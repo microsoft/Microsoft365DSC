@@ -1,4 +1,22 @@
 # region ExchangeOnlineManagement
+function Get-EmailTenantSettings
+{
+    [CmdletBinding()]
+    param(
+    )
+}
+
+function Set-EmailTenantSettings
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $EnablePriorityAccountProtection
+    )
+}
+
+
 function Get-SweepRule
 {
     [CmdletBinding()]
