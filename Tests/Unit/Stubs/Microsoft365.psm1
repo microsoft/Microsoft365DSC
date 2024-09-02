@@ -1,4 +1,154 @@
 # region ExchangeOnlineManagement
+function Get-SweepRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Int32]
+        $SkipCount,
+
+        [Parameter()]
+        [System.String]
+        $Provider,
+
+        [Parameter()]
+        [System.Object]
+        $Mailbox,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $BypassScopeCheck,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $ResultSize
+    )
+}
+
+function New-SweepRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Object]
+        $DestinationFolder,
+
+        [Parameter()]
+        [System.String]
+        $Provider,
+
+        [Parameter()]
+        [System.Object]
+        $SystemCategory,
+
+        [Parameter()]
+        [System.Object]
+        $KeepLatest,
+
+        [Parameter()]
+        [System.Object]
+        $SourceFolder,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Mailbox,
+
+        [Parameter()]
+        [System.Object]
+        $Sender,
+
+        [Parameter()]
+        [System.Object]
+        $KeepForDays,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled
+    )
+}
+function Remove-SweepRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Mailbox,
+
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
+function Set-SweepRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Object]
+        $Sender,
+
+        [Parameter()]
+        [System.String]
+        $Provider,
+
+        [Parameter()]
+        [System.Object]
+        $SystemCategory,
+
+        [Parameter()]
+        [System.Object]
+        $KeepLatest,
+
+        [Parameter()]
+        [System.Object]
+        $SourceFolder,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Mailbox,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $DestinationFolder,
+
+        [Parameter()]
+        [System.Object]
+        $KeepForDays,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled
+    )
+}
+
 function Get-DefaultTenantBriefingConfig
 {
     [CmdletBinding()]
