@@ -8,6 +8,8 @@
   * Fixes an issue where a Intune settings catalog DSC param was not handled
     correctly when it was not specified.
     FIXES [#5000](https://github.com/microsoft/Microsoft365DSC/issues/5000)
+* EXOOwaMailboxPolicy
+  * Add support for AccountTransferEnabled parameter
 
 # 1.24.828.1
 
