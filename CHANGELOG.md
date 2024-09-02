@@ -1,5 +1,13 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* EXOSweepRule
+  * Initial Release.
+* M365DSCDRGUtil
+  * Fixes an issue where a Intune settings catalog DSC param was not handled
+    correctly when it was not specified.
+    FIXES [#5000](https://github.com/microsoft/Microsoft365DSC/issues/5000)
 * EXOOwaMailboxPolicy
   * Add support for AccountTransferEnabled parameter
 
