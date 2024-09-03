@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* EXOMailboxIRMAccess
+  * Initial Release.
 * EXOSweepRule
   * Initial Release.
 * M365DSCDRGUtil
