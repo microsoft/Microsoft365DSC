@@ -67,8 +67,6 @@
 * M365DSCUtil
   * Fix `Compare-PSCustomObjectArrays` by allowing empty arrays as input
     FIXES [#4952](https://github.com/microsoft/Microsoft365DSC/issues/4952)
-* O365OrgSettings
-  * FIXES [#4741](https://github.com/microsoft/Microsoft365DSC/issues/4741)
 * MISC
   * Improve module updates and PowerShell Core support across the DSC
     resources.
