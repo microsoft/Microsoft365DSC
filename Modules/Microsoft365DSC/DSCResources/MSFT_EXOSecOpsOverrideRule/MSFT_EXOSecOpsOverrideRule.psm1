@@ -71,7 +71,7 @@ function Get-TargetResource
         }
         else
         {
-            $instance = Get-EXOSecOpsOverrideRule -PrimaryKey $PrimaryKey -ErrorAction Stop
+            $instance = Get-EXOSecOpsOverrideRule -Identity $Identity
         }
         if ($null -eq $instance)
         {
@@ -334,9 +334,9 @@ function Export-TargetResource
             $displayedKey = $config.Id
             Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -NoNewline
             $params = @{
-                Identity              = $instance.Identity
-                Comment               = $instance.Comment
-                Policy                = $instance.Policy
+                Identity              = $config.Identity
+                Comment               = $config.Comment
+                Policy                = $config.Policy
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
