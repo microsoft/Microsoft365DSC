@@ -149,6 +149,8 @@ function Set-SweepRule
     )
 }
 
+
+
 function Get-DefaultTenantBriefingConfig
 {
     [CmdletBinding()]
@@ -300,6 +302,75 @@ function Add-RecipientPermission
         [Parameter()]
         [System.Object]
         $Trustee
+    )
+}
+function Get-ExoSecOpsOverrideRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $Policy
+    )
+}
+
+function New-ExoSecOpsOverrideRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Object]
+        $Policy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Comment
+    )
+}
+function Remove-ExoSecOpsOverrideRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
+function Set-ExoSecOpsOverrideRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.Object]
+        $Identity
     )
 }
 function Disable-JournalRule
