@@ -309,10 +309,6 @@ function Get-ExoSecOpsOverrideRule
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
         [System.Object]
         $Identity,
 
@@ -335,10 +331,6 @@ function New-ExoSecOpsOverrideRule
         $Policy,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
         [System.String]
         $Comment
     )
@@ -347,9 +339,6 @@ function Remove-ExoSecOpsOverrideRule
 {
     [CmdletBinding()]
     param(
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
 
         [Parameter()]
         [System.Object]
@@ -360,10 +349,6 @@ function Set-ExoSecOpsOverrideRule
 {
     [CmdletBinding()]
     param(
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
         [Parameter()]
         [System.String]
         $Comment,

@@ -91,8 +91,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential          = $Credential;
                 }
 
-                ##TODO - Mock the Get-Cmdlet to return an instance
-                Mock -CommandName Get-Cmdlet -MockWith {
+                Mock -CommandName Get-EXOSecOpsOverrideRule -MockWith {
                     return @{
                         Identity            = "_Exe:SecOpsOverrid:ca3c51ac-925c-49f4-af42-43e26b874245";
                         Comment             = "TestComment";
@@ -125,8 +124,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential          = $Credential;
                 }
 
-                ##TODO - Mock the Get-Cmdlet to return the desired values
-                Mock -CommandName Get-Cmdlet -MockWith {
+                Mock -CommandName Get-EXOSecOpsOverrideRule -MockWith {
                     return @{
                         Identity            = "_Exe:SecOpsOverrid:ca3c51ac-925c-49f4-af42-43e26b874245";
                         Comment             = "TestComment";
@@ -152,8 +150,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential          = $Credential;
                 }
 
-                ##TODO - Mock the Get-Cmdlet to return a drift
-                Mock -CommandName Get-Cmdlet -MockWith {
+                Mock -CommandName Get-EXOSecOpsOverrideRule -MockWith {
                     return @{
                         Identity            = "_Exe:SecOpsOverrid:ca3c51ac-925c-49f4-af42-43e26b874245";
                         Comment             = "TestComment";
@@ -174,7 +171,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should call the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Update-EXOSecOpsOverrideRule -Exactly 1
+                Should -Invoke -CommandName Set-EXOSecOpsOverrideRule -Exactly 1
             }
         }
 
@@ -186,8 +183,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential  = $Credential;
                 }
 
-                ##TODO - Mock the Get-Cmdlet to return an instance
-                Mock -CommandName Get-Cmdlet -MockWith {
+                Mock -CommandName Get-EXOSecOpsOverrideRule -MockWith {
                     return @{
                         Identity            = "_Exe:SecOpsOverrid:ca3c51ac-925c-49f4-af42-43e26b874245";
                         Comment             = "TestComment";

@@ -178,12 +178,13 @@ function Set-TargetResource
     # UPDATE
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
+        $setParameters.Remove("Policy")
         Set-EXOSecOpsOverrideRule @SetParameters
     }
     # REMOVE
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Remove-EXOSecOpsOverrideRule @SetParameters
+        Remove-EXOSecOpsOverrideRule -Identity $Identity
     }
 }
 
