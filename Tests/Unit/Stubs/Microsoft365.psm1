@@ -162,7 +162,7 @@ function Get-ExoPhishSimOverrideRule
         $Identity,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Policy
     )
 }
@@ -192,7 +192,7 @@ function New-ExoPhishSimOverrideRule
         $Comment,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $Policy
     )
 }

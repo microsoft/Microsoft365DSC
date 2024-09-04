@@ -12,5 +12,6 @@ class MSFT_EXOPhishSimOverrideRule : OMI_BaseResource
     [Write, Description("The domains for the override rule.")] String Domains[];
     [Write, Description("The IP ranges for the override rule.")] String SenderIpRanges[];
     [Write, Description("An optional comment for the override rule.")] String Comment;
+    [Write, Description("The phishing simulation override policy that's associated with the rule.")] String Policy;
     [Write, Description("Ensures the presence or absence of the configuration.")] String Ensure;
 };

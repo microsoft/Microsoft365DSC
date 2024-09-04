@@ -21,6 +21,10 @@ function Get-TargetResource
         $Comment,
 
         [Parameter()]
+        [System.String]
+        $Policy,
+
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -83,10 +87,11 @@ function Get-TargetResource
         }
 
         $results = @{
-            Identity             = $instance.Identity
-            SenderIpRanges       = $instance.SenderIpRanges
-            Domains              = $instance.Domains
-            Comment              = $instance.Comment
+            Identity              = $instance.Identity
+            SenderIpRanges        = $instance.SenderIpRanges
+            Domains               = $instance.Domains
+            Comment               = $instance.Comment
+            Policy                = $instance.Policy
             Ensure                = 'Present'
             Credential            = $Credential
             ApplicationId         = $ApplicationId
@@ -157,6 +162,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $Comment,
+
+        [Parameter()]
+        [System.String]
+        $Policy,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -250,6 +259,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $Comment,
+
+        [Parameter()]
+        [System.String]
+        $Policy,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -418,5 +431,6 @@ function Export-TargetResource
         return ''
     }
 }
-
+$Credential = Get-Credential
+Test-TargetResource -Identity "_Exe:PhishSimOverr:d779965e-ab14-4dd8-b3f5-0876a99f988b" -Policy "fc55717b-28bb-4cf3-98ee-9ba57903c978" -Domains @("fabrikam.com","wingtiptoys.com") -SenderIpRanges @("192.168.1.55") -Comment "abc" -Ensure "Present" -Credential $Credential
 Export-ModuleMember -Function *-TargetResource
