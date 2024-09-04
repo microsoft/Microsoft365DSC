@@ -4,10 +4,14 @@
 
 * EXOSweepRule
   * Initial Release.
+* FabricAdminTenantSettings
+  * Initial Release.
 * M365DSCDRGUtil
   * Fixes an issue where a Intune settings catalog DSC param was not handled
     correctly when it was not specified.
     FIXES [#5000](https://github.com/microsoft/Microsoft365DSC/issues/5000)
+* DEPENDENCIES
+  * Updated MSCloudLoginAssistant to version 1.1.20.
 
 # 1.24.828.1
 
