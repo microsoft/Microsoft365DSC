@@ -163,7 +163,6 @@ class MSFT_FabricAdminTenantSettings : OMI_BaseResource
     [Write, Description("Integration with SharePoint and Microsoft Lists"), EmbeddedInstance("MSFT_FabricTenantSetting")] string VisualizeListInPowerBI;
     [Write, Description("Web content on dashboard tiles"), EmbeddedInstance("MSFT_FabricTenantSetting")] string WebContentTilesTenant;
     [Write, Description("Users can edit data models in the Power BI service (preview)"), EmbeddedInstance("MSFT_FabricTenantSetting")] string WebModelingTenantSwitch;
-    [Write, Description("Credentials of the workload's Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
     [Write, Description("Secret of the Azure Active Directory application to authenticate with."), EmbeddedInstance("MSFT_Credential")] String ApplicationSecret;
     [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
