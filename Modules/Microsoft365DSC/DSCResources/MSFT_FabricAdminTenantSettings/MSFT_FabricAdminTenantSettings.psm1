@@ -1854,7 +1854,6 @@ function Test-TargetResource
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
-
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
 
@@ -1874,12 +1873,13 @@ function Test-TargetResource
             if (-Not $testResult)
             {
                 Write-Verbose -Message "Difference found for $key"
+                Write-Verbose -Message "Current Values: $($source | Out-String)"
+                Write-Verbose -Message "Desired Values: $($target | Out-String)"
                 $testResult = $false
                 break
             }
 
             $ValuesToCheck.Remove($key) | Out-Null
-
         }
     }
 
@@ -1975,13 +1975,22 @@ function Export-TargetResource
             -ModulePath $PSScriptRoot `
             -Results $newResults `
             -Credential $Credential
+        $fixQuotes = $false
         foreach ($key in $Results.Keys)
         {
             if ($null -ne $Results.$key -and $key -notin $params.Keys)
             {
+                if ($currentDSCBlock.Contains('`"'))
+                {
+                    $fixQuotes = $true
+                }
                 $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                -ParameterName $key
+                    -ParameterName $key                
             }
+        }
+        if ($fixQuotes)
+        {
+            $currentDSCBlock = $currentDSCBlock.Replace('`', '"')
         }
         $dscContent += $currentDSCBlock
         Save-M365DSCPartialExport -Content $currentDSCBlock `
@@ -2032,7 +2041,7 @@ function Get-M365DSCFabricTenantSettingAsString
     {
         $StringContent += "                tenantSettingGroup       = '" + $setting.tenantSettingGroup + "'`r`n"
     }
-    $StringContent += "                title                    = '" + $setting.title + "'`r`n"
+    $StringContent += "                title                    = '" + $setting.title.Replace("'", "''") + "'`r`n"
     if (-not [System.String]::IsNullOrEmpty($setting.properties))
     {
         $StringContent += "                properties               = @("
@@ -2040,7 +2049,7 @@ function Get-M365DSCFabricTenantSettingAsString
         {
             $StringContent += "                    MSFT_FabricTenantSettingProperty{`r`n"
             $StringContent += "                        name  = '$($property.name)'`r`n"
-            $StringContent += "                        value = '$($property.value)'`r`n"
+            $StringContent += "                        value = '$($property.value.Replace("'", "''"))'`r`n"
             $StringContent += "                        type  = '$($property.type)'`r`n"
             $StringContent += "                    }`r`n"
         }
@@ -2049,20 +2058,11 @@ function Get-M365DSCFabricTenantSettingAsString
     if (-not [System.String]::IsNullOrEmpty($setting.excludedSecurityGroups))
     {
         $excludedSecurityGroupsValue = $setting.excludedSecurityGroups -join "','"
-        if ($setting.excludedSecurityGroups.Length -gt 1)
-        {
-            $excludedSecurityGroupsValue = $excludedSecurityGroupsValue.Substring(0, $excludedSecurityGroupsValue.Length -3)
-        }
         $StringContent += "                excludedSecurityGroups   = @('" + $excludedSecurityGroupsValue + "')`r`n"
     }
     if (-not [System.String]::IsNullOrEmpty($setting.enabledSecurityGroups))
     {
         $enabledSecurityGroupsValue = $setting.enabledSecurityGroups -join "','"
-        if ($setting.enabledSecurityGroups.Length -gt 1)
-        {
-            $enabledSecurityGroupsValue = $setting.enabledSecurityGroups -join "','"
-            $enabledSecurityGroupsValue = $enabledSecurityGroupsValue.Substring(0, $enabledSecurityGroupsValue.Length -3)
-        }
         $StringContent += "                enabledSecurityGroups    = @('" + $enabledSecurityGroupsValue + "')`r`n"
     }
     $StringContent += "            }`r`n"
@@ -2088,7 +2088,7 @@ function Get-M365DSCFabricTenantSettingObject
     $values = @{
         settingName              = $Setting.settingName
         enabled                  = [Boolean]$Setting.enabled
-        title                    = $Setting.title.Replace("'", "''")
+        title                    = $Setting.title
     }
     if (-not [System.String]::IsNullOrEmpty($Setting.canSpecifySecurityGroups))
     {
@@ -2113,7 +2113,7 @@ function Get-M365DSCFabricTenantSettingObject
         {
             $curProperty = @{
                 name  = $property.name
-                value = $property.value.Replace("'", "''")
+                value = $property.value
                 type  = $property.type
             }
             $propertiesValue += $curProperty
