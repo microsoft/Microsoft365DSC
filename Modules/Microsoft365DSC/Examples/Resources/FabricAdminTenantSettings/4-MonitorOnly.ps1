@@ -21,25 +21,28 @@ Configuration Example
     Import-DscResource -ModuleName Microsoft365DSC
     node localhost
     {
-        IsSingleInstance = 'Yes'
-        AADSSOForGateway                                                      = MSFT_FabricTenantSetting {
-            settingName              = 'AADSSOForGateway'
-            canSpecifySecurityGroups = $False
-            enabled                  = $True
-            tenantSettingGroup       = 'Integration settings'
-            title                    = 'Microsoft Entra single sign-on for data gateway'
-        };
-        AdminApisIncludeDetailedMetadata                                      = MSFT_FabricTenantSetting {
-            settingName              = 'AdminApisIncludeDetailedMetadata'
-            canSpecifySecurityGroups = $True
-            enabled                  = $True
-            tenantSettingGroup       = 'Admin API settings'
-            title                    = 'Enhance admin APIs responses with detailed metadata'
-            excludedSecurityGroups   = @('MyExcludedGroup')
-            enabledSecurityGroups    = @('Group1','Group2')
-        };
-        ApplicationId         = $ApplicationId
-        TenantId              = $TenantId
-        CertificateThumbprint = $CertificateThumbprint
+        FabricAdminTenantSettings "FabricAdminTenantSettings"
+        {
+            IsSingleInstance = 'Yes'
+            AADSSOForGateway                                                      = MSFT_FabricTenantSetting {
+                settingName              = 'AADSSOForGateway'
+                canSpecifySecurityGroups = $False
+                enabled                  = $True
+                tenantSettingGroup       = 'Integration settings'
+                title                    = 'Microsoft Entra single sign-on for data gateway'
+            };
+            AdminApisIncludeDetailedMetadata                                      = MSFT_FabricTenantSetting {
+                settingName              = 'AdminApisIncludeDetailedMetadata'
+                canSpecifySecurityGroups = $True
+                enabled                  = $True
+                tenantSettingGroup       = 'Admin API settings'
+                title                    = 'Enhance admin APIs responses with detailed metadata'
+                excludedSecurityGroups   = @('MyExcludedGroup')
+                enabledSecurityGroups    = @('Group1','Group2')
+            };
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
+        }
     }
 }
