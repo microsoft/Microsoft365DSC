@@ -1,4 +1,4 @@
-﻿﻿{
+﻿{
     "resourceName": "EXOPhishSimOverrideRule",
     "description": "Use this resource to manage phish sim override rules.",
     "roles": {
