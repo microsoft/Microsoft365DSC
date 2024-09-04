@@ -1,12 +1,12 @@
 ﻿﻿{
-    "resourceName": "EXOPhishSimOverrideRule",
-    "description": "",
+    "resourceName": "EXOSweepRule",
+    "description": "Use this resource to manage phish sim override rules.",
     "roles": {
         "read": [
-            "Global Reader"
+            "Exchange Admin"
         ],
         "update": [
-            "Exchange Administrator"
+            "Exchange Admin"
         ]
     },
     "permissions": {
@@ -19,16 +19,6 @@
                 "read": [],
                 "update": []
             }
-        },
-        "exchange": {
-            "requiredroles": [
-                "Organization Management",
-                "Recipient Management"
-            ],
-            "requiredrolegroups": [
-               "Organization Management",
-               "Help Desk"
-            ]
         }
     }
 }
