@@ -35,7 +35,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return "Credentials"
             }
 
-            ##TODO - Mock any Remove/Set/New cmdlets
+            Mock -CommandName Set-EXOSecOpsOverrideRule -MockWith {
+                return $null
+            }
+
+            Mock -CommandName Remove-EXOSecOpsOverrideRule -MockWith {
+                return $null
+            }
+
+            Mock -CommandName New-EXOSecOpsOverrideRule -MockWith {
+                return $null
+            }
 
             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
@@ -47,13 +57,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The instance should exist but it DOES NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    ##TODO - Add Parameters
+                    Identity            = "_Exe:SecOpsOverrid:ca3c51ac-925c-49f4-af42-43e26b874245";
+                    Comment             = "TestComment";
+                    Policy              = "40528418-717d-4368-a1ae-7912918f8a1f";
                     Ensure              = 'Present'
                     Credential          = $Credential;
                 }
 
-                ##TODO - Mock the Get-Cmdlet to return $null
-                Mock -CommandName Get-Cmdlet -MockWith {
+                Mock -CommandName Get-EXOSecOpsOverrideRule -MockWith {
                     return $null
                 }
             }
@@ -65,23 +76,29 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should create a new instance from the Set method' {
-                ##TODO - Replace the New-Cmdlet by the appropriate one
-                Should -Invoke -CommandName New-Cmdlet -Exactly 1
+                Set-TargetResource @testParams
+                Should -Invoke -CommandName New-EXOSecOpsOverrideRule -Exactly 1
             }
         }
 
         Context -Name "The instance exists but it SHOULD NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    ##TODO - Add Parameters
-                    Ensure              = 'Absent'
+                    Identity            = "_Exe:SecOpsOverrid:ca3c51ac-925c-49f4-af42-43e26b874245";
+                    Comment             = "TestComment";
+                    Policy              = "40528418-717d-4368-a1ae-7912918f8a1f";
+                    Ensure              = 'Absent';
                     Credential          = $Credential;
                 }
 
                 ##TODO - Mock the Get-Cmdlet to return an instance
                 Mock -CommandName Get-Cmdlet -MockWith {
                     return @{
-
+                        Identity            = "_Exe:SecOpsOverrid:ca3c51ac-925c-49f4-af42-43e26b874245";
+                        Comment             = "TestComment";
+                        Policy              = "40528418-717d-4368-a1ae-7912918f8a1f";
+                        Ensure              = 'Present';
+                        Credential          = $Credential;
                     }
                 }
             }
@@ -93,15 +110,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should remove the instance from the Set method' {
-                ##TODO - Replace the Remove-Cmdlet by the appropriate one
-                Should -Invoke -CommandName Remove-Cmdlet -Exactly 1
+                Set-TargetResource @testParams
+                Should -Invoke -CommandName Remove-EXOSecOpsOverrideRule -Exactly 1
             }
         }
 
         Context -Name "The instance exists and values are already in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    ##TODO - Add Parameters
+                    Identity            = "_Exe:SecOpsOverrid:ca3c51ac-925c-49f4-af42-43e26b874245";
+                    Comment             = "TestComment";
+                    Policy              = "40528418-717d-4368-a1ae-7912918f8a1f";
                     Ensure              = 'Present'
                     Credential          = $Credential;
                 }
@@ -109,7 +128,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 ##TODO - Mock the Get-Cmdlet to return the desired values
                 Mock -CommandName Get-Cmdlet -MockWith {
                     return @{
-
+                        Identity            = "_Exe:SecOpsOverrid:ca3c51ac-925c-49f4-af42-43e26b874245";
+                        Comment             = "TestComment";
+                        Policy              = "40528418-717d-4368-a1ae-7912918f8a1f";
+                        Ensure              = 'Present';
+                        Credential          = $Credential;
                     }
                 }
             }
@@ -122,7 +145,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The instance exists and values are NOT in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    ##TODO - Add Parameters
+                    Identity            = "_Exe:SecOpsOverrid:ca3c51ac-925c-49f4-af42-43e26b874245";
+                    Comment             = "TestComment";
+                    Policy              = "40528418-717d-4368-a1ae-7912918f8a1g";
                     Ensure              = 'Present'
                     Credential          = $Credential;
                 }
@@ -130,7 +155,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 ##TODO - Mock the Get-Cmdlet to return a drift
                 Mock -CommandName Get-Cmdlet -MockWith {
                     return @{
-
+                        Identity            = "_Exe:SecOpsOverrid:ca3c51ac-925c-49f4-af42-43e26b874245";
+                        Comment             = "TestComment";
+                        Policy              = "40528418-717d-4368-a1ae-7912918f8a1f";
+                        Ensure              = 'Present';
+                        Credential          = $Credential;
                     }
                 }
             }
@@ -145,8 +174,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should call the Set method' {
                 Set-TargetResource @testParams
-                ##TODO - Replace the Update-Cmdlet by the appropriate one
-                Should -Invoke -CommandName Update-Cmdlet -Exactly 1
+                Should -Invoke -CommandName Update-EXOSecOpsOverrideRule -Exactly 1
             }
         }
 
@@ -161,7 +189,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 ##TODO - Mock the Get-Cmdlet to return an instance
                 Mock -CommandName Get-Cmdlet -MockWith {
                     return @{
-
+                        Identity            = "_Exe:SecOpsOverrid:ca3c51ac-925c-49f4-af42-43e26b874245";
+                        Comment             = "TestComment";
+                        Policy              = "40528418-717d-4368-a1ae-7912918f8a1f";
+                        Ensure              = 'Present';
+                        Credential          = $Credential;
                     }
                 }
             }
