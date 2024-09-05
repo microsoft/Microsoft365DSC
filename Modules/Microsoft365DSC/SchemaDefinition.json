@@ -12033,6 +12033,11 @@
                                "Option":  "Key"
                            },
                            {
+                               "CIMType":  "Boolean",
+                               "Name":  "AccountTransferEnabled",
+                               "Option":  "Write"
+                           },
+                           {
                                "CIMType":  "String",
                                "Name":  "ActionForUnknownFileAndMIMETypes",
                                "Option":  "Write"
