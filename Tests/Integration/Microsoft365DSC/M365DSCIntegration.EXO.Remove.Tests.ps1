@@ -536,6 +536,16 @@
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                 }
+                EXOSweepRule 'MyRule'
+                {
+                    ApplicationId         = $ApplicationId;
+                    CertificateThumbprint = $CertificateThumbprint;
+                    Enabled               = $True;
+                    Ensure                = "Absent";
+                    Mailbox               = "Test2";
+                    Name                  = "From Michelle";
+                    TenantId              = $TenantId;
+                }
                 EXOTransportRule 'ConfigureTransportRule'
                 {
                     Name                                          = "Ethical Wall - Sales and Brokerage Departments"

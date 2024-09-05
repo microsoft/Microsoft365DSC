@@ -272,7 +272,7 @@ function Get-M365DSCDRGComplexTypeToString
 
         [Parameter()]
         [switch]
-        $isArray = $false
+        $IsArray
     )
 
     if ($null -eq $ComplexObject)
@@ -281,7 +281,7 @@ function Get-M365DSCDRGComplexTypeToString
     }
 
     $indent = ''
-    for ($i = 0; $i -lt $IndentLevel ; $i++)
+    for ($i = 0; $i -lt $IndentLevel; $i++)
     {
         $indent += '    '
     }
@@ -299,10 +299,10 @@ function Get-M365DSCDRGComplexTypeToString
             }
             if ($ComplexTypeMapping)
             {
-                $splat.add('ComplexTypeMapping', $ComplexTypeMapping)
+                $splat.Add('ComplexTypeMapping', $ComplexTypeMapping)
             }
 
-            $currentProperty += Get-M365DSCDRGComplexTypeToString -isArray:$true @splat
+            $currentProperty += Get-M365DSCDRGComplexTypeToString -IsArray @splat
         }
 
         # PowerShell returns all non-captured stream output, not just the argument of the return statement.
@@ -312,7 +312,7 @@ function Get-M365DSCDRGComplexTypeToString
     }
 
     $currentProperty = ''
-    if ($isArray)
+    if ($IsArray)
     {
         $currentProperty += "`r`n"
         $currentProperty += $indent
@@ -338,29 +338,29 @@ function Get-M365DSCDRGComplexTypeToString
             {
                 $hashPropertyType = $ComplexObject[$key].GetType().Name.ToLower()
 
-                $isArray = $false
+                $IsArray = $false
                 if ($ComplexObject[$key].GetType().FullName -like '*[[\]]')
                 {
-                    $isArray = $true
+                    $IsArray = $true
                 }
                 #overwrite type if object defined in mapping complextypemapping
                 if ($key -in $ComplexTypeMapping.Name)
                 {
                     $hashPropertyType = ([Array]($ComplexTypeMapping | Where-Object -FilterScript { $_.Name -eq $key }).CimInstanceName)[0]
                     $hashProperty = $ComplexObject[$key]
-                    $currentProperty += "`r`n"
+                    #$currentProperty += "`r`n"
                 }
                 else
                 {
                     $hashProperty = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject[$key]
                 }
 
-                if (-not $isArray)
+                if (-not $IsArray)
                 {
                     $currentProperty += $indent + $key + ' = '
                 }
 
-                if ($isArray -and $key -in $ComplexTypeMapping.Name)
+                if ($IsArray -and $key -in $ComplexTypeMapping.Name)
                 {
                     if ($ComplexObject.$key.Count -gt 0)
                     {
@@ -369,11 +369,12 @@ function Get-M365DSCDRGComplexTypeToString
                     }
                 }
 
-                if ($isArray)
+                if ($IsArray)
                 {
                     $IndentLevel++
-                    foreach ($item in $ComplexObject[$key])
+                    for ($i = 0; $i -lt $ComplexObject[$key].Count; $i++)
                     {
+                        $item = $ComplexObject.$key[$i]
                         if ($ComplexObject.$key.GetType().FullName -like 'Microsoft.Graph.PowerShell.Models.*')
                         {
                             $item = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $item
@@ -383,10 +384,16 @@ function Get-M365DSCDRGComplexTypeToString
                             -CIMInstanceName $hashPropertyType `
                             -IndentLevel $IndentLevel `
                             -ComplexTypeMapping $ComplexTypeMapping `
-                            -IsArray:$true
+                            -IsArray
                         if ([string]::IsNullOrWhiteSpace($nestedPropertyString))
                         {
                             $nestedPropertyString = "@()`r`n"
+                        }
+                        if ($i -ne 0)
+                        {
+                            # Remove the line break at the start because every item contains a trailing line break
+                            # which would lead to two line breaks between each item
+                            $nestedPropertyString = $nestedPropertyString.Substring(2)
                         }
                         $currentProperty += $nestedPropertyString
                     }
@@ -405,7 +412,7 @@ function Get-M365DSCDRGComplexTypeToString
                     }
                     $currentProperty += $nestedPropertyString
                 }
-                if ($isArray)
+                if ($IsArray)
                 {
                     if ($ComplexObject.$key.Count -gt 0)
                     {
@@ -414,7 +421,7 @@ function Get-M365DSCDRGComplexTypeToString
                         $currentProperty += "`r`n"
                     }
                 }
-                $isArray = $PSBoundParameters.IsArray
+                $IsArray = $PSBoundParameters.IsArray
             }
             else
             {
@@ -432,7 +439,7 @@ function Get-M365DSCDRGComplexTypeToString
 
             if ($mappedKey -and $mappedKey.isRequired)
             {
-                if ($mappedKey.isArray)
+                if ($mappedKey.IsArray)
                 {
                     $currentProperty += "$indent$key = @()`r`n"
                 }
@@ -451,7 +458,7 @@ function Get-M365DSCDRGComplexTypeToString
     }
 
     $currentProperty += "$indent}"
-    if ($isArray -or $IndentLevel -gt 4)
+    if ($IsArray -or $IndentLevel -gt 4)
     {
         $currentProperty += "`r`n"
     }
@@ -1643,8 +1650,7 @@ function Get-IntuneSettingCatalogPolicySettingInstanceValue
         # GroupSettingCollections are a collection of settings without a value of their own
         { $_ -eq '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance' -or $_ -eq '#microsoft.graph.deviceManagementConfigurationSettingGroupCollectionDefinition' }
         {
-            $groupSettingCollectionValue = @{}
-            $groupSettingCollectionValueChildren = @()
+            $groupSettingCollectionValue = @()
             $groupSettingCollectionDefinitionChildren = @()
 
             $templates = $SettingTemplates | Where-Object {
@@ -1686,6 +1692,7 @@ function Get-IntuneSettingCatalogPolicySettingInstanceValue
 
             for ($i = 0; $i -lt $instanceCount; $i++)
             {
+                $groupSettingCollectionValueChildren = @()
                 $currentDSCParams = if ($instanceCount -eq 1) {
                     if (-not [System.String]::IsNullOrEmpty($cimDSCParamsName)) {
                         $DSCParams.$cimDSCParamsName
@@ -1708,7 +1715,7 @@ function Get-IntuneSettingCatalogPolicySettingInstanceValue
                 foreach ($childDefinition in $groupSettingCollectionDefinitionChildren)
                 {
                     $childSettingName = $childDefinition.Name
-                    $childSettingType = $childDefinition.AdditionalProperties.'@odata.type'.Replace('Definition', 'Instance')
+                    $childSettingType = $childDefinition.AdditionalProperties.'@odata.type'.Replace('Definition', 'Instance').Replace('SettingGroup', 'GroupSetting')
                     $childSettingValueName = $childSettingType.Replace('#microsoft.graph.deviceManagementConfiguration', '').Replace('Instance', 'Value')
                     $childSettingValueType = "#microsoft.graph.deviceManagementConfiguration$($childSettingValueName)"
                     $childSettingValueName = $childSettingValueName.Substring(0, 1).ToLower() + $childSettingValueName.Substring(1, $childSettingValueName.length - 1 )
@@ -1740,10 +1747,15 @@ function Get-IntuneSettingCatalogPolicySettingInstanceValue
                         $groupSettingCollectionValueChildren += $childSettingValue
                     }
                 }
+                if ($groupSettingCollectionValueChildren.Count -gt 0)
+                {
+                    $groupSettingCollectionValue += @{
+                        children = @($groupSettingCollectionValueChildren)
+                    }
+                }
             }
 
-            if ($groupSettingCollectionDefinitionChildren.Count -gt 0) {
-                $groupSettingCollectionValue.Add('children', $groupSettingCollectionValueChildren)
+            if ($groupSettingCollectionDefinitionChildren.Count -gt 0 -and $groupSettingCollectionValue.Count -gt 0) {
                 $settingValuesToReturn.Add('groupSettingCollectionValue', @($groupSettingCollectionValue))
             }
         }
@@ -1870,6 +1882,11 @@ function Get-IntuneSettingCatalogPolicySettingInstanceValue
                 -SettingDefinition $SettingDefinition `
                 -DSCParams $DSCParams
 
+            if ($null -eq $valuesResult)
+            {
+                return $null
+            }
+
             $values = $valuesResult.Value
             $SettingValueType = $valuesResult.SettingDefinition.AdditionalProperties.valueDefinition.'@odata.type'.Replace('Definition', '')
 
@@ -1983,7 +2000,11 @@ function Get-IntuneSettingCatalogPolicySettingDSCValue
                     # Parent was combined with child setting. Since there can be multiple settings with the same Name, we need to check the Id as well
                     if ($SettingDefinition.Id -eq $childDefinition.Id)
                     {
-                        $global:excludedDscParams += $key
+                        # Only exclude the combined setting if it is not part of a group setting collection (which could be of a separate CIM type)
+                        if ($parentDefinition.AdditionalProperties.'@odata.type' -ne '#microsoft.graph.deviceManagementConfigurationSettingGroupCollectionDefinition')
+                        {
+                            $global:excludedDscParams += $key
+                        }
                         $matchCombined = $true
                     }
                 }
@@ -2120,7 +2141,7 @@ function Export-IntuneSettingCatalogPolicySettings
         }
         elseif ($settingDefinition.AdditionalProperties.options.dependentOn.parentSettingId.Count -gt 0)
         {
-            $parentSetting = $SettingDefinitions | Where-Object -FilterScript { $_.Id -eq $($settingDefinition.AdditionalProperties.dependentOn.parentSettingId | Select-Object -Unique -First 1) }
+            $parentSetting = $SettingDefinitions | Where-Object -FilterScript { $_.Id -eq $($settingDefinition.AdditionalProperties.options.dependentOn.parentSettingId | Select-Object -Unique -First 1) }
         }
 
         $combinationMatches = $SettingDefinitions | Where-Object -FilterScript {
