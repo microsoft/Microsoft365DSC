@@ -8,10 +8,14 @@
   * Initial Release.
 * FabricAdminTenantSettings
   * Initial Release.
+* IntuneDeviceControlPolicyWindows10
+  * Initial Release
 * M365DSCDRGUtil
   * Fixes an issue where a Intune settings catalog DSC param was not handled
     correctly when it was not specified.
     FIXES [#5000](https://github.com/microsoft/Microsoft365DSC/issues/5000)
+  * Fixes an issue where the exported nested CIM instances had too many line breaks.
+  * Fixes an issue where Settings Catalog properties were not correctly handled.
 * DEPENDENCIES
   * Updated MSCloudLoginAssistant to version 1.1.20.
 
