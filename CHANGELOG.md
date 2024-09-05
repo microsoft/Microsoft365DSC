@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* EXOOwaMailboxPolicy
+  * Add support for AccountTransferEnabled parameter
 * EXOSweepRule
   * Initial Release.
 * FabricAdminTenantSettings

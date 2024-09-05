@@ -10,6 +10,10 @@ function Get-TargetResource
         $Name,
 
         [Parameter()]
+        [System.Boolean]
+        $AccountTransferEnabled,
+
+        [Parameter()]
         [ValidateSet('Allow', 'ForceSave', 'Block')]
         [System.String]
         $ActionForUnknownFileAndMIMETypes,
@@ -434,6 +438,7 @@ function Get-TargetResource
         {
             $result = @{
                 Name                                                 = $OwaMailboxPolicy.Name
+                AccountTransferEnabled                               = $OwaMailboxPolicy.AccountTransferEnabled
                 ActionForUnknownFileAndMIMETypes                     = $OwaMailboxPolicy.ActionForUnknownFileAndMIMETypes
                 ActiveSyncIntegrationEnabled                         = $OwaMailboxPolicy.ActiveSyncIntegrationEnabled
                 AdditionalAccountsEnabled                            = $OwaMailboxPolicy.AdditionalAccountsEnabled
@@ -555,6 +560,10 @@ function Set-TargetResource
         [ValidateLength(1, 64)]
         [System.String]
         $Name,
+
+        [Parameter()]
+        [System.Boolean]
+        $AccountTransferEnabled,
 
         [Parameter()]
         [ValidateSet('Allow', 'ForceSave', 'Block')]
@@ -1014,6 +1023,10 @@ function Test-TargetResource
         [ValidateLength(1, 64)]
         [System.String]
         $Name,
+
+        [Parameter()]
+        [System.Boolean]
+        $AccountTransferEnabled,
 
         [Parameter()]
         [ValidateSet('Allow', 'ForceSave', 'Block')]
