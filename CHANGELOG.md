@@ -1,7 +1,8 @@
 # Change log for Microsoft365DSC
 
 # UNRELEASED
-
+* EXOArcConfig
+  * Initial Release.
 * EXOSweepRule
   * Initial Release.
 * M365DSCDRGUtil
