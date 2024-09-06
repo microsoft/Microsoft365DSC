@@ -1,14 +1,28 @@
 # Change log for Microsoft365DSC
 
 # UNRELEASED
+
 * EXOArcConfig
   * Initial Release.
+* EXOOwaMailboxPolicy
+  * Add support for AccountTransferEnabled parameter
+
+# 1.24.904.1
+
 * EXOSweepRule
   * Initial Release.
+* FabricAdminTenantSettings
+  * Initial Release.
+* IntuneDeviceControlPolicyWindows10
+  * Initial Release
 * M365DSCDRGUtil
   * Fixes an issue where a Intune settings catalog DSC param was not handled
     correctly when it was not specified.
     FIXES [#5000](https://github.com/microsoft/Microsoft365DSC/issues/5000)
+  * Fixes an issue where the exported nested CIM instances had too many line breaks.
+  * Fixes an issue where Settings Catalog properties were not correctly handled.
+* DEPENDENCIES
+  * Updated MSCloudLoginAssistant to version 1.1.20.
 
 # 1.24.828.1
 
@@ -68,8 +82,6 @@
 * M365DSCUtil
   * Fix `Compare-PSCustomObjectArrays` by allowing empty arrays as input
     FIXES [#4952](https://github.com/microsoft/Microsoft365DSC/issues/4952)
-* O365OrgSettings
-  * FIXES [#4741](https://github.com/microsoft/Microsoft365DSC/issues/4741)
 * MISC
   * Improve module updates and PowerShell Core support across the DSC
     resources.
