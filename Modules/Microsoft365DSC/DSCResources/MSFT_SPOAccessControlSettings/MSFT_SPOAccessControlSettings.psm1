@@ -296,7 +296,30 @@ function Set-TargetResource
         $CurrentParameters.Remove('IPAddressAllowList')
     }
 
-    $tenant = Set-PnPTenant @CurrentParameters
+    $EnableRestrictedAccessControlValue = $null
+    if ($null -ne $EnableRestrictedAccessControl)
+    {
+        $EnableRestrictedAccessControlValue = $EnableRestrictedAccessControl
+        $CurrentParameters.Remove('EnableRestrictedAccessControl') | Out-Null
+    }
+
+    Set-PnPTenant @CurrentParameters | Out-Null
+
+    try
+    {
+        Set-PnPTenant -EnableRestrictedAccessControl $EnableRestrictedAccessControlValue -ErrorAction Stop | Out-Null
+    }
+    catch
+    {
+        if ($_.ErrorDetails.Message.Contains("This operation can't be performed as the tenant doesn't have the required license"))
+        {
+            Write-Warning -Message "The tenant doesn't have the required license to configure Restrcited Access Control."
+        }
+        else
+        {
+            Write-Error $_.ErrorDetails.Message
+        }
+    }
 }
 
 function Test-TargetResource
