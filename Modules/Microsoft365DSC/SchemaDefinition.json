@@ -39043,6 +39043,11 @@
                                "Option":  "Write"
                            },
                            {
+                               "CIMType":  "boolean",
+                               "Name":  "EnableRestrictedAccessControl",
+                               "Option":  "Write"
+                           },
+                           {
                                "CIMType":  "String",
                                "Name":  "Ensure",
                                "Option":  "Write"
