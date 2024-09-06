@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* SPOAccessControlSettings
+  * Added support for property EnableRestrictedAccessControl.
+
 # 1.24.904.1
 
 * EXOOwaMailboxPolicy

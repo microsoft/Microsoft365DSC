@@ -1710,7 +1710,7 @@ function New-M365DSCConnection
         [Parameter(Mandatory = $true)]
         [ValidateSet('AzureDevOPS', 'ExchangeOnline', 'Fabric', 'Intune', `
                 'SecurityComplianceCenter', 'PnP', 'PowerPlatforms', `
-                'MicrosoftTeams', 'MicrosoftGraph', 'Tasks')]
+                'MicrosoftTeams', 'MicrosoftGraph', 'SharePointOnlineREST', 'Tasks')]
         [System.String]
         $Workload,
 
