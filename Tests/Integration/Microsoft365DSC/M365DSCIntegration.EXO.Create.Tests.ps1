@@ -129,6 +129,15 @@
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                 }
+                EXOArcConfig 'EXOArcConfig'
+                {
+                    ArcTrustedSealers     = "example.com,example.org";
+                    Ensure                = "Present";
+                    IsSingleInstance      = "Yes";
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
+                }
                 EXOAuthenticationPolicy 'ConfigureAuthenticationPolicy'
                 {
                     Identity                            = "Block Basic Auth"

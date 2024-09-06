@@ -485,6 +485,14 @@ function Get-ApplicationAccessPolicy
         $Identity
     )
 }
+
+function Get-ArcConfig
+{
+    [CmdletBinding()]
+    param(
+    )
+}
+
 function Get-AtpPolicyForO365
 {
     [CmdletBinding()]
@@ -7527,6 +7535,21 @@ function Set-ApplicationAccessPolicy
         $Identity
     )
 }
+
+function Set-ArcConfig
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $ArcTrustedSealers
+    )
+}
+
 function Set-AtpPolicyForO365
 {
     [CmdletBinding()]

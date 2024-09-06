@@ -1,0 +1,6 @@
+[ClassVersion("1.0.0.0"), FriendlyName("EXOArcConfig")]
+class MSFT_EXOArcConfig: OMI_BaseResource
+{
+    [Key, Description("Specifies the resource is a single instance, the value must be 'Yes'"), ValueMap{"Yes"}, Values{"Yes"}] String IsSingleInstance;
+    [Write, Description("Comma separated list of trusted Authentication Received Chain (ARC) sealers")] String ArcTrustedSealers;
+};

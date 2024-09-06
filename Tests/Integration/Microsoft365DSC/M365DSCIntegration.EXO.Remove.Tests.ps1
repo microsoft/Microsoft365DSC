@@ -115,6 +115,15 @@
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                 }
+                EXOArcConfig 'EXOArcConfig'
+                {
+                    ArcTrustedSealers     = $null;
+                    Ensure                = "Present";
+                    IsSingleInstance      = "Yes";
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
+                }
                 EXOAuthenticationPolicy 'ConfigureAuthenticationPolicy'
                 {
                     Identity                            = "Block Basic Auth"
@@ -438,7 +447,7 @@
                 }
                 EXORecipientPermission 'AddSendAs'
                 {
-        
+
                     Identity     = 'AdeleV@$Domain'
                     Trustee      = "admin@$TenantId"
                     Ensure       = 'Absent'
