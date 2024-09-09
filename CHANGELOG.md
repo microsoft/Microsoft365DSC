@@ -4,8 +4,12 @@
 
 * AADPasswordRuleSettings
   * Initial release
+* SCInsiderRiskEntityList
+  * Initial release.
 * SPOAccessControlSettings
   * Added support for property EnableRestrictedAccessControl.
+* DEPENDENCIES
+  * Updated Microsoft.Graph to version 2.23.0.
 
 # 1.24.904.1
 
