@@ -68,7 +68,7 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    Write-Verbose -Message 'Getting configuration of AzureAD Groups Settings'
+    Write-Verbose -Message 'Getting configuration of AzureAD Password Rule Settings'
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
@@ -207,7 +207,7 @@ function Set-TargetResource
         $AccessTokens
     )
 
-    Write-Verbose -Message 'Setting configuration of Azure AD Groups Settings'
+    Write-Verbose -Message 'Setting configuration of Azure AD Password Rule Settings'
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
