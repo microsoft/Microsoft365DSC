@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* AADPasswordRuleSettings
+  * Initial release
 * SPOAccessControlSettings
   * Added support for property EnableRestrictedAccessControl.
 
