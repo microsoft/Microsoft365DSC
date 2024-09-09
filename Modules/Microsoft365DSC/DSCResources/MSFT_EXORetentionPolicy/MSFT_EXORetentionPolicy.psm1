@@ -11,10 +11,6 @@ function Get-TargetResource
   
         [Parameter()]  
         [System.Boolean]  
-        $Force,  
-  
-        [Parameter()]  
-        [System.Boolean]  
         $IsDefault,  
   
         [Parameter()]  
@@ -36,6 +32,11 @@ function Get-TargetResource
         [Parameter()]  
         [System.Management.Automation.PSCredential]  
         $Credential,  
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
   
         [Parameter()]  
         [System.String]  
@@ -58,7 +59,7 @@ function Get-TargetResource
         $AccessTokens  
     )  
   
-    New-M365DSCConnection -Workload 'ExchangeOnline' `  
+    New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters | Out-Null  
   
     Confirm-M365DSCDependencies  
@@ -66,8 +67,8 @@ function Get-TargetResource
     #region Telemetry  
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')  
     $CommandName = $MyInvocation.MyCommand  
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `  
-        -CommandName $CommandName `  
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
         -Parameters $PSBoundParameters  
     Add-M365DSCTelemetryEvent -Data $data  
     #endregion  
@@ -91,13 +92,12 @@ function Get-TargetResource
   
         $results = @{  
             Ensure                = 'Present'  
-            Identity              = [System.String]$Identity  
-            Force                 = [System.Boolean]$Force  
-            IsDefault             = [System.Boolean]$IsDefault  
-            IsDefaultArbitrationMailbox = [System.Boolean]$IsDefaultArbitrationMailbox  
-            Name                  = [System.String]$Name  
-            RetentionId           = [System.Guid]$RetentionId  
-            RetentionPolicyTagLinks = [System.String[]]$RetentionPolicyTagLinks  
+            Identity              = [System.String]$instance.Identity  
+            IsDefault             = [System.Boolean]$instance.IsDefault  
+            IsDefaultArbitrationMailbox = [System.Boolean]$instance.IsDefaultArbitrationMailbox  
+            Name                  = [System.String]$instance.Name  
+            RetentionId           = [System.Guid]$instance.RetentionId  
+            RetentionPolicyTagLinks = [System.String[]]$instance.RetentionPolicyTagLinks  
             Credential            = $Credential  
             ApplicationId         = $ApplicationId  
             TenantId              = $TenantId  
@@ -109,10 +109,10 @@ function Get-TargetResource
     }  
     catch  
     {  
-        New-M365DSCLogEntry -Message 'Error retrieving data:' `  
-            -Exception $_ `  
-            -Source $($MyInvocation.MyCommand.Source) `  
-            -TenantId $TenantId `  
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
             -Credential $Credential  
   
         return $nullResult  
@@ -131,10 +131,6 @@ function Set-TargetResource
   
         [Parameter()]  
         [System.Boolean]  
-        $Force,  
-  
-        [Parameter()]  
-        [System.Boolean]  
         $IsDefault,  
   
         [Parameter()]  
@@ -152,6 +148,12 @@ function Set-TargetResource
         [Parameter()]  
         [System.String[]]  
         $RetentionPolicyTagLinks,  
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+  
   
         [Parameter()]  
         [System.Management.Automation.PSCredential]  
@@ -184,8 +186,8 @@ function Set-TargetResource
     #region Telemetry  
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')  
     $CommandName = $MyInvocation.MyCommand  
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `  
-        -CommandName $CommandName `  
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
         -Parameters $PSBoundParameters  
     Add-M365DSCTelemetryEvent -Data $data  
     #endregion  
@@ -197,18 +199,18 @@ function Set-TargetResource
     # CREATE  
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')  
     {  
-        $setParameters.Remove("Force")  
+        $setParameters.Remove("Identity")
         New-RetentionPolicy @SetParameters  
     }  
     # UPDATE  
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')  
     {  
-        Set-RetentionPolicy @SetParameters  
+        Set-RetentionPolicy @SetParameters -Force 
     }  
     # REMOVE  
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')  
     {  
-        Remove-RetentionPolicy -Identity $Identity  
+        Remove-RetentionPolicy -Identity $Identity  -Force
     }  
 }  
 
@@ -225,10 +227,6 @@ function Test-TargetResource
   
         [Parameter()]  
         [System.Boolean]  
-        $Force,  
-  
-        [Parameter()]  
-        [System.Boolean]  
         $IsDefault,  
   
         [Parameter()]  
@@ -246,6 +244,11 @@ function Test-TargetResource
         [Parameter()]  
         [System.String[]]  
         $RetentionPolicyTagLinks,  
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
   
         [Parameter()]  
         [System.Management.Automation.PSCredential]  
@@ -278,8 +281,8 @@ function Test-TargetResource
     #region Telemetry  
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')  
     $CommandName = $MyInvocation.MyCommand  
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `  
-        -CommandName $CommandName `  
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
         -Parameters $PSBoundParameters  
     Add-M365DSCTelemetryEvent -Data $data  
     #endregion  
@@ -290,9 +293,9 @@ function Test-TargetResource
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"  
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"  
   
-    $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `  
-        -Source $($MyInvocation.MyCommand.Source) `  
-        -DesiredValues $PSBoundParameters `  
+    $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
         -ValuesToCheck $ValuesToCheck.Keys  
   
     Write-Verbose -Message "Test-TargetResource returned $testResult"  
@@ -335,7 +338,7 @@ function Export-TargetResource
         $AccessTokens  
     )  
   
-    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `  
+    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters  
   
     Confirm-M365DSCDependencies  
@@ -343,8 +346,8 @@ function Export-TargetResource
     #region Telemetry  
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')  
     $CommandName = $MyInvocation.MyCommand  
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `  
-        -CommandName $CommandName `  
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
         -Parameters $PSBoundParameters  
     Add-M365DSCTelemetryEvent -Data $data  
     #endregion  
@@ -379,16 +382,16 @@ function Export-TargetResource
             }  
   
             $Results = Get-TargetResource @Params  
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `  
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results  
   
-            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `  
-                -ConnectionMode $ConnectionMode `  
-                -ModulePath $PSScriptRoot `  
-                -Results $Results `  
+            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
                 -Credential $Credential  
             $dscContent += $currentDSCBlock  
-            Save-M365DSCPartialExport -Content $currentDSCBlock `  
+            Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName  
             $i++  
             Write-Host $Global:M365DSCEmojiGreenCheckMark  
@@ -399,10 +402,10 @@ function Export-TargetResource
     {  
         Write-Host $Global:M365DSCEmojiRedX  
   
-        New-M365DSCLogEntry -Message 'Error during Export:' `  
-            -Exception $_ `  
-            -Source $($MyInvocation.MyCommand.Source) `  
-            -TenantId $TenantId `  
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
             -Credential $Credential  
   
         return ''  
