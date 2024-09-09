@@ -41,7 +41,7 @@ function Start-M365DSCConfigurationExtract
         $MaxProcesses = 16,
 
         [Parameter()]
-        [ValidateSet('AAD', 'SPO', 'EXO', 'INTUNE', 'SC', 'OD', 'O365', 'TEAMS', 'PP', 'PLANNER')]
+        [ValidateSet('AAD', 'FABRIC', 'SPO', 'EXO', 'INTUNE', 'SC', 'OD', 'O365', 'TEAMS', 'PP', 'PLANNER')]
         [System.String[]]
         $Workloads,
 
@@ -256,9 +256,9 @@ function Start-M365DSCConfigurationExtract
                 $ComponentsToSkip += $resource.InputObject
             }
 
-            Write-Host '[WARNING]' -NoNewline -ForegroundColor Yellow
-            Write-Host ' Based on the provided Authentication parameters, the following resources cannot be extracted: ' -ForegroundColor Gray
-            Write-Host "$($resourcesNotSupported -join ',')" -ForegroundColor Gray
+            $warningMessage = 'Based on the provided Authentication parameters, the following resources cannot be extracted: '
+            $warningMessage += $resourcesNotSupported -join ','
+            Write-Warning -Message $warningMessage
 
             # If all selected resources are not valid based on the authentication method used, simply return.
             if ($ComponentsToSkip.Length -eq $selectedResources.Length)
@@ -773,12 +773,12 @@ function Start-M365DSCConfigurationExtract
             Write-Host "Results:"
             if ($results.Count -gt 0)
             {
+                $errorMessage = ''
                 foreach ($issue in $results)
                 {
-                    Write-Host "    - [" -NoNewline
-                    Write-Host "$($issue.Reason)" -ForegroundColor Red -NoNewline
-                    Write-Host "]: $($issue.InstanceName)"
+                    $errorMessage += "    - [$($issue.Reason)]: $($issue.InstanceName)`r`n"
                 }
+                Write-Error -Message $errorMessage -ErrorAction Continue
             }
             else
             {
@@ -918,9 +918,7 @@ function Start-M365DSCConfigurationExtract
                 }
                 else
                 {
-                    Write-Host "$($Global:M365DSCEmojiYellowCircle) Warning {" -NoNewline
-                    Write-Host "Cannot export Local Configuration Manager settings. This process isn't executed with Administrative Privileges!" -NoNewline -ForegroundColor DarkCyan
-                    Write-Host '}'
+                    Write-Warning -Message "Cannot export Local Configuration Manager settings. This process isn't executed with Administrative Privileges!"
                 }
             }
             catch

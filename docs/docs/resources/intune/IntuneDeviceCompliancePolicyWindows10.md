@@ -36,7 +36,7 @@
 | **DeviceThreatProtectionEnabled** | Write | Boolean | DeviceThreatProtectionEnabled of the Windows 10 device compliance policy. | |
 | **DeviceThreatProtectionRequiredSecurityLevel** | Write | String | DeviceThreatProtectionRequiredSecurityLevel of the Windows 10 device compliance policy. | `Unavailable`, `Secured`, `Low`, `Medium`, `High`, `NotSet` |
 | **ConfigurationManagerComplianceRequired** | Write | Boolean | ConfigurationManagerComplianceRequired of the Windows 10 device compliance policy. | |
-| **TPMRequired** | Write | Boolean | TPMRequired of the Windows 10 device compliance policy. | |
+| **TpmRequired** | Write | Boolean | TpmRequired of the Windows 10 device compliance policy. | |
 | **DeviceCompliancePolicyScript** | Write | String | DeviceCompliancePolicyScript of the Windows 10 device compliance policy. | |
 | **ValidOperatingSystemBuildRanges** | Write | StringArray[] | ValidOperatingSystemBuildRanges of the Windows 10 device compliance policy. | |
 | **Ensure** | Write | String | Present ensures the policy exists, absent ensures it is removed. | `Present`, `Absent` |

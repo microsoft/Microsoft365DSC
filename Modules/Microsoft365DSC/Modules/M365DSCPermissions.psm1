@@ -103,7 +103,7 @@ function Get-M365DSCCompiledPermissionList
         }
         catch
         {
-            Write-Host "File settings.json was not found for resource {$resourceName}" -ForegroundColor Red
+            Write-Warning -Message "File settings.json was not found for resource {$resourceName}"
         }
 
         if ($null -ne $settingsFilePath)
@@ -1747,7 +1747,7 @@ function Update-M365DSCAzureAdApplication
                         {
                             if ($_.Exception.Message -match 'Key credential end date is invalid')
                             {
-                                Write-Host "Caught error: $($_.Exception.Message)"
+                                Write-Error $($_.Exception.Message) -ErrorAction Continue
                                 if ($retryCount -lt $maxRetries)
                                 {
                                     $retryCount++

@@ -329,7 +329,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         ParentPolicyName                    = 'TestPolicy'
                         ProcessingLimitExceeded             = $False
                         ReportSeverityLevel                 = 'Low'
-                        Workload                            = 'Exchange'
+                        LogicalWorkload                     = 'Exchange'
                         ContentContainsSensitiveInformation = @(@{maxconfidence = '100'; id = 'cb353f78-2b72-4c3c-8827-92ebe4f69fdf'; minconfidence = '75'; rulePackId = '00000000-0000-0000-0000-000000000000'; classifiertype = 'Content'; name = 'ABA Routing Number'; mincount = '1'; maxcount = '-1'; })
                     }
                 }

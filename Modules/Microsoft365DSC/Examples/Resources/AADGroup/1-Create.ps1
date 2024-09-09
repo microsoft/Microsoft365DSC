@@ -30,6 +30,8 @@ Configuration Example
             MailEnabled     = $True
             GroupTypes      = @("Unified")
             MailNickname    = "M365DSC"
+            Members         = @("admin@$TenantId", "AdeleV@$TenantId")
+            GroupAsMembers  = @("Group1", "Group2")
             Visibility      = "Private"
             Owners          = @("admin@$TenantId", "AdeleV@$TenantId")
             Ensure          = "Present"

@@ -26,6 +26,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String[]]
+        $GroupAsMembers,
+
+        [Parameter()]
+        [System.String[]]
         $MemberOf,
 
         [Parameter()]
@@ -213,11 +217,16 @@ function Get-TargetResource
                 # Members
                 [Array]$members = Get-MgGroupMember -GroupId $Group.Id -All:$true
                 $MembersValues = @()
+                $GroupAsMembersValues = @()
                 foreach ($member in $members)
                 {
-                    if ($member.AdditionalProperties.userPrincipalName -ne $null)
+                    if ($member.AdditionalProperties.'@odata.type' -eq "#microsoft.graph.user")
                     {
                         $MembersValues += $member.AdditionalProperties.userPrincipalName
+                    }
+                    elseif($member.AdditionalProperties.'@odata.type' -eq "#microsoft.graph.group")
+                    {
+                        $GroupAsMembersValues += $member.AdditionalProperties.displayName
                     }
                 }
             }
@@ -265,6 +274,7 @@ function Get-TargetResource
                 Id                            = $Group.Id
                 Owners                        = $OwnersValues
                 Members                       = $MembersValues
+                GroupAsMembers                = $GroupAsMembersValues
                 MemberOf                      = $MemberOfValues
                 Description                   = $Group.Description
                 GroupTypes                    = [System.String[]]$Group.GroupTypes
@@ -326,6 +336,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String[]]
         $Members,
+
+        [Parameter()]
+        [System.String[]]
+        $GroupAsMembers,
 
         [Parameter()]
         [System.String[]]
@@ -432,10 +446,12 @@ function Set-TargetResource
     $currentParameters.Remove('ManagedIdentity') | Out-Null
     $backCurrentOwners = $currentGroup.Owners
     $backCurrentMembers = $currentGroup.Members
+    $backCurrentGroupAsMembers = $currentGroup.GroupAsMembers
     $backCurrentMemberOf = $currentGroup.MemberOf
     $backCurrentAssignedToRole = $currentGroup.AssignedToRole
     $currentParameters.Remove('Owners') | Out-Null
     $currentParameters.Remove('Members') | Out-Null
+    $currentParameters.Remove('GroupAsMembers') | Out-Null
     $currentParameters.Remove('MemberOf') | Out-Null
     $currentParameters.Remove('AssignedToRole') | Out-Null
 
@@ -728,6 +744,57 @@ function Set-TargetResource
             Write-Verbose -Message 'Ignoring membership since this is a dynamic group.'
         }
 
+        #GroupAsMembers
+        if ($MembershipRuleProcessingState -ne 'On' -and $PSBoundParameters.ContainsKey('GroupAsMembers'))
+        {
+            $currentGroupAsMembersValue = @()
+            if ($currentParameters.GroupAsMembers.Length -ne 0)
+            {
+                $currentGroupAsMembersValue = $backCurrentGroupAsMembers
+            }
+            $desiredGroupAsMembersValue = @()
+            if ($GroupAsMembers.Length -ne 0)
+            {
+                $desiredGroupAsMembersValue = $GroupAsMembers
+            }
+            if ($backCurrentGroupAsMembers -eq $null)
+            {
+                $backCurrentGroupAsMembers = @()
+            }
+            $groupAsMembersDiff = Compare-Object -ReferenceObject $backCurrentGroupAsMembers -DifferenceObject $desiredGroupAsMembersValue
+            foreach ($diff in $groupAsMembersDiff)
+            {
+                try
+                {
+                    $groupAsMember = Get-MgGroup -Filter "DisplayName eq '$($diff.InputObject)'" -ErrorAction Stop
+                }
+                catch
+                {
+                    $groupAsMember = $null
+                }
+                if ($null -eq $groupAsMember)
+                {
+                    throw "Group '$($diff.InputObject)' does not exist"
+                }
+                else
+                {
+                    if ($diff.SideIndicator -eq '=>')
+                    {
+                        Write-Verbose -Message "Adding AAD group {$($groupAsMember.DisplayName)} as member of AAD group {$($currentGroup.DisplayName)}"
+                        $groupAsMemberObject = @{
+                            "@odata.id"= "https://graph.microsoft.com/v1.0/directoryObjects/$($groupAsMember.Id)"
+                        }
+                        New-MgGroupMemberByRef -GroupId ($currentGroup.Id) -Body $groupAsMemberObject | Out-Null
+                    }
+                    if ($diff.SideIndicator -eq '<=')
+                    {
+                        Write-Verbose -Message "Removing AAD Group {$($groupAsMember.DisplayName)} from AAD group {$($currentGroup.DisplayName)}"
+                        Remove-MgGroupMemberDirectoryObjectByRef -GroupId ($currentGroup.Id) -DirectoryObjectId ($groupAsMember.Id) | Out-Null
+                    }
+                }
+            }
+        }
+
         #MemberOf
         if ($PSBoundParameters.ContainsKey('MemberOf'))
         {
@@ -878,6 +945,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String[]]
         $Members,
+
+        [Parameter()]
+        [System.String[]]
+        $GroupAsMembers,
 
         [Parameter()]
         [System.String[]]

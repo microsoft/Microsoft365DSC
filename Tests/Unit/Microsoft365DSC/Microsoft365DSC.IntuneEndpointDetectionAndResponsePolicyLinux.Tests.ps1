@@ -57,6 +57,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             Name = 'tags'
                             AdditionalProperties = @{
                                 '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSettingGroupCollectionDefinition'
+                                childIds = @(
+                                    'linux_mdatp_managed_edr_tags_item_key',
+                                    'linux_mdatp_managed_edr_tags_item_value'
+                                )
+                                minimumCount = 0
+                                maximumCount = 1
                             }
                         },
                         @{

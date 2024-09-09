@@ -420,13 +420,13 @@ function Get-TargetResource
             $entry = $protectgroup | Where-Object -FilterScript { $_.Key -eq 'allowaccesstoguestusers' }
             if ($null -ne $entry)
             {
-                $siteAndGroupAccessToGuestUsersValue = -not [Boolean]::Parse($entry.Value)
+                $siteAndGroupAccessToGuestUsersValue = [Boolean]::Parse($entry.Value)
             }
 
             $entry = $protectgroup | Where-Object -FilterScript { $_.Key -eq 'allowemailfromguestusers' }
             if ($null -ne $entry)
             {
-                $siteAndGroupAllowEmailFromGuestUsers = -not [Boolean]::Parse($entry.Value)
+                $siteAndGroupAllowEmailFromGuestUsers = [Boolean]::Parse($entry.Value)
             }
 
             $entry = $protectsite | Where-Object -FilterScript { $_.Key -eq 'allowfullaccess' }
