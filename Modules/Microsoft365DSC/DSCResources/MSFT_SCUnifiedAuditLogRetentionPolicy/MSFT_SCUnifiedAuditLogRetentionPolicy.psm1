@@ -12,14 +12,26 @@ function Get-TargetResource
         [System.String]
         $Name,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Int32]
         $Priority,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
+        [System.String[]]
+        $RecordTypes,
+
+        [Parameter()]
         [ValidateSet("SevenDays", "OneMonth", "ThreeMonths", "SixMonths", "NineMonths", "TwelveMonths", "ThreeYears", "FiveYears", "SevenYears", "TenYears")]
         [System.String]
         $RetentionDuration,
+
+        [Parameter()]
+        [System.String[]]
+        $UserIds,
+
+        [Parameter()]
+        [System.String[]]
+        $Operations,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -66,13 +78,13 @@ function Get-TargetResource
     $nullResult.Ensure = 'Absent'
     try
     {
-        $instances = @(Get-UnifiedAuditLogRetentionPolicy -ErrorAction SilentlyContinue)
+        [array]$instances = @(Get-UnifiedAuditLogRetentionPolicy -ErrorAction SilentlyContinue | Where-Object { $_.Mode -ne 'PendingDeletion' })
         if ($null -eq $instances)
         {
             return $nullResult
         }
 
-        $instance = $instances | Where-Object { $_.Name -eq $Name -and $_.Priority -eq $Priority -and $_.RetentionDuration -eq $RetentionDuration} | Select-Object -First 1
+        $instance = $instances | Where-Object { $_.Name -eq $Name } | Select-Object -First 1
         if ($null -eq $instance)
         {
             return $nullResult
@@ -261,15 +273,15 @@ function Test-TargetResource
         [System.String[]]
         $Operations,
 
-        [Parameter()]
-        [System.Int32]
+        [Parameter(Mandatory = $true)]
+        [System.UInt32]
         $Priority,
 
         [Parameter()]
         [System.String[]]
         $RecordTypes,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [ValidateSet("SevenDays", "OneMonth", "ThreeMonths", "SixMonths", "NineMonths", "TwelveMonths", "ThreeYears", "FiveYears", "SevenYears", "TenYears")]
         [System.String]
         $RetentionDuration,
@@ -399,7 +411,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$getValue = Get-UnifiedAuditLogRetentionPolicy -ErrorAction Stop
+        [array]$getValue = @(Get-UnifiedAuditLogRetentionPolicy -ErrorAction Stop | Where-Object { $_.Mode -ne 'PendingDeletion' })
 
         $i = 1
         $dscContent = ''
@@ -437,6 +449,7 @@ function Export-TargetResource
             }
 
             $Results = Get-TargetResource @Params
+            $Results.Remove("Identity") | Out-Null
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
 
