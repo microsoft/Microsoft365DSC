@@ -8,7 +8,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $Credscredential
+        $Credentials
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -16,8 +16,8 @@ Configuration Example
     {
         SCUnifiedAuditLogRetentionPolicy 'Example'
         {
-            Credential           = $Credscredential;
-            Ensure               = "Absent";
+            Credential           = $Credentials;
+            Ensure               = "Present";
             Name                 = "Test Policy";
             Priority             = 1;
             RetentionDuration    = "7Days";
