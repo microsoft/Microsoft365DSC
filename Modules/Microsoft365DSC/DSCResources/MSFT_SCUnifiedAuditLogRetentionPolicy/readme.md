@@ -3,6 +3,4 @@
 
 ## Description
 
-
-New-UnifiedAuditLogRetentionPolicy [-Name] <string> -Priority <int> -RetentionDuration <Object> [-Description <string>] [-Operations <Object>] [-RecordTypes <Object>] [-UserIds <Object>] [-WhatIf] [-Confirm] [<CommonParameters>]
-
+The resource configured the Unified Audit Log Retention Policy in the Security and Compliance.
