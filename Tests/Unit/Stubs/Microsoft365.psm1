@@ -1,5 +1,5 @@
 #region Azure
-function Get-AzSentinel
+function Get-AzSentinelSetting
 {
     [CmdletBinding()]
     param(
@@ -14,7 +14,7 @@ function Get-AzSentinel
     )
 }
 
-function Update-AzSentinel
+function Update-AzSentinelSetting
 {
     [CmdletBinding()]
     param(

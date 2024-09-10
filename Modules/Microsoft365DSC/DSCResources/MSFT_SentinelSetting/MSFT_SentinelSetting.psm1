@@ -85,14 +85,20 @@ function Get-TargetResource
         if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
         {
             $entry = $Script:exportedInstances | Where-Object -FilterScript {$_.Name -eq $WorkspaceName}
-            $instance = Get-AzSentinelSetting -ResourceGroupName $entry.ResourceGroupName -WorkspaceName $entry.Name -ErrorAction SilentlyContinue
+            $instance = Get-AzSentinelSetting -ResourceGroupName $entry.ResourceGroupName `
+                                              -WorkspaceName $entry.Name `
+                                              -SubscriptionId $SubscriptionId `
+                                              -ErrorAction SilentlyContinue
             $ResourceGroupNameValue = $entry.ResourceGroupName
             $WorkspaceNameValue = $entry.Name
         }
         else
         {
             Write-Verbose -Message "Retrieving Sentinel Settings for {$WorkspaceName}"
-            $instance = Get-AzSentinelSetting -ResourceGroupName $ResourceGroupName -WorkspaceName $WorkspaceName -ErrorAction SilentlyContinue
+            $instance = Get-AzSentinelSetting -ResourceGroupName $ResourceGroupName `
+                                              -WorkspaceName $WorkspaceName `
+                                              -ErrorAction SilentlyContinue `
+                                              -SubscriptionId $SubscriptionId
         }
         if ($null -eq $instance)
         {
@@ -194,11 +200,6 @@ function Set-TargetResource
         [Parameter()]
         [System.String[]]
         $UebaDataSource,
-
-        [Parameter()]
-        [ValidateSet('Present', 'Absent')]
-        [System.String]
-        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]

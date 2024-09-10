@@ -12,8 +12,8 @@
 * SPOAccessControlSettings
   * Added support for property EnableRestrictedAccessControl.
 * DEPENDENCIES
-  * Added dependencies on Az.Accounts and Az.SecurityInsights
-  * Updated MSCloudLoginAssistant to version 1.1.21.
+  * Added dependencies on Az.Accounts, Az.Resources and Az.SecurityInsights
+  * Updated MSCloudLoginAssistant to version 1.1.22.
 
 # 1.24.904.1
 

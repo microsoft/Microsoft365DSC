@@ -5,6 +5,10 @@
             RequiredVersion = '3.0.2'
         },
         @{
+            ModuleName      = 'Az.Resources'
+            RequiredVersion = '7.2.0'
+        },
+        @{
             ModuleName      = 'Az.SecurityInsights'
             RequiredVersion = '3.1.2'
         },
@@ -98,7 +102,7 @@
         },
         @{
             ModuleName      = "MSCloudLoginAssistant"
-            RequiredVersion = "1.1.21"
+            RequiredVersion = "1.1.22"
         },
         @{
             ModuleName      = 'PnP.PowerShell'
