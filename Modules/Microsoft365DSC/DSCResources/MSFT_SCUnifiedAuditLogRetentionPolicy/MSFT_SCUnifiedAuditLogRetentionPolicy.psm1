@@ -4,9 +4,22 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
+        [Parameter()]
+        [System.String]
+        $Description,
+
         [Parameter(Mandatory = $true)]
         [System.String]
         $Name,
+
+        [Parameter(Mandatory = $true)]
+        [System.Int32]
+        $Priority,
+
+        [Parameter(Mandatory = $true)]
+        [ValidateSet("SevenDays", "OneMonth", "ThreeMonths", "SixMonths", "NineMonths", "TwelveMonths", "ThreeYears", "FiveYears", "SevenYears", "TenYears")]
+        [System.String]
+        $RetentionDuration,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -53,13 +66,13 @@ function Get-TargetResource
     $nullResult.Ensure = 'Absent'
     try
     {
-        $instances = Get-UnifiedAuditLogRetentionPolicy -ErrorAction SilentlyContinue
+        $instances = @(Get-UnifiedAuditLogRetentionPolicy -ErrorAction SilentlyContinue)
         if ($null -eq $instances)
         {
             return $nullResult
         }
 
-        $instance = $instances | Where-Object { $_.Name -eq $Name } | Select-Object -First 1
+        $instance = $instances | Where-Object { $_.Name -eq $Name -and $_.Priority -eq $Priority -and $_.RetentionDuration -eq $RetentionDuration} | Select-Object -First 1
         if ($null -eq $instance)
         {
             return $nullResult
@@ -105,7 +118,7 @@ function Set-TargetResource
         [System.String]
         $Description,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Name,
 
@@ -171,7 +184,14 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $currentInstance = Get-TargetResource @PSBoundParameters
+    $GetParameters = ([Hashtable]$PSBoundParameters).Clone()
+
+    $GetParameters.Remove('Description') | Out-Null
+    $GetParameters.Remove('Operations') | Out-Null
+    $GetParameters.Remove('RecordTypes') | Out-Null
+    $GetParameters.Remove('UserIds') | Out-Null
+
+    $currentInstance = Get-TargetResource @GetParameters
 
     $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
@@ -198,14 +218,10 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Updating {$Name}"
 
-        if ([String]::IsNullOrEmpty($Identity))
-        {
-            throw "Identity is required for updating an existing UnifiedAuditLogRetentionPolicy"
-        }
-
         $UpdateParameters = ([Hashtable]$BoundParameters).Clone()
         $UpdateParameters.Remove('Verbose') | Out-Null
-        $UpdateParameters.add('Identity', $currentInstance.Identity)
+        $UpdateParameters.Remove('Name') | Out-Null
+        $UpdateParameters.Add('Identity', $currentInstance.Identity)  | Out-Null
 
         $keys = $UpdateParameters.Keys
         foreach ($key in $keys)
@@ -410,6 +426,8 @@ function Export-TargetResource
             Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{
                 Name = $config.Name
+                Priority = $config.Priority
+                RetentionDuration = $config.RetentionDuration
                 Ensure = 'Present'
                 Credential = $Credential
                 ApplicationId = $ApplicationId

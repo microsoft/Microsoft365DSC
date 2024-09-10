@@ -2057,6 +2057,29 @@ function Get-TransportRule
         $Identity
     )
 }
+
+function Get-UnifiedAuditLogRetentionPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Operation,
+
+        [Parameter()]
+        [System.String]
+        $RecordType,
+
+        [Parameter()]
+        [System.String]
+        $RetentionDuration,
+
+        [Parameter()]
+        [System.String]
+        $UserId
+    )
+}
+
 function Get-UnifiedGroup
 {
     [CmdletBinding()]
@@ -6186,6 +6209,41 @@ function New-TransportRule
         $ExceptIfHeaderContainsMessageHeader
     )
 }
+
+function New-UnifiedAuditLogRetentionPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.UInt32]
+        $Priority,
+
+        [Parameter()]
+        [System.String]
+        $RetentionDuration,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String[]]
+        $Operations,
+
+        [Parameter()]
+        [System.String[]]
+        $RecordTypes,
+
+        [Parameter()]
+        [System.String[]]
+        $UserIds
+    )
+}
+
 function Remove-ActiveSyncDevice
 {
     [CmdletBinding()]
@@ -7058,6 +7116,17 @@ function Remove-TransportRule
         $Identity
     )
 }
+
+function Remove-UnifiedAuditLogRetentionPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+
 function Set-AcceptedDomain
 {
     [CmdletBinding()]
@@ -13943,6 +14012,41 @@ function Set-UnifiedGroup
         $HiddenFromAddressListsEnabled
     )
 }
+
+function Set-UnifiedAuditLogRetentionPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.UInt32]
+        $Priority,
+
+        [Parameter()]
+        [System.String]
+        $RetentionDuration,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String[]]
+        $Operations,
+
+        [Parameter()]
+        [System.String[]]
+        $RecordTypes,
+
+        [Parameter()]
+        [System.String[]]
+        $UserIds
+    )
+}
+
 function Set-User
 {
     [CmdletBinding()]

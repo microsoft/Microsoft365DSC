@@ -50,13 +50,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Write-Host -MockWith {
             }
             $Script:exportedInstances =$null
-            $Script:ExportMode = $false<AssignmentMock>
+            $Script:ExportMode = $false
         }
         # Test contexts
         Context -Name "The SCUnifiedAuditLogRetentionPolicy should exist but it DOES NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
-<TargetResourceFakeValues>                    Ensure = "Present"
+                    Name = "Test Policy"
+                    Priority = 42
+                    RetentionDuration = "SevenDays"
+                    Ensure = "Present"
                     Credential = $Credential;
                 }
 
@@ -70,7 +73,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
-            It 'Should Create the group from the Set method' {
+            It 'Should Create the Unified Audit Log Retention Policy from the Set method' {
                 Set-TargetResource @testParams
                 Should -Invoke -CommandName New-UnifiedAuditLogRetentionPolicy -Exactly 1
             }
@@ -79,16 +82,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The SCUnifiedAuditLogRetentionPolicy exists but it SHOULD NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
-<TargetResourceFakeValues>                    Ensure = 'Absent'
+                    Name = "Test Policy"
+                    Priority = 42
+                    RetentionDuration = "SevenDays"
+                    Ensure = "Absent"
                     Credential = $Credential;
                 }
 
                 Mock -CommandName Get-UnifiedAuditLogRetentionPolicy -MockWith {
                     return @{
-                    Priority              = 3
-                    Name                  = "FakeStringValue"
-                    Description           = "FakeStringValue"
-
+                        Identity = "TestIdentity"
+                        Priority = $testParams.Priority
+                        Name = $testParams.Name
+                        RetentionDuration = $testParams.RetentionDuration
                     }
                 }
             }
@@ -97,7 +103,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It 'Should return true from the Test method' {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 
@@ -109,16 +115,18 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The SCUnifiedAuditLogRetentionPolicy Exists and Values are already in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-<TargetResourceFakeValues>                    Ensure = 'Present'
+                    Name = "Test Policy"
+                    Priority = 42
+                    RetentionDuration = "SevenDays"
+                    Ensure = 'Present'
                     Credential = $Credential;
                 }
 
                 Mock -CommandName Get-UnifiedAuditLogRetentionPolicy -MockWith {
                     return @{
-                    Priority              = 3
-                    Name                  = "FakeStringValue"
-                    Description           = "FakeStringValue"
-
+                        Name = "Test Policy"
+                        Priority = 42
+                        RetentionDuration = "SevenDays"
                     }
                 }
             }
@@ -132,15 +140,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The SCUnifiedAuditLogRetentionPolicy exists and values are NOT in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-<TargetResourceFakeValues>                    Ensure = 'Present'
+                    Name = "Test Policy"
+                    Priority = 42
+                    RetentionDuration = "SevenDays"
+                    Description = "FakeStringValueDrift"
+                    Ensure = 'Present'
                     Credential = $Credential;
                 }
 
                 Mock -CommandName Get-UnifiedAuditLogRetentionPolicy -MockWith {
                     return @{
-                    Priority              = 2
-                    Name                  = "FakeStringValue"
-                    Description           = "FakeStringValueDrift #Drift"
+                        Identity = "TestIdentity"
+                        Name = $testParams.Name
+                        Priority              = $testParams.Priority
+                        RetentionDuration     = $testParams.RetentionDuration
+                        Description           = $testParams.RetentionDescription + "#Drift"
                     }
                 }
             }
@@ -169,10 +183,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-UnifiedAuditLogRetentionPolicy -MockWith {
                     return @{
-                    Priority              = 3
-                    Name                  = "FakeStringValue"
-                    Description           = "FakeStringValue"
-
+                        Priority              = 3
+                        Name                  = "FakeStringValue"
+                        Description           = "FakeStringValue"
+                        RetentionDuration     = "SevenDays"
+                        Identity              = "FakeIdentity"
                     }
                 }
             }
