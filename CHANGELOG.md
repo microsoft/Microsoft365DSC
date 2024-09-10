@@ -9,8 +9,13 @@
 * IntuneAntivirusPolicyWindows10SettingCatalog
   * Fixes an issue with invalid parameter definition.
     FIXES [#5015](https://github.com/microsoft/Microsoft365DSC/issues/5015)
+* SentinelSetting
+  * Initial release.
 * SPOAccessControlSettings
   * Added support for property EnableRestrictedAccessControl.
+* DEPENDENCIES
+  * Added dependencies on Az.Accounts, Az.Resources and Az.SecurityInsights
+  * Updated MSCloudLoginAssistant to version 1.1.22.
 
 # 1.24.904.1
 
