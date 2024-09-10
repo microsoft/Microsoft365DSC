@@ -1,12 +1,12 @@
 ﻿{
     "resourceName": "EXOMailboxIRMAccess",
-    "description": "Description of what the resource is about.",
+    "description": "Use this resource to create block Mailbox IRM access for delegates.",
     "roles": {
         "read": [
-            "Role"
+            "Global Reader"
         ],
         "update": [
-            "Role"
+            "Exchange Administrator"
         ]
     },
     "permissions": {
@@ -16,17 +16,18 @@
                 "update": []
             },
             "application": {
-                "read": [
-                    {
-                        "name": "Permission for Monitoring and Export"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Permission for deploying"
-                    }
-                ]
+                "read": [],
+                "update": []
             }
+        },
+        "exchange": {
+            "requiredroles": [
+                "Hygiene Management",
+                "Compliance Management",
+                "Organization Management",
+                "View-Only Organization Management"
+            ],
+            "requiredrolegroups": "Organization Management"
         }
     }
 }
