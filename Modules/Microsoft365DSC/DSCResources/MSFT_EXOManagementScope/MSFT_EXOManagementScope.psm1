@@ -54,7 +54,6 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    ##TODO - Replace the workload by the one associated to your resource
     New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters | Out-Null
 
@@ -76,12 +75,10 @@ function Get-TargetResource
     {
         if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
         {
-            ##TODO - Replace the PrimaryKey in the Filter by the one for the resource
             $ManagementScope = $Script:exportedInstances | Where-Object -FilterScript {$_.Identity -eq $Identity}
         }
         else
         {
-            ##TODO - Replace the cmdlet by the one to retrieve a specific instance.
             $ManagementScope = Get-ManagementScope -Identity $Identity -ErrorAction Stop
         }
         if ($null -eq $ManagementScope)
@@ -90,7 +87,6 @@ function Get-TargetResource
         }
 
         $results = @{
-            ##TODO - Add the list of parameters to be returned
             Identity                    = $Identity
             Name                        = $ManagementScope.Name
             RecipientRestrictionFilter  = $ManagementScope.RecipientFilter
@@ -210,7 +206,6 @@ function Set-TargetResource
     # REMOVE
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        ## should I just send identity to the remove cmdlet?
         Remove-ManagementScope -Identity $Identity
     }
 }
@@ -334,7 +329,6 @@ function Export-TargetResource
         $AccessTokens
     )
 
-    ##TODO - Replace workload
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
@@ -353,7 +347,6 @@ function Export-TargetResource
     try
     {
         $Script:ExportMode = $true
-        ##TODO - Replace Get-Cmdlet by the cmdlet to retrieve all instances
         [array] $Script:exportedInstances = Get-ManagementScope -ErrorAction Stop
 
         $i = 1
@@ -368,11 +361,9 @@ function Export-TargetResource
         }
         foreach ($config in $Script:exportedInstances)
         {
-            $displayedKey = $config.Id
+            $displayedKey = $config.Identity
             Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -NoNewline
             $params = @{
-                ##TODO - Specify the Primary Key
-                #PrimaryKey            = $config.PrimaryKey
                 Identity              = $config.Identity
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
