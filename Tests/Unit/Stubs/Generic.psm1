@@ -356,9 +356,6 @@ function New-M365DSCConnection
     [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true)]
-        [ValidateSet('ExchangeOnline', 'Intune', `
-                'SecurityComplianceCenter', 'MSOnline', 'PnP', 'PowerPlatforms', `
-                'MicrosoftTeams', 'MicrosoftGraph', 'Tasks')]
         [System.String]
         $Workload,
 

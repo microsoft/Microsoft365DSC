@@ -1161,7 +1161,7 @@ function Export-M365DSCConfiguration
         $Components,
 
         [Parameter(ParameterSetName = 'Export')]
-        [ValidateSet('AAD', 'SPO', 'EXO', 'INTUNE', 'SC', 'OD', 'O365', 'PLANNER', 'PP', 'TEAMS')]
+        [ValidateSet('AAD', 'FABRIC', 'SPO', 'EXO', 'INTUNE', 'SC', 'OD', 'O365', 'PLANNER', 'PP', 'TEAMS')]
         [System.String[]]
         $Workloads,
 
@@ -1708,9 +1708,9 @@ function New-M365DSCConnection
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateSet('ExchangeOnline', 'Intune', `
+        [ValidateSet('AzureDevOPS', 'ExchangeOnline', 'Fabric', 'Intune', `
                 'SecurityComplianceCenter', 'PnP', 'PowerPlatforms', `
-                'MicrosoftTeams', 'MicrosoftGraph', 'Tasks')]
+                'MicrosoftTeams', 'MicrosoftGraph', 'SharePointOnlineREST', 'Tasks')]
         [System.String]
         $Workload,
 

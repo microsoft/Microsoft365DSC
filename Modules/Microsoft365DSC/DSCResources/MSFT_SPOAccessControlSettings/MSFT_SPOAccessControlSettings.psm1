@@ -46,6 +46,10 @@ function Get-TargetResource
         $EmailAttestationReAuthDays,
 
         [Parameter()]
+        [System.Boolean]
+        $EnableRestrictedAccessControl,
+
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -117,27 +121,28 @@ function Get-TargetResource
         $SPOAccessControlSettings = Get-PnPTenant -ErrorAction Stop
 
         return @{
-            IsSingleInstance             = 'Yes'
-            DisplayStartASiteOption      = $SPOAccessControlSettings.DisplayStartASiteOption
-            StartASiteFormUrl            = $SPOAccessControlSettings.StartASiteFormUrl
-            IPAddressEnforcement         = $SPOAccessControlSettings.IPAddressEnforcement
-            IPAddressAllowList           = $SPOAccessControlSettings.IPAddressAllowList
-            IPAddressWACTokenLifetime    = $SPOAccessControlSettings.IPAddressWACTokenLifetime
-            DisallowInfectedFileDownload = $SPOAccessControlSettings.DisallowInfectedFileDownload
-            ExternalServicesEnabled      = $SPOAccessControlSettings.ExternalServicesEnabled
-            EmailAttestationRequired     = $SPOAccessControlSettings.EmailAttestationRequired
-            EmailAttestationReAuthDays   = $SPOAccessControlSettings.EmailAttestationReAuthDays
-            Credential                   = $Credential
-            ApplicationId                = $ApplicationId
-            TenantId                     = $TenantId
-            ApplicationSecret            = $ApplicationSecret
-            CertificatePassword          = $CertificatePassword
-            CertificatePath              = $CertificatePath
-            CertificateThumbprint        = $CertificateThumbprint
-            Managedidentity              = $ManagedIdentity.IsPresent
-            Ensure                       = 'Present'
-            ConditionalAccessPolicy      = $SPOAccessControlSettings.ConditionalAccessPolicy
-            AccessTokens                 = $AccessTokens
+            IsSingleInstance              = 'Yes'
+            DisplayStartASiteOption       = $SPOAccessControlSettings.DisplayStartASiteOption
+            StartASiteFormUrl             = $SPOAccessControlSettings.StartASiteFormUrl
+            IPAddressEnforcement          = $SPOAccessControlSettings.IPAddressEnforcement
+            IPAddressAllowList            = $SPOAccessControlSettings.IPAddressAllowList
+            IPAddressWACTokenLifetime     = $SPOAccessControlSettings.IPAddressWACTokenLifetime
+            DisallowInfectedFileDownload  = $SPOAccessControlSettings.DisallowInfectedFileDownload
+            ExternalServicesEnabled       = $SPOAccessControlSettings.ExternalServicesEnabled
+            EmailAttestationRequired      = $SPOAccessControlSettings.EmailAttestationRequired
+            EmailAttestationReAuthDays    = $SPOAccessControlSettings.EmailAttestationReAuthDays
+            EnableRestrictedAccessControl = $SPOAccessControlSettings.RestrictedAccessControl
+            Credential                    = $Credential
+            ApplicationId                 = $ApplicationId
+            TenantId                      = $TenantId
+            ApplicationSecret             = $ApplicationSecret
+            CertificatePassword           = $CertificatePassword
+            CertificatePath               = $CertificatePath
+            CertificateThumbprint         = $CertificateThumbprint
+            Managedidentity               = $ManagedIdentity.IsPresent
+            Ensure                        = 'Present'
+            ConditionalAccessPolicy       = $SPOAccessControlSettings.ConditionalAccessPolicy
+            AccessTokens                  = $AccessTokens
         }
     }
     catch
@@ -202,6 +207,10 @@ function Set-TargetResource
         [Parameter()]
         [System.UInt32]
         $EmailAttestationReAuthDays,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableRestrictedAccessControl,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -286,7 +295,31 @@ function Set-TargetResource
         $CurrentParameters.Remove('IPAddressEnforcement')
         $CurrentParameters.Remove('IPAddressAllowList')
     }
-    $tenant = Set-PnPTenant @CurrentParameters
+
+    $EnableRestrictedAccessControlValue = $null
+    if ($null -ne $EnableRestrictedAccessControl)
+    {
+        $EnableRestrictedAccessControlValue = $EnableRestrictedAccessControl
+        $CurrentParameters.Remove('EnableRestrictedAccessControl') | Out-Null
+    }
+
+    Set-PnPTenant @CurrentParameters | Out-Null
+
+    try
+    {
+        Set-PnPTenant -EnableRestrictedAccessControl $EnableRestrictedAccessControlValue -ErrorAction Stop | Out-Null
+    }
+    catch
+    {
+        if ($_.ErrorDetails.Message.Contains("This operation can't be performed as the tenant doesn't have the required license"))
+        {
+            Write-Warning -Message "The tenant doesn't have the required license to configure Restrcited Access Control."
+        }
+        else
+        {
+            Write-Error $_.ErrorDetails.Message
+        }
+    }
 }
 
 function Test-TargetResource
@@ -335,6 +368,10 @@ function Test-TargetResource
         [Parameter()]
         [System.UInt32]
         $EmailAttestationReAuthDays,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableRestrictedAccessControl,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -414,7 +451,8 @@ function Test-TargetResource
             'ExternalServicesEnabled', `
             'EmailAttestationRequired', `
             'EmailAttestationReAuthDays',
-            'ConditionalAccessPolicy')
+            'ConditionalAccessPolicy', `
+            'EnableRestrictedAccessControl')
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
