@@ -9,8 +9,11 @@ function Get-AzSentinelSetting
 
         [Parameter()]
         [System.String]
-        $WorkspaceName
+        $WorkspaceName,
 
+        [Parameter()]
+        [System.String]
+        $SubscriptionId
     )
 }
 
