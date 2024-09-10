@@ -1708,7 +1708,7 @@ function New-M365DSCConnection
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateSet('AzureDevOPS', 'ExchangeOnline', 'Fabric', 'Intune', `
+        [ValidateSet('Azure', 'AzureDevOPS', 'ExchangeOnline', 'Fabric', 'Intune', `
                 'SecurityComplianceCenter', 'PnP', 'PowerPlatforms', `
                 'MicrosoftTeams', 'MicrosoftGraph', 'SharePointOnlineREST', 'Tasks')]
         [System.String]
@@ -1771,6 +1771,7 @@ function New-M365DSCConnection
         [System.Boolean]
         $SkipModuleReload = $false
     )
+    $verbosepreference = 'Continue'
     $Global:MaximumFunctionCount = 32767
     if ($Workload -eq 'MicrosoftTeams')
     {
@@ -2193,12 +2194,14 @@ function New-M365DSCConnection
         {
             $Global:M365DSCTelemetryConnectionToGraphParams.Add('CertificateThumbprint', $InboundParameters.CertificateThumbprint)
         }
+        Write-Verbose -Message "Calling into Connect-M365Tenant"
         Connect-M365Tenant -Workload $Workload `
             -ApplicationId $InboundParameters.ApplicationId `
             -TenantId $InboundParameters.TenantId `
             -CertificateThumbprint $InboundParameters.CertificateThumbprint `
             -SkipModuleReload $Global:CurrentModeIsExport `
             -Url $Url
+        Write-Verbose -Message "Connection initiated."
         if (-not $Script:M365ConnectedToWorkloads -contains "$Workload-ServicePrincipalWithThumbprint")
         {
             $data.Add('ConnectionMode', 'ServicePrincipalWithThumbprint')
@@ -3689,6 +3692,10 @@ function Get-M365DSCExportContentForResource
     elseif ($Keys.Contains('CDNType'))
     {
         $primaryKey = $Results.CDNType
+    }
+    elseif ($Keys.Contains('WorkspaceName'))
+    {
+        $primaryKey = $Results.WorkspaceName
     }
 
     if ([String]::IsNullOrEmpty($primaryKey) -and `

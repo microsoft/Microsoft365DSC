@@ -4,12 +4,38 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        ##TODO - Replace the PrimaryKey
         [Parameter(Mandatory = $true)]
         [System.String]
-        $PrimaryKey,
+        $ResourceGroupName,
 
-        ##TODO - Add the list of Parameters
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $WorkspaceName,
+
+        [Parameter()]
+        [System.String]
+        $SubscriptionId,
+
+        [Parameter()]
+        [System.Boolean]
+        $AnomaliesIsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $EntityAnalyticsIsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $EyesOnIsEnabled,
+
+        [Parameter()]
+        [System.String[]]
+        $UebaDataSource,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -36,8 +62,7 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    ##TODO - Replace the workload by the one associated to your resource
-    New-M365DSCConnection -Workload 'Workload' `
+    New-M365DSCConnection -Workload 'Azure' `
         -InboundParameters $PSBoundParameters | Out-Null
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -53,33 +78,74 @@ function Get-TargetResource
     #endregion
 
     $nullResult = $PSBoundParameters
-    $nullResult.Ensure = 'Absent'
     try
     {
+        $ResourceGroupNameValue = $ResourceGroupName
+        $WorkspaceNameValue = $WorkspaceName
         if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
         {
-            ##TODO - Replace the PrimaryKey in the Filter by the one for the resource
-            $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.PrimaryKey -eq $PrimaryKey}
+            $entry = $Script:exportedInstances | Where-Object -FilterScript {$_.Name -eq $WorkspaceName}
+            $instance = Get-AzSentinelSetting -ResourceGroupName $entry.ResourceGroupName -WorkspaceName $entry.Name -ErrorAction SilentlyContinue
+            $ResourceGroupNameValue = $entry.ResourceGroupName
+            $WorkspaceNameValue = $entry.Name
         }
         else
         {
-            ##TODO - Replace the cmdlet by the one to retrieve a specific instance.
-            $instance = Get-cmdlet -PrimaryKey $PrimaryKey -ErrorAction Stop
+            Write-Verbose -Message "Retrieving Sentinel Settings for {$WorkspaceName}"
+            $instance = Get-AzSentinelSetting -ResourceGroupName $ResourceGroupName -WorkspaceName $WorkspaceName -ErrorAction SilentlyContinue
         }
         if ($null -eq $instance)
         {
-            return $nullResult
+            throw "Could not find Sentinel Workspace {$WorkspaceName} in Resource Group {$ResourceGroupName}"
+        }
+
+        Write-Verbose -Message "Found an instance of Sentinel Workspace {$Workspace}"
+        $Anomalies = $instance | Where-Object -FilterScript {$_.Name -eq 'Anomalies'}
+        $AnomaliesIsEnabledValue = $false
+        if ($null -ne $Anomalies)
+        {
+            Write-Verbose -Message "Anomalies instance found."
+            $AnomaliesIsEnabledValue = $Anomalies.IsEnabled
+        }
+
+        $EntityAnalytics = $instance | Where-Object -FilterScript {$_.Name -eq 'EntityAnalytics'}
+        $EntityAnalyticsIsEnabledValue = $false
+        if ($null -ne $EntityAnalytics)
+        {
+            Write-Verbose -Message "EntityAnalytics instance found."
+            $EntityAnalyticsIsEnabledValue = $EntityAnalytics.IsEnabled
+        }
+
+        $EyesOn = $instance | Where-Object -FilterScript {$_.Name -eq 'EyesOn'}
+        $EyesOnIsEnabledValue = $false
+        if ($null -ne $EyesOn)
+        {
+            Write-Verbose -Message "EyesOn instance found."
+            $EyesOnIsEnabledValue = $EyesOn.IsEnabled
+        }
+
+        $Ueba = $instance | Where-Object -FilterScript {$_.Name -eq 'Ueba'}
+        $UebaDataSourceValue = $null
+        if ($null -ne $Ueba)
+        {
+            Write-Verbose -Message "UEBA Data source instance found."
+            $UebaDataSourceValue = $Ueba.DataSource
         }
 
         $results = @{
-            ##TODO - Add the list of parameters to be returned
-            Ensure                = 'Present'
-            Credential            = $Credential
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            CertificateThumbprint = $CertificateThumbprint
-            ManagedIdentity       = $ManagedIdentity.IsPresent
-            AccessTokens          = $AccessTokens
+            AnomaliesIsEnabled       = [Boolean]$AnomaliesIsEnabledValue
+            EntityAnalyticsIsEnabled = [Boolean]$EntityAnalyticsIsEnabledValue
+            EyesOnIsEnabled          = [Boolean]$EyesOnIsEnabledValue
+            UebaDataSource           = $UebaDataSourceValue
+            ResourceGroupName        = $ResourceGroupNameValue
+            WorkspaceName            = $WorkspaceNameValue
+            SubscriptionId           = $SubscriptionId
+            Credential               = $Credential
+            ApplicationId            = $ApplicationId
+            TenantId                 = $TenantId
+            CertificateThumbprint    = $CertificateThumbprint
+            ManagedIdentity          = $ManagedIdentity.IsPresent
+            AccessTokens             = $AccessTokens
         }
         return [System.Collections.Hashtable] $results
     }
@@ -101,12 +167,38 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
-        ##TODO - Replace the PrimaryKey
         [Parameter(Mandatory = $true)]
         [System.String]
-        $PrimaryKey,
+        $ResourceGroupName,
 
-        ##TODO - Add the list of Parameters
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $WorkspaceName,
+
+        [Parameter()]
+        [System.String]
+        $SubscriptionId,
+
+        [Parameter()]
+        [System.Boolean]
+        $AnomaliesIsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $EntityAnalyticsIsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $EyesOnIsEnabled,
+
+        [Parameter()]
+        [System.String[]]
+        $UebaDataSource,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -145,27 +237,37 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $currentInstance = Get-TargetResource @PSBoundParameters
-
-    $setParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
-
-    # CREATE
-    if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
+    if ($PSBoundParameters.ContainsKey('AnomaliesIsEnabled'))
     {
-        ##TODO - Replace by the New cmdlet for the resource
-        New-Cmdlet @SetParameters
+        Write-Verbose -Message "Updating Anomalies IsEnabled value to {$AnomaliesIsEnabled}"
+        Update-AzSentinelSetting -ResourceGroupName $ResourceGroupName `
+                                    -WorkspaceName $WorkspaceName `
+                                     -SettingsName "Anomalies" `
+                                     -Enabled $AnomaliesIsEnabled | Out-Null
     }
-    # UPDATE
-    elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
+    if ($PSBoundParameters.ContainsKey('EntityAnalyticsIsEnabled'))
     {
-        ##TODO - Replace by the Update/Set cmdlet for the resource
-        Set-cmdlet @SetParameters
+        Write-Verbose -Message "Updating Entity Analytics IsEnabled value to {$EntityAnalyticsIsEnabled}"
+        Update-AzSentinelSetting -ResourceGroupName $ResourceGroupName `
+                                     -WorkspaceName $WorkspaceName `
+                                     -SettingsName "EntityAnalytics" `
+                                     -Enabled $EntityAnalyticsIsEnabled | Out-Null
     }
-    # REMOVE
-    elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
+    if ($PSBoundParameters.ContainsKey('EyesOnIsEnabled'))
     {
-        ##TODO - Replace by the Remove cmdlet for the resource
-        Remove-cmdlet @SetParameters
+        Write-Verbose -Message "Updating Eyes On IsEnabled value to {$EyesOnIsEnabled}"
+        Update-AzSentinelSetting -ResourceGroupName $ResourceGroupName `
+                                     -WorkspaceName $WorkspaceName `
+                                     -SettingsName "EyesOn" `
+                                     -Enabled $EyesOnIsEnabled | Out-Null
+    }
+    if ($PSBoundParameters.ContainsKey('UebaDataSource'))
+    {
+        Write-Verbose -Message "Updating UEBA Data Source value to {$UebaDataSource}"
+        Update-AzSentinelSetting -ResourceGroupName $ResourceGroupName `
+                                     -WorkspaceName $WorkspaceName `
+                                     -SettingsName "Ueba" `
+                                     -DataSource $UebaDataSource | Out-Null
     }
 }
 
@@ -175,12 +277,33 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
-        ##TODO - Replace the PrimaryKey
         [Parameter(Mandatory = $true)]
         [System.String]
-        $PrimaryKey,
+        $ResourceGroupName,
 
-        ##TODO - Add the list of Parameters
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $WorkspaceName,
+
+        [Parameter()]
+        [System.String]
+        $SubscriptionId,
+
+        [Parameter()]
+        [System.Boolean]
+        $AnomaliesIsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $EntityAnalyticsIsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $EyesOnIsEnabled,
+
+        [Parameter()]
+        [System.String[]]
+        $UebaDataSource,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -270,8 +393,7 @@ function Export-TargetResource
         $AccessTokens
     )
 
-    ##TODO - Replace workload
-    $ConnectionMode = New-M365DSCConnection -Workload 'Workload' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'Azure' `
         -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -289,11 +411,11 @@ function Export-TargetResource
     try
     {
         $Script:ExportMode = $true
-        ##TODO - Replace Get-Cmdlet by the cmdlet to retrieve all instances
-        [array] $Script:exportedInstances = Get-Cmdlet -ErrorAction Stop
 
-        $i = 1
+        [array] $Script:exportedInstances = Get-AzResource -ResourceType 'Microsoft.OperationalInsights/workspaces'
+
         $dscContent = ''
+        $i = 1
         if ($Script:exportedInstances.Length -eq 0)
         {
             Write-Host $Global:M365DSCEmojiGreenCheckMark
@@ -304,11 +426,15 @@ function Export-TargetResource
         }
         foreach ($config in $Script:exportedInstances)
         {
-            $displayedKey = $config.Id
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+            $displayedKey = $config.Name
             Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -NoNewline
             $params = @{
-                ##TODO - Specify the Primary Key
-                #PrimaryKey            = $config.PrimaryKey
+                ResourceGroupName     = $config.ResourceGroupName
+                WorkspaceName         = $config.Name
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
@@ -319,16 +445,16 @@ function Export-TargetResource
 
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
+                    -Results $Results
 
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                -ConnectionMode $ConnectionMode `
-                -ModulePath $PSScriptRoot `
-                -Results $Results `
-                -Credential $Credential
+                    -ConnectionMode $ConnectionMode `
+                    -ModulePath $PSScriptRoot `
+                    -Results $Results `
+                    -Credential $Credential
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
-                -FileName $Global:PartialExportFileName
+                    -FileName $Global:PartialExportFileName
             $i++
             Write-Host $Global:M365DSCEmojiGreenCheckMark
         }

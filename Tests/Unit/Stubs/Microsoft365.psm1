@@ -1,3 +1,56 @@
+#region Azure
+function Get-AzSentinel
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $ResourceGroupName,
+
+        [Parameter()]
+        [System.String]
+        $WorkspaceName
+
+    )
+}
+
+function Update-AzSentinel
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $ResourceGroupName,
+
+        [Parameter()]
+        [System.String]
+        $WorkspaceName,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled,
+
+        [Parameter()]
+        [System.String]
+        $SettingsName,
+
+        [Parameter()]
+        [System.String]
+        $DataSource
+    )
+}
+
+function Get-AzResource
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $ResourceType
+    )
+}
+#endregion
+
 # region ExchangeOnlineManagement
 function Get-SweepRule
 {
@@ -28,7 +81,6 @@ function Get-SweepRule
         $ResultSize
     )
 }
-
 function New-SweepRule
 {
     [CmdletBinding()]
