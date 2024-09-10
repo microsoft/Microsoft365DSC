@@ -196,6 +196,31 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $result | Should -Not -BeNullOrEmpty
             }
         }
+
+        Context -Name 'Does not return resources that are pending deletion' -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    Name = "Test Policy"
+                    Priority = 42
+                    RetentionDuration = "SevenDays"
+                    Ensure = 'Present'
+                    Credential = $Credential;
+                }
+
+                Mock -CommandName Get-UnifiedAuditLogRetentionPolicy -MockWith {
+                    return @{
+                        Name = "Test Policy"
+                        Priority = 42
+                        RetentionDuration = "SevenDays"
+                        Mode = "PendingDeletion"
+                    }
+                }
+            }
+
+            It 'Should return false from the Test method' {
+                Test-TargetResource @testParams | Should -Be $false
+            }
+        }
     }
 }
 
