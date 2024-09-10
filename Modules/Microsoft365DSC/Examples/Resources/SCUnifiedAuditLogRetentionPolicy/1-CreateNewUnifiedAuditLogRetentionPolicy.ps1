@@ -20,7 +20,7 @@ Configuration Example
             Ensure               = "Present";
             Name                 = "Test Policy";
             Priority             = 1;
-            RetentionDuration    = "7Days";
+            RetentionDuration    = "SevenDays";
         }
     }
 }
