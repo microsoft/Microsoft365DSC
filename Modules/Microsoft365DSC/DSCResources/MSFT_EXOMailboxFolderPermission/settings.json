@@ -1,0 +1,24 @@
+﻿{
+    "resourceName": "EXOMailboxFolderPermission",
+    "description": "Use this resource to add/set/remove mailbox folder permissions for users in your tenant.",
+    "roles": {
+        "read": [
+            "Role"
+        ],
+        "update": [
+            "Role"
+        ]
+    },
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [],
+                "update": []
+            },
+            "application": {
+                "read": [],
+                "update": []
+            }
+        }
+    }
+}
