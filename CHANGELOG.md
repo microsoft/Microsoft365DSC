@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* EXOManagementScope
+  * Initial Release.
 * AADPasswordRuleSettings
   * Initial release
 * IntuneAntivirusPolicyWindows10SettingCatalog
