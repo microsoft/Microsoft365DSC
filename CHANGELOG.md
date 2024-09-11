@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* EXOFocusedInbox
+  * Initial Release.
 * EXOManagementScope
   * Initial Release.
 * AADPasswordRuleSettings
