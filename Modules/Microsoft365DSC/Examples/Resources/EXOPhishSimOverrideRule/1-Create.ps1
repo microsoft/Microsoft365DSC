@@ -24,7 +24,6 @@ Configuration Example
         EXOPhishSimOverrideRule "EXOPhishSimOverrideRule-_Exe:PhishSimOverr:d779965e-ab14-4dd8-b3f5-0876a99f988b"
         {
             Comment                                  = "Comment note";
-            Credential                               = $Credscredential;
             Domains                                  = @("fabrikam.com","wingtiptoys.com");
             Ensure                                   = "Present";
             Identity                                 = "_Exe:PhishSimOverr:d779965e-ab14-4dd8-b3f5-0876a99f988b";
