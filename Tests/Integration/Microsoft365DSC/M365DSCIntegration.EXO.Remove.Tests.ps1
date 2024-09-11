@@ -330,6 +330,15 @@
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                 }
+                EXOManagementScope 'EXOManagementScope-Test New DGs'
+                {
+                    Credential                 = $Credscredential;
+                    Ensure                     = "Absent";
+                    Exclusive                  = $False;
+                    Identity                   = "Test New DGs";
+                    Name                       = "Test New DGs";
+                    RecipientRestrictionFilter = "Name -like 'NewTest*'";
+                }
                 EXOMessageClassification 'ConfigureMessageClassification'
                 {
                     Identity                    = "Contoso Message Classification"
