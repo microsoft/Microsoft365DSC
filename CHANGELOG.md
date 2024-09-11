@@ -3,14 +3,18 @@
 # UNRELEASED
 * EXOArcConfig
   * Initial Release.
+* AADPasswordRuleSettings
+  * Initial release
 * EXOFocusedInbox
   * Initial Release.
 * EXOMailboxCalendarConfiguration
   * Initial Release.
 * EXOManagementScope
   * Initial Release.
-* AADPasswordRuleSettings
-  * Initial release
+* EXOManagementScope
+  * Initial Release.
+* EXORetenionPolicy
+  * Initial Release.
 * EXOPhishSimOverrideRule
   * Initial Release.
 * IntuneAntivirusPolicyWindows10SettingCatalog
