@@ -151,6 +151,38 @@ function Remove-ManagementScope
     )
 }
 
+function Get-FocusedInbox
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $UseCustomRouting,
+
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
+
+function Set-FocusedInbox
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $UseCustomRouting,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $FocusedInboxOn
+    )
+}
+
 function Get-SweepRule
 {
     [CmdletBinding()]
