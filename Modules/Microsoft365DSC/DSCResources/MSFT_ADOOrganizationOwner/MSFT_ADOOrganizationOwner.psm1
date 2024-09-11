@@ -4,12 +4,22 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        ##TODO - Replace the PrimaryKey
         [Parameter(Mandatory = $true)]
         [System.String]
-        $PrimaryKey,
+        $Name,
 
-        ##TODO - Add the list of Parameters
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.String]
+        $Owner,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -36,8 +46,7 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    ##TODO - Replace the workload by the one associated to your resource
-    New-M365DSCConnection -Workload 'Workload' `
+    New-M365DSCConnection -Workload 'AzureDevOPS' `
         -InboundParameters $PSBoundParameters | Out-Null
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -58,21 +67,33 @@ function Get-TargetResource
     {
         if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
         {
-            ##TODO - Replace the PrimaryKey in the Filter by the one for the resource
-            $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.PrimaryKey -eq $PrimaryKey}
+            if (-not [System.String]::IsNullOrEmpty($Id))
+            {
+                $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.Id -eq $Id}
+            }
+            if ($null -eq $instance -and -not [System.String]::IsNullOrEmpty($Name))
+            {
+                $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.Name -eq $Name}
+            }
         }
         else
         {
-            ##TODO - Replace the cmdlet by the one to retrieve a specific instance.
-            $instance = Get-cmdlet -PrimaryKey $PrimaryKey -ErrorAction Stop
+            $instance = Get-M365DSCADOOrganization -Name $Name -ErrorAction Stop
         }
         if ($null -eq $instance)
         {
             return $nullResult
         }
 
+        New-M365DSCConnection -Workload 'MicrosoftGraph' `
+                              -InboundParameters $PSBoundParameters | Out-Null
+
+        $owner = Get-MgUser -UserId $instance.owner
+
         $results = @{
-            ##TODO - Add the list of parameters to be returned
+            Name                  = $instance.Name
+            Id                    = $instance.Id
+            Owner                 = $owner.UserPrincipalName
             Ensure                = 'Present'
             Credential            = $Credential
             ApplicationId         = $ApplicationId
@@ -271,7 +292,7 @@ function Export-TargetResource
     )
 
     ##TODO - Replace workload
-    $ConnectionMode = New-M365DSCConnection -Workload 'Workload' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'AzureDevOPS' `
         -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -289,48 +310,56 @@ function Export-TargetResource
     try
     {
         $Script:ExportMode = $true
-        ##TODO - Replace Get-Cmdlet by the cmdlet to retrieve all instances
-        [array] $Script:exportedInstances = Get-Cmdlet -ErrorAction Stop
+        $organizations = Get-M365DSCADOOrganizationList
 
-        $i = 1
-        $dscContent = ''
-        if ($Script:exportedInstances.Length -eq 0)
+        foreach ($organization in $organizations)
         {
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
-        }
-        else
-        {
-            Write-Host "`r`n" -NoNewline
-        }
-        foreach ($config in $Script:exportedInstances)
-        {
-            $displayedKey = $config.Id
-            Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -NoNewline
-            $params = @{
-                ##TODO - Specify the Primary Key
-                #PrimaryKey            = $config.PrimaryKey
-                Credential            = $Credential
-                ApplicationId         = $ApplicationId
-                TenantId              = $TenantId
-                CertificateThumbprint = $CertificateThumbprint
-                ManagedIdentity       = $ManagedIdentity.IsPresent
-                AccessTokens          = $AccessTokens
+            [array] $Script:exportedInstances = Get-M365DSCADOOrganization -Name 'O365DSC-Dev'
+
+            $i = 1
+            $dscContent = ''
+            if ($Script:exportedInstances.Length -eq 0)
+            {
+                Write-Host $Global:M365DSCEmojiGreenCheckMark
             }
+            else
+            {
+                Write-Host "`r`n" -NoNewline
+            }
+            foreach ($config in $Script:exportedInstances)
+            {
+                if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+                {
+                    $Global:M365DSCExportResourceInstancesCount++
+                }
+                $displayedKey = $config.name
+                Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -NoNewline
+                $params = @{
+                    Name                  = $config.name
+                    Id                    = $config.id
+                    Credential            = $Credential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
+                    ManagedIdentity       = $ManagedIdentity.IsPresent
+                    AccessTokens          = $AccessTokens
+                }
 
-            $Results = Get-TargetResource @Params
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
+                $Results = Get-TargetResource @Params
+                $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                    -Results $Results
 
-            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                -ConnectionMode $ConnectionMode `
-                -ModulePath $PSScriptRoot `
-                -Results $Results `
-                -Credential $Credential
-            $dscContent += $currentDSCBlock
-            Save-M365DSCPartialExport -Content $currentDSCBlock `
-                -FileName $Global:PartialExportFileName
-            $i++
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+                $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                    -ConnectionMode $ConnectionMode `
+                    -ModulePath $PSScriptRoot `
+                    -Results $Results `
+                    -Credential $Credential
+                $dscContent += $currentDSCBlock
+                Save-M365DSCPartialExport -Content $currentDSCBlock `
+                    -FileName $Global:PartialExportFileName
+                $i++
+                Write-Host $Global:M365DSCEmojiGreenCheckMark
+            }
         }
         return $dscContent
     }
@@ -346,6 +375,51 @@ function Export-TargetResource
 
         return ''
     }
+}
+
+function Get-M365DSCADOOrganization
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name
+    )
+
+    $headers = @{
+        Authorization = $Global:MSCloudLoginConnectionProfile.AzureDevOPS.AccessToken
+        'Content-Type' = "application/json-patch+json"
+    }
+
+    $uri = "https://vssps.dev.azure.com/$Name/_apis/Organization/Collections/Me"
+
+    $response = Invoke-WebRequest -Method GET `
+                                  -Uri $uri `
+                                  -Headers $headers
+
+    $results = ConvertFrom-Json ($response.Content)
+    return $results
+}
+
+function Get-M365DSCADOOrganizationList
+{
+    [CmdletBinding()]
+    param(
+    )
+
+    $headers = @{
+        Authorization = $Global:MSCloudLoginConnectionProfile.AzureDevOPS.AccessToken
+        'Content-Type' = "application/json-patch+json"
+    }
+
+    $uri = "https://app.vssps.visualstudio.com/_apis/profile/profiles/me"
+
+    $response = Invoke-WebRequest -Method GET `
+                                  -Uri $uri `
+                                  -Headers $headers
+
+    $results = ConvertFrom-Json ($response.Content)
+    return $results
 }
 
 Export-ModuleMember -Function *-TargetResource

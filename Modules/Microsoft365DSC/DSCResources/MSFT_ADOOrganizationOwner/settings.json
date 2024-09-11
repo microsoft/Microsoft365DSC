@@ -1,5 +1,5 @@
 ﻿{
-    "resourceName": "ResourceName",
+    "resourceName": "ADOOrganizationOwner",
     "description": "Description of what the resource is about.",
     "roles": {
         "read": [
