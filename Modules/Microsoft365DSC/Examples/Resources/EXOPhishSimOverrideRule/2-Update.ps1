@@ -24,7 +24,6 @@ Configuration Example
         EXOPhishSimOverrideRule "EXOPhishSimOverrideRule-_Exe:PhishSimOverr:d779965e-ab14-4dd8-b3f5-0876a99f988b"
         {
             Comment                                  = "New Comment note";
-            Credential                               = $Credscredential;
             Ensure                                   = "Present";
             Identity                                 = "_Exe:PhishSimOverr:d779965e-ab14-4dd8-b3f5-0876a99f988b";
             ApplicationId                            = $ApplicationId
