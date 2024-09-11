@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* EXOPhishSimOverrideRule
+  * Initial Release.
 * EXOManagementScope
   * Initial Release.
 * AADPasswordRuleSettings
