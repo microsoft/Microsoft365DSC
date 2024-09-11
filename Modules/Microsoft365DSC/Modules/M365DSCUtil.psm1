@@ -3668,7 +3668,7 @@ function Get-M365DSCExportContentForResource
     {
         $primaryKey = ''
     }
-    elseif ($Keys.Contains('DisplayName'))
+    elseif ($Keys.Contains('DisplayName') -and -not [System.String]::IsNullOrEmpty($Results.DisplayName))
     {
         $primaryKey = $Results.DisplayName
     }
