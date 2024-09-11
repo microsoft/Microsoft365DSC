@@ -4,12 +4,16 @@
 
 * EXOFocusedInbox
   * Initial Release.
+* EXOMailboxCalendarConfiguration
+  * Initial Release.
 * EXOManagementScope
   * Initial Release.
 * EXOManagementScope
   * Initial Release.
 * AADPasswordRuleSettings
   * Initial release
+* EXOPhishSimOverrideRule
+  * Initial Release.
 * IntuneAntivirusPolicyWindows10SettingCatalog
   * Fixes an issue with invalid parameter definition.
     FIXES [#5015](https://github.com/microsoft/Microsoft365DSC/issues/5015)
