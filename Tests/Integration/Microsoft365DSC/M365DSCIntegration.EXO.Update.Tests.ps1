@@ -348,6 +348,16 @@
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                 }
+                EXOFocusedInbox 'EXOFocusedInbox-Test'
+                {
+                    Ensure                       = "Present";
+                    FocusedInboxOn               = $False; # Updated Property
+                    FocusedInboxOnLastUpdateTime = "1/1/0001 12:00:00 AM";
+                    Identity                     = "admin@$TenantId";
+                    ApplicationId                = $ApplicationId;
+                    TenantId                     = $TenantId;
+                    CertificateThumbprint        = $CertificateThumbprint;
+                }
                 EXOGlobalAddressList 'ConfigureGlobalAddressList'
                 {
                     Name                         = "Contoso Human Resources in Washington"
