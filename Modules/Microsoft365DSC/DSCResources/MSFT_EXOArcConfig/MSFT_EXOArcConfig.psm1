@@ -18,11 +18,6 @@ function Get-TargetResource
         $ArcTrustedSealers,
 
         [Parameter()]
-        [ValidateSet('Present', 'Absent')]
-        [System.String]
-        $Ensure = 'Present',
-
-        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -38,7 +33,7 @@ function Get-TargetResource
         [System.String]
         $CertificateThumbprint,
 
-         [Parameter()]
+        [Parameter()]
         [System.String]
         $CertificatePath,
 
@@ -82,7 +77,6 @@ function Get-TargetResource
     #endregion
 
     $nullResult = $PSBoundParameters
-    $nullResult.Ensure = 'Absent'
     try
     {
         $ArcConfigSettings = Get-ArcConfig -ErrorAction Stop
@@ -91,7 +85,6 @@ function Get-TargetResource
             IsSingleInstance                           = 'Yes'
             ArcTrustedSealers                          = $ArcConfigSettings.ArcTrustedSealers
             Credential                                 = $Credential
-            Ensure                                     = 'Present'
             ApplicationId                              = $ApplicationId
             CertificateThumbprint                      = $CertificateThumbprint
             CertificatePath                            = $CertificatePath
@@ -134,11 +127,6 @@ function Set-TargetResource
         [Parameter()]
         [System.String[]]
         $ArcTrustedSealers,
-
-        [Parameter()]
-        [ValidateSet('Present', 'Absent')]
-        [System.String]
-        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -189,22 +177,13 @@ function Set-TargetResource
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
-    $ArcConfigParams = [System.Collections.Hashtable]($PSBoundParameters)
-    $ArcConfigParams.Remove('Ensure') | Out-Null
-    $ArcConfigParams.Remove('Credential') | Out-Null
-    $ArcConfigParams.Remove('ApplicationId') | Out-Null
-    $ArcConfigParams.Remove('TenantId') | Out-Null
-    $ArcConfigParams.Remove('CertificateThumbprint') | Out-Null
-    $ArcConfigParams.Remove('CertificatePath') | Out-Null
-    $ArcConfigParams.Remove('CertificatePassword') | Out-Null
-    $ArcConfigParams.Remove('ManagedIdentity') | Out-Null
+    $ArcConfigParams = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
     $ArcConfigParams.Remove('IsSingleInstance') | Out-Null
-    $ArcConfigParams.Remove('AccessTokens') | Out-Null
 
-    if (('Present' -eq $Ensure ) -and ($Null -ne $ArcConfigParams))
+    if ($Null -ne $ArcConfigParams)
     {
         Write-Verbose -Message "Setting Arc Config with values: $(Convert-M365DscHashtableToString -Hashtable $ArcConfigParams)"
-        Set-ArcConfig @ArcConfigParams
+        Set-ArcConfig -Identity Default @ArcConfigParams
 
         Write-Verbose -Message 'Arc Config updated successfully'
     }
@@ -228,11 +207,6 @@ function Test-TargetResource
         [Parameter()]
         [System.String[]]
         $ArcTrustedSealers,
-
-        [Parameter()]
-        [ValidateSet('Present', 'Absent')]
-        [System.String]
-        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -287,7 +261,6 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('Ensure') | Out-Null
 
     # Need to remove Identity as Get-ArcConfig doesn't return Identity
     $ValuesToCheck.Remove('Identity') | Out-Null

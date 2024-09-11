@@ -24,7 +24,7 @@ Configuration Example
         EXOArcConfig "EXOArcConfig-Test"
         {
             ArcTrustedSealers                        = "contoso.com";
-            Ensure                                   = "Present";
+            IsSingleInstance                         = "Yes"
             TenantId                                 = $TenantId
             CertificateThumbprint                    = $CertificateThumbprint
             ApplicationId                            = $ApplicationId

@@ -54,7 +54,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ArcTrustedSealers                          = "cohovineyard.com,tailspintoys.com";
                     Identity                                   = "Default";
                     Credential                                 = $Credential
-                    Ensure                                     = "Present"
                 }
 
                 Mock -CommandName Get-ArcConfig -MockWith {
@@ -82,7 +81,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ArcTrustedSealers                          = "abc.com,cohovineyard.com,tailspintoys.com";
                     Identity                                   = "Default";
                     Credential                                 = $Credential
-                    Ensure                                     = "Present"
                 }
 
                 Mock -CommandName Get-ArcConfig -MockWith {

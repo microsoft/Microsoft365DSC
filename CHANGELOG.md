@@ -3,6 +3,8 @@
 # UNRELEASED
 * EXOArcConfig
   * Initial Release.
+* EXOFocusedInbox
+  * Initial Release.
 * EXOMailboxCalendarConfiguration
   * Initial Release.
 * EXOManagementScope
