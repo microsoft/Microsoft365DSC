@@ -11,5 +11,5 @@ class MSFT_EXOSecOpsOverrideRule : OMI_BaseResource
     [Key, Description("The unique identifier (GUID or name) of the override rule. This parameter is mandatory.")] String Identity;
     [Write, Description("An optional comment for the override rule.")] String Comment;
     [Write, Description("The SecOps simulation override policy that's associated with the rule.")] String Policy;
-    [Write, Description("Ensures the presence or absence of the configuration.")] String Ensure;
+    [Write, Description("Ensures the presence or absence of the configuration."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
 };
