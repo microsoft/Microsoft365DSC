@@ -6,6 +6,8 @@
   * Initial release
 * ADOOrganizationOwner
   * Initial release.
+* AzureSubscription
+  * Initial Release.
 * EXOArcConfig
   * Initial Release.
 * EXOFocusedInbox
