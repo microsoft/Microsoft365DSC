@@ -14,6 +14,7 @@
 | **ExternalServicesEnabled** | Write | Boolean | Enables external services for a tenant. External services are defined as services that are not in the Office 365 datacenters. | |
 | **EmailAttestationRequired** | Write | Boolean | Sets email attestation to required | |
 | **EmailAttestationReAuthDays** | Write | UInt32 | Sets email attestation re-auth days | |
+| **EnableRestrictedAccessControl** | Write | Boolean | Enables or disables the restricted access control. | |
 | **Ensure** | Write | String | Only value accepted is 'Present' | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials of the account to authenticate with. | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
