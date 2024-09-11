@@ -4,6 +4,8 @@
 
 * AADPasswordRuleSettings
   * Initial release
+* ADOOrganizationOwner
+  * Initial release.
 * EXOArcConfig
   * Initial Release.
 * EXOFocusedInbox
