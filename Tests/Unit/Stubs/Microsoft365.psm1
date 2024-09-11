@@ -183,6 +183,222 @@ function Set-FocusedInbox
     )
 }
 
+function Get-MailboxCalendarConfiguration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $MailboxLocation,
+
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
+
+function Set-MailboxCalendarConfiguration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Int32]
+        $WeatherLocationBookmark,
+
+        [Parameter()]
+        [System.Object]
+        $WorkspaceUserEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $ConversationalSchedulingEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $HotelEventsFromEmailEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $SkipAgendaMailOnFreeDays,
+
+        [Parameter()]
+        [System.Boolean]
+        $DiningEventsFromEmailEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $CreateEventsFromEmailAsPrivate,
+
+        [Parameter()]
+        [System.String]
+        $CalendarFeedsPreferredLanguage,
+
+        [Parameter()]
+        [System.Boolean]
+        $PackageDeliveryEventsFromEmailEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $WorkingHoursTimeZone,
+
+        [Parameter()]
+        [System.Object]
+        $WeatherLocations,
+
+        [Parameter()]
+        [System.Boolean]
+        $FlightEventsFromEmailEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $RentalCarEventsFromEmailEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $DeleteMeetingRequestOnRespond,
+
+        [Parameter()]
+        [System.Int32]
+        $DefaultMeetingDuration,
+
+        [Parameter()]
+        [System.Boolean]
+        $ReminderSoundEnabled,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $WorkingHoursEndTime,
+
+        [Parameter()]
+        [System.Object]
+        $ShortenEventScopeDefault,
+
+        [Parameter()]
+        [System.Boolean]
+        $InvoiceEventsFromEmailEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $UseBrightCalendarColorThemeInOwa,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $DefaultReminderTime,
+
+        [Parameter()]
+        [System.Object]
+        $LocationDetailsInFreeBusy,
+
+        [Parameter()]
+        [System.Object]
+        $WeatherEnabled,
+
+        [Parameter()]
+        [System.String]
+        $CalendarFeedsPreferredRegion,
+
+        [Parameter()]
+        [System.Boolean]
+        $ServiceAppointmentEventsFromEmailEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $ShowWeekNumbers,
+
+        [Parameter()]
+        [System.Boolean]
+        $RemindersEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $WeekStartDay,
+
+        [Parameter()]
+        [System.Object]
+        $FirstWeekOfYear,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $AgendaMailIntroductionEnabled,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $WorkingHoursStartTime,
+
+        [Parameter()]
+        [System.String]
+        $CalendarFeedsRootPageId,
+
+        [Parameter()]
+        [System.Object]
+        $DailyAgendaMailSchedule,
+
+        [Parameter()]
+        [System.Int32]
+        $DefaultMinutesToReduceLongEventsBy,
+
+        [Parameter()]
+        [System.Int32]
+        $DefaultMinutesToReduceShortEventsBy,
+
+        [Parameter()]
+        [System.Boolean]
+        $AutoDeclineWhenBusy,
+
+        [Parameter()]
+        [System.Object]
+        $OnlineMeetingsByDefaultEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $PreserveDeclinedMeetings,
+
+        [Parameter()]
+        [System.Object]
+        $TimeIncrement,
+
+        [Parameter()]
+        [System.Object]
+        $WorkDays,
+
+        [Parameter()]
+        [System.Boolean]
+        $EntertainmentEventsFromEmailEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $EventsFromEmailEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $WeatherUnit,
+
+        [Parameter()]
+        [System.Object]
+        $DefaultOnlineMeetingProvider,
+
+        [Parameter()]
+        [System.Object]
+        $MailboxLocation,
+
+        [Parameter()]
+        [System.Boolean]
+        $AgendaMailEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $AgendaPaneEnabled
+    )
+}
+
 function Get-SweepRule
 {
     [CmdletBinding()]

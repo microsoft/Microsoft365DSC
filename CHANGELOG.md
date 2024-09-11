@@ -4,6 +4,8 @@
 
 * EXOFocusedInbox
   * Initial Release.
+* EXOMailboxCalendarConfiguration
+  * Initial Release.
 * EXOManagementScope
   * Initial Release.
 * AADPasswordRuleSettings
