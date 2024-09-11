@@ -58,7 +58,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The instance should exist but it DOES NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Ensure                      = 'Present';
+                    Ensure                      = "Present";
                     Credential                  = $Credential;
                     Identity                    = "Ritik";
                     IsDefault                   = $False;
@@ -80,6 +80,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should create a new instance from the Set method' {
+                Set-TargetResource @testParams
                 Should -Invoke -CommandName New-RetentionPolicy -Exactly 1
             }
         }
@@ -117,6 +118,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should remove the instance from the Set method' {
+                Set-TargetResource @testParams
                 Should -Invoke -CommandName Remove-RetentionPolicy -Exactly 1
             }
         }
