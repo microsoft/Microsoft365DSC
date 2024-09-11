@@ -797,6 +797,60 @@ function Add-RecipientPermission
         $Trustee
     )
 }
+function Get-ExoSecOpsOverrideRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $Policy
+    )
+}
+
+function New-ExoSecOpsOverrideRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Object]
+        $Policy,
+
+        [Parameter()]
+        [System.String]
+        $Comment
+    )
+}
+function Remove-ExoSecOpsOverrideRule
+{
+    [CmdletBinding()]
+    param(
+
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
+function Set-ExoSecOpsOverrideRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
 function Disable-JournalRule
 {
     [CmdletBinding()]

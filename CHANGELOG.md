@@ -8,6 +8,8 @@
   * Initial Release.
 * EXOManagementScope
   * Initial Release.
+* EXOManagementScope
+  * Initial Release.
 * AADPasswordRuleSettings
   * Initial release
 * EXOPhishSimOverrideRule
