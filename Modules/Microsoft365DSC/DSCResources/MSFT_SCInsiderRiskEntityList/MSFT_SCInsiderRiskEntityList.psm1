@@ -4,12 +4,21 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        ##TODO - Replace the PrimaryKey
         [Parameter(Mandatory = $true)]
         [System.String]
-        $PrimaryKey,
+        $Name,
 
-        ##TODO - Add the list of Parameters
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $ListType,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -37,7 +46,7 @@ function Get-TargetResource
     )
 
     ##TODO - Replace the workload by the one associated to your resource
-    New-M365DSCConnection -Workload 'Workload' `
+    New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
         -InboundParameters $PSBoundParameters | Out-Null
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -58,13 +67,18 @@ function Get-TargetResource
     {
         if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
         {
-            ##TODO - Replace the PrimaryKey in the Filter by the one for the resource
-            $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.PrimaryKey -eq $PrimaryKey}
+            if (-not [System.String]::IsNullOrEmpty($DisplayName))
+            {
+                $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.ListType -eq $ListType -and $_.DisplayName -eq $DisplayName}
+            }
+            else
+            {
+                $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.ListType -eq $ListType -and $_.Name -eq $Name}
+            }
         }
         else
         {
-            ##TODO - Replace the cmdlet by the one to retrieve a specific instance.
-            $instance = Get-cmdlet -PrimaryKey $PrimaryKey -ErrorAction Stop
+            $instance = Get-InsiderRiskEntityList -Type $ListType -ErrorAction Stop
         }
         if ($null -eq $instance)
         {
@@ -72,7 +86,10 @@ function Get-TargetResource
         }
 
         $results = @{
-            ##TODO - Add the list of parameters to be returned
+            DisplayName           = $instance.DisplayName
+            Name                  = $instance.Name
+            Description           = $instance.Description
+            ListType              = $instance.ListType
             Ensure                = 'Present'
             Credential            = $Credential
             ApplicationId         = $ApplicationId
@@ -269,8 +286,7 @@ function Export-TargetResource
         $AccessTokens
     )
 
-    ##TODO - Replace workload
-    $ConnectionMode = New-M365DSCConnection -Workload 'Workload' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
         -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -288,8 +304,16 @@ function Export-TargetResource
     try
     {
         $Script:ExportMode = $true
-        ##TODO - Replace Get-Cmdlet by the cmdlet to retrieve all instances
-        [array] $Script:exportedInstances = Get-Cmdlet -ErrorAction Stop
+        [array] $Script:exportedInstances = @()
+        $availableTypes = @('HveLists', 'DomainLists', 'CriticalAssetLists', 'WindowsFilePathRegexLists', 'SensitiveTypeLists', 'SiteLists', 'KeywordLists', `
+                            'CustomDomainLists', 'CustomSiteLists', 'CustomKeywordLists', 'CustomFileTypeLists', 'CustomFilePathRegexLists', `
+                            'CustomSensitiveInformationTypeLists', 'CustomMLClassifierTypeLists', 'GlobalExclusionSGMapping', 'DlpPolicyLists')
+
+        # Retrieve entries for each type
+        foreach ($listType in $availableTypes)
+        {
+            $Script:exportedInstances += Get-InsiderRiskEntityList -Type $listType -ErrorAction Stop
+        }
 
         $i = 1
         $dscContent = ''
@@ -303,11 +327,16 @@ function Export-TargetResource
         }
         foreach ($config in $Script:exportedInstances)
         {
-            $displayedKey = $config.Id
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+            $displayedKey = $config.ListType + ' - ' + $config.Name
             Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -NoNewline
             $params = @{
-                ##TODO - Specify the Primary Key
-                #PrimaryKey            = $config.PrimaryKey
+                DisplayName           = $config.DisplayName
+                Name                  = $config.Name
+                ListType              = $config.ListType
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
