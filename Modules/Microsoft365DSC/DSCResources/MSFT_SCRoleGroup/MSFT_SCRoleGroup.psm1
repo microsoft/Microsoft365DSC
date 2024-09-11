@@ -11,6 +11,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
         $Description,
 
         [Parameter()]
@@ -95,8 +99,9 @@ function Get-TargetResource
         {
             $result = @{
                 Name                  = $RoleGroup.Name
+                DisplayName           = $RoleGroup.DisplayName
                 Description           = $RoleGroup.Description
-                Roles                 = $RoleGroup.Roles
+                Roles                 = $RoleGroup.Roles -replace "^.*\/(?=[^\/]*$)"
                 Ensure                = 'Present'
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
@@ -133,6 +138,11 @@ function Set-TargetResource
         [ValidateLength(1, 64)]
         [System.String]
         $Name,
+
+        [Parameter()]
+        [ValidateLength(1, 256)]
+        [System.String]
+        $DisplayName,
 
         [Parameter()]
         [System.String]
@@ -205,6 +215,14 @@ function Set-TargetResource
         Roles       = $Roles
         Confirm     = $false
     }
+    # Add DisplayName Parameter equals Name if null or Empty as creation with no value will lead to a corrupted state of the created RoleGroup
+    if ([System.String]::IsNullOrEmpty($DisplayName))
+    {
+        $NewRoleGroupParams.Add('DisplayName', $Name)
+    }
+    else {
+        $NewRoleGroupParams.Add('DisplayName', $DisplayName)
+    }
     # Remove Description Parameter if null or Empty as the creation fails with $null parameter
     if ([System.String]::IsNullOrEmpty($Description))
     {
@@ -239,6 +257,11 @@ function Test-TargetResource
         [ValidateLength(1, 64)]
         [System.String]
         $Name,
+
+        [Parameter()]
+        [ValidateLength(1, 256)]
+        [System.String]
+        $DisplayName,
 
         [Parameter()]
         [System.String]
