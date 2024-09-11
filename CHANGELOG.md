@@ -1,10 +1,11 @@
 # Change log for Microsoft365DSC
 
 # UNRELEASED
-* EXOArcConfig
-  * Initial Release.
+
 * AADPasswordRuleSettings
   * Initial release
+* EXOArcConfig
+  * Initial Release.
 * EXOFocusedInbox
   * Initial Release.
 * EXOMailboxCalendarConfiguration
@@ -32,6 +33,9 @@
 
 * EXOOwaMailboxPolicy
   * Add support for AccountTransferEnabled parameter
+
+# 1.24.904.1
+
 * EXOSweepRule
   * Initial Release.
 * FabricAdminTenantSettings
