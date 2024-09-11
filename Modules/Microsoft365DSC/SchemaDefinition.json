@@ -20105,6 +20105,26 @@
                        ]
     },
     {
+        "ClassName":  "MSFT_MicrosoftGraphOperatingSystemVersionRange",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Description",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "LowestVersion",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "HighestVersion",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
         "ClassName":  "MSFT_IntuneDeviceCompliancePolicyWindows10",
         "Parameters":  [
                            {
@@ -20278,7 +20298,7 @@
                                "Option":  "Write"
                            },
                            {
-                               "CIMType":  "String[]",
+                               "CIMType":  "MSFT_MicrosoftGraphOperatingSystemVersionRange[]",
                                "Name":  "ValidOperatingSystemBuildRanges",
                                "Option":  "Write"
                            },
