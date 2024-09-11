@@ -55,6 +55,26 @@ function Get-AzResource
 #endregion
 
 # region ExchangeOnlineManagement
+function Get-ArcConfig
+{
+    [CmdletBinding()]
+    param()
+}
+
+function Set-ArcConfig
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $ArcTrustedSealers,
+
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
+
 function Get-ManagementScope
 {
     [CmdletBinding()]
