@@ -1,0 +1,33 @@
+﻿{
+    "resourceName": "EXOManagementScope",
+    "description": "Use this resource to create Management Scope.",
+    "roles": {
+        "read": [
+            "Global Reader"
+        ],
+        "update": [
+            "Exchange Administrator"
+        ]
+    },
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [],
+                "update": []
+            },
+            "application": {
+                "read": [],
+                "update": []
+            }
+        },
+        "exchange": {
+            "requiredroles": [
+                "Hygiene Management",
+                "Compliance Management",
+                "Organization Management",
+                "View-Only Organization Management"
+            ],
+            "requiredrolegroups": "Organization Management"
+        }
+    }
+}

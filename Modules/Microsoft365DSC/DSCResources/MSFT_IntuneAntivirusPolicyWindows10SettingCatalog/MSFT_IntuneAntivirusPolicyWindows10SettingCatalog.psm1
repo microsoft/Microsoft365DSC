@@ -90,11 +90,11 @@ function Get-TargetResource
         [System.int32]
         $avgcpuloadfactor,
 
-        [Parameter]
+        [Parameter()]
         [System.Int32]
         $archivemaxdepth,
 
-        [Parameter]
+        [Parameter()]
         [System.Int32]
         $archivemaxsize,
 
@@ -601,11 +601,11 @@ function Set-TargetResource
         [System.int32]
         $avgcpuloadfactor,
 
-        [Parameter]
+        [Parameter()]
         [System.Int32]
         $archivemaxdepth,
 
-        [Parameter]
+        [Parameter()]
         [System.Int32]
         $archivemaxsize,
 
@@ -1095,11 +1095,11 @@ function Test-TargetResource
         [System.int32]
         $avgcpuloadfactor,
 
-        [Parameter]
+        [Parameter()]
         [System.Int32]
         $archivemaxdepth,
 
-        [Parameter]
+        [Parameter()]
         [System.Int32]
         $archivemaxsize,
 
