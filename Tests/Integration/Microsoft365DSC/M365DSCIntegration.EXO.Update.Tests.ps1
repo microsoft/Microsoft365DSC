@@ -130,6 +130,14 @@
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                 }
+                EXOArcConfig 'EXOArcConfig-Test'
+                {
+                    ArcTrustedSealers                        = "contoso.com";
+                    IsSingleInstance                         = "Yes";
+                    TenantId                                 = $TenantId;
+                    CertificateThumbprint                    = $CertificateThumbprint;
+                    ApplicationId                            = $ApplicationId;
+                }
                 EXOAtpPolicyForO365 'ConfigureAntiPhishPolicy'
                 {
                     IsSingleInstance        = "Yes"
