@@ -21,6 +21,9 @@
 * IntuneAntivirusPolicyWindows10SettingCatalog
   * Fixes an issue with invalid parameter definition.
     FIXES [#5015](https://github.com/microsoft/Microsoft365DSC/issues/5015)
+* IntuneDeviceConfigurationSharedMultiDevicePolicyWindows10
+  * Add missing `AccessTokens` parameter to `Export-TargetResource`
+    FIXES [#5034](https://github.com/microsoft/Microsoft365DSC/issues/5034)
 * SCRoleGroup
   * Fixes an issue with creation without specifying Displayname
   * Fixes an issue with Drifts because of returned Role format
