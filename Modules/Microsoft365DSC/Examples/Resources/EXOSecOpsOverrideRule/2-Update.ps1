@@ -27,7 +27,6 @@ Configuration Example
             Ensure                                   = "Present";
             Identity                                 = "_Exe:SecOpsOverrid:ca3c51ac-925c-49f4-af42-43e26b874245";
             Policy                                   = "40528418-717d-4368-a1ae-7912918f8a1f";
-            Credential                               = $Credscredential;
             ApplicationId                            = $ApplicationId
             TenantId                                 = $TenantId
             CertificateThumbprint                    = $CertificateThumbprint
