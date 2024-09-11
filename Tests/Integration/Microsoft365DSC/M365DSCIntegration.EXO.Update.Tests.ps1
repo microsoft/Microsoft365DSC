@@ -348,6 +348,16 @@
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                 }
+                EXOFocusedInbox 'EXOFocusedInbox-Test'
+                {
+                    Ensure                       = "Present";
+                    FocusedInboxOn               = $False; # Updated Property
+                    FocusedInboxOnLastUpdateTime = "1/1/0001 12:00:00 AM";
+                    Identity                     = "admin@$TenantId";
+                    ApplicationId                = $ApplicationId;
+                    TenantId                     = $TenantId;
+                    CertificateThumbprint        = $CertificateThumbprint;
+                }
                 EXOGlobalAddressList 'ConfigureGlobalAddressList'
                 {
                     Name                         = "Contoso Human Resources in Washington"
@@ -564,6 +574,51 @@
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
+                }
+                EXOMailboxCalendarConfiguration 'EXOMailboxCalendarConfiguration-Test'
+                {
+                    AgendaMailIntroductionEnabled            = $True;
+                    AutoDeclineWhenBusy                      = $False;
+                    ConversationalSchedulingEnabled          = $True;
+                    CreateEventsFromEmailAsPrivate           = $True;
+                    DefaultMinutesToReduceLongEventsBy       = 10;
+                    DefaultMinutesToReduceShortEventsBy      = 6; # Updated Property
+                    DefaultOnlineMeetingProvider             = "TeamsForBusiness";
+                    DefaultReminderTime                      = "00:15:00";
+                    DeleteMeetingRequestOnRespond            = $True;
+                    DiningEventsFromEmailEnabled             = $True;
+                    Ensure                                   = "Present";
+                    EntertainmentEventsFromEmailEnabled      = $True;
+                    EventsFromEmailEnabled                   = $True;
+                    FirstWeekOfYear                          = "FirstDay";
+                    FlightEventsFromEmailEnabled             = $True;
+                    HotelEventsFromEmailEnabled              = $True;
+                    Identity                                 = "admin@$TenantId";
+                    InvoiceEventsFromEmailEnabled            = $True;
+                    LocationDetailsInFreeBusy                = "Desk";
+                    PackageDeliveryEventsFromEmailEnabled    = $False;
+                    PreserveDeclinedMeetings                 = $False;
+                    RemindersEnabled                         = $True;
+                    ReminderSoundEnabled                     = $True;
+                    RentalCarEventsFromEmailEnabled          = $True;
+                    ServiceAppointmentEventsFromEmailEnabled = $True;
+                    ShortenEventScopeDefault                 = "None";
+                    ShowWeekNumbers                          = $False;
+                    TimeIncrement                            = "ThirtyMinutes";
+                    UseBrightCalendarColorThemeInOwa         = $False;
+                    WeatherEnabled                           = "FirstRun";
+                    WeatherLocationBookmark                  = 0;
+                    WeatherLocations                         = @();
+                    WeatherUnit                              = "Default";
+                    WeekStartDay                             = "Sunday";
+                    WorkDays                                 = "Monday, Tuesday";
+                    WorkingHoursEndTime                      = "17:00:00";
+                    WorkingHoursStartTime                    = "08:00:00";
+                    WorkingHoursTimeZone                     = "Pacific Standard Time";
+                    WorkspaceUserEnabled                     = $False;
+                    ApplicationId                            = $ApplicationId
+                    TenantId                                 = $TenantId
+                    CertificateThumbprint                    = $CertificateThumbprint
                 }
                 EXOMailboxCalendarFolder 'JohnCalendarFolder'
                 {
@@ -1037,6 +1092,15 @@
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
+                }
+                EXOPhishSimOverrideRule 'EXOPhishSimOverrideRule-_Exe:PhishSimOverr:d779965e-ab14-4dd8-b3f5-0876a99f988b'
+                {
+                    Comment                                  = "New Comment note";
+                    Ensure                                   = "Present";
+                    Identity                                 = "_Exe:PhishSimOverr:d779965e-ab14-4dd8-b3f5-0876a99f988b";
+                    ApplicationId                            = $ApplicationId
+                    TenantId                                 = $TenantId
+                    CertificateThumbprint                    = $CertificateThumbprint
                 }
                 EXOPlace 'TestPlace'
                 {

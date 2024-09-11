@@ -418,6 +418,14 @@
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                 }
+                EXOPhishSimOverrideRule 'EXOPhishSimOverrideRule-_Exe:PhishSimOverr:d779965e-ab14-4dd8-b3f5-0876a99f988b'
+                {
+                    Ensure                                   = "Absent";
+                    Identity                                 = "_Exe:PhishSimOverr:d779965e-ab14-4dd8-b3f5-0876a99f988b";
+                    ApplicationId                            = $ApplicationId
+                    TenantId                                 = $TenantId
+                    CertificateThumbprint                    = $CertificateThumbprint
+                }
                 EXOPlace 'TestPlace'
                 {
                     AudioDeviceName        = "MyAudioDevice";
