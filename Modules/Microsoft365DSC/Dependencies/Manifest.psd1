@@ -1,6 +1,18 @@
 @{
     Dependencies = @(
         @{
+            ModuleName      = 'Az.Accounts'
+            RequiredVersion = '3.0.2'
+        },
+        @{
+            ModuleName      = 'Az.Resources'
+            RequiredVersion = '7.2.0'
+        },
+        @{
+            ModuleName      = 'Az.SecurityInsights'
+            RequiredVersion = '3.1.2'
+        },
+        @{
             ModuleName      = 'DSCParser'
             RequiredVersion = '2.0.0.8'
         },

@@ -2,14 +2,24 @@
 
 # UNRELEASED
 
+
 * AADPasswordRuleSettings
   * Initial release
+* EXOManagementScope
+  * Initial Release.
+* IntuneAntivirusPolicyWindows10SettingCatalog
+  * Fixes an issue with invalid parameter definition.
+    FIXES [#5015](https://github.com/microsoft/Microsoft365DSC/issues/5015)
 * SCInsiderRiskEntityList
+  * Initial release.
+* SentinelSetting
   * Initial release.
 * SPOAccessControlSettings
   * Added support for property EnableRestrictedAccessControl.
 * DEPENDENCIES
   * Updated Microsoft.Graph to version 2.23.0.
+  * Added dependencies on Az.Accounts, Az.Resources and Az.SecurityInsights
+  * Updated MSCloudLoginAssistant to version 1.1.22.
 
 # 1.24.904.1
 
