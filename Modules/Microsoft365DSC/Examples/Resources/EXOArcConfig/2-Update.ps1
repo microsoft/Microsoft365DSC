@@ -24,10 +24,10 @@ Configuration Example
         EXOArcConfig "EXOArcConfig-Test"
         {
             ArcTrustedSealers                        = "contoso.com";
-            IsSingleInstance                         = "Yes"
-            TenantId                                 = $TenantId
-            CertificateThumbprint                    = $CertificateThumbprint
-            ApplicationId                            = $ApplicationId
+            IsSingleInstance                         = "Yes";
+            TenantId                                 = $TenantId;
+            CertificateThumbprint                    = $CertificateThumbprint;
+            ApplicationId                            = $ApplicationId;
         }
     }
 }
