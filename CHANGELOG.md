@@ -19,6 +19,10 @@
 * IntuneAntivirusPolicyWindows10SettingCatalog
   * Fixes an issue with invalid parameter definition.
     FIXES [#5015](https://github.com/microsoft/Microsoft365DSC/issues/5015)
+* SCRoleGroup
+  * Fixes an issue with creation without specifying Displayname
+  * Fixes an issue with Drifts because of returned Role format
+    FIXES [#5036](https://github.com/microsoft/Microsoft365DSC/issues/5036)
 * SentinelSetting
   * Initial release.
 * SPOAccessControlSettings
