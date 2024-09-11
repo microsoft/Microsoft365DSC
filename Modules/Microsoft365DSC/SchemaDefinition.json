@@ -39094,6 +39094,11 @@
                            },
                            {
                                "CIMType":  "String",
+                               "Name":  "DisplayName",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
                                "Name":  "Description",
                                "Option":  "Write"
                            },
