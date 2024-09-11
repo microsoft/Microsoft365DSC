@@ -1,3 +1,59 @@
+#region Azure
+function Get-AzSentinelSetting
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $ResourceGroupName,
+
+        [Parameter()]
+        [System.String]
+        $WorkspaceName,
+
+        [Parameter()]
+        [System.String]
+        $SubscriptionId
+    )
+}
+
+function Update-AzSentinelSetting
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $ResourceGroupName,
+
+        [Parameter()]
+        [System.String]
+        $WorkspaceName,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled,
+
+        [Parameter()]
+        [System.String]
+        $SettingsName,
+
+        [Parameter()]
+        [System.String]
+        $DataSource
+    )
+}
+
+function Get-AzResource
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $ResourceType
+    )
+}
+#endregion
+
 # region ExchangeOnlineManagement
 function Get-ArcConfig
 {
@@ -16,6 +72,102 @@ function Set-ArcConfig
         [Parameter()]
         [System.Object]
         $Identity
+    )
+}
+
+function Get-ManagementScope
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $Exclusive,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Orphan
+    )
+}
+
+function New-ManagementScope
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Exclusive,
+
+        [Parameter()]
+        [System.Object]
+        $RecipientRoot,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $RecipientRestrictionFilter,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force
+    )
+}
+
+function Set-ManagementScope
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $RecipientRoot,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $RecipientRestrictionFilter,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force
+    )
+}
+
+function Remove-ManagementScope
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force
     )
 }
 
@@ -48,7 +200,6 @@ function Get-SweepRule
         $ResultSize
     )
 }
-
 function New-SweepRule
 {
     [CmdletBinding()]
