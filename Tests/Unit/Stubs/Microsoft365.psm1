@@ -332,6 +332,102 @@ function Set-SweepRule
     )
 }
 
+function Get-ExoPhishSimOverrideRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Policy
+    )
+}
+
+function New-ExoPhishSimOverrideRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Object]
+        $SenderIpRanges,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Domains,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.String]
+        $Policy
+    )
+}
+
+function Remove-ExoPhishSimOverrideRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
+
+function Set-ExoPhishSimOverrideRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $AddDomains,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.Object]
+        $AddSenderIpRanges,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveDomains,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveSenderIpRanges
+    )
+}
+
 function Get-DefaultTenantBriefingConfig
 {
     [CmdletBinding()]
