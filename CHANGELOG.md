@@ -36,7 +36,8 @@
   * Added support for property EnableRestrictedAccessControl.
 * DEPENDENCIES
   * Added dependencies on Az.Accounts, Az.Resources and Az.SecurityInsights
-  * Updated MSCloudLoginAssistant to version 1.1.22.
+  * Updated DSCParser to version 2.0.0.9.
+  * Updated MSCloudLoginAssistant to version 1.1.23.
 
 # 1.24.904.1
 
