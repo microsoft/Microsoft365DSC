@@ -4,12 +4,17 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        ##TODO - Replace the PrimaryKey
         [Parameter(Mandatory = $true)]
         [System.String]
-        $PrimaryKey,
+        $Name,
 
-        ##TODO - Add the list of Parameters
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -41,8 +46,7 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    ##TODO - Replace the workload by the one associated to your resource
-    New-M365DSCConnection -Workload 'Workload' `
+    New-M365DSCConnection -Workload 'Azure' `
         -InboundParameters $PSBoundParameters | Out-Null
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -63,13 +67,25 @@ function Get-TargetResource
     {
         if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
         {
-            ##TODO - Replace the PrimaryKey in the Filter by the one for the resource
-            $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.PrimaryKey -eq $PrimaryKey}
+            if (-not [System.String]::IsNullOrEmpty($Id))
+            {
+                $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.Id -eq $Id}
+            }
+            elseif ($null -eq $instance -and -not [System.String]::IsNullOrEmpty($Name))
+            {
+                $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.Name -eq $Name}
+            }
         }
         else
         {
-            ##TODO - Replace the cmdlet by the one to retrieve a specific instance.
-            $instance = Get-cmdlet -PrimaryKey $PrimaryKey -ErrorAction Stop
+            if (-not [System.String]::IsNullOrEmpty($Id))
+            {
+                $instance = Get-AzSubscription -SubscriptionId $Id
+            }
+            elseif ($null -eq $instance -and -not [System.String]::IsNullOrEmpty($Name))
+            {
+                $instance = Get-AzSubscription -SubscriptionName $Name
+            }
         }
         if ($null -eq $instance)
         {
@@ -77,7 +93,9 @@ function Get-TargetResource
         }
 
         $results = @{
-            ##TODO - Add the list of parameters to be returned
+            Name                  = $instance.Name
+            Id                    = $instance.Id
+            Enabled               = $instance.Enabled
             Ensure                = 'Present'
             Credential            = $Credential
             ApplicationId         = $ApplicationId
@@ -106,12 +124,17 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
-        ##TODO - Replace the PrimaryKey
         [Parameter(Mandatory = $true)]
         [System.String]
-        $PrimaryKey,
+        $Name,
 
-        ##TODO - Add the list of Parameters
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -157,25 +180,27 @@ function Set-TargetResource
 
     $currentInstance = Get-TargetResource @PSBoundParameters
 
-    $setParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
-
     # CREATE
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        ##TODO - Replace by the New cmdlet for the resource
-        New-Cmdlet @SetParameters
+        throw "This resource cannot create new Azure subscriptions."
     }
     # UPDATE
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        ##TODO - Replace by the Update/Set cmdlet for the resource
-        Set-cmdlet @SetParameters
+        if ($Enabled)
+        {
+            Enable-AzSubscription -Id $currentInstance.Id | Out-Null
+        }
+        elseif (-not $Enabled)
+        {
+            Disable-AzSubscription -Id $currentInstance.Id | Out-Null
+        }
     }
     # REMOVE
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        ##TODO - Replace by the Remove cmdlet for the resource
-        Remove-cmdlet @SetParameters
+        throw "This resource cannot remove Azure subscriptions."
     }
 }
 
@@ -185,12 +210,17 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
-        ##TODO - Replace the PrimaryKey
         [Parameter(Mandatory = $true)]
         [System.String]
-        $PrimaryKey,
+        $Name,
 
-        ##TODO - Add the list of Parameters
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -304,8 +334,7 @@ function Export-TargetResource
     try
     {
         $Script:ExportMode = $true
-        ##TODO - Replace Get-Cmdlet by the cmdlet to retrieve all instances
-        [array] $Script:exportedInstances = Get-Cmdlet -ErrorAction Stop
+        [array] $Script:exportedInstances = Get-AzSubscription -ErrorAction Stop
 
         $i = 1
         $dscContent = ''
@@ -319,11 +348,11 @@ function Export-TargetResource
         }
         foreach ($config in $Script:exportedInstances)
         {
-            $displayedKey = $config.Id
+            $displayedKey = $config.Name
             Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -NoNewline
             $params = @{
-                ##TODO - Specify the Primary Key
-                #PrimaryKey            = $config.PrimaryKey
+                Name                  = $config.Name
+                Id                    = $config.Id
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId

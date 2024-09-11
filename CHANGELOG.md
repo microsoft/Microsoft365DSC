@@ -4,6 +4,8 @@
 
 * AADPasswordRuleSettings
   * Initial release
+* AzureSubscription
+  * Initial Release.
 * EXOArcConfig
   * Initial Release.
 * EXOFocusedInbox

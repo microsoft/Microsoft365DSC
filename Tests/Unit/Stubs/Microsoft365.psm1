@@ -52,6 +52,40 @@ function Get-AzResource
         $ResourceType
     )
 }
+
+function Get-AzSubscription
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $SubscriptionId,
+
+        [Parameter()]
+        [System.String]
+        $SubscriptionName
+    )
+}
+
+function Enable-AzSubscription
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Id
+    )
+}
+
+function Disable-AzSubscription
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Id
+    )
+}
 #endregion
 
 # region ExchangeOnlineManagement
