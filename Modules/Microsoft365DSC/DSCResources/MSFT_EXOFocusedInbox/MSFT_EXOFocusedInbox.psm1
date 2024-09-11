@@ -4,12 +4,22 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        ##TODO - Replace the PrimaryKey
         [Parameter(Mandatory = $true)]
         [System.String]
-        $PrimaryKey,
+        $Identity,
 
-        ##TODO - Add the list of Parameters
+        [Parameter()]
+        [System.DateTime]
+        $FocusedInboxOnLastUpdateTime,
+
+        [Parameter()]
+        [System.Boolean]
+        $FocusedInboxOn,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -36,8 +46,7 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    ##TODO - Replace the workload by the one associated to your resource
-    New-M365DSCConnection -Workload 'Workload' `
+    New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters | Out-Null
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -56,23 +65,16 @@ function Get-TargetResource
     $nullResult.Ensure = 'Absent'
     try
     {
-        if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
-        {
-            ##TODO - Replace the PrimaryKey in the Filter by the one for the resource
-            $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.PrimaryKey -eq $PrimaryKey}
-        }
-        else
-        {
-            ##TODO - Replace the cmdlet by the one to retrieve a specific instance.
-            $instance = Get-cmdlet -PrimaryKey $PrimaryKey -ErrorAction Stop
-        }
+        $instance = Get-FocusedInbox -Identity $Identity 
         if ($null -eq $instance)
         {
             return $nullResult
         }
 
         $results = @{
-            ##TODO - Add the list of parameters to be returned
+            Identity              = $Identity
+            FocusedInboxOn        = [Boolean]$instance.FocusedInboxOn
+            FocusedInboxOnLastUpdateTime = [DateTime]$instance.FocusedInboxOnLastUpdateTime
             Ensure                = 'Present'
             Credential            = $Credential
             ApplicationId         = $ApplicationId
@@ -85,7 +87,6 @@ function Get-TargetResource
     }
     catch
     {
-        Write-Verbose -Message $_
         New-M365DSCLogEntry -Message 'Error retrieving data:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
@@ -101,12 +102,22 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
-        ##TODO - Replace the PrimaryKey
         [Parameter(Mandatory = $true)]
         [System.String]
-        $PrimaryKey,
+        $Identity,
 
-        ##TODO - Add the list of Parameters
+        [Parameter()]
+        [System.DateTime]
+        $FocusedInboxOnLastUpdateTime,
+
+        [Parameter()]
+        [System.Boolean]
+        $FocusedInboxOn,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -149,24 +160,8 @@ function Set-TargetResource
 
     $setParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
-    # CREATE
-    if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
-    {
-        ##TODO - Replace by the New cmdlet for the resource
-        New-Cmdlet @SetParameters
-    }
-    # UPDATE
-    elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
-    {
-        ##TODO - Replace by the Update/Set cmdlet for the resource
-        Set-cmdlet @SetParameters
-    }
-    # REMOVE
-    elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
-    {
-        ##TODO - Replace by the Remove cmdlet for the resource
-        Remove-cmdlet @SetParameters
-    }
+    $SetParameters.Remove("FocusedInboxOnLastUpdateTime") | Out-Null
+    Set-FocusedInbox @SetParameters
 }
 
 function Test-TargetResource
@@ -175,12 +170,22 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
-        ##TODO - Replace the PrimaryKey
         [Parameter(Mandatory = $true)]
         [System.String]
-        $PrimaryKey,
+        $Identity,
 
-        ##TODO - Add the list of Parameters
+        [Parameter()]
+        [System.DateTime]
+        $FocusedInboxOnLastUpdateTime,
+
+        [Parameter()]
+        [System.Boolean]
+        $FocusedInboxOn,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -270,8 +275,7 @@ function Export-TargetResource
         $AccessTokens
     )
 
-    ##TODO - Replace workload
-    $ConnectionMode = New-M365DSCConnection -Workload 'Workload' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -289,8 +293,7 @@ function Export-TargetResource
     try
     {
         $Script:ExportMode = $true
-        ##TODO - Replace Get-Cmdlet by the cmdlet to retrieve all instances
-        [array] $Script:exportedInstances = Get-Cmdlet -ErrorAction Stop
+        [array] $Script:exportedInstances = Get-Mailbox -ResultSize Unlimited -ErrorAction Stop
 
         $i = 1
         $dscContent = ''
@@ -304,11 +307,10 @@ function Export-TargetResource
         }
         foreach ($config in $Script:exportedInstances)
         {
-            $displayedKey = $config.Id
+            $displayedKey = $config.UserPrincipalName
             Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -NoNewline
             $params = @{
-                ##TODO - Specify the Primary Key
-                #PrimaryKey            = $config.PrimaryKey
+                Identity              = $displayedKey
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId

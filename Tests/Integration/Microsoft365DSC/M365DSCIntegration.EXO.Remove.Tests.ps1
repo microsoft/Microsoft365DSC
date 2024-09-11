@@ -330,6 +330,15 @@
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                 }
+                EXOManagementScope 'EXOManagementScope-Test New DGs'
+                {
+                    Credential                 = $Credscredential;
+                    Ensure                     = "Absent";
+                    Exclusive                  = $False;
+                    Identity                   = "Test New DGs";
+                    Name                       = "Test New DGs";
+                    RecipientRestrictionFilter = "Name -like 'NewTest*'";
+                }
                 EXOMessageClassification 'ConfigureMessageClassification'
                 {
                     Identity                    = "Contoso Message Classification"
@@ -408,6 +417,14 @@
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
+                }
+                EXOPhishSimOverrideRule 'EXOPhishSimOverrideRule-_Exe:PhishSimOverr:d779965e-ab14-4dd8-b3f5-0876a99f988b'
+                {
+                    Ensure                                   = "Absent";
+                    Identity                                 = "_Exe:PhishSimOverr:d779965e-ab14-4dd8-b3f5-0876a99f988b";
+                    ApplicationId                            = $ApplicationId
+                    TenantId                                 = $TenantId
+                    CertificateThumbprint                    = $CertificateThumbprint
                 }
                 EXOPlace 'TestPlace'
                 {
@@ -513,6 +530,11 @@
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
+                }
+                EXOSecOpsOverrideRule 'EXOSecOpsOverrideRule-_Exe:SecOpsOverrid:ca3c51ac-925c-49f4-af42-43e26b874245'
+                {
+                    Ensure               = "Absent";
+                    Identity             = "_Exe:SecOpsOverrid:ca3c51ac-925c-49f4-af42-43e26b874245";
                 }
                 EXOSharedMailbox 'SharedMailbox'
                 {
