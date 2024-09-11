@@ -1205,6 +1205,18 @@
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                 }
+                EXORetentionPolicy 'EXORetentionPolicy-Test'
+                {
+                    Name                        = "Test Retention Policy";
+                    Identity                    = "Test Retention Policy";
+                    IsDefault                   = $False;
+                    IsDefaultArbitrationMailbox = $False;
+                    RetentionPolicyTagLinks     = @("Personal 5 year move to archive","1 Month Delete","1 Week Delete","Personal never move to archive","Personal 1 year move to archive","Default 2 year move to archive","Deleted Items","Junk Email","Recoverable Items 14 days move to archive","Never Delete"); # drifted property
+                    Ensure                      = "Present";
+                    ApplicationId               = $ApplicationId;
+                    TenantId                    = $TenantId;
+                    CertificateThumbprint       = $CertificateThumbprint;
+                }
                 EXORoleAssignmentPolicy 'ConfigureRoleAssignmentPolicy'
                 {
                     Name                 = "Integration Policy"
