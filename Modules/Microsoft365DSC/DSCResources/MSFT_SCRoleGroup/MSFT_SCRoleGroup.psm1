@@ -10,6 +10,7 @@ function Get-TargetResource
         $Name,
 
         [Parameter()]
+        [ValidateLength(1, 256)]
         [System.String]
         $DisplayName,
 
