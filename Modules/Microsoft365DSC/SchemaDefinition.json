@@ -5155,6 +5155,61 @@
                        ]
     },
     {
+        "ClassName":  "MSFT_AzureSubscription",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Name",
+                               "Option":  "Key"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Id",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "Enabled",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "string",
+                               "Name":  "Ensure",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "Credential",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ApplicationId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "TenantId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "CertificateThumbprint",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "ManagedIdentity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
         "ClassName":  "MSFT_EXOAcceptedDomain",
         "Parameters":  [
                            {
@@ -20050,6 +20105,26 @@
                        ]
     },
     {
+        "ClassName":  "MSFT_MicrosoftGraphOperatingSystemVersionRange",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Description",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "LowestVersion",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "HighestVersion",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
         "ClassName":  "MSFT_IntuneDeviceCompliancePolicyWindows10",
         "Parameters":  [
                            {
@@ -20223,7 +20298,7 @@
                                "Option":  "Write"
                            },
                            {
-                               "CIMType":  "String[]",
+                               "CIMType":  "MSFT_MicrosoftGraphOperatingSystemVersionRange[]",
                                "Name":  "ValidOperatingSystemBuildRanges",
                                "Option":  "Write"
                            },
@@ -35675,6 +35750,11 @@
                            {
                                "CIMType":  "Boolean",
                                "Name":  "AdminCenterReportDisplayConcealedNames",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "CustomerLockboxEnabled",
                                "Option":  "Write"
                            },
                            {

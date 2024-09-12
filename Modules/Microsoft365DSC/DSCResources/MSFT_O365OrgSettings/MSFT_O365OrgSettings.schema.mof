@@ -26,6 +26,7 @@ class MSFT_O365OrgSettings : OMI_BaseResource
     [Write, Description("To Do - Allow sharing with external users.")] Boolean ToDoIsExternalShareEnabled;
     [Write, Description("To Do - Allow your users to receive push notifications.")] Boolean ToDoIsPushNotificationEnabled;
     [Write, Description("Controls whether or not the Admin Center reports will conceale user, group and site names.")] Boolean AdminCenterReportDisplayConcealedNames;
+    [Write, Description("Determines if the customer lockbox should require approval for all data access requests or not.")] Boolean CustomerLockboxEnabled;
     [Write, Description("Defines how often you want your users to get feature updates for Microsoft 365 apps installed on devices running Windows"), ValueMap{"current","monthlyEnterprise","semiAnnual"}, Values{"current","monthlyEnterprise","semiAnnual"}] String InstallationOptionsUpdateChannel;
     [Write, Description("Defines the apps users can install on Windows and mobile devices."), ValueMap{"isVisioEnabled","isSkypeForBusinessEnabled","isProjectEnabled","isMicrosoft365AppsEnabled"}, Values{"isVisioEnabled","isSkypeForBusinessEnabled","isProjectEnabled","isMicrosoft365AppsEnabled"}] String InstallationOptionsAppsForWindows[];
     [Write, Description("Defines the apps users can install on Mac devices."), ValueMap{"isSkypeForBusinessEnabled","isMicrosoft365AppsEnabled"}, Values{"isSkypeForBusinessEnabled","isMicrosoft365AppsEnabled"}] String InstallationOptionsAppsForMac[];
