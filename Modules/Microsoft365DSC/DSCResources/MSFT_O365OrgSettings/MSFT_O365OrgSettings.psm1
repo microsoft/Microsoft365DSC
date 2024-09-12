@@ -19,6 +19,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $CustomerLockboxEnabled,
+
+        [Parameter()]
+        [System.Boolean]
         $AppsAndServicesIsAppAndServicesTrialEnabled,
 
         [Parameter()]
@@ -235,61 +239,6 @@ function Get-TargetResource
             }
         }
 
-        # DEPRECATED - Microsoft Viva Briefing Email
-        <#
-        $vivaBriefingEmailValue = $false
-        try
-        {
-            $currentBriefingConfig = Get-DefaultTenantBriefingConfig -ErrorAction Stop -Verbose:$false
-            if ($currentBriefingConfig.IsEnabledByDefault -eq 'opt-in')
-            {
-                $vivaBriefingEmailValue = $true
-            }
-        }
-        catch
-        {
-            if ($_.Exception.Message -like "*Unexpected character encountered while parsing value*")
-            {
-                $vivaBriefingEmailValue = $true
-            }
-            elseif ($_.Exception.Message -like "*A task was canceled*")
-            {
-                $retries = 1
-                $errorContent = $null
-                while ($retries -le 5)
-                {
-                    try
-                    {
-                        Start-Sleep -Seconds 2
-                        $currentBriefingConfig = Get-DefaultTenantBriefingConfig -ErrorAction Stop -Verbose:$false
-                    }
-                    catch
-                    {
-                        $errorContent = $_
-                        $retries++
-                    }
-                }
-                if ($null -eq $currentBriefingConfig)
-                {
-                    throw $errorContent
-                }
-                else
-                {
-                    if ($currentBriefingConfig.IsEnabledByDefault -eq 'opt-in')
-                    {
-                        $vivaBriefingEmailValue = $true
-                    }
-                }
-            }
-            else
-            {
-                throw $_
-            }
-        }
-        $results += @{
-            MicrosoftVivaBriefingEmail = $vivaBriefingEmailValue
-        }#>
-
         # Viva Insights settings
         $currentVivaInsightsSettings = Get-DefaultTenantMyAnalyticsFeatureConfig -Verbose:$false
         if ($null -ne $currentVivaInsightsSettings)
@@ -305,11 +254,11 @@ function Get-TargetResource
         $MRODeviceManagerService = 'ebe0c285-db95-403f-a1a3-a793bd6d7767'
         try
         {
-            $servicePrincipal = Get-MgServicePrincipal -Filter "appid eq 'ebe0c285-db95-403f-a1a3-a793bd6d7767'"
+            $servicePrincipal = Get-MgServicePrincipal -Filter "appid eq '$MRODeviceManagerService'"
             if ($null -eq $servicePrincipal)
             {
                 Write-Verbose -Message "Registering the MRO Device Manager Service Principal"
-                New-MgServicePrincipal -AppId 'ebe0c285-db95-403f-a1a3-a793bd6d7767' -ErrorAction Stop | Out-Null
+                New-MgServicePrincipal -AppId $MRODeviceManagerService -ErrorAction Stop | Out-Null
             }
         }
         catch
@@ -401,6 +350,9 @@ function Get-TargetResource
             }
         }
 
+        $OrganizationConfig = Get-OrganizationConfig
+        $results.Add('CustomerLockboxEnabled', $OrganizationConfig.CustomerLockboxEnabled)
+
         return $results
     }
     catch
@@ -436,6 +388,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $AppsAndServicesIsAppAndServicesTrialEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $CustomerLockboxEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -626,14 +582,6 @@ function Set-TargetResource
     {
         Write-Verbose -Message "DEPRECATED - The MicrosoftVivaBriefingEmail parameter is deprecated and will be ignored."
     }
-    #$briefingValue = 'opt-out'
-
-    <# DEPRECATED
-    if ($currentValues.MicrosoftVivaBriefingEmail -and $MicrosoftVivaBriefingEmail -ne $currentValues.MicrosoftVivaBriefingEmail)
-    {
-        Write-Verbose -Message "Updating Microsoft Viva Briefing Email settings."
-        Set-DefaultTenantBriefingConfig -IsEnabledByDefault $briefingValue -Verbose:$false | Out-Null
-    }#>
 
     # Viva Insights
     if ($PSBoundParameters.ContainsKey('VivaInsightsWebExperience') -and `
@@ -844,6 +792,12 @@ function Set-TargetResource
         Write-Verbose -Message "Updating the To Do settings with values:$(Convert-M365DscHashtableToString -Hashtable $ToDoParametersToUpdate)"
         Update-M365DSCOrgSettingsToDo -Options $ToDoParametersToUpdate
     }
+
+    # Customer Lockbox
+    if ($PSBoundParameters.ContainsKey('CustomerLockboxEnabled'))
+    {
+        Set-OrganizationConfig -CustomerLockboxEnabled $CustomerLockboxEnabled | Out-Null
+    }
 }
 
 function Test-TargetResource
@@ -868,6 +822,10 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $AppsAndServicesIsAppAndServicesTrialEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $CustomerLockboxEnabled,
 
         [Parameter()]
         [System.Boolean]
