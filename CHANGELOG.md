@@ -30,6 +30,8 @@
 * IntuneDeviceConfigurationSharedMultiDevicePolicyWindows10
   * Add missing `AccessTokens` parameter to `Export-TargetResource`
     FIXES [#5034](https://github.com/microsoft/Microsoft365DSC/issues/5034)
+* O365OrgSettings
+  * Added support for the CustomerLockboxEnabled property.
 * SCRoleGroup
   * Fixes an issue with creation without specifying Displayname
   * Fixes an issue with Drifts because of returned Role format

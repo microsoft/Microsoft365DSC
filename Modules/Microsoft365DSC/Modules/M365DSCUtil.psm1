@@ -1771,7 +1771,6 @@ function New-M365DSCConnection
         [System.Boolean]
         $SkipModuleReload = $false
     )
-    $verbosepreference = 'Continue'
     $Global:MaximumFunctionCount = 32767
     if ($Workload -eq 'MicrosoftTeams')
     {
