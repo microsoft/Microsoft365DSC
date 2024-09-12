@@ -120,6 +120,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Value = "example.com";
                     Ensure = 'Present'
                     Credential = $Credential;
+                    ExpirationDate = [DateTime]::new(2022, 12, 31, 0, 0, 0, 0, 0, 'Local')
                 }
 
                 Mock -CommandName Get-TenantAllowBlockListItems -MockWith {
@@ -127,10 +128,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Action = "Block";
                         ListType = "Url";
                         Value = "example.com";
-                        Ensure = 'Present'
-                        SubmissionID          = "FakeStringValue"
-                        RemoveAfter           = 3
-                        Notes                 = "FakeStringValue"
+                        Ensure = 'Present';
+                        SubmissionID          = "FakeStringValue";
+                        Notes                 = "FakeStringValue";
+                        ExpirationDate = [DateTime]::new(2022, 12, 31, 0, 0, 0, 0, 0, 'Utc')
                     }
                 }
             }
@@ -157,7 +158,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Action = "Block";
                         ListType = "Url";
                         Value = "example.com";
-                        Notes = "FakeStringValueDrift #Drift"
+                        Notes = "FakeStringValueDrift #Drift";
                     }
                 }
             }

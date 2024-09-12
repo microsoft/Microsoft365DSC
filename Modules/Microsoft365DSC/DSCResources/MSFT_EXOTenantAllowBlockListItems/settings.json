@@ -1,10 +1,24 @@
 {
     "resourceName": "EXOTenantAllowBlockListItems",
-    "description": "This resource configures an 
-New-TenantAllowBlockListItems -Entries <string[]> -ListType <Object> [-Allow] [-Block] [-ExpirationDate <datetime>] [-ListSubType <Object>] [-LogExtraDetails] [-Notes <string>] [-OutputJson] [-RemoveAfter <int>] [-SubmissionID <string>] [<CommonParameters>]
-
-New-TenantAllowBlockListItems -Entries <string[]> -ListType <Object> -NoExpiration [-Allow] [-Block] [-ListSubType <Object>] [-LogExtraDetails] [-Notes <string>] [-OutputJson] [-RemoveAfter <int>] [-SubmissionID <string>] [<CommonParameters>]
-.",
-    "permissions":[]
-
+    "description": "This resource configures the tenant allow/block list (TABL) entries",
+    "roles": {
+        "read": [
+            "Exchange Admin"
+        ],
+        "update": [
+            "Exchange Admin"
+        ]
+    },
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [],
+                "update": []
+            },
+            "application": {
+                "read": [],
+                "update": []
+            }
+        }
+    }
 }

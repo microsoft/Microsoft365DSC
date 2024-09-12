@@ -42,6 +42,7 @@ function Get-TargetResource
         $ExpirationDate,
 
         [Parameter()]
+        [ValidateSet('AdvancedDelivery', 'Tenant')]
         [System.String]
         $ListSubType,
 
@@ -54,7 +55,7 @@ function Get-TargetResource
         $Notes,
 
         [Parameter()]
-        [System.Int32]
+        [System.UInt32]
         $RemoveAfter,
 
         [Parameter()]
@@ -104,6 +105,7 @@ function Get-TargetResource
 
     $nullResult = $PSBoundParameters
     $nullResult.Ensure = 'Absent'
+    $nullResult.ListType = $ListType
     try
     {
         $getParams = @{ ListType = $ListType; Entry = $Value; }
@@ -128,9 +130,7 @@ function Get-TargetResource
             ExpirationDate        = $instance.ExpirationDate
             ListSubType           = $instance.ListSubType
             ListType              = $ListType
-            LogExtraDetails       = $instance.LogExtraDetails
             Notes                 = $instance.Notes
-            OutputJson            = $instance.OutputJson
             RemoveAfter           = $instance.RemoveAfter
             SubmissionID          = $instance.SubmissionID
             Ensure                = 'Present'
@@ -173,6 +173,7 @@ function Set-TargetResource
         $ExpirationDate,
 
         [Parameter()]
+        [ValidateSet('AdvancedDelivery', 'Tenant')]
         [System.String]
         $ListSubType,
 
@@ -185,7 +186,7 @@ function Set-TargetResource
         $Notes,
 
         [Parameter()]
-        [System.Int32]
+        [System.UInt32]
         $RemoveAfter,
 
         [Parameter()]
@@ -256,18 +257,37 @@ function Set-TargetResource
                 $CreateParameters.Add($keyName, $keyValue)
             }
         }
-        Write-Verbose -Message "Creating {$Entries} with Parameters:`r`n$(Convert-M365DscHashtableToString -Hashtable $CreateParameters)"
+        Write-Verbose -Message "Creating {$Value} with Parameters:`r`n$(Convert-M365DscHashtableToString -Hashtable $CreateParameters)"
         New-TenantAllowBlockListItems @CreateParameters | Out-Null
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Updating {$Entries}"
+        Write-Verbose -Message "Updating {$Value}"
+
+        if ($currentInstance.Action -ne $Action)
+        {
+            throw "Updating Action from {$currentInstance.Action} to {$Action} is not allowed"
+        }
+
+        if ($currentInstance.Value -ne $Value -and
+            $currentInstance.ListType -ne 'Url' -and
+            $currentInstance.Action -ne 'Allow' -and
+            $currentInstance.ListSubType -ne 'AdvancedDelivery')
+        {
+            throw "Updating Value is only allowed for Action=Allow ListType=Url ListSubType=AdvancedDelivery"
+        }
+
+        if ($currentInstance.SubmissionID -ne $SubmissionID)
+        {
+            throw "SubmissionID can not be changed"
+        }
 
         $UpdateParameters = ([Hashtable]$BoundParameters).Clone()
         $UpdateParameters.Remove('Verbose') | Out-Null
         $UpdateParameters.Remove('Value') | Out-Null
+        $UpdateParameters.Remove('SubmissionID') | Out-Null #SubmissionID can not be changed
         $UpdateParameters.Add('Entries', @($Value)) | Out-Null
-        Add-ActionParameters -Action $Action -Parameters $UpdateParameters
+        $UpdateParameters.Remove('Action') | Out-Null
 
         $keys = $UpdateParameters.Keys
         foreach ($key in $keys)
@@ -284,8 +304,8 @@ function Set-TargetResource
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing {$Entries}"
-        Remove-TenantAllowBlockListItems -Entries $currentInstance.Value -ListType $currentInstance.$ListType
+        Write-Verbose -Message "Removing {$Value}"
+        Remove-TenantAllowBlockListItems -Entries $currentInstance.Value -ListType $currentInstance.ListType
     }
 }
 
@@ -313,6 +333,7 @@ function Test-TargetResource
         $ExpirationDate,
 
         [Parameter()]
+        [ValidateSet('AdvancedDelivery', 'Tenant')]
         [System.String]
         $ListSubType,
 
@@ -371,6 +392,10 @@ function Test-TargetResource
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
     $ValuesToCheck.Remove('Entries') | Out-Null
+    if ($null -ne $ValuesToCheck.ExpirationDate -and $ValuesToCheck.ExpirationDate.Kind -eq 'Local')
+    {
+        $ValuesToCheck.ExpirationDate = $ValuesToCheck.ExpirationDate.ToUniversalTime().ToString()
+    }
 
     if ($CurrentValues.Ensure -eq 'Absent')
     {
@@ -382,18 +407,22 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
 
     #Convert any DateTime to String
-    foreach ($key in $ValuesToCheck.Keys)
+    $keys = $ValuesToCheck.Keys
+    foreach ($key in $keys)
     {
         if (($null -ne $CurrentValues[$key]) `
                 -and ($CurrentValues[$key].GetType().Name -eq 'DateTime'))
         {
-            $CurrentValues[$key] = $CurrentValues[$key].toString()
+            #Write-Verbose -Message "*** Current Value for $key is a DateTime, kind=$($CurrentValues[$key].Kind)"
+            #Write-Verbose -Message "*** Desired Value for $key is a DateTime, kind=$($ValuesToCheck[$key].Kind)"
+            $CurrentValues[$key] = $CurrentValues[$key].ToString()
+            Write-Verbose -Message "*** Current=$($CurrentValues[$key]) Desired=$($ValuesToCheck[$key])"
         }
     }
 
     $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
-        -DesiredValues $PSBoundParameters `
+        -DesiredValues $ValuesToCheck `
         -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $testResult"
