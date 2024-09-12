@@ -1,7 +1,7 @@
 [ClassVersion("1.0.0.0"), FriendlyName("EXOTenantAllowBlockListItems")]
 class MSFT_EXOTenantAllowBlockListItems : OMI_BaseResource
 {
-    [Key, Description("")] String Action;
+    [Key, Description(""), ValueMap{"Allow","Block"}, Values{"Allow","Block"}] String Action;
     [Key, Description("")] String Value;
     [Write, Description("")] DateTime ExpirationDate;
     [Write, Description("")] String ListSubType;

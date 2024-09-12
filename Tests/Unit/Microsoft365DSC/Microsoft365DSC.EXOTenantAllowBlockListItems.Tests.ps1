@@ -50,13 +50,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Write-Host -MockWith {
             }
             $Script:exportedInstances =$null
-            $Script:ExportMode = $false<AssignmentMock>
+            $Script:ExportMode = $false
         }
         # Test contexts
         Context -Name "The EXOTenantAllowBlockListItems should exist but it DOES NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
-<TargetResourceFakeValues>                    Ensure = "Present"
+                    Action = "Block";
+                    ListType = "Url";
+                    Value = "example.com";
+                    Ensure = "Present";
                     Credential = $Credential;
                 }
 
@@ -79,7 +82,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The EXOTenantAllowBlockListItems exists but it SHOULD NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
-<TargetResourceFakeValues>                    Ensure = 'Absent'
+                    Action = "Block";
+                    ListType = "Url";
+                    Value = "example.com";
+                    Ensure = 'Absent'
                     Credential = $Credential;
                 }
 
@@ -109,16 +115,22 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The EXOTenantAllowBlockListItems Exists and Values are already in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-<TargetResourceFakeValues>                    Ensure = 'Present'
+                    Action = "Block";
+                    ListType = "Url";
+                    Value = "example.com";
+                    Ensure = 'Present'
                     Credential = $Credential;
                 }
 
                 Mock -CommandName Get-TenantAllowBlockListItems -MockWith {
                     return @{
-                    SubmissionID          = "FakeStringValue"
-                    RemoveAfter           = 3
-                    Notes                 = "FakeStringValue"
-
+                        Action = "Block";
+                        ListType = "Url";
+                        Value = "example.com";
+                        Ensure = 'Present'
+                        SubmissionID          = "FakeStringValue"
+                        RemoveAfter           = 3
+                        Notes                 = "FakeStringValue"
                     }
                 }
             }
@@ -132,15 +144,20 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The EXOTenantAllowBlockListItems exists and values are NOT in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-<TargetResourceFakeValues>                    Ensure = 'Present'
+                    Action = "Block";
+                    ListType = "Url";
+                    Value = "example.com";
+                    Ensure = 'Present'
+                    Notes = "FakeStringValueDrift"
                     Credential = $Credential;
                 }
 
                 Mock -CommandName Get-TenantAllowBlockListItems -MockWith {
                     return @{
-                    SubmissionID          = "FakeStringValueDrift #Drift"
-                    RemoveAfter           = 2
-                    Notes                 = "FakeStringValueDrift #Drift"
+                        Action = "Block";
+                        ListType = "Url";
+                        Value = "example.com";
+                        Notes = "FakeStringValueDrift #Drift"
                     }
                 }
             }
@@ -169,10 +186,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-TenantAllowBlockListItems -MockWith {
                     return @{
-                    SubmissionID          = "FakeStringValue"
-                    RemoveAfter           = 3
-                    Notes                 = "FakeStringValue"
-
+                        Action = "Block";
+                        ListType = "Url";
+                        Value = "example.com";
+                        SubmissionID          = "FakeStringValue"
+                        RemoveAfter           = 3
+                        Notes                 = "FakeStringValue"
                     }
                 }
             }

@@ -1,10 +1,34 @@
+function Add-ActionParameters
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Action,
+
+        [Parameter(Mandatory = $true)]
+        [System.Collections.Hashtable]
+        $Parameters
+    )
+
+    if ($Action -eq 'Allow')
+    {
+        $Parameters.Add('Allow', $true) | Out-Null
+    }
+    elseif ($Action -eq 'Block')
+    {
+        $Parameters.Add('Block', $true) | Out-Null
+    }
+    $Parameters.Remove('Action') | Out-Null
+}
+
 function Get-TargetResource
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [ValidateSet('Allow', 'Block')]
         [System.String]
         $Action,
@@ -18,24 +42,16 @@ function Get-TargetResource
         $ExpirationDate,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $ListSubType,
 
         [Parameter(Mandatory = $true)]
-        [System.Object]
+        [System.String]
         $ListType,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $LogExtraDetails,
 
         [Parameter()]
         [System.String]
         $Notes,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $OutputJson,
 
         [Parameter()]
         [System.Int32]
@@ -143,41 +159,30 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Allow,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Block,
+        [Parameter(Mandatory = $true)]
+        [ValidateSet('Allow', 'Block')]
+        [System.String]
+        $Action,
 
         [Parameter(Mandatory = $true)]
-        [System.String[]]
-        $Entries,
+        [System.String]
+        $Value,
 
         [Parameter()]
         [System.DateTime]
         $ExpirationDate,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $ListSubType,
 
         [Parameter(Mandatory = $true)]
-        [System.Object]
+        [System.String]
         $ListType,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $LogExtraDetails,
 
         [Parameter()]
         [System.String]
         $Notes,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $OutputJson,
 
         [Parameter()]
         [System.Int32]
@@ -237,6 +242,9 @@ function Set-TargetResource
         $CreateParameters = ([Hashtable]$BoundParameters).Clone()
 
         $CreateParameters.Remove('Verbose') | Out-Null
+        $CreateParameters.Remove('Value') | Out-Null
+        $CreateParameters.Add('Entries', @($Value)) | Out-Null
+        Add-ActionParameters -Action $Action -Parameters $CreateParameters
 
         $keys = $CreateParameters.Keys
         foreach ($key in $keys)
@@ -257,6 +265,9 @@ function Set-TargetResource
 
         $UpdateParameters = ([Hashtable]$BoundParameters).Clone()
         $UpdateParameters.Remove('Verbose') | Out-Null
+        $UpdateParameters.Remove('Value') | Out-Null
+        $UpdateParameters.Add('Entries', @($Value)) | Out-Null
+        Add-ActionParameters -Action $Action -Parameters $UpdateParameters
 
         $keys = $UpdateParameters.Keys
         foreach ($key in $keys)
@@ -274,7 +285,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing {$Entries}"
-        Remove-TenantAllowBlockListItems -Entries $currentInstance.Entries
+        Remove-TenantAllowBlockListItems -Entries $currentInstance.Value -ListType $currentInstance.$ListType
     }
 }
 
@@ -284,41 +295,30 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Allow,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Block,
+        [Parameter(Mandatory = $true)]
+        [ValidateSet('Allow', 'Block')]
+        [System.String]
+        $Action,
 
         [Parameter(Mandatory = $true)]
-        [System.String[]]
-        $Entries,
+        [System.String]
+        $Value,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $ListType,
 
         [Parameter()]
         [System.DateTime]
         $ExpirationDate,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $ListSubType,
-
-        [Parameter(Mandatory = $true)]
-        [System.Object]
-        $ListType,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $LogExtraDetails,
 
         [Parameter()]
         [System.String]
         $Notes,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $OutputJson,
 
         [Parameter()]
         [System.Int32]
