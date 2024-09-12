@@ -177,6 +177,32 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
+        Context -Name 'Disallowed Updates' -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    Action = "Block";
+                    ListType = "Url";
+                    Value = "example.com";
+                    Ensure = 'Present'
+                    SubmissionID = "SubmissionID"
+                    Credential = $Credential;
+                }
+
+                Mock -CommandName Get-TenantAllowBlockListItems -MockWith {
+                    return @{
+                        Action = "Block";
+                        ListType = "Url";
+                        Value = "example.com";
+                        SubmissionID = "SubmissionID"
+                    }
+                }
+            }
+            It 'Should throw if SubmissionID is changed' {
+                $testParams['SubmissionID'] = "SubmissionID 2"
+                { Set-TargetResource @testParams } | Should -Throw
+            }
+        }
+
         Context -Name 'ReverseDSC Tests' -Fixture {
             BeforeAll {
                 $Global:CurrentModeIsExport = $true

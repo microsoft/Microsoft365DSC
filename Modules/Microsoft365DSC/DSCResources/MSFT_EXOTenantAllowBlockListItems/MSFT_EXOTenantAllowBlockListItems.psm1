@@ -264,19 +264,6 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Updating {$Value}"
 
-        if ($currentInstance.Action -ne $Action)
-        {
-            throw "Updating Action from {$currentInstance.Action} to {$Action} is not allowed"
-        }
-
-        if ($currentInstance.Value -ne $Value -and
-            $currentInstance.ListType -ne 'Url' -and
-            $currentInstance.Action -ne 'Allow' -and
-            $currentInstance.ListSubType -ne 'AdvancedDelivery')
-        {
-            throw "Updating Value is only allowed for Action=Allow ListType=Url ListSubType=AdvancedDelivery"
-        }
-
         if ($currentInstance.SubmissionID -ne $SubmissionID)
         {
             throw "SubmissionID can not be changed"
@@ -387,7 +374,7 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of {$Entries}"
+    Write-Verbose -Message "Testing configuration of {$Value}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
@@ -413,10 +400,7 @@ function Test-TargetResource
         if (($null -ne $CurrentValues[$key]) `
                 -and ($CurrentValues[$key].GetType().Name -eq 'DateTime'))
         {
-            #Write-Verbose -Message "*** Current Value for $key is a DateTime, kind=$($CurrentValues[$key].Kind)"
-            #Write-Verbose -Message "*** Desired Value for $key is a DateTime, kind=$($ValuesToCheck[$key].Kind)"
             $CurrentValues[$key] = $CurrentValues[$key].ToString()
-            Write-Verbose -Message "*** Current=$($CurrentValues[$key]) Desired=$($ValuesToCheck[$key])"
         }
     }
 
