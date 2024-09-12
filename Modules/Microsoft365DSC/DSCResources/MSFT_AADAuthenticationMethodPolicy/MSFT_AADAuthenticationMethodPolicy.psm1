@@ -32,6 +32,10 @@ function Get-TargetResource
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance]
+        $ReportSuspiciousActivitySettings,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $SystemCredentialPreferences,
 
         [Parameter()]
@@ -172,6 +176,35 @@ function Get-TargetResource
             $complexRegistrationEnforcement = $null
         }
 
+        $complexReportSuspiciousActivitySettings = @{}
+        $complexIncludeTargets = @()
+        foreach ($currentIncludeTargets in $getValue.ReportSuspiciousActivitySettings.includeTargets)
+        {
+            $myIncludeTargets = @{}
+            $myIncludeTargets.Add('Id', $currentIncludeTargets.id)
+            if ($null -ne $currentIncludeTargets.targetType)
+            {
+                $myIncludeTargets.Add('TargetType', $currentIncludeTargets.targetType.toString())
+            }
+            if ($myIncludeTargets.values.Where({$null -ne $_}).count -gt 0)
+            {
+                $complexIncludeTargets += $myIncludeTargets
+            }
+        }
+        $complexReportSuspiciousActivitySettings.Add('IncludeTargets',$complexIncludeTargets)
+        if ($null -ne $getValue.ReportSuspiciousActivitySettings.state)
+        {
+            $complexReportSuspiciousActivitySettings.Add('State', $getValue.ReportSuspiciousActivitySettings.state.toString())
+        }
+        if($null -ne $getValue.ReportSuspiciousActivitySettings.VoiceReportingCode)
+        {
+            $complexReportSuspiciousActivitySettings.Add('VoiceReportingCode', $getValue.ReportSuspiciousActivitySettings.VoiceReportingCode)
+        }
+        if ($complexReportSuspiciousActivitySettings.values.Where({$null -ne $_}).count -eq 0)
+        {
+            $complexReportSuspiciousActivitySettings = $null
+        }
+
         $complexSystemCredentialPreferences = @{}
         $complexExcludeTargets = @()
         foreach ($currentExcludeTargets in $getValue.SystemCredentialPreferences.excludeTargets)
@@ -229,6 +262,7 @@ function Get-TargetResource
             PolicyVersion               = $getValue.PolicyVersion
             ReconfirmationInDays        = $getValue.ReconfirmationInDays
             RegistrationEnforcement     = $complexRegistrationEnforcement
+            ReportSuspiciousActivitySettings = $complexReportSuspiciousActivitySettings
             SystemCredentialPreferences = $complexSystemCredentialPreferences
             Id                          = $getValue.Id
             Ensure                      = 'Present'
@@ -286,6 +320,10 @@ function Set-TargetResource
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance]
         $RegistrationEnforcement,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $ReportSuspiciousActivitySettings,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance]
@@ -406,6 +444,10 @@ function Test-TargetResource
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance]
         $RegistrationEnforcement,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $ReportSuspiciousActivitySettings,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance]
@@ -648,6 +690,37 @@ function Export-TargetResource
                         $Results.Remove('RegistrationEnforcement') | Out-Null
                     }
                 }
+
+                if ($null -ne $Results.ReportSuspiciousActivitySettings)
+                {
+                    $complexMapping = @(
+                        @{
+                            Name = 'ReportSuspiciousActivitySettings'
+                            CimInstanceName = 'MicrosoftGraphReportSuspiciousActivitySettings'
+                            IsRequired = $False
+                        }
+                        @{
+                            Name = 'IncludeTargets'
+                            CimInstanceName = 'AADAuthenticationMethodPolicyIncludeTarget'
+                            IsRequired = $False
+                        }
+                    )
+                    $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                        -ComplexObject $Results.ReportSuspiciousActivitySettings `
+                        -CIMInstanceName 'MicrosoftGraphsystemCredentialPreferences' `
+                        -ComplexTypeMapping $complexMapping
+
+                    if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                    {
+                        $Results.ReportSuspiciousActivitySettings = $complexTypeStringResult
+                    }
+                    else
+                    {
+                        $Results.Remove('ReportSuspiciousActivitySettings') | Out-Null
+                    }
+                }
+
+
                 if ($null -ne $Results.SystemCredentialPreferences)
                 {
                     $complexMapping = @(
@@ -694,6 +767,11 @@ function Export-TargetResource
                 if ($Results.SystemCredentialPreferences)
                 {
                     $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "SystemCredentialPreferences" -isCIMArray:$False
+                }
+
+                if ($Results.ReportSuspiciousActivitySettings)
+                {
+                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "ReportSuspiciousActivitySettings" -isCIMArray:$False
                 }
                 $dscContent += $currentDSCBlock
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
