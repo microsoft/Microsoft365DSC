@@ -940,7 +940,7 @@
                     SourceFolder          = "Test2:\Inbox";
                     TenantId              = $TenantId;
                 }
-                EXOTenantAllowBlockListItems "TenantAllowBlowListItem"
+                EXOTenantAllowBlockListItems 'Example'
                 {
                     ApplicationId         = $ApplicationId;
                     CertificateThumbprint = $CertificateThumbprint;
