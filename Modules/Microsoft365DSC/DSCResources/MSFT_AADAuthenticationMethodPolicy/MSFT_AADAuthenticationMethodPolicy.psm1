@@ -177,21 +177,14 @@ function Get-TargetResource
         }
 
         $complexReportSuspiciousActivitySettings = @{}
-        $complexIncludeTargets = @()
-        foreach ($currentIncludeTargets in $getValue.ReportSuspiciousActivitySettings.includeTargets)
+        $newComplexIncludeTarget = @{}
+        $newComplexIncludeTarget.Add('Id', $getValue.ReportSuspiciousActivitySettings.IncludeTarget.id)
+        if ($null -ne $getValue.ReportSuspiciousActivitySettings.IncludeTarget.targetType)
         {
-            $myIncludeTargets = @{}
-            $myIncludeTargets.Add('Id', $currentIncludeTargets.id)
-            if ($null -ne $currentIncludeTargets.targetType)
-            {
-                $myIncludeTargets.Add('TargetType', $currentIncludeTargets.targetType.toString())
-            }
-            if ($myIncludeTargets.values.Where({$null -ne $_}).count -gt 0)
-            {
-                $complexIncludeTargets += $myIncludeTargets
-            }
+            $newComplexIncludeTarget.Add('TargetType', $getValue.ReportSuspiciousActivitySettings.IncludeTarget.targetType.toString())
         }
-        $complexReportSuspiciousActivitySettings.Add('IncludeTargets',$complexIncludeTargets)
+        $complexReportSuspiciousActivitySettings.Add('IncludeTarget',$newComplexIncludeTarget)
+
         if ($null -ne $getValue.ReportSuspiciousActivitySettings.state)
         {
             $complexReportSuspiciousActivitySettings.Add('State', $getValue.ReportSuspiciousActivitySettings.state.toString())
@@ -700,14 +693,14 @@ function Export-TargetResource
                             IsRequired = $False
                         }
                         @{
-                            Name = 'IncludeTargets'
+                            Name = 'IncludeTarget'
                             CimInstanceName = 'AADAuthenticationMethodPolicyIncludeTarget'
                             IsRequired = $False
                         }
                     )
                     $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                         -ComplexObject $Results.ReportSuspiciousActivitySettings `
-                        -CIMInstanceName 'MicrosoftGraphsystemCredentialPreferences' `
+                        -CIMInstanceName 'MicrosoftGraphreportSuspiciousActivitySettings' `
                         -ComplexTypeMapping $complexMapping
 
                     if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))

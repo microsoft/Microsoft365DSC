@@ -46,7 +46,7 @@ class MSFT_MicrosoftGraphSystemCredentialPreferences
 [ClassVersion("1.0.0")]
 class MSFT_MicrosoftGraphReportSuspiciousActivitySettings
 {
-    [Write, Description(""), EmbeddedInstance("MSFT_AADAuthenticationMethodPolicyIncludeTarget")] String IncludeTargets[];
+    [Write, Description(""), EmbeddedInstance("MSFT_AADAuthenticationMethodPolicyIncludeTarget")] String IncludeTarget;
     [Write, Description(""), ValueMap{"default","enabled","disabled","unknownFutureValue"}, Values{"default","enabled","disabled","unknownFutureValue"}] String State;
     [Write, Description("")] UInt32 VoiceReportingCode;
 };
