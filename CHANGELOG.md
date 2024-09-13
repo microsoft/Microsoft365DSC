@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* AADAuthenticationMethodPolicy
+  * Added ReportSuspiciousActivitySettings
 * AADPasswordRuleSettings
   * Initial release
 * AzureSubscription
