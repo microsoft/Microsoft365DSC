@@ -1,10 +1,16 @@
-[ClassVersion("1.0.0.0"), FriendlyName("ResourceName")]
-class MSFT_ResourceName : OMI_BaseResource
+[ClassVersion("1.0.0")]
+class MSFT_EXOMailboxFolderUserPermission
 {
-    [Key, Description("The Identity parameter specifies the target mailbox and folder. The syntax is MailboxID:\ParentFolder[\SubFolder]. For the MailboxID you can use any value that uniquely identifies the mailbox.")] String Identity;
     [Required, Description("The AccessRights parameter specifies the permissions that you want to add for the user on the mailbox folder.")] String AccessRights[];
-    [Key, Description("The User parameter specifies who gets the permissions on the mailbox folder.")] String User;
-    [Key, Description("The SharingPermissionFlags parameter assigns calendar delegate permissions. This parameter only applies to calendar folders and can only be used when the AccessRights parameter value is Editor. Valid values are: None, Delegate, CanViewPrivateItems"), ValueMap{"None", "Delegate", "CanViewPrivateItems"}, Values{"None", "Delegate", "CanViewPrivateItems"}] String SharingPermissionFlags;
+    [Required, Description("The User parameter specifies who gets the permissions on the mailbox folder.")] String User;
+    [Write, Description("The SharingPermissionFlags parameter assigns calendar delegate permissions. This parameter only applies to calendar folders and can only be used when the AccessRights parameter value is Editor. Valid values are: None, Delegate, CanViewPrivateItems")] String SharingPermissionFlags;
+};
+
+[ClassVersion("1.0.0.0"), FriendlyName("EXOMailboxFolderPermission")]
+class MSFT_EXOMailboxFolderPermission : OMI_BaseResource
+{
+    [Key, Description("The Identity parameter specifies the target mailbox and folder. The syntax is MailboxID:\\ParentFolder[\\SubFolder]. For the MailboxID you can use any value that uniquely identifies the mailbox.")] String Identity;
+    [Write, Description("Mailbox Folder Permissions for the current user."),EmbeddedInstance("MSFT_EXOMailboxFolderUserPermission")] String UserPermissions[];
 
     [Write, Description("Determines wheter or not the permission should exist on the mailbox."), ValueMap{"Present"}, Values{"Present"}] String Ensure;
     [Write, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;

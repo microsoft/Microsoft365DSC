@@ -8,18 +8,9 @@ function Get-TargetResource
         [System.String]
         $Identity,
 
-        [Parameter(Mandatory = $true)]
-        [System.String[]]
-        $AccessRights,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        [ValidateSet("None", "Delegate", "CanViewPrivateItems")]
-        $SharingPermissionFlags,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $User,
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $UserPermissions,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -41,6 +32,14 @@ function Get-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -73,29 +72,39 @@ function Get-TargetResource
     {
         if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
         {
-            $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.Identity -eq $Identity -and $_.User -eq $User}
+            $instances = $Script:exportedInstances | Where-Object -FilterScript {$_.Identity -eq $Identity}
         }
         else
         {
-            $instance = Get-MailboxFolderPermission -Identity $Identity -User $User -ErrorAction Stop
+            $instances = Get-MailboxFolderPermission -Identity $Identity -ErrorAction Stop
         }
-        if ($null -eq $instance)
+        if ($null -eq $instances)
         {
             return $nullResult
         }
 
+        [Array]$permissionsObj = @()
+
+        foreach($mailboxfolderPermission in $instances){
+            $currentPermission = @{}
+            $currentPermission.Add('User', $mailboxFolderPermission.User)
+            $currentPermission.Add('AccessRights', $mailboxFolderPermission.AccessRights)
+            if($null -ne $mailboxFolderPermission.SharingPermissionFlags) {
+                $currentPermission.Add('SharingPermissionFlags', $mailboxFolderPermission.SharingPermissionFlags)
+            }
+            $permissionsObj += $currentPermission
+        }
+
         $results = @{
-            Identity               = $Identity
-            User                   = $User
-            AccessRights           = $instance.AccessRights
-            SharingPermissionFlags = $instance.SharingPermissionFlags
-            Ensure                 = 'Present'
-            Credential             = $Credential
-            ApplicationId          = $ApplicationId
-            TenantId               = $TenantId
-            CertificateThumbprint  = $CertificateThumbprint
-            ManagedIdentity        = $ManagedIdentity.IsPresent
-            AccessTokens           = $AccessTokens
+            Identity                 = $Identity
+            UserPermissions = [Array]$permissionsObj
+            Ensure                   = 'Present'
+            Credential               = $Credential
+            ApplicationId            = $ApplicationId
+            TenantId                 = $TenantId
+            CertificateThumbprint    = $CertificateThumbprint
+            ManagedIdentity          = $ManagedIdentity.IsPresent
+            AccessTokens             = $AccessTokens
         }
         return [System.Collections.Hashtable] $results
     }
@@ -120,18 +129,9 @@ function Set-TargetResource
         [System.String]
         $Identity,
 
-        [Parameter(Mandatory = $true)]
-        [System.String[]]
-        $AccessRights,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        [ValidateSet("None", "Delegate", "CanViewPrivateItems")]
-        $SharingPermissionFlags,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $User,
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $UserPermissions,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -153,6 +153,14 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -176,26 +184,55 @@ function Set-TargetResource
     #endregion
 
     $currentInstance = Get-TargetResource @PSBoundParameters
+    $currentMailboxFolderPermissions = $currentInstance.UserPermissions
 
     $setParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
-    # CREATE
-    if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
-    {
-        Add-MailboxFolderPermission @SetParameters
+    # Remove all the current existing pemrissions on this folder.
+    # Skip removing the default and anonymous permissions, as can't be removed, and should just be directly updated.
+    foreach($currentUserPermission in $currentMailboxFolderPermissions) {
+        if($currentUserPermission.User.ToString().ToLower() -ne "default" -and $currentUserPermission.User.ToString().ToLower() -ne "anonymous"){
+            Remove-MailboxFolderPermission -Identity $Identity -User $currentUserPermission.User -Confirm:$false
+        }
     }
-    # UPDATE
-    elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
-    {
-        Set-MailboxFolderPermission @SetParameters
+
+    #
+    foreach($userPermission in $UserPermissions) {
+        if($userPermission.User.ToString().ToLower() -eq "default" -or $userPermission.User.ToString().ToLower() -eq "anonymous"){
+            if ($userPermission.SharingPermissionFlags -eq ""){
+                Set-MailboxFolderPermission -Identity $Identity -User $userPermission.User -AccessRights $userPermission.AccessRights
+            }
+            else {
+                Set-MailboxFolderPermission -Identity $Identity -User $userPermission.User -AccessRights $userPermission.AccessRights -SharingPermissionFlags $userPermission.SharingPermissionFlags
+            }
+        }
+        else {
+            if ($userPermission.SharingPermissionFlags -eq ""){
+                Add-MailboxFolderPermission -Identity $Identity -User $userPermission.User -AccessRights $userPermission.AccessRights
+            }
+            else {
+                Add-MailboxFolderPermission -Identity $Identity -User $userPermission.User -AccessRights $userPermission.AccessRights -SharingPermissionFlags $userPermission.SharingPermissionFlags
+            }
+        }
     }
-    # REMOVE
-    elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
-    {
-        $instanceParams.Remove('AccessTokens') | Out-Null
-        $instanceParams.Remove('SharingPermissionFlags') | Out-Null
-        Remove-MailboxFolderPermission @SetParameters -Confirm:$false
-    }
+
+    # # CREATE
+    # if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
+    # {
+    #     Add-MailboxFolderPermission @SetParameters
+    # }
+    # # UPDATE
+    # elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
+    # {
+    #     Set-MailboxFolderPermission @SetParameters
+    # }
+    # # REMOVE
+    # elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
+    # {
+    #     $instanceParams.Remove('AccessTokens') | Out-Null
+    #     $instanceParams.Remove('SharingPermissionFlags') | Out-Null
+    #     Remove-MailboxFolderPermission @SetParameters -Confirm:$false
+    # }
 }
 
 function Test-TargetResource
@@ -208,18 +245,9 @@ function Test-TargetResource
         [System.String]
         $Identity,
 
-        [Parameter(Mandatory = $true)]
-        [System.String[]]
-        $AccessRights,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        [ValidateSet("None", "Delegate", "CanViewPrivateItems")]
-        $SharingPermissionFlags,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $User,
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $UserPermissions,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -241,6 +269,14 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -265,6 +301,23 @@ function Test-TargetResource
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
+
+    # foreach($value in $ValuesToCheck.UserPermissions) {
+    #     Write-Host $value
+    #     Write-Host $value.SharingPermissionFlags.IsNullOrEmpty()
+    #     if($value.SharingPermissionFlags.IsNullOrEmpty()) {
+    #         $value.SharingPermissionFlags = $null
+    #     }
+    # }
+    # Write-Host "DONE HERE ###################################################################"
+
+    # foreach($value in $ValuesToCheck.UserPermissions) {
+    #     Write-Host $value.SharingPermissionFlags
+    #     Write-Host $value.SharingPermissionFlags.IsNullOrEmpty()
+    #     if($value.SharingPermissionFlags.IsNullOrEmpty()) {
+    #         $value.SharingPermissionFlags = $null
+    #     }
+    # }
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
@@ -298,12 +351,16 @@ function Export-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ApplicationSecret,
+        [System.String]
+        $CertificateThumbprint,
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint,
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [Switch]
@@ -314,7 +371,6 @@ function Export-TargetResource
         $AccessTokens
     )
 
-    ##TODO - Replace workload
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
@@ -332,7 +388,12 @@ function Export-TargetResource
 
     try
     {
-        [array]$mailboxes = Get-Mailbox -ResultSize 'Unlimited' -ErrorAction Stop
+        Write-Host "`r`n" -NoNewline
+        Write-Host "    |---Getting the mailbox folders on behalf of the current admin" -NoNewline
+
+        [Array]$mailboxFolders = Get-MailboxFolder -Recurse
+
+        Write-Host "`r`n" -NoNewline
 
         if ($mailboxes.Length -eq 0)
         {
@@ -342,67 +403,51 @@ function Export-TargetResource
         {
             Write-Host "`r`n" -NoNewline
         }
-        $dscContent = ''
-        $i = 1
-        foreach ($mailbox in $mailboxes)
+
+        $j = 1
+        foreach ($mailboxFolder in $mailboxFolders)
         {
-            Write-Host "    |---[$i/$($mailboxes.Count)] $($mailbox.UserPrincipalName)" -NoNewline
-
-            [Array]$mailboxFolders = Get-MailboxFolder -Identity $mailbox.UserPrincipalName -Recurse
-
-            $j = 1
+            Write-Host "        |---[$j/$($mailboxFolders.count)] $($mailboxFolder.Identity)" -NoNewline
             Write-Host "`r`n" -NoNewline
-            foreach ($mailboxFolder in $mailboxFolders)
-            {
-                [Array]$mailboxFolderPermissions = Get-MailboxFolderPermission -Identity $mailboxFolder.Identity
 
-                Write-Host "        |---[$j/$($mailboxFolders.count)] $($mailboxFolder.Identity)" -NoNewline
-                Write-Host "`r`n" -NoNewline
-
-                foreach ($permission in $mailboxFolderPermissions)
-                {
-                    if ($null -ne $Global:M365DSCExportResourceInstancesCount)
-                    {
-                        $Global:M365DSCExportResourceInstancesCount++
-                    }
-
-                    Write-Host "        |---[$j/$($mailboxFolderPermissions.Count)] $($permission.User)" -NoNewline
-                    Write-Host "`r`n" -NoNewline
-
-                    $dscIRMAccess = @{
-                        Identity               = $permission.Identity
-                        User                   = $permission.User
-                        AccessRights           = $permission.AccessRights
-                        SharingPermissionFlags = $permission.SharingPermissionFlags
-                        Ensure                = 'Present'
-                        Credential            = $Credential
-                        ApplicationId         = $ApplicationId
-                        TenantId              = $TenantId
-                        CertificateThumbprint = $CertificateThumbprint
-                        CertificatePassword   = $CertificatePassword
-                        Managedidentity       = $ManagedIdentity.IsPresent
-                        CertificatePath       = $CertificatePath
-                        AccessTokens          = $AccessTokens
-                    }
-
-                    $Result = $dscIRMAccess
-                    $Result = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                        -Results $Result
-                    $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                        -ConnectionMode $ConnectionMode `
-                        -ModulePath $PSScriptRoot `
-                        -Results $Result `
-                        -Credential $Credential
-                    $dscContent += $currentDSCBlock
-
-                    Save-M365DSCPartialExport -Content $currentDSCBlock `
-                        -FileName $Global:PartialExportFileName
-
-                }
-                $j++
+            $Params = @{
+                Identity              = $mailboxFolder.Identity
+                UserPermissions = $null
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+                Managedidentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
             }
 
-            $i++
+            $MailboxFolderPermissions = Get-TargetResource @Params
+
+            $Result = $MailboxFolderPermissions
+            $Result = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Result
+            if ($Result.UserPermissions.Count -gt 0)
+            {
+                $Result.UserPermissions = Get-M365DSCEXOUserPermissionsList $Result.UserPermissions
+            }
+            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Result `
+                -Credential $Credential
+
+            if ($null -ne $Result.UserPermissions)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
+                    -ParameterName 'UserPermissions'
+            }
+
+            $dscContent += $currentDSCBlock
+
+            Save-M365DSCPartialExport -Content $currentDSCBlock `
+                -FileName $Global:PartialExportFileName
+
+            $j++
         }
         return $dscContent
     }
@@ -420,4 +465,31 @@ function Export-TargetResource
     }
 }
 
-Export-ModuleMember -Function *-TargetResource
+function Get-M365DSCEXOUserPermissionsList
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Collections.ArrayList]
+        $Permissions
+    )
+
+    $StringContent = '@('
+    foreach ($permission in $Permissions)
+    {
+        $StringContent += "MSFT_EXOMailboxFolderUserPermission {`r`n"
+        $StringContent += "                User                   = '" + $permission.User + "'`r`n"
+        $StringContent += "                AccessRights           = '" + $permission.AccessRights + "'`r`n"
+        if($null -ne $permission.SharingPermissionFlags){
+        #     $StringContent += "                SharingPermissionFlags = `$null" + "`r`n"
+        # } else {
+            $StringContent += "                SharingPermissionFlags = '" + $permission.SharingPermissionFlags + "'`r`n"
+        }
+        $StringContent += "            }`r`n"
+    }
+    $StringContent += '            )'
+    return $StringContent
+}
+
+Export-ModuleMember -Function *
