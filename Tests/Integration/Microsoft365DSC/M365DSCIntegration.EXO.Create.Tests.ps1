@@ -385,6 +385,14 @@
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                 }
+                EXOMailboxIRMAccess 'EXOMailboxIRMAccess-qwe@testorg.onmicrosoft.com'
+                {
+                    AccessLevel          = "Block";
+                    Credential           = $Credscredential;
+                    Ensure               = "Present";
+                    Identity             = "qwe@$OrganizationName";
+                    User                 = "admin@$OrganizationName";
+                }
                 EXOMailContact 'TestMailContact'
                 {
                     Alias                       = 'TestMailContact'
