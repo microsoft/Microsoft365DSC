@@ -35,7 +35,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return "Credentials"
             }
 
-            ##TODO - Mock any Remove/Set/New cmdlets
             Mock -CommandName New-ManagementScope -MockWith {
             }
 
@@ -66,7 +65,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     RecipientRestrictionFilter = "Name -like 'Nik*'";
                 }
 
-                ##TODO - Mock the Get-Cmdlet to return $null
                 Mock -CommandName Get-ManagementScope -MockWith {
                     return $null
                 }
@@ -95,7 +93,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     RecipientRestrictionFilter = "Name -like 'Nik*'";
                 }
 
-                ##TODO - Mock the Get-Cmdlet to return an instance
                 Mock -CommandName Get-ManagementScope -MockWith {
                     return @{
                         Exclusive                  = $False;
@@ -129,7 +126,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     RecipientRestrictionFilter = "Name -like 'Nik*'";
                 }
 
-                ##TODO - Mock the Get-Cmdlet to return the desired values
                 Mock -CommandName Get-ManagementScope -MockWith {
                     return @{
                         Exclusive                  = $False;
@@ -141,7 +137,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should return true from the Test method' {
-                Test-TargetResource -Verbose @testParams | Should -Be $true
+                Test-TargetResource @testParams | Should -Be $true
             }
         }
 
@@ -156,7 +152,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     RecipientRestrictionFilter = "Name -like 'Nik*'";
                 }
 
-                ##TODO - Mock the Get-Cmdlet to return a drift
                 Mock -CommandName Get-ManagementScope -MockWith {
                     return @{
                         Exclusive                  = $False;
@@ -189,7 +184,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential  = $Credential;
                 }
 
-                ##TODO - Mock the Get-Cmdlet to return an instance
                 Mock -CommandName Get-ManagementScope -MockWith {
                     return @{
                         Exclusive                  = $False;
