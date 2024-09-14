@@ -1,8 +1,20 @@
 @{
     Dependencies = @(
         @{
+            ModuleName      = 'Az.Accounts'
+            RequiredVersion = '3.0.2'
+        },
+        @{
+            ModuleName      = 'Az.Resources'
+            RequiredVersion = '7.2.0'
+        },
+        @{
+            ModuleName      = 'Az.SecurityInsights'
+            RequiredVersion = '3.1.2'
+        },
+        @{
             ModuleName      = 'DSCParser'
-            RequiredVersion = '2.0.0.8'
+            RequiredVersion = '2.0.0.9'
         },
         @{
             ModuleName      = 'ExchangeOnlineManagement'
@@ -10,75 +22,75 @@
         },
         @{
             ModuleName      = 'Microsoft.Graph.Applications'
-            RequiredVersion = '2.20.0'
+            RequiredVersion = '2.23.0'
         },
         @{
             ModuleName      = 'Microsoft.Graph.Authentication'
-            RequiredVersion = '2.20.0'
+            RequiredVersion = '2.23.0'
         },
         @{
             ModuleName      = 'Microsoft.Graph.Beta.DeviceManagement'
-            RequiredVersion = '2.20.0'
+            RequiredVersion = '2.23.0'
         },
         @{
             ModuleName      = 'Microsoft.Graph.Beta.Devices.CorporateManagement'
-            RequiredVersion = '2.20.0'
+            RequiredVersion = '2.23.0'
         },
         @{
             ModuleName      = 'Microsoft.Graph.Beta.DeviceManagement.Administration'
-            RequiredVersion = '2.20.0'
+            RequiredVersion = '2.23.0'
         },
         @{
             ModuleName      = 'Microsoft.Graph.Beta.DeviceManagement.Enrollment'
-            RequiredVersion = '2.20.0'
+            RequiredVersion = '2.23.0'
         },
         @{
             ModuleName      = 'Microsoft.Graph.Beta.Identity.DirectoryManagement'
-            RequiredVersion = '2.20.0'
+            RequiredVersion = '2.23.0'
         },
         @{
             ModuleName      = 'Microsoft.Graph.Beta.Identity.Governance'
-            RequiredVersion = '2.20.0'
+            RequiredVersion = '2.23.0'
         },
         @{
             ModuleName      = 'Microsoft.Graph.Beta.Identity.SignIns'
-            RequiredVersion = '2.20.0'
+            RequiredVersion = '2.23.0'
         },
         @{
             ModuleName      = 'Microsoft.Graph.Beta.Reports'
-            RequiredVersion = '2.20.0'
+            RequiredVersion = '2.23.0'
         },
         @{
             ModuleName      = 'Microsoft.Graph.Beta.Teams'
-            RequiredVersion = '2.20.0'
+            RequiredVersion = '2.23.0'
         },
         @{
             ModuleName      = 'Microsoft.Graph.DeviceManagement.Administration'
-            RequiredVersion = '2.20.0'
+            RequiredVersion = '2.23.0'
         },
         @{
             ModuleName      = 'Microsoft.Graph.Beta.DirectoryObjects'
-            RequiredVersion = '2.20.0'
+            RequiredVersion = '2.23.0'
         },
         @{
             ModuleName      = 'Microsoft.Graph.Groups'
-            RequiredVersion = '2.20.0'
+            RequiredVersion = '2.23.0'
         },
         @{
             ModuleName      = 'Microsoft.Graph.Planner'
-            RequiredVersion = '2.20.0'
+            RequiredVersion = '2.23.0'
         },
         @{
             ModuleName      = 'Microsoft.Graph.Sites'
-            RequiredVersion = '2.20.0'
+            RequiredVersion = '2.23.0'
         },
         @{
             ModuleName      = 'Microsoft.Graph.Users'
-            RequiredVersion = '2.20.0'
+            RequiredVersion = '2.23.0'
         },
         @{
             ModuleName      = 'Microsoft.Graph.Users.Actions'
-            RequiredVersion = '2.20.0'
+            RequiredVersion = '2.23.0'
         },
         @{
             ModuleName      = 'Microsoft.PowerApps.Administration.PowerShell'
@@ -90,7 +102,7 @@
         },
         @{
             ModuleName      = "MSCloudLoginAssistant"
-            RequiredVersion = "1.1.20"
+            RequiredVersion = "1.1.24"
         },
         @{
             ModuleName      = 'PnP.PowerShell'

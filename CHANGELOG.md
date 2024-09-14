@@ -6,16 +6,54 @@
   * Initial Release.
 * AADPasswordRuleSettings
   * Initial release
+* AzureSubscription
+  * Initial Release.
+* EXOArcConfig
+  * Initial Release.
+* EXOFocusedInbox
+  * Initial Release.
+* EXOMailboxCalendarConfiguration
+  * Initial Release.
+* EXOManagementScope
+  * Initial Release.
+* EXOManagementScope
+  * Initial Release.
+* EXORetenionPolicy
+  * Initial Release.
+* EXOPhishSimOverrideRule
+  * Initial Release.
 * IntuneAntivirusPolicyWindows10SettingCatalog
   * Fixes an issue with invalid parameter definition.
     FIXES [#5015](https://github.com/microsoft/Microsoft365DSC/issues/5015)
+* IntuneDeviceCompliancePolicyWindows10
+  * Fixes an issue where the property `ValidOperatingSystemBuildRanges` was
+    not exported properly.
+    FIXES [#5030](https://github.com/microsoft/Microsoft365DSC/issues/5030)
+* IntuneDeviceConfigurationSharedMultiDevicePolicyWindows10
+  * Add missing `AccessTokens` parameter to `Export-TargetResource`
+    FIXES [#5034](https://github.com/microsoft/Microsoft365DSC/issues/5034)
+* O365OrgSettings
+  * Added support for the CustomerLockboxEnabled property.
+* SCRoleGroup
+  * Fixes an issue with creation without specifying Displayname
+  * Fixes an issue with Drifts because of returned Role format
+    FIXES [#5036](https://github.com/microsoft/Microsoft365DSC/issues/5036)
+* SentinelSetting
+  * Initial release.
 * SPOAccessControlSettings
   * Added support for property EnableRestrictedAccessControl.
+* DEPENDENCIES
+  * Added dependencies on Az.Accounts, Az.Resources and Az.SecurityInsights
+  * Updated DSCParser to version 2.0.0.9.
+  * Updated MSCloudLoginAssistant to version 1.1.24.
 
 # 1.24.904.1
 
 * EXOOwaMailboxPolicy
   * Add support for AccountTransferEnabled parameter
+
+# 1.24.904.1
+
 * EXOSweepRule
   * Initial Release.
 * FabricAdminTenantSettings

@@ -1,3 +1,93 @@
+#region Azure
+function Get-AzSentinelSetting
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $ResourceGroupName,
+
+        [Parameter()]
+        [System.String]
+        $WorkspaceName,
+
+        [Parameter()]
+        [System.String]
+        $SubscriptionId
+    )
+}
+
+function Update-AzSentinelSetting
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $ResourceGroupName,
+
+        [Parameter()]
+        [System.String]
+        $WorkspaceName,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled,
+
+        [Parameter()]
+        [System.String]
+        $SettingsName,
+
+        [Parameter()]
+        [System.String]
+        $DataSource
+    )
+}
+
+function Get-AzResource
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $ResourceType
+    )
+}
+
+function Get-AzSubscription
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $SubscriptionId,
+
+        [Parameter()]
+        [System.String]
+        $SubscriptionName
+    )
+}
+
+function Enable-AzSubscription
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Id
+    )
+}
+
+function Disable-AzSubscription
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Id
+    )
+}
+#endregion
+
 # region ExchangeOnlineManagement
 function Get-MailboxIRMAccess
 {
@@ -45,6 +135,470 @@ function Remove-MailboxIRMAccess
     )
 }
 
+function Get-ArcConfig
+{
+    [CmdletBinding()]
+    param()
+}
+
+function Set-ArcConfig
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $ArcTrustedSealers,
+
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
+
+function Get-ManagementScope
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $Exclusive,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Orphan
+    )
+}
+
+function New-ManagementScope
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Exclusive,
+
+        [Parameter()]
+        [System.Object]
+        $RecipientRoot,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $RecipientRestrictionFilter,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force
+    )
+}
+
+function Set-ManagementScope
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $RecipientRoot,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $RecipientRestrictionFilter,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force
+    )
+}
+
+function Remove-ManagementScope
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force
+    )
+}
+
+function Get-FocusedInbox
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $UseCustomRouting,
+
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
+
+function Set-FocusedInbox
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $UseCustomRouting,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $FocusedInboxOn
+    )
+}
+
+function Get-MailboxCalendarConfiguration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $MailboxLocation,
+
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
+
+function Set-MailboxCalendarConfiguration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Int32]
+        $WeatherLocationBookmark,
+
+        [Parameter()]
+        [System.Object]
+        $WorkspaceUserEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $ConversationalSchedulingEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $HotelEventsFromEmailEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $SkipAgendaMailOnFreeDays,
+
+        [Parameter()]
+        [System.Boolean]
+        $DiningEventsFromEmailEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $CreateEventsFromEmailAsPrivate,
+
+        [Parameter()]
+        [System.String]
+        $CalendarFeedsPreferredLanguage,
+
+        [Parameter()]
+        [System.Boolean]
+        $PackageDeliveryEventsFromEmailEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $WorkingHoursTimeZone,
+
+        [Parameter()]
+        [System.Object]
+        $WeatherLocations,
+
+        [Parameter()]
+        [System.Boolean]
+        $FlightEventsFromEmailEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $RentalCarEventsFromEmailEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $DeleteMeetingRequestOnRespond,
+
+        [Parameter()]
+        [System.Int32]
+        $DefaultMeetingDuration,
+
+        [Parameter()]
+        [System.Boolean]
+        $ReminderSoundEnabled,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $WorkingHoursEndTime,
+
+        [Parameter()]
+        [System.Object]
+        $ShortenEventScopeDefault,
+
+        [Parameter()]
+        [System.Boolean]
+        $InvoiceEventsFromEmailEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $UseBrightCalendarColorThemeInOwa,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $DefaultReminderTime,
+
+        [Parameter()]
+        [System.Object]
+        $LocationDetailsInFreeBusy,
+
+        [Parameter()]
+        [System.Object]
+        $WeatherEnabled,
+
+        [Parameter()]
+        [System.String]
+        $CalendarFeedsPreferredRegion,
+
+        [Parameter()]
+        [System.Boolean]
+        $ServiceAppointmentEventsFromEmailEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $ShowWeekNumbers,
+
+        [Parameter()]
+        [System.Boolean]
+        $RemindersEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $WeekStartDay,
+
+        [Parameter()]
+        [System.Object]
+        $FirstWeekOfYear,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $AgendaMailIntroductionEnabled,
+
+        [Parameter()]
+        [System.TimeSpan]
+        $WorkingHoursStartTime,
+
+        [Parameter()]
+        [System.String]
+        $CalendarFeedsRootPageId,
+
+        [Parameter()]
+        [System.Object]
+        $DailyAgendaMailSchedule,
+
+        [Parameter()]
+        [System.Int32]
+        $DefaultMinutesToReduceLongEventsBy,
+
+        [Parameter()]
+        [System.Int32]
+        $DefaultMinutesToReduceShortEventsBy,
+
+        [Parameter()]
+        [System.Boolean]
+        $AutoDeclineWhenBusy,
+
+        [Parameter()]
+        [System.Object]
+        $OnlineMeetingsByDefaultEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $PreserveDeclinedMeetings,
+
+        [Parameter()]
+        [System.Object]
+        $TimeIncrement,
+
+        [Parameter()]
+        [System.Object]
+        $WorkDays,
+
+        [Parameter()]
+        [System.Boolean]
+        $EntertainmentEventsFromEmailEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $EventsFromEmailEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $WeatherUnit,
+
+        [Parameter()]
+        [System.Object]
+        $DefaultOnlineMeetingProvider,
+
+        [Parameter()]
+        [System.Object]
+        $MailboxLocation,
+
+        [Parameter()]
+        [System.Boolean]
+        $AgendaMailEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $AgendaPaneEnabled
+    )
+}
+
+
+
+function Get-RetentionPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
+
+function New-RetentionPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Object[]]
+        $RetentionPolicyTagLinks,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsDefaultArbitrationMailbox,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsDefault,
+
+        [Parameter()]
+        [System.Guid]
+        $RetentionId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm
+    )
+}
+
+
+function Remove-RetentionPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force
+    )
+}
+
+
+function Set-RetentionPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Object[]]
+        $RetentionPolicyTagLinks,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsDefault,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Guid]
+        $RetentionId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsDefaultArbitrationMailbox,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force
+    )
+}
+
 function Get-SweepRule
 {
     [CmdletBinding()]
@@ -74,7 +628,6 @@ function Get-SweepRule
         $ResultSize
     )
 }
-
 function New-SweepRule
 {
     [CmdletBinding()]
@@ -192,6 +745,102 @@ function Set-SweepRule
         [Parameter()]
         [System.Boolean]
         $Enabled
+    )
+}
+
+function Get-ExoPhishSimOverrideRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Policy
+    )
+}
+
+function New-ExoPhishSimOverrideRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Object]
+        $SenderIpRanges,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Domains,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.String]
+        $Policy
+    )
+}
+
+function Remove-ExoPhishSimOverrideRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
+
+function Set-ExoPhishSimOverrideRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $AddDomains,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.Object]
+        $AddSenderIpRanges,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveDomains,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveSenderIpRanges
     )
 }
 
@@ -346,6 +995,60 @@ function Add-RecipientPermission
         [Parameter()]
         [System.Object]
         $Trustee
+    )
+}
+function Get-ExoSecOpsOverrideRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $Policy
+    )
+}
+
+function New-ExoSecOpsOverrideRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Object]
+        $Policy,
+
+        [Parameter()]
+        [System.String]
+        $Comment
+    )
+}
+function Remove-ExoSecOpsOverrideRule
+{
+    [CmdletBinding()]
+    param(
+
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
+function Set-ExoSecOpsOverrideRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.Object]
+        $Identity
     )
 }
 function Disable-JournalRule
@@ -2103,6 +2806,29 @@ function Get-TransportRule
         $Identity
     )
 }
+
+function Get-UnifiedAuditLogRetentionPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Operation,
+
+        [Parameter()]
+        [System.String]
+        $RecordType,
+
+        [Parameter()]
+        [System.String]
+        $RetentionDuration,
+
+        [Parameter()]
+        [System.String]
+        $UserId
+    )
+}
+
 function Get-UnifiedGroup
 {
     [CmdletBinding()]
@@ -6232,6 +6958,41 @@ function New-TransportRule
         $ExceptIfHeaderContainsMessageHeader
     )
 }
+
+function New-UnifiedAuditLogRetentionPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.UInt32]
+        $Priority,
+
+        [Parameter()]
+        [System.String]
+        $RetentionDuration,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String[]]
+        $Operations,
+
+        [Parameter()]
+        [System.String[]]
+        $RecordTypes,
+
+        [Parameter()]
+        [System.String[]]
+        $UserIds
+    )
+}
+
 function Remove-ActiveSyncDevice
 {
     [CmdletBinding()]
@@ -7104,6 +7865,17 @@ function Remove-TransportRule
         $Identity
     )
 }
+
+function Remove-UnifiedAuditLogRetentionPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+
 function Set-AcceptedDomain
 {
     [CmdletBinding()]
@@ -13989,6 +14761,41 @@ function Set-UnifiedGroup
         $HiddenFromAddressListsEnabled
     )
 }
+
+function Set-UnifiedAuditLogRetentionPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.UInt32]
+        $Priority,
+
+        [Parameter()]
+        [System.String]
+        $RetentionDuration,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String[]]
+        $Operations,
+
+        [Parameter()]
+        [System.String[]]
+        $RecordTypes,
+
+        [Parameter()]
+        [System.String[]]
+        $UserIds
+    )
+}
+
 function Set-User
 {
     [CmdletBinding()]
@@ -71770,6 +72577,37 @@ function Get-TenantSettings
         $ApiVersion
     )
 }
+
+function Get-TenantAllowBlockListItems
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $ListType,
+
+        [Parameter()]
+        [System.DateTime]
+        $ExpirationDate,
+
+        [Parameter()]
+        [switch]
+        $Allow,
+
+        [Parameter()]
+        [switch]
+        $Block,
+
+        [Parameter()]
+        [System.String]
+        $Entry,
+
+        [Parameter()]
+        [System.Object[]]
+        $ListSubType
+    )
+}
+
 function New-AdminPowerAppEnvironment
 {
     [CmdletBinding()]
@@ -71895,6 +72733,53 @@ function Set-TenantSettings
         $RequestBody
     )
 }
+
+function Set-TenantAllowBlockListItems
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $ListType,
+
+        [Parameter()]
+        [System.DateTime]
+        $ExpirationDate,
+
+        [Parameter()]
+        [switch]
+        $Allow,
+
+        [Parameter()]
+        [switch]
+        $Block,
+
+        [Parameter()]
+        [System.String[]]
+        $Entries,
+
+        [Parameter()]
+        [System.Object[]]
+        $ListSubType,
+
+        [Parameter()]
+        [switch]
+        $NoExpiration,
+
+        [Parameter()]
+        [System.String]
+        $Notes,
+
+        [Parameter()]
+        [switch]
+        $OutputJson,
+
+        [Parameter()]
+        [System.Int32]
+        $RemoveAfter
+    )
+}
+
 #endregion
 #region MicrosoftTeams
 function Add-TeamUser
@@ -73827,6 +74712,57 @@ function New-TeamChannel
         $GroupId
     )
 }
+
+function New-TenantAllowBlockListItems
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Entries,
+
+        [Parameter()]
+        [System.String]
+        $ListType,
+
+        [Parameter()]
+        [System.DateTime]
+        $ExpirationDate,
+
+        [Parameter()]
+        [switch]
+        $Allow,
+
+        [Parameter()]
+        [switch]
+        $Block,
+
+        [Parameter()]
+        [System.Object]
+        $ListSubType,
+
+        [Parameter()]
+        [switch]
+        $LogExtraDetails,
+
+        [Parameter()]
+        [System.String]
+        $Notes,
+
+        [Parameter()]
+        [switch]
+        $OutputJson,
+
+        [Parameter()]
+        [System.Int32]
+        $RemoveAfter,
+
+        [Parameter()]
+        [System.String]
+        $SubmissionID
+    )
+}
+
 function Remove-CsOnlineVoicemailPolicy
 {
     [CmdletBinding()]
@@ -74155,6 +75091,29 @@ function Remove-TeamUser
         $Role
     )
 }
+
+function Remove-TenantAllowBlockListItems
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $ListType,
+
+        [Parameter()]
+        [System.String[]]
+        $Entries,
+
+        [Parameter()]
+        [System.String]
+        $ListSubType,
+
+        [Parameter()]
+        [switch]
+        $OutputJson
+    )
+}
+
 function Set-CsOnlineVoicemailPolicy
 {
     [CmdletBinding()]
