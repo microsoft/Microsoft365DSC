@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* EXOMailboxIRMAccess
+  * Initial Release.
 * AADPasswordRuleSettings
   * Initial release
 * AzureSubscription
