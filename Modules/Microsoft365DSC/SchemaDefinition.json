@@ -35883,11 +35883,6 @@
                                "Option":  "Write"
                            },
                            {
-                               "CIMType":  "Boolean",
-                               "Name":  "CustomerLockboxEnabled",
-                               "Option":  "Write"
-                           },
-                           {
                                "CIMType":  "String",
                                "Name":  "InstallationOptionsUpdateChannel",
                                "Option":  "Write"
