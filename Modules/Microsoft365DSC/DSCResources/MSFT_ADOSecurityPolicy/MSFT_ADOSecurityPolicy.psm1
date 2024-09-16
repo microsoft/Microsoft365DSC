@@ -4,12 +4,45 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        ##TODO - Replace the PrimaryKey
         [Parameter(Mandatory = $true)]
         [System.String]
-        $PrimaryKey,
+        $OrganizationName,
 
-        ##TODO - Add the list of Parameters
+        [Parameter()]
+        [System.Boolean]
+        $DisallowAadGuestUserAccess,
+
+        [Parameter()]
+        [System.Boolean]
+        $DisallowOAuthAuthentication,
+
+        [Parameter()]
+        [System.Boolean]
+        $DisallowSecureShell,
+
+        [Parameter()]
+        [System.Boolean]
+        $LogAuditEvents,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowAnonymousAccess,
+
+        [Parameter()]
+        [System.Boolean]
+        $ArtifactsExternalPackageProtectionToken,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnforceAADConditionalAccess,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowTeamAdminsInvitationsAccessToken,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowRequestAccessToken,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -35,8 +68,6 @@ function Get-TargetResource
         [System.String[]]
         $AccessTokens
     )
-
-    ##TODO - Replace the workload by the one associated to your resource
     New-M365DSCConnection -Workload 'AzureDevOPS' `
         -InboundParameters $PSBoundParameters | Out-Null
 
@@ -58,14 +89,46 @@ function Get-TargetResource
         $uri = "https://dev.azure.com/$($OrganizationName)/_apis/OrganizationPolicy/Policies/Policy.DisallowAadGuestUserAccess?defaultValue"
         $DisallowAadGuestUserAccessValue = (Invoke-M365DSCAzureDevOPSWebRequest -uri $uri).Value
 
+        $uri = "https://dev.azure.com/$($OrganizationName)/_apis/OrganizationPolicy/Policies/Policy.DisallowOAuthAuthentication?defaultValue"
+        $DisallowOAuthAuthenticationValue = (Invoke-M365DSCAzureDevOPSWebRequest -uri $uri).Value
+
+        $uri = "https://dev.azure.com/$($OrganizationName)/_apis/OrganizationPolicy/Policies/Policy.DisallowSecureShell?defaultValue"
+        $DisallowSecureShellValue = (Invoke-M365DSCAzureDevOPSWebRequest -uri $uri).Value
+
+        $uri = "https://dev.azure.com/$($OrganizationName)/_apis/OrganizationPolicy/Policies/Policy.LogAuditEvents?defaultValue"
+        $LogAuditEventsValue = (Invoke-M365DSCAzureDevOPSWebRequest -uri $uri).Value
+
+        $uri = "https://dev.azure.com/$($OrganizationName)/_apis/OrganizationPolicy/Policies/Policy.AllowAnonymousAccess?defaultValue"
+        $AllowAnonymousAccessValue = (Invoke-M365DSCAzureDevOPSWebRequest -uri $uri).Value
+
+        $uri = "https://dev.azure.com/$($OrganizationName)/_apis/OrganizationPolicy/Policies/Policy.ArtifactsExternalPackageProtectionToken?defaultValue"
+        $ArtifactsExternalPackageProtectionTokenValue = (Invoke-M365DSCAzureDevOPSWebRequest -uri $uri).Value
+
+        $uri = "https://dev.azure.com/$($OrganizationName)/_apis/OrganizationPolicy/Policies/Policy.EnforceAADConditionalAccess?defaultValue"
+        $EnforceAADConditionalAccessValue = (Invoke-M365DSCAzureDevOPSWebRequest -uri $uri).Value
+
+        $uri = "https://dev.azure.com/$($OrganizationName)/_apis/OrganizationPolicy/Policies/Policy.AllowTeamAdminsInvitationsAccessToken?defaultValue"
+        $AllowTeamAdminsInvitationsAccessTokenValue = (Invoke-M365DSCAzureDevOPSWebRequest -uri $uri).Value
+
+        $uri = "https://dev.azure.com/$($OrganizationName)/_apis/OrganizationPolicy/Policies/Policy.AllowRequestAccessToken?defaultValue"
+        $AllowRequestAccessTokenValue = (Invoke-M365DSCAzureDevOPSWebRequest -uri $uri).Value
+
         $results = @{
-            DisallowAadGuestUserAccessValue = [Boolean] $DisallowAadGuestUserAccessValue
-            Credential            = $Credential
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            CertificateThumbprint = $CertificateThumbprint
-            ManagedIdentity       = $ManagedIdentity.IsPresent
-            AccessTokens          = $AccessTokens
+            DisallowAadGuestUserAccess              = [Boolean]::Parse($DisallowAadGuestUserAccessValue)
+            DisallowOAuthAuthentication             = [Boolean]::Parse($DisallowOAuthAuthenticationValue)
+            DisallowSecureShell                     = [Boolean]::Parse($DisallowSecureShellValue)
+            LogAuditEvents                          = [Boolean]::Parse($LogAuditEventsValue)
+            AllowAnonymousAccess                    = [Boolean]::Parse($AllowAnonymousAccessValue)
+            ArtifactsExternalPackageProtectionToken = [Boolean]::Parse($ArtifactsExternalPackageProtectionTokenValue)
+            EnforceAADConditionalAccess             = [Boolean]::Parse($EnforceAADConditionalAccessValue)
+            AllowTeamAdminsInvitationsAccessToken   = [Boolean]::Parse($AllowTeamAdminsInvitationsAccessTokenValue)
+            AllowRequestAccessToken                 = [Boolean]::Parse($AllowRequestAccessTokenValue)
+            Credential                              = $Credential
+            ApplicationId                           = $ApplicationId
+            TenantId                                = $TenantId
+            CertificateThumbprint                   = $CertificateThumbprint
+            ManagedIdentity                         = $ManagedIdentity.IsPresent
+            AccessTokens                            = $AccessTokens
         }
         return [System.Collections.Hashtable] $results
     }
@@ -87,12 +150,46 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
-        ##TODO - Replace the PrimaryKey
+
         [Parameter(Mandatory = $true)]
         [System.String]
-        $PrimaryKey,
+        $OrganizationName,
 
-        ##TODO - Add the list of Parameters
+        [Parameter()]
+        [System.Boolean]
+        $DisallowAadGuestUserAccess,
+
+        [Parameter()]
+        [System.Boolean]
+        $DisallowOAuthAuthentication,
+
+        [Parameter()]
+        [System.Boolean]
+        $DisallowSecureShell,
+
+        [Parameter()]
+        [System.Boolean]
+        $LogAuditEvents,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowAnonymousAccess,
+
+        [Parameter()]
+        [System.Boolean]
+        $ArtifactsExternalPackageProtectionToken,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnforceAADConditionalAccess,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowTeamAdminsInvitationsAccessToken,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowRequestAccessToken,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -131,28 +228,42 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $currentInstance = Get-TargetResource @PSBoundParameters
+    New-M365DSCConnection -Workload 'AzureDevOPS' `
+        -InboundParameters $PSBoundParameters | Out-Null
 
-    $setParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+    if ($PSBoundParameters.ContainsKey('DisallowAadGuestUserAccess'))
+    {
+        $uri = "https://dev.azure.com/$($OrganizationName)/_apis/OrganizationPolicy/Policies/Policy.DisallowAadGuestUserAccess"
+        $body = @{
+            path = '/value'
+            value = $DisallowAadGuestUserAccess
+        }
+        DisallowAadGuestUserAccessValue = Invoke-M365DSCAzureDevOPSWebRequest -uri $uri -Method 'PATCH'
+    }
+<#
+    $uri = "https://dev.azure.com/$($OrganizationName)/_apis/OrganizationPolicy/Policies/Policy.DisallowOAuthAuthentication?defaultValue"
+    $DisallowOAuthAuthenticationValue = (Invoke-M365DSCAzureDevOPSWebRequest -uri $uri).Value
 
-    # CREATE
-    if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
-    {
-        ##TODO - Replace by the New cmdlet for the resource
-        New-Cmdlet @SetParameters
-    }
-    # UPDATE
-    elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
-    {
-        ##TODO - Replace by the Update/Set cmdlet for the resource
-        Set-cmdlet @SetParameters
-    }
-    # REMOVE
-    elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
-    {
-        ##TODO - Replace by the Remove cmdlet for the resource
-        Remove-cmdlet @SetParameters
-    }
+    $uri = "https://dev.azure.com/$($OrganizationName)/_apis/OrganizationPolicy/Policies/Policy.DisallowSecureShell?defaultValue"
+    $DisallowSecureShellValue = (Invoke-M365DSCAzureDevOPSWebRequest -uri $uri).Value
+
+    $uri = "https://dev.azure.com/$($OrganizationName)/_apis/OrganizationPolicy/Policies/Policy.LogAuditEvents?defaultValue"
+    $LogAuditEventsValue = (Invoke-M365DSCAzureDevOPSWebRequest -uri $uri).Value
+
+    $uri = "https://dev.azure.com/$($OrganizationName)/_apis/OrganizationPolicy/Policies/Policy.AllowAnonymousAccess?defaultValue"
+    $AllowAnonymousAccessValue = (Invoke-M365DSCAzureDevOPSWebRequest -uri $uri).Value
+
+    $uri = "https://dev.azure.com/$($OrganizationName)/_apis/OrganizationPolicy/Policies/Policy.ArtifactsExternalPackageProtectionToken?defaultValue"
+    $ArtifactsExternalPackageProtectionTokenValue = (Invoke-M365DSCAzureDevOPSWebRequest -uri $uri).Value
+
+    $uri = "https://dev.azure.com/$($OrganizationName)/_apis/OrganizationPolicy/Policies/Policy.EnforceAADConditionalAccess?defaultValue"
+    $EnforceAADConditionalAccessValue = (Invoke-M365DSCAzureDevOPSWebRequest -uri $uri).Value
+
+    $uri = "https://dev.azure.com/$($OrganizationName)/_apis/OrganizationPolicy/Policies/Policy.AllowTeamAdminsInvitationsAccessToken?defaultValue"
+    $AllowTeamAdminsInvitationsAccessTokenValue = (Invoke-M365DSCAzureDevOPSWebRequest -uri $uri).Value
+
+    $uri = "https://dev.azure.com/$($OrganizationName)/_apis/OrganizationPolicy/Policies/Policy.AllowRequestAccessToken?defaultValue"
+    $AllowRequestAccessTokenValue = (Invoke-M365DSCAzureDevOPSWebRequest -uri $uri).Value#>
 }
 
 function Test-TargetResource
@@ -161,12 +272,46 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
-        ##TODO - Replace the PrimaryKey
+
         [Parameter(Mandatory = $true)]
         [System.String]
-        $PrimaryKey,
+        $OrganizationName,
 
-        ##TODO - Add the list of Parameters
+        [Parameter()]
+        [System.Boolean]
+        $DisallowAadGuestUserAccess,
+
+        [Parameter()]
+        [System.Boolean]
+        $DisallowOAuthAuthentication,
+
+        [Parameter()]
+        [System.Boolean]
+        $DisallowSecureShell,
+
+        [Parameter()]
+        [System.Boolean]
+        $LogAuditEvents,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowAnonymousAccess,
+
+        [Parameter()]
+        [System.Boolean]
+        $ArtifactsExternalPackageProtectionToken,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnforceAADConditionalAccess,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowTeamAdminsInvitationsAccessToken,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowRequestAccessToken,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -256,7 +401,6 @@ function Export-TargetResource
         $AccessTokens
     )
 
-    ##TODO - Replace workload
     $ConnectionMode = New-M365DSCConnection -Workload 'AzureDevOPS' `
         -InboundParameters $PSBoundParameters
 
@@ -277,7 +421,7 @@ function Export-TargetResource
         $Script:ExportMode = $true
 
         $profile = Invoke-M365DSCAzureDevOPSWebRequest -Uri 'https://app.vssps.visualstudio.com/_apis/profile/profiles/me?api-version=5.1'
-        $accounts = Invoke-M365DSCAzureDevOPSWebRequest -Uri "https://app.vssps.visualstudio.com/_apis/accounts?api-version=7.1-preview.1&memberId=$($profile.Id)"
+        $accounts = Invoke-M365DSCAzureDevOPSWebRequest -Uri "https://app.vssps.visualstudio.com/_apis/accounts?api-version=7.1-preview.1&memberId=$($profile.id)"
 
         $i = 1
         $dscContent = ''
@@ -295,6 +439,7 @@ function Export-TargetResource
         }
         foreach ($organization in $accounts.accountName)
         {
+
             $displayedKey = $organization
             Write-Host "    |---[$i/$($accounts.accountName.Count)] $displayedKey" -NoNewline
             $params = @{

@@ -18,6 +18,7 @@ function Invoke-M365DSCAzureDevOPSWebRequest
 
     $headers = @{
         Authorization = $global:MsCloudLoginConnectionProfile.AzureDevOPS.AccessToken
+        'Content-Type' = 'application/json-patch+json'
     }
 
     $response = Invoke-WebRequest -Method $Method -Uri $Uri -Headers $headers -Body $Body
