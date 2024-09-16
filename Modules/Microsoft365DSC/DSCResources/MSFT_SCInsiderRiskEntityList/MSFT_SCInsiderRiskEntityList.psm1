@@ -49,6 +49,38 @@ function Get-TargetResource
         $TrainableClassifiers,
 
         [Parameter()]
+        [System.String[]]
+        $ExceptionKeyworkGroups,
+
+        [Parameter()]
+        [System.String[]]
+        $ExcludedClassifierGroups,
+
+        [Parameter()]
+        [System.String[]]
+        $ExcludedDomainGroups,
+
+        [Parameter()]
+        [System.String[]]
+        $ExcludedFilePathGroup,
+
+        [Parameter()]
+        [System.String[]]
+        $ExcludedFileTypeGroups,
+
+        [Parameter()]
+        [System.String[]]
+        $ExcludedKeyworkGroups,
+
+        [Parameter()]
+        [System.String[]]
+        $ExcludedSensitiveInformationTypeGroups,
+
+        [Parameter()]
+        [System.String[]]
+        $ExcludedSiteGroups,
+
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -388,6 +420,38 @@ function Set-TargetResource
         $TrainableClassifiers,
 
         [Parameter()]
+        [System.String[]]
+        $ExceptionKeyworkGroups,
+
+        [Parameter()]
+        [System.String[]]
+        $ExcludedClassifierGroups,
+
+        [Parameter()]
+        [System.String[]]
+        $ExcludedDomainGroups,
+
+        [Parameter()]
+        [System.String[]]
+        $ExcludedFilePathGroup,
+
+        [Parameter()]
+        [System.String[]]
+        $ExcludedFileTypeGroups,
+
+        [Parameter()]
+        [System.String[]]
+        $ExcludedKeyworkGroups,
+
+        [Parameter()]
+        [System.String[]]
+        $ExcludedSensitiveInformationTypeGroups,
+
+        [Parameter()]
+        [System.String[]]
+        $ExcludedSiteGroups,
+
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -502,6 +566,38 @@ function Test-TargetResource
         [Parameter()]
         [System.String[]]
         $TrainableClassifiers,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptionKeyworkGroups,
+
+        [Parameter()]
+        [System.String[]]
+        $ExcludedClassifierGroups,
+
+        [Parameter()]
+        [System.String[]]
+        $ExcludedDomainGroups,
+
+        [Parameter()]
+        [System.String[]]
+        $ExcludedFilePathGroup,
+
+        [Parameter()]
+        [System.String[]]
+        $ExcludedFileTypeGroups,
+
+        [Parameter()]
+        [System.String[]]
+        $ExcludedKeyworkGroups,
+
+        [Parameter()]
+        [System.String[]]
+        $ExcludedSensitiveInformationTypeGroups,
+
+        [Parameter()]
+        [System.String[]]
+        $ExcludedSiteGroups,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
