@@ -21,6 +21,34 @@ function Get-TargetResource
         $DisplayName,
 
         [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Domains,
+
+        [Parameter()]
+        [System.String[]]
+        $FilePaths,
+
+        [Parameter()]
+        [System.String[]]
+        $FileTypes,
+
+        [Parameter()]
+        [System.String[]]
+        $Keywords,
+
+        [Parameter()]
+        [System.String[]]
+        $SensitiveInformationTypes,
+
+        [Parameter()]
+        [System.String[]]
+        $Sites,
+
+        [Parameter()]
+        [System.String[]]
+        $TrainableClassifiers,
+
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -70,38 +98,231 @@ function Get-TargetResource
     $nullResult.Ensure = 'Absent'
     try
     {
-        if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
-        {
-            if (-not [System.String]::IsNullOrEmpty($DisplayName))
-            {
-                $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.ListType -eq $ListType -and $_.DisplayName -eq $DisplayName}
-            }
-            else
-            {
-                $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.ListType -eq $ListType -and $_.Name -eq $Name}
-            }
-        }
-        else
-        {
-            $instance = Get-InsiderRiskEntityList -Type $ListType -ErrorAction Stop
-        }
+        $instance = Get-InsiderRiskEntityList -Identity $Name -ErrorAction Stop
+
         if ($null -eq $instance)
         {
             return $nullResult
         }
 
+        # CustomDomainLists
+        $DmnValues = @()
+        if ($instance.ListType -eq 'CustomDomainLists' -or `
+            $instance.Name -eq 'IrmWhitelistDomains')
+        {
+            foreach ($entity in $instance.Entities)
+            {
+                $entity = ConvertFrom-Json $entity
+                $current = @{
+                    Dmn        = $entity.Dmn
+                    isMLSubDmn = $entity.isMLSubDmn
+                }
+                $DmnValues += $current
+            }
+        }
+
+        # CustomFilePathRegexLists
+        $FilePathValues = @()
+        if ($instance.ListType -eq 'CustomFilePathRegexLists' -or `
+            $instance.Name -eq 'IrmCustomExWinFilePaths')
+        {
+            foreach ($entity in $instance.Entities)
+            {
+                $entity = ConvertFrom-Json $entity
+                $FilePathValues += $entity.FlPthRgx
+            }
+        }
+
+        # CustomFileTypeLists
+        $FileTypeValues = @()
+        if ($instance.ListType -eq 'CustomFileTypeLists')
+        {
+            foreach ($entity in $instance.Entities)
+            {
+                $entity = ConvertFrom-Json $entity
+                $FileTypeValues += $entity.Ext
+            }
+        }
+
+        # CustomKeywordLists
+        $KeywordValues = @()
+        if ($instance.ListType -eq 'CustomKeywordLists' -or `
+            $instance.Name -eq 'IrmExcludedKeywords' -or $instance.Name -eq 'IrmNotExcludedKeywords')
+        {
+            foreach ($entity in $instance.Entities)
+            {
+                $entity = ConvertFrom-Json $entity
+                $KeywordValues += $entity.Name
+            }
+        }
+
+        # CustomSensitiveInformationTypeLists
+        $SITValues = @()
+        if ($instance.ListType -eq 'CustomSensitiveInformationTypeLists' -or `
+            $instance.Name -eq 'IrmCustomExSensitiveTypes')
+        {
+            foreach ($entity in $instance.Entities)
+            {
+                $entity = ConvertFrom-Json $entity
+                $SITObject = Get-DLPSensitiveInformationType -Identity $entity.GUID
+                $SITValues += $SITObject.Name
+            }
+        }
+
+        # CustomSiteLists
+        $SiteValues = @()
+        if ($instance.ListType -eq 'CustomSiteLists' -or `
+            $instance.Name -eq 'IrmExcludedSites')
+        {
+            foreach ($entity in $instance.Entities)
+            {
+                $entity = ConvertFrom-Json $entity
+                $SiteValues += $entity.Url
+            }
+        }
+
+        # CustomMLClassifierTypeLists
+        $TrainableClassifierValues = @()
+        if ($instance.ListType -eq 'CustomMLClassifierTypeLists' -or $instance.Name -eq 'IrmCustomExMLClassifiers')
+        {
+            foreach ($entity in $instance.Entities)
+            {
+                $entity = ConvertFrom-Json $entity
+                $SiteValues += $entity.Url
+            }
+        }
+
+        # Global Exclusions - Excluded Keyword Groups
+        $excludedKeywordGroupValue = @()
+        if ($instance.Name -eq 'IrmXSGExcludedKeywords')
+        {
+            $entities = $instance.Entities
+            foreach ($entity in $entities)
+            {
+                $entity = ConvertFrom-Json $entity
+                $group = Get-InsiderRiskEntityList -Identity $entity.GroupId
+                $excludedKeywordGroupValue += $group.DisplayName
+            }
+        }
+
+        # Global Exclusions - Exception Keyword Groups
+        $exceptionKeywordGroupValue = @()
+        if ($instance.Name -eq 'IrmXSGExceptionKeywords')
+        {
+            $entities = $instance.Entities
+            foreach ($entity in $entities)
+            {
+                $entity = ConvertFrom-Json $entity
+                $group = Get-InsiderRiskEntityList -Identity $entity.GroupId
+                $exceptionKeywordGroupValue += $group.DisplayName
+            }
+        }
+
+        # Global Exclusions - Excluded Classifier Groups
+        $excludedClassifierGroupValue = @()
+        if ($instance.Name -eq 'IrmXSGMLClassifierTypes')
+        {
+            $entities = $instance.Entities
+            foreach ($entity in $entities)
+            {
+                $entity = ConvertFrom-Json $entity
+                $group = Get-InsiderRiskEntityList -Identity $entity.GroupId
+                $excludedClassifierGroupValue += $group.DisplayName
+            }
+        }
+
+        # Global Exclusions - Excluded Domain Groups
+        $excludedDomainGroupValue = @()
+        if ($instance.Name -eq 'IrmXSGDomains')
+        {
+            $entities = $instance.Entities
+            foreach ($entity in $entities)
+            {
+                $entity = ConvertFrom-Json $entity
+                $group = Get-InsiderRiskEntityList -Identity $entity.GroupId
+                $excludedDomainGroupValue += $group.DisplayName
+            }
+        }
+
+        # Global Exclusions - Excluded File Path Groups
+        $excludedFilePathGroupValue = @()
+        if ($instance.Name -eq 'IrmXSGFilePaths')
+        {
+            $entities = $instance.Entities
+            foreach ($entity in $entities)
+            {
+                $entity = ConvertFrom-Json $entity
+                $group = Get-InsiderRiskEntityList -Identity $entity.GroupId
+                $excludedFilePathGroupValue += $group.DisplayName
+            }
+        }
+
+        # Global Exclusions - Excluded Site Groups
+        $excludedSiteGroupValue = @()
+        if ($instance.Name -eq 'IrmXSGSites')
+        {
+            $entities = $instance.Entities
+            foreach ($entity in $entities)
+            {
+                $entity = ConvertFrom-Json $entity
+                $group = Get-InsiderRiskEntityList -Identity $entity.GroupId
+                $excludedSiteGroupValue += $group.DisplayName
+            }
+        }
+
+        # Global Exclusions - Excluded Sensitive Info Type Groups
+        $excludedSITGroupValue = @()
+        if ($instance.Name -eq 'IrmXSGSensitiveInfoTypes')
+        {
+            $entities = $instance.Entities
+            foreach ($entity in $entities)
+            {
+                $entity = ConvertFrom-Json $entity
+                $group = Get-InsiderRiskEntityList -Identity $entity.GroupId
+                $excludedSITGroupValue += $group.DisplayName
+            }
+        }
+
+        # Global Exclusions - Excluded File Type Groups
+        $excludedFileTypeGroupValue = @()
+        if ($instance.Name -eq 'IrmXSGFiletypes')
+        {
+            $entities = $instance.Entities
+            foreach ($entity in $entities)
+            {
+                $entity = ConvertFrom-Json $entity
+                $group = Get-InsiderRiskEntityList -Identity $entity.GroupId
+                $excludedFileTypeGroupValue += $group.DisplayName
+            }
+        }
+
         $results = @{
-            DisplayName           = $instance.DisplayName
-            Name                  = $instance.Name
-            Description           = $instance.Description
-            ListType              = $instance.ListType
-            Ensure                = 'Present'
-            Credential            = $Credential
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            CertificateThumbprint = $CertificateThumbprint
-            ManagedIdentity       = $ManagedIdentity.IsPresent
-            AccessTokens          = $AccessTokens
+            DisplayName                            = $instance.DisplayName
+            Name                                   = $instance.Name
+            Description                            = $instance.Description
+            ListType                               = $instance.ListType
+            Domains                                = $DmnValues
+            FilePaths                              = $FilePathValues
+            FileTypes                              = $FileTypeValues
+            Keywords                               = $KeywordValues
+            SensitiveInformationTypes              = $SITValues
+            Sites                                  = $SiteValues
+            #TrainableClassifiers                  =
+            ExcludedKeyworkGroups                  = $excludedKeywordGroupValue
+            ExceptionKeyworkGroups                 = $exceptionKeywordGroupValue
+            ExcludedClassifierGroups               = $excludedClassifierGroupValue
+            ExcludedDomainGroups                   = $excludedDomainGroupValue
+            ExcludedFilePathGroup                  = $excludedFilePathGroupValue
+            ExcludedSiteGroups                     = $excludedSiteGroupValue
+            ExcludedSensitiveInformationTypeGroups = $excludedSITGroupValue
+            ExcludedFileTypeGroups                 = $excludedFileTypeGroupValue
+            Ensure                                 = 'Present'
+            Credential                             = $Credential
+            ApplicationId                          = $ApplicationId
+            TenantId                               = $TenantId
+            CertificateThumbprint                  = $CertificateThumbprint
+            ManagedIdentity                        = $ManagedIdentity.IsPresent
+            AccessTokens                           = $AccessTokens
         }
         return [System.Collections.Hashtable] $results
     }
@@ -122,12 +343,54 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
-        ##TODO - Replace the PrimaryKey
         [Parameter(Mandatory = $true)]
         [System.String]
-        $PrimaryKey,
+        $Name,
 
-        ##TODO - Add the list of Parameters
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $ListType,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Domains,
+
+        [Parameter()]
+        [System.String[]]
+        $FilePaths,
+
+        [Parameter()]
+        [System.String[]]
+        $FileTypes,
+
+        [Parameter()]
+        [System.String[]]
+        $Keywords,
+
+        [Parameter()]
+        [System.String[]]
+        $SensitiveInformationTypes,
+
+        [Parameter()]
+        [System.String[]]
+        $Sites,
+
+        [Parameter()]
+        [System.String[]]
+        $TrainableClassifiers,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -196,12 +459,54 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
-        ##TODO - Replace the PrimaryKey
         [Parameter(Mandatory = $true)]
         [System.String]
-        $PrimaryKey,
+        $Name,
 
-        ##TODO - Add the list of Parameters
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $ListType,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Domains,
+
+        [Parameter()]
+        [System.String[]]
+        $FilePaths,
+
+        [Parameter()]
+        [System.String[]]
+        $FileTypes,
+
+        [Parameter()]
+        [System.String[]]
+        $Keywords,
+
+        [Parameter()]
+        [System.String[]]
+        $SensitiveInformationTypes,
+
+        [Parameter()]
+        [System.String[]]
+        $Sites,
+
+        [Parameter()]
+        [System.String[]]
+        $TrainableClassifiers,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]

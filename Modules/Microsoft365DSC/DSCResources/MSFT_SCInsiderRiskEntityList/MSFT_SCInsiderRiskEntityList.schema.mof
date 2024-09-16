@@ -1,3 +1,11 @@
+[ClassVersion("1.0.0")]
+class MSFT_SCInsiderRiskEntityListDomain
+{
+    [Required, Description("Domain name.")] String Dmn;
+    [Write, Description("Defines if the entry should include multi-level subdomains or not.")] Boolean isMLSubDmn;
+    [Write, Description("Type of the Sensitive Information label")] String type;
+};
+
 [ClassVersion("1.0.0.0"), FriendlyName("SCInsiderRiskEntityList")]
 class MSFT_SCInsiderRiskEntityList : OMI_BaseResource
 {
@@ -5,6 +13,7 @@ class MSFT_SCInsiderRiskEntityList : OMI_BaseResource
     [Required, Description("")] String ListType;
     [Write, Description("")] String Description;
     [Write, Description("")] String DisplayName;
+    [Write, Description("Domain group."), EmbeddedInstance("MSFT_SCInsiderRiskEntityListDomain")] string Domains;
     [Write, Description("Specify if this entity should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
     [Write, Description("Credentials of the workload's Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
