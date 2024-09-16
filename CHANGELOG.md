@@ -14,6 +14,8 @@
   * Initial Release.
 * EXOMailboxCalendarConfiguration
   * Initial Release.
+* EXOMailboxIRMAccess
+  * Initial Release.
 * EXOManagementScope
   * Initial Release.
 * EXOManagementScope

@@ -1345,6 +1345,20 @@
                     SourceFolder          = "Test2:\Inbox";
                     TenantId              = $TenantId;
                 }
+                EXOTenantAllowBlockListItems 'Example'
+                {
+                    ApplicationId         = $ApplicationId;
+                    CertificateThumbprint = $CertificateThumbprint;
+                    TenantId              = $TenantId;
+                    Action                = "Block";
+                    Ensure                = "Present";
+                    ExpirationDate        = "10/11/2024 9:00:00 PM";
+                    ListSubType           = "Tenant";
+                    ListType              = "Sender";
+                    Notes                 = "Test block with updated notes";
+                    SubmissionID          = "Non-Submission";
+                    Value                 = "example.com";
+                }
                 EXOTransportConfig 'EXOTransportConfig '
                 {
                     IsSingleInstance                        = "Yes";

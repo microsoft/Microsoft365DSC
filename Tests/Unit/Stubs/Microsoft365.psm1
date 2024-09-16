@@ -89,6 +89,52 @@ function Disable-AzSubscription
 #endregion
 
 # region ExchangeOnlineManagement
+function Get-MailboxIRMAccess
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $User,
+
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
+
+function Set-MailboxIRMAccess
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $User,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $AccessLevel
+    )
+}
+
+function Remove-MailboxIRMAccess
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $User,
+
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
+
 function Get-ArcConfig
 {
     [CmdletBinding()]
@@ -72531,6 +72577,37 @@ function Get-TenantSettings
         $ApiVersion
     )
 }
+
+function Get-TenantAllowBlockListItems
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $ListType,
+
+        [Parameter()]
+        [System.DateTime]
+        $ExpirationDate,
+
+        [Parameter()]
+        [switch]
+        $Allow,
+
+        [Parameter()]
+        [switch]
+        $Block,
+
+        [Parameter()]
+        [System.String]
+        $Entry,
+
+        [Parameter()]
+        [System.Object[]]
+        $ListSubType
+    )
+}
+
 function New-AdminPowerAppEnvironment
 {
     [CmdletBinding()]
@@ -72656,6 +72733,53 @@ function Set-TenantSettings
         $RequestBody
     )
 }
+
+function Set-TenantAllowBlockListItems
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $ListType,
+
+        [Parameter()]
+        [System.DateTime]
+        $ExpirationDate,
+
+        [Parameter()]
+        [switch]
+        $Allow,
+
+        [Parameter()]
+        [switch]
+        $Block,
+
+        [Parameter()]
+        [System.String[]]
+        $Entries,
+
+        [Parameter()]
+        [System.Object[]]
+        $ListSubType,
+
+        [Parameter()]
+        [switch]
+        $NoExpiration,
+
+        [Parameter()]
+        [System.String]
+        $Notes,
+
+        [Parameter()]
+        [switch]
+        $OutputJson,
+
+        [Parameter()]
+        [System.Int32]
+        $RemoveAfter
+    )
+}
+
 #endregion
 #region MicrosoftTeams
 function Add-TeamUser
@@ -74588,6 +74712,57 @@ function New-TeamChannel
         $GroupId
     )
 }
+
+function New-TenantAllowBlockListItems
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Entries,
+
+        [Parameter()]
+        [System.String]
+        $ListType,
+
+        [Parameter()]
+        [System.DateTime]
+        $ExpirationDate,
+
+        [Parameter()]
+        [switch]
+        $Allow,
+
+        [Parameter()]
+        [switch]
+        $Block,
+
+        [Parameter()]
+        [System.Object]
+        $ListSubType,
+
+        [Parameter()]
+        [switch]
+        $LogExtraDetails,
+
+        [Parameter()]
+        [System.String]
+        $Notes,
+
+        [Parameter()]
+        [switch]
+        $OutputJson,
+
+        [Parameter()]
+        [System.Int32]
+        $RemoveAfter,
+
+        [Parameter()]
+        [System.String]
+        $SubmissionID
+    )
+}
+
 function Remove-CsOnlineVoicemailPolicy
 {
     [CmdletBinding()]
@@ -74916,6 +75091,29 @@ function Remove-TeamUser
         $Role
     )
 }
+
+function Remove-TenantAllowBlockListItems
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $ListType,
+
+        [Parameter()]
+        [System.String[]]
+        $Entries,
+
+        [Parameter()]
+        [System.String]
+        $ListSubType,
+
+        [Parameter()]
+        [switch]
+        $OutputJson
+    )
+}
+
 function Set-CsOnlineVoicemailPolicy
 {
     [CmdletBinding()]
