@@ -29,7 +29,6 @@
 | **ToDoIsExternalShareEnabled** | Write | Boolean | To Do - Allow sharing with external users. | |
 | **ToDoIsPushNotificationEnabled** | Write | Boolean | To Do - Allow your users to receive push notifications. | |
 | **AdminCenterReportDisplayConcealedNames** | Write | Boolean | Controls whether or not the Admin Center reports will conceale user, group and site names. | |
-| **CustomerLockboxEnabled** | Write | Boolean | Determines if the customer lockbox should require approval for all data access requests or not. | |
 | **InstallationOptionsUpdateChannel** | Write | String | Defines how often you want your users to get feature updates for Microsoft 365 apps installed on devices running Windows | `current`, `monthlyEnterprise`, `semiAnnual` |
 | **InstallationOptionsAppsForWindows** | Write | StringArray[] | Defines the apps users can install on Windows and mobile devices. | `isVisioEnabled`, `isSkypeForBusinessEnabled`, `isProjectEnabled`, `isMicrosoft365AppsEnabled` |
 | **InstallationOptionsAppsForMac** | Write | StringArray[] | Defines the apps users can install on Mac devices. | `isSkypeForBusinessEnabled`, `isMicrosoft365AppsEnabled` |
