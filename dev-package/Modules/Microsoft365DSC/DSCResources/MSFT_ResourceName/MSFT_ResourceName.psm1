@@ -12,6 +12,11 @@ function Get-TargetResource
         ##TODO - Add the list of Parameters
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -109,6 +114,11 @@ function Set-TargetResource
         ##TODO - Add the list of Parameters
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -181,6 +191,11 @@ function Test-TargetResource
         $PrimaryKey,
 
         ##TODO - Add the list of Parameters
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]

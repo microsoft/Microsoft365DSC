@@ -1,0 +1,24 @@
+{
+    "resourceName": "EXOTenantAllowBlockListItems",
+    "description": "This resource configures the tenant allow/block list (TABL) entries",
+    "roles": {
+        "read": [
+            "Exchange Admin"
+        ],
+        "update": [
+            "Exchange Admin"
+        ]
+    },
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [],
+                "update": []
+            },
+            "application": {
+                "read": [],
+                "update": []
+            }
+        }
+    }
+}

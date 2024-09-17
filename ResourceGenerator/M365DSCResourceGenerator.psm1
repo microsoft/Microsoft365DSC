@@ -911,10 +911,24 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
     }
     else
     {
-        $ParametersToFilterOut = @('Verbose', 'Debug', 'ErrorAction', 'WarningAction', 'InformationAction', 'ErrorVariable', 'WarningVariable', 'InformationVariable', 'OutVariable', 'OutBuffer', 'PipelineVariable', 'WhatIf', 'Confirm')
+        $ParametersToFilterOut = @('Verbose', 'Debug', 'ErrorAction', 'WarningAction', 'InformationAction', 'ErrorVariable', 'WarningVariable', 'InformationVariable', 'OutVariable', 'OutBuffer', 'PipelineVariable', 'WhatIf', 'Confirm', 'ProgressAction')
         $cmdlet = Get-Command ($cmdletVerb + "-" + $cmdletNoun)
 
         $defaultParameterSetProperties = $cmdlet.ParameterSets | Where-Object -FilterScript {$_.IsDefault}
+
+        if ($null -eq $defaultParameterSetProperties)
+        {
+            # No default parameter set, if there is only a single parameter set then use that
+            if ($cmdlet.ParameterSets.Count -eq 1)
+            {
+                $defaultParameterSetProperties = $cmdlet.ParameterSets[0]
+            }
+            else
+            {
+                throw "CmdLet '$($cmdletVerb + "-" + $cmdletNoun)' does not have a default parameter set"
+            }
+        }
+
         $properties = $defaultParameterSetProperties.Parameters | Where-Object -FilterScript {-not $ParametersToFilterOut.Contains($_.Name) -and -not $_.Name.StartsWith('MsftInternal')}
 
         #region Get longest parametername
@@ -1128,6 +1142,12 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
 
             $propertyValue = $null
             $propertyDriftValue = $null
+
+            if ($null -eq $fakeValues.$key)
+            {
+                continue
+            }
+
             switch ($fakeValues.$key.GetType().Name)
             {
                 "String"
