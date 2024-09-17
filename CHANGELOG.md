@@ -34,6 +34,15 @@
 * IntuneDeviceConfigurationSharedMultiDevicePolicyWindows10
   * Add missing `AccessTokens` parameter to `Export-TargetResource`
     FIXES [#5034](https://github.com/microsoft/Microsoft365DSC/issues/5034)
+* IntuneFirewallPolicyWindows10
+  * Initial release
+    FIXES [#3033](https://github.com/microsoft/Microsoft365DSC/issues/3033)
+* M365DSCDRGUtil
+  * Add support for more complex Intune Settings Catalog properties
+  * Update handling of `Update-IntuneDeviceConfigurationPolicy` to throw on error
+    FIXES [#5055](https://github.com/microsoft/Microsoft365DSC/issues/5055)
+* M365DSCResourceGenerator
+  * Update Intune resource generation for the Settings Catalog.
 * SCRoleGroup
   * Fixes an issue with creation without specifying Displayname
   * Fixes an issue with Drifts because of returned Role format

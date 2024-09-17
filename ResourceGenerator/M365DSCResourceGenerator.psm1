@@ -3816,6 +3816,7 @@ function New-SettingsCatalogSettingDefinitionSettingsFromTemplate {
             else
             {
                 $skip = 0
+                $breakCounter = 0
                 $newSettingName = $settingName
                 do {
                     $previousSettingName = $newSettingName
@@ -3831,9 +3832,21 @@ function New-SettingsCatalogSettingDefinitionSettingsFromTemplate {
                     }
                     $settingsWithSameName = $combinationMatchesWithOffsetUri
                     $skip++
-                } while ($combinationMatchesWithOffsetUri.Count -gt 1)
+                    $breakCounter++
+                } while ($combinationMatchesWithOffsetUri.Count -gt 1 -and $breakCounter -lt 8)
 
-                $settingName = $newSettingName
+                if ($breakCounter -lt 8)
+                {
+                    $settingName = $newSettingName
+                }
+                else
+                {
+                    # Alternative way if no unique setting name can be found
+                    $parentSettingIdProperty = $parentSetting.Id.Split('_')[-1]
+                    $parentSettingIdWithoutProperty = $parentSetting.Id.Replace("_$parentSettingIdProperty", "")
+                    # We can't use the entire setting here, because the child setting id does not have to come after the parent setting id
+                    $settingName = $settingDefinition.Id.Replace($parentSettingIdWithoutProperty + "_", "").Replace($parentSettingIdProperty + "_", "")
+                }
             }
         }
 
