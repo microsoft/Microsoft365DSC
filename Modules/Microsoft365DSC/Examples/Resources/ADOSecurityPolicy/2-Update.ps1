@@ -21,6 +21,21 @@ Configuration Example
     Import-DscResource -ModuleName Microsoft365DSC
     node localhost
     {
-        
+        ADOSecurityPolicy "ADOPolicy"
+        {
+            AllowAnonymousAccess                    = $True;
+            AllowRequestAccessToken                 = $False;
+            AllowTeamAdminsInvitationsAccessToken   = $True;
+            ApplicationId                           = $ApplicationId;
+            ArtifactsExternalPackageProtectionToken = $False;
+            CertificateThumbprint                   = $CertificateThumbprint;
+            DisallowAadGuestUserAccess              = $True;
+            DisallowOAuthAuthentication             = $True;
+            DisallowSecureShell                     = $False;
+            EnforceAADConditionalAccess             = $False;
+            LogAuditEvents                          = $True;
+            OrganizationName                        = "O365DSC-Dev";
+            TenantId                                = $TenantId;
+        }
     }
 }

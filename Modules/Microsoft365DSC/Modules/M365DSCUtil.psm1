@@ -1771,7 +1771,6 @@ function New-M365DSCConnection
         [System.Boolean]
         $SkipModuleReload = $false
     )
-    $verbosepreference = 'Continue'
     $Global:MaximumFunctionCount = 32767
     if ($Workload -eq 'MicrosoftTeams')
     {
@@ -3696,6 +3695,10 @@ function Get-M365DSCExportContentForResource
     elseif ($Keys.Contains('WorkspaceName'))
     {
         $primaryKey = $Results.WorkspaceName
+    }
+    elseif ($Keys.Contains('OrganizationName'))
+    {
+        $primaryKey = $Results.OrganizationName
     }
 
     if ([String]::IsNullOrEmpty($primaryKey) -and `

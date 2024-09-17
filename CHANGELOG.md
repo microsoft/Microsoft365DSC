@@ -2,10 +2,10 @@
 
 # UNRELEASED
 
-* EXOMailboxIRMAccess
-  * Initial Release.
 * AADPasswordRuleSettings
   * Initial release
+* ADOSecurityPolicy
+  * Initial release.
 * AzureSubscription
   * Initial Release.
 * EXOArcConfig
@@ -13,6 +13,8 @@
 * EXOFocusedInbox
   * Initial Release.
 * EXOMailboxCalendarConfiguration
+  * Initial Release.
+* EXOMailboxIRMAccess
   * Initial Release.
 * EXOManagementScope
   * Initial Release.
@@ -43,7 +45,7 @@
 * DEPENDENCIES
   * Added dependencies on Az.Accounts, Az.Resources and Az.SecurityInsights
   * Updated DSCParser to version 2.0.0.9.
-  * Updated MSCloudLoginAssistant to version 1.1.24.
+  * Updated MSCloudLoginAssistant to version 1.1.25.
 
 # 1.24.904.1
 

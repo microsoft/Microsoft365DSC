@@ -12,7 +12,7 @@ function Invoke-M365DSCAzureDevOPSWebRequest
         $Method = 'GET',
 
         [Parameter()]
-        [System.Collections.Hashtable]
+        [System.String]
         $Body
     )
 
@@ -21,7 +21,23 @@ function Invoke-M365DSCAzureDevOPSWebRequest
         'Content-Type' = 'application/json-patch+json'
     }
 
-    $response = Invoke-WebRequest -Method $Method -Uri $Uri -Headers $headers -Body $Body
-    $result = ConvertFrom-Json $response.Content
+    $params = @{
+        Headers = $headers
+        Uri     = $Uri
+        Method  = $Method
+
+    }
+
+    if ($Method -ne 'GET')
+    {
+        $params.Add('Body', $Body)
+    }
+
+    $response = Invoke-WebRequest @params -UseBasicParsing
+    $result = $null
+    if (-not [System.String]::IsNullOrEmpty($response.Content))
+    {
+        $result = ConvertFrom-Json $response.Content
+    }
     return $result
 }

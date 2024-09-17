@@ -114,6 +114,7 @@ function Get-TargetResource
         $AllowRequestAccessTokenValue = (Invoke-M365DSCAzureDevOPSWebRequest -uri $uri).Value
 
         $results = @{
+            OrganizationName                        = $OrganizationName
             DisallowAadGuestUserAccess              = [Boolean]::Parse($DisallowAadGuestUserAccessValue)
             DisallowOAuthAuthentication             = [Boolean]::Parse($DisallowOAuthAuthenticationValue)
             DisallowSecureShell                     = [Boolean]::Parse($DisallowSecureShellValue)
@@ -233,37 +234,84 @@ function Set-TargetResource
 
     if ($PSBoundParameters.ContainsKey('DisallowAadGuestUserAccess'))
     {
-        $uri = "https://dev.azure.com/$($OrganizationName)/_apis/OrganizationPolicy/Policies/Policy.DisallowAadGuestUserAccess"
-        $body = @{
-            path = '/value'
-            value = $DisallowAadGuestUserAccess
-        }
-        DisallowAadGuestUserAccessValue = Invoke-M365DSCAzureDevOPSWebRequest -uri $uri -Method 'PATCH'
+        $uri = "https://dev.azure.com/$($OrganizationName)/_apis/OrganizationPolicy/Policies/Policy.DisallowAadGuestUserAccess?api-version=5.0-preview"
+        $body = "[{`"from`":`"`",`"op`":2,`"path`":`"/Value`",`"value`":`"$($DisallowAadGuestUserAccess.ToString().ToLower())`"}]"
+        Write-Verbose -Message "Updating DisallowAadGuestUserAccess policy with values: $($body)"
+
+        Invoke-M365DSCAzureDevOPSWebRequest -uri $uri -Method 'PATCH' -Body $body
     }
-<#
-    $uri = "https://dev.azure.com/$($OrganizationName)/_apis/OrganizationPolicy/Policies/Policy.DisallowOAuthAuthentication?defaultValue"
-    $DisallowOAuthAuthenticationValue = (Invoke-M365DSCAzureDevOPSWebRequest -uri $uri).Value
 
-    $uri = "https://dev.azure.com/$($OrganizationName)/_apis/OrganizationPolicy/Policies/Policy.DisallowSecureShell?defaultValue"
-    $DisallowSecureShellValue = (Invoke-M365DSCAzureDevOPSWebRequest -uri $uri).Value
+    if ($PSBoundParameters.ContainsKey('DisallowOAuthAuthentication'))
+    {
+        $uri = "https://dev.azure.com/$($OrganizationName)/_apis/OrganizationPolicy/Policies/Policy.DisallowOAuthAuthentication?api-version=5.0-preview"
+        $body = "[{`"from`":`"`",`"op`":2,`"path`":`"/Value`",`"value`":`"$($DisallowOAuthAuthentication.ToString().ToLower())`"}]"
+        Write-Verbose -Message "Updating DisallowOAuthAuthentication policy with values: $($body)"
 
-    $uri = "https://dev.azure.com/$($OrganizationName)/_apis/OrganizationPolicy/Policies/Policy.LogAuditEvents?defaultValue"
-    $LogAuditEventsValue = (Invoke-M365DSCAzureDevOPSWebRequest -uri $uri).Value
+        Invoke-M365DSCAzureDevOPSWebRequest -uri $uri -Method 'PATCH' -Body $body
+    }
 
-    $uri = "https://dev.azure.com/$($OrganizationName)/_apis/OrganizationPolicy/Policies/Policy.AllowAnonymousAccess?defaultValue"
-    $AllowAnonymousAccessValue = (Invoke-M365DSCAzureDevOPSWebRequest -uri $uri).Value
+    if ($PSBoundParameters.ContainsKey('DisallowSecureShell'))
+    {
+        $uri = "https://dev.azure.com/$($OrganizationName)/_apis/OrganizationPolicy/Policies/Policy.DisallowSecureShell?api-version=5.0-preview"
+        $body = "[{`"from`":`"`",`"op`":2,`"path`":`"/Value`",`"value`":`"$($DisallowSecureShell.ToString().ToLower())`"}]"
+        Write-Verbose -Message "Updating DisallowSecureShell policy with values: $($body)"
 
-    $uri = "https://dev.azure.com/$($OrganizationName)/_apis/OrganizationPolicy/Policies/Policy.ArtifactsExternalPackageProtectionToken?defaultValue"
-    $ArtifactsExternalPackageProtectionTokenValue = (Invoke-M365DSCAzureDevOPSWebRequest -uri $uri).Value
+        Invoke-M365DSCAzureDevOPSWebRequest -uri $uri -Method 'PATCH' -Body $body
+    }
 
-    $uri = "https://dev.azure.com/$($OrganizationName)/_apis/OrganizationPolicy/Policies/Policy.EnforceAADConditionalAccess?defaultValue"
-    $EnforceAADConditionalAccessValue = (Invoke-M365DSCAzureDevOPSWebRequest -uri $uri).Value
+    if ($PSBoundParameters.ContainsKey('LogAuditEvents'))
+    {
+        $uri = "https://dev.azure.com/$($OrganizationName)/_apis/OrganizationPolicy/Policies/Policy.LogAuditEvents?api-version=5.0-preview"
+        $body = "[{`"from`":`"`",`"op`":2,`"path`":`"/Value`",`"value`":`"$($LogAuditEvents.ToString().ToLower())`"}]"
+        Write-Verbose -Message "Updating LogAuditEvents policy with values: $($body)"
 
-    $uri = "https://dev.azure.com/$($OrganizationName)/_apis/OrganizationPolicy/Policies/Policy.AllowTeamAdminsInvitationsAccessToken?defaultValue"
-    $AllowTeamAdminsInvitationsAccessTokenValue = (Invoke-M365DSCAzureDevOPSWebRequest -uri $uri).Value
+        Invoke-M365DSCAzureDevOPSWebRequest -uri $uri -Method 'PATCH' -Body $body
+    }
 
-    $uri = "https://dev.azure.com/$($OrganizationName)/_apis/OrganizationPolicy/Policies/Policy.AllowRequestAccessToken?defaultValue"
-    $AllowRequestAccessTokenValue = (Invoke-M365DSCAzureDevOPSWebRequest -uri $uri).Value#>
+    if ($PSBoundParameters.ContainsKey('AllowAnonymousAccess'))
+    {
+        $uri = "https://dev.azure.com/$($OrganizationName)/_apis/OrganizationPolicy/Policies/Policy.AllowAnonymousAccess?api-version=5.0-preview"
+        $body = "[{`"from`":`"`",`"op`":2,`"path`":`"/Value`",`"value`":`"$($AllowAnonymousAccess.ToString().ToLower())`"}]"
+        Write-Verbose -Message "Updating AllowAnonymousAccess policy with values: $($body)"
+
+        Invoke-M365DSCAzureDevOPSWebRequest -uri $uri -Method 'PATCH' -Body $body
+    }
+
+    if ($PSBoundParameters.ContainsKey('ArtifactsExternalPackageProtectionToken'))
+    {
+        $uri = "https://dev.azure.com/$($OrganizationName)/_apis/OrganizationPolicy/Policies/Policy.ArtifactsExternalPackageProtectionToken?api-version=5.0-preview"
+        $body = "[{`"from`":`"`",`"op`":2,`"path`":`"/Value`",`"value`":`"$($ArtifactsExternalPackageProtectionToken.ToString().ToLower())`"}]"
+        Write-Verbose -Message "Updating ArtifactsExternalPackageProtectionToken policy with values: $($body)"
+
+        Invoke-M365DSCAzureDevOPSWebRequest -uri $uri -Method 'PATCH' -Body $body
+    }
+
+    if ($PSBoundParameters.ContainsKey('EnforceAADConditionalAccess'))
+    {
+        $uri = "https://dev.azure.com/$($OrganizationName)/_apis/OrganizationPolicy/Policies/Policy.EnforceAADConditionalAccess?api-version=5.0-preview"
+        $body = "[{`"from`":`"`",`"op`":2,`"path`":`"/Value`",`"value`":`"$($EnforceAADConditionalAccess.ToString().ToLower())`"}]"
+        Write-Verbose -Message "Updating EnforceAADConditionalAccess policy with values: $($body)"
+
+        Invoke-M365DSCAzureDevOPSWebRequest -uri $uri -Method 'PATCH' -Body $body
+    }
+
+    if ($PSBoundParameters.ContainsKey('AllowTeamAdminsInvitationsAccessToken'))
+    {
+        $uri = "https://dev.azure.com/$($OrganizationName)/_apis/OrganizationPolicy/Policies/Policy.AllowTeamAdminsInvitationsAccessToken?api-version=5.0-preview"
+        $body = "[{`"from`":`"`",`"op`":2,`"path`":`"/Value`",`"value`":`"$($AllowTeamAdminsInvitationsAccessToken.ToString().ToLower())`"}]"
+        Write-Verbose -Message "Updating AllowTeamAdminsInvitationsAccessToken policy with values: $($body)"
+
+        Invoke-M365DSCAzureDevOPSWebRequest -uri $uri -Method 'PATCH' -Body $body
+    }
+
+    if ($PSBoundParameters.ContainsKey('AllowRequestAccessToken'))
+    {
+        $uri = "https://dev.azure.com/$($OrganizationName)/_apis/OrganizationPolicy/Policies/Policy.AllowRequestAccessToken?api-version=5.0-preview"
+        $body = "[{`"from`":`"`",`"op`":2,`"path`":`"/Value`",`"value`":`"$($AllowRequestAccessToken.ToString().ToLower())`"}]"
+        Write-Verbose -Message "Updating AllowRequestAccessToken policy with values: $($body)"
+
+        Invoke-M365DSCAzureDevOPSWebRequest -uri $uri -Method 'PATCH' -Body $body
+    }
 }
 
 function Test-TargetResource
@@ -272,7 +320,6 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
-
         [Parameter(Mandatory = $true)]
         [System.String]
         $OrganizationName,
@@ -433,15 +480,16 @@ function Export-TargetResource
         {
             Write-Host "`r`n" -NoNewline
         }
-
-        $accounts = @{
-            accountName = 'O365DSC-Dev'
-        }
-        foreach ($organization in $accounts.accountName)
+        foreach ($account in $accounts)
         {
+            $organization = $account.Value.accountName
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
 
             $displayedKey = $organization
-            Write-Host "    |---[$i/$($accounts.accountName.Count)] $displayedKey" -NoNewline
+            Write-Host "    |---[$i/$($accounts.Count)] $displayedKey" -NoNewline
             $params = @{
                 OrganizationName      = $organization
                 Credential            = $Credential

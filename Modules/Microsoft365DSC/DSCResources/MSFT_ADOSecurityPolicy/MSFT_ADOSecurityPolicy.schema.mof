@@ -10,7 +10,7 @@ class MSFT_ADOSecurityPolicy : OMI_BaseResource
     [Write, Description("Controls the Additional protections when using public package registries setting.")] Boolean ArtifactsExternalPackageProtectionToken;
     [Write, Description("Controls the Enable IP Conditional Access policy validation setting.")] Boolean EnforceAADConditionalAccess;
     [Write, Description("Controls the Allow team and project administrators to invite new user setting.")] Boolean AllowTeamAdminsInvitationsAccessToken;
-    [Write, Description("Controls the Request access setting.")] Boolean AllowRequestAccessTokenValue;
+    [Write, Description("Controls the Request access setting.")] Boolean AllowRequestAccessToken;
     [Write, Description("Credentials of the workload's Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
     [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
