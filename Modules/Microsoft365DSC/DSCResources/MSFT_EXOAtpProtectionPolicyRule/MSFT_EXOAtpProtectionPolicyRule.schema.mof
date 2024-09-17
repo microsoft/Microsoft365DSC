@@ -1,5 +1,5 @@
-[ClassVersion("1.0.0.0"), FriendlyName("EXOATPProtectionPolicyRule")]
-class MSFT_EXOATPProtectionPolicyRule : OMI_BaseResource
+[ClassVersion("1.0.0.0"), FriendlyName("EXOAtpProtectionPolicyRule")]
+class MSFT_EXOAtpProtectionPolicyRule : OMI_BaseResource
 {
     [Key, Description("Identifier for the rule")] String Identity;
     [Write, Description("Specifies whether the rule is enabled")] Boolean Enabled;
