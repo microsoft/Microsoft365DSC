@@ -1,6 +1,6 @@
 
-# ResourceName
+# EXOATPProtectionPolicyRule
 
 ## Description
 
-##TODO - Provide a short description of what the resource is set to configure.
+Manage ATP Protection policy rules that are associated with Microsoft Defender for Office 365 protections in preset security policies.
