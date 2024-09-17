@@ -212,6 +212,7 @@ function Set-TargetResource
     $EmailTenantSettingsParams.Remove('Name') | Out-Null
     $EmailTenantSettingsParams.Remove('IsValid') | Out-Null
     $EmailTenantSettingsParams.Remove('ObjectState') | Out-Null
+    $EmailTenantSettingsParams.Remove('IsSingleInstance') | Out-Null
 
     if ($Null -ne $EmailTenantSettingsParams)
     {

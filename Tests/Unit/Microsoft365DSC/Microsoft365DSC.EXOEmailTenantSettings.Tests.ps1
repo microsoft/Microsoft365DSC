@@ -52,12 +52,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     IsSingleInstance                           = 'Yes'
                     EnablePriorityAccountProtection            = $True;
-                    Identity                                   = "sotmcpoc.onmicrosoft.com\Default";
                     IsValid                                    = $True;
                     ObjectState                                = "New"
                     Credential                                 = $Credential
                     Name                                       = "Default"
-                    Ensure                                     = "Present"
                 }
 
                 Mock -CommandName Get-EmailTenantSettings -MockWith {
@@ -89,7 +87,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ObjectState                                = "New"
                     Credential                                 = $Credential
                     Name                                       = "Default"
-                    Ensure                                     = "Present"
                 }
 
                 Mock -CommandName Get-EmailTenantSettings -MockWith {
