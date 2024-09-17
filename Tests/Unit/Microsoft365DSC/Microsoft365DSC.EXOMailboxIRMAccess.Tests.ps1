@@ -35,16 +35,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return "Credentials"
             }
 
-            Mock -CommandName New-ManagementScope -MockWith {
+            Mock -CommandName Get-MailboxIRMAccess -MockWith {
             }
 
-            Mock -CommandName Set-ManagementScope -MockWith {
+            Mock -CommandName Set-MailboxIRMAccess -MockWith {
             }
 
-            Mock -CommandName Remove-ManagementScope -MockWith {
-            }
-
-            Mock -CommandName Get-ManagementScope -MockWith {
+            Mock -CommandName Remove-MailboxIRMAccess -MockWith {
             }
 
             # Mock Write-Host to hide output during the tests
@@ -57,15 +54,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The instance should exist but it DOES NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Credential                 = $Credscredential;
-                    Ensure                     = "Present";
-                    Exclusive                  = $False;
-                    Identity                   = "Nik DGs";
-                    Name                       = "Nik DGs";
-                    RecipientRestrictionFilter = "Name -like 'Nik*'";
+                    AccessLevel          = "Block";
+                    Identity             = "qwe@test.org";
+                    User                 = "admin@test.org";
+                    Ensure               = 'Present'
+                    Credential           = $Credential;
                 }
 
-                Mock -CommandName Get-ManagementScope -MockWith {
+                Mock -CommandName Get-MailboxIRMAccess -MockWith {
                     return $null
                 }
             }
@@ -78,27 +74,26 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should create a new instance from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName New-ManagementScope -Exactly 1
+                Should -Invoke -CommandName Set-MailboxIRMAccess -Exactly 1
             }
         }
 
         Context -Name "The instance exists but it SHOULD NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Credential                 = $Credscredential;
-                    Ensure                     = "Absent";
-                    Exclusive                  = $False;
-                    Identity                   = "Nik DGs";
-                    Name                       = "Nik DGs";
-                    RecipientRestrictionFilter = "Name -like 'Nik*'";
+                    AccessLevel          = "Block";
+                    Identity             = "qwe@test.org";
+                    User                 = "admin@test.org";
+                    Ensure               = 'Absent'
+                    Credential           = $Credential;
                 }
 
-                Mock -CommandName Get-ManagementScope -MockWith {
+                ##TODO - Mock the Get-Cmdlet to return an instance
+                Mock -CommandName Get-MailboxIRMAccess -MockWith {
                     return @{
-                        Exclusive                  = $False;
-                        Identity                   = "Nik DGs";
-                        Name                       = "Nik DGs";
-                        RecipientFilter = "Name -like 'Nik*'";
+                        AccessLevel          = "Block";
+                        Identity             = "qwe@test.org";
+                        User                 = "admin@test.org";
                     }
                 }
             }
@@ -111,68 +106,31 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should remove the instance from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Remove-ManagementScope -Exactly 1
+                Should -Invoke -CommandName Remove-MailboxIRMAccess -Exactly 1
             }
         }
 
         Context -Name "The instance exists and values are already in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Credential                 = $Credscredential;
-                    Ensure                     = "Present";
-                    Exclusive                  = $False;
-                    Identity                   = "Nik DGs";
-                    Name                       = "Nik DGs";
-                    RecipientRestrictionFilter = "Name -like 'Nik*'";
+                    AccessLevel          = "Block";
+                    Identity             = "qwe@test.org";
+                    User                 = "admin@test.org";
+                    Ensure               = 'Present'
+                    Credential           = $Credential;
                 }
 
-                Mock -CommandName Get-ManagementScope -MockWith {
+                Mock -CommandName Get-MailboxIRMAccess -MockWith {
                     return @{
-                        Exclusive                  = $False;
-                        Identity                   = "Nik DGs";
-                        Name                       = "Nik DGs";
-                        RecipientFilter = "Name -like 'Nik*'";
+                        AccessLevel          = "Block";
+                        Identity             = "qwe@test.org";
+                        User                 = "admin@test.org";
                     }
                 }
             }
 
             It 'Should return true from the Test method' {
                 Test-TargetResource @testParams | Should -Be $true
-            }
-        }
-
-        Context -Name "The instance exists and values are NOT in the desired state" -Fixture {
-            BeforeAll {
-                $testParams = @{
-                    Credential                 = $Credscredential;
-                    Ensure                     = "Present";
-                    Exclusive                  = $False;
-                    Identity                   = "Nik DGs";
-                    Name                       = "Nik DGs";
-                    RecipientRestrictionFilter = "Name -like 'Nik*'";
-                }
-
-                Mock -CommandName Get-ManagementScope -MockWith {
-                    return @{
-                        Exclusive                  = $False;
-                        Identity                   = "Nik DGs";
-                        Name                       = "Nik DGs Drift";
-                        RecipientFilter = "Name -like 'Nik*'";
-                    }
-                }
-            }
-
-            It 'Should return Values from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
-            }
-
-            It 'Should return false from the Test method' {
-                Test-TargetResource @testParams | Should -Be $false
-            }
-
-            It 'Should call the Set method' {
-                Set-TargetResource @testParams
-                Should -Invoke -CommandName Set-ManagementScope -Exactly 1
             }
         }
 
@@ -184,12 +142,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential  = $Credential;
                 }
 
-                Mock -CommandName Get-ManagementScope -MockWith {
+                Mock -CommandName Get-MailboxIRMAccess -MockWith {
                     return @{
-                        Exclusive                  = $False;
-                        Identity                   = "Nik DGs";
-                        Name                       = "Nik DGs";
-                        RecipientFilter = "Name -like 'Nik*'";
+                        Identity             = "john.smith@contoso.com";
+                        AccessLevel          = "Block";
+                        User                 = "admin@contoso.com";
+                    }
+                }
+
+                Mock -CommandName Get-Mailbox -MockWith {
+                    return @{
+                        UserPrincipalName = "john.smith@contoso.com";
                     }
                 }
             }

@@ -89,6 +89,52 @@ function Disable-AzSubscription
 #endregion
 
 # region ExchangeOnlineManagement
+function Get-MailboxIRMAccess
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $User,
+
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
+
+function Set-MailboxIRMAccess
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $User,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $AccessLevel
+    )
+}
+
+function Remove-MailboxIRMAccess
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $User,
+
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
+
 function Get-ArcConfig
 {
     [CmdletBinding()]
