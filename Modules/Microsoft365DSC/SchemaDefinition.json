@@ -3920,6 +3920,86 @@
                        ]
     },
     {
+        "ClassName":  "MSFT_AADPasswordRuleSettings",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IsSingleInstance",
+                               "Option":  "Key"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "LockoutThreshold",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "LockoutDurationInSeconds",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "EnableBannedPasswordCheck",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "BannedPasswordList",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "BannedPasswordCheckOnPremisesMode",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "EnableBannedPasswordCheckOnPremises",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Ensure",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "Credential",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ApplicationId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "TenantId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "ApplicationSecret",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "CertificateThumbprint",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "ManagedIdentity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
         "ClassName":  "MSFT_AADRoleDefinition",
         "Parameters":  [
                            {
@@ -5075,6 +5155,61 @@
                        ]
     },
     {
+        "ClassName":  "MSFT_AzureSubscription",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Name",
+                               "Option":  "Key"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Id",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "Enabled",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "string",
+                               "Name":  "Ensure",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "Credential",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ApplicationId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "TenantId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "CertificateThumbprint",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "ManagedIdentity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
         "ClassName":  "MSFT_EXOAcceptedDomain",
         "Parameters":  [
                            {
@@ -5835,6 +5970,56 @@
                            {
                                "CIMType":  "String",
                                "Name":  "CertificatePath",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "ManagedIdentity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_EXOArcConfig",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IsSingleInstance",
+                               "Option":  "Key"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Identity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "ArcTrustedSealers",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "Credential",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ApplicationId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "TenantId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "CertificateThumbprint",
                                "Option":  "Write"
                            },
                            {
@@ -7635,6 +7820,61 @@
                        ]
     },
     {
+        "ClassName":  "MSFT_EXOFocusedInbox",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Identity",
+                               "Option":  "Key"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "FocusedInboxOn",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "DateTime",
+                               "Name":  "FocusedInboxOnLastUpdateTime",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Ensure",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "Credential",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ApplicationId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "TenantId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "CertificateThumbprint",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "ManagedIdentity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
         "ClassName":  "MSFT_EXOGlobalAddressList",
         "Parameters":  [
                            {
@@ -9345,6 +9585,261 @@
                        ]
     },
     {
+        "ClassName":  "MSFT_EXOMailboxCalendarConfiguration",
+        "Parameters":  [
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "Credential",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ApplicationId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "TenantId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "CertificateThumbprint",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "ManagedIdentity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Identity",
+                               "Option":  "Key"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "AgendaMailIntroductionEnabled",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "AutoDeclineWhenBusy",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "CalendarFeedsPreferredLanguage",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "CalendarFeedsPreferredRegion",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "CalendarFeedsRootPageId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "ConversationalSchedulingEnabled",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "CreateEventsFromEmailAsPrivate",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "DefaultMinutesToReduceLongEventsBy",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "DefaultMinutesToReduceShortEventsBy",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "DefaultOnlineMeetingProvider",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "DefaultReminderTime",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "DeleteMeetingRequestOnRespond",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "DiningEventsFromEmailEnabled",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "EntertainmentEventsFromEmailEnabled",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "EventsFromEmailEnabled",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "FirstWeekOfYear",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "FlightEventsFromEmailEnabled",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "HotelEventsFromEmailEnabled",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "InvoiceEventsFromEmailEnabled",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "LocationDetailsInFreeBusy",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "MailboxLocation",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "OnlineMeetingsByDefaultEnabled",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "PackageDeliveryEventsFromEmailEnabled",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "PreserveDeclinedMeetings",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "RemindersEnabled",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "ReminderSoundEnabled",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "RentalCarEventsFromEmailEnabled",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "ServiceAppointmentEventsFromEmailEnabled",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ShortenEventScopeDefault",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "ShowWeekNumbers",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "TimeIncrement",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "UseBrightCalendarColorThemeInOwa",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "WeatherEnabled",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "WeatherLocationBookmark",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "WeatherLocations",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "WeatherUnit",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "WeekStartDay",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "WorkDays",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "WorkingHoursEndTime",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "WorkingHoursStartTime",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "WorkingHoursTimeZone",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "WorkspaceUserEnabled",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Ensure",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
         "ClassName":  "MSFT_EXOMailboxCalendarFolder",
         "Parameters":  [
                            {
@@ -9415,6 +9910,61 @@
                            {
                                "CIMType":  "String",
                                "Name":  "CertificatePath",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "ManagedIdentity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_EXOMailboxIRMAccess",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Identity",
+                               "Option":  "Key"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "User",
+                               "Option":  "Key"
+                           },
+                           {
+                               "CIMType":  "string",
+                               "Name":  "AccessLevel",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "string",
+                               "Name":  "Ensure",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "Credential",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ApplicationId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "TenantId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "CertificateThumbprint",
                                "Option":  "Write"
                            },
                            {
@@ -10450,6 +11000,71 @@
                            {
                                "CIMType":  "String",
                                "Name":  "CertificatePath",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "ManagedIdentity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_EXOManagementScope",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Identity",
+                               "Option":  "Key"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Name",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "RecipientRestrictionFilter",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "RecipientRoot",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "Exclusive",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Ensure",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "Credential",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ApplicationId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "TenantId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "CertificateThumbprint",
                                "Option":  "Write"
                            },
                            {
@@ -12033,6 +12648,11 @@
                                "Option":  "Key"
                            },
                            {
+                               "CIMType":  "Boolean",
+                               "Name":  "AccountTransferEnabled",
+                               "Option":  "Write"
+                           },
+                           {
                                "CIMType":  "String",
                                "Name":  "ActionForUnknownFileAndMIMETypes",
                                "Option":  "Write"
@@ -12640,6 +13260,71 @@
                            {
                                "CIMType":  "String[]",
                                "Name":  "AccessTokens",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_EXOPhishSimOverrideRule",
+        "Parameters":  [
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "Credential",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ApplicationId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "TenantId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "CertificateThumbprint",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "ManagedIdentity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Identity",
+                               "Option":  "Key"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "Domains",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "SenderIpRanges",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Comment",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Policy",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Ensure",
                                "Option":  "Write"
                            }
                        ]
@@ -13520,6 +14205,76 @@
                        ]
     },
     {
+        "ClassName":  "MSFT_EXORetentionPolicy",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Identity",
+                               "Option":  "Key"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "IsDefault",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "IsDefaultArbitrationMailbox",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Name",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "RetentionId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "RetentionPolicyTagLinks",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Ensure",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "Credential",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ApplicationId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "TenantId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "CertificateThumbprint",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "ManagedIdentity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
         "ClassName":  "MSFT_EXORoleAssignmentPolicy",
         "Parameters":  [
                            {
@@ -14085,6 +14840,61 @@
                        ]
     },
     {
+        "ClassName":  "MSFT_EXOSecOpsOverrideRule",
+        "Parameters":  [
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "Credential",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ApplicationId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "TenantId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "CertificateThumbprint",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "ManagedIdentity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Identity",
+                               "Option":  "Key"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Comment",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Policy",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Ensure",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
         "ClassName":  "MSFT_EXOSharedMailbox",
         "Parameters":  [
                            {
@@ -14315,6 +15125,81 @@
                            {
                                "CIMType":  "String[]",
                                "Name":  "AccessTokens",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_EXOTenantAllowBlockListItems",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Action",
+                               "Option":  "Key"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Value",
+                               "Option":  "Key"
+                           },
+                           {
+                               "CIMType":  "DateTime",
+                               "Name":  "ExpirationDate",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ListSubType",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ListType",
+                               "Option":  "Key"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Notes",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "RemoveAfter",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "SubmissionID",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "string",
+                               "Name":  "Ensure",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "Credential",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ApplicationId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "TenantId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "CertificateThumbprint",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "ApplicationSecret",
                                "Option":  "Write"
                            }
                        ]
@@ -15380,6 +16265,786 @@
                            {
                                "CIMType":  "Boolean",
                                "Name":  "ManagedIdentity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_FabricDelegatedFrom",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Capacity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Domain",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Tenant",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_FabricTenantSettingProperty",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "name",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "type",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "value",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_FabricTenantSetting",
+        "Parameters":  [
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "canSpecifySecurityGroups",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "delegateToWorkspace",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricDelegatedFrom",
+                               "Name":  "delegatedFrom",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "settingName",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "enabled",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "tenantSettingGroup",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "title",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSettingProperty[]",
+                               "Name":  "properties",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "excludedSecurityGroups",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "enabledSecurityGroups",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_FabricAdminTenantSettings",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IsSingleInstance",
+                               "Option":  "Key"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "AADSSOForGateway",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "AdminApisIncludeDetailedMetadata",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "AdminApisIncludeExpressions",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "AdminCustomDisclaimer",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "AISkillArtifactTenantSwitch",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "AllowAccessOverPrivateLinks",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "AllowCVAuthenticationTenant",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "AllowCVLocalStorageV2Tenant",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "AllowCVToExportDataToFileTenant",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "AllowEndorsementMasterDataSwitch",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "AllowExternalDataSharingReceiverSwitch",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "AllowExternalDataSharingSwitch",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "AllowFreeTrial",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "AllowGuestLookup",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "AllowGuestUserToAccessSharedContent",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "AllowPowerBIASDQOnTenant",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "AllowSendAOAIDataToOtherRegions",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "AllowSendNLToDaxDataToOtherRegions",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "AllowServicePrincipalsCreateAndUseProfiles",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "AllowServicePrincipalsUseReadAdminAPIs",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "AppPush",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "ArtifactSearchTenant",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "ASCollectQueryTextTelemetryTenantSwitch",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "ASShareableCloudConnectionBindingSecurityModeTenant",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "ASWritethruContinuousExportTenantSwitch",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "ASWritethruTenantSwitch",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "AutoInstallPowerBIAppInTeamsTenant",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "AutomatedInsightsEntryPoints",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "AutomatedInsightsTenant",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "AzureMap",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "BingMap",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "BlockAccessFromPublicNetworks",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "BlockAutoDiscoverAndPackageRefresh",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "BlockProtectedLabelSharingToEntireOrg",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "BlockResourceKeyAuthentication",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "CDSAManagement",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "CertifiedCustomVisualsTenant",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "CertifyDatasets",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "ConfigureFolderRetentionPeriod",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "CreateAppWorkspaces",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "CustomVisualsTenant",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "DatamartTenant",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "DatasetExecuteQueries",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "DevelopServiceApps",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "DiscoverDatasetsConsumption",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "DiscoverDatasetsSettingsCertified",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "DiscoverDatasetsSettingsPromoted",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "DremioSSO",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "EimInformationProtectionDataSourceInheritanceSetting",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "EimInformationProtectionDownstreamInheritanceSetting",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "EimInformationProtectionEdit",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "EimInformationProtectionLessElevated",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "EimInformationProtectionWorkspaceAdminsOverrideAutomaticLabelsSetting",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "ElevatedGuestsTenant",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "EmailSecurityGroupsOnOutage",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "EmailSubscriptionsToB2BUsers",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "EmailSubscriptionsToExternalUsers",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "EmailSubscriptionTenant",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "Embedding",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "EnableAOAI",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "EnableDatasetInPlaceSharing",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "EnableExcelYellowIntegration",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "EnableFabricAirflow",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "EnableNLToDax",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "EnableReassignDataDomainSwitch",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "EsriVisual",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "ExpFlightingTenant",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "ExportReport",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "ExportToCsv",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "ExportToExcelSetting",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "ExportToImage",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "ExportToMHTML",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "ExportToPowerPoint",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "ExportToWord",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "ExportToXML",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "ExportVisualImageTenant",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "ExternalDatasetSharingTenant",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "ExternalSharingV2",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "FabricAddPartnerWorkload",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "FabricFeedbackTenantSwitch",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "FabricGAWorkloads",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "FabricThirdPartyWorkloads",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "GitHubTenantSettings",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "GitIntegrationCrossGeoTenantSwitch",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "GitIntegrationSensitivityLabelsTenantSwitch",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "GitIntegrationTenantSwitch",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "GoogleBigQuerySSO",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "GraphQLTenant",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "HealthcareSolutionsTenantSwitch",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "InstallNonvalidatedTemplateApps",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "InstallServiceApps",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "KustoDashboardTenantSwitch",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "LiveConnection",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "LogAnalyticsAttachForWorkspaceAdmins",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "M365DataSharing",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "Mirroring",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "ODSPRefreshEnforcementTenantAllowAutomaticUpdate",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "OneDriveSharePointAllowSharingTenantSetting",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "OneDriveSharePointViewerIntegrationTenantSettingV2",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "OneLakeFileExplorer",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "OneLakeForThirdParty",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "OnPremAnalyzeInExcel",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "PowerBIGoalsTenant",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "PowerPlatformSolutionsIntegrationTenant",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "Printing",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "PromoteContent",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "PublishContentPack",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "PublishToWeb",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "QnaFeedbackLoop",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "QnaLsdlSharing",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "QueryScaleOutTenant",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "RedshiftSSO",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "RestrictMyFolderCapacity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "RetailSolutionsTenantSwitch",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "RScriptVisual",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "ServicePrincipalAccess",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "ShareLinkToEntireOrg",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "ShareToTeamsTenant",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "SnowflakeSSO",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "StorytellingTenant",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "SustainabilitySolutionsTenantSwitch",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "TemplatePublish",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "TenantSettingPublishGetHelpInfo",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "TridentPrivatePreview",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "UsageMetrics",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "UsageMetricsTrackUserLevelInfo",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "UseDatasetsAcrossWorkspaces",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "VisualizeListInPowerBI",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "WebContentTilesTenant",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "WebModelingTenantSwitch",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ApplicationId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "ApplicationSecret",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "TenantId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "CertificateThumbprint",
                                "Option":  "Write"
                            },
                            {
@@ -18570,6 +20235,26 @@
                        ]
     },
     {
+        "ClassName":  "MSFT_MicrosoftGraphOperatingSystemVersionRange",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Description",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "LowestVersion",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "HighestVersion",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
         "ClassName":  "MSFT_IntuneDeviceCompliancePolicyWindows10",
         "Parameters":  [
                            {
@@ -18743,7 +20428,7 @@
                                "Option":  "Write"
                            },
                            {
-                               "CIMType":  "String[]",
+                               "CIMType":  "MSFT_MicrosoftGraphOperatingSystemVersionRange[]",
                                "Name":  "ValidOperatingSystemBuildRanges",
                                "Option":  "Write"
                            },
@@ -29190,6 +30875,306 @@
                        ]
     },
     {
+        "ClassName":  "MSFT_MicrosoftGraphIntuneSettingsCatalogPolicyRule",
+        "Parameters":  [
+                           {
+                               "CIMType":  "MSFT_MicrosoftGraphIntuneSettingsCatalogPolicyRuleEntry[]",
+                               "Name":  "Entry",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Name",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "ExcludedIdList_GroupId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "IncludedIdList_GroupId",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_MicrosoftGraphIntuneSettingsCatalogPolicyRuleEntry",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Type",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Options",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Sid",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "SInt32[]",
+                               "Name":  "AccessMask",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ComputerSid",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_IntuneDeviceControlPolicyWindows10",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Description",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "DisplayName",
+                               "Option":  "Key"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "RoleScopeTagIds",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Id",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_MicrosoftGraphIntuneSettingsCatalogPolicyRule[]",
+                               "Name":  "PolicyRule",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "DeviceInstall_Allow_Deny_Layered",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "DeviceInstall_IDs_Allow",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "DeviceInstall_IDs_Allow_List",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "DeviceInstall_Instance_IDs_Allow",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "DeviceInstall_Instance_IDs_Allow_List",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "DeviceInstall_Classes_Allow",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "DeviceInstall_Classes_Allow_List",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "DeviceInstall_Unspecified_Deny",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "DeviceInstall_IDs_Deny",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "DeviceInstall_IDs_Deny_List",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "DeviceInstall_IDs_Deny_Retroactive",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "DeviceInstall_Instance_IDs_Deny",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "DeviceInstall_Instance_IDs_Deny_Retroactive",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "DeviceInstall_Instance_IDs_Deny_List",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "DeviceInstall_Classes_Deny",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "DeviceInstall_Classes_Deny_List",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "DeviceInstall_Classes_Deny_Retroactive",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "DeviceInstall_Removable_Deny",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "WPDDevices_DenyRead_Access_2",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "WPDDevices_DenyRead_Access_1",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "WPDDevices_DenyWrite_Access_2",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "WPDDevices_DenyWrite_Access_1",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AllowFullScanRemovableDriveScanning",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AllowDirectMemoryAccess",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "DeviceEnumerationPolicy",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "RemovableDiskDenyWriteAccess",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AllowUSBConnection",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AllowBluetooth",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AllowAdvertising",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AllowDiscoverableMode",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AllowPrepairing",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AllowPromptedProximalConnections",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "ServicesAllowedList",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AllowStorageCard",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_DeviceManagementConfigurationPolicyAssignments[]",
+                               "Name":  "Assignments",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "string",
+                               "Name":  "Ensure",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "Credential",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ApplicationId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "TenantId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "ApplicationSecret",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "CertificateThumbprint",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "ManagedIdentity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
         "ClassName":  "MSFT_IntuneDeviceEnrollmentLimitRestriction",
         "Parameters":  [
                            {
@@ -37314,6 +39299,11 @@
                            },
                            {
                                "CIMType":  "String",
+                               "Name":  "DisplayName",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
                                "Name":  "Description",
                                "Option":  "Write"
                            },
@@ -37905,6 +39895,146 @@
                        ]
     },
     {
+        "ClassName":  "MSFT_SCUnifiedAuditLogRetentionPolicy",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Description",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Name",
+                               "Option":  "Key"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "Operations",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "Priority",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "RecordTypes",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "RetentionDuration",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "UserIds",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "string",
+                               "Name":  "Ensure",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "Credential",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ApplicationId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "TenantId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "CertificateThumbprint",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "ApplicationSecret",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_SentinelSetting",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ResourceGroupName",
+                               "Option":  "Key"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "WorkspaceName",
+                               "Option":  "Required"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "SubscriptionId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "AnomaliesIsEnabled",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "EntityAnalyticsIsEnabled",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "EyesOnIsEnabled",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "UebaDataSource",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "Credential",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ApplicationId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "TenantId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "CertificateThumbprint",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "ManagedIdentity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
         "ClassName":  "MSFT_SPOAccessControlSettings",
         "Parameters":  [
                            {
@@ -37955,6 +40085,11 @@
                            {
                                "CIMType":  "uint32",
                                "Name":  "EmailAttestationReAuthDays",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "boolean",
+                               "Name":  "EnableRestrictedAccessControl",
                                "Option":  "Write"
                            },
                            {
