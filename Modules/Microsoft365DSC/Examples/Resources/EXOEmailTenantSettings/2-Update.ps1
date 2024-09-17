@@ -23,6 +23,7 @@ Configuration Example
     {
         EXOEmailTenantSettings "EXOEmailTenantSettings-Test"
         {
+            IsSingleInstance =                       = $True;
             EnablePriorityAccountProtection          = $True;
             Identity                                 = $TenantId;
             IsValid                                  = $True;

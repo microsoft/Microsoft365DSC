@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* EXOEmailTenantSettings
+  * Initial Release
 * EXOMailboxIRMAccess
   * Initial Release.
 * AADPasswordRuleSettings

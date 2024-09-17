@@ -30,11 +30,6 @@ function Get-TargetResource
         $ObjectState,
 
         [Parameter()]
-        [ValidateSet('Present', 'Absent')]
-        [System.String]
-        $Ensure = 'Present',
-
-        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -107,7 +102,6 @@ function Get-TargetResource
             IsValid                                    = $EmailTenantSettings.IsValid
             ObjectState                                = $EmailTenantSettings.ObjectState
             Credential                                 = $Credential
-            Ensure                                     = 'Present'
             ApplicationId                              = $ApplicationId
             CertificateThumbprint                      = $CertificateThumbprint
             CertificatePath                            = $CertificatePath
@@ -164,11 +158,6 @@ function Set-TargetResource
         $ObjectState,
 
         [Parameter()]
-        [ValidateSet('Present', 'Absent')]
-        [System.String]
-        $Ensure = 'Present',
-
-        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -217,24 +206,14 @@ function Set-TargetResource
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
-    $EmailTenantSettingsParams = [System.Collections.Hashtable]($PSBoundParameters)
-    $EmailTenantSettingsParams.Remove('Ensure') | Out-Null
-    $EmailTenantSettingsParams.Remove('Credential') | Out-Null
-    $EmailTenantSettingsParams.Remove('ApplicationId') | Out-Null
-    $EmailTenantSettingsParams.Remove('TenantId') | Out-Null
-    $EmailTenantSettingsParams.Remove('CertificateThumbprint') | Out-Null
-    $EmailTenantSettingsParams.Remove('CertificatePath') | Out-Null
-    $EmailTenantSettingsParams.Remove('CertificatePassword') | Out-Null
-    $EmailTenantSettingsParams.Remove('ManagedIdentity') | Out-Null
-    $EmailTenantSettingsParams.Remove('IsSingleInstance') | Out-Null
-    $EmailTenantSettingsParams.Remove('AccessTokens') | Out-Null
+    $EmailTenantSettingsParams = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
     #removing params that cannot be set.
     $EmailTenantSettingsParams.Remove('Name') | Out-Null
     $EmailTenantSettingsParams.Remove('IsValid') | Out-Null
     $EmailTenantSettingsParams.Remove('ObjectState') | Out-Null
 
-    if (('Present' -eq $Ensure ) -and ($Null -ne $EmailTenantSettingsParams))
+    if ($Null -ne $EmailTenantSettingsParams)
     {
         Write-Verbose -Message "Setting Email tenant settings with values: $(Convert-M365DscHashtableToString -Hashtable $EmailTenantSettingsParams)"
         Set-EmailTenantSettings @EmailTenantSettingsParams
@@ -273,11 +252,6 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $ObjectState,
-
-        [Parameter()]
-        [ValidateSet('Present', 'Absent')]
-        [System.String]
-        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -331,7 +305,6 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('Ensure') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `

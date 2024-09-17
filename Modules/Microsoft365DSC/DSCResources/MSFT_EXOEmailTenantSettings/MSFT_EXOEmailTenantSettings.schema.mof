@@ -7,7 +7,6 @@ class MSFT_EXOEmailTenantSettings : OMI_BaseResource
     [Write, Description("Specifies whether the migration configuration is valid.")] Boolean IsValid;
     [Write, Description("Specifies the state of the object.")] String ObjectState;
     [Write, Description("Specifies the name of the object.")] String Name;
-    [Write, Description("Specifies if this EmailTenantSettings should exist."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
     [Write, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
     [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
