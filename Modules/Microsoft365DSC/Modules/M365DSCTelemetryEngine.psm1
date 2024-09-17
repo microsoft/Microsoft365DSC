@@ -368,7 +368,10 @@ function Add-M365DSCTelemetryEvent
             # LCM Metadata Information
             try
             {
-                $LCMInfo = Get-DscLocalConfigurationManager -ErrorAction Stop
+                if ($null -eq $Global:LCMInfo)
+                {
+                    $Global:LCMInfo = Get-DscLocalConfigurationManager -ErrorAction Stop
+                }
 
                 $certificateConfigured = $false
                 if (-not [System.String]::IsNullOrEmpty($LCMInfo.CertificateID))
@@ -377,17 +380,17 @@ function Add-M365DSCTelemetryEvent
                 }
 
                 $partialConfiguration = $false
-                if (-not [System.String]::IsNullOrEmpty($LCMInfo.PartialConfigurations))
+                if (-not [System.String]::IsNullOrEmpty($Global:LCMInfo.PartialConfigurations))
                 {
                     $partialConfiguration = $true
                 }
                 $Data.Add('LCMUsesPartialConfigurations', $partialConfiguration)
                 $Data.Add('LCMCertificateConfigured', $certificateConfigured)
-                $Data.Add('LCMConfigurationMode', $LCMInfo.ConfigurationMode)
-                $Data.Add('LCMConfigurationModeFrequencyMins', $LCMInfo.ConfigurationModeFrequencyMins)
-                $Data.Add('LCMRefreshMode', $LCMInfo.RefreshMode)
-                $Data.Add('LCMState', $LCMInfo.LCMState)
-                $Data.Add('LCMStateDetail', $LCMInfo.LCMStateDetail)
+                $Data.Add('LCMConfigurationMode', $Global:LCMInfo.ConfigurationMode)
+                $Data.Add('LCMConfigurationModeFrequencyMins', $Global:LCMInfo.ConfigurationModeFrequencyMins)
+                $Data.Add('LCMRefreshMode', $Global:LCMInfo.RefreshMode)
+                $Data.Add('LCMState', $Global:LCMInfo.LCMState)
+                $Data.Add('LCMStateDetail', $Global:LCMInfo.LCMStateDetail)
 
                 if ([System.String]::IsNullOrEmpty($Type))
                 {
@@ -395,18 +398,18 @@ function Add-M365DSCTelemetryEvent
                     {
                         $Type = 'Export'
                     }
-                    elseif ($LCMInfo.LCMStateDetail -eq 'LCM is performing a consistency check.' -or `
-                            $LCMInfo.LCMStateDetail -eq 'LCM exécute une vérification de cohérence.' -or `
-                            $LCMInfo.LCMStateDetail -eq 'LCM führt gerade eine Konsistenzüberprüfung durch.')
+                    elseif ($Global:LCMInfo.LCMStateDetail -eq 'LCM is performing a consistency check.' -or `
+                            $Global:LCMInfo.LCMStateDetail -eq 'LCM exécute une vérification de cohérence.' -or `
+                            $Global:LCMInfo.LCMStateDetail -eq 'LCM führt gerade eine Konsistenzüberprüfung durch.')
                     {
                         $Type = 'MonitoringScheduled'
                     }
-                    elseif ($LCMInfo.LCMStateDetail -eq 'LCM is testing node against the configuration.')
+                    elseif ($Global:LCMInfo.LCMStateDetail -eq 'LCM is testing node against the configuration.')
                     {
                         $Type = 'MonitoringManual'
                     }
-                    elseif ($LCMInfo.LCMStateDetail -eq 'LCM is applying a new configuration.' -or `
-                            $LCMInfo.LCMStateDetail -eq 'LCM applique une nouvelle configuration.')
+                    elseif ($Global:LCMInfo.LCMStateDetail -eq 'LCM is applying a new configuration.' -or `
+                            $Global:LCMInfo.LCMStateDetail -eq 'LCM applique une nouvelle configuration.')
                     {
                         $Type = 'ApplyingConfiguration'
                     }

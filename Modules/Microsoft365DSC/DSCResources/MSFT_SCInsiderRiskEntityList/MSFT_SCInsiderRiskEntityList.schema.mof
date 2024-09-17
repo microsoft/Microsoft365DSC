@@ -28,7 +28,6 @@ class MSFT_SCInsiderRiskEntityList : OMI_BaseResource
     [Write, Description("")] String ExcludedKeyworkGroups[];
     [Write, Description("")] String ExcludedSensitiveInformationTypeGroups[];
     [Write, Description("")] String ExcludedSiteGroups[];
-    [Write, Description("Domain group.")] string Domains;
     [Write, Description("Specify if this entity should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
     [Write, Description("Credentials of the workload's Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;

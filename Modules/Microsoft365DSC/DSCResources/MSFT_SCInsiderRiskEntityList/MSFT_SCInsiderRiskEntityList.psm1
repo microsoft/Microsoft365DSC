@@ -500,14 +500,69 @@ function Set-TargetResource
     # CREATE
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        ##TODO - Replace by the New cmdlet for the resource
-        New-Cmdlet @SetParameters
+        # Create a new Domain Group
+        if ($ListType -eq 'CustomDomainLists')
+        {
+            $value = @()
+            foreach ($domain in $Domains)
+            {
+                $value += "{`"Dmn`":`"$($domain.Dmn)`",`"isMLSubDmn`":$($domain.isMLSubDmn.ToString().ToLower())}"
+            }
+            Write-Verbose -Message "Creating new Domain Group {$Name} with values {$($value -join ',')}"
+            New-InsiderRiskEntityList -Type 'CustomDomainLists' `
+                                      -Name $Name `
+                                      -DisplayName $DisplayName `
+                                      -Description $Description `
+                                      -Entities $value | Out-Null
+        }
+        elseif ($ListType -eq 'CustomFilePathRegexLists')
+        {
+            $value = @()
+            foreach ($filePath in $FilePaths)
+            {
+                $value += "{`"FlPthRgx`":`"$($filePath)`",`"isSrc`":true,`"isTrgt`":true}"
+            }
+            Write-Verbose -Message "Creating new FilePath Group {$Name} with values {$($value -join ',')}"
+            New-InsiderRiskEntityList -Type 'CustomDomainLists' `
+                                      -Name $Name `
+                                      -DisplayName $DisplayName `
+                                      -Description $Description `
+                                      -Entities $value | Out-Null
+        }
     }
     # UPDATE
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        ##TODO - Replace by the Update/Set cmdlet for the resource
-        Set-cmdlet @SetParameters
+        # Update Domain Group
+        if ($ListType -eq 'CustomDomainLists')
+        {
+            $entitiesToAdd = @()
+            $entitiesToRemove = @()
+            $differences = Compare-Object -ReferenceObject $currentInstance.Domains.Dmn -DifferenceObject $Domains.Dmn
+            foreach ($diff in $differences)
+            {
+                if ($diff.SideIndicator -eq '=>')
+                {
+                    $instance = $Domains | Where-Object -FilterScript {$_.Dmn -eq $diff.InputObject}
+                    $entitiesToAdd += "{`"Dmn`":`"$($instance.Dmn)`",`"isMLSubDmn`":$($instance.isMLSubDmn.ToString().ToLower())}"
+                }
+                else
+                {
+                    $instance = $currentInstance.Domains | Where-Object -FilterScript {$_.Dmn -eq $diff.InputObject}
+                    $entitiesToRemove += "{`"Dmn`":`"$($instance.Dmn)`",`"isMLSubDmn`":$($instance.isMLSubDmn.ToString().ToLower())}"
+                }
+            }
+
+            Write-Verbose -Message "Updating Domain Group {$Name}"
+            Write-Verbose -Message "Adding entities: $($entitiesToAdd -join ',')"
+            Write-Verbose -Message "Removing entities: $($entitiesToRemove -join ',')"
+
+            Set-InsiderRiskEntityList -Identity $Name `
+                                      -DisplayName $DisplayName `
+                                      -Description $Description `
+                                      -AddEntities $entitiesToAdd `
+                                      -RemoveEntities $entitiesToRemove | Out-Null
+        }
     }
     # REMOVE
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
@@ -643,6 +698,7 @@ function Test-TargetResource
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
+    $ValuesToCheck.Remove('Name') | Out-Null
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
