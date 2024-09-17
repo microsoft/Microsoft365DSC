@@ -90,9 +90,29 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential  = $Credential;
                 }
 
+                $Script:callCount = 0
                 Mock -CommandName Invoke-M365DSCAzureDevOPSWebRequest -MockWith {
-                    return @{
-                        Value = $true
+                    if ($Script:callCount -eq 0)
+                    {
+                        $Script:callCount++
+                        return @{
+                            id = '12345-12345-12345-12345'
+                        }
+                    }
+                    elseif ($Script:callCount -eq 1)
+                    {
+                        $Script:callCount++
+                        return @{
+                            value = @{
+                                accountName = 'TestOrg'
+                            }
+                        }
+                    }
+                    else
+                    {
+                        return @{
+                            Value = $true
+                        }
                     }
                 }
             }
