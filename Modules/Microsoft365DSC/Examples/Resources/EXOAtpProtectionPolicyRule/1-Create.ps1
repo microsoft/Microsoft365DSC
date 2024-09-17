@@ -21,6 +21,19 @@ Configuration Example
     Import-DscResource -ModuleName Microsoft365DSC
     node localhost
     {
-        
+        EXOATPProtectionPolicyRule "EXOATPProtectionPolicyRule-Strict Preset Security Policy"
+        {
+            Comments                = "Built-in Strict Preset Security Policy";
+            Enabled                 = $False;
+            Identity                = "Strict Preset Security Policy";
+            Name                    = "Strict Preset Security Policy";
+            Priority                = 0;
+            SafeAttachmentPolicy    = "Strict Preset Security Policy1725468967835";
+            SafeLinksPolicy         = "Strict Preset Security Policy1725468969412";
+            Ensure                  = "Present"
+            ApplicationId           = $ApplicationId
+            TenantId                = $TenantId
+            CertificateThumbprint   = $CertificateThumbprint
+        }
     }
 }
