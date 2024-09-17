@@ -261,6 +261,7 @@ function Set-TargetResource
     # CREATE
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
+        $SetParameters.Remove('Identity') | Out-Null
         New-ATPProtectionPolicyRule @SetParameters
     }
     # UPDATE
