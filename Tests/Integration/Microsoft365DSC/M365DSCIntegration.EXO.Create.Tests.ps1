@@ -385,6 +385,14 @@
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                 }
+                EXOMailboxIRMAccess 'EXOMailboxIRMAccess-qwe@testorg.onmicrosoft.com'
+                {
+                    AccessLevel          = "Block";
+                    Credential           = $Credscredential;
+                    Ensure               = "Present";
+                    Identity             = "qwe@$OrganizationName";
+                    User                 = "admin@$OrganizationName";
+                }
                 EXOMailContact 'TestMailContact'
                 {
                     Alias                       = 'TestMailContact'
@@ -939,6 +947,20 @@
                     SenderName            = "michelle@fabrikam.com";
                     SourceFolder          = "Test2:\Inbox";
                     TenantId              = $TenantId;
+                }
+                EXOTenantAllowBlockListItems 'Example'
+                {
+                    ApplicationId         = $ApplicationId;
+                    CertificateThumbprint = $CertificateThumbprint;
+                    TenantId              = $TenantId;
+                    Action                = "Block";
+                    Ensure                = "Present";
+                    ExpirationDate        = "10/11/2024 9:00:00 PM";
+                    ListSubType           = "Tenant";
+                    ListType              = "Sender";
+                    Notes                 = "Test block";
+                    SubmissionID          = "Non-Submission";
+                    Value                 = "example.com";
                 }
                 EXOTransportRule 'ConfigureTransportRule'
                 {

@@ -38,7 +38,7 @@
 | **ConfigurationManagerComplianceRequired** | Write | Boolean | ConfigurationManagerComplianceRequired of the Windows 10 device compliance policy. | |
 | **TpmRequired** | Write | Boolean | TpmRequired of the Windows 10 device compliance policy. | |
 | **DeviceCompliancePolicyScript** | Write | String | DeviceCompliancePolicyScript of the Windows 10 device compliance policy. | |
-| **ValidOperatingSystemBuildRanges** | Write | StringArray[] | ValidOperatingSystemBuildRanges of the Windows 10 device compliance policy. | |
+| **ValidOperatingSystemBuildRanges** | Write | MSFT_MicrosoftGraphOperatingSystemVersionRange[] | ValidOperatingSystemBuildRanges of the Windows 10 device compliance policy. | |
 | **Ensure** | Write | String | Present ensures the policy exists, absent ensures it is removed. | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials of the Intune Admin | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
@@ -60,6 +60,16 @@
 | **groupId** | Write | String | The group Id that is the target of the assignment. | |
 | **groupDisplayName** | Write | String | The group Display Name that is the target of the assignment. | |
 | **collectionId** | Write | String | The collection Id that is the target of the assignment.(ConfigMgr) | |
+
+### MSFT_MicrosoftGraphOperatingSystemVersionRange
+
+#### Parameters
+
+| Parameter | Attribute | DataType | Description | Allowed Values |
+| --- | --- | --- | --- | --- |
+| **Description** | Write | String | The description of this range (e.g. Valid 1702 builds) | |
+| **LowestVersion** | Write | String | The lowest inclusive version that this range contains. | |
+| **HighestVersion** | Write | String | The highest inclusive version that this range contains. | |
 
 
 ## Description
