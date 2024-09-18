@@ -41,7 +41,7 @@ function Get-TargetResource
         $SensitiveInformationTypes,
 
         [Parameter()]
-        [System.String[]]
+        [System.Management.Infrastructure.CimInstance[]]
         $Sites,
 
         [Parameter()]
@@ -412,7 +412,7 @@ function Set-TargetResource
         $SensitiveInformationTypes,
 
         [Parameter()]
-        [System.String[]]
+        [System.Management.Infrastructure.CimInstance[]]
         $Sites,
 
         [Parameter()]
@@ -520,10 +520,66 @@ function Set-TargetResource
             $value = @()
             foreach ($filePath in $FilePaths)
             {
-                $value += "{`"FlPthRgx`":`"$($filePath)`",`"isSrc`":true,`"isTrgt`":true}"
+                $value += "{`"FlPthRgx`":`"$($filePath.Replace('\', '\\'))`",`"isSrc`":true,`"isTrgt`":true}"
             }
             Write-Verbose -Message "Creating new FilePath Group {$Name} with values {$($value -join ',')}"
-            New-InsiderRiskEntityList -Type 'CustomDomainLists' `
+            New-InsiderRiskEntityList -Type 'CustomFilePathRegexLists' `
+                                      -Name $Name `
+                                      -DisplayName $DisplayName `
+                                      -Description $Description `
+                                      -Entities $value | Out-Null
+        }
+        elseif ($ListType -eq 'CustomFileTypeLists')
+        {
+            $value = @()
+            foreach ($fileType in $FileTypes)
+            {
+                $value += "{`"Ext`":`"$fileType`"}"
+            }
+            Write-Verbose -Message "Creating new FileType Group {$Name} with values {$($value -join ',')}"
+            New-InsiderRiskEntityList -Type 'CustomFileTypeLists ' `
+                                      -Name $Name `
+                                      -DisplayName $DisplayName `
+                                      -Description $Description `
+                                      -Entities $value | Out-Null
+        }
+        elseif ($ListType -eq 'CustomKeywordLists')
+        {
+            $value = @()
+            foreach ($keyword in $Keywords)
+            {
+                $value += "{`"Name`":`"$keyword`"}"
+            }
+            Write-Verbose -Message "Creating new Keyword Group {$Name} with values {$($value -join ',')}"
+            New-InsiderRiskEntityList -Type 'CustomKeywordLists' `
+                                      -Name $Name `
+                                      -DisplayName $DisplayName `
+                                      -Description $Description `
+                                      -Entities $value | Out-Null
+        }
+        elseif ($ListType -eq 'CustomSensitiveInformationTypeLists')
+        {
+            $value = @()
+            foreach ($sit in $SensitiveInformationTypes)
+            {
+                $value += "{`"Guid`":`"$sit`"}"
+            }
+            Write-Verbose -Message "Creating new SIT Group {$Name} with values {$($value -join ',')}"
+            New-InsiderRiskEntityList -Type 'CustomSensitiveInformationTypeLists' `
+                                      -Name $Name `
+                                      -DisplayName $DisplayName `
+                                      -Description $Description `
+                                      -Entities $value | Out-Null
+        }
+        elseif ($ListType -eq 'CustomSiteLists')
+        {
+            $value = @()
+            foreach ($site in $Sites)
+            {
+                $value += "{`"Url`":`"$($site.Url)`";`"Name`":`"$($site.Name)`";`"Guid`":`"$($site.Guid)`"}"
+            }
+            Write-Verbose -Message "Creating new Site Group {$Name} with values {$($value -join ',')}"
+            New-InsiderRiskEntityList -Type 'CustomSiteLists' `
                                       -Name $Name `
                                       -DisplayName $DisplayName `
                                       -Description $Description `
@@ -554,6 +610,148 @@ function Set-TargetResource
             }
 
             Write-Verbose -Message "Updating Domain Group {$Name}"
+            Write-Verbose -Message "Adding entities: $($entitiesToAdd -join ',')"
+            Write-Verbose -Message "Removing entities: $($entitiesToRemove -join ',')"
+
+            Set-InsiderRiskEntityList -Identity $Name `
+                                      -DisplayName $DisplayName `
+                                      -Description $Description `
+                                      -AddEntities $entitiesToAdd `
+                                      -RemoveEntities $entitiesToRemove | Out-Null
+        }
+        # Update File Path Group
+        elseif ($ListType -eq 'CustomFilePathRegexLists')
+        {
+            $entitiesToAdd = @()
+            $entitiesToRemove = @()
+            $differences = Compare-Object -ReferenceObject $currentInstance.FilePaths -DifferenceObject $FilePaths
+            foreach ($diff in $differences)
+            {
+                if ($diff.SideIndicator -eq '=>')
+                {
+                    $entitiesToAdd += "{`"FlPthRgx`":`"$($diff.InputObject.Replace('\', '\\'))`",`"isSrc`":true,`"isTrgt`":true}"
+                }
+                else
+                {
+                    $entitiesToRemove += "{`"FlPthRgx`":`"$($diff.InputObject.Replace('\', '\\'))`",`"isSrc`":true,`"isTrgt`":true}"
+                }
+            }
+
+            Write-Verbose -Message "Updating File Path Group {$Name}"
+            Write-Verbose -Message "Adding entities: $($entitiesToAdd -join ',')"
+            Write-Verbose -Message "Removing entities: $($entitiesToRemove -join ',')"
+
+            Set-InsiderRiskEntityList -Identity $Name `
+                                      -DisplayName $DisplayName `
+                                      -Description $Description `
+                                      -AddEntities $entitiesToAdd `
+                                      -RemoveEntities $entitiesToRemove | Out-Null
+        }
+        # Update File Type Group
+        elseif ($ListType -eq 'CustomFileTypeLists')
+        {
+            $entitiesToAdd = @()
+            $entitiesToRemove = @()
+            $differences = Compare-Object -ReferenceObject $currentInstance.FileTypes -DifferenceObject $FileTypes
+            foreach ($diff in $differences)
+            {
+                if ($diff.SideIndicator -eq '=>')
+                {
+                    $entitiesToAdd += "{`"Ext`":`"$($diff.InputObject)`"}"
+                }
+                else
+                {
+                    $entitiesToRemove += "{`"Ext`":`"$($diff.InputObject)`"}"
+                }
+            }
+
+            Write-Verbose -Message "Updating File Type Group {$Name}"
+            Write-Verbose -Message "Adding entities: $($entitiesToAdd -join ',')"
+            Write-Verbose -Message "Removing entities: $($entitiesToRemove -join ',')"
+
+            Set-InsiderRiskEntityList -Identity $Name `
+                                      -DisplayName $DisplayName `
+                                      -Description $Description `
+                                      -AddEntities $entitiesToAdd `
+                                      -RemoveEntities $entitiesToRemove | Out-Null
+        }
+        # Update Keywords Group
+        elseif ($ListType -eq 'CustomKeywordLists')
+        {
+            $entitiesToAdd = @()
+            $entitiesToRemove = @()
+            $differences = Compare-Object -ReferenceObject $currentInstance.Keywords -DifferenceObject $Keywords
+            foreach ($diff in $differences)
+            {
+                if ($diff.SideIndicator -eq '=>')
+                {
+                    $entitiesToAdd += "{`"Name`":`"$($diff.InputObject)`"}"
+                }
+                else
+                {
+                    $entitiesToRemove += "{`"Name`":`"$($diff.InputObject)`"}"
+                }
+            }
+
+            Write-Verbose -Message "Updating Keyword Group {$Name}"
+            Write-Verbose -Message "Adding entities: $($entitiesToAdd -join ',')"
+            Write-Verbose -Message "Removing entities: $($entitiesToRemove -join ',')"
+
+            Set-InsiderRiskEntityList -Identity $Name `
+                                      -DisplayName $DisplayName `
+                                      -Description $Description `
+                                      -AddEntities $entitiesToAdd `
+                                      -RemoveEntities $entitiesToRemove | Out-Null
+        }
+        # Update SIT Group
+        elseif ($ListType -eq 'CustomSensitiveInformationTypeLists')
+        {
+            $entitiesToAdd = @()
+            $entitiesToRemove = @()
+            $differences = Compare-Object -ReferenceObject $currentInstance.SensitiveInformationTypes -DifferenceObject $SensitiveInformationTypes
+            foreach ($diff in $differences)
+            {
+                if ($diff.SideIndicator -eq '=>')
+                {
+                    $entitiesToAdd += "{`"Guid`":`"$($diff.InputObject)`"}"
+                }
+                else
+                {
+                    $entitiesToRemove += "{`"Guid`":`"$($diff.InputObject)`"}"
+                }
+            }
+
+            Write-Verbose -Message "Updating SIT Group {$Name}"
+            Write-Verbose -Message "Adding entities: $($entitiesToAdd -join ',')"
+            Write-Verbose -Message "Removing entities: $($entitiesToRemove -join ',')"
+
+            Set-InsiderRiskEntityList -Identity $Name `
+                                      -DisplayName $DisplayName `
+                                      -Description $Description `
+                                      -AddEntities $entitiesToAdd `
+                                      -RemoveEntities $entitiesToRemove | Out-Null
+        }
+        # Update Sites Group
+        elseif ($ListType -eq 'CustomSiteLists')
+        {
+            $entitiesToAdd = @()
+            $entitiesToRemove = @()
+            $differences = Compare-Object -ReferenceObject $currentInstance.Sites.Url -DifferenceObject $Sites.Url
+            foreach ($diff in $differences)
+            {
+                if ($diff.SideIndicator -eq '=>')
+                {
+                    $entry = $Sites | Where-Object -FilterScript {$_.Url -eq $diff.InputObject}
+                    $entitiesToAdd += "{`"Url`":`"$($entry.Url)`";`"Name`":`"$($entry.Name)`";`"Guid`":`"$($entry.Guid)`"}"
+                }
+                else
+                {
+                    $entry = $currentInstance.Sites | Where-Object -FilterScript {$_.Url -eq $diff.InputObject}
+                    $entitiesToRemove += "{`"Url`":`"$($entry.Url)`";`"Name`":`"$($entry.Name)`";`"Guid`":`"$($entry.Guid)`"}"
+                }
+            }
+
+            Write-Verbose -Message "Updating Sites Group {$Name}"
             Write-Verbose -Message "Adding entities: $($entitiesToAdd -join ',')"
             Write-Verbose -Message "Removing entities: $($entitiesToRemove -join ',')"
 
@@ -615,7 +813,7 @@ function Test-TargetResource
         $SensitiveInformationTypes,
 
         [Parameter()]
-        [System.String[]]
+        [System.Management.Infrastructure.CimInstance[]]
         $Sites,
 
         [Parameter()]

@@ -5,7 +5,13 @@ class MSFT_SCInsiderRiskEntityListDomain
     [Write, Description("Defines if the entry should include multi-level subdomains or not.")] Boolean isMLSubDmn;
     [Write, Description("Type of the Sensitive Information label")] String type;
 };
-
+[ClassVersion("1.0.0")]
+class MSFT_SCInsiderRiskEntityListSite
+{
+    [Required, Description("Url of the site.")] String Url;
+    [Write, Description("Name of the site.")] String Name;
+    [Write, Description("Unique identifier of the site.")] String Guid;
+};
 [ClassVersion("1.0.0.0"), FriendlyName("SCInsiderRiskEntityList")]
 class MSFT_SCInsiderRiskEntityList : OMI_BaseResource
 {
@@ -18,7 +24,7 @@ class MSFT_SCInsiderRiskEntityList : OMI_BaseResource
     [Write, Description("")] String FileTypes[];
     [Write, Description("")] String Keywords[];
     [Write, Description("")] String SensitiveInformationTypes[];
-    [Write, Description("")] String Sites[];
+    [Write, Description(""), EmbeddedInstance("MSFT_SCInsiderRiskEntityListSite")] String Sites[];
     [Write, Description("")] String TrainableClassifiers[];
     [Write, Description("")] String ExceptionKeyworkGroups[];
     [Write, Description("")] String ExcludedClassifierGroups[];
