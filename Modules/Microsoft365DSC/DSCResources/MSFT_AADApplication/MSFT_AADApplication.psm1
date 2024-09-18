@@ -62,6 +62,10 @@ function Get-TargetResource
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
+        $OptionalClaims,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
         $Permissions,
 
         [Parameter()]
@@ -163,6 +167,53 @@ function Get-TargetResource
         else
         {
             Write-Verbose -Message 'An instance of Azure AD App was retrieved.'
+
+            $complexOptionalClaims = @{}
+            $complexAccessTokenClaims = @()
+            foreach ($currentAccessTokenClaim in $AADApp.OptionalClaims.AccessToken)
+            {
+                $myAccessTokenClaim  = @{}
+                $myAccessTokenClaim.Add('Essential', $currentAccessTokenClaim.Essential)
+
+                $myAccessTokenClaim.Add('Name', $currentAccessTokenClaim.Name)
+
+                $myAccessTokenClaim.Add('Source', $currentAccessTokenClaim.Source)
+                $complexAccessTokenClaims += $myAccessTokenClaim
+            }
+            $complexOptionalClaims.Add('AccessToken',$complexAccessTokenClaims)
+
+
+            $complexIdTokenClaims = @()
+            foreach ($currentIdTokenClaim in $AADApp.OptionalClaims.IdToken)
+            {
+                $myIdTokenClaim  = @{}
+                $myIdTokenClaim.Add('Essential', $currentIdTokenClaim.Essential)
+
+                $myIdTokenClaim.Add('Name', $currentIdTokenClaim.Name)
+
+                $myIdTokenClaim.Add('Source', $currentIdTokenClaim.Source)
+                $currentIdTokenClaim += $myIdTokenClaim
+            }
+            $complexOptionalClaims.Add('IdToken',$complexIdTokenClaims)
+
+            $complexSaml2TokenClaims = @()
+            foreach ($currentSaml2TokenClaim in $AADApp.OptionalClaims.Saml2Token)
+            {
+                $mySaml2TokenClaim  = @{}
+                $mySaml2TokenClaim.Add('Essential', $currentSaml2TokenClaim.Essential)
+
+                $mySaml2TokenClaim.Add('Name', $currentSaml2TokenClaim.Name)
+
+                $mySaml2TokenClaim.Add('Source', $currentSaml2TokenClaim.Source)
+                $complexSaml2TokenClaims += $mySaml2TokenClaim
+            }
+            $complexOptionalClaims.Add('Saml2Token',$complexSaml2TokenClaims)
+
+            if ($complexOptionalClaims.values.Where({$null -ne $_}).count -eq 0)
+            {
+                $complexOptionalClaims = $null
+            }
+
             $permissionsObj = Get-M365DSCAzureADAppPermissions -App $AADApp
             $isPublicClient = $false
             if (-not [System.String]::IsNullOrEmpty($AADApp.PublicClient) -and $AADApp.PublicClient -eq $true)
@@ -210,6 +261,7 @@ function Get-TargetResource
                 Owners                  = $OwnersValues
                 ObjectId                = $AADApp.Id
                 AppId                   = $AADApp.AppId
+                OptionalClaims          = $complexOptionalClaims
                 Permissions             = $permissionsObj
                 Ensure                  = 'Present'
                 Credential              = $Credential
@@ -303,6 +355,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String[]]
         $Owners,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $OptionalClaims,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
@@ -744,6 +800,10 @@ function Test-TargetResource
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
+        $OptionalClaims,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
         $Permissions,
 
         [Parameter()]
@@ -941,6 +1001,45 @@ function Export-TargetResource
                     {
                         $Results.Permissions = Get-M365DSCAzureADAppPermissionsAsString $Results.Permissions
                     }
+
+                    if($null -ne $Results.OptionalClaims)
+                    {
+                        $complexMapping = @(
+                            @{
+                                Name = 'OptionalClaims'
+                                CimInstanceName = 'AADApplicationOptionalClaims'
+                                IsRequired = $False
+                            }
+                            @{
+                                Name = 'AccessToken'
+                                CimInstanceName = 'MicrosoftGraphOptionalClaim'
+                                IsRequired = $False
+                            }
+                            @{
+                                Name = 'IdToken'
+                                CimInstanceName = 'MicrosoftGraphOptionalClaim'
+                                IsRequired = $False
+                            }
+                            @{
+                                Name = 'Saml2Token'
+                                CimInstanceName = 'MicrosoftGraphOptionalClaim'
+                                IsRequired = $False
+                            }
+                        )
+                        $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                        -ComplexObject $Results.OptionalClaims`
+                        -CIMInstanceName 'AADApplicationOptionalClaims' `
+                        -ComplexTypeMapping $complexMapping
+
+                        if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                        {
+                            $Results.OptionalClaims = $complexTypeStringResult
+                        }
+                        else
+                        {
+                            $Results.Remove('OptionalClaims') | Out-Null
+                        }
+                    }
                     $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                         -ConnectionMode $ConnectionMode `
                         -ModulePath $PSScriptRoot `
@@ -951,6 +1050,12 @@ function Export-TargetResource
                     {
                         $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
                             -ParameterName 'Permissions'
+                    }
+
+
+                    if ($Results.OptionalClaims)
+                    {
+                        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "OptionalClaims" -isCIMArray:$False
                     }
 
                     $dscContent.Append($currentDSCBlock) | Out-Null
