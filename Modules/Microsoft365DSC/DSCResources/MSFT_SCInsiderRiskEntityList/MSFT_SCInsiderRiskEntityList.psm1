@@ -481,6 +481,7 @@ function Set-TargetResource
         $AccessTokens
     )
 
+    Write-Verbose -Message "Start Set-TargetResource"
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
