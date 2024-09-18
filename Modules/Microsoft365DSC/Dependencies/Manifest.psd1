@@ -110,11 +110,6 @@
         },
         @{
             ModuleName      = 'PSDesiredStateConfiguration'
-            RequiredVersion = '1.1'
-            PowerShellCore  = $false
-        },
-        @{
-            ModuleName      = 'PSDesiredStateConfiguration'
             RequiredVersion = '2.0.7'
             PowerShellCore  = $true
             ExplicitLoading = $true

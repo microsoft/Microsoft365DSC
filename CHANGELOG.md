@@ -50,6 +50,7 @@
   * Added dependencies on Az.Accounts, Az.Resources and Az.SecurityInsights
   * Updated DSCParser to version 2.0.0.9.
   * Updated MSCloudLoginAssistant to version 1.1.25.
+  * Removed unnecessary dependency PSDesiredStateConfiguration v1.1
 
 # 1.24.904.1
 
