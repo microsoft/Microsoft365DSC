@@ -1,9 +1,8 @@
 [ClassVersion("1.0.0.0"), FriendlyName("ADOOrganizationOwner")]
 class MSFT_ADOOrganizationOwner : OMI_BaseResource
 {
-    [Key, Description("")] String OrganizationName;
-    [Write, Description("")] String Owner;
-
+    [Key, Description("NAme of the Azure DevOPS Organization")] String OrganizationName;
+    [Write, Description("User principal of the organization's owner")] String Owner;
     [Write, Description("Credentials of the workload's Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
     [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;

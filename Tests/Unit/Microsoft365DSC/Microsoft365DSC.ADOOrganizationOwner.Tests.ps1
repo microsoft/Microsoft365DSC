@@ -35,81 +35,47 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return "Credentials"
             }
 
-            ##TODO - Mock any Remove/Set/New cmdlets
-
             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
             }
             $Script:exportedInstances =$null
             $Script:ExportMode = $false
         }
-        # Test contexts
-        Context -Name "The instance should exist but it DOES NOT" -Fixture {
-            BeforeAll {
-                $testParams = @{
-                    ##TODO - Add Parameters
-                    Ensure              = 'Present'
-                    Credential          = $Credential;
-                }
-
-                ##TODO - Mock the Get-Cmdlet to return $null
-                Mock -CommandName Get-Cmdlet -MockWith {
-                    return $null
-                }
-            }
-            It 'Should return Values from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should -Be 'Absent'
-            }
-            It 'Should return false from the Test method' {
-                Test-TargetResource @testParams | Should -Be $false
-            }
-
-            It 'Should create a new instance from the Set method' {
-                ##TODO - Replace the New-Cmdlet by the appropriate one
-                Should -Invoke -CommandName New-Cmdlet -Exactly 1
-            }
-        }
-
-        Context -Name "The instance exists but it SHOULD NOT" -Fixture {
-            BeforeAll {
-                $testParams = @{
-                    ##TODO - Add Parameters
-                    Ensure              = 'Absent'
-                    Credential          = $Credential;
-                }
-
-                ##TODO - Mock the Get-Cmdlet to return an instance
-                Mock -CommandName Get-Cmdlet -MockWith {
-                    return @{
-
-                    }
-                }
-            }
-            It 'Should return Values from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
-            }
-            It 'Should return false from the Test method' {
-                Test-TargetResource @testParams | Should -Be $false
-            }
-
-            It 'Should remove the instance from the Set method' {
-                ##TODO - Replace the Remove-Cmdlet by the appropriate one
-                Should -Invoke -CommandName Remove-Cmdlet -Exactly 1
-            }
-        }
 
         Context -Name "The instance exists and values are already in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    ##TODO - Add Parameters
-                    Ensure              = 'Present'
-                    Credential          = $Credential;
+                    OrganizationName = 'MyOrg'
+                    Owner            = "john.smith@contoso.com"
+                    Credential       = $Credential;
                 }
 
-                ##TODO - Mock the Get-Cmdlet to return the desired values
-                Mock -CommandName Get-Cmdlet -MockWith {
-                    return @{
-
+                $Script:callCount = 0
+                Mock -CommandName Invoke-M365DSCAzureDevOPSWebRequest -MockWith {
+                    if ($Script:callCount -eq 0)
+                    {
+                        $Script:callCount++
+                        return @{
+                            owner = '12345-12345-12345-12345-12345'
+                        }
+                    }
+                    elseif ($Script:callCount -eq 1)
+                    {
+                        $Script:callCount++
+                        return @{
+                            items = @(
+                                @{
+                                    id = '12345-12345-12345-12345-12345'
+                                    user = @{
+                                        principalName = 'john.smith@contoso.com'
+                                    }
+                                }
+                            )
+                        }
+                    }
+                    else
+                    {
+                        return $null
                     }
                 }
             }
@@ -122,21 +88,66 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The instance exists and values are NOT in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    ##TODO - Add Parameters
-                    Ensure              = 'Present'
-                    Credential          = $Credential;
+                    OrganizationName = 'MyOrg'
+                    Owner            = "john.smith@contoso.com"
+                    Credential       = $Credential;
                 }
 
-                ##TODO - Mock the Get-Cmdlet to return a drift
-                Mock -CommandName Get-Cmdlet -MockWith {
-                    return @{
-
+                $Script:callCount = 0
+                Mock -CommandName Invoke-M365DSCAzureDevOPSWebRequest -MockWith {
+                    if ($Script:callCount -eq 0)
+                    {
+                        $Script:callCount++
+                        return @{
+                            owner = '12345-12345-12345-12345-12346'
+                        }
+                    }
+                    elseif ($Script:callCount -eq 1)
+                    {
+                        $Script:callCount++
+                        return @{
+                            items = @(
+                                @{
+                                    id = '12345-12345-12345-12345-12345'
+                                    user = @{
+                                        principalName = 'john.smith@contoso.com'
+                                    }
+                                },
+                                @{
+                                    id = '12345-12345-12345-12345-12346'
+                                    user = @{
+                                        principalName = 'bob.houle@contoso.com'
+                                    }
+                                }
+                            )
+                        }
+                    }
+                    elseif ($Script:callCount -eq 2)
+                    {
+                        $Script:callCount++
+                        return @{
+                            items = @(
+                                @{
+                                    id = '12345-12345-12345-12345-12345'
+                                    user = @{
+                                        principalName = 'john.smith@contoso.com'
+                                    }
+                                }
+                            )
+                        }
+                    }
+                    if ($Script:callCount -eq 3)
+                    {
+                        $Script:callCount++
+                        return @{
+                            owner = '12345-12345-12345-12345-12345'
+                        }
+                    }
+                    else
+                    {
+                        return $null
                     }
                 }
-            }
-
-            It 'Should return Values from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
             It 'Should return false from the Test method' {
@@ -145,23 +156,72 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should call the Set method' {
                 Set-TargetResource @testParams
-                ##TODO - Replace the Update-Cmdlet by the appropriate one
-                Should -Invoke -CommandName Update-Cmdlet -Exactly 1
+                Should -Invoke -CommandName Invoke-M365DSCAzureDevOPSWebRequest -Exactly 2
             }
         }
 
         Context -Name 'ReverseDSC Tests' -Fixture {
             BeforeAll {
+
                 $Global:CurrentModeIsExport = $true
                 $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
-                    Credential  = $Credential;
+                    Credential = $Credential
+                }
+                $testParams = @{
+                    Credential       = $Credential;
                 }
 
-                ##TODO - Mock the Get-Cmdlet to return an instance
-                Mock -CommandName Get-Cmdlet -MockWith {
-                    return @{
-
+                $Script:callCount = 0
+                Mock -CommandName Invoke-M365DSCAzureDevOPSWebRequest -MockWith {
+                    if ($Script:callCount -eq 0)
+                    {
+                        $Script:callCount++
+                        return @{
+                            id = '12345-12345-12345-12345-12346'
+                        }
+                    }
+                    elseif ($Script:callCount -eq 1)
+                    {
+                        $Script:callCount++
+                        return @(
+                        @{
+                            Value = @{
+                                accountName = 'MyOrg'
+                            }
+                            }
+                        )
+                    }
+                    elseif ($Script:callCount -eq 2)
+                    {
+                        $Script:callCount++
+                        return @{
+                            owner = '12345-12345-12345-12345-12346'
+                        }
+                    }
+                    elseif ($Script:callCount -eq 3)
+                    {
+                        $Script:callCount++
+                        return @{
+                            items = @(
+                                @{
+                                    id = '12345-12345-12345-12345-12345'
+                                    user = @{
+                                        principalName = 'john.smith@contoso.com'
+                                    }
+                                },
+                                @{
+                                    id = '12345-12345-12345-12345-12346'
+                                    user = @{
+                                        principalName = 'bob.houle@contoso.com'
+                                    }
+                                }
+                            )
+                        }
+                    }
+                    else
+                    {
+                        return $null
                     }
                 }
             }

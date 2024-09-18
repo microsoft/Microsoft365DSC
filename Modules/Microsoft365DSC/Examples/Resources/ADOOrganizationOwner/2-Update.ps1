@@ -21,6 +21,13 @@ Configuration Example
     Import-DscResource -ModuleName Microsoft365DSC
     node localhost
     {
-        
+        ADOOrganizationOwner "MyOrgOwner"
+        {
+            ApplicationId         = $ApplicationId;
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
+            OrganizationName      = "MyOrg";
+            Owner                 = "john.smith@$TenantId";
+        }
     }
 }

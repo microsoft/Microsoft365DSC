@@ -58,13 +58,14 @@ function Get-TargetResource
         $uri = "https://vssps.dev.azure.com/$OrganizationName/_apis/Organization/Collections/Me"
         $organizationInfo = Invoke-M365DSCAzureDevOPSWebRequest -Uri $uri
 
-        $uri = "https://app.vssps.visualstudio.com/_apis/profile/profiles/$($organizationInfo.Owner)?api-version=7.1-preview.3"
-        $ownerInfo = Invoke-M365DSCAzureDevOPSWebRequest -Uri $uri
+        $uri = "https://vsaex.dev.azure.com/$OrganizationName/_apis/userentitlements?api-version=7.2-preview.4"
+        $allUsers = Invoke-M365DSCAzureDevOPSWebRequest -Uri $uri
+
+        $ownerInfo = $allUsers.Items | Where-Object -FilterScript {$_.id -eq $organizationInfo.owner}
 
         $results = @{
             OrganizationName      = $OrganizationName
-            Owner                 = $ownerInfo.EmailAddress
-            Ensure                = 'Present'
+            Owner                 = $ownerInfo.user.principalName
             Credential            = $Credential
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
@@ -139,12 +140,23 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    
+    Write-Verbose -Message "Retrieving all users."
+    $uri = "https://vsaex.dev.azure.com/$OrganizationName/_apis/userentitlements?api-version=7.2-preview.4"
+    $allUsers = Invoke-M365DSCAzureDevOPSWebRequest -Uri $uri
 
-    $body = "[{`"from`":`"`",`"op`":2,`"path`":`"/Owner`",`"value`":`"a76a2017-0aee-69fd-9300-cf624aaff3a9`"}]"
-    $uri ='https://vssps.dev.azure.com/O365DSC-Dev/_apis/Organization/Collections/Me?api-version=7.1-preview.1'
-    $org = Invoke-M365DSCAzureDevOPSWebRequest -Uri $uri
-    Invoke-M365DSCAzureDevOPSWebRequest -Uri $uri -Method PATCH -Body $body
+    $ownerInfo = $allUsers.items | Where-Object -FilterScript {$_.user.principalName -eq $Owner}
+
+    if ($null -ne $ownerInfo)
+    {
+        Write-Verbose -Message "Updating owner for organization {$OrganizationName} to {$($ownerInfo.id)}"
+        $body = "[{`"from`":`"`",`"op`":2,`"path`":`"/Owner`",`"value`":`"$($ownerInfo.id)`"}]"
+        $uri ='https://vssps.dev.azure.com/O365DSC-Dev/_apis/Organization/Collections/Me?api-version=7.1-preview.1'
+        Invoke-M365DSCAzureDevOPSWebRequest -Uri $uri -Method PATCH -Body $body
+    }
+    else
+    {
+        throw "Could not retrieve an Azure DevOPS user entitlement for {$Owner}"
+    }
 }
 
 function Test-TargetResource
