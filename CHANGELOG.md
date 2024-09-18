@@ -36,6 +36,9 @@
   * Fixes an issue with creation without specifying Displayname
   * Fixes an issue with Drifts because of returned Role format
     FIXES [#5036](https://github.com/microsoft/Microsoft365DSC/issues/5036)
+* SCSensitivityLabel
+  * Added support for Auto Labeling settings
+    FIXES [#3784](https://github.com/microsoft/Microsoft365DSC/issues/3784)
 * SentinelSetting
   * Initial release.
 * SPOAccessControlSettings
