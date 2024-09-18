@@ -32,6 +32,10 @@
 * IntuneDeviceConfigurationSharedMultiDevicePolicyWindows10
   * Add missing `AccessTokens` parameter to `Export-TargetResource`
     FIXES [#5034](https://github.com/microsoft/Microsoft365DSC/issues/5034)
+* SCAutoSensitivityLabelRule
+  * Fixed issue with incorrectly applying HeaderMatchesPatterns, even when
+    parameter wasn't specified.
+    FIXES [#4641](https://github.com/microsoft/Microsoft365DSC/issues/4641)
 * SCRoleGroup
   * Fixes an issue with creation without specifying Displayname
   * Fixes an issue with Drifts because of returned Role format
