@@ -192,7 +192,7 @@ function Get-TargetResource
                 $myIdTokenClaim.Add('Name', $currentIdTokenClaim.Name)
 
                 $myIdTokenClaim.Add('Source', $currentIdTokenClaim.Source)
-                $currentIdTokenClaim += $myIdTokenClaim
+                $complexIdTokenClaims += $myIdTokenClaim
             }
             $complexOptionalClaims.Add('IdToken',$complexIdTokenClaims)
 
