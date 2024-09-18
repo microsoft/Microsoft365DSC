@@ -631,9 +631,9 @@ function Set-TargetResource
 
     $CurrentRule = Get-TargetResource @PSBoundParameters
 
-    $HeaderMatchesPatternsValue = @{}
     if ($null -ne $HeaderMatchesPatterns -and $null -ne $HeaderMatchesPatterns.Name)
     {
+        $HeaderMatchesPatternsValue = @{}
         $HeaderMatchesPatternsValue.Add($HeaderMatchesPatterns.Name, $HeaderMatchesPatterns.Values)
     }
     if (('Present' -eq $Ensure) -and ('Absent' -eq $CurrentRule.Ensure))
