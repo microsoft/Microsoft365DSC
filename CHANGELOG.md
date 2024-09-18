@@ -4,6 +4,10 @@
 
 * AADPasswordRuleSettings
   * Initial release
+* ADOOrganizationOwner
+  * Initial release.
+* ADOOrganizationOwner
+  * Initial release.
 * ADOSecurityPolicy
   * Initial release.
 * AzureSubscription
