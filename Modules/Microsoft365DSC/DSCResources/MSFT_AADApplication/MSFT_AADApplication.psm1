@@ -61,7 +61,7 @@ function Get-TargetResource
         $Owners,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $OptionalClaims,
 
         [Parameter()]
@@ -357,7 +357,7 @@ function Set-TargetResource
         $Owners,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $OptionalClaims,
 
         [Parameter()]
@@ -510,6 +510,16 @@ function Set-TargetResource
     $currentParameters.Remove('ReplyURLs') | Out-Null
     $currentParameters.Remove('LogoutURL') | Out-Null
     $currentParameters.Remove('Homepage') | Out-Null
+
+
+    $keys = (([Hashtable]$currentParameters).clone()).Keys
+    foreach ($key in $keys)
+    {
+        if ($null -ne $currentParameters.$key -and $currentParameters.$key.getType().Name -like '*cimInstance*')
+        {
+            $currentParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $currentParameters.$key
+        }
+    }
 
     $skipToUpdate = $false
     $AppIdValue = $null
@@ -799,7 +809,7 @@ function Test-TargetResource
         $Owners,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $OptionalClaims,
 
         [Parameter()]
@@ -889,10 +899,28 @@ function Test-TargetResource
             Write-Verbose -Message 'No Permissions exist for the current Azure AD App and no permissions were specified'
         }
     }
+
+
+    $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
+    foreach ($key in $PSBoundParameters.Keys)
+    {
+        $source = $PSBoundParameters.$key
+        $target = $CurrentValues.$key
+        if ($source.getType().Name -like '*CimInstance*' -and $target -ne 'Permissions')
+        {
+            $source = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
+
+            $cimtestResult = Compare-M365DSCComplexObject `
+                -Source ($source) `
+                -Target ($target)
+
+            $ValuesToCheck.Remove($key) | Out-Null
+        }
+    }
+
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
-    $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('ObjectId') | Out-Null
     $ValuesToCheck.Remove('AppId') | Out-Null
     $ValuesToCheck.Remove('Permissions') | Out-Null
@@ -905,7 +933,7 @@ function Test-TargetResource
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
-    return $TestResult
+    return $TestResult -and $cimtestResult
 }
 
 function Export-TargetResource
