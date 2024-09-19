@@ -21,6 +21,18 @@ Configuration Example
     Import-DscResource -ModuleName Microsoft365DSC
     node localhost
     {
-        
+        SCInsiderRiskEntityList "SCInsiderRiskEntityList-MyFileType"
+        {
+            ApplicationId                          = $ApplicationId;
+            CertificateThumbprint                  = $CertificateThumbprint;
+            Description                            = "Test file type";
+            DisplayName                            = "MyFileType";
+            Ensure                                 = "Absent";
+            FileTypes                              = @(".exe",".cmd",".bat");
+            Keywords                               = @();
+            ListType                               = "CustomFileTypeLists";
+            Name                                   = "MyFileTypeList";
+            TenantId                               = $OrganizationName;
+        }
     }
 }

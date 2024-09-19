@@ -41,7 +41,7 @@ function Get-TargetResource
         $SensitiveInformationTypes,
 
         [Parameter()]
-        [System.Management.Infrastructure.CimInstance[]]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
         $Sites,
 
         [Parameter()]
@@ -62,7 +62,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String[]]
-        $ExcludedFilePathGroup,
+        $ExcludedFilePathGroups,
 
         [Parameter()]
         [System.String[]]
@@ -209,7 +209,12 @@ function Get-TargetResource
             foreach ($entity in $instance.Entities)
             {
                 $entity = ConvertFrom-Json $entity
-                $SiteValues += $entity.Url
+                $site = @{
+                    Url  = $entity.Url
+                    Name = $entity.Name
+                    Guid = $entity.Guid
+                }
+                $SiteValues += $site
             }
         }
 
@@ -220,7 +225,7 @@ function Get-TargetResource
             foreach ($entity in $instance.Entities)
             {
                 $entity = ConvertFrom-Json $entity
-                $SiteValues += $entity.Url
+                $TrainableClassifierValues += $entity.Guid
             }
         }
 
@@ -233,7 +238,7 @@ function Get-TargetResource
             {
                 $entity = ConvertFrom-Json $entity
                 $group = Get-InsiderRiskEntityList -Identity $entity.GroupId
-                $excludedKeywordGroupValue += $group.DisplayName
+                $excludedKeywordGroupValue += $group.Name
             }
         }
 
@@ -246,7 +251,7 @@ function Get-TargetResource
             {
                 $entity = ConvertFrom-Json $entity
                 $group = Get-InsiderRiskEntityList -Identity $entity.GroupId
-                $exceptionKeywordGroupValue += $group.DisplayName
+                $exceptionKeywordGroupValue += $group.Name
             }
         }
 
@@ -259,7 +264,7 @@ function Get-TargetResource
             {
                 $entity = ConvertFrom-Json $entity
                 $group = Get-InsiderRiskEntityList -Identity $entity.GroupId
-                $excludedClassifierGroupValue += $group.DisplayName
+                $excludedClassifierGroupValue += $group.Name
             }
         }
 
@@ -272,12 +277,12 @@ function Get-TargetResource
             {
                 $entity = ConvertFrom-Json $entity
                 $group = Get-InsiderRiskEntityList -Identity $entity.GroupId
-                $excludedDomainGroupValue += $group.DisplayName
+                $excludedDomainGroupValue += $group.Name
             }
         }
 
         # Global Exclusions - Excluded File Path Groups
-        $excludedFilePathGroupValue = @()
+        $ExcludedFilePathGroupsValue = @()
         if ($instance.Name -eq 'IrmXSGFilePaths')
         {
             $entities = $instance.Entities
@@ -285,7 +290,7 @@ function Get-TargetResource
             {
                 $entity = ConvertFrom-Json $entity
                 $group = Get-InsiderRiskEntityList -Identity $entity.GroupId
-                $excludedFilePathGroupValue += $group.DisplayName
+                $ExcludedFilePathGroupsValue += $group.Name
             }
         }
 
@@ -298,7 +303,7 @@ function Get-TargetResource
             {
                 $entity = ConvertFrom-Json $entity
                 $group = Get-InsiderRiskEntityList -Identity $entity.GroupId
-                $excludedSiteGroupValue += $group.DisplayName
+                $excludedSiteGroupValue += $group.Name
             }
         }
 
@@ -311,7 +316,7 @@ function Get-TargetResource
             {
                 $entity = ConvertFrom-Json $entity
                 $group = Get-InsiderRiskEntityList -Identity $entity.GroupId
-                $excludedSITGroupValue += $group.DisplayName
+                $excludedSITGroupValue += $group.Name
             }
         }
 
@@ -324,7 +329,7 @@ function Get-TargetResource
             {
                 $entity = ConvertFrom-Json $entity
                 $group = Get-InsiderRiskEntityList -Identity $entity.GroupId
-                $excludedFileTypeGroupValue += $group.DisplayName
+                $excludedFileTypeGroupValue += $group.Name
             }
         }
 
@@ -339,12 +344,12 @@ function Get-TargetResource
             Keywords                               = $KeywordValues
             SensitiveInformationTypes              = $SITValues
             Sites                                  = $SiteValues
-            #TrainableClassifiers                  =
+            TrainableClassifiers                   = $TrainableClassifierValues
             ExcludedKeyworkGroups                  = $excludedKeywordGroupValue
             ExceptionKeyworkGroups                 = $exceptionKeywordGroupValue
             ExcludedClassifierGroups               = $excludedClassifierGroupValue
             ExcludedDomainGroups                   = $excludedDomainGroupValue
-            ExcludedFilePathGroup                  = $excludedFilePathGroupValue
+            ExcludedFilePathGroups                  = $ExcludedFilePathGroupsValue
             ExcludedSiteGroups                     = $excludedSiteGroupValue
             ExcludedSensitiveInformationTypeGroups = $excludedSITGroupValue
             ExcludedFileTypeGroups                 = $excludedFileTypeGroupValue
@@ -412,7 +417,7 @@ function Set-TargetResource
         $SensitiveInformationTypes,
 
         [Parameter()]
-        [System.Management.Infrastructure.CimInstance[]]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
         $Sites,
 
         [Parameter()]
@@ -433,7 +438,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String[]]
-        $ExcludedFilePathGroup,
+        $ExcludedFilePathGroups,
 
         [Parameter()]
         [System.String[]]
@@ -481,7 +486,6 @@ function Set-TargetResource
         $AccessTokens
     )
 
-    Write-Verbose -Message "Start Set-TargetResource"
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
@@ -495,8 +499,6 @@ function Set-TargetResource
     #endregion
 
     $currentInstance = Get-TargetResource @PSBoundParameters
-
-    $setParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
     # CREATE
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
@@ -577,21 +579,39 @@ function Set-TargetResource
             $value = @()
             foreach ($site in $Sites)
             {
-                $value += "{`"Url`":`"$($site.Url)`";`"Name`":`"$($site.Name)`";`"Guid`":`"$($site.Guid)`"}"
+                $value += "{`"Url`":`"$($site.Url.ToString())`",`"Name`":`"$($site.Name.ToString())`",`"Guid`":`"$((New-GUID).ToString())`"}"
             }
-            Write-Verbose -Message "Creating new Site Group {$Name} with values {$($value -join ',')}"
+            Write-Verbose -Message "Creating new Site Group {$Name} with values {$($value)}"
             New-InsiderRiskEntityList -Type 'CustomSiteLists' `
                                       -Name $Name `
                                       -DisplayName $DisplayName `
                                       -Description $Description `
                                       -Entities $value | Out-Null
         }
+        elseif ($ListType -eq 'CustomMLClassifierTypeLists')
+        {
+            $value = @()
+            foreach ($clasifier in $TrainableClassifiers)
+            {
+                $value += "{`"Guid`":`"$($classifier)`"}"
+            }
+            Write-Verbose -Message "Creating new Trainable classifier Group {$Name} with values {$($value)}"
+            New-InsiderRiskEntityList -Type 'CustomMLClassifierTypeLists' `
+                                      -Name $Name `
+                                      -DisplayName $DisplayName `
+                                      -Description $Description `
+                                      -Entities $value | Out-Null
+        }
+        else
+        {
+            throw "Couldn't not identify operation to perform on {$Name}"
+        }
     }
     # UPDATE
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
         # Update Domain Group
-        if ($ListType -eq 'CustomDomainLists')
+        if ($ListType -eq 'CustomDomainLists' -or $Name -eq 'IrmWhitelistDomains')
         {
             $entitiesToAdd = @()
             $entitiesToRemove = @()
@@ -621,7 +641,8 @@ function Set-TargetResource
                                       -RemoveEntities $entitiesToRemove | Out-Null
         }
         # Update File Path Group
-        elseif ($ListType -eq 'CustomFilePathRegexLists')
+        elseif ($ListType -eq 'CustomFilePathRegexLists' -or $Name -eq 'IrmCustomExWinFilePaths' -or `
+                $Name -eq 'IrmDsbldSysExWinFilePaths')
         {
             $entitiesToAdd = @()
             $entitiesToRemove = @()
@@ -677,7 +698,7 @@ function Set-TargetResource
                                       -RemoveEntities $entitiesToRemove | Out-Null
         }
         # Update Keywords Group
-        elseif ($ListType -eq 'CustomKeywordLists')
+        elseif ($ListType -eq 'CustomKeywordLists' -or $Name -eq 'IrmExcludedKeywords' -or $Name -eq 'IrmNotExcludedKeywords')
         {
             $entitiesToAdd = @()
             $entitiesToRemove = @()
@@ -705,7 +726,8 @@ function Set-TargetResource
                                       -RemoveEntities $entitiesToRemove | Out-Null
         }
         # Update SIT Group
-        elseif ($ListType -eq 'CustomSensitiveInformationTypeLists')
+        elseif ($ListType -eq 'CustomSensitiveInformationTypeLists' -or $Name -eq 'IrmCustomExSensitiveTypes ' -or `
+                $Name -eq 'IrmDsbldSysExSensitiveTypes')
         {
             $entitiesToAdd = @()
             $entitiesToRemove = @()
@@ -733,8 +755,9 @@ function Set-TargetResource
                                       -RemoveEntities $entitiesToRemove | Out-Null
         }
         # Update Sites Group
-        elseif ($ListType -eq 'CustomSiteLists')
+        elseif ($ListType -eq 'CustomSiteLists' -or $Name -eq 'IrmExcludedSites')
         {
+            Write-Verbose -Message "Calculating the difference in the Site list."
             $entitiesToAdd = @()
             $entitiesToRemove = @()
             $differences = Compare-Object -ReferenceObject $currentInstance.Sites.Url -DifferenceObject $Sites.Url
@@ -743,12 +766,17 @@ function Set-TargetResource
                 if ($diff.SideIndicator -eq '=>')
                 {
                     $entry = $Sites | Where-Object -FilterScript {$_.Url -eq $diff.InputObject}
-                    $entitiesToAdd += "{`"Url`":`"$($entry.Url)`";`"Name`":`"$($entry.Name)`";`"Guid`":`"$($entry.Guid)`"}"
+                    $guid = $entry.Guid
+                    if ([System.String]::IsNullOrEmpty($guid))
+                    {
+                        $guid = (New-Guid).ToString()
+                    }
+                    $entitiesToAdd += "{`"Url`":`"$($entry.Url)`",`"Name`":`"$($entry.Name)`",`"Guid`":`"$($guid)`"}"
                 }
                 else
                 {
                     $entry = $currentInstance.Sites | Where-Object -FilterScript {$_.Url -eq $diff.InputObject}
-                    $entitiesToRemove += "{`"Url`":`"$($entry.Url)`";`"Name`":`"$($entry.Name)`";`"Guid`":`"$($entry.Guid)`"}"
+                    $entitiesToRemove += "{`"Url`":`"$($entry.Url)`",`"Name`":`"$($entry.Name)`",`"Guid`":`"$($entry.Guid)`"}"
                 }
             }
 
@@ -762,12 +790,91 @@ function Set-TargetResource
                                       -AddEntities $entitiesToAdd `
                                       -RemoveEntities $entitiesToRemove | Out-Null
         }
+        # Update Trainable Classifiers Group
+        elseif ($ListType -eq 'CustomMLClassifierTypeLists' -or $Name -eq 'IrmCustomExMLClassifiers' -or `
+                $Name -eq 'IrmDsbldSysExMLClassifiers')
+        {
+            $entitiesToAdd = @()
+            $entitiesToRemove = @()
+            $differences = Compare-Object -ReferenceObject $currentInstance.Sites.Url -DifferenceObject $Sites.Url
+            foreach ($diff in $differences)
+            {
+                if ($diff.SideIndicator -eq '=>')
+                {
+                    $entitiesToAdd += "{`"Guid`":`"$($diff.InputObject)`"}"
+                }
+                else
+                {
+                    $entitiesToRemove += "{`"Guid`":`"$($diff.InputObject)`"}"
+                }
+            }
+
+            Write-Verbose -Message "Updating Sites Group {$Name}"
+            Write-Verbose -Message "Adding entities: $($entitiesToAdd -join ',')"
+            Write-Verbose -Message "Removing entities: $($entitiesToRemove -join ',')"
+
+            Set-InsiderRiskEntityList -Identity $Name `
+                                      -DisplayName $DisplayName `
+                                      -Description $Description `
+                                      -AddEntities $entitiesToAdd `
+                                      -RemoveEntities $entitiesToRemove | Out-Null
+        }
+
+        <################## Group Exclusions #############>
+        if ($null -ne $ExcludedDomainGroups -and $ExcludedDomainGroups.Length -gt 0)
+        {
+            Set-M365DSCSCInsiderRiskExclusionGroup -CurrentValues $currentInstance.ExcludedDomainGroups `
+                                                   -DesiredValues $ExcludedDomainGroups `
+                                                   -Name 'IrmXSGDomains'
+        }
+        elseif ($null -ne $ExcludedFilePathGroups -and $ExcludedFilePathGroups.Length -gt 0)
+        {
+            Set-M365DSCSCInsiderRiskExclusionGroup -CurrentValues $currentInstance.ExcludedFilePathGroups `
+                                                   -DesiredValues $ExcludedFilePathGroups `
+                                                   -Name 'IrmXSGFilePaths'
+        }
+        elseif ($null -ne $ExcludedFileTypeGroups -and $ExcludedFileTypeGroups.Length -gt 0)
+        {
+            Set-M365DSCSCInsiderRiskExclusionGroup -CurrentValues $currentInstance.ExcludedFileTypeGroups `
+                                                   -DesiredValues $ExcludedFileTypeGroups `
+                                                   -Name 'IrmXSGFiletypes'
+        }
+        elseif ($null -ne $ExceptionKeyworkGroups -and $ExceptionKeyworkGroups.Length -gt 0)
+        {
+            Set-M365DSCSCInsiderRiskExclusionGroup -CurrentValues $currentInstance.ExceptionKeyworkGroups `
+                                                   -DesiredValues $ExceptionKeyworkGroups `
+                                                   -Name 'IrmXSGExcludedKeywords '
+        }
+        elseif ($null -ne $ExcludedKeyworkGroups -and $ExcludedKeyworkGroups.Length -gt 0)
+        {
+            Set-M365DSCSCInsiderRiskExclusionGroup -CurrentValues $currentInstance.ExcludedKeyworkGroups `
+                                                   -DesiredValues $ExcludedKeyworkGroups `
+                                                   -Name 'IrmXSGExcludedKeywords '
+        }
+        elseif ($null -ne $ExcludedSensitiveInformationTypeGroups -and $ExcludedSensitiveInformationTypeGroups.Length -gt 0)
+        {
+            Set-M365DSCSCInsiderRiskExclusionGroup -CurrentValues $currentInstance.ExcludedSensitiveInformationTypeGroups `
+                                                   -DesiredValues $ExcludedSensitiveInformationTypeGroups `
+                                                   -Name 'IrmXSGSensitiveInfoTypes '
+        }
+        elseif ($null -ne $ExcludedSiteGroups -and $ExcludedSiteGroups.Length -gt 0)
+        {
+            Set-M365DSCSCInsiderRiskExclusionGroup -CurrentValues $currentInstance.ExcludedSiteGroups `
+                                                   -DesiredValues $ExcludedSiteGroups `
+                                                   -Name 'IrmXSGSites '
+        }
+        elseif ($null -ne $ExcludedClassifierGroups -and $ExcludedClassifierGroups.Length -gt 0)
+        {
+            Set-M365DSCSCInsiderRiskExclusionGroup -CurrentValues $currentInstance.ExcludedClassifierGroups `
+                                                   -DesiredValues $ExcludedClassifierGroups `
+                                                   -Name 'IrmXSGMLClassifierTypes '
+        }
     }
     # REMOVE
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        ##TODO - Replace by the Remove cmdlet for the resource
-        Remove-cmdlet @SetParameters
+        Write-Verbose -Message "Removing group {$Name}"
+        Remove-InsiderRiskEntityList -Identity $Name -ForceDeletion
     }
 }
 
@@ -814,7 +921,7 @@ function Test-TargetResource
         $SensitiveInformationTypes,
 
         [Parameter()]
-        [System.Management.Infrastructure.CimInstance[]]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
         $Sites,
 
         [Parameter()]
@@ -835,7 +942,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String[]]
-        $ExcludedFilePathGroup,
+        $ExcludedFilePathGroups,
 
         [Parameter()]
         [System.String[]]
@@ -897,7 +1004,6 @@ function Test-TargetResource
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
-    $ValuesToCheck.Remove('Name') | Out-Null
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
@@ -1007,6 +1113,19 @@ function Export-TargetResource
             }
 
             $Results = Get-TargetResource @Params
+
+            if ($null -ne $Results.Domains -and $Results.Domains.Length -gt 0 -and `
+                ($Results.ListType -eq 'CustomDomainLists' -or $Results.ListType -eq 'DomainLists'))
+            {
+                $Results.Domains = ConvertTo-M365DSCSCInsiderRiskDomainToString -Domains $Results.Domains
+            }
+
+            if ($null -ne $Results.Sites -and $Results.Sites.Length -gt 0 -and `
+                ($Results.ListType -eq 'CustomSiteLists' -or $Results.ListType -eq 'SiteLists'))
+            {
+                $Results.Sites = ConvertTo-M365DSCSCInsiderRiskSiteToString -Sites $Results.Sites
+            }
+
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
 
@@ -1015,6 +1134,19 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
+
+            if ($null -ne $Results.Domains -and `
+                ($Results.ListType -eq 'CustomDomainLists' -or $Results.ListType -eq 'DomainLists'))
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Domains' -IsCIMArray $true
+            }
+
+            if ($null -ne $Results.Sites -and `
+                ($Results.ListType -eq 'CustomSiteLists' -or $Results.ListType -eq 'SiteLists'))
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Sites' -IsCIMArray $true
+            }
+
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
@@ -1035,6 +1167,94 @@ function Export-TargetResource
 
         return ''
     }
+}
+
+function ConvertTo-M365DSCSCInsiderRiskDomainToString
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param(
+        [Parameter(Mandatory=$true)]
+        [System.Object[]]
+        $Domains
+    )
+
+    $content = "@("
+    foreach ($domain in $Domains)
+    {
+        $content += "MSFT_SCInsiderRiskEntityListDomain`r`n"
+        $content += "{`r`n"
+        $content += "    Dmn        = '$($domain.Dmn)'`r`n"
+        $content += "    isMLSubDmn = `$$($domain.isMLSubDmn)`r`n"
+        $content += "}`r`n"
+    }
+    $content += ")"
+    return $content
+}
+
+function ConvertTo-M365DSCSCInsiderRiskSiteToString
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param(
+        [Parameter(Mandatory=$true)]
+        [System.Object[]]
+        $Sites
+    )
+
+    $content = "@("
+    foreach ($site in $Sites)
+    {
+        $content += "MSFT_SCInsiderRiskEntityListSite`r`n"
+        $content += "{`r`n"
+        $content += "    Url  = '$($site.Url)'`r`n"
+        $content += "    Name = '$($site.Name)'`r`n"
+        $content += "    Guid = '$($site.Guid)'`r`n"
+        $content += "}`r`n"
+    }
+    $content += ")"
+    return $content
+}
+
+function Set-M365DSCSCInsiderRiskExclusionGroup
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String[]]
+        $CurrentValues,
+
+        [Parameter(Mandatory = $true)]
+        [System.String[]]
+        $DesiredValues,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Name
+    )
+
+    $entitiesToAdd = @()
+    $entitiesToRemove = @()
+    $differences = Compare-Object -ReferenceObject $CurrentValues -DifferenceObject $DesiredValues
+    foreach ($diff in $differences)
+    {
+        if ($diff.SideIndicator -eq '=>')
+        {
+            $entitiesToAdd += "{`"GroupId`":`"$($diff.InputObject)`"}"
+        }
+        else
+        {
+            $entitiesToRemove += "{`"GroupId`":`"$($diff.InputObject)`"}"
+        }
+    }
+
+    Write-Verbose -Message "Updating Group Exclusions for {$Name}"
+    Write-Verbose -Message "Adding entities: $($entitiesToAdd -join ',')"
+    Write-Verbose -Message "Removing entities: $($entitiesToRemove -join ',')"
+
+    Set-InsiderRiskEntityList -Identity $Name `
+                              -AddEntities $entitiesToAdd `
+                              -RemoveEntities $entitiesToRemove | Out-Null
 }
 
 Export-ModuleMember -Function *-TargetResource

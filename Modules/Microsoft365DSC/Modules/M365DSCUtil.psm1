@@ -462,7 +462,7 @@ function Compare-PSCustomObjectArrays
                 Desired      = $DesiredEntry.$KeyProperty
                 Current      = $null
             }
-            $DriftedProperties += $DesiredEntry
+            $DriftedProperties += $result
         }
         else
         {
@@ -488,6 +488,53 @@ function Compare-PSCustomObjectArrays
                             PropertyName = $PropertyName
                             Desired      = $DesiredEntry.$PropertyName
                             Current      = $EquivalentEntryInCurrent.$PropertyName
+                        }
+                        $DriftedProperties += $result
+                    }
+                }
+            }
+        }
+    }
+
+    foreach ($currentEntry in $currentValues)
+    {
+        $KeyProperty = Get-M365DSCCIMInstanceKey -CIMInstance $currentEntry
+
+        $EquivalentEntryInDesired = $DesiredValues | Where-Object -FilterScript { $_.$KeyProperty -eq $currentEntry.$KeyProperty }
+        if ($null -eq $EquivalentEntryInDesired)
+        {
+            $result = @{
+                Property     = $currentEntry
+                PropertyName = $KeyProperty
+                Desired      = $currentEntry.$KeyProperty
+                Current      = $null
+            }
+            $DriftedProperties += $result
+        }
+        else
+        {
+            foreach ($property in $Properties)
+            {
+                $propertyName = $property.Name
+
+                if ((-not [System.String]::IsNullOrEmpty($currentEntry.$PropertyName) -and -not [System.String]::IsNullOrEmpty($EquivalentEntryInDesired.$PropertyName)) -and `
+                    $currentEntry.$PropertyName -ne $EquivalentEntryInDesired.$PropertyName)
+                {
+                    $drift = $true
+                    if ($currentEntry.$PropertyName.GetType().Name -eq 'String' -and $currentEntry.$PropertyName.Contains('$OrganizationName'))
+                    {
+                        if ($currentEntry.$PropertyName.Split('@')[0] -eq $EquivalentEntryInDesired.$PropertyName.Split('@')[0])
+                        {
+                            $drift = $false
+                        }
+                    }
+                    if ($drift)
+                    {
+                        $result = @{
+                            Property     = $currentEntry
+                            PropertyName = $PropertyName
+                            Desired      = $currentEntry.$PropertyName
+                            Current      = $EquivalentEntryInDesired.$PropertyName
                         }
                         $DriftedProperties += $result
                     }
