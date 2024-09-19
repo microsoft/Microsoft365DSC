@@ -88,6 +88,14 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
+        $WelcomeMusicFileName,
+
+        [Parameter()]
+        [System.String]
+        $WelcomeTextToSpeechPrompt,
+
+        [Parameter()]
+        [System.String]
         $OverflowDisconnectTextToSpeechPrompt,
 
         [Parameter()]
@@ -291,6 +299,8 @@ function Get-TargetResource
                 ConferenceMode                                = $queue.ConferenceMode
                 Users                                         = [String[]]$queue.Users
                 LanguageId                                    = $queue.LanguageId
+                WelcomeMusicFileName                          = $queue.WelcomeMusicFileName
+                WelcomeTextToSpeechPrompt                     = $queue.WelcomeTextToSpeechPrompt
                 OboResourceAccountIds                         = [String[]]$queue.OboResourceAccountIds
                 OverflowDisconnectTextToSpeechPrompt          = $queue.OverflowDisconnectTextToSpeechPrompt
                 OverflowDisconnectAudioFilePrompt             = $queue.OverflowDisconnectAudioFilePrompt
@@ -429,6 +439,14 @@ function Set-TargetResource
         [Parameter()]
         [System.String[]]
         $OboResourceAccountIds,
+
+        [Parameter()]
+        [System.String[]]
+        $WelcomeMusicFileName,
+
+        [Parameter()]
+        [System.String[]]
+        $WelcomeTextToSpeechPrompt,
 
         [Parameter()]
         [System.String]
@@ -711,6 +729,14 @@ function Test-TargetResource
         [Parameter()]
         [System.String[]]
         $OboResourceAccountIds,
+
+        [Parameter()]
+        [System.String[]]
+        $WelcomeMusicFileName,
+
+        [Parameter()]
+        [System.String[]]
+        $WelcomeTextToSpeechPrompt,
 
         [Parameter()]
         [System.String]
