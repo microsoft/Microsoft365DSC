@@ -16,12 +16,12 @@ class MSFT_SCInsiderRiskEntityList : OMI_BaseResource
 {
     [Key, Description("The name of the group or setting.")] String Name;
     [Required, Description("The setting type.")] String ListType;
-    [Write, DescriptionDescription for the group or setting. String Description;
+    [Write, Description("Description for the group or setting.")] String Description;
     [Write, Description("The display name of the group or setting.")] String DisplayName;
     [Write, Description("List of domains"), EmbeddedInstance("MSFT_SCInsiderRiskEntityListDomain")] String Domains[];
     [Write, Description("List of file paths.")] String FilePaths[];
-    [Write, Description("List of file types")] String FileTypes[];
-    [Write, Description("List of keywords")] String Keywords[];
+    [Write, Description("List of file types.")] String FileTypes[];
+    [Write, Description("List of keywords.")] String Keywords[];
     [Write, Description("List of sensitive information types.")] String SensitiveInformationTypes[];
     [Write, Description("List of sites."), EmbeddedInstance("MSFT_SCInsiderRiskEntityListSite")] String Sites[];
     [Write, Description("List of trainable classifiers.")] String TrainableClassifiers[];
