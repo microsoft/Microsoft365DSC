@@ -81,6 +81,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-MgBetaDirectoryRoleMemberDirectoryObjectByRef -MockWith {
             }
 
+            Mock -CommandName Invoke-MgGraphRequest -MockWith {
+            }
+
+            Mock -CommandName Set-MgGroupLicense -MockWith {
+            }
+
             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
             }
@@ -624,6 +630,270 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Should -Invoke -CommandName 'Get-MgGroup' -Exactly 1
                 Should -Invoke -CommandName 'Get-MgBetaDirectoryRole' -Exactly 1
                 Should -Invoke -CommandName 'Remove-MgBetaDirectoryRoleMemberDirectoryObjectByRef' -Exactly 1
+            }
+        }
+
+        Context -Name "The Group does not exist and must be created and assigned a license. Values are NOT in the desired state" -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    DisplayName        = 'DSCGroup'
+                    ID                 = '12345-12345-12345-12345'
+                    Description        = 'Microsoft DSC Group'
+                    SecurityEnabled    = $True
+                    MailEnabled        = $false
+                    GroupTypes         = @()
+                    MailNickname       = 'M365DSC'
+                    AssignedLicenses   = (New-CimInstance -ClassName MSFT_AADGroupLicense -Property @{
+                            DisabledPlans  = $null
+                            SkuId          = 'AAD_PREMIUM_P2'
+                        } -ClientOnly)
+                    Ensure             = 'Present'
+                    Credential         = $Credential
+                }
+
+                Mock -CommandName New-M365DSCConnection -MockWith {
+                    return 'Credentials'
+                }
+
+                Mock -CommandName Get-MgGroup -MockWith {
+                }
+
+                Mock -CommandName Get-MgBetaSubscribedSku -MockWith {
+                    return @{
+                        ServicePlans         = @(
+                            @{
+                                ServicePlanId   = 'fake-planid'
+                                ServicePlanName = 'AAD_PREMIUM_P2'
+                            }
+                        )
+                        SkuId                = 'AAD_PREMIUM_P2'
+                        SkuPartNumber        = 'AAD_PREMIUM_P2'
+                    }
+                }
+            }
+
+            It 'Should return Values from the Get method' {
+                Get-TargetResource @testParams
+                Should -Invoke -CommandName 'Get-MgGroup' -Exactly 1
+            }
+
+            It 'Should return false from the Test method' {
+                Test-TargetResource @testParams | Should -Be $false
+            }
+
+            It 'Should call the Set method' {
+                Set-TargetResource @testParams
+                Should -Invoke -CommandName 'New-MgGroup' -Exactly 1
+                Should -Invoke -CommandName 'Set-MgGroupLicense' -Exactly 1
+            }
+        }
+
+        Context -Name "The Group exists and has been assigned the correct license. Values are already in the desired state" -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    DisplayName        = 'DSCGroup'
+                    ID                 = '12345-12345-12345-12345'
+                    Description        = 'Microsoft DSC Group'
+                    SecurityEnabled    = $True
+                    MailEnabled        = $false
+                    GroupTypes         = @()
+                    MailNickname       = 'M365DSC'
+                    AssignedLicenses   = @(
+                        (New-CimInstance -ClassName MSFT_AADGroupLicense -Property @{
+                            DisabledPlans  = @()
+                            SkuId          = 'AAD_PREMIUM_P2'
+                        } -ClientOnly)
+                    )
+                    Ensure             = 'Present'
+                    Credential         = $Credential
+                }
+
+                Mock -CommandName New-M365DSCConnection -MockWith {
+                    return 'Credentials'
+                }
+
+                Mock -CommandName Get-MgGroup -MockWith {
+                    return @{
+                        DisplayName        = 'DSCGroup'
+                        ID                 = '12345-12345-12345-12345'
+                        Description        = 'Microsoft DSC Group'
+                        SecurityEnabled    = $True
+                        MailEnabled        = $false
+                        GroupTypes         = @()
+                        MailNickname       = 'M365DSC'
+                        IsAssignableToRole = $false
+                    }
+                }
+
+                Mock -CommandName Invoke-MgGraphRequest -MockWith {
+                    return @{
+                        value = @{
+                            DisabledPlans = @()
+                            SkuId         = 'AAD_PREMIUM_P2'
+                        }
+                    }
+                }
+
+                Mock -CommandName Get-MgBetaSubscribedSku -MockWith {
+                    return @{
+                        ServicePlans         = @(
+                            @{
+                                ServicePlanId   = 'fake-planid'
+                                ServicePlanName = 'AAD_PREMIUM_P2'
+                            }
+                        )
+                        SkuId                = 'AAD_PREMIUM_P2'
+                        SkuPartNumber        = 'AAD_PREMIUM_P2'
+                    }
+                }
+            }
+
+            It 'Should return Values from the Get method' {
+                Get-TargetResource @testParams
+                Should -Invoke -CommandName 'Get-MgGroup' -Exactly 1
+                Should -Invoke -CommandName 'Invoke-MgGraphRequest' -Exactly 1
+            }
+
+            It 'Should return true from the Test method' {
+                Test-TargetResource @testParams | Should -Be $true
+            }
+        }
+        Context -Name "The Group exists and is not assigned a license but it should be. Values are NOT in the desired state" -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    DisplayName        = 'DSCGroup'
+                    ID                 = '12345-12345-12345-12345'
+                    Description        = 'Microsoft DSC Group'
+                    SecurityEnabled    = $True
+                    MailEnabled        = $false
+                    GroupTypes         = @()
+                    MailNickname       = 'M365DSC'
+                    AssignedLicenses   = @(
+                        (New-CimInstance -ClassName MSFT_AADGroupLicense -Property @{
+                            DisabledPlans  = @()
+                            SkuId          = 'AAD_PREMIUM_P2'
+                        } -ClientOnly)
+                    )
+                    Ensure             = 'Present'
+                    Credential         = $Credential
+                }
+
+                Mock -CommandName New-M365DSCConnection -MockWith {
+                    return 'Credentials'
+                }
+
+                Mock -CommandName Get-MgGroup -MockWith {
+                    return @{
+                        DisplayName        = 'DSCGroup'
+                        ID                 = '12345-12345-12345-12345'
+                        Description        = 'Microsoft DSC Group'
+                        SecurityEnabled    = $True
+                        MailEnabled        = $false
+                        GroupTypes         = @()
+                        MailNickname       = 'M365DSC'
+                        IsAssignableToRole = $false
+                    }
+                }
+
+                Mock -CommandName Get-MgBetaSubscribedSku -MockWith {
+                    return @{
+                        ServicePlans         = @(
+                            @{
+                                ServicePlanId   = 'fake-planid'
+                                ServicePlanName = 'AAD_PREMIUM_P2'
+                            }
+                        )
+                        SkuId                = 'AAD_PREMIUM_P2'
+                        SkuPartNumber        = 'AAD_PREMIUM_P2'
+                    }
+                }
+            }
+
+            It 'Should return Values from the Get method' {
+                Get-TargetResource @testParams
+                Should -Invoke -CommandName 'Get-MgGroup' -Exactly 1
+                Should -Invoke -CommandName 'Invoke-MgGraphRequest' -Exactly 1
+            }
+
+            It 'Should return false from the Test method' {
+                Test-TargetResource @testParams | Should -Be $false
+            }
+
+            It 'Should call the Set method' {
+                Set-TargetResource @testParams
+                Should -Invoke -CommandName 'Get-MgGroup' -Exactly 1
+                Should -Invoke -CommandName 'Set-MgGroupLicense' -Exactly 1
+            }
+        }
+        Context -Name "The Group Exists and is assigned a license but it shouldn't be. Values are NOT in the desired state" -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    DisplayName        = 'DSCGroup'
+                    ID                 = '12345-12345-12345-12345'
+                    Description        = 'Microsoft DSC Group'
+                    SecurityEnabled    = $True
+                    MailEnabled        = $false
+                    GroupTypes         = @()
+                    MailNickname       = 'M365DSC'
+                    AssignedLicenses   = @()
+                    Ensure             = 'Present'
+                    Credential         = $Credential
+                }
+
+                Mock -CommandName New-M365DSCConnection -MockWith {
+                    return 'Credentials'
+                }
+
+                Mock -CommandName Get-MgGroup -MockWith {
+                    return @{
+                        DisplayName        = 'DSCGroup'
+                        ID                 = '12345-12345-12345-12345'
+                        Description        = 'Microsoft DSC Group'
+                        SecurityEnabled    = $True
+                        MailEnabled        = $false
+                        GroupTypes         = @()
+                        MailNickname       = 'M365DSC'
+                        IsAssignableToRole = $false
+                    }
+                }
+
+                Mock -CommandName Invoke-MgGraphRequest -MockWith {
+                    return @{
+                        value = @{
+                            DisabledPlans = @()
+                            SkuId         = 'AAD_PREMIUM_P2'
+                        }
+                    }
+                }
+
+                Mock -CommandName Get-MgBetaSubscribedSku -MockWith {
+                    return @{
+                        ServicePlans         = @(
+                            @{
+                                ServicePlanId   = 'fake-planid'
+                                ServicePlanName = 'AAD_PREMIUM_P2'
+                            }
+                        )
+                        SkuId                = 'AAD_PREMIUM_P2'
+                        SkuPartNumber        = 'AAD_PREMIUM_P2'
+                    }
+                }
+            }
+
+            It 'Should return Values from the Get method' {
+                Get-TargetResource @testParams
+                Should -Invoke -CommandName 'Get-MgGroup' -Exactly 1
+                Should -Invoke -CommandName 'Invoke-MgGraphRequest' -Exactly 1
+            }
+
+            It 'Should return false from the Test method' {
+                Test-TargetResource @testParams | Should -Be $false
+            }
+
+            It 'Should call the Set method' {
+                Set-TargetResource @testParams
+                Should -Invoke -CommandName 'Get-MgGroup' -Exactly 1
+                Should -Invoke -CommandName 'Set-MgGroupLicense' -Exactly 1
             }
         }
 

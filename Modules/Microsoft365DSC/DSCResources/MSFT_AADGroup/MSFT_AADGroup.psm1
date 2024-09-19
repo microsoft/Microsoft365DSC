@@ -612,7 +612,7 @@ function Set-TargetResource
                 Update-MgGroup @currentParameters | Out-Null
             }
 
-            if (($licensesToAdd.Length -gt 0 -or $licensesToRemove.Length -gt 0) -and $AssignedLicenses -ne $null)
+            if (($licensesToAdd.Length -gt 0 -or $licensesToRemove.Length -gt 0) -and $PSBoundParameters.ContainsKey('AssignedLicenses'))
             {
                 try
                 {
