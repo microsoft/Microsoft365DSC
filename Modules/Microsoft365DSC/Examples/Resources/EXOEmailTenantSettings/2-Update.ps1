@@ -28,7 +28,6 @@ Configuration Example
             Identity                                 = $TenantId;
             IsValid                                  = $True;
             ObjectState                              = "Unchanged"
-            Ensure                                   = "Present";
             Name                                     = "Default"
             TenantId                                 = $TenantId
             CertificateThumbprint                    = $CertificateThumbprint
