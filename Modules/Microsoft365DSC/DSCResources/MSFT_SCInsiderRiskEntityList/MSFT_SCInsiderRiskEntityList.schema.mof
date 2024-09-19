@@ -14,25 +14,25 @@ class MSFT_SCInsiderRiskEntityListSite
 [ClassVersion("1.0.0.0"), FriendlyName("SCInsiderRiskEntityList")]
 class MSFT_SCInsiderRiskEntityList : OMI_BaseResource
 {
-    [Key, Description("")] String Name;
-    [Required, Description("")] String ListType;
-    [Write, Description("")] String Description;
-    [Write, Description("")] String DisplayName;
-    [Write, Description(""), EmbeddedInstance("MSFT_SCInsiderRiskEntityListDomain")] String Domains[];
-    [Write, Description("")] String FilePaths[];
-    [Write, Description("")] String FileTypes[];
-    [Write, Description("")] String Keywords[];
-    [Write, Description("")] String SensitiveInformationTypes[];
-    [Write, Description(""), EmbeddedInstance("MSFT_SCInsiderRiskEntityListSite")] String Sites[];
-    [Write, Description("")] String TrainableClassifiers[];
-    [Write, Description("")] String ExceptionKeyworkGroups[];
-    [Write, Description("")] String ExcludedClassifierGroups[];
-    [Write, Description("")] String ExcludedDomainGroups[];
-    [Write, Description("")] String ExcludedFilePathGroups[];
-    [Write, Description("")] String ExcludedFileTypeGroups[];
-    [Write, Description("")] String ExcludedKeyworkGroups[];
-    [Write, Description("")] String ExcludedSensitiveInformationTypeGroups[];
-    [Write, Description("")] String ExcludedSiteGroups[];
+    [Key, Description("The name of the group or setting.")] String Name;
+    [Required, Description("The setting type.")] String ListType;
+    [Write, DescriptionDescription for the group or setting. String Description;
+    [Write, Description("The display name of the group or setting.")] String DisplayName;
+    [Write, Description("List of domains"), EmbeddedInstance("MSFT_SCInsiderRiskEntityListDomain")] String Domains[];
+    [Write, Description("List of file paths.")] String FilePaths[];
+    [Write, Description("List of file types")] String FileTypes[];
+    [Write, Description("List of keywords")] String Keywords[];
+    [Write, Description("List of sensitive information types.")] String SensitiveInformationTypes[];
+    [Write, Description("List of sites."), EmbeddedInstance("MSFT_SCInsiderRiskEntityListSite")] String Sites[];
+    [Write, Description("List of trainable classifiers.")] String TrainableClassifiers[];
+    [Write, Description("List of keywords for exception.")] String ExceptionKeyworkGroups[];
+    [Write, Description("List of excluded trainable classifiers.")] String ExcludedClassifierGroups[];
+    [Write, Description("List of excluded domains.")] String ExcludedDomainGroups[];
+    [Write, Description("List of excluded file paths.")] String ExcludedFilePathGroups[];
+    [Write, Description("List of excluded file types.")] String ExcludedFileTypeGroups[];
+    [Write, Description("List of excluded keywords.")] String ExcludedKeyworkGroups[];
+    [Write, Description("List of excluded sensitive information types.")] String ExcludedSensitiveInformationTypeGroups[];
+    [Write, Description("List of excluded sites.")] String ExcludedSiteGroups[];
     [Write, Description("Specify if this entity should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
     [Write, Description("Credentials of the workload's Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
