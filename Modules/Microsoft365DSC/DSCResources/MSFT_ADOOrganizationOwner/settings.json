@@ -1,0 +1,20 @@
+﻿{
+    "resourceName": "ADOOrganizationOwner",
+    "description": "Configures the owner of an Azure DevOPS organization.",
+    "roles": {
+        "read": [],
+        "update": []
+    },
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [],
+                "update": []
+            },
+            "application": {
+                "read": [],
+                "update": []
+            }
+        }
+    }
+}
