@@ -70030,6 +70030,98 @@ function Set-SupervisoryReviewPolicy
         $SamplingRate
     )
 }
+function Set-InsiderRiskEntityList
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Object[]]
+        $Entities,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.Object[]]
+        $AddEntities,
+
+        [Parameter()]
+        [System.Object[]]
+        $RemoveEntities
+    )
+}
+
+function New-InsiderRiskEntityList
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Object[]]
+        $Entities,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $Type
+    )
+}
+
+function Remove-InsiderRiskEntityList
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ForceDeletion
+    )
+}
+
+function Get-InsiderRiskEntityList
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Type
+    )
+}
+
 function Set-SupervisoryReviewPolicyV2
 {
     [CmdletBinding()]
