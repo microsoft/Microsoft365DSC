@@ -1227,6 +1227,14 @@ function Get-M365DSCCIMInstanceKey
     {
         $primaryKey = 'Dmn'
     }
+    elseif ($CIMInstance.ContainsKey('EmergencyDialString'))
+    {
+        $primaryKey = 'EmergencyDialString'
+    }
+    else
+    {
+        $primaryKey = $CIMInstance.Keys[0]
+    }
 
     return $primaryKey
 }

@@ -498,15 +498,24 @@ function Compare-PSCustomObjectArrays
 
     foreach ($currentEntry in $currentValues)
     {
-        $KeyProperty = Get-M365DSCCIMInstanceKey -CIMInstance $currentEntry
+        if ($currentEntry.GetType().Name -eq 'PSCustomObject')
+        {
+            $fixedEntry = @{}
+            $currentEntry.psobject.properties | Foreach { $fixedEntry[$_.Name] = $_.Value }
+        }
+        else
+        {
+            $fixedEntry = $currentEntry
+        }
+        $KeyProperty = Get-M365DSCCIMInstanceKey -CIMInstance $fixedEntry
 
-        $EquivalentEntryInDesired = $DesiredValues | Where-Object -FilterScript { $_.$KeyProperty -eq $currentEntry.$KeyProperty }
+        $EquivalentEntryInDesired = $DesiredValues | Where-Object -FilterScript { $_.$KeyProperty -eq $fixedEntry.$KeyProperty }
         if ($null -eq $EquivalentEntryInDesired)
         {
             $result = @{
-                Property     = $currentEntry
+                Property     = $fixedEntry
                 PropertyName = $KeyProperty
-                Desired      = $currentEntry.$KeyProperty
+                Desired      = $fixedEntry.$KeyProperty
                 Current      = $null
             }
             $DriftedProperties += $result
@@ -517,13 +526,13 @@ function Compare-PSCustomObjectArrays
             {
                 $propertyName = $property.Name
 
-                if ((-not [System.String]::IsNullOrEmpty($currentEntry.$PropertyName) -and -not [System.String]::IsNullOrEmpty($EquivalentEntryInDesired.$PropertyName)) -and `
-                    $currentEntry.$PropertyName -ne $EquivalentEntryInDesired.$PropertyName)
+                if ((-not [System.String]::IsNullOrEmpty($fixedEntry.$PropertyName) -and -not [System.String]::IsNullOrEmpty($EquivalentEntryInDesired.$PropertyName)) -and `
+                    $fixedEntry.$PropertyName -ne $EquivalentEntryInDesired.$PropertyName)
                 {
                     $drift = $true
-                    if ($currentEntry.$PropertyName.GetType().Name -eq 'String' -and $currentEntry.$PropertyName.Contains('$OrganizationName'))
+                    if ($fixedEntry.$PropertyName.GetType().Name -eq 'String' -and $fixedEntry.$PropertyName.Contains('$OrganizationName'))
                     {
-                        if ($currentEntry.$PropertyName.Split('@')[0] -eq $EquivalentEntryInDesired.$PropertyName.Split('@')[0])
+                        if ($fixedEntry.$PropertyName.Split('@')[0] -eq $EquivalentEntryInDesired.$PropertyName.Split('@')[0])
                         {
                             $drift = $false
                         }
@@ -531,9 +540,9 @@ function Compare-PSCustomObjectArrays
                     if ($drift)
                     {
                         $result = @{
-                            Property     = $currentEntry
+                            Property     = $fixedEntry
                             PropertyName = $PropertyName
-                            Desired      = $currentEntry.$PropertyName
+                            Desired      = $fixedEntry.$PropertyName
                             Current      = $EquivalentEntryInDesired.$PropertyName
                         }
                         $DriftedProperties += $result
@@ -747,8 +756,20 @@ function Test-M365DSCParameterState
                                 }
                                 $AllDesiredValuesAsArray += [PSCustomObject]$currentEntry
                             }
-                            $arrayCompare = Compare-PSCustomObjectArrays -CurrentValues $CurrentValues.$fieldName `
-                                -DesiredValues $AllDesiredValuesAsArray
+                            try
+                            {
+                                $arrayCompare = $null
+                                if ($CurrentValues.$fieldName.GetType().Name -ne 'CimInstance' -and `
+                                    $CurrentValues.$fieldName.GetType().Name -ne 'CimInstance[]')
+                                {
+                                    $arrayCompare = Compare-PSCustomObjectArrays -CurrentValues $CurrentValues.$fieldName `
+                                        -DesiredValues $AllDesiredValuesAsArray
+                                }
+                            }
+                            catch
+                            {
+                                Write-Verbose -Message $_
+                            }
 
                             if ($null -ne $arrayCompare)
                             {
