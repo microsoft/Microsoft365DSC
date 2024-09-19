@@ -643,10 +643,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     MailEnabled        = $false
                     GroupTypes         = @()
                     MailNickname       = 'M365DSC'
-                    AssignedLicenses   = (New-CimInstance -ClassName MSFT_AADGroupLicense -Property @{
+                    AssignedLicenses   = [CimInstance[]]@(
+                        (New-CimInstance -ClassName MSFT_AADGroupLicense -Property @{
                             DisabledPlans  = $null
                             SkuId          = 'AAD_PREMIUM_P2'
                         } -ClientOnly)
+                    )
                     Ensure             = 'Present'
                     Credential         = $Credential
                 }
