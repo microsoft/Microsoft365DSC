@@ -910,9 +910,15 @@ function Test-TargetResource
         {
             $source = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
 
-            $cimtestResult = Compare-M365DSCComplexObject `
+            $testResult = Compare-M365DSCComplexObject `
                 -Source ($source) `
                 -Target ($target)
+
+            if (-Not $testResult)
+            {
+                $testResult = $false
+                break
+            }
 
             $ValuesToCheck.Remove($key) | Out-Null
         }
@@ -925,15 +931,18 @@ function Test-TargetResource
     $ValuesToCheck.Remove('AppId') | Out-Null
     $ValuesToCheck.Remove('Permissions') | Out-Null
 
-    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
-        -Source $($MyInvocation.MyCommand.Source) `
-        -DesiredValues $PSBoundParameters `
-        -ValuesToCheck $ValuesToCheck.Keys `
-        -IncludedDrifts $driftedParams
+    if($testResult)
+    {
+        $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -DesiredValues $PSBoundParameters `
+            -ValuesToCheck $ValuesToCheck.Keys `
+            -IncludedDrifts $driftedParams
+    }
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
-    return $TestResult -and $cimtestResult
+    return $TestResult 
 }
 
 function Export-TargetResource
