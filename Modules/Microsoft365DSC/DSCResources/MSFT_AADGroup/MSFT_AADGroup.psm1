@@ -583,10 +583,11 @@ function Set-TargetResource
                     -Source $MyInvocation.MyCommand.ModuleName
             }
         }
-        if ($assignedLicensesGUIDs.Length -gt 0)
-        {
-            Set-MgGroupLicense -GroupId $currentGroup.Id -AddLicenses $licensesToAdd -RemoveLicenses @()
-        }
+        # any assigned licenses processed by next block
+        #if ($assignedLicensesGUIDs.Length -gt 0)
+        #{
+        #    Set-MgGroupLicense -GroupId $currentGroup.Id -AddLicenses $licensesToAdd -RemoveLicenses @()
+        #}
     }
     if ($Ensure -eq 'Present')
     {
@@ -1077,30 +1078,41 @@ function Test-TargetResource
             return $false
         }
 
-        #Check DisabledPlans
-        try
+        #Compare DisabledPlans for each SkuId - all SkuId's are processed regardless of result
+        $result = $true
+        foreach ($assignedLicense in $AssignedLicenses)
         {
-            $licensesDiff = Compare-Object -ReferenceObject ($CurrentValues.AssignedLicenses.DisabledPlans) -DifferenceObject ($AssignedLicenses.DisabledPlans)
-            if ($null -ne $licensesDiff)
+            $currentLicense = $CurrentValues.AssignedLicenses | Where-Object -FilterScript {$_.SkuId -eq $assignedLicense.SkuId}
+            if ($assignedLicense.DisabledPlans.Count -ne 0 -or $currentLicense.DisabledPlans.Count -ne 0)
             {
-                Write-Verbose -Message "DisabledPlans differ: $($licensesDiff | Out-String)"
-                Write-Verbose -Message "Test-TargetResource returned $false"
-                $EventMessage = "Disabled Plans for Azure AD Group Licenses {$DisplayName} were not in the desired state.`r`n" + `
-                    "They should contain {$($AssignedLicenses.DisabledPlans)} but instead contained {$($CurrentValues.AssignedLicenses.DisabledPlans)}"
-                Add-M365DSCEvent -Message $EventMessage -EntryType 'Warning' `
-                    -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+                try {
+                    $licensesDiff = Compare-Object -ReferenceObject $assignedLicense.DisabledPlans -DifferenceObject $currentLicense.DisabledPlans
+                    if ($null -ne $licensesDiff)
+                    {
+                        Write-verbose -Message "DisabledPlans for SkuId $($assignedLicense.SkuId) differ: $($licensesDiff | Out-String)"
+                        Write-Verbose -Message "Test-TargetResource returned $false"
+                        $EventMessage = "Disabled Plans for Azure AD Group Licenses {$DisplayName} SkuId $($assignedLicense.SkuId) were not in the desired state.`r`n" + `
+                            "They should contain {$($assignedLicense.DisabledPlans -join ',')} but instead contained {$($currentLicense.DisabledPlans -join ',')}"
+                        Add-M365DSCEvent -Message $EventMessage -EntryType 'Warning' `
+                            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
 
-                return $false
-            }
-            else
-            {
-                Write-Verbose -Message 'DisabledPlans for Azure AD Group Licensing are the same'
+                        $result = $false
+                    }
+                    else
+                    {
+                        Write-Verbose -Message 'DisabledPlans for SkuId $($assignedLicense.SkuId) are the same'
+                    }
+                }
+                catch
+                {
+                    Write-verbose -Message "Test-TargetResource returned $false (DisabledPlans: $($_.Exception.Message))"
+                    $result = $false
+                }
             }
         }
-        catch
+        if ($true -ne $result)
         {
-            Write-Verbose -Message "Test-TargetResource returned $false"
-            return $false
+            return $result
         }
     }
 

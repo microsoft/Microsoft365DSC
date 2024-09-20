@@ -643,9 +643,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     MailEnabled        = $false
                     GroupTypes         = @()
                     MailNickname       = 'M365DSC'
-                    AssignedLicenses   = [CimInstance[]]@(
+                    AssignedLicenses   = @(
                         (New-CimInstance -ClassName MSFT_AADGroupLicense -Property @{
-                            DisabledPlans  = @()
+                            DisabledPlans  = [string[]]@()
                             SkuId          = 'AAD_PREMIUM_P2'
                         } -ClientOnly)
                     )
@@ -664,11 +664,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return @{
                         ServicePlans         = @(
                             @{
-                                ServicePlanId   = 'fake-planid'
-                                ServicePlanName = 'AAD_PREMIUM_P2'
+                                ServicePlanId   = '56789-56789-56789-56789'
+                                ServicePlanName = 'Something_P2'
                             }
                         )
-                        SkuId                = 'AAD_PREMIUM_P2'
+                        SkuId                = '12345-12345-12345-12345'
                         SkuPartNumber        = 'AAD_PREMIUM_P2'
                     }
                 }
@@ -702,7 +702,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     MailNickname       = 'M365DSC'
                     AssignedLicenses   = @(
                         (New-CimInstance -ClassName MSFT_AADGroupLicense -Property @{
-                            DisabledPlans  = @()
+                            DisabledPlans  = [string[]]@()
                             SkuId          = 'AAD_PREMIUM_P2'
                         } -ClientOnly)
                     )
@@ -731,7 +731,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return @{
                         value = @{
                             DisabledPlans = @()
-                            SkuId         = 'AAD_PREMIUM_P2'
+                            SkuId         = '12345-12345-12345'
                         }
                     }
                 }
@@ -740,11 +740,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return @{
                         ServicePlans         = @(
                             @{
-                                ServicePlanId   = 'fake-planid'
-                                ServicePlanName = 'AAD_PREMIUM_P2'
+                                ServicePlanId   = '67890-67890-67890'
+                                ServicePlanName = 'Something_P2'
                             }
                         )
-                        SkuId                = 'AAD_PREMIUM_P2'
+                        SkuId                = '12345-12345-12345'
                         SkuPartNumber        = 'AAD_PREMIUM_P2'
                     }
                 }
@@ -760,6 +760,86 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Test-TargetResource @testParams | Should -Be $true
             }
         }
+        Context -Name "The Group exists and has been assigned the correct license but DisabledPlans differ. Values are NOT in the desired state" -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    DisplayName        = 'DSCGroup'
+                    ID                 = '12345-12345-12345-12345'
+                    Description        = 'Microsoft DSC Group'
+                    SecurityEnabled    = $True
+                    MailEnabled        = $false
+                    GroupTypes         = @()
+                    MailNickname       = 'M365DSC'
+                    AssignedLicenses   = @(
+                        (New-CimInstance -ClassName MSFT_AADGroupLicense -Property @{
+                            DisabledPlans  = [string[]]@()
+                            SkuId          = 'AAD_PREMIUM_P2'  # is really the SkuPartNumber
+                        } -ClientOnly)
+                    )
+                    Ensure             = 'Present'
+                    Credential         = $Credential
+                }
+
+                Mock -CommandName New-M365DSCConnection -MockWith {
+                    return 'Credentials'
+                }
+
+                Mock -CommandName Get-MgGroup -MockWith {
+                    return @{
+                        DisplayName        = 'DSCGroup'
+                        ID                 = '12345-12345-12345-12345'
+                        Description        = 'Microsoft DSC Group'
+                        SecurityEnabled    = $True
+                        MailEnabled        = $false
+                        GroupTypes         = @()
+                        MailNickname       = 'M365DSC'
+                        IsAssignableToRole = $false
+                    }
+                }
+
+                Mock -CommandName Invoke-MgGraphRequest -MockWith {
+                    return @{
+                        value = @{
+                            DisabledPlans = @('56789-56789-56789-56789')
+                            SkuId         = '23456-23456-23456-23456'
+                        }
+                    }
+                }
+
+                Mock -CommandName Get-MgBetaSubscribedSku -MockWith {
+                    return [pscustomobject]@{
+                        ServicePlans         = @(
+                            @{
+                                ServicePlanId   = '56789-56789-56789-56789'
+                                ServicePlanName = 'AAD_PREMIUM'
+                            },
+                            @{
+                                ServicePlanId   = '67890-67890-67890-67890'
+                                ServicePlanName = 'AAD_PREMIUM_P2'
+                            }
+                        )
+                        SkuId                = '23456-23456-23456-23456'
+                        SkuPartNumber        = 'AAD_PREMIUM_P2'
+                    }
+                }
+            }
+
+            It 'Should return Values from the Get method' {
+                Get-TargetResource @testParams
+                Should -Invoke -CommandName 'Get-MgGroup' -Exactly 1
+                Should -Invoke -CommandName 'Invoke-MgGraphRequest' -Exactly 1
+            }
+
+            It 'Should return false from the Test method' {
+                Test-TargetResource @testParams | Should -Be $false
+            }
+
+            It 'Should call the Set method' {
+                Set-TargetResource @testParams
+                Should -Invoke -CommandName 'Update-MgGroup' -Exactly 1
+                Should -Invoke -CommandName 'Set-MgGroupLicense' -Exactly 1
+            }
+        }
         Context -Name "The Group exists and is not assigned a license but it should be. Values are NOT in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
@@ -772,7 +852,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     MailNickname       = 'M365DSC'
                     AssignedLicenses   = @(
                         (New-CimInstance -ClassName MSFT_AADGroupLicense -Property @{
-                            DisabledPlans  = @()
+                            DisabledPlans  = [string[]]@()
                             SkuId          = 'AAD_PREMIUM_P2'
                         } -ClientOnly)
                     )
@@ -801,11 +881,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return @{
                         ServicePlans         = @(
                             @{
-                                ServicePlanId   = 'fake-planid'
-                                ServicePlanName = 'AAD_PREMIUM_P2'
+                                ServicePlanId   = '67890-67890-67890'
+                                ServicePlanName = 'Something_P2'
                             }
                         )
-                        SkuId                = 'AAD_PREMIUM_P2'
+                        SkuId                = '12345-12345-12345'
                         SkuPartNumber        = 'AAD_PREMIUM_P2'
                     }
                 }
@@ -863,7 +943,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return @{
                         value = @{
                             DisabledPlans = @()
-                            SkuId         = 'AAD_PREMIUM_P2'
+                            SkuId         = '12345-12345-12345'
                         }
                     }
                 }
@@ -872,11 +952,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return @{
                         ServicePlans         = @(
                             @{
-                                ServicePlanId   = 'fake-planid'
-                                ServicePlanName = 'AAD_PREMIUM_P2'
+                                ServicePlanId   = '67890-67890-67890'
+                                ServicePlanName = 'Something_P2'
                             }
                         )
-                        SkuId                = 'AAD_PREMIUM_P2'
+                        SkuId                = '12345-12345-12345'
                         SkuPartNumber        = 'AAD_PREMIUM_P2'
                     }
                 }
