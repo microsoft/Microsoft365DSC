@@ -661,7 +661,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
 
                 Mock -CommandName Get-MgBetaSubscribedSku -MockWith {
-                    return @{
+                    return [pscustomobject]@{
                         ServicePlans         = @(
                             @{
                                 ServicePlanId   = '56789-56789-56789-56789'
@@ -737,7 +737,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
 
                 Mock -CommandName Get-MgBetaSubscribedSku -MockWith {
-                    return @{
+                    return [pscustomobject]@{
                         ServicePlans         = @(
                             @{
                                 ServicePlanId   = '67890-67890-67890'
@@ -878,7 +878,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
 
                 Mock -CommandName Get-MgBetaSubscribedSku -MockWith {
-                    return @{
+                    return [pscustomobject]@{
                         ServicePlans         = @(
                             @{
                                 ServicePlanId   = '67890-67890-67890'
@@ -949,7 +949,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
 
                 Mock -CommandName Get-MgBetaSubscribedSku -MockWith {
-                    return @{
+                    return [pscustomobject]@{
                         ServicePlans         = @(
                             @{
                                 ServicePlanId   = '67890-67890-67890'
