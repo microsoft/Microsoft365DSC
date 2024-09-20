@@ -7,6 +7,19 @@ class MSFT_AADApplicationPermission
     [Write, Description("Represented whether or not the Admin consent been granted on the app.")] Boolean AdminConsentGranted;
 };
 
+
+[ClassVersion("1.0.0")]
+class MSFT_MicrosoftGraphAppRole
+{
+    [Write, Description("Specifies whether this app role can be assigned to users and groups (by setting to 'User'), to other application's (by setting to 'Application', or both (by setting to 'User', 'Application'). App roles supporting assignment to other applications' service principals are also known as application permissions. The 'Application' value is only supported for app roles defined on application entities.")] String AllowedMemberTypes[];
+    [Write, Description("The description for the app role. This is displayed when the app role is being assigned and, if the app role functions as an application permission, during  consent experiences.")] String Description;
+    [Write, Description("Display name for the permission that appears in the app role assignment and consent experiences.")] String DisplayName;
+    [Write, Description("Unique role identifier inside the appRoles collection. When creating a new app role, a new GUID identifier must be provided.")] String Id;
+    [Write, Description("When creating or updating an app role, this must be set to true (which is the default). To delete a role, this must first be set to false.  At that point, in a subsequent call, this role may be removed.")] Boolean IsEnabled;
+    [Write, Description("Specifies if the app role is defined on the application object or on the servicePrincipal entity. Must not be included in any POST or PATCH requests. Read-only.")] String Origin;
+    [Write, Description("Specifies the value to include in the roles claim in ID tokens and access tokens authenticating an assigned user or service principal. Must not exceed 120 characters in length. Allowed characters are : ! # $ % & ' ( ) * + , - . / :   =       + _    } , and characters in the ranges 0-9, A-Z and a-z. Any other character, including the space character, aren't allowed. May not begin with ..")] String Value;
+};
+
 [ClassVersion("1.0.0")]
 class MSFT_MicrosoftGraphOptionalClaim
 {
@@ -36,6 +49,7 @@ class MSFT_AADApplication : OMI_BaseResource
     [Write, Description("User-defined URI(s) that uniquely identify a Web application within its Azure AD tenant, or within a verified custom domain.")] string IdentifierUris[];
     [Write, Description("Specifies the fallback application type as public client, such as an installed application running on a mobile device. The default value is false, which means the fallback application type is confidential client such as web app. There are certain scenarios where Microsoft Entra ID cannot determine the client application type (for example, ROPC flow where it is configured without specifying a redirect URI). In those cases, Microsoft Entra ID will interpret the application type based on the value of this property.")] Boolean IsFallbackPublicClient;
     [Write, Description("Client applications that are tied to this resource application.")] string KnownClientApplications[];
+    [Write, Description("The collection of roles defined for the application. With app role assignments, these roles can be assigned to users, groups, or service principals associated with other applications. Not nullable."), EmbeddedInstance("MSFT_MicrosoftGraphappRole")] String AppRoles[];
     [Write, Description("The logout url for this application.")] string LogoutURL;
     [Write, Description("Specifies whether this application is a public client (such as an installed application running on a mobile device). Default is false.")] Boolean PublicClient;
     [Write, Description("Specifies the URLs that user tokens are sent to for sign in, or the redirect URIs that OAuth 2.0 authorization codes and access tokens are sent to.")] String ReplyURLs[];

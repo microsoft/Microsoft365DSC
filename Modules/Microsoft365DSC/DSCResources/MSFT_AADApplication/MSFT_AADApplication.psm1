@@ -61,6 +61,10 @@ function Get-TargetResource
         $Owners,
 
         [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $AppRoles,
+
+        [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance]
         $OptionalClaims,
 
@@ -168,6 +172,24 @@ function Get-TargetResource
         {
             Write-Verbose -Message 'An instance of Azure AD App was retrieved.'
 
+
+            $complexAppRoles = @()
+            foreach ($currentappRoles in $AADApp.appRoles)
+            {
+                $myappRoles = @{}
+                $myappRoles.Add('AllowedMemberTypes', $currentappRoles.allowedMemberTypes)
+                $myappRoles.Add('Description', $currentappRoles.description)
+                $myappRoles.Add('DisplayName', $currentappRoles.displayName)
+                $myappRoles.Add('Id', $currentappRoles.id)
+                $myappRoles.Add('IsEnabled', $currentappRoles.isEnabled)
+                $myappRoles.Add('Origin', $currentappRoles.origin)
+                $myappRoles.Add('Value', $currentappRoles.value)
+                if ($myappRoles.values.Where({$null -ne $_}).Count -gt 0)
+                {
+                    $complexAppRoles += $myappRoles
+                }
+            }
+
             $complexOptionalClaims = @{}
             $complexAccessTokenClaims = @()
             foreach ($currentAccessTokenClaim in $AADApp.OptionalClaims.AccessToken)
@@ -261,6 +283,7 @@ function Get-TargetResource
                 Owners                  = $OwnersValues
                 ObjectId                = $AADApp.Id
                 AppId                   = $AADApp.AppId
+                AppRoles                = $complexAppRoles
                 OptionalClaims          = $complexOptionalClaims
                 Permissions             = $permissionsObj
                 Ensure                  = 'Present'
@@ -355,6 +378,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String[]]
         $Owners,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $AppRoles,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance]
@@ -809,6 +836,10 @@ function Test-TargetResource
         $Owners,
 
         [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $AppRoles,
+
+        [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance]
         $OptionalClaims,
 
@@ -1039,6 +1070,22 @@ function Export-TargetResource
                         $Results.Permissions = Get-M365DSCAzureADAppPermissionsAsString $Results.Permissions
                     }
 
+
+                    if ($null -ne $Results.AppRoles)
+                    {
+                        $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                        -ComplexObject $Results.AppRoles `
+                        -CIMInstanceName 'MicrosoftGraphappRole'
+                        if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                        {
+                            $Results.AppRoles = $complexTypeStringResult
+                        }
+                        else
+                        {
+                            $Results.Remove('AppRoles') | Out-Null
+                        }
+                    }
+
                     if($null -ne $Results.OptionalClaims)
                     {
                         $complexMapping = @(
@@ -1089,6 +1136,10 @@ function Export-TargetResource
                             -ParameterName 'Permissions'
                     }
 
+                    if ($Results.AppRoles)
+                    {
+                        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "AppRoles" -IsCIMArray:$True
+                    }
 
                     if ($Results.OptionalClaims)
                     {
