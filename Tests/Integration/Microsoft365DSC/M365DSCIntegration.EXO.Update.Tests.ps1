@@ -370,6 +370,18 @@
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                 }
+                EXOEmailTenantSettings 'EXOEmailTenantSettings-Test'
+                {
+                    IsSingleInstance                         = "Yes"
+                    EnablePriorityAccountProtection          = $True;
+                    Identity                                 = $TenantId;
+                    IsValid                                  = $True;
+                    ObjectState                              = "Unchanged"
+                    Name                                     = "Default"
+                    TenantId                                 = $TenantId
+                    CertificateThumbprint                    = $CertificateThumbprint
+                    ApplicationId                            = $ApplicationId
+                }
                 EXOFocusedInbox 'EXOFocusedInbox-Test'
                 {
                     Ensure                       = "Present";
