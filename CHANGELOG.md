@@ -14,6 +14,8 @@
   * Initial Release.
 * EXOArcConfig
   * Initial Release.
+* EXOEmailTenantSettings
+  * Initial Release.
 * EXOFocusedInbox
   * Initial Release.
 * EXOMailboxCalendarConfiguration
