@@ -1,0 +1,33 @@
+﻿{
+    "resourceName": "ResourceName",
+    "description": "Manage ATP Protection policy rules that are associated with Microsoft Defender for Office 365 protections in preset security policies.",
+    "roles": {
+        "read": [
+            "Security Reader"
+        ],
+        "update": [
+            "Security Administrator"
+        ]
+    },
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [],
+                "update": []
+            },
+            "application": {
+                "read": [],
+                "update": []
+            }
+        },
+        "exchange": {
+            "requiredroles": [
+                "Transport Hygiene",
+                "Security Admin",
+                "View-Only Configuration",
+                "Security Reader"
+            ],
+            "requiredrolegroups": "Organization Management"
+        }
+    }
+}

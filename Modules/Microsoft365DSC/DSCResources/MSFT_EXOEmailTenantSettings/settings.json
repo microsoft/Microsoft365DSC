@@ -1,0 +1,34 @@
+{
+    "resourceName": "EXOEmailTenantSettings",
+    "description": "",
+    "roles": {
+        "read": [
+            "Global Reader"
+        ],
+        "update": [
+            "Exchange Administrator"
+        ]
+    },
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [],
+                "update": []
+            },
+            "application": {
+                "read": [],
+                "update": []
+            }
+        },
+        "exchange": {
+            "requiredroles": [
+                "Organization Management",
+                "Security Reader"
+            ],
+            "requiredrolegroups": [
+               "Organization Management",
+               "Security Administrator"
+            ]
+        }
+    }
+}

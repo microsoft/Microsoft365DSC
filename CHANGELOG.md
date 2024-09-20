@@ -6,7 +6,7 @@
   * Initial release
 * ADOOrganizationOwner
   * Initial release.
-* ADOOrganizationOwner
+* ADOPermissionGroup
   * Initial release.
 * ADOSecurityPolicy
   * Initial release.
@@ -14,13 +14,13 @@
   * Initial Release.
 * EXOArcConfig
   * Initial Release.
+* EXOEmailTenantSettings
+  * Initial Release.
 * EXOFocusedInbox
   * Initial Release.
 * EXOMailboxCalendarConfiguration
   * Initial Release.
 * EXOMailboxIRMAccess
-  * Initial Release.
-* EXOManagementScope
   * Initial Release.
 * EXOManagementScope
   * Initial Release.

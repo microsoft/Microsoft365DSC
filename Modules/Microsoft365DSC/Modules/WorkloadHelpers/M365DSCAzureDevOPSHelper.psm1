@@ -13,12 +13,16 @@ function Invoke-M365DSCAzureDevOPSWebRequest
 
         [Parameter()]
         [System.String]
-        $Body
+        $Body,
+
+        [Parameter()]
+        [System.String]
+        $ContentType = 'application/json-patch+json'
     )
 
     $headers = @{
         Authorization = $global:MsCloudLoginConnectionProfile.AzureDevOPS.AccessToken
-        'Content-Type' = 'application/json-patch+json'
+        'Content-Type' = $ContentType
     }
 
     $params = @{
