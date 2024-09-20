@@ -471,7 +471,7 @@
                 }
                 EXORecipientPermission 'AddSendAs'
                 {
-
+        
                     Identity     = 'AdeleV@$Domain'
                     Trustee      = "admin@$TenantId"
                     Ensure       = 'Absent'
