@@ -31,6 +31,9 @@
 * IntuneAntivirusPolicyWindows10SettingCatalog
   * Fixes an issue with invalid parameter definition.
     FIXES [#5015](https://github.com/microsoft/Microsoft365DSC/issues/5015)
+* IntuneAppAndBrowserIsolationPolicyWindows10
+  * Initial release.
+    FIXES [#3028](https://github.com/microsoft/Microsoft365DSC/issues/3028)
 * IntuneDeviceCompliancePolicyWindows10
   * Fixes an issue where the property `ValidOperatingSystemBuildRanges` was
     not exported properly.
