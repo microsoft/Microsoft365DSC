@@ -27,6 +27,7 @@ Configuration Example
             Description           = "Microsoft DSC Group with license"
             SecurityEnabled       = $True
             MailNickname          = "M365DSC"
+            MailEnabled           = $False
             AssignedLicenses      = @(
                 MSFT_AADGroupLicense
                 {
