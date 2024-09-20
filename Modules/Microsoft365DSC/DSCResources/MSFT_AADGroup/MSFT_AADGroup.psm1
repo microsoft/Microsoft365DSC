@@ -583,11 +583,6 @@ function Set-TargetResource
                     -Source $MyInvocation.MyCommand.ModuleName
             }
         }
-        # any assigned licenses processed by next block
-        #if ($assignedLicensesGUIDs.Length -gt 0)
-        #{
-        #    Set-MgGroupLicense -GroupId $currentGroup.Id -AddLicenses $licensesToAdd -RemoveLicenses @()
-        #}
     }
     if ($Ensure -eq 'Present')
     {
