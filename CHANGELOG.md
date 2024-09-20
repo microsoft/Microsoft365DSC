@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* AADGroup
+  * Fixed #5001 and updated Test-TargetResource to report all differences in DisabledServicePlans per SkuId
 * AADPasswordRuleSettings
   * Initial release
 * ADOOrganizationOwner
