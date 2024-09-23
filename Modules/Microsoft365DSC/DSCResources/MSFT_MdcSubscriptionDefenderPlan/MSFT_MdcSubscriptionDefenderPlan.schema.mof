@@ -3,7 +3,7 @@ class MSFT_MdcSubscriptionDefenderPlan : OMI_BaseResource
 {
     [Key, Description("The display name of the subscription.")] String SubscriptionName;
     [Key, Description("The Defender plan name, for the list all of possible Defender plans refer to Defender for Cloud documentation")] String PlanName;
-    [Write, ("The unique identifier of the Azure subscription.")] String SubscriptionId;
+    [Write, Description("The unique identifier of the Azure subscription.")] String SubscriptionId;
     [Write, Description("The pricing tier ('Standard' or 'Free')")] String PricingTier;
     [Write, Description("The Defender sub plan name, for the list all of possible sub plans refer to Defender for Cloud documentation")] String SubPlanName;
     [Write, Description("The extensions offered under the plan, for more information refer to Defender for Cloud documentation")] String Extensions;
@@ -16,3 +16,4 @@ class MSFT_MdcSubscriptionDefenderPlan : OMI_BaseResource
     [Write, Description("Managed ID being used for authentication.")] Boolean ManagedIdentity;
     [Write, Description("Access token used for authentication.")] String AccessTokens[];
 };
+
