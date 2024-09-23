@@ -97,7 +97,7 @@ function Get-TargetResource
 
         $results = @{
             Identity                 = $Identity
-            UserPermissions = [Array]$permissionsObj
+            UserPermissions          = [Array]$permissionsObj
             Ensure                   = 'Present'
             Credential               = $Credential
             ApplicationId            = $ApplicationId
@@ -319,6 +319,25 @@ function Test-TargetResource
     #     }
     # }
 
+    # foreach($value in $ValuesToCheck.UserPermissions) {
+    #     if ($value.SharingPermissionFlags -ne "None" -and $value.SharingPermissionFlags -ne "Delegate" -and $value.SharingPermissionFlags -ne "CanViewPrivateItems")
+    #     {
+    #         $value.Remove('SharingPermissionFlags') | Out-Null
+    #     }
+    # }
+
+    for ($i = 0; $i -lt $ValuesToCheck.UserPermissions.Count; $i++) {
+        # $value = $ValuesToCheck.UserPermissions[$i]
+
+        Write-Host "$i : Target Values: $ValuesToCheck.UserPermissions[$i]"
+        Write-Host "$i : Target Values: $CurrentValues.UserPermissions[$i]"
+        # if ($value.SharingPermissionFlags -ne "None" -and $value.SharingPermissionFlags -ne "Delegate" -and $value.SharingPermissionFlags -ne "CanViewPrivateItems") {
+        #     # Update the value in place
+        #     $ValuesToCheck.UserPermissions[$i].Remove('SharingPermissionFlags') | Out-Null
+        #     Write-Verbose $ValuesToCheck.UserPermissions[$i]
+        # }
+    }
+
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
 
@@ -389,11 +408,9 @@ function Export-TargetResource
     try
     {
         Write-Host "`r`n" -NoNewline
-        Write-Host "    |---Getting the mailbox folders on behalf of the current admin" -NoNewline
+        Write-Host "    |---Getting only the mailbox folders for the current admin" -NoNewline
 
         [Array]$mailboxFolders = Get-MailboxFolder -Recurse
-
-        Write-Host "`r`n" -NoNewline
 
         if ($mailboxes.Length -eq 0)
         {
@@ -412,7 +429,7 @@ function Export-TargetResource
 
             $Params = @{
                 Identity              = $mailboxFolder.Identity
-                UserPermissions = $null
+                UserPermissions       = $null
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
@@ -492,4 +509,4 @@ function Get-M365DSCEXOUserPermissionsList
     return $StringContent
 }
 
-Export-ModuleMember -Function *
+Export-ModuleMember -Function *-TargetResource

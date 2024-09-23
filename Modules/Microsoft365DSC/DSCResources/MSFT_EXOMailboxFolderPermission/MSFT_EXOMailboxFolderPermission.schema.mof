@@ -1,8 +1,8 @@
 [ClassVersion("1.0.0")]
 class MSFT_EXOMailboxFolderUserPermission
 {
-    [Required, Description("The AccessRights parameter specifies the permissions that you want to add for the user on the mailbox folder.")] String AccessRights[];
-    [Required, Description("The User parameter specifies who gets the permissions on the mailbox folder.")] String User;
+    [Write, Description("The AccessRights parameter specifies the permissions that you want to add for the user on the mailbox folder.")] String AccessRights[];
+    [Write, Description("The User parameter specifies who gets the permissions on the mailbox folder.")] String User;
     [Write, Description("The SharingPermissionFlags parameter assigns calendar delegate permissions. This parameter only applies to calendar folders and can only be used when the AccessRights parameter value is Editor. Valid values are: None, Delegate, CanViewPrivateItems")] String SharingPermissionFlags;
 };
 
