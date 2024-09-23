@@ -35,8 +35,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return "Credentials"
             }
 
-            ##TODO - Mock any Remove/Set/New cmdlets
-
             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
             }
@@ -47,14 +45,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The instance should exist but it DOES NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    ##TODO - Add Parameters
+                    Identity            = 'TestRule'
                     Ensure              = 'Present'
                     Credential          = $Credential;
                 }
 
-                ##TODO - Mock the Get-Cmdlet to return $null
-                Mock -CommandName Get-Cmdlet -MockWith {
+                Mock -CommandName Get-ATPProtectionPolicyRule -MockWith {
                     return $null
+                }
+
+                Mock -CommandName New-ATPProtectionPolicyRule -MockWith {
+                    return @{
+                        Identity = 'TestRule'
+                    }
                 }
             }
             It 'Should return Values from the Get method' {
@@ -65,25 +68,27 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should create a new instance from the Set method' {
-                ##TODO - Replace the New-Cmdlet by the appropriate one
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName New-Cmdlet -Exactly 1
+                Should -Invoke -CommandName New-ATPProtectionPolicyRule -Exactly 1
             }
         }
 
         Context -Name "The instance exists but it SHOULD NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    ##TODO - Add Parameters
+                    Identity            = 'TestRule'
                     Ensure              = 'Absent'
                     Credential          = $Credential;
                 }
 
-                ##TODO - Mock the Get-Cmdlet to return an instance
-                Mock -CommandName Get-Cmdlet -MockWith {
+                Mock -CommandName Get-ATPProtectionPolicyRule -MockWith {
                     return @{
-
+                        Identity = 'TestRule'
                     }
+                }
+
+                Mock -CommandName Remove-ATPProtectionPolicyRule -MockWith {
+                    return $null
                 }
             }
             It 'Should return Values from the Get method' {
@@ -94,23 +99,28 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should remove the instance from the Set method' {
-                ##TODO - Replace the Remove-Cmdlet by the appropriate one
-                Should -Invoke -CommandName Remove-Cmdlet -Exactly 1
+                Set-TargetResource @testParams
+                Should -Invoke -CommandName Remove-ATPProtectionPolicyRule -Exactly 1
             }
         }
 
         Context -Name "The instance exists and values are already in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    ##TODO - Add Parameters
+                    Identity            = 'TestRule'
                     Ensure              = 'Present'
                     Credential          = $Credential;
                 }
 
-                ##TODO - Mock the Get-Cmdlet to return the desired values
-                Mock -CommandName Get-Cmdlet -MockWith {
+                Mock -CommandName Get-ATPProtectionPolicyRule -MockWith {
                     return @{
+                        Identity       = 'TestRule'
+                    }
+                }
 
+                Mock -CommandName Set-ATPProtectionPolicyRule -MockWith {
+                    return @{
+                        Identity       = 'TestRule'
                     }
                 }
             }
@@ -123,16 +133,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The instance exists and values are NOT in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    ##TODO - Add Parameters
+                    Identity            = 'TestRule'
+                    Comments            = 'TestComment'
                     Ensure              = 'Present'
                     Credential          = $Credential;
                 }
 
-                ##TODO - Mock the Get-Cmdlet to return a drift
-                Mock -CommandName Get-Cmdlet -MockWith {
+                Mock -CommandName Get-ATPProtectionPolicyRule -MockWith {
                     return @{
-
+                        Identity            = 'TestRule'
+                        Comments            = 'TestComment #DriftValue'
                     }
+                }
+
+                Mock -CommandName Set-ATPProtectionPolicyRule -MockWith {
+                    return $testParams
                 }
             }
 
@@ -146,8 +161,77 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should call the Set method' {
                 Set-TargetResource @testParams
-                ##TODO - Replace the Update-Cmdlet by the appropriate one
-                Should -Invoke -CommandName Update-Cmdlet -Exactly 1
+                Should -Invoke -CommandName Set-ATPProtectionPolicyRule -Exactly 1
+            }
+        }
+
+        Context -Name "The instance exists and should be disabled, but is not" -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    Identity            = 'TestRule'
+                    Ensure              = 'Present'
+                    Enabled             = $false
+                    Credential          = $Credential;
+                }
+
+                Mock -CommandName Get-ATPProtectionPolicyRule -MockWith {
+                    return @{
+                        Identity            = 'TestRule'
+                        State               = 'Enabled'
+                    }
+                }
+
+                Mock -CommandName Set-ATPProtectionPolicyRule -MockWith {
+                    return $testParams
+                }
+
+                Mock -CommandName Disable-ATPProtectionPolicyRule -MockWith {
+                    return $null
+                }
+            }
+
+            It 'Should return false from the Test method' {
+                Test-TargetResource @testParams | Should -Be $false
+            }
+
+            It 'Should call the Disable method' {
+                Set-TargetResource @testParams
+                Should -Invoke -CommandName Disable-ATPProtectionPolicyRule -Exactly 1
+            }
+        }
+
+        Context -Name "The instance exists and should be enabled, but is not" -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    Identity            = 'TestRule'
+                    Ensure              = 'Present'
+                    Enabled             = $True
+                    Credential          = $Credential;
+                }
+
+                Mock -CommandName Get-ATPProtectionPolicyRule -MockWith {
+                    return @{
+                        Identity            = 'TestRule'
+                        State               = 'Disabled'
+                    }
+                }
+
+                Mock -CommandName Set-ATPProtectionPolicyRule -MockWith {
+                    return $testParams
+                }
+
+                Mock -CommandName Enable-ATPProtectionPolicyRule -MockWith {
+                    return $null
+                }
+            }
+
+            It 'Should return false from the Test method' {
+                Test-TargetResource @testParams | Should -Be $false
+            }
+
+            It 'Should call the Enable method' {
+                Set-TargetResource @testParams
+                Should -Invoke -CommandName Enable-ATPProtectionPolicyRule -Exactly 1
             }
         }
 
@@ -159,10 +243,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential  = $Credential;
                 }
 
-                ##TODO - Mock the Get-Cmdlet to return an instance
-                Mock -CommandName Get-Cmdlet -MockWith {
+                Mock -CommandName Get-ATPProtectionPolicyRule -MockWith {
                     return @{
-
+                        Identity = 'TestRule'
                     }
                 }
             }

@@ -6,7 +6,7 @@
   * Initial release
 * ADOOrganizationOwner
   * Initial release.
-* ADOOrganizationOwner
+* ADOPermissionGroup
   * Initial release.
 * ADOSecurityPolicy
   * Initial release.
@@ -14,13 +14,13 @@
   * Initial Release.
 * EXOArcConfig
   * Initial Release.
+* EXOEmailTenantSettings
+  * Initial Release.
 * EXOFocusedInbox
   * Initial Release.
 * EXOMailboxCalendarConfiguration
   * Initial Release.
 * EXOMailboxIRMAccess
-  * Initial Release.
-* EXOManagementScope
   * Initial Release.
 * EXOManagementScope
   * Initial Release.
@@ -42,6 +42,8 @@
   * Fixed issue with incorrectly applying HeaderMatchesPatterns, even when
     parameter wasn't specified.
     FIXES [#4641](https://github.com/microsoft/Microsoft365DSC/issues/4641)
+* SCInsiderRiskEntityList
+  * Initial release.
 * SCRoleGroup
   * Fixes an issue with creation without specifying Displayname
   * Fixes an issue with Drifts because of returned Role format
@@ -54,6 +56,8 @@
 * SPOAccessControlSettings
   * Added support for property EnableRestrictedAccessControl.
 * DEPENDENCIES
+  * Updated DSCParser to version 2.0.0.10.
+  * Updated Microsoft.Graph to version 2.23.0.
   * Added dependencies on Az.Accounts, Az.Resources and Az.SecurityInsights
   * Updated DSCParser to version 2.0.0.9.
   * Updated MSCloudLoginAssistant to version 1.1.25.

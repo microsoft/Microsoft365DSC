@@ -462,7 +462,7 @@ function Compare-PSCustomObjectArrays
                 Desired      = $DesiredEntry.$KeyProperty
                 Current      = $null
             }
-            $DriftedProperties += $DesiredEntry
+            $DriftedProperties += $result
         }
         else
         {
@@ -488,6 +488,62 @@ function Compare-PSCustomObjectArrays
                             PropertyName = $PropertyName
                             Desired      = $DesiredEntry.$PropertyName
                             Current      = $EquivalentEntryInCurrent.$PropertyName
+                        }
+                        $DriftedProperties += $result
+                    }
+                }
+            }
+        }
+    }
+
+    foreach ($currentEntry in $currentValues)
+    {
+        if ($currentEntry.GetType().Name -eq 'PSCustomObject')
+        {
+            $fixedEntry = @{}
+            $currentEntry.psobject.properties | Foreach { $fixedEntry[$_.Name] = $_.Value }
+        }
+        else
+        {
+            $fixedEntry = $currentEntry
+        }
+        $KeyProperty = Get-M365DSCCIMInstanceKey -CIMInstance $fixedEntry
+
+        $EquivalentEntryInDesired = $DesiredValues | Where-Object -FilterScript { $_.$KeyProperty -eq $fixedEntry.$KeyProperty }
+        if ($null -eq $EquivalentEntryInDesired)
+        {
+            $result = @{
+                Property     = $fixedEntry
+                PropertyName = $KeyProperty
+                Desired      = $fixedEntry.$KeyProperty
+                Current      = $null
+            }
+            $DriftedProperties += $result
+        }
+        else
+        {
+            foreach ($property in $Properties)
+            {
+                $propertyName = $property.Name
+
+                if ((-not [System.String]::IsNullOrEmpty($fixedEntry.$PropertyName) -and -not [System.String]::IsNullOrEmpty($EquivalentEntryInDesired.$PropertyName)) -and `
+                    $fixedEntry.$PropertyName -ne $EquivalentEntryInDesired.$PropertyName)
+                {
+                    $drift = $true
+                    if ($fixedEntry.$PropertyName.GetType().Name -eq 'String' -and $fixedEntry.$PropertyName.Contains('$OrganizationName'))
+                    {
+                        if ($fixedEntry.$PropertyName.Split('@')[0] -eq $EquivalentEntryInDesired.$PropertyName.Split('@')[0])
+                        {
+                            $drift = $false
+                        }
+                    }
+                    if ($drift)
+                    {
+                        $result = @{
+                            Property     = $fixedEntry
+                            PropertyName = $PropertyName
+                            Desired      = $fixedEntry.$PropertyName
+                            Current      = $EquivalentEntryInDesired.$PropertyName
                         }
                         $DriftedProperties += $result
                     }
@@ -700,8 +756,20 @@ function Test-M365DSCParameterState
                                 }
                                 $AllDesiredValuesAsArray += [PSCustomObject]$currentEntry
                             }
-                            $arrayCompare = Compare-PSCustomObjectArrays -CurrentValues $CurrentValues.$fieldName `
-                                -DesiredValues $AllDesiredValuesAsArray
+                            try
+                            {
+                                $arrayCompare = $null
+                                if ($CurrentValues.$fieldName.GetType().Name -ne 'CimInstance' -and `
+                                    $CurrentValues.$fieldName.GetType().Name -ne 'CimInstance[]')
+                                {
+                                    $arrayCompare = Compare-PSCustomObjectArrays -CurrentValues $CurrentValues.$fieldName `
+                                        -DesiredValues $AllDesiredValuesAsArray
+                                }
+                            }
+                            catch
+                            {
+                                Write-Verbose -Message $_
+                            }
 
                             if ($null -ne $arrayCompare)
                             {
@@ -3669,7 +3737,7 @@ function Get-M365DSCExportContentForResource
     {
         $primaryKey = ''
     }
-    elseif ($Keys.Contains('DisplayName'))
+    elseif ($Keys.Contains('DisplayName') -and -not [System.String]::IsNullOrEmpty($Results.DisplayName))
     {
         $primaryKey = $Results.DisplayName
     }
