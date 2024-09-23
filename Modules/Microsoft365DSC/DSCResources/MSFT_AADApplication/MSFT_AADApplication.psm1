@@ -183,7 +183,7 @@ function Get-TargetResource
 
             if($AuthenticationBehaviors)
             {
-                $AADBetaApp= Get-MgBetaApplication -ApplicationId $Id  -ErrorAction SilentlyContinue
+                $AADBetaApp= Get-MgBetaApplication -Property "id,displayName,appId,authenticationBehaviors" -ApplicationId $Id  -ErrorAction SilentlyContinue
 
                 $complexAuthenticationBehaviors = @{}
                 $complexAuthenticationBehaviors.Add('BlockAzureADGraphAccess', $AADBetaApp.authenticationBehaviors.blockAzureADGraphAccess)
