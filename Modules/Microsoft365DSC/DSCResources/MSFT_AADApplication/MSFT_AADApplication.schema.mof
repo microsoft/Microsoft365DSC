@@ -7,6 +7,19 @@ class MSFT_AADApplicationPermission
     [Write, Description("Represented whether or not the Admin consent been granted on the app.")] Boolean AdminConsentGranted;
 };
 
+
+[ClassVersion("1.0.0")]
+class MSFT_MicrosoftGraphKeyCredential
+{
+    [Write, Description("A 40-character binary type that can be used to identify the credential. Optional. When not provided in the payload, defaults to the thumbprint of the certificate.")] String CustomKeyIdentifier;
+    [Write, Description("Friendly name for the key. Optional.")] String DisplayName;
+    [Write, Description("The date and time at which the credential expires. The DateTimeOffset type represents date and time information using ISO 8601 format and is always in UTC time. For example, midnight UTC on Jan 1, 2014 is 2014-01-01T00:00:00Z.")] String EndDateTime;
+    [Write, Description("The unique identifier (GUID) for the key.")] String KeyId;
+    [Write, Description("The date and time at which the credential becomes valid.The Timestamp type represents date and time information using ISO 8601 format and is always in UTC time. For example, midnight UTC on Jan 1, 2014 is 2014-01-01T00:00:00Z.")] String StartDateTime;
+    [Write, Description("The type of key credential for example, Symmetric, AsymmetricX509Cert.")] String Type;
+    [Write, Description("A string that describes the purpose for which the key can be used for example, Verify.")] String Usage;
+};
+
 [ClassVersion("1.0.0")]
 class MSFT_MicrosoftGraphPasswordCredential
 {
@@ -43,6 +56,7 @@ class MSFT_AADApplication : OMI_BaseResource
     [Write, Description("Specifies the fallback application type as public client, such as an installed application running on a mobile device. The default value is false, which means the fallback application type is confidential client such as web app. There are certain scenarios where Microsoft Entra ID cannot determine the client application type (for example, ROPC flow where it is configured without specifying a redirect URI). In those cases, Microsoft Entra ID will interpret the application type based on the value of this property.")] Boolean IsFallbackPublicClient;
     [Write, Description("Client applications that are tied to this resource application.")] string KnownClientApplications[];
     [Write, Description("The collection of password credentials associated with the application. Not nullable."), EmbeddedInstance("MSFT_MicrosoftGraphpasswordCredential")] String PasswordCredentials[];
+    [Write, Description("The collection of key credentials associated with the application. Not nullable. Supports $filter (eq, not, ge, le)."), EmbeddedInstance("MSFT_MicrosoftGraphkeyCredential")] String KeyCredentials[];
     [Write, Description("The collection of roles defined for the application. With app role assignments, these roles can be assigned to users, groups, or service principals associated with other applications. Not nullable."), EmbeddedInstance("MSFT_MicrosoftGraphappRole")] String AppRoles[];
     [Write, Description("The logout url for this application.")] string LogoutURL;
     [Write, Description("Specifies whether this application is a public client (such as an installed application running on a mobile device). Default is false.")] Boolean PublicClient;

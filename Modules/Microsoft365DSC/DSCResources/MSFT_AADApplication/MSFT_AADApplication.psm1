@@ -62,6 +62,10 @@ function Get-TargetResource
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
+        $KeyCredentials,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
         $PasswordCredentials,
 
         [Parameter()]
@@ -172,6 +176,29 @@ function Get-TargetResource
         {
             Write-Verbose -Message 'An instance of Azure AD App was retrieved.'
 
+            $complexKeyCredentials = @()
+            foreach ($currentkeyCredentials in $AADApp.keyCredentials)
+            {
+                $mykeyCredentials = @{}
+                $mykeyCredentials.Add('CustomKeyIdentifier', $currentkeyCredentials.customKeyIdentifier)
+                $mykeyCredentials.Add('DisplayName', $currentkeyCredentials.displayName)
+                if ($null -ne $currentkeyCredentials.endDateTime)
+                {
+                    $mykeyCredentials.Add('EndDateTime', ([DateTimeOffset]$currentkeyCredentials.endDateTime).ToString('o'))
+                }
+                $mykeyCredentials.Add('KeyId', $currentkeyCredentials.keyId)
+                if ($null -ne $currentkeyCredentials.startDateTime)
+                {
+                    $mykeyCredentials.Add('StartDateTime', ([DateTimeOffset]$currentkeyCredentials.startDateTime).ToString('o'))
+                }
+                $mykeyCredentials.Add('Type', $currentkeyCredentials.type)
+                $mykeyCredentials.Add('Usage', $currentkeyCredentials.usage)
+                if ($mykeyCredentials.values.Where({$null -ne $_}).Count -gt 0)
+                {
+                    $complexKeyCredentials += $mykeyCredentials
+                }
+            }
+
             $complexPasswordCredentials = @()
             foreach ($currentpasswordCredentials in $AADApp.passwordCredentials)
             {
@@ -257,6 +284,7 @@ function Get-TargetResource
                 Owners                  = $OwnersValues
                 ObjectId                = $AADApp.Id
                 AppId                   = $AADApp.AppId
+                KeyCredentials          = $complexKeyCredentials
                 PasswordCredentials     = $complexPasswordCredentials
                 AppRoles                = $complexAppRoles
                 Permissions             = $permissionsObj
@@ -352,6 +380,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String[]]
         $Owners,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $KeyCredentials,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
@@ -811,6 +843,10 @@ function Test-TargetResource
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
+        $KeyCredentials,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
         $PasswordCredentials,
 
         [Parameter()]
@@ -1018,6 +1054,21 @@ function Export-TargetResource
                         $Results.Permissions = Get-M365DSCAzureADAppPermissionsAsString $Results.Permissions
                     }
 
+                    if ($null -ne $Results.KeyCredentials)
+                    {
+                        $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                        -ComplexObject $Results.KeyCredentials `
+                        -CIMInstanceName 'MicrosoftGraphkeyCredential'
+                        if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                        {
+                            $Results.KeyCredentials = $complexTypeStringResult
+                        }
+                        else
+                        {
+                            $Results.Remove('KeyCredentials') | Out-Null
+                        }
+                    }
+
                     if ($null -ne $Results.PasswordCredentials)
                     {
                         $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
@@ -1058,6 +1109,11 @@ function Export-TargetResource
                     {
                         $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
                             -ParameterName 'Permissions'
+                    }
+
+                    if ($Results.KeyCredentials)
+                    {
+                        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "KeyCredentials" -IsCIMArray:$True
                     }
 
                     if ($Results.PasswordCredentials)
