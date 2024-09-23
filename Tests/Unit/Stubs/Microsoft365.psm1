@@ -67,6 +67,16 @@ function Get-AzSubscription
     )
 }
 
+function Enable-ATPProtectionPolicyRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+
 function Enable-AzSubscription
 {
     [CmdletBinding()]
@@ -74,6 +84,16 @@ function Enable-AzSubscription
         [Parameter()]
         [System.String]
         $Id
+    )
+}
+
+function Disable-ATPProtectionPolicyRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity
     )
 }
 
@@ -89,6 +109,24 @@ function Disable-AzSubscription
 #endregion
 
 # region ExchangeOnlineManagement
+function Get-EmailTenantSettings
+{
+    [CmdletBinding()]
+    param(
+    )
+}
+
+function Set-EmailTenantSettings
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $EnablePriorityAccountProtection
+    )
+}
+
+
 function Get-MailboxIRMAccess
 {
     [CmdletBinding()]
@@ -1234,6 +1272,21 @@ function Get-ApplicationAccessPolicy
         $Identity
     )
 }
+
+function Get-ATPProtectionPolicyRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $State
+    )
+}
+
 function Get-AtpPolicyForO365
 {
     [CmdletBinding()]
@@ -3410,6 +3463,61 @@ function New-ApplicationAccessPolicy
         $AppId
     )
 }
+
+function New-ATPProtectionPolicyRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $SafeAttachmentPolicy,
+
+        [Parameter()]
+        [System.String]
+        $SafeLinksPolicy,
+
+        [Parameter()]
+        [System.String]
+        $Comments,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfRecipientDomainIs,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSentTo,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSentToMemberOf,
+
+        [Parameter()]
+        [System.UInt32]
+        $Priority,
+
+        [Parameter()]
+        [System.String[]]
+        $RecipientDomainIs,
+
+        [Parameter()]
+        [System.String[]]
+        $SentTo,
+
+        [Parameter()]
+        [System.String[]]
+        $SentToMemberOf
+    )
+}
+
 function New-AuthenticationPolicy
 {
     [CmdletBinding()]
@@ -7121,6 +7229,17 @@ function Remove-ApplicationAccessPolicy
         $Identity
     )
 }
+
+function Remove-ATPProtectionPolicyRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+
 function Remove-AuditConfigurationPolicy
 {
     [CmdletBinding()]
@@ -8370,6 +8489,53 @@ function Set-AtpPolicyForO365
         $Confirm
     )
 }
+
+function Set-ATPProtectionPolicyRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Comments,
+
+        [Parameter()]
+        [System.String]
+        $ExceptIfRecipientDomainIs,
+
+        [Parameter()]
+        [System.String]
+        $ExceptIfSentTo,
+
+        [Parameter()]
+        [System.String]
+        $ExceptIfSentToMemberOf,
+
+        [Parameter()]
+        [System.String]
+        $String,
+
+        [Parameter()]
+        [System.UInt32]
+        $Priority,
+
+        [Parameter()]
+        [System.String[]]
+        $RecipientDomainIs,
+
+        [Parameter()]
+        [System.String[]]
+        $SentTo,
+
+        [Parameter()]
+        [System.String[]]
+        $SentToMemberOf
+    )
+}
+
 function Set-AuthenticationPolicy
 {
     [CmdletBinding()]
