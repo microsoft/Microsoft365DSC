@@ -61,6 +61,10 @@ function Get-TargetResource
         $Owners,
 
         [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $AuthenticationBehaviors,
+
+        [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $KeyCredentials,
 
@@ -176,6 +180,22 @@ function Get-TargetResource
         {
             Write-Verbose -Message 'An instance of Azure AD App was retrieved.'
 
+
+            if($AuthenticationBehaviors)
+            {
+                $AADBetaApp= Get-MgBetaApplication -ApplicationId $Id  -ErrorAction SilentlyContinue
+
+                $complexAuthenticationBehaviors = @{}
+                $complexAuthenticationBehaviors.Add('BlockAzureADGraphAccess', $AADBetaApp.authenticationBehaviors.blockAzureADGraphAccess)
+                $complexAuthenticationBehaviors.Add('RemoveUnverifiedEmailClaim', $AADBetaApp.authenticationBehaviors.removeUnverifiedEmailClaim)
+                $complexAuthenticationBehaviors.Add('RequireClientServicePrincipal', $AADBetaApp.authenticationBehaviors.requireClientServicePrincipal)
+                if ($complexAuthenticationBehaviors.values.Where({$null -ne $_}).Count -eq 0)
+                {
+                    $complexAuthenticationBehaviors = $null
+                }
+            }
+
+
             $complexKeyCredentials = @()
             foreach ($currentkeyCredentials in $AADApp.keyCredentials)
             {
@@ -269,6 +289,7 @@ function Get-TargetResource
             {
                 $IsFallbackPublicClientValue = $AADApp.IsFallbackPublicClient
             }
+
             $result = @{
                 DisplayName             = $AADApp.DisplayName
                 AvailableToOtherTenants = $AvailableToOtherTenantsValue
@@ -284,6 +305,7 @@ function Get-TargetResource
                 Owners                  = $OwnersValues
                 ObjectId                = $AADApp.Id
                 AppId                   = $AADApp.AppId
+                AuthenticationBehaviors = $complexAuthenticationBehaviors
                 KeyCredentials          = $complexKeyCredentials
                 PasswordCredentials     = $complexPasswordCredentials
                 AppRoles                = $complexAppRoles
@@ -380,6 +402,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String[]]
         $Owners,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $AuthenticationBehaviors,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
@@ -494,6 +520,7 @@ function Set-TargetResource
 
     # App should exist but it doesn't
     $needToUpdatePermissions = $false
+    $needToUpdateAuthenticationBehaviors = $false
     $currentParameters.Remove('AppId') | Out-Null
     $currentParameters.Remove('Permissions') | Out-Null
 
@@ -598,6 +625,7 @@ function Set-TargetResource
         $currentAADApp = New-MgApplication @currentParameters
         Write-Verbose -Message "Azure AD Application {$DisplayName} was successfully created"
         $needToUpdatePermissions = $true
+        $needToUpdateAuthenticationBehaviors = $true
 
         $tries = 1
         $appEntity = $null
@@ -624,6 +652,7 @@ function Set-TargetResource
         Update-MgApplication @currentParameters
         $currentAADApp.Add('ID', $AppIdValue)
         $needToUpdatePermissions = $true
+        $needToUpdateAuthenticationBehaviors = $true
     }
     # App exists but should not
     elseif ($Ensure -eq 'Absent' -and $currentAADApp.Ensure -eq 'Present')
@@ -777,6 +806,14 @@ function Set-TargetResource
         Update-MgApplication -ApplicationId ($currentAADApp.Id) `
             -RequiredResourceAccess $allRequiredAccess | Out-Null
     }
+
+    if($needToUpdateAuthenticationBehaviors -and $AuthenticationBehaviors)
+    {
+        Write-Verbose -Message "Updating for Azure AD Application {$($currentAADApp.DisplayName)} with AuthenticationBehaviors:`r`n$($AuthenticationBehaviors| Out-String)"
+        Write-Verbose -Message "Current App Id: $($currentAADApp.AppId)"
+
+        Update-MgBetaApplication -ApplicationId ($currentAADApp.Id) -AuthenticationBehaviors $AuthenticationBehaviors | Out-Null
+    }
 }
 
 function Test-TargetResource
@@ -840,6 +877,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String[]]
         $Owners,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $AuthenticationBehaviors,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
@@ -1054,6 +1095,21 @@ function Export-TargetResource
                         $Results.Permissions = Get-M365DSCAzureADAppPermissionsAsString $Results.Permissions
                     }
 
+                    if ($null -ne $Results.AuthenticationBehaviors)
+                    {
+                        $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                        -ComplexObject $Results.AuthenticationBehaviors `
+                        -CIMInstanceName 'MicrosoftGraphauthenticationBehaviors'
+                        if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                        {
+                            $Results.AuthenticationBehaviors = $complexTypeStringResult
+                        }
+                        else
+                        {
+                            $Results.Remove('AuthenticationBehaviors') | Out-Null
+                        }
+                    }
+
                     if ($null -ne $Results.KeyCredentials)
                     {
                         $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
@@ -1109,6 +1165,11 @@ function Export-TargetResource
                     {
                         $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
                             -ParameterName 'Permissions'
+                    }
+
+                    if ($Results.AuthenticationBehaviors)
+                    {
+                        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "AuthenticationBehaviors" -IsCIMArray:$False
                     }
 
                     if ($Results.KeyCredentials)

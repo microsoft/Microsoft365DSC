@@ -25,6 +25,10 @@
             RequiredVersion = '2.23.0'
         },
         @{
+            ModuleName      = 'Microsoft.Graph.Beta.Applications'
+            Requiredversion = '2.23.0'
+        },
+        @{
             ModuleName      = 'Microsoft.Graph.Authentication'
             RequiredVersion = '2.23.0'
         },
