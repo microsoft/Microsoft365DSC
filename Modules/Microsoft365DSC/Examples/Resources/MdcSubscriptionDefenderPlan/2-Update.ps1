@@ -28,7 +28,6 @@ Configuration Example
             SubPlanName           = 'P2'
             PricingTier           = 'Standard'
             SubscriptionId        = 'd620d94d-916d-4dd9-9de5-179292873e20'
-            Enabled               = $true
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint
