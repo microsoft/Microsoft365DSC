@@ -62,11 +62,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
-        $AppRoles,
+        $PasswordCredentials,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance]
-        $OptionalClaims,
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $AppRoles,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
@@ -172,6 +172,26 @@ function Get-TargetResource
         {
             Write-Verbose -Message 'An instance of Azure AD App was retrieved.'
 
+            $complexPasswordCredentials = @()
+            foreach ($currentpasswordCredentials in $AADApp.passwordCredentials)
+            {
+                $mypasswordCredentials = @{}
+                $mypasswordCredentials.Add('DisplayName', $currentpasswordCredentials.displayName)
+                if ($null -ne $currentpasswordCredentials.endDateTime)
+                {
+                    $mypasswordCredentials.Add('EndDateTime', ([DateTimeOffset]$currentpasswordCredentials.endDateTime).ToString('o'))
+                }
+                $mypasswordCredentials.Add('Hint', $currentpasswordCredentials.hint)
+                $mypasswordCredentials.Add('KeyId', $currentpasswordCredentials.keyId)
+                if ($null -ne $currentpasswordCredentials.startDateTime)
+                {
+                    $mypasswordCredentials.Add('StartDateTime', ([DateTimeOffset]$currentpasswordCredentials.startDateTime).ToString('o'))
+                }
+                if ($mypasswordCredentials.values.Where({$null -ne $_}).Count -gt 0)
+                {
+                    $complexPasswordCredentials += $mypasswordCredentials
+                }
+            }
 
             $complexAppRoles = @()
             foreach ($currentappRoles in $AADApp.appRoles)
@@ -188,52 +208,6 @@ function Get-TargetResource
                 {
                     $complexAppRoles += $myappRoles
                 }
-            }
-
-            $complexOptionalClaims = @{}
-            $complexAccessTokenClaims = @()
-            foreach ($currentAccessTokenClaim in $AADApp.OptionalClaims.AccessToken)
-            {
-                $myAccessTokenClaim  = @{}
-                $myAccessTokenClaim.Add('Essential', $currentAccessTokenClaim.Essential)
-
-                $myAccessTokenClaim.Add('Name', $currentAccessTokenClaim.Name)
-
-                $myAccessTokenClaim.Add('Source', $currentAccessTokenClaim.Source)
-                $complexAccessTokenClaims += $myAccessTokenClaim
-            }
-            $complexOptionalClaims.Add('AccessToken',$complexAccessTokenClaims)
-
-
-            $complexIdTokenClaims = @()
-            foreach ($currentIdTokenClaim in $AADApp.OptionalClaims.IdToken)
-            {
-                $myIdTokenClaim  = @{}
-                $myIdTokenClaim.Add('Essential', $currentIdTokenClaim.Essential)
-
-                $myIdTokenClaim.Add('Name', $currentIdTokenClaim.Name)
-
-                $myIdTokenClaim.Add('Source', $currentIdTokenClaim.Source)
-                $complexIdTokenClaims += $myIdTokenClaim
-            }
-            $complexOptionalClaims.Add('IdToken',$complexIdTokenClaims)
-
-            $complexSaml2TokenClaims = @()
-            foreach ($currentSaml2TokenClaim in $AADApp.OptionalClaims.Saml2Token)
-            {
-                $mySaml2TokenClaim  = @{}
-                $mySaml2TokenClaim.Add('Essential', $currentSaml2TokenClaim.Essential)
-
-                $mySaml2TokenClaim.Add('Name', $currentSaml2TokenClaim.Name)
-
-                $mySaml2TokenClaim.Add('Source', $currentSaml2TokenClaim.Source)
-                $complexSaml2TokenClaims += $mySaml2TokenClaim
-            }
-            $complexOptionalClaims.Add('Saml2Token',$complexSaml2TokenClaims)
-
-            if ($complexOptionalClaims.values.Where({$null -ne $_}).count -eq 0)
-            {
-                $complexOptionalClaims = $null
             }
 
             $permissionsObj = Get-M365DSCAzureADAppPermissions -App $AADApp
@@ -283,8 +257,8 @@ function Get-TargetResource
                 Owners                  = $OwnersValues
                 ObjectId                = $AADApp.Id
                 AppId                   = $AADApp.AppId
+                PasswordCredentials     = $complexPasswordCredentials
                 AppRoles                = $complexAppRoles
-                OptionalClaims          = $complexOptionalClaims
                 Permissions             = $permissionsObj
                 Ensure                  = 'Present'
                 Credential              = $Credential
@@ -381,11 +355,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
-        $AppRoles,
+        $PasswordCredentials,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance]
-        $OptionalClaims,
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $AppRoles,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
@@ -837,11 +811,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
-        $AppRoles,
+        $PasswordCredentials,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance]
-        $OptionalClaims,
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $AppRoles,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
@@ -1070,6 +1044,20 @@ function Export-TargetResource
                         $Results.Permissions = Get-M365DSCAzureADAppPermissionsAsString $Results.Permissions
                     }
 
+                    if ($null -ne $Results.PasswordCredentials)
+                    {
+                        $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                        -ComplexObject $Results.PasswordCredentials `
+                        -CIMInstanceName 'MicrosoftGraphpasswordCredential'
+                        if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                        {
+                            $Results.PasswordCredentials = $complexTypeStringResult
+                        }
+                        else
+                        {
+                            $Results.Remove('PasswordCredentials') | Out-Null
+                        }
+                    }
 
                     if ($null -ne $Results.AppRoles)
                     {
@@ -1086,44 +1074,6 @@ function Export-TargetResource
                         }
                     }
 
-                    if($null -ne $Results.OptionalClaims)
-                    {
-                        $complexMapping = @(
-                            @{
-                                Name = 'OptionalClaims'
-                                CimInstanceName = 'AADApplicationOptionalClaims'
-                                IsRequired = $False
-                            }
-                            @{
-                                Name = 'AccessToken'
-                                CimInstanceName = 'MicrosoftGraphOptionalClaim'
-                                IsRequired = $False
-                            }
-                            @{
-                                Name = 'IdToken'
-                                CimInstanceName = 'MicrosoftGraphOptionalClaim'
-                                IsRequired = $False
-                            }
-                            @{
-                                Name = 'Saml2Token'
-                                CimInstanceName = 'MicrosoftGraphOptionalClaim'
-                                IsRequired = $False
-                            }
-                        )
-                        $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
-                        -ComplexObject $Results.OptionalClaims`
-                        -CIMInstanceName 'AADApplicationOptionalClaims' `
-                        -ComplexTypeMapping $complexMapping
-
-                        if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
-                        {
-                            $Results.OptionalClaims = $complexTypeStringResult
-                        }
-                        else
-                        {
-                            $Results.Remove('OptionalClaims') | Out-Null
-                        }
-                    }
                     $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                         -ConnectionMode $ConnectionMode `
                         -ModulePath $PSScriptRoot `
@@ -1136,14 +1086,14 @@ function Export-TargetResource
                             -ParameterName 'Permissions'
                     }
 
+                    if ($Results.PasswordCredentials)
+                    {
+                        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "PasswordCredentials" -IsCIMArray:$True
+                    }
+
                     if ($Results.AppRoles)
                     {
                         $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "AppRoles" -IsCIMArray:$True
-                    }
-
-                    if ($Results.OptionalClaims)
-                    {
-                        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "OptionalClaims" -isCIMArray:$False
                     }
 
                     $dscContent.Append($currentDSCBlock) | Out-Null
