@@ -181,18 +181,24 @@ function Get-TargetResource
             Write-Verbose -Message 'An instance of Azure AD App was retrieved.'
 
 
-            if($AuthenticationBehaviors)
-            {
-                $AADBetaApp= Get-MgBetaApplication -Property "id,displayName,appId,authenticationBehaviors" -ApplicationId $Id  -ErrorAction SilentlyContinue
+            $AADBetaApp= Get-MgBetaApplication -Property "id,displayName,appId,authenticationBehaviors" -ApplicationId $Id  -ErrorAction SilentlyContinue
 
-                $complexAuthenticationBehaviors = @{}
+            $complexAuthenticationBehaviors = @{}
+            if ($null -ne $AADBetaApp.authenticationBehaviors.blockAzureADGraphAccess)
+            {
                 $complexAuthenticationBehaviors.Add('BlockAzureADGraphAccess', $AADBetaApp.authenticationBehaviors.blockAzureADGraphAccess)
+            }
+            if ($null -ne $AADBetaApp.authenticationBehaviors.removeUnverifiedEmailClaim)
+            {
                 $complexAuthenticationBehaviors.Add('RemoveUnverifiedEmailClaim', $AADBetaApp.authenticationBehaviors.removeUnverifiedEmailClaim)
+            }
+            if ($null -ne $AADBetaApp.authenticationBehaviors.requireClientServicePrincipal)
+            {
                 $complexAuthenticationBehaviors.Add('RequireClientServicePrincipal', $AADBetaApp.authenticationBehaviors.requireClientServicePrincipal)
-                if ($complexAuthenticationBehaviors.values.Where({$null -ne $_}).Count -eq 0)
-                {
-                    $complexAuthenticationBehaviors = $null
-                }
+            }
+            if ($complexAuthenticationBehaviors.values.Where({$null -ne $_}).Count -eq 0)
+            {
+                $complexAuthenticationBehaviors = $null
             }
 
 
@@ -523,6 +529,7 @@ function Set-TargetResource
     $needToUpdateAuthenticationBehaviors = $false
     $currentParameters.Remove('AppId') | Out-Null
     $currentParameters.Remove('Permissions') | Out-Null
+    $currentParameters.Remove('AuthenticationBehaviors)') | Out-Null
 
     if ($currentParameters.AvailableToOtherTenants)
     {
@@ -990,11 +997,35 @@ function Test-TargetResource
     $ValuesToCheck.Remove('AppId') | Out-Null
     $ValuesToCheck.Remove('Permissions') | Out-Null
 
-    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
+    #Compare Cim instances
+    foreach ($key in $PSBoundParameters.Keys)
+    {
+        $source = $PSBoundParameters.$key
+        $target = $CurrentValues.$key
+        if ($source.getType().Name -like '*CimInstance*')
+        {
+            $testResult = Compare-M365DSCComplexObject `
+                -Source ($source) `
+                -Target ($target)
+ 
+            if (-Not $testResult)
+            {
+                $testResult = $false
+                break
+            }
+ 
+            $ValuesToCheck.Remove($key) | Out-Null
+        }
+    }
+
+    if($TestResult)
+    {
+        $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck $ValuesToCheck.Keys `
         -IncludedDrifts $driftedParams
+    }
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
