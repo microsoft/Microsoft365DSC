@@ -92,6 +92,8 @@
                     EnableOrganizationDomainsProtection   = $null
                     EnableUnusualCharactersSafetyTips     = $null
                     TargetedUserActionRecipients          = $null
+                    DmarcQuarantineAction                 = "Quarantine"
+                    DmarcRejectAction                     = "Reject"
                     Ensure                                = "Present"
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId

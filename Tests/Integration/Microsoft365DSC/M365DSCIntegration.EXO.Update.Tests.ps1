@@ -102,6 +102,8 @@
                     EnableUnusualCharactersSafetyTips     = $null
                     TargetedUserActionRecipients          = $null
                     Ensure                                = "Present"
+                    DmarcQuarantineAction                 = "Quarantine"
+                    DmarcRejectAction                     = "Reject"
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
