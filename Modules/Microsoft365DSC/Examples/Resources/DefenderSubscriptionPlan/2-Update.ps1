@@ -21,7 +21,7 @@ Configuration Example
     Import-DscResource -ModuleName Microsoft365DSC
     node localhost
     {
-        MdcSubscriptionDefenderPlan 'TestSubscription'
+        DefenderSubscriptionPlan 'TestSubscription'
         {
             SubscriptionName      = 'MyTestSubscription'
             PlanName              = 'VirtualMachines'
