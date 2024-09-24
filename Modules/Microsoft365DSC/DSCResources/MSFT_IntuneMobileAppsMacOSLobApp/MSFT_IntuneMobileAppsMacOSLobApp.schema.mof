@@ -1,0 +1,32 @@
+[ClassVersion("1.0.0"), FriendlyName("IntuneMobileAppsMacOSLobApp")]
+class MSFT_IntuneMobileAppsMacOSLobApp : OMI_BaseResource
+{
+    [Key, Description("The unique identifier for an entity. Read-only. Inherited from mobileApp object.")] String Id;
+
+    [Write, Description("Optional Response Headers Variable.")] String ResponseHeadersVariable;
+    [Write, Description("Additional Parameters.")] Hashtable AdditionalProperties; #TODOK
+
+    [Write, Description("The description of the app. Inherited from mobileApp.")] String Description;
+    [Write, Description("Name of the device health script publisher")] String Developer;
+    [Write, Description("The admin provided or imported title of the app. Inherited from mobileApp.")] String DisplayName;
+    [Write, Description("Name of the device health script publisher")] String InformationUrl;
+    [Write, Description("The value indicating whether the app is marked as featured by the admin. Inherited from mobileApp.")] String IsFeatured;
+    [Write, Description("The large icon to be displayed in the app details and used for upload of the icon. Inherited from mobileApp.")] String LargeIcon; #TODOK
+    [Write, Description("Notes for the app. Inherited from mobileApp.")] String Notes;
+    [Write, Description("The owner of the app. Inherited from mobileApp.")] String Owner;
+    [Write, Description("The privacy statement Url. Inherited from mobileApp.")] String PrivacyInformationUrl;
+    [Write, Description("The publisher of the app. Inherited from mobileApp.")] String Publisher;
+    [Write, Description("The publishing state for the app. The app cannot be assigned unless the app is published. Inherited from mobileApp. Possible values are: notPublished, processing, published.")] MobileAppPublishingState PublishingState; #TODOK
+
+    [Write, Description("The list of group assignments for this mobile app. To construct, see NOTES section for ASSIGNMENTS properties and create a hash table.")] String Assignments[]; #TODOK
+    [Write, Description("The list of categories for this app. To construct, see NOTES section for CATEGORIES properties and create a hash table.")] String Categories[]; #TODOK
+
+    [Write, Description("Present ensures the policy exists, absent ensures it is removed."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] string Ensure;
+    [Write, Description("Credentials of the Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
+    [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
+    [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
+    [Write, Description("Secret of the Azure Active Directory tenant used for authentication."), EmbeddedInstance("MSFT_Credential")] String ApplicationSecret;
+    [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
+    [Write, Description("Managed ID being used for authentication.")] Boolean ManagedIdentity;
+    [Write, Description("Access token used for authentication.")] String AccessTokens[];
+};

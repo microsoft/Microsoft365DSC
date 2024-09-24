@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* IntuneMobileAppsMacOSLobApp
+  * Initial release
 * AADPasswordRuleSettings
   * Initial release
 * ADOOrganizationOwner
