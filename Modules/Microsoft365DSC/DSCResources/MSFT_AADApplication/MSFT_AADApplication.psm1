@@ -529,7 +529,7 @@ function Set-TargetResource
     $needToUpdateAuthenticationBehaviors = $false
     $currentParameters.Remove('AppId') | Out-Null
     $currentParameters.Remove('Permissions') | Out-Null
-    $currentParameters.Remove('AuthenticationBehaviors)') | Out-Null
+    $currentParameters.Remove('AuthenticationBehaviors') | Out-Null
 
     if ($currentParameters.AvailableToOtherTenants)
     {
@@ -819,7 +819,13 @@ function Set-TargetResource
         Write-Verbose -Message "Updating for Azure AD Application {$($currentAADApp.DisplayName)} with AuthenticationBehaviors:`r`n$($AuthenticationBehaviors| Out-String)"
         Write-Verbose -Message "Current App Id: $($currentAADApp.AppId)"
 
-        Update-MgBetaApplication -ApplicationId ($currentAADApp.Id) -AuthenticationBehaviors $AuthenticationBehaviors | Out-Null
+        $IAuthenticationBehaviors = @{
+            blockAzureADGraphAccess = $AuthenticationBehaviors.blockAzureADGraphAccess
+            removeUnverifiedEmailClaim = $AuthenticationBehaviors.removeUnverifiedEmailClaim
+            requireClientServicePrincipal = $AuthenticationBehaviors.requireClientServicePrincipal
+        }
+
+        Update-MgBetaApplication -ApplicationId ($currentAADApp.Id) -AuthenticationBehaviors $IAuthenticationBehaviors | Out-Null
     }
 }
 
@@ -997,35 +1003,12 @@ function Test-TargetResource
     $ValuesToCheck.Remove('AppId') | Out-Null
     $ValuesToCheck.Remove('Permissions') | Out-Null
 
-    #Compare Cim instances
-    foreach ($key in $PSBoundParameters.Keys)
-    {
-        $source = $PSBoundParameters.$key
-        $target = $CurrentValues.$key
-        if ($source.getType().Name -like '*CimInstance*')
-        {
-            $testResult = Compare-M365DSCComplexObject `
-                -Source ($source) `
-                -Target ($target)
- 
-            if (-Not $testResult)
-            {
-                $testResult = $false
-                break
-            }
- 
-            $ValuesToCheck.Remove($key) | Out-Null
-        }
-    }
 
-    if($TestResult)
-    {
-        $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
-        -Source $($MyInvocation.MyCommand.Source) `
-        -DesiredValues $PSBoundParameters `
-        -ValuesToCheck $ValuesToCheck.Keys `
-        -IncludedDrifts $driftedParams
-    }
+    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
+    -Source $($MyInvocation.MyCommand.Source) `
+    -DesiredValues $PSBoundParameters `
+    -ValuesToCheck $ValuesToCheck.Keys `
+    -IncludedDrifts $driftedParams
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
