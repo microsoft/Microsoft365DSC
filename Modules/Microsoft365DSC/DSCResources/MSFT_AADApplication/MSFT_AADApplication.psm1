@@ -995,10 +995,34 @@ function Test-TargetResource
         }
     }
 
+    $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
+ 
+    $testTargetResource = $true
+
+    #Compare Cim instances
+    foreach ($key in $PSBoundParameters.Keys)
+    {
+        $source = $PSBoundParameters.$key
+        $target = $CurrentValues.$key
+        if ($null -ne $source -and $source.GetType().Name -like '*CimInstance*' -and $source -notlike '*Permission*')
+        {
+            $testResult = Compare-M365DSCComplexObject `
+                -Source ($source) `
+                -Target ($target)
+ 
+            if (-not $testResult)
+            {
+                $testTargetResource = $false
+            }
+            else { 
+                $ValuesToCheck.Remove($key) | Out-Null
+            }
+        }
+    }
+
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
-    $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
     $ValuesToCheck.Remove('ObjectId') | Out-Null
     $ValuesToCheck.Remove('AppId') | Out-Null
     $ValuesToCheck.Remove('Permissions') | Out-Null
@@ -1010,9 +1034,15 @@ function Test-TargetResource
     -ValuesToCheck $ValuesToCheck.Keys `
     -IncludedDrifts $driftedParams
 
-    Write-Verbose -Message "Test-TargetResource returned $TestResult"
+    if(-not $TestResult)
+    {
+        $testTargetResource = $false
+    }
 
-    return $TestResult 
+
+    Write-Verbose -Message "Test-TargetResource returned $testTargetResource"
+
+    return $testTargetResource
 }
 
 function Export-TargetResource
