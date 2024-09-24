@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* IntuneMobileThreatDefenseConnector
+  * Initial release
 * AADPasswordRuleSettings
   * Initial release
 * ADOOrganizationOwner
