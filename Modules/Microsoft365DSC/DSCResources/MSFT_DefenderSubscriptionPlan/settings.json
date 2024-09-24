@@ -1,5 +1,5 @@
 ﻿{
-    "resourceName": "MdcSubscriptionDefenderPlan",
+    "resourceName": "DefenderSubscriptionPlan",
     "description": "Enables or disables Microsoft Defender plans for a subscription in Microsoft Defender for Cloud.",
     "roles": {
         "read": [],

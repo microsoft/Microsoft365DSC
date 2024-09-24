@@ -1,5 +1,5 @@
-[ClassVersion("1.0.0.0"), FriendlyName("MdcSubscriptionDefenderPlan")]
-class MSFT_MdcSubscriptionDefenderPlan : OMI_BaseResource
+[ClassVersion("1.0.0.0"), FriendlyName("DefenderSubscriptionPlan")]
+class MSFT_DefenderSubscriptionPlan : OMI_BaseResource
 {
     [Key, Description("The display name of the subscription.")] String SubscriptionName;
     [Key, Description("The Defender plan name, for the list all of possible Defender plans refer to Defender for Cloud documentation")] String PlanName;

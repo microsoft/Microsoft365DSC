@@ -1,5 +1,5 @@
 
-# MdcSubscriptionDefenderPlan
+# DefenderSubscriptionPlan
 
 ## Description
 
