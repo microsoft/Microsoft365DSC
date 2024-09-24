@@ -67,6 +67,77 @@ function Get-AzSubscription
     )
 }
 
+function Get-AzSecurityPricing
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Name
+    )
+}
+
+function Set-AzSecurityPricing
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $PricingTier,
+
+        [Parameter()]
+        [System.String]
+        $SubPlan,
+
+        [Parameter()]
+        [System.String]
+        $Extension
+    )
+}
+
+function Get-AzContext
+{
+    [CmdletBinding()]
+    param()
+}
+
+function Set-AzContext
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Subscription
+    )
+}
+
+function Search-AzGraph
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Query,
+
+        [Parameter()]
+        [System.Int32]
+        $First,
+
+        [Parameter()]
+        [System.String]
+        $SkipToken,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $UseTenantScope
+    )
+}
+
+
 function Enable-ATPProtectionPolicyRule
 {
     [CmdletBinding()]
