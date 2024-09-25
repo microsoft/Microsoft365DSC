@@ -67,6 +67,87 @@ function Get-AzSubscription
     )
 }
 
+function Get-AzSecurityPricing
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Name
+    )
+}
+
+function Set-AzSecurityPricing
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $PricingTier,
+
+        [Parameter()]
+        [System.String]
+        $SubPlan,
+
+        [Parameter()]
+        [System.String]
+        $Extension
+    )
+}
+
+function Get-AzContext
+{
+    [CmdletBinding()]
+    param()
+}
+
+function Set-AzContext
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Subscription
+    )
+}
+
+function Search-AzGraph
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Query,
+
+        [Parameter()]
+        [System.Int32]
+        $First,
+
+        [Parameter()]
+        [System.String]
+        $SkipToken,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $UseTenantScope
+    )
+}
+
+
+function Enable-ATPProtectionPolicyRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+
 function Enable-AzSubscription
 {
     [CmdletBinding()]
@@ -74,6 +155,16 @@ function Enable-AzSubscription
         [Parameter()]
         [System.String]
         $Id
+    )
+}
+
+function Disable-ATPProtectionPolicyRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity
     )
 }
 
@@ -89,6 +180,24 @@ function Disable-AzSubscription
 #endregion
 
 # region ExchangeOnlineManagement
+function Get-EmailTenantSettings
+{
+    [CmdletBinding()]
+    param(
+    )
+}
+
+function Set-EmailTenantSettings
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $EnablePriorityAccountProtection
+    )
+}
+
+
 function Get-MailboxIRMAccess
 {
     [CmdletBinding()]
@@ -1234,6 +1343,21 @@ function Get-ApplicationAccessPolicy
         $Identity
     )
 }
+
+function Get-ATPProtectionPolicyRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $State
+    )
+}
+
 function Get-AtpPolicyForO365
 {
     [CmdletBinding()]
@@ -1458,6 +1582,463 @@ function Get-DeviceConditionalAccessPolicy
         $Identity
     )
 }
+function Get-DeviceConditionalAccessRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $CompareToWorkload,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $DomainController
+    )
+}
+function New-DeviceConditionalAccessRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $CameraEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $EnableRemovableStorage,
+
+        [Parameter()]
+        [System.Object]
+        $AntiVirusSignatureStatus,
+
+        [Parameter()]
+        [System.Object]
+        $FirewallStatus,
+
+        [Parameter()]
+        [System.Object]
+        $AllowAppStore,
+
+        [Parameter()]
+        [System.Object]
+        $AllowAssistantWhileLocked,
+
+        [Parameter()]
+        [System.Object]
+        $AllowiCloudBackup,
+
+        [Parameter()]
+        [System.Object]
+        $AppsRating,
+
+        [Parameter()]
+        [System.Object]
+        $PasswordHistoryCount,
+
+        [Parameter()]
+        [System.Object]
+        $PasswordQuality,
+
+        [Parameter()]
+        [System.Object]
+        $PasswordMinComplexChars,
+
+        [Parameter()]
+        [System.Object]
+        $PhoneMemoryEncrypted,
+
+        [Parameter()]
+        [System.String]
+        $EmailAddress,
+
+        [Parameter()]
+        [System.Object]
+        $BluetoothEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $AllowConvenienceLogon,
+
+        [Parameter()]
+        [System.Object]
+        $MaxPasswordGracePeriod,
+
+        [Parameter()]
+        [System.Object]
+        $AllowiCloudDocSync,
+
+        [Parameter()]
+        [System.Object]
+        $ForceAppStorePassword,
+
+        [Parameter()]
+        [System.Object]
+        $Policy,
+
+        [Parameter()]
+        [System.Object]
+        $TVShowsRating,
+
+        [Parameter()]
+        [System.Object]
+        $AllowJailbroken,
+
+        [Parameter()]
+        [System.Object]
+        $RequireEmailProfile,
+
+        [Parameter()]
+        [System.Object]
+        $AllowDiagnosticSubmission,
+
+        [Parameter()]
+        [System.Object]
+        $AutoUpdateStatus,
+
+        [Parameter()]
+        [System.String]
+        $AccountUserName,
+
+        [Parameter()]
+        [System.Object]
+        $WLANEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $AllowVoiceDialing,
+
+        [Parameter()]
+        [System.String]
+        $AccountName,
+
+        [Parameter()]
+        [System.Object]
+        $PasswordExpirationDays,
+
+        [Parameter()]
+        [System.Object]
+        $PasswordTimeout,
+
+        [Parameter()]
+        [System.Object]
+        $AllowiCloudPhotoSync,
+
+        [Parameter()]
+        [System.Object]
+        $AllowSimplePassword,
+
+        [Parameter()]
+        [System.Object]
+        $AllowPassbookWhileLocked,
+
+        [Parameter()]
+        [System.Object]
+        $PasswordMinimumLength,
+
+        [Parameter()]
+        [System.Object]
+        $AllowVideoConferencing,
+
+        [Parameter()]
+        [System.Object]
+        $PasswordRequired,
+
+        [Parameter()]
+        [System.Object]
+        $MaxPasswordAttemptsBeforeWipe,
+
+        [Parameter()]
+        [System.Object]
+        $MoviesRating,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $DomainController,
+
+        [Parameter()]
+        [System.Object]
+        $AntiVirusStatus,
+
+        [Parameter()]
+        [System.String]
+        $WorkFoldersSyncUrl,
+
+        [Parameter()]
+        [System.Object]
+        $UserAccountControlStatus,
+
+        [Parameter()]
+        [System.Object]
+        $ForceEncryptedBackup,
+
+        [Parameter()]
+        [System.String]
+        $ExchangeActiveSyncHost,
+
+        [Parameter()]
+        [System.Object]
+        $AllowScreenshot,
+
+        [Parameter()]
+        [System.Object]
+        $PasswordComplexity,
+
+        [Parameter()]
+        [System.Object]
+        $TargetGroups,
+
+        [Parameter()]
+        [System.Object]
+        $AllowVoiceAssistant,
+
+        [Parameter()]
+        [System.Object]
+        $SystemSecurityTLS,
+
+        [Parameter()]
+        [System.Object]
+        $RegionRatings,
+
+        [Parameter()]
+        [System.Object]
+        $SmartScreenEnabled
+    )
+}
+function Remove-DeviceConditionalAccessRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
+function Set-DeviceConditionalAccessRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $CameraEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $EnableRemovableStorage,
+
+        [Parameter()]
+        [System.Object]
+        $AntiVirusSignatureStatus,
+
+        [Parameter()]
+        [System.Object]
+        $FirewallStatus,
+
+        [Parameter()]
+        [System.Object]
+        $AllowAppStore,
+
+        [Parameter()]
+        [System.Object]
+        $AllowAssistantWhileLocked,
+
+        [Parameter()]
+        [System.Object]
+        $AllowiCloudBackup,
+
+        [Parameter()]
+        [System.Object]
+        $AppsRating,
+
+        [Parameter()]
+        [System.Object]
+        $PasswordHistoryCount,
+
+        [Parameter()]
+        [System.Object]
+        $PasswordQuality,
+
+        [Parameter()]
+        [System.Object]
+        $PasswordMinComplexChars,
+
+        [Parameter()]
+        [System.Object]
+        $PhoneMemoryEncrypted,
+
+        [Parameter()]
+        [System.String]
+        $EmailAddress,
+
+        [Parameter()]
+        [System.Object]
+        $BluetoothEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $AllowConvenienceLogon,
+
+        [Parameter()]
+        [System.Object]
+        $MaxPasswordGracePeriod,
+
+        [Parameter()]
+        [System.Object]
+        $AllowiCloudDocSync,
+
+        [Parameter()]
+        [System.Object]
+        $ForceAppStorePassword,
+
+        [Parameter()]
+        [System.Object]
+        $TVShowsRating,
+
+        [Parameter()]
+        [System.Object]
+        $AllowJailbroken,
+
+        [Parameter()]
+        [System.Object]
+        $RequireEmailProfile,
+
+        [Parameter()]
+        [System.Object]
+        $AllowDiagnosticSubmission,
+
+        [Parameter()]
+        [System.Object]
+        $AutoUpdateStatus,
+
+        [Parameter()]
+        [System.String]
+        $AccountUserName,
+
+        [Parameter()]
+        [System.Object]
+        $WLANEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $AllowVoiceDialing,
+
+        [Parameter()]
+        [System.String]
+        $AccountName,
+
+        [Parameter()]
+        [System.Object]
+        $PasswordExpirationDays,
+
+        [Parameter()]
+        [System.Object]
+        $PasswordTimeout,
+
+        [Parameter()]
+        [System.Object]
+        $AllowiCloudPhotoSync,
+
+        [Parameter()]
+        [System.Object]
+        $AllowSimplePassword,
+
+        [Parameter()]
+        [System.Object]
+        $AllowPassbookWhileLocked,
+
+        [Parameter()]
+        [System.Object]
+        $PasswordMinimumLength,
+
+        [Parameter()]
+        [System.Object]
+        $AllowVideoConferencing,
+
+        [Parameter()]
+        [System.Object]
+        $PasswordRequired,
+
+        [Parameter()]
+        [System.Object]
+        $MaxPasswordAttemptsBeforeWipe,
+
+        [Parameter()]
+        [System.Object]
+        $MoviesRating,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $DomainController,
+
+        [Parameter()]
+        [System.Object]
+        $AntiVirusStatus,
+
+        [Parameter()]
+        [System.String]
+        $WorkFoldersSyncUrl,
+
+        [Parameter()]
+        [System.Object]
+        $UserAccountControlStatus,
+
+        [Parameter()]
+        [System.Object]
+        $ForceEncryptedBackup,
+
+        [Parameter()]
+        [System.String]
+        $ExchangeActiveSyncHost,
+
+        [Parameter()]
+        [System.Object]
+        $AllowScreenshot,
+
+        [Parameter()]
+        [System.Object]
+        $PasswordComplexity,
+
+        [Parameter()]
+        [System.Object]
+        $TargetGroups,
+
+        [Parameter()]
+        [System.Object]
+        $AllowVoiceAssistant,
+
+        [Parameter()]
+        [System.Object]
+        $SystemSecurityTLS,
+
+        [Parameter()]
+        [System.Object]
+        $RegionRatings,
+
+        [Parameter()]
+        [System.Object]
+        $SmartScreenEnabled
+    )
+}
+
 function Get-DeviceConfigurationPolicy
 {
     [CmdletBinding()]
@@ -3410,6 +3991,61 @@ function New-ApplicationAccessPolicy
         $AppId
     )
 }
+
+function New-ATPProtectionPolicyRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $SafeAttachmentPolicy,
+
+        [Parameter()]
+        [System.String]
+        $SafeLinksPolicy,
+
+        [Parameter()]
+        [System.String]
+        $Comments,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfRecipientDomainIs,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSentTo,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSentToMemberOf,
+
+        [Parameter()]
+        [System.UInt32]
+        $Priority,
+
+        [Parameter()]
+        [System.String[]]
+        $RecipientDomainIs,
+
+        [Parameter()]
+        [System.String[]]
+        $SentTo,
+
+        [Parameter()]
+        [System.String[]]
+        $SentToMemberOf
+    )
+}
+
 function New-AuthenticationPolicy
 {
     [CmdletBinding()]
@@ -7121,6 +7757,17 @@ function Remove-ApplicationAccessPolicy
         $Identity
     )
 }
+
+function Remove-ATPProtectionPolicyRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+
 function Remove-AuditConfigurationPolicy
 {
     [CmdletBinding()]
@@ -8370,6 +9017,53 @@ function Set-AtpPolicyForO365
         $Confirm
     )
 }
+
+function Set-ATPProtectionPolicyRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Comments,
+
+        [Parameter()]
+        [System.String]
+        $ExceptIfRecipientDomainIs,
+
+        [Parameter()]
+        [System.String]
+        $ExceptIfSentTo,
+
+        [Parameter()]
+        [System.String]
+        $ExceptIfSentToMemberOf,
+
+        [Parameter()]
+        [System.String]
+        $String,
+
+        [Parameter()]
+        [System.UInt32]
+        $Priority,
+
+        [Parameter()]
+        [System.String[]]
+        $RecipientDomainIs,
+
+        [Parameter()]
+        [System.String[]]
+        $SentTo,
+
+        [Parameter()]
+        [System.String[]]
+        $SentToMemberOf
+    )
+}
+
 function Set-AuthenticationPolicy
 {
     [CmdletBinding()]

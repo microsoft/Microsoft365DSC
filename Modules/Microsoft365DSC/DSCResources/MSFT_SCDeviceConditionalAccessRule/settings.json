@@ -1,0 +1,28 @@
+﻿{
+    "resourceName": "SCDeviceConditionalAccessRule",
+    "description": "Manages Purview Device Conditional Access rules.",
+    "roles": {
+        "read": [],
+        "update": []
+    },
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [],
+                "update": []
+            },
+            "application": {
+                "read": [
+                    {
+                        "name": "Group.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Group.Read.All"
+                    }
+                ]
+            }
+        }
+    }
+}

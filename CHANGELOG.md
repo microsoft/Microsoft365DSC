@@ -1,12 +1,13 @@
 # Change log for Microsoft365DSC
 
 # UNRELEASED
-
+* MdcSubscriptionDefenderPlan
+  * Initial release
 * AADPasswordRuleSettings
   * Initial release
 * ADOOrganizationOwner
   * Initial release.
-* ADOOrganizationOwner
+* ADOPermissionGroup
   * Initial release.
 * ADOSecurityPolicy
   * Initial release.
@@ -14,13 +15,13 @@
   * Initial Release.
 * EXOArcConfig
   * Initial Release.
+* EXOEmailTenantSettings
+  * Initial Release.
 * EXOFocusedInbox
   * Initial Release.
 * EXOMailboxCalendarConfiguration
   * Initial Release.
 * EXOMailboxIRMAccess
-  * Initial Release.
-* EXOManagementScope
   * Initial Release.
 * EXOManagementScope
   * Initial Release.
@@ -47,6 +48,8 @@
     FIXES [#5055](https://github.com/microsoft/Microsoft365DSC/issues/5055)
 * M365DSCResourceGenerator
   * Update Intune resource generation for the Settings Catalog.
+* SCDeviceConditionalAccessRule
+  * Initial release.
 * SCInsiderRiskEntityList
   * Initial release.
 * SCRoleGroup
@@ -58,6 +61,7 @@
 * SPOAccessControlSettings
   * Added support for property EnableRestrictedAccessControl.
 * DEPENDENCIES
+  * Updated DSCParser to version 2.0.0.10.
   * Updated Microsoft.Graph to version 2.23.0.
   * Added dependencies on Az.Accounts, Az.Resources and Az.SecurityInsights
   * Updated DSCParser to version 2.0.0.9.

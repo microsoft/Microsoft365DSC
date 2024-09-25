@@ -102,6 +102,8 @@
                     EnableUnusualCharactersSafetyTips     = $null
                     TargetedUserActionRecipients          = $null
                     Ensure                                = "Present"
+                    DmarcQuarantineAction                 = "Quarantine"
+                    DmarcRejectAction                     = "Reject"
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
@@ -128,6 +130,20 @@
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
+                }
+                EXOATPProtectionPolicyRule 'EXOATPProtectionPolicyRule-Strict Preset Security Policy'
+                {
+                    Comments                = "Built-in Strict Preset Security Policy";
+                    Enabled                 = $False;
+                    Identity                = "Strict Preset Security Policy";
+                    Name                    = "Strict Preset Security Policy";
+                    Priority                = 0;
+                    SafeAttachmentPolicy    = "Strict Preset Security Policy1725468967835";
+                    SafeLinksPolicy         = "Strict Preset Security Policy1725468969412";
+                    Ensure                  = "Present"
+                    ApplicationId           = $ApplicationId
+                    TenantId                = $TenantId
+                    CertificateThumbprint   = $CertificateThumbprint
                 }
                 EXOAuthenticationPolicy 'ConfigureAuthenticationPolicy'
                 {
