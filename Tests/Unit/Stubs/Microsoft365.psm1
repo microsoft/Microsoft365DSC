@@ -18670,7 +18670,7 @@ function New-MgBetaDeviceManagementAssignmentFilter
         $HttpPipelineAppend
     )
 }
-function New-MgBetaDeviceManagementConfigurationPolicy
+function New-MgBetaDeviceManagementConfigurationPolicy #TODOK: What is the use of this file? Why almost all Intune cmdlets are already here?
 {
     [CmdletBinding()]
     param(
