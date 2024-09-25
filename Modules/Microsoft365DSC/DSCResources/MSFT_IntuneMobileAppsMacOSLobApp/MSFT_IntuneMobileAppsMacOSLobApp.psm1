@@ -14,14 +14,6 @@ function Get-TargetResource
         $BodyParameter,
 
         [Parameter()]
-        [System.String]
-        $ResponseHeadersVariable,
-
-        [Parameter()]
-        [System.Collections.Hashtable]
-        $AdditionalProperties,
-
-        [Parameter()]
         [PSObject[]]
         $Assignments,
 
@@ -134,12 +126,22 @@ function Get-TargetResource
         }
         else
         {
-            $instance = Get-IntuneMobileAppsMacOSLobApp -MobileAppId $Id -ErrorAction Stop
+            $instance = Get-MgDeviceAppManagementMobileApp -MobileAppId $Id -ErrorAction Stop
         }
+
         if ($null -eq $instance)
         {
+            Write-Verbose -Message "No Mobile app with Id {$Id} was found. Search with DisplayName."
+            $policy = Get-MgBetaDeviceAppManagementiOSManagedAppProtection -Filter "displayName eq '$DisplayName'" -ErrorAction SilentlyContinue
+        }
+
+        if ($null -eq $policy)
+        {
+            Write-Verbose -Message "No Mobile app with {$DisplayName} was found."
             return $nullResult
         }
+
+        Write-Verbose -Message "Found Mobile app with {$DisplayName}."
 
         $results = @{
             Id                    = $instance.Id
@@ -196,14 +198,6 @@ function Set-TargetResource
         [Parameter()]
         [PSObject]
         $BodyParameter,
-
-        [Parameter()]
-        [System.String]
-        $ResponseHeadersVariable,
-
-        [Parameter()]
-        [System.Collections.Hashtable]
-        $AdditionalProperties,
 
         [Parameter()]
         [PSObject[]]
@@ -312,17 +306,17 @@ function Set-TargetResource
     # CREATE
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        New-IntuneMobileAppsMacOSLobApp @SetParameters
+        New-MgDeviceAppManagementMobileApp @SetParameters
     }
     # UPDATE
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        Update-IntuneMobileAppsMacOSLobApp @SetParameters
+        Update-MgDeviceAppManagementMobileApp @SetParameters
     }
     # REMOVE
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Remove-IntuneMobileAppsMacOSLobApp @SetParameters
+        Remove-MgDeviceAppManagementMobileApp @SetParameters
     }
 }
 
@@ -340,14 +334,6 @@ function Test-TargetResource
         [Parameter()]
         [PSObject]
         $BodyParameter,
-
-        [Parameter()]
-        [System.String]
-        $ResponseHeadersVariable,
-
-        [Parameter()]
-        [System.Collections.Hashtable]
-        $AdditionalProperties,
 
         [Parameter()]
         [PSObject[]]
@@ -518,7 +504,7 @@ function Export-TargetResource
     try
     {
         $Script:ExportMode = $true
-        [array] $Script:exportedInstances = Get-IntuneMobileAppsMacOSLobApp -ErrorAction Stop
+        [array] $Script:exportedInstances = Get-MgDeviceAppManagementMobileApp -ErrorAction Stop
 
         $i = 1
         $dscContent = ''
