@@ -1,7 +1,8 @@
 # Change log for Microsoft365DSC
 
 # UNRELEASED
-
+* MdcSubscriptionDefenderPlan
+  * Initial release
 * AADPasswordRuleSettings
   * Initial release
 * ADOOrganizationOwner
