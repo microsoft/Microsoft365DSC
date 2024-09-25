@@ -39,6 +39,8 @@
 * IntuneDeviceConfigurationSharedMultiDevicePolicyWindows10
   * Add missing `AccessTokens` parameter to `Export-TargetResource`
     FIXES [#5034](https://github.com/microsoft/Microsoft365DSC/issues/5034)
+* SCDeviceConditionalAccessRule
+  * Initial release.
 * SCInsiderRiskEntityList
   * Initial release.
 * SCRoleGroup
