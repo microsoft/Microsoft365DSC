@@ -1,0 +1,28 @@
+﻿{
+    "resourceName": "SCDeviceConfigurationRule",
+    "description": "This resource configures a Device Configuration Rule in Purview.",
+    "roles": {
+        "read": [],
+        "update": []
+    },
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [],
+                "update": []
+            },
+            "application": {
+                "read": [
+                    {
+                        "name": "Group.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Group.Read.All"
+                    }
+                ]
+            }
+        }
+    }
+}
