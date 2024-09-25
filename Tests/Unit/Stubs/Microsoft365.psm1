@@ -1582,6 +1582,463 @@ function Get-DeviceConditionalAccessPolicy
         $Identity
     )
 }
+function Get-DeviceConditionalAccessRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $CompareToWorkload,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $DomainController
+    )
+}
+function New-DeviceConditionalAccessRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $CameraEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $EnableRemovableStorage,
+
+        [Parameter()]
+        [System.Object]
+        $AntiVirusSignatureStatus,
+
+        [Parameter()]
+        [System.Object]
+        $FirewallStatus,
+
+        [Parameter()]
+        [System.Object]
+        $AllowAppStore,
+
+        [Parameter()]
+        [System.Object]
+        $AllowAssistantWhileLocked,
+
+        [Parameter()]
+        [System.Object]
+        $AllowiCloudBackup,
+
+        [Parameter()]
+        [System.Object]
+        $AppsRating,
+
+        [Parameter()]
+        [System.Object]
+        $PasswordHistoryCount,
+
+        [Parameter()]
+        [System.Object]
+        $PasswordQuality,
+
+        [Parameter()]
+        [System.Object]
+        $PasswordMinComplexChars,
+
+        [Parameter()]
+        [System.Object]
+        $PhoneMemoryEncrypted,
+
+        [Parameter()]
+        [System.String]
+        $EmailAddress,
+
+        [Parameter()]
+        [System.Object]
+        $BluetoothEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $AllowConvenienceLogon,
+
+        [Parameter()]
+        [System.Object]
+        $MaxPasswordGracePeriod,
+
+        [Parameter()]
+        [System.Object]
+        $AllowiCloudDocSync,
+
+        [Parameter()]
+        [System.Object]
+        $ForceAppStorePassword,
+
+        [Parameter()]
+        [System.Object]
+        $Policy,
+
+        [Parameter()]
+        [System.Object]
+        $TVShowsRating,
+
+        [Parameter()]
+        [System.Object]
+        $AllowJailbroken,
+
+        [Parameter()]
+        [System.Object]
+        $RequireEmailProfile,
+
+        [Parameter()]
+        [System.Object]
+        $AllowDiagnosticSubmission,
+
+        [Parameter()]
+        [System.Object]
+        $AutoUpdateStatus,
+
+        [Parameter()]
+        [System.String]
+        $AccountUserName,
+
+        [Parameter()]
+        [System.Object]
+        $WLANEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $AllowVoiceDialing,
+
+        [Parameter()]
+        [System.String]
+        $AccountName,
+
+        [Parameter()]
+        [System.Object]
+        $PasswordExpirationDays,
+
+        [Parameter()]
+        [System.Object]
+        $PasswordTimeout,
+
+        [Parameter()]
+        [System.Object]
+        $AllowiCloudPhotoSync,
+
+        [Parameter()]
+        [System.Object]
+        $AllowSimplePassword,
+
+        [Parameter()]
+        [System.Object]
+        $AllowPassbookWhileLocked,
+
+        [Parameter()]
+        [System.Object]
+        $PasswordMinimumLength,
+
+        [Parameter()]
+        [System.Object]
+        $AllowVideoConferencing,
+
+        [Parameter()]
+        [System.Object]
+        $PasswordRequired,
+
+        [Parameter()]
+        [System.Object]
+        $MaxPasswordAttemptsBeforeWipe,
+
+        [Parameter()]
+        [System.Object]
+        $MoviesRating,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $DomainController,
+
+        [Parameter()]
+        [System.Object]
+        $AntiVirusStatus,
+
+        [Parameter()]
+        [System.String]
+        $WorkFoldersSyncUrl,
+
+        [Parameter()]
+        [System.Object]
+        $UserAccountControlStatus,
+
+        [Parameter()]
+        [System.Object]
+        $ForceEncryptedBackup,
+
+        [Parameter()]
+        [System.String]
+        $ExchangeActiveSyncHost,
+
+        [Parameter()]
+        [System.Object]
+        $AllowScreenshot,
+
+        [Parameter()]
+        [System.Object]
+        $PasswordComplexity,
+
+        [Parameter()]
+        [System.Object]
+        $TargetGroups,
+
+        [Parameter()]
+        [System.Object]
+        $AllowVoiceAssistant,
+
+        [Parameter()]
+        [System.Object]
+        $SystemSecurityTLS,
+
+        [Parameter()]
+        [System.Object]
+        $RegionRatings,
+
+        [Parameter()]
+        [System.Object]
+        $SmartScreenEnabled
+    )
+}
+function Remove-DeviceConditionalAccessRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
+function Set-DeviceConditionalAccessRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $CameraEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $EnableRemovableStorage,
+
+        [Parameter()]
+        [System.Object]
+        $AntiVirusSignatureStatus,
+
+        [Parameter()]
+        [System.Object]
+        $FirewallStatus,
+
+        [Parameter()]
+        [System.Object]
+        $AllowAppStore,
+
+        [Parameter()]
+        [System.Object]
+        $AllowAssistantWhileLocked,
+
+        [Parameter()]
+        [System.Object]
+        $AllowiCloudBackup,
+
+        [Parameter()]
+        [System.Object]
+        $AppsRating,
+
+        [Parameter()]
+        [System.Object]
+        $PasswordHistoryCount,
+
+        [Parameter()]
+        [System.Object]
+        $PasswordQuality,
+
+        [Parameter()]
+        [System.Object]
+        $PasswordMinComplexChars,
+
+        [Parameter()]
+        [System.Object]
+        $PhoneMemoryEncrypted,
+
+        [Parameter()]
+        [System.String]
+        $EmailAddress,
+
+        [Parameter()]
+        [System.Object]
+        $BluetoothEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $AllowConvenienceLogon,
+
+        [Parameter()]
+        [System.Object]
+        $MaxPasswordGracePeriod,
+
+        [Parameter()]
+        [System.Object]
+        $AllowiCloudDocSync,
+
+        [Parameter()]
+        [System.Object]
+        $ForceAppStorePassword,
+
+        [Parameter()]
+        [System.Object]
+        $TVShowsRating,
+
+        [Parameter()]
+        [System.Object]
+        $AllowJailbroken,
+
+        [Parameter()]
+        [System.Object]
+        $RequireEmailProfile,
+
+        [Parameter()]
+        [System.Object]
+        $AllowDiagnosticSubmission,
+
+        [Parameter()]
+        [System.Object]
+        $AutoUpdateStatus,
+
+        [Parameter()]
+        [System.String]
+        $AccountUserName,
+
+        [Parameter()]
+        [System.Object]
+        $WLANEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $AllowVoiceDialing,
+
+        [Parameter()]
+        [System.String]
+        $AccountName,
+
+        [Parameter()]
+        [System.Object]
+        $PasswordExpirationDays,
+
+        [Parameter()]
+        [System.Object]
+        $PasswordTimeout,
+
+        [Parameter()]
+        [System.Object]
+        $AllowiCloudPhotoSync,
+
+        [Parameter()]
+        [System.Object]
+        $AllowSimplePassword,
+
+        [Parameter()]
+        [System.Object]
+        $AllowPassbookWhileLocked,
+
+        [Parameter()]
+        [System.Object]
+        $PasswordMinimumLength,
+
+        [Parameter()]
+        [System.Object]
+        $AllowVideoConferencing,
+
+        [Parameter()]
+        [System.Object]
+        $PasswordRequired,
+
+        [Parameter()]
+        [System.Object]
+        $MaxPasswordAttemptsBeforeWipe,
+
+        [Parameter()]
+        [System.Object]
+        $MoviesRating,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $DomainController,
+
+        [Parameter()]
+        [System.Object]
+        $AntiVirusStatus,
+
+        [Parameter()]
+        [System.String]
+        $WorkFoldersSyncUrl,
+
+        [Parameter()]
+        [System.Object]
+        $UserAccountControlStatus,
+
+        [Parameter()]
+        [System.Object]
+        $ForceEncryptedBackup,
+
+        [Parameter()]
+        [System.String]
+        $ExchangeActiveSyncHost,
+
+        [Parameter()]
+        [System.Object]
+        $AllowScreenshot,
+
+        [Parameter()]
+        [System.Object]
+        $PasswordComplexity,
+
+        [Parameter()]
+        [System.Object]
+        $TargetGroups,
+
+        [Parameter()]
+        [System.Object]
+        $AllowVoiceAssistant,
+
+        [Parameter()]
+        [System.Object]
+        $SystemSecurityTLS,
+
+        [Parameter()]
+        [System.Object]
+        $RegionRatings,
+
+        [Parameter()]
+        [System.Object]
+        $SmartScreenEnabled
+    )
+}
+
 function Get-DeviceConfigurationPolicy
 {
     [CmdletBinding()]
