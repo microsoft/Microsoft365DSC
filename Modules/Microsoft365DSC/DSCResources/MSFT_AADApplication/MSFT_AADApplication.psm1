@@ -186,6 +186,7 @@ function Get-TargetResource
 
 
             $AADBetaApp= Get-MgBetaApplication -Property "id,displayName,appId,authenticationBehaviors" -ApplicationId $ObjectID -ErrorAction SilentlyContinue
+            $AADAppKeyCredentials = Get-MgApplication -Property "keyCredentials" -ApplicationId $ObjectID -ErrorAction SilentlyContinue
 
             $complexAuthenticationBehaviors = @{}
             if ($null -ne $AADBetaApp.authenticationBehaviors.blockAzureADGraphAccess)
@@ -225,16 +226,17 @@ function Get-TargetResource
 
 
             $complexKeyCredentials = @()
-            foreach ($currentkeyCredentials in $AADApp.keyCredentials)
+            foreach ($currentkeyCredentials in $AADAppKeyCredentials.keyCredentials)
             {
                 $mykeyCredentials = @{}
-                $mykeyCredentials.Add('CustomKeyIdentifier', $currentkeyCredentials.customKeyIdentifier)
+                $mykeyCredentials.Add('CustomKeyIdentifier', [convert]::ToBase64String($currentkeyCredentials.customKeyIdentifier))
                 $mykeyCredentials.Add('DisplayName', $currentkeyCredentials.displayName)
                 if ($null -ne $currentkeyCredentials.endDateTime)
                 {
                     $mykeyCredentials.Add('EndDateTime', ([DateTimeOffset]$currentkeyCredentials.endDateTime).ToString('o'))
                 }
                 $mykeyCredentials.Add('KeyId', $currentkeyCredentials.keyId)
+                $mykeyCredentials.Add('Key', [convert]::ToBase64String($currentkeyCredentials.key))
                 if ($null -ne $currentkeyCredentials.startDateTime)
                 {
                     $mykeyCredentials.Add('StartDateTime', ([DateTimeOffset]$currentkeyCredentials.startDateTime).ToString('o'))
@@ -554,9 +556,17 @@ function Set-TargetResource
     # App should exist but it doesn't
     $needToUpdatePermissions = $false
     $needToUpdateAuthenticationBehaviors = $false
+    $needToUpdateKeyCredentials = $false
     $currentParameters.Remove('AppId') | Out-Null
     $currentParameters.Remove('Permissions') | Out-Null
     $currentParameters.Remove('AuthenticationBehaviors') | Out-Null
+    $currentParameters.Remove('KeyCredentials') | Out-Null
+    $currentParameters.Remove('PasswordCredentials') | Out-Null
+    if ($PasswordCredentials)
+    {
+        Write-Warning -Message "PasswordCredentials is a readonly property and cannot be configured."
+           
+    }
 
     if ($currentParameters.AvailableToOtherTenants)
     {
@@ -660,6 +670,7 @@ function Set-TargetResource
         Write-Verbose -Message "Azure AD Application {$DisplayName} was successfully created"
         $needToUpdatePermissions = $true
         $needToUpdateAuthenticationBehaviors = $true
+        $needToUpdateKeyCredentials = $true
 
         $tries = 1
         $appEntity = $null
@@ -687,6 +698,7 @@ function Set-TargetResource
         $currentAADApp.Add('ID', $AppIdValue)
         $needToUpdatePermissions = $true
         $needToUpdateAuthenticationBehaviors = $true
+        $needToUpdateKeyCredentials = $true
     }
     # App exists but should not
     elseif ($Ensure -eq 'Absent' -and $currentAADApp.Ensure -eq 'Present')
@@ -852,7 +864,42 @@ function Set-TargetResource
             requireClientServicePrincipal = $AuthenticationBehaviors.requireClientServicePrincipal
         }
 
-        Update-MgBetaApplication -ApplicationId ($currentAADApp.Id) -AuthenticationBehaviors $IAuthenticationBehaviors | Out-Null
+        Update-MgBetaApplication -ApplicationId $currentAADApp.Id -AuthenticationBehaviors $IAuthenticationBehaviors | Out-Null
+    }
+
+    if($needToUpdateKeyCredentials -and $KeyCredentials)
+    {
+        Write-Verbose -Message "Updating for Azure AD Application {$($currentAADApp.DisplayName)} with KeyCredentials:`r`n$($KeyCredentials| Out-String)"
+        Write-Verbose -Message "Current App Id: $($currentAADApp.AppId)"
+
+        $IKeyCredentials = @()
+        
+        foreach ($KeyCredential in $KeyCredentials)
+        {
+            $IKeyCredential = @{
+                DisplayName = $KeyCredential.displayName
+                EndDateTime = $KeyCredential.endDateTime
+                KeyId = $KeyCredential.keyId
+                Key = [System.Text.Encoding]::UTF8.GetBytes($KeyCredential.key)
+                StartDateTime = $KeyCredential.startDateTime
+                Type = $KeyCredential.type
+                Usage = $KeyCredential.usage
+            }
+
+            $CustomKeyIdentifier = $null
+            if($KeyCredential.CustomKeyIdentifier -ne $null) 
+            {
+                $CustomKeyIdentifier = [System.Text.Encoding]::UTF8.GetBytes($KeyCredential.customKeyIdentifier)
+                $IKeyCredential.Add('CustomKeyIdentifier', $CustomKeyIdentifier)
+            }
+
+            Write-Verbose -Message "Updating for Azure AD Application {$($currentAADApp.DisplayName)} with KeyCredentials:`r`n$($IKeyCredential | Out-String)"
+            Write-Verbose -Message "Current App Id: $($currentAADApp.AppId)"
+
+            $IKeyCredentials += $IKeyCredential
+        }
+
+        Update-MgApplication -ApplicationId $currentAADApp.Id -KeyCredentials $IKeyCredentials | Out-Null
     }
 }
 
@@ -1043,6 +1090,7 @@ function Test-TargetResource
  
             if (-not $testResult)
             {
+                Write-Verbose "TestResult returned False for $source"
                 $testTargetResource = $false
             }
             else { 

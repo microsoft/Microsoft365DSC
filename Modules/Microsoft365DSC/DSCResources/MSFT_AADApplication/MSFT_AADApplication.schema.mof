@@ -35,6 +35,7 @@ class MSFT_MicrosoftGraphKeyCredential
     [Write, Description("Friendly name for the key. Optional.")] String DisplayName;
     [Write, Description("The date and time at which the credential expires. The DateTimeOffset type represents date and time information using ISO 8601 format and is always in UTC time. For example, midnight UTC on Jan 1, 2014 is 2014-01-01T00:00:00Z.")] String EndDateTime;
     [Write, Description("The unique identifier (GUID) for the key.")] String KeyId;
+    [Write, Description("The certificate's raw data in byte array converted to Base64 string.")] String Key;
     [Write, Description("The date and time at which the credential becomes valid.The Timestamp type represents date and time information using ISO 8601 format and is always in UTC time. For example, midnight UTC on Jan 1, 2014 is 2014-01-01T00:00:00Z.")] String StartDateTime;
     [Write, Description("The type of key credential for example, Symmetric, AsymmetricX509Cert.")] String Type;
     [Write, Description("A string that describes the purpose for which the key can be used for example, Verify.")] String Usage;
