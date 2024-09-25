@@ -1,7 +1,8 @@
 # Change log for Microsoft365DSC
 
 # UNRELEASED
-
+* MdcSubscriptionDefenderPlan
+  * Initial release
 * AADPasswordRuleSettings
   * Initial release
 * ADOOrganizationOwner
@@ -42,6 +43,8 @@
   * Fixed issue with incorrectly applying HeaderMatchesPatterns, even when
     parameter wasn't specified.
     FIXES [#4641](https://github.com/microsoft/Microsoft365DSC/issues/4641)
+* SCDeviceConditionalAccessRule
+  * Initial release.
 * SCInsiderRiskEntityList
   * Initial release.
 * SCRoleGroup
