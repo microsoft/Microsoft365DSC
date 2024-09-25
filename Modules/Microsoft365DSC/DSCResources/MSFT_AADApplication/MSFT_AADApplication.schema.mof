@@ -8,6 +8,19 @@ class MSFT_AADApplicationPermission
 };
 
 [ClassVersion("1.0.0")]
+class MSFT_MicrosoftGraphPreAuthorizedApplication
+{
+    [Write, Description("The unique identifier for the client application.")] String AppId;
+    [Write, Description("The unique identifier for the scopes the client application is granted.")] String PermissionIds[];
+};
+
+[ClassVersion("1.0.0")]
+class MSFT_MicrosoftGraphApiApplication
+{
+    [Write, Description("Lists the client applications that are preauthorized with the specified delegated permissions to access this application's APIs. Users aren't required to consent to any preauthorized application (for the permissions specified). However, any other permissions not listed in preAuthorizedApplications (requested through incremental consent for example) will require user consent."), EmbeddedInstance("MSFT_MicrosoftGraphPreAuthorizedApplication")] String PreAuthorizedApplications[];
+};
+
+[ClassVersion("1.0.0")]
 class MSFT_MicrosoftGraphAuthenticationBehaviors
 {
     [Write, Description("If false, allows the app to have extended access to Azure AD Graph until June 30, 2025 when Azure AD Graph is fully retired. For more information on Azure AD retirement updates, see June 2024 update on Azure AD Graph API retirement.")] Boolean BlockAzureADGraphAccess;
@@ -62,6 +75,7 @@ class MSFT_AADApplication : OMI_BaseResource
     [Write, Description("User-defined URI(s) that uniquely identify a Web application within its Azure AD tenant, or within a verified custom domain.")] string IdentifierUris[];
     [Write, Description("Specifies the fallback application type as public client, such as an installed application running on a mobile device. The default value is false, which means the fallback application type is confidential client such as web app. There are certain scenarios where Microsoft Entra ID cannot determine the client application type (for example, ROPC flow where it is configured without specifying a redirect URI). In those cases, Microsoft Entra ID will interpret the application type based on the value of this property.")] Boolean IsFallbackPublicClient;
     [Write, Description("Client applications that are tied to this resource application.")] string KnownClientApplications[];
+    [Write, Description("Specifies settings for an application that implements a web API."), EmbeddedInstance("MSFT_MicrosoftGraphapiApplication")] String Api;
     [Write, Description("The collection of breaking change behaviors related to token issuance that are configured for the application. Authentication behaviors are unset by default (null) and must be explicitly enabled or disabled. Nullable. Returned only on $select.  For more information about authentication behaviors, see Manage application authenticationBehaviors to avoid unverified use of email claims for user identification or authorization."), EmbeddedInstance("MSFT_MicrosoftGraphauthenticationBehaviors")] String AuthenticationBehaviors;
     [Write, Description("The collection of password credentials associated with the application. Not nullable."), EmbeddedInstance("MSFT_MicrosoftGraphpasswordCredential")] String PasswordCredentials[];
     [Write, Description("The collection of key credentials associated with the application. Not nullable. Supports $filter (eq, not, ge, le)."), EmbeddedInstance("MSFT_MicrosoftGraphkeyCredential")] String KeyCredentials[];

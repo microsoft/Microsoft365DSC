@@ -62,6 +62,10 @@ function Get-TargetResource
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance]
+        $Api,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $AuthenticationBehaviors,
 
         [Parameter()]
@@ -201,6 +205,24 @@ function Get-TargetResource
                 $complexAuthenticationBehaviors = $null
             }
 
+            $complexApi = @{}
+            $complexPreAuthorizedApplications = @()
+            foreach ($currentPreAuthorizedApplications in $AADApp.api.preAuthorizedApplications)
+            {
+                $myPreAuthorizedApplications = @{}
+                $myPreAuthorizedApplications.Add('AppId', $currentPreAuthorizedApplications.appId)
+                $myPreAuthorizedApplications.Add('PermissionIds', $currentPreAuthorizedApplications.permissionIds)
+                if ($myPreAuthorizedApplications.values.Where({$null -ne $_}).Count -gt 0)
+                {
+                    $complexPreAuthorizedApplications += $myPreAuthorizedApplications
+                }
+            }
+            $complexApi.Add('PreAuthorizedApplications',$complexPreAuthorizedApplications)
+            if ($complexApi.values.Where({$null -ne $_}).Count -eq 0)
+            {
+                $complexApi = $null
+            }
+
 
             $complexKeyCredentials = @()
             foreach ($currentkeyCredentials in $AADApp.keyCredentials)
@@ -311,6 +333,7 @@ function Get-TargetResource
                 Owners                  = $OwnersValues
                 ObjectId                = $AADApp.Id
                 AppId                   = $AADApp.AppId
+                Api                     = $complexApi
                 AuthenticationBehaviors = $complexAuthenticationBehaviors
                 KeyCredentials          = $complexKeyCredentials
                 PasswordCredentials     = $complexPasswordCredentials
@@ -408,6 +431,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String[]]
         $Owners,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $Api,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance]
@@ -893,6 +920,10 @@ function Test-TargetResource
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance]
+        $Api,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $AuthenticationBehaviors,
 
         [Parameter()]
@@ -1139,6 +1170,35 @@ function Export-TargetResource
                         $Results.Permissions = Get-M365DSCAzureADAppPermissionsAsString $Results.Permissions
                     }
 
+                    if ($null -ne $Results.Api)
+                    {
+                        $complexMapping = @(
+                            @{
+                                Name = 'Api'
+                                CimInstanceName = 'MicrosoftGraphApiApplication'
+                                IsRequired = $False
+                            }
+                            @{
+                                Name = 'PreAuthorizedApplications'
+                                CimInstanceName = 'MicrosoftGraphPreAuthorizedApplication'
+                                IsRequired = $False
+                            }
+                        )
+                        $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                        -ComplexObject $Results.Api `
+                        -CIMInstanceName 'MicrosoftGraphapiApplication' `
+                        -ComplexTypeMapping $complexMapping
+
+                        if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                        {
+                            $Results.Api = $complexTypeStringResult
+                        }
+                        else
+                        {
+                            $Results.Remove('Api') | Out-Null
+                        }
+                    }
+
                     if ($null -ne $Results.AuthenticationBehaviors)
                     {
                         $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
@@ -1204,6 +1264,11 @@ function Export-TargetResource
                         -ModulePath $PSScriptRoot `
                         -Results $Results `
                         -Credential $Credential
+
+                    if ($Results.Api)
+                    {
+                        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Api" -IsCIMArray:$False
+                    }
 
                     if ($null -ne $Results.Permissions)
                     {
