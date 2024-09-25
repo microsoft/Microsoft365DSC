@@ -4724,6 +4724,11 @@
                            },
                            {
                                "CIMType":  "String[]",
+                               "Name":  "Owners",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
                                "Name":  "ReplyUrls",
                                "Option":  "Write"
                            },
