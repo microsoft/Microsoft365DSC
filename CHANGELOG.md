@@ -41,6 +41,8 @@
     FIXES [#5034](https://github.com/microsoft/Microsoft365DSC/issues/5034)
 * SCDeviceConditionalAccessRule
   * Initial release.
+* SCDeviceConfigurationRule
+  * Initial release.
 * SCInsiderRiskEntityList
   * Initial release.
 * SCRoleGroup
