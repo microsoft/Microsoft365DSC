@@ -51,7 +51,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            Mock -CommandName Get-DeviceConditionalAccessPolicy -MockWith {
+            Mock -CommandName Get-DeviceCOnfigurationPolicy -MockWith {
                 return @{
                     Name = 'MyPolicy'
                     Id   = '12345-12345-12345-12345-12345'

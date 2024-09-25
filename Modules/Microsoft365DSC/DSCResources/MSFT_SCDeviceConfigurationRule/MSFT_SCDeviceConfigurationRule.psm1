@@ -671,7 +671,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing device configuration rule {$Name}"
-        Remove-DeviceConfigurationRuleDeviceConditionalAccessRule -Identity $currentInstance.Name -Confirm:$false
+        Remove-DeviceConfigurationRule -Identity $currentInstance.Name -Confirm:$false
     }
 }
 
