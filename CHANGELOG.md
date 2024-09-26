@@ -1,8 +1,9 @@
 # Change log for Microsoft365DSC
 
 # UNRELEASED
-* MdcSubscriptionDefenderPlan
-  * Initial release
+
+* AADEntitlementManagementSettings
+  * Initial release.
 * AADPasswordRuleSettings
   * Initial release
 * ADOOrganizationOwner
@@ -43,7 +44,12 @@
   * Update export logic to target more specific policy types.
   * Prevent thrown exception to be caught by exception handler.
     FIXES [#5088](https://github.com/microsoft/Microsoft365DSC/issues/5088)
+* M365DSCUtil
+  * Fixes an issue where the O365Group workload was not properly detected.
+    FIXES [#5095](https://github.com/microsoft/Microsoft365DSC/issues/5095)
 * SCDeviceConditionalAccessRule
+  * Initial release.
+* SCDeviceConfigurationRule
   * Initial release.
 * SCInsiderRiskEntityList
   * Initial release.
