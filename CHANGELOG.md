@@ -1,8 +1,9 @@
 # Change log for Microsoft365DSC
 
 # UNRELEASED
-* MdcSubscriptionDefenderPlan
-  * Initial release
+
+* AADEntitlementManagementSettings
+  * Initial release.
 * AADPasswordRuleSettings
   * Initial release
 * ADOOrganizationOwner
@@ -48,7 +49,12 @@
     FIXES [#5055](https://github.com/microsoft/Microsoft365DSC/issues/5055)
 * M365DSCResourceGenerator
   * Update Intune resource generation for the Settings Catalog.
+* M365DSCUtil
+  * Fixes an issue where the O365Group workload was not properly detected.
+    FIXES [#5095](https://github.com/microsoft/Microsoft365DSC/issues/5095)
 * SCDeviceConditionalAccessRule
+  * Initial release.
+* SCDeviceConfigurationRule
   * Initial release.
 * SCInsiderRiskEntityList
   * Initial release.
