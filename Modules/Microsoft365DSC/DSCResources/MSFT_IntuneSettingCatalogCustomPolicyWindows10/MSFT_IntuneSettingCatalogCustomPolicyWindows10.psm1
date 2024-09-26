@@ -107,24 +107,25 @@ function Get-TargetResource
         {
             Write-Verbose -Message "Could not find an Intune Setting Catalog Custom Policy for Windows10 with Id {$Id}"
 
-            if (-Not [string]::IsNullOrEmpty($Name))
+            if (-not [string]::IsNullOrEmpty($Name))
             {
                 $getValue = Get-MgBetaDeviceManagementConfigurationPolicy `
-                    -Filter "Name eq '$Name' and Platforms eq 'windows10'" `
-                    -ErrorAction SilentlyContinue | Where-Object `
-                    -FilterScript {[String]::IsNullOrWhiteSpace($_.TemplateReference.TemplateId)}
-                if ($getValue.count -gt 1)
+                    -Filter "Name eq '$Name' and Platforms eq 'windows10' and Technologies eq 'mdm' and TemplateReference/TemplateFamily eq 'none'" `
+                    -ErrorAction SilentlyContinue
+
+                if ($getValue.Count -gt 1)
                 {
                     throw "Error: The displayName {$Name} is not unique in the tenant`r`nEnsure the display Name is unique for this type of resource."
                 }
-                if (-not [string]::IsNullOrEmpty($getValue.id))
+
+                if (-not [string]::IsNullOrEmpty($getValue.Id))
                 {
-                    $getValue = Get-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $getValue.id -ExpandProperty 'settings' -ErrorAction SilentlyContinue
+                    $getValue = Get-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $getValue.Id -ExpandProperty 'settings' -ErrorAction SilentlyContinue
                 }
             }
         }
         #endregion
-        if ([string]::IsNullOrEmpty($getValue.id))
+        if ([string]::IsNullOrEmpty($getValue.Id))
         {
             Write-Verbose -Message "Could not find an Intune Setting Catalog Custom Policy for Windows10 with Name {$Name}"
             return $nullResult
@@ -201,6 +202,11 @@ function Get-TargetResource
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `
             -Credential $Credential
+
+        if ($_.Exception.Message -like "Error: The displayName*")
+        {
+            throw $_
+        }
 
         return $nullResult
     }
@@ -304,17 +310,17 @@ function Set-TargetResource
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        Write-Verbose -Message "Creating an Intune Setting Catalog Custom Policy for Windows10 with Name {$DisplayName}"
+        Write-Verbose -Message "Creating an Intune Setting Catalog Custom Policy for Windows10 with Name {$Name}"
         $BoundParameters.Remove('Assignments') | Out-Null
 
-        $CreateParameters = ([Hashtable]$BoundParameters).clone()
+        $CreateParameters = ([Hashtable]$BoundParameters).Clone()
         $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters -KeyMapping $keyToRename
         $CreateParameters.Remove('Id') | Out-Null
 
-        $keys = (([Hashtable]$CreateParameters).clone()).Keys
+        $keys = (([Hashtable]$CreateParameters).Clone()).Keys
         foreach ($key in $keys)
         {
-            if ($null -ne $CreateParameters.$key -and $CreateParameters.$key.getType().Name -like '*cimInstance*')
+            if ($null -ne $CreateParameters.$key -and $CreateParameters.$key.GetType().Name -like '*cimInstance*')
             {
                 $CreateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters.$key
             }
@@ -324,9 +330,9 @@ function Set-TargetResource
         $policy = New-MgBetaDeviceManagementConfigurationPolicy -BodyParameter $CreateParameters
         $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
 
-        if ($policy.id)
+        if ($policy.Id)
         {
-            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $policy.id `
+            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $policy.Id `
                 -Targets $assignmentsHash `
                 -Repository 'deviceManagement/configurationPolicies'
         }
@@ -337,15 +343,15 @@ function Set-TargetResource
         Write-Verbose -Message "Updating the Intune Setting Catalog Custom Policy for Windows10 with Id {$($currentInstance.Id)}"
         $BoundParameters.Remove('Assignments') | Out-Null
 
-        $UpdateParameters = ([Hashtable]$BoundParameters).clone()
+        $UpdateParameters = ([Hashtable]$BoundParameters).Clone()
         $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters -KeyMapping $keyToRename
 
         $UpdateParameters.Remove('Id') | Out-Null
 
-        $keys = (([Hashtable]$UpdateParameters).clone()).Keys
+        $keys = (([Hashtable]$UpdateParameters).Clone()).Keys
         foreach ($key in $keys)
         {
-            if ($null -ne $UpdateParameters.$key -and $UpdateParameters.$key.getType().Name -like '*cimInstance*')
+            if ($null -ne $UpdateParameters.$key -and $UpdateParameters.$key.GetType().Name -like '*cimInstance*')
             {
                 $UpdateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters.$key
             }
@@ -357,7 +363,7 @@ function Set-TargetResource
 
         $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
         Update-DeviceConfigurationPolicyAssignment `
-            -DeviceConfigurationPolicyId $currentInstance.id `
+            -DeviceConfigurationPolicyId $currentInstance.Id `
             -Targets $assignmentsHash `
             -Repository 'deviceManagement/configurationPolicies'
         #endregion
@@ -462,7 +468,7 @@ function Test-TargetResource
     Write-Verbose -Message "Testing configuration of the Intune Setting Catalog Custom Policy for Windows10 with Id {$Id} and Name {$Name}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
-    $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
+    $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
 
     if ($CurrentValues.Ensure -ne $Ensure)
     {
@@ -476,13 +482,13 @@ function Test-TargetResource
     {
         $source = $PSBoundParameters.$key
         $target = $CurrentValues.$key
-        if ($source.getType().Name -like '*CimInstance*')
+        if ($source.GetType().Name -like '*CimInstance*')
         {
             $testResult = Compare-M365DSCComplexObject `
                 -Source ($source) `
                 -Target ($target)
 
-            if (-Not $testResult)
+            if (-not $testResult)
             {
                 $testResult = $false
                 break
@@ -491,7 +497,7 @@ function Test-TargetResource
         }
     }
 
-    $ValuesToCheck.remove('Id') | Out-Null
+    $ValuesToCheck.Remove('Id') | Out-Null
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
@@ -567,7 +573,8 @@ function Export-TargetResource
         [array]$getValue = Get-MgBetaDeviceManagementConfigurationPolicy -Filter $Filter -All `
             -ErrorAction Stop | Where-Object -FilterScript { `
                 $_.Platforms -eq 'windows10' -and
-                [String]::IsNullOrWhiteSpace($_.TemplateReference.TemplateId)
+                $_.Technologies -eq 'mdm' -and
+                $_.TemplateReference.TemplateFamily -eq 'none'
             }
         #endregion
 
