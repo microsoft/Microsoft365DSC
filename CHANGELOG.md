@@ -1,14 +1,15 @@
 # Change log for Microsoft365DSC
 
 # UNRELEASED
+
 * AADApplication
   * Added AppRoles
   * Added AuthenticationBehavior
   * Added KeyCredentials
   * Added PaswordCredentials
   * Added PreAuthorizationApplications
-* MdcSubscriptionDefenderPlan
-  * Initial release
+* AADEntitlementManagementSettings
+  * Initial release.
 * AADPasswordRuleSettings
   * Initial release
 * ADOOrganizationOwner
@@ -45,6 +46,13 @@
 * IntuneDeviceConfigurationSharedMultiDevicePolicyWindows10
   * Add missing `AccessTokens` parameter to `Export-TargetResource`
     FIXES [#5034](https://github.com/microsoft/Microsoft365DSC/issues/5034)
+* M365DSCUtil
+  * Fixes an issue where the O365Group workload was not properly detected.
+    FIXES [#5095](https://github.com/microsoft/Microsoft365DSC/issues/5095)
+* SCDeviceConditionalAccessRule
+  * Initial release.
+* SCDeviceConfigurationRule
+  * Initial release.
 * SCInsiderRiskEntityList
   * Initial release.
 * SCRoleGroup

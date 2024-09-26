@@ -3415,6 +3415,56 @@
                        ]
     },
     {
+        "ClassName":  "MSFT_AADEntitlementManagementSettings",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IsSingleInstance",
+                               "Option":  "Key"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "DaysUntilExternalUserDeletedAfterBlocked",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ExternalUserLifecycleAction",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "Credential",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ApplicationId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "TenantId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "CertificateThumbprint",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "ManagedIdentity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
         "ClassName":  "MSFT_AADExternalIdentityPolicy",
         "Parameters":  [
                            {
@@ -4720,6 +4770,11 @@
                            {
                                "CIMType":  "String",
                                "Name":  "PublisherName",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "Owners",
                                "Option":  "Write"
                            },
                            {
@@ -38245,6 +38300,301 @@
                        ]
     },
     {
+        "ClassName":  "MSFT_SCDeviceConditionalAccessRule",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Name",
+                               "Option":  "Key"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Policy",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "TargetGroups",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AccountName",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AccountUserName",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "AllowAppStore",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "AllowAssistantWhileLocked",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "AllowConvenienceLogon",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "AllowDiagnosticSubmission",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "AllowiCloudBackup",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "AllowiCloudDocSync",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "AllowiCloudPhotoSync",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "AllowJailbroken",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "AllowPassbookWhileLocked",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "AllowScreenshot",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "AllowSimplePassword",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "AllowVideoConferencing",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "AllowVoiceAssistant",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "AllowVoiceDialing",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "AntiVirusSignatureStatus",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "AntiVirusStatus",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AppsRating",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AutoUpdateStatus",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "BluetoothEnabled",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "CameraEnabled",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "EmailAddress",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "EnableRemovableStorage",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ExchangeActiveSyncHost",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "FirewallStatus",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "ForceAppStorePassword",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "ForceEncryptedBackup",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "MaxPasswordAttemptsBeforeWipe",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "MaxPasswordGracePeriod",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "MoviesRating",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "PasswordComplexity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "PasswordExpirationDays",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "PasswordHistoryCount",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "PasswordMinComplexChars",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "PasswordMinimumLength",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "PasswordQuality",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "PasswordRequired",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "PasswordTimeout",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "PhoneMemoryEncrypted",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "RegionRatings",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "RequireEmailProfile",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "SmartScreenEnabled",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "SystemSecurityTLS",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "TVShowsRating",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "UserAccountControlStatus",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "WLANEnabled",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "WorkFoldersSyncUrl",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "string",
+                               "Name":  "Ensure",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "Credential",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ApplicationId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "TenantId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "CertificateThumbprint",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "ManagedIdentity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
         "ClassName":  "MSFT_SCDeviceConfigurationPolicy",
         "Parameters":  [
                            {
@@ -38295,6 +38645,296 @@
                            {
                                "CIMType":  "String",
                                "Name":  "CertificatePath",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_SCDeviceConfigurationRule",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Name",
+                               "Option":  "Key"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Policy",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "TargetGroups",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AccountName",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AccountUserName",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "AllowAppStore",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "AllowAssistantWhileLocked",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "AllowConvenienceLogon",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "AllowDiagnosticSubmission",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "AllowiCloudBackup",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "AllowiCloudDocSync",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "AllowiCloudPhotoSync",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "AllowPassbookWhileLocked",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "AllowScreenshot",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "AllowSimplePassword",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "AllowVideoConferencing",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "AllowVoiceAssistant",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "AllowVoiceDialing",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "AntiVirusSignatureStatus",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "AntiVirusStatus",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AppsRating",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AutoUpdateStatus",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "BluetoothEnabled",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "CameraEnabled",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "EmailAddress",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "EnableRemovableStorage",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ExchangeActiveSyncHost",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "FirewallStatus",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "ForceAppStorePassword",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "ForceEncryptedBackup",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "MaxPasswordAttemptsBeforeWipe",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "MaxPasswordGracePeriod",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "MoviesRating",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "PasswordComplexity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "PasswordExpirationDays",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "PasswordHistoryCount",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "PasswordMinComplexChars",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "PasswordMinimumLength",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "PasswordQuality",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "PasswordRequired",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "PasswordTimeout",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "PhoneMemoryEncrypted",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "RegionRatings",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "RequireEmailProfile",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "SmartScreenEnabled",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "SystemSecurityTLS",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "TVShowsRating",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "UserAccountControlStatus",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "WLANEnabled",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "WorkFoldersSyncUrl",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "string",
+                               "Name":  "Ensure",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "Credential",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ApplicationId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "TenantId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "CertificateThumbprint",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "ManagedIdentity",
                                "Option":  "Write"
                            },
                            {
