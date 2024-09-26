@@ -1,6 +1,12 @@
 # Change log for Microsoft365DSC
 
 # UNRELEASED
+* AADApplication
+  * Added AppRoles
+  * Added AuthenticationBehavior
+  * Added KeyCredentials
+  * Added PaswordCredentials
+  * Added PreAuthorizationApplications
 * MdcSubscriptionDefenderPlan
   * Initial release
 * AADPasswordRuleSettings

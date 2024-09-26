@@ -869,50 +869,7 @@ function Set-TargetResource
 
     if($needToUpdateKeyCredentials -and $KeyCredentials)
     {
-        Write-Verbose -Message "Updating for Azure AD Application {$($currentAADApp.DisplayName)} with KeyCredentials:`r`n$($KeyCredentials| Out-String)"
-        Write-Verbose -Message "Current App Id: $($currentAADApp.AppId)"
-
-        $CurrentKeyCredentials = (Get-MgApplication -Property "keyCredentials" -ApplicationId $ObjectID -ErrorAction SilentlyContinue).KeyCredentials
-
-        $CurrentKeyCredentialsKeyIds = $CurrentKeyCredentials | ForEach-Object { $_.KeyId }
-        $DesiredKeyCredentialsKeyIds = $KeyCredentials |  ForEach-Object { $_.KeyId }
-
-        $AddKeyCredentials = $KeyCredentials | Where-Object {$_.KeyId -notin $CurrentKeyCredentialsKeyIds};
-        $RemoveKeyCredentials = $CurrentKeyCredentials | Where-Object {$_.KeyId -notin $DesiredKeyCredentialsKeyIds};
-
-        Write-Verbose -Message "Key Credentials to be added:`r`n$($AddKeyCredentials| Out-String)"
-        Write-Verbose -Message "Key Credentials to be removed:`r`n$($RemoveKeyCredentials| Out-String)"
-
-        foreach ($KeyCredential in $AddKeyCredentials)
-        {
-            $IKeyCredential = @{
-                DisplayName = $KeyCredential.displayName
-                EndDateTime = $KeyCredential.endDateTime
-                KeyId = $KeyCredential.keyId
-                Key = [System.Text.Encoding]::UTF8.GetBytes($KeyCredential.key)
-                StartDateTime = $KeyCredential.startDateTime
-                Type = $KeyCredential.type
-                Usage = $KeyCredential.usage
-            }
-
-            $CustomKeyIdentifier = $null
-            if($KeyCredential.CustomKeyIdentifier -ne $null) 
-            {
-                $CustomKeyIdentifier = [System.Text.Encoding]::UTF8.GetBytes($KeyCredential.customKeyIdentifier)
-                $IKeyCredential.Add('CustomKeyIdentifier', $CustomKeyIdentifier)
-            }
-
-            Write-Verbose -Message "Adding KeyCredentials:`r`n$($KeyCredential| Out-String) to Azure AD Application {$($currentAADApp.DisplayName)} "
-            Add-MgApplicationKey -ApplicationId $currentAADApp.Id -KeyCredential $IKeyCredentials 
-        }
-
-
-        foreach ($KeyCredential in $RemoveKeyCredentials)
-        {
-            Write-Verbose -Message "Removing KeyCredentials:`r`n$($KeyCredential| Out-String) to Azure AD Application {$($currentAADApp.DisplayName)} "
-            Remove-MgApplicationKey -ApplicationId $currentAADApp.Id -KeyId $KeyCredentials.KeyId
-        }
-
+        Write-Warning -Message "KeyCredentials is a readonly property and cannot be configured."
     }
 }
 
