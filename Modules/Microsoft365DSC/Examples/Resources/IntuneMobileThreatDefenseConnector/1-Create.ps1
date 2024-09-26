@@ -18,9 +18,27 @@ Configuration Example
         [System.String]
         $CertificateThumbprint
     )
+
     Import-DscResource -ModuleName Microsoft365DSC
+
     node localhost
     {
-        
+        AllowPartnerToCollectIosApplicationMetadata         = $False;
+        AllowPartnerToCollectIosPersonalApplicationMetadata = $False;
+        AndroidDeviceBlockedOnMissingPartnerData            = $False;
+        AndroidEnabled                                      = $False;
+        AndroidMobileApplicationManagementEnabled           = $False;
+        Credential                                          = $Credscredential;
+        Ensure                                              = "Present";
+        Id                                                  = "2c7790de-8b02-4814-85cf-e0c59380dee8";
+        IosDeviceBlockedOnMissingPartnerData                = $False;
+        IosEnabled                                          = $False;
+        IosMobileApplicationManagementEnabled               = $False;
+        MicrosoftDefenderForEndpointAttachEnabled           = $False;
+        PartnerState                                        = "";
+        PartnerUnresponsivenessThresholdInDays              = 0;
+        PartnerUnsupportedOSVersionBlocked                  = $False;
+        WindowsDeviceBlockedOnMissingPartnerData            = $False;
+        WindowsEnabled                                      = $False;
     }
 }

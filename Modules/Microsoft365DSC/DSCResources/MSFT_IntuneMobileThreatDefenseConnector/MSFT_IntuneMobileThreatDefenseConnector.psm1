@@ -11,14 +11,6 @@ function Get-TargetResource
         $Id,
 
         [Parameter()]
-        [System.String]
-        $ResponseHeadersVariable,
-
-        [Parameter()]
-        [System..Collections.Hashtable]
-        $AdditionalProperties,
-
-        [Parameter()]
         [System.Boolean]
         $AllowPartnerToCollectIosApplicationMetadata,
 
@@ -135,7 +127,7 @@ function Get-TargetResource
         }
         else
         {
-            $instance = Get-DeviceConditionalAccessRule -PrimaryKey $Id -ErrorAction Stop
+            $instance = Get-MgDeviceManagementMobileThreatDefenseConnector -PrimaryKey $Id -ErrorAction Stop
         }
         if ($null -eq $instance)
         {
@@ -196,14 +188,6 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $Id,
-
-        [Parameter()]
-        [System.String]
-        $ResponseHeadersVariable,
-
-        [Parameter()]
-        [System..Collections.Hashtable]
-        $AdditionalProperties,
 
         [Parameter()]
         [System.Boolean]
@@ -316,17 +300,17 @@ function Set-TargetResource
     # CREATE
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        New-IntuneDeviceConditionalAccessRule @SetParameters
+        New-MgDeviceManagementMobileThreatDefenseConnector @SetParameters
     }
     # UPDATE
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        Update-IntuneDeviceConditionalAccessRule @SetParameters
+        Update-MgDeviceManagementMobileThreatDefenseConnector @SetParameters
     }
     # REMOVE
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Remove-IntuneDeviceConditionalAccessRule @SetParameters
+        Remove-MgDeviceManagementMobileThreatDefenseConnector @SetParameters
     }
 }
 
@@ -341,14 +325,6 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $Id,
-
-        [Parameter()]
-        [System.String]
-        $ResponseHeadersVariable,
-
-        [Parameter()]
-        [System..Collections.Hashtable]
-        $AdditionalProperties,
 
         [Parameter()]
         [System.Boolean]
@@ -392,6 +368,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
+        [ValidateSet('unavailable', 'available', 'enabled', 'unresponsive')]
         $PartnerState,
 
         [Parameter()]
@@ -523,7 +500,7 @@ function Export-TargetResource
     try
     {
         $Script:ExportMode = $true
-        [array] $Script:exportedInstances = Get-IntuneDeviceConditionalAccessRule -ErrorAction Stop
+        [array] $Script:exportedInstances = Get-MgDeviceManagementMobileThreatDefenseConnector -ErrorAction Stop
 
         $i = 1
         $dscContent = ''
@@ -540,7 +517,7 @@ function Export-TargetResource
             $displayedKey = $config.Id
             Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -NoNewline
             $params = @{
-                PrimaryKey            = $config.Id
+                Id                    = $config.Id
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId

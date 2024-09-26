@@ -21,6 +21,23 @@ Configuration Example
     Import-DscResource -ModuleName Microsoft365DSC
     node localhost
     {
-        
+        AllowPartnerToCollectIosApplicationMetadata         = $False;
+        AllowPartnerToCollectIosPersonalApplicationMetadata = $False;
+        AndroidDeviceBlockedOnMissingPartnerData            = $False;
+        AndroidEnabled                                      = $False;
+        AndroidMobileApplicationManagementEnabled           = $False;
+        Credential                                          = $Credscredential;
+        Ensure                                              = "Present"; #drift
+        Id                                                  = "2c7790de-8b02-4814-85cf-e0c59380dee8";
+        IosDeviceBlockedOnMissingPartnerData                = $False;
+        IosEnabled                                          = $False;
+        IosMobileApplicationManagementEnabled               = $False;
+        MicrosoftDefenderForEndpointAttachEnabled           = $False;
+        PartnerState                                        = "notSetUp";
+        PartnerUnresponsivenessThresholdInDays              = 0;
+        PartnerUnsupportedOSVersionBlocked                  = $False;
+        WindowsDeviceBlockedOnMissingPartnerData            = $False;
+        WindowsEnabled                                      = $False;
+
     }
 }

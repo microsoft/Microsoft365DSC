@@ -1,21 +1,15 @@
 ﻿{
     "resourceName": "IntuneMobileThreatDefenseConnector",
-    "description": "This resource configures an Intune device configuration profile for an MacOS Device.",
+    "description": "This resouce configures a connection to Mobile Threat Defense partner.",
     "permissions": {
         "graph": {
             "delegated": {
                 "read": [
                     {
-                        "name": "DeviceManagementServiceConfiguration.Read.All"
-                    },
-                    {
                         "name": "DeviceManagementServiceConfig.Read.All"
                     }
                 ],
                 "update": [
-                    {
-                        "name": "DeviceManagementServiceConfiguration.ReadWrite.All"
-                    },
                     {
                         "name": "DeviceManagementServiceConfig.ReadWrite.All"
                     }
@@ -24,16 +18,10 @@
             "application": {
                 "read": [
                     {
-                        "name": "DeviceManagementServiceConfiguration.Read.All"
-                    },
-                    {
                         "name": "DeviceManagementServiceConfig.Read.All"
                     }
                 ],
                 "update": [
-                    {
-                        "name": "DeviceManagementServiceConfiguration.ReadWrite.All"
-                    },
                     {
                         "name": "DeviceManagementServiceConfig.ReadWrite.All"
                     }
