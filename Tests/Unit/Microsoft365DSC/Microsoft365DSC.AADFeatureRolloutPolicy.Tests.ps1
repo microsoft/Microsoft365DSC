@@ -15,7 +15,7 @@ Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
         -Resolve)
 
 $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "AADPolicyFeatureRolloutPolicy" -GenericStubModule $GenericStubPath
+    -DscResource "AADFeatureRolloutPolicy" -GenericStubModule $GenericStubPath
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
@@ -56,7 +56,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $Script:ExportMode = $false
         }
         # Test contexts
-        Context -Name "The AADPolicyFeatureRolloutPolicy should exist but it DOES NOT" -Fixture {
+        Context -Name "The AADFeatureRolloutPolicy should exist but it DOES NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
                     Description = "FakeStringValue"
@@ -85,7 +85,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "The AADPolicyFeatureRolloutPolicy exists but it SHOULD NOT" -Fixture {
+        Context -Name "The AADFeatureRolloutPolicy exists but it SHOULD NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
                     Description = "FakeStringValue"
@@ -127,7 +127,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Should -Invoke -CommandName Remove-MgBetaPolicyFeatureRolloutPolicy -Exactly 1
             }
         }
-        Context -Name "The AADPolicyFeatureRolloutPolicy Exists and Values are already in the desired state" -Fixture {
+        Context -Name "The AADFeatureRolloutPolicy Exists and Values are already in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
                     Description = "FakeStringValue"
@@ -162,7 +162,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "The AADPolicyFeatureRolloutPolicy exists and values are NOT in the desired state" -Fixture {
+        Context -Name "The AADFeatureRolloutPolicy exists and values are NOT in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
                     Description = "FakeStringValue"

@@ -4000,7 +4000,7 @@
                        ]
     },
     {
-        "ClassName":  "MSFT_AADPolicyFeatureRolloutPolicy",
+        "ClassName":  "MSFT_AADFeatureRolloutPolicy",
         "Parameters":  [
                            {
                                "CIMType":  "String",
