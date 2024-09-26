@@ -229,14 +229,23 @@ function Get-TargetResource
             foreach ($currentkeyCredentials in $AADAppKeyCredentials.keyCredentials)
             {
                 $mykeyCredentials = @{}
-                $mykeyCredentials.Add('CustomKeyIdentifier', [convert]::ToBase64String($currentkeyCredentials.customKeyIdentifier))
+                if($null -ne $currentkeyCredentials.customKeyIdentifier)
+                {
+                    $mykeyCredentials.Add('CustomKeyIdentifier', [convert]::ToBase64String($currentkeyCredentials.customKeyIdentifier))
+                }
                 $mykeyCredentials.Add('DisplayName', $currentkeyCredentials.displayName)
                 if ($null -ne $currentkeyCredentials.endDateTime)
                 {
                     $mykeyCredentials.Add('EndDateTime', ([DateTimeOffset]$currentkeyCredentials.endDateTime).ToString('o'))
                 }
                 $mykeyCredentials.Add('KeyId', $currentkeyCredentials.keyId)
-                $mykeyCredentials.Add('Key', [convert]::ToBase64String($currentkeyCredentials.key))
+
+
+                if($null -ne $currentkeyCredentials.Key) 
+                {
+                    $mykeyCredentials.Add('Key', [convert]::ToBase64String($currentkeyCredentials.key))
+                }
+
                 if ($null -ne $currentkeyCredentials.startDateTime)
                 {
                     $mykeyCredentials.Add('StartDateTime', ([DateTimeOffset]$currentkeyCredentials.startDateTime).ToString('o'))
