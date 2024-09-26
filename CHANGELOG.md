@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* AADFeatureRolloutPolicy
+  * Initial release
 * AADPasswordRuleSettings
   * Initial release
 * ADOOrganizationOwner
