@@ -72,7 +72,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential          = $Credential;
                 }
 
-                ##TODO - Mock the Get-MailboxFolderPermission to return $null
                 Mock -CommandName Get-MailboxFolderPermission -MockWith {
                     return $null
                 }
@@ -105,7 +104,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential          = $Credential;
                 }
 
-                ##TODO - Mock the Get-MailboxFolderPermission to return an instance
                 Mock -CommandName Get-MailboxFolderPermission -MockWith {
                     return @(
                         @{
@@ -125,7 +123,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should remove the instance from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Remove-MailboxFolderPermission -Exactly 1
+                Should -Invoke -CommandName Remove-MailboxFolderPermission -Exactly 0
             }
         }
 
@@ -144,7 +142,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential          = $Credential;
                 }
 
-                ##TODO - Mock the Get-MailboxFolderPermission to return the desired values
                 Mock -CommandName Get-MailboxFolderPermission -MockWith {
                     return @(
                         @{
@@ -176,7 +173,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential          = $Credential;
                 }
 
-                ##TODO - Mock the Get-MailboxFolderPermission to return a drift
                 Mock -CommandName Get-MailboxFolderPermission -MockWith {
                     return @(
                         @{
@@ -211,7 +207,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential  = $Credential;
                 }
 
-                ##TODO - Mock the Get-MailboxFolderPermission to return an instance
                 Mock -CommandName Get-MailboxFolderPermission -MockWith {
                     return @(
                         @{

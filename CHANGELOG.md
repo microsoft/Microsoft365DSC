@@ -22,6 +22,8 @@
   * Initial Release.
 * EXOMailboxCalendarConfiguration
   * Initial Release.
+* EXOMailboxFolderPermission
+  * Initial Release.
 * EXOMailboxIRMAccess
   * Initial Release.
 * EXOManagementScope
