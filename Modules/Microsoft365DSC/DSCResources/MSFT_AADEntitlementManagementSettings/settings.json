@@ -1,29 +1,46 @@
 ﻿{
-    "resourceName": "ResourceName",
-    "description": "Description of what the resource is about.",
+    "resourceName": "AADEntitlementManagementSettings",
+    "description": "Manages Entra Id Entitlement Management settings.",
     "roles": {
         "read": [
-            "Role"
+            "Security Reader"
         ],
         "update": [
-            "Role"
+            "Identity Governance Administrator"
         ]
     },
     "permissions": {
         "graph": {
             "delegated": {
-                "read": [],
-                "update": []
-            },
-            "application": {
                 "read": [
                     {
-                        "name": "Permission for Monitoring and Export"
+                        "name": "EntitlementManagement.Read.All"
                     }
                 ],
                 "update": [
                     {
-                        "name": "Permission for deploying"
+                        "name": "EntitlementManagement.Read.All"
+                    },
+                    {
+                        "name": "EntitlementManagement.ReadWrite.All"
+                    }
+                ]
+            },
+            "application": {
+                "read": [
+                    {
+                        "name": "EntitlementManagement.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "EntitlementManagement.Read.All"
+                    },
+                    {
+                        "name": "EntitlementManagement.ReadWrite.All"
+                    },
+                    {
+                        "name" : "RoleManagement.ReadWrite.Directory"
                     }
                 ]
             }
