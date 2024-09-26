@@ -50,7 +50,6 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    ##TODO - Replace the workload by the one associated to your resource
     New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters | Out-Null
 
@@ -87,7 +86,7 @@ function Get-TargetResource
 
         foreach($mailboxfolderPermission in $instances){
             $currentPermission = @{}
-            $currentPermission.Add('User', $mailboxFolderPermission.User)
+            $currentPermission.Add('User', $mailboxFolderPermission.User.ToString())
             $currentPermission.Add('AccessRights', $mailboxFolderPermission.AccessRights)
             if($null -ne $mailboxFolderPermission.SharingPermissionFlags) {
                 $currentPermission.Add('SharingPermissionFlags', $mailboxFolderPermission.SharingPermissionFlags)
@@ -186,8 +185,6 @@ function Set-TargetResource
     $currentInstance = Get-TargetResource @PSBoundParameters
     $currentMailboxFolderPermissions = $currentInstance.UserPermissions
 
-    $setParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
-
     # Remove all the current existing pemrissions on this folder.
     # Skip removing the default and anonymous permissions, as can't be removed, and should just be directly updated.
     foreach($currentUserPermission in $currentMailboxFolderPermissions) {
@@ -196,7 +193,6 @@ function Set-TargetResource
         }
     }
 
-    #
     foreach($userPermission in $UserPermissions) {
         if($userPermission.User.ToString().ToLower() -eq "default" -or $userPermission.User.ToString().ToLower() -eq "anonymous"){
             if ($userPermission.SharingPermissionFlags -eq ""){
@@ -215,24 +211,6 @@ function Set-TargetResource
             }
         }
     }
-
-    # # CREATE
-    # if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
-    # {
-    #     Add-MailboxFolderPermission @SetParameters
-    # }
-    # # UPDATE
-    # elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
-    # {
-    #     Set-MailboxFolderPermission @SetParameters
-    # }
-    # # REMOVE
-    # elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
-    # {
-    #     $instanceParams.Remove('AccessTokens') | Out-Null
-    #     $instanceParams.Remove('SharingPermissionFlags') | Out-Null
-    #     Remove-MailboxFolderPermission @SetParameters -Confirm:$false
-    # }
 }
 
 function Test-TargetResource
@@ -299,56 +277,52 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
+    $testTargetResource = $true
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
 
-    # foreach($value in $ValuesToCheck.UserPermissions) {
-    #     Write-Host $value
-    #     Write-Host $value.SharingPermissionFlags.IsNullOrEmpty()
-    #     if($value.SharingPermissionFlags.IsNullOrEmpty()) {
-    #         $value.SharingPermissionFlags = $null
-    #     }
-    # }
-    # Write-Host "DONE HERE ###################################################################"
+    #Compare Cim instances
+    foreach ($key in $PSBoundParameters.Keys)
+    {
+        $source = $PSBoundParameters.$key
+        $target = $CurrentValues.$key
+        if ($null -ne $source -and $source.GetType().Name -like '*CimInstance*')
+        {
+            $testResult = Compare-M365DSCComplexObject `
+                -Source ($source) `
+                -Target ($target)
 
-    # foreach($value in $ValuesToCheck.UserPermissions) {
-    #     Write-Host $value.SharingPermissionFlags
-    #     Write-Host $value.SharingPermissionFlags.IsNullOrEmpty()
-    #     if($value.SharingPermissionFlags.IsNullOrEmpty()) {
-    #         $value.SharingPermissionFlags = $null
-    #     }
-    # }
-
-    # foreach($value in $ValuesToCheck.UserPermissions) {
-    #     if ($value.SharingPermissionFlags -ne "None" -and $value.SharingPermissionFlags -ne "Delegate" -and $value.SharingPermissionFlags -ne "CanViewPrivateItems")
-    #     {
-    #         $value.Remove('SharingPermissionFlags') | Out-Null
-    #     }
-    # }
-
-    for ($i = 0; $i -lt $ValuesToCheck.UserPermissions.Count; $i++) {
-        # $value = $ValuesToCheck.UserPermissions[$i]
-
-        Write-Host "$i : Target Values: $ValuesToCheck.UserPermissions[$i]"
-        Write-Host "$i : Target Values: $CurrentValues.UserPermissions[$i]"
-        # if ($value.SharingPermissionFlags -ne "None" -and $value.SharingPermissionFlags -ne "Delegate" -and $value.SharingPermissionFlags -ne "CanViewPrivateItems") {
-        #     # Update the value in place
-        #     $ValuesToCheck.UserPermissions[$i].Remove('SharingPermissionFlags') | Out-Null
-        #     Write-Verbose $ValuesToCheck.UserPermissions[$i]
-        # }
+            if (-not $testResult)
+            {
+                $testTargetResource = $false
+            }
+            else {
+                $ValuesToCheck.Remove($key) | Out-Null
+            }
+        }
     }
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
-    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
+    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
-    $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
-        -Source $($MyInvocation.MyCommand.Source) `
-        -DesiredValues $PSBoundParameters `
-        -ValuesToCheck $ValuesToCheck.Keys
+    $ValuesToCheck.Remove('ObjectId') | Out-Null
+    $ValuesToCheck.Remove('AppId') | Out-Null
+    $ValuesToCheck.Remove('Permissions') | Out-Null
 
-    Write-Verbose -Message "Test-TargetResource returned $testResult"
+    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
+    -Source $($MyInvocation.MyCommand.Source) `
+    -DesiredValues $PSBoundParameters `
+    -ValuesToCheck $ValuesToCheck.Keys `
+    -IncludedDrifts $driftedParams
 
-    return $testResult
+    if(-not $TestResult)
+    {
+        $testTargetResource = $false
+    }
+
+    Write-Verbose -Message "Test-TargetResource returned $testTargetResource"
+
+    return $testTargetResource
 }
 
 function Export-TargetResource

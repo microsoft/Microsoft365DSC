@@ -35,7 +35,20 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return "Credentials"
             }
 
-            ##TODO - Mock any Remove/Set/New cmdlets
+            Mock -CommandName Get-MailboxFolderPermission -MockWith {
+            }
+
+            Mock -CommandName Set-MailboxFolderPermission -MockWith {
+            }
+
+            Mock -CommandName Add-MailboxFolderPermission -MockWith {
+            }
+
+            Mock -CommandName Remove-MailboxFolderPermission -MockWith {
+            }
+
+            Mock -CommandName Get-MailboxFolder -MockWith {
+            }
 
             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
@@ -47,13 +60,20 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The instance should exist but it DOES NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    ##TODO - Add Parameters
+                    Identity          = 'FakeStringValue1'
+                    UserPermissions     = @(
+                        (New-CimInstance -ClassName MSFT_EXOMailboxFolderUserPermission -Property @{
+                            User     = 'User'
+                            AccessRights = @('Editor')
+                            SharingPermissionFlags = 'Delegate'
+                        } -ClientOnly)
+                    )
                     Ensure              = 'Present'
                     Credential          = $Credential;
                 }
 
                 ##TODO - Mock the Get-Cmdlet to return $null
-                Mock -CommandName Get-Cmdlet -MockWith {
+                Mock -CommandName Get-MailboxFolderPermission -MockWith {
                     return $null
                 }
             }
@@ -65,24 +85,35 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should create a new instance from the Set method' {
-                ##TODO - Replace the New-Cmdlet by the appropriate one
-                Should -Invoke -CommandName New-Cmdlet -Exactly 1
+                Set-TargetResource @testParams
+                Should -Invoke -CommandName Add-MailboxFolderPermission -Exactly 1
             }
         }
 
         Context -Name "The instance exists but it SHOULD NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    ##TODO - Add Parameters
+                    Identity          = 'FakeStringValue1'
+                    UserPermissions     = @(
+                        (New-CimInstance -ClassName MSFT_EXOMailboxFolderUserPermission -Property @{
+                            User     = 'User'
+                            AccessRights = @('Editor')
+                            SharingPermissionFlags = 'Delegate'
+                        } -ClientOnly)
+                    )
                     Ensure              = 'Absent'
                     Credential          = $Credential;
                 }
 
                 ##TODO - Mock the Get-Cmdlet to return an instance
-                Mock -CommandName Get-Cmdlet -MockWith {
-                    return @{
-
-                    }
+                Mock -CommandName Get-MailboxFolderPermission -MockWith {
+                    return @(
+                        @{
+                            User = 'User'
+                            AccessRights = @('Editor')
+                            SharingPermissionFlags = 'Delegate'
+                        }
+                    )
                 }
             }
             It 'Should return Values from the Get method' {
@@ -93,8 +124,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should remove the instance from the Set method' {
-                ##TODO - Replace the Remove-Cmdlet by the appropriate one
-                Should -Invoke -CommandName Remove-Cmdlet -Exactly 1
+                Set-TargetResource @testParams
+                Should -Invoke -CommandName Remove-MailboxFolderPermission -Exactly 1
             }
         }
 

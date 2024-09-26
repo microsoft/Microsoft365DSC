@@ -236,8 +236,6 @@ function Convert-M365DscCIMInstanceToString
         $CIMInstance
     )
 
-    Write-Host $CIMInstance
-    Write-Host "entering for loop*******************************************"
     $str = '{'
     foreach ($prop in $CIMInstance.CimInstanceProperties)
     {
