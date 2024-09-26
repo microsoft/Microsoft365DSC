@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* AADAdministrativeUnit
+  * Added support for property IsMemberManagementRestricted.
 * AADPasswordRuleSettings
   * Initial release
 * ADOOrganizationOwner
