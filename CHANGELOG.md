@@ -1,6 +1,7 @@
 # Change log for Microsoft365DSC
 
 # UNRELEASED
+
 * AADApplication
   * Added AppRoles
   * Added AuthenticationBehavior
