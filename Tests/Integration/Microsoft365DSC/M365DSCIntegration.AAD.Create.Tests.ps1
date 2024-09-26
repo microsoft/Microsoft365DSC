@@ -301,6 +301,7 @@
                     Feature                 = "certificateBasedAuthentication";
                     IsAppliedToOrganization = $False;
                     IsEnabled               = $True;
+                    Id                      = "e6f15f6f-1ebe-4007-aa6c-0590844080d2";
                 }
                 AADGroup 'MyGroups'
                 {
