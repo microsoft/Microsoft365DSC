@@ -556,12 +556,6 @@ function Set-TargetResource
         #region resource generator code
         Write-Verbose -Message "Creating new Administrative Unit with: $(Convert-M365DscHashtableToString -Hashtable $CreateParameters)"
 
-        #$jsonParams = ConvertTo-Json $CreateParameters
-
-        # TODO - Replace by cmdlet call which has an issue in 2.11.1
-        #$url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + 'beta/administrativeUnits'
-        #$policy = Invoke-MgGraphRequest -Method POST -Uri $url -Body $jsonParams
-        Write-Verbose "$memberSpecification"
         $policy = New-MgBetaDirectoryAdministrativeUnit @CreateParameters
 
         if ($MembershipType -ne 'Dynamic')
@@ -610,9 +604,6 @@ function Set-TargetResource
         $UpdateParameters.Remove('ScopedRoleMembers') | Out-Null
 
         #region resource generator code
-        #$jsonParams = ConvertTo-Json $UpdateParameters
-        #$url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/administrativeUnits/$($currentInstance.Id)"
-        #Invoke-MgGraphRequest -Method PATCH -Uri $url -Body $jsonParams
         Update-MgBetaDirectoryAdministrativeUnit @UpdateParameters `
             -AdministrativeUnitId $currentInstance.Id
         #endregion
