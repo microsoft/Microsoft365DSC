@@ -72,7 +72,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential          = $Credential;
                 }
 
-                ##TODO - Mock the Get-Cmdlet to return $null
+                ##TODO - Mock the Get-MailboxFolderPermission to return $null
                 Mock -CommandName Get-MailboxFolderPermission -MockWith {
                     return $null
                 }
@@ -105,7 +105,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential          = $Credential;
                 }
 
-                ##TODO - Mock the Get-Cmdlet to return an instance
+                ##TODO - Mock the Get-MailboxFolderPermission to return an instance
                 Mock -CommandName Get-MailboxFolderPermission -MockWith {
                     return @(
                         @{
@@ -132,16 +132,27 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The instance exists and values are already in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    ##TODO - Add Parameters
+                    Identity          = 'FakeStringValue1'
+                    UserPermissions     = @(
+                        (New-CimInstance -ClassName MSFT_EXOMailboxFolderUserPermission -Property @{
+                            User     = 'User'
+                            AccessRights = @('Editor')
+                            SharingPermissionFlags = 'Delegate'
+                        } -ClientOnly)
+                    )
                     Ensure              = 'Present'
                     Credential          = $Credential;
                 }
 
-                ##TODO - Mock the Get-Cmdlet to return the desired values
-                Mock -CommandName Get-Cmdlet -MockWith {
-                    return @{
-
-                    }
+                ##TODO - Mock the Get-MailboxFolderPermission to return the desired values
+                Mock -CommandName Get-MailboxFolderPermission -MockWith {
+                    return @(
+                        @{
+                            User = 'User'
+                            AccessRights = @('Editor')
+                            SharingPermissionFlags = 'Delegate'
+                        }
+                    )
                 }
             }
 
@@ -153,16 +164,27 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The instance exists and values are NOT in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    ##TODO - Add Parameters
+                    Identity          = 'FakeStringValue1'
+                    UserPermissions     = @(
+                        (New-CimInstance -ClassName MSFT_EXOMailboxFolderUserPermission -Property @{
+                            User     = 'User'
+                            AccessRights = @('Editor')
+                            SharingPermissionFlags = 'Delegate'
+                        } -ClientOnly)
+                    )
                     Ensure              = 'Present'
                     Credential          = $Credential;
                 }
 
-                ##TODO - Mock the Get-Cmdlet to return a drift
-                Mock -CommandName Get-Cmdlet -MockWith {
-                    return @{
-
-                    }
+                ##TODO - Mock the Get-MailboxFolderPermission to return a drift
+                Mock -CommandName Get-MailboxFolderPermission -MockWith {
+                    return @(
+                        @{
+                            User = 'User'
+                            AccessRights = @('Owner')
+                            SharingPermissionFlags = 'Delegate'
+                        }
+                    )
                 }
             }
 
@@ -176,8 +198,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should call the Set method' {
                 Set-TargetResource @testParams
-                ##TODO - Replace the Update-Cmdlet by the appropriate one
-                Should -Invoke -CommandName Update-Cmdlet -Exactly 1
+                Should -Invoke -CommandName Remove-MailboxFolderPermission -Exactly 1
+                Should -Invoke -CommandName Add-MailboxFolderPermission -Exactly 1
             }
         }
 
@@ -189,11 +211,22 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential  = $Credential;
                 }
 
-                ##TODO - Mock the Get-Cmdlet to return an instance
-                Mock -CommandName Get-Cmdlet -MockWith {
-                    return @{
+                ##TODO - Mock the Get-MailboxFolderPermission to return an instance
+                Mock -CommandName Get-MailboxFolderPermission -MockWith {
+                    return @(
+                        @{
+                            User = 'User'
+                            AccessRights = @('Editor')
+                            SharingPermissionFlags = 'Delegate'
+                        }
+                    )
+                }
 
+                Mock -CommandName Get-MailboxFolder -MockWith {
+                    return @{
+                        Identity = "admin:/Calendar"
                     }
+
                 }
             }
             It 'Should Reverse Engineer resource from the Export method' {

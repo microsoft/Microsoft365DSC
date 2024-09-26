@@ -185,6 +185,17 @@ function Set-TargetResource
     $currentInstance = Get-TargetResource @PSBoundParameters
     $currentMailboxFolderPermissions = $currentInstance.UserPermissions
 
+    if ($Ensure -eq 'Present' -and $currentValues.Ensure -eq 'Absent')
+    {
+        Write-Verbose -Message "There was some error in fetching the mailbox folder permissions for the folder {$Identity}."
+        return
+    }
+    elseif ($Ensure -eq 'Absent')
+    {
+        Write-Verbose -Message "Supplying Ensure = 'Absent' doesn't remove the permissions for the current mailbox folder. Send an array of required permissions instead."
+        return
+    }
+
     # Remove all the current existing pemrissions on this folder.
     # Skip removing the default and anonymous permissions, as can't be removed, and should just be directly updated.
     foreach($currentUserPermission in $currentMailboxFolderPermissions) {
@@ -193,6 +204,8 @@ function Set-TargetResource
         }
     }
 
+    # Add the desired state permissions on the mailbox folder
+    # For Default and anonymous users, as the permissions were not removed, we just need to call set.
     foreach($userPermission in $UserPermissions) {
         if($userPermission.User.ToString().ToLower() -eq "default" -or $userPermission.User.ToString().ToLower() -eq "anonymous"){
             if ($userPermission.SharingPermissionFlags -eq ""){
@@ -304,10 +317,6 @@ function Test-TargetResource
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
-
-    $ValuesToCheck.Remove('ObjectId') | Out-Null
-    $ValuesToCheck.Remove('AppId') | Out-Null
-    $ValuesToCheck.Remove('Permissions') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
     -Source $($MyInvocation.MyCommand.Source) `

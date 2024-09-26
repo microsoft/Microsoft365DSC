@@ -3,10 +3,10 @@
     "description": "Use this resource to add/set/remove mailbox folder permissions for users in your tenant.",
     "roles": {
         "read": [
-            "Role"
+            "Global Reader"
         ],
         "update": [
-            "Role"
+            "Exchange Administrator"
         ]
     },
     "permissions": {
@@ -19,6 +19,16 @@
                 "read": [],
                 "update": []
             }
+        },
+        "exchange": {
+            "requiredroles": [
+                "Organization Management",
+                "Recipient Management"
+            ],
+            "requiredrolegroups": [
+               "Organization Management",
+               "Help Desk"
+            ]
         }
     }
 }
