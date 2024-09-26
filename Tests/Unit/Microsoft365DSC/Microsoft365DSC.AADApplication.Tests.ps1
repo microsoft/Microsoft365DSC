@@ -207,6 +207,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                              removeUnverifiedEmailClaim    = $true
                              requireClientServicePrincipal = $false
                      } -ClientOnly
+                    Api = New-CimInstance -ClassName MSFT_MicrosoftGraphapiApplication -Property @{
+                        PreAuthorizedApplications = [CimInstance[]]@(
+                            New-CimInstance -ClassName MSFT_MicrosoftGraphPreAuthorizedApplication  -Property @{
+                                AppId = '12345-12345-12345-12345-12345'
+                                PermissionIds = @('12345-12345-12345-12345-12345')
+                            } -ClientOnly
+                        )
+                        
+                    } -ClientOnly
                     Ensure                    = 'Present'
                     Credential                = $Credential
                 }
@@ -264,6 +273,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                     $AADApp | Add-Member -MemberType NoteProperty -Name API -Value @{
                         KnownClientApplications = ''
+                        PreAuthorizedApplications = @(
+                            @{
+                                AppId = '12345-12345-12345-12345-12345'
+                                PermissionIds = @('12345-12345-12345-12345-12345')
+                            }
+                        )
                     }
                     $AADApp | Add-Member -MemberType NoteProperty -Name IdentifierUris -Value 'https://app.contoso.com'
                     $AADApp | Add-Member -MemberType NoteProperty -Name Oauth2RequirePostResponse -Value $false
@@ -278,7 +293,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should return true from the test method' {
-                Test-TargetResource @testParams -Verbose | Should -Be $true
+                Test-TargetResource @testParams | Should -Be $true
             }
         }
 
