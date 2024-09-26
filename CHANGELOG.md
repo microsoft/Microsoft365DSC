@@ -43,6 +43,10 @@
 * IntuneFirewallPolicyWindows10
   * Initial release
     FIXES [#3033](https://github.com/microsoft/Microsoft365DSC/issues/3033)
+* IntuneSettingCatalogCustomPolicyWindows10
+  * Update export logic to target more specific policy types.
+  * Prevent thrown exception to be caught by exception handler.
+    FIXES [#5088](https://github.com/microsoft/Microsoft365DSC/issues/5088)
 * M365DSCDRGUtil
   * Add support for more complex Intune Settings Catalog properties
   * Update handling of `Update-IntuneDeviceConfigurationPolicy` to throw on error
