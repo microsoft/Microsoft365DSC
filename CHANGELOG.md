@@ -5,6 +5,8 @@
   * Initial release
 * MdcSubscriptionDefenderPlan
   * Initial release
+* AADEntitlementManagementSettings
+  * Initial release.
 * AADPasswordRuleSettings
   * Initial release
 * ADOOrganizationOwner
