@@ -2,12 +2,89 @@
 
 # UNRELEASED
 
+* AADEntitlementManagementSettings
+  * Initial release.
+* AADPasswordRuleSettings
+  * Initial release
+* ADOOrganizationOwner
+  * Initial release.
+* ADOPermissionGroup
+  * Initial release.
+* ADOSecurityPolicy
+  * Initial release.
+* AzureSubscription
+  * Initial Release.
+* EXOArcConfig
+  * Initial Release.
+* EXOEmailTenantSettings
+  * Initial Release.
+* EXOFocusedInbox
+  * Initial Release.
+* EXOMailboxCalendarConfiguration
+  * Initial Release.
+* EXOMailboxIRMAccess
+  * Initial Release.
+* EXOManagementScope
+  * Initial Release.
+* EXORetenionPolicy
+  * Initial Release.
+* EXOPhishSimOverrideRule
+  * Initial Release.
+* IntuneAntivirusPolicyWindows10SettingCatalog
+  * Fixes an issue with invalid parameter definition.
+    FIXES [#5015](https://github.com/microsoft/Microsoft365DSC/issues/5015)
+* IntuneDeviceCompliancePolicyWindows10
+  * Fixes an issue where the property `ValidOperatingSystemBuildRanges` was
+    not exported properly.
+    FIXES [#5030](https://github.com/microsoft/Microsoft365DSC/issues/5030)
+* IntuneDeviceConfigurationSharedMultiDevicePolicyWindows10
+  * Add missing `AccessTokens` parameter to `Export-TargetResource`
+    FIXES [#5034](https://github.com/microsoft/Microsoft365DSC/issues/5034)
+* M365DSCUtil
+  * Fixes an issue where the O365Group workload was not properly detected.
+    FIXES [#5095](https://github.com/microsoft/Microsoft365DSC/issues/5095)
+* SCDeviceConditionalAccessRule
+  * Initial release.
+* SCDeviceConfigurationRule
+  * Initial release.
+* SCInsiderRiskEntityList
+  * Initial release.
+* SCRoleGroup
+  * Fixes an issue with creation without specifying Displayname
+  * Fixes an issue with Drifts because of returned Role format
+    FIXES [#5036](https://github.com/microsoft/Microsoft365DSC/issues/5036)
+* SentinelSetting
+  * Initial release.
+* SPOAccessControlSettings
+  * Added support for property EnableRestrictedAccessControl.
+* DEPENDENCIES
+  * Updated DSCParser to version 2.0.0.10.
+  * Updated Microsoft.Graph to version 2.23.0.
+  * Added dependencies on Az.Accounts, Az.Resources and Az.SecurityInsights
+  * Updated DSCParser to version 2.0.0.9.
+  * Updated MSCloudLoginAssistant to version 1.1.25.
+
+# 1.24.904.1
+
+* EXOOwaMailboxPolicy
+  * Add support for AccountTransferEnabled parameter
+
+# 1.24.904.1
+
 * EXOSweepRule
   * Initial Release.
+* FabricAdminTenantSettings
+  * Initial Release.
+* IntuneDeviceControlPolicyWindows10
+  * Initial Release
 * M365DSCDRGUtil
   * Fixes an issue where a Intune settings catalog DSC param was not handled
     correctly when it was not specified.
     FIXES [#5000](https://github.com/microsoft/Microsoft365DSC/issues/5000)
+  * Fixes an issue where the exported nested CIM instances had too many line breaks.
+  * Fixes an issue where Settings Catalog properties were not correctly handled.
+* DEPENDENCIES
+  * Updated MSCloudLoginAssistant to version 1.1.20.
 
 # 1.24.828.1
 
@@ -67,8 +144,6 @@
 * M365DSCUtil
   * Fix `Compare-PSCustomObjectArrays` by allowing empty arrays as input
     FIXES [#4952](https://github.com/microsoft/Microsoft365DSC/issues/4952)
-* O365OrgSettings
-  * FIXES [#4741](https://github.com/microsoft/Microsoft365DSC/issues/4741)
 * MISC
   * Improve module updates and PowerShell Core support across the DSC
     resources.

@@ -102,6 +102,8 @@
                     EnableUnusualCharactersSafetyTips     = $null
                     TargetedUserActionRecipients          = $null
                     Ensure                                = "Present"
+                    DmarcQuarantineAction                 = "Quarantine"
+                    DmarcRejectAction                     = "Reject"
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
@@ -128,6 +130,20 @@
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
+                }
+                EXOATPProtectionPolicyRule 'EXOATPProtectionPolicyRule-Strict Preset Security Policy'
+                {
+                    Comments                = "Built-in Strict Preset Security Policy";
+                    Enabled                 = $False;
+                    Identity                = "Strict Preset Security Policy";
+                    Name                    = "Strict Preset Security Policy";
+                    Priority                = 0;
+                    SafeAttachmentPolicy    = "Strict Preset Security Policy1725468967835";
+                    SafeLinksPolicy         = "Strict Preset Security Policy1725468969412";
+                    Ensure                  = "Present"
+                    ApplicationId           = $ApplicationId
+                    TenantId                = $TenantId
+                    CertificateThumbprint   = $CertificateThumbprint
                 }
                 EXOAuthenticationPolicy 'ConfigureAuthenticationPolicy'
                 {
@@ -385,6 +401,14 @@
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                 }
+                EXOMailboxIRMAccess 'EXOMailboxIRMAccess-qwe@testorg.onmicrosoft.com'
+                {
+                    AccessLevel          = "Block";
+                    Credential           = $Credscredential;
+                    Ensure               = "Present";
+                    Identity             = "qwe@$OrganizationName";
+                    User                 = "admin@$OrganizationName";
+                }
                 EXOMailContact 'TestMailContact'
                 {
                     Alias                       = 'TestMailContact'
@@ -466,6 +490,15 @@
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
+                }
+                EXOManagementScope 'EXOManagementScope-Test New DGs'
+                {
+                    Credential                 = $Credscredential;
+                    Ensure                     = "Present";
+                    Exclusive                  = $False;
+                    Identity                   = "Test New DGs";
+                    Name                       = "Test New DGs";
+                    RecipientRestrictionFilter = "Name -like 'Test*'";
                 }
                 EXOMessageClassification 'ConfigureMessageClassification'
                 {
@@ -716,6 +749,18 @@
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                 }
+                EXOPhishSimOverrideRule 'EXOPhishSimOverrideRule-_Exe:PhishSimOverr:d779965e-ab14-4dd8-b3f5-0876a99f988b'
+                {
+                    Comment                                  = "Comment note";
+                    Domains                                  = @("fabrikam.com","wingtiptoys.com");
+                    Ensure                                   = "Present";
+                    Identity                                 = "_Exe:PhishSimOverr:d779965e-ab14-4dd8-b3f5-0876a99f988b";
+                    Policy                                   = "fc55717b-28bb-4cf3-98ee-9ba57903c978";
+                    SenderIpRanges                           = @("192.168.1.55");
+                    ApplicationId                            = $ApplicationId
+                    TenantId                                 = $TenantId
+                    CertificateThumbprint                    = $CertificateThumbprint
+                }
                 EXOPlace 'TestPlace'
                 {
                     AudioDeviceName        = "MyAudioDevice";
@@ -790,6 +835,18 @@
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                 }
+                EXORetentionPolicy 'EXORetentionPolicy-Test'
+                {
+                    Name                        = "Test Retention Policy";
+                    Identity                    = "Test Retention Policy";
+                    IsDefault                   = $False;
+                    IsDefaultArbitrationMailbox = $False;
+                    RetentionPolicyTagLinks     = @("6 Month Delete","Personal 5 year move to archive","1 Month Delete","1 Week Delete","Personal never move to archive","Personal 1 year move to archive","Default 2 year move to archive","Deleted Items","Junk Email","Recoverable Items 14 days move to archive","Never Delete");
+                    Ensure                      = "Present";
+                    ApplicationId               = $ApplicationId;
+                    TenantId                    = $TenantId;
+                    CertificateThumbprint       = $CertificateThumbprint;
+                }
                 EXORoleAssignmentPolicy 'ConfigureRoleAssignmentPolicy'
                 {
                     Name                 = "Integration Policy"
@@ -863,6 +920,13 @@
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                 }
+                EXOSecOpsOverrideRule 'EXOSecOpsOverrideRule-_Exe:SecOpsOverrid:ca3c51ac-925c-49f4-af42-43e26b874245'
+                {
+                    Comment              = "TestComment";
+                    Ensure               = "Present";
+                    Identity             = "_Exe:SecOpsOverrid:ca3c51ac-925c-49f4-af42-43e26b874245";
+                    Policy               = "40528418-717d-4368-a1ae-7912918f8a1f";
+                }
                 EXOSharedMailbox 'SharedMailbox'
                 {
                     DisplayName        = "Integration"
@@ -899,6 +963,20 @@
                     SenderName            = "michelle@fabrikam.com";
                     SourceFolder          = "Test2:\Inbox";
                     TenantId              = $TenantId;
+                }
+                EXOTenantAllowBlockListItems 'Example'
+                {
+                    ApplicationId         = $ApplicationId;
+                    CertificateThumbprint = $CertificateThumbprint;
+                    TenantId              = $TenantId;
+                    Action                = "Block";
+                    Ensure                = "Present";
+                    ExpirationDate        = "10/11/2024 9:00:00 PM";
+                    ListSubType           = "Tenant";
+                    ListType              = "Sender";
+                    Notes                 = "Test block";
+                    SubmissionID          = "Non-Submission";
+                    Value                 = "example.com";
                 }
                 EXOTransportRule 'ConfigureTransportRule'
                 {

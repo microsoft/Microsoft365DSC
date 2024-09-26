@@ -11,6 +11,7 @@ class MSFT_SPOAccessControlSettings : OMI_BaseResource
     [Write, Description("Enables external services for a tenant. External services are defined as services that are not in the Office 365 datacenters.")] boolean ExternalServicesEnabled;
     [Write, Description("Sets email attestation to required")] boolean EmailAttestationRequired;
     [Write, Description("Sets email attestation re-auth days")] uint32 EmailAttestationReAuthDays;
+    [Write, Description("Enables or disables the restricted access control.")] boolean EnableRestrictedAccessControl;
     [Write, Description("Only value accepted is 'Present'"), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
     [Write, Description("Credentials of the account to authenticate with."), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;

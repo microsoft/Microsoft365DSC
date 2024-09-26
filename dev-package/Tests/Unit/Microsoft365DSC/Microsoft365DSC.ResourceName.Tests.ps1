@@ -66,6 +66,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should create a new instance from the Set method' {
                 ##TODO - Replace the New-Cmdlet by the appropriate one
+                Set-TargetResource @testParams
                 Should -Invoke -CommandName New-Cmdlet -Exactly 1
             }
         }

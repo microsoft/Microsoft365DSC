@@ -646,6 +646,15 @@
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                 }
+                AADEntitlementManagementSettings 'AADEntitlementManagementSettings'
+                {
+                    ApplicationId                            = $ApplicationId;
+                    CertificateThumbprint                    = $CertificateThumbprint;
+                    DaysUntilExternalUserDeletedAfterBlocked = 30;
+                    ExternalUserLifecycleAction              = "blockSignInAndDelete";
+                    IsSingleInstance                         = "Yes";
+                    TenantId                                 = $TenantId;
+                }
                 AADExternalIdentityPolicy 'AADExternalIdentityPolicy'
                 {
                     AllowDeletedIdentitiesDataRemoval = $False;
