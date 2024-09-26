@@ -1,6 +1,6 @@
 
-# ResourceName
+# IntuneAppCategories
 
 ## Description
 
-##TODO - Provide a short description of what the resource is set to configure.
+Configures a resource for navigation property for Intune mobile app categories.

@@ -1,29 +1,29 @@
 ﻿{
-    "resourceName": "ResourceName",
-    "description": "Description of what the resource is about.",
-    "roles": {
-        "read": [
-            "Role"
-        ],
-        "update": [
-            "Role"
-        ]
-    },
+    "resourceName": "IntuneAppCategories",
+    "description": "Configures a resource for navigation property for Intune mobile app categories.",
     "permissions": {
         "graph": {
             "delegated": {
-                "read": [],
-                "update": []
-            },
-            "application": {
                 "read": [
                     {
-                        "name": "Permission for Monitoring and Export"
+                        "name": "DeviceManagementApps.Read.All"
                     }
                 ],
                 "update": [
                     {
-                        "name": "Permission for deploying"
+                        "name": "DeviceManagementApps.ReadWrite.All"
+                    }
+                ]
+            },
+            "application": {
+                "read": [
+                    {
+                        "name": "DeviceManagementApps.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "DeviceManagementApps.ReadWrite.All"
                     }
                 ]
             }
