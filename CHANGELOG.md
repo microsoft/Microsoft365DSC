@@ -40,6 +40,9 @@
 * IntuneDeviceConfigurationSharedMultiDevicePolicyWindows10
   * Add missing `AccessTokens` parameter to `Export-TargetResource`
     FIXES [#5034](https://github.com/microsoft/Microsoft365DSC/issues/5034)
+* M365DSCUtil
+  * Fixes an issue where the O365Group workload was not properly detected.
+    FIXES [#5095](https://github.com/microsoft/Microsoft365DSC/issues/5095)
 * SCDeviceConditionalAccessRule
   * Initial release.
 * SCDeviceConfigurationRule
