@@ -240,7 +240,6 @@ function Convert-M365DscCIMInstanceToString
     $str = '{'
     foreach ($prop in $CIMInstance.CimInstanceProperties)
     {
-        Write-Host $prop.Name
         if ($str -notmatch '{$')
         {
             $str += '; '
