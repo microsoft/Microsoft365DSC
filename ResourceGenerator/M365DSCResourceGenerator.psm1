@@ -902,7 +902,6 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
         #region Examples
         if ($null -ne $Credential)
         {
-            Import-Module Microsoft365DSC -Force
             New-M365DSCExampleFile -ResourceName $ResourceName `
                 -Path $ExampleFilePath `
                 -Credential $Credential
@@ -1635,8 +1634,7 @@ function Get-Microsoft365DSCModuleCimClass
         $ResourceName
     )
 
-    Import-Module -Name Microsoft365DSC -Force
-    $modulePath = Split-Path -Path (Get-Module -Name Microsoft365DSC).Path
+    $modulePath = "C:\Program Files\WindowsPowerShell\Modules\Microsoft365DSC\Modules\Microsoft365DSC"
     $resourcesPath = "$modulePath\DSCResources\*\*.mof"
     $resources = (Get-ChildItem $resourcesPath).FullName
     $resources = $resources | Where-Object -FilterScript {$_ -notlike "*MSFT_$ResourceName.schema.mof"}

@@ -1,6 +1,6 @@
 
-[ClassVersion("1.0.0.0"), FriendlyName("AADPolicyFeatureRolloutPolicy")]
-class MSFT_AADPolicyFeatureRolloutPolicy : OMI_BaseResource
+[ClassVersion("1.0.0.0"), FriendlyName("AADFeatureRolloutPolicy")]
+class MSFT_AADFeatureRolloutPolicy : OMI_BaseResource
 {
     [Write, Description("A description for this feature rollout policy.")] String Description;
     [Required, Description("The display name for this  feature rollout policy.")] String DisplayName;

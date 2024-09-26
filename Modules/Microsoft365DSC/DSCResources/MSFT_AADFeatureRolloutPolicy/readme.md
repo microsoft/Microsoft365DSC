@@ -1,5 +1,5 @@
 
-# AADPolicyFeatureRolloutPolicy
+# AADFeatureRolloutPolicy
 
 ## Description
 

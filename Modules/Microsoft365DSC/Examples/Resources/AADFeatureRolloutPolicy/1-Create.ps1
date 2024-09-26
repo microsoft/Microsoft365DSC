@@ -22,7 +22,7 @@ Configuration Example
 
     node localhost
     {
-        AADPolicyFeatureRolloutPolicy "AADPolicyFeatureRolloutPolicy-CertificateBasedAuthentication rollout policy"
+        AADFeatureRolloutPolicy "AADFeatureRolloutPolicy-CertificateBasedAuthentication rollout policy"
         {
             ApplicationId           = $ApplicationId
             TenantId                = $TenantId
