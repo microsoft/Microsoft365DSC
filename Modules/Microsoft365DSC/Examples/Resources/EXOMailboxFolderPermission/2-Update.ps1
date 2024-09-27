@@ -40,6 +40,6 @@ MSFT_EXOMailboxFolderUserPermission {
 		SharingPermissionFlags = 'Delegate'
             }
             );
-
+        }
     }
 }
