@@ -646,6 +646,15 @@
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                 }
+                AADEntitlementManagementSettings 'AADEntitlementManagementSettings'
+                {
+                    ApplicationId                            = $ApplicationId;
+                    CertificateThumbprint                    = $CertificateThumbprint;
+                    DaysUntilExternalUserDeletedAfterBlocked = 30;
+                    ExternalUserLifecycleAction              = "blockSignInAndDelete";
+                    IsSingleInstance                         = "Yes";
+                    TenantId                                 = $TenantId;
+                }
                 AADExternalIdentityPolicy 'AADExternalIdentityPolicy'
                 {
                     AllowDeletedIdentitiesDataRemoval = $False;
@@ -654,6 +663,17 @@
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                     IsSingleInstance                  = "Yes";
+                }
+                AADFeatureRolloutPolicy 'AADFeatureRolloutPolicy-CertificateBasedAuthentication rollout policy'
+                {
+                    ApplicationId           = $ApplicationId
+                    TenantId                = $TenantId
+                    CertificateThumbprint   = $CertificateThumbprint
+                    Description             = "CertificateBasedAuthentication rollout policy";
+                    DisplayName             = "CertificateBasedAuthentication rollout policy";
+                    Ensure                  = "Present";
+                    IsAppliedToOrganization = $False;
+                    IsEnabled               = $False;
                 }
                 AADGroup 'MyGroups'
                 {
