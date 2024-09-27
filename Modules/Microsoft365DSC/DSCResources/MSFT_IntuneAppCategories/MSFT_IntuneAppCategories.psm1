@@ -75,7 +75,7 @@ function Get-TargetResource
 
           if ($null -eq $instance)
           {
-              Write-Verbose -Message "Could not find by Id {$Id}."
+              Write-Verbose -Message "Could not find MobileAppCategory by Id {$Id}."
 
               if (-Not [string]::IsNullOrEmpty($DisplayName))
               {
@@ -87,7 +87,7 @@ function Get-TargetResource
 
           if ($null -eq $instance)
           {
-              Write-Verbose -Message "Could not find by DisplayName {$DisplayName}."
+              Write-Verbose -Message "Could not find MobileAppCategory by DisplayName {$DisplayName}."
               return $nullResult
           }
         }
@@ -344,6 +344,8 @@ function Export-TargetResource
             Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -NoNewline
             $params = @{
                 Id                    = $config.Id
+                DisplayName           = $config.DisplayName
+                Ensure                = 'Present'
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId

@@ -1,8 +1,8 @@
 [ClassVersion("1.0.0.0"), FriendlyName("IntuneAppCategories")]
 class MSFT_IntuneAppCategories : OMI_BaseResource
 {
-    [Key, Description("The unique identifier for an entity. Read-only.")] String Id;
-    [Required, Description("The name of the app category.")] String DisplayName;
+    [Write, Description("The unique identifier for an entity. Read-only.")] String Id;
+    [Key, Description("The name of the app category.")] String DisplayName;
 
     [Write, Description("Present ensures the instance exists, absent ensures it is removed."), ValueMap{"Present"}, Values{"Present"}] string Ensure;
     [Write, Description("Credentials of the workload's Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;

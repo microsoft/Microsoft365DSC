@@ -18,9 +18,12 @@ Configuration Example
         [System.String]
         $CertificateThumbprint
     )
+
     Import-DscResource -ModuleName Microsoft365DSC
     node localhost
     {
-        
+        Id                   = "f1fc9fe2-728d-4867-9a72-a61e18f8c606";
+        DisplayName          = "Books & Reference";
+        Ensure               = "Present";
     }
 }
