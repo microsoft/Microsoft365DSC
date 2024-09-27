@@ -1,12 +1,12 @@
 ﻿{
-    "resourceName": "ResourceName",
-    "description": "Description of what the resource is about.",
+    "resourceName": "SCInsiderRiskPolicy",
+    "description": "Configures Insider Risk Policies in Purview.",
     "roles": {
         "read": [
-            "Role"
+            "Global Reader"
         ],
         "update": [
-            "Role"
+            "Compliance Administrator"
         ]
     },
     "permissions": {
@@ -16,16 +16,8 @@
                 "update": []
             },
             "application": {
-                "read": [
-                    {
-                        "name": "Permission for Monitoring and Export"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Permission for deploying"
-                    }
-                ]
+                "read": [],
+                "update": []
             }
         }
     }

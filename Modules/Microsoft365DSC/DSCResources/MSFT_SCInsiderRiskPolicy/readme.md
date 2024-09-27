@@ -1,6 +1,6 @@
 
-# ResourceName
+# SCInsiderRiskPolicy
 
 ## Description
 
-##TODO - Provide a short description of what the resource is set to configure.
+Configures Insider Risk Policies in Purview.

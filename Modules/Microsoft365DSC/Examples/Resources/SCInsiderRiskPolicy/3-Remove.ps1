@@ -21,6 +21,14 @@ Configuration Example
     Import-DscResource -ModuleName Microsoft365DSC
     node localhost
     {
-        
+        SCInsiderRiskPolicy "SCInsiderRiskPolicy-IRM_Tenant_Setting"
+        {
+            ApplicationId                                 = $ApplicationId;
+            CertificateThumbprint                         = $CertificateThumbprint;
+            Ensure                                        = "Absent";
+            InsiderRiskScenario                           = "TenantSetting";
+            Name                                          = "IRM_Tenant_Setting";
+            TenantId                                      = $TenantId;
+        }
     }
 }

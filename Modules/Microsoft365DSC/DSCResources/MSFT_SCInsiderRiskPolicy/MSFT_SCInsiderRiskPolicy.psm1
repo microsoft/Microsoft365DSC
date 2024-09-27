@@ -8,6 +8,14 @@ function Get-TargetResource
         [System.String]
         $Name,
 
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $InsiderRiskScenario,
+
+        [Parameter()]
+        [System.Boolean]
+        $Anonymization,
+
         [Parameter()]
         [System.Boolean]
         $DLPUserRiskSync,
@@ -553,19 +561,19 @@ function Get-TargetResource
         $SessionRecordingEnabled,
 
         [Parameter()]
-        [System.Boolean]
+        [System.String]
         $RecordingTimeframePreEventInSec,
 
         [Parameter()]
-        [System.Boolean]
+        [System.String]
         $RecordingTimeframePostEventInSec,
 
         [Parameter()]
-        [System.Boolean]
+        [System.String]
         $BandwidthCapInMb,
 
         [Parameter()]
-        [System.Boolean]
+        [System.String]
         $OfflineRecordingStorageLimitInMb,
 
         [Parameter()]
@@ -626,8 +634,14 @@ function Get-TargetResource
             $instance = Get-InsiderRiskPolicy -Identity $Name
         }
 
+        if ($null -eq $instance)
+        {
+            return $nullResult
+        }
+
         $results = @{
             Name                  = $instance.Name
+            InsiderRiskScenario   = $instance.InsiderRiskScenario
             Ensure                = 'Present'
             Credential            = $Credential
             ApplicationId         = $ApplicationId
@@ -641,8 +655,8 @@ function Get-TargetResource
         {
             $SessionRecordingSettings = ConvertFrom-Json $instance.SessionRecordingSettings
             $forensicSettingsHash = @{
-                ClipDeletionEnabled              = [Boolean]$SessionRecordingSettings.ClipDeletionEnabled
-                SessionRecordingEnabled          = [Boolean]$SessionRecordingSettings.Enabled
+                ClipDeletionEnabled              = [Boolean]($SessionRecordingSettings.ClipDeletionEnabled)
+                SessionRecordingEnabled          = [Boolean]($SessionRecordingSettings.Enabled)
                 RecordingTimeframePreEventInSec  = $SessionRecordingSettings.RecordingTimeframePreEventInSec
                 RecordingTimeframePostEventInSec = $SessionRecordingSettings.RecordingTimeframePostEventInSec
                 BandwidthCapInMb                 = $SessionRecordingSettings.BandwidthCapInMb
@@ -651,136 +665,137 @@ function Get-TargetResource
             $results += $forensicSettingsHash
         }
 
-        if (-not [System.String]::IsNullOrEmpty($instance.TenantSettings))
+        if (-not [System.String]::IsNullOrEmpty($instance.TenantSettings) -and $instance.TenantSettings.Length -gt 0)
         {
             $tenantSettings = ConvertFrom-Json $instance.TenantSettings[0]
             $tenantSettingsHash = @{
-                DLPUserRiskSync                               = [Boolean]$tenantSettings.FeatureSettings.DLPUserRiskSync
-                OptInIRMDataExport                            = [Boolean]$tenantSettings.FeatureSettings.OptInIRMDataExport
-                RaiseAuditAlert                               = [Boolean]$tenantSettings.FeatureSettings.RaiseAuditAlert
+                Anonymization                                 = [Boolean]($tenantSettings.FeatureSettings.Anonymization)
+                DLPUserRiskSync                               = [Boolean]($tenantSettings.FeatureSettings.DLPUserRiskSync)
+                OptInIRMDataExport                            = [Boolean]($tenantSettings.FeatureSettings.OptInIRMDataExport)
+                RaiseAuditAlert                               = [Boolean]($tenantSettings.FeatureSettings.RaiseAuditAlert)
                 FileVolCutoffLimits                           = $tenantSettings.IntelligentDetections.FileVolCutoffLimits
                 AlertVolume                                   = $tenantSettings.IntelligentDetections.AlertVolume
-                AnomalyDetections                             = [Boolean]$tenantSettings.Indicators.AnomalyDetections
-                CopyToPersonalCloud                           = [Boolean]$tenantSettings.Indicators.CopyToPersonalCloud
-                CopyToUSB                                     = [Boolean]$tenantSettings.Indicators.CopyToUSB
-                CumulativeExfiltrationDetector                = [Boolean]$tenantSettings.Indicators.CumulativeExfiltrationDetector
-                EmailExternal                                 = [Boolean]$tenantSettings.Indicators.EmailExternal
-                EmployeeAccessedEmployeePatientData           = [Boolean]$tenantSettings.Indicators.EmployeeAccessedEmployeePatientData
-                EmployeeAccessedFamilyData                    = [Boolean]$tenantSettings.Indicators.EmployeeAccessedFamilyData
-                EmployeeAccessedHighVolumePatientData         = [Boolean]$tenantSettings.Indicators.EmployeeAccessedHighVolumePatientData
-                EmployeeAccessedNeighbourData                 = [Boolean]$tenantSettings.Indicators.EmployeeAccessedNeighbourData
-                EmployeeAccessedRestrictedData                = [Boolean]$tenantSettings.Indicators.EmployeeAccessedRestrictedData
-                EpoBrowseToChildAbuseSites                    = [Boolean]$tenantSettings.Indicators.EpoBrowseToChildAbuseSites
-                EpoBrowseToCriminalActivitySites              = [Boolean]$tenantSettings.Indicators.EpoBrowseToCriminalActivitySites
-                EpoBrowseToCultSites                          = [Boolean]$tenantSettings.Indicators.EpoBrowseToCultSites
-                EpoBrowseToGamblingSites                      = [Boolean]$tenantSettings.Indicators.EpoBrowseToGamblingSites
-                EpoBrowseToHackingSites                       = [Boolean]$tenantSettings.Indicators.EpoBrowseToHackingSites
-                EpoBrowseToHateIntoleranceSites               = [Boolean]$tenantSettings.Indicators.EpoBrowseToHateIntoleranceSites
-                EpoBrowseToIllegalSoftwareSites               = [Boolean]$tenantSettings.Indicators.EpoBrowseToIllegalSoftwareSites
-                EpoBrowseToKeyloggerSites                     = [Boolean]$tenantSettings.Indicators.EpoBrowseToKeyloggerSites
-                EpoBrowseToLlmSites                           = [Boolean]$tenantSettings.Indicators.EpoBrowseToLlmSites
-                EpoBrowseToMalwareSites                       = [Boolean]$tenantSettings.Indicators.EpoBrowseToMalwareSites
-                EpoBrowseToPhishingSites                      = [Boolean]$tenantSettings.Indicators.EpoBrowseToPhishingSites
-                EpoBrowseToPornographySites                   = [Boolean]$tenantSettings.Indicators.EpoBrowseToPornographySites
-                EpoBrowseToUnallowedDomain                    = [Boolean]$tenantSettings.Indicators.EpoBrowseToUnallowedDomain
-                EpoBrowseToViolenceSites                      = [Boolean]$tenantSettings.Indicators.EpoBrowseToViolenceSites
-                EpoCopyToClipboardFromSensitiveFile           = [Boolean]$tenantSettings.Indicators.EpoCopyToClipboardFromSensitiveFile
-                EpoCopyToNetworkShare                         = [Boolean]$tenantSettings.Indicators.EpoCopyToNetworkShare
-                EpoFileArchived                               = [Boolean]$tenantSettings.Indicators.EpoFileArchived
-                EpoFileCopiedToRemoteDesktopSession           = [Boolean]$tenantSettings.Indicators.EpoFileCopiedToRemoteDesktopSession
-                EpoFileDeleted                                = [Boolean]$tenantSettings.Indicators.EpoFileDeleted
-                EpoFileDownloadedFromBlacklistedDomain        = [Boolean]$tenantSettings.Indicators.EpoFileDownloadedFromBlacklistedDomain
-                EpoFileDownloadedFromEnterpriseDomain         = [Boolean]$tenantSettings.Indicators.EpoFileDownloadedFromEnterpriseDomain
-                EpoFileRenamed                                = [Boolean]$tenantSettings.Indicators.EpoFileRenamed
-                EpoFileStagedToCentralLocation                = [Boolean]$tenantSettings.Indicators.EpoFileStagedToCentralLocation
-                EpoHiddenFileCreated                          = [Boolean]$tenantSettings.Indicators.EpoHiddenFileCreated
-                EpoRemovableMediaMount                        = [Boolean]$tenantSettings.Indicators.EpoRemovableMediaMount
-                EpoSensitiveFileRead                          = [Boolean]$tenantSettings.Indicators.EpoSensitiveFileRead
-                Mcas3rdPartyAppDownload                       = [Boolean]$tenantSettings.Indicators.Mcas3rdPartyAppDownload
-                Mcas3rdPartyAppFileDelete                     = [Boolean]$tenantSettings.Indicators.Mcas3rdPartyAppFileDelete
-                Mcas3rdPartyAppFileSharing                    = [Boolean]$tenantSettings.Indicators.Mcas3rdPartyAppFileSharing
-                McasActivityFromInfrequentCountry             = [Boolean]$tenantSettings.Indicators.McasActivityFromInfrequentCountry
-                McasImpossibleTravel                          = [Boolean]$tenantSettings.Indicators.McasImpossibleTravel
-                McasMultipleFailedLogins                      = [Boolean]$tenantSettings.Indicators.McasMultipleFailedLogins
-                McasMultipleStorageDeletion                   = [Boolean]$tenantSettings.Indicators.McasMultipleStorageDeletion
-                McasMultipleVMCreation                        = [Boolean]$tenantSettings.Indicators.McasMultipleVMCreation
-                McasMultipleVMDeletion                        = [Boolean]$tenantSettings.Indicators.McasMultipleVMDeletion
-                McasSuspiciousAdminActivities                 = [Boolean]$tenantSettings.Indicators.McasSuspiciousAdminActivities
-                McasSuspiciousCloudCreation                   = [Boolean]$tenantSettings.Indicators.McasSuspiciousCloudCreation
-                McasSuspiciousCloudTrailLoggingChange         = [Boolean]$tenantSettings.Indicators.McasSuspiciousCloudTrailLoggingChange
-                McasTerminatedEmployeeActivity                = [Boolean]$tenantSettings.Indicators.McasTerminatedEmployeeActivity
-                OdbDownload                                   = [Boolean]$tenantSettings.Indicators.OdbDownload
-                OdbSyncDownload                               = [Boolean]$tenantSettings.Indicators.OdbSyncDownload
-                PeerCumulativeExfiltrationDetector            = [Boolean]$tenantSettings.Indicators.PeerCumulativeExfiltrationDetector
-                PhysicalAccess                                = [Boolean]$tenantSettings.Indicators.PhysicalAccess
-                PotentialHighImpactUser                       = [Boolean]$tenantSettings.Indicators.PotentialHighImpactUser
-                Print                                         = [Boolean]$tenantSettings.Indicators.Print
-                PriorityUserGroupMember                       = [Boolean]$tenantSettings.Indicators.PriorityUserGroupMember
-                SecurityAlertDefenseEvasion                   = [Boolean]$tenantSettings.Indicators.SecurityAlertDefenseEvasion
-                SecurityAlertUnwantedSoftware                 = [Boolean]$tenantSettings.Indicators.SecurityAlertUnwantedSoftware
-                SpoAccessRequest                              = [Boolean]$tenantSettings.Indicators.SpoAccessRequest
-                SpoApprovedAccess                             = [Boolean]$tenantSettings.Indicators.SpoApprovedAccess
-                SpoDownload                                   = [Boolean]$tenantSettings.Indicators.SpoDownload
-                SpoDownloadV2                                 = [Boolean]$tenantSettings.Indicators.SpoDownloadV2
-                SpoFileAccessed                               = [Boolean]$tenantSettings.Indicators.SpoFileAccessed
-                SpoFileDeleted                                = [Boolean]$tenantSettings.Indicators.SpoFileDeleted
-                SpoFileDeletedFromFirstStageRecycleBin        = [Boolean]$tenantSettings.Indicators.SpoFileDeletedFromFirstStageRecycleBin
-                SpoFileDeletedFromSecondStageRecycleBin       = [Boolean]$tenantSettings.Indicators.SpoFileDeletedFromSecondStageRecycleBin
-                SpoFileLabelDowngraded                        = [Boolean]$tenantSettings.Indicators.SpoFileLabelDowngraded
-                SpoFileLabelRemoved                           = [Boolean]$tenantSettings.Indicators.SpoFileLabelRemoved
-                SpoFileSharing                                = [Boolean]$tenantSettings.Indicators.SpoFileSharing
-                SpoFolderDeleted                              = [Boolean]$tenantSettings.Indicators.SpoFolderDeleted
-                SpoFolderDeletedFromFirstStageRecycleBin      = [Boolean]$tenantSettings.Indicators.SpoFolderDeletedFromFirstStageRecycleBin
-                SpoFolderDeletedFromSecondStageRecycleBin     = [Boolean]$tenantSettings.Indicators.SpoFolderDeletedFromSecondStageRecycleBin
-                SpoFolderSharing                              = [Boolean]$tenantSettings.Indicators.SpoFolderSharing
-                SpoSiteExternalUserAdded                      = [Boolean]$tenantSettings.Indicators.SpoSiteExternalUserAdded
-                SpoSiteInternalUserAdded                      = [Boolean]$tenantSettings.Indicators.SpoSiteInternalUserAdded
-                SpoSiteLabelRemoved                           = [Boolean]$tenantSettings.Indicators.SpoSiteLabelRemoved
-                SpoSiteSharing                                = [Boolean]$tenantSettings.Indicators.SpoSiteSharing
-                SpoSyncDownload                               = [Boolean]$tenantSettings.Indicators.SpoSyncDownload
-                TeamsChannelFileSharedExternal                = [Boolean]$tenantSettings.Indicators.TeamsChannelFileSharedExternal
-                TeamsChannelMemberAddedExternal               = [Boolean]$tenantSettings.Indicators.TeamsChannelMemberAddedExternal
-                TeamsChatFileSharedExternal                   = [Boolean]$tenantSettings.Indicators.TeamsChatFileSharedExternal
-                TeamsFileDownload                             = [Boolean]$tenantSettings.Indicators.TeamsFileDownload
-                TeamsFolderSharedExternal                     = [Boolean]$tenantSettings.Indicators.TeamsFolderSharedExternal
-                TeamsMemberAddedExternal                      = [Boolean]$tenantSettings.Indicators.TeamsMemberAddedExternal
-                TeamsSensitiveMessage                         = [Boolean]$tenantSettings.Indicators.TeamsSensitiveMessage
-                UserHistory                                   = [Boolean]$tenantSettings.Indicators.UserHistory
-                AWSS3BlockPublicAccessDisabled                = [Boolean]$tenantSettings.ExtensibleIndicators.AWSS3BlockPublicAccessDisabled
-                AWSS3BucketDeleted                            = [Boolean]$tenantSettings.ExtensibleIndicators.AWSS3BucketDeleted
-                AWSS3PublicAccessEnabled                      = [Boolean]$tenantSettings.ExtensibleIndicators.AWSS3PublicAccessEnabled
-                AWSS3ServerLoggingDisabled                    = [Boolean]$tenantSettings.ExtensibleIndicators.AWSS3ServerLoggingDisabled
-                AzureElevateAccessToAllSubscriptions          = [Boolean]$tenantSettings.ExtensibleIndicators.AzureElevateAccessToAllSubscriptions
-                AzureResourceThreatProtectionSettingsUpdated  = [Boolean]$tenantSettings.ExtensibleIndicators.AzureResourceThreatProtectionSettingsUpdated
-                AzureSQLServerAuditingSettingsUpdated         = [Boolean]$tenantSettings.ExtensibleIndicators.AzureSQLServerAuditingSettingsUpdated
-                AzureSQLServerFirewallRuleDeleted             = [Boolean]$tenantSettings.ExtensibleIndicators.AzureSQLServerFirewallRuleDeleted
-                AzureSQLServerFirewallRuleUpdated             = [Boolean]$tenantSettings.ExtensibleIndicators.AzureSQLServerFirewallRuleUpdated
-                AzureStorageAccountOrContainerDeleted         = [Boolean]$tenantSettings.ExtensibleIndicators.AzureStorageAccountOrContainerDeleted
-                BoxContentAccess                              = [Boolean]$tenantSettings.ExtensibleIndicators.BoxContentAccess
-                BoxContentDelete                              = [Boolean]$tenantSettings.ExtensibleIndicators.BoxContentDelete
-                BoxContentDownload                            = [Boolean]$tenantSettings.ExtensibleIndicators.BoxContentDownload
-                BoxContentExternallyShared                    = [Boolean]$tenantSettings.ExtensibleIndicators.BoxContentExternallyShared
-                CCFinancialRegulatoryRiskyTextSent            = [Boolean]$tenantSettings.ExtensibleIndicators.CCFinancialRegulatoryRiskyTextSent
-                CCInappropriateContentSent                    = [Boolean]$tenantSettings.ExtensibleIndicators.CCInappropriateContentSent
-                CCInappropriateImagesSent                     = [Boolean]$tenantSettings.ExtensibleIndicators.CCInappropriateImagesSent
-                DropboxContentAccess                          = [Boolean]$tenantSettings.ExtensibleIndicators.DropboxContentAccess
-                DropboxContentDelete                          = [Boolean]$tenantSettings.ExtensibleIndicators.DropboxContentDelete
-                DropboxContentDownload                        = [Boolean]$tenantSettings.ExtensibleIndicators.DropboxContentDownload
-                DropboxContentExternallyShared                = [Boolean]$tenantSettings.ExtensibleIndicators.DropboxContentExternallyShared
-                GoogleDriveContentAccess                      = [Boolean]$tenantSettings.ExtensibleIndicators.GoogleDriveContentAccess
-                GoogleDriveContentDelete                      = [Boolean]$tenantSettings.ExtensibleIndicators.GoogleDriveContentDelete
-                GoogleDriveContentExternallyShared            = [Boolean]$tenantSettings.ExtensibleIndicators.GoogleDriveContentExternallyShared
-                PowerBIDashboardsDeleted                      = [Boolean]$tenantSettings.ExtensibleIndicators.PowerBIDashboardsDeleted
-                PowerBIReportsDeleted                         = [Boolean]$tenantSettings.ExtensibleIndicators.PowerBIReportsDeleted
-                PowerBIReportsDownloaded                      = [Boolean]$tenantSettings.ExtensibleIndicators.PowerBIReportsDownloaded
-                PowerBIReportsExported                        = [Boolean]$tenantSettings.ExtensibleIndicators.PowerBIReportsExported
-                PowerBIReportsViewed                          = [Boolean]$tenantSettings.ExtensibleIndicators.PowerBIReportsViewed
-                PowerBISemanticModelsDeleted                  = [Boolean]$tenantSettings.ExtensibleIndicators.PowerBISemanticModelsDeleted
-                PowerBISensitivityLabelDowngradedForArtifacts = [Boolean]$tenantSettings.ExtensibleIndicators.PowerBISensitivityLabelDowngradedForArtifacts
-                PowerBISensitivityLabelRemovedFromArtifacts   = [Boolean]$tenantSettings.ExtensibleIndicators.PowerBISensitivityLabelRemovedFromArtifacts
+                AnomalyDetections                             = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'AnomalyDetections'}).Enabled
+                CopyToPersonalCloud                           = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'CopyToPersonalCloud'}).Enabled
+                CopyToUSB                                     = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'CopyToUSB'}).Enabled
+                CumulativeExfiltrationDetector                = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'CumulativeExfiltrationDetector'}).Enabled
+                EmailExternal                                 = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'EmailExternal'}).Enabled
+                EmployeeAccessedEmployeePatientData           = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'EmployeeAccessedEmployeePatientData'}).Enabled
+                EmployeeAccessedFamilyData                    = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'EmployeeAccessedFamilyData'}).Enabled
+                EmployeeAccessedHighVolumePatientData         = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'EmployeeAccessedHighVolumePatientData'}).Enabled
+                EmployeeAccessedNeighbourData                 = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'EmployeeAccessedNeighbourData'}).Enabled
+                EmployeeAccessedRestrictedData                = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'EmployeeAccessedRestrictedData'}).Enabled
+                EpoBrowseToChildAbuseSites                    = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'EpoBrowseToChildAbuseSites'}).Enabled
+                EpoBrowseToCriminalActivitySites              = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'EpoBrowseToCriminalActivitySites'}).Enabled
+                EpoBrowseToCultSites                          = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'EpoBrowseToCultSites'}).Enabled
+                EpoBrowseToGamblingSites                      = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'EpoBrowseToGamblingSites'}).Enabled
+                EpoBrowseToHackingSites                       = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'EpoBrowseToHackingSites'}).Enabled
+                EpoBrowseToHateIntoleranceSites               = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'EpoBrowseToHateIntoleranceSites'}).Enabled
+                EpoBrowseToIllegalSoftwareSites               = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'EpoBrowseToIllegalSoftwareSites'}).Enabled
+                EpoBrowseToKeyloggerSites                     = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'EpoBrowseToKeyloggerSites'}).Enabled
+                EpoBrowseToLlmSites                           = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'EpoBrowseToLlmSites'}).Enabled
+                EpoBrowseToMalwareSites                       = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'EpoBrowseToMalwareSites'}).Enabled
+                EpoBrowseToPhishingSites                      = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'EpoBrowseToPhishingSites'}).Enabled
+                EpoBrowseToPornographySites                   = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'EpoBrowseToPornographySites'}).Enabled
+                EpoBrowseToUnallowedDomain                    = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'EpoBrowseToUnallowedDomain'}).Enabled
+                EpoBrowseToViolenceSites                      = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'EpoBrowseToViolenceSites'}).Enabled
+                EpoCopyToClipboardFromSensitiveFile           = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'EpoCopyToClipboardFromSensitiveFile'}).Enabled
+                EpoCopyToNetworkShare                         = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'EpoCopyToNetworkShare'}).Enabled
+                EpoFileArchived                               = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'EpoFileArchived'}).Enabled
+                EpoFileCopiedToRemoteDesktopSession           = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'EpoFileCopiedToRemoteDesktopSession'}).Enabled
+                EpoFileDeleted                                = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'EpoFileDeleted'}).Enabled
+                EpoFileDownloadedFromBlacklistedDomain        = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'EpoFileDownloadedFromBlacklistedDomain'}).Enabled
+                EpoFileDownloadedFromEnterpriseDomain         = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'EpoFileDownloadedFromEnterpriseDomain'}).Enabled
+                EpoFileRenamed                                = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'EpoFileRenamed'}).Enabled
+                EpoFileStagedToCentralLocation                = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'EpoFileStagedToCentralLocation'}).Enabled
+                EpoHiddenFileCreated                          = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'EpoHiddenFileCreated'}).Enabled
+                EpoRemovableMediaMount                        = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'EpoRemovableMediaMount'}).Enabled
+                EpoSensitiveFileRead                          = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'EpoSensitiveFileRead'}).Enabled
+                Mcas3rdPartyAppDownload                       = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'Mcas3rdPartyAppDownload'}).Enabled
+                Mcas3rdPartyAppFileDelete                     = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'Mcas3rdPartyAppFileDelete'}).Enabled
+                Mcas3rdPartyAppFileSharing                    = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'Mcas3rdPartyAppFileSharing'}).Enabled
+                McasActivityFromInfrequentCountry             = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'McasActivityFromInfrequentCountry'}).Enabled
+                McasImpossibleTravel                          = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'McasImpossibleTravel'}).Enabled
+                McasMultipleFailedLogins                      = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'McasMultipleFailedLogins'}).Enabled
+                McasMultipleStorageDeletion                   = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'McasMultipleStorageDeletion'}).Enabled
+                McasMultipleVMCreation                        = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'McasMultipleVMCreation'}).Enabled
+                McasMultipleVMDeletion                        = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'McasMultipleVMDeletion'}).Enabled
+                McasSuspiciousAdminActivities                 = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'McasSuspiciousAdminActivities'}).Enabled
+                McasSuspiciousCloudCreation                   = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'McasSuspiciousCloudCreation'}).Enabled
+                McasSuspiciousCloudTrailLoggingChange         = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'McasSuspiciousCloudTrailLoggingChange'}).Enabled
+                McasTerminatedEmployeeActivity                = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'McasTerminatedEmployeeActivity'}).Enabled
+                OdbDownload                                   = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'OdbDownload'}).Enabled
+                OdbSyncDownload                               = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'OdbSyncDownload'}).Enabled
+                PeerCumulativeExfiltrationDetector            = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'PeerCumulativeExfiltrationDetector'}).Enabled
+                PhysicalAccess                                = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'PhysicalAccess'}).Enabled
+                PotentialHighImpactUser                       = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'PotentialHighImpactUser'}).Enabled
+                Print                                         = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'Print'}).Enabled
+                PriorityUserGroupMember                       = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'PriorityUserGroupMember'}).Enabled
+                SecurityAlertDefenseEvasion                   = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'SecurityAlertDefenseEvasion'}).Enabled
+                SecurityAlertUnwantedSoftware                 = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'SecurityAlertUnwantedSoftware'}).Enabled
+                SpoAccessRequest                              = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'SpoAccessRequest'}).Enabled
+                SpoApprovedAccess                             = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'SpoApprovedAccess'}).Enabled
+                SpoDownload                                   = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'SpoDownload'}).Enabled
+                SpoDownloadV2                                 = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'SpoDownloadV2'}).Enabled
+                SpoFileAccessed                               = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'SpoFileAccessed'}).Enabled
+                SpoFileDeleted                                = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'SpoFileDeleted'}).Enabled
+                SpoFileDeletedFromFirstStageRecycleBin        = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'SpoFileDeletedFromFirstStageRecycleBin'}).Enabled
+                SpoFileDeletedFromSecondStageRecycleBin       = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'SpoFileDeletedFromSecondStageRecycleBin'}).Enabled
+                SpoFileLabelDowngraded                        = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'SpoFileLabelDowngraded'}).Enabled
+                SpoFileLabelRemoved                           = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'SpoFileLabelRemoved'}).Enabled
+                SpoFileSharing                                = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'SpoFileSharing'}).Enabled
+                SpoFolderDeleted                              = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'SpoFolderDeleted'}).Enabled
+                SpoFolderDeletedFromFirstStageRecycleBin      = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'SpoFolderDeletedFromFirstStageRecycleBin'}).Enabled
+                SpoFolderDeletedFromSecondStageRecycleBin     = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'SpoFolderDeletedFromSecondStageRecycleBin'}).Enabled
+                SpoFolderSharing                              = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'SpoFolderSharing'}).Enabled
+                SpoSiteExternalUserAdded                      = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'SpoSiteExternalUserAdded'}).Enabled
+                SpoSiteInternalUserAdded                      = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'SpoSiteInternalUserAdded'}).Enabled
+                SpoSiteLabelRemoved                           = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'SpoSiteLabelRemoved'}).Enabled
+                SpoSiteSharing                                = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'SpoSiteSharing'}).Enabled
+                SpoSyncDownload                               = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'SpoSyncDownload'}).Enabled
+                TeamsChannelFileSharedExternal                = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'TeamsChannelFileSharedExternal'}).Enabled
+                TeamsChannelMemberAddedExternal               = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'TeamsChannelMemberAddedExternal'}).Enabled
+                TeamsChatFileSharedExternal                   = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'TeamsChatFileSharedExternal'}).Enabled
+                TeamsFileDownload                             = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'TeamsFileDownload'}).Enabled
+                TeamsFolderSharedExternal                     = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'TeamsFolderSharedExternal'}).Enabled
+                TeamsMemberAddedExternal                      = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'TeamsMemberAddedExternal'}).Enabled
+                TeamsSensitiveMessage                         = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'TeamsSensitiveMessage'}).Enabled
+                UserHistory                                   = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'UserHistory'}).Enabled
+                AWSS3BlockPublicAccessDisabled                = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript {$_.Name -eq 'AWSS3BlockPublicAccessDisabled'}).Enabled
+                AWSS3BucketDeleted                            = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript {$_.Name -eq 'AWSS3BucketDeleted'}).Enabled
+                AWSS3PublicAccessEnabled                      = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript {$_.Name -eq 'AWSS3PublicAccessEnabled'}).Enabled
+                AWSS3ServerLoggingDisabled                    = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript {$_.Name -eq 'AWSS3ServerLoggingDisabled'}).Enabled
+                AzureElevateAccessToAllSubscriptions          = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript {$_.Name -eq 'AzureElevateAccessToAllSubscriptions'}).Enabled
+                AzureResourceThreatProtectionSettingsUpdated  = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript {$_.Name -eq 'AzureResourceThreatProtectionSettingsUpdated'}).Enabled
+                AzureSQLServerAuditingSettingsUpdated         = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript {$_.Name -eq 'AzureSQLServerAuditingSettingsUpdated'}).Enabled
+                AzureSQLServerFirewallRuleDeleted             = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript {$_.Name -eq 'AzureSQLServerFirewallRuleDeleted'}).Enabled
+                AzureSQLServerFirewallRuleUpdated             = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript {$_.Name -eq 'AzureSQLServerFirewallRuleUpdated'}).Enabled
+                AzureStorageAccountOrContainerDeleted         = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript {$_.Name -eq 'AzureStorageAccountOrContainerDeleted'}).Enabled
+                BoxContentAccess                              = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript {$_.Name -eq 'BoxContentAccess'}).Enabled
+                BoxContentDelete                              = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript {$_.Name -eq 'BoxContentDelete'}).Enabled
+                BoxContentDownload                            = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript {$_.Name -eq 'BoxContentDownload'}).Enabled
+                BoxContentExternallyShared                    = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript {$_.Name -eq 'BoxContentExternallyShared'}).Enabled
+                CCFinancialRegulatoryRiskyTextSent            = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript {$_.Name -eq 'CCFinancialRegulatoryRiskyTextSent'}).Enabled
+                CCInappropriateContentSent                    = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript {$_.Name -eq 'CCInappropriateContentSent'}).Enabled
+                CCInappropriateImagesSent                     = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript {$_.Name -eq 'CCInappropriateImagesSent'}).Enabled
+                DropboxContentAccess                          = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript {$_.Name -eq 'DropboxContentAccess'}).Enabled
+                DropboxContentDelete                          = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript {$_.Name -eq 'DropboxContentDelete'}).Enabled
+                DropboxContentDownload                        = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript {$_.Name -eq 'DropboxContentDownload'}).Enabled
+                DropboxContentExternallyShared                = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript {$_.Name -eq 'DropboxContentExternallyShared'}).Enabled
+                GoogleDriveContentAccess                      = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript {$_.Name -eq 'GoogleDriveContentAccess'}).Enabled
+                GoogleDriveContentDelete                      = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript {$_.Name -eq 'GoogleDriveContentDelete'}).Enabled
+                GoogleDriveContentExternallyShared            = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript {$_.Name -eq 'GoogleDriveContentExternallyShared'}).Enabled
+                PowerBIDashboardsDeleted                      = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript {$_.Name -eq 'PowerBIDashboardsDeleted'}).Enabled
+                PowerBIReportsDeleted                         = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript {$_.Name -eq 'PowerBIReportsDeleted'}).Enabled
+                PowerBIReportsDownloaded                      = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript {$_.Name -eq 'PowerBIReportsDownloaded'}).Enabled
+                PowerBIReportsExported                        = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript {$_.Name -eq 'PowerBIReportsExported'}).Enabled
+                PowerBIReportsViewed                          = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript {$_.Name -eq 'PowerBIReportsViewed'}).Enabled
+                PowerBISemanticModelsDeleted                  = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript {$_.Name -eq 'PowerBISemanticModelsDeleted'}).Enabled
+                PowerBISensitivityLabelDowngradedForArtifacts = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript {$_.Name -eq 'PowerBISensitivityLabelDowngradedForArtifacts'}).Enabled
+                PowerBISensitivityLabelRemovedFromArtifacts   = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript {$_.Name -eq 'PowerBISensitivityLabelRemovedFromArtifacts'}).Enabled
                 HistoricTimeSpan                              = $tenantSettings.TimeSpan.HistoricTimeSpan
                 InScopeTimeSpan                               = $tenantSettings.TimeSpan.InScopeTimeSpan
-                EnableTeam                                    = [Boolean]$tenantSettings.FeatureSettings.EnableTeam
+                EnableTeam                                    = [Boolean]($tenantSettings.FeatureSettings.EnableTeam)
             }
 
             $AnalyticsNewInsight = $tenantSettings.NotificationPreferences | Where-Object -FilterScript {$_.NotificationType -eq 'AnalyticsNewInsight'}
@@ -846,6 +861,14 @@ function Set-TargetResource
         [System.String]
         $Name,
 
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $InsiderRiskScenario,
+
+        [Parameter()]
+        [System.Boolean]
+        $Anonymization,
+
         [Parameter()]
         [System.Boolean]
         $DLPUserRiskSync,
@@ -1391,19 +1414,19 @@ function Set-TargetResource
         $SessionRecordingEnabled,
 
         [Parameter()]
-        [System.Boolean]
+        [System.String]
         $RecordingTimeframePreEventInSec,
 
         [Parameter()]
-        [System.Boolean]
+        [System.String]
         $RecordingTimeframePostEventInSec,
 
         [Parameter()]
-        [System.Boolean]
+        [System.String]
         $BandwidthCapInMb,
 
         [Parameter()]
-        [System.Boolean]
+        [System.String]
         $OfflineRecordingStorageLimitInMb,
 
         [Parameter()]
@@ -1452,23 +1475,105 @@ function Set-TargetResource
 
     $setParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
+    $indicatorsProperties = @('AnomalyDetections','CopyToPersonalCloud','CopyToUSB','CumulativeExfiltrationDetector', `
+                              'EmailExternal','EmployeeAccessedEmployeePatientData','EmployeeAccessedFamilyData', `
+                              'EmployeeAccessedHighVolumePatientData','EmployeeAccessedNeighbourData', `
+                              'EmployeeAccessedRestrictedData','EpoBrowseToChildAbuseSites','EpoBrowseToCriminalActivitySites', `
+                              'EpoBrowseToCultSites','EpoBrowseToGamblingSites','EpoBrowseToHackingSites', `
+                              'EpoBrowseToHateIntoleranceSites','EpoBrowseToIllegalSoftwareSites','EpoBrowseToKeyloggerSites', `
+                              'EpoBrowseToLlmSites','EpoBrowseToMalwareSites','EpoBrowseToPhishingSites', `
+                              'EpoBrowseToPornographySites','EpoBrowseToUnallowedDomain','EpoBrowseToViolenceSites', `
+                              'EpoCopyToClipboardFromSensitiveFile','EpoCopyToNetworkShare','EpoFileArchived', `
+                              'EpoFileCopiedToRemoteDesktopSession','EpoFileDeleted','EpoFileDownloadedFromBlacklistedDomain', `
+                              'EpoFileDownloadedFromEnterpriseDomain','EpoFileRenamed','EpoFileStagedToCentralLocation', `
+                              'EpoHiddenFileCreated','EpoRemovableMediaMount','EpoSensitiveFileRead','Mcas3rdPartyAppDownload', `
+                              'Mcas3rdPartyAppFileDelete','Mcas3rdPartyAppFileSharing','McasActivityFromInfrequentCountry', `
+                              'McasImpossibleTravel','McasMultipleFailedLogins','McasMultipleStorageDeletion', `
+                              'McasMultipleVMCreation','McasMultipleVMDeletion','McasSuspiciousAdminActivities', `
+                              'McasSuspiciousCloudCreation','McasSuspiciousCloudTrailLoggingChange','McasTerminatedEmployeeActivity', `
+                              'OdbDownload','OdbSyncDownload','PeerCumulativeExfiltrationDetector','PhysicalAccess', `
+                              'PotentialHighImpactUser','Print','PriorityUserGroupMember','SecurityAlertDefenseEvasion', `
+                              'SecurityAlertUnwantedSoftware','SpoAccessRequest','SpoApprovedAccess','SpoDownload','SpoDownloadV2', `
+                              'SpoFileAccessed','SpoFileDeleted','SpoFileDeletedFromFirstStageRecycleBin', `
+                              'SpoFileDeletedFromSecondStageRecycleBin','SpoFileLabelDowngraded','SpoFileLabelRemoved', `
+                              'SpoFileSharing','SpoFolderDeleted','SpoFolderDeletedFromFirstStageRecycleBin', `
+                              'SpoFolderDeletedFromSecondStageRecycleBin','SpoFolderSharing','SpoSiteExternalUserAdded', `
+                              'SpoSiteInternalUserAdded','SpoSiteLabelRemoved','SpoSiteSharing','SpoSyncDownload', `
+                              'TeamsChannelFileSharedExternal','TeamsChannelMemberAddedExternal','TeamsChatFileSharedExternal', `
+                              'TeamsFileDownload','TeamsFolderSharedExternal','TeamsMemberAddedExternal','TeamsSensitiveMessage', `
+                              'UserHistory')
+
+    $indicatorValues = @()
+    foreach ($indicatorProperty in $indicatorsProperties)
+    {
+        if ($PSBoundParameters.ContainsKey($indicatorProperty))
+        {
+            $indicatorValues += "{`"Name`":`"$indicatorProperty`",`"Type`":`"Insight`",`"Enabled`":$(($PSBoundParameters.$indicatorProperty).ToString().ToLower()),`"UseDefault`":true,`"ThresholdMode`":`"Default`"}"
+        }
+    }
+
+    $extensibleIndicatorsProperties = @('AWSS3BlockPublicAccessDisabled','AWSS3BucketDeleted','AWSS3PublicAccessEnabled',`
+    'AWSS3ServerLoggingDisabled','AzureElevateAccessToAllSubscriptions','AzureResourceThreatProtectionSettingsUpdated', `
+    'AzureSQLServerAuditingSettingsUpdated','AzureSQLServerFirewallRuleDeleted','AzureSQLServerFirewallRuleUpdated', `
+    'AzureStorageAccountOrContainerDeleted','BoxContentAccess','BoxContentDelete','BoxContentDownload','BoxContentExternallyShared', `
+    'CCFinancialRegulatoryRiskyTextSent','CCInappropriateContentSent','CCInappropriateImagesSent','DropboxContentAccess', `
+    'DropboxContentDelete','DropboxContentDownload','DropboxContentExternallyShared','GoogleDriveContentAccess', `
+    'GoogleDriveContentDelete','GoogleDriveContentExternallyShared','PowerBIDashboardsDeleted','PowerBIReportsDeleted', `
+    'PowerBIReportsDownloaded','PowerBIReportsExported','PowerBIReportsViewed','PowerBISemanticModelsDeleted', `
+    'PowerBISensitivityLabelDowngradedForArtifacts','PowerBISensitivityLabelRemovedFromArtifacts')
+
+    $extensibleIndicatorsValues = @()
+    foreach ($extensibleIndicatorsProperty in $extensibleIndicatorsProperties)
+    {
+        if ($PSBoundParameters.ContainsKey($extensibleIndicatorsProperty))
+        {
+            $extensibleIndicatorsValues += "{`"Name`":`"$extensibleIndicatorsProperty`",`"Type`":`"ExtensibleInsight`",`"Enabled`":$(($PSBoundParameters.$extensibleIndicatorsProperty).ToString().ToLower()),`"UseDefault`":true,`"ThresholdMode`":`"Default`"}"
+        }
+    }
+
+    # Tenant Settings
+    $featureSettingsValue = "{`"Anonymization`":$($Anonymization.ToString().ToLower()), `"DLPUserRiskSync`":$($DLPUserRiskSync.ToString().ToLower()), `"OptInIRMDataExport`":$($OptInIRMDataExport.ToString().ToLower()), `"RaiseAuditAlert`":$($RaiseAuditAlert.ToString().ToLower()), `"EnableTeam`":$($EnableTeam.ToString().ToLower())}"
+    $intelligentDetectionValue = "{`"FileVolCutoffLimits`":`"$($FileVolCutoffLimits)`", `"AlertVolume`":`"$($AlertVolume)`"}"
+    $tenantSettingsValue = "{`"Region`":`"WW`", `"FeatureSettings`":$($featureSettingsValue), " + `
+                            "`"IntelligentDetections`":$($intelligentDetectionValue)}"
+
     # CREATE
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        ##TODO - Replace by the New cmdlet for the resource
-        New-Cmdlet @SetParameters
+        Write-Verbose -Message "Creating new Insider Risk Policy {$Name} with values:`r`nIndicators: $($indicatorValues)`r`n`r`nExtensibleIndicators: $($extensibleIndicatorsValues)`r`n`r`nTenantSettings: $($tenantSettingsValue)`r`n`r`nSessionRecordingSettings: $($sessionRecordingValues)"
+        New-InsiderRiskPolicy -Name $Name -InsiderRiskScenario $InsiderRiskScenario `
+                              -Indicators $indicatorValues `
+                              -ExtensibleIndicators $extensibleIndicatorsValues `
+                              -TenantSetting $tenantSettingsValue `
+                              -HistoricTimeSpan $HistoricTimeSpan `
+                              -InScopeTimeSpan $InScopeTimeSpan `
+                              -SessionRecordingSettings $sessionRecordingValues
     }
     # UPDATE
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        ##TODO - Replace by the Update/Set cmdlet for the resource
-        Set-cmdlet @SetParameters
+        Write-Verbose -Message "Updating existing Insider Risk Policy {$Name} with values:`r`nIndicators: $($indicatorValues)`r`n`r`nExtensibleIndicators: $($extensibleIndicatorsValues)`r`n`r`nTenantSettings: $($tenantSettingsValue)`r`n`r`nSessionRecordingSettings: $($sessionRecordingValues)"
+
+        if ($InsiderRiskScenario -eq 'SessionRecordingSetting')
+        {
+            $sessionRecordingValues = "{`"RecordingMode`":`"EventDriven`", `"RecordingTimeframePreEventInSec`":$($RecordingTimeframePreEventInSec),`"RecordingTimeframePostEventInSec`":$($RecordingTimeframePostEventInSec),`"BandwidthCapInMb`":$($BandwidthCapInMb),`"OfflineRecordingStorageLimitInMb`":$($OfflineRecordingStorageLimitInMb),`"ClipDeletionEnabled`":$($ClipDeletionEnabled.ToString().ToLower()),`"Enabled`":$($SessionRecordingEnabled.ToString().ToLower()),`"FpsNumerator`":0,`"FpsDenominator`":0}"
+            Write-Verbose -Message 'Updating Session Recording Settings'
+            Set-InsiderRiskPolicy -Identity $Name -SessionRecordingSettings $sessionRecordingValues | Out-Null
+        }
+        else
+        {
+            Set-InsiderRiskPolicy -Identity $Name -Indicators $indicatorValues `
+                -ExtensibleIndicators $extensibleIndicatorsValues `
+                -TenantSetting $tenantSettingsValue `
+                -HistoricTimeSpan $HistoricTimeSpan `
+                -InScopeTimeSpan $InScopeTimeSpan
+        }
     }
     # REMOVE
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        ##TODO - Replace by the Remove cmdlet for the resource
-        Remove-cmdlet @SetParameters
+        Write-Verbose -Message "Removing Insider Risk Policy {$Name}"
+        Remove-InsiderRiskPolicy -Identity $Name -Confirm:$false
     }
 }
 
@@ -1481,6 +1586,14 @@ function Test-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $Name,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $InsiderRiskScenario,
+
+        [Parameter()]
+        [System.Boolean]
+        $Anonymization,
 
         [Parameter()]
         [System.Boolean]
@@ -2027,19 +2140,19 @@ function Test-TargetResource
         $SessionRecordingEnabled,
 
         [Parameter()]
-        [System.Boolean]
+        [System.String]
         $RecordingTimeframePreEventInSec,
 
         [Parameter()]
-        [System.Boolean]
+        [System.String]
         $RecordingTimeframePostEventInSec,
 
         [Parameter()]
-        [System.Boolean]
+        [System.String]
         $BandwidthCapInMb,
 
         [Parameter()]
-        [System.Boolean]
+        [System.String]
         $OfflineRecordingStorageLimitInMb,
 
         [Parameter()]
@@ -2167,10 +2280,15 @@ function Export-TargetResource
         }
         foreach ($config in $Script:exportedInstances)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
             $displayedKey = $config.Name
             Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -NoNewline
             $params = @{
                 Name                  = $config.Name
+                InsiderRiskScenario   = $config.InsiderRiskScenario
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId

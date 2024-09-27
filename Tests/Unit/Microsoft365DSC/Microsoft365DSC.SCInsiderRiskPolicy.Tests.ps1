@@ -35,7 +35,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return "Credentials"
             }
 
-            ##TODO - Mock any Remove/Set/New cmdlets
+            Mock -CommandName Set-InsiderRiskPolicy -MockWith {}
+            Mock -CommandName New-InsiderRiskPolicy -MockWith {}
+            Mock -CommandName Remove-InsiderRiskPolicy -MockWith {}
 
             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
@@ -47,13 +49,23 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The instance should exist but it DOES NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    ##TODO - Add Parameters
-                    Ensure              = 'Present'
-                    Credential          = $Credential;
+                    Anonymization = $false
+                    AlertVolume                                   = "Medium";
+                    AnalyticsNewInsightEnabled                    = $False;
+                    AnalyticsTurnedOffEnabled                     = $False;
+                    AnomalyDetections                             = $False;
+                    AzureStorageAccountOrContainerDeleted         = $False;
+                    CCInappropriateContentSent                    = $False;
+                    EnableTeam                                    = $True;
+                    InsiderRiskScenario                           = "TenantSetting";
+                    Mcas3rdPartyAppDownload                       = $False;
+                    Name                                          = "IRM_Tenant_Setting";
+                    NotificationDetailsEnabled                    = $True;
+                    Ensure                                        = 'Present'
+                    Credential                                    = $Credential;
                 }
 
-                ##TODO - Mock the Get-Cmdlet to return $null
-                Mock -CommandName Get-Cmdlet -MockWith {
+                Mock -CommandName Get-InsiderRiskPolicy -MockWith {
                     return $null
                 }
             }
@@ -65,24 +77,35 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should create a new instance from the Set method' {
-                ##TODO - Replace the New-Cmdlet by the appropriate one
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName New-Cmdlet -Exactly 1
+                Should -Invoke -CommandName New-InsiderRiskPolicy -Exactly 1
             }
         }
 
         Context -Name "The instance exists but it SHOULD NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    ##TODO - Add Parameters
-                    Ensure              = 'Absent'
-                    Credential          = $Credential;
+                    Anonymization = $false
+                    AlertVolume                                   = "Medium";
+                    AnalyticsNewInsightEnabled                    = $False;
+                    AnalyticsTurnedOffEnabled                     = $False;
+                    AnomalyDetections                             = $False;
+                    AzureStorageAccountOrContainerDeleted         = $False;
+                    CCInappropriateContentSent                    = $False;
+                    EnableTeam                                    = $True;
+                    InsiderRiskScenario                           = "TenantSetting";
+                    Mcas3rdPartyAppDownload                       = $False;
+                    Name                                          = "IRM_Tenant_Setting";
+                    NotificationDetailsEnabled                    = $True;
+                    Ensure                                        = 'Absent'
+                    Credential                                    = $Credential;
                 }
 
-                ##TODO - Mock the Get-Cmdlet to return an instance
-                Mock -CommandName Get-Cmdlet -MockWith {
+                Mock -CommandName Get-InsiderRiskPolicy -MockWith {
                     return @{
-
+                        TenantSetting = @(
+                            '{"Region":"WW","IndicatorVersion":"1.1","Indicators":[{"Name":"AnomalyDetections","Enabled":false},{"Name":"CopyToPersonalCloud","Enabled":false},{"Name":"CopyToUSB","Enabled":false},{"Name":"CumulativeExfiltrationDetector","Enabled":true},{"Name":"EmailExternal","Enabled":false},{"Name":"EmployeeAccessedEmployeePatientData","Enabled":false},{"Name":"EmployeeAccessedFamilyData","Enabled":false},{"Name":"EmployeeAccessedHighVolumePatientData","Enabled":false},{"Name":"EmployeeAccessedNeighbourData","Enabled":false},{"Name":"EmployeeAccessedRestrictedData","Enabled":false},{"Name":"EpoBrowseToChildAbuseSites","Enabled":false},{"Name":"EpoBrowseToCriminalActivitySites","Enabled":false},{"Name":"EpoBrowseToCultSites","Enabled":false},{"Name":"EpoBrowseToGamblingSites","Enabled":false},{"Name":"EpoBrowseToHackingSites","Enabled":false},{"Name":"EpoBrowseToHateIntoleranceSites","Enabled":false},{"Name":"EpoBrowseToIllegalSoftwareSites","Enabled":false},{"Name":"EpoBrowseToKeyloggerSites","Enabled":false},{"Name":"EpoBrowseToLlmSites","Enabled":false},{"Name":"EpoBrowseToMalwareSites","Enabled":false},{"Name":"EpoBrowseToPhishingSites","Enabled":false},{"Name":"EpoBrowseToPornographySites","Enabled":false},{"Name":"EpoBrowseToUnallowedDomain","Enabled":false},{"Name":"EpoBrowseToViolenceSites","Enabled":false},{"Name":"EpoCopyToClipboardFromSensitiveFile","Enabled":false},{"Name":"EpoCopyToNetworkShare","Enabled":false},{"Name":"EpoFileArchived","Enabled":false},{"Name":"EpoFileCopiedToRemoteDesktopSession","Enabled":false},{"Name":"EpoFileDeleted","Enabled":false},{"Name":"EpoFileDownloadedFromBlacklistedDomain","Enabled":false},{"Name":"EpoFileDownloadedFromEnterpriseDomain","Enabled":false},{"Name":"EpoFileRenamed","Enabled":false},{"Name":"EpoFileStagedToCentralLocation","Enabled":false},{"Name":"EpoHiddenFileCreated","Enabled":false},{"Name":"EpoRemovableMediaMount","Enabled":false},{"Name":"EpoSensitiveFileRead","Enabled":false},{"Name":"Mcas3rdPartyAppDownload","Enabled":false},{"Name":"Mcas3rdPartyAppFileDelete","Enabled":false},{"Name":"Mcas3rdPartyAppFileSharing","Enabled":false},{"Name":"McasActivityFromInfrequentCountry","Enabled":false},{"Name":"McasImpossibleTravel","Enabled":false},{"Name":"McasMultipleFailedLogins","Enabled":false},{"Name":"McasMultipleStorageDeletion","Enabled":false},{"Name":"McasMultipleVMCreation","Enabled":true},{"Name":"McasMultipleVMDeletion","Enabled":false},{"Name":"McasSuspiciousAdminActivities","Enabled":false},{"Name":"McasSuspiciousCloudCreation","Enabled":false},{"Name":"McasSuspiciousCloudTrailLoggingChange","Enabled":false},{"Name":"McasTerminatedEmployeeActivity","Enabled":false},{"Name":"OdbDownload","Enabled":false},{"Name":"OdbSyncDownload","Enabled":false},{"Name":"PeerCumulativeExfiltrationDetector","Enabled":false},{"Name":"PhysicalAccess","Enabled":false},{"Name":"PotentialHighImpactUser","Enabled":false},{"Name":"Print","Enabled":false},{"Name":"PriorityUserGroupMember","Enabled":false},{"Name":"SecurityAlertDefenseEvasion","Enabled":false},{"Name":"SecurityAlertUnwantedSoftware","Enabled":false},{"Name":"SpoAccessRequest","Enabled":false},{"Name":"SpoApprovedAccess","Enabled":false},{"Name":"SpoDownload","Enabled":false},{"Name":"SpoDownloadV2","Enabled":false},{"Name":"SpoFileAccessed","Enabled":false},{"Name":"SpoFileDeleted","Enabled":false},{"Name":"SpoFileDeletedFromFirstStageRecycleBin","Enabled":false},{"Name":"SpoFileDeletedFromSecondStageRecycleBin","Enabled":false},{"Name":"SpoFileLabelDowngraded","Enabled":false},{"Name":"SpoFileLabelRemoved","Enabled":false},{"Name":"SpoFileSharing","Enabled":true},{"Name":"SpoFolderDeleted","Enabled":false},{"Name":"SpoFolderDeletedFromFirstStageRecycleBin","Enabled":false},{"Name":"SpoFolderDeletedFromSecondStageRecycleBin","Enabled":false},{"Name":"SpoFolderSharing","Enabled":false},{"Name":"SpoSiteExternalUserAdded","Enabled":false},{"Name":"SpoSiteInternalUserAdded","Enabled":false},{"Name":"SpoSiteLabelRemoved","Enabled":false},{"Name":"SpoSiteSharing","Enabled":false},{"Name":"SpoSyncDownload","Enabled":false},{"Name":"TeamsChannelFileSharedExternal","Enabled":false},{"Name":"TeamsChannelMemberAddedExternal","Enabled":false},{"Name":"TeamsChatFileSharedExternal","Enabled":false},{"Name":"TeamsFileDownload","Enabled":false},{"Name":"TeamsFolderSharedExternal","Enabled":false},{"Name":"TeamsMemberAddedExternal","Enabled":false},{"Name":"TeamsSensitiveMessage","Enabled":false},{"Name":"UserHistory","Enabled":false}],"ExtensibleIndicators":[{"Name":"AWSS3BlockPublicAccessDisabled","Enabled":false},{"Name":"AWSS3BucketDeleted","Enabled":false},{"Name":"AWSS3PublicAccessEnabled","Enabled":false},{"Name":"AWSS3ServerLoggingDisabled","Enabled":false},{"Name":"AzureElevateAccessToAllSubscriptions","Enabled":false},{"Name":"AzureResourceThreatProtectionSettingsUpdated","Enabled":false},{"Name":"AzureSQLServerAuditingSettingsUpdated","Enabled":false},{"Name":"AzureSQLServerFirewallRuleDeleted","Enabled":false},{"Name":"AzureSQLServerFirewallRuleUpdated","Enabled":false},{"Name":"AzureStorageAccountOrContainerDeleted","Enabled":false},{"Name":"BoxContentAccess","Enabled":false},{"Name":"BoxContentDelete","Enabled":false},{"Name":"BoxContentDownload","Enabled":false},{"Name":"BoxContentExternallyShared","Enabled":false},{"Name":"CCFinancialRegulatoryRiskyTextSent","Enabled":false},{"Name":"CCInappropriateContentSent","Enabled":false},{"Name":"CCInappropriateImagesSent","Enabled":false},{"Name":"DropboxContentAccess","Enabled":false},{"Name":"DropboxContentDelete","Enabled":false},{"Name":"DropboxContentDownload","Enabled":false},{"Name":"DropboxContentExternallyShared","Enabled":false},{"Name":"GoogleDriveContentAccess","Enabled":false},{"Name":"GoogleDriveContentDelete","Enabled":false},{"Name":"GoogleDriveContentExternallyShared","Enabled":false},{"Name":"PowerBIDashboardsDeleted","Enabled":false},{"Name":"PowerBIReportsDeleted","Enabled":false},{"Name":"PowerBIReportsDownloaded","Enabled":false},{"Name":"PowerBIReportsExported","Enabled":false},{"Name":"PowerBIReportsViewed","Enabled":false},{"Name":"PowerBISemanticModelsDeleted","Enabled":false},{"Name":"PowerBISensitivityLabelDowngradedForArtifacts","Enabled":false},{"Name":"PowerBISensitivityLabelRemovedFromArtifacts","Enabled":false}],"TimeSpan":{"InScopeTimeSpan":"30","HistoricTimeSpan":"89","FutureTerminationWindow":"5","PastTerminationWindow":"5","PostTerminationActivity":"False"},"IntelligentDetections":{"FileVolCutoffLimits":"59","AlertVolume":"Medium"},"FeatureSettings":{"Anonymization":"false","DLPUserRiskSync":"true","OptInIRMDataExport":"true","RaiseAuditAlert":"true","EnableTeam":"true"},"NotificationPreferences":null,"DynamicRiskPreventionSettings":null,"InterpretedSettings":null}'
+                        )
                     }
                 }
             }
@@ -94,23 +117,28 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should remove the instance from the Set method' {
-                ##TODO - Replace the Remove-Cmdlet by the appropriate one
-                Should -Invoke -CommandName Remove-Cmdlet -Exactly 1
+                Set-TargetResource @testParams
+                Should -Invoke -CommandName Remove-InsiderRiskPolicy -Exactly 1
             }
         }
 
         Context -Name "The instance exists and values are already in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    ##TODO - Add Parameters
-                    Ensure              = 'Present'
-                    Credential          = $Credential;
+                    AnomalyDetections                             = $False;
+                    InsiderRiskScenario                           = "TenantSetting";
+                    Name                                          = "IRM_Tenant_Setting";
+                    Ensure                                        = 'Present'
+                    Credential                                    = $Credential;
                 }
 
-                ##TODO - Mock the Get-Cmdlet to return the desired values
-                Mock -CommandName Get-Cmdlet -MockWith {
+                Mock -CommandName Get-InsiderRiskPolicy -MockWith {
                     return @{
-
+                        Name = "IRM_Tenant_Setting"
+                        InsiderRiskScenario = "TenantSetting"
+                        TenantSettings = @(
+                            '{"Region":"WW","IndicatorVersion":"1.1","Indicators":[{"Name":"AnomalyDetections","Enabled":false},{"Name":"CumulativeExfiltrationDetector","Enabled":true},{"Name":"EmailExternal","Enabled":false},{"Name":"EmployeeAccessedEmployeePatientData","Enabled":false},{"Name":"EmployeeAccessedFamilyData","Enabled":false},{"Name":"EmployeeAccessedHighVolumePatientData","Enabled":false},{"Name":"EmployeeAccessedNeighbourData","Enabled":false},{"Name":"EmployeeAccessedRestrictedData","Enabled":false},{"Name":"EpoBrowseToChildAbuseSites","Enabled":false},{"Name":"EpoBrowseToCriminalActivitySites","Enabled":false},{"Name":"EpoBrowseToCultSites","Enabled":false},{"Name":"EpoBrowseToGamblingSites","Enabled":false},{"Name":"EpoBrowseToHackingSites","Enabled":false},{"Name":"EpoBrowseToHateIntoleranceSites","Enabled":false},{"Name":"EpoBrowseToIllegalSoftwareSites","Enabled":false},{"Name":"EpoBrowseToKeyloggerSites","Enabled":false},{"Name":"EpoBrowseToLlmSites","Enabled":false},{"Name":"EpoBrowseToMalwareSites","Enabled":false},{"Name":"EpoBrowseToPhishingSites","Enabled":false},{"Name":"EpoBrowseToPornographySites","Enabled":false},{"Name":"EpoBrowseToUnallowedDomain","Enabled":false},{"Name":"EpoBrowseToViolenceSites","Enabled":false},{"Name":"EpoCopyToClipboardFromSensitiveFile","Enabled":false},{"Name":"EpoCopyToNetworkShare","Enabled":false},{"Name":"EpoFileArchived","Enabled":false},{"Name":"EpoFileCopiedToRemoteDesktopSession","Enabled":false},{"Name":"EpoFileDeleted","Enabled":false},{"Name":"EpoFileDownloadedFromBlacklistedDomain","Enabled":false},{"Name":"EpoFileDownloadedFromEnterpriseDomain","Enabled":false},{"Name":"EpoFileRenamed","Enabled":false},{"Name":"EpoFileStagedToCentralLocation","Enabled":false},{"Name":"EpoHiddenFileCreated","Enabled":false},{"Name":"EpoRemovableMediaMount","Enabled":false},{"Name":"EpoSensitiveFileRead","Enabled":false},{"Name":"Mcas3rdPartyAppDownload","Enabled":false},{"Name":"Mcas3rdPartyAppFileDelete","Enabled":false},{"Name":"Mcas3rdPartyAppFileSharing","Enabled":false},{"Name":"McasActivityFromInfrequentCountry","Enabled":false},{"Name":"McasImpossibleTravel","Enabled":false},{"Name":"McasMultipleFailedLogins","Enabled":false},{"Name":"McasMultipleStorageDeletion","Enabled":false},{"Name":"McasMultipleVMCreation","Enabled":true},{"Name":"McasMultipleVMDeletion","Enabled":false},{"Name":"McasSuspiciousAdminActivities","Enabled":false},{"Name":"McasSuspiciousCloudCreation","Enabled":false},{"Name":"McasSuspiciousCloudTrailLoggingChange","Enabled":false},{"Name":"McasTerminatedEmployeeActivity","Enabled":false},{"Name":"OdbDownload","Enabled":false},{"Name":"OdbSyncDownload","Enabled":false},{"Name":"PeerCumulativeExfiltrationDetector","Enabled":false},{"Name":"PhysicalAccess","Enabled":false},{"Name":"PotentialHighImpactUser","Enabled":false},{"Name":"Print","Enabled":false},{"Name":"PriorityUserGroupMember","Enabled":false},{"Name":"SecurityAlertDefenseEvasion","Enabled":false},{"Name":"SecurityAlertUnwantedSoftware","Enabled":false},{"Name":"SpoAccessRequest","Enabled":false},{"Name":"SpoApprovedAccess","Enabled":false},{"Name":"SpoDownload","Enabled":false},{"Name":"SpoDownloadV2","Enabled":false},{"Name":"SpoFileAccessed","Enabled":false},{"Name":"SpoFileDeleted","Enabled":false},{"Name":"SpoFileDeletedFromFirstStageRecycleBin","Enabled":false},{"Name":"SpoFileDeletedFromSecondStageRecycleBin","Enabled":false},{"Name":"SpoFileLabelDowngraded","Enabled":false},{"Name":"SpoFileLabelRemoved","Enabled":false},{"Name":"SpoFileSharing","Enabled":true},{"Name":"SpoFolderDeleted","Enabled":false},{"Name":"SpoFolderDeletedFromFirstStageRecycleBin","Enabled":false},{"Name":"SpoFolderDeletedFromSecondStageRecycleBin","Enabled":false},{"Name":"SpoFolderSharing","Enabled":false},{"Name":"SpoSiteExternalUserAdded","Enabled":false},{"Name":"SpoSiteInternalUserAdded","Enabled":false},{"Name":"SpoSiteLabelRemoved","Enabled":false},{"Name":"SpoSiteSharing","Enabled":false},{"Name":"SpoSyncDownload","Enabled":false},{"Name":"TeamsChannelFileSharedExternal","Enabled":false},{"Name":"TeamsChannelMemberAddedExternal","Enabled":false},{"Name":"TeamsChatFileSharedExternal","Enabled":false},{"Name":"TeamsFileDownload","Enabled":false},{"Name":"TeamsFolderSharedExternal","Enabled":false},{"Name":"TeamsMemberAddedExternal","Enabled":false},{"Name":"TeamsSensitiveMessage","Enabled":false},{"Name":"UserHistory","Enabled":false}],"ExtensibleIndicators":[{"Name":"AWSS3BlockPublicAccessDisabled","Enabled":false},{"Name":"AWSS3BucketDeleted","Enabled":false},{"Name":"AWSS3PublicAccessEnabled","Enabled":false},{"Name":"AWSS3ServerLoggingDisabled","Enabled":false},{"Name":"AzureElevateAccessToAllSubscriptions","Enabled":false},{"Name":"AzureResourceThreatProtectionSettingsUpdated","Enabled":false},{"Name":"AzureSQLServerAuditingSettingsUpdated","Enabled":false},{"Name":"AzureSQLServerFirewallRuleDeleted","Enabled":false},{"Name":"AzureSQLServerFirewallRuleUpdated","Enabled":false},{"Name":"AzureStorageAccountOrContainerDeleted","Enabled":false},{"Name":"BoxContentAccess","Enabled":false},{"Name":"BoxContentDelete","Enabled":false},{"Name":"BoxContentDownload","Enabled":false},{"Name":"BoxContentExternallyShared","Enabled":false},{"Name":"CCFinancialRegulatoryRiskyTextSent","Enabled":false},{"Name":"CCInappropriateContentSent","Enabled":false},{"Name":"CCInappropriateImagesSent","Enabled":false},{"Name":"DropboxContentAccess","Enabled":false},{"Name":"DropboxContentDelete","Enabled":false},{"Name":"DropboxContentDownload","Enabled":false},{"Name":"DropboxContentExternallyShared","Enabled":false},{"Name":"GoogleDriveContentAccess","Enabled":false},{"Name":"GoogleDriveContentDelete","Enabled":false},{"Name":"GoogleDriveContentExternallyShared","Enabled":false},{"Name":"PowerBIDashboardsDeleted","Enabled":false},{"Name":"PowerBIReportsDeleted","Enabled":false},{"Name":"PowerBIReportsDownloaded","Enabled":false},{"Name":"PowerBIReportsExported","Enabled":false},{"Name":"PowerBIReportsViewed","Enabled":false},{"Name":"PowerBISemanticModelsDeleted","Enabled":false},{"Name":"PowerBISensitivityLabelDowngradedForArtifacts","Enabled":false},{"Name":"PowerBISensitivityLabelRemovedFromArtifacts","Enabled":false}],"TimeSpan":{"InScopeTimeSpan":"30","HistoricTimeSpan":"89","FutureTerminationWindow":"5","PastTerminationWindow":"5","PostTerminationActivity":"False"},"IntelligentDetections":{"FileVolCutoffLimits":"59","AlertVolume":"Medium"},"FeatureSettings":{"Anonymization":"false","DLPUserRiskSync":"true","OptInIRMDataExport":"true","RaiseAuditAlert":"true","EnableTeam":"true"},"NotificationPreferences":null,"DynamicRiskPreventionSettings":null,"InterpretedSettings":null}'
+                        )
                     }
                 }
             }
@@ -123,15 +151,29 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The instance exists and values are NOT in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    ##TODO - Add Parameters
-                    Ensure              = 'Present'
-                    Credential          = $Credential;
+                    Anonymization = $false
+                    AlertVolume                                   = "Medium";
+                    AnalyticsNewInsightEnabled                    = $False;
+                    AnalyticsTurnedOffEnabled                     = $False;
+                    AnomalyDetections                             = $False;
+                    AzureStorageAccountOrContainerDeleted         = $True; #Drift
+                    CCInappropriateContentSent                    = $False;
+                    EnableTeam                                    = $True;
+                    InsiderRiskScenario                           = "TenantSetting";
+                    Mcas3rdPartyAppDownload                       = $False;
+                    Name                                          = "IRM_Tenant_Setting";
+                    NotificationDetailsEnabled                    = $True;
+                    Ensure                                        = 'Present'
+                    Credential                                    = $Credential;
                 }
 
-                ##TODO - Mock the Get-Cmdlet to return a drift
-                Mock -CommandName Get-Cmdlet -MockWith {
-                    return @{
-
+                Mock -CommandName Get-InsiderRiskPolicy -MockWith {
+                    return @{                    
+                        Name = "IRM_Tenant_Setting"
+                        InsiderRiskScenario = "TenantSetting"
+                        TenantSettings = @(
+                            '{"Region":"WW","IndicatorVersion":"1.1","Indicators":[{"Name":"AnomalyDetections","Enabled":false},{"Name":"CopyToPersonalCloud","Enabled":false},{"Name":"CopyToUSB","Enabled":false},{"Name":"CumulativeExfiltrationDetector","Enabled":true},{"Name":"EmailExternal","Enabled":false},{"Name":"EmployeeAccessedEmployeePatientData","Enabled":false},{"Name":"EmployeeAccessedFamilyData","Enabled":false},{"Name":"EmployeeAccessedHighVolumePatientData","Enabled":false},{"Name":"EmployeeAccessedNeighbourData","Enabled":false},{"Name":"EmployeeAccessedRestrictedData","Enabled":false},{"Name":"EpoBrowseToChildAbuseSites","Enabled":false},{"Name":"EpoBrowseToCriminalActivitySites","Enabled":false},{"Name":"EpoBrowseToCultSites","Enabled":false},{"Name":"EpoBrowseToGamblingSites","Enabled":false},{"Name":"EpoBrowseToHackingSites","Enabled":false},{"Name":"EpoBrowseToHateIntoleranceSites","Enabled":false},{"Name":"EpoBrowseToIllegalSoftwareSites","Enabled":false},{"Name":"EpoBrowseToKeyloggerSites","Enabled":false},{"Name":"EpoBrowseToLlmSites","Enabled":false},{"Name":"EpoBrowseToMalwareSites","Enabled":false},{"Name":"EpoBrowseToPhishingSites","Enabled":false},{"Name":"EpoBrowseToPornographySites","Enabled":false},{"Name":"EpoBrowseToUnallowedDomain","Enabled":false},{"Name":"EpoBrowseToViolenceSites","Enabled":false},{"Name":"EpoCopyToClipboardFromSensitiveFile","Enabled":false},{"Name":"EpoCopyToNetworkShare","Enabled":false},{"Name":"EpoFileArchived","Enabled":false},{"Name":"EpoFileCopiedToRemoteDesktopSession","Enabled":false},{"Name":"EpoFileDeleted","Enabled":false},{"Name":"EpoFileDownloadedFromBlacklistedDomain","Enabled":false},{"Name":"EpoFileDownloadedFromEnterpriseDomain","Enabled":false},{"Name":"EpoFileRenamed","Enabled":false},{"Name":"EpoFileStagedToCentralLocation","Enabled":false},{"Name":"EpoHiddenFileCreated","Enabled":false},{"Name":"EpoRemovableMediaMount","Enabled":false},{"Name":"EpoSensitiveFileRead","Enabled":false},{"Name":"Mcas3rdPartyAppDownload","Enabled":false},{"Name":"Mcas3rdPartyAppFileDelete","Enabled":false},{"Name":"Mcas3rdPartyAppFileSharing","Enabled":false},{"Name":"McasActivityFromInfrequentCountry","Enabled":false},{"Name":"McasImpossibleTravel","Enabled":false},{"Name":"McasMultipleFailedLogins","Enabled":false},{"Name":"McasMultipleStorageDeletion","Enabled":false},{"Name":"McasMultipleVMCreation","Enabled":true},{"Name":"McasMultipleVMDeletion","Enabled":false},{"Name":"McasSuspiciousAdminActivities","Enabled":false},{"Name":"McasSuspiciousCloudCreation","Enabled":false},{"Name":"McasSuspiciousCloudTrailLoggingChange","Enabled":false},{"Name":"McasTerminatedEmployeeActivity","Enabled":false},{"Name":"OdbDownload","Enabled":false},{"Name":"OdbSyncDownload","Enabled":false},{"Name":"PeerCumulativeExfiltrationDetector","Enabled":false},{"Name":"PhysicalAccess","Enabled":false},{"Name":"PotentialHighImpactUser","Enabled":false},{"Name":"Print","Enabled":false},{"Name":"PriorityUserGroupMember","Enabled":false},{"Name":"SecurityAlertDefenseEvasion","Enabled":false},{"Name":"SecurityAlertUnwantedSoftware","Enabled":false},{"Name":"SpoAccessRequest","Enabled":false},{"Name":"SpoApprovedAccess","Enabled":false},{"Name":"SpoDownload","Enabled":false},{"Name":"SpoDownloadV2","Enabled":false},{"Name":"SpoFileAccessed","Enabled":false},{"Name":"SpoFileDeleted","Enabled":false},{"Name":"SpoFileDeletedFromFirstStageRecycleBin","Enabled":false},{"Name":"SpoFileDeletedFromSecondStageRecycleBin","Enabled":false},{"Name":"SpoFileLabelDowngraded","Enabled":false},{"Name":"SpoFileLabelRemoved","Enabled":false},{"Name":"SpoFileSharing","Enabled":true},{"Name":"SpoFolderDeleted","Enabled":false},{"Name":"SpoFolderDeletedFromFirstStageRecycleBin","Enabled":false},{"Name":"SpoFolderDeletedFromSecondStageRecycleBin","Enabled":false},{"Name":"SpoFolderSharing","Enabled":false},{"Name":"SpoSiteExternalUserAdded","Enabled":false},{"Name":"SpoSiteInternalUserAdded","Enabled":false},{"Name":"SpoSiteLabelRemoved","Enabled":false},{"Name":"SpoSiteSharing","Enabled":false},{"Name":"SpoSyncDownload","Enabled":false},{"Name":"TeamsChannelFileSharedExternal","Enabled":false},{"Name":"TeamsChannelMemberAddedExternal","Enabled":false},{"Name":"TeamsChatFileSharedExternal","Enabled":false},{"Name":"TeamsFileDownload","Enabled":false},{"Name":"TeamsFolderSharedExternal","Enabled":false},{"Name":"TeamsMemberAddedExternal","Enabled":false},{"Name":"TeamsSensitiveMessage","Enabled":false},{"Name":"UserHistory","Enabled":false}],"ExtensibleIndicators":[{"Name":"AWSS3BlockPublicAccessDisabled","Enabled":false},{"Name":"AWSS3BucketDeleted","Enabled":false},{"Name":"AWSS3PublicAccessEnabled","Enabled":false},{"Name":"AWSS3ServerLoggingDisabled","Enabled":false},{"Name":"AzureElevateAccessToAllSubscriptions","Enabled":false},{"Name":"AzureResourceThreatProtectionSettingsUpdated","Enabled":false},{"Name":"AzureSQLServerAuditingSettingsUpdated","Enabled":false},{"Name":"AzureSQLServerFirewallRuleDeleted","Enabled":false},{"Name":"AzureSQLServerFirewallRuleUpdated","Enabled":false},{"Name":"AzureStorageAccountOrContainerDeleted","Enabled":false},{"Name":"BoxContentAccess","Enabled":false},{"Name":"BoxContentDelete","Enabled":false},{"Name":"BoxContentDownload","Enabled":false},{"Name":"BoxContentExternallyShared","Enabled":false},{"Name":"CCFinancialRegulatoryRiskyTextSent","Enabled":false},{"Name":"CCInappropriateContentSent","Enabled":false},{"Name":"CCInappropriateImagesSent","Enabled":false},{"Name":"DropboxContentAccess","Enabled":false},{"Name":"DropboxContentDelete","Enabled":false},{"Name":"DropboxContentDownload","Enabled":false},{"Name":"DropboxContentExternallyShared","Enabled":false},{"Name":"GoogleDriveContentAccess","Enabled":false},{"Name":"GoogleDriveContentDelete","Enabled":false},{"Name":"GoogleDriveContentExternallyShared","Enabled":false},{"Name":"PowerBIDashboardsDeleted","Enabled":false},{"Name":"PowerBIReportsDeleted","Enabled":false},{"Name":"PowerBIReportsDownloaded","Enabled":false},{"Name":"PowerBIReportsExported","Enabled":false},{"Name":"PowerBIReportsViewed","Enabled":false},{"Name":"PowerBISemanticModelsDeleted","Enabled":false},{"Name":"PowerBISensitivityLabelDowngradedForArtifacts","Enabled":false},{"Name":"PowerBISensitivityLabelRemovedFromArtifacts","Enabled":false}],"TimeSpan":{"InScopeTimeSpan":"30","HistoricTimeSpan":"89","FutureTerminationWindow":"5","PastTerminationWindow":"5","PostTerminationActivity":"False"},"IntelligentDetections":{"FileVolCutoffLimits":"59","AlertVolume":"Medium"},"FeatureSettings":{"Anonymization":"false","DLPUserRiskSync":"true","OptInIRMDataExport":"true","RaiseAuditAlert":"true","EnableTeam":"true"},"NotificationPreferences":null,"DynamicRiskPreventionSettings":null,"InterpretedSettings":null}'
+                        )
                     }
                 }
             }
@@ -146,8 +188,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should call the Set method' {
                 Set-TargetResource @testParams
-                ##TODO - Replace the Update-Cmdlet by the appropriate one
-                Should -Invoke -CommandName Update-Cmdlet -Exactly 1
+                Should -Invoke -CommandName Set-InsiderRiskPolicy -Exactly 1
             }
         }
 
@@ -159,10 +200,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential  = $Credential;
                 }
 
-                ##TODO - Mock the Get-Cmdlet to return an instance
-                Mock -CommandName Get-Cmdlet -MockWith {
+                Mock -CommandName Get-InsiderRiskPolicy -MockWith {
                     return @{
-
+                        Name = "IRM_Tenant_Setting"
+                        InsiderRiskScenario = "TenantSetting"
+                        TenantSettings = @(
+                            '{"Region":"WW","IndicatorVersion":"1.1","Indicators":[{"Name":"AnomalyDetections","Enabled":false},{"Name":"CopyToPersonalCloud","Enabled":false},{"Name":"CopyToUSB","Enabled":false},{"Name":"CumulativeExfiltrationDetector","Enabled":true},{"Name":"EmailExternal","Enabled":false},{"Name":"EmployeeAccessedEmployeePatientData","Enabled":false},{"Name":"EmployeeAccessedFamilyData","Enabled":false},{"Name":"EmployeeAccessedHighVolumePatientData","Enabled":false},{"Name":"EmployeeAccessedNeighbourData","Enabled":false},{"Name":"EmployeeAccessedRestrictedData","Enabled":false},{"Name":"EpoBrowseToChildAbuseSites","Enabled":false},{"Name":"EpoBrowseToCriminalActivitySites","Enabled":false},{"Name":"EpoBrowseToCultSites","Enabled":false},{"Name":"EpoBrowseToGamblingSites","Enabled":false},{"Name":"EpoBrowseToHackingSites","Enabled":false},{"Name":"EpoBrowseToHateIntoleranceSites","Enabled":false},{"Name":"EpoBrowseToIllegalSoftwareSites","Enabled":false},{"Name":"EpoBrowseToKeyloggerSites","Enabled":false},{"Name":"EpoBrowseToLlmSites","Enabled":false},{"Name":"EpoBrowseToMalwareSites","Enabled":false},{"Name":"EpoBrowseToPhishingSites","Enabled":false},{"Name":"EpoBrowseToPornographySites","Enabled":false},{"Name":"EpoBrowseToUnallowedDomain","Enabled":false},{"Name":"EpoBrowseToViolenceSites","Enabled":false},{"Name":"EpoCopyToClipboardFromSensitiveFile","Enabled":false},{"Name":"EpoCopyToNetworkShare","Enabled":false},{"Name":"EpoFileArchived","Enabled":false},{"Name":"EpoFileCopiedToRemoteDesktopSession","Enabled":false},{"Name":"EpoFileDeleted","Enabled":false},{"Name":"EpoFileDownloadedFromBlacklistedDomain","Enabled":false},{"Name":"EpoFileDownloadedFromEnterpriseDomain","Enabled":false},{"Name":"EpoFileRenamed","Enabled":false},{"Name":"EpoFileStagedToCentralLocation","Enabled":false},{"Name":"EpoHiddenFileCreated","Enabled":false},{"Name":"EpoRemovableMediaMount","Enabled":false},{"Name":"EpoSensitiveFileRead","Enabled":false},{"Name":"Mcas3rdPartyAppDownload","Enabled":false},{"Name":"Mcas3rdPartyAppFileDelete","Enabled":false},{"Name":"Mcas3rdPartyAppFileSharing","Enabled":false},{"Name":"McasActivityFromInfrequentCountry","Enabled":false},{"Name":"McasImpossibleTravel","Enabled":false},{"Name":"McasMultipleFailedLogins","Enabled":false},{"Name":"McasMultipleStorageDeletion","Enabled":false},{"Name":"McasMultipleVMCreation","Enabled":true},{"Name":"McasMultipleVMDeletion","Enabled":false},{"Name":"McasSuspiciousAdminActivities","Enabled":false},{"Name":"McasSuspiciousCloudCreation","Enabled":false},{"Name":"McasSuspiciousCloudTrailLoggingChange","Enabled":false},{"Name":"McasTerminatedEmployeeActivity","Enabled":false},{"Name":"OdbDownload","Enabled":false},{"Name":"OdbSyncDownload","Enabled":false},{"Name":"PeerCumulativeExfiltrationDetector","Enabled":false},{"Name":"PhysicalAccess","Enabled":false},{"Name":"PotentialHighImpactUser","Enabled":false},{"Name":"Print","Enabled":false},{"Name":"PriorityUserGroupMember","Enabled":false},{"Name":"SecurityAlertDefenseEvasion","Enabled":false},{"Name":"SecurityAlertUnwantedSoftware","Enabled":false},{"Name":"SpoAccessRequest","Enabled":false},{"Name":"SpoApprovedAccess","Enabled":false},{"Name":"SpoDownload","Enabled":false},{"Name":"SpoDownloadV2","Enabled":false},{"Name":"SpoFileAccessed","Enabled":false},{"Name":"SpoFileDeleted","Enabled":false},{"Name":"SpoFileDeletedFromFirstStageRecycleBin","Enabled":false},{"Name":"SpoFileDeletedFromSecondStageRecycleBin","Enabled":false},{"Name":"SpoFileLabelDowngraded","Enabled":false},{"Name":"SpoFileLabelRemoved","Enabled":false},{"Name":"SpoFileSharing","Enabled":true},{"Name":"SpoFolderDeleted","Enabled":false},{"Name":"SpoFolderDeletedFromFirstStageRecycleBin","Enabled":false},{"Name":"SpoFolderDeletedFromSecondStageRecycleBin","Enabled":false},{"Name":"SpoFolderSharing","Enabled":false},{"Name":"SpoSiteExternalUserAdded","Enabled":false},{"Name":"SpoSiteInternalUserAdded","Enabled":false},{"Name":"SpoSiteLabelRemoved","Enabled":false},{"Name":"SpoSiteSharing","Enabled":false},{"Name":"SpoSyncDownload","Enabled":false},{"Name":"TeamsChannelFileSharedExternal","Enabled":false},{"Name":"TeamsChannelMemberAddedExternal","Enabled":false},{"Name":"TeamsChatFileSharedExternal","Enabled":false},{"Name":"TeamsFileDownload","Enabled":false},{"Name":"TeamsFolderSharedExternal","Enabled":false},{"Name":"TeamsMemberAddedExternal","Enabled":false},{"Name":"TeamsSensitiveMessage","Enabled":false},{"Name":"UserHistory","Enabled":false}],"ExtensibleIndicators":[{"Name":"AWSS3BlockPublicAccessDisabled","Enabled":false},{"Name":"AWSS3BucketDeleted","Enabled":false},{"Name":"AWSS3PublicAccessEnabled","Enabled":false},{"Name":"AWSS3ServerLoggingDisabled","Enabled":false},{"Name":"AzureElevateAccessToAllSubscriptions","Enabled":false},{"Name":"AzureResourceThreatProtectionSettingsUpdated","Enabled":false},{"Name":"AzureSQLServerAuditingSettingsUpdated","Enabled":false},{"Name":"AzureSQLServerFirewallRuleDeleted","Enabled":false},{"Name":"AzureSQLServerFirewallRuleUpdated","Enabled":false},{"Name":"AzureStorageAccountOrContainerDeleted","Enabled":false},{"Name":"BoxContentAccess","Enabled":false},{"Name":"BoxContentDelete","Enabled":false},{"Name":"BoxContentDownload","Enabled":false},{"Name":"BoxContentExternallyShared","Enabled":false},{"Name":"CCFinancialRegulatoryRiskyTextSent","Enabled":false},{"Name":"CCInappropriateContentSent","Enabled":false},{"Name":"CCInappropriateImagesSent","Enabled":false},{"Name":"DropboxContentAccess","Enabled":false},{"Name":"DropboxContentDelete","Enabled":false},{"Name":"DropboxContentDownload","Enabled":false},{"Name":"DropboxContentExternallyShared","Enabled":false},{"Name":"GoogleDriveContentAccess","Enabled":false},{"Name":"GoogleDriveContentDelete","Enabled":false},{"Name":"GoogleDriveContentExternallyShared","Enabled":false},{"Name":"PowerBIDashboardsDeleted","Enabled":false},{"Name":"PowerBIReportsDeleted","Enabled":false},{"Name":"PowerBIReportsDownloaded","Enabled":false},{"Name":"PowerBIReportsExported","Enabled":false},{"Name":"PowerBIReportsViewed","Enabled":false},{"Name":"PowerBISemanticModelsDeleted","Enabled":false},{"Name":"PowerBISensitivityLabelDowngradedForArtifacts","Enabled":false},{"Name":"PowerBISensitivityLabelRemovedFromArtifacts","Enabled":false}],"TimeSpan":{"InScopeTimeSpan":"30","HistoricTimeSpan":"89","FutureTerminationWindow":"5","PastTerminationWindow":"5","PostTerminationActivity":"False"},"IntelligentDetections":{"FileVolCutoffLimits":"59","AlertVolume":"Medium"},"FeatureSettings":{"Anonymization":"false","DLPUserRiskSync":"true","OptInIRMDataExport":"true","RaiseAuditAlert":"true","EnableTeam":"true"},"NotificationPreferences":null,"DynamicRiskPreventionSettings":null,"InterpretedSettings":null}'
+                        )
                     }
                 }
             }
