@@ -820,6 +820,26 @@
                        ]
     },
     {
+        "ClassName":  "MSFT_MicrosoftGraphReportSuspiciousActivitySettings",
+        "Parameters":  [
+                           {
+                               "CIMType":  "MSFT_AADAuthenticationMethodPolicyIncludeTarget",
+                               "Name":  "IncludeTarget",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "State",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "VoiceReportingCode",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
         "ClassName":  "MSFT_AADAuthenticationMethodPolicy",
         "Parameters":  [
                            {
@@ -850,6 +870,11 @@
                            {
                                "CIMType":  "MSFT_MicrosoftGraphregistrationEnforcement",
                                "Name":  "RegistrationEnforcement",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_MicrosoftGraphreportSuspiciousActivitySettings",
+                               "Name":  "ReportSuspiciousActivitySettings",
                                "Option":  "Write"
                            },
                            {
