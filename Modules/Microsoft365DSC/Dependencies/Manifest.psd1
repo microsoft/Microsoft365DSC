@@ -14,7 +14,7 @@
         },
         @{
             ModuleName      = 'DSCParser'
-            RequiredVersion = '2.0.0.9'
+            RequiredVersion = '2.0.0.10'
         },
         @{
             ModuleName      = 'ExchangeOnlineManagement'
@@ -23,6 +23,10 @@
         @{
             ModuleName      = 'Microsoft.Graph.Applications'
             RequiredVersion = '2.23.0'
+        },
+        @{
+            ModuleName      = 'Microsoft.Graph.Beta.Applications'
+            Requiredversion = '2.23.0'
         },
         @{
             ModuleName      = 'Microsoft.Graph.Authentication'
@@ -77,6 +81,10 @@
             RequiredVersion = '2.23.0'
         },
         @{
+            ModuleName      = 'Microsoft.Graph.Beta.Groups'
+            RequiredVersion = '2.23.0'
+        },
+        @{
             ModuleName      = 'Microsoft.Graph.Planner'
             RequiredVersion = '2.23.0'
         },
@@ -102,7 +110,7 @@
         },
         @{
             ModuleName      = "MSCloudLoginAssistant"
-            RequiredVersion = "1.1.24"
+            RequiredVersion = "1.1.25"
         },
         @{
             ModuleName      = 'PnP.PowerShell'

@@ -61,6 +61,26 @@ function Get-TargetResource
         $Owners,
 
         [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $Api,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $AuthenticationBehaviors,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $KeyCredentials,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $PasswordCredentials,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $AppRoles,
+
+        [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Permissions,
 
@@ -163,6 +183,119 @@ function Get-TargetResource
         else
         {
             Write-Verbose -Message 'An instance of Azure AD App was retrieved.'
+
+
+            $AADBetaApp= Get-MgBetaApplication -Property "id,displayName,appId,authenticationBehaviors" -ApplicationId $ObjectID -ErrorAction SilentlyContinue
+            $AADAppKeyCredentials = Get-MgApplication -Property "keyCredentials" -ApplicationId $ObjectID -ErrorAction SilentlyContinue
+
+            $complexAuthenticationBehaviors = @{}
+            if ($null -ne $AADBetaApp.authenticationBehaviors.blockAzureADGraphAccess)
+            {
+                $complexAuthenticationBehaviors.Add('BlockAzureADGraphAccess', $AADBetaApp.authenticationBehaviors.blockAzureADGraphAccess)
+            }
+            if ($null -ne $AADBetaApp.authenticationBehaviors.removeUnverifiedEmailClaim)
+            {
+                $complexAuthenticationBehaviors.Add('RemoveUnverifiedEmailClaim', $AADBetaApp.authenticationBehaviors.removeUnverifiedEmailClaim)
+            }
+            if ($null -ne $AADBetaApp.authenticationBehaviors.requireClientServicePrincipal)
+            {
+                $complexAuthenticationBehaviors.Add('RequireClientServicePrincipal', $AADBetaApp.authenticationBehaviors.requireClientServicePrincipal)
+            }
+            if ($complexAuthenticationBehaviors.values.Where({$null -ne $_}).Count -eq 0)
+            {
+                $complexAuthenticationBehaviors = $null
+            }
+
+            $complexApi = @{}
+            $complexPreAuthorizedApplications = @()
+            foreach ($currentPreAuthorizedApplications in $AADApp.api.preAuthorizedApplications)
+            {
+                $myPreAuthorizedApplications = @{}
+                $myPreAuthorizedApplications.Add('AppId', $currentPreAuthorizedApplications.appId)
+                $myPreAuthorizedApplications.Add('PermissionIds', $currentPreAuthorizedApplications.permissionIds)
+                if ($myPreAuthorizedApplications.values.Where({$null -ne $_}).Count -gt 0)
+                {
+                    $complexPreAuthorizedApplications += $myPreAuthorizedApplications
+                }
+            }
+            $complexApi.Add('PreAuthorizedApplications',$complexPreAuthorizedApplications)
+            if ($complexApi.values.Where({$null -ne $_}).Count -eq 0)
+            {
+                $complexApi = $null
+            }
+
+
+            $complexKeyCredentials = @()
+            foreach ($currentkeyCredentials in $AADAppKeyCredentials.keyCredentials)
+            {
+                $mykeyCredentials = @{}
+                if($null -ne $currentkeyCredentials.customKeyIdentifier)
+                {
+                    $mykeyCredentials.Add('CustomKeyIdentifier', [convert]::ToBase64String($currentkeyCredentials.customKeyIdentifier))
+                }
+                $mykeyCredentials.Add('DisplayName', $currentkeyCredentials.displayName)
+                if ($null -ne $currentkeyCredentials.endDateTime)
+                {
+                    $mykeyCredentials.Add('EndDateTime', ([DateTimeOffset]$currentkeyCredentials.endDateTime).ToString('o'))
+                }
+                $mykeyCredentials.Add('KeyId', $currentkeyCredentials.keyId)
+
+
+                if($null -ne $currentkeyCredentials.Key) 
+                {
+                    $mykeyCredentials.Add('Key', [convert]::ToBase64String($currentkeyCredentials.key))
+                }
+
+                if ($null -ne $currentkeyCredentials.startDateTime)
+                {
+                    $mykeyCredentials.Add('StartDateTime', ([DateTimeOffset]$currentkeyCredentials.startDateTime).ToString('o'))
+                }
+                $mykeyCredentials.Add('Type', $currentkeyCredentials.type)
+                $mykeyCredentials.Add('Usage', $currentkeyCredentials.usage)
+                if ($mykeyCredentials.values.Where({$null -ne $_}).Count -gt 0)
+                {
+                    $complexKeyCredentials += $mykeyCredentials
+                }
+            }
+
+            $complexPasswordCredentials = @()
+            foreach ($currentpasswordCredentials in $AADApp.passwordCredentials)
+            {
+                $mypasswordCredentials = @{}
+                $mypasswordCredentials.Add('DisplayName', $currentpasswordCredentials.displayName)
+                if ($null -ne $currentpasswordCredentials.endDateTime)
+                {
+                    $mypasswordCredentials.Add('EndDateTime', ([DateTimeOffset]$currentpasswordCredentials.endDateTime).ToString('o'))
+                }
+                $mypasswordCredentials.Add('Hint', $currentpasswordCredentials.hint)
+                $mypasswordCredentials.Add('KeyId', $currentpasswordCredentials.keyId)
+                if ($null -ne $currentpasswordCredentials.startDateTime)
+                {
+                    $mypasswordCredentials.Add('StartDateTime', ([DateTimeOffset]$currentpasswordCredentials.startDateTime).ToString('o'))
+                }
+                if ($mypasswordCredentials.values.Where({$null -ne $_}).Count -gt 0)
+                {
+                    $complexPasswordCredentials += $mypasswordCredentials
+                }
+            }
+
+            $complexAppRoles = @()
+            foreach ($currentappRoles in $AADApp.appRoles)
+            {
+                $myappRoles = @{}
+                $myappRoles.Add('AllowedMemberTypes', $currentappRoles.allowedMemberTypes)
+                $myappRoles.Add('Description', $currentappRoles.description)
+                $myappRoles.Add('DisplayName', $currentappRoles.displayName)
+                $myappRoles.Add('Id', $currentappRoles.id)
+                $myappRoles.Add('IsEnabled', $currentappRoles.isEnabled)
+                $myappRoles.Add('Origin', $currentappRoles.origin)
+                $myappRoles.Add('Value', $currentappRoles.value)
+                if ($myappRoles.values.Where({$null -ne $_}).Count -gt 0)
+                {
+                    $complexAppRoles += $myappRoles
+                }
+            }
+
             $permissionsObj = Get-M365DSCAzureADAppPermissions -App $AADApp
             $isPublicClient = $false
             if (-not [System.String]::IsNullOrEmpty($AADApp.PublicClient) -and $AADApp.PublicClient -eq $true)
@@ -195,6 +328,7 @@ function Get-TargetResource
             {
                 $IsFallbackPublicClientValue = $AADApp.IsFallbackPublicClient
             }
+
             $result = @{
                 DisplayName             = $AADApp.DisplayName
                 AvailableToOtherTenants = $AvailableToOtherTenantsValue
@@ -210,6 +344,11 @@ function Get-TargetResource
                 Owners                  = $OwnersValues
                 ObjectId                = $AADApp.Id
                 AppId                   = $AADApp.AppId
+                Api                     = $complexApi
+                AuthenticationBehaviors = $complexAuthenticationBehaviors
+                KeyCredentials          = $complexKeyCredentials
+                PasswordCredentials     = $complexPasswordCredentials
+                AppRoles                = $complexAppRoles
                 Permissions             = $permissionsObj
                 Ensure                  = 'Present'
                 Credential              = $Credential
@@ -303,6 +442,26 @@ function Set-TargetResource
         [Parameter()]
         [System.String[]]
         $Owners,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $Api,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $AuthenticationBehaviors,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $KeyCredentials,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $PasswordCredentials,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $AppRoles,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
@@ -405,8 +564,18 @@ function Set-TargetResource
 
     # App should exist but it doesn't
     $needToUpdatePermissions = $false
+    $needToUpdateAuthenticationBehaviors = $false
+    $needToUpdateKeyCredentials = $false
     $currentParameters.Remove('AppId') | Out-Null
     $currentParameters.Remove('Permissions') | Out-Null
+    $currentParameters.Remove('AuthenticationBehaviors') | Out-Null
+    $currentParameters.Remove('KeyCredentials') | Out-Null
+    $currentParameters.Remove('PasswordCredentials') | Out-Null
+    if ($PasswordCredentials)
+    {
+        Write-Warning -Message "PasswordCredentials is a readonly property and cannot be configured."
+           
+    }
 
     if ($currentParameters.AvailableToOtherTenants)
     {
@@ -455,6 +624,16 @@ function Set-TargetResource
     $currentParameters.Remove('LogoutURL') | Out-Null
     $currentParameters.Remove('Homepage') | Out-Null
 
+
+    $keys = (([Hashtable]$currentParameters).clone()).Keys
+    foreach ($key in $keys)
+    {
+        if ($null -ne $currentParameters.$key -and $currentParameters.$key.getType().Name -like '*cimInstance*')
+        {
+            $currentParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $currentParameters.$key
+        }
+    }
+
     $skipToUpdate = $false
     $AppIdValue = $null
     if ($Ensure -eq 'Present' -and $currentAADApp.Ensure -eq 'Absent')
@@ -499,6 +678,8 @@ function Set-TargetResource
         $currentAADApp = New-MgApplication @currentParameters
         Write-Verbose -Message "Azure AD Application {$DisplayName} was successfully created"
         $needToUpdatePermissions = $true
+        $needToUpdateAuthenticationBehaviors = $true
+        $needToUpdateKeyCredentials = $true
 
         $tries = 1
         $appEntity = $null
@@ -525,6 +706,8 @@ function Set-TargetResource
         Update-MgApplication @currentParameters
         $currentAADApp.Add('ID', $AppIdValue)
         $needToUpdatePermissions = $true
+        $needToUpdateAuthenticationBehaviors = $true
+        $needToUpdateKeyCredentials = $true
     }
     # App exists but should not
     elseif ($Ensure -eq 'Absent' -and $currentAADApp.Ensure -eq 'Present')
@@ -678,6 +861,25 @@ function Set-TargetResource
         Update-MgApplication -ApplicationId ($currentAADApp.Id) `
             -RequiredResourceAccess $allRequiredAccess | Out-Null
     }
+
+    if($needToUpdateAuthenticationBehaviors -and $AuthenticationBehaviors)
+    {
+        Write-Verbose -Message "Updating for Azure AD Application {$($currentAADApp.DisplayName)} with AuthenticationBehaviors:`r`n$($AuthenticationBehaviors| Out-String)"
+        Write-Verbose -Message "Current App Id: $($currentAADApp.AppId)"
+
+        $IAuthenticationBehaviors = @{
+            blockAzureADGraphAccess = $AuthenticationBehaviors.blockAzureADGraphAccess
+            removeUnverifiedEmailClaim = $AuthenticationBehaviors.removeUnverifiedEmailClaim
+            requireClientServicePrincipal = $AuthenticationBehaviors.requireClientServicePrincipal
+        }
+
+        Update-MgBetaApplication -ApplicationId $currentAADApp.Id -AuthenticationBehaviors $IAuthenticationBehaviors | Out-Null
+    }
+
+    if($needToUpdateKeyCredentials -and $KeyCredentials)
+    {
+        Write-Warning -Message "KeyCredentials is a readonly property and cannot be configured."
+    }
 }
 
 function Test-TargetResource
@@ -741,6 +943,26 @@ function Test-TargetResource
         [Parameter()]
         [System.String[]]
         $Owners,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $Api,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $AuthenticationBehaviors,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $KeyCredentials,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $PasswordCredentials,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $AppRoles,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
@@ -829,23 +1051,56 @@ function Test-TargetResource
             Write-Verbose -Message 'No Permissions exist for the current Azure AD App and no permissions were specified'
         }
     }
+
+    $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
+ 
+    $testTargetResource = $true
+
+    #Compare Cim instances
+    foreach ($key in $PSBoundParameters.Keys)
+    {
+        $source = $PSBoundParameters.$key
+        $target = $CurrentValues.$key
+        if ($null -ne $source -and $source.GetType().Name -like '*CimInstance*' -and $source -notlike '*Permission*')
+        {
+            $testResult = Compare-M365DSCComplexObject `
+                -Source ($source) `
+                -Target ($target)
+ 
+            if (-not $testResult)
+            {
+                Write-Verbose "TestResult returned False for $source"
+                $testTargetResource = $false
+            }
+            else { 
+                $ValuesToCheck.Remove($key) | Out-Null
+            }
+        }
+    }
+
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
-    $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('ObjectId') | Out-Null
     $ValuesToCheck.Remove('AppId') | Out-Null
     $ValuesToCheck.Remove('Permissions') | Out-Null
 
+
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
-        -Source $($MyInvocation.MyCommand.Source) `
-        -DesiredValues $PSBoundParameters `
-        -ValuesToCheck $ValuesToCheck.Keys `
-        -IncludedDrifts $driftedParams
+    -Source $($MyInvocation.MyCommand.Source) `
+    -DesiredValues $PSBoundParameters `
+    -ValuesToCheck $ValuesToCheck.Keys `
+    -IncludedDrifts $driftedParams
 
-    Write-Verbose -Message "Test-TargetResource returned $TestResult"
+    if(-not $TestResult)
+    {
+        $testTargetResource = $false
+    }
 
-    return $TestResult
+
+    Write-Verbose -Message "Test-TargetResource returned $testTargetResource"
+
+    return $testTargetResource
 }
 
 function Export-TargetResource
@@ -941,16 +1196,131 @@ function Export-TargetResource
                     {
                         $Results.Permissions = Get-M365DSCAzureADAppPermissionsAsString $Results.Permissions
                     }
+
+                    if ($null -ne $Results.Api)
+                    {
+                        $complexMapping = @(
+                            @{
+                                Name = 'Api'
+                                CimInstanceName = 'MicrosoftGraphApiApplication'
+                                IsRequired = $False
+                            }
+                            @{
+                                Name = 'PreAuthorizedApplications'
+                                CimInstanceName = 'MicrosoftGraphPreAuthorizedApplication'
+                                IsRequired = $False
+                            }
+                        )
+                        $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                        -ComplexObject $Results.Api `
+                        -CIMInstanceName 'MicrosoftGraphapiApplication' `
+                        -ComplexTypeMapping $complexMapping
+
+                        if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                        {
+                            $Results.Api = $complexTypeStringResult
+                        }
+                        else
+                        {
+                            $Results.Remove('Api') | Out-Null
+                        }
+                    }
+
+                    if ($null -ne $Results.AuthenticationBehaviors)
+                    {
+                        $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                        -ComplexObject $Results.AuthenticationBehaviors `
+                        -CIMInstanceName 'MicrosoftGraphauthenticationBehaviors'
+                        if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                        {
+                            $Results.AuthenticationBehaviors = $complexTypeStringResult
+                        }
+                        else
+                        {
+                            $Results.Remove('AuthenticationBehaviors') | Out-Null
+                        }
+                    }
+
+                    if ($null -ne $Results.KeyCredentials)
+                    {
+                        $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                        -ComplexObject $Results.KeyCredentials `
+                        -CIMInstanceName 'MicrosoftGraphkeyCredential'
+                        if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                        {
+                            $Results.KeyCredentials = $complexTypeStringResult
+                        }
+                        else
+                        {
+                            $Results.Remove('KeyCredentials') | Out-Null
+                        }
+                    }
+
+                    if ($null -ne $Results.PasswordCredentials)
+                    {
+                        $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                        -ComplexObject $Results.PasswordCredentials `
+                        -CIMInstanceName 'MicrosoftGraphpasswordCredential'
+                        if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                        {
+                            $Results.PasswordCredentials = $complexTypeStringResult
+                        }
+                        else
+                        {
+                            $Results.Remove('PasswordCredentials') | Out-Null
+                        }
+                    }
+
+                    if ($null -ne $Results.AppRoles)
+                    {
+                        $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                        -ComplexObject $Results.AppRoles `
+                        -CIMInstanceName 'MicrosoftGraphappRole'
+                        if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                        {
+                            $Results.AppRoles = $complexTypeStringResult
+                        }
+                        else
+                        {
+                            $Results.Remove('AppRoles') | Out-Null
+                        }
+                    }
+
                     $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                         -ConnectionMode $ConnectionMode `
                         -ModulePath $PSScriptRoot `
                         -Results $Results `
                         -Credential $Credential
 
+                    if ($Results.Api)
+                    {
+                        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Api" -IsCIMArray:$False
+                    }
+
                     if ($null -ne $Results.Permissions)
                     {
                         $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
                             -ParameterName 'Permissions'
+                    }
+
+                    if ($Results.AuthenticationBehaviors)
+                    {
+                        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "AuthenticationBehaviors" -IsCIMArray:$False
+                    }
+
+                    if ($Results.KeyCredentials)
+                    {
+                        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "KeyCredentials" -IsCIMArray:$True
+                    }
+
+                    if ($Results.PasswordCredentials)
+                    {
+                        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "PasswordCredentials" -IsCIMArray:$True
+                    }
+
+                    if ($Results.AppRoles)
+                    {
+                        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "AppRoles" -IsCIMArray:$True
                     }
 
                     $dscContent.Append($currentDSCBlock) | Out-Null

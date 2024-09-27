@@ -102,6 +102,8 @@
                     EnableUnusualCharactersSafetyTips     = $null
                     TargetedUserActionRecipients          = $null
                     Ensure                                = "Present"
+                    DmarcQuarantineAction                 = "Quarantine"
+                    DmarcRejectAction                     = "Reject"
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
@@ -146,6 +148,20 @@
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
+                }
+                EXOATPProtectionPolicyRule 'EXOATPProtectionPolicyRule-Strict Preset Security Policy'
+                {
+                    Comments                = "Built-in Strict Preset Security Policy with comments"; # Changed value
+                    Enabled                 = $True; # Changed value
+                    Identity                = "Strict Preset Security Policy";
+                    Name                    = "Strict Preset Security Policy";
+                    Priority                = 0;
+                    SafeAttachmentPolicy    = "Strict Preset Security Policy1725468967835";
+                    SafeLinksPolicy         = "Strict Preset Security Policy1725468969412";
+                    Ensure                  = "Present"
+                    ApplicationId           = $ApplicationId
+                    TenantId                = $TenantId
+                    CertificateThumbprint   = $CertificateThumbprint
                 }
                 EXOAuthenticationPolicy 'ConfigureAuthenticationPolicy'
                 {
@@ -355,6 +371,18 @@
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
+                }
+                EXOEmailTenantSettings 'EXOEmailTenantSettings-Test'
+                {
+                    IsSingleInstance                         = "Yes"
+                    EnablePriorityAccountProtection          = $True;
+                    Identity                                 = $TenantId;
+                    IsValid                                  = $True;
+                    ObjectState                              = "Unchanged"
+                    Name                                     = "Default"
+                    TenantId                                 = $TenantId
+                    CertificateThumbprint                    = $CertificateThumbprint
+                    ApplicationId                            = $ApplicationId
                 }
                 EXOFocusedInbox 'EXOFocusedInbox-Test'
                 {
@@ -640,6 +668,26 @@
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
+                }
+                EXOMailboxFolderPermission 'EXOMailboxFolderPermission-admin:\Calendar'
+                {
+                    Credential           = $Credscredential;
+                    Ensure               = "Present";
+                    Identity             = "admin:\Calendar";
+                    UserPermissions      = @(MSFT_EXOMailboxFolderUserPermission {
+                        User                   = 'Default'
+                        AccessRights           = 'AvailabilityOnly'
+                    }
+        MSFT_EXOMailboxFolderUserPermission {
+                        User                   = 'Anonymous'
+                        AccessRights           = 'AvailabilityOnly'
+                    }
+        MSFT_EXOMailboxFolderUserPermission {
+                        User                   = 'AlexW'
+                        AccessRights           = 'Editor'
+        		SharingPermissionFlags = 'Delegate'
+                    }
+                    );
                 }
                 EXOMailboxPermission 'TestPermission'
                 {

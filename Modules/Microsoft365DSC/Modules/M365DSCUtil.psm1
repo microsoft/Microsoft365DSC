@@ -6,7 +6,8 @@ $Global:SessionSecurityCompliance = $null
 #region Extraction Modes
 $Global:DefaultComponents = @('SPOApp', 'SPOSiteDesign')
 
-$Global:FullComponents = @('AADGroup', 'AADServicePrincipal', 'EXOCalendarProcessing', 'EXODistributionGroup', 'EXOMailboxAutoReplyConfiguration', `
+$Global:FullComponents = @('AADGroup', 'AADServicePrincipal', 'ADOSecurityPolicy', 'AzureSubscription','FabricAdminTenantSettings', `
+        'EXOCalendarProcessing', 'EXODistributionGroup', 'EXOMailboxAutoReplyConfiguration', `
         'EXOMailboxPermission','EXOMailboxCalendarFolder','EXOMailboxSettings', 'EXOManagementRole', 'O365Group', 'AADUser', `
         'PlannerPlan', 'PlannerBucket', 'PlannerTask', 'PPPowerAppsEnvironment', 'PPTenantSettings', `
         'SPOSiteAuditSettings', 'SPOSiteGroup', 'SPOSite', 'SPOUserProfileProperty', 'SPOPropertyBag', 'TeamsTeam', 'TeamsChannel', `
@@ -461,7 +462,7 @@ function Compare-PSCustomObjectArrays
                 Desired      = $DesiredEntry.$KeyProperty
                 Current      = $null
             }
-            $DriftedProperties += $DesiredEntry
+            $DriftedProperties += $result
         }
         else
         {
@@ -487,6 +488,62 @@ function Compare-PSCustomObjectArrays
                             PropertyName = $PropertyName
                             Desired      = $DesiredEntry.$PropertyName
                             Current      = $EquivalentEntryInCurrent.$PropertyName
+                        }
+                        $DriftedProperties += $result
+                    }
+                }
+            }
+        }
+    }
+
+    foreach ($currentEntry in $currentValues)
+    {
+        if ($currentEntry.GetType().Name -eq 'PSCustomObject')
+        {
+            $fixedEntry = @{}
+            $currentEntry.psobject.properties | Foreach { $fixedEntry[$_.Name] = $_.Value }
+        }
+        else
+        {
+            $fixedEntry = $currentEntry
+        }
+        $KeyProperty = Get-M365DSCCIMInstanceKey -CIMInstance $fixedEntry
+
+        $EquivalentEntryInDesired = $DesiredValues | Where-Object -FilterScript { $_.$KeyProperty -eq $fixedEntry.$KeyProperty }
+        if ($null -eq $EquivalentEntryInDesired)
+        {
+            $result = @{
+                Property     = $fixedEntry
+                PropertyName = $KeyProperty
+                Desired      = $fixedEntry.$KeyProperty
+                Current      = $null
+            }
+            $DriftedProperties += $result
+        }
+        else
+        {
+            foreach ($property in $Properties)
+            {
+                $propertyName = $property.Name
+
+                if ((-not [System.String]::IsNullOrEmpty($fixedEntry.$PropertyName) -and -not [System.String]::IsNullOrEmpty($EquivalentEntryInDesired.$PropertyName)) -and `
+                    $fixedEntry.$PropertyName -ne $EquivalentEntryInDesired.$PropertyName)
+                {
+                    $drift = $true
+                    if ($fixedEntry.$PropertyName.GetType().Name -eq 'String' -and $fixedEntry.$PropertyName.Contains('$OrganizationName'))
+                    {
+                        if ($fixedEntry.$PropertyName.Split('@')[0] -eq $EquivalentEntryInDesired.$PropertyName.Split('@')[0])
+                        {
+                            $drift = $false
+                        }
+                    }
+                    if ($drift)
+                    {
+                        $result = @{
+                            Property     = $fixedEntry
+                            PropertyName = $PropertyName
+                            Desired      = $fixedEntry.$PropertyName
+                            Current      = $EquivalentEntryInDesired.$PropertyName
                         }
                         $DriftedProperties += $result
                     }
@@ -699,8 +756,20 @@ function Test-M365DSCParameterState
                                 }
                                 $AllDesiredValuesAsArray += [PSCustomObject]$currentEntry
                             }
-                            $arrayCompare = Compare-PSCustomObjectArrays -CurrentValues $CurrentValues.$fieldName `
-                                -DesiredValues $AllDesiredValuesAsArray
+                            try
+                            {
+                                $arrayCompare = $null
+                                if ($CurrentValues.$fieldName.GetType().Name -ne 'CimInstance' -and `
+                                    $CurrentValues.$fieldName.GetType().Name -ne 'CimInstance[]')
+                                {
+                                    $arrayCompare = Compare-PSCustomObjectArrays -CurrentValues $CurrentValues.$fieldName `
+                                        -DesiredValues $AllDesiredValuesAsArray
+                                }
+                            }
+                            catch
+                            {
+                                Write-Verbose -Message $_
+                            }
 
                             if ($null -ne $arrayCompare)
                             {
@@ -1161,7 +1230,7 @@ function Export-M365DSCConfiguration
         $Components,
 
         [Parameter(ParameterSetName = 'Export')]
-        [ValidateSet('AAD', 'FABRIC', 'SPO', 'EXO', 'INTUNE', 'SC', 'OD', 'O365', 'PLANNER', 'PP', 'TEAMS')]
+        [ValidateSet('AAD', 'DEFENDER', 'FABRIC', 'SPO', 'EXO', 'INTUNE', 'SC', 'OD', 'O365', 'PLANNER', 'PP', 'TEAMS')]
         [System.String[]]
         $Workloads,
 
@@ -1708,7 +1777,7 @@ function New-M365DSCConnection
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateSet('Azure', 'AzureDevOPS', 'ExchangeOnline', 'Fabric', 'Intune', `
+        [ValidateSet('Azure', 'AzureDevOPS', 'Defender', 'ExchangeOnline', 'Fabric', 'Intune', `
                 'SecurityComplianceCenter', 'PnP', 'PowerPlatforms', `
                 'MicrosoftTeams', 'MicrosoftGraph', 'SharePointOnlineREST', 'Tasks')]
         [System.String]
@@ -1771,7 +1840,6 @@ function New-M365DSCConnection
         [System.Boolean]
         $SkipModuleReload = $false
     )
-    $verbosepreference = 'Continue'
     $Global:MaximumFunctionCount = 32767
     if ($Workload -eq 'MicrosoftTeams')
     {
@@ -3669,7 +3737,7 @@ function Get-M365DSCExportContentForResource
     {
         $primaryKey = ''
     }
-    elseif ($Keys.Contains('DisplayName'))
+    elseif ($Keys.Contains('DisplayName') -and -not [System.String]::IsNullOrEmpty($Results.DisplayName))
     {
         $primaryKey = $Results.DisplayName
     }
@@ -3696,6 +3764,10 @@ function Get-M365DSCExportContentForResource
     elseif ($Keys.Contains('WorkspaceName'))
     {
         $primaryKey = $Results.WorkspaceName
+    }
+    elseif ($Keys.Contains('OrganizationName'))
+    {
+        $primaryKey = $Results.OrganizationName
     }
 
     if ([String]::IsNullOrEmpty($primaryKey) -and `
@@ -4115,7 +4187,7 @@ function Get-M365DSCWorkloadsListFromResourceNames
             }
             'O3'
             {
-                if (-not $workloads.Name -or -not $workloads.Name.Contains('MicrosoftGraph') -and $resource -eq 'O365Group')
+                if (-not $workloads.Name -or -not $workloads.Name.Contains('MicrosoftGraph') -and $resource.Name -eq 'O365Group')
                 {
                     $workloads += @{
                         Name                 = 'MicrosoftGraph'
