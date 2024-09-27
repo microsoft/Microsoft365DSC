@@ -39,7 +39,7 @@ Configuration Example
             MSFT_EXOMailboxFolderUserPermission {
                 User                          = 'AlexW'
                 AccessRights                  = 'Owner'
-                SharingSharingPermissionFlags = 'Delegate'
+                SharingPermissionFlags        = 'Delegate'
             }
             );
         }
