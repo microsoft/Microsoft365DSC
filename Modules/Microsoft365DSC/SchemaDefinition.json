@@ -3530,7 +3530,7 @@
                            {
                                "CIMType":  "String",
                                "Name":  "DisplayName",
-                               "Option":  "Required"
+                               "Option":  "Key"
                            },
                            {
                                "CIMType":  "String",
@@ -3550,7 +3550,7 @@
                            {
                                "CIMType":  "String",
                                "Name":  "Id",
-                               "Option":  "Key"
+                               "Option":  "Write"
                            },
                            {
                                "CIMType":  "string",
