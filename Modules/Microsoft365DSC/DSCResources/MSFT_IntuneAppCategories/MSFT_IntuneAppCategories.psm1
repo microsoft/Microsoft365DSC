@@ -129,8 +129,8 @@ function Set-TargetResource
         [System.String]
         $Id,
 
-        [Parameter()]
         [Parameter(Mandatory = $true)]
+        [System.String]
         $DisplayName,
 
         #endregion Intune params
@@ -189,7 +189,7 @@ function Set-TargetResource
     # UPDATE
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        Set-MgBetaDeviceAppManagementMobileAppCategory @SetParameters
+        Update-MgBetaDeviceAppManagementMobileAppCategory @SetParameters
     }
     # REMOVE
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
@@ -197,7 +197,6 @@ function Set-TargetResource
         Remove-MgBetaDeviceAppManagementMobileAppCategory @SetParameters
     }
 }
-
 function Test-TargetResource
 {
     [CmdletBinding()]

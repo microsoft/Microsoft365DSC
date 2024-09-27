@@ -35,82 +35,92 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return "Credentials"
             }
 
-            ##TODO - Mock any Remove/Set/New cmdlets
-
-            # Mock Write-Host to hide output during the tests
+             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
             }
+
+            Mock -CommandName Get-MgBetaDeviceAppManagementMobileAppCategory -MockWith {
+            }
+            Mock -CommandName New-MgBetaDeviceAppManagementMobileAppCategory -MockWith {
+            }
+            Mock -CommandName Update-MgBetaDeviceAppManagementMobileAppCategory -MockWith {
+            }
+            Mock -CommandName Remove-MgBetaDeviceAppManagementMobileAppCategory -MockWith {
+            }
+
             $Script:exportedInstances =$null
             $Script:ExportMode = $false
         }
+
         # Test contexts
         Context -Name "The instance should exist but it DOES NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    ##TODO - Add Parameters
+                    Id                  = "f1fc9fe2-728d-4867-9a72-a61e18f8c606";
+                    DisplayName         = "Books & Reference";
                     Ensure              = 'Present'
                     Credential          = $Credential;
                 }
 
-                ##TODO - Mock the Get-Cmdlet to return $null
-                Mock -CommandName Get-Cmdlet -MockWith {
+                Mock -CommandName Get-MgBetaDeviceAppManagementMobileAppCategory -MockWith {
                     return $null
                 }
             }
+
             It 'Should return Values from the Get method' {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Absent'
             }
             It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
-
             It 'Should create a new instance from the Set method' {
-                ##TODO - Replace the New-Cmdlet by the appropriate one
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName New-Cmdlet -Exactly 1
+                Should -Invoke -CommandName New-MgBetaDeviceAppManagementMobileAppCategory -Exactly 1
             }
         }
 
         Context -Name "The instance exists but it SHOULD NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    ##TODO - Add Parameters
+                    Id                  = "f1fc9fe2-728d-4867-9a72-a61e18f8c606";
+                    DisplayName         = "Books & Reference";
                     Ensure              = 'Absent'
                     Credential          = $Credential;
                 }
 
-                ##TODO - Mock the Get-Cmdlet to return an instance
-                Mock -CommandName Get-Cmdlet -MockWith {
+                Mock -CommandName Get-MgBetaDeviceAppManagementMobileAppCategory -MockWith {
                     return @{
-
+                        Id                  = "f1fc9fe2-728d-4867-9a72-a61e18f8c606";
+                        DisplayName         = "Books & Reference";
                     }
                 }
             }
+
             It 'Should return Values from the Get method' {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
             It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
-
             It 'Should remove the instance from the Set method' {
-                ##TODO - Replace the Remove-Cmdlet by the appropriate one
-                Should -Invoke -CommandName Remove-Cmdlet -Exactly 1
+                Set-TargetResource @testParams
+                Should -Invoke -CommandName Remove-MgBetaDeviceAppManagementMobileAppCategory -Exactly 1
             }
         }
 
         Context -Name "The instance exists and values are already in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    ##TODO - Add Parameters
+                    Id                  = "f1fc9fe2-728d-4867-9a72-a61e18f8c606";
+                    DisplayName         = "Books & Reference";
                     Ensure              = 'Present'
                     Credential          = $Credential;
                 }
 
-                ##TODO - Mock the Get-Cmdlet to return the desired values
-                Mock -CommandName Get-Cmdlet -MockWith {
+                Mock -CommandName Get-MgBetaDeviceAppManagementMobileAppCategory -MockWith {
                     return @{
-
+                        Id                  = "f1fc9fe2-728d-4867-9a72-a61e18f8c606";
+                        DisplayName         = "Books & Reference";
                     }
                 }
             }
@@ -123,15 +133,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The instance exists and values are NOT in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    ##TODO - Add Parameters
+                    Id                  = "f1fc9fe2-728d-4867-9a72-a61e18f8c606";
+                    DisplayName         = "Books & Reference";
                     Ensure              = 'Present'
                     Credential          = $Credential;
                 }
 
-                ##TODO - Mock the Get-Cmdlet to return a drift
-                Mock -CommandName Get-Cmdlet -MockWith {
+                Mock -CommandName Get-MgBetaDeviceAppManagementMobileAppCategory -MockWith {
                     return @{
-
+                        Id                  = "f1fc9fe2-728d-4867-9a72-a61e18f8c606";
+                        DisplayName         = "Books & Reference";
                     }
                 }
             }
@@ -146,8 +157,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should call the Set method' {
                 Set-TargetResource @testParams
-                ##TODO - Replace the Update-Cmdlet by the appropriate one
-                Should -Invoke -CommandName Update-Cmdlet -Exactly 1
+                Should -Invoke -CommandName Update-MgBetaDeviceAppManagementMobileAppCategory -Exactly 1
             }
         }
 
@@ -159,13 +169,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential  = $Credential;
                 }
 
-                ##TODO - Mock the Get-Cmdlet to return an instance
-                Mock -CommandName Get-Cmdlet -MockWith {
+                Mock -CommandName Get-MgBetaDeviceAppManagementMobileAppCategory -MockWith {
                     return @{
-
+                        Id                  = "f1fc9fe2-728d-4867-9a72-a61e18f8c606";
+                        DisplayName         = "Books & Reference";
                     }
                 }
             }
+
             It 'Should Reverse Engineer resource from the Export method' {
                 $result = Export-TargetResource @testParams
                 $result | Should -Not -BeNullOrEmpty
