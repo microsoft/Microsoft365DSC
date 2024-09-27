@@ -664,6 +664,17 @@
                     CertificateThumbprint = $CertificateThumbprint
                     IsSingleInstance                  = "Yes";
                 }
+                AADFeatureRolloutPolicy 'AADFeatureRolloutPolicy-CertificateBasedAuthentication rollout policy'
+                {
+                    ApplicationId           = $ApplicationId
+                    TenantId                = $TenantId
+                    CertificateThumbprint   = $CertificateThumbprint
+                    Description             = "CertificateBasedAuthentication rollout policy";
+                    DisplayName             = "CertificateBasedAuthentication rollout policy";
+                    Ensure                  = "Present";
+                    IsAppliedToOrganization = $False;
+                    IsEnabled               = $False;
+                }
                 AADGroup 'MyGroups'
                 {
                     DisplayName     = "DSCGroup"
