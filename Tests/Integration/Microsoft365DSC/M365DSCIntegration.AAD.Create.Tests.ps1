@@ -290,6 +290,19 @@
                     Principal       = "AdeleV@$TenantId";
                     RoleDefinition  = "Catalog creator";
                 }
+                AADFeatureRolloutPolicy 'AADFeatureRolloutPolicy-CertificateBasedAuthentication rollout policy'
+                {
+                    ApplicationId           = $ApplicationId
+                    TenantId                = $TenantId
+                    CertificateThumbprint   = $CertificateThumbprint
+                    Description             = "CertificateBasedAuthentication rollout policy";
+                    DisplayName             = "CertificateBasedAuthentication rollout policy";
+                    Ensure                  = "Present";
+                    Feature                 = "certificateBasedAuthentication";
+                    IsAppliedToOrganization = $False;
+                    IsEnabled               = $True;
+                    Id                      = "e6f15f6f-1ebe-4007-aa6c-0590844080d2";
+                }
                 AADGroup 'MyGroups'
                 {
                     DisplayName     = "DSCGroup"
