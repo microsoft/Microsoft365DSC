@@ -19,7 +19,6 @@ Configuration Example
         $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
-
     node localhost
     {
         AADFeatureRolloutPolicy "AADFeatureRolloutPolicy-CertificateBasedAuthentication rollout policy"
@@ -30,9 +29,8 @@ Configuration Example
             Description             = "CertificateBasedAuthentication rollout policy";
             DisplayName             = "CertificateBasedAuthentication rollout policy";
             Ensure                  = "Present";
-            Feature                 = "certificateBasedAuthentication";
             IsAppliedToOrganization = $False;
-            IsEnabled               = $True;
+            IsEnabled               = $False;
         }
     }
 }

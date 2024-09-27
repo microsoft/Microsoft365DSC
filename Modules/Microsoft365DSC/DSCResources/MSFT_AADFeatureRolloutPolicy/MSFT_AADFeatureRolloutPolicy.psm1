@@ -26,7 +26,7 @@ function Get-TargetResource
         [System.Boolean]
         $IsEnabled,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Id,
 
@@ -180,7 +180,7 @@ function Set-TargetResource
         [System.Boolean]
         $IsEnabled,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Id,
 
@@ -241,17 +241,8 @@ function Set-TargetResource
         Write-Verbose -Message "Creating an Azure AD Policy Feature Rollout Policy with DisplayName {$DisplayName}"
 
         $createParameters = ([Hashtable]$BoundParameters).Clone()
-        $createParameters = Rename-M365DSCCimInstanceParameter -Properties $createParameters
         $createParameters.Remove('Id') | Out-Null
 
-        $keys = (([Hashtable]$createParameters).Clone()).Keys
-        foreach ($key in $keys)
-        {
-            if ($null -ne $createParameters.$key -and $createParameters.$key.GetType().Name -like '*CimInstance*')
-            {
-                $createParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $createParameters.$key
-            }
-        }
         #region resource generator code
         $policy = New-MgBetaPolicyFeatureRolloutPolicy -BodyParameter $createParameters
         #endregion
@@ -261,19 +252,9 @@ function Set-TargetResource
         Write-Verbose -Message "Updating the Azure AD Policy Feature Rollout Policy with Id {$($currentInstance.Id)}"
 
         $updateParameters = ([Hashtable]$BoundParameters).Clone()
-        $updateParameters = Rename-M365DSCCimInstanceParameter -Properties $updateParameters
 
         $updateParameters.Remove('Id') | Out-Null
         $updateParameters.Remove('Feature') | Out-Null
-
-        $keys = (([Hashtable]$updateParameters).Clone()).Keys
-        foreach ($key in $keys)
-        {
-            if ($null -ne $pdateParameters.$key -and $updateParameters.$key.GetType().Name -like '*CimInstance*')
-            {
-                $updateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $updateParameters.FeatureRolloutPolicyId
-            }
-        }
 
         #region resource generator code
         Update-MgBetaPolicyFeatureRolloutPolicy `
@@ -318,7 +299,7 @@ function Test-TargetResource
         [System.Boolean]
         $IsEnabled,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Id,
 
@@ -381,26 +362,6 @@ function Test-TargetResource
         return $false
     }
     $testResult = $true
-
-    #Compare Cim instances
-    foreach ($key in $PSBoundParameters.Keys)
-    {
-        $source = $PSBoundParameters.$key
-        $target = $CurrentValues.$key
-        if ($null -ne $source -and $source.GetType().Name -like '*CimInstance*')
-        {
-            $testResult = Compare-M365DSCComplexObject `
-                -Source ($source) `
-                -Target ($target)
-
-            if (-not $testResult)
-            {
-                break
-            }
-
-            $ValuesToCheck.Remove($key) | Out-Null
-        }
-    }
 
     $ValuesToCheck.Remove('Id') | Out-Null
     $ValuesToCheck = Remove-M365DSCAuthenticationParameter -BoundParameters $ValuesToCheck
@@ -501,10 +462,7 @@ function Export-TargetResource
             {
                 $displayedKey = $config.displayName
             }
-            elseif (-not [string]::IsNullOrEmpty($config.name))
-            {
-                $displayedKey = $config.name
-            }
+
             Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{
                 Id = $config.Id
