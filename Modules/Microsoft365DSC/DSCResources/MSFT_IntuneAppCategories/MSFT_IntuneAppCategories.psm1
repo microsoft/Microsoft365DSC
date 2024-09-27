@@ -197,6 +197,7 @@ function Set-TargetResource
         Remove-MgBetaDeviceAppManagementMobileAppCategory @SetParameters
     }
 }
+
 function Test-TargetResource
 {
     [CmdletBinding()]
