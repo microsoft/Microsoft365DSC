@@ -1,10 +1,17 @@
 # Change log for Microsoft365DSC
 
 # UNRELEASED
-* AADFeatureRolloutPolicy
-  * Initial release
+
+* AADApplication
+  * Added AppRoles
+  * Added AuthenticationBehavior
+  * Added KeyCredentials
+  * Added PaswordCredentials
+  * Added PreAuthorizationApplications
 * AADEntitlementManagementSettings
   * Initial release.
+* AADFeatureRolloutPolicy
+  * Initial release
 * AADGroup
   * Fixes logic to evaluate license assignments and disabled plans.
     FIXES [#5101](https://github.com/microsoft/Microsoft365DSC/issues/5101)
@@ -20,6 +27,8 @@
   * Initial release.
 * AzureSubscription
   * Initial Release.
+* DefenderSubscriptionDefenderPlan
+  * Initial release.
 * EXOArcConfig
   * Initial Release.
 * EXOEmailTenantSettings
