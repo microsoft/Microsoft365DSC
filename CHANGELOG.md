@@ -1,7 +1,8 @@
 # Change log for Microsoft365DSC
 
 # UNRELEASED
-
+* AADFeatureRolloutPolicy
+  * Initial release
 * AADEntitlementManagementSettings
   * Initial release.
 * AADGroup
