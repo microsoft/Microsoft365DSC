@@ -70346,6 +70346,387 @@ function Get-MgBetaDirectoryObject
 }
 #endregion
 #region SecurityComplianceCenter
+function Get-InsiderRiskPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $MetaDataOnly,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $DistributionDetail
+    )
+}
+function New-InsiderRiskPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $IsCustom,
+
+        [Parameter()]
+        [System.Object]
+        $ExchangeLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $Indicators,
+
+        [Parameter()]
+        [System.Object]
+        $ExtensibleIndicators,
+
+        [Parameter()]
+        [System.Object]
+        $ModernGroupLocationException,
+
+        [Parameter()]
+        [System.String]
+        $CCPolicySdsId,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled,
+
+        [Parameter()]
+        [System.Object]
+        $ExtensibleTriggerInsightGroups,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Object]
+        $UserMailList,
+
+        [Parameter()]
+        [System.Object]
+        $PolicyRBACScopes,
+
+        [Parameter()]
+        [System.Object]
+        $ExchangeLocation,
+
+        [Parameter()]
+        [System.Object]
+        $FileExtensions,
+
+        [Parameter()]
+        [System.Boolean]
+        $OptInDrpForDlp,
+
+        [Parameter()]
+        [System.Int32]
+        $UseDefaultTemplate,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsPriorityContentOnlyScoring,
+
+        [Parameter()]
+        [System.Object]
+        $Triggers,
+
+        [Parameter()]
+        [System.Object]
+        $SharepointSites,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.Object]
+        $TeamsSites,
+
+        [Parameter()]
+        [System.Int32]
+        $HistoricTimeSpan,
+
+        [Parameter()]
+        [System.Int32]
+        $PastTerminationWindow,
+
+        [Parameter()]
+        [System.Object]
+        $MLClassifierTypes,
+
+        [Parameter()]
+        [System.Object]
+        $ModernGroupLocation,
+
+        [Parameter()]
+        [System.Object]
+        $InsiderRiskScenario,
+
+        [Parameter()]
+        [System.String]
+        $SessionRecordingSettings,
+
+        [Parameter()]
+        [System.Object]
+        $DlpPolicy,
+
+        [Parameter()]
+        [System.Int32]
+        $FutureTerminationWindow,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $PostTerminationActivity,
+
+        [Parameter()]
+        [System.Object]
+        $IrmAdaptiveScopeLocation,
+
+        [Parameter()]
+        [System.Object]
+        $CustomTags,
+
+        [Parameter()]
+        [System.String]
+        $CCPolicyName,
+
+        [Parameter()]
+        [System.Object]
+        $TriggerInsightGroups,
+
+        [Parameter()]
+        [System.String]
+        $TenantSetting,
+
+        [Parameter()]
+        [System.Object]
+        $SensitivityLabels,
+
+        [Parameter()]
+        [System.Object]
+        $DlpSensitiveTypes,
+
+        [Parameter()]
+        [System.Int32]
+        $InScopeTimeSpan,
+
+        [Parameter()]
+        [System.Int32]
+        $SchemaVersion
+    )
+}
+function Remove-InsiderRiskPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ForceDeletion
+    )
+}
+function Set-InsiderRiskPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $IsCustom,
+
+        [Parameter()]
+        [System.Object]
+        $Indicators,
+
+        [Parameter()]
+        [System.String]
+        $TurnOnAnalytics,
+
+        [Parameter()]
+        [System.Object]
+        $AddExchangeLocationException,
+
+        [Parameter()]
+        [System.String]
+        $SessionRecordingSettings,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $CCPolicyName,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveExchangeLocationException,
+
+        [Parameter()]
+        [System.String]
+        $CCPolicySdsId,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled,
+
+        [Parameter()]
+        [System.Object]
+        $ExtensibleTriggerInsightGroups,
+
+        [Parameter()]
+        [System.Object]
+        $AddExchangeLocation,
+
+        [Parameter()]
+        [System.Object]
+        $PolicyRBACScopes,
+
+        [Parameter()]
+        [System.Object]
+        $FileExtensions,
+
+        [Parameter()]
+        [System.Boolean]
+        $OptInDrpForDlp,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveIrmAdaptiveScopeLocation,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveModernGroupLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $AddModernGroupLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $DlpPolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsPriorityContentOnlyScoring,
+
+        [Parameter()]
+        [System.Object]
+        $Triggers,
+
+        [Parameter()]
+        [System.Object]
+        $AddModernGroupLocation,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.Object]
+        $TeamsSites,
+
+        [Parameter()]
+        [System.Int32]
+        $HistoricTimeSpan,
+
+        [Parameter()]
+        [System.String]
+        $TurnOnDLPUserRiskSync,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveModernGroupLocation,
+
+        [Parameter()]
+        [System.Object]
+        $MLClassifierTypes,
+
+        [Parameter()]
+        [System.Object]
+        $ExtensibleIndicators,
+
+        [Parameter()]
+        [System.Object]
+        $AddIrmAdaptiveScopeLocation,
+
+        [Parameter()]
+        [System.Int32]
+        $FutureTerminationWindow,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $PostTerminationActivity,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveExchangeLocation,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $RetryDistribution,
+
+        [Parameter()]
+        [System.Object]
+        $SharepointSites,
+
+        [Parameter()]
+        [System.Object]
+        $CustomTags,
+
+        [Parameter()]
+        [System.Object]
+        $AddUserMailList,
+
+        [Parameter()]
+        [System.Object]
+        $TriggerInsightGroups,
+
+        [Parameter()]
+        [System.String]
+        $TenantSetting,
+
+        [Parameter()]
+        [System.Object]
+        $SensitivityLabels,
+
+        [Parameter()]
+        [System.Object]
+        $DlpSensitiveTypes,
+
+        [Parameter()]
+        [System.Int32]
+        $InScopeTimeSpan,
+
+        [Parameter()]
+        [System.Int32]
+        $SchemaVersion,
+
+        [Parameter()]
+        [System.Int32]
+        $PastTerminationWindow
+    )
+}
+
 function Get-AdminAuditLogConfig
 {
     [CmdletBinding()]

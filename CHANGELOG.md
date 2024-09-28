@@ -73,6 +73,8 @@
   * Initial release.
 * SCInsiderRiskEntityList
   * Initial release.
+* SCInsiderRiskPolicy
+  * Initial release.
 * SCRoleGroup
   * Fixes an issue with creation without specifying Displayname
   * Fixes an issue with Drifts because of returned Role format
