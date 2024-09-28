@@ -42,6 +42,14 @@ Configuration Example
                     State = 'default'
                 }
             };
+            ReportSuspiciousActivitySettings = MSFT_MicrosoftGraphreportSuspiciousActivitySettings{
+                VoiceReportingCode = 0
+                IncludeTarget = MSFT_AADAuthenticationMethodPolicyIncludeTarget{
+                    Id = 'all_users'
+                    TargetType = 'group'
+                }
+                State = 'default'
+            };
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint

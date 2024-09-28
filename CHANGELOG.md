@@ -8,6 +8,8 @@
   * Added KeyCredentials
   * Added PaswordCredentials
   * Added PreAuthorizationApplications
+* AADAuthenticationMethodPolicy
+  * Added ReportSuspiciousActivitySettings
 * AADEntitlementManagementSettings
   * Initial release.
 * AADFeatureRolloutPolicy
@@ -37,10 +39,11 @@
   * Initial Release.
 * EXOMailboxCalendarConfiguration
   * Initial Release.
+* EXOMailboxIRMAccess
+  * Initial Release.
 * EXOMailboxFolderPermission
   * Initial Release.
 * EXOMailboxIRMAccess
-  * Initial Release.
 * EXOManagementScope
   * Initial Release.
 * EXORetenionPolicy
