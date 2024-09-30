@@ -80,6 +80,8 @@
   * Initial release.
 * SCInsiderRiskPolicy
   * Initial release.
+* SCRecordReviewNotificationTemplateConfig
+  * Initial release.
 * SCRoleGroup
   * Fixes an issue with creation without specifying Displayname
   * Fixes an issue with Drifts because of returned Role format
