@@ -668,11 +668,36 @@ function Get-TargetResource
         if (-not [System.String]::IsNullOrEmpty($instance.TenantSettings) -and $instance.TenantSettings.Length -gt 0)
         {
             $tenantSettings = ConvertFrom-Json $instance.TenantSettings[0]
+
+            $DLPUserRiskSyncValue = $null
+            if (-not [System.String]::IsNullOrEmpty($tenantSettings.FeatureSettings.DLPUserRiskSync))
+            {
+                $DLPUserRiskSyncValue = [Boolean]::Parse($tenantSettings.FeatureSettings.DLPUserRiskSync)
+            }
+
+            $AnonymizationValue = $null
+            if (-not [System.String]::IsNullOrEmpty($tenantSettings.FeatureSettings.Anonymization))
+            {
+                $AnonymizationValue = [Boolean]::Parse($tenantSettings.FeatureSettings.Anonymization)
+            }
+
+            $OptInIRMDataExportValue = $null
+            if (-not [System.String]::IsNullOrEmpty($tenantSettings.FeatureSettings.OptInIRMDataExport))
+            {
+                $OptInIRMDataExportValue = [Boolean]::Parse($tenantSettings.FeatureSettings.OptInIRMDataExport)
+            }
+
+            $RaiseAuditAlertValue = $null
+            if (-not [System.String]::IsNullOrEmpty($tenantSettings.FeatureSettings.RaiseAuditAlert))
+            {
+                $RaiseAuditAlertValue = [Boolean]::Parse($tenantSettings.FeatureSettings.RaiseAuditAlert)
+            }
+
             $tenantSettingsHash = @{
-                Anonymization                                 = [Boolean]($tenantSettings.FeatureSettings.Anonymization)
-                DLPUserRiskSync                               = [Boolean]($tenantSettings.FeatureSettings.DLPUserRiskSync)
-                OptInIRMDataExport                            = [Boolean]($tenantSettings.FeatureSettings.OptInIRMDataExport)
-                RaiseAuditAlert                               = [Boolean]($tenantSettings.FeatureSettings.RaiseAuditAlert)
+                Anonymization                                 = $AnonymizationValue
+                DLPUserRiskSync                               = $DLPUserRiskSyncValue
+                OptInIRMDataExport                            = $OptInIRMDataExportValue
+                RaiseAuditAlert                               = $RaiseAuditAlertValue
                 FileVolCutoffLimits                           = $tenantSettings.IntelligentDetections.FileVolCutoffLimits
                 AlertVolume                                   = $tenantSettings.IntelligentDetections.AlertVolume
                 AnomalyDetections                             = ($tenantSettings.Indicators | Where-Object -FilterScript {$_.Name -eq 'AnomalyDetections'}).Enabled
