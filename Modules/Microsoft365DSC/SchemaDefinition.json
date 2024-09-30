@@ -41188,6 +41188,11 @@
                                "Option":  "Write"
                            },
                            {
+                               "CIMType":  "Boolean",
+                               "Name":  "AdaptiveProtectionEnabled",
+                               "Option":  "Write"
+                           },
+                           {
                                "CIMType":  "string",
                                "Name":  "Ensure",
                                "Option":  "Write"
