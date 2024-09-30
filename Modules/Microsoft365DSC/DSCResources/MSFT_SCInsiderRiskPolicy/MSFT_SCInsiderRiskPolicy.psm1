@@ -581,6 +581,102 @@ function Get-TargetResource
         $AdaptiveProtectionEnabled,
 
         [Parameter()]
+        [System.UInt32]
+        $AdaptiveProtectionHighProfileSourceType,
+
+        [Parameter()]
+        [System.UInt32]
+        $AdaptiveProtectionHighProfileConfirmedIssueSeverity,
+
+        [Parameter()]
+        [System.UInt32]
+        $AdaptiveProtectionHighProfileGeneratedIssueSeverity,
+
+        [Parameter()]
+        [System.UInt32]
+        $AdaptiveProtectionHighProfileInsightSeverity,
+
+        [Parameter()]
+        [System.UInt32]
+        $AdaptiveProtectionHighProfileInsightCount,
+
+        [Parameter()]
+        [System.String[]]
+        $AdaptiveProtectionHighProfileInsightTypes,
+
+        [Parameter()]
+        [System.Boolean]
+        $AdaptiveProtectionHighProfileConfirmedIssue,
+
+        [Parameter()]
+        [System.UInt32]
+        $AdaptiveProtectionMediumProfileSourceType,
+
+        [Parameter()]
+        [System.UInt32]
+        $AdaptiveProtectionMediumProfileConfirmedIssueSeverity,
+
+        [Parameter()]
+        [System.UInt32]
+        $AdaptiveProtectionMediumProfileGeneratedIssueSeverity,
+
+        [Parameter()]
+        [System.UInt32]
+        $AdaptiveProtectionMediumProfileInsightSeverity,
+
+        [Parameter()]
+        [System.UInt32]
+        $AdaptiveProtectionMediumProfileInsightCount,
+
+        [Parameter()]
+        [System.String[]]
+        $AdaptiveProtectionMediumProfileInsightTypes,
+
+        [Parameter()]
+        [System.Boolean]
+        $AdaptiveProtectionMediumProfileConfirmedIssue,
+
+        [Parameter()]
+        [System.UInt32]
+        $AdaptiveProtectionLowProfileSourceType,
+
+        [Parameter()]
+        [System.UInt32]
+        $AdaptiveProtectionLowProfileConfirmedIssueSeverity,
+
+        [Parameter()]
+        [System.UInt32]
+        $AdaptiveProtectionLowProfileGeneratedIssueSeverity,
+
+        [Parameter()]
+        [System.UInt32]
+        $AdaptiveProtectionLowProfileInsightSeverity,
+
+        [Parameter()]
+        [System.UInt32]
+        $AdaptiveProtectionLowProfileInsightCount,
+
+        [Parameter()]
+        [System.String[]]
+        $AdaptiveProtectionLowProfileInsightTypes,
+
+        [Parameter()]
+        [System.Boolean]
+        $AdaptiveProtectionLowProfileConfirmedIssue,
+
+        [Parameter()]
+        [System.UInt32]
+        $ProfileInscopeTimeSpan,
+
+        [Parameter()]
+        [System.UInt32]
+        $LookbackTimeSpan,
+
+        [Parameter()]
+        [System.Boolean]
+        $RetainSeverityAfterTriage,
+
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -863,6 +959,7 @@ function Get-TargetResource
                 $tenantSettingsHash.Add('NotificationDetailsEnabled', $false)
             }
 
+            # Adaptive Protection
             $AdaptiveProtectionEnabledValue = $false
             if ($null -ne $tenantSettings.DynamicRiskPreventionSettings -and `
                 $null -ne $tenantSettings.DynamicRiskPreventionSettings.DynamicRiskScenarioSettings)
@@ -875,6 +972,49 @@ function Get-TargetResource
                 {
                     $AdaptiveProtectionEnabledValue = $false
                 }
+
+                # High Profile
+                if ($null -ne $tenantSettings.DynamicRiskPreventionSettings.DynamicRiskScenarioSettings.HighProfile)
+                {
+                    $highProfile = $tenantSettings.DynamicRiskPreventionSettings.DynamicRiskScenarioSettings.HighProfile
+                    $tenantSettingsHash.Add('AdaptiveProtectionHighProfileSourceType', $highProfile.ProfileSourceType)
+                    $tenantSettingsHash.Add('AdaptiveProtectionHighProfileConfirmedIssueSeverity', $highProfile.ConfirmedIssueSeverity)
+                    $tenantSettingsHash.Add('AdaptiveProtectionHighProfileGeneratedIssueSeverity', $highProfile.GeneratedIssueSeverity)
+                    $tenantSettingsHash.Add('AdaptiveProtectionHighProfileInsightSeverity', $highProfile.InsightSeverity)
+                    $tenantSettingsHash.Add('AdaptiveProtectionHighProfileInsightCount', $highProfile.InsightCount)
+                    $tenantSettingsHash.Add('AdaptiveProtectionHighProfileInsightTypes', [Array]($highProfile.InsightTypes))
+                    $tenantSettingsHash.Add('AdaptiveProtectionHighProfileConfirmedIssue', $highProfile.ConfirmedIssue)
+                }
+
+                # Medium Profile
+                if ($null -ne $tenantSettings.DynamicRiskPreventionSettings.DynamicRiskScenarioSettings.MediumProfile)
+                {
+                    $mediumProfile = $tenantSettings.DynamicRiskPreventionSettings.DynamicRiskScenarioSettings.MediumProfile
+                    $tenantSettingsHash.Add('AdaptiveProtectionMediumProfileSourceType', $mediumProfile.ProfileSourceType)
+                    $tenantSettingsHash.Add('AdaptiveProtectionMediumProfileConfirmedIssueSeverity', $mediumProfile.ConfirmedIssueSeverity)
+                    $tenantSettingsHash.Add('AdaptiveProtectionMediumProfileGeneratedIssueSeverity', $mediumProfile.GeneratedIssueSeverity)
+                    $tenantSettingsHash.Add('AdaptiveProtectionMediumProfileInsightSeverity', $mediumProfile.InsightSeverity)
+                    $tenantSettingsHash.Add('AdaptiveProtectionMediumProfileInsightCount', $mediumProfile.InsightCount)
+                    $tenantSettingsHash.Add('AdaptiveProtectionMediumProfileInsightTypes', [Array]($mediumProfile.InsightTypes))
+                    $tenantSettingsHash.Add('AdaptiveProtectionMediumProfileConfirmedIssue', $mediumProfile.ConfirmedIssue)
+                }
+
+                # Low Profile
+                if ($null -ne $tenantSettings.DynamicRiskPreventionSettings.DynamicRiskScenarioSettings.LowProfile)
+                {
+                    $lowProfile = $tenantSettings.DynamicRiskPreventionSettings.DynamicRiskScenarioSettings.LowProfile
+                    $tenantSettingsHash.Add('AdaptiveProtectionLowProfileSourceType', $lowProfile.ProfileSourceType)
+                    $tenantSettingsHash.Add('AdaptiveProtectionLowProfileConfirmedIssueSeverity', $lowProfile.ConfirmedIssueSeverity)
+                    $tenantSettingsHash.Add('AdaptiveProtectionLowProfileGeneratedIssueSeverity', $lowProfile.GeneratedIssueSeverity)
+                    $tenantSettingsHash.Add('AdaptiveProtectionLowProfileInsightSeverity', $lowProfile.InsightSeverity)
+                    $tenantSettingsHash.Add('AdaptiveProtectionLowProfileInsightCount', $lowProfile.InsightCount)
+                    $tenantSettingsHash.Add('AdaptiveProtectionLowProfileInsightTypes', [Array]($lowProfile.InsightTypes))
+                    $tenantSettingsHash.Add('AdaptiveProtectionLowProfileConfirmedIssue', $lowProfile.ConfirmedIssue)
+                }
+
+                $tenantSettingsHash.Add('ProfileInScopeTimeSpan', $tenantSettings.DynamicRiskPreventionSettings.ProfileInScopeTimeSpan)
+                $tenantSettingsHash.Add('LookbackTimeSpan', $tenantSettings.DynamicRiskPreventionSettings.LookbackTimeSpan)
+                $tenantSettingsHash.Add('RetainSeverityAfterTriage', $tenantSettings.DynamicRiskPreventionSettings.RetainSeverityAfterTriage)
             }
             $tenantSettingsHash.Add('AdaptiveProtectionEnabled', $AdaptiveProtectionEnabledValue)
 
@@ -1478,6 +1618,102 @@ function Set-TargetResource
         $AdaptiveProtectionEnabled,
 
         [Parameter()]
+        [System.UInt32]
+        $AdaptiveProtectionHighProfileSourceType,
+
+        [Parameter()]
+        [System.UInt32]
+        $AdaptiveProtectionHighProfileConfirmedIssueSeverity,
+
+        [Parameter()]
+        [System.UInt32]
+        $AdaptiveProtectionHighProfileGeneratedIssueSeverity,
+
+        [Parameter()]
+        [System.UInt32]
+        $AdaptiveProtectionHighProfileInsightSeverity,
+
+        [Parameter()]
+        [System.UInt32]
+        $AdaptiveProtectionHighProfileInsightCount,
+
+        [Parameter()]
+        [System.String[]]
+        $AdaptiveProtectionHighProfileInsightTypes,
+
+        [Parameter()]
+        [System.Boolean]
+        $AdaptiveProtectionHighProfileConfirmedIssue,
+
+        [Parameter()]
+        [System.UInt32]
+        $AdaptiveProtectionMediumProfileSourceType,
+
+        [Parameter()]
+        [System.UInt32]
+        $AdaptiveProtectionMediumProfileConfirmedIssueSeverity,
+
+        [Parameter()]
+        [System.UInt32]
+        $AdaptiveProtectionMediumProfileGeneratedIssueSeverity,
+
+        [Parameter()]
+        [System.UInt32]
+        $AdaptiveProtectionMediumProfileInsightSeverity,
+
+        [Parameter()]
+        [System.UInt32]
+        $AdaptiveProtectionMediumProfileInsightCount,
+
+        [Parameter()]
+        [System.String[]]
+        $AdaptiveProtectionMediumProfileInsightTypes,
+
+        [Parameter()]
+        [System.Boolean]
+        $AdaptiveProtectionMediumProfileConfirmedIssue,
+
+        [Parameter()]
+        [System.UInt32]
+        $AdaptiveProtectionLowProfileSourceType,
+
+        [Parameter()]
+        [System.UInt32]
+        $AdaptiveProtectionLowProfileConfirmedIssueSeverity,
+
+        [Parameter()]
+        [System.UInt32]
+        $AdaptiveProtectionLowProfileGeneratedIssueSeverity,
+
+        [Parameter()]
+        [System.UInt32]
+        $AdaptiveProtectionLowProfileInsightSeverity,
+
+        [Parameter()]
+        [System.UInt32]
+        $AdaptiveProtectionLowProfileInsightCount,
+
+        [Parameter()]
+        [System.String[]]
+        $AdaptiveProtectionLowProfileInsightTypes,
+
+        [Parameter()]
+        [System.Boolean]
+        $AdaptiveProtectionLowProfileConfirmedIssue,
+
+        [Parameter()]
+        [System.UInt32]
+        $ProfileInscopeTimeSpan,
+
+        [Parameter()]
+        [System.UInt32]
+        $LookbackTimeSpan,
+
+        [Parameter()]
+        [System.Boolean]
+        $RetainSeverityAfterTriage,
+
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -1594,7 +1830,11 @@ function Set-TargetResource
         {
             $AdaptiveProtectionActivatonStatus = 0
         }
-        $dynamicRiskPreventionSettings = "{`"ProfileInScopeTimeSpan`":7, `"LoopbackTimeSpan`":7, `"DynamicRiskScenarioSettings`":[{`"ActivationStatus`":$AdaptiveProtectionActivatonStatus}]}"
+        $dynamicRiskPreventionSettings = "{`"RetainSeverityAfterTriage`":$($RetainSeverityAfterTriage.ToString().ToLower()),`"ProfileInScopeTimeSpan`":$($ProfileInscopeTimeSpan), `"LookbackTimeSpan`":$($LookbackTimeSpan), `"DynamicRiskScenarioSettings`":[{`"ActivationStatus`":$AdaptiveProtectionActivatonStatus"
+        $dynamicRiskPreventionSettings += ", `"HighProfile`":{`"ProfileSourceType`":$($AdaptiveProtectionHighProfileSourceType), `"ConfirmedIssueSeverity`":$($AdaptiveProtectionHighProfileConfirmedIssueSeverity), `"GeneratedIssueSeverity`":$($AdaptiveProtectionHighProfileGeneratedIssueSeverity), `"InsightSeverity`": $($AdaptiveProtectionHighProfileInsightSeverity), `"InsightCount`": $($AdaptiveProtectionHighProfileInsightCount), `"InsightTypes`": [`"$($AdaptiveProtectionHighProfileInsightTypes -join '","')`"], `"ConfirmedIssue`": $($AdaptiveProtectionHighProfileConfirmedIssue.ToString().ToLower())}"
+        $dynamicRiskPreventionSettings += ", `"MediumProfile`":{`"ProfileSourceType`":$($AdaptiveProtectionMediumProfileSourceType), `"ConfirmedIssueSeverity`":$($AdaptiveProtectionMediumProfileConfirmedIssueSeverity), `"GeneratedIssueSeverity`":$($AdaptiveProtectionMediumProfileGeneratedIssueSeverity), `"InsightSeverity`": $($AdaptiveProtectionMediumProfileInsightSeverity), `"InsightCount`": $($AdaptiveProtectionMediumProfileInsightCount), `"InsightTypes`": [`"$($AdaptiveProtectionMediumProfileInsightTypes -join '","')`"], `"ConfirmedIssue`": $($AdaptiveProtectionMediumProfileConfirmedIssue.ToString().ToLower())}"
+        $dynamicRiskPreventionSettings += ", `"LowProfile`":{`"ProfileSourceType`":$($AdaptiveProtectionLowProfileSourceType), `"ConfirmedIssueSeverity`":$($AdaptiveProtectionLowProfileConfirmedIssueSeverity), `"GeneratedIssueSeverity`":$($AdaptiveProtectionLowProfileGeneratedIssueSeverity), `"InsightSeverity`": $($AdaptiveProtectionLowProfileInsightSeverity), `"InsightCount`": $($AdaptiveProtectionLowProfileInsightCount), `"InsightTypes`": [`"$($AdaptiveProtectionLowProfileInsightTypes -join '","')`"], `"ConfirmedIssue`": $($AdaptiveProtectionLowProfileConfirmedIssue.ToString().ToLower())}"
+        $dynamicRiskPreventionSettings += '}]}'
         $tenantSettingsValue += ", `"DynamicRiskPreventionSettings`":$dynamicRiskPreventionSettings"
     }
 
@@ -2221,6 +2461,102 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $AdaptiveProtectionEnabled,
+
+        [Parameter()]
+        [System.UInt32]
+        $AdaptiveProtectionHighProfileSourceType,
+
+        [Parameter()]
+        [System.UInt32]
+        $AdaptiveProtectionHighProfileConfirmedIssueSeverity,
+
+        [Parameter()]
+        [System.UInt32]
+        $AdaptiveProtectionHighProfileGeneratedIssueSeverity,
+
+        [Parameter()]
+        [System.UInt32]
+        $AdaptiveProtectionHighProfileInsightSeverity,
+
+        [Parameter()]
+        [System.UInt32]
+        $AdaptiveProtectionHighProfileInsightCount,
+
+        [Parameter()]
+        [System.String[]]
+        $AdaptiveProtectionHighProfileInsightTypes,
+
+        [Parameter()]
+        [System.Boolean]
+        $AdaptiveProtectionHighProfileConfirmedIssue,
+
+        [Parameter()]
+        [System.UInt32]
+        $AdaptiveProtectionMediumProfileSourceType,
+
+        [Parameter()]
+        [System.UInt32]
+        $AdaptiveProtectionMediumProfileConfirmedIssueSeverity,
+
+        [Parameter()]
+        [System.UInt32]
+        $AdaptiveProtectionMediumProfileGeneratedIssueSeverity,
+
+        [Parameter()]
+        [System.UInt32]
+        $AdaptiveProtectionMediumProfileInsightSeverity,
+
+        [Parameter()]
+        [System.UInt32]
+        $AdaptiveProtectionMediumProfileInsightCount,
+
+        [Parameter()]
+        [System.String[]]
+        $AdaptiveProtectionMediumProfileInsightTypes,
+
+        [Parameter()]
+        [System.Boolean]
+        $AdaptiveProtectionMediumProfileConfirmedIssue,
+
+        [Parameter()]
+        [System.UInt32]
+        $AdaptiveProtectionLowProfileSourceType,
+
+        [Parameter()]
+        [System.UInt32]
+        $AdaptiveProtectionLowProfileConfirmedIssueSeverity,
+
+        [Parameter()]
+        [System.UInt32]
+        $AdaptiveProtectionLowProfileGeneratedIssueSeverity,
+
+        [Parameter()]
+        [System.UInt32]
+        $AdaptiveProtectionLowProfileInsightSeverity,
+
+        [Parameter()]
+        [System.UInt32]
+        $AdaptiveProtectionLowProfileInsightCount,
+
+        [Parameter()]
+        [System.String[]]
+        $AdaptiveProtectionLowProfileInsightTypes,
+
+        [Parameter()]
+        [System.Boolean]
+        $AdaptiveProtectionLowProfileConfirmedIssue,
+
+        [Parameter()]
+        [System.UInt32]
+        $ProfileInscopeTimeSpan,
+
+        [Parameter()]
+        [System.UInt32]
+        $LookbackTimeSpan,
+
+        [Parameter()]
+        [System.Boolean]
+        $RetainSeverityAfterTriage,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
