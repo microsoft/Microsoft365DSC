@@ -149,6 +149,14 @@
                             State = 'default'
                         }
                     };
+                    ReportSuspiciousActivitySettings = MSFT_MicrosoftGraphreportSuspiciousActivitySettings{
+                        VoiceReportingCode = 0
+                        IncludeTarget = MSFT_AADAuthenticationMethodPolicyIncludeTarget{
+                            Id = 'all_users'
+                            TargetType = 'group'
+                        }
+                        State = 'default'
+                    };
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
@@ -688,6 +696,17 @@
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                     IsSingleInstance                  = "Yes";
+                }
+                AADFeatureRolloutPolicy 'AADFeatureRolloutPolicy-CertificateBasedAuthentication rollout policy'
+                {
+                    ApplicationId           = $ApplicationId
+                    TenantId                = $TenantId
+                    CertificateThumbprint   = $CertificateThumbprint
+                    Description             = "CertificateBasedAuthentication rollout policy";
+                    DisplayName             = "CertificateBasedAuthentication rollout policy";
+                    Ensure                  = "Present";
+                    IsAppliedToOrganization = $False;
+                    IsEnabled               = $False;
                 }
                 AADGroup 'MyGroups'
                 {
