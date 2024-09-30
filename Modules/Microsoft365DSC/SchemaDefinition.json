@@ -41238,6 +41238,126 @@
                                "Option":  "Write"
                            },
                            {
+                               "CIMType":  "UInt32",
+                               "Name":  "AdaptiveProtectionHighProfileSourceType",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "AdaptiveProtectionHighProfileConfirmedIssueSeverity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "AdaptiveProtectionHighProfileGeneratedIssueSeverity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "AdaptiveProtectionHighProfileInsightSeverity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "AdaptiveProtectionHighProfileInsightCount",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AdaptiveProtectionHighProfileInsightTypes",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "AdaptiveProtectionHighProfileConfirmedIssue",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "AdaptiveProtectionMediumProfileSourceType",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "AdaptiveProtectionMediumProfileConfirmedIssueSeverity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "AdaptiveProtectionMediumProfileGeneratedIssueSeverity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "AdaptiveProtectionMediumProfileInsightSeverity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "AdaptiveProtectionMediumProfileInsightCount",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AdaptiveProtectionMediumProfileInsightTypes",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "AdaptiveProtectionMediumProfileConfirmedIssue",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "AdaptiveProtectionLowProfileSourceType",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "AdaptiveProtectionLowProfileConfirmedIssueSeverity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "AdaptiveProtectionLowProfileGeneratedIssueSeverity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "AdaptiveProtectionLowProfileInsightSeverity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "AdaptiveProtectionLowProfileInsightCount",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AdaptiveProtectionLowProfileInsightTypes",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "AdaptiveProtectionLowProfileConfirmedIssue",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "RetainSeverityAfterTriage",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "LookbackTimeSpan",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "ProfileInScopeTimeSpan",
+                               "Option":  "Write"
+                           },
+                           {
                                "CIMType":  "string",
                                "Name":  "Ensure",
                                "Option":  "Write"
