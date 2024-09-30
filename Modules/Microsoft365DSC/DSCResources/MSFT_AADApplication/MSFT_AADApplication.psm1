@@ -241,7 +241,7 @@ function Get-TargetResource
                 $mykeyCredentials.Add('KeyId', $currentkeyCredentials.keyId)
 
 
-                if($null -ne $currentkeyCredentials.Key) 
+                if($null -ne $currentkeyCredentials.Key)
                 {
                     $mykeyCredentials.Add('Key', [convert]::ToBase64String($currentkeyCredentials.key))
                 }
@@ -574,7 +574,7 @@ function Set-TargetResource
     if ($PasswordCredentials)
     {
         Write-Warning -Message "PasswordCredentials is a readonly property and cannot be configured."
-           
+
     }
 
     if ($currentParameters.AvailableToOtherTenants)
@@ -1053,30 +1053,6 @@ function Test-TargetResource
     }
 
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
- 
-    $testTargetResource = $true
-
-    #Compare Cim instances
-    foreach ($key in $PSBoundParameters.Keys)
-    {
-        $source = $PSBoundParameters.$key
-        $target = $CurrentValues.$key
-        if ($null -ne $source -and $source.GetType().Name -like '*CimInstance*' -and $source -notlike '*Permission*')
-        {
-            $testResult = Compare-M365DSCComplexObject `
-                -Source ($source) `
-                -Target ($target)
- 
-            if (-not $testResult)
-            {
-                Write-Verbose "TestResult returned False for $source"
-                $testTargetResource = $false
-            }
-            else { 
-                $ValuesToCheck.Remove($key) | Out-Null
-            }
-        }
-    }
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
@@ -1085,17 +1061,11 @@ function Test-TargetResource
     $ValuesToCheck.Remove('AppId') | Out-Null
     $ValuesToCheck.Remove('Permissions') | Out-Null
 
-
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
-    -Source $($MyInvocation.MyCommand.Source) `
-    -DesiredValues $PSBoundParameters `
-    -ValuesToCheck $ValuesToCheck.Keys `
-    -IncludedDrifts $driftedParams
-
-    if(-not $TestResult)
-    {
-        $testTargetResource = $false
-    }
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck $ValuesToCheck.Keys `
+        -IncludedDrifts $driftedParams
 
 
     Write-Verbose -Message "Test-TargetResource returned $testTargetResource"
