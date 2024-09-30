@@ -10,6 +10,8 @@
   * Added PreAuthorizationApplications
 * AADAuthenticationMethodPolicy
   * Added ReportSuspiciousActivitySettings
+* AADAuthenticationMethodPolicyHardware
+  * Initial release.
 * AADEntitlementManagementSettings
   * Initial release.
 * AADFeatureRolloutPolicy
@@ -32,6 +34,8 @@
 * DefenderSubscriptionDefenderPlan
   * Initial release.
 * EXOArcConfig
+  * Initial Release.
+* EXODnssecForVerifiedDomain
   * Initial Release.
 * EXOEmailTenantSettings
   * Initial Release.

@@ -1,0 +1,32 @@
+﻿{
+    "resourceName": "EXODnssecForVerifiedDomain",
+    "description": "This resource configures the DnsSec status for a verified domain.",
+    "roles": {
+        "read": [
+            "Role"
+        ],
+        "update": [
+            "Role"
+        ]
+    },
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [],
+                "update": []
+            },
+            "application": {
+                "read": [
+                    {
+                        "name": "Permission for Monitoring and Export"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Permission for deploying"
+                    }
+                ]
+            }
+        }
+    }
+}
