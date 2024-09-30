@@ -205,6 +205,46 @@
                        ]
     },
     {
+        "ClassName":  "MSFT_MicrosoftGraphOptionalClaims",
+        "Parameters":  [
+                           {
+                               "CIMType":  "MSFT_MicrosoftGraphOptionalClaim[]",
+                               "Name":  "AccessToken",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_MicrosoftGraphOptionalClaim[]",
+                               "Name":  "IdToken",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_MicrosoftGraphOptionalClaim[]",
+                               "Name":  "Saml2Token",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_MicrosoftGraphOptionalClaim",
+        "Parameters":  [
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "Essential",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Name",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Source",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
         "ClassName":  "MSFT_MicrosoftGraphPreAuthorizedApplication",
         "Parameters":  [
                            {
@@ -415,6 +455,11 @@
                            {
                                "CIMType":  "string[]",
                                "Name":  "KnownClientApplications",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_MicrosoftGraphoptionalClaims",
+                               "Name":  "OptionalClaims",
                                "Option":  "Write"
                            },
                            {
