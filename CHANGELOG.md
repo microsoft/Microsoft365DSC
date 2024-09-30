@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* AADAuthenticationMethodPolicyHardware
+  * Initial release.
 * AADEntitlementManagementSettings
   * Initial release.
 * AADPasswordRuleSettings
