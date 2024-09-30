@@ -37636,11 +37636,25 @@ function Update-MgBetaTeamChannelTab
 
 #region Microsoft.Graph.deviceManagement
 
+function New-MgBetaDeviceAppManagementMobileAppCategory
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName
+    )
+}
+
 function Get-MgBetaDeviceAppManagementMobileAppCategory
 {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Id,
 
@@ -37654,7 +37668,7 @@ function Update-MgBetaDeviceAppManagementMobileAppCategory
 {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Id,
 
@@ -37668,7 +37682,7 @@ function Remove-MgBetaDeviceAppManagementMobileAppCategory
 {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Id,
 

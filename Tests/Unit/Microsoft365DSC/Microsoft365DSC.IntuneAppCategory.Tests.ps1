@@ -52,7 +52,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $Script:ExportMode = $false
         }
 
-        # Test contexts
+        #Test contexts
+
         Context -Name "The instance should exist but it DOES NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
@@ -172,7 +173,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-MgBetaDeviceAppManagementMobileAppCategory -MockWith {
                     return @{
                         Id                  = "f1fc9fe2-728d-4867-9a72-a61e18f8c606";
-                        DisplayName         = "Books & Reference";
+                        DisplayName         = "Custom Books & Reference sample category";
                     }
                 }
             }
