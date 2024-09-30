@@ -10,6 +10,8 @@
   * Added PreAuthorizationApplications
 * AADAuthenticationMethodPolicy
   * Added ReportSuspiciousActivitySettings
+* AADAuthenticationMethodPolicyHardware
+  * Initial release.
 * AADEntitlementManagementSettings
   * Initial release.
 * AADFeatureRolloutPolicy
