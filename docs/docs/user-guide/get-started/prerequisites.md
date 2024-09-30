@@ -6,6 +6,10 @@ For Microsoft365DSC to function, you need to arrange the following components:
 
 Microsoft365DSC is supported for PowerShell version 5.1 and 7.3+. For additional details on how to leverage it with PowerShell 7, please refer to our [PowerShell 7+ Guide for Microsoft365DSC](https://microsoft365dsc.com/user-guide/get-started/powershell7-support/).
 
+### Windows Remote Management (WinRM)
+
+Microsoft365DSC uses the Local Configuration Manager (LCM). This requires PowerShell Remoting to be enabled. Please run either `winrm quickconfig -force` or `Enable-PSRemoting -Force -SkipNetworkProfileCheck` to enable it.
+
 ### Tooling
 
 To get the best experience running Microsoft365DSC cmdlets, it is recommended that you use the <a href="https://www.microsoft.com/en-ca/p/windows-terminal/9n0dx20hk701" target="_blank">Windows Terminal</a>. All screenshots provided in this article are using the Windows Terminal. This tool allows you to quickly switch between PowerShell versions and provide better support for icons and symbols that are used throughout Microsoft365DSC’s experience.

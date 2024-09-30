@@ -152,6 +152,16 @@ function Get-TargetResource
         $TargetedUserQuarantineTag,
 
         [Parameter()]
+        [System.String]
+        [ValidateSet('MoveToJmf', 'Quarantine')]
+        $DmarcQuarantineAction,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('Quarantine', 'Reject')]
+        $DmarcRejectAction,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -277,6 +287,8 @@ function Get-TargetResource
                 TargetedUserProtectionAction                  = $TargetedUserProtectionActionValue
                 TargetedUsersToProtect                        = $AntiPhishPolicy.TargetedUsersToProtect
                 TargetedUserQuarantineTag                     = $AntiPhishPolicy.TargetedUserQuarantineTag
+                DmarcQuarantineAction                         = $AntiPhishPolicy.DmarcQuarantineAction
+                DmarcRejectAction                             = $AntiPhishPolicy.DmarcRejectAction
                 Credential                                    = $Credential
                 Ensure                                        = 'Present'
                 ApplicationId                                 = $ApplicationId
@@ -456,6 +468,16 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $TargetedUserQuarantineTag,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('MoveToJmf', 'Quarantine')]
+        $DmarcQuarantineAction,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('Quarantine', 'Reject')]
+        $DmarcRejectAction,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -693,6 +715,16 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $TargetedUserQuarantineTag,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('MoveToJmf', 'Quarantine')]
+        $DmarcQuarantineAction,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('Quarantine', 'Reject')]
+        $DmarcRejectAction,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]

@@ -167,7 +167,8 @@ function Get-M365DSCAllGraphPermissionsList
                         'Channel.Delete.All', `
                         'ChannelSettings.ReadWrite.All', `
                         'ChannelMember.ReadWrite.All', `
-                        'ChannelSettings.Read.All')
+                        'ChannelSettings.Read.All',
+                        'EntitlementManagement.Read.All')
     $roles = $allPermissions | Select-Object -Unique | Sort-Object -Descending:$false
     return $roles
 }

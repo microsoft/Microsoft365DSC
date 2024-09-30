@@ -14,7 +14,7 @@
         },
         @{
             ModuleName      = 'DSCParser'
-            RequiredVersion = '2.0.0.9'
+            RequiredVersion = '2.0.0.10'
         },
         @{
             ModuleName      = 'ExchangeOnlineManagement'
@@ -23,6 +23,10 @@
         @{
             ModuleName      = 'Microsoft.Graph.Applications'
             RequiredVersion = '2.23.0'
+        },
+        @{
+            ModuleName      = 'Microsoft.Graph.Beta.Applications'
+            Requiredversion = '2.23.0'
         },
         @{
             ModuleName      = 'Microsoft.Graph.Authentication'
@@ -74,6 +78,10 @@
         },
         @{
             ModuleName      = 'Microsoft.Graph.Groups'
+            RequiredVersion = '2.23.0'
+        },
+        @{
+            ModuleName      = 'Microsoft.Graph.Beta.Groups'
             RequiredVersion = '2.23.0'
         },
         @{

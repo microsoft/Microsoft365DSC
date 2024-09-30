@@ -19,9 +19,6 @@
                 ],
                 "update": [
                     {
-                        "name": "EntitlementManagement.Read.All"
-                    },
-                    {
                         "name": "EntitlementManagement.ReadWrite.All"
                     }
                 ]
@@ -33,9 +30,6 @@
                     }
                 ],
                 "update": [
-                    {
-                        "name": "EntitlementManagement.Read.All"
-                    },
                     {
                         "name": "EntitlementManagement.ReadWrite.All"
                     }

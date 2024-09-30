@@ -958,6 +958,9 @@ function Update-M365DSCResourceDocumentationPage
             'AAD*'
             { $targetFolder = 'azure-ad'
             }
+            'Defender*'
+            { $targetFolder = 'Defender'
+            }
             'EXO*'
             { $targetFolder = 'exchange'
             }

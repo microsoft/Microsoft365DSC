@@ -71,7 +71,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 } -ClientOnly)
                             )
                         } -ClientOnly)
-                    } -ClientOnly)
+                        } -ClientOnly)
+                    ReportSuspiciousActivitySettings = (New-CimInstance -ClassName MSFT_MicrosoftGraphreportSuspiciousActivitySettings -Property @{
+                        VoiceReportingCode = 0
+                        State = 'default'
+                        IncludeTarget = (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyIncludeTarget -Property @{
+                                Id = 'a8ab05ba-6680-4f93-88ae-71099eedfda1'
+                                TargetType = 'group'
+                        } -ClientOnly)
+                    } -ClientOnly);
                     SystemCredentialPreferences = (New-CimInstance -ClassName MSFT_MicrosoftGraphsystemCredentialPreferences -Property @{
                         State = "default"
                         IncludeTargets = [CimInstance[]]@(
@@ -131,6 +139,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             )
                         } -ClientOnly)
                     } -ClientOnly)
+                    ReportSuspiciousActivitySettings = (New-CimInstance -ClassName MSFT_MicrosoftGraphreportSuspiciousActivitySettings -Property @{
+                        VoiceReportingCode = 0
+                        State = 'default'
+                        IncludeTarget = (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyIncludeTarget -Property @{
+                                Id = 'a8ab05ba-6680-4f93-88ae-71099eedfda1'
+                                TargetType = 'group'
+                        } -ClientOnly)
+                    } -ClientOnly);
                     SystemCredentialPreferences = (New-CimInstance -ClassName MSFT_MicrosoftGraphsystemCredentialPreferences -Property @{
                         State = "default"
                         IncludeTargets = [CimInstance[]]@(
@@ -179,6 +195,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                     }
                                 )
                             }
+                        }
+                        ReportSuspiciousActivitySettings  = @{
+                            State = 'default'
+                            IncludeTarget = @{
+                                TargetType = 'group'
+                                Id = "a8ab05ba-6680-4f93-88ae-71099eedfda1"
+                            }
+                            VoiceReportingCode  = 0
                         }
                         SystemCredentialPreferences = @{
                             State = "default"
@@ -234,6 +258,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             )
                         } -ClientOnly)
                     } -ClientOnly)
+                    ReportSuspiciousActivitySettings = (New-CimInstance -ClassName MSFT_MicrosoftGraphreportSuspiciousActivitySettings -Property @{
+                        VoiceReportingCode = 0
+                        State = 'default'
+                        IncludeTarget = (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyIncludeTarget -Property @{
+                                Id = 'a8ab05ba-6680-4f93-88ae-71099eedfda1'
+                                TargetType = 'group'
+                        } -ClientOnly)
+                    } -ClientOnly);
                     SystemCredentialPreferences = (New-CimInstance -ClassName MSFT_MicrosoftGraphsystemCredentialPreferences -Property @{
                         State = "default"
                         IncludeTargets = [CimInstance[]]@(
@@ -279,6 +311,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                     }
                                 )
                             }
+                        }
+                        ReportSuspiciousActivitySettings  = @{
+                            State = "default"
+                            IncludeTarget = @{
+                                TargetType = "user" #drift
+                                Id = "a8ab05ba-6680-4f93-88ae-71099eedfda1"
+                            }
+                            VoiceReportingCode  = 1 #drift
                         }
                         SystemCredentialPreferences = @{
                             State = "default"
@@ -350,6 +390,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                     }
                                 )
                             }
+                        }
+                        ReportSuspiciousActivitySettings  = @{
+                            State = "default"
+                            IncludeTarget = @{
+                                TargetType = "user" #drift
+                                Id = "a8ab05ba-6680-4f93-88ae-71099eedfda1"
+                            }
+                            VoiceReportingCode  = 1 #drift
                         }
                         SystemCredentialPreferences = @{
                             State = "default"

@@ -45,6 +45,10 @@ function Get-TargetResource
         $LogoutUrl,
 
         [Parameter()]
+        [System.String[]]
+        $Owners,
+
+        [Parameter()]
         [System.String]
         $PublisherName,
 
@@ -197,6 +201,17 @@ function Get-TargetResource
                 }
             }
 
+            $ownersValues = @()
+            $ownersInfo = Get-MgServicePrincipalOwner -ServicePrincipalId $AADServicePrincipal.Id -ErrorAction SilentlyContinue
+            foreach ($ownerInfo in $ownersInfo)
+            {
+                $info = Get-MgUser -UserId $ownerInfo.Id -ErrorAction SilentlyContinue
+                if ($null -ne $info)
+                {
+                    $ownersValues += $info.UserPrincipalName
+                }
+            }
+
             $result = @{
                 AppId                     = $AADServicePrincipal.AppId
                 AppRoleAssignedTo         = $AppRoleAssignedToValues
@@ -208,6 +223,7 @@ function Get-TargetResource
                 ErrorUrl                  = $AADServicePrincipal.ErrorUrl
                 Homepage                  = $AADServicePrincipal.Homepage
                 LogoutUrl                 = $AADServicePrincipal.LogoutUrl
+                Owners                    = $ownersValues
                 PublisherName             = $AADServicePrincipal.PublisherName
                 ReplyURLs                 = $AADServicePrincipal.ReplyURLs
                 SamlMetadataURL           = $AADServicePrincipal.SamlMetadataURL
@@ -284,6 +300,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $LogoutUrl,
+
+        [Parameter()]
+        [System.String[]]
+        $Owners,
 
         [Parameter()]
         [System.String]
@@ -387,7 +407,18 @@ function Set-TargetResource
 
         Write-Verbose -Message 'Creating new Service Principal'
         Write-Verbose -Message "With Values: $(Convert-M365DscHashtableToString -Hashtable $currentParameters)"
-        New-MgServicePrincipal @currentParameters
+        $newSP = New-MgServicePrincipal @currentParameters
+
+        # Assign Owners
+        foreach ($owner in $Owners)
+        {
+            $userInfo = Get-MgUser -UserId $owner
+            $body = @{
+                '@odata.id' = "https://graph.microsoft.com/v1.0/directoryObjects/$($userInfo.Id)"
+            }
+            Write-Verbose -Message "Adding new owner {$owner}"
+            $newOwner = New-MgServicePrincipalOwnerByRef -ServicePrincipalId $newSP.Id -BodyParameter $body
+        }
     }
     # ServicePrincipal should exist and will be configured to desired state
     elseif ($Ensure -eq 'Present' -and $currentAADServicePrincipal.Ensure -eq 'Present')
@@ -402,6 +433,7 @@ function Set-TargetResource
         Write-Verbose -Message "CurrentParameters: $($currentParameters | Out-String)"
         Write-Verbose -Message "ServicePrincipalID: $($currentAADServicePrincipal.ObjectID)"
         $currentParameters.Remove('AppRoleAssignedTo') | Out-Null
+        $currentParameters.Remove('Owners') | Out-Null
         Update-MgServicePrincipal -ServicePrincipalId $currentAADServicePrincipal.ObjectID @currentParameters
 
         if ($AppRoleAssignedTo)
@@ -488,6 +520,32 @@ function Set-TargetResource
                 }
             }
         }
+
+        Write-Verbose -Message "Checking if owners need to be updated..."
+
+        if ($null -ne $Owners)
+        {
+            $diffOwners = Compare-Object -ReferenceObject $currentAADServicePrincipal.Owners -DifferenceObject $Owners
+        }
+        foreach ($diff in $diffOwners)
+        {
+            $userInfo = Get-MgUser -UserId $diff.InputObject
+            if ($diff.SideIndicator -eq '=>')
+            {
+                $body = @{
+                    '@odata.id' = "https://graph.microsoft.com/v1.0/directoryObjects/$($userInfo.Id)"
+                }
+                Write-Verbose -Message "Adding owner {$($userInfo.Id)}"
+                New-MgServicePrincipalOwnerByRef -ServicePrincipalId $currentAADServicePrincipal.ObjectId `
+                                                 -BodyParameter $body | Out-Null
+            }
+            else
+            {
+                Write-Verbose -Message "Removing owner {$($userInfo.Id)}"
+                Remove-MgServicePrincipalOwnerByRef -ServicePrincipalId $currentAADServicePrincipal.ObjectId `
+                                                    -DirectoryObjectId $userInfo.Id | Out-Null
+            }
+        }
     }
     # ServicePrincipal exists but should not
     elseif ($Ensure -eq 'Absent' -and $currentAADServicePrincipal.Ensure -eq 'Present')
@@ -542,6 +600,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $LogoutUrl,
+
+        [Parameter()]
+        [System.String[]]
+        $Owners,
 
         [Parameter()]
         [System.String]

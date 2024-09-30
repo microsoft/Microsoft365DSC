@@ -2,6 +2,23 @@
 
 # UNRELEASED
 
+* AADApplication
+  * Added AppRoles
+  * Added AuthenticationBehavior
+  * Added KeyCredentials
+  * Added PaswordCredentials
+  * Added PreAuthorizationApplications
+* AADAuthenticationMethodPolicy
+  * Added ReportSuspiciousActivitySettings
+* AADEntitlementManagementSettings
+  * Initial release.
+* AADFeatureRolloutPolicy
+  * Initial release
+* AADGroup
+  * Fixes logic to evaluate license assignments and disabled plans.
+    FIXES [#5101](https://github.com/microsoft/Microsoft365DSC/issues/5101)
+  * Adds support to assign Service Principal as members or owners.
+    FIXES [#4972](https://github.com/microsoft/Microsoft365DSC/issues/4972)
 * AADPasswordRuleSettings
   * Initial release
 * ADOOrganizationOwner
@@ -12,6 +29,8 @@
   * Initial release.
 * AzureSubscription
   * Initial Release.
+* DefenderSubscriptionDefenderPlan
+  * Initial release.
 * EXOArcConfig
   * Initial Release.
 * EXOEmailTenantSettings
@@ -22,6 +41,9 @@
   * Initial Release.
 * EXOMailboxIRMAccess
   * Initial Release.
+* EXOMailboxFolderPermission
+  * Initial Release.
+* EXOMailboxIRMAccess
 * EXOManagementScope
   * Initial Release.
 * EXORetenionPolicy
@@ -38,7 +60,20 @@
 * IntuneDeviceConfigurationSharedMultiDevicePolicyWindows10
   * Add missing `AccessTokens` parameter to `Export-TargetResource`
     FIXES [#5034](https://github.com/microsoft/Microsoft365DSC/issues/5034)
+* IntuneSettingCatalogCustomPolicyWindows10
+  * Update export logic to target more specific policy types.
+  * Prevent thrown exception to be caught by exception handler.
+    FIXES [#5088](https://github.com/microsoft/Microsoft365DSC/issues/5088)
+* M365DSCUtil
+  * Fixes an issue where the O365Group workload was not properly detected.
+    FIXES [#5095](https://github.com/microsoft/Microsoft365DSC/issues/5095)
+* SCDeviceConditionalAccessRule
+  * Initial release.
+* SCDeviceConfigurationRule
+  * Initial release.
 * SCInsiderRiskEntityList
+  * Initial release.
+* SCInsiderRiskPolicy
   * Initial release.
 * SCRoleGroup
   * Fixes an issue with creation without specifying Displayname
@@ -49,6 +84,7 @@
 * SPOAccessControlSettings
   * Added support for property EnableRestrictedAccessControl.
 * DEPENDENCIES
+  * Updated DSCParser to version 2.0.0.10.
   * Updated Microsoft.Graph to version 2.23.0.
   * Added dependencies on Az.Accounts, Az.Resources and Az.SecurityInsights
   * Updated DSCParser to version 2.0.0.9.

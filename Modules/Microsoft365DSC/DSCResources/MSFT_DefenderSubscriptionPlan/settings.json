@@ -1,0 +1,20 @@
+﻿{
+    "resourceName": "DefenderSubscriptionPlan",
+    "description": "Enables or disables Microsoft Defender plans for a subscription in Microsoft Defender for Cloud.",
+    "roles": {
+        "read": [],
+        "update": []
+    },
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [],
+                "update": []
+            },
+            "application": {
+                "read": [],
+                "update": []
+            }
+        }
+    }
+}

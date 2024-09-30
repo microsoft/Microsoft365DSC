@@ -43,6 +43,13 @@ class MSFT_MicrosoftGraphSystemCredentialPreferences
     [Write, Description("Users and groups included in the preferred authentication method experience of the system."), EmbeddedInstance("MSFT_AADAuthenticationMethodPolicyIncludeTarget")] String IncludeTargets[];
     [Write, Description("Indicates whether the feature is enabled or disabled. Possible values are: default, enabled, disabled, unknownFutureValue. The default value is used when the configuration hasn't been explicitly set, and uses the default behavior of Azure Active Directory for the setting. The default value is disabled."), ValueMap{"default","enabled","disabled","unknownFutureValue"}, Values{"default","enabled","disabled","unknownFutureValue"}] String State;
 };
+[ClassVersion("1.0.0")]
+class MSFT_MicrosoftGraphReportSuspiciousActivitySettings
+{
+    [Write, Description("Group IDs in scope for report suspicious activity."), EmbeddedInstance("MSFT_AADAuthenticationMethodPolicyIncludeTarget")] String IncludeTarget;
+    [Write, Description("Specifies the state of the reportSuspiciousActivitySettings object."), ValueMap{"default","enabled","disabled","unknownFutureValue"}, Values{"default","enabled","disabled","unknownFutureValue"}] String State;
+    [Write, Description("Specifies the number the user enters on their phone to report the MFA prompt as suspicious.")] UInt32 VoiceReportingCode;
+};
 
 [ClassVersion("1.0.0.0"), FriendlyName("AADAuthenticationMethodPolicy")]
 class MSFT_AADAuthenticationMethodPolicy : OMI_BaseResource
@@ -53,6 +60,7 @@ class MSFT_AADAuthenticationMethodPolicy : OMI_BaseResource
     [Write, Description("The version of the policy in use.")] String PolicyVersion;
     [Write, Description("Days before the user will be asked to reconfirm their method.")] UInt32 ReconfirmationInDays;
     [Write, Description("Enforce registration at sign-in time. This property can be used to remind users to set up targeted authentication methods."), EmbeddedInstance("MSFT_MicrosoftGraphregistrationEnforcement")] String RegistrationEnforcement;
+    [Write, Description("Allows users to report suspicious activities if they receive an authentication request that they did not initiate."), EmbeddedInstance("MSFT_MicrosoftGraphreportSuspiciousActivitySettings")] String ReportSuspiciousActivitySettings;
     [Write, Description("Prompt users with their most-preferred credential for multifactor authentication."), EmbeddedInstance("MSFT_MicrosoftGraphsystemCredentialPreferences")] String SystemCredentialPreferences;
     [Write, Description("The unique identifier for an entity. Read-only.")] String Id;
     [Write, Description("Present ensures the policy exists, absent ensures it is removed."), ValueMap{"Present"}, Values{"Present"}] string Ensure;

@@ -27,7 +27,7 @@ jobs:
       - name: Install Dependencies
         shell: powershell
         run: |
-          Import-Module './Modules/Microsoft365DSC/Microsoft365DSC.psd1' -Force;          
+          Import-Module './Modules/Microsoft365DSC/Microsoft365DSC.psd1' -Force;
           Import-Module './Modules/Microsoft365DSC/Modules/M365DSCUtil.psm1' -Force;
           Update-M365DSCModule
       - name: Get Permissions List

@@ -199,6 +199,14 @@
                     Principal       = "AdeleV@$TenantId";
                     RoleDefinition  = "Catalog creator";
                 }
+                AADFeatureRolloutPolicy 'AADFeatureRolloutPolicy-CertificateBasedAuthentication rollout policy'
+                {
+                    ApplicationId           = $ApplicationId
+                    TenantId                = $TenantId
+                    CertificateThumbprint   = $CertificateThumbprint
+                    DisplayName             = "CertificateBasedAuthentication rollout policy";
+                    Ensure                  = "Absent";
+                }
                 AADGroup 'MyGroups'
                 {
                     MailNickname    = "M365DSC"

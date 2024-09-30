@@ -19,6 +19,7 @@ class MSFT_AADServicePrincipal : OMI_BaseResource
     [Write, Description("Specifies the homepage of the ServicePrincipal.")] String Homepage;
     [Write, Description("Specifies the LogoutURL of the ServicePrincipal.")] String LogoutUrl;
     [Write, Description("Specifies the PublisherName of the ServicePrincipal.")] String PublisherName;
+    [Write, Description("List of the owners of the service principal.")] String Owners[];
     [Write, Description("The URLs that user tokens are sent to for sign in with the associated application, or the redirect URIs that OAuth 2.0 authorization codes and access tokens are sent to for the associated application.")] String ReplyUrls[];
     [Write, Description("The URL for the SAML metadata of the ServicePrincipal.")] String SamlMetadataUrl;
     [Write, Description("Specifies an array of service principal names. Based on the identifierURIs collection, plus the application's appId property, these URIs are used to reference an application's service principal.")] String ServicePrincipalNames[];

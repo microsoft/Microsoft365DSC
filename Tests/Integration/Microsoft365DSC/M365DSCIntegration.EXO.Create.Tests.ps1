@@ -102,6 +102,8 @@
                     EnableUnusualCharactersSafetyTips     = $null
                     TargetedUserActionRecipients          = $null
                     Ensure                                = "Present"
+                    DmarcQuarantineAction                 = "Quarantine"
+                    DmarcRejectAction                     = "Reject"
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
@@ -398,6 +400,26 @@
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
+                }
+                EXOMailboxFolderPermission 'EXOMailboxFolderPermission-admin:\Calendar'
+                {
+                    Credential           = $Credscredential;
+                    Ensure               = "Present";
+                    Identity             = "amdin:\Calendar";
+                    UserPermissions      = @(MSFT_EXOMailboxFolderUserPermission {
+                        User                   = 'Default'
+                        AccessRights           = 'AvailabilityOnly'
+                    }
+                    MSFT_EXOMailboxFolderUserPermission {
+                        User                   = 'Anonymous'
+                        AccessRights           = 'AvailabilityOnly'
+                    }
+                    MSFT_EXOMailboxFolderUserPermission {
+                        User                          = 'AlexW'
+                        AccessRights                  = 'Owner'
+                        SharingPermissionFlags        = 'Delegate'
+                    }
+                    );
                 }
                 EXOMailboxIRMAccess 'EXOMailboxIRMAccess-qwe@testorg.onmicrosoft.com'
                 {

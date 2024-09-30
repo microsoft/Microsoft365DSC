@@ -320,6 +320,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             }
                         )
                         Technologies = 'mdm'
+                        TemplateReference = @{
+                            TemplateFamily = 'none'
+                        }
                     }
                 }
             }
@@ -508,6 +511,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             }
                         )
                         Technologies = 'mdm'
+                        TemplateReference = @{
+                            TemplateFamily = 'none'
+                        }
                     }
                 }
             }
@@ -689,6 +695,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             }
                         )
                         Technologies = 'mdm'
+                        TemplateReference = @{
+                            TemplateFamily = 'none'
+                        }
                     }
                 }
 
@@ -806,6 +815,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             }
                         )
                         Technologies = 'mdm'
+                        TemplateReference = @{
+                            TemplateFamily = 'none'
+                        }
                     }
                 }
             }
