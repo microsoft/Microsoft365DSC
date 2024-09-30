@@ -547,6 +547,35 @@ function Set-EmailTenantSettings
     )
 }
 
+function Get-DnssecStatusForVerifiedDomain
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $DomainName
+    )
+}
+
+function Enable-DnssecForVerifiedDomain
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $DomainName
+    )
+}
+
+function Disable-DnssecForVerifiedDomain
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $DomainName
+    )
+}
 
 function Get-MailboxIRMAccess
 {
