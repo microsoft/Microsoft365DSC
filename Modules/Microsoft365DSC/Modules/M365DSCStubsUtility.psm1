@@ -52,6 +52,7 @@ function New-M365DSCStubFiles
             @{Name = 'ExchangeOnline'; ModuleName = 'ExchangeOnlineManagement'; CommandName = 'Get-Mailbox' }, # This is the EXO Proxy
             @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Applications'},
             @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Authentication'},
+            @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Beta.Applications'},
             @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Beta.DeviceManagement'},
             @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Beta.Devices.CorporateManagement'},
             @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Beta.DeviceManagement.Administration'},

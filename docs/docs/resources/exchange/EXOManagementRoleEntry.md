@@ -6,7 +6,7 @@
 | --- | --- | --- | --- | --- |
 | **Identity** | Key | String | The Identity parameter specifies the role entry that you want to modify. | |
 | **Parameters** | Write | StringArray[] | The Parameters parameter specifies the parameters to be added to or removed from the role entry. | |
-| **Type** | Write | String | The Type parameter specifies the type of role entry to return. | `Cmdlet`, `Script`, `ApplicationPermission` |
+| **Type** | Write | String | The Type parameter specifies the type of role entry to return. | `Cmdlet`, `Script`, `ApplicationPermission`, `WebService` |
 | **Credential** | Write | PSCredential | Credentials of the Exchange Global Admin | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
 | **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. | |
@@ -45,9 +45,17 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -55,7 +63,9 @@ Configuration Example
     {
         EXOManagementRoleEntry "UpdateRoleEntry"
         {
-            Credential = $Credscredential;
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
             Identity   = "Information Rights Management\Get-BookingMailbox"
             Parameters = @("ANR","RecipientTypeDetails", "ResultSize")
         }

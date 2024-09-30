@@ -683,6 +683,11 @@ function Export-TargetResource
         $i = 1
         foreach ($domain in $AllRemoteDomains)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    |---[$i/$($AllRemoteDomains.Length)] $($domain.Identity)" -NoNewline
 
             $Params = @{

@@ -14,9 +14,6 @@ function Test-M365DSCAgent
     param(
 
     )
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add('Event', 'TestAgent')
@@ -68,21 +65,13 @@ function Test-M365DSCAgent
 
     #region Modules Dependencies
     Write-Progress -Activity 'Scanning Dependencies...' -PercentComplete (3 / $TotalSteps * 100)
-    $M365DSC = Get-Module Microsoft365DSC
-    $ManifestPath = Join-Path -Path $M365DSC.ModuleBase -ChildPath 'Microsoft365DSC.psd1'
-    $manifest = Import-PowerShellDataFile $ManifestPath
-    $dependencies = $manifest.RequiredModules
+    $dependencies = Update-M365DSCDependencies -ValidateOnly
     foreach ($dependency in $dependencies)
     {
-        $module = Get-Module $dependency.ModuleName -ListAvailable | `
-            Where-Object -FilterScript { $_.Version -eq $dependency.RequiredVersion }
-        if ($null -eq $module)
-        {
-            $Issues += @{
-                ID      = 'I2'
-                Message = "M365DSC has a dependency on module $($dependency.ModuleName) which was not found. You need to install " + `
-                    "this module by running: Install-Module $($dependency.ModuleName) -RequiredVersion $($dependency.RequiredVersion) -Force"
-            }
+        $Issues += @{
+            ID      = 'I2'
+            Message = "M365DSC has a dependency on module $($dependency.ModuleName) which was not found. You need to install " + `
+                "this module by running: Install-Module $($dependency.ModuleName) -RequiredVersion $($dependency.RequiredVersion) -Force"
         }
     }
     #endregion
@@ -90,23 +79,25 @@ function Test-M365DSCAgent
     Write-Progress -Completed -Activity 'Completed Analysis'
     if ($Issues.Count -gt 0)
     {
-        Write-Host "The following issues were detected with the current agent's configuration. Please take " + `
-            'proper action to remediate.'
+        $errorMessage = "The following issues were detected with the current agent's configuration. Please take " + `
+            "proper action to remediate. `r`n"
         $i = 1
         foreach ($issue in $Issues)
         {
-            Write-Error -Message "    [$i/$($Issues.Count)] $($issue.Message)"
+            $errorMessage += "    [$i/$($Issues.Count)] $($issue.Message)`r`n"
         }
+        Write-Error -Message $errorMessage -ErrorAction Continue
     }
 
     if ($Recommendations.Count -gt 0)
     {
-        Write-Host 'The following recommendations were issued. We strongly recommend adressing those: '
+        $warningMessage = 'The following recommendations were issued. We strongly recommend adressing those: '
         $i = 1
         foreach ($recommendation in $Recommendations)
         {
-            Write-Warning "    [$i/$($Recommendations.Count)] $($recommendation.Message)"
+            $warningMessage += "    [$i/$($Recommendations.Count)] $($recommendation.Message)`r`n"
         }
+        Write-Warning -Message $warningMessage
     }
 
     if ($Recommendations.Count -eq 0 -and $Issues.Count -eq 0)

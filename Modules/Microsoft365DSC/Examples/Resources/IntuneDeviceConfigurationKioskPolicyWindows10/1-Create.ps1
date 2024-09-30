@@ -6,9 +6,17 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -22,7 +30,6 @@ Configuration Example
                     dataType = '#microsoft.graph.allLicensedUsersAssignmentTarget'
                 }
             );
-            Credential                          = $Credscredential;
             DisplayName                         = "kiosk";
             EdgeKioskEnablePublicBrowsing       = $False;
             Ensure                              = "Present";
@@ -62,6 +69,9 @@ Configuration Example
                 Recurrence = 'daily'
                 DayofWeek = 'sunday'
             };
+            ApplicationId         = $ApplicationId;
+            TenantId              = $TenantId;
+            CertificateThumbprint = $CertificateThumbprint;
         }
     }
 }

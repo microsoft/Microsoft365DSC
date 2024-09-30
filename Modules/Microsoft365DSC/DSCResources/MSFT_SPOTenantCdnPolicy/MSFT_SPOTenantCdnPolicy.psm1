@@ -55,6 +55,7 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration for SPOTenantCdnPolicy {$CDNType}"
+
     $ConnectionMode = New-M365DSCConnection -Workload 'PNP' `
         -InboundParameters $PSBoundParameters
 
@@ -77,23 +78,23 @@ function Get-TargetResource
     try
     {
         $Policies = Get-PnPTenantCdnPolicies -CdnType $CDNType -ErrorAction Stop
-        if ($null -ne $Policies['ExcludeRestrictedSiteClassifications'])
+        if ($Policies['ExcludeRestrictedSiteClassifications'].Length -gt 0)
         {
             $ExcludeRestrictedSiteClassifications = `
                 $Policies['ExcludeRestrictedSiteClassifications'].Split(',')
         }
         else
         {
-            $ExcludeRestrictedSiteClassifications = $null
+            $ExcludeRestrictedSiteClassifications = @()
         }
-        if ($null -ne $Policies['IncludeFileExtensions'])
+        if ($Policies['IncludeFileExtensions'].Length -gt 0)
         {
             $IncludeFileExtensions = `
                 $Policies['IncludeFileExtensions'].Split(',')
         }
         else
         {
-            $IncludeFileExtensions = $null
+            $IncludeFileExtensions = @()
         }
 
         return @{
@@ -363,6 +364,11 @@ function Export-TargetResource
         Add-M365DSCTelemetryEvent -Data $data
         #endregion
 
+        if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+        {
+            $Global:M365DSCExportResourceInstancesCount++
+        }
+
         $Params = @{
             CdnType               = 'Public'
             ApplicationId         = $ApplicationId
@@ -397,6 +403,11 @@ function Export-TargetResource
         else
         {
             Write-Host $Global:M365DSCEmojiRedX
+        }
+
+        if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+        {
+            $Global:M365DSCExportResourceInstancesCount++
         }
 
         $Params = @{

@@ -50,6 +50,7 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting SPOSiteAuditSettings for {$Url}"
+
     $ConnectionMode = New-M365DSCConnection -Workload 'PNP' `
         -InboundParameters $PSBoundParameters `
         -Url $Url -ErrorAction SilentlyContinue
@@ -352,6 +353,11 @@ function Export-TargetResource
         {
             try
             {
+                if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+                {
+                    $Global:M365DSCExportResourceInstancesCount++
+                }
+
                 Write-Host "    [$i/$($sites.Length)] Audit Settings for {$($site.Url)}" -NoNewline
 
                 $Params = @{

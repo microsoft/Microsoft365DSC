@@ -80,6 +80,7 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration for SPO SiteDesign for $Title"
+
     $ConnectionMode = New-M365DSCConnection -Workload 'PNP' `
         -InboundParameters $PSBoundParameters
 
@@ -499,6 +500,10 @@ function Export-TargetResource
 
         foreach ($design in $designs)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
 
             Write-Host "    |---[$i/$($designs.Length)] $($design.Title)" -NoNewline
             $Params = @{

@@ -413,6 +413,11 @@ function Export-TargetResource
         }
         foreach ($ActiveSyncDeviceAccessRule in $AllActiveSyncDeviceAccessRules)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    |---[$i/$($AllActiveSyncDeviceAccessRules.Count)] $($ActiveSyncDeviceAccessRule.Identity)" -NoNewline
 
             $Params = @{

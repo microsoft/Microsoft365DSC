@@ -99,9 +99,17 @@ This example creates a new Device Enrollment Platform Restriction.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -122,7 +130,6 @@ Configuration Example
                     deviceAndAppManagementAssignmentFilterType = 'none'
                     dataType = '#microsoft.graph.allDevicesAssignmentTarget'
                 });
-            Credential                        = $Credscredential
             Description                       = "This is the default Device Type Restriction applied with the lowest priority to all users regardless of group membership.";
             DeviceEnrollmentConfigurationType = "platformRestrictions";
             DisplayName                       = "All users and all devices";
@@ -152,6 +159,9 @@ Configuration Example
                 platformBlocked = $False
                 personalDeviceEnrollmentBlocked = $False
             };
+            ApplicationId         = $ApplicationId;
+            TenantId              = $TenantId;
+            CertificateThumbprint = $CertificateThumbprint;
         }
     }
 }
@@ -165,9 +175,17 @@ This example creates a new Device Enrollment Platform Restriction.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -188,7 +206,6 @@ Configuration Example
                     deviceAndAppManagementAssignmentFilterType = 'none'
                     dataType = '#microsoft.graph.allDevicesAssignmentTarget'
                 });
-            Credential                        = $Credscredential
             Description                       = "This is the default Device Type Restriction applied with the lowest priority to all users regardless of group membership.";
             DeviceEnrollmentConfigurationType = "platformRestrictions";
             DisplayName                       = "All users and all devices";
@@ -218,6 +235,9 @@ Configuration Example
                 platformBlocked = $False
                 personalDeviceEnrollmentBlocked = $False
             };
+            ApplicationId         = $ApplicationId;
+            TenantId              = $TenantId;
+            CertificateThumbprint = $CertificateThumbprint;
         }
     }
 }
@@ -231,9 +251,17 @@ This example creates a new Device Enrollment Platform Restriction.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -241,7 +269,6 @@ Configuration Example
     {
         IntuneDeviceEnrollmentPlatformRestriction 'DeviceEnrollmentPlatformRestriction'
         {
-            Credential                        = $Credscredential
             DisplayName                       = "Removed Policy";
             Ensure                            = "Absent";
             Assignments                       = @();
@@ -253,7 +280,9 @@ Configuration Example
                 PersonalDeviceEnrollmentBlocked = $False
             };
             Priority                          = 1;
-            TenantId                          = $OrganizationName;
+            ApplicationId         = $ApplicationId;
+            TenantId              = $TenantId;
+            CertificateThumbprint = $CertificateThumbprint;
         }
     }
 }

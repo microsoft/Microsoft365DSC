@@ -406,6 +406,11 @@ function Export-TargetResource
 
         Write-Host "    |---Export ReportSubmissionRule" -NoNewline
 
+        if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+        {
+            $Global:M365DSCExportResourceInstancesCount++
+        }
+
         $Params = @{
             Identity              = $ReportSubmissionRule.Identity
             Credential            = $Credential

@@ -15,6 +15,7 @@
 | **Homepage** | Write | String | Specifies the homepage of the ServicePrincipal. | |
 | **LogoutUrl** | Write | String | Specifies the LogoutURL of the ServicePrincipal. | |
 | **PublisherName** | Write | String | Specifies the PublisherName of the ServicePrincipal. | |
+| **Owners** | Write | StringArray[] | List of the owners of the service principal. | |
 | **ReplyUrls** | Write | StringArray[] | The URLs that user tokens are sent to for sign in with the associated application, or the redirect URIs that OAuth 2.0 authorization codes and access tokens are sent to for the associated application. | |
 | **SamlMetadataUrl** | Write | String | The URL for the SAML metadata of the ServicePrincipal. | |
 | **ServicePrincipalNames** | Write | StringArray[] | Specifies an array of service principal names. Based on the identifierURIs collection, plus the application's appId property, these URIs are used to reference an application's service principal. | |
@@ -79,13 +80,20 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
-    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         AADServicePrincipal 'AADServicePrincipal'
@@ -95,13 +103,15 @@ Configuration Example
             AlternativeNames              = "AlternativeName1","AlternativeName2"
             AccountEnabled                = $true
             AppRoleAssignmentRequired     = $false
-            Homepage                      = "https://$Domain"
-            LogoutUrl                     = "https://$Domain/logout"
-            ReplyURLs                     = "https://$Domain"
+            Homepage                      = "https://$TenantId"
+            LogoutUrl                     = "https://$TenantId/logout"
+            ReplyURLs                     = "https://$TenantId"
             ServicePrincipalType          = "Application"
             Tags                          = "{WindowsAzureActiveDirectoryIntegratedApp}"
             Ensure                        = "Present"
-            Credential                    = $Credscredential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
 }
@@ -116,13 +126,20 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
-    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         AADServicePrincipal 'AADServicePrincipal'
@@ -132,13 +149,15 @@ Configuration Example
             AlternativeNames              = "AlternativeName1","AlternativeName3" # Updated Property
             AccountEnabled                = $true
             AppRoleAssignmentRequired     = $false
-            Homepage                      = "https://$Domain"
-            LogoutUrl                     = "https://$Domain/logout"
-            ReplyURLs                     = "https://$Domain"
+            Homepage                      = "https://$TenantId"
+            LogoutUrl                     = "https://$TenantId/logout"
+            ReplyURLs                     = "https://$TenantId"
             ServicePrincipalType          = "Application"
             Tags                          = "{WindowsAzureActiveDirectoryIntegratedApp}"
             Ensure                        = "Present"
-            Credential                    = $Credscredential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
 }
@@ -153,9 +172,17 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -166,7 +193,9 @@ Configuration Example
             AppId                         = "AppDisplayName"
             DisplayName                   = "AppDisplayName"
             Ensure                        = "Absent"
-            Credential                    = $Credscredential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
 }

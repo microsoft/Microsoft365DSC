@@ -13,7 +13,7 @@ function Get-TargetResource
         $Parameters,
 
         [Parameter()]
-        [ValidateSet('Cmdlet', 'Script', 'ApplicationPermission')]
+        [ValidateSet('Cmdlet', 'Script', 'ApplicationPermission', 'WebService')]
         [System.String]
         $Type,
 
@@ -137,7 +137,7 @@ function Set-TargetResource
         $Parameters,
 
         [Parameter()]
-        [ValidateSet('Cmdlet', 'Script', 'ApplicationPermission')]
+        [ValidateSet('Cmdlet', 'Script', 'ApplicationPermission', 'WebService')]
         [System.String]
         $Type,
 
@@ -234,7 +234,7 @@ function Test-TargetResource
         $Parameters,
 
         [Parameter()]
-        [ValidateSet('Cmdlet', 'Script', 'ApplicationPermission')]
+        [ValidateSet('Cmdlet', 'Script', 'ApplicationPermission', 'WebService')]
         [System.String]
         $Type,
 
@@ -373,6 +373,11 @@ function Export-TargetResource
         $i = 1
         foreach ($roleEntry in $Script:exportedInstances)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $($roleEntry.Identity + "\" + $roleEntry.Name)" -NoNewline
 
             $Params = @{

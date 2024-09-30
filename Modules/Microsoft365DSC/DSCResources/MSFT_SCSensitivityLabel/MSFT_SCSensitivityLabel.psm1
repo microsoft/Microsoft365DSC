@@ -420,13 +420,13 @@ function Get-TargetResource
             $entry = $protectgroup | Where-Object -FilterScript { $_.Key -eq 'allowaccesstoguestusers' }
             if ($null -ne $entry)
             {
-                $siteAndGroupAccessToGuestUsersValue = -not [Boolean]::Parse($entry.Value)
+                $siteAndGroupAccessToGuestUsersValue = [Boolean]::Parse($entry.Value)
             }
 
             $entry = $protectgroup | Where-Object -FilterScript { $_.Key -eq 'allowemailfromguestusers' }
             if ($null -ne $entry)
             {
-                $siteAndGroupAllowEmailFromGuestUsers = -not [Boolean]::Parse($entry.Value)
+                $siteAndGroupAllowEmailFromGuestUsers = [Boolean]::Parse($entry.Value)
             }
 
             $entry = $protectsite | Where-Object -FilterScript { $_.Key -eq 'allowfullaccess' }
@@ -1223,6 +1223,11 @@ function Export-TargetResource
         }
         foreach ($label in $labels)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    |---[$i/$($labels.Count)] $($label.Name)" -NoNewline
 
             $Results = Get-TargetResource @PSBoundParameters -Name $label.Name

@@ -80,18 +80,25 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
-    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         AADUser 'ConfigureJohnSMith'
         {
-            UserPrincipalName  = "John.Smith@$Domain"
+            UserPrincipalName  = "John.Smith@$TenantId"
             FirstName          = "John"
             LastName           = "Smith"
             DisplayName        = "John J. Smith"
@@ -100,7 +107,9 @@ Configuration Example
             Office             = "Ottawa - Queen"
             UsageLocation      = "US"
             Ensure             = "Present"
-            Credential         = $Credscredential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
 }
@@ -115,18 +124,25 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
-    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         AADUser 'ConfigureJohnSMith'
         {
-            UserPrincipalName  = "John.Smith@$Domain"
+            UserPrincipalName  = "John.Smith@$TenantId"
             FirstName          = "John"
             LastName           = "Smith"
             DisplayName        = "John J. Smith"
@@ -135,7 +151,9 @@ Configuration Example
             Office             = "Ottawa - Queen"
             UsageLocation      = "US"
             Ensure             = "Present"
-            Credential         = $Credscredential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
 }
@@ -150,21 +168,30 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
-    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         AADUser 'ConfigureJohnSMith'
         {
-            UserPrincipalName  = "John.Smith@$Domain"
+            UserPrincipalName  = "John.Smith@$TenantId"
             DisplayName        = "John J. Smith"
             Ensure             = "Absent"
-            Credential         = $Credscredential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
 }

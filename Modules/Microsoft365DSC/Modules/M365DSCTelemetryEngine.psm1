@@ -68,6 +68,130 @@ function Add-M365DSCTelemetryEvent
 
     if ($null -eq $TelemetryEnabled -or $TelemetryEnabled -eq $true)
     {
+        if ($Type -eq 'DriftEvaluation')
+        {
+            try
+            {
+                $hostId = (Get-Host).InstanceId
+                if ($null -eq $Script:M365DSCCountResourceInstance -or $hostId -ne $Script:M365DSCExecutionContextId)
+                {
+                    $Script:M365DSCCountResourceInstance = 1
+                }
+                else
+                {
+                    $Script:M365DSCCountResourceInstance++
+                }
+                if ($null -eq $Script:M365DSCOperationStartTime -or $hostId -ne $Script:M365DSCExecutionContextId)
+                {
+                    $Script:M365DSCOperationStartTime = [System.DateTime]::Now
+                }
+
+                $Script:M365DSCOperationTimeTaken = [System.DateTime]::Now.Subtract($Script:M365DSCOperationStartTime)
+
+                if ($hostId -ne $Script:M365DSCExecutionContextId)
+                {
+                    $Script:M365DSCExecutionContextId = $hostId
+                }
+                $Data.Add('ResourceInstancesCount', $Script:M365DSCCountResourceInstance)
+                $Data.Add('M365DSCExecutionContextId', $hostId)
+                $Data.Add('M365DSCOperationTotalTime', $Script:M365DSCOperationTimeTaken.TotalSeconds)
+            }
+            catch
+            {
+                Write-Verbose -Message $_
+            }
+        }
+
+        try
+        {
+            if ($null -ne $Data.ConnectionMode -and $Data.ConnectionMode.StartsWith('Credential'))
+            {
+                if ($null -eq $Script:M365DSCCurrentRoles -or $Script:M365DSCCurrentRoles.Length -eq 0)
+                {
+                    try
+                    {
+                        Connect-M365Tenant -Workload 'MicrosoftGraph' @Global:M365DSCTelemetryConnectionToGraphParams -ErrorAction SilentlyContinue
+                    }
+                    catch
+                    {
+                        Write-Verbose -Message $_
+                    }
+                    $Script:M365DSCCurrentRoles = @()
+
+                    $uri = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + 'v1.0/me?$select=id'
+                    $currentUser = Invoke-MgGraphRequest -Uri $uri -Method GET
+                    $currentUserId = $currentUser.id
+
+                    $assignments = Get-MgBetaRoleManagementDirectoryRoleAssignment -Filter "principalId eq '$currentUserId'" `
+                                    -Property @('RoleDefinitionId', 'DirectoryScopeId') -All -ErrorAction 'SilentlyContinue'
+
+                    if ($null -ne $assignments)
+                    {
+                        $roles = Get-MgBetaRoleManagementDirectoryRoleDefinition -All `
+                                    -Property @('Id', 'DisplayName')
+                        foreach ($assignment in $assignments)
+                        {
+                            $role = $roles | Where-Object -FilterScript {$_.Id -eq $assignment.RoleDefinitionId}
+                            if ($null -ne $role)
+                            {
+                                $Script:M365DSCCurrentRoles += $role.DisplayName + '|' + $assignment.DirectoryScopeId
+                            }
+                        }
+                        $Data.Add('M365DSCCurrentRoles', $Script:M365DSCCurrentRoles -join ',')
+                    }
+                }
+                else
+                {
+                    $Data.Add('M365DSCCurrentRoles', $Script:M365DSCCurrentRoles -join ',')
+                }
+            }
+            elseif ($null -ne $Data.ConnectionMode -and $Data.ConnectionMode.StartsWith('ServicePrincipal'))
+            {
+                if ($null -eq $Script:M365DSCCurrentRoles -or $Script:M365DSCCurrentRoles.Length -eq 0)
+                {
+                    try
+                    {
+                        Connect-M365Tenant -Workload 'MicrosoftGraph' @Global:M365DSCTelemetryConnectionToGraphParams -ErrorAction Stop
+                        $Script:M365DSCCurrentRoles = @()
+
+                        $sp = Get-MgServicePrincipal -Filter "AppId eq '$($Global:M365DSCTelemetryConnectionToGraphParams.ApplicationId)'" `
+                                -ErrorAction 'SilentlyContinue'
+                        if ($null -ne $sp)
+                        {
+                            $assignments = Get-MgBetaRoleManagementDirectoryRoleAssignment -Filter "principalId eq '$($sp.Id)'" `
+                                        -Property @('RoleDefinitionId', 'DirectoryScopeId') -All -ErrorAction 'SilentlyContinue'
+                            if ($null -ne $assignments)
+                            {
+                                $roles = Get-MgBetaRoleManagementDirectoryRoleDefinition -All `
+                                            -Property @('Id', 'DisplayName')
+                                foreach ($assignment in $assignments)
+                                {
+                                    $role = $roles | Where-Object -FilterScript {$_.Id -eq $assignment.RoleDefinitionId}
+                                    if ($null -ne $role)
+                                    {
+                                        $Script:M365DSCCurrentRoles += $role.DisplayName + '|' + $assignment.DirectoryScopeId
+                                    }
+                                }
+                                $Data.Add('M365DSCCurrentRoles', $Script:M365DSCCurrentRoles -join ',')
+                            }
+                        }
+                    }
+                    catch
+                    {
+                        Write-Verbose -Message $_
+                    }
+                }
+                else
+                {
+                    $Data.Add('M365DSCCurrentRoles', $Script:M365DSCCurrentRoles -join ',')
+                }
+            }
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
+
         $TelemetryClient = Get-M365DSCApplicationInsightsTelemetryClient
 
         try
@@ -162,11 +286,15 @@ function Add-M365DSCTelemetryEvent
                 $Data.Add('PowerShellAgent', 'Cloud Shell')
             }
 
-            if ($null -ne $Data.Resource -and -not $Data.Keys.Contains('Resource'))
+            if ($null -ne $Data.Resource -and $Data.Keys.Contains('Resource'))
             {
                 if ($Data.Resource.StartsWith('MSFT_AAD') -or $Data.Resource.StartsWith('AAD'))
                 {
                     $Data.Add('Workload', 'Azure Active Directory')
+                }
+                elseif ($Data.Resource.StartsWith('MSFT_Intune') -or $Data.Resource.StartsWith('Defender'))
+                {
+                    $Data.Add('Workload', 'Defender')
                 }
                 elseif ($Data.Resource.StartsWith('MSFT_EXO') -or $Data.Resource.StartsWith('EXO'))
                 {
@@ -207,6 +335,23 @@ function Add-M365DSCTelemetryEvent
                 $Data.Resource = $Data.Resource.Replace('MSFT_', '')
             }
 
+            if ($Type -eq "ExportCompleted")
+            {
+                if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+                {
+                    $Data.Add("ExportedResourceInstancesCount", $Global:M365DSCExportResourceInstancesCount)
+                }
+                if ($null -ne $Global:M365DSCExportResourceTypes)
+                {
+                    $Data.Add("ExportedResourceTypes", $Global:M365DSCExportResourceTypes)
+                    $Data.Add("ExportedResourceTypesCount", $Global:M365DSCExportResourceTypes.Length)
+                }
+                if($null -ne $Global:M365DSCExportContentSize)
+                {
+                    $Data.Add("ExportedContentSize", $Global:M365DSCExportContentSize)
+                }
+            }
+
             [array]$version = (Get-Module 'Microsoft365DSC').Version | Sort-Object -Descending
             $Data.Add('M365DSCVersion', $version[0].ToString())
 
@@ -227,7 +372,10 @@ function Add-M365DSCTelemetryEvent
             # LCM Metadata Information
             try
             {
-                $LCMInfo = Get-DscLocalConfigurationManager -ErrorAction Stop
+                if ($null -eq $Script:LCMInfo)
+                {
+                    $Script:LCMInfo = Get-DscLocalConfigurationManager -ErrorAction Stop
+                }
 
                 $certificateConfigured = $false
                 if (-not [System.String]::IsNullOrEmpty($LCMInfo.CertificateID))
@@ -236,17 +384,17 @@ function Add-M365DSCTelemetryEvent
                 }
 
                 $partialConfiguration = $false
-                if (-not [System.String]::IsNullOrEmpty($LCMInfo.PartialConfigurations))
+                if (-not [System.String]::IsNullOrEmpty($Script:LCMInfo.PartialConfigurations))
                 {
                     $partialConfiguration = $true
                 }
                 $Data.Add('LCMUsesPartialConfigurations', $partialConfiguration)
                 $Data.Add('LCMCertificateConfigured', $certificateConfigured)
-                $Data.Add('LCMConfigurationMode', $LCMInfo.ConfigurationMode)
-                $Data.Add('LCMConfigurationModeFrequencyMins', $LCMInfo.ConfigurationModeFrequencyMins)
-                $Data.Add('LCMRefreshMode', $LCMInfo.RefreshMode)
-                $Data.Add('LCMState', $LCMInfo.LCMState)
-                $Data.Add('LCMStateDetail', $LCMInfo.LCMStateDetail)
+                $Data.Add('LCMConfigurationMode', $Script:LCMInfo.ConfigurationMode)
+                $Data.Add('LCMConfigurationModeFrequencyMins', $Script:LCMInfo.ConfigurationModeFrequencyMins)
+                $Data.Add('LCMRefreshMode', $Script:LCMInfo.RefreshMode)
+                $Data.Add('LCMState', $Script:LCMInfo.LCMState)
+                $Data.Add('LCMStateDetail', $Script:LCMInfo.LCMStateDetail)
 
                 if ([System.String]::IsNullOrEmpty($Type))
                 {
@@ -254,18 +402,18 @@ function Add-M365DSCTelemetryEvent
                     {
                         $Type = 'Export'
                     }
-                    elseif ($LCMInfo.LCMStateDetail -eq 'LCM is performing a consistency check.' -or `
-                            $LCMInfo.LCMStateDetail -eq 'LCM exécute une vérification de cohérence.' -or `
-                            $LCMInfo.LCMStateDetail -eq 'LCM führt gerade eine Konsistenzüberprüfung durch.')
+                    elseif ($Script:LCMInfo.LCMStateDetail -eq 'LCM is performing a consistency check.' -or `
+                            $Script:LCMInfo.LCMStateDetail -eq 'LCM exécute une vérification de cohérence.' -or `
+                            $Script:LCMInfo.LCMStateDetail -eq 'LCM führt gerade eine Konsistenzüberprüfung durch.')
                     {
                         $Type = 'MonitoringScheduled'
                     }
-                    elseif ($LCMInfo.LCMStateDetail -eq 'LCM is testing node against the configuration.')
+                    elseif ($Script:LCMInfo.LCMStateDetail -eq 'LCM is testing node against the configuration.')
                     {
                         $Type = 'MonitoringManual'
                     }
-                    elseif ($LCMInfo.LCMStateDetail -eq 'LCM is applying a new configuration.' -or `
-                            $LCMInfo.LCMStateDetail -eq 'LCM applique une nouvelle configuration.')
+                    elseif ($Script:LCMInfo.LCMStateDetail -eq 'LCM is applying a new configuration.' -or `
+                            $Script:LCMInfo.LCMStateDetail -eq 'LCM applique une nouvelle configuration.')
                     {
                         $Type = 'ApplyingConfiguration'
                     }
@@ -304,6 +452,10 @@ function Add-M365DSCTelemetryEvent
                 Write-Error $_
             }
         }
+    }
+    else
+    {
+        return
     }
 }
 
@@ -397,6 +549,8 @@ function Get-M365DSCTelemetryOption
                     [System.EnvironmentVariableTarget]::Machine)
             ProjectName        = [System.Environment]::GetEnvironmentVariable('M365DSCTelemetryProjectName', `
                     [System.EnvironmentVariableTarget]::Machine)
+            ConnectionString   = [System.Environment]::GetEnvironmentVariable('M365DSCTelemetryConnectionString', `
+                    [System.EnvironmentVariableTarget]::Machine)
         }
     }
     catch
@@ -456,7 +610,8 @@ function Format-M365DSCTelemetryParameters
         {
             $data.Add('Tenant', $Parameters.TenantId)
         }
-        $data.Add('ConnectionMode', (Get-M365DSCAuthenticationMode -Parameters $Parameters))
+        $connectionMode = Get-M365DSCAuthenticationMode -Parameters $Parameters
+        $data.Add('ConnectionMode', $connectionMode)
     }
     catch
     {

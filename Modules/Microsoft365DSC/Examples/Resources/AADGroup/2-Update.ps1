@@ -6,12 +6,19 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
-    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         AADGroup 'MyGroups'
@@ -22,10 +29,14 @@ Configuration Example
             MailEnabled     = $True
             GroupTypes      = @("Unified")
             MailNickname    = "M365DSC"
+            Members         = @("AdeleV@$TenantId")
+            GroupAsMembers  = @("Group1")
             Visibility      = "Private"
-            Owners          = @("admin@$Domain", "AdeleV@$Domain")
+            Owners          = @("admin@$TenantId", "AdeleV@$TenantId")
             Ensure          = "Present"
-            Credential      = $Credscredential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
 }

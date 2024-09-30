@@ -531,6 +531,11 @@ function Export-TargetResource
         }
         foreach ($mailbox in $mailboxes)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    |---[$i/$($mailboxes.Length)] $($mailbox.UserPrincipalName)" -NoNewline
 
             $Params = @{

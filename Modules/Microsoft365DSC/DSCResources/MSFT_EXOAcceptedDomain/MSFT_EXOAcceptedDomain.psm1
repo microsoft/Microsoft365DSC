@@ -60,9 +60,6 @@ function Get-TargetResource
         $AccessTokens
     )
     Write-Verbose -Message "Getting configuration of Accepted Domain for $Identity"
-    Write-Verbose -Message "Access: $($AccessTokens | Out-String)"
-
-    Write-Verbose -Message "Tenant: $($TenantId | Out-String)"
 
     if ($Global:CurrentModeIsExport)
     {
@@ -395,6 +392,11 @@ function Export-TargetResource
         }
         foreach ($domain in $AllAcceptedDomains)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    |---[$i/$($AllAcceptedDomains.Count)] $($domain.Identity)" -NoNewline
 
             $Params = @{

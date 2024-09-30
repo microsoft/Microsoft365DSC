@@ -61,6 +61,9 @@ function Get-TargetResource
         [System.String[]]
         $AccessTokens
     )
+
+    Write-Verbose -Message "Getting Site Script: $Title"
+
     $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
         -InboundParameters $PSBoundParameters
 
@@ -489,6 +492,11 @@ function Export-TargetResource
         }
         foreach ($script in $siteScripts)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    [$i/$($siteScripts.Length)] $($script.Title)" -NoNewline
             $params = @{
                 Identity              = $script.Id
