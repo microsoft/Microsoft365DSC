@@ -6,6 +6,7 @@
   * Added AppRoles
   * Added AuthenticationBehavior
   * Added KeyCredentials
+  * Added OptionalClaims
   * Added PaswordCredentials
   * Added PreAuthorizationApplications
 * AADAuthenticationMethodPolicy
