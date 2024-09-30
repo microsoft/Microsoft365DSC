@@ -6,7 +6,7 @@ function Get-TargetResource
     (
         #region Intune params
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Id,
 
@@ -36,6 +36,10 @@ function Get-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
 
         [Parameter()]
         [Switch]
@@ -100,6 +104,7 @@ function Get-TargetResource
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint
+            ApplicationSecret     = $ApplicationSecret
             ManagedIdentity       = $ManagedIdentity.IsPresent
             AccessTokens          = $AccessTokens
         }
@@ -125,7 +130,7 @@ function Set-TargetResource
     (
         #region Intune params
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Id,
 
@@ -155,6 +160,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
 
         [Parameter()]
         [Switch]
@@ -189,12 +198,13 @@ function Set-TargetResource
     # UPDATE
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        Update-MgBetaDeviceAppManagementMobileAppCategory @SetParameters
+        Update-MgBetaDeviceAppManagementMobileAppCategory -MobileAppCategoryId $currentInstance.Id @SetParameters
     }
     # REMOVE
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Remove-MgBetaDeviceAppManagementMobileAppCategory @SetParameters
+        Remove-MgBetaDeviceAppManagementMobileAppCategory -MobileAppCategoryId $currentInstance.Id -Confirm:$false
+        #Remove-MgBetaDeviceAppManagementMobileAppCategory @SetParameters - didn't work as it didn't find -Id param
     }
 }
 
@@ -206,7 +216,7 @@ function Test-TargetResource
     (
         #region Intune params
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Id,
 
@@ -236,6 +246,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
 
         [Parameter()]
         [Switch]
@@ -293,12 +307,12 @@ function Export-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ApplicationSecret,
-
-        [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
 
         [Parameter()]
         [Switch]
@@ -351,6 +365,7 @@ function Export-TargetResource
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
+                ApplicationSecret     = $ApplicationSecret
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }
