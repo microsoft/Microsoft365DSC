@@ -1,6 +1,6 @@
 {
-    "resourceName": "AADAuthenticationMethodPolicySoftware",
-    "description": "This resource configures an Azure AD Authentication Method Policy Software.",
+    "resourceName": "AADAuthenticationMethodPolicyHardware",
+    "description": "This resource configures an Azure AD Authentication Method Policy Hardware.",
     "roles": {
         "read": [
             "Security Reader"
