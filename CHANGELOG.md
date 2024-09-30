@@ -33,6 +33,8 @@
   * Initial release.
 * EXOArcConfig
   * Initial Release.
+* EXODnssecForVerifiedDomain
+  * Initial Release.
 * EXOEmailTenantSettings
   * Initial Release.
 * EXOFocusedInbox
