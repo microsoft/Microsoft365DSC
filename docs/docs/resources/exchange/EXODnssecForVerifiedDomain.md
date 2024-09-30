@@ -38,11 +38,11 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - Permission for Monitoring and Export
+    - None
 
 - **Update**
 
-    - Permission for deploying
+    - None
 
 ## Examples
 

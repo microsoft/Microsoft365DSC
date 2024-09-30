@@ -147,6 +147,7 @@
 | **RecordingTimeframePostEventInSec** | Write | String | Official documentation to come. | |
 | **BandwidthCapInMb** | Write | String | Official documentation to come. | |
 | **OfflineRecordingStorageLimitInMb** | Write | String | Official documentation to come. | |
+| **AdaptiveProtectionEnabled** | Write | Boolean | Determines if Adaptive Protection is enabled for Purview. | |
 | **Ensure** | Write | String | Present ensures the instance exists, absent ensures it is removed. | `Absent`, `Present` |
 | **Credential** | Write | PSCredential | Credentials of the workload's Admin | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
