@@ -577,6 +577,10 @@ function Get-TargetResource
         $OfflineRecordingStorageLimitInMb,
 
         [Parameter()]
+        [System.Boolean]
+        $AdaptiveProtectionEnabled,
+
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -858,6 +862,21 @@ function Get-TargetResource
             {
                 $tenantSettingsHash.Add('NotificationDetailsEnabled', $false)
             }
+
+            $AdaptiveProtectionEnabledValue = $false
+            if ($null -ne $tenantSettings.DynamicRiskPreventionSettings -and `
+                $null -ne $tenantSettings.DynamicRiskPreventionSettings.DynamicRiskScenarioSettings)
+            {
+                if ($tenantSettings.DynamicRiskPreventionSettings.DynamicRiskScenarioSettings.ActivationStatus -eq 0)
+                {
+                    $AdaptiveProtectionEnabledValue = $true
+                }
+                else
+                {
+                    $AdaptiveProtectionEnabledValue = $false
+                }
+            }
+            $tenantSettingsHash.Add('AdaptiveProtectionEnabled', $AdaptiveProtectionEnabledValue)
 
             $results += $tenantSettingsHash
         }
@@ -1455,6 +1474,10 @@ function Set-TargetResource
         $OfflineRecordingStorageLimitInMb,
 
         [Parameter()]
+        [System.Boolean]
+        $AdaptiveProtectionEnabled,
+
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -1538,14 +1561,14 @@ function Set-TargetResource
     }
 
     $extensibleIndicatorsProperties = @('AWSS3BlockPublicAccessDisabled','AWSS3BucketDeleted','AWSS3PublicAccessEnabled',`
-    'AWSS3ServerLoggingDisabled','AzureElevateAccessToAllSubscriptions','AzureResourceThreatProtectionSettingsUpdated', `
-    'AzureSQLServerAuditingSettingsUpdated','AzureSQLServerFirewallRuleDeleted','AzureSQLServerFirewallRuleUpdated', `
-    'AzureStorageAccountOrContainerDeleted','BoxContentAccess','BoxContentDelete','BoxContentDownload','BoxContentExternallyShared', `
-    'CCFinancialRegulatoryRiskyTextSent','CCInappropriateContentSent','CCInappropriateImagesSent','DropboxContentAccess', `
-    'DropboxContentDelete','DropboxContentDownload','DropboxContentExternallyShared','GoogleDriveContentAccess', `
-    'GoogleDriveContentDelete','GoogleDriveContentExternallyShared','PowerBIDashboardsDeleted','PowerBIReportsDeleted', `
-    'PowerBIReportsDownloaded','PowerBIReportsExported','PowerBIReportsViewed','PowerBISemanticModelsDeleted', `
-    'PowerBISensitivityLabelDowngradedForArtifacts','PowerBISensitivityLabelRemovedFromArtifacts')
+        'AWSS3ServerLoggingDisabled','AzureElevateAccessToAllSubscriptions','AzureResourceThreatProtectionSettingsUpdated', `
+        'AzureSQLServerAuditingSettingsUpdated','AzureSQLServerFirewallRuleDeleted','AzureSQLServerFirewallRuleUpdated', `
+        'AzureStorageAccountOrContainerDeleted','BoxContentAccess','BoxContentDelete','BoxContentDownload','BoxContentExternallyShared', `
+        'CCFinancialRegulatoryRiskyTextSent','CCInappropriateContentSent','CCInappropriateImagesSent','DropboxContentAccess', `
+        'DropboxContentDelete','DropboxContentDownload','DropboxContentExternallyShared','GoogleDriveContentAccess', `
+        'GoogleDriveContentDelete','GoogleDriveContentExternallyShared','PowerBIDashboardsDeleted','PowerBIReportsDeleted', `
+        'PowerBIReportsDownloaded','PowerBIReportsExported','PowerBIReportsViewed','PowerBISemanticModelsDeleted', `
+        'PowerBISensitivityLabelDowngradedForArtifacts','PowerBISensitivityLabelRemovedFromArtifacts')
 
     $extensibleIndicatorsValues = @()
     foreach ($extensibleIndicatorsProperty in $extensibleIndicatorsProperties)
@@ -1559,8 +1582,23 @@ function Set-TargetResource
     # Tenant Settings
     $featureSettingsValue = "{`"Anonymization`":$($Anonymization.ToString().ToLower()), `"DLPUserRiskSync`":$($DLPUserRiskSync.ToString().ToLower()), `"OptInIRMDataExport`":$($OptInIRMDataExport.ToString().ToLower()), `"RaiseAuditAlert`":$($RaiseAuditAlert.ToString().ToLower()), `"EnableTeam`":$($EnableTeam.ToString().ToLower())}"
     $intelligentDetectionValue = "{`"FileVolCutoffLimits`":`"$($FileVolCutoffLimits)`", `"AlertVolume`":`"$($AlertVolume)`"}"
+
+
     $tenantSettingsValue = "{`"Region`":`"WW`", `"FeatureSettings`":$($featureSettingsValue), " + `
-                            "`"IntelligentDetections`":$($intelligentDetectionValue)}"
+                            "`"IntelligentDetections`":$($intelligentDetectionValue)"
+    if ($null -ne $AdaptiveProtectionEnabled)
+    {
+        Write-Verbose -Message "Adding Adaptive Protection setting to the set parameters."
+        $AdaptiveProtectionActivatonStatus = 1
+        if ($AdaptiveProtectionEnabled)
+        {
+            $AdaptiveProtectionActivatonStatus = 0
+        }
+        $dynamicRiskPreventionSettings = "{`"ProfileInScopeTimeSpan`":7, `"LoopbackTimeSpan`":7, `"DynamicRiskScenarioSettings`":[{`"ActivationStatus`":$AdaptiveProtectionActivatonStatus}]}"
+        $tenantSettingsValue += ", `"DynamicRiskPreventionSettings`":$dynamicRiskPreventionSettings"
+    }
+
+    $tenantSettingsValue += "}"
 
     # CREATE
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
@@ -2179,6 +2217,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $OfflineRecordingStorageLimitInMb,
+
+        [Parameter()]
+        [System.Boolean]
+        $AdaptiveProtectionEnabled,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
