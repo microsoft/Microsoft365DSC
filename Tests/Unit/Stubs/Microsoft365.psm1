@@ -37644,7 +37644,7 @@ function New-MgBetaDeviceAppManagementMobileAppCategory
         [System.String]
         $Id,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $DisplayName
     )
@@ -37656,9 +37656,9 @@ function Get-MgBetaDeviceAppManagementMobileAppCategory
     param(
         [Parameter()]
         [System.String]
-        $Id,
+        $MobileAppCategoryId,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $DisplayName
     )
@@ -37670,9 +37670,9 @@ function Update-MgBetaDeviceAppManagementMobileAppCategory
     param(
         [Parameter()]
         [System.String]
-        $Id,
+        $MobileAppCategoryId,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $DisplayName
     )
@@ -37684,11 +37684,11 @@ function Remove-MgBetaDeviceAppManagementMobileAppCategory
     param(
         [Parameter()]
         [System.String]
-        $Id,
+        $MobileAppCategoryId,
 
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $DisplayName
+        [Parameter()]
+        [System.Boolean]
+        $Confirm
     )
 }
 

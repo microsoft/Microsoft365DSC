@@ -85,7 +85,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     Id                  = '046e0b16-76ce-4b49-bf1b-1cc5bd94fb47'
                     DisplayName         = 'Data Management'
-                    Ensure              = 'Present'
+                    Ensure              = 'Absent'
                     Credential          = $Credential
                 }
 
@@ -98,8 +98,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It '2.1 Should return values from the Get method' {
-
-                $kjl = $testParams
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
             It '2.2 Should return false from the Test method' {
@@ -145,7 +143,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-MgBetaDeviceAppManagementMobileAppCategory -MockWith {
                     return @{
                         Id                  = "046e0b16-76ce-4b49-bf1b-1cc5bd94fb47"
-                        DisplayName         = "Data Management"
+                        DisplayName         = "Data Management 1" #drift
                     }
                 }
             }

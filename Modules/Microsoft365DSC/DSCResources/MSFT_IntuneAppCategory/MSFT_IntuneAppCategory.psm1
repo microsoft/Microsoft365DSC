@@ -70,7 +70,7 @@ function Get-TargetResource
 
     try
     {
-        $instance = null
+        $instance = $null
         if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
         {
             $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.Id -eq $Id}
@@ -192,6 +192,8 @@ function Set-TargetResource
     $currentInstance = Get-TargetResource @PSBoundParameters
 
     $setParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+    $setParameters.remove('Id') | Out-Null
+    $setParameters.remove('Ensure') | Out-Null
 
     # CREATE
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
@@ -207,7 +209,6 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
         Remove-MgBetaDeviceAppManagementMobileAppCategory -MobileAppCategoryId $currentInstance.Id -Confirm:$false
-        #Remove-MgBetaDeviceAppManagementMobileAppCategory @SetParameters - didn't work as it didn't find -Id param
     }
 }
 
