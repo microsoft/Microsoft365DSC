@@ -25,6 +25,10 @@
             RequiredVersion = '2.23.0'
         },
         @{
+            ModuleName      = 'Microsoft.Graph.Beta.Applications'
+            Requiredversion = '2.23.0'
+        },
+        @{
             ModuleName      = 'Microsoft.Graph.Authentication'
             RequiredVersion = '2.23.0'
         },
@@ -77,6 +81,10 @@
             RequiredVersion = '2.23.0'
         },
         @{
+            ModuleName      = 'Microsoft.Graph.Beta.Groups'
+            RequiredVersion = '2.23.0'
+        },
+        @{
             ModuleName      = 'Microsoft.Graph.Planner'
             RequiredVersion = '2.23.0'
         },
@@ -107,11 +115,6 @@
         @{
             ModuleName      = 'PnP.PowerShell'
             RequiredVersion = '1.12.0'
-        },
-        @{
-            ModuleName      = 'PSDesiredStateConfiguration'
-            RequiredVersion = '1.1'
-            PowerShellCore  = $false
         },
         @{
             ModuleName      = 'PSDesiredStateConfiguration'
