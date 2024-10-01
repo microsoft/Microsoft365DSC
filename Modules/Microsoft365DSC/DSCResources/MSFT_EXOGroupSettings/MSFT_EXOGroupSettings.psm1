@@ -997,7 +997,7 @@ function Export-TargetResource
     try
     {
         $Script:ExportMode = $true
-        [array] $Script:exportedInstances = Get-UnifiedGroup -ErrorAction SilentlyContinue
+        [array] $Script:exportedInstances = Get-UnifiedGroup -ResultSize Unlimited -ErrorAction SilentlyContinue
 
         $i = 1
         if ($Script:exportedInstances.Length -eq 0)
@@ -1015,6 +1015,11 @@ function Export-TargetResource
             $groupName = $group.DisplayName
             if (-not [System.String]::IsNullOrEmpty($groupName))
             {
+                if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+                {
+                    $Global:M365DSCExportResourceInstancesCount++
+                }
+
                 $Params = @{
                     Credential            = $Credential
                     DisplayName           = $groupName

@@ -149,8 +149,12 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message 'Getting configuration for SPO Tenant'
-    $ConnectionMode = New-M365DSCConnection -Workload 'PNP' -InboundParameters $PSBoundParameters
-    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters $PSBoundParameters
+
+    $ConnectionModeGraph = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+        -InboundParameters $PSBoundParameters
+
+    $ConnectionMode = New-M365DSCConnection -Workload 'PNP' `
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -189,7 +193,7 @@ function Get-TargetResource
             LegacyAuthProtocolsEnabled                    = $SPOTenantSettings.LegacyAuthProtocolsEnabled
             SignInAccelerationDomain                      = $SPOTenantSettings.SignInAccelerationDomain
             UsePersistentCookiesForExplorerView           = $SPOTenantSettings.UsePersistentCookiesForExplorerView
-            UserVoiceForFeedbackEnabled                   = $SPOTenantSettings.UserVoiceForFeedbackEnabled
+            #UserVoiceForFeedbackEnabled                   = $SPOTenantSettings.UserVoiceForFeedbackEnabled
             PublicCdnEnabled                              = $SPOTenantSettings.PublicCdnEnabled
             PublicCdnAllowedFileTypes                     = $SPOTenantSettings.PublicCdnAllowedFileTypes
             UseFindPeopleInPeoplePicker                   = $SPOTenantSettings.UseFindPeopleInPeoplePicker
@@ -393,11 +397,12 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'PNP' -InboundParameters $PSBoundParameters
     if (-not [string]::IsNullOrEmpty($TenantDefaultTimezone))
     {
-        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters $PSBoundParameters
+        $ConnectionModeGraph = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+            -InboundParameters $PSBoundParameters
     }
+    $ConnectionMode = New-M365DSCConnection -Workload 'PNP' -InboundParameters $PSBoundParameters
 
     $CurrentParameters = $PSBoundParameters
     $CurrentParameters.Remove('Credential') | Out-Null
@@ -413,6 +418,11 @@ function Set-TargetResource
     $CurrentParameters.Remove('AccessTokens') | Out-Null
 
     $CurrentParameters.Remove('TenantDefaultTimezone') | Out-Null # this one is updated separately using Graph
+    if ($CurrentParameters.Keys.Contains('UserVoiceForFeedbackEnabled'))
+    {
+        Write-Verbose -Message 'Property UserVoiceForFeedbackEnabled is deprecated, removing it'
+        $CurrentParameters.Remove('UserVoiceForFeedbackEnabled') | Out-Null
+    }
 
     if ($PublicCdnEnabled -eq $false)
     {
@@ -667,9 +677,10 @@ function Export-TargetResource
 
     try
     {
-        $ConnectionMode = New-M365DSCConnection -Workload 'PNP' `
+        $ConnectionModeGraph = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters
-        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+
+        $ConnectionMode = New-M365DSCConnection -Workload 'PNP' `
             -InboundParameters $PSBoundParameters
 
         #Ensure the proper dependencies are installed in the current environment.
@@ -683,6 +694,11 @@ function Export-TargetResource
             -Parameters $PSBoundParameters
         Add-M365DSCTelemetryEvent -Data $data
         #endregion
+
+        if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+        {
+            $Global:M365DSCExportResourceInstancesCount++
+        }
 
         $Params = @{
             IsSingleInstance      = 'Yes'

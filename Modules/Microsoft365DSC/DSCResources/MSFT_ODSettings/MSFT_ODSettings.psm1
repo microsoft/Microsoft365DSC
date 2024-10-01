@@ -103,6 +103,7 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message 'Getting configuration of OneDrive Settings'
+
     $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
         -InboundParameters $PSBoundParameters
 
@@ -445,7 +446,6 @@ function Set-TargetResource
     Write-Verbose -Message ($Options | Out-String)
 
     Set-PnPTenantSyncClientRestriction @Options
-
 }
 
 function Test-TargetResource
@@ -648,6 +648,11 @@ function Export-TargetResource
             -Parameters $PSBoundParameters
         Add-M365DSCTelemetryEvent -Data $data
         #endregion
+
+        if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+        {
+            $Global:M365DSCExportResourceInstancesCount++
+        }
 
         $Params = @{
             IsSingleInstance      = 'Yes'

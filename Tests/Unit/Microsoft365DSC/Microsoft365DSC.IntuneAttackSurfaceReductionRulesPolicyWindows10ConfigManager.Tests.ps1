@@ -41,47 +41,85 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
+            Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicy -MockWith {
+            }
+
             Mock -CommandName Remove-MgBetaDeviceManagementConfigurationPolicy -MockWith {
             }
 
-            Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicyTemplate -MockWith {
-                return @{
-                    TemplateId = 'd02f2162-fcac-48db-9b7b-b0a3f160d2c2_1'
-                }
+            Mock -CommandName Update-IntuneDeviceConfigurationPolicy -MockWith {
             }
 
-            Mock -CommandName Get-DeviceManagementConfigurationPolicyAssignment -MockWith {
-                return @(@{
+            Mock -CommandName Get-IntuneSettingCatalogPolicySetting -MockWith {
+            }
 
-                        dataType = '#microsoft.graph.exclusionGroupAssignmentTarget'
-                        collectionId       = '26d60dd1-fab6-47bf-8656-358194c1a49d'
-                    })
-            }
-            Mock -CommandName Update-DeviceConfigurationPolicyAssignment -MockWith {
-            }
-            Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicyTemplateSettingTemplate -MockWith {
+            Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicySetting -MockWith {
                 return @{
-                    Id       = '12345-12345-12345-12345-12345'
-                    SettingInstanceTemplate = @{
-                        settingDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules'
-                        settingInstanceTemplateId = 'd770fcd1-62cd-4217-9b20-9ee2a12062ff'
-                        AdditionalProperties = @{
-                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstanceTemplate'
-                            groupSettingCollectionValueTemplate = @{
-                                children =@(
+                    Id                   = 0
+                    SettingDefinitions   = @(
+                        @{
+                            Id = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_useadvancedprotectionagainstransomware'
+                            Name = 'UseAdvancedProtectionAgainstRansomware'
+                            AdditionalProperties = @{
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                            }
+                        },
+                        @{
+                            Id = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules'
+                            Name = 'AttackSurfaceReductionRules'
+                            AdditionalProperties = @{
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSettingGroupCollectionDefinition'
+                                'childIds' = @(
+                                    'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_useadvancedprotectionagainstransomware'
+                                )
+                                minimumCount = 0
+                                maximumCount = 1
+                            }
+                        }
+                    )
+                    SettingInstance      = @{
+                        SettingDefinitionId              = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules'
+                        SettingInstanceTemplateReference = @{
+                            SettingInstanceTemplateId = 'd770fcd1-62cd-4217-9b20-9ee2a12062ff'
+                        }
+                        AdditionalProperties             = @{
+                            '@odata.type'      = '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
+                            groupSettingCollectionValue = @(@{
+                                children = @(
                                     @{
-                                        '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstanceTemplate'
-                                        settingInstanceTemplateId ='999c8d1b-9f4e-49b7-824d-001c5c7d0182'
-                                        settingDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_useadvancedprotectionagainstransomware'
-                                        choiceSettingValueTemplate = @{
-                                            settingValueTemplateId = 'a212472c-c5cc-43dd-898d-d35286a408e5'
+                                        "@odata.type" = "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance"
+                                        "settingDefinitionId" = "device_vendor_msft_policy_config_defender_attacksurfacereductionrules_useadvancedprotectionagainstransomware"
+                                        "choiceSettingValue" = @{
+                                            "@odata.type" = "#microsoft.graph.deviceManagementConfigurationChoiceSettingValue"
+                                            "value" = "device_vendor_msft_policy_config_defender_attacksurfacereductionrules_useadvancedprotectionagainstransomware_block"
                                         }
                                     }
                                 )
-                            }
+                            })
                         }
                     }
+                    AdditionalProperties = $null
                 }
+            }
+
+            Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicyAssignment -MockWith {
+                return @(@{
+                    Id       = '12345-12345-12345-12345-12345'
+                    Source   = 'direct'
+                    SourceId = '12345-12345-12345-12345-12345'
+                    Target   = @{
+                        DeviceAndAppManagementAssignmentFilterType = 'none'
+                        AdditionalProperties                       = @(
+                            @{
+                                '@odata.type' = '#microsoft.graph.configurationManagerCollectionAssignmentTarget'
+                                collectionId  = '26d60dd1-fab6-47bf-8656-358194c1a49d'
+                            }
+                        )
+                    }
+                })
+            }
+
+            Mock -CommandName Update-DeviceConfigurationPolicyAssignment -MockWith {
             }
 
             # Mock Write-Host to hide output during the tests
@@ -98,8 +136,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     Assignments = @(
                         (New-CimInstance -ClassName MSFT_DeviceManagementConfigurationPolicyAssignments -Property @{
-                            DataType                                   = '#microsoft.graph.exclusionGroupAssignmentTarget'
-                            CollectionId                               = '26d60dd1-fab6-47bf-8656-358194c1a49d'
+                            DataType     = '#microsoft.graph.configurationManagerCollectionAssignmentTarget'
+                            CollectionId = '26d60dd1-fab6-47bf-8656-358194c1a49d'
                         } -ClientOnly)
                     )
                     Credential  = $Credential
@@ -133,8 +171,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     Assignments = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_DeviceManagementConfigurationPolicyAssignments -Property @{
-                            DataType                                   = '#microsoft.graph.exclusionGroupAssignmentTarget'
-                            CollectionId                               = '26d60dd1-fab6-47bf-8656-358194c1a49d'
+                            DataType     = '#microsoft.graph.configurationManagerCollectionAssignmentTarget'
+                            CollectionId = '26d60dd1-fab6-47bf-8656-358194c1a49d'
                         } -ClientOnly)
                     )
                     Credential  = $Credential
@@ -152,38 +190,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Name        = 'My Test'
                     }
                 }
-
-                Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicySetting -MockWith {
-                    return @{
-                        Id                   = 0
-                        SettingDefinitions   = $null
-                        SettingInstance      = @{
-                            SettingDefinitionId              = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules'
-                            SettingInstanceTemplateReference = @{
-                                SettingInstanceTemplateId = 'd770fcd1-62cd-4217-9b20-9ee2a12062ff'
-                            }
-                            AdditionalProperties             = @{
-                                '@odata.type'      = '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
-                                groupSettingCollectionValue = @(@{
-                                    children = @(
-                                        @{
-                                            "@odata.type" = "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance"
-                                            "settingDefinitionId" = "device_vendor_msft_policy_config_defender_attacksurfacereductionrules_useadvancedprotectionagainstransomware"
-                                            "choiceSettingValue" = @{
-                                                "@odata.type" = "#microsoft.graph.deviceManagementConfigurationChoiceSettingValue"
-                                                "value" = "device_vendor_msft_policy_config_defender_attacksurfacereductionrules_useadvancedprotectionagainstransomware_block"
-                                            }
-                                        }
-                                    )
-                                })
-                            }
-
-                        }
-                        AdditionalProperties = $null
-                    }
-                }
-                Mock -CommandName Update-DeviceManagementConfigurationPolicy -MockWith {
-                }
             }
 
             It 'Should return Present from the Get method' {
@@ -196,7 +202,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should update the instance from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Update-DeviceManagementConfigurationPolicy -Exactly 1
+                Should -Invoke -CommandName Update-IntuneDeviceConfigurationPolicy -Exactly 1
             }
         }
 
@@ -208,10 +214,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName = 'My Test'
                     Ensure      = 'Present'
                     Identity    = '619bd4a4-3b3b-4441-bd6f-3f4c0c444870'
+                    useadvancedprotectionagainstransomware = 'block'
                     Assignments = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_DeviceManagementConfigurationPolicyAssignments -Property @{
-                            DataType                                   = '#microsoft.graph.exclusionGroupAssignmentTarget'
-                            CollectionId                               = '26d60dd1-fab6-47bf-8656-358194c1a49d'
+                            DataType     = '#microsoft.graph.configurationManagerCollectionAssignmentTarget'
+                            CollectionId = '26d60dd1-fab6-47bf-8656-358194c1a49d'
                         } -ClientOnly)
                     )
                 }
@@ -221,36 +228,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Id    = '619bd4a4-3b3b-4441-bd6f-3f4c0c444870'
                         Description = 'My Test Description'
                         Name        = 'My Test'
-                    }
-                }
-
-                Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicySetting -MockWith {
-                    return @{
-                        Id                   = 0
-                        SettingDefinitions   = $null
-                        SettingInstance      = @{
-                            SettingDefinitionId              = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules'
-                            SettingInstanceTemplateReference = @{
-                                SettingInstanceTemplateId = 'd770fcd1-62cd-4217-9b20-9ee2a12062ff'
-                            }
-                            AdditionalProperties             = @{
-                                '@odata.type'      = '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
-                                groupSettingCollectionValue = @(@{
-                                    children = @(
-                                        @{
-                                            "@odata.type" = "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance"
-                                            "settingDefinitionId" = "device_vendor_msft_policy_config_defender_attacksurfacereductionrules_useadvancedprotectionagainstransomware"
-                                            "choiceSettingValue" = @{
-                                                "@odata.type" = "#microsoft.graph.deviceManagementConfigurationChoiceSettingValue"
-                                                "value" = "device_vendor_msft_policy_config_defender_attacksurfacereductionrules_useadvancedprotectionagainstransomware_block"
-                                            }
-                                        }
-                                    )
-                                })
-                            }
-
-                        }
-                        AdditionalProperties = $null
                     }
                 }
             }
@@ -265,8 +242,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     Assignments = @(
                         (New-CimInstance -ClassName MSFT_DeviceManagementConfigurationPolicyAssignments -Property @{
-                            DataType                                   = '#microsoft.graph.exclusionGroupAssignmentTarget'
-                            CollectionId                               = '26d60dd1-fab6-47bf-8656-358194c1a49d'
+                            DataType     = '#microsoft.graph.configurationManagerCollectionAssignmentTarget'
+                            CollectionId = '26d60dd1-fab6-47bf-8656-358194c1a49d'
                         } -ClientOnly)
                     )
                     Credential  = $Credential
@@ -281,36 +258,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Id    = '619bd4a4-3b3b-4441-bd6f-3f4c0c444870'
                         Description = 'My Test Description'
                         Name        = 'My Test'
-                    }
-                }
-
-                Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicySetting -MockWith {
-                    return @{
-                        Id                   = 0
-                        SettingDefinitions   = $null
-                        SettingInstance      = @{
-                            SettingDefinitionId              = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules'
-                            SettingInstanceTemplateReference = @{
-                                SettingInstanceTemplateId = 'd770fcd1-62cd-4217-9b20-9ee2a12062ff'
-                            }
-                            AdditionalProperties             = @{
-                                '@odata.type'      = '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
-                                groupSettingCollectionValue = @(@{
-                                    children = @(
-                                        @{
-                                            "@odata.type" = "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance"
-                                            "settingDefinitionId" = "device_vendor_msft_policy_config_defender_attacksurfacereductionrules_useadvancedprotectionagainstransomware"
-                                            "choiceSettingValue" = @{
-                                                "@odata.type" = "#microsoft.graph.deviceManagementConfigurationChoiceSettingValue"
-                                                "value" = "device_vendor_msft_policy_config_defender_attacksurfacereductionrules_useadvancedprotectionagainstransomware_block"
-                                            }
-                                        }
-                                    )
-                                })
-                            }
-
-                        }
-                        AdditionalProperties = $null
                     }
                 }
             }
@@ -372,7 +319,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                     )
                                 })
                             }
-
                         }
                         AdditionalProperties = $null
                     }
@@ -381,6 +327,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should Reverse Engineer resource from the Export method' {
                 $result = Export-TargetResource @testParams
+                $result | Should -Not -BeNullOrEmpty
             }
         }
     }

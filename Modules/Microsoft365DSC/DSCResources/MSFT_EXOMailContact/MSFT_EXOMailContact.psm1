@@ -828,6 +828,11 @@ function Export-TargetResource
 
         foreach ($contact in $contactList)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    |---[$i/$($contactList.Count)] $($contact.Name)" -NoNewline
             $params = @{
                 Name                  = $contact.Name

@@ -539,6 +539,11 @@ function Export-TargetResource
         }
         foreach ($filter in $filters)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    |---[$i/$($filters.Count)] $($filter.FilterName)" -NoNewline
 
             # $GetParams = ([Hashtable]$PSBoundParameters).Clone()

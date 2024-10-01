@@ -436,6 +436,11 @@ function Export-TargetResource
         $i = 1
         foreach ($RoleAssignmentPolicy in $AllRoleAssignmentPolicies)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    |---[$i/$($AllRoleAssignmentPolicies.Length)] $($RoleAssignmentPolicy.Name)" -NoNewline
 
             $Params = @{

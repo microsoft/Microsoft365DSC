@@ -114,6 +114,7 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration for Result Source instance $Name"
+
     $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
         -InboundParameters $PSBoundParameters
 
@@ -629,6 +630,11 @@ function Export-TargetResource
         }
         foreach ($source in $sources)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             $mapping = $InfoMapping | Where-Object -FilterScript { $_.ProviderID -eq $source.ProviderId }
             Write-Host "    |---[$i/$($sourcesLength)] $($source.Name)" -NoNewline
 

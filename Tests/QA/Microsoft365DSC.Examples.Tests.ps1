@@ -153,6 +153,10 @@ Describe -Name 'Successfully compile examples' {
                                         #>
                                     $exampleParameters.Add($parameterName, ('1' -as $parameterType))
                                 }
+                                elseif ($parameterName -eq 'TenantId')
+                                {
+                                    $exampleParameters.Add('TenantId', (New-Guid).ToString())
+                                }
                             }
                         }
 

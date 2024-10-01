@@ -36,6 +36,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-MgGroupMember -MockWith {
             }
+            Mock -CommandName Get-MgBetaGroupMember -MockWith {
+            }
+
+            Mock -CommandName Get-MgGroup -MockWith {
+            }
 
             Mock -CommandName Restore-MgBetaDirectoryDeletedItem -MockWith {
             }
@@ -46,6 +51,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Get-MgGroupOwner -MockWith {
+            }
+
+            Mock -CommandName Get-MgBetaGroupMemberOf -MockWith {
+            }
+
+            Mock -CommandName Get-MgBetaGroupOwner -MockWith {
             }
 
             Mock -CommandName Invoke-MgGraphRequest -MockWith {
@@ -63,8 +74,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName New-MgGroupOwnerByRef -MockWith {
             }
 
-            Mock -CommandName New-MgGroupMember -MockWith {
+            Mock -CommandName New-MgGroupMember -MockWith {        }            
+
+            Mock -CommandName New-MgBetaGroupOwnerByRef -MockWith {
             }
+            
+            Mock -CommandName New-MgBetaGroupMemberByRef -MockWith {
+            }
+
+            Mock -CommandName New-MgBetaGroupMember -MockWith {}
 
             Mock -CommandName New-MgBetaDirectoryRoleMemberByRef -MockWith {
             }
@@ -237,7 +255,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         GroupTypes      = @()
                     }
                 }
-                Mock -CommandName Get-MgGroupMemberOf -MockWith {
+                Mock -CommandName Get-MgBetaGroupMemberOf -MockWith {
                     return @{
                         AdditionalProperties = @{
                             '@odata.type' = '#microsoft.graph.group'
@@ -264,7 +282,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It 'Should return Values from the Get method' {
                 Get-TargetResource @testParams
                 Should -Invoke -CommandName 'Get-MgGroup' -Exactly 1
-                Should -Invoke -CommandName 'Get-MgGroupMemberOf' -Exactly 1
+                Should -Invoke -CommandName 'Get-MgBetaGroupMemberOf' -Exactly 1
             }
 
             It 'Should return true from the Test method' {
@@ -305,7 +323,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         IsAssignableToRole = $true
                     }
                 }
-                Mock -CommandName Get-MgGroupMemberOf -MockWith {
+                Mock -CommandName Get-MgBetaGroupMemberOf -MockWith {
                     return @{
                         AdditionalProperties = @{
                             '@odata.type' = '#microsoft.graph.directoryRole'
@@ -318,7 +336,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It 'Should return Values from the Get method' {
                 Get-TargetResource @testParams
                 Should -Invoke -CommandName 'Get-MgGroup' -Exactly 1
-                Should -Invoke -CommandName 'Get-MgGroupMemberOf' -Exactly 1
+                Should -Invoke -CommandName 'Get-MgBEtaGroupMemberOf' -Exactly 1
             }
 
             It 'Should return true from the Test method' {
@@ -426,7 +444,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It 'Should return Values from the Get method' {
                 Get-TargetResource @testParams
                 Should -Invoke -CommandName 'Get-MgGroup' -Exactly 1
-                Should -Invoke -CommandName 'Get-MgGroupMemberOf' -Exactly 1
+                Should -Invoke -CommandName 'Get-MgBetaGroupMemberOf' -Exactly 1
             }
 
             It 'Should return false from the Test method' {
@@ -500,6 +518,63 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
+        Context -Name 'The Group Exists but group is not assigned as member. Values are NOT in the desired state' -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    DisplayName        = 'DSCGroup'
+                    ID                 = '12345-12345-12345-12345'
+                    Description        = 'Microsoft DSC Group'
+                    SecurityEnabled    = $True
+                    MailEnabled        = $true
+                    GroupTypes         = @()
+                    MailNickname       = 'M365DSC'
+                    IsAssignableToRole = $true
+                    GroupAsMembers     = 'DSCGroupMember'
+                    Ensure             = 'Present'
+                    Credential         = $Credential
+                }
+
+
+                Mock -CommandName New-M365DSCConnection -MockWith {
+                    return 'Credentials'
+                }
+
+                Mock -CommandName Get-MgGroup -MockWith {
+                    return @{
+                        DisplayName        = 'DSCGroupMember'
+                        ID                 = '12345-12345-12345-12345'
+                        Description        = 'Microsoft DSC Group'
+                        SecurityEnabled    = $True
+                        MailEnabled        = $true
+                        GroupTypes         = @()
+                        MailNickname       = 'M365DSC'
+                        IsAssignableToRole = $true
+                        AssignedToRole     = @()
+                        Ensure             = 'Present'
+                    }
+                }
+
+                Mock -CommandName New-MgBetaGroupMemberByRef -MockWith {
+                }
+            }
+
+            It 'Should return Values from the Get method' {
+                Get-TargetResource @testParams
+                Should -Invoke -CommandName 'Get-MgGroup' -Exactly 1
+            }
+
+            It 'Should return false from the Test method' {
+                Test-TargetResource @testParams | Should -Be $false
+            }
+
+            It 'Should call the Set method' {
+                Set-TargetResource @testParams
+                Should -Invoke -CommandName 'Get-MgGroup' -Exactly 2
+                Should -Invoke -CommandName 'New-MgBetaGroupMemberByRef' -Exactly 1
+                #Should -Invoke -CommandName 'Remove-MgGroupMemberDirectoryObjectByRef' -Exactly 1
+            }
+        }
+
         Context -Name "The Group Exists and is assigned to a role but it shouldn't be. Values are NOT in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
@@ -531,10 +606,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         GroupTypes         = @()
                         MailNickname       = 'M365DSC'
                         IsAssignableToRole = $true
-                        Ensure             = 'Present'
                     }
                 }
-                Mock -CommandName Get-MgGroupMemberOf -MockWith {
+                Mock -CommandName Get-MgBEtaGroupMemberOf -MockWith {
                     return @{
                         AdditionalProperties = @{
                             '@odata.type' = '#microsoft.graph.directoryRole'
@@ -553,7 +627,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It 'Should return Values from the Get method' {
                 Get-TargetResource @testParams
                 Should -Invoke -CommandName 'Get-MgGroup' -Exactly 1
-                Should -Invoke -CommandName 'Get-MgGroupMemberOf' -Exactly 1
+                Should -Invoke -CommandName 'Get-MgBetaGroupMemberOf' -Exactly 1
             }
 
             It 'Should return false from the Test method' {

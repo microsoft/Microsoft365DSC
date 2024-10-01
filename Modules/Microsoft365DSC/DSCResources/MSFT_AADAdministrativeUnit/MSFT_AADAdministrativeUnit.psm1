@@ -104,7 +104,6 @@ function Get-TargetResource
     $nullResult.Ensure = 'Absent'
     try
     {
-
         $getValue = $null
         #region resource generator code
         if (-not [string]::IsNullOrEmpty($Id))
@@ -121,7 +120,7 @@ function Get-TargetResource
 
         if ($null -eq $getValue -and -not [string]::IsNullOrEmpty($DisplayName))
         {
-            Write-Verbose -Message "Could not find an Azure AD Administrative Unit with Id {$Id}"
+            Write-Verbose -Message "Could not find an Azure AD Administrative Unit by Id, trying by DisplayName {$DisplayName}"
             if (-Not [string]::IsNullOrEmpty($DisplayName))
             {
                 if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
@@ -159,17 +158,17 @@ function Get-TargetResource
             #endregion
         }
 
-        if (-not [string]::IsNullOrEmpty($getValue.AdditionalProperties.membershipType))
+        if (-not [string]::IsNullOrEmpty($getValue.membershipType))
         {
-            $results.Add('MembershipType', $getValue.AdditionalProperties.membershipType)
+            $results.Add('MembershipType', $getValue.membershipType)
         }
-        if (-not [string]::IsNullOrEmpty($getValue.AdditionalProperties.membershipRule))
+        if (-not [string]::IsNullOrEmpty($getValue.membershipRule))
         {
-            $results.Add('MembershipRule', $getValue.AdditionalProperties.membershipRule)
+            $results.Add('MembershipRule', $getValue.membershipRule)
         }
-        if (-not [string]::IsNullOrEmpty($getValue.AdditionalProperties.membershipRuleProcessingState))
+        if (-not [string]::IsNullOrEmpty($getValue.membershipRuleProcessingState))
         {
-            $results.Add('MembershipRuleProcessingState', $getValue.AdditionalProperties.membershipRuleProcessingState)
+            $results.Add('MembershipRuleProcessingState', $getValue.membershipRuleProcessingState)
         }
 
         Write-Verbose -Message "AU {$DisplayName} MembershipType {$($results.MembershipType)}"
@@ -1010,7 +1009,51 @@ function Export-TargetResource
     {
         $Script:ExportMode = $true
         #region resource generator code
-        [array] $Script:exportedInstances = Get-MgBetaDirectoryAdministrativeUnit -Filter $Filter -All:$true -ErrorAction Stop
+        $ExportParameters = @{
+            Filter      = $Filter
+            All         = [switch]$true
+            ErrorAction = 'Stop'
+        }
+        $queryTypes = @{
+                        'eq' = @('description')
+                        'startsWith' = @('description')
+                        'eq null' = @(
+                            'description',
+                            'displayName'
+                            )
+        }
+
+        #extract arguments from the query
+        # Define the regex pattern to match all words in the query
+        $pattern = "([^\s,()]+)"
+        $query = $Filter
+
+        # Match all words in the query
+        $matches = [regex]::matches($query, $pattern)
+
+        # Extract the matched argument into an array
+        $arguments = @()
+        foreach ($match in $matches) {
+        $arguments += $match.Value
+        }
+
+        #extracting keys to check vs arguments in the filter
+        $Keys = $queryTypes.Keys
+
+        $matchedKey = $arguments | Where-Object { $_ -in $Keys }
+        $matchedProperty = $arguments | Where-Object { $_ -in $queryTypes[$matchedKey]}
+        if ($matchedProperty -and $matchedKey) {
+            $allConditionsMatched = $true
+        }
+
+        # If all conditions match the support, add parameters to $ExportParameters
+        if ($allConditionsMatched -or $Filter -like '*endsWith*')
+        {
+            $ExportParameters.Add('CountVariable', 'count')
+            $ExportParameters.Add('headers', @{"ConsistencyLevel" = "Eventual"})
+        }
+
+        [array] $Script:exportedInstances = Get-MgBetaDirectoryAdministrativeUnit @ExportParameters
         #endregion
 
         $i = 1
@@ -1025,6 +1068,11 @@ function Export-TargetResource
         }
         foreach ($config in $Script:exportedInstances)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             $displayedKey = $config.Id
             if (-not [String]::IsNullOrEmpty($config.displayName))
             {

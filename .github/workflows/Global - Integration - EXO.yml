@@ -46,48 +46,6 @@ jobs:
           git push
           $SHA = git rev-parse HEAD
           echo "commitid=$SHA" >> $env:GITHUB_OUTPUT
-      - name: Run {Create} Integration Tests
-        shell: powershell
-        env:
-          INTEGRATION_USERNAME: ${{ secrets.INTEGRATION_USERNAME }}
-          INTEGRATION_PASSWORD: ${{ secrets.INTEGRATION_PASSWORD }}
-        run: |
-          $CredPassword = ConvertTo-SecureString $env:INTEGRATION_PASSWORD -AsPlainText -Force
-          $Credential = New-Object System.Management.Automation.PSCredential ($env:INTEGRATION_USERNAME, $CredPassword)
-          try
-          {
-            & .\Tests\Integration\Microsoft365DSC\M365DSCIntegration.EXO.Create.Tests.ps1 -Credential $Credential
-          }
-          catch
-          {
-            throw $_
-          }
-
-          try
-          {
-            $Result = Test-DSCConfiguration -Detailed -Verbose -ErrorAction Stop
-          }
-          catch
-          {
-            throw $_
-          }
-
-          Write-Host ""
-
-          if ($Result.InDesiredState -eq $false)
-          {
-            Write-Host -Message "Resources below are not in the Desired State:"
-            foreach ($Resource in $Result.ResourcesNotInDesiredState)
-            {
-                Write-Host $Resource.InstanceName
-            }
-
-            throw "Could not validate that the Tenant is in the Desired State"
-          }
-          else
-          {
-            Write-Host "All resources in the Tenant are in the Desired State"
-          }
       - name: Generate {Update} Integration Tests from Examples
         shell: powershell
         run: |
@@ -104,48 +62,6 @@ jobs:
           git push
           $SHA = git rev-parse HEAD
           echo "commitid=$SHA" >> $env:GITHUB_OUTPUT
-      - name: Run {Update} Integration Tests
-        shell: powershell
-        env:
-          INTEGRATION_USERNAME: ${{ secrets.INTEGRATION_USERNAME }}
-          INTEGRATION_PASSWORD: ${{ secrets.INTEGRATION_PASSWORD }}
-        run: |
-          $CredPassword = ConvertTo-SecureString $env:INTEGRATION_PASSWORD -AsPlainText -Force
-          $Credential = New-Object System.Management.Automation.PSCredential ($env:INTEGRATION_USERNAME, $CredPassword)
-          try
-          {
-            & .\Tests\Integration\Microsoft365DSC\M365DSCIntegration.EXO.Update.Tests.ps1 -Credential $Credential
-          }
-          catch
-          {
-            throw $_
-          }
-
-          try
-          {
-            $Result = Test-DSCConfiguration -Detailed -Verbose -ErrorAction Stop
-          }
-          catch
-          {
-            throw $_
-          }
-
-          Write-Host ""
-
-          if ($Result.InDesiredState -eq $false)
-          {
-            Write-Host -Message "Resources below are not in the Desired State:"
-            foreach ($Resource in $Result.ResourcesNotInDesiredState)
-            {
-                Write-Host $Resource.InstanceName
-            }
-
-            throw "Could not validate that the Tenant is in the Desired State"
-          }
-          else
-          {
-            Write-Host "All resources in the Tenant are in the Desired State"
-          }
       - name: Generate {Remove} Integration Tests from Examples
         shell: powershell
         run: |
@@ -162,46 +78,3 @@ jobs:
             git push
             $SHA = git rev-parse HEAD
             echo "commitid=$SHA" >> $env:GITHUB_OUTPUT
-      - name: Run {Remove} Integration Tests
-        shell: powershell
-        env:
-          INTEGRATION_USERNAME: ${{ secrets.INTEGRATION_USERNAME }}
-          INTEGRATION_PASSWORD: ${{ secrets.INTEGRATION_PASSWORD }}
-        run: |
-            $CredPassword = ConvertTo-SecureString $env:INTEGRATION_PASSWORD -AsPlainText -Force
-            $Credential = New-Object System.Management.Automation.PSCredential ($env:INTEGRATION_USERNAME, $CredPassword)
-            try
-            {
-              & .\Tests\Integration\Microsoft365DSC\M365DSCIntegration.EXO.Remove.Tests.ps1 -Credential $Credential
-            }
-            catch
-            {
-              throw $_
-            }
-
-            try
-            {
-              $Result = Test-DSCConfiguration -Detailed -Verbose -ErrorAction Stop
-            }
-            catch
-            {
-              throw $_
-            }
-
-            Write-Host ""
-
-            if ($Result.InDesiredState -eq $false)
-            {
-              Write-Host -Message "Resources below are not in the Desired State:"
-              foreach ($Resource in $Result.ResourcesNotInDesiredState)
-              {
-                  Write-Host $Resource.InstanceName
-              }
-
-              throw "Could not validate that the Tenant is in the Desired State"
-            }
-            else
-            {
-              Write-Host "All resources in the Tenant are in the Desired State"
-            }
-

@@ -1,0 +1,24 @@
+﻿{
+    "resourceName": "EXOPhishSimOverrideRule",
+    "description": "Use this resource to manage phish sim override rules.",
+    "roles": {
+        "read": [
+            "Exchange Admin"
+        ],
+        "update": [
+            "Exchange Admin"
+        ]
+    },
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [],
+                "update": []
+            },
+            "application": {
+                "read": [],
+                "update": []
+            }
+        }
+    }
+}

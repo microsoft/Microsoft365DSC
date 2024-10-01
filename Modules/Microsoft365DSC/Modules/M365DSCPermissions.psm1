@@ -103,7 +103,7 @@ function Get-M365DSCCompiledPermissionList
         }
         catch
         {
-            Write-Host "File settings.json was not found for resource {$resourceName}" -ForegroundColor Red
+            Write-Warning -Message "File settings.json was not found for resource {$resourceName}"
         }
 
         if ($null -ne $settingsFilePath)
@@ -1599,7 +1599,6 @@ function Update-M365DSCAzureAdApplication
                 $username = $Credential.UserName
                 $password = $Credential.GetNetworkCredential().password
 
-                $url = "https://main.iam.ad.ext.azure.com/api/Directories/$($tenant.tenantId)/Details"
                 $uri = 'https://login.microsoftonline.com/{0}/oauth2/token' -f $tenantid
                 $body = 'resource=74658136-14ec-4630-ad9b-26e160ff0fc6&client_id=1950a258-227b-4e31-a9cf-717495945fc2&grant_type=password&username={1}&password={0}' -f [System.Web.HttpUtility]::UrlEncode($password), $username
                 $token = Invoke-RestMethod $uri `
@@ -1748,7 +1747,7 @@ function Update-M365DSCAzureAdApplication
                         {
                             if ($_.Exception.Message -match 'Key credential end date is invalid')
                             {
-                                Write-Host "Caught error: $($_.Exception.Message)"
+                                Write-Error $($_.Exception.Message) -ErrorAction Continue
                                 if ($retryCount -lt $maxRetries)
                                 {
                                     $retryCount++

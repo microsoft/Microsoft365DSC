@@ -114,9 +114,17 @@ This example creates a new General Device Configuration Policy for Android WorkP
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -146,7 +154,9 @@ Configuration Example
             WorkProfilePasswordRequiredType                = 'deviceDefault'
             WorkProfileRequirePassword                     = $False
             Ensure                                         = 'Present'
-            Credential                                     = $Credscredential
+            ApplicationId         = $ApplicationId;
+            TenantId              = $TenantId;
+            CertificateThumbprint = $CertificateThumbprint;
         }
     }
 }
@@ -160,9 +170,17 @@ This example creates a new General Device Configuration Policy for Android WorkP
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -192,7 +210,9 @@ Configuration Example
             WorkProfilePasswordRequiredType                = 'deviceDefault'
             WorkProfileRequirePassword                     = $False
             Ensure                                         = 'Present'
-            Credential                                     = $Credscredential
+            ApplicationId         = $ApplicationId;
+            TenantId              = $TenantId;
+            CertificateThumbprint = $CertificateThumbprint;
         }
     }
 }
@@ -206,9 +226,17 @@ This example creates a new General Device Configuration Policy for Android WorkP
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -218,7 +246,9 @@ Configuration Example
         {
             DisplayName                                    = 'Android Work Profile - Device Restrictions - Standard'
             Ensure                                         = 'Absent'
-            Credential                                     = $Credscredential
+            ApplicationId         = $ApplicationId;
+            TenantId              = $TenantId;
+            CertificateThumbprint = $CertificateThumbprint;
         }
     }
 }

@@ -10,6 +10,7 @@
 | **PolicyVersion** | Write | String | The version of the policy in use. | |
 | **ReconfirmationInDays** | Write | UInt32 | Days before the user will be asked to reconfirm their method. | |
 | **RegistrationEnforcement** | Write | MSFT_MicrosoftGraphregistrationEnforcement | Enforce registration at sign-in time. This property can be used to remind users to set up targeted authentication methods. | |
+| **ReportSuspiciousActivitySettings** | Write | MSFT_MicrosoftGraphreportSuspiciousActivitySettings | Allows users to report suspicious activities if they receive an authentication request that they did not initiate. | |
 | **SystemCredentialPreferences** | Write | MSFT_MicrosoftGraphsystemCredentialPreferences | Prompt users with their most-preferred credential for multifactor authentication. | |
 | **Id** | Write | String | The unique identifier for an entity. Read-only. | |
 | **Ensure** | Write | String | Present ensures the policy exists, absent ensures it is removed. | `Present` |
@@ -87,6 +88,16 @@
 | **IncludeTargets** | Write | MSFT_AADAuthenticationMethodPolicyIncludeTarget[] | Users and groups included in the preferred authentication method experience of the system. | |
 | **State** | Write | String | Indicates whether the feature is enabled or disabled. Possible values are: default, enabled, disabled, unknownFutureValue. The default value is used when the configuration hasn't been explicitly set, and uses the default behavior of Azure Active Directory for the setting. The default value is disabled. | `default`, `enabled`, `disabled`, `unknownFutureValue` |
 
+### MSFT_MicrosoftGraphReportSuspiciousActivitySettings
+
+#### Parameters
+
+| Parameter | Attribute | DataType | Description | Allowed Values |
+| --- | --- | --- | --- | --- |
+| **IncludeTarget** | Write | MSFT_AADAuthenticationMethodPolicyIncludeTarget | Group IDs in scope for report suspicious activity. | |
+| **State** | Write | String | Specifies the state of the reportSuspiciousActivitySettings object. | `default`, `enabled`, `disabled`, `unknownFutureValue` |
+| **VoiceReportingCode** | Write | UInt32 | Specifies the number the user enters on their phone to report the MFA prompt as suspicious. | |
+
 
 ## Description
 
@@ -128,11 +139,18 @@ It is not meant to use as a production baseline.
 ```powershell
 Configuration Example
 {
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $credsCredential
+    param(
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -158,7 +176,17 @@ Configuration Example
                     State = 'default'
                 }
             };
-            Credential           = $credsCredential;
+            ReportSuspiciousActivitySettings = MSFT_MicrosoftGraphreportSuspiciousActivitySettings{
+                VoiceReportingCode = 0
+                IncludeTarget = MSFT_AADAuthenticationMethodPolicyIncludeTarget{
+                    Id = 'all_users'
+                    TargetType = 'group'
+                }
+                State = 'default'
+            };
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
 }

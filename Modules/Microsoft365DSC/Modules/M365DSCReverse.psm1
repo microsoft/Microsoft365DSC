@@ -41,7 +41,7 @@ function Start-M365DSCConfigurationExtract
         $MaxProcesses = 16,
 
         [Parameter()]
-        [ValidateSet('AAD', 'SPO', 'EXO', 'INTUNE', 'SC', 'OD', 'O365', 'TEAMS', 'PP', 'PLANNER')]
+        [ValidateSet('AAD', 'FABRIC', 'SPO', 'DEFENDER','EXO', 'INTUNE', 'SC', 'SENTINEL', 'OD', 'O365', 'TEAMS', 'PP', 'PLANNER')]
         [System.String[]]
         $Workloads,
 
@@ -109,6 +109,11 @@ function Start-M365DSCConfigurationExtract
     try
     {
         $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
+
+        # Telemetry parameters initialization
+        $Global:M365DSCExportResourceTypes = @()
+        $Global:M365DSCExportResourceInstancesCount = 0
+
         $M365DSCExportStartTime = [System.DateTime]::Now
         $InformationPreference = 'Continue'
         $VerbosePreference = 'SilentlyContinue'
@@ -251,9 +256,9 @@ function Start-M365DSCConfigurationExtract
                 $ComponentsToSkip += $resource.InputObject
             }
 
-            Write-Host '[WARNING]' -NoNewline -ForegroundColor Yellow
-            Write-Host ' Based on the provided Authentication parameters, the following resources cannot be extracted: ' -ForegroundColor Gray
-            Write-Host "$($resourcesNotSupported -join ',')" -ForegroundColor Gray
+            $warningMessage = 'Based on the provided Authentication parameters, the following resources cannot be extracted: '
+            $warningMessage += $resourcesNotSupported -join ','
+            Write-Warning -Message $warningMessage
 
             # If all selected resources are not valid based on the authentication method used, simply return.
             if ($ComponentsToSkip.Length -eq $selectedResources.Length)
@@ -673,7 +678,7 @@ function Start-M365DSCConfigurationExtract
                         Write-Host "    `r`n$($Global:M365DSCEmojiYellowCircle) You specified a filter for resource {$resourceName} but it doesn't support filters. Filter will be ignored and all instances of the resource will be captured."
                     }
                 }
-
+                $Global:M365DSCExportResourceTypes += $resourceName
                 $exportString.Append((Export-TargetResource @parameters)) | Out-Null
                 $i++
             }
@@ -740,6 +745,8 @@ function Start-M365DSCConfigurationExtract
             -End ($M365DSCExportEndTime.ToString())
         Write-Host "$($Global:M365DSCEmojiHourglass) Export took {" -NoNewline
         Write-Host "$($timeTaken.TotalSeconds) seconds" -NoNewline -ForegroundColor Cyan
+        Write-Host '} for {' -NoNewline
+        Write-Host "$($Global:M365DSCExportResourceInstancesCount) instances" -NoNewline -ForegroundColor Magenta
         Write-Host '}'
         #endregion
 
@@ -766,12 +773,12 @@ function Start-M365DSCConfigurationExtract
             Write-Host "Results:"
             if ($results.Count -gt 0)
             {
+                $errorMessage = ''
                 foreach ($issue in $results)
                 {
-                    Write-Host "    - [" -NoNewline
-                    Write-Host "$($issue.Reason)" -ForegroundColor Red -NoNewline
-                    Write-Host "]: $($issue.InstanceName)"
+                    $errorMessage += "    - [$($issue.Reason)]: $($issue.InstanceName)`r`n"
                 }
+                Write-Error -Message $errorMessage -ErrorAction Continue
             }
             else
             {
@@ -863,6 +870,15 @@ function Start-M365DSCConfigurationExtract
         $DSCContent = $DSCContent.Replace("`r`n;`r`n", ";`r`n")
         $DSCContent.ToString() | Out-File $outputDSCFile
 
+        try
+        {
+            $Global:M365DSCExportContentSize = $DSCContent.Length
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
+
         if (!$AzureAutomation -and !$ManagedIdentity.IsPresent)
         {
             try
@@ -902,9 +918,7 @@ function Start-M365DSCConfigurationExtract
                 }
                 else
                 {
-                    Write-Host "$($Global:M365DSCEmojiYellowCircle) Warning {" -NoNewline
-                    Write-Host "Cannot export Local Configuration Manager settings. This process isn't executed with Administrative Privileges!" -NoNewline -ForegroundColor DarkCyan
-                    Write-Host '}'
+                    Write-Warning -Message "Cannot export Local Configuration Manager settings. This process isn't executed with Administrative Privileges!"
                 }
             }
             catch

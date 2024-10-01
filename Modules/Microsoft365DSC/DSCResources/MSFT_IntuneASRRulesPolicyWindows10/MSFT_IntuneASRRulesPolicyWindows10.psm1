@@ -520,11 +520,7 @@ function Set-TargetResource
         $policy = New-MgBetaDeviceManagementIntent -BodyParameter $createParameters
 
         #region Assignments
-        $assignmentsHash = @()
-        foreach ($assignment in $Assignments)
-        {
-            $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
-        }
+        $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
         if ($policy.id)
         {
             Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId  $policy.id `
@@ -557,15 +553,10 @@ function Set-TargetResource
         #Using Rest to reduce the number of calls
         $Uri = "https://graph.microsoft.com/beta/deviceManagement/intents/$($currentPolicy.Identity)/updateSettings"
         $body = @{'settings' = $settings }
-        Invoke-MgGraphRequest -Method POST -Uri $Uri -Body ($body | ConvertTo-Json -Depth 20) -ContentType 'application/json' 4> Out-Null
+        Invoke-MgGraphRequest -Method POST -Uri $Uri -Body ($body | ConvertTo-Json -Depth 20) -ContentType 'application/json' 4> $null
 
         #region Assignments
-        $assignmentsHash = @()
-        foreach ($assignment in $Assignments)
-        {
-            $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
-        }
-
+        $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
         Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId  $currentPolicy.Identity `
             -Targets $assignmentsHash `
             -Repository 'deviceManagement/intents'
@@ -864,6 +855,11 @@ function Export-TargetResource
         }
         foreach ($policy in $policies)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    |---[$i/$($policies.Count)] $($policy.DisplayName)" -NoNewline
 
             $params = @{

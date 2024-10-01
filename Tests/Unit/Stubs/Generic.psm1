@@ -356,9 +356,6 @@ function New-M365DSCConnection
     [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true)]
-        [ValidateSet('ExchangeOnline', 'Intune', `
-                'SecurityComplianceCenter', 'MSOnline', 'PnP', 'PowerPlatforms', `
-                'MicrosoftTeams', 'MicrosoftGraph', 'Tasks')]
         [System.String]
         $Workload,
 
@@ -1224,5 +1221,39 @@ function Update-MgPlannerBucket
         [Parameter()]
         [System.String]
         $BucketId
+    )
+}
+
+function Get-EOPProtectionPolicyRule
+{
+    [CmdletBinding()]
+    Param(
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $State
+    )
+}
+
+function Enable-EOPProtectionPolicyRule
+{
+    [CmdletBinding()]
+    Param(
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+
+function Disable-EOPProtectionPolicyRule
+{
+    [CmdletBinding()]
+    Param(
+        [Parameter()]
+        [System.String]
+        $Identity
     )
 }

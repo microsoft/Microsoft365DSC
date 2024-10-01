@@ -425,6 +425,11 @@ function Export-TargetResource
         {
             Write-Host "    |---[$i/$($AllAddressBookPolicies.Count)] $($AddressBookPolicy.Name)" -NoNewline
 
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             $Params = @{
                 Name                  = $AddressBookPolicy.Name
                 Credential            = $Credential

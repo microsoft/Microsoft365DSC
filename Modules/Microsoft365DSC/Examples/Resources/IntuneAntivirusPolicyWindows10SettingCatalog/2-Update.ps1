@@ -6,9 +6,17 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -28,7 +36,9 @@ Configuration Example
             excludedprocesses  = @('processes.exe', 'process3.exe') # Updated Property
             templateId         = '45fea5e9-280d-4da1-9792-fb5736da0ca9_1'
             Ensure             = 'Present'
-            Credential         = $Credscredential
+            ApplicationId         = $ApplicationId;
+            TenantId              = $TenantId;
+            CertificateThumbprint = $CertificateThumbprint;
         }
     }
 }
