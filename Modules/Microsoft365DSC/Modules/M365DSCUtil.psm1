@@ -3769,6 +3769,10 @@ function Get-M365DSCExportContentForResource
     {
         $primaryKey = $Results.OrganizationName
     }
+    elseif ($Keys.Contains('DomainName'))
+    {
+        $primaryKey = $Results.DomainName
+    }
 
     if ([String]::IsNullOrEmpty($primaryKey) -and `
         -not $Keys.Contains('IsSingleInstance'))
@@ -4187,7 +4191,7 @@ function Get-M365DSCWorkloadsListFromResourceNames
             }
             'O3'
             {
-                if (-not $workloads.Name -or -not $workloads.Name.Contains('MicrosoftGraph') -and $resource -eq 'O365Group')
+                if (-not $workloads.Name -or -not $workloads.Name.Contains('MicrosoftGraph') -and $resource.Name -eq 'O365Group')
                 {
                     $workloads += @{
                         Name                 = 'MicrosoftGraph'

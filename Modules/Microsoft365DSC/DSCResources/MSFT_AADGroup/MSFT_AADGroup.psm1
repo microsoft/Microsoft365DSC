@@ -201,7 +201,7 @@ function Get-TargetResource
             Write-Verbose -Message 'Found existing AzureAD Group'
 
             # Owners
-            [Array]$owners = Get-MgGroupOwner -GroupId $Group.Id -All:$true
+            [Array]$owners = Get-MgBetaGroupOwner -GroupId $Group.Id -All:$true
             $OwnersValues = @()
             foreach ($owner in $owners)
             {
@@ -209,13 +209,17 @@ function Get-TargetResource
                 {
                     $OwnersValues += $owner.AdditionalProperties.userPrincipalName
                 }
+                elseif($owner.AdditionalProperties.'@odata.type' -eq "#microsoft.graph.servicePrincipal")
+                {
+                    $OwnersValues += $owner.AdditionalProperties.displayName
+                }
             }
 
             $MembersValues = $null
             if ($Group.MembershipRuleProcessingState -ne 'On')
             {
                 # Members
-                [Array]$members = Get-MgGroupMember -GroupId $Group.Id -All:$true
+                [Array]$members = Get-MgBetaGroupMember -GroupId $Group.Id -All:$true
                 $MembersValues = @()
                 $GroupAsMembersValues = @()
                 foreach ($member in $members)
@@ -223,6 +227,10 @@ function Get-TargetResource
                     if ($member.AdditionalProperties.'@odata.type' -eq "#microsoft.graph.user")
                     {
                         $MembersValues += $member.AdditionalProperties.userPrincipalName
+                    }
+                    elseif ($member.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.servicePrincipal')
+                    {
+                        $MembersValues += $member.AdditionalProperties.displayName
                     }
                     elseif($member.AdditionalProperties.'@odata.type' -eq "#microsoft.graph.group")
                     {
@@ -232,7 +240,7 @@ function Get-TargetResource
             }
 
             # MemberOf
-            [Array]$memberOf = Get-MgGroupMemberOf -GroupId $Group.Id -All # result also used for/by AssignedToRole
+            [Array]$memberOf = Get-MgBetaGroupMemberOf -GroupId $Group.Id -All # result also used for/by AssignedToRole
             $MemberOfValues = @()
             # Note: only process security-groups that this group is a member of and not directory roles (if any)
             foreach ($member in ($memberOf | Where-Object -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.group' }))
@@ -616,6 +624,7 @@ function Set-TargetResource
             {
                 try
                 {
+                    Write-Verbose -Message "Setting Group Licenses"
                     Set-MgGroupLicense -GroupId $currentGroup.Id `
                         -AddLicenses $licensesToAdd `
                         -RemoveLicenses $licensesToRemove `
@@ -651,6 +660,7 @@ function Set-TargetResource
     if ($Ensure -ne 'Absent')
     {
         #Owners
+        Write-Verbose -Message "Updating Owners"
         if ($PSBoundParameters.ContainsKey('Owners'))
         {
             $currentOwnersValue = @()
@@ -670,13 +680,21 @@ function Set-TargetResource
             $ownersDiff = Compare-Object -ReferenceObject $backCurrentOwners -DifferenceObject $desiredOwnersValue
             foreach ($diff in $ownersDiff)
             {
-                $user = Get-MgUser -UserId $diff.InputObject
-
+                $directoryObject = Get-MgUser -UserId $diff.InputObject -ErrorAction SilentlyContinue
+                if ($null -eq $directoryObject)
+                {
+                    Write-Verbose -Message "Trying to retrieve Service Principal {$($diff.InputObject)}"
+                    $app = Get-MgApplication -Filter "DisplayName eq '$($diff.InputObject)'"
+                    if ($null -ne $app)
+                    {
+                        $directoryObject = Get-MgServicePrincipal -Filter "AppId eq '$($app.AppId)'"
+                    }
+                }
                 if ($diff.SideIndicator -eq '=>')
                 {
                     Write-Verbose -Message "Adding new owner {$($diff.InputObject)} to AAD Group {$($currentGroup.DisplayName)}"
                     $ownerObject = @{
-                        '@odata.id' = "https://graph.microsoft.com/v1.0/users/{$($user.Id)}"
+                        '@odata.id' = "https://graph.microsoft.com/v1.0/directoryObjects/{$($directoryObject.Id)}"
                     }
                     try
                     {
@@ -700,6 +718,7 @@ function Set-TargetResource
         }
 
         #Members
+        Write-Verbose -Message "Updating Members"
         if ($MembershipRuleProcessingState -ne 'On' -and $PSBoundParameters.ContainsKey('Members'))
         {
             $currentMembersValue = @()
@@ -716,16 +735,28 @@ function Set-TargetResource
             {
                 $backCurrentMembers = @()
             }
+            Write-Verbose -Message "Comparing current members and desired list"
             $membersDiff = Compare-Object -ReferenceObject $backCurrentMembers -DifferenceObject $desiredMembersValue
             foreach ($diff in $membersDiff)
             {
-                $user = Get-MgUser -UserId $diff.InputObject
+                Write-Verbose -Message "Found difference for member {$($diff.InputObject)}"
+                $directoryObject = Get-MgUser -UserId $diff.InputObject -ErrorAction SilentlyContinue
+
+                if ($null -eq $directoryObject)
+                {
+                    Write-Verbose -Message "Trying to retrieve Service Principal {$($diff.InputObject)}"
+                    $app = Get-MgApplication -Filter "DisplayName eq '$($diff.InputObject)'"
+                    if ($null -ne $app)
+                    {
+                        $directoryObject = Get-MgServicePrincipal -Filter "AppId eq '$($app.AppId)'"
+                    }
+                }
 
                 if ($diff.SideIndicator -eq '=>')
                 {
                     Write-Verbose -Message "Adding new member {$($diff.InputObject)} to AAD Group {$($currentGroup.DisplayName)}"
                     $memberObject = @{
-                        '@odata.id' = "https://graph.microsoft.com/v1.0/users/{$($user.Id)}"
+                        '@odata.id' = "https://graph.microsoft.com/v1.0/directoryObjects/{$($directoryObject.Id)}"
                     }
                     New-MgGroupMemberByRef -GroupId ($currentGroup.Id) -BodyParameter $memberObject | Out-Null
                 }
@@ -733,9 +764,9 @@ function Set-TargetResource
                 {
                     Write-Verbose -Message "Removing new member {$($diff.InputObject)} to AAD Group {$($currentGroup.DisplayName)}"
                     $memberObject = @{
-                        '@odata.id' = "https://graph.microsoft.com/v1.0/users/{$($user.Id)}"
+                        '@odata.id' = "https://graph.microsoft.com/v1.0/directoryObjects/{$($directoryObject.Id)}"
                     }
-                    Remove-MgGroupMemberDirectoryObjectByRef -GroupId ($currentGroup.Id) -DirectoryObjectId ($user.Id) | Out-Null
+                    Remove-MgGroupMemberDirectoryObjectByRef -GroupId ($currentGroup.Id) -DirectoryObjectId ($directoryObject.Id) | Out-Null
                 }
             }
         }
@@ -745,6 +776,7 @@ function Set-TargetResource
         }
 
         #GroupAsMembers
+        Write-Verbose -Message "Updating GroupAsMembers"
         if ($MembershipRuleProcessingState -ne 'On' -and $PSBoundParameters.ContainsKey('GroupAsMembers'))
         {
             $currentGroupAsMembersValue = @()
@@ -766,7 +798,7 @@ function Set-TargetResource
             {
                 try
                 {
-                    $groupAsMember = Get-MgGroup -Filter "DisplayName eq '$($diff.InputObject)'" -ErrorAction Stop
+                    $groupAsMember = Get-MgGroup -Filter "DisplayName eq '$($diff.InputObject)'" -ErrorAction SilentlyContinue
                 }
                 catch
                 {
@@ -784,18 +816,19 @@ function Set-TargetResource
                         $groupAsMemberObject = @{
                             "@odata.id"= "https://graph.microsoft.com/v1.0/directoryObjects/$($groupAsMember.Id)"
                         }
-                        New-MgGroupMemberByRef -GroupId ($currentGroup.Id) -Body $groupAsMemberObject | Out-Null
+                        New-MgBetaGroupMemberByRef -GroupId ($currentGroup.Id) -Body $groupAsMemberObject | Out-Null
                     }
                     if ($diff.SideIndicator -eq '<=')
                     {
                         Write-Verbose -Message "Removing AAD Group {$($groupAsMember.DisplayName)} from AAD group {$($currentGroup.DisplayName)}"
-                        Remove-MgGroupMemberDirectoryObjectByRef -GroupId ($currentGroup.Id) -DirectoryObjectId ($groupAsMember.Id) | Out-Null
+                        Remove-MgBetaGroupMemberDirectoryObjectByRef -GroupId ($currentGroup.Id) -DirectoryObjectId ($groupAsMember.Id) | Out-Null
                     }
                 }
             }
         }
 
         #MemberOf
+        Write-Verbose -Message "Updating MemberOf"
         if ($PSBoundParameters.ContainsKey('MemberOf'))
         {
             $currentMemberOfValue = @()
@@ -1050,55 +1083,77 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     # Check Licenses
-    if (-not ($AssignedLicenses -eq $null -and $CurrentValues.AssignedLicenses -eq $null))
+    if (-not ($null -eq $AssignedLicenses -and $null -eq $CurrentValues.AssignedLicenses))
     {
         try
         {
-            $licensesDiff = Compare-Object -ReferenceObject ($CurrentValues.AssignedLicenses.SkuId) -DifferenceObject ($AssignedLicenses.SkuId)
-            if ($null -ne $licensesDiff)
+            if ($null -ne $CurrentValues.AssignedLicenses -and $CurrentValues.AssignedLicenses.Length -gt 0 -and `
+                $null -eq $AssignedLicenses)
             {
-                Write-Verbose -Message "AssignedLicenses differ: $($licensesDiff | Out-String)"
+                Write-Verbose -Message "The group currently has licenses assigned but it shouldn't"
                 Write-Verbose -Message "Test-TargetResource returned $false"
-                $EventMessage = "Assigned Licenses for Azure AD Group {$DisplayName} were not in the desired state.`r`n" + `
-                    "They should contain {$($AssignedLicenses.SkuId)} but instead contained {$($CurrentValues.AssignedLicenses.SkuId)}"
+                $EventMessage = "Assigned Licenses for Azure AD Group {$DisplayName} were not in the desired state.`r`nThe group should not have any licenses assigned but instead contained {$($CurrentValues.AssignedLicenses.SkuId)}"
                 Add-M365DSCEvent -Message $EventMessage -EntryType 'Warning' `
                     -EventID 1 -Source $($MyInvocation.MyCommand.Source)
 
                 return $false
             }
-            else
+            elseif ($null -eq $CurrentValues.AssignedLicenses -and $null -ne $AssignedLicenses -and `
+                    $AssignedLicenses.Length -gt 0)
             {
-                Write-Verbose -Message 'AssignedLicenses for Azure AD Group are the same'
-            }
-        }
-        catch
-        {
-            Write-Verbose -Message "Test-TargetResource returned $false"
-            return $false
-        }
-
-        #Check DisabledPlans
-        try
-        {
-            $licensesDiff = Compare-Object -ReferenceObject ($CurrentValues.AssignedLicenses.DisabledPlans) -DifferenceObject ($AssignedLicenses.DisabledPlans)
-            if ($null -ne $licensesDiff)
-            {
-                Write-Verbose -Message "DisabledPlans differ: $($licensesDiff | Out-String)"
+                Write-Verbose -Message "The group currently doesn't have licenses assigned but it should"
                 Write-Verbose -Message "Test-TargetResource returned $false"
-                $EventMessage = "Disabled Plans for Azure AD Group Licenses {$DisplayName} were not in the desired state.`r`n" + `
-                    "They should contain {$($AssignedLicenses.DisabledPlans)} but instead contained {$($CurrentValues.AssignedLicenses.DisabledPlans)}"
+                $EventMessage = "Assigned Licenses for Azure AD Group {$DisplayName} were not in the desired state.`r`nThe group doesn't not have any licenses assigned but should have {$($CurrentValues.AssignedLicenses.SkuId)}"
                 Add-M365DSCEvent -Message $EventMessage -EntryType 'Warning' `
                     -EventID 1 -Source $($MyInvocation.MyCommand.Source)
 
                 return $false
             }
+            elseif ($CurrentValues.AssignedLicenses.Length -gt 0 -and $AssignedLicenses.Length -gt 0)
+            {
+                Write-Verbose -Message "Current assigned licenses and desired assigned licenses are not null"
+                $licensesDiff = Compare-Object -ReferenceObject ($CurrentValues.AssignedLicenses.SkuId) -DifferenceObject ($AssignedLicenses.SkuId)
+                if ($null -ne $licensesDiff)
+                {
+                    Write-Verbose -Message "AssignedLicenses differ: $($licensesDiff | Out-String)"
+                    Write-Verbose -Message "Test-TargetResource returned $false"
+                    $EventMessage = "Assigned Licenses for Azure AD Group {$DisplayName} were not in the desired state.`r`nThey should contain {$($AssignedLicenses.SkuId)} but instead contained {$($CurrentValues.AssignedLicenses.SkuId)}"
+                    Add-M365DSCEvent -Message $EventMessage -EntryType 'Warning' `
+                        -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+
+                    return $false
+                }
+                else
+                {
+                    Write-Verbose -Message 'AssignedLicenses for Azure AD Group are the same'
+                }
+
+                # Disabled Plans
+                $licensesDiff = Compare-Object -ReferenceObject ($CurrentValues.AssignedLicenses.DisabledPlans) -DifferenceObject ($AssignedLicenses.DisabledPlans)
+                if ($null -ne $licensesDiff)
+                {
+                    Write-Verbose -Message "DisabledPlans differ: $($licensesDiff | Out-String)"
+                    Write-Verbose -Message "Test-TargetResource returned $false"
+                    $EventMessage = "Disabled Plans for Azure AD Group Licenses {$DisplayName} were not in the desired state.`r`n" + `
+                        "They should contain {$($AssignedLicenses.DisabledPlans)} but instead contained {$($CurrentValues.AssignedLicenses.DisabledPlans)}"
+                    Add-M365DSCEvent -Message $EventMessage -EntryType 'Warning' `
+                        -EventID 1 -Source $($MyInvocation.MyCommand.Source)
+
+                    return $false
+                }
+                else
+                {
+                    Write-Verbose -Message 'DisabledPlans for Azure AD Group Licensing are the same'
+                }
+            }
             else
             {
-                Write-Verbose -Message 'DisabledPlans for Azure AD Group Licensing are the same'
+                Write-Verbose -Message "Both the current and desired assigned licenses lists are empty."
             }
         }
         catch
         {
+            Write-Verbose -Message "Error evaluating the AssignedLicenses: $_"
             Write-Verbose -Message "Test-TargetResource returned $false"
             return $false
         }

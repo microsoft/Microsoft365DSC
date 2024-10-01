@@ -149,6 +149,14 @@
                             State = 'default'
                         }
                     };
+                    ReportSuspiciousActivitySettings = MSFT_MicrosoftGraphreportSuspiciousActivitySettings{
+                        VoiceReportingCode = 0
+                        IncludeTarget = MSFT_AADAuthenticationMethodPolicyIncludeTarget{
+                            Id = 'all_users'
+                            TargetType = 'group'
+                        }
+                        State = 'default'
+                    };
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
@@ -259,6 +267,31 @@
                         AaGuids = @()
                     };
                     State                            = "enabled"; # Updated Property
+                }
+                AADAuthenticationMethodPolicyHardware 'AADAuthenticationMethodPolicyHardware-HardwareOath'
+                {
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
+                    Ensure               = "Present";
+                    ExcludeTargets       = @(
+                        MSFT_AADAuthenticationMethodPolicyHardwareExcludeTarget{
+                            Id = 'Executives'
+                            TargetType = 'group'
+                        }
+                        MSFT_AADAuthenticationMethodPolicyHardwareExcludeTarget{
+                            Id = 'Paralegals'
+                            TargetType = 'group'
+                        }
+                    );
+                    Id                   = "HardwareOath";
+                    IncludeTargets       = @(
+                        MSFT_AADAuthenticationMethodPolicyHardwareIncludeTarget{
+                            Id = 'Legal Team'
+                            TargetType = 'group'
+                        }
+                    );
+                    State                = "enabled"; # Updated Property
                 }
                 AADAuthenticationMethodPolicySms 'AADAuthenticationMethodPolicySms-Sms'
                 {
@@ -646,6 +679,15 @@
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                 }
+                AADEntitlementManagementSettings 'AADEntitlementManagementSettings'
+                {
+                    ApplicationId                            = $ApplicationId;
+                    CertificateThumbprint                    = $CertificateThumbprint;
+                    DaysUntilExternalUserDeletedAfterBlocked = 30;
+                    ExternalUserLifecycleAction              = "blockSignInAndDelete";
+                    IsSingleInstance                         = "Yes";
+                    TenantId                                 = $TenantId;
+                }
                 AADExternalIdentityPolicy 'AADExternalIdentityPolicy'
                 {
                     AllowDeletedIdentitiesDataRemoval = $False;
@@ -654,6 +696,17 @@
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                     IsSingleInstance                  = "Yes";
+                }
+                AADFeatureRolloutPolicy 'AADFeatureRolloutPolicy-CertificateBasedAuthentication rollout policy'
+                {
+                    ApplicationId           = $ApplicationId
+                    TenantId                = $TenantId
+                    CertificateThumbprint   = $CertificateThumbprint
+                    Description             = "CertificateBasedAuthentication rollout policy";
+                    DisplayName             = "CertificateBasedAuthentication rollout policy";
+                    Ensure                  = "Present";
+                    IsAppliedToOrganization = $False;
+                    IsEnabled               = $False;
                 }
                 AADGroup 'MyGroups'
                 {
