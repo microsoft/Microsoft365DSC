@@ -70,12 +70,15 @@ function Get-TargetResource
 
     try
     {
+        $instance = null
         if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
         {
             $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.Id -eq $Id}
         }
-        else {
-            $instance = Get-MgBetaDeviceAppManagementMobileAppCategory -MobileAppCategoryId $Id -ErrorAction Stop
+
+        if ($null -eq $instance)
+        {
+          $instance = Get-MgBetaDeviceAppManagementMobileAppCategory -MobileAppCategoryId $Id -ErrorAction Stop
 
           if ($null -eq $instance)
           {

@@ -1,5 +1,5 @@
 
-# IntuneAppCategories
+# IntuneAppCategory
 
 ## Description
 

@@ -54,13 +54,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         #Test contexts
 
-        Context -Name "The instance should exist but it DOES NOT" -Fixture {
+        Context -Name '1. The instance should exist but it DOES NOT' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Id                  = "f1fc9fe2-728d-4867-9a72-a61e18f8c606";
-                    DisplayName         = "Books & Reference";
+                    Id                  = 'f1fc9fe2-728d-4867-9a72-a61e18f8c606'
+                    DisplayName         = 'Books & Reference'
                     Ensure              = 'Present'
-                    Credential          = $Credential;
+                    Credential          = $Credential
                 }
 
                 Mock -CommandName Get-MgBetaDeviceAppManagementMobileAppCategory -MockWith {
@@ -68,117 +68,119 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            It 'Should return Values from the Get method' {
+            It '1.1 Should return Values from the Get method' {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Absent'
             }
-            It 'Should return false from the Test method' {
+            It '1.2 Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
-            It 'Should create a new instance from the Set method' {
+            It '1.3 Should create a new instance from the Set method' {
                 Set-TargetResource @testParams
                 Should -Invoke -CommandName New-MgBetaDeviceAppManagementMobileAppCategory -Exactly 1
             }
         }
 
-        Context -Name "The instance exists but it SHOULD NOT" -Fixture {
+        Context -Name '2. The instance exists but it SHOULD NOT' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Id                  = "f1fc9fe2-728d-4867-9a72-a61e18f8c606";
-                    DisplayName         = "Books & Reference";
-                    Ensure              = 'Absent'
-                    Credential          = $Credential;
+                    Id                  = 'f1fc9fe2-728d-4867-9a72-a61e18f8c606'
+                    DisplayName         = 'Books & Reference'
+                    Ensure              = 'Present'
+                    Credential          = $Credential
                 }
 
                 Mock -CommandName Get-MgBetaDeviceAppManagementMobileAppCategory -MockWith {
                     return @{
-                        Id                  = "f1fc9fe2-728d-4867-9a72-a61e18f8c606";
-                        DisplayName         = "Books & Reference";
+                        Id                  = 'f1fc9fe2-728d-4867-9a72-a61e18f8c606'
+                        DisplayName         = 'Books & Reference'
                     }
                 }
             }
 
-            It 'Should return Values from the Get method' {
+            It '2.1 Should return values from the Get method' {
+
+                $kjl = $testParams
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
-            It 'Should return false from the Test method' {
+            It '2.2 Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
-            It 'Should remove the instance from the Set method' {
+            It '2.3 Should remove the instance from the Set method' {
                 Set-TargetResource @testParams
                 Should -Invoke -CommandName Remove-MgBetaDeviceAppManagementMobileAppCategory -Exactly 1
             }
         }
 
-        Context -Name "The instance exists and values are already in the desired state" -Fixture {
+        Context -Name '3. The instance exists and values are already in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Id                  = "f1fc9fe2-728d-4867-9a72-a61e18f8c606";
-                    DisplayName         = "Books & Reference";
+                    Id                  = 'f1fc9fe2-728d-4867-9a72-a61e18f8c606'
+                    DisplayName         = 'Books & Reference'
                     Ensure              = 'Present'
-                    Credential          = $Credential;
+                    Credential          = $Credential
                 }
 
                 Mock -CommandName Get-MgBetaDeviceAppManagementMobileAppCategory -MockWith {
                     return @{
-                        Id                  = "f1fc9fe2-728d-4867-9a72-a61e18f8c606";
-                        DisplayName         = "Books & Reference";
+                        Id                  = 'f1fc9fe2-728d-4867-9a72-a61e18f8c606'
+                        DisplayName         = 'Books & Reference'
                     }
                 }
             }
 
-            It 'Should return true from the Test method' {
+            It '3.0 Should return true from the Test method' {
                 Test-TargetResource @testParams | Should -Be $true
             }
         }
 
-        Context -Name "The instance exists and values are NOT in the desired state" -Fixture {
+        Context -Name '4. The instance exists and values are NOT in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Id                  = "f1fc9fe2-728d-4867-9a72-a61e18f8c606";
-                    DisplayName         = "Books & Reference";
+                    Id                  = "f1fc9fe2-728d-4867-9a72-a61e18f8c606"
+                    DisplayName         = "Books & Reference"
                     Ensure              = 'Present'
-                    Credential          = $Credential;
+                    Credential          = $Credential
                 }
 
                 Mock -CommandName Get-MgBetaDeviceAppManagementMobileAppCategory -MockWith {
                     return @{
-                        Id                  = "f1fc9fe2-728d-4867-9a72-a61e18f8c606";
-                        DisplayName         = "Books & Reference";
+                        Id                  = "f1fc9fe2-728d-4867-9a72-a61e18f8c606"
+                        DisplayName         = "Books & Reference"
                     }
                 }
             }
 
-            It 'Should return Values from the Get method' {
+            It '4.1 Should return Values from the Get method' {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It 'Should return false from the Test method' {
+            It '4.2 Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 
-            It 'Should call the Set method' {
+            It '4.3 Should call the Set method' {
                 Set-TargetResource @testParams
                 Should -Invoke -CommandName Update-MgBetaDeviceAppManagementMobileAppCategory -Exactly 1
             }
         }
 
-        Context -Name 'ReverseDSC Tests' -Fixture {
+        Context -Name '5. ReverseDSC Tests' -Fixture {
             BeforeAll {
                 $Global:CurrentModeIsExport = $true
                 $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
-                    Credential  = $Credential;
+                    Credential  = $Credential
                 }
 
                 Mock -CommandName Get-MgBetaDeviceAppManagementMobileAppCategory -MockWith {
                     return @{
-                        Id                  = "f1fc9fe2-728d-4867-9a72-a61e18f8c606";
-                        DisplayName         = "Custom Books & Reference sample category";
+                        Id                  = "f1fc9fe2-728d-4867-9a72-a61e18f8c606"
+                        DisplayName         = "Books & Reference"
                     }
                 }
             }
 
-            It 'Should Reverse Engineer resource from the Export method' {
+            It '5.1 Should Reverse Engineer resource from the Export method' {
                 $result = Export-TargetResource @testParams
                 $result | Should -Not -BeNullOrEmpty
             }
