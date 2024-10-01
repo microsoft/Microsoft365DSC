@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* IntuneAppCategory
+  * Initial release.
 * AADEntitlementManagementSettings
   * Initial release.
 * AADPasswordRuleSettings

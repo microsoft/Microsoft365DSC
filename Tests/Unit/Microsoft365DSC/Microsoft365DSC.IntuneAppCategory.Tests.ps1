@@ -57,8 +57,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name '1. The instance should exist but it DOES NOT' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Id                  = 'f1fc9fe2-728d-4867-9a72-a61e18f8c606'
-                    DisplayName         = 'Books & Reference'
+                    Id                  = '046e0b16-76ce-4b49-bf1b-1cc5bd94fb47'
+                    DisplayName         = 'Data Management'
                     Ensure              = 'Present'
                     Credential          = $Credential
                 }
@@ -83,16 +83,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name '2. The instance exists but it SHOULD NOT' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Id                  = 'f1fc9fe2-728d-4867-9a72-a61e18f8c606'
-                    DisplayName         = 'Books & Reference'
+                    Id                  = '046e0b16-76ce-4b49-bf1b-1cc5bd94fb47'
+                    DisplayName         = 'Data Management'
                     Ensure              = 'Present'
                     Credential          = $Credential
                 }
 
                 Mock -CommandName Get-MgBetaDeviceAppManagementMobileAppCategory -MockWith {
                     return @{
-                        Id                  = 'f1fc9fe2-728d-4867-9a72-a61e18f8c606'
-                        DisplayName         = 'Books & Reference'
+                        Id                  = '046e0b16-76ce-4b49-bf1b-1cc5bd94fb47'
+                        DisplayName         = 'Data Management'
                     }
                 }
             }
@@ -114,16 +114,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name '3. The instance exists and values are already in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Id                  = 'f1fc9fe2-728d-4867-9a72-a61e18f8c606'
-                    DisplayName         = 'Books & Reference'
+                    Id                  = '046e0b16-76ce-4b49-bf1b-1cc5bd94fb47'
+                    DisplayName         = 'Data Management'
                     Ensure              = 'Present'
                     Credential          = $Credential
                 }
 
                 Mock -CommandName Get-MgBetaDeviceAppManagementMobileAppCategory -MockWith {
                     return @{
-                        Id                  = 'f1fc9fe2-728d-4867-9a72-a61e18f8c606'
-                        DisplayName         = 'Books & Reference'
+                        Id                  = '046e0b16-76ce-4b49-bf1b-1cc5bd94fb47'
+                        DisplayName         = 'Data Management'
                     }
                 }
             }
@@ -136,16 +136,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name '4. The instance exists and values are NOT in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Id                  = "f1fc9fe2-728d-4867-9a72-a61e18f8c606"
-                    DisplayName         = "Books & Reference"
+                    Id                  = "046e0b16-76ce-4b49-bf1b-1cc5bd94fb47"
+                    DisplayName         = "Data Management"
                     Ensure              = 'Present'
                     Credential          = $Credential
                 }
 
                 Mock -CommandName Get-MgBetaDeviceAppManagementMobileAppCategory -MockWith {
                     return @{
-                        Id                  = "f1fc9fe2-728d-4867-9a72-a61e18f8c606"
-                        DisplayName         = "Books & Reference"
+                        Id                  = "046e0b16-76ce-4b49-bf1b-1cc5bd94fb47"
+                        DisplayName         = "Data Management"
                     }
                 }
             }
@@ -174,8 +174,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-MgBetaDeviceAppManagementMobileAppCategory -MockWith {
                     return @{
-                        Id                  = "f1fc9fe2-728d-4867-9a72-a61e18f8c606"
-                        DisplayName         = "Books & Reference"
+                        Id                  = "046e0b16-76ce-4b49-bf1b-1cc5bd94fb47"
+                        DisplayName         = "Data Management"
                     }
                 }
             }

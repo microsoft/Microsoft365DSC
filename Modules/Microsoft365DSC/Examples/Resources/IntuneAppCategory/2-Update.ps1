@@ -23,7 +23,7 @@ Configuration Example
     node localhost
     {
         Id                   = "a1fc9fe2-728d-4867-9a72-a61e18f8c606";
-        DisplayName          = "Custom Books & Reference updated";
+        DisplayName          = "Custom Data Management updated";
         Ensure               = "Present";
     }
 }
