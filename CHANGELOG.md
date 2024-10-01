@@ -69,6 +69,8 @@
   * Update export logic to target more specific policy types.
   * Prevent thrown exception to be caught by exception handler.
     FIXES [#5088](https://github.com/microsoft/Microsoft365DSC/issues/5088)
+* O365ExternalConnection
+  * Initial release.
 * SCDeviceConditionalAccessRule
   * Initial release.
 * SCDeviceConfigurationRule

@@ -121,7 +121,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     AuthorizedAppIds    = @("MyApp");
                     Description         = "Connection to index Contoso HR system";
-                    Ensure              = "Absent";
+                    Ensure              = "Present";
                     Id                  = "contosohr";
                     Name                = "Contoso HR";
                     Credential          = $Credential;
@@ -189,7 +189,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential  = $Credential;
                 }
 
-                Mock -CommandName Get-Cmdlet -MockWith {
+                Mock -CommandName Get-MgBetaExternalConnection -MockWith {
                     return @{
                         Name = 'Contoso Hr'
                         Id   = "contosohr"
