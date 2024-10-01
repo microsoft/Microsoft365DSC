@@ -4,12 +4,21 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        ##TODO - Replace the PrimaryKey
         [Parameter(Mandatory = $true)]
         [System.String]
-        $PrimaryKey,
+        $Name,
 
-        ##TODO - Add the list of Parameters
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String[]]
+        $authorizedAppIds,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -41,8 +50,7 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    ##TODO - Replace the workload by the one associated to your resource
-    New-M365DSCConnection -Workload 'Workload' `
+    New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters | Out-Null
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -63,13 +71,26 @@ function Get-TargetResource
     {
         if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
         {
-            ##TODO - Replace the PrimaryKey in the Filter by the one for the resource
-            $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.PrimaryKey -eq $PrimaryKey}
+            if (-not [System.String]::IsNullOrEmpty($Id))
+            {
+                $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.Id -eq $Id}
+            }
+
+            if ($null -eq $instance)
+            {
+                $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.Name -eq $Name}
+            }
         }
         else
         {
-            ##TODO - Replace the cmdlet by the one to retrieve a specific instance.
-            $instance = Get-cmdlet -PrimaryKey $PrimaryKey -ErrorAction Stop
+            if (-not [System.String]::IsNullOrEmpty($Id))
+            {
+                $instance = Get-MgBetaExternalConnection -ExternalConnectionId $Id -ErrorAction SilentlyContinue
+            }
+            if ($null -eq $instance)
+            {
+                $instance = Get-MgBetaExternalConnection -Filter "Name eq '$Name'"
+            }
         }
         if ($null -eq $instance)
         {
@@ -77,7 +98,10 @@ function Get-TargetResource
         }
 
         $results = @{
-            ##TODO - Add the list of parameters to be returned
+            Name                  = $instance.Name
+            Id                    = $instance.id
+            Description           = $instance.Description
+            AuthorizedAppIds      = [Array] $instance.authorizedAppIds
             Ensure                = 'Present'
             Credential            = $Credential
             ApplicationId         = $ApplicationId
@@ -106,12 +130,21 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
-        ##TODO - Replace the PrimaryKey
         [Parameter(Mandatory = $true)]
         [System.String]
-        $PrimaryKey,
+        $Name,
 
-        ##TODO - Add the list of Parameters
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String[]]
+        $authorizedAppIds,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -185,12 +218,21 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
-        ##TODO - Replace the PrimaryKey
         [Parameter(Mandatory = $true)]
         [System.String]
-        $PrimaryKey,
+        $Name,
 
-        ##TODO - Add the list of Parameters
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String[]]
+        $authorizedAppIds,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -285,8 +327,7 @@ function Export-TargetResource
         $AccessTokens
     )
 
-    ##TODO - Replace workload
-    $ConnectionMode = New-M365DSCConnection -Workload 'Workload' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -304,8 +345,7 @@ function Export-TargetResource
     try
     {
         $Script:ExportMode = $true
-        ##TODO - Replace Get-Cmdlet by the cmdlet to retrieve all instances
-        [array] $Script:exportedInstances = Get-Cmdlet -ErrorAction Stop
+        [array] $Script:exportedInstances = Get-MgBetaExternalConnection-ErrorAction Stop
 
         $i = 1
         $dscContent = ''
@@ -323,12 +363,11 @@ function Export-TargetResource
             {
                 $Global:M365DSCExportResourceInstancesCount++
             }
-
             $displayedKey = $config.Id
             Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -NoNewline
             $params = @{
-                ##TODO - Specify the Primary Key
-                #PrimaryKey            = $config.PrimaryKey
+                Name                  = $config.Name
+                Id                    = $config.Id
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
