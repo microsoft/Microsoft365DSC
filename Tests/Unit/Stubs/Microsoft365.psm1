@@ -71577,6 +71577,31 @@ function Get-DlpComplianceRule
         $IncludeExecutionRuleGuids
     )
 }
+function Get-DlpSensitiveInformationType
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $IncludeElements,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IncludeDetails,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $Organization,
+
+        [Parameter()]
+        [System.Object]
+        $Capability
+    )
+}
 function Get-FilePlanPropertyAuthority
 {
     [CmdletBinding()]
