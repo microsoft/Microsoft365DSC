@@ -16,7 +16,7 @@ class MSFT_MicrosoftGraphOmaSetting
     [Write, Description("Indicates whether the value field is encrypted. This property is read-only.")] Boolean IsEncrypted;
     [Write, Description("OMA.")] String OmaUri;
     [Write, Description("ReferenceId for looking up secret for decryption. This property is read-only.")] String SecretReferenceValueId;
-    [Write, Description("File name associated with the Value property (.cer")] String FileName;
+    [Write, Description("File name associated with the Value property (.cer)")] String FileName;
     [Write, Description("Value. (Base64 encoded string)")] String Value;
     [Write, Description("By setting to true, the CSP (configuration service provider) specified in the OMA-URI will perform a get, instead of set")] Boolean IsReadOnly;
     [Write, Description("The type of the entity."), ValueMap{"#microsoft.graph.omaSettingBase64","#microsoft.graph.omaSettingBoolean","#microsoft.graph.omaSettingDateTime","#microsoft.graph.omaSettingFloatingPoint","#microsoft.graph.omaSettingInteger","#microsoft.graph.omaSettingString","#microsoft.graph.omaSettingStringXml"}, Values{"#microsoft.graph.omaSettingBase64","#microsoft.graph.omaSettingBoolean","#microsoft.graph.omaSettingDateTime","#microsoft.graph.omaSettingFloatingPoint","#microsoft.graph.omaSettingInteger","#microsoft.graph.omaSettingString","#microsoft.graph.omaSettingStringXml"}] String odataType;

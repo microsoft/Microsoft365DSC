@@ -23,7 +23,9 @@ class MSFT_IntuneWindowsUpdateForBusinessFeatureUpdateProfileWindows10 : OMI_Bas
     [Key, Description("The display name of the profile.")] String DisplayName;
     [Write, Description("The description of the profile which is specified by the user.")] String Description;
     [Write, Description("The feature update version that will be deployed to the devices targeted by this profile. The version could be any supported version for example 1709, 1803 or 1809 and so on.")] String FeatureUpdateVersion;
-    [Write, Description("The windows update rollout settings, including offer start date time, offer end date time, and days between each set of offers."), EmbeddedInstance("MSFT_MicrosoftGraphwindowsUpdateRolloutSettings")] String RolloutSettings;
+    [Write, Description("If true, the Windows 11 update will become optional")] Boolean InstallFeatureUpdatesOptional;
+    [Write, Description("If true, the latest Microsoft Windows 10 update will be installed on devices ineligible for Microsoft Windows 11. Cannot be changed after creation of the policy.")] Boolean InstallLatestWindows10OnWindows11IneligibleDevice;
+    [Write, Description("The windows update rollout settings, including offer start date time, offer end date time, and days between each set of offers. For 'as soon as possible' installation, set this setting to $null or do not configure it."), EmbeddedInstance("MSFT_MicrosoftGraphwindowsUpdateRolloutSettings")] String RolloutSettings;
     [Write, Description("Represents the assignment to the Intune policy."), EmbeddedInstance("MSFT_DeviceManagementConfigurationPolicyAssignments")] String Assignments[];
     [Write, Description("Present ensures the policy exists, absent ensures it is removed."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] string Ensure;
     [Write, Description("Credentials of the Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;

@@ -120,7 +120,7 @@ function Get-TargetResource
 
         if ($null -eq $getValue -and -not [string]::IsNullOrEmpty($DisplayName))
         {
-            Write-Verbose -Message "Could not find an Azure AD Administrative Unit with Id {$Id}"
+            Write-Verbose -Message "Could not find an Azure AD Administrative Unit by Id, trying by DisplayName {$DisplayName}"
             if (-Not [string]::IsNullOrEmpty($DisplayName))
             {
                 if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
@@ -158,17 +158,17 @@ function Get-TargetResource
             #endregion
         }
 
-        if (-not [string]::IsNullOrEmpty($getValue.AdditionalProperties.membershipType))
+        if (-not [string]::IsNullOrEmpty($getValue.membershipType))
         {
-            $results.Add('MembershipType', $getValue.AdditionalProperties.membershipType)
+            $results.Add('MembershipType', $getValue.membershipType)
         }
-        if (-not [string]::IsNullOrEmpty($getValue.AdditionalProperties.membershipRule))
+        if (-not [string]::IsNullOrEmpty($getValue.membershipRule))
         {
-            $results.Add('MembershipRule', $getValue.AdditionalProperties.membershipRule)
+            $results.Add('MembershipRule', $getValue.membershipRule)
         }
-        if (-not [string]::IsNullOrEmpty($getValue.AdditionalProperties.membershipRuleProcessingState))
+        if (-not [string]::IsNullOrEmpty($getValue.membershipRuleProcessingState))
         {
-            $results.Add('MembershipRuleProcessingState', $getValue.AdditionalProperties.membershipRuleProcessingState)
+            $results.Add('MembershipRuleProcessingState', $getValue.membershipRuleProcessingState)
         }
 
         Write-Verbose -Message "AU {$DisplayName} MembershipType {$($results.MembershipType)}"

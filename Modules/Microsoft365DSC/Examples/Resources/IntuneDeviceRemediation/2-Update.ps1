@@ -5,9 +5,17 @@ This example updates a new Device Remediation.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -32,7 +40,6 @@ Configuration Example
                     }
                 }
             );
-            Credential               = $Credscredential
             Description              = 'Description'
             DetectionScriptContent   = "Base64 encoded script content 2"; # Updated property
             DeviceHealthScriptType   = "deviceHealthScript";
@@ -45,7 +52,9 @@ Configuration Example
             RoleScopeTagIds          = @("0");
             RunAs32Bit               = $True;
             RunAsAccount             = "system";
-            TenantId                 = $OrganizationName;
+            ApplicationId         = $ApplicationId;
+            TenantId              = $TenantId;
+            CertificateThumbprint = $CertificateThumbprint;
         }
     }
 }

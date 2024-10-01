@@ -129,9 +129,17 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -139,7 +147,6 @@ Configuration Example
     {
         IntuneDeviceConfigurationAdministrativeTemplatePolicyWindows10 'Example'
         {
-            Credential                       = $Credscredential
             Assignments                      = @(
                 MSFT_DeviceManagementConfigurationPolicyAssignments
                 {
@@ -261,6 +268,9 @@ Configuration Example
             DisplayName                      = 'admin template'
             Ensure                           = 'Present'
             PolicyConfigurationIngestionType = 'unknown'
+            ApplicationId         = $ApplicationId;
+            TenantId              = $TenantId;
+            CertificateThumbprint = $CertificateThumbprint;
         }
     }
 }
@@ -275,9 +285,17 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -285,7 +303,6 @@ Configuration Example
     {
         IntuneDeviceConfigurationAdministrativeTemplatePolicyWindows10 'Example'
         {
-            Credential                       = $Credscredential
             Assignments                      = @(
                 MSFT_DeviceManagementConfigurationPolicyAssignments
                 {
@@ -407,6 +424,9 @@ Configuration Example
             DisplayName                      = 'admin template'
             Ensure                           = 'Present'
             PolicyConfigurationIngestionType = 'builtIn' # Updated Property
+            ApplicationId         = $ApplicationId;
+            TenantId              = $TenantId;
+            CertificateThumbprint = $CertificateThumbprint;
         }
     }
 }
@@ -421,9 +441,17 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -431,9 +459,11 @@ Configuration Example
     {
         IntuneDeviceConfigurationAdministrativeTemplatePolicyWindows10 'Example'
         {
-            Credential                       = $Credscredential
             DisplayName                      = 'admin template'
             Ensure                           = 'Absent'
+            ApplicationId         = $ApplicationId;
+            TenantId              = $TenantId;
+            CertificateThumbprint = $CertificateThumbprint;
         }
     }
 }

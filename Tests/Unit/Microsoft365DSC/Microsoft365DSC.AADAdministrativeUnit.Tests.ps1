@@ -236,11 +236,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         DisplayName          = 'DSCAU'
                         Id                   = 'DSCAU'
                         Visibility           = 'Public'
-                        AdditionalProperties = @{
-                            membershipType                = 'Assigned'
-                            membershipRule                = 'Canada'
-                            membershipRuleProcessingState = 'On'
-                        }
+                        MembershipType                = 'Assigned'
+                        MembershipRule                = 'Canada'
+                        MembershipRuleProcessingState = 'On'
                     }
                 }
 
@@ -303,9 +301,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Description          = 'DSCAU Old Description'
                         DisplayName          = 'DSCAU'
                         Id                   = 'DSCAU'
-                        AdditionalProperties = @{
-                            membershipType                = 'Assigned'
-                        }
+                        MembershipType       = 'Assigned'
                     }
                 }
 

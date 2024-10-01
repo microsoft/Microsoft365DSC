@@ -1,0 +1,24 @@
+﻿{
+    "resourceName": "EXOSweepRule",
+    "description": "DUse this resource to create Sweep rules in mailboxes. Sweep rules run at regular intervals to help keep your Inbox clean.",
+    "roles": {
+        "read": [
+            "Exchange Admin"
+        ],
+        "update": [
+            "Exchange Admin"
+        ]
+    },
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [],
+                "update": []
+            },
+            "application": {
+                "read": [],
+                "update": []
+            }
+        }
+    }
+}

@@ -6,24 +6,34 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
-    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         EXOMailTips 'OrgWideMailTips'
         {
             IsSingleInstance                      = 'Yes'
             MailTipsAllTipsEnabled                = $True
-            MailTipsGroupMetricsEnabled           = $True
-            MailTipsLargeAudienceThreshold        = 13 # Updated Property
+            MailTipsGroupMetricsEnabled           = $False # Updated Property
+            #MailTipsLargeAudienceThreshold        = 100
             MailTipsMailboxSourcedTipsEnabled     = $True
             MailTipsExternalRecipientsTipsEnabled = $True
-            Credential                            = $Credscredential
+            Ensure                                = "Present"
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
 }

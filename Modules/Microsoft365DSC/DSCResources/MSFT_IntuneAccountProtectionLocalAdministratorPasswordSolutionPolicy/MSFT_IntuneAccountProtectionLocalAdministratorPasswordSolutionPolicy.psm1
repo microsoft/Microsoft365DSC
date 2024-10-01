@@ -54,7 +54,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Int32]
-        [ValidateRange(1, 4)]
+        [ValidateRange(1, 5)]
         $PasswordComplexity,
 
         [Parameter()]
@@ -267,7 +267,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Int32]
-        [ValidateRange(1, 4)]
+        [ValidateRange(1, 5)]
         $PasswordComplexity,
 
         [Parameter()]
@@ -463,7 +463,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Int32]
-        [ValidateRange(1, 4)]
+        [ValidateRange(1, 5)]
         $PasswordComplexity,
 
         [Parameter()]
@@ -668,7 +668,7 @@ function Export-TargetResource
         [array]$policies = Get-MgBetaDeviceManagementConfigurationPolicy `
             -All:$true `
             -Filter $Filter `
-            -ErrorAction Stop | Where-Object -FilterScript { $_.TemplateReference.TemplateId -eq $policyTemplateID } `
+            -ErrorAction Stop | Where-Object -FilterScript { $_.TemplateReference.TemplateId -eq $policyTemplateID }
 
         if ($policies.Length -eq 0)
         {

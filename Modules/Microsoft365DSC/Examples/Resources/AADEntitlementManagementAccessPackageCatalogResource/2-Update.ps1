@@ -6,27 +6,33 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
-    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         AADEntitlementManagementAccessPackageCatalogResource 'myAccessPackageCatalogResource'
         {
-            DisplayName         = 'Human Resources'
-            CatalogId           = 'My Catalog'
-            Description         = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/HumanResources"
-            IsPendingOnboarding = $false # Updated Property
-            OriginId            = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/HumanResources"
-            OriginSystem        = 'SharePointOnline'
-            ResourceType        = 'SharePoint Online Site'
-            Url                 = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/HumanResources"
-            Ensure              = 'Present'
-            Credential          = $Credscredential
+            ApplicationId         = $ApplicationId;
+            CatalogId             = "My Catalog";
+            CertificateThumbprint = $CertificateThumbprint;
+            DisplayName           = "DSCGroup";
+            OriginSystem          = "AADGroup";
+            OriginId              = '849b3661-61a8-44a8-92e7-fcc91d296235'
+            Ensure                = "Present";
+            IsPendingOnboarding   = $False;
+            TenantId              = $TenantId;
         }
     }
 }

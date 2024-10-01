@@ -368,7 +368,7 @@ function Get-IconPath
     }
     elseif ($ResourceName.StartsWith('SC'))
     {
-        return Get-Base64EncodedImage -IconName "SecurityAndComplance.png"
+        return Get-Base64EncodedImage -IconName "SecurityAndCompliance.png"
     }
     elseif ($ResourceName.StartsWith('SPO'))
     {
@@ -382,9 +382,9 @@ function Get-IconPath
     {
         return Get-Base64EncodedImage -IconName "Intune.jpg"
     }
-    elseif ($ResourceName.StartsWith('Intune'))
+    elseif ($ResourceName.StartsWith('Defender'))
     {
-        return 'http://microsoft365dsc.com/Images/Intune.jpg'
+        return Get-Base64EncodedImage -IconName "SecurityAndCompliance.png"
     }
     return $null
 }
@@ -419,12 +419,21 @@ function Get-Base64EncodedImage
         {
             $mimeType = "image/jpeg"
         }
+
         if($icon.Extension.endsWith("png"))
         {
             $mimeType = "image/png"
         }
 
-        $base64EncodedImage = [System.Convert]::ToBase64String((Get-Content -Path $iconPath -Encoding Byte -ReadCount 0))
+        if ($PSVersionTable.PSEdition -eq 'Core')
+        {
+            $base64EncodedImage = [System.Convert]::ToBase64String((Get-Content -Path $IconPath -AsByteStream -ReadCount 0))
+        }
+        else
+        {
+            $base64EncodedImage = [System.Convert]::ToBase64String((Get-Content -Path $iconPath -Encoding Byte -ReadCount 0))
+        }
+
         return $("data:$($mimeType);base64,$($base64EncodedImage)")
     }
     else
@@ -633,7 +642,7 @@ function New-M365DSCReportFromConfiguration
     }
     else
     {
-        throw "Parsed content was null."
+        Write-Warning -Message "Parsed content was null. No report was generated."
     }
 }
 
@@ -736,7 +745,15 @@ function Compare-M365DSCConfigurations
         [Array]$DestinationObject = $DestinationObject | Where-Object -FilterScript { $_.ResourceName -notin $ExcludedResources }
     }
 
-    $dscResourceInfo = Get-DSCResource -Module 'Microsoft365DSC'
+    $isPowerShellCore = $PSVersionTable.PSEdition -eq 'Core'
+    if ($isPowerShellCore)
+    {
+        $dscResourceInfo = Get-PwshDSCResource -Module 'Microsoft365DSC'
+    }
+    else
+    {
+        $dscResourceInfo = Get-DSCResource -Module 'Microsoft365DSC'
+    }
     # Loop through all items in the source array
     $i = 1
     foreach ($sourceResource in $SourceObject)
@@ -794,11 +811,7 @@ function Compare-M365DSCConfigurations
                 {
                     if ($propertyName -notin $filteredProperties)
                     {
-                        $destinationPropertyName = $destinationResource.Keys | Where-Object -FilterScript { $_ -eq $propertyName }
-                        if ([System.String]::IsNullOrEmpty($destinationPropertyName))
-                        {
-                            $destinationPropertyName = $propertyName
-                        }
+                        $destinationPropertyName = $propertyName
 
                         # Case where the property contains CIMInstances
                         if ($null -ne $sourceResource.$propertyName.Keys -and $sourceResource.$propertyName.Keys.Contains('CIMInstance'))
@@ -892,7 +905,7 @@ function Compare-M365DSCConfigurations
                         }
                         # Needs to be a separate nested if statement otherwise the ReferenceObject can be null and it will error out;
                         elseif ($destinationResource.ContainsKey($destinationPropertyName) -eq $false -or (-not [System.String]::IsNullOrEmpty($propertyName) -and
-                                (-not [System.String]::IsNullOrEmpty($sourceResource.$propertyName) -and
+                                ($null -ne $sourceResource.$propertyName -and
                                     $null -ne (Compare-Object -ReferenceObject ($sourceResource.$propertyName)`
                                         -DifferenceObject ($destinationResource.$destinationPropertyName)))) -and
                             -not ([System.String]::IsNullOrEmpty($destinationResource.$destinationPropertyName) -and [System.String]::IsNullOrEmpty($sourceResource.$propertyName)))
@@ -952,11 +965,8 @@ function Compare-M365DSCConfigurations
                 {
                     if ($propertyName -notin $filteredProperties)
                     {
-                        $sourcePropertyName = $destinationResource.Keys | Where-Object -FilterScript { $_ -eq $propertyName }
-                        if ([System.String]::IsNullOrEmpty($sourcePropertyName))
-                        {
-                            $sourcePropertyName = $propertyName
-                        }
+                        $sourcePropertyName = $propertyName
+
                         # Case where the property contains CIMInstances
                         if ($null -ne $destinationResource.$propertyName.Keys -and $destinationResource.$propertyName.Keys.Contains('CIMInstance'))
                         {
@@ -979,13 +989,15 @@ function Compare-M365DSCConfigurations
                                         foreach ($property in $instance.Keys)
                                         {
                                             if ($null -eq $sourceResourceInstance."$property" -or `
-                                                (-not [System.String]::IsNullOrEmpty($instance."$property") -and `
+                                                ($null -ne $instance."$property" -and `
                                                     $null -ne (Compare-Object -ReferenceObject ($instance."$property")`
                                                 -DifferenceObject ($sourceResourceInstance."$property"))))
                                             {
                                                 # Make sure we haven't already added this drift in the delta return object to prevent duplicates.
-                                                $existing = $delta | Where-Object -FilterScript {$_.ResourceName -eq $destinationResource.ResourceName -and `
-                                                                                                    $_.ResourceInstanceName -eq $destinationResource.ResourceInstanceName}
+                                                $existing = $delta | Where-Object -FilterScript {
+                                                    $_.ResourceName -eq $destinationResource.ResourceName -and
+                                                    $_.ResourceInstanceName -eq $destinationResource.ResourceInstanceName
+                                                }
 
                                                 $sameEntry = $null
                                                 if ($null -ne $existing)
@@ -1091,7 +1103,7 @@ function Compare-M365DSCConfigurations
         }
         catch
         {
-            Write-Host "Error: $_"
+            Write-Error -Message $_ -ErrorAction Continue
         }
         $i++
     }
@@ -1145,7 +1157,7 @@ function Compare-M365DSCConfigurations
     }
     catch
     {
-        Write-Host "Error: $_"
+        Write-Error -Message $_ -ErrorAction Continue
     }
     Write-Progress -Activity 'Scanning Destination...' -Completed
 
@@ -1157,7 +1169,7 @@ function Compare-M365DSCConfigurations
 This function gets the key parameter for the specified CIMInstance
 
 .Functionality
-Internal, Hidden
+Public
 #>
 function Get-M365DSCCIMInstanceKey
 {
@@ -1211,6 +1223,18 @@ function Get-M365DSCCIMInstanceKey
     {
         $primaryKey = 'dataType'
     }
+    elseif ($CIMInstance.ContainsKey("Dmn"))
+    {
+        $primaryKey = 'Dmn'
+    }
+    elseif ($CIMInstance.ContainsKey('EmergencyDialString'))
+    {
+        $primaryKey = 'EmergencyDialString'
+    }
+    else
+    {
+        $primaryKey = $CIMInstance.Keys[0]
+    }
 
     return $primaryKey
 }
@@ -1247,6 +1271,10 @@ function Get-M365DSCResourceKey
         if ($Resource.ResourceName -eq 'AADMSGroup' -and -not [System.String]::IsNullOrEmpty($Resource.Id))
         {
             return @('Id')
+        }
+        if ($Resource.ResourceName -eq 'AADGroup' -and -not [System.String]::IsNullOrEmpty($Resource.MailNickname))
+        {
+            return ('DisplayName', 'MailNickname')
         }
         if ($Resource.ResourceName -eq 'IntuneDeviceEnrollmentPlatformRestriction' -and $Resource.Keys.Where({ $_ -like "*Restriction"}))
         {
@@ -1915,5 +1943,6 @@ function Initialize-M365DSCReporting
 Export-ModuleMember -Function @(
     'Compare-M365DSCConfigurations',
     'New-M365DSCDeltaReport',
-    'New-M365DSCReportFromConfiguration'
+    'New-M365DSCReportFromConfiguration',
+    'Get-M365DSCCIMInstanceKey'
 )

@@ -41,10 +41,10 @@ that location or use PowerShell 5.1 to install the modules using 'Install-Module
 Connect-PnPOnline: Could not load file or assembly 'System.IdentityModel.Tokens.Jwt, Version=6.12.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35'. Could not find or load a specific file. (0x80131621)
 ```
 
-# PSDesiredStateConfiguration Needs to be Installed Separately
+# PSDesiredStateConfiguration needs to be installed separately
 
-Starting with PowerShell 7.2, the core Desired State Configuration module (PSdesiredStateConfiguration) has been decoupled from the core PowerShell build and now need to be installed separately. In a PowerShell 7+ console, you can install the module by running the command:
+Starting with PowerShell 7.2, the core Desired State Configuration module (PSdesiredStateConfiguration) has been decoupled from the core PowerShell build and now needs to be installed separately. In an administrative PowerShell 7+ console, you can install the module by running the command:
 
 ```powershell
-Install-Module PSDesiredStateConfiguration -Force
+Update-M365DSCDependencies -Scope AllUsers
 ```
