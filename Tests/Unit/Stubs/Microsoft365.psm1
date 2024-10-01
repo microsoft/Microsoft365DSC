@@ -94157,3 +94157,487 @@ function Update-MgBetaPolicyFeatureRolloutPolicy
 
 #endregion
 
+#region Microsoft.Graph.Beta.Search
+function Get-MgBetaExternal
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [System.String]
+        $ResponseHeadersVariable,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Collections.IDictionary]
+        $Headers,
+
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break
+    )
+}
+function Get-MgBetaExternalConnection
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.String]
+        $ExternalConnectionId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.String]
+        $ResponseHeadersVariable,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [System.Collections.IDictionary]
+        $Headers,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend
+    )
+}
+function New-MgBetaExternalConnection
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PSObject]
+        $Schema,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $ConnectorId,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [PSObject]
+        $Groups,
+
+        [Parameter()]
+        [PSObject]
+        $Items,
+
+        [Parameter()]
+        [PSObject]
+        $SearchSettings,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.String]
+        $EnabledContentExperiences,
+
+        [Parameter()]
+        [System.String]
+        $State,
+
+        [Parameter()]
+        [PSObject]
+        $ComplianceSettings,
+
+        [Parameter()]
+        [PSObject]
+        $Quota,
+
+        [Parameter()]
+        [PSObject]
+        $ActivitySettings,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [PSObject]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.Int64]
+        $IngestedItemsCount,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [PSObject]
+        $Operations,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [PSObject]
+        $Configuration,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $ResponseHeadersVariable,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.Collections.IDictionary]
+        $Headers,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend
+    )
+}
+function Remove-MgBetaExternalConnection
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.String]
+        $IfMatch,
+
+        [Parameter()]
+        [System.String]
+        $ExternalConnectionId,
+
+        [Parameter()]
+        [System.String]
+        $ResponseHeadersVariable,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Collections.IDictionary]
+        $Headers,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break
+    )
+}
+function Update-MgBetaExternal
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [PSObject]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [PSObject]
+        $Connections,
+
+        [Parameter()]
+        [PSObject]
+        $IndustryData,
+
+        [Parameter()]
+        [System.String]
+        $ResponseHeadersVariable,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Collections.IDictionary]
+        $Headers,
+
+        [Parameter()]
+        [PSObject]
+        $AuthorizationSystems,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break
+    )
+}
+function Update-MgBetaExternalConnection
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PSObject]
+        $Schema,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [PSObject]
+        $Groups,
+
+        [Parameter()]
+        [PSObject]
+        $Items,
+
+        [Parameter()]
+        [PSObject]
+        $SearchSettings,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.String]
+        $EnabledContentExperiences,
+
+        [Parameter()]
+        [System.String]
+        $ExternalConnectionId,
+
+        [Parameter()]
+        [System.String]
+        $State,
+
+        [Parameter()]
+        [PSObject]
+        $ComplianceSettings,
+
+        [Parameter()]
+        [PSObject]
+        $Quota,
+
+        [Parameter()]
+        [PSObject]
+        $ActivitySettings,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String]
+        $ConnectorId,
+
+        [Parameter()]
+        [System.Int64]
+        $IngestedItemsCount,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [PSObject]
+        $Operations,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [PSObject]
+        $Configuration,
+
+        [Parameter()]
+        [PSObject]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $ResponseHeadersVariable,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.Collections.IDictionary]
+        $Headers,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend
+    )
+}
+#endregion

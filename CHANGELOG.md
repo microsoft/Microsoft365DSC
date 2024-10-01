@@ -69,6 +69,8 @@
   * Update export logic to target more specific policy types.
   * Prevent thrown exception to be caught by exception handler.
     FIXES [#5088](https://github.com/microsoft/Microsoft365DSC/issues/5088)
+* O365ExternalConnection
+  * Initial release.
 * SCDeviceConditionalAccessRule
   * Initial release.
 * SCDeviceConfigurationRule
@@ -103,6 +105,7 @@
   * Added dependencies on Az.Accounts, Az.Resources and Az.SecurityInsights
   * Updated DSCParser to version 2.0.0.9.
   * Updated MSCloudLoginAssistant to version 1.1.25.
+  * Added dependency on Microsoft.Graph.Beta.Search.
   * Removed unnecessary dependency PSDesiredStateConfiguration v1.1
 
 # 1.24.904.1
