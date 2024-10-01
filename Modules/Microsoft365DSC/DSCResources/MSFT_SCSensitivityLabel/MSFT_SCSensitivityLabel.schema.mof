@@ -1,4 +1,35 @@
 [ClassVersion("1.0.0")]
+class MSFT_SCSLSensitiveInformationType
+{
+    [Required, Description("Name of the Sensitive Information Type")] String name;
+    [Write, Description("Confidence level value for the Sensitive Information"),ValueMap{"Low","Medium","High"}, Values{"Low","Medium","High"}] String confidencelevel;
+    [Write, Description("Type of Classifier value for the Sensitive Information")] String classifiertype;
+    [Write, Description("Minimum Count value for the Sensitive Information")] String mincount;
+    [Write, Description("Maximum Count value for the Sensitive Information")] String maxcount;
+};
+[ClassVersion("1.0.0")]
+class MSFT_SCSLTrainableClassifiers
+{
+    [Required, Description("Name of the Trainable Classifier")] String name;
+    [Write, Description("Id of the Trainable Classifier")] String id;
+};
+[ClassVersion("1.0.0")]
+class MSFT_SCSLSensitiveInformationGroup
+{
+    [Write, Description("Sensitive Information Content Types"),EmbeddedInstance("MSFT_SCSLSensitiveInformationType")] String SensitiveInformationType[];
+    [Write, Description("Trainable Classifiers"),EmbeddedInstance("MSFT_SCSLTrainableClassifiers")] String TrainableClassifier[];
+    [Required, Description("Name of the group")] String Name;
+    [Required, Description("How to process the Sensitive Information Types and Trainable Classifiers"),ValueMap{"And","Or"}, Values{"And","Or"}] String Operator;
+};
+[ClassVersion("1.0.0")]
+class MSFT_SCSLAutoLabelingSettings
+{
+    [Required, Description("Groups of sensitive information types."),EmbeddedInstance("MSFT_SCSLSensitiveInformationGroup")] String Groups[];
+    [Required, Description("How to process the various groups"),ValueMap{"And","Or"}, Values{"And","Or"}] String Operator;
+    [Write, Description("Display this message to users when the label is applied")] String PolicyTip;
+    [Required, Description("Specifies what to do when content matches the conditions"),ValueMap{"Automatic","Recommend"}, Values{"Automatic","Recommend"}] String AutoApplyType;
+};
+[ClassVersion("1.0.0")]
 class MSFT_SCLabelSetting
 {
     [Write, Description("Advanced settings key.")] String Key;
@@ -57,6 +88,7 @@ class MSFT_SCSensitivityLabel : OMI_BaseResource
     [Write, Description("The SiteAndGroupProtectionEnabled parameter enables or disables the Site and Group Protection action for the labels.")] Boolean SiteAndGroupProtectionEnabled;
     [Write, Description("The SiteAndGroupProtectionPrivacy parameter specifies the privacy level for the label."), ValueMap{"Public","Private","Unspecified"}, Values{"Public","Private","Unspecified"}] String SiteAndGroupProtectionPrivacy;
     [Write, Description("The SiteAndGroupExternalSharingControlType parameter specifies the external user sharing setting for the label."), ValueMap{"ExternalUserAndGuestSharing","ExternalUserSharingOnly","ExistingExternalUserSharingOnly","Disabled"}, Values{"ExternalUserAndGuestSharing","ExternalUserSharingOnly","ExistingExternalUserSharingOnly","Disabled"}] String SiteAndGroupExternalSharingControlType;
+    [Write, Description("The AutoLabelingSettings parameter specifies the conditions for label to be automatically applied to files and emails."), EmbeddedInstance("MSFT_SCSLAutoLabelingSettings")] String AutoLabelingSettings;
     [Write, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
     [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
