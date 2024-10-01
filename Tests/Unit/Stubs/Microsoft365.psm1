@@ -17977,7 +17977,9 @@ function Invoke-MgGraphRequest
     )
 }
 #endregion
+
 #region Microsoft.Graph.Beta.DeviceManagement
+
 function Get-MgBetaDeviceManagement
 {
     [CmdletBinding()]
@@ -18015,6 +18017,47 @@ function Get-MgBetaDeviceManagement
         $Break
     )
 }
+
+function New-MgDeviceManagementMobileThreatDefenseConnector
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Id
+    )
+}
+
+function Get-MgDeviceManagementMobileThreatDefenseConnector
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $MobileThreatDefenseConnectorId
+    )
+}
+
+function Update-MgDeviceManagementMobileThreatDefenseConnector
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $MobileThreatDefenseConnectorId
+    )
+}
+
+function Remove-MgDeviceManagementMobileThreatDefenseConnector
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $MobileThreatDefenseConnectorId
+    )
+}
+
 function Get-MgBetaDeviceManagementAssignmentFilter
 {
     [CmdletBinding()]

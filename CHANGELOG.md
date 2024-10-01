@@ -2,6 +2,10 @@
 
 # UNRELEASED
 
+* IntuneMobileThreatDefenseConnector
+  * Initial release.
+* IntuneAppCategory
+  * Initial release.
 * AADApplication
   * Added AppRoles
   * Added AuthenticationBehavior
