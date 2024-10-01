@@ -7,7 +7,7 @@
   * Added AuthenticationBehavior
   * Added KeyCredentials
   * Added OptionalClaims
-  * Added PaswordCredentials
+  * Added PasswordCredentials
   * Added PreAuthorizationApplications
 * AADAuthenticationMethodPolicy
   * Added ReportSuspiciousActivitySettings
@@ -53,7 +53,7 @@
 * EXOMailboxIRMAccess
 * EXOManagementScope
   * Initial Release.
-* EXORetenionPolicy
+* EXORetentionPolicy
   * Initial Release.
 * EXOPhishSimOverrideRule
   * Initial Release.
