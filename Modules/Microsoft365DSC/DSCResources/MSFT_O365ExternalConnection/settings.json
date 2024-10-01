@@ -1,14 +1,7 @@
 ﻿{
-    "resourceName": "ResourceName",
-    "description": "Description of what the resource is about.",
-    "roles": {
-        "read": [
-            "Role"
-        ],
-        "update": [
-            "Role"
-        ]
-    },
+    "resourceName": "O365ExternalConnection",
+    "description": "Configures external connectors in Microsoft 365.",
+    "roles": {},
     "permissions": {
         "graph": {
             "delegated": {
@@ -18,12 +11,12 @@
             "application": {
                 "read": [
                     {
-                        "name": "Permission for Monitoring and Export"
+                        "name": "ExternalConnection.Read.All"
                     }
                 ],
                 "update": [
                     {
-                        "name": "Permission for deploying"
+                        "name": "ExternalConnection.ReadWrite.All"
                     }
                 ]
             }

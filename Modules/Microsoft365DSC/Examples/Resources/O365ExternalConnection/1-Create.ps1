@@ -21,6 +21,16 @@ Configuration Example
     Import-DscResource -ModuleName Microsoft365DSC
     node localhost
     {
-        
+        O365ExternalConnection "O365ExternalConnection-Contoso HR"
+        {
+            ApplicationId         = $ApplicationId;
+            AuthorizedAppIds      = @("MyApp");
+            CertificateThumbprint = $CertificateThumbprint;
+            Description           = "Connection to index Contoso HR system";
+            Ensure                = "Present";
+            Id                    = "contosohr";
+            Name                  = "Contoso HR Nik";
+            TenantId              = $TenantId;
+        }
     }
 }

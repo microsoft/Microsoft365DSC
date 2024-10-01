@@ -18,7 +18,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String[]]
-        $authorizedAppIds,
+        $AuthorizedAppIds,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -97,11 +97,25 @@ function Get-TargetResource
             return $nullResult
         }
 
+        $AuthorizedAppIdsValue = @()
+        foreach ($app in $instance.Configuration.AuthorizedAppIds)
+        {
+            $appInstance = Get-MgApplication -Filter "AppId eq '$app'" -ErrorAction SilentlyContinue
+            if ($null -ne $appInstance)
+            {
+                $AuthorizedAppIdsValue += $appInstance.DisplayName
+            }
+            else
+            {
+                throw "Could not find referenced application {$app} in the tenant."
+            }
+        }
+
         $results = @{
             Name                  = $instance.Name
             Id                    = $instance.id
             Description           = $instance.Description
-            AuthorizedAppIds      = [Array] $instance.authorizedAppIds
+            AuthorizedAppIds      = $AuthorizedAppIdsValue
             Ensure                = 'Present'
             Credential            = $Credential
             ApplicationId         = $ApplicationId
@@ -144,7 +158,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String[]]
-        $authorizedAppIds,
+        $AuthorizedAppIds,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -192,23 +206,48 @@ function Set-TargetResource
 
     $setParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
+    $AuthorizedAppIdsValue = @()
+    if ($null -ne $AuthorizedAppIds)
+    {
+        foreach ($app in $AuthorizedAppIds)
+        {
+            $app = Get-MgApplication -Filter "DisplayName eq '$app'" -ErrorAction SilentlyContinue
+            if ($null -ne $app)
+            {
+                $AuthorizedAppIdsValue += $app.AppId
+            }
+            else
+            {
+                throw "Could not find referenced application {$app} in the tenant."
+            }
+        }
+    }
+    $body = @{
+        id          = $Id
+        name        = $Name
+        description = $Description
+        configuration = @{
+            AuthorizedAppIds = $AuthorizedAppIdsValue
+        }
+    }
     # CREATE
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        ##TODO - Replace by the New cmdlet for the resource
-        New-Cmdlet @SetParameters
+        Write-Verbose -Message "Creating new external connection {$Name}"
+        New-MgBetaExternalConnection -BodyParameter $body
     }
     # UPDATE
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        ##TODO - Replace by the Update/Set cmdlet for the resource
-        Set-cmdlet @SetParameters
+        Write-Verbose -Message "Updating new external connection {$Name}"
+        $body.Remove('Id') | Out-Null
+        Update-MgBetaExternalConnection -ExternalConnectionId $currentInstance.Id -BodyParameter $body
     }
     # REMOVE
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        ##TODO - Replace by the Remove cmdlet for the resource
-        Remove-cmdlet @SetParameters
+        Write-Verbose -Message "Removing external connection {$Name}"
+        Remove-MgBetaExternalConnection -ExternalConnectionId $currentInstance.Id -Confirm:$false
     }
 }
 
@@ -232,7 +271,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String[]]
-        $authorizedAppIds,
+        $AuthorizedAppIds,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -345,7 +384,7 @@ function Export-TargetResource
     try
     {
         $Script:ExportMode = $true
-        [array] $Script:exportedInstances = Get-MgBetaExternalConnection-ErrorAction Stop
+        [array] $Script:exportedInstances = Get-MgBetaExternalConnection -ErrorAction Stop
 
         $i = 1
         $dscContent = ''
