@@ -205,6 +205,46 @@
                        ]
     },
     {
+        "ClassName":  "MSFT_MicrosoftGraphOptionalClaims",
+        "Parameters":  [
+                           {
+                               "CIMType":  "MSFT_MicrosoftGraphOptionalClaim[]",
+                               "Name":  "AccessToken",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_MicrosoftGraphOptionalClaim[]",
+                               "Name":  "IdToken",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_MicrosoftGraphOptionalClaim[]",
+                               "Name":  "Saml2Token",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_MicrosoftGraphOptionalClaim",
+        "Parameters":  [
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "Essential",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Name",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Source",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
         "ClassName":  "MSFT_MicrosoftGraphPreAuthorizedApplication",
         "Parameters":  [
                            {
@@ -415,6 +455,11 @@
                            {
                                "CIMType":  "string[]",
                                "Name":  "KnownClientApplications",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_MicrosoftGraphoptionalClaims",
+                               "Name":  "OptionalClaims",
                                "Option":  "Write"
                            },
                            {
@@ -41193,6 +41238,126 @@
                                "Option":  "Write"
                            },
                            {
+                               "CIMType":  "UInt32",
+                               "Name":  "AdaptiveProtectionHighProfileSourceType",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "AdaptiveProtectionHighProfileConfirmedIssueSeverity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "AdaptiveProtectionHighProfileGeneratedIssueSeverity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "AdaptiveProtectionHighProfileInsightSeverity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "AdaptiveProtectionHighProfileInsightCount",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AdaptiveProtectionHighProfileInsightTypes",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "AdaptiveProtectionHighProfileConfirmedIssue",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "AdaptiveProtectionMediumProfileSourceType",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "AdaptiveProtectionMediumProfileConfirmedIssueSeverity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "AdaptiveProtectionMediumProfileGeneratedIssueSeverity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "AdaptiveProtectionMediumProfileInsightSeverity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "AdaptiveProtectionMediumProfileInsightCount",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AdaptiveProtectionMediumProfileInsightTypes",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "AdaptiveProtectionMediumProfileConfirmedIssue",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "AdaptiveProtectionLowProfileSourceType",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "AdaptiveProtectionLowProfileConfirmedIssueSeverity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "AdaptiveProtectionLowProfileGeneratedIssueSeverity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "AdaptiveProtectionLowProfileInsightSeverity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "AdaptiveProtectionLowProfileInsightCount",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AdaptiveProtectionLowProfileInsightTypes",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "AdaptiveProtectionLowProfileConfirmedIssue",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "RetainSeverityAfterTriage",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "LookbackTimeSpan",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "ProfileInScopeTimeSpan",
+                               "Option":  "Write"
+                           },
+                           {
                                "CIMType":  "string",
                                "Name":  "Ensure",
                                "Option":  "Write"
@@ -41535,6 +41700,66 @@
                            {
                                "CIMType":  "String",
                                "Name":  "CertificatePath",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_SCRecordReviewNotificationTemplateConfig",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IsSingleInstance",
+                               "Option":  "Key"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "CustomizedNotificationDataString",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "CustomizedReminderDataString",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "IsCustomizedNotificationTemplate",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "IsCustomizedReminderTemplate",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "Credential",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ApplicationId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "TenantId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "CertificateThumbprint",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "ManagedIdentity",
                                "Option":  "Write"
                            },
                            {

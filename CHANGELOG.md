@@ -6,6 +6,7 @@
   * Added AppRoles
   * Added AuthenticationBehavior
   * Added KeyCredentials
+  * Added OptionalClaims
   * Added PaswordCredentials
   * Added PreAuthorizationApplications
 * AADAuthenticationMethodPolicy
@@ -78,6 +79,8 @@
 * SCInsiderRiskEntityList
   * Initial release.
 * SCInsiderRiskPolicy
+  * Initial release.
+* SCRecordReviewNotificationTemplateConfig
   * Initial release.
 * SCRoleGroup
   * Fixes an issue with creation without specifying Displayname

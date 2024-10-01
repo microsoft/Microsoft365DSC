@@ -70756,6 +70756,37 @@ function Set-InsiderRiskPolicy
     )
 }
 
+function Get-RecordReviewNotificationTemplateConfig
+{
+    [CmdletBinding()]
+    param(
+
+    )
+}
+
+function Set-RecordReviewNotificationTemplateConfig
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $IsCustomizedReminderTemplate,
+
+        [Parameter()]
+        [System.String]
+        $CustomizedNotificationDataString,
+
+        [Parameter()]
+        [System.String]
+        $CustomizedReminderDataString,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsCustomizedNotificationTemplate
+    )
+}
+
+
 function Get-AdminAuditLogConfig
 {
     [CmdletBinding()]
