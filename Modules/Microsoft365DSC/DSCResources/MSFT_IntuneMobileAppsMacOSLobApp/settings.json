@@ -1,6 +1,6 @@
 {
     "resourceName": "IntuneMobileAppsMacOSLobApp",
-    "description": "This resource configures an Intune mobile app of MacOSLobApp type for MacOS devices.",
+    "description": "This resource configures an Intune mobile app.",
     "permissions": {
         "graph": {
             "delegated": {

@@ -4,22 +4,15 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        #region resource parameters
+        #region Intune resource parameters
+
         [Parameter()]
         [System.String]
         $Id,
 
-        [Parameter()]
-        [PSObject]
-        $BodyParameter,
-
-        [Parameter()]
-        [PSObject[]]
-        $Assignments,
-
-        [Parameter()]
-        [PSObject[]]
-        $Categories,
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
 
         [Parameter()]
         [System.String]
@@ -31,19 +24,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $DisplayName,
-
-        [Parameter()]
-        [System.String]
         $InformationUrl,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
+        [System.Boolean]
         $IsFeatured,
-
-        [Parameter()]
-        [PSObject]
-        $LargeIcon,
 
         [Parameter()]
         [System.String]
@@ -62,12 +47,9 @@ function Get-TargetResource
         $Publisher,
 
         [Parameter()]
-        [PSObject]
+        [System.String]
+        [ValidateSet('notPublished', 'processing','published')]
         $PublishingState,
-
-        [Parameter()]
-        [PSObject[]]
-        $Relationships,
 
         #endregion
 
@@ -91,6 +73,10 @@ function Get-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
 
         [Parameter()]
         [Switch]
@@ -126,16 +112,16 @@ function Get-TargetResource
         }
         else
         {
-            $instance = Get-MgDeviceAppManagementMobileApp -MobileAppId $Id -ErrorAction Stop
+            $instance = Get-MgBetaDeviceAppManagementMobileApp -MobileAppId $Id -Filter "microsoft.graph.managedApp/appAvailability eq null" -ErrorAction Stop
         }
 
         if ($null -eq $instance)
         {
             Write-Verbose -Message "No Mobile app with Id {$Id} was found. Search with DisplayName."
-            $policy = Get-MgBetaDeviceAppManagementiOSManagedAppProtection -Filter "displayName eq '$DisplayName'" -ErrorAction SilentlyContinue
+            $instance = Get-MgBetaDeviceAppManagementMobileApp -Filter "displayName eq '$DisplayName'" -ErrorAction SilentlyContinue
         }
 
-        if ($null -eq $policy)
+        if ($null -eq $instance)
         {
             Write-Verbose -Message "No Mobile app with {$DisplayName} was found."
             return $nullResult
@@ -145,27 +131,25 @@ function Get-TargetResource
 
         $results = @{
             Id                    = $instance.Id
-            ResponseHeadersVariable = $instance.ResponseHeadersVariable
-            AdditionalProperties  = $instance.AdditionalProperties
-            Assignments           = $instance.Assignments
-            Categories            = $instance.Categories
+            #Assignments           = $instance.Assignments
+            #Categories            = $instance.Categories
             Description           = $instance.Description
             Developer             = $instance.Developer
             DisplayName           = $instance.DisplayName
             InformationUrl        = $instance.InformationUrl
             IsFeatured            = $instance.IsFeatured
-            LargeIcon             = $instance.LargeIcon
+            #LargeIcon             = $instance.LargeIcon
             Notes                 = $instance.Notes
             Owner                 = $instance.Owner
             PrivacyInformationUrl = $instance.PrivacyInformationUrl
             Publisher             = $instance.Publisher
             PublishingState       = $instance.PublishingState
-
             Ensure                = 'Present'
             Credential            = $Credential
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint
+            ApplicationSecret     = $ApplicationSecret
             ManagedIdentity       = $ManagedIdentity.IsPresent
             AccessTokens          = $AccessTokens
         }
@@ -190,22 +174,15 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
-        #region resource generator code
-        [Parameter(Mandatory = $true)]
+        #region Intune resource parameters
+
+        [Parameter()]
         [System.String]
         $Id,
 
-        [Parameter()]
-        [PSObject]
-        $BodyParameter,
-
-        [Parameter()]
-        [PSObject[]]
-        $Assignments,
-
-        [Parameter()]
-        [PSObject[]]
-        $Categories,
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
 
         [Parameter()]
         [System.String]
@@ -217,19 +194,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $DisplayName,
-
-        [Parameter()]
-        [System.String]
         $InformationUrl,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
+        [System.Boolean]
         $IsFeatured,
-
-        [Parameter()]
-        [PSObject]
-        $LargeIcon,
 
         [Parameter()]
         [System.String]
@@ -248,14 +217,11 @@ function Set-TargetResource
         $Publisher,
 
         [Parameter()]
-        [PSObject]
+        [System.String]
+        [ValidateSet('notPublished', 'processing','published')]
         $PublishingState,
 
-        [Parameter()]
-        [PSObject[]]
-        $Relationships,
-
-        #endregion resource generator code
+        #endregion
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -277,6 +243,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
 
         [Parameter()]
         [Switch]
@@ -300,23 +270,25 @@ function Set-TargetResource
     #endregion
 
     $currentInstance = Get-TargetResource @PSBoundParameters
-
     $setParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+
+    $setParameters.remove('Id') | Out-Null
+    $setParameters.remove('Ensure') | Out-Null
 
     # CREATE
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        New-MgDeviceAppManagementMobileApp @SetParameters
+        New-MgBetaDeviceAppManagementMobileApp @SetParameters
     }
     # UPDATE
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        Update-MgDeviceAppManagementMobileApp @SetParameters
+        Update-MgBetaDeviceAppManagementMobileApp -MobileAppId $currentInstance.Id @SetParameters
     }
     # REMOVE
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Remove-MgDeviceAppManagementMobileApp @SetParameters
+        Remove-MgBetaDeviceAppManagementMobileApp -MobileAppId $currentInstance.Id -Confirm:$false
     }
 }
 
@@ -326,22 +298,15 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
-        #region resource generator code
-        [Parameter(Mandatory = $true)]
+        #region resource parameters
+
+        [Parameter()]
         [System.String]
         $Id,
 
-        [Parameter()]
-        [PSObject]
-        $BodyParameter,
-
-        [Parameter()]
-        [PSObject[]]
-        $Assignments,
-
-        [Parameter()]
-        [PSObject[]]
-        $Categories,
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
 
         [Parameter()]
         [System.String]
@@ -353,19 +318,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $DisplayName,
-
-        [Parameter()]
-        [System.String]
         $InformationUrl,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
+        [System.Boolean]
         $IsFeatured,
-
-        [Parameter()]
-        [PSObject]
-        $LargeIcon,
 
         [Parameter()]
         [System.String]
@@ -384,14 +341,11 @@ function Test-TargetResource
         $Publisher,
 
         [Parameter()]
-        [PSObject]
+        [System.String]
+        [ValidateSet('notPublished', 'processing','published')]
         $PublishingState,
 
-        [Parameter()]
-        [PSObject[]]
-        $Relationships,
-
-        #endregion resource generator code
+        #endregion
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -413,6 +367,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
 
         [Parameter()]
         [Switch]
@@ -470,12 +428,12 @@ function Export-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ApplicationSecret,
-
-        [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
 
         [Parameter()]
         [Switch]
@@ -504,7 +462,7 @@ function Export-TargetResource
     try
     {
         $Script:ExportMode = $true
-        [array] $Script:exportedInstances = Get-MgDeviceAppManagementMobileApp -ErrorAction Stop
+        [array] $Script:exportedInstances = Get-MgBetaDeviceAppManagementMobileApp -Filter "microsoft.graph.managedApp/appAvailability eq null" -ErrorAction Stop
 
         $i = 1
         $dscContent = ''
@@ -521,12 +479,23 @@ function Export-TargetResource
             $displayedKey = $config.Id
             Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -NoNewline
             $params = @{
-                PrimaryKey            = $config.Id
+                Id                    = $config.Id
+                Description           = $config.Description
+                Developer             = $config.Developer
+                DisplayName           = $config.DisplayName
+                InformationUrl        = $config.InformationUrl
+                IsFeatured            = $config.IsFeatured
+                Notes                 = $config.Notes
+                Owner                 = $config.Owner
+                PrivacyInformationUrl = $config.PrivacyInformationUrl
+                Publisher             = $config.Publisher
+                PublishingState       = $config.PublishingState
                 Ensure                = 'Present'
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
+                ApplicationSecret     = $ApplicationSecret
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }

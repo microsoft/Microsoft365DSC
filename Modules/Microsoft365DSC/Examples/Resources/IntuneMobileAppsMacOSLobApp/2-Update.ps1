@@ -22,6 +22,20 @@ Configuration Example
     Import-DscResource -ModuleName Microsoft365DSC
     node localhost
     {
-
+        IntuneMobileAppsMacOSLobApp "IntuneMobileAppsMacOSLobApp-TeamsForBusinessInstaller"
+        {
+            Id                    = "8d027f94-0682-431e-97c1-827d1879fa79";
+            Description           = "TeamsForBusinessInstaller";
+            Developer             = "Contoso drift"; #drift
+            DisplayName           = "TeamsForBusinessInstaller";
+            Ensure                = "Present";
+            InformationUrl        = "";
+            IsFeatured            = $False;
+            Notes                 = "";
+            Owner                 = "";
+            PrivacyInformationUrl = "";
+            Publisher             = "Contoso";
+            PublishingState       = "published";
+        }
     }
 }

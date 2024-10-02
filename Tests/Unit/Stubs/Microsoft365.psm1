@@ -17892,6 +17892,210 @@ function Get-MgBetaDeviceManagementGroupPolicyConfigurationAssignment
         $HttpPipelineAppend
     )
 }
+
+function New-MgBetaDeviceAppManagementMobileApp {
+    [CmdletBinding()]
+    param (
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $Developer,
+
+        [Parameter()]
+        [System.String]
+        $InformationUrl,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsFeatured,
+
+        [Parameter()]
+        [System.String]
+        $Notes,
+
+        [Parameter()]
+        [System.String]
+        $Owner,
+
+        [Parameter()]
+        [System.String]
+        $PrivacyInformationUrl,
+
+        [Parameter()]
+        [System.String]
+        $Publisher,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('notPublished', 'processing','published')]
+        $PublishingState
+    )
+}
+
+function Get-MgBetaDeviceAppManagementMobileApp {
+    [CmdletBinding()]
+    param (
+        [Parameter()]
+        [System.String]
+        $MobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $Developer,
+
+        [Parameter()]
+        [System.String]
+        $InformationUrl,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsFeatured,
+
+        [Parameter()]
+        [System.String]
+        $Notes,
+
+        [Parameter()]
+        [System.String]
+        $Owner,
+
+        [Parameter()]
+        [System.String]
+        $PrivacyInformationUrl,
+
+        [Parameter()]
+        [System.String]
+        $Publisher,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('notPublished', 'processing','published')]
+        $PublishingState
+    )
+}
+function Update-MgBetaDeviceAppManagementMobileApp {
+    [CmdletBinding()]
+    param (
+        [Parameter()]
+        [System.String]
+        $MobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $Developer,
+
+        [Parameter()]
+        [System.String]
+        $InformationUrl,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsFeatured,
+
+        [Parameter()]
+        [System.String]
+        $Notes,
+
+        [Parameter()]
+        [System.String]
+        $Owner,
+
+        [Parameter()]
+        [System.String]
+        $PrivacyInformationUrl,
+
+        [Parameter()]
+        [System.String]
+        $Publisher,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('notPublished', 'processing','published')]
+        $PublishingState
+    )
+}
+
+function Remove-MgBetaDeviceAppManagementMobileApp {
+    [CmdletBinding()]
+    param (
+        [Parameter()]
+        [System.String]
+        $MobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $Developer,
+
+        [Parameter()]
+        [System.String]
+        $InformationUrl,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsFeatured,
+
+        [Parameter()]
+        [System.String]
+        $Notes,
+
+        [Parameter()]
+        [System.String]
+        $Owner,
+
+        [Parameter()]
+        [System.String]
+        $PrivacyInformationUrl,
+
+        [Parameter()]
+        [System.String]
+        $Publisher,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('notPublished', 'processing','published')]
+        $PublishingState,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm
+    )
+}
+
 function Get-MgBetaDeviceManagementGroupPolicyConfigurationDefinitionValue
 {
     [CmdletBinding()]
