@@ -41,11 +41,11 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - ExternalConnection.Read.All
+    - Application.Read.All, ExternalConnection.Read.All
 
 - **Update**
 
-    - ExternalConnection.ReadWrite.All
+    - Application.Read.All, ExternalConnection.ReadWrite.All
 
 ## Examples
 
