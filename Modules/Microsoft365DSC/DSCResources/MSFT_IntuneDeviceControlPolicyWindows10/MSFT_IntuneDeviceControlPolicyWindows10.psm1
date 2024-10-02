@@ -266,10 +266,7 @@ function Get-TargetResource
             {
                 $getValue = Get-MgBetaDeviceManagementConfigurationPolicy `
                     -Filter "Name eq '$DisplayName'" `
-                    -ErrorAction SilentlyContinue | Where-Object `
-                    -FilterScript {
-                        $_.AdditionalProperties.'@odata.type' -eq "#microsoft.graph.DeviceManagementConfigurationPolicy"
-                    }
+                    -ErrorAction SilentlyContinue
             }
         }
         #endregion

@@ -2,8 +2,6 @@
 
 # UNRELEASED
 
-* IntuneAppCategory
-  * Initial release.
 * AADApplication
   * Added AppRoles
   * Added AuthenticationBehavior
@@ -65,6 +63,8 @@
 * IntuneAntivirusPolicyWindows10SettingCatalog
   * Fixes an issue with invalid parameter definition.
     FIXES [#5015](https://github.com/microsoft/Microsoft365DSC/issues/5015)
+* IntuneAppCategory
+  * Initial release.
 * IntuneAppProtectionPolicyiOS
   * Improve `TargetedAppManagementLevels` property to specify multiple values.
     FIXES [#5032](https://github.com/microsoft/Microsoft365DSC/issues/5032)
@@ -75,10 +75,19 @@
 * IntuneDeviceConfigurationSharedMultiDevicePolicyWindows10
   * Add missing `AccessTokens` parameter to `Export-TargetResource`
     FIXES [#5034](https://github.com/microsoft/Microsoft365DSC/issues/5034)
+* IntuneFirewallPolicyWindows10
+  * Initial release
+    FIXES [#3033](https://github.com/microsoft/Microsoft365DSC/issues/3033)
 * IntuneSettingCatalogCustomPolicyWindows10
   * Update export logic to target more specific policy types.
   * Prevent thrown exception to be caught by exception handler.
     FIXES [#5088](https://github.com/microsoft/Microsoft365DSC/issues/5088)
+* M365DSCDRGUtil
+  * Add support for more complex Intune Settings Catalog properties
+  * Update handling of `Update-IntuneDeviceConfigurationPolicy` to throw on error
+    FIXES [#5055](https://github.com/microsoft/Microsoft365DSC/issues/5055)
+* M365DSCResourceGenerator
+  * Update Intune resource generation for the Settings Catalog.
 * O365ExternalConnection
   * Initial release.
 * SCDeviceConditionalAccessRule
