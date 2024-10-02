@@ -38,6 +38,10 @@
   * Use correct type integer for variable `PhishThresholdLevel`
 * EXOArcConfig
   * Initial Release.
+* EXOAuthenticationPolicy
+  * If policy needs changes then recreate it to avoid issue with
+    `Set-AuthenticationPolicy` cmdlet
+    FIXES [#4819](https://github.com/microsoft/Microsoft365DSC/issues/4819)
 * EXODnssecForVerifiedDomain
   * Initial Release.
 * EXOEmailTenantSettings
