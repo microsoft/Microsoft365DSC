@@ -65,6 +65,10 @@
             RequiredVersion = '2.23.0'
         },
         @{
+            ModuleName      = 'Microsoft.Graph.Beta.Search'
+            RequiredVersion = '2.23.0'
+        },
+        @{
             ModuleName      = 'Microsoft.Graph.Beta.Teams'
             RequiredVersion = '2.23.0'
         },

@@ -4,12 +4,17 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        ##TODO - Replace the PrimaryKey
+        #region Intune params
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
         [Parameter(Mandatory = $true)]
         [System.String]
-        $PrimaryKey,
+        $DisplayName,
 
-        ##TODO - Add the list of Parameters
+        #endregion Intune params
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -33,6 +38,10 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
         [Switch]
         $ManagedIdentity,
 
@@ -41,8 +50,7 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    ##TODO - Replace the workload by the one associated to your resource
-    New-M365DSCConnection -Workload 'Workload' `
+    New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters | Out-Null
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -59,30 +67,47 @@ function Get-TargetResource
 
     $nullResult = $PSBoundParameters
     $nullResult.Ensure = 'Absent'
+
     try
     {
+        $instance = $null
         if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
         {
-            ##TODO - Replace the PrimaryKey in the Filter by the one for the resource
-            $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.PrimaryKey -eq $PrimaryKey}
+            $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.Id -eq $Id}
         }
-        else
-        {
-            ##TODO - Replace the cmdlet by the one to retrieve a specific instance.
-            $instance = Get-cmdlet -PrimaryKey $PrimaryKey -ErrorAction Stop
-        }
+
         if ($null -eq $instance)
         {
-            return $nullResult
+          $instance = Get-MgBetaDeviceAppManagementMobileAppCategory -MobileAppCategoryId $Id -ErrorAction Stop
+
+          if ($null -eq $instance)
+          {
+              Write-Verbose -Message "Could not find MobileAppCategory by Id {$Id}."
+
+              if (-Not [string]::IsNullOrEmpty($DisplayName))
+              {
+                  $instance = Get-MgBetaDeviceAppManagementMobileAppConfiguration `
+                      -Filter "DisplayName eq '$DisplayName'" `
+                      -ErrorAction SilentlyContinue
+              }
+          }
+
+          if ($null -eq $instance)
+          {
+              Write-Verbose -Message "Could not find MobileAppCategory by DisplayName {$DisplayName}."
+              return $nullResult
+          }
         }
 
         $results = @{
-            ##TODO - Add the list of parameters to be returned
+            Id                    = $instance.Id
+            DisplayName           = $instance.DisplayName
             Ensure                = 'Present'
             Credential            = $Credential
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint
+            ApplicationSecret     = $ApplicationSecret
             ManagedIdentity       = $ManagedIdentity.IsPresent
             AccessTokens          = $AccessTokens
         }
@@ -106,12 +131,17 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
-        ##TODO - Replace the PrimaryKey
+        #region Intune params
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
         [Parameter(Mandatory = $true)]
         [System.String]
-        $PrimaryKey,
+        $DisplayName,
 
-        ##TODO - Add the list of Parameters
+        #endregion Intune params
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -133,6 +163,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
 
         [Parameter()]
         [Switch]
@@ -158,24 +192,23 @@ function Set-TargetResource
     $currentInstance = Get-TargetResource @PSBoundParameters
 
     $setParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+    $setParameters.remove('Id') | Out-Null
+    $setParameters.remove('Ensure') | Out-Null
 
     # CREATE
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        ##TODO - Replace by the New cmdlet for the resource
-        New-Cmdlet @SetParameters
+        New-MgBetaDeviceAppManagementMobileAppCategory @SetParameters
     }
     # UPDATE
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        ##TODO - Replace by the Update/Set cmdlet for the resource
-        Set-cmdlet @SetParameters
+        Update-MgBetaDeviceAppManagementMobileAppCategory -MobileAppCategoryId $currentInstance.Id @SetParameters
     }
     # REMOVE
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        ##TODO - Replace by the Remove cmdlet for the resource
-        Remove-cmdlet @SetParameters
+        Remove-MgBetaDeviceAppManagementMobileAppCategory -MobileAppCategoryId $currentInstance.Id -Confirm:$false
     }
 }
 
@@ -185,12 +218,17 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
-        ##TODO - Replace the PrimaryKey
+        #region Intune params
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
         [Parameter(Mandatory = $true)]
         [System.String]
-        $PrimaryKey,
+        $DisplayName,
 
-        ##TODO - Add the list of Parameters
+        #endregion Intune params
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -212,6 +250,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
 
         [Parameter()]
         [Switch]
@@ -269,12 +311,12 @@ function Export-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ApplicationSecret,
-
-        [Parameter()]
         [System.String]
         $CertificateThumbprint,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
 
         [Parameter()]
         [Switch]
@@ -285,8 +327,7 @@ function Export-TargetResource
         $AccessTokens
     )
 
-    ##TODO - Replace workload
-    $ConnectionMode = New-M365DSCConnection -Workload 'Workload' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -304,8 +345,7 @@ function Export-TargetResource
     try
     {
         $Script:ExportMode = $true
-        ##TODO - Replace Get-Cmdlet by the cmdlet to retrieve all instances
-        [array] $Script:exportedInstances = Get-Cmdlet -ErrorAction Stop
+        [array] $Script:exportedInstances = Get-MgBetaDeviceAppManagementMobileAppCategory -ErrorAction Stop
 
         $i = 1
         $dscContent = ''
@@ -319,20 +359,17 @@ function Export-TargetResource
         }
         foreach ($config in $Script:exportedInstances)
         {
-            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
-            {
-                $Global:M365DSCExportResourceInstancesCount++
-            }
-
             $displayedKey = $config.Id
             Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -NoNewline
             $params = @{
-                ##TODO - Specify the Primary Key
-                #PrimaryKey            = $config.PrimaryKey
+                Id                    = $config.Id
+                DisplayName           = $config.DisplayName
+                Ensure                = 'Present'
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
+                ApplicationSecret     = $ApplicationSecret
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }

@@ -6,31 +6,19 @@ function Get-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $ResourceGroupName,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $WorkspaceName,
+        $Name,
 
         [Parameter()]
         [System.String]
-        $SubscriptionId,
+        $Id,
 
         [Parameter()]
-        [System.Boolean]
-        $AnomaliesIsEnabled,
-
-        [Parameter()]
-        [System.Boolean]
-        $EntityAnalyticsIsEnabled,
-
-        [Parameter()]
-        [System.Boolean]
-        $EyesOnIsEnabled,
+        [System.String]
+        $Description,
 
         [Parameter()]
         [System.String[]]
-        $UebaDataSource,
+        $AuthorizedAppIds,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -62,7 +50,7 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    New-M365DSCConnection -Workload 'Azure' `
+    New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters | Out-Null
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -78,80 +66,63 @@ function Get-TargetResource
     #endregion
 
     $nullResult = $PSBoundParameters
+    $nullResult.Ensure = 'Absent'
     try
     {
-        $ResourceGroupNameValue = $ResourceGroupName
-        $WorkspaceNameValue = $WorkspaceName
         if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
         {
-            $entry = $Script:exportedInstances | Where-Object -FilterScript {$_.Name -eq $WorkspaceName}
-            $instance = Get-AzSentinelSetting -ResourceGroupName $entry.ResourceGroupName `
-                                              -WorkspaceName $entry.Name `
-                                              -SubscriptionId $SubscriptionId `
-                                              -ErrorAction SilentlyContinue
-            $ResourceGroupNameValue = $entry.ResourceGroupName
-            $WorkspaceNameValue = $entry.Name
+            if (-not [System.String]::IsNullOrEmpty($Id))
+            {
+                $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.Id -eq $Id}
+            }
+
+            if ($null -eq $instance)
+            {
+                $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.Name -eq $Name}
+            }
         }
         else
         {
-            Write-Verbose -Message "Retrieving Sentinel Settings for {$WorkspaceName}"
-            $instance = Get-AzSentinelSetting -ResourceGroupName $ResourceGroupName `
-                                              -WorkspaceName $WorkspaceName `
-                                              -ErrorAction SilentlyContinue `
-                                              -SubscriptionId $SubscriptionId
+            if (-not [System.String]::IsNullOrEmpty($Id))
+            {
+                $instance = Get-MgBetaExternalConnection -ExternalConnectionId $Id -ErrorAction SilentlyContinue
+            }
+            if ($null -eq $instance)
+            {
+                $instance = Get-MgBetaExternalConnection -Filter "Name eq '$Name'"
+            }
         }
         if ($null -eq $instance)
         {
-            throw "Could not find Sentinel Workspace {$WorkspaceName} in Resource Group {$ResourceGroupName}"
+            return $nullResult
         }
 
-        Write-Verbose -Message "Found an instance of Sentinel Workspace {$Workspace}"
-        $Anomalies = $instance | Where-Object -FilterScript {$_.Name -eq 'Anomalies'}
-        $AnomaliesIsEnabledValue = $false
-        if ($null -ne $Anomalies)
+        $AuthorizedAppIdsValue = @()
+        foreach ($app in $instance.Configuration.AuthorizedAppIds)
         {
-            Write-Verbose -Message "Anomalies instance found."
-            $AnomaliesIsEnabledValue = $Anomalies.IsEnabled
-        }
-
-        $EntityAnalytics = $instance | Where-Object -FilterScript {$_.Name -eq 'EntityAnalytics'}
-        $EntityAnalyticsIsEnabledValue = $false
-        if ($null -ne $EntityAnalytics)
-        {
-            Write-Verbose -Message "EntityAnalytics instance found."
-            $EntityAnalyticsIsEnabledValue = $EntityAnalytics.IsEnabled
-        }
-
-        $EyesOn = $instance | Where-Object -FilterScript {$_.Name -eq 'EyesOn'}
-        $EyesOnIsEnabledValue = $false
-        if ($null -ne $EyesOn)
-        {
-            Write-Verbose -Message "EyesOn instance found."
-            $EyesOnIsEnabledValue = $EyesOn.IsEnabled
-        }
-
-        $Ueba = $instance | Where-Object -FilterScript {$_.Name -eq 'Ueba'}
-        $UebaDataSourceValue = $null
-        if ($null -ne $Ueba)
-        {
-            Write-Verbose -Message "UEBA Data source instance found."
-            $UebaDataSourceValue = $Ueba.DataSource
+            $appInstance = Get-MgApplication -Filter "AppId eq '$app'" -ErrorAction SilentlyContinue
+            if ($null -ne $appInstance)
+            {
+                $AuthorizedAppIdsValue += $appInstance.DisplayName
+            }
+            else
+            {
+                throw "Could not find referenced application {$app} in the tenant."
+            }
         }
 
         $results = @{
-            AnomaliesIsEnabled       = [Boolean]$AnomaliesIsEnabledValue
-            EntityAnalyticsIsEnabled = [Boolean]$EntityAnalyticsIsEnabledValue
-            EyesOnIsEnabled          = [Boolean]$EyesOnIsEnabledValue
-            UebaDataSource           = $UebaDataSourceValue
-            ResourceGroupName        = $ResourceGroupNameValue
-            WorkspaceName            = $WorkspaceNameValue
-            SubscriptionId           = $SubscriptionId
-            Credential               = $Credential
-            ApplicationId            = $ApplicationId
-            TenantId                 = $TenantId
-            CertificateThumbprint    = $CertificateThumbprint
-            ManagedIdentity          = $ManagedIdentity.IsPresent
-            AccessTokens             = $AccessTokens
+            Name                  = $instance.Name
+            Id                    = $instance.id
+            Description           = $instance.Description
+            AuthorizedAppIds      = $AuthorizedAppIdsValue
+            Ensure                = 'Present'
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
+            ManagedIdentity       = $ManagedIdentity.IsPresent
+            AccessTokens          = $AccessTokens
         }
         return [System.Collections.Hashtable] $results
     }
@@ -175,31 +146,24 @@ function Set-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $ResourceGroupName,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $WorkspaceName,
+        $Name,
 
         [Parameter()]
         [System.String]
-        $SubscriptionId,
+        $Id,
 
         [Parameter()]
-        [System.Boolean]
-        $AnomaliesIsEnabled,
-
-        [Parameter()]
-        [System.Boolean]
-        $EntityAnalyticsIsEnabled,
-
-        [Parameter()]
-        [System.Boolean]
-        $EyesOnIsEnabled,
+        [System.String]
+        $Description,
 
         [Parameter()]
         [System.String[]]
-        $UebaDataSource,
+        $AuthorizedAppIds,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -238,37 +202,52 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    if ($PSBoundParameters.ContainsKey('AnomaliesIsEnabled'))
+    $currentInstance = Get-TargetResource @PSBoundParameters
+
+    $setParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+
+    $AuthorizedAppIdsValue = @()
+    if ($null -ne $AuthorizedAppIds)
     {
-        Write-Verbose -Message "Updating Anomalies IsEnabled value to {$AnomaliesIsEnabled}"
-        Update-AzSentinelSetting -ResourceGroupName $ResourceGroupName `
-                                    -WorkspaceName $WorkspaceName `
-                                     -SettingsName "Anomalies" `
-                                     -Enabled $AnomaliesIsEnabled | Out-Null
+        foreach ($app in $AuthorizedAppIds)
+        {
+            $app = Get-MgApplication -Filter "DisplayName eq '$app'" -ErrorAction SilentlyContinue
+            if ($null -ne $app)
+            {
+                $AuthorizedAppIdsValue += $app.AppId
+            }
+            else
+            {
+                throw "Could not find referenced application {$app} in the tenant."
+            }
+        }
     }
-    if ($PSBoundParameters.ContainsKey('EntityAnalyticsIsEnabled'))
-    {
-        Write-Verbose -Message "Updating Entity Analytics IsEnabled value to {$EntityAnalyticsIsEnabled}"
-        Update-AzSentinelSetting -ResourceGroupName $ResourceGroupName `
-                                     -WorkspaceName $WorkspaceName `
-                                     -SettingsName "EntityAnalytics" `
-                                     -Enabled $EntityAnalyticsIsEnabled | Out-Null
+    $body = @{
+        id          = $Id
+        name        = $Name
+        description = $Description
+        configuration = @{
+            AuthorizedAppIds = $AuthorizedAppIdsValue
+        }
     }
-    if ($PSBoundParameters.ContainsKey('EyesOnIsEnabled'))
+    # CREATE
+    if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        Write-Verbose -Message "Updating Eyes On IsEnabled value to {$EyesOnIsEnabled}"
-        Update-AzSentinelSetting -ResourceGroupName $ResourceGroupName `
-                                     -WorkspaceName $WorkspaceName `
-                                     -SettingsName "EyesOn" `
-                                     -Enabled $EyesOnIsEnabled | Out-Null
+        Write-Verbose -Message "Creating new external connection {$Name}"
+        New-MgBetaExternalConnection -BodyParameter $body
     }
-    if ($PSBoundParameters.ContainsKey('UebaDataSource'))
+    # UPDATE
+    elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Updating UEBA Data Source value to {$UebaDataSource}"
-        Update-AzSentinelSetting -ResourceGroupName $ResourceGroupName `
-                                     -WorkspaceName $WorkspaceName `
-                                     -SettingsName "Ueba" `
-                                     -DataSource $UebaDataSource | Out-Null
+        Write-Verbose -Message "Updating new external connection {$Name}"
+        $body.Remove('Id') | Out-Null
+        Update-MgBetaExternalConnection -ExternalConnectionId $currentInstance.Id -BodyParameter $body
+    }
+    # REMOVE
+    elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
+    {
+        Write-Verbose -Message "Removing external connection {$Name}"
+        Remove-MgBetaExternalConnection -ExternalConnectionId $currentInstance.Id -Confirm:$false
     }
 }
 
@@ -280,31 +259,24 @@ function Test-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $ResourceGroupName,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $WorkspaceName,
+        $Name,
 
         [Parameter()]
         [System.String]
-        $SubscriptionId,
+        $Id,
 
         [Parameter()]
-        [System.Boolean]
-        $AnomaliesIsEnabled,
-
-        [Parameter()]
-        [System.Boolean]
-        $EntityAnalyticsIsEnabled,
-
-        [Parameter()]
-        [System.Boolean]
-        $EyesOnIsEnabled,
+        [System.String]
+        $Description,
 
         [Parameter()]
         [System.String[]]
-        $UebaDataSource,
+        $AuthorizedAppIds,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -394,7 +366,7 @@ function Export-TargetResource
         $AccessTokens
     )
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'Azure' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -412,11 +384,10 @@ function Export-TargetResource
     try
     {
         $Script:ExportMode = $true
+        [array] $Script:exportedInstances = Get-MgBetaExternalConnection -ErrorAction Stop
 
-        [array] $Script:exportedInstances = Get-AzResource -ResourceType 'Microsoft.OperationalInsights/workspaces'
-
-        $dscContent = ''
         $i = 1
+        $dscContent = ''
         if ($Script:exportedInstances.Length -eq 0)
         {
             Write-Host $Global:M365DSCEmojiGreenCheckMark
@@ -431,13 +402,11 @@ function Export-TargetResource
             {
                 $Global:M365DSCExportResourceInstancesCount++
             }
-            $displayedKey = $config.Name
+            $displayedKey = $config.Id
             Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -NoNewline
-            $SubscriptionId = $config.ResourceId.Split('/')[2]
             $params = @{
-                ResourceGroupName     = $config.ResourceGroupName
-                WorkspaceName         = $config.Name
-                SubscriptionId        = $SubscriptionId
+                Name                  = $config.Name
+                Id                    = $config.Id
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
@@ -448,16 +417,16 @@ function Export-TargetResource
 
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                    -Results $Results
+                -Results $Results
 
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                    -ConnectionMode $ConnectionMode `
-                    -ModulePath $PSScriptRoot `
-                    -Results $Results `
-                    -Credential $Credential
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -Credential $Credential
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
-                    -FileName $Global:PartialExportFileName
+                -FileName $Global:PartialExportFileName
             $i++
             Write-Host $Global:M365DSCEmojiGreenCheckMark
         }

@@ -58,6 +58,8 @@
 * IntuneAntivirusPolicyWindows10SettingCatalog
   * Fixes an issue with invalid parameter definition.
     FIXES [#5015](https://github.com/microsoft/Microsoft365DSC/issues/5015)
+* IntuneAppCategory
+  * Initial release.
 * IntuneDeviceCompliancePolicyWindows10
   * Fixes an issue where the property `ValidOperatingSystemBuildRanges` was
     not exported properly.
@@ -78,9 +80,8 @@
     FIXES [#5055](https://github.com/microsoft/Microsoft365DSC/issues/5055)
 * M365DSCResourceGenerator
   * Update Intune resource generation for the Settings Catalog.
-* M365DSCUtil
-  * Fixes an issue where the O365Group workload was not properly detected.
-    FIXES [#5095](https://github.com/microsoft/Microsoft365DSC/issues/5095)
+* O365ExternalConnection
+  * Initial release.
 * SCDeviceConditionalAccessRule
   * Initial release.
 * SCDeviceConfigurationRule
@@ -104,6 +105,8 @@
     FIXES [#3784](https://github.com/microsoft/Microsoft365DSC/issues/3784)
 * SentinelSetting
   * Initial release.
+* SentinelWatchlist
+  * Initial release.
 * SPOAccessControlSettings
   * Added support for property EnableRestrictedAccessControl.
 * M365DSCUtil
@@ -115,6 +118,7 @@
   * Added dependencies on Az.Accounts, Az.Resources and Az.SecurityInsights
   * Updated DSCParser to version 2.0.0.9.
   * Updated MSCloudLoginAssistant to version 1.1.25.
+  * Added dependency on Microsoft.Graph.Beta.Search.
   * Removed unnecessary dependency PSDesiredStateConfiguration v1.1
 
 # 1.24.904.1
