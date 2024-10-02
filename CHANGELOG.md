@@ -71,6 +71,9 @@
     FIXES [#5121](https://github.com/microsoft/Microsoft365DSC/issues/5121)
 * IntuneAppCategory
   * Initial release.
+* IntuneAppProtectionPolicyiOS
+  * Improve `TargetedAppManagementLevels` property to specify multiple values.
+    FIXES [#5032](https://github.com/microsoft/Microsoft365DSC/issues/5032)
 * IntuneDeviceCompliancePolicyWindows10
   * Fixes an issue where the property `ValidOperatingSystemBuildRanges` was
     not exported properly.
