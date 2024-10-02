@@ -44,7 +44,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     IsSingleInstance       = 'Yes'
                     MailTipsAllTipsEnabled = $True
-                    Ensure                 = 'Present'
                     Credential             = $Credential
                 }
 
@@ -77,7 +76,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     IsSingleInstance            = 'Yes'
                     MailTipsGroupMetricsEnabled = $True
-                    Ensure                      = 'Present'
                     Credential                  = $Credential
                 }
 
@@ -110,7 +108,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     IsSingleInstance               = 'Yes'
                     MailTipsLargeAudienceThreshold = 50
-                    Ensure                         = 'Present'
                     Credential                     = $Credential
                 }
 
@@ -143,7 +140,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     IsSingleInstance                  = 'Yes'
                     MailTipsMailboxSourcedTipsEnabled = $True
-                    Ensure                            = 'Present'
                     Credential                        = $Credential
                 }
 
@@ -172,7 +168,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     IsSingleInstance                      = 'Yes'
                     MailTipsExternalRecipientsTipsEnabled = $True
-                    Ensure                                = 'Present'
                     Credential                            = $Credential
                 }
 
@@ -209,7 +204,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     MailTipsMailboxSourcedTipsEnabled     = $True
                     MailTipsGroupMetricsEnabled           = $True
                     MailTipsExternalRecipientsTipsEnabled = $True
-                    Ensure                                = 'Present'
                     Credential                            = $Credential
                 }
 
@@ -225,30 +219,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should return Present from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
+                (Get-TargetResource @testParams).IsSingleInstance | Should -Be 'Yes'
             }
 
             It 'Should return True from the Test method' {
                 { Test-TargetResource @testParams } | Should -Be $True
-            }
-        }
-
-        Context -Name 'Organization Configuration is null' -Fixture {
-            BeforeAll {
-                $testParams = @{
-                    IsSingleInstance       = 'Yes'
-                    MailTipsAllTipsEnabled = $True
-                    Ensure                 = 'Present'
-                    Credential             = $Credential
-                }
-
-                Mock -CommandName Get-OrganizationConfig -MockWith {
-                    return $null
-                }
-            }
-
-            It 'Should return Ensure is Absent from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should -Be 'Absent'
             }
         }
 

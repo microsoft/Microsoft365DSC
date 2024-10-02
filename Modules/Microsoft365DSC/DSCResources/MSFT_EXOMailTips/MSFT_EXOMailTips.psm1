@@ -30,11 +30,6 @@ function Get-TargetResource
         $MailTipsExternalRecipientsTipsEnabled,
 
         [Parameter()]
-        [ValidateSet('Present', 'Absent')]
-        [System.String]
-        $Ensure = 'Present',
-
-        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -93,7 +88,6 @@ function Get-TargetResource
     #endregion
 
     $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = 'Absent'
 
     try
     {
@@ -112,7 +106,6 @@ function Get-TargetResource
             MailTipsLargeAudienceThreshold        = $OrgConfig.MailTipsLargeAudienceThreshold
             MailTipsMailboxSourcedTipsEnabled     = $OrgConfig.MailTipsMailboxSourcedTipsEnabled
             MailTipsExternalRecipientsTipsEnabled = $OrgConfig.MailTipsExternalRecipientsTipsEnabled
-            Ensure                                = 'Present'
             Credential                            = $Credential
             ApplicationId                         = $ApplicationId
             CertificateThumbprint                 = $CertificateThumbprint
@@ -167,11 +160,6 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $MailTipsExternalRecipientsTipsEnabled,
-
-        [Parameter()]
-        [ValidateSet('Present', 'Absent')]
-        [System.String]
-        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -290,11 +278,6 @@ function Test-TargetResource
         $MailTipsExternalRecipientsTipsEnabled,
 
         [Parameter()]
-        [ValidateSet('Present', 'Absent')]
-        [System.String]
-        $Ensure = 'Present',
-
-        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -353,8 +336,7 @@ function Test-TargetResource
         'MailTipsGroupMetricsEnabled',
         'MailTipsLargeAudienceThreshold',
         'MailTipsMailboxSourcedTipsEnabled',
-        'MailTipsExternalRecipientsTipsEnabled',
-        'Ensure')
+        'MailTipsExternalRecipientsTipsEnabled')
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -462,4 +444,3 @@ function Export-TargetResource
 }
 
 Export-ModuleMember -Function *-TargetResource
-

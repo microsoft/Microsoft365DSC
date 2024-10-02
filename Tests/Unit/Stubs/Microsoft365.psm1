@@ -1,3 +1,22 @@
+#region Azure
+function Invoke-AzRest
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Uri,
+
+        [Parameter()]
+        [System.String]
+        $Payload,
+
+        [Parameter()]
+        [System.String]
+        $Method
+    )
+}
+#endregion
 
 #region Microsoft.Graph.Beta.Applications
 function Get-MgBetaApplication

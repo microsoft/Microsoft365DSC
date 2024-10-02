@@ -1,0 +1,20 @@
+﻿{
+    "resourceName": "SentinelWatchlist",
+    "description": "Configures watchlists in Azure Sentinel.",
+    "roles": {
+        "read": [],
+        "update": []
+    },
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [],
+                "update": []
+            },
+            "application": {
+                "read": [],
+                "update": []
+            }
+        }
+    }
+}

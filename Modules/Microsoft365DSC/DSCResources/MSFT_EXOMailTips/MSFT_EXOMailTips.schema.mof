@@ -8,7 +8,6 @@ class MSFT_EXOMailTips : OMI_BaseResource
     [Write, Description("Specifies what a large audience is.")] UInt32 MailTipsLargeAudienceThreshold;
     [Write, Description("Specifies whether MailTips that rely on mailbox data (out-of-office or full mailbox) are enabled.")] Boolean MailTipsMailboxSourcedTipsEnabled;
     [Write, Description("Specifies whether MailTips for external recipients are enabled.")] Boolean MailTipsExternalRecipientsTipsEnabled;
-    [Write, Description("Specifies if this MailTip should exist."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
     [Write, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
     [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
