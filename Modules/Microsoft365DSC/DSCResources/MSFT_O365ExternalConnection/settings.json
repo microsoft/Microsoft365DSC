@@ -11,10 +11,16 @@
             "application": {
                 "read": [
                     {
+                        "name": "Application.Read.All"
+                    },
+                    {
                         "name": "ExternalConnection.Read.All"
                     }
                 ],
                 "update": [
+                    {
+                        "name": "Application.Read.All"
+                    },
                     {
                         "name": "ExternalConnection.ReadWrite.All"
                     }
