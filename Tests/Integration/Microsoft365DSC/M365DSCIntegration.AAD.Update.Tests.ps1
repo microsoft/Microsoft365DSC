@@ -268,6 +268,31 @@
                     };
                     State                            = "enabled"; # Updated Property
                 }
+                AADAuthenticationMethodPolicyHardware 'AADAuthenticationMethodPolicyHardware-HardwareOath'
+                {
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
+                    Ensure               = "Present";
+                    ExcludeTargets       = @(
+                        MSFT_AADAuthenticationMethodPolicyHardwareExcludeTarget{
+                            Id = 'Executives'
+                            TargetType = 'group'
+                        }
+                        MSFT_AADAuthenticationMethodPolicyHardwareExcludeTarget{
+                            Id = 'Paralegals'
+                            TargetType = 'group'
+                        }
+                    );
+                    Id                   = "HardwareOath";
+                    IncludeTargets       = @(
+                        MSFT_AADAuthenticationMethodPolicyHardwareIncludeTarget{
+                            Id = 'Legal Team'
+                            TargetType = 'group'
+                        }
+                    );
+                    State                = "enabled"; # Updated Property
+                }
                 AADAuthenticationMethodPolicySms 'AADAuthenticationMethodPolicySms-Sms'
                 {
                     ApplicationId         = $ApplicationId

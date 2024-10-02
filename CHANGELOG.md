@@ -8,10 +8,13 @@
   * Added AppRoles
   * Added AuthenticationBehavior
   * Added KeyCredentials
-  * Added PaswordCredentials
+  * Added OptionalClaims
+  * Added PasswordCredentials
   * Added PreAuthorizationApplications
 * AADAuthenticationMethodPolicy
   * Added ReportSuspiciousActivitySettings
+* AADAuthenticationMethodPolicyHardware
+  * Initial release.
 * AADEntitlementManagementSettings
   * Initial release.
 * AADFeatureRolloutPolicy
@@ -33,7 +36,15 @@
   * Initial Release.
 * DefenderSubscriptionDefenderPlan
   * Initial release.
+* EXOAntiPhishPolicy
+  * Use correct type integer for variable `PhishThresholdLevel`
 * EXOArcConfig
+  * Initial Release.
+* EXOAuthenticationPolicy
+  * If policy needs changes then recreate it to avoid issue with
+    `Set-AuthenticationPolicy` cmdlet
+    FIXES [#4819](https://github.com/microsoft/Microsoft365DSC/issues/4819)
+* EXODnssecForVerifiedDomain
   * Initial Release.
 * EXOEmailTenantSettings
   * Initial Release.
@@ -46,15 +57,22 @@
 * EXOMailboxFolderPermission
   * Initial Release.
 * EXOMailboxIRMAccess
+  * Initial Release.
+* EXOMailTips
+  * Remove property `Ensure` since this resource is of type `IsSingleInstance`
 * EXOManagementScope
   * Initial Release.
-* EXORetenionPolicy
+* EXORetentionPolicy
   * Initial Release.
 * EXOPhishSimOverrideRule
   * Initial Release.
 * IntuneAntivirusPolicyWindows10SettingCatalog
   * Fixes an issue with invalid parameter definition.
     FIXES [#5015](https://github.com/microsoft/Microsoft365DSC/issues/5015)
+  * Fixes an issue where the `AccessTokens` parameter was not available.
+    FIXES [#5121](https://github.com/microsoft/Microsoft365DSC/issues/5121)
+* IntuneAppCategory
+  * Initial release.
 * IntuneDeviceCompliancePolicyWindows10
   * Fixes an issue where the property `ValidOperatingSystemBuildRanges` was
     not exported properly.
@@ -62,33 +80,59 @@
 * IntuneDeviceConfigurationSharedMultiDevicePolicyWindows10
   * Add missing `AccessTokens` parameter to `Export-TargetResource`
     FIXES [#5034](https://github.com/microsoft/Microsoft365DSC/issues/5034)
+* IntuneFirewallPolicyWindows10
+  * Initial release
+    FIXES [#3033](https://github.com/microsoft/Microsoft365DSC/issues/3033)
 * IntuneSettingCatalogCustomPolicyWindows10
   * Update export logic to target more specific policy types.
   * Prevent thrown exception to be caught by exception handler.
     FIXES [#5088](https://github.com/microsoft/Microsoft365DSC/issues/5088)
-* M365DSCUtil
-  * Fixes an issue where the O365Group workload was not properly detected.
-    FIXES [#5095](https://github.com/microsoft/Microsoft365DSC/issues/5095)
+* M365DSCDRGUtil
+  * Add support for more complex Intune Settings Catalog properties
+  * Update handling of `Update-IntuneDeviceConfigurationPolicy` to throw on error
+    FIXES [#5055](https://github.com/microsoft/Microsoft365DSC/issues/5055)
+* M365DSCResourceGenerator
+  * Update Intune resource generation for the Settings Catalog.
+* O365ExternalConnection
+  * Initial release.
 * SCDeviceConditionalAccessRule
   * Initial release.
 * SCDeviceConfigurationRule
   * Initial release.
 * SCInsiderRiskEntityList
   * Initial release.
+* SCInsiderRiskPolicy
+  * Initial release.
+* SCRecordReviewNotificationTemplateConfig
+  * Initial release.
 * SCRoleGroup
   * Fixes an issue with creation without specifying Displayname
   * Fixes an issue with Drifts because of returned Role format
     FIXES [#5036](https://github.com/microsoft/Microsoft365DSC/issues/5036)
+* SCAutoSensitivityLabelRule
+  * Fixed issue with incorrectly applying HeaderMatchesPatterns, even when
+    parameter wasn't specified.
+    FIXES [#4641](https://github.com/microsoft/Microsoft365DSC/issues/4641)
+* SCSensitivityLabel
+  * Added support for Auto Labeling settings
+    FIXES [#3784](https://github.com/microsoft/Microsoft365DSC/issues/3784)
 * SentinelSetting
+  * Initial release.
+* SentinelWatchlist
   * Initial release.
 * SPOAccessControlSettings
   * Added support for property EnableRestrictedAccessControl.
+* M365DSCUtil
+  * Fixes an issue where the O365Group workload was not properly detected.
+    FIXES [#5095](https://github.com/microsoft/Microsoft365DSC/issues/5095)
 * DEPENDENCIES
   * Updated DSCParser to version 2.0.0.10.
   * Updated Microsoft.Graph to version 2.23.0.
   * Added dependencies on Az.Accounts, Az.Resources and Az.SecurityInsights
   * Updated DSCParser to version 2.0.0.9.
   * Updated MSCloudLoginAssistant to version 1.1.25.
+  * Added dependency on Microsoft.Graph.Beta.Search.
+  * Removed unnecessary dependency PSDesiredStateConfiguration v1.1
 
 # 1.24.904.1
 
@@ -680,6 +724,8 @@
   * Added EnableAIPIntegration.
 * TeamsChannelTab
   * Fixed schema file
+* TeamsComplianceRecordingPolicy
+  * FIXES [[#3712](https://github.com/microsoft/Microsoft365DSC/issues/3712)]
 * TeamsGroupPolicyAssignment
   * Skip assignments that have orphaned/deleted groups or without display name
     instead of throwing an error
