@@ -113,6 +113,11 @@
                                "Option":  "Write"
                            },
                            {
+                               "CIMType":  "Boolean",
+                               "Name":  "IsMemberManagementRestricted",
+                               "Option":  "Write"
+                           },
+                           {
                                "CIMType":  "String",
                                "Name":  "MembershipType",
                                "Option":  "Write"
