@@ -1,7 +1,7 @@
 [ClassVersion("1.0.0.0"), FriendlyName("SentinelWatchlist")]
 class MSFT_SentinelWatchlist : OMI_BaseResource
 {
-    [Key, Description("")] Name;
+    [Key, Description("")] String Name;
     [Write, Description("")] String SubscriptionId;
     [Write, Description("")] String ResourceGroupName;
     [Write, Description("")] String WorkspaceName;

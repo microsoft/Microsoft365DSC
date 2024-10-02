@@ -105,6 +105,12 @@ function Get-TargetResource
     $nullResult.Ensure = 'Absent'
     try
     {
+        if ([System.String]::IsNullOrEmpty($TenantId) -and $null -ne $Credential)
+        {
+            $TenantId = $Credential.UserName.Split('@')[1]
+        }
+
+        Write-Verbose -Message "Retrieving watchlist {$Name}"
         if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
         {
             if (-not [System.String]::IsNullOrEmpty($Id))
@@ -121,7 +127,8 @@ function Get-TargetResource
         {
             $watchLists = Get-M365DSCSentinelWatchlist -SubscriptionId $SubscriptionId `
                                                        -ResourceGroupName $ResourceName `
-                                                       -WorkspaceName $workspaceName
+                                                       -WorkspaceName $workspaceName `
+                                                       -TenantId $TenantId
 
             if (-not [System.String]::IsNullOrEmpty($Id))
             {
@@ -135,9 +142,11 @@ function Get-TargetResource
         }
         if ($null -eq $instance)
         {
+            Write-Verbose -Message "Watchlist {$Name} was not found"
             return $nullResult
         }
 
+        Write-Verbose -Message "Found watchlist {$Name}"
         $results = @{
             SubscriptionId        = $SubscriptionId
             ResourceGroupName     = $ResourceGroupName
@@ -274,27 +283,51 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $currentInstance = Get-TargetResource @PSBoundParameters
-
-    $setParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
-
-    # CREATE
-    if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
+    if ([System.String]::IsNullOrEmpty($TenantId) -and $null -ne $Credential)
     {
-        ##TODO - Replace by the New cmdlet for the resource
-        New-Cmdlet @SetParameters
+        $TenantId = $Credential.UserName.Split('@')[1]
     }
-    # UPDATE
-    elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
+
+    $body = @{
+        properties = @{
+            displayName         = $DisplayName
+            provider            = "Microsoft"
+            itemsSearchKey      = $ItemsSearchKey
+            sourceType          = $SourceType
+            description         = $Description
+            defaultDuration     = $defaultDuration
+            numberOfLinesToSkip = $NumberOfLinesToSkip
+            watchListAlias      = $Alias
+        }
+    }
+
+    if ($null -ne $RawContent)
     {
-        ##TODO - Replace by the Update/Set cmdlet for the resource
-        Set-cmdlet @SetParameters
+        Write-Verbose -Message "Adding rawContent and contentType to the payload"
+        $body.properties.Add('rawContent', $RawContent)
+        $body.properties.Add('contentType', 'text/csv')
+    }
+
+    # CREATE & UPDATE
+    if ($Ensure -eq 'Present')
+    {
+        Write-Verbose -Message "Configuring watchlist {$Name}"
+        Set-M365DSCSentinelWatchlist -SubscriptionId $SubscriptionId `
+                                     -ResourceGroupName $ResourceGroupName `
+                                     -WorkspaceName $WorkspaceName `
+                                     -WatchListAlias $Alias `
+                                     -Body $body `
+                                     -TenantId $TenantId
     }
     # REMOVE
-    elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
+    elseif ($Ensure -eq 'Absent')
     {
-        ##TODO - Replace by the Remove cmdlet for the resource
-        Remove-cmdlet @SetParameters
+        Write-Verbose -Message "Removing watchlist {$Name}"
+        Remove-M365DSCSentinelWatchlist -SubscriptionId $SubscriptionId `
+                                        -ResourceGroupName $ResourceGroupName `
+                                        -WorkspaceName $WorkspaceName `
+                                        -WatchListAlias $Alias `
+                                        -TenantId $TenantId
     }
 }
 
@@ -479,6 +512,11 @@ function Export-TargetResource
         {
             Write-Host "`r`n" -NoNewline
         }
+
+        if ([System.String]::IsNullOrEmpty($TenantId) -and $null -ne $Credential)
+        {
+            $TenantId = $Credential.UserName.Split('@')[1]
+        }
         foreach ($workspace in $workspaces)
         {
             Write-Host "    |---[$i/$($workspaces.Length)] $($workspace.Name)" -NoNewline
@@ -488,7 +526,8 @@ function Export-TargetResource
 
             $currentWatchLists = Get-M365DSCSentinelWatchlist -SubscriptionId $subscriptionId `
                                                               -ResourceGroupName $resourceGroupName `
-                                                              -WorkspaceName $workspaceName
+                                                              -WorkspaceName $workspaceName `
+                                                              -TenantId $TenantId
 
             $j = 1
             if ($currentWatchLists.Length -eq 0 )
@@ -572,14 +611,19 @@ function Get-M365DSCSentinelWatchlist
 
         [Parameter()]
         [System.String]
-        $WorkspaceName
+        $WorkspaceName,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $TenantId
     )
 
     try
     {
-        $uri = $Global:MSCloudLoginConnectionProfile.Azure.HostUrl + "/subscriptions/$($SubscriptionId)/resourceGroups/$($ResourceGroupName)/"
+        $hostUrl = Get-M365DSCAPIEndpoint -TenantId $TenantId
+        $uri = $hostUrl.AzureManagement + "/subscriptions/$($SubscriptionId)/resourceGroups/$($ResourceGroupName)/"
         $uri += "providers/Microsoft.OperationalInsights/workspaces/$($WorkspaceName)/providers/Microsoft.SecurityInsights/watchlists?api-version=2022-06-01-preview"
-        $response = Invoke-AzRest -Uri $uri -Method Get
+        $response = Invoke-AzRest -Uri $uri -Method 'GET'
         $result = ConvertFrom-Json $response.Content
         return $result.value
     }
@@ -589,16 +633,14 @@ function Get-M365DSCSentinelWatchlist
         New-M365DSCLogEntry -Message 'Error retrieving data:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
-            -TenantId $TenantId `
-            -Credential $Credential
+            -TenantId $TenantId
         throw $_
     }
 }
 
-function New-M365DSCSentinelWatchlist
+function Set-M365DSCSentinelWatchlist
 {
     [CmdletBinding()]
-    [OutputType([Array])]
     param(
         [Parameter()]
         [System.String]
@@ -613,17 +655,34 @@ function New-M365DSCSentinelWatchlist
         $WorkspaceName,
 
         [Parameter()]
+        [System.String]
+        $WatchListAlias,
+
+        [Parameter()]
         [System.Collections.Hashtable]
-        $Body
+        $Body,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $TenantId
     )
 
     try
     {
-        $uri = $Global:MSCloudLoginConnectionProfile.Azure.HostUrl + "/subscriptions/$($SubscriptionId)/resourceGroups/$($ResourceGroupName)/"
-        $uri += "providers/Microsoft.OperationalInsights/workspaces/$($WorkspaceName)/providers/Microsoft.SecurityInsights/watchlists?api-version=2022-06-01-preview"
-        $response = Invoke-AzRest -Uri $uri -Method PUT
-        $result = ConvertFrom-Json $response.Content
-        return $result.value
+        $hostUrl = Get-M365DSCAPIEndpoint -TenantId $TenantId
+        $uri = $hostUrl.AzureManagement + "/subscriptions/$($SubscriptionId)/resourceGroups/$($ResourceGroupName)/"
+        $uri += "providers/Microsoft.OperationalInsights/workspaces/$($WorkspaceName)/providers/Microsoft.SecurityInsights/watchlists/$($WatchListAlias)?api-version=2022-06-01-preview"
+        $payload = ConvertTo-Json $Body -Depth 10 -Compress
+
+        Write-Verbose -Message "Calling Url: {$($uri)}"
+        Write-Verbose -Message "Payload: {$payload}"
+        $response = Invoke-AzRest -Uri $uri -Method 'PUT' -Payload $payload
+        if ($response.StatusCode -ne 200 -and $response.StatusCode -ne 201)
+        {
+            Write-Verbose -Message $($response | Out-String)
+            $content = ConvertFrom-Json $response.Content
+            throw $content.error.message
+        }
     }
     catch
     {
@@ -631,8 +690,50 @@ function New-M365DSCSentinelWatchlist
         New-M365DSCLogEntry -Message 'Error retrieving data:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
-            -TenantId $TenantId `
-            -Credential $Credential
+            -TenantId $TenantId
+        throw $_
+    }
+}
+
+function Remove-M365DSCSentinelWatchlist
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $SubscriptionId,
+
+        [Parameter()]
+        [System.String]
+        $ResourceGroupName,
+
+        [Parameter()]
+        [System.String]
+        $WorkspaceName,
+
+        [Parameter()]
+        [System.String]
+        $WatchListAlias,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $TenantId
+    )
+
+    try
+    {
+        $hostUrl = Get-M365DSCAPIEndpoint -TenantId $TenantId
+        $uri = $hostUrl.AzureManagement + "/subscriptions/$($SubscriptionId)/resourceGroups/$($ResourceGroupName)/"
+        $uri += "providers/Microsoft.OperationalInsights/workspaces/$($WorkspaceName)/providers/Microsoft.SecurityInsights/watchlists/$($WatchListAlias)?api-version=2022-06-01-preview"
+        Invoke-AzRest -Uri $uri -Method 'DELETE'
+    }
+    catch
+    {
+        Write-Verbose -Message $_
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId
         throw $_
     }
 }

@@ -26,7 +26,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         BeforeAll {
 
             $secpasswd = ConvertTo-SecureString (New-Guid | Out-String) -AsPlainText -Force
-            $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin@mydomain.com', $secpasswd)
+            $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin@o365DSC.onmicrosoft.com', $secpasswd)
 
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
             }
@@ -35,7 +35,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return "Credentials"
             }
 
-            ##TODO - Mock any Remove/Set/New cmdlets
+            Mock -CommandName Get-AzResource -MockWith {
+                return @{
+                    ResourceGroupName = "MyResourceGroup"
+                    Name              = 'MySentinelWorkspace'
+                    ResourceId        = "name/part/resourceId/"
+                }
+            }
 
             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
@@ -47,14 +53,27 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The instance should exist but it DOES NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    ##TODO - Add Parameters
-                    Ensure              = 'Present'
-                    Credential          = $Credential;
+                    Alias                 = "MyAlias";
+                    DefaultDuration       = "P1DT3H";
+                    Description           = "My description";
+                    DisplayName           = "My Display Name";
+                    Ensure                = "Present";
+                    ItemsSearchKey        = "Test";
+                    Name                  = "MyWatchList";
+                    NumberOfLinesToSkip   = 1;
+                    RawContent            = 'MyContent'
+                    ResourceGroupName     = "MyResourceGroup";
+                    SourceType            = "Local";
+                    SubscriptionId        = "20f41296-9edc-4374-b5e0-b1c1aa07e7d3";
+                    TenantId              = $TenantId;
+                    WorkspaceName         = "MyWorkspace";
+                    Credential            = $Credential;
                 }
 
-                ##TODO - Mock the Get-Cmdlet to return $null
-                Mock -CommandName Get-Cmdlet -MockWith {
-                    return $null
+                Mock -CommandName Invoke-AzRest -MockWith {
+                    return @{
+                        statuscode = 200
+                    }
                 }
             }
             It 'Should return Values from the Get method' {
@@ -65,24 +84,70 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should create a new instance from the Set method' {
-                ##TODO - Replace the New-Cmdlet by the appropriate one
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName New-Cmdlet -Exactly 1
+                Should -Invoke -CommandName Invoke-AzRest -Exactly 1
             }
         }
 
         Context -Name "The instance exists but it SHOULD NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    ##TODO - Add Parameters
-                    Ensure              = 'Absent'
-                    Credential          = $Credential;
+                    Alias                 = "MyAlias";
+                    DefaultDuration       = "P1DT3H";
+                    Description           = "My description";
+                    DisplayName           = "My Display Name";
+                    Ensure                = "Absent";
+                    ItemsSearchKey        = "Test";
+                    Name                  = "MyWatchList";
+                    NumberOfLinesToSkip   = 1;
+                    RawContent            = 'MyContent'
+                    ResourceGroupName     = "MyResourceGroup";
+                    SourceType            = "Local";
+                    SubscriptionId        = "20f41296-9edc-4374-b5e0-b1c1aa07e7d3";
+                    TenantId              = $TenantId;
+                    WorkspaceName         = "MyWorkspace";
+                    Credential            = $Credential;
                 }
 
-                ##TODO - Mock the Get-Cmdlet to return an instance
-                Mock -CommandName Get-Cmdlet -MockWith {
+                Mock -CommandName Invoke-AzRest -MockWith {
                     return @{
-
+                        StatusCode = '200'
+                        Content = @"
+{"value":[
+{
+      "id": "/subscriptions/xxxx/resourceGroups/xxxx/providers/Microsoft.OperationalInsights/workspaces/xxxx/providers/Microsoft.SecurityInsights/Watchlists/xxxx",
+      "name": "MyWatchList",
+      "type": "Microsoft.SecurityInsights/Watchlists",
+      "properties": {
+        "watchlistId": "xxxx",
+        "displayName": "My Display Name",
+        "provider": "Microsoft",
+        "sourceType": "Local",
+        "itemsSearchKey": "Test",
+        "created": "2024-10-01T16:40:07.5468197-04:00",
+        "updated": "2024-10-01T16:58:54.4225042-04:00",
+        "createdBy": {
+          "objectId": "xxxx",
+          "name": "xxxx"
+        },
+        "updatedBy": {
+          "objectId": "xxxx",
+          "name": "xxxx"
+        },
+        "description": "My description",
+        "watchlistType": "watchlist",
+        "watchlistAlias": "MyAlias",
+        "isDeleted": false,
+        "labels": [],
+        "defaultDuration": "P1DT3H",
+        "tenantId": "xxx",
+        "numberOfLinesToSkip": 1,
+        "provisioningState": "Succeeded",
+        "sasUri": "",
+        "watchlistCategory": "General"
+      }
+    }]}
+"@
                     }
                 }
             }
@@ -95,23 +160,69 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should remove the instance from the Set method' {
                 Set-TargetResource @testParams
-                ##TODO - Replace the Remove-Cmdlet by the appropriate one
-                Should -Invoke -CommandName Remove-Cmdlet -Exactly 1
+                Should -Invoke -CommandName Invoke-AzRest -Exactly 1
             }
         }
 
         Context -Name "The instance exists and values are already in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    ##TODO - Add Parameters
-                    Ensure              = 'Present'
-                    Credential          = $Credential;
+                    Alias                 = "MyAlias";
+                    DefaultDuration       = "P1DT3H";
+                    Description           = "My description";
+                    DisplayName           = "My Display Name";
+                    Ensure                = "Present";
+                    ItemsSearchKey        = "Test";
+                    Name                  = "MyWatchList";
+                    NumberOfLinesToSkip   = 1;
+                    RawContent            = 'MyContent'
+                    ResourceGroupName     = "MyResourceGroup";
+                    SourceType            = "Local";
+                    SubscriptionId        = "20f41296-9edc-4374-b5e0-b1c1aa07e7d3";
+                    TenantId              = $TenantId;
+                    WorkspaceName         = "MyWorkspace";
+                    Credential            = $Credential;
                 }
 
-                ##TODO - Mock the Get-Cmdlet to return the desired values
-                Mock -CommandName Get-Cmdlet -MockWith {
+                Mock -CommandName Invoke-AzRest -MockWith {
                     return @{
-
+                        StatusCode = '200'
+                        Content = @"
+{"value":[
+{
+      "id": "/subscriptions/xxxx/resourceGroups/xxxx/providers/Microsoft.OperationalInsights/workspaces/xxxx/providers/Microsoft.SecurityInsights/Watchlists/xxxx",
+      "name": "MyWatchList",
+      "type": "Microsoft.SecurityInsights/Watchlists",
+      "properties": {
+        "watchlistId": "xxxx",
+        "displayName": "My Display Name",
+        "provider": "Microsoft",
+        "sourceType": "Local",
+        "itemsSearchKey": "Test",
+        "created": "2024-10-01T16:40:07.5468197-04:00",
+        "updated": "2024-10-01T16:58:54.4225042-04:00",
+        "createdBy": {
+          "objectId": "xxxx",
+          "name": "xxxx"
+        },
+        "updatedBy": {
+          "objectId": "xxxx",
+          "name": "xxxx"
+        },
+        "description": "My description",
+        "watchlistType": "watchlist",
+        "watchlistAlias": "MyAlias",
+        "isDeleted": false,
+        "labels": [],
+        "defaultDuration": "P1DT3H",
+        "tenantId": "xxx",
+        "numberOfLinesToSkip": 1,
+        "provisioningState": "Succeeded",
+        "sasUri": "",
+        "watchlistCategory": "General"
+      }
+    }]}
+"@
                     }
                 }
             }
@@ -124,15 +235,62 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The instance exists and values are NOT in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    ##TODO - Add Parameters
-                    Ensure              = 'Present'
-                    Credential          = $Credential;
+                    Alias                 = "MyAlias";
+                    DefaultDuration       = "P1DT3H";
+                    Description           = "My description";
+                    DisplayName           = "My Display Name";
+                    Ensure                = "Present";
+                    ItemsSearchKey        = "Test";
+                    Name                  = "MyWatchList";
+                    NumberOfLinesToSkip   = 0; # Drift
+                    RawContent            = 'MyContent'
+                    ResourceGroupName     = "MyResourceGroup";
+                    SourceType            = "Local";
+                    SubscriptionId        = "20f41296-9edc-4374-b5e0-b1c1aa07e7d3";
+                    TenantId              = $TenantId;
+                    WorkspaceName         = "MyWorkspace";
+                    Credential            = $Credential;
                 }
 
-                ##TODO - Mock the Get-Cmdlet to return a drift
-                Mock -CommandName Get-Cmdlet -MockWith {
+                Mock -CommandName Invoke-AzRest -MockWith {
                     return @{
-
+                        StatusCode = '200'
+                        Content = @"
+{"value":[
+{
+      "id": "/subscriptions/xxxx/resourceGroups/xxxx/providers/Microsoft.OperationalInsights/workspaces/xxxx/providers/Microsoft.SecurityInsights/Watchlists/xxxx",
+      "name": "MyWatchList",
+      "type": "Microsoft.SecurityInsights/Watchlists",
+      "properties": {
+        "watchlistId": "xxxx",
+        "displayName": "My Display Name",
+        "provider": "Microsoft",
+        "sourceType": "Local",
+        "itemsSearchKey": "Test",
+        "created": "2024-10-01T16:40:07.5468197-04:00",
+        "updated": "2024-10-01T16:58:54.4225042-04:00",
+        "createdBy": {
+          "objectId": "xxxx",
+          "name": "xxxx"
+        },
+        "updatedBy": {
+          "objectId": "xxxx",
+          "name": "xxxx"
+        },
+        "description": "My description",
+        "watchlistType": "watchlist",
+        "watchlistAlias": "MyAlias",
+        "isDeleted": false,
+        "labels": [],
+        "defaultDuration": "P1DT3H",
+        "tenantId": "xxx",
+        "numberOfLinesToSkip": 1,
+        "provisioningState": "Succeeded",
+        "sasUri": "",
+        "watchlistCategory": "General"
+      }
+    }]}
+"@
                     }
                 }
             }
@@ -147,8 +305,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should call the Set method' {
                 Set-TargetResource @testParams
-                ##TODO - Replace the Update-Cmdlet by the appropriate one
-                Should -Invoke -CommandName Update-Cmdlet -Exactly 1
+                Should -Invoke -CommandName Invoke-AzRest -Exactly 1
             }
         }
 
@@ -156,14 +313,49 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $Global:CurrentModeIsExport = $true
                 $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
-                $testParams = @{
-                    Credential  = $Credential;
+                $testParams = @{                    
+                    Credential            = $Credential;
                 }
 
-                ##TODO - Mock the Get-Cmdlet to return an instance
-                Mock -CommandName Get-Cmdlet -MockWith {
+                Mock -CommandName Invoke-AzRest -MockWith {
                     return @{
-
+                        StatusCode = '200'
+                        Content = @"
+{"value":[
+{
+      "id": "/subscriptions/xxxx/resourceGroups/xxxx/providers/Microsoft.OperationalInsights/workspaces/xxxx/providers/Microsoft.SecurityInsights/Watchlists/xxxx",
+      "name": "MyWatchList",
+      "type": "Microsoft.SecurityInsights/Watchlists",
+      "properties": {
+        "watchlistId": "xxxx",
+        "displayName": "My Display Name",
+        "provider": "Microsoft",
+        "sourceType": "Local",
+        "itemsSearchKey": "Test",
+        "created": "2024-10-01T16:40:07.5468197-04:00",
+        "updated": "2024-10-01T16:58:54.4225042-04:00",
+        "createdBy": {
+          "objectId": "xxxx",
+          "name": "xxxx"
+        },
+        "updatedBy": {
+          "objectId": "xxxx",
+          "name": "xxxx"
+        },
+        "description": "My description",
+        "watchlistType": "watchlist",
+        "watchlistAlias": "MyAlias",
+        "isDeleted": false,
+        "labels": [],
+        "defaultDuration": "P1DT3H",
+        "tenantId": "xxx",
+        "numberOfLinesToSkip": 1,
+        "provisioningState": "Succeeded",
+        "sasUri": "",
+        "watchlistCategory": "General"
+      }
+    }]}
+"@
                     }
                 }
             }
