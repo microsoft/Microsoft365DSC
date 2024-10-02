@@ -99,6 +99,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     SaveAsBlocked                           = $True
                     SimplePinBlocked                        = $False
                     Identity                                = '12345-12345-12345-12345-12345'
+                    TargetedAppManagementLevels             = @('unmanaged')
                 }
                 Mock -CommandName Get-MgBetaDeviceAppManagementiosManagedAppProtection -MockWith {
                     return $null
@@ -160,6 +161,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     SaveAsBlocked                           = $True
                     SimplePinBlocked                        = $False
                     Identity                                = '12345-12345-12345-12345-12345'
+                    TargetedAppManagementLevels             = @('unmanaged')
                 }
 
                 Mock -CommandName Get-MgBetaDeviceAppManagementiosManagedAppProtection -MockWith {
@@ -198,6 +200,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         SaveAsBlocked                           = $True
                         SimplePinBlocked                        = $False
                         id                                      = '12345-12345-12345-12345-12345'
+                        TargetedAppManagementLevels             = 'unmanaged'
                     }
                 }
                 Mock -CommandName Get-MgBetaDeviceAppManagementiosManagedAppProtectionApp -MockWith {
@@ -305,6 +308,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     SaveAsBlocked                           = $True
                     SimplePinBlocked                        = $False
                     Identity                                = '12345-12345-12345-12345-12345'
+                    TargetedAppManagementLevels             = @('unmanaged')
                 }
 
                 Mock -CommandName Get-MgBetaDeviceAppManagementiosManagedAppProtection -MockWith {
@@ -343,6 +347,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         SaveAsBlocked                           = $True
                         SimplePinBlocked                        = $False
                         id                                      = '12345-12345-12345-12345-12345'
+                        TargetedAppManagementLevels             = 'unmanaged'
                     }
                 }
                 Mock -CommandName Get-MgBetaDeviceAppManagementiosManagedAppProtectionApp -MockWith {
@@ -441,6 +446,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     SaveAsBlocked                           = $True
                     SimplePinBlocked                        = $False
                     Identity                                = '12345-12345-12345-12345-12345'
+                    TargetedAppManagementLevels             = @('unmanaged')
                 }
 
                 Mock -CommandName Get-MgBetaDeviceAppManagementiosManagedAppProtection -MockWith {
@@ -479,6 +485,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         SaveAsBlocked                           = $True
                         SimplePinBlocked                        = $False
                         id                                      = '12345-12345-12345-12345-12345'
+                        TargetedAppManagementLevels             = 'unmanaged'
                     }
                 }
                 Mock -CommandName Get-MgBetaDeviceAppManagementiosManagedAppProtectionApp -MockWith {
@@ -589,6 +596,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         SaveAsBlocked                           = $True
                         SimplePinBlocked                        = $False
                         id                                      = '12345-12345-12345-12345-12345'
+                        TargetedAppManagementLevels             = 'unmanaged'
                     }
                 }
                 Mock -CommandName Get-MgBetaDeviceAppManagementiosManagedAppProtectionApp -MockWith {
