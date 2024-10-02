@@ -145,17 +145,22 @@ Configuration Example
     {
         AADGroup 'MyGroups'
         {
-            DisplayName     = "DSCGroup"
-            Description     = "Microsoft DSC Group Updated" # Updated Property
-            SecurityEnabled = $True
-            MailEnabled     = $True
-            GroupTypes      = @("Unified")
-            MailNickname    = "M365DSC"
-            Members         = @("AdeleV@$TenantId")
-            GroupAsMembers  = @("Group1")
-            Visibility      = "Private"
-            Owners          = @("admin@$TenantId", "AdeleV@$TenantId")
-            Ensure          = "Present"
+            DisplayName      = "DSCGroup"
+            Description      = "Microsoft DSC Group Updated" # Updated Property
+            SecurityEnabled  = $True
+            MailEnabled      = $True
+            GroupTypes       = @("Unified")
+            MailNickname     = "M365DSC"
+            Members          = @("AdeleV@$TenantId")
+            GroupAsMembers   = @("Group1")
+            Visibility       = "Private"
+            Owners           = @("admin@$TenantId", "AdeleV@$TenantId")
+            AssignedLicenses = @(
+                MSFT_AADGroupLicense {
+                    SkuId          = 'AAD_PREMIUM_P2'
+                }
+            )
+            Ensure           = "Present"
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint

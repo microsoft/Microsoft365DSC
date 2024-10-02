@@ -382,9 +382,9 @@ function Get-IconPath
     {
         return Get-Base64EncodedImage -IconName "Intune.jpg"
     }
-    elseif ($ResourceName.StartsWith('Intune'))
+    elseif ($ResourceName.StartsWith('Defender'))
     {
-        return 'http://microsoft365dsc.com/Images/Intune.jpg'
+        return Get-Base64EncodedImage -IconName "SecurityAndCompliance.png"
     }
     return $null
 }
@@ -1169,7 +1169,7 @@ function Compare-M365DSCConfigurations
 This function gets the key parameter for the specified CIMInstance
 
 .Functionality
-Internal, Hidden
+Public
 #>
 function Get-M365DSCCIMInstanceKey
 {
@@ -1222,6 +1222,18 @@ function Get-M365DSCCIMInstanceKey
     elseif ($CIMInstance.ContainsKey("dataType"))
     {
         $primaryKey = 'dataType'
+    }
+    elseif ($CIMInstance.ContainsKey("Dmn"))
+    {
+        $primaryKey = 'Dmn'
+    }
+    elseif ($CIMInstance.ContainsKey('EmergencyDialString'))
+    {
+        $primaryKey = 'EmergencyDialString'
+    }
+    else
+    {
+        $primaryKey = $CIMInstance.Keys[0]
     }
 
     return $primaryKey
@@ -1931,5 +1943,6 @@ function Initialize-M365DSCReporting
 Export-ModuleMember -Function @(
     'Compare-M365DSCConfigurations',
     'New-M365DSCDeltaReport',
-    'New-M365DSCReportFromConfiguration'
+    'New-M365DSCReportFromConfiguration',
+    'Get-M365DSCCIMInstanceKey'
 )
