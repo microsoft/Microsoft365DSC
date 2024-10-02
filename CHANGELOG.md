@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* IntuneAppCategory
+  * Initial release.
 * AADApplication
   * Added AppRoles
   * Added AuthenticationBehavior
