@@ -17917,7 +17917,7 @@ function New-MgBetaDeviceAppManagementMobileApp {
         $InformationUrl,
 
         [Parameter()]
-        [System.Boolean]
+        [System.String]
         $IsFeatured,
 
         [Parameter()]
@@ -17967,7 +17967,7 @@ function Get-MgBetaDeviceAppManagementMobileApp {
         $InformationUrl,
 
         [Parameter()]
-        [System.Boolean]
+        [System.String]
         $IsFeatured,
 
         [Parameter()]
@@ -18016,7 +18016,7 @@ function Update-MgBetaDeviceAppManagementMobileApp {
         $InformationUrl,
 
         [Parameter()]
-        [System.Boolean]
+        [System.String]
         $IsFeatured,
 
         [Parameter()]
@@ -18066,7 +18066,7 @@ function Remove-MgBetaDeviceAppManagementMobileApp {
         $InformationUrl,
 
         [Parameter()]
-        [System.Boolean]
+        [System.String]
         $IsFeatured,
 
         [Parameter()]
@@ -18874,7 +18874,7 @@ function New-MgBetaDeviceManagementAssignmentFilter
         $HttpPipelineAppend
     )
 }
-function New-MgBetaDeviceManagementConfigurationPolicy #TODOK: What is the use of this file? Why almost all Intune cmdlets are already here?
+function New-MgBetaDeviceManagementConfigurationPolicy
 {
     [CmdletBinding()]
     param(
@@ -83113,7 +83113,7 @@ function Update-MgBetaDeviceAppManagementPolicySetAssignment
 #endregion
 
 #region MgBetaDeviceAppManagementMobileApp
-function Get-MgBetaDeviceAppManagementMobileApp
+function Get-MgBetaDeviceAppManagementMobileApp # TODOK
 {
     [CmdletBinding()]
     param
@@ -83200,7 +83200,7 @@ function Get-MgBetaDeviceAppManagementMobileApp
     )
 }
 
-function New-MgBetaDeviceAppManagementMobileApp
+function New-MgBetaDeviceAppManagementMobileApp # TODOK
 {
     [CmdletBinding()]
     param
@@ -83258,7 +83258,8 @@ function New-MgBetaDeviceAppManagementMobileApp
         $IsAssigned,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
+        #[System.Management.Automation.SwitchParameter]
+        [System.String]
         $IsFeatured,
 
         [Parameter()]
@@ -83339,7 +83340,7 @@ function New-MgBetaDeviceAppManagementMobileApp
     )
 }
 
-function Remove-MgBetaDeviceAppManagementMobileApp
+function Remove-MgBetaDeviceAppManagementMobileApp # TODOK
 {
     [CmdletBinding()]
     param
@@ -83390,70 +83391,7 @@ function Remove-MgBetaDeviceAppManagementMobileApp
     )
 }
 
-function Set-MgBetaDeviceAppManagementMobileApp
-{
-    [CmdletBinding()]
-    param
-    (
-        [Parameter()]
-        [System.String]
-        $MobileAppId,
-
-        [Parameter()]
-        [PSObject]
-        $InputObject,
-
-        [Parameter()]
-        [PSObject]
-        $BodyParameter,
-
-        [Parameter()]
-        [System.String]
-        $ResponseHeadersVariable,
-
-        [Parameter()]
-        [System.Collections.Hashtable]
-        $AdditionalProperties,
-
-        [Parameter()]
-        [PSObject[]]
-        $MobileAppAssignments,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break,
-
-        [Parameter()]
-        [System.Collections.IDictionary]
-        $Headers,
-
-        [Parameter()]
-        [PSObject[]]
-        $HttpPipelineAppend,
-
-        [Parameter()]
-        [PSObject[]]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $PassThru,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials
-    )
-}
-
-function Update-MgBetaDeviceAppManagementMobileApp
+function Update-MgBetaDeviceAppManagementMobileApp # TODOK
 {
     [CmdletBinding()]
     param
@@ -83519,7 +83457,8 @@ function Update-MgBetaDeviceAppManagementMobileApp
         $IsAssigned,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
+        #[System.Management.Automation.SwitchParameter]
+        [System.String]
         $IsFeatured,
 
         [Parameter()]
