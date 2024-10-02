@@ -51,6 +51,9 @@
 * EXOMailboxFolderPermission
   * Initial Release.
 * EXOMailboxIRMAccess
+  * Initial Release.
+* EXOMailTips
+  * Remove property `Ensure` since this resource is of type `IsSingleInstance`
 * EXOManagementScope
   * Initial Release.
 * EXORetenionPolicy
