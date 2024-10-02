@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.24.1002.1
 
 * AADAdministrativeUnit
   * Added support for property IsMemberManagementRestricted.
@@ -135,7 +135,8 @@
 * DEPENDENCIES
   * Updated DSCParser to version 2.0.0.10.
   * Updated Microsoft.Graph to version 2.23.0.
-  * Added dependencies on Az.Accounts, Az.Resources and Az.SecurityInsights
+  * Added dependencies on Az.Accounts, Az.Resources, Az.ResourceGraph
+    and Az.SecurityInsights.
   * Updated DSCParser to version 2.0.0.9.
   * Updated MSCloudLoginAssistant to version 1.1.25.
   * Added dependency on Microsoft.Graph.Beta.Search.
