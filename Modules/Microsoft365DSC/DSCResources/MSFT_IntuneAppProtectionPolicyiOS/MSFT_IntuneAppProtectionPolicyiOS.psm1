@@ -710,7 +710,7 @@ function Set-TargetResource
         $createParameters.Remove('Identity')
         $createParameters.Remove('Assignments')
         $createParameters.Remove('Apps')
-        $createParameter.TargetedAppManagementLevels = $createParameters.TargetedAppManagementLevels -join ','
+        $createParameters.TargetedAppManagementLevels = $createParameters.TargetedAppManagementLevels -join ','
 
         $myApps = Get-IntuneAppProtectionPolicyiOSAppsToHashtable -Parameters $PSBoundParameters
         $myAssignments = Get-IntuneAppProtectionPolicyiOSAssignmentToHashtable -Parameters $PSBoundParameters
