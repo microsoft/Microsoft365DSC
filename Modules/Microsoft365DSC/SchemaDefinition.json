@@ -19060,6 +19060,61 @@
                        ]
     },
     {
+        "ClassName":  "MSFT_IntuneAppCategory",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "DisplayName",
+                               "Option":  "Key"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Id",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "string",
+                               "Name":  "Ensure",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "Credential",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ApplicationId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "TenantId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "CertificateThumbprint",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "ApplicationSecret",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "ManagedIdentity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
         "ClassName":  "MSFT_MicrosoftGraphAndroidPermissionAction",
         "Parameters":  [
                            {
@@ -36710,6 +36765,66 @@
                        ]
     },
     {
+        "ClassName":  "MSFT_O365ExternalConnection",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Name",
+                               "Option":  "Key"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Id",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Description",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AuthorizedAppIds",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "string",
+                               "Name":  "Ensure",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "Credential",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ApplicationId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "TenantId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "CertificateThumbprint",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "ManagedIdentity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
         "ClassName":  "MSFT_O365Group",
         "Parameters":  [
                            {
@@ -42265,6 +42380,101 @@
                        ]
     },
     {
+        "ClassName":  "MSFT_SCSLSensitiveInformationType",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "name",
+                               "Option":  "Required"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "confidencelevel",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "classifiertype",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "mincount",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "maxcount",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_SCSLTrainableClassifiers",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "name",
+                               "Option":  "Required"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "id",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_SCSLSensitiveInformationGroup",
+        "Parameters":  [
+                           {
+                               "CIMType":  "MSFT_SCSLSensitiveInformationType[]",
+                               "Name":  "SensitiveInformationType",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_SCSLTrainableClassifiers[]",
+                               "Name":  "TrainableClassifier",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Name",
+                               "Option":  "Required"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Operator",
+                               "Option":  "Required"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_SCSLAutoLabelingSettings",
+        "Parameters":  [
+                           {
+                               "CIMType":  "MSFT_SCSLSensitiveInformationGroup[]",
+                               "Name":  "Groups",
+                               "Option":  "Required"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Operator",
+                               "Option":  "Required"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "PolicyTip",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AutoApplyType",
+                               "Option":  "Required"
+                           }
+                       ]
+    },
+    {
         "ClassName":  "MSFT_SCLabelLocaleSettings",
         "Parameters":  [
                            {
@@ -42500,6 +42710,11 @@
                            {
                                "CIMType":  "String",
                                "Name":  "SiteAndGroupExternalSharingControlType",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_SCSLAutoLabelingSettings",
+                               "Name":  "AutoLabelingSettings",
                                "Option":  "Write"
                            },
                            {

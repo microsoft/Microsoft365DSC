@@ -77,61 +77,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name 'When the policy already exists and is NOT in the Desired State' -Fixture {
-            BeforeAll {
-                $testParams = @{
-                    DisplayName = 'Test Category'
-                    Description = 'Test Definition'
-                    Ensure      = 'Present'
-                    Credential  = $Credential
-                }
-
-                Mock -CommandName Get-MgBetaDeviceManagementDeviceCategory -MockWith {
-                    return @{
-                        DisplayName = 'Test Category'
-                        Description = 'Different Value'
-                        Id          = '12345-12345-12345-12345-12345'
-                    }
-                }
-            }
-
-            It 'Should return Present from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
-            }
-
-            It 'Should return false from the Test method' {
-                Test-TargetResource @testParams | Should -Be $false
-            }
-
-            It 'Should update the category from the Set method' {
-                Set-TargetResource @testParams
-                Should -Invoke -CommandName Update-MgBetaDeviceManagementDeviceCategory -Exactly 1
-            }
-        }
-
-        Context -Name 'When the policy already exists and IS in the Desired State' -Fixture {
-            BeforeAll {
-                $testParams = @{
-                    DisplayName = 'Test Category'
-                    Description = 'Test Definition'
-                    Ensure      = 'Present'
-                    Credential  = $Credential
-                }
-
-                Mock -CommandName Get-MgBetaDeviceManagementDeviceCategory -MockWith {
-                    return @{
-                        DisplayName = 'Test Category'
-                        Description = 'Test Definition'
-                        Id          = '12345-12345-12345-12345-12345'
-                    }
-                }
-            }
-
-            It 'Should return true from the Test method' {
-                Test-TargetResource @testParams | Should -Be $true
-            }
-        }
-
         Context -Name 'When the policy exists and it SHOULD NOT' -Fixture {
             BeforeAll {
                 $testParams = @{
@@ -161,6 +106,61 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It 'Should remove the category from the Set method' {
                 Set-TargetResource @testParams
                 Should -Invoke -CommandName Remove-MgBetaDeviceManagementDeviceCategory -Exactly 1
+            }
+        }
+
+        Context -Name 'When the policy already exists and IS in the Desired State' -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    DisplayName = 'Test Category'
+                    Description = 'Test Definition'
+                    Ensure      = 'Present'
+                    Credential  = $Credential
+                }
+
+                Mock -CommandName Get-MgBetaDeviceManagementDeviceCategory -MockWith {
+                    return @{
+                        DisplayName = 'Test Category'
+                        Description = 'Test Definition'
+                        Id          = '12345-12345-12345-12345-12345'
+                    }
+                }
+            }
+
+            It 'Should return true from the Test method' {
+                Test-TargetResource @testParams | Should -Be $true
+            }
+        }
+
+        Context -Name 'When the policy already exists and is NOT in the Desired State' -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    DisplayName = 'Test Category'
+                    Description = 'Test Definition'
+                    Ensure      = 'Present'
+                    Credential  = $Credential
+                }
+
+                Mock -CommandName Get-MgBetaDeviceManagementDeviceCategory -MockWith {
+                    return @{
+                        DisplayName = 'Test Category'
+                        Description = 'Different Value'
+                        Id          = '12345-12345-12345-12345-12345'
+                    }
+                }
+            }
+
+            It 'Should return Present from the Get method' {
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
+            }
+
+            It 'Should return false from the Test method' {
+                Test-TargetResource @testParams | Should -Be $false
+            }
+
+            It 'Should update the category from the Set method' {
+                Set-TargetResource @testParams
+                Should -Invoke -CommandName Update-MgBetaDeviceManagementDeviceCategory -Exactly 1
             }
         }
 

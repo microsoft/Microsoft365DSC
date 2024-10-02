@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* IntuneAppCategory
+  * Initial release.
 * AADApplication
   * Added AppRoles
   * Added AuthenticationBehavior
@@ -69,9 +71,8 @@
   * Update export logic to target more specific policy types.
   * Prevent thrown exception to be caught by exception handler.
     FIXES [#5088](https://github.com/microsoft/Microsoft365DSC/issues/5088)
-* M365DSCUtil
-  * Fixes an issue where the O365Group workload was not properly detected.
-    FIXES [#5095](https://github.com/microsoft/Microsoft365DSC/issues/5095)
+* O365ExternalConnection
+  * Initial release.
 * SCDeviceConditionalAccessRule
   * Initial release.
 * SCDeviceConfigurationRule
@@ -86,16 +87,28 @@
   * Fixes an issue with creation without specifying Displayname
   * Fixes an issue with Drifts because of returned Role format
     FIXES [#5036](https://github.com/microsoft/Microsoft365DSC/issues/5036)
+* SCAutoSensitivityLabelRule
+  * Fixed issue with incorrectly applying HeaderMatchesPatterns, even when
+    parameter wasn't specified.
+    FIXES [#4641](https://github.com/microsoft/Microsoft365DSC/issues/4641)
+* SCSensitivityLabel
+  * Added support for Auto Labeling settings
+    FIXES [#3784](https://github.com/microsoft/Microsoft365DSC/issues/3784)
 * SentinelSetting
   * Initial release.
 * SPOAccessControlSettings
   * Added support for property EnableRestrictedAccessControl.
+* M365DSCUtil
+  * Fixes an issue where the O365Group workload was not properly detected.
+    FIXES [#5095](https://github.com/microsoft/Microsoft365DSC/issues/5095)
 * DEPENDENCIES
   * Updated DSCParser to version 2.0.0.10.
   * Updated Microsoft.Graph to version 2.23.0.
   * Added dependencies on Az.Accounts, Az.Resources and Az.SecurityInsights
   * Updated DSCParser to version 2.0.0.9.
   * Updated MSCloudLoginAssistant to version 1.1.25.
+  * Added dependency on Microsoft.Graph.Beta.Search.
+  * Removed unnecessary dependency PSDesiredStateConfiguration v1.1
 
 # 1.24.904.1
 
