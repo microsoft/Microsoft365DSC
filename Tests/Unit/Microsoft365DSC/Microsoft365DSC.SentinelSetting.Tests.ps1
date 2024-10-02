@@ -42,6 +42,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return @{
                     ResourceGroupName = "MyResourceGroup"
                     Name              = 'MySentinelWorkspace'
+                    ResourceId        = "name/part/resourceId/"
                 }
             }
 

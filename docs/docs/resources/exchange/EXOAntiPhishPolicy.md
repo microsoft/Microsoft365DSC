@@ -7,7 +7,7 @@
 | **Identity** | Key | String | The Identity parameter specifies the name of the antiphishing policy that you want to modify. | |
 | **Ensure** | Write | String | Specify if this policy should exist or not. | `Present`, `Absent` |
 | **AdminDisplayName** | Write | String | The AdminDisplayName parameter specifies a description for the policy. | |
-| **PhishThresholdLevel** | Write | String | The PhishThresholdLevel parameter specifies the tolerance level that's used by machine learning in the handling of phishing messages. | `1`, `2`, `3`, `4` |
+| **PhishThresholdLevel** | Write | UInt32 | The PhishThresholdLevel parameter specifies the tolerance level that's used by machine learning in the handling of phishing messages. | `1`, `2`, `3`, `4` |
 | **AuthenticationFailAction** | Write | String | The AuthenticationFailAction parameter specifies the action to take when the message fails composite authentication. | `MoveToJmf`, `Quarantine` |
 | **TargetedUserProtectionAction** | Write | String | The TargetedUserProtectionActionâ¯parameter specifies the action to take on detected user impersonation messages for the users specified by the TargetedUsersToProtect parameter. | `BccMessage`, `Delete`, `MoveToJmf`, `NoAction`, `Quarantine`, `Redirect` |
 | **Enabled** | Write | Boolean | Specify if this policy should be enabled. Default is $true. | |

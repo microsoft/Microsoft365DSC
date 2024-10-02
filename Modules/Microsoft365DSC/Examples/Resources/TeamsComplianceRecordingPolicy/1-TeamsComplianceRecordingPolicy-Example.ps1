@@ -14,14 +14,34 @@ Configuration Example
 
     node localhost
     {
-        TeamsComplianceRecordingPolicy 'Example'
+        TeamsComplianceRecordingPolicy "TeamsComplianceRecordingPolicy-Tag:MyTeamsComplianceRecordingPolicy"
         {
-            ComplianceRecordingApplications                     = @('qwertzuio-abcd-abcd-abcd-qwertzuio');
-            Credential                                          = $Credscredential;
+            Credential                                          = $credsCredential;
+            ComplianceRecordingApplications                     = @(
+                MSFT_TeamsComplianceRecordingApplication{
+                    Id = '00000000-0000-0000-0000-000000000000'
+                    ComplianceRecordingPairedApplications = @('00000000-0000-0000-0000-000000000000')
+                    ConcurrentInvitationCount = 1
+                    RequiredDuringCall = $True
+                    RequiredBeforeMeetingJoin = $True
+                    RequiredBeforeCallEstablishment = $True
+                    RequiredDuringMeeting = $True
+                }
+                MSFT_TeamsComplianceRecordingApplication{
+                    Id = '12345678-0000-0000-0000-000000000000'
+                    ComplianceRecordingPairedApplications = @('87654321-0000-0000-0000-000000000000')
+                    ConcurrentInvitationCount = 1
+                    RequiredDuringCall = $True
+                    RequiredBeforeMeetingJoin = $True
+                    RequiredBeforeCallEstablishment = $True
+                    RequiredDuringMeeting = $True
+                }
+            );
+            Description                                         = "MyTeamsComplianceRecordingPolicy";
             DisableComplianceRecordingAudioNotificationForCalls = $False;
-            Enabled                                             = $False;
+            Enabled                                             = $True;
             Ensure                                              = "Present";
-            Identity                                            = "Global";
+            Identity                                            = "Tag:MyTeamsComplianceRecordingPolicy";
             WarnUserOnRemoval                                   = $True;
         }
     }
