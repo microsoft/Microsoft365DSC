@@ -63,6 +63,8 @@
 * IntuneAntivirusPolicyWindows10SettingCatalog
   * Fixes an issue with invalid parameter definition.
     FIXES [#5015](https://github.com/microsoft/Microsoft365DSC/issues/5015)
+  * Fixes an issue where the `AccessTokens` parameter was not available.
+    FIXES [#5121](https://github.com/microsoft/Microsoft365DSC/issues/5121)
 * IntuneAppCategory
   * Initial release.
 * IntuneDeviceCompliancePolicyWindows10
