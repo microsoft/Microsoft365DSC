@@ -96,6 +96,8 @@
     FIXES [#3784](https://github.com/microsoft/Microsoft365DSC/issues/3784)
 * SentinelSetting
   * Initial release.
+* SentinelWatchlist
+  * Initial release.
 * SPOAccessControlSettings
   * Added support for property EnableRestrictedAccessControl.
 * M365DSCUtil
