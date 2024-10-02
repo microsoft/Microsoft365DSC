@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* AADAdministrativeUnit
+  * Added support for property IsMemberManagementRestricted.
 * AADApplication
   * Added AppRoles
   * Added AuthenticationBehavior
