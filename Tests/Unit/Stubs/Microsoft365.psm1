@@ -38128,6 +38128,65 @@ function Update-MgBetaTeamChannelTab
     )
 }
 #endregion
+
+#region Microsoft.Graph.deviceManagement
+
+function New-MgBetaDeviceAppManagementMobileAppCategory
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName
+    )
+}
+
+function Get-MgBetaDeviceAppManagementMobileAppCategory
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $MobileAppCategoryId,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName
+    )
+}
+
+function Update-MgBetaDeviceAppManagementMobileAppCategory
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $MobileAppCategoryId,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName
+    )
+}
+
+function Remove-MgBetaDeviceAppManagementMobileAppCategory
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $MobileAppCategoryId,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm
+    )
+}
+
 #region Microsoft.Graph.DeviceManagement.Administration
 function Get-MgDeviceManagementRoleAssignment
 {
@@ -38739,6 +38798,9 @@ function Update-MgDeviceManagementRoleDefinition
     )
 }
 #endregion
+
+#endregion Microsoft.Graph.DeviceManagement
+
 #region Microsoft.Graph.DirectoryObjects
 function Get-MgDirectoryObject
 {
