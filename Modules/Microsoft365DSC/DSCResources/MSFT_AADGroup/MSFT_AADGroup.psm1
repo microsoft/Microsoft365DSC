@@ -1086,9 +1086,9 @@ function Test-TargetResource
             if ($null -ne $CurrentValues.AssignedLicenses -and $CurrentValues.AssignedLicenses.Length -gt 0 -and `
                 ($PSBoundParameters.ContainsKey('AssignedLicenses') -and $null -eq $AssignedLicenses))
             {
-                Write-verbose -Message "The group {$DisplayName} currently has licenses assigned but it shouldn't"
+                Write-Verbose -Message "The group {$DisplayName} currently has licenses assigned but it shouldn't"
                 Write-Verbose -Message "Test-TargetResource returned $false"
-                $EventMessage = "Assigned Licenses for Azure AD Group {$DisplayName} were not in the desired state.`r`nThe group should not have any licenses assigned but instead contained {$($CurrentValues.AssignedLicenses.SkuId)}"
+                $EventMessage = "Assigned Licenses for Azure AD Group {$DisplayName} were not in the desired state.`r`nThe group should not have any licenses assigned but instead contained {$($CurrentValues.AssignedLicenses.SkuId -join ',')}"
                 Add-M365DSCEvent -Message $EventMessage -EntryType 'Warning' `
                     -EventID 1 -Source $($MyInvocation.MyCommand.Source)
 
@@ -1097,9 +1097,9 @@ function Test-TargetResource
             elseif ($null -eq $CurrentValues.AssignedLicenses -and $null -ne $AssignedLicenses -and `
                     $AssignedLicenses.Length -gt 0)
             {
-                Write-verbose -Message "The group {$DisplayName} currently doesn't have licenses assigned but it should"
+                Write-Verbose -Message "The group {$DisplayName} currently doesn't have licenses assigned but it should"
                 Write-Verbose -Message "Test-TargetResource returned $false"
-                $EventMessage = "Assigned Licenses for Azure AD Group {$DisplayName} were not in the desired state.`r`nThe group doesn't not have any licenses assigned but should have {$($CurrentValues.AssignedLicenses.SkuId)}"
+                $EventMessage = "Assigned Licenses for Azure AD Group {$DisplayName} were not in the desired state.`r`nThe group doesn't not have any licenses assigned but should have {$($CurrentValues.AssignedLicenses.SkuId -join ',')}"
                 Add-M365DSCEvent -Message $EventMessage -EntryType 'Warning' `
                     -EventID 1 -Source $($MyInvocation.MyCommand.Source)
 
@@ -1107,13 +1107,13 @@ function Test-TargetResource
             }
             elseif ($CurrentValues.AssignedLicenses.Length -gt 0 -and $AssignedLicenses.Length -gt 0)
             {
-                Write-verbose -Message "Current assigned licenses and desired assigned licenses for group {$DisplayName} are not null"
+                Write-Verbose -Message "Current assigned licenses and desired assigned licenses for group {$DisplayName} are not null and will be compared"
                 $licensesDiff = Compare-Object -ReferenceObject ($CurrentValues.AssignedLicenses.SkuId) -DifferenceObject ($AssignedLicenses.SkuId)
                 if ($null -ne $licensesDiff)
                 {
-                    Write-verbose -Message "AssignedLicenses differ for group {$DisplayName}: $($licensesDiff | Out-String)"
+                    Write-Verbose -Message "AssignedLicenses differ for group {$DisplayName}: $($licensesDiff | Out-String)"
                     Write-Verbose -Message "Test-TargetResource returned $false"
-                    $EventMessage = "Assigned Licenses for Azure AD Group {$DisplayName} were not in the desired state.`r`nThey should contain {$($AssignedLicenses.SkuId)} but instead contained {$($CurrentValues.AssignedLicenses.SkuId)}"
+                    $EventMessage = "Assigned Licenses for Azure AD Group {$DisplayName} were not in the desired state.`r`nThey should contain {$($AssignedLicenses.SkuId -join ',')} but instead contained {$($CurrentValues.AssignedLicenses.SkuId -join ',')}"
                     Add-M365DSCEvent -Message $EventMessage -EntryType 'Warning' `
                         -EventID 1 -Source $($MyInvocation.MyCommand.Source)
 
@@ -1121,7 +1121,7 @@ function Test-TargetResource
                 }
                 else
                 {
-                    Write-verbose -Message "AssignedLicenses for Azure AD Group {$DisplayName} are the same"
+                    Write-Verbose -Message "AssignedLicenses for Azure AD Group {$DisplayName} are the same, checking DisabledPlans"
                 }
 
                 # Disabled Plans
@@ -1129,7 +1129,7 @@ function Test-TargetResource
                 $result = $true
                 foreach ($assignedLicense in $AssignedLicenses)
                 {
-                    write-verbose "Compare DisabledPlans for SkuId $($assignedLicense.SkuId) in group {$DisplayName}"
+                    Write-Verbose "Compare DisabledPlans for SkuId $($assignedLicense.SkuId) in group {$DisplayName}"
                     $currentLicense = $CurrentValues.AssignedLicenses | Where-Object -FilterScript {$_.SkuId -eq $assignedLicense.SkuId}
                     if ($assignedLicense.DisabledPlans.Count -ne 0 -or $currentLicense.DisabledPlans.Count -ne 0)
                     {
@@ -1137,7 +1137,7 @@ function Test-TargetResource
                             $licensesDiff = Compare-Object -ReferenceObject $assignedLicense.DisabledPlans -DifferenceObject $currentLicense.DisabledPlans
                             if ($null -ne $licensesDiff)
                             {
-                                Write-verbose -Message "DisabledPlans for SkuId $($assignedLicense.SkuId) differ: $($licensesDiff | Out-String)"
+                                Write-Verbose -Message "DisabledPlans for SkuId $($assignedLicense.SkuId) differ: $($licensesDiff | Out-String)"
                                 Write-Verbose -Message "Test-TargetResource returned $false"
                                 $EventMessage = "Disabled Plans for Azure AD Group Licenses {$DisplayName} SkuId $($assignedLicense.SkuId) were not in the desired state.`r`n" + `
                                     "They should contain {$($assignedLicense.DisabledPlans -join ',')} but instead contained {$($currentLicense.DisabledPlans -join ',')}"
@@ -1148,12 +1148,12 @@ function Test-TargetResource
                             }
                             else
                             {
-                                Write-verbose -Message "DisabledPlans for SkuId $($assignedLicense.SkuId) are the same"
+                                Write-Verbose -Message "DisabledPlans for SkuId $($assignedLicense.SkuId) are the same"
                             }
                         }
                         catch
                         {
-                            Write-verbose -Message "Test-TargetResource returned `$false (DisabledPlans: $($_.Exception.Message))"
+                            Write-Verbose -Message "Test-TargetResource returned `$false (DisabledPlans: $($_.Exception.Message))"
                             $result = $false
                         }
                     }
@@ -1165,7 +1165,7 @@ function Test-TargetResource
             }
             elseif ($PSBoundParameters.ContainsKey('AssignedLicenses'))
             {
-                Write-verbose -Message "The group {$DisplayName} currently has licenses assigned but it shouldn't have"
+                Write-Verbose -Message "The group {$DisplayName} currently has licenses assigned but it shouldn't have"
                 Write-Verbose -Message "Test-TargetResource returned $false"
                 $EventMessage = "Assigned Licenses for Azure AD Group {$DisplayName} were not in the desired state.`r`nThe group has licenses assigned but shouldn't have {$($CurrentValues.AssignedLicenses.SkuId)}"
                 Add-M365DSCEvent -Message $EventMessage -EntryType 'Warning' `
@@ -1175,7 +1175,7 @@ function Test-TargetResource
             }
             else
             {
-                Write-verbose -Message "Both the current and desired assigned licenses lists for group {$DisplayName} are empty or not specified."
+                Write-Verbose -Message "Both the current and desired assigned licenses lists for group {$DisplayName} are empty or not specified."
             }
         }
         catch
