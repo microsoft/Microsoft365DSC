@@ -92,6 +92,8 @@
                     EnableOrganizationDomainsProtection   = $null
                     EnableUnusualCharactersSafetyTips     = $null
                     TargetedUserActionRecipients          = $null
+                    DmarcQuarantineAction                 = "Quarantine"
+                    DmarcRejectAction                     = "Reject"
                     Ensure                                = "Present"
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
@@ -295,14 +297,6 @@
                     UsePreferMessageFormat      = $false # Updated Property
                     CustomAttribute1            = 'Custom Value 1'
                     ExtensionCustomAttribute5   = 'Extension Custom Value 1', 'Extension Custom Value 2'
-                    ApplicationId         = $ApplicationId
-                    TenantId              = $TenantId
-                    CertificateThumbprint = $CertificateThumbprint
-                }
-                EXOMailTips 'OrgWideMailTips'
-                {
-                    IsSingleInstance = 'Yes'
-                    Ensure           = "Absent"
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
