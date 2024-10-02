@@ -245,11 +245,13 @@ function New-M365DSCResource
             }
 
             $templateSettings = @()
+            $allSettingDefinitions = $SettingsCatalogSettingTemplates.SettingDefinitions
             foreach ($settingTemplate in $SettingsCatalogSettingTemplates)
             {
                 $templateSettings += New-SettingsCatalogSettingDefinitionSettingsFromTemplate `
                     -FromRoot `
-                    -SettingTemplate $settingTemplate
+                    -SettingTemplate $settingTemplate `
+                    -AllSettingDefinitions $allSettingDefinitions
             }
 
             $definitionSettings = @()
@@ -3749,6 +3751,10 @@ function New-SettingsCatalogSettingDefinitionSettingsFromTemplate {
         [Parameter(ParameterSetName = "Start")]
         [switch] $FromRoot,
 
+        [Parameter(Mandatory = $true)]
+        [System.Array]
+        $AllSettingDefinitions,
+
         [Parameter(ParameterSetName = "ParseChild")]
         [System.String]$ParentInstanceName,
 
@@ -3766,7 +3772,8 @@ function New-SettingsCatalogSettingDefinitionSettingsFromTemplate {
         return New-SettingsCatalogSettingDefinitionSettingsFromTemplate `
             -SettingTemplate $SettingTemplate `
             -RootSettingDefinitions $RootSettingDefinitions `
-            -SettingDefinitionIdPrefix $settingDefinitionIdPrefix
+            -SettingDefinitionIdPrefix $settingDefinitionIdPrefix `
+            -AllSettingDefinitions $AllSettingDefinitions
     }
 
     if ($PSCmdlet.ParameterSetName -eq "ParseRoot") {
@@ -3777,7 +3784,8 @@ function New-SettingsCatalogSettingDefinitionSettingsFromTemplate {
                 -SettingDefinition $RootSettingDefinition `
                 -SettingDefinitionIdPrefix $settingDefinitionIdPrefix `
                 -Level 1 `
-                -ParentInstanceName "MSFT_MicrosoftGraphIntuneSettingsCatalog"
+                -ParentInstanceName "MSFT_MicrosoftGraphIntuneSettingsCatalog" `
+                -AllSettingDefinitions $AllSettingDefinitions
         }
         return $settings
     }
@@ -3789,39 +3797,66 @@ function New-SettingsCatalogSettingDefinitionSettingsFromTemplate {
 
     $settingName = $SettingDefinition.Name
 
-    $settingsWithSameName = $SettingTemplate.SettingDefinitions | Where-Object -FilterScript { $_.Name -eq $settingName }
-    if ($settingsWithSameName.Count -gt 1) {
+    $settingsWithSameName = $AllSettingDefinitions | Where-Object -FilterScript { $_.Name -eq $settingName }
+    if ($settingsWithSameName.Count -gt 1)
+    {
         # Get the parent setting of the current setting
-        if ($SettingDefinition.AdditionalProperties.dependentOn.parentSettingId.Count -gt 0)
+        $parentSetting = Get-ParentSettingDefinition -SettingDefinition $SettingDefinition -AllSettingDefinitions $AllSettingDefinitions
+        if ($null -ne $parentSetting)
         {
-            $parentSetting = $SettingTemplate.SettingDefinitions | Where-Object -FilterScript {
-                $_.Id -eq ($SettingDefinition.AdditionalProperties.dependentOn.parentSettingId | Select-Object -Unique -First 1)
+            $combinationMatchesWithParent = $settingsWithSameName | Where-Object -FilterScript {
+                "$($parentSetting.Name)_$($_.Name)" -eq "$($parentSetting.Name)_$settingName"
             }
-        }
-        elseif ($SettingDefinition.AdditionalProperties.options.dependentOn.parentSettingId.Count -gt 0)
-        {
-            $parentSetting = $SettingTemplate.SettingDefinitions | Where-Object -FilterScript {
-                $_.Id -eq ($SettingDefinition.AdditionalProperties.options.dependentOn.parentSettingId | Select-Object -Unique -First 1)
+            # If the combination of parent setting and setting name is unique, add the parent setting name to the setting name
+            if ($combinationMatchesWithParent.Count -eq 1)
+            {
+                $settingName = $parentSetting.Name + "_" + $settingName
+            }
+            # If the combination of parent setting and setting name is still not unique, do it with the OffsetUri of the current setting
+            else
+            {
+                $skip = 0
+                $breakCounter = 0
+                $newSettingName = $settingName
+                do {
+                    $previousSettingName = $newSettingName
+                    $newSettingName = Get-SettingDefinitionNameWithParentFromOffsetUri -OffsetUri $SettingDefinition.OffsetUri -SettingName $newSettingName -Skip $skip
+
+                    $combinationMatchesWithOffsetUri = @()
+                    $settingsWithSameName | ForEach-Object {
+                        $newName = Get-SettingDefinitionNameWithParentFromOffsetUri -OffsetUri $_.OffsetUri -SettingName $previousSettingName -Skip $skip
+                        if ($newName -eq $newSettingName)
+                        {
+                            $combinationMatchesWithOffsetUri += $_
+                        }
+                    }
+                    $settingsWithSameName = $combinationMatchesWithOffsetUri
+                    $skip++
+                    $breakCounter++
+                } while ($combinationMatchesWithOffsetUri.Count -gt 1 -and $breakCounter -lt 8)
+
+                if ($breakCounter -lt 8)
+                {
+                    $settingName = $newSettingName
+                }
+                else
+                {
+                    # Alternative way if no unique setting name can be found
+                    $parentSettingIdProperty = $parentSetting.Id.Split('_')[-1]
+                    $parentSettingIdWithoutProperty = $parentSetting.Id.Replace("_$parentSettingIdProperty", "")
+                    # We can't use the entire setting here, because the child setting id does not have to come after the parent setting id
+                    $settingName = $settingDefinition.Id.Replace($parentSettingIdWithoutProperty + "_", "").Replace($parentSettingIdProperty + "_", "")
+                }
             }
         }
 
-        $combinationMatches = $SettingTemplate.SettingDefinitions | Where-Object -FilterScript {
-            $_.Name -eq $settingName -and
-            (($_.AdditionalProperties.dependentOn.Count -gt 0 -and $_.AdditionalProperties.dependentOn.parentSettingId -contains $parentSetting.Id) -or
-            ($_.AdditionalProperties.options.dependentOn.Count -gt 0 -and $_.AdditionalProperties.options.dependentOn.parentSettingId -contains $parentSetting.Id))
-        }
-
-        # If the combination of parent setting and setting name is unique, add the parent setting name to the setting name
-        if ($combinationMatches.Count -eq 1) {
-            $settingName = $parentSetting.Name + "_" + $settingName
-        }
-        # If the combination of parent setting and setting name is still not unique, get the last part of the setting id as the name
-        else
+        # When there is no parent, we can't use the parent setting name to make the setting name unique
+        # Instead, we traverse up the OffsetUri. Since no parent setting can only happen at the root level, the result
+        # of Get-SettingDefinitionNameWithParentFromOffsetUri is absolute and cannot change. There cannot be multiple settings with the same name
+        # in the same level of OffsetUri
+        if ($null -eq $parentSetting)
         {
-            $parentSettingIdProperty = $parentSetting.Id.Split('_')[-1]
-            $parentSettingIdWithoutProperty = $parentSetting.Id.Replace("_$parentSettingIdProperty", "")
-            # We can't use the entire setting here, because the child setting id does not have to come after the parent setting id
-            $settingName = $SettingDefinition.Id.Replace($parentSettingIdWithoutProperty + "_", "").Replace($parentSettingIdProperty + "_", "")
+            $settingName = Get-SettingDefinitionNameWithParentFromOffsetUri -OffsetUri $SettingDefinition.OffsetUri -SettingName $settingName
         }
     }
 
@@ -3845,7 +3880,8 @@ function New-SettingsCatalogSettingDefinitionSettingsFromTemplate {
             -SettingDefinition $childSetting `
             -SettingDefinitionIdPrefix $SettingDefinitionIdPrefix `
             -Level $($Level + 1) `
-            -ParentInstanceName $instanceName
+            -ParentInstanceName $instanceName `
+            -AllSettingDefinitions $AllSettingDefinitions
     }
 
     $setting = [ordered]@{
@@ -3867,6 +3903,79 @@ function New-SettingsCatalogSettingDefinitionSettingsFromTemplate {
     }
 
     $setting
+}
+
+<#
+    This function also exists in M365DSCDRGUtil.psm1. Changes here must be added there as well for compatibility.
+#>
+function Get-SettingDefinitionNameWithParentFromOffsetUri {
+    param (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $OffsetUri,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $SettingName,
+
+        [Parameter(Mandatory = $false)]
+        [System.Int32]
+        $Skip = 0
+    )
+
+    # If the last part of the OffsetUri is the same as the setting name or it contains invalid characters, we traverse up until we reach the first element
+    # Invalid characters are { and } which are used in the OffsetUri to indicate a variable
+    $splittedOffsetUri = $OffsetUri.Split("/")
+    if ([string]::IsNullOrEmpty($splittedOffsetUri[0]))
+    {
+        $splittedOffsetUri = $splittedOffsetUri[1..($splittedOffsetUri.Length - 1)]
+    }
+    $splittedOffsetUri = $splittedOffsetUri[0..($splittedOffsetUri.Length - 1 - $Skip)]
+    $traversed = $false
+    while (-not $traversed -and $splittedOffsetUri.Length -gt 1) # Prevent adding the first element of the OffsetUri
+    {
+        $traversed = $true
+        if ($splittedOffsetUri[-1] -eq $SettingName -or $splittedOffsetUri[-1] -match "[\{\}]" -or $SettingName.StartsWith($splittedOffsetUri[-1]))
+        {
+            $splittedOffsetUri = $splittedOffsetUri[0..($splittedOffsetUri.Length - 2)]
+            $traversed = $false
+        }
+    }
+
+    if ($splittedOffsetUri.Length -gt 1)
+    {
+        $splittedOffsetUri[-1] + "_" + $SettingName
+    }
+    else
+    {
+        $SettingName
+    }
+}
+
+function Get-ParentSettingDefinition {
+    param(
+        [Parameter(Mandatory = $true)]
+        $SettingDefinition,
+
+        [Parameter(Mandatory = $true)]
+        $AllSettingDefinitions
+    )
+
+    $parentSetting = $null
+    if ($SettingDefinition.AdditionalProperties.dependentOn.parentSettingId.Count -gt 0)
+    {
+        $parentSetting = $AllSettingDefinitions | Where-Object -FilterScript {
+            $_.Id -eq ($SettingDefinition.AdditionalProperties.dependentOn.parentSettingId | Select-Object -Unique -First 1)
+        }
+    }
+    elseif ($SettingDefinition.AdditionalProperties.options.dependentOn.parentSettingId.Count -gt 0)
+    {
+        $parentSetting = $AllSettingDefinitions | Where-Object -FilterScript {
+            $_.Id -eq ($SettingDefinition.AdditionalProperties.options.dependentOn.parentSettingId | Select-Object -Unique -First 1)
+        }
+    }
+
+    $parentSetting
 }
 
 function New-ParameterDefinitionFromSettingsCatalogTemplateSetting {

@@ -41,9 +41,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName New-AuthenticationPolicy {
             }
 
-            Mock -CommandName Set-AuthenticationPolicy {
-            }
-
             Mock -CommandName Remove-AuthenticationPolicy {
             }
 
@@ -195,7 +192,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should call the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Set-AuthenticationPolicy -Exactly 1
+                Should -Invoke -CommandName Remove-AuthenticationPolicy -Exactly 1
+                Should -Invoke -CommandName New-AuthenticationPolicy -Exactly 1
             }
         }
 

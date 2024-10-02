@@ -1,0 +1,33 @@
+{
+    "resourceName": "IntuneFirewallPolicyWindows10",
+    "description": "This resource configures an Intune Firewall Policy for Windows10.",
+    "permissions":    {
+  "graph": {
+    "delegated": {
+      "update": [
+        {
+          "name": "DeviceManagementConfiguration.ReadWrite.All"
+        }
+      ],
+      "read": [
+        {
+          "name": "DeviceManagementConfiguration.Read.All"
+        }
+      ]
+    },
+    "application": {
+      "update": [
+        {
+          "name": "DeviceManagementConfiguration.ReadWrite.All"
+        }
+      ],
+      "read": [
+        {
+          "name": "DeviceManagementConfiguration.Read.All"
+        }
+      ]
+    }
+  }
+}
+
+}

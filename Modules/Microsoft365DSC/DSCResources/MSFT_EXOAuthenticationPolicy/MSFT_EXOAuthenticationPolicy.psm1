@@ -329,10 +329,12 @@ function Set-TargetResource
         Remove-AuthenticationPolicy -Identity $Identity -Confirm:$false
     }
     # CASE: Authentication Policy exists and it should, but has different values than the desired one
+    # Policy cannot be changed so it must be deleted and re-created again
     elseif ($Ensure -eq 'Present' -and $currentAuthenticationPolicyConfig.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Authentication Policy '$($Identity)' exists. Updating settings."
-        Set-AuthenticationPolicy -Identity $Identity @NewAuthenticationPolicyParams | Out-Null
+        Remove-AuthenticationPolicy -Identity $Identity -Confirm:$false
+        New-AuthenticationPolicy -Name $Identity @NewAuthenticationPolicyParams | Out-Null
     }
 }
 

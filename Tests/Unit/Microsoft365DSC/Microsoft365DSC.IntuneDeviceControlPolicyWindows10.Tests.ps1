@@ -260,6 +260,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             @{
                                 Id = 'device_vendor_msft_defender_configuration_devicecontrol_policyrules_{ruleid}_ruledata_id'
                                 Name = 'Id'
+                                OffsetUri = '/configuration/devicecontrol/policyrules/{0}/ruledata'
                                 AdditionalProperties = @{
                                     '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
                                     dependentOn = @(
@@ -353,6 +354,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             @{
                                 Id = 'device_vendor_msft_defender_configuration_devicecontrol_policyrules_{ruleid}_ruledata_entry_id'
                                 Name = 'Id'
+                                OffsetUri = '/configuration/devicecontrol/policyrules/{0}/ruledata'
                                 AdditionalProperties = @{
                                     '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
                                     dependentOn = @(
