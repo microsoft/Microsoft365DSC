@@ -46310,6 +46310,46 @@
                        ]
     },
     {
+        "ClassName":  "MSFT_TeamsComplianceRecordingApplication",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Id",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "ComplianceRecordingPairedApplications",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "RequiredBeforeMeetingJoin",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "RequiredBeforeCallEstablishment",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "RequiredDuringMeeting",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "RequiredDuringCall",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ConcurrentInvitationCount",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
         "ClassName":  "MSFT_TeamsComplianceRecordingPolicy",
         "Parameters":  [
                            {
@@ -46318,7 +46358,7 @@
                                "Option":  "Key"
                            },
                            {
-                               "CIMType":  "String[]",
+                               "CIMType":  "MSFT_TeamsComplianceRecordingApplication[]",
                                "Name":  "ComplianceRecordingApplications",
                                "Option":  "Write"
                            },
