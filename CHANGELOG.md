@@ -2,6 +2,8 @@
 
 # 1.24.1002.1
 
+* AADAdministrativeUnit
+  * Added support for property IsMemberManagementRestricted.
 * AADApplication
   * Added AppRoles
   * Added AuthenticationBehavior
