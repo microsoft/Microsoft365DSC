@@ -17917,7 +17917,7 @@ function New-MgBetaDeviceAppManagementMobileApp {
         $InformationUrl,
 
         [Parameter()]
-        [System.String]
+        [System.Boolean]
         $IsFeatured,
 
         [Parameter()]
@@ -17967,7 +17967,7 @@ function Get-MgBetaDeviceAppManagementMobileApp {
         $InformationUrl,
 
         [Parameter()]
-        [System.String]
+        [System.Boolean]
         $IsFeatured,
 
         [Parameter()]
@@ -18016,7 +18016,7 @@ function Update-MgBetaDeviceAppManagementMobileApp {
         $InformationUrl,
 
         [Parameter()]
-        [System.String]
+        [System.Boolean]
         $IsFeatured,
 
         [Parameter()]
@@ -18048,47 +18048,6 @@ function Remove-MgBetaDeviceAppManagementMobileApp {
         [Parameter()]
         [System.String]
         $MobileAppId,
-
-        [Parameter()]
-        [System.String]
-        $DisplayName,
-
-        [Parameter()]
-        [System.String]
-        $Description,
-
-        [Parameter()]
-        [System.String]
-        $Developer,
-
-        [Parameter()]
-        [System.String]
-        $InformationUrl,
-
-        [Parameter()]
-        [System.String]
-        $IsFeatured,
-
-        [Parameter()]
-        [System.String]
-        $Notes,
-
-        [Parameter()]
-        [System.String]
-        $Owner,
-
-        [Parameter()]
-        [System.String]
-        $PrivacyInformationUrl,
-
-        [Parameter()]
-        [System.String]
-        $Publisher,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet('notPublished', 'processing','published')]
-        $PublishingState,
 
         [Parameter()]
         [System.Boolean]
@@ -83258,8 +83217,7 @@ function New-MgBetaDeviceAppManagementMobileApp # TODOK
         $IsAssigned,
 
         [Parameter()]
-        #[System.Management.Automation.SwitchParameter]
-        [System.String]
+        [System.Management.Automation.SwitchParameter]
         $IsFeatured,
 
         [Parameter()]
@@ -83387,7 +83345,11 @@ function Remove-MgBetaDeviceAppManagementMobileApp # TODOK
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm
     )
 }
 
@@ -83457,8 +83419,7 @@ function Update-MgBetaDeviceAppManagementMobileApp # TODOK
         $IsAssigned,
 
         [Parameter()]
-        #[System.Management.Automation.SwitchParameter]
-        [System.String]
+        [System.Management.Automation.SwitchParameter]
         $IsFeatured,
 
         [Parameter()]

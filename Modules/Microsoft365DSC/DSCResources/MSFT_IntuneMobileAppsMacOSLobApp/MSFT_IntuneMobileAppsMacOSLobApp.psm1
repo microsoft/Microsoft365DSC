@@ -27,7 +27,7 @@ function Get-TargetResource
         $InformationUrl,
 
         [Parameter()]
-        [System.String]
+        [System.Boolean]
         $IsFeatured,
 
         [Parameter()]
@@ -197,7 +197,7 @@ function Set-TargetResource
         $InformationUrl,
 
         [Parameter()]
-        [System.String]
+        [System.Boolean]
         $IsFeatured,
 
         [Parameter()]
@@ -321,7 +321,7 @@ function Test-TargetResource
         $InformationUrl,
 
         [Parameter()]
-        [System.String]
+        [System.Boolean]
         $IsFeatured,
 
         [Parameter()]
