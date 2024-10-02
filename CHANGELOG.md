@@ -60,6 +60,9 @@
 * IntuneAntivirusPolicyWindows10SettingCatalog
   * Fixes an issue with invalid parameter definition.
     FIXES [#5015](https://github.com/microsoft/Microsoft365DSC/issues/5015)
+* IntuneAppProtectionPolicyiOS
+  * Improve `TargetedAppManagementLevels` property to specify multiple values.
+    FIXES [#5032](https://github.com/microsoft/Microsoft365DSC/issues/5032)
 * IntuneDeviceCompliancePolicyWindows10
   * Fixes an issue where the property `ValidOperatingSystemBuildRanges` was
     not exported properly.
