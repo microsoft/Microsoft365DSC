@@ -29,7 +29,7 @@ Configuration Example
             MailEnabled      = $False
             MailNickname     = "M365DSC"
             AssignedLicenses = @(
-                MSFT_AADGroupLicense -Property @{
+                MSFT_AADGroupLicense {
                     SkuId          = 'AAD_PREMIUM_P2'
                 }
             )
