@@ -19883,7 +19883,7 @@
                                "Option":  "Write"
                            },
                            {
-                               "CIMType":  "String",
+                               "CIMType":  "String[]",
                                "Name":  "TargetedAppManagementLevels",
                                "Option":  "Write"
                            },
