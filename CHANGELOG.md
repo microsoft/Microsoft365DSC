@@ -1,6 +1,12 @@
 # Change log for Microsoft365DSC
 
 # UNRELEASED
+* AADGroup
+  * Fixes issue with code that is never executed
+    FIXES [#5001](https://github.com/microsoft/Microsoft365DSC/issues/5001)
+  * Fixes issue with incorrect removal of assigned license(s)
+    FIXES [#5128](https://github.com/microsoft/Microsoft365DSC/issues/5128)
+
 
 * IntuneAppCategory
   * Initial release.
