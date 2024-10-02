@@ -9,7 +9,7 @@
   * Added AuthenticationBehavior
   * Added KeyCredentials
   * Added OptionalClaims
-  * Added PaswordCredentials
+  * Added PasswordCredentials
   * Added PreAuthorizationApplications
 * AADAuthenticationMethodPolicy
   * Added ReportSuspiciousActivitySettings
@@ -36,6 +36,8 @@
   * Initial Release.
 * DefenderSubscriptionDefenderPlan
   * Initial release.
+* EXOAntiPhishPolicy
+  * Use correct type integer for variable `PhishThresholdLevel`
 * EXOArcConfig
   * Initial Release.
 * EXODnssecForVerifiedDomain
@@ -56,7 +58,7 @@
   * Remove property `Ensure` since this resource is of type `IsSingleInstance`
 * EXOManagementScope
   * Initial Release.
-* EXORetenionPolicy
+* EXORetentionPolicy
   * Initial Release.
 * EXOPhishSimOverrideRule
   * Initial Release.
