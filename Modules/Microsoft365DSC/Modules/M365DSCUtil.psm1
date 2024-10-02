@@ -1230,7 +1230,7 @@ function Export-M365DSCConfiguration
         $Components,
 
         [Parameter(ParameterSetName = 'Export')]
-        [ValidateSet('AAD', 'FABRIC', 'SPO', 'EXO', 'INTUNE', 'SC', 'OD', 'O365', 'PLANNER', 'PP', 'TEAMS')]
+        [ValidateSet('AAD', 'DEFENDER', 'FABRIC', 'SPO', 'EXO', 'INTUNE', 'SC', 'OD', 'O365', 'PLANNER', 'PP', 'TEAMS')]
         [System.String[]]
         $Workloads,
 
@@ -1650,6 +1650,58 @@ function Remove-M365DSCInvalidDependenciesFromSession
 
 <#
 .Description
+This function retrieves the various endpoint urls based on the cloud environment.
+
+.Example
+Get-M365DSCAPIEndpoint -TenantId 'contoso.onmicrosoft.com'
+
+.Functionality
+Private
+#>
+function Get-M365DSCAPIEndpoint
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $TenantId
+    )
+
+    try
+    {
+        $webrequest = Invoke-WebRequest -Uri "https://login.windows.net/$($TenantId)/.well-known/openid-configuration" -UseBasicParsing
+        $response = ConvertFrom-Json $webrequest.Content
+        $tenantRegionScope = $response."tenant_region_scope"
+
+        $endpoints = @{
+            AzureManagement = $null
+        }
+
+        switch ($tenantRegionScope)
+        {
+            'USGov'
+            {
+                if ($null -ne $response.'tenant_region_sub_scope' -and $response.'tenant_region_sub_scope' -eq 'DODCON')
+                {
+                    $endpoints.AzureManagement = "https://management.usgovcloudapi.net"
+                }
+            }
+            default
+            {
+                $endpoints.AzureManagement = "https://management.azure.com"
+            }
+        }
+        return $endpoints
+    }
+    catch
+    {
+        throw $_
+    }
+}
+
+<#
+.Description
 This function gets the onmicrosoft.com name of the tenant
 
 .Functionality
@@ -1777,7 +1829,7 @@ function New-M365DSCConnection
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateSet('Azure', 'AzureDevOPS', 'ExchangeOnline', 'Fabric', 'Intune', `
+        [ValidateSet('Azure', 'AzureDevOPS', 'Defender', 'ExchangeOnline', 'Fabric', 'Intune', `
                 'SecurityComplianceCenter', 'PnP', 'PowerPlatforms', `
                 'MicrosoftTeams', 'MicrosoftGraph', 'SharePointOnlineREST', 'Tasks')]
         [System.String]
@@ -3769,6 +3821,10 @@ function Get-M365DSCExportContentForResource
     {
         $primaryKey = $Results.OrganizationName
     }
+    elseif ($Keys.Contains('DomainName'))
+    {
+        $primaryKey = $Results.DomainName
+    }
 
     if ([String]::IsNullOrEmpty($primaryKey) -and `
         -not $Keys.Contains('IsSingleInstance'))
@@ -4187,7 +4243,7 @@ function Get-M365DSCWorkloadsListFromResourceNames
             }
             'O3'
             {
-                if (-not $workloads.Name -or -not $workloads.Name.Contains('MicrosoftGraph') -and $resource -eq 'O365Group')
+                if (-not $workloads.Name -or -not $workloads.Name.Contains('MicrosoftGraph') -and $resource.Name -eq 'O365Group')
                 {
                     $workloads += @{
                         Name                 = 'MicrosoftGraph'
@@ -5099,6 +5155,7 @@ Export-ModuleMember -Function @(
     'Export-M365DSCConfiguration',
     'Get-AllSPOPackages',
     'Get-M365DSCAllResources',
+    'Get-M365DSCAPIEndpoint'
     'Get-M365DSCAuthenticationMode',
     'Get-M365DSCComponentsForAuthenticationType',
     'Get-M365DSCComponentsWithMostSecureAuthenticationType',

@@ -19,16 +19,16 @@ Configuration Example
         $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
-
     node localhost
     {
-        EXOMailTips 'OrgWideMailTips'
+        AADEntitlementManagementSettings "AADEntitlementManagementSettings"
         {
-            IsSingleInstance = 'Yes'
-            Ensure           = "Absent"
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            CertificateThumbprint = $CertificateThumbprint
+            ApplicationId                            = $ApplicationId;
+            CertificateThumbprint                    = $CertificateThumbprint;
+            DaysUntilExternalUserDeletedAfterBlocked = 30;
+            ExternalUserLifecycleAction              = "blockSignInAndDelete";
+            IsSingleInstance                         = "Yes";
+            TenantId                                 = $TenantId;
         }
     }
 }
