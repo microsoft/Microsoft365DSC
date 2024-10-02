@@ -18,17 +18,15 @@ Configuration Example
         [System.String]
         $CertificateThumbprint
     )
-    Import-DscResource -ModuleName Microsoft365DSC
 
+    Import-DscResource -ModuleName Microsoft365DSC
     node localhost
     {
-        EXOMailTips 'OrgWideMailTips'
+        IntuneAppCategory "IntuneAppCategory-Data Management"
         {
-            IsSingleInstance = 'Yes'
-            Ensure           = "Absent"
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            CertificateThumbprint = $CertificateThumbprint
+            Id                   = "a1fc9fe2-728d-4867-9a72-a61e18f8c606";
+            DisplayName          = "Custom Data Management updated";
+            Ensure               = "Present";
         }
     }
 }

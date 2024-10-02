@@ -433,9 +433,11 @@ function Export-TargetResource
             }
             $displayedKey = $config.Name
             Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -NoNewline
+            $SubscriptionId = $config.ResourceId.Split('/')[2]
             $params = @{
                 ResourceGroupName     = $config.ResourceGroupName
                 WorkspaceName         = $config.Name
+                SubscriptionId        = $SubscriptionId
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
