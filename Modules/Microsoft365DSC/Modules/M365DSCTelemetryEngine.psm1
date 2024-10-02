@@ -292,6 +292,10 @@ function Add-M365DSCTelemetryEvent
                 {
                     $Data.Add('Workload', 'Azure Active Directory')
                 }
+                elseif ($Data.Resource.StartsWith('MSFT_Intune') -or $Data.Resource.StartsWith('Defender'))
+                {
+                    $Data.Add('Workload', 'Defender')
+                }
                 elseif ($Data.Resource.StartsWith('MSFT_EXO') -or $Data.Resource.StartsWith('EXO'))
                 {
                     $Data.Add('Workload', 'Exchange Online')

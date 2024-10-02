@@ -85,6 +85,14 @@
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                 }
+                AADAuthenticationMethodPolicyHardware 'AADAuthenticationMethodPolicyHardware-HardwareOath'
+                {
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
+                    Ensure                = "Absent";
+                    Id                    = "HardwareOath";
+                }
                 AADAuthenticationMethodPolicySms 'AADAuthenticationMethodPolicySms-Sms'
                 {
                     ApplicationId         = $ApplicationId
@@ -198,6 +206,14 @@
                     Ensure          = "Absent";
                     Principal       = "AdeleV@$TenantId";
                     RoleDefinition  = "Catalog creator";
+                }
+                AADFeatureRolloutPolicy 'AADFeatureRolloutPolicy-CertificateBasedAuthentication rollout policy'
+                {
+                    ApplicationId           = $ApplicationId
+                    TenantId                = $TenantId
+                    CertificateThumbprint   = $CertificateThumbprint
+                    DisplayName             = "CertificateBasedAuthentication rollout policy";
+                    Ensure                  = "Absent";
                 }
                 AADGroup 'MyGroups'
                 {

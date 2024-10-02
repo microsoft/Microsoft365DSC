@@ -113,9 +113,9 @@ function Get-TargetResource
         $MakeDefault = $false,
 
         [Parameter()]
-        [ValidateSet('1', '2', '3', '4')]
-        [System.String]
-        $PhishThresholdLevel = '1',
+        [ValidateSet(1, 2, 3, 4)]
+        [System.Int32]
+        $PhishThresholdLevel = 1,
 
         [Parameter()]
         [System.String[]]
@@ -150,6 +150,16 @@ function Get-TargetResource
         [Parameter()]
         [System.String]
         $TargetedUserQuarantineTag,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('MoveToJmf', 'Quarantine')]
+        $DmarcQuarantineAction,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('Quarantine', 'Reject')]
+        $DmarcRejectAction,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -227,7 +237,7 @@ function Get-TargetResource
             $PhishThresholdLevelValue = $AntiPhishPolicy.PhishThresholdLevel
             if ([System.String]::IsNullOrEmpty($PhishThresholdLevelValue))
             {
-                $PhishThresholdLevelValue = '1'
+                $PhishThresholdLevelValue = 1
             }
 
             $TargetedUserProtectionActionValue = $AntiPhishPolicy.TargetedUserProtectionAction
@@ -277,6 +287,8 @@ function Get-TargetResource
                 TargetedUserProtectionAction                  = $TargetedUserProtectionActionValue
                 TargetedUsersToProtect                        = $AntiPhishPolicy.TargetedUsersToProtect
                 TargetedUserQuarantineTag                     = $AntiPhishPolicy.TargetedUserQuarantineTag
+                DmarcQuarantineAction                         = $AntiPhishPolicy.DmarcQuarantineAction
+                DmarcRejectAction                             = $AntiPhishPolicy.DmarcRejectAction
                 Credential                                    = $Credential
                 Ensure                                        = 'Present'
                 ApplicationId                                 = $ApplicationId
@@ -419,9 +431,9 @@ function Set-TargetResource
         $MakeDefault = $false,
 
         [Parameter()]
-        [ValidateSet('1', '2', '3', '4')]
-        [System.String]
-        $PhishThresholdLevel = '1',
+        [ValidateSet(1, 2, 3, 4)]
+        [System.Int32]
+        $PhishThresholdLevel = 1,
 
         [Parameter()]
         [System.String[]]
@@ -456,6 +468,16 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $TargetedUserQuarantineTag,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('MoveToJmf', 'Quarantine')]
+        $DmarcQuarantineAction,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('Quarantine', 'Reject')]
+        $DmarcRejectAction,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -656,9 +678,9 @@ function Test-TargetResource
         $MakeDefault = $false,
 
         [Parameter()]
-        [ValidateSet('1', '2', '3', '4')]
-        [System.String]
-        $PhishThresholdLevel = '1',
+        [ValidateSet(1, 2, 3, 4)]
+        [System.Int32]
+        $PhishThresholdLevel = 1,
 
         [Parameter()]
         [System.String[]]
@@ -693,6 +715,16 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $TargetedUserQuarantineTag,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('MoveToJmf', 'Quarantine')]
+        $DmarcQuarantineAction,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('Quarantine', 'Reject')]
+        $DmarcRejectAction,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]

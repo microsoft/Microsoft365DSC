@@ -7,7 +7,7 @@
 | **Identity** | Key | String | The Identity parameter specifies the name of the antiphishing policy that you want to modify. | |
 | **Ensure** | Write | String | Specify if this policy should exist or not. | `Present`, `Absent` |
 | **AdminDisplayName** | Write | String | The AdminDisplayName parameter specifies a description for the policy. | |
-| **PhishThresholdLevel** | Write | String | The PhishThresholdLevel parameter specifies the tolerance level that's used by machine learning in the handling of phishing messages. | `1`, `2`, `3`, `4` |
+| **PhishThresholdLevel** | Write | UInt32 | The PhishThresholdLevel parameter specifies the tolerance level that's used by machine learning in the handling of phishing messages. | `1`, `2`, `3`, `4` |
 | **AuthenticationFailAction** | Write | String | The AuthenticationFailAction parameter specifies the action to take when the message fails composite authentication. | `MoveToJmf`, `Quarantine` |
 | **TargetedUserProtectionAction** | Write | String | The TargetedUserProtectionActionâ¯parameter specifies the action to take on detected user impersonation messages for the users specified by the TargetedUsersToProtect parameter. | `BccMessage`, `Delete`, `MoveToJmf`, `NoAction`, `Quarantine`, `Redirect` |
 | **Enabled** | Write | Boolean | Specify if this policy should be enabled. Default is $true. | |
@@ -39,6 +39,8 @@
 | **TargetedUserActionRecipients** | Write | StringArray[] | Theâ¯TargetedUserActionRecipients parameter specifies the replacement or additional recipients for detected user impersonation messages when the TargetedUserProtectionAction parameter is set to the valueâ¯Redirect or BccMessage. A valid value for this parameter is an email address. You can specify multiple email addresses separated by commas. | |
 | **TargetedUsersToProtect** | Write | StringArray[] | The TargetedUsersToProtect parameter specifies the users that are included in user impersonation protection when the EnableTargetedUserProtection parameter is set to $true. | |
 | **TargetedUserQuarantineTag** | Write | String | The TargetedUserQuarantineTag specifies the quarantine policy that's used on messages that are quarantined by user impersonation protection. | |
+| **DmarcQuarantineAction** | Write | String | The DmarcQuarantineAction parameter specifies the action to take when a message fails DMARC checks and the sender's DMARC policy is p=quarantine | `MoveToJmf`, `Quarantine` |
+| **DmarcRejectAction** | Write | String | The DmarcRejectAction parameter specifies the action to take when a message fails DMARC checks and the sender's DMARC policy is p=reject. | `Quarantine`, `Reject` |
 | **Credential** | Write | PSCredential | Credentials of the Exchange Global Admin | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
 | **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. | |
@@ -117,6 +119,8 @@ Configuration Example
             EnableUnusualCharactersSafetyTips     = $null
             TargetedUserActionRecipients          = $null
             Ensure                                = "Present"
+            DmarcQuarantineAction                 = "Quarantine"
+            DmarcRejectAction                     = "Reject"
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint
@@ -173,6 +177,8 @@ Configuration Example
             EnableUnusualCharactersSafetyTips     = $null
             TargetedUserActionRecipients          = $null
             Ensure                                = "Present"
+            DmarcQuarantineAction                 = "Quarantine"
+            DmarcRejectAction                     = "Reject"
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint
@@ -228,6 +234,8 @@ Configuration Example
             EnableOrganizationDomainsProtection   = $null
             EnableUnusualCharactersSafetyTips     = $null
             TargetedUserActionRecipients          = $null
+            DmarcQuarantineAction                 = "Quarantine"
+            DmarcRejectAction                     = "Reject"
             Ensure                                = "Present"
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
