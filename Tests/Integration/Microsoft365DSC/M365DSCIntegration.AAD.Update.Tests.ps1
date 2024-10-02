@@ -42,6 +42,7 @@
                     MembershipRule                = "(user.country -eq `"US`")" # Updated Property
                     MembershipRuleProcessingState = 'On'
                     MembershipType                = 'Dynamic'
+                    IsMemberManagementRestricted  = $False
                     ScopedRoleMembers             = @(
                         MSFT_MicrosoftGraphScopedRoleMembership
                         {
