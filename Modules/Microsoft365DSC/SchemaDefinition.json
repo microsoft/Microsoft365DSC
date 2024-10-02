@@ -19051,6 +19051,11 @@
                                "CIMType":  "Boolean",
                                "Name":  "ManagedIdentity",
                                "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
+                               "Option":  "Write"
                            }
                        ]
     },
