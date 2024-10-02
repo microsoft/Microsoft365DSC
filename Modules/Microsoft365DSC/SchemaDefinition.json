@@ -6363,7 +6363,7 @@
                                "Option":  "Write"
                            },
                            {
-                               "CIMType":  "String",
+                               "CIMType":  "UInt32",
                                "Name":  "PhishThresholdLevel",
                                "Option":  "Write"
                            },
@@ -11555,11 +11555,6 @@
                            {
                                "CIMType":  "Boolean",
                                "Name":  "MailTipsExternalRecipientsTipsEnabled",
-                               "Option":  "Write"
-                           },
-                           {
-                               "CIMType":  "String",
-                               "Name":  "Ensure",
                                "Option":  "Write"
                            },
                            {

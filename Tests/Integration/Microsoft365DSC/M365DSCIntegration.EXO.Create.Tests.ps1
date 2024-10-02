@@ -458,19 +458,6 @@
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                 }
-                EXOMailTips 'OrgWideMailTips'
-                {
-                    IsSingleInstance                      = 'Yes'
-                    MailTipsAllTipsEnabled                = $True
-                    MailTipsGroupMetricsEnabled           = $True
-                    #MailTipsLargeAudienceThreshold        = 100
-                    MailTipsMailboxSourcedTipsEnabled     = $True
-                    MailTipsExternalRecipientsTipsEnabled = $True
-                    Ensure                                = "Present"
-                    ApplicationId         = $ApplicationId
-                    TenantId              = $TenantId
-                    CertificateThumbprint = $CertificateThumbprint
-                }
                 EXOMalwareFilterPolicy 'ConfigureMalwareFilterPolicy'
                 {
                     Identity                               = "IntegrationMFP"

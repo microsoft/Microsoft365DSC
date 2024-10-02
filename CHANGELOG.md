@@ -15,7 +15,7 @@
   * Added AuthenticationBehavior
   * Added KeyCredentials
   * Added OptionalClaims
-  * Added PaswordCredentials
+  * Added PasswordCredentials
   * Added PreAuthorizationApplications
 * AADAuthenticationMethodPolicy
   * Added ReportSuspiciousActivitySettings
@@ -42,6 +42,8 @@
   * Initial Release.
 * DefenderSubscriptionDefenderPlan
   * Initial release.
+* EXOAntiPhishPolicy
+  * Use correct type integer for variable `PhishThresholdLevel`
 * EXOArcConfig
   * Initial Release.
 * EXODnssecForVerifiedDomain
@@ -62,7 +64,7 @@
   * Remove property `Ensure` since this resource is of type `IsSingleInstance`
 * EXOManagementScope
   * Initial Release.
-* EXORetenionPolicy
+* EXORetentionPolicy
   * Initial Release.
 * EXOPhishSimOverrideRule
   * Initial Release.
@@ -711,6 +713,8 @@
   * Added EnableAIPIntegration.
 * TeamsChannelTab
   * Fixed schema file
+* TeamsComplianceRecordingPolicy
+  * FIXES [[#3712](https://github.com/microsoft/Microsoft365DSC/issues/3712)]
 * TeamsGroupPolicyAssignment
   * Skip assignments that have orphaned/deleted groups or without display name
     instead of throwing an error

@@ -301,14 +301,6 @@
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                 }
-                EXOMailTips 'OrgWideMailTips'
-                {
-                    IsSingleInstance = 'Yes'
-                    Ensure           = "Absent"
-                    ApplicationId         = $ApplicationId
-                    TenantId              = $TenantId
-                    CertificateThumbprint = $CertificateThumbprint
-                }
                 EXOMalwareFilterPolicy 'ConfigureMalwareFilterPolicy'
                 {
                     Identity                               = "IntegrationMFP"
