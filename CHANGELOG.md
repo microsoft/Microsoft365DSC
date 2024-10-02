@@ -1,12 +1,6 @@
 # Change log for Microsoft365DSC
 
 # UNRELEASED
-* AADGroup
-  * Fixes issue with code that is never executed
-    FIXES [#5001](https://github.com/microsoft/Microsoft365DSC/issues/5001)
-  * Fixes issue with incorrect removal of assigned license(s)
-    FIXES [#5128](https://github.com/microsoft/Microsoft365DSC/issues/5128)
-
 
 * AADApplication
   * Added AppRoles
@@ -24,8 +18,12 @@
 * AADFeatureRolloutPolicy
   * Initial release
 * AADGroup
+  * Fixes issue with incorrect removal of assigned license(s)
+    FIXES [#5128](https://github.com/microsoft/Microsoft365DSC/issues/5128)
   * Fixes logic to evaluate license assignments and disabled plans.
     FIXES [#5101](https://github.com/microsoft/Microsoft365DSC/issues/5101)
+  * Fixes issue with code that is never executed
+    FIXES [#5001](https://github.com/microsoft/Microsoft365DSC/issues/5001)
   * Adds support to assign Service Principal as members or owners.
     FIXES [#4972](https://github.com/microsoft/Microsoft365DSC/issues/4972)
 * AADPasswordRuleSettings
