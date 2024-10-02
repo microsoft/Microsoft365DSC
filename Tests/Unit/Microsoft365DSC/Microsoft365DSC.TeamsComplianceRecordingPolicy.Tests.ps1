@@ -67,7 +67,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Description                                         = 'FakeStringValue'
                     Enabled                                             = $True
                     DisableComplianceRecordingAudioNotificationForCalls = $True
-                    ComplianceRecordingApplications                     = @("123456")
                     Identity                                            = 'FakeStringValue'
                     Ensure                                              = 'Present'
                     Credential                                          = $Credential
@@ -99,7 +98,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Description                                         = 'FakeStringValue'
                     Enabled                                             = $True
                     DisableComplianceRecordingAudioNotificationForCalls = $True
-                    ComplianceRecordingApplications                     = @('123456')
                     Identity                                            = 'FakeStringValue'
                     Ensure                                              = 'Absent'
                     Credential                                          = $Credential
@@ -111,14 +109,29 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Description                                         = 'FakeStringValue'
                         Enabled                                             = $True
                         DisableComplianceRecordingAudioNotificationForCalls = $True
-                        ComplianceRecordingApplications                     = "Microsoft.Teams.Policy.Aministration.Cmdlets.Core.CompianceRecordingApplication"
+                        ComplianceRecordingApplications                     = @(
+                            @{
+                                Id = '00000000-0000-0000-0000-000000000000'
+                                ComplianceRecordingPairedApplications = @()
+                                ConcurrentInvitationCount             = 1
+                                RequiredDuringCall                    = $True
+                                RequiredBeforeMeetingJoin             = $True
+                                RequiredBeforeCallEstablishment       = $True
+                                RequiredDuringMeeting                 = $True
+                            }
+                        )
                         Identity                                            = 'FakeStringValue'
                     }
                 }
                 Mock -CommandName Get-CsTeamsComplianceRecordingApplication  -MockWith {
                     return @{
-                        Identity                                            = 'FakeStringValue/123456'
-                        Id                                                  = '123456'
+                        Id = '00000000-0000-0000-0000-000000000000'
+                        ComplianceRecordingPairedApplications = @()
+                        ConcurrentInvitationCount             = 1
+                        RequiredDuringCall                    = $True
+                        RequiredBeforeMeetingJoin             = $True
+                        RequiredBeforeCallEstablishment       = $True
+                        RequiredDuringMeeting                 = $True
                     }
                 }
 
@@ -128,9 +141,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $Result = (Get-TargetResource @testParams)
                 $Result.Ensure | Should -Be 'Present'
                 $Result.ComplianceRecordingApplications.Length | Should -Be 1
-                $Result.ComplianceRecordingApplications[0] | Should -Be '123456'
                 Should -Invoke -CommandName Get-CsTeamsComplianceRecordingPolicy -Exactly 1
-                Should -Invoke -CommandName Get-CsTeamsComplianceRecordingApplication -ParameterFilter {$Filter -eq 'FakeStringValue/*'} -Exactly 1
 
             }
 
@@ -151,7 +162,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Description                                         = 'FakeStringValue'
                     Enabled                                             = $True
                     DisableComplianceRecordingAudioNotificationForCalls = $True
-                    ComplianceRecordingApplications                     = @('123456')
                     Identity                                            = 'FakeStringValue'
                     Ensure                                              = 'Present'
                     Credential                                          = $Credential
@@ -163,15 +173,29 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Description                                         = 'FakeStringValue'
                         Enabled                                             = $True
                         DisableComplianceRecordingAudioNotificationForCalls = $True
-                        ComplianceRecordingApplications                     = "Microsoft.Teams.Policy.Aministration.Cmdlets.Core.CompianceRecordingApplication"
+                        ComplianceRecordingApplications                     = @(
+                            @{
+                                Id = '00000000-0000-0000-0000-000000000000'
+                                ComplianceRecordingPairedApplications = @()
+                                ConcurrentInvitationCount             = 1
+                                RequiredDuringCall                    = $True
+                                RequiredBeforeMeetingJoin             = $True
+                                RequiredBeforeCallEstablishment       = $True
+                                RequiredDuringMeeting                 = $True
+                            }
+                        )
                         Identity                                            = 'FakeStringValue'
-
                     }
                 }
                 Mock -CommandName Get-CsTeamsComplianceRecordingApplication  -MockWith {
                     return @{
-                        Identity                                            = 'FakeStringValue/123456'
-                        Id                                                  = '123456'
+                        Id = '00000000-0000-0000-0000-000000000000'
+                        ComplianceRecordingPairedApplications = @()
+                        ConcurrentInvitationCount             = 1
+                        RequiredDuringCall                    = $True
+                        RequiredBeforeMeetingJoin             = $True
+                        RequiredBeforeCallEstablishment       = $True
+                        RequiredDuringMeeting                 = $True
                     }
                 }
             }
@@ -188,7 +212,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Description                                         = 'FakeStringValue'
                     Enabled                                             = $True
                     DisableComplianceRecordingAudioNotificationForCalls = $True
-                    ComplianceRecordingApplications                     = @('123456')
                     Identity                                            = 'FakeStringValue'
                     Ensure                                              = 'Present'
                     Credential                                          = $Credential
@@ -197,18 +220,33 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-CsTeamsComplianceRecordingPolicy -MockWith {
                     return @{
                         WarnUserOnRemoval                                   = $False
-                        Description                                         = 'FakeStringValueDrift' #Drift
-                        Enabled                                             = $False
-                        DisableComplianceRecordingAudioNotificationForCalls = $False
-                        ComplianceRecordingApplications                     = "Microsoft.Teams.Policy.Aministration.Cmdlets.Core.CompianceRecordingApplication"
+                        Description                                         = 'FakeStringValue'
+                        Enabled                                             = $True
+                        DisableComplianceRecordingAudioNotificationForCalls = $True
+                        ComplianceRecordingApplications                     = @(
+                            @{
+                                Id = '00000000-0000-0000-0000-000000000000'
+                                ComplianceRecordingPairedApplications = @()
+                                ConcurrentInvitationCount             = 1
+                                RequiredDuringCall                    = $True
+                                RequiredBeforeMeetingJoin             = $True
+                                RequiredBeforeCallEstablishment       = $True
+                                RequiredDuringMeeting                 = $True
+                            }
+                        )
                         Identity                                            = 'FakeStringValue'
                     }
                 }
 
                 Mock -CommandName Get-CsTeamsComplianceRecordingApplication  -MockWith {
                     return @{
-                        Identity                                            = 'FakeStringValue/123456Drift'
-                        Id                                                  = '123456Drift'  #Drift
+                        Id = '00000000-0000-0000-0000-000000000000'
+                        ComplianceRecordingPairedApplications = @()
+                        ConcurrentInvitationCount             = 1
+                        RequiredDuringCall                    = $True
+                        RequiredBeforeMeetingJoin             = $True
+                        RequiredBeforeCallEstablishment       = $True
+                        RequiredDuringMeeting                 = $True
                     }
                 }
             }
@@ -241,18 +279,20 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Description                                         = 'FakeStringValue'
                         Enabled                                             = $True
                         DisableComplianceRecordingAudioNotificationForCalls = $True
-                        ComplianceRecordingApplications                     = "Microsoft.Teams.Policy.Aministration.Cmdlets.Core.CompianceRecordingApplication"
+                        ComplianceRecordingApplications                     = @(
+                            @{
+                                Id = '00000000-0000-0000-0000-000000000000'
+                                ComplianceRecordingPairedApplications = @()
+                                ConcurrentInvitationCount             = 1
+                                RequiredDuringCall                    = $True
+                                RequiredBeforeMeetingJoin             = $True
+                                RequiredBeforeCallEstablishment       = $True
+                                RequiredDuringMeeting                 = $True
+                            }
+                        )
                         Identity                                            = 'FakeStringValue'
-
                     }
                 }
-                Mock -CommandName Get-CsTeamsComplianceRecordingApplication  -MockWith {
-                    return @{
-                        Identity                                            = 'FakeStringValue/123456'
-                        Id                                                  = '123456'
-                    }
-                }
-
             }
 
             It 'Should Reverse Engineer resource from the Export method' {

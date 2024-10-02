@@ -56,23 +56,31 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
-    $OrganizationName = $Credscredential.UserName.Split('@')[1]
     Import-DscResource -ModuleName Microsoft365DSC
 
-    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         EXOQuarantinePolicy 'ConfigureQuarantinePolicy'
         {
             EndUserQuarantinePermissionsValue = 87;
             ESNEnabled                        = $False;
-            Identity                          = "$Domain\IntegrationPolicy";
+            Identity                          = "$TenantId\IntegrationPolicy";
             Ensure                            = "Present"
-            Credential                        = $Credscredential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
 }
@@ -87,23 +95,31 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
-    $OrganizationName = $Credscredential.UserName.Split('@')[1]
     Import-DscResource -ModuleName Microsoft365DSC
 
-    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         EXOQuarantinePolicy 'ConfigureQuarantinePolicy'
         {
             EndUserQuarantinePermissionsValue = 87;
             ESNEnabled                        = $True; # Updated Property
-            Identity                          = "$Domain\IntegrationPolicy";
+            Identity                          = "$TenantId\IntegrationPolicy";
             Ensure                            = "Present"
-            Credential                        = $Credscredential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
 }
@@ -118,21 +134,29 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
-    $OrganizationName = $Credscredential.UserName.Split('@')[1]
     Import-DscResource -ModuleName Microsoft365DSC
 
-    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         EXOQuarantinePolicy 'ConfigureQuarantinePolicy'
         {
-            Identity                          = "$Domain\IntegrationPolicy";
+            Identity                          = "$TenantId\IntegrationPolicy";
             Ensure                            = "Absent"
-            Credential                        = $Credscredential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
 }

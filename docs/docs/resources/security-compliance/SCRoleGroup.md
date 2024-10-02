@@ -5,6 +5,7 @@
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
 | **Name** | Key | String | The Name parameter specifies the name of the role. The maximum length of the name is 64 characters. | |
+| **DisplayName** | Write | String | The DisplayName parameter specifies the friendly name of the role group. If the name contains spaces, enclose the name in quotation marks. This parameter has a maximum length of 256 characters. | |
 | **Description** | Write | String | The Description parameter specifies the description that's displayed when the role group is viewed using the Get-RoleGroup cmdlet. Enclose the description in quotation marks | |
 | **Roles** | Write | StringArray[] | The Roles parameter specifies the management roles to assign to the role group when it's created. If a role name contains spaces, enclose the name in quotation marks. If you want to assign more that one role, separate the role names with commas. | |
 | **Ensure** | Write | String | Specify if the Role Group should exist or not. | `Present`, `Absent` |

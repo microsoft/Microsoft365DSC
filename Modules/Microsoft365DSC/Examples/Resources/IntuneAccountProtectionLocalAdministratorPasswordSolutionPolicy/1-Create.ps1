@@ -6,9 +6,17 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -19,7 +27,6 @@ Configuration Example
             DisplayName              = "Account Protection LAPS Policy";
             Description              = "My revised description";
             Ensure                   = "Present";
-            Credential               = $Credscredential
             Assignments              = @(
                 MSFT_IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicyAssignments{
                     deviceAndAppManagementAssignmentFilterType = 'none'
@@ -30,6 +37,9 @@ Configuration Example
             PasswordAgeDays_AAD      = 10;
             AdministratorAccountName = "Administrator";
             PasswordAgeDays          = 20;
+            ApplicationId         = $ApplicationId;
+            TenantId              = $TenantId;
+            CertificateThumbprint = $CertificateThumbprint;
         }
     }
 }

@@ -81,15 +81,22 @@ It is not meant to use as a production baseline.
 ```powershell
 Configuration Example
 {
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $credsCredential
+    param(
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
+
     Import-DscResource -ModuleName Microsoft365DSC
 
-    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         EXOCalendarProcessing "CalendarProcessing"
@@ -107,7 +114,6 @@ Configuration Example
             BookingWindowInDays                  = 180;
             BookInPolicy                         = @();
             ConflictPercentageAllowed            = 0;
-            Credential                           = $credsCredential;
             DeleteAttachments                    = $True;
             DeleteComments                       = $True;
             DeleteNonCalendarItems               = $True;
@@ -118,7 +124,7 @@ Configuration Example
             EnforceSchedulingHorizon             = $True;
             Ensure                               = "Present";
             ForwardRequestsToDelegates           = $True;
-            Identity                             = "admin@$Domain";
+            Identity                             = "admin@$TenantId";
             MaximumConflictInstances             = 0;
             MaximumDurationInMinutes             = 1440;
             MinimumDurationInMinutes             = 0;
@@ -129,10 +135,13 @@ Configuration Example
             RemoveForwardedMeetingNotifications  = $False;
             RemoveOldMeetingMessages             = $False;
             RemovePrivateProperty                = $True;
-            RequestInPolicy                      = @("AlexW@$Domain");
+            RequestInPolicy                      = @("AlexW@$TenantId");
             ResourceDelegates                    = @();
             ScheduleOnlyDuringWorkHours          = $False;
             TentativePendingApproval             = $True;
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
 }

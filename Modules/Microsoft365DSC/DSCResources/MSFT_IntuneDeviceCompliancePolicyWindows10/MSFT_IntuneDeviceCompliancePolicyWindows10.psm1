@@ -132,14 +132,14 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $TPMRequired,
+        $TpmRequired,
 
         [Parameter()]
         [System.String]
         $DeviceCompliancePolicyScript,
 
         [Parameter()]
-        [System.Array]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
         $ValidOperatingSystemBuildRanges,
 
         [Parameter()]
@@ -214,6 +214,28 @@ function Get-TargetResource
             return $nullResult
         }
 
+        $complexValidOperatingSystemBuildRanges = @()
+        foreach ($currentValidOperatingSystemBuildRanges in $devicePolicy.AdditionalProperties.validOperatingSystemBuildRanges)
+        {
+            $myValidOperatingSystemBuildRanges = @{}
+            if ($null -ne $currentValidOperatingSystemBuildRanges.lowestVersion)
+            {
+                $myValidOperatingSystemBuildRanges.Add('LowestVersion', $currentValidOperatingSystemBuildRanges.lowestVersion.ToString())
+            }
+            if ($null -ne $currentValidOperatingSystemBuildRanges.highestVersion)
+            {
+                $myValidOperatingSystemBuildRanges.Add('HighestVersion', $currentValidOperatingSystemBuildRanges.highestVersion.ToString())
+            }
+            if ($null -ne $currentValidOperatingSystemBuildRanges.description)
+            {
+                $myValidOperatingSystemBuildRanges.Add('Description', $currentValidOperatingSystemBuildRanges.description)
+            }
+            if ($myValidOperatingSystemBuildRanges.values.Where({$null -ne $_}).Count -gt 0)
+            {
+                $complexValidOperatingSystemBuildRanges += $myValidOperatingSystemBuildRanges
+            }
+        }
+
         Write-Verbose -Message "Found Windows 10 Device Compliance Policy with displayName {$DisplayName}"
         $results = @{
             DisplayName                                 = $devicePolicy.DisplayName
@@ -247,9 +269,9 @@ function Get-TargetResource
             DeviceThreatProtectionEnabled               = $devicePolicy.AdditionalProperties.deviceThreatProtectionEnabled
             DeviceThreatProtectionRequiredSecurityLevel = $devicePolicy.AdditionalProperties.deviceThreatProtectionRequiredSecurityLevel
             ConfigurationManagerComplianceRequired      = $devicePolicy.AdditionalProperties.configurationManagerComplianceRequired
-            TPMRequired                                 = $devicePolicy.AdditionalProperties.tPMRequired
+            TpmRequired                                 = $devicePolicy.AdditionalProperties.tpmRequired
             DeviceCompliancePolicyScript                = $devicePolicy.AdditionalProperties.deviceCompliancePolicyScript
-            ValidOperatingSystemBuildRanges             = $devicePolicy.AdditionalProperties.validOperatingSystemBuildRanges
+            ValidOperatingSystemBuildRanges             = $complexValidOperatingSystemBuildRanges
             Ensure                                      = 'Present'
             Credential                                  = $Credential
             ApplicationId                               = $ApplicationId
@@ -262,7 +284,7 @@ function Get-TargetResource
 
         $returnAssignments = @()
         $graphAssignments = Get-MgBetaDeviceManagementDeviceCompliancePolicyAssignment -DeviceCompliancePolicyId  $devicePolicy.Id
-        if ($graphAssignments.count -gt 0)
+        if ($graphAssignments.Count -gt 0)
         {
             $returnAssignments += ConvertFrom-IntunePolicyAssignment `
                                 -IncludeDeviceFilter:$true `
@@ -418,14 +440,14 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $TPMRequired,
+        $TpmRequired,
 
         [Parameter()]
         [System.String]
         $DeviceCompliancePolicyScript,
 
         [Parameter()]
-        [System.Array]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
         $ValidOperatingSystemBuildRanges,
 
         [Parameter()]
@@ -694,14 +716,14 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $TPMRequired,
+        $TpmRequired,
 
         [Parameter()]
         [System.String]
         $DeviceCompliancePolicyScript,
 
         [Parameter()]
-        [System.Array]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
         $ValidOperatingSystemBuildRanges,
 
         [Parameter()]
@@ -763,25 +785,36 @@ function Test-TargetResource
         throw "An error occured in Get-TargetResource, the policy {$displayName} will not be processed. Refer to the event viewer logs for more information."
     }
 
-    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
-    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
-
-    $ValuesToCheck = $PSBoundParameters
+    $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
 
     $testResult = $true
     if ($CurrentValues.Ensure -ne $Ensure)
     {
         $testResult = $false
     }
-    #region Assignments
-    if ($testResult)
+
+    #Compare Cim instances
+    foreach ($key in $PSBoundParameters.Keys)
     {
-        $source = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $PSBoundParameters.Assignments
-        $target = $CurrentValues.Assignments
-        $testResult = Compare-M365DSCIntunePolicyAssignment -Source $source -Target $target
-        $ValuesToCheck.Remove('Assignments') | Out-Null
+        $source = $PSBoundParameters.$key
+        $target = $CurrentValues.$key
+        if ($null -ne $source -and $source.GetType().Name -like '*CimInstance*')
+        {
+            $testResult = Compare-M365DSCComplexObject `
+                -Source ($source) `
+                -Target ($target)
+
+            if (-not $testResult)
+            {
+                break
+            }
+
+            $ValuesToCheck.Remove($key) | Out-Null
+        }
     }
-    #endregion
+
+    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     if ($testResult)
     {
@@ -850,9 +883,16 @@ function Export-TargetResource
 
     try
     {
+        if (-not [string]::IsNullOrEmpty($Filter))
+        {
+            $complexFunctions = Get-ComplexFunctionsFromFilterQuery -FilterQuery $Filter
+            $Filter = Remove-ComplexFunctionsFromFilterQuery -FilterQuery $Filter
+        }
         [array]$configDeviceWindowsPolicies = Get-MgBetaDeviceManagementDeviceCompliancePolicy `
             -ErrorAction Stop -All:$true -Filter $Filter | Where-Object `
             -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windows10CompliancePolicy' }
+        $configDeviceWindowsPolicies = Find-GraphDataUsingComplexFunctions -ComplexFunctions $complexFunctions -Policies $configDeviceWindowsPolicies
+
         $i = 1
         $dscContent = ''
         if ($configDeviceWindowsPolicies.Length -eq 0)
@@ -880,7 +920,7 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
-                Managedidentity       = $ManagedIdentity.IsPresent
+                ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }
             $Results = Get-TargetResource @params
@@ -892,6 +932,21 @@ function Export-TargetResource
 
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
+            if ($null -ne $Results.ValidOperatingSystemBuildRanges)
+            {
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                    -ComplexObject $Results.ValidOperatingSystemBuildRanges `
+                    -CIMInstanceName 'MicrosoftGraphOperatingSystemVersionRange' `
+                    -IsArray
+                if (-not [string]::IsNullOrWhiteSpace($complexTypeStringResult))
+                {
+                    $Results.ValidOperatingSystemBuildRanges = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('ValidOperatingSystemBuildRanges') | Out-Null
+                }
+            }
             if ($Results.Assignments)
             {
                 $complexTypeStringResult = Get-M365DSCAssignmentsAsString -Params $Results.Assignments
@@ -909,6 +964,10 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
+            if ($Results.ValidOperatingSystemBuildRanges)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'ValidOperatingSystemBuildRanges'
+            }
             if ($Results.Assignments)
             {
                 $isCIMArray = $false
@@ -967,6 +1026,10 @@ function Get-M365DSCIntuneDeviceCompliancePolicyWindows10AdditionalProperties
         {
             $propertyName = $property[0].ToString().ToLower() + $property.Substring(1, $property.Length - 1)
             $propertyValue = $properties.$property
+            if ($null -ne $propertyValue -and $propertyValue.GetType().Name -like '*cimInstance*')
+            {
+                $propertyValue = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $propertyValue
+            }
             $results.Add($propertyName, $propertyValue)
         }
     }

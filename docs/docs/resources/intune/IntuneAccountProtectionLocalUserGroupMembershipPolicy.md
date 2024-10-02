@@ -85,9 +85,17 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -98,7 +106,6 @@ Configuration Example
             DisplayName              = "Account Protection LUGM Policy";
             Description              = "My revised description";
             Ensure                   = "Present";
-            Credential               = $Credscredential
             Assignments              = @(
                 MSFT_IntuneAccountProtectionLocalUserGroupMembershipPolicyAssignments{
                     deviceAndAppManagementAssignmentFilterType = 'none'
@@ -113,6 +120,9 @@ Configuration Example
                     UserSelectionType = 'users'
                 }
             );
+            ApplicationId         = $ApplicationId;
+            TenantId              = $TenantId;
+            CertificateThumbprint = $CertificateThumbprint;
         }
     }
 }
@@ -127,9 +137,17 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -140,7 +158,6 @@ Configuration Example
             DisplayName              = "Account Protection LUGM Policy";
             Description              = "My revised description";
             Ensure                   = "Present";
-            Credential               = $Credscredential
             Assignments              = @(); # Updated Property
             LocalUserGroupCollection = @(
                 MSFT_IntuneAccountProtectionLocalUserGroupCollection{
@@ -150,6 +167,9 @@ Configuration Example
                     UserSelectionType = 'users'
                 }
             );
+            ApplicationId         = $ApplicationId;
+            TenantId              = $TenantId;
+            CertificateThumbprint = $CertificateThumbprint;
         }
     }
 }
@@ -164,9 +184,17 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -177,7 +205,9 @@ Configuration Example
             DisplayName              = "Account Protection LUGM Policy";
             Description              = "My revised description";
             Ensure                   = "Absent";
-            Credential               = $Credscredential
+            ApplicationId         = $ApplicationId;
+            TenantId              = $TenantId;
+            CertificateThumbprint = $CertificateThumbprint;
         }
     }
 }

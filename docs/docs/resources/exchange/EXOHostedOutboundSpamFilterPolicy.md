@@ -10,9 +10,9 @@
 | **BccSuspiciousOutboundMail** | Write | Boolean | The BccSuspiciousOutboundMail parameter enables or disables adding recipients to the Bcc field of outgoing spam messages. Valid input for this parameter is $true or $false. The default value is $false. You specify the additional recipients using the BccSuspiciousOutboundAdditionalRecipients parameter. | |
 | **NotifyOutboundSpam** | Write | Boolean | The NotifyOutboundSpam parameter enables or disables sending notification messages to administrators when an outgoing message is determined to be spam. Valid input for this parameter is $true or $false. The default value is $false. You specify the administrators to notify by using the NotifyOutboundSpamRecipients parameter. | |
 | **NotifyOutboundSpamRecipients** | Write | StringArray[] | The NotifyOutboundSpamRecipients parameter specifies the administrators to notify when an outgoing message is determined to be spam. Valid input for this parameter is an email address. Separate multiple email addresses with commas. | |
-| **RecipientLimitInternalPerHour** | Write | String | The RecipientLimitInternalPerHour parameter specifies the maximum number of internal recipients that a user can send to within an hour. A valid value is 0 to 10000. The default value is 0, which means the service defaults are used. | |
-| **RecipientLimitPerDay** | Write | String | The RecipientLimitPerDay parameter specifies the maximum number of recipients that a user can send to within a day. A valid value is 0 to 10000. The default value is 0, which means the service defaults are used. | |
-| **RecipientLimitExternalPerHour** | Write | String | The RecipientLimitExternalPerHour parameter specifies the maximum number of external recipients that a user can send to within an hour. A valid value is 0 to 10000. The default value is 0, which means the service defaults are used. | |
+| **RecipientLimitInternalPerHour** | Write | UInt32 | The RecipientLimitInternalPerHour parameter specifies the maximum number of internal recipients that a user can send to within an hour. A valid value is 0 to 10000. The default value is 0, which means the service defaults are used. | |
+| **RecipientLimitPerDay** | Write | UInt32 | The RecipientLimitPerDay parameter specifies the maximum number of recipients that a user can send to within a day. A valid value is 0 to 10000. The default value is 0, which means the service defaults are used. | |
+| **RecipientLimitExternalPerHour** | Write | UInt32 | The RecipientLimitExternalPerHour parameter specifies the maximum number of external recipients that a user can send to within an hour. A valid value is 0 to 10000. The default value is 0, which means the service defaults are used. | |
 | **ActionWhenThresholdReached** | Write | String | The ActionWhenThresholdReached parameter specifies the action to take when any of the limits specified in the policy are reached. Valid values are: Alert, BlockUser, BlockUserForToday. BlockUserForToday is the default value. | |
 | **AutoForwardingMode** | Write | String | The AutoForwardingMode specifies how the policy controls automatic email forwarding to outbound recipients. Valid values are: Automatic, On, Off. | |
 | **Ensure** | Write | String | Specify if this policy should exist or not. | `Present`, `Absent` |
@@ -55,10 +55,19 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
+
     Import-DscResource -ModuleName Microsoft365DSC
 
     node localhost
@@ -73,11 +82,13 @@ Configuration Example
             BccSuspiciousOutboundMail                 = $False
             NotifyOutboundSpam                        = $False
             NotifyOutboundSpamRecipients              = @()
-            RecipientLimitExternalPerHour             = 0
-            RecipientLimitInternalPerHour             = 0
-            RecipientLimitPerDay                      = 0
+            #RecipientLimitExternalPerHour             = 0
+            #RecipientLimitInternalPerHour             = 0
+            #RecipientLimitPerDay                      = 0
             Ensure                                    = "Present"
-            Credential                                = $Credscredential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
 }
@@ -92,10 +103,19 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
+
     Import-DscResource -ModuleName Microsoft365DSC
 
     node localhost
@@ -110,11 +130,13 @@ Configuration Example
             BccSuspiciousOutboundMail                 = $False
             NotifyOutboundSpam                        = $False
             NotifyOutboundSpamRecipients              = @()
-            RecipientLimitExternalPerHour             = 0
-            RecipientLimitInternalPerHour             = 1 # Updated Property
-            RecipientLimitPerDay                      = 0
+            #RecipientLimitExternalPerHour             = 0
+            #RecipientLimitInternalPerHour             = 1 # Updated Property
+            #RecipientLimitPerDay                      = 0
             Ensure                                    = "Present"
-            Credential                                = $Credscredential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
 }
@@ -129,10 +151,19 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
+
     Import-DscResource -ModuleName Microsoft365DSC
 
     node localhost
@@ -141,7 +172,9 @@ Configuration Example
         {
             Identity                                  = "Integration SFP"
             Ensure                                    = "Absent"
-            Credential                                = $Credscredential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
 }

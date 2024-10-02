@@ -8,7 +8,7 @@
 | **Id** | Write | String | Unique identifier of the Authentication Flow Policy. | |
 | **DisplayName** | Write | String | Display name of the Authentication Flow Policy. | |
 | **Description** | Write | String | Description of the Authentication Flow Policy. | |
-| **SelfServiceSignUpEnabled** | Write | String | Indicates whether self-service sign-up flow is enabled or disabled. The default value is false. This property isn't a key. Required. | |
+| **SelfServiceSignUpEnabled** | Write | Boolean | Indicates whether self-service sign-up flow is enabled or disabled. The default value is false. This property isn't a key. Required. | |
 | **Credential** | Write | PSCredential | Credentials of the Azure Active Directory Admin | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
 | **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. | |
@@ -57,8 +57,17 @@ It is not meant to use as a production baseline.
 ```powershell
 Configuration Example {
     param(
-        [System.Management.Automation.PSCredential]
-        $credsCredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Import-DscResource -ModuleName Microsoft365DSC
@@ -67,7 +76,9 @@ Configuration Example {
     {
         AADAuthenticationFlowPolicy "AADAuthenticationFlowPolicy"
         {
-            Credential               = $credsCredential;
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
             Description              = "Authentication flows policy allows modification of settings related to authentication flows in AAD tenant, such as self-service sign up configuration.";
             DisplayName              = "Authentication flows policy";
             Id                       = "authenticationFlowsPolicy";

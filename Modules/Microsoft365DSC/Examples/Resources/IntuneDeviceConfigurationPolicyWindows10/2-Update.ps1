@@ -6,9 +6,17 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -47,7 +55,6 @@ Configuration Example
             ConnectedDevicesServiceBlocked                       = $False;
             CopyPasteBlocked                                     = $False;
             CortanaBlocked                                       = $False;
-            Credential                                           = $Credscredential;
             CryptographyAllowFipsAlgorithmPolicy                 = $False;
             DefenderBlockEndUserAccess                           = $False;
             DefenderBlockOnAccessProtection                      = $False;
@@ -267,6 +274,9 @@ Configuration Example
             WirelessDisplayBlockProjectionToThisDevice           = $False;
             WirelessDisplayBlockUserInputFromReceiver            = $False;
             WirelessDisplayRequirePinForPairing                  = $False;
+            ApplicationId         = $ApplicationId;
+            TenantId              = $TenantId;
+            CertificateThumbprint = $CertificateThumbprint;
         }
     }
 }

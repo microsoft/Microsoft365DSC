@@ -6,9 +6,17 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -25,11 +33,13 @@ Configuration Example
             );
             ComputerNameStaticPrefix          = "WK-";
             ComputerNameSuffixRandomCharCount = 12;
-            Credential                        = $Credscredential;
             DisplayName                       = "Domain Join";
             Ensure                            = "Present";
             OrganizationalUnit                = "OU=workstation,CN=domain,CN=com";
             SupportsScopeTags                 = $True;
+            ApplicationId         = $ApplicationId;
+            TenantId              = $TenantId;
+            CertificateThumbprint = $CertificateThumbprint;
         }
     }
 }

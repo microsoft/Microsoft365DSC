@@ -19,11 +19,13 @@ Configuration Example
         AADRoleEligibilityScheduleRequest "MyRequest"
         {
             Action               = "AdminAssign";
-            Credential           = $Credscredential;
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
             DirectoryScopeId     = "/";
             Ensure               = "Absent";
             IsValidationOnly     = $True; # Updated Property
-            Principal            = "John.Smith@$OrganizationName";
+            Principal            = "AdeleV@$TenantId";
             RoleDefinition       = "Teams Communications Administrator";
             ScheduleInfo         = MSFT_AADRoleEligibilityScheduleRequestSchedule {
                 startDateTime             = '2023-09-01T02:40:44Z'
