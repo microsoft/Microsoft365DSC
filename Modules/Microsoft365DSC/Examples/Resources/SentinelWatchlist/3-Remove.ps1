@@ -33,7 +33,7 @@ Configuration Example
             ItemsSearchKey        = "Test";
             Name                  = "MyWatchList";
             NumberOfLinesToSkip   = 1;
-            RawContent            = (Get-Content 'C:\book2.csv' -Raw)
+            RawContent            = 'MyContent'
             ResourceGroupName     = "MyResourceGroup";
             SourceType            = "Local";
             SubscriptionId        = "20f41296-9edc-4374-b5e0-b1c1aa07e7d3";
