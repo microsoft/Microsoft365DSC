@@ -4,12 +4,26 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        ##TODO - Replace the PrimaryKey
         [Parameter(Mandatory = $true)]
+        [ValidateSet('Yes')]
         [System.String]
-        $PrimaryKey,
+        $IsSingleInstance,
 
-        ##TODO - Add the list of Parameters
+        [Parameter()]
+        [System.Boolean]
+        $IsCustomizedNotificationTemplate,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsCustomizedReminderTemplate,
+
+        [Parameter()]
+        [System.String]
+        $CustomizedNotificationDataString,
+
+        [Parameter()]
+        [System.String]
+        $CustomizedReminderDataString,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -41,8 +55,7 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    ##TODO - Replace the workload by the one associated to your resource
-    New-M365DSCConnection -Workload 'Workload' `
+    New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
         -InboundParameters $PSBoundParameters | Out-Null
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -58,33 +71,33 @@ function Get-TargetResource
     #endregion
 
     $nullResult = $PSBoundParameters
-    $nullResult.Ensure = 'Absent'
     try
     {
         if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
         {
-            ##TODO - Replace the PrimaryKey in the Filter by the one for the resource
-            $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.PrimaryKey -eq $PrimaryKey}
+            $instance = $Script:exportedInstances[0]
         }
         else
         {
-            ##TODO - Replace the cmdlet by the one to retrieve a specific instance.
-            $instance = Get-cmdlet -PrimaryKey $PrimaryKey -ErrorAction Stop
+            $instance = Get-RecordReviewNotificationTemplateConfig -ErrorAction Stop
         }
         if ($null -eq $instance)
         {
-            return $nullResult
+            throw "Couldn't retrieve the Record Management Disposition settings"
         }
 
         $results = @{
-            ##TODO - Add the list of parameters to be returned
-            Ensure                = 'Present'
-            Credential            = $Credential
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            CertificateThumbprint = $CertificateThumbprint
-            ManagedIdentity       = $ManagedIdentity.IsPresent
-            AccessTokens          = $AccessTokens
+            IsSingleInstance                 = 'Yes'
+            IsCustomizedNotificationTemplate = $instance.IsCustomizedNotificationTemplate
+            IsCustomizedReminderTemplate     = $instance.IsCustomizedReminderTemplate
+            CustomizedNotificationDataString = $instance.CustomizedNotificationDataString
+            CustomizedReminderDataString     = $instance.CustomizedReminderDataString
+            Credential                       = $Credential
+            ApplicationId                    = $ApplicationId
+            TenantId                         = $TenantId
+            CertificateThumbprint            = $CertificateThumbprint
+            ManagedIdentity                  = $ManagedIdentity.IsPresent
+            AccessTokens                     = $AccessTokens
         }
         return [System.Collections.Hashtable] $results
     }
@@ -106,17 +119,26 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
-        ##TODO - Replace the PrimaryKey
         [Parameter(Mandatory = $true)]
+        [ValidateSet('Yes')]
         [System.String]
-        $PrimaryKey,
-
-        ##TODO - Add the list of Parameters
+        $IsSingleInstance,
 
         [Parameter()]
-        [ValidateSet('Present', 'Absent')]
+        [System.Boolean]
+        $IsCustomizedNotificationTemplate,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsCustomizedReminderTemplate,
+
+        [Parameter()]
         [System.String]
-        $Ensure = 'Present',
+        $CustomizedNotificationDataString,
+
+        [Parameter()]
+        [System.String]
+        $CustomizedReminderDataString,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -155,28 +177,10 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $currentInstance = Get-TargetResource @PSBoundParameters
-
+    Write-Verbose -Message 'Updating the Records Management Disposition settings for Purview'
     $setParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
-
-    # CREATE
-    if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
-    {
-        ##TODO - Replace by the New cmdlet for the resource
-        New-Cmdlet @SetParameters
-    }
-    # UPDATE
-    elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
-    {
-        ##TODO - Replace by the Update/Set cmdlet for the resource
-        Set-cmdlet @SetParameters
-    }
-    # REMOVE
-    elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
-    {
-        ##TODO - Replace by the Remove cmdlet for the resource
-        Remove-cmdlet @SetParameters
-    }
+    $setParameters.Remove('IsSingleInstance') | Out-Null
+    Set-RecordReviewNotificationTemplateConfig @setParameters
 }
 
 function Test-TargetResource
@@ -185,17 +189,26 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
-        ##TODO - Replace the PrimaryKey
         [Parameter(Mandatory = $true)]
+        [ValidateSet('Yes')]
         [System.String]
-        $PrimaryKey,
-
-        ##TODO - Add the list of Parameters
+        $IsSingleInstance,
 
         [Parameter()]
-        [ValidateSet('Present', 'Absent')]
+        [System.Boolean]
+        $IsCustomizedNotificationTemplate,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsCustomizedReminderTemplate,
+
+        [Parameter()]
         [System.String]
-        $Ensure = 'Present',
+        $CustomizedNotificationDataString,
+
+        [Parameter()]
+        [System.String]
+        $CustomizedReminderDataString,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -285,8 +298,7 @@ function Export-TargetResource
         $AccessTokens
     )
 
-    ##TODO - Replace workload
-    $ConnectionMode = New-M365DSCConnection -Workload 'Workload' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
         -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -304,8 +316,7 @@ function Export-TargetResource
     try
     {
         $Script:ExportMode = $true
-        ##TODO - Replace Get-Cmdlet by the cmdlet to retrieve all instances
-        [array] $Script:exportedInstances = Get-Cmdlet -ErrorAction Stop
+        [array] $Script:exportedInstances = Get-RecordReviewNotificationTemplateConfig -ErrorAction Stop
 
         $i = 1
         $dscContent = ''
@@ -324,11 +335,10 @@ function Export-TargetResource
                 $Global:M365DSCExportResourceInstancesCount++
             }
 
-            $displayedKey = $config.Id
+            $displayedKey = $config.Name
             Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -NoNewline
             $params = @{
-                ##TODO - Specify the Primary Key
-                #PrimaryKey            = $config.PrimaryKey
+                IsSingleInstance      = 'Yes'
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId

@@ -14,6 +14,7 @@
 | **IdentifierUris** | Write | StringArray[] | User-defined URI(s) that uniquely identify a Web application within its Azure AD tenant, or within a verified custom domain. | |
 | **IsFallbackPublicClient** | Write | Boolean | Specifies the fallback application type as public client, such as an installed application running on a mobile device. The default value is false, which means the fallback application type is confidential client such as web app. There are certain scenarios where Microsoft Entra ID cannot determine the client application type (for example, ROPC flow where it is configured without specifying a redirect URI). In those cases, Microsoft Entra ID will interpret the application type based on the value of this property. | |
 | **KnownClientApplications** | Write | StringArray[] | Client applications that are tied to this resource application. | |
+| **OptionalClaims** | Write | MSFT_MicrosoftGraphoptionalClaims | Application developers can configure optional claims in their Microsoft Entra applications to specify the claims that are sent to their application by the Microsoft security token service. For more information, see How to: Provide optional claims to your app. | |
 | **Api** | Write | MSFT_MicrosoftGraphapiApplication | Specifies settings for an application that implements a web API. | |
 | **AuthenticationBehaviors** | Write | MSFT_MicrosoftGraphauthenticationBehaviors | The collection of breaking change behaviors related to token issuance that are configured for the application. Authentication behaviors are unset by default (null) and must be explicitly enabled or disabled. Nullable. Returned only on $select.  For more information about authentication behaviors, see Manage application authenticationBehaviors to avoid unverified use of email claims for user identification or authorization. | |
 | **PasswordCredentials** | Write | MSFT_MicrosoftGraphpasswordCredential[] | The collection of password credentials associated with the application. Not nullable. | |
@@ -43,6 +44,26 @@
 | **SourceAPI** | Write | String | Name of the API from which the permission comes from. | |
 | **Type** | Write | String | Type of permission. | `AppOnly`, `Delegated` |
 | **AdminConsentGranted** | Write | Boolean | Represented whether or not the Admin consent been granted on the app. | |
+
+### MSFT_MicrosoftGraphOptionalClaims
+
+#### Parameters
+
+| Parameter | Attribute | DataType | Description | Allowed Values |
+| --- | --- | --- | --- | --- |
+| **AccessToken** | Write | MSFT_MicrosoftGraphOptionalClaim[] | The optional claims returned in the JWT access token. | |
+| **IdToken** | Write | MSFT_MicrosoftGraphOptionalClaim[] | The optional claims returned in the JWT ID token. | |
+| **Saml2Token** | Write | MSFT_MicrosoftGraphOptionalClaim[] | The optional claims returned in the SAML token. | |
+
+### MSFT_MicrosoftGraphOptionalClaim
+
+#### Parameters
+
+| Parameter | Attribute | DataType | Description | Allowed Values |
+| --- | --- | --- | --- | --- |
+| **Essential** | Write | Boolean | If the value is true, the claim specified by the client is necessary to ensure a smooth authorization experience for the specific task requested by the end user. The default value is false. | |
+| **Name** | Write | String | The name of the optional claim. | |
+| **Source** | Write | String | The source (directory object) of the claim. There are predefined claims and user-defined claims from extension properties. If the source value is null, the claim is a predefined optional claim. If the source value is user, the value in the name property is the extension property from the user object. | |
 
 ### MSFT_MicrosoftGraphPreAuthorizedApplication
 

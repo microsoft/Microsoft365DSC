@@ -55,6 +55,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Start-Sleep -MockWith {
             }
 
+            Mock -CommandName Get-DlpSensitiveInformationType -MockWith {
+                return @(
+                    [PSCustomObject]@{Name = 'ABA Routing Number'; Id = 'cb353f78-2b72-4c3c-8827-92ebe4f69fdf'; RulePackId = '00000000-0000-0000-0000-000000000000' },
+                    [PSCustomObject]@{Name = 'All Full Names'; Id = '50b8b56b-4ef8-44c2-a924-03374f5831ce'; RulePackId = '00000000-0000-0000-0000-000000000004' }
+                )
+            }
+
             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
             }
@@ -82,6 +89,47 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                     Value = 'English DisplayName'
                                 } -ClientOnly)
                         } -ClientOnly)
+                    AutoLabelingSettings = New-CimInstance -ClassName MSFT_SCSLAutoLabelingSettings -Property @{
+                        Operator      = 'And'
+                        AutoApplyType = 'Recommend'
+                        PolicyTip     = 'My Perfect Test Tip!'
+                        Groups        = [CimInstance[]]@(
+                            New-CimInstance -ClassName MSFT_SCSLSensitiveInformationGroup -Property @{
+                                Name = 'Group1'
+                                Operator = 'Or'
+                                SensitiveInformationType = [CimInstance[]]@(
+                                    New-CimInstance -ClassName MSFT_SCSLSensitiveInformationType -Property @{
+                                        name = 'ABA Routing Number'
+                                        confidencelevel = 'High'
+                                        mincount = 1
+                                        maxcount = -1
+                                    } -ClientOnly
+                                )
+                                TrainableClassifier = [CimInstance[]]@(
+                                    New-CimInstance -ClassName MSFT_SCSLTrainableClassifiers -Property @{
+                                        name = 'Legal Affairs'
+                                    } -ClientOnly
+                                )
+                            } -ClientOnly
+                            New-CimInstance -ClassName MSFT_SCSLSensitiveInformationGroup -Property @{
+                                Name = 'Group2'
+                                Operator = 'And'
+                                SensitiveInformationType = [CimInstance[]]@(
+                                    New-CimInstance -ClassName MSFT_SCSLSensitiveInformationType -Property @{
+                                        name = 'All Full Names'
+                                        confidencelevel = 'High'
+                                        mincount = 10
+                                        maxcount = 100
+                                    } -ClientOnly
+                                )
+                                TrainableClassifier = [CimInstance[]]@(
+                                    New-CimInstance -ClassName MSFT_SCSLTrainableClassifiers -Property @{
+                                        name = 'Legal Affairs'
+                                    } -ClientOnly
+                                )
+                            } -ClientOnly
+                        )
+                    } -ClientOnly
                     Credential       = $Credential
                     Ensure           = 'Present'
                 }
@@ -104,7 +152,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name 'Label already exists' -Fixture {
+        Context -Name 'Label already exists, but is incorrectly configured' -Fixture {
             BeforeAll {
                 $testParams = @{
                     Name             = 'TestLabel'
@@ -126,6 +174,48 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 } -ClientOnly)
                         } -ClientOnly)
 
+                    AutoLabelingSettings = New-CimInstance -ClassName MSFT_SCSLAutoLabelingSettings -Property @{
+                            Operator      = 'And'
+                            AutoApplyType = 'Recommend'
+                            PolicyTip     = 'My Perfect Test Tip!'
+                            Groups        = [CimInstance[]]@(
+                                New-CimInstance -ClassName MSFT_SCSLSensitiveInformationGroup -Property @{
+                                    Name = 'Group1'
+                                    Operator = 'Or'
+                                    SensitiveInformationType = [CimInstance[]]@(
+                                        New-CimInstance -ClassName MSFT_SCSLSensitiveInformationType -Property @{
+                                            name = 'ABA Routing Number'
+                                            confidencelevel = 'High'
+                                            mincount = 1
+                                            maxcount = -1
+                                        } -ClientOnly
+                                    )
+                                    TrainableClassifier = [CimInstance[]]@(
+                                        New-CimInstance -ClassName MSFT_SCSLTrainableClassifiers -Property @{
+                                            name = 'Legal Affairs'
+                                        } -ClientOnly
+                                    )
+                                } -ClientOnly
+                                New-CimInstance -ClassName MSFT_SCSLSensitiveInformationGroup -Property @{
+                                    Name = 'Group2'
+                                    Operator = 'And'
+                                    SensitiveInformationType = [CimInstance[]]@(
+                                        New-CimInstance -ClassName MSFT_SCSLSensitiveInformationType -Property @{
+                                            name = 'All Full Names'
+                                            confidencelevel = 'High'
+                                            mincount = 1
+                                            maxcount = 100
+                                        } -ClientOnly
+                                    )
+                                    TrainableClassifier = [CimInstance[]]@(
+                                        New-CimInstance -ClassName MSFT_SCSLTrainableClassifiers -Property @{
+                                            name = 'Legal Affairs'
+                                        } -ClientOnly
+                                    )
+                                } -ClientOnly
+                            )
+                        } -ClientOnly
+
                     Credential       = $Credential
                     Ensure           = 'Present'
                 }
@@ -138,11 +228,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         DisplayName    = 'Test label'
                         ParentId       = 'MyLabel'
                         Priority       = '2'
-                        Settings       = '{"Key": "LabelStatus",
-                                            "Value": "Enabled"}'
-                        LocaleSettings = '{"LocaleKey":"DisplayName",
-                                            "LabelSettings":[
-                                            {"Key":"en-us","Value":"English Display Names"}]}'
+                        Settings       = '[LabelStatus, Enabled]'
+                        LocaleSettings = '{"LocaleKey":"DisplayName","Settings":[{"Key":"en-us","Value":"English Display Names"}]}'
+                        Conditions     = '{"And":[{"Or":[{"Key":"CCSI","Value":"cb353f78-2b72-4c3c-8827-92ebe4f69fdf","Properties":null,"Settings":[{"Key":"mincount","Value":"1"},{"Key":"maxconfidence","Value":"100"},{"Key":"rulepackage","Value":"00000000-0000-0000-0000-000000000000"},{"Key":"name","Value":"ABA Routing Number"},{"Key":"groupname","Value":"Group1"},{"Key":"minconfidence","Value":"85"},{"Key":"maxcount","Value":"-1"},{"Key":"policytip","Value":"My Perfect Test Tip!"},{"Key":"confidencelevel","Value":"High"},{"Key":"autoapplytype","Value":"Recommend"}]},{"Key":"ContentMatchesModule","Value":"ba38aa0f-8c86-4c73-87db-95147a0f4420","Properties":null,"Settings":[{"Key":"name","Value":"Legal Affairs"},{"Key":"groupname","Value":"Group1"},{"Key":"policytip","Value":"My Perfect Test Tip!"},{"Key":"autoapplytype","Value":"Recommend"}]}]},{"And":[{"Key":"CCSI","Value":"50b8b56b-4ef8-44c2-a924-03374f5831ce","Properties":null,"Settings":[{"Key":"mincount","Value":"10"},{"Key":"maxconfidence","Value":"100"},{"Key":"rulepackage","Value":"00000000-0000-0000-0000-000000000004"},{"Key":"name","Value":"All Full Names"},{"Key":"groupname","Value":"Group2"},{"Key":"minconfidence","Value":"85"},{"Key":"maxcount","Value":"100"},{"Key":"policytip","Value":"My Perfect Test Tip!"},{"Key":"confidencelevel","Value":"High"},{"Key":"autoapplytype","Value":"Recommend"}]},{"Key":"ContentMatchesModule","Value":"ba38aa0f-8c86-4c73-87db-95147a0f4420","Properties":null,"Settings":[{"Key":"name","Value":"Legal Affairs"},{"Key":"groupname","Value":"Group2"},{"Key":"policytip","Value":"My Perfect Test Tip!"},{"Key":"autoapplytype","Value":"Recommend"}]}]}]}'
                     }
                 }
             }
@@ -157,6 +245,100 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should return Present from the Get method' {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
+            }
+        }
+
+        Context -Name 'Label already exists and is correctly configured' -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    Name             = 'TestLabel'
+                    Comment          = 'This is a test label'
+                    ToolTip          = 'Test tool tip'
+                    DisplayName      = 'Test label'
+                    ParentId         = 'MyLabel'
+
+                    AdvancedSettings = (New-CimInstance -ClassName MSFT_SCLabelSetting -Property @{
+                            Key   = 'LabelStatus'
+                            Value = 'Enabled'
+                        } -ClientOnly)
+
+                    LocaleSettings   = (New-CimInstance -ClassName MSFT_SCLabelLocaleSettings -Property @{
+                            LocaleKey     = 'DisplayName'
+                            LabelSettings = (New-CimInstance -ClassName MSFT_SCLabelSetting -Property @{
+                                    Key   = 'en-us'
+                                    Value = 'English Display Names'
+                                } -ClientOnly)
+                        } -ClientOnly)
+
+                    AutoLabelingSettings = New-CimInstance -ClassName MSFT_SCSLAutoLabelingSettings -Property @{
+                            Operator      = 'And'
+                            AutoApplyType = 'Recommend'
+                            PolicyTip     = 'My Perfect Test Tip!'
+                            Groups        = [CimInstance[]]@(
+                                New-CimInstance -ClassName MSFT_SCSLSensitiveInformationGroup -Property @{
+                                    Name = 'Group1'
+                                    Operator = 'Or'
+                                    SensitiveInformationType = [CimInstance[]]@(
+                                        New-CimInstance -ClassName MSFT_SCSLSensitiveInformationType -Property @{
+                                            name = 'ABA Routing Number'
+                                            confidencelevel = 'High'
+                                            mincount = 1
+                                            maxcount = -1
+                                        } -ClientOnly
+                                    )
+                                    TrainableClassifier = [CimInstance[]]@(
+                                        New-CimInstance -ClassName MSFT_SCSLTrainableClassifiers -Property @{
+                                            name = 'Legal Affairs'
+                                        } -ClientOnly
+                                    )
+                                } -ClientOnly
+                                New-CimInstance -ClassName MSFT_SCSLSensitiveInformationGroup -Property @{
+                                    Name = 'Group2'
+                                    Operator = 'And'
+                                    SensitiveInformationType = [CimInstance[]]@(
+                                        New-CimInstance -ClassName MSFT_SCSLSensitiveInformationType -Property @{
+                                            name = 'All Full Names'
+                                            confidencelevel = 'High'
+                                            mincount = 10
+                                            maxcount = 100
+                                        } -ClientOnly
+                                    )
+                                    TrainableClassifier = [CimInstance[]]@(
+                                        New-CimInstance -ClassName MSFT_SCSLTrainableClassifiers -Property @{
+                                            name = 'Legal Affairs'
+                                        } -ClientOnly
+                                    )
+                                } -ClientOnly
+                            )
+                        } -ClientOnly
+
+                    Credential       = $Credential
+                    Ensure           = 'Present'
+                }
+
+                Mock -CommandName Get-Label -MockWith {
+                    return @{
+                        Name           = 'TestLabel'
+                        Comment        = 'This is a test label'
+                        ToolTip        = 'Test tool tip'
+                        DisplayName    = 'Test label'
+                        ParentId       = 'MyLabel'
+                        Priority       = '2'
+                        Settings       = '[LabelStatus, Enabled]'
+                        LocaleSettings = '{"LocaleKey":"DisplayName","Settings":[{"Key":"en-us","Value":"English Display Names"}]}'
+                        Conditions     = '{"And":[{"Or":[{"Key":"CCSI","Value":"cb353f78-2b72-4c3c-8827-92ebe4f69fdf","Properties":null,"Settings":[{"Key":"mincount","Value":"1"},{"Key":"maxconfidence","Value":"100"},{"Key":"rulepackage","Value":"00000000-0000-0000-0000-000000000000"},{"Key":"name","Value":"ABA Routing Number"},{"Key":"groupname","Value":"Group1"},{"Key":"minconfidence","Value":"85"},{"Key":"maxcount","Value":"-1"},{"Key":"policytip","Value":"My Perfect Test Tip!"},{"Key":"confidencelevel","Value":"High"},{"Key":"autoapplytype","Value":"Recommend"}]},{"Key":"ContentMatchesModule","Value":"ba38aa0f-8c86-4c73-87db-95147a0f4420","Properties":null,"Settings":[{"Key":"name","Value":"Legal Affairs"},{"Key":"groupname","Value":"Group1"},{"Key":"policytip","Value":"My Perfect Test Tip!"},{"Key":"autoapplytype","Value":"Recommend"}]}]},{"And":[{"Key":"CCSI","Value":"50b8b56b-4ef8-44c2-a924-03374f5831ce","Properties":null,"Settings":[{"Key":"mincount","Value":"10"},{"Key":"maxconfidence","Value":"100"},{"Key":"rulepackage","Value":"00000000-0000-0000-0000-000000000004"},{"Key":"name","Value":"All Full Names"},{"Key":"groupname","Value":"Group2"},{"Key":"minconfidence","Value":"85"},{"Key":"maxcount","Value":"100"},{"Key":"policytip","Value":"My Perfect Test Tip!"},{"Key":"confidencelevel","Value":"High"},{"Key":"autoapplytype","Value":"Recommend"}]},{"Key":"ContentMatchesModule","Value":"ba38aa0f-8c86-4c73-87db-95147a0f4420","Properties":null,"Settings":[{"Key":"name","Value":"Legal Affairs"},{"Key":"groupname","Value":"Group2"},{"Key":"policytip","Value":"My Perfect Test Tip!"},{"Key":"autoapplytype","Value":"Recommend"}]}]}]}'
+                    }
+                } -ParameterFilter { $Identity -eq 'TestLabel' }
+
+                Mock -CommandName Get-Label -MockWith {
+                    return @{
+                        Name           = 'MyLabel'
+                    }
+                } -ParameterFilter { $Identity -eq 'MyLabel' }
+            }
+
+            It 'Should return false from the Test method' {
+                Test-TargetResource @testParams | Should -Be $true
             }
         }
 

@@ -169,9 +169,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
 
                 Mock -CommandName Get-RoleGroupMember -MockWith {
-                    return @{
-                        Name = @('Group1','User1','User2')
-                    }
+                    return @(
+                        [PSCustomObject]@{Name = 'Group1' },
+                        [PSCustomObject]@{Name = 'User1' },
+                        [PSCustomObject]@{Name = 'User2' }
+                    )
                 }
             }
 

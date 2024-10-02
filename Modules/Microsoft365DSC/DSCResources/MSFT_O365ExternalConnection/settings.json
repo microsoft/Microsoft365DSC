@@ -1,0 +1,25 @@
+﻿{
+    "resourceName": "O365ExternalConnection",
+    "description": "Configures external connectors in Microsoft 365.",
+    "roles": {},
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [],
+                "update": []
+            },
+            "application": {
+                "read": [
+                    {
+                        "name": "ExternalConnection.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "ExternalConnection.ReadWrite.All"
+                    }
+                ]
+            }
+        }
+    }
+}

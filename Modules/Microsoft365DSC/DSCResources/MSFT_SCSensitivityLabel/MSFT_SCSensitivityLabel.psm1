@@ -1,3 +1,84 @@
+$allTrainableClassifiers = @(
+    [PSCustomObject]@{ Name = "Actuary reports"; Id = "b27df2ee-fd14-4ce9-b02f-4070a5d68132" }
+    [PSCustomObject]@{ Name = "Agreements"; Id = "7f12e403-5335-4da8-a91e-6c2210b7a2b1" }
+    [PSCustomObject]@{ Name = "Asset Management"; Id = "716fb550-90cd-493b-b29b-ceed41ee8a6f" }
+    [PSCustomObject]@{ Name = "Bank statement"; Id = "f426bd16-e42e-4397-824b-f17dedc5bb1c" }
+    [PSCustomObject]@{ Name = "Budget"; Id = "6f207592-f71e-4b4f-8c07-ebc4bd4965b9" }
+    [PSCustomObject]@{ Name = "Business Context"; Id = "08b772df-bf93-457f-be23-b5cbf02005fd" }
+    [PSCustomObject]@{ Name = "Business plan"; Id = "693f8221-ae4e-4612-80f5-746efee167c3" }
+    [PSCustomObject]@{ Name = "Completion Certificates"; Id = "b2580781-286b-4ad2-ab47-84e84ff331e5" }
+    [PSCustomObject]@{ Name = "Compliance policies"; Id = "fdad8089-651b-4877-8b66-be105b2e57da" }
+    [PSCustomObject]@{ Name = "Construction specifications"; Id = "bfde18ef-b4b9-4f30-9965-ef8d00861a2c" }
+    [PSCustomObject]@{ Name = "Control System and SCADA files"; Id = "59f1f471-687d-453b-a73e-0b0e9f350812" }
+    [PSCustomObject]@{ Name = "Corporate Sabotage"; Id = "d88960c3-6101-43d9-9250-8c43c71d638a" }
+    [PSCustomObject]@{ Name = "Credit Report"; Id = "07ce7d30-690a-4a1c-a331-8df9c944f1ab" }
+    [PSCustomObject]@{ Name = "Customer Complaints"; Id = "8137d8fc-fb7a-40db-9009-284f962fde96" }
+    [PSCustomObject]@{ Name = "Customer Files"; Id = "fdff9df2-03ba-4372-be97-82c0d2515118" }
+    [PSCustomObject]@{ Name = "Discrimination"; Id = "a65c4ab6-a155-11eb-921c-6c0b84aa8ea5" }
+    [PSCustomObject]@{ Name = "Employee disciplinary action files"; Id = "769d56c1-e737-4fc1-8673-8c99bbe24a07" }
+    [PSCustomObject]@{ Name = "Employee Insurance files"; Id = "fa982a9f-9454-4885-a2bf-94a155df2f33" }
+    [PSCustomObject]@{ Name = "Employee Pension Records"; Id = "f9ae0bbc-a1e0-4b7e-a96a-eb60b26b4434" }
+    [PSCustomObject]@{ Name = "Employee Stocks and Financial Bond Records"; Id = "a67b2b59-c5f0-4c66-a6c4-ca6973adfd94" }
+    [PSCustomObject]@{ Name = "Employment Agreement"; Id = "2a2baab7-b82c-4166-bbe4-55f9d3fd1129" }
+    [PSCustomObject]@{ Name = "Enterprise Risk Management"; Id = "eed09aae-6f32-47c7-9c99-9d17bad48783" }
+    [PSCustomObject]@{ Name = "Environmental permits and clearances"; Id = "1b7d3e51-0ecf-41bd-9794-966c94a889ba" }
+    [PSCustomObject]@{ Name = "Facility Permits"; Id = "914c5379-9d05-47cb-98f0-f5a2be059b5a" }
+    [PSCustomObject]@{ Name = "factory Incident Investigation reports"; Id = "86186144-d507-4603-bac7-50b56ba05c70" }
+    [PSCustomObject]@{ Name = "Finance"; Id = "1771481d-a337-4dbf-8e64-af8da0cc3ee9" }
+    [PSCustomObject]@{ Name = "Finance policies and procedures"; Id = "6556c5eb-0819-4618-ba2e-59925925655e" }
+    [PSCustomObject]@{ Name = "Financial Audit Reports"; Id = "b04b2a4e-22f8-4024-8adc-e2caaad1c2e2" }
+    [PSCustomObject]@{ Name = "Financial statement"; Id = "c31bfef9-8045-4a35-88a3-74b8681615c2" }
+    [PSCustomObject]@{ Name = "Freight Documents"; Id = "785917ed-db01-43c7-8153-8a6fc393efa3" }
+    [PSCustomObject]@{ Name = "Garnishment"; Id = "65e827c3-f8e8-4bc8-b08c-c31e3132b832" }
+    [PSCustomObject]@{ Name = "Gifts \u0026 entertainment"; Id = "3b3d817a-9190-465b-af2d-9e856f894059" }
+    [PSCustomObject]@{ Name = "Health/Medical forms"; Id = "7cc60f30-9e96-4d51-b26f-3d7a9df56338" }
+    [PSCustomObject]@{ Name = "Healthcare"; Id = "dcbada08-65bf-4561-b140-25d8fee4d143" }
+    [PSCustomObject]@{ Name = "HR"; Id = "11631f87-7ffe-4052-b173-abda16b231f3" }
+    [PSCustomObject]@{ Name = "Invoice"; Id = "bf7df7c3-fce4-4ffd-ab90-26f6463f3a00" }
+    [PSCustomObject]@{ Name = "IP"; Id = "495fad07-d6e4-4da4-9c64-5b9b109a5f59" }
+    [PSCustomObject]@{ Name = "IT"; Id = "77a140be-c29f-4155-9dc4-c3e247e47560" }
+    [PSCustomObject]@{ Name = "IT Infra and Network Security Documents"; Id = "bc55de38-cb72-43e6-952f-8422f584f229" }
+    [PSCustomObject]@{ Name = "Lease Deeds"; Id = "841f54ad-3e31-4ddd-aea0-e7f0cd6b3d18" }
+    [PSCustomObject]@{ Name = "Legal Affairs"; Id = "ba38aa0f-8c86-4c73-87db-95147a0f4420" }
+    [PSCustomObject]@{ Name = "Legal Agreements"; Id = "bee9cefb-88bd-410f-ab3e-67cab21cef46" }
+    [PSCustomObject]@{ Name = "Letter of Credits"; Id = "fd85acd5-59dd-49b2-a4c3-df7075885a82" }
+    [PSCustomObject]@{ Name = "License agreement"; Id = "b399eb17-c9c4-4205-951b-43f38eb8dffe" }
+    [PSCustomObject]@{ Name = "Loan agreements and offer letters"; Id = "5771fa57-34a1-48b3-93df-778b304daa54" }
+    [PSCustomObject]@{ Name = "M&A Files"; Id = "eeffbf7c-fd04-40ef-a156-b37bf61832f7" }
+    [PSCustomObject]@{ Name = "Manufacturing batch records"; Id = "834b2353-509a-4605-b4f1-fc2172a0d97c" }
+    [PSCustomObject]@{ Name = "Marketing Collaterals"; Id = "fcaa6d2a-601c-4bdc-947e-af1178a646ac" }
+    [PSCustomObject]@{ Name = "Meeting notes"; Id = "e7ff9a9e-4689-4192-b927-e6c6bdf099fc" }
+    [PSCustomObject]@{ Name = "Money laundering"; Id = "adbbb20e-b175-46e7-8ba2-cf3f3179d0ed" }
+    [PSCustomObject]@{ Name = "MoU Files (Memorandum of understanding)"; Id = "cb37c277-4b88-49c6-81fb-2eeca8c52bb9" }
+    [PSCustomObject]@{ Name = "Network Design files"; Id = "12587d70-9596-4c21-b09f-f1abe9d6ca13" }
+    [PSCustomObject]@{ Name = "Non disclosure agreement"; Id = "8dfd10db-0c72-4be4-a4f2-f615fe7aeb1c" }
+    [PSCustomObject]@{ Name = "OSHA records"; Id = "b11b771e-7dd1-4434-873a-d648a16e969e" }
+    [PSCustomObject]@{ Name = "Paystub"; Id = "31c11384-2d64-4635-9335-018295c64268" }
+    [PSCustomObject]@{ Name = "Personal Financial Information"; Id = "6901c616-5857-432f-b3da-f5234fa1d342" }
+    [PSCustomObject]@{ Name = "Procurement"; Id = "8fa64a47-6e77-4b4c-91a5-0f67525cebf5" }
+    [PSCustomObject]@{ Name = "Profanity"; Id = "4b0aa61d-37dc-4596-a1f1-fc5a5b21d56b" }
+    [PSCustomObject]@{ Name = "Project documents"; Id = "e062df90-816c-47ca-8913-db647510d3b5" }
+    [PSCustomObject]@{ Name = "Quality assurance files"; Id = "97b1e0d3-7788-4dd4-bb18-48ea77796743" }
+    [PSCustomObject]@{ Name = "Quotation"; Id = "3882e681-c437-42d8-ac75-1f9b7481fe13" }
+    [PSCustomObject]@{ Name = "Regulatory Collusion"; Id = "911b7815-6883-4022-a882-9cbe9462f114" }
+    [PSCustomObject]@{ Name = "Resume"; Id = "14b2da41-0427-47e9-a11b-c924e1d05689" }
+    [PSCustomObject]@{ Name = "Safety Records"; Id = "938fb100-5b1f-4bbb-aba7-73d9c89d086f" }
+    [PSCustomObject]@{ Name = "Sales and revenue"; Id = "9d6b864d-28c6-4be3-a9d0-cd40434a847f" }
+    [PSCustomObject]@{ Name = "Software Product Development Files"; Id = "813aa6d8-0727-48d8-acb7-06e1819ee339" }
+    [PSCustomObject]@{ Name = "Source code"; Id = "8aef6743-61aa-44b9-9ae5-3bb3d77df535" }
+    [PSCustomObject]@{ Name = "Standard Operating Procedures and Manuals"; Id = "32f23ad4-2ca1-4495-8048-8dc567891644" }
+    [PSCustomObject]@{ Name = "Statement of Accounts"; Id = "fe3676a6-0f5d-4990-bb46-9b2b31d7746a" }
+    [PSCustomObject]@{ Name = "Statement of Work"; Id = "611c95f9-b1ef-4253-8b36-d8ae19d02fb0" }
+    [PSCustomObject]@{ Name = "Stock manipulation"; Id = "1140cd79-ad87-4043-a562-c768acacc6ba" }
+    [PSCustomObject]@{ Name = "Strategic planning documents"; Id = "9332b317-2ca4-413a-b983-92a1bd88c6f3" }
+    [PSCustomObject]@{ Name = "Targeted Harassment"; Id = "a02ddb8e-3c93-44ac-87c1-2f682b1cb78e" }
+    [PSCustomObject]@{ Name = "Tax"; Id = "9722b51a-f920-4a81-8390-b188a0692840" }
+    [PSCustomObject]@{ Name = "Threat"; Id = "ef2edb64-6982-4648-b0ad-c0d8a861501b" }
+    [PSCustomObject]@{ Name = "Unauthorized disclosure"; Id = "839aecf8-c67b-4270-8aaf-378127b23b7f" }
+    [PSCustomObject]@{ Name = "Wire transfer"; Id = "05fc5ed0-58ef-4306-b65c-11b0a43895c2" }
+    [PSCustomObject]@{ Name = "Work Schedules"; Id = "25bb9d2d-a5b5-45b1-882e-b2581a183873" }
+)
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -186,6 +267,10 @@ function Get-TargetResource
         [ValidateSet('ExternalUserAndGuestSharing', 'ExternalUserSharingOnly', 'ExistingExternalUserSharingOnly', 'Disabled')]
         [System.String]
         $SiteAndGroupExternalSharingControlType,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $AutoLabelingSettings,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -447,6 +532,101 @@ function Get-TargetResource
                 $siteAndGroupBlockAccess = [Boolean]::Parse($entry.Value)
             }
 
+            # Auto Labelling Conditions
+            $getConditions = $null
+            if ([System.String]::IsNullOrEmpty($label.Conditions) -eq $false)
+            {
+                $currConditions = $label.Conditions | ConvertFrom-Json
+
+                $getConditions = @{
+                    Groups = @()
+                    Operator = ''
+                }
+
+                $operator = $currConditions.PSObject.Properties.Name
+                $getConditions.Operator = $operator
+
+                $autoApplyType = ''
+                $policyTip = ''
+                $groups = foreach ($group in $currConditions.$($operator))
+                {
+                    $grpObject = @{
+                        Name = ''
+                        Operator = ''
+                    }
+
+                    $grpOperator = $group.PSObject.Properties.Name
+                    $grpObject.Operator = $grpOperator
+
+                    $grpName = ''
+                    [array]$sensitiveInformationTypes = foreach ($item in $group.$grpOperator | Where-Object { $_.Key -eq 'CCSI'})
+                    {
+                        if ([String]::IsNullOrEmpty($grpName))
+                        {
+                            $grpName = ($item.Settings | Where-Object { $_.Key -eq 'groupname' }).Value
+                        }
+
+                        if ([String]::IsNullOrEmpty($policyTip))
+                        {
+                            $policyTip = ($item.Settings | Where-Object { $_.Key -eq 'policytip' }).Value
+                        }
+
+                        if ([String]::IsNullOrEmpty($autoApplyType))
+                        {
+                            $autoApplyType = ($item.Settings | Where-Object { $_.Key -eq 'autoapplytype' }).Value
+                        }
+
+                        $settingsObject = @{
+                            name = ($item.Settings | Where-Object { $_.Key -eq 'name' }).Value
+                            confidencelevel = ($item.Settings | Where-Object { $_.Key -eq 'confidencelevel' }).Value
+                            mincount = ($item.Settings | Where-Object { $_.Key -eq 'mincount' }).Value
+                            maxcount = ($item.Settings | Where-Object { $_.Key -eq 'maxcount' }).Value
+                        }
+
+                        if ($null -ne ($item.Settings | Where-Object { $_.Key -eq 'classifiertype' }))
+                        {
+                            $settingsObject.classifiertype = ($item.Settings | Where-Object { $_.Key -eq 'classifiertype' }).Value
+                        }
+
+                        # return the settings object as output to the sensitiveInformationTypes array
+                        $settingsObject
+                    }
+
+                    [array]$trainableClassifiers = foreach ($item in $group.$grpOperator | Where-Object { $_.Key -eq 'ContentMatchesModule'})
+                    {
+                        if ([String]::IsNullOrEmpty($grpName))
+                        {
+                            $grpName = ($item.Settings | Where-Object { $_.Key -eq 'groupname' }).Value
+                        }
+
+                        @{
+                            name = ($item.Settings | Where-Object { $_.Key -eq 'name' }).Value
+                            id = $item.Value
+                        }
+                    }
+
+                    $grpObject.Name = $grpName
+                    $grpObject.SensitiveInformationType = $sensitiveInformationTypes
+                    $grpObject.TrainableClassifier = $trainableClassifiers
+
+                    # return the group object as output to the groups array
+                    $grpObject
+                }
+                $getConditions.Groups = $groups
+                if ([System.String]::IsNullOrEmpty($policyTip) -eq $false)
+                {
+                    $getConditions.PolicyTip = $policyTip
+                }
+                if ([System.String]::IsNullOrEmpty($autoApplyType) -eq $false)
+                {
+                    $getConditions.AutoApplyType = $autoApplyType
+                }
+                else
+                {
+                    $getConditions.AutoApplyType = 'Automatic'
+                }
+            }
+
             $result = @{
                 Name                                           = $label.Name
                 Comment                                        = $label.Comment
@@ -500,9 +680,9 @@ function Get-TargetResource
                 SiteAndGroupProtectionEnabled                  = $siteAndGroupEnabledValue
                 SiteAndGroupExternalSharingControlType         = ($protectsite | Where-Object { $_.Key -eq 'externalsharingcontroltype' }).Value
                 AccessTokens                                   = $AccessTokens
+                AutoLabelingSettings                           = $getConditions
             }
 
-            Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
             return $result
         }
     }
@@ -707,6 +887,10 @@ function Set-TargetResource
         $SiteAndGroupExternalSharingControlType,
 
         [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $AutoLabelingSettings,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -770,6 +954,139 @@ function Set-TargetResource
         Write-Warning -Message "You have specified EncryptionDoNotForward, EncryptionEncryptOnly or EncryptionPromptUser, but EncryptionProtectionType isn't set to UserDefined."
     }
 
+    if ('Present' -eq $Ensure -and $PSBoundParameters.ContainsKey('AutoLabelingSettings'))
+    {
+        Write-Verbose 'Generating required JSON string for AutoLabelingSettings'
+
+        Write-Verbose 'Retrieving all existing Sensitive Information Types'
+        $existingSITs = Get-DlpSensitiveInformationType | Select-Object -Property Name,Id, RulePackId
+
+        # Convert the AutoLabelingSettings to the correct JSON format, ready to be inserted into the label cmdlets
+        $autoLabelingSettingsHT = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $AutoLabelingSettings
+
+        Write-Verbose 'Processing all setting groups'
+        [array]$grps = foreach ($group in $autoLabelingSettingsHT.Groups)
+        {
+            $groupCollection = @()
+            Write-Verbose 'Processing all Sensitive Information Types'
+            foreach ($sit in $group.SensitiveInformationType)
+            {
+                $currentSIT = $existingSITs | Where-Object { $_.Name -eq $sit.Name }
+                if ($null -eq $currentSIT)
+                {
+                    throw "[ERROR] Provided Sensitive Information Type $($sit.Name) doesn't exist."
+                }
+
+                [array]$settingsCollection = foreach ($setting in ($sit.Keys | Where-Object { $_ -ne 'id' }))
+                {
+                    @{
+                        Key = $setting
+                        Value = $sit[$setting]
+                    }
+                }
+                $settingsCollection += @{
+                        Key = "rulepackage"
+                        Value = $currentSIT.RulePackId
+                }
+                $settingsCollection += @{
+                        Key = "groupname"
+                        Value = $group.Name
+                }
+
+                if ($autoLabelingSettingsHT.ContainsKey("PolicyTip"))
+                {
+                    $settingsCollection += @{
+                            Key = "policytip"
+                            Value = $autoLabelingSettingsHT.PolicyTip
+                    }
+                }
+
+                if ($autoLabelingSettingsHT.ContainsKey("AutoApplyType") -and $autoLabelingSettingsHT.AutoApplyType -eq 'Recommend')
+                {
+                    $settingsCollection += @{
+                            Key = "autoapplytype"
+                            Value = $autoLabelingSettingsHT.AutoApplyType
+                    }
+                }
+
+                $groupCollection += @{
+                    Key = 'CCSI'
+                    Value = $currentSIT.Id
+                    Properties = $null
+                    Settings = $settingsCollection
+                }
+            }
+
+            Write-Verbose 'Processing all Trainable Classifiers'
+            foreach ($trainableClassifier in $group.TrainableClassifier)
+            {
+                $currentTrainableClassifier = $allTrainableClassifiers | Where-Object { $_.Name -eq $trainableClassifier.name }
+                if ($null -ne $currentTrainableClassifier)
+                {
+                    if ([String]::IsNullOrEmpty($trainableClassifier.id) -eq $false -and `
+                        $trainableClassifier.id -ne $currentTrainableClassifier.Id)
+                    {
+                        Write-Verbose ("[WARNING] Provided ID ($($trainableClassifier.id)) does not match the known " + `
+                                       "ID ($($currentTrainableClassifier.id)) for trainable classifier '$($trainableClassifier.name)'.")
+                    }
+                    $requiredId = $currentTrainableClassifier.Id
+                }
+                else
+                {
+                    if ([String]::IsNullOrEmpty($trainableClassifier.id))
+                    {
+                        throw "[ERROR] Trainable classifier $($trainableClassifier.name) isn't a default classifier and no ID was provided."
+                    }
+                    $requiredId = $trainableClassifier.id
+                }
+
+                [array]$settingsCollection = foreach ($key in ($trainableClassifier.Keys | Where-Object { $_ -ne 'id' }))
+                {
+                    @{
+                        Key = $key
+                        Value = $trainableClassifier[$key]
+                    }
+                }
+                $settingsCollection += @{
+                        Key = "groupname"
+                        Value = $group.Name
+                }
+
+                if ($autoLabelingSettingsHT.ContainsKey("PolicyTip"))
+                {
+                    $settingsCollection += @{
+                            Key = "policytip"
+                            Value = $autoLabelingSettingsHT.PolicyTip
+                    }
+                }
+
+                if ($autoLabelingSettingsHT.ContainsKey("AutoApplyType") -and $autoLabelingSettingsHT.AutoApplyType -eq 'Recommend')
+                {
+                    $settingsCollection += @{
+                            Key = "autoapplytype"
+                            Value = $autoLabelingSettingsHT.AutoApplyType
+                    }
+                }
+
+                $groupCollection += @{
+                    Key = 'ContentMatchesModule'
+                    Value = $requiredId
+                    Properties = $null
+                    Settings = $settingsCollection
+                }
+            }
+
+            @{
+                $group.Operator = $groupCollection
+            }
+        }
+
+        $desiredAutoLabelingSettings = @{
+            $autoLabelingSettingsHT.Operator = $grps
+        }
+        Write-Verbose 'Completed generating required JSON string for AutoLabelingSettings'
+    }
+
     if (('Present' -eq $Ensure) -and ('Absent' -eq $label.Ensure))
     {
         Write-Verbose -Message "Label {$Name} doesn't already exist, creating it from the Set-TargetResource function."
@@ -793,6 +1110,12 @@ function Set-TargetResource
             $CreationParams.Remove('SiteAndGroupExternalSharingControlType')
         }
 
+        if ($PSBoundParameters.ContainsKey('AutoLabelingSettings') -and $null -ne $desiredAutoLabelingSettings)
+        {
+            $CreationParams.Conditions = $desiredAutoLabelingSettings | ConvertTo-Json -Depth 20
+            $CreationParams.Remove('AutoLabelingSettings')
+        }
+
         $CreationParams.Remove('Priority') | Out-Null
 
         # Remove authentication parameters
@@ -810,19 +1133,25 @@ function Set-TargetResource
         try
         {
             Write-Verbose -Message "Creating Label {$Name}"
-            New-Label @CreationParams
+            New-Label @CreationParams -ErrorAction Stop
 
             ## Can't set priority until label created
             if ($PSBoundParameters.ContainsKey('Priority'))
             {
                 Start-Sleep 5
                 Write-Verbose -Message "Updating the priority for newly created label {$Name}"
-                Set-label -Identity $Name -priority $Priority
+                Set-label -Identity $Name -priority $Priority -ErrorAction Stop
             }
         }
         catch
         {
-            Write-Warning "New-Label is not available in tenant $($Credential.UserName.Split('@')[1]): $_"
+            New-M365DSCLogEntry -Message 'Error retrieving data:' `
+                -Exception $_ `
+                -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $TenantId `
+                -Credential $Credential
+
+            throw $_
         }
     }
     elseif (('Present' -eq $Ensure) -and ('Present' -eq $label.Ensure))
@@ -848,6 +1177,12 @@ function Set-TargetResource
             $SetParams.Remove('SiteAndGroupExternalSharingControlType')
         }
 
+        if ($PSBoundParameters.ContainsKey('AutoLabelingSettings') -and $null -ne $desiredAutoLabelingSettings)
+        {
+            $SetParams.Conditions = $desiredAutoLabelingSettings | ConvertTo-Json -Depth 20
+            $SetParams.Remove('AutoLabelingSettings')
+        }
+
         #Remove unused parameters for Set-Label cmdlet
         $SetParams.Remove('Name') | Out-Null
 
@@ -865,11 +1200,17 @@ function Set-TargetResource
 
         try
         {
-            Set-Label @SetParams -Identity $Name
+            Set-Label @SetParams -Identity $Name -ErrorAction Stop
         }
         catch
         {
-            Write-Warning "Set-Label is not available in tenant $($Credential.UserName.Split('@')[1]): $_"
+            New-M365DSCLogEntry -Message 'Error retrieving data:' `
+                -Exception $_ `
+                -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $TenantId `
+                -Credential $Credential
+
+            throw $_
         }
     }
     elseif (('Absent' -eq $Ensure) -and ('Present' -eq $label.Ensure))
@@ -879,12 +1220,18 @@ function Set-TargetResource
 
         try
         {
-            Remove-Label -Identity $Name -Confirm:$false
-            Remove-Label -Identity $Name -Confirm:$false -forcedeletion:$true
+            Remove-Label -Identity $Name -Confirm:$false -ErrorAction Stop
+            Remove-Label -Identity $Name -Confirm:$false -forcedeletion:$true -ErrorAction Stop
         }
         catch
         {
-            Write-Warning "Remove-Label is not available in tenant $($Credential.UserName.Split('@')[1]): $_"
+            New-M365DSCLogEntry -Message 'Error retrieving data:' `
+                -Exception $_ `
+                -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $TenantId `
+                -Credential $Credential
+
+            throw $_
         }
     }
 }
@@ -1079,6 +1426,10 @@ function Test-TargetResource
         $SiteAndGroupExternalSharingControlType,
 
         [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $AutoLabelingSettings,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -1127,6 +1478,7 @@ function Test-TargetResource
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('AdvancedSettings') | Out-Null
     $ValuesToCheck.Remove('LocaleSettings') | Out-Null
+    $ValuesToCheck.Remove('AutoLabelingSettings') | Out-Null
 
     if ($null -ne $AdvancedSettings -and $null -ne $CurrentValues.AdvancedSettings)
     {
@@ -1143,6 +1495,20 @@ function Test-TargetResource
         Write-Verbose -Message 'Testing LocaleSettings'
         $localeSettingsSame = Test-LocaleSettings -DesiredProperty $LocaleSettings -CurrentProperty $CurrentValues.LocaleSettings
         if ($false -eq $localeSettingsSame)
+        {
+            return $false
+        }
+    }
+
+    if ($null -ne $AutoLabelingSettings -and $null -ne $CurrentValues.AutoLabelingSettings)
+    {
+        Write-Verbose -Message 'Testing AutoLabelingSettings'
+
+        # Convert the AutoLabelingSettings to the correct JSON format, ready to be inserted into the label cmdlets
+        $autoLabelingSettingsHT = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $AutoLabelingSettings
+
+        $autoLabelSettingsSame = Test-AutoLabelingSettings -CurrentProperty $CurrentValues.AutoLabelingSettings -DesiredProperty $autoLabelingSettingsHT
+        if ($false -eq $autoLabelSettingsSame)
         {
             return $false
         }
@@ -1241,6 +1607,10 @@ function Export-TargetResource
             {
                 $Results.LocaleSettings = ConvertTo-LocaleSettingsString -LocaleSettings $Results.LocaleSettings
             }
+            if ($null -ne $Results.AutoLabelingSettings)
+            {
+                $Results.AutoLabelingSettings = ConvertTo-AutoLabelingSettingsString -AutoLabelingSettings $Results.AutoLabelingSettings
+            }
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
@@ -1255,6 +1625,10 @@ function Export-TargetResource
             if ($null -ne $Results.LocaleSettings)
             {
                 $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'LocaleSettings'
+            }
+            if ($null -ne $Results.AutoLabelingSettings)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'AutoLabelingSettings'
             }
 
             Write-Host $Global:M365DSCEmojiGreenCheckMark
@@ -1566,7 +1940,160 @@ function Test-LocaleSettings
         }
     }
 
+    if ($foundSettings -eq $false)
+    {
+        New-M365DSCLogEntry -Message "LocaleSettings for label $Name do not match: $($driftedSetting -join ', ')" `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+    }
+
     Write-Verbose -Message "Test LocaleSettings returns $foundSettings"
+
+    return $foundSettings
+}
+
+function Test-AutoLabelingSettings
+{
+    [CmdletBinding()]
+    [OutputType([System.Boolean])]
+    param
+    (
+        [Parameter (Mandatory = $true)]
+        [System.Object]
+        $DesiredProperty,
+
+        [Parameter (Mandatory = $true)]
+        [System.Object]
+        $CurrentProperty
+    )
+
+    $foundSettings = $true
+    $driftedSetting = New-Object System.Collections.ArrayList
+
+    if ($DesiredProperty.Operator -ne $CurrentProperty.Operator)
+    {
+        $null = $driftedSetting.Add("Parameter 'Operator' does not match. Current: '$($CurrentProperty.Operator)'. Desired: '$($DesiredProperty.Operator)'.")
+        $foundSettings = $false
+    }
+
+    if ($DesiredProperty.AutoApplyType -ne $CurrentProperty.AutoApplyType)
+    {
+        $null = $driftedSetting.Add("Parameter 'AutoApplyType' does not match. Current: '$($CurrentProperty.AutoApplyType)'. Desired: '$($DesiredProperty.AutoApplyType)'.")
+        $foundSettings = $false
+    }
+
+    if ($DesiredProperty.ContainsKey('PolicyTip') -and $DesiredProperty.PolicyTip -ne $CurrentProperty.PolicyTip)
+    {
+        $null = $driftedSetting.Add("Parameter 'PolicyTip' does not match. Current: '$($CurrentProperty.PolicyTip)'. Desired: '$($DesiredProperty.PolicyTip)'.")
+        $foundSettings = $false
+    }
+
+    foreach ($group in $DesiredProperty.Groups)
+    {
+        $currentGroup = $CurrentProperty.Groups | Where-Object { $_.Name -eq $group.Name }
+        if ($null -eq $currentGroup)
+        {
+            $null = $driftedSetting.Add("Group '$($group.Name)' not found in the current settings.")
+            $foundSettings = $false
+            continue
+        }
+
+        if ($group.Operator -ne $currentGroup.Operator)
+        {
+            $null = $driftedSetting.Add("Parameter 'Groups\$($group.Name)\Operator' does not match. Current: '$($currentGroup.Operator)'. Desired: '$($group.Operator)'.")
+            $foundSettings = $false
+        }
+
+        foreach ($sensitiveinfotype in $group.SensitiveInformationType)
+        {
+            $currentSensitiveInfoType = $currentGroup.SensitiveInformationType | Where-Object { $_.name -eq $sensitiveinfotype.name }
+            if ($null -eq $currentSensitiveInfoType)
+            {
+                $null = $driftedSetting.Add("Sensitive Information Type '$($sensitiveinfotype.name)' not found in the current settings for group '$($group.Name)'.")
+                $foundSettings = $false
+                continue
+            }
+
+            if ($sensitiveinfotype.ContainsKey('confidencelevel') -and $sensitiveinfotype.confidencelevel -ne $currentSensitiveInfoType.confidencelevel)
+            {
+                $null = $driftedSetting.Add("Parameter 'confidencelevel' does not match for Sensitive Information Type '$($sensitiveinfotype.name)' in group '$($group.Name)'. Current: '$($currentSensitiveInfoType.confidencelevel)'. Desired: '$($sensitiveinfotype.confidencelevel)'.")
+                $foundSettings = $false
+            }
+
+
+            if ($sensitiveinfotype.ContainsKey('classifiertype') -and $sensitiveinfotype.classifiertype -ne $currentSensitiveInfoType.classifiertype)
+            {
+                $null = $driftedSetting.Add("Parameter 'classifiertype' does not match for Sensitive Information Type '$($sensitiveinfotype.name)' in group '$($group.Name)'. Current: '$($currentSensitiveInfoType.classifiertype)'. Desired: '$($sensitiveinfotype.classifiertype)'.")
+                $foundSettings = $false
+            }
+
+            if ($sensitiveinfotype.ContainsKey('mincount') -and $sensitiveinfotype.mincount -ne $currentSensitiveInfoType.mincount)
+            {
+                $null = $driftedSetting.Add("Parameter 'mincount' does not match for Sensitive Information Type '$($sensitiveinfotype.name)' in group '$($group.Name)'. Current: '$($currentSensitiveInfoType.mincount)'. Desired: '$($sensitiveinfotype.mincount)'.")
+                $foundSettings = $false
+            }
+
+            if ($sensitiveinfotype.ContainsKey('maxcount') -and $sensitiveinfotype.maxcount -ne $currentSensitiveInfoType.maxcount)
+            {
+                $null = $driftedSetting.Add("Parameter 'maxcount' does not match for Sensitive Information Type '$($sensitiveinfotype.name)' in group '$($group.Name)'. Current: '$($currentSensitiveInfoType.maxcount)'. Desired: '$($sensitiveinfotype.maxcount)'.")
+                $foundSettings = $false
+            }
+        }
+        foreach ($trainableClassifier in $group.TrainableClassifier)
+        {
+            $currentTrainableClassifier = $currentGroup.trainableClassifier | Where-Object { $_.name -eq $trainableClassifier.name }
+            if ($null -eq $currentTrainableClassifier)
+            {
+                $null = $driftedSetting.Add("Trainable Classifier '$($trainableClassifier.name)' not found in the current settings for group '$($group.Name)'.")
+                $foundSettings = $false
+                continue
+            }
+        }
+    }
+
+    foreach ($group in $CurrentProperty.Groups)
+    {
+        $desiredGroup = $DesiredProperty.Groups | Where-Object { $_.Name -eq $group.Name }
+        if ($null -eq $desiredGroup)
+        {
+            $null = $driftedSetting.Add("Group '$($group.Name)' not found in the desired settings.")
+            $foundSettings = $false
+            continue
+        }
+
+        foreach ($sensitiveinfotype in $group.SensitiveInformationType)
+        {
+            $desiredSensitiveInfoType = $desiredGroup.SensitiveInformationType | Where-Object { $_.name -eq $sensitiveinfotype.name }
+            if ($null -eq $desiredSensitiveInfoType)
+            {
+                $null = $driftedSetting.Add("Sensitive Information Type '$($sensitiveinfotype.name)' not found in the desired settings for group '$($group.Name)'.")
+                $foundSettings = $false
+                continue
+            }
+        }
+        foreach ($trainableClassifier in $group.TrainableClassifier)
+        {
+            $desiredTrainableClassifier = $desiredGroup.trainableClassifier | Where-Object { $_.name -eq $trainableClassifier.name }
+            if ($null -eq $desiredTrainableClassifier)
+            {
+                $null = $driftedSetting.Add("Trainable Classifier '$($trainableClassifier.name)' not found in the desired settings for group '$($group.Name)'.")
+                $foundSettings = $false
+                continue
+            }
+        }
+    }
+
+    if ($foundSettings -eq $false)
+    {
+        New-M365DSCLogEntry -Message "AutoLabelingSettings for label $Name do not match: `r`n- $($driftedSetting -join '`r`n- ')" `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+    }
+
+    Write-Verbose -Message "Test AutoLabelingSettings returns $foundSettings"
+
     return $foundSettings
 }
 
@@ -1622,6 +2149,86 @@ function ConvertTo-LocaleSettingsString
         $StringContent += "                }`r`n"
     }
     $StringContent += '            )'
+    return $StringContent
+}
+
+function ConvertTo-AutoLabelingSettingsString
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        $AutoLabelingSettings
+    )
+
+    $StringContent = ""
+    foreach ($autoLabelingSetting in $AutoLabelingSettings)
+    {
+        $StringContent += "                MSFT_SCSLAutoLabelingSettings`r`n"
+        $StringContent += "                {`r`n"
+        $StringContent += "                    Operator = '$($autoLabelingSetting.Operator)'`r`n"
+        if ($autoLabelingSetting.ContainsKey('PolicyTip'))
+        {
+            $StringContent += "                    PolicyTip = '$($autoLabelingSetting.PolicyTip.Replace("'", "''"))'`r`n"
+        }
+        $StringContent += "                    AutoApplyType = '$($autoLabelingSetting.AutoApplyType)'`r`n"
+        $StringContent += "                    Groups  = @(`r`n"
+        foreach ($Group in $autoLabelingSetting.Groups)
+        {
+            $StringContent += "                        MSFT_SCSLSensitiveInformationGroup`r`n"
+            $StringContent += "                        {`r`n"
+            $StringContent += "                            Name   = '$($Group.Name.Replace("'", "''"))'`r`n"
+            $StringContent += "                            Operator = '$($Group.Operator)'`r`n"
+            if ($Group.ContainsKey('SensitiveInformationType'))
+            {
+                $StringContent += "                            SensitiveInformationType  = @(`r`n"
+                foreach ($sensitiveInformationType in $Group.SensitiveInformationType)
+                {
+                    $StringContent += "                                MSFT_SCSLSensitiveInformationType`r`n"
+                    $StringContent += "                                {`r`n"
+                    $StringContent += "                                    name   = '$($sensitiveInformationType.name.Replace("'", "''"))'`r`n"
+                    if ($sensitiveInformationType.ContainsKey('confidencelevel'))
+                    {
+                        $StringContent += "                                    confidencelevel = '$($sensitiveInformationType.confidencelevel)'`r`n"
+                    }
+                    if ($sensitiveInformationType.ContainsKey('classifiertype'))
+                    {
+                        $StringContent += "                                    classifiertype = '$($sensitiveInformationType.classifiertype)'`r`n"
+                    }
+                    if ($sensitiveInformationType.ContainsKey('mincount'))
+                    {
+                        $StringContent += "                                    mincount = '$($sensitiveInformationType.mincount)'`r`n"
+                    }
+                    if ($sensitiveInformationType.ContainsKey('maxcount'))
+                    {
+                        $StringContent += "                                    maxcount = '$($sensitiveInformationType.maxcount)'`r`n"
+                    }
+                    $StringContent += "                                }`r`n"
+                }
+                $StringContent += "                            )`r`n"
+            }
+            if ($Group.ContainsKey('TrainableClassifier'))
+            {
+                $StringContent += "                            TrainableClassifier  = @(`r`n"
+                foreach ($trainableClassifier in $Group.TrainableClassifier)
+                {
+                    $StringContent += "                                MSFT_SCSLTrainableClassifiers`r`n"
+                    $StringContent += "                                {`r`n"
+                    $StringContent += "                                    name   = '$($trainableClassifier.name.Replace("'", "''"))'`r`n"
+                    if ($trainableClassifier.ContainsKey('id'))
+                    {
+                        $StringContent += "                                    id = '$($trainableClassifier.id)'`r`n"
+                    }
+                    $StringContent += "                                }`r`n"
+                }
+                $StringContent += "                            )`r`n"
+            }
+            $StringContent += "                        }`r`n"
+        }
+        $StringContent += "                    )`r`n"
+        $StringContent += "                }`r`n"
+    }
     return $StringContent
 }
 

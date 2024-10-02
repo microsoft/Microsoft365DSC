@@ -8,6 +8,22 @@ class MSFT_AADApplicationPermission
 };
 
 [ClassVersion("1.0.0")]
+class MSFT_MicrosoftGraphOptionalClaims
+{
+    [Write, Description("The optional claims returned in the JWT access token."), EmbeddedInstance("MSFT_MicrosoftGraphOptionalClaim")] String AccessToken[];
+    [Write, Description("The optional claims returned in the JWT ID token."), EmbeddedInstance("MSFT_MicrosoftGraphOptionalClaim")] String IdToken[];
+    [Write, Description("The optional claims returned in the SAML token."), EmbeddedInstance("MSFT_MicrosoftGraphOptionalClaim")] String Saml2Token[];
+};
+
+[ClassVersion("1.0.0")]
+class MSFT_MicrosoftGraphOptionalClaim
+{
+    [Write, Description("If the value is true, the claim specified by the client is necessary to ensure a smooth authorization experience for the specific task requested by the end user. The default value is false.")] Boolean Essential;
+    [Write, Description("The name of the optional claim.")] String Name;
+    [Write, Description("The source (directory object) of the claim. There are predefined claims and user-defined claims from extension properties. If the source value is null, the claim is a predefined optional claim. If the source value is user, the value in the name property is the extension property from the user object.")] String Source;
+};
+
+[ClassVersion("1.0.0")]
 class MSFT_MicrosoftGraphPreAuthorizedApplication
 {
     [Write, Description("The unique identifier for the client application.")] String AppId;
@@ -76,6 +92,7 @@ class MSFT_AADApplication : OMI_BaseResource
     [Write, Description("User-defined URI(s) that uniquely identify a Web application within its Azure AD tenant, or within a verified custom domain.")] string IdentifierUris[];
     [Write, Description("Specifies the fallback application type as public client, such as an installed application running on a mobile device. The default value is false, which means the fallback application type is confidential client such as web app. There are certain scenarios where Microsoft Entra ID cannot determine the client application type (for example, ROPC flow where it is configured without specifying a redirect URI). In those cases, Microsoft Entra ID will interpret the application type based on the value of this property.")] Boolean IsFallbackPublicClient;
     [Write, Description("Client applications that are tied to this resource application.")] string KnownClientApplications[];
+    [Write, Description("Application developers can configure optional claims in their Microsoft Entra applications to specify the claims that are sent to their application by the Microsoft security token service. For more information, see How to: Provide optional claims to your app."), EmbeddedInstance("MSFT_MicrosoftGraphoptionalClaims")] String OptionalClaims;
     [Write, Description("Specifies settings for an application that implements a web API."), EmbeddedInstance("MSFT_MicrosoftGraphapiApplication")] String Api;
     [Write, Description("The collection of breaking change behaviors related to token issuance that are configured for the application. Authentication behaviors are unset by default (null) and must be explicitly enabled or disabled. Nullable. Returned only on $select.  For more information about authentication behaviors, see Manage application authenticationBehaviors to avoid unverified use of email claims for user identification or authorization."), EmbeddedInstance("MSFT_MicrosoftGraphauthenticationBehaviors")] String AuthenticationBehaviors;
     [Write, Description("The collection of password credentials associated with the application. Not nullable."), EmbeddedInstance("MSFT_MicrosoftGraphpasswordCredential")] String PasswordCredentials[];
