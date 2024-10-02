@@ -1,3 +1,22 @@
+#region Azure
+function Invoke-AzRest
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Uri,
+
+        [Parameter()]
+        [System.String]
+        $Payload,
+
+        [Parameter()]
+        [System.String]
+        $Method
+    )
+}
+#endregion
 
 #region Microsoft.Graph.Beta.Applications
 function Get-MgBetaApplication
@@ -547,6 +566,35 @@ function Set-EmailTenantSettings
     )
 }
 
+function Get-DnssecStatusForVerifiedDomain
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $DomainName
+    )
+}
+
+function Enable-DnssecForVerifiedDomain
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $DomainName
+    )
+}
+
+function Disable-DnssecForVerifiedDomain
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $DomainName
+    )
+}
 
 function Get-MailboxIRMAccess
 {
@@ -38099,6 +38147,65 @@ function Update-MgBetaTeamChannelTab
     )
 }
 #endregion
+
+#region Microsoft.Graph.deviceManagement
+
+function New-MgBetaDeviceAppManagementMobileAppCategory
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName
+    )
+}
+
+function Get-MgBetaDeviceAppManagementMobileAppCategory
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $MobileAppCategoryId,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName
+    )
+}
+
+function Update-MgBetaDeviceAppManagementMobileAppCategory
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $MobileAppCategoryId,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName
+    )
+}
+
+function Remove-MgBetaDeviceAppManagementMobileAppCategory
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $MobileAppCategoryId,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm
+    )
+}
+
 #region Microsoft.Graph.DeviceManagement.Administration
 function Get-MgDeviceManagementRoleAssignment
 {
@@ -38710,6 +38817,9 @@ function Update-MgDeviceManagementRoleDefinition
     )
 }
 #endregion
+
+#endregion Microsoft.Graph.DeviceManagement
+
 #region Microsoft.Graph.DirectoryObjects
 function Get-MgDirectoryObject
 {
@@ -70346,6 +70456,418 @@ function Get-MgBetaDirectoryObject
 }
 #endregion
 #region SecurityComplianceCenter
+function Get-InsiderRiskPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $MetaDataOnly,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $DistributionDetail
+    )
+}
+function New-InsiderRiskPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $IsCustom,
+
+        [Parameter()]
+        [System.Object]
+        $ExchangeLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $Indicators,
+
+        [Parameter()]
+        [System.Object]
+        $ExtensibleIndicators,
+
+        [Parameter()]
+        [System.Object]
+        $ModernGroupLocationException,
+
+        [Parameter()]
+        [System.String]
+        $CCPolicySdsId,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled,
+
+        [Parameter()]
+        [System.Object]
+        $ExtensibleTriggerInsightGroups,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Object]
+        $UserMailList,
+
+        [Parameter()]
+        [System.Object]
+        $PolicyRBACScopes,
+
+        [Parameter()]
+        [System.Object]
+        $ExchangeLocation,
+
+        [Parameter()]
+        [System.Object]
+        $FileExtensions,
+
+        [Parameter()]
+        [System.Boolean]
+        $OptInDrpForDlp,
+
+        [Parameter()]
+        [System.Int32]
+        $UseDefaultTemplate,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsPriorityContentOnlyScoring,
+
+        [Parameter()]
+        [System.Object]
+        $Triggers,
+
+        [Parameter()]
+        [System.Object]
+        $SharepointSites,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.Object]
+        $TeamsSites,
+
+        [Parameter()]
+        [System.Int32]
+        $HistoricTimeSpan,
+
+        [Parameter()]
+        [System.Int32]
+        $PastTerminationWindow,
+
+        [Parameter()]
+        [System.Object]
+        $MLClassifierTypes,
+
+        [Parameter()]
+        [System.Object]
+        $ModernGroupLocation,
+
+        [Parameter()]
+        [System.Object]
+        $InsiderRiskScenario,
+
+        [Parameter()]
+        [System.String]
+        $SessionRecordingSettings,
+
+        [Parameter()]
+        [System.Object]
+        $DlpPolicy,
+
+        [Parameter()]
+        [System.Int32]
+        $FutureTerminationWindow,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $PostTerminationActivity,
+
+        [Parameter()]
+        [System.Object]
+        $IrmAdaptiveScopeLocation,
+
+        [Parameter()]
+        [System.Object]
+        $CustomTags,
+
+        [Parameter()]
+        [System.String]
+        $CCPolicyName,
+
+        [Parameter()]
+        [System.Object]
+        $TriggerInsightGroups,
+
+        [Parameter()]
+        [System.String]
+        $TenantSetting,
+
+        [Parameter()]
+        [System.Object]
+        $SensitivityLabels,
+
+        [Parameter()]
+        [System.Object]
+        $DlpSensitiveTypes,
+
+        [Parameter()]
+        [System.Int32]
+        $InScopeTimeSpan,
+
+        [Parameter()]
+        [System.Int32]
+        $SchemaVersion
+    )
+}
+function Remove-InsiderRiskPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ForceDeletion
+    )
+}
+function Set-InsiderRiskPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $IsCustom,
+
+        [Parameter()]
+        [System.Object]
+        $Indicators,
+
+        [Parameter()]
+        [System.String]
+        $TurnOnAnalytics,
+
+        [Parameter()]
+        [System.Object]
+        $AddExchangeLocationException,
+
+        [Parameter()]
+        [System.String]
+        $SessionRecordingSettings,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $CCPolicyName,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveExchangeLocationException,
+
+        [Parameter()]
+        [System.String]
+        $CCPolicySdsId,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled,
+
+        [Parameter()]
+        [System.Object]
+        $ExtensibleTriggerInsightGroups,
+
+        [Parameter()]
+        [System.Object]
+        $AddExchangeLocation,
+
+        [Parameter()]
+        [System.Object]
+        $PolicyRBACScopes,
+
+        [Parameter()]
+        [System.Object]
+        $FileExtensions,
+
+        [Parameter()]
+        [System.Boolean]
+        $OptInDrpForDlp,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveIrmAdaptiveScopeLocation,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveModernGroupLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $AddModernGroupLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $DlpPolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsPriorityContentOnlyScoring,
+
+        [Parameter()]
+        [System.Object]
+        $Triggers,
+
+        [Parameter()]
+        [System.Object]
+        $AddModernGroupLocation,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.Object]
+        $TeamsSites,
+
+        [Parameter()]
+        [System.Int32]
+        $HistoricTimeSpan,
+
+        [Parameter()]
+        [System.String]
+        $TurnOnDLPUserRiskSync,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveModernGroupLocation,
+
+        [Parameter()]
+        [System.Object]
+        $MLClassifierTypes,
+
+        [Parameter()]
+        [System.Object]
+        $ExtensibleIndicators,
+
+        [Parameter()]
+        [System.Object]
+        $AddIrmAdaptiveScopeLocation,
+
+        [Parameter()]
+        [System.Int32]
+        $FutureTerminationWindow,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $PostTerminationActivity,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveExchangeLocation,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $RetryDistribution,
+
+        [Parameter()]
+        [System.Object]
+        $SharepointSites,
+
+        [Parameter()]
+        [System.Object]
+        $CustomTags,
+
+        [Parameter()]
+        [System.Object]
+        $AddUserMailList,
+
+        [Parameter()]
+        [System.Object]
+        $TriggerInsightGroups,
+
+        [Parameter()]
+        [System.String]
+        $TenantSetting,
+
+        [Parameter()]
+        [System.Object]
+        $SensitivityLabels,
+
+        [Parameter()]
+        [System.Object]
+        $DlpSensitiveTypes,
+
+        [Parameter()]
+        [System.Int32]
+        $InScopeTimeSpan,
+
+        [Parameter()]
+        [System.Int32]
+        $SchemaVersion,
+
+        [Parameter()]
+        [System.Int32]
+        $PastTerminationWindow
+    )
+}
+
+function Get-RecordReviewNotificationTemplateConfig
+{
+    [CmdletBinding()]
+    param(
+
+    )
+}
+
+function Set-RecordReviewNotificationTemplateConfig
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $IsCustomizedReminderTemplate,
+
+        [Parameter()]
+        [System.String]
+        $CustomizedNotificationDataString,
+
+        [Parameter()]
+        [System.String]
+        $CustomizedReminderDataString,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsCustomizedNotificationTemplate
+    )
+}
+
+
 function Get-AdminAuditLogConfig
 {
     [CmdletBinding()]
@@ -71134,6 +71656,31 @@ function Get-DlpComplianceRule
         [Parameter()]
         [System.Boolean]
         $IncludeExecutionRuleGuids
+    )
+}
+function Get-DlpSensitiveInformationType
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $IncludeElements,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IncludeDetails,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $Organization,
+
+        [Parameter()]
+        [System.Object]
+        $Capability
     )
 }
 function Get-FilePlanPropertyAuthority
@@ -93691,3 +94238,487 @@ function Update-MgBetaPolicyFeatureRolloutPolicy
 
 #endregion
 
+#region Microsoft.Graph.Beta.Search
+function Get-MgBetaExternal
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [System.String]
+        $ResponseHeadersVariable,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Collections.IDictionary]
+        $Headers,
+
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break
+    )
+}
+function Get-MgBetaExternalConnection
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.String]
+        $ExternalConnectionId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.String]
+        $ResponseHeadersVariable,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [System.Collections.IDictionary]
+        $Headers,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend
+    )
+}
+function New-MgBetaExternalConnection
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PSObject]
+        $Schema,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $ConnectorId,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [PSObject]
+        $Groups,
+
+        [Parameter()]
+        [PSObject]
+        $Items,
+
+        [Parameter()]
+        [PSObject]
+        $SearchSettings,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.String]
+        $EnabledContentExperiences,
+
+        [Parameter()]
+        [System.String]
+        $State,
+
+        [Parameter()]
+        [PSObject]
+        $ComplianceSettings,
+
+        [Parameter()]
+        [PSObject]
+        $Quota,
+
+        [Parameter()]
+        [PSObject]
+        $ActivitySettings,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [PSObject]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.Int64]
+        $IngestedItemsCount,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [PSObject]
+        $Operations,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [PSObject]
+        $Configuration,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $ResponseHeadersVariable,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.Collections.IDictionary]
+        $Headers,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend
+    )
+}
+function Remove-MgBetaExternalConnection
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.String]
+        $IfMatch,
+
+        [Parameter()]
+        [System.String]
+        $ExternalConnectionId,
+
+        [Parameter()]
+        [System.String]
+        $ResponseHeadersVariable,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Collections.IDictionary]
+        $Headers,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break
+    )
+}
+function Update-MgBetaExternal
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [PSObject]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [PSObject]
+        $Connections,
+
+        [Parameter()]
+        [PSObject]
+        $IndustryData,
+
+        [Parameter()]
+        [System.String]
+        $ResponseHeadersVariable,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Collections.IDictionary]
+        $Headers,
+
+        [Parameter()]
+        [PSObject]
+        $AuthorizationSystems,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break
+    )
+}
+function Update-MgBetaExternalConnection
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PSObject]
+        $Schema,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [PSObject]
+        $Groups,
+
+        [Parameter()]
+        [PSObject]
+        $Items,
+
+        [Parameter()]
+        [PSObject]
+        $SearchSettings,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.String]
+        $EnabledContentExperiences,
+
+        [Parameter()]
+        [System.String]
+        $ExternalConnectionId,
+
+        [Parameter()]
+        [System.String]
+        $State,
+
+        [Parameter()]
+        [PSObject]
+        $ComplianceSettings,
+
+        [Parameter()]
+        [PSObject]
+        $Quota,
+
+        [Parameter()]
+        [PSObject]
+        $ActivitySettings,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String]
+        $ConnectorId,
+
+        [Parameter()]
+        [System.Int64]
+        $IngestedItemsCount,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [PSObject]
+        $Operations,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [PSObject]
+        $Configuration,
+
+        [Parameter()]
+        [PSObject]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $ResponseHeadersVariable,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.Collections.IDictionary]
+        $Headers,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend
+    )
+}
+#endregion

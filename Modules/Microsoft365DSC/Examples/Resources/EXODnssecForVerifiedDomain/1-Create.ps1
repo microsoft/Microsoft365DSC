@@ -19,16 +19,15 @@ Configuration Example
         $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
-
     node localhost
     {
-        EXOMailTips 'OrgWideMailTips'
+        EXODnssecForVerifiedDomain "EXODnssecForVerifiedDomain-nik-charlebois.com"
         {
-            IsSingleInstance = 'Yes'
-            Ensure           = "Absent"
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint
+            DnssecFeatureStatus   = "Enabled";
+            DomainName            = "nik-charlebois.com";
         }
     }
 }

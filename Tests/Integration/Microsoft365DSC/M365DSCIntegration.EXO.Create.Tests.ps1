@@ -249,6 +249,14 @@
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                 }
+                EXODnssecForVerifiedDomain 'EXODnssecForVerifiedDomain-nik-charlebois.com'
+                {
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
+                    DnssecFeatureStatus   = "Enabled";
+                    DomainName            = "nik-charlebois.com";
+                }
                 EXOEmailAddressPolicy 'ConfigureEmailAddressPolicy'
                 {
                     Name                              = "Integration Policy"
@@ -446,19 +454,6 @@
                     UsePreferMessageFormat      = $true
                     CustomAttribute1            = 'Custom Value 1'
                     ExtensionCustomAttribute5   = 'Extension Custom Value 1', 'Extension Custom Value 2'
-                    ApplicationId         = $ApplicationId
-                    TenantId              = $TenantId
-                    CertificateThumbprint = $CertificateThumbprint
-                }
-                EXOMailTips 'OrgWideMailTips'
-                {
-                    IsSingleInstance                      = 'Yes'
-                    MailTipsAllTipsEnabled                = $True
-                    MailTipsGroupMetricsEnabled           = $True
-                    #MailTipsLargeAudienceThreshold        = 100
-                    MailTipsMailboxSourcedTipsEnabled     = $True
-                    MailTipsExternalRecipientsTipsEnabled = $True
-                    Ensure                                = "Present"
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint

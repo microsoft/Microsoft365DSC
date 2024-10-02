@@ -65,6 +65,10 @@
             RequiredVersion = '2.23.0'
         },
         @{
+            ModuleName      = 'Microsoft.Graph.Beta.Search'
+            RequiredVersion = '2.23.0'
+        },
+        @{
             ModuleName      = 'Microsoft.Graph.Beta.Teams'
             RequiredVersion = '2.23.0'
         },
@@ -115,11 +119,6 @@
         @{
             ModuleName      = 'PnP.PowerShell'
             RequiredVersion = '1.12.0'
-        },
-        @{
-            ModuleName      = 'PSDesiredStateConfiguration'
-            RequiredVersion = '1.1'
-            PowerShellCore  = $false
         },
         @{
             ModuleName      = 'PSDesiredStateConfiguration'
