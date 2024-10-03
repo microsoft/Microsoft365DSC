@@ -85,7 +85,12 @@ function Get-TargetResource
             {
                 $getValue = Get-MgBetaProgram `
                     -Filter "DisplayName eq '$DisplayName'" `
-                    -ErrorAction SilentlyContinue | Where-Object `
+                    -ErrorAction SilentlyContinue 
+
+                if ($null -ne $getValue -and $getValue.Count -gt 1)
+                {
+                    Throw "Multiple AAD Identity Governance Programs with the Displayname $($DisplayName) exist in the tenant."
+                }
             }
         }
 
@@ -295,6 +300,7 @@ function Test-TargetResource
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
     $ValuesToCheck.Remove('Id') | Out-Null
+    $ValuesToCheck.Add('Ensure', $Ensure)
 
     $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
