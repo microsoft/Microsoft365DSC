@@ -29,6 +29,7 @@ Configuration Example
             MembershipRule                = "(user.country -eq `"Canada`")"
             MembershipRuleProcessingState = 'On'
             MembershipType                = 'Dynamic'
+            IsMemberManagementRestricted  = $False;
             ScopedRoleMembers             = @(
                 MSFT_MicrosoftGraphScopedRoleMembership
                 {

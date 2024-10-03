@@ -454,21 +454,28 @@ function Export-TargetResource
 
 function Get-SubscriptionsDefenderPlansFromArg
 {
-    $results = @()
-    $argQuery=@'
+    try
+    {
+        $results = @()
+        $argQuery=@'
 securityresources | where type == "microsoft.security/pricings" | project Id=id, PlanName=name, SubscriptionId=subscriptionId, SubPlan=tostring(properties.subPlan), PricingTier=tostring(properties.pricingTier), Extensions=tostring(properties.extensions)
 | join kind=inner (resourcecontainers | where type == "microsoft.resources/subscriptions" | project SubscriptionName = name, SubscriptionId = subscriptionId) on SubscriptionId | project-away SubscriptionId1
 '@
-    $queryResult = Search-AzGraph -Query $argQuery -First 1000 -UseTenantScope -ErrorAction Stop
-    $results+=$queryResult.Data
+        $queryResult = Search-AzGraph -Query $argQuery -First 1000 -UseTenantScope -ErrorAction Stop
+        $results += $queryResult.Data
 
-    while($queryResult.SkipToken -ne $null)
-    {
-        $queryResult = Search-AzGraph -Query $argQuery -First 1000 -UseTenantScope -SkipToken $queryResult.SkipToken  -ErrorAction Stop
-        $results+=$queryResult.Data
+        while($queryResult.SkipToken -ne $null)
+        {
+            $queryResult = Search-AzGraph -Query $argQuery -First 1000 -UseTenantScope -SkipToken $queryResult.SkipToken  -ErrorAction Stop
+            $results+=$queryResult.Data
+        }
+
+        return $results
     }
-
-    return $results
+    catch
+    {
+        throw $_
+    }
 }
 
 

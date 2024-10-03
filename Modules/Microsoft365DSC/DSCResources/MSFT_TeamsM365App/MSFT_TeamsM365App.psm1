@@ -435,7 +435,16 @@ function Export-TargetResource
     try
     {
         $Script:ExportMode = $true
-        [array] $Script:exportedInstances = Get-AllM365TeamsApps -ErrorAction Stop
+
+        [array] $Script:exportedInstances = @()
+        try
+        {
+            [array] $Script:exportedInstances = Get-AllM365TeamsApps -ErrorAction Stop
+        }
+        catch
+        {
+            Write-Verbose $_
+        }
 
         $i = 1
         $dscContent = ''

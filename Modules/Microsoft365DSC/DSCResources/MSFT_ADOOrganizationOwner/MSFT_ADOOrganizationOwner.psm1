@@ -281,9 +281,10 @@ function Export-TargetResource
 
         $i = 1
         $dscContent = ''
-        if ($accounts.Length -eq 0)
+        if ($accounts.count -eq 0)
         {
             Write-Host $Global:M365DSCEmojiGreenCheckMark
+            return ''
         }
         else
         {

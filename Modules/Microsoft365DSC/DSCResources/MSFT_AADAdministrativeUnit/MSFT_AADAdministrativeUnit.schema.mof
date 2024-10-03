@@ -18,6 +18,7 @@ class MSFT_AADAdministrativeUnit : OMI_BaseResource
     [Write, Description("Object-Id of the Administrative Unit")] String Id;
     [Write, Description("Description of the Administrative Unit")] String Description;
     [Write, Description("Visibility of the Administrative Unit. Specify HiddenMembership if members of the AU are hidden")] String Visibility;
+    [Write, Description("Indicates whether the management rights on resources in the administrative units should be restricted to ONLY the administrators scoped on the administrative unit object.")] Boolean IsMemberManagementRestricted;
     [Write, Description("Specify membership type. Possible values are Assigned and Dynamic. Note that the functionality is currently in preview.")] String MembershipType;
     [Write, Description("Specify membership rule. Requires that MembershipType is set to Dynamic. Note that the functionality is currently in preview.")] String MembershipRule;
     [Write, Description("Specify dynamic membership-rule processing-state. Valid values are 'On' and 'Paused'. Requires that MembershipType is set to Dynamic. Note that the functionality is currently in preview.")] String MembershipRuleProcessingState;

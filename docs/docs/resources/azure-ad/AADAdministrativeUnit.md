@@ -8,6 +8,7 @@
 | **Id** | Write | String | Object-Id of the Administrative Unit | |
 | **Description** | Write | String | Description of the Administrative Unit | |
 | **Visibility** | Write | String | Visibility of the Administrative Unit. Specify HiddenMembership if members of the AU are hidden | |
+| **IsMemberManagementRestricted** | Write | Boolean | Indicates whether the management rights on resources in the administrative units should be restricted to ONLY the administrators scoped on the administrative unit object. | |
 | **MembershipType** | Write | String | Specify membership type. Possible values are Assigned and Dynamic. Note that the functionality is currently in preview. | |
 | **MembershipRule** | Write | String | Specify membership rule. Requires that MembershipType is set to Dynamic. Note that the functionality is currently in preview. | |
 | **MembershipRuleProcessingState** | Write | String | Specify dynamic membership-rule processing-state. Valid values are 'On' and 'Paused'. Requires that MembershipType is set to Dynamic. Note that the functionality is currently in preview. | |
@@ -105,6 +106,7 @@ Configuration Example
             MembershipRule                = "(user.country -eq `"Canada`")"
             MembershipRuleProcessingState = 'On'
             MembershipType                = 'Dynamic'
+            IsMemberManagementRestricted  = $False;
             ScopedRoleMembers             = @(
                 MSFT_MicrosoftGraphScopedRoleMembership
                 {
@@ -157,6 +159,7 @@ Configuration Example
             MembershipRule                = "(user.country -eq `"US`")" # Updated Property
             MembershipRuleProcessingState = 'On'
             MembershipType                = 'Dynamic'
+            IsMemberManagementRestricted  = $False
             ScopedRoleMembers             = @(
                 MSFT_MicrosoftGraphScopedRoleMembership
                 {
