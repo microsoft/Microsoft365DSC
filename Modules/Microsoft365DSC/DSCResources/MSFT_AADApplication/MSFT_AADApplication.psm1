@@ -941,7 +941,7 @@ function Set-TargetResource
         }
         else
         {
-            Write-Warning -Message "KeyCredentials is a readonly property and cannot be configured."
+            Write-Warning -Message "KeyCredentials cannot be updated for AAD Applications with more than one KeyCredentials due to technical limitation of Update-MgApplication Cmdlet. Learn more at: https://learn.microsoft.com/en-us/graph/api/application-addkey"
         }
     }
 }
