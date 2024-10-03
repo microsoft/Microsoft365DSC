@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* AADEntitlementManagementSettings
+  * Added support for ApplicationSecret
+
 # 1.24.1002.1
 
 * AADAdministrativeUnit
