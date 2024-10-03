@@ -7,6 +7,9 @@
 * IntuneAppAndBrowserIsolationPolicyWindows10
   * Initial release.
     FIXES [#3028](https://github.com/microsoft/Microsoft365DSC/issues/3028)
+* M365DSCDRGUtil
+  * Fixes an issue for the handling of skipped one-property elements in the
+    Settings Catalog. FIXES [#5086](https://github.com/microsoft/Microsoft365DSC/issues/5086)
 
 # 1.24.1002.1
 
