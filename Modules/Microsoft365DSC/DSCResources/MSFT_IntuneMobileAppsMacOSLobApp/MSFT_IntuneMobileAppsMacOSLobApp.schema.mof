@@ -15,11 +15,17 @@ class MSFT_IntuneMobileAppsMacOSLobApp : OMI_BaseResource
     [Write, Description("The publishing state for the app. The app cannot be assigned unless the app is published. Inherited from mobileApp."), ValueMap{"notPublished", "processing","published"}, Values{"notPublished", "processing", "published"}] String PublishingState;
     [Write, Description("List of Scope Tag IDs for the device health script")] String RoleScopeTagIds[];
 
-    [Write, Description("The list of categories for this app."), EmbeddedInstance("MSFT_DeviceManagementMobileAppCategory")]  String Categories[];
-    [Write, Description("The list of categories for this app."), EmbeddedInstance("MSFT_DeviceManagementMobileAppAssignment")]  String Assignments[];
-    [Write, Description("The list of categories for this app."), EmbeddedInstance("MSFT_DeviceManagementMobileAppRelationship")]  String Relationships[];
-    [Write, Description("The list of categories for this app."), EmbeddedInstance("MSFT_DeviceManagementMobileAppAssignmentSettings")]  String Settings[];
-    [Write, Description("The list of categories for this app."), EmbeddedInstance("MSFT_DeviceManagementMimeContent")]  String LargeIcon;
+    [Write, Description("The bundleId of the app.")] String FileName;
+    [Write, Description("The bundleId of the app.")] Int32 Md5HashChunkSize;
+    [Write, Description("The build number of the app.")] String Md5Hash[];
+    [Write, Description("The version number of the app.")] String InstallAsManaged;
+    [Write, Description("The version number of the app.")] String IgnoreVersionDetection;
+    [Write, Description("The bundleId of the app.")] String BundleId;
+    [Write, Description("The build number of the app.")] String BuildNumber;
+    [Write, Description("The version number of the app.")] String VersionNumber;
+
+    [Write, Description("The list of categories for this app."), EmbeddedInstance("MSFT_DeviceManagementMobileAppCategory")] String Categories[];
+
 
     [Write, Description("Present ensures the policy exists, absent ensures it is removed."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
     [Write, Description("Credentials of the Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
@@ -33,14 +39,8 @@ class MSFT_IntuneMobileAppsMacOSLobApp : OMI_BaseResource
 
 class MSFT_DeviceManagementMobileAppCategory
 {
-    [Key, Description("The name of the app category.")] String DisplayName;
-    [Write, Description("The unique identifier for an entity. Read-only.")] String Id;
-};
-
-class MSFT_DeviceManagementMimeContent
-{
-    [Write, Description("Indicates the type of content mime.")] String Type;
-    [Write, Description("The byte array that contains the actual content.")] String Value[];
+    [Key, Description("The name of the app category.")] String displayName;
+    [Write, Description("The unique identifier for an entity. Read-only.")] String id;
 };
 
 class MSFT_DeviceManagementMobileAppAssignment
@@ -49,33 +49,18 @@ class MSFT_DeviceManagementMobileAppAssignment
         ValueMap{"Available", "Required","Uninstall", "AvailableWithoutEnrollment"},
         Values{"Available", "Required","Uninstall", "AvailableWithoutEnrollment"}]
         String Intent;
+    [Write, Description("The list of categories for this app."), EmbeddedInstance("MSFT_DeviceManagementMobileAppAssignmentSettings")] String Settings[];
 
     [Write, Description("The group Id that is the target of the assignment.")] String groupId;
     [Write, Description("The group Display Name that is the target of the assignment.")] String groupDisplayName;
     [Write, Description("The type of the target assignment."),
         ValueMap{"#microsoft.graph.groupAssignmentTarget","#microsoft.graph.allLicensedUsersAssignmentTarget","#microsoft.graph.allDevicesAssignmentTarget","#microsoft.graph.exclusionGroupAssignmentTarget"},
         Values{"#microsoft.graph.groupAssignmentTarget","#microsoft.graph.allLicensedUsersAssignmentTarget","#microsoft.graph.allDevicesAssignmentTarget","#microsoft.graph.exclusionGroupAssignmentTarget"}]
-        String odataType; #TODOK: It could be 'target' property also
+        String odataType;
 
     [Write, Description("The Id of the filter for the target assignment.")] String deviceAndAppManagementAssignmentFilterId;
     [Write, Description("The type of filter of the target assignment i.e. Exclude or Include. Possible values are:none, include, exclude."),
         ValueMap{"none","include","exclude"},
         Values{"none","include","exclude"}]
         String deviceAndAppManagementAssignmentFilterType;
-};
-
-class MSFT_DeviceManagementMobileAppAssingmentSetting
-{
-    [Write, Description("The mobile app assignment setting type.")] String type;
-    [Write, Description("he mobile app assignment setting value.")] String value;
-};
-
-class MSFT_DeviceManagementMobileAppRelationship
-{
-    [Write, Description("The unique identifier for an entity. Read-only.")] String Id;
-    [Write, Description("The target mobile app's app id.")] String TargetId;
-    [Write, Description(" Indicates whether the target of a relationship is the parent or the child in the relationship."),
-        ValueMap{"Child", "Parent", "UnknownFutureValue"},
-        Values{"Child", "Parent", "UnknownFutureValue"}]
-        String TargetType;
 };

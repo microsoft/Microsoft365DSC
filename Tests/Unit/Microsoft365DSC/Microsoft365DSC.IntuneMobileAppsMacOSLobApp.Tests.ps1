@@ -65,6 +65,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     PrivacyInformationUrl = ""
                     Publisher             = "Contoso"
                     PublishingState       = "published"
+                    RoleScopeTagIds       = @()
+                    Category              = "Productivity"
                     Ensure                = 'Present'
                     Credential            = $Credential
                 }
@@ -73,13 +75,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return $null
                 }
             }
+
             It '1.1 Should return Values from the Get method' {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Absent'
             }
             It '1.2 Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
-
             It '1.3 Should create a new instance from the Set method' {
                 Set-TargetResource @testParams
                 Should -Invoke -CommandName New-MgBetaDeviceAppManagementMobileApp -Exactly 1
@@ -100,6 +102,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     PrivacyInformationUrl = ""
                     Publisher             = "Contoso"
                     PublishingState       = "published"
+                    RoleScopeTagIds       = @()
+                    Category              = "Productivity"
                     Ensure                = 'Absent'
                     Credential            = $Credential
                 }
@@ -117,16 +121,18 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         PrivacyInformationUrl = ""
                         Publisher             = "Contoso"
                         PublishingState       = "published"
+                        RoleScopeTagIds       = @()
+                        Category              = "Productivity"
                     }
                 }
             }
+
             It '2.1 Should return Values from the Get method' {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
             It '2.2 Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
-
             It '2.3 Should remove the instance from the Set method' {
                 Set-TargetResource @testParams
                 Should -Invoke -CommandName Remove-MgBetaDeviceAppManagementMobileApp -Exactly 1
@@ -147,6 +153,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     PrivacyInformationUrl = ""
                     Publisher             = "Contoso"
                     PublishingState       = "published"
+                    RoleScopeTagIds       = @()
+                    Category              = "Productivity"
                     Ensure                = 'Present'
                     Credential            = $Credential;
                 }
@@ -164,6 +172,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         PrivacyInformationUrl = ""
                         Publisher             = "Contoso"
                         PublishingState       = "published"
+                        RoleScopeTagIds       = @()
+                        Category              = "Productivity"
                     }
                 }
             }
@@ -187,6 +197,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     PrivacyInformationUrl = ""
                     Publisher             = "Contoso"
                     PublishingState       = "published"
+                    RoleScopeTagIds       = @()
+                    Category              = "Productivity"
                     Ensure                = 'Present'
                     Credential            = $Credential;
                 }
@@ -204,6 +216,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         PrivacyInformationUrl = ""
                         Publisher             = "Contoso"
                         PublishingState       = "published"
+                        RoleScopeTagIds       = @()
+                        Categories           = @(MSFT_DeviceManagementMobileAppCategory {
+                            id  = '1bff2652-03ec-4a48-941c-152e93736515'
+                            displyName = 'Kajal 3'
+                        });
                     }
                 }
             }
@@ -211,11 +228,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It '4.1 Should return Values from the Get method' {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
-
             It '4.2 Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
-
             It '4.3 Should call the Set method' {
                 Set-TargetResource @testParams
                 Should -Invoke -CommandName Update-MgBetaDeviceAppManagementMobileApp -Exactly 1
@@ -243,9 +258,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         PrivacyInformationUrl = ""
                         Publisher             = "Contoso"
                         PublishingState       = "published"
+                        RoleScopeTagIds       = @()
+                        Category              = "Productivity"
                     }
                 }
             }
+
             It '5.0 Should Reverse Engineer resource from the Export method' {
                 $result = Export-TargetResource @testParams
                 $result | Should -Not -BeNullOrEmpty

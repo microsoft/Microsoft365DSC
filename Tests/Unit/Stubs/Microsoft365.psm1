@@ -17939,7 +17939,15 @@ function New-MgBetaDeviceAppManagementMobileApp {
         [Parameter()]
         [System.String]
         [ValidateSet('notPublished', 'processing','published')]
-        $PublishingState
+        $PublishingState,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Categories,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds
     )
 }
 
@@ -17989,7 +17997,15 @@ function Get-MgBetaDeviceAppManagementMobileApp {
         [Parameter()]
         [System.String]
         [ValidateSet('notPublished', 'processing','published')]
-        $PublishingState
+        $PublishingState,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Categories,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds
     )
 }
 function Update-MgBetaDeviceAppManagementMobileApp {
@@ -18038,7 +18054,15 @@ function Update-MgBetaDeviceAppManagementMobileApp {
         [Parameter()]
         [System.String]
         [ValidateSet('notPublished', 'processing','published')]
-        $PublishingState
+        $PublishingState,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Categories,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds
     )
 }
 

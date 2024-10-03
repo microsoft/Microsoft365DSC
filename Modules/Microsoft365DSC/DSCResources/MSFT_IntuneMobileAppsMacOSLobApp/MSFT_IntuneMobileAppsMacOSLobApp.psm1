@@ -51,6 +51,14 @@ function Get-TargetResource
         [ValidateSet('notPublished', 'processing','published')]
         $PublishingState,
 
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Categories,
+
         #endregion
 
         [Parameter()]
@@ -112,13 +120,20 @@ function Get-TargetResource
         }
         else
         {
-            $instance = Get-MgBetaDeviceAppManagementMobileApp -MobileAppId $Id -Filter "microsoft.graph.managedApp/appAvailability eq null" -ErrorAction Stop
+            $instance = Get-MgBetaDeviceAppManagementMobileApp `
+                -MobileAppId $Id `
+                -Filter "microsoft.graph.managedApp/appAvailability eq null" `
+                -ExpandProperty "categories,assignments" `
+                -ErrorAction Stop
         }
 
         if ($null -eq $instance)
         {
             Write-Verbose -Message "No Mobile app with Id {$Id} was found. Search with DisplayName."
-            $instance = Get-MgBetaDeviceAppManagementMobileApp -Filter "displayName eq '$DisplayName'" -ErrorAction SilentlyContinue
+            $instance = Get-MgBetaDeviceAppManagementMobileApp `
+                -Filter "displayName eq '$DisplayName'" `
+                -ExpandProperty "categories,assignments" `
+                -ErrorAction SilentlyContinue
         }
 
         if ($null -eq $instance)
@@ -131,19 +146,19 @@ function Get-TargetResource
 
         $results = @{
             Id                    = $instance.Id
-            #Assignments           = $instance.Assignments
-            #Categories            = $instance.Categories
             Description           = $instance.Description
             Developer             = $instance.Developer
             DisplayName           = $instance.DisplayName
             InformationUrl        = $instance.InformationUrl
             IsFeatured            = $instance.IsFeatured
-            #LargeIcon             = $instance.LargeIcon
             Notes                 = $instance.Notes
             Owner                 = $instance.Owner
             PrivacyInformationUrl = $instance.PrivacyInformationUrl
             Publisher             = $instance.Publisher
             PublishingState       = $instance.PublishingState
+            RoleScopeTagIds       = $instance.RoleScopeTagIds
+            Categories            = $instance.Categories
+
             Ensure                = 'Present'
             Credential            = $Credential
             ApplicationId         = $ApplicationId
@@ -153,6 +168,17 @@ function Get-TargetResource
             ManagedIdentity       = $ManagedIdentity.IsPresent
             AccessTokens          = $AccessTokens
         }
+
+        #TODOK
+        # $resultAssignments = @()
+        # $appAssignments = Get-MgBetaDeviceAppManagementMobileAppAssignment -MobileAppId $configPolicy.Id
+        # if ($appAssignments.count -gt 0)
+        # {
+        #     $resultAssignments += ConvertFrom-IntuneMobileAppAssignment `
+        #                         -IncludeDeviceFilter:$true `
+        #                         -Assignments ($appAssignments)
+        # }
+        # $returnHashtable.Add('Assignments', $resultAssignments)
 
         return [System.Collections.Hashtable] $results
     }
@@ -221,6 +247,14 @@ function Set-TargetResource
         [ValidateSet('notPublished', 'processing','published')]
         $PublishingState,
 
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Categories,
+
         #endregion
 
         [Parameter()]
@@ -278,12 +312,45 @@ function Set-TargetResource
     # CREATE
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
+        if($null -ne $Categories)
+        {
+            [System.Object[]]$categoriesValue = ConvertTo-M365DSCIntuneAppCategories -Categories $Categories
+            $setParameters.Add('Categories', $categoriesValue)
+        }
+
+        #$app = New-MgBetaDeviceAppManagementMobileApp @SetParameters
+
         New-MgBetaDeviceAppManagementMobileApp @SetParameters
+
+        #TODOK
+        # $assignmentsHash = ConvertTo-IntuneMobileAppAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
+        # if ($app.id)
+        # {
+        #     Update-MgBetaDeviceAppManagementMobileAppAssignment -MobileAppId $app.id `
+        #         -Targets $assignmentsHash `
+        #         -Repository 'deviceAppManagement/mobileAppAssignments'
+        # }
+
     }
     # UPDATE
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
+        if($null -ne $Categories)
+        {
+            [System.Object[]]$categoriesValue = ConvertTo-M365DSCIntuneAppCategories -Categories $Categories
+            $setParameters.Add('Categories', $categoriesValue)
+        }
+
         Update-MgBetaDeviceAppManagementMobileApp -MobileAppId $currentInstance.Id @SetParameters
+
+        #TODOK
+        # $assignmentsHash = ConvertTo-IntuneMobileAppAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
+        # if ($app.id)
+        # {
+        #     Update-MgBetaDeviceAppManagementMobileAppAssignment -MobileAppId $app.id `
+        #         -Targets $assignmentsHash `
+        #         -Repository 'deviceAppManagement/mobileAppAssignments'
+        # }
     }
     # REMOVE
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
@@ -344,6 +411,14 @@ function Test-TargetResource
         [System.String]
         [ValidateSet('notPublished', 'processing','published')]
         $PublishingState,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Categories,
 
         #endregion
 
@@ -462,7 +537,10 @@ function Export-TargetResource
     try
     {
         $Script:ExportMode = $true
-        [array] $Script:exportedInstances = Get-MgBetaDeviceAppManagementMobileApp -Filter "microsoft.graph.managedApp/appAvailability eq null" -ErrorAction Stop
+        [array] $Script:exportedInstances = Get-MgBetaDeviceAppManagementMobileApp `
+            -Filter "microsoft.graph.managedApp/appAvailability eq null" `
+            -ExpandProperty "categories,assignments" `
+            -ErrorAction Stop
 
         $i = 1
         $dscContent = ''
@@ -490,6 +568,11 @@ function Export-TargetResource
                 PrivacyInformationUrl = $config.PrivacyInformationUrl
                 Publisher             = $config.Publisher
                 PublishingState       = $config.PublishingState
+                RoleScopeTagIds       = $config.RoleScopeTagIds
+                Categories            = $config.Categories
+                # LargeIcon             = $config.LargeIcon
+                # ChildApps             = $config.ChildApps
+
                 Ensure                = 'Present'
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
@@ -500,7 +583,25 @@ function Export-TargetResource
                 AccessTokens          = $AccessTokens
             }
 
+            $Params.remove('Md5HashChunkSize') | Out-Null
             $Results = Get-TargetResource @Params
+
+            #region complex types
+
+
+            if (-not (Test-M365DSCAuthenticationParameter -BoundParameters $Results))
+            {
+                Write-Verbose "An error occured in Get-TargetResource, the app {$($params.displayName)} will not be processed."
+                throw "An error occured in Get-TargetResource, the app {$($params.displayName)} will not be processed. Refer to the event viewer logs for more information."
+            }
+
+            if ($Results.Categories.Count -gt 0)
+            {
+                $Results.Categories = Get-M365DSCIntuneAppCategoriesAsString -Categories $Results.Categories
+            }
+
+            #endregion complex types
+
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
 
@@ -509,6 +610,16 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
+
+            #region complex types
+
+            if ($null -ne $Results.Categories)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Categories'
+            }
+
+            #endregion complex types
+
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
@@ -531,5 +642,124 @@ function Export-TargetResource
         return ''
     }
 }
+
+#region Helper functions
+
+function ConvertTo-M365DSCIntuneAppAssignmentSettings
+{
+    [OutputType([System.Object[]])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Collections.ArrayList]
+        $Settings
+    )
+
+    $result = @()
+    foreach ($setting in $Settings)
+    {
+        $currentSetting = @{
+            name  = $setting.name
+            value = $setting.value
+        }
+        $result += $currentSetting
+    }
+
+    return $result
+}
+
+function Get-M365DSCIntuneAppAssignmentSettingsAsString
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Object[]]
+        $Settings
+    )
+
+    $StringContent = '@('
+    $space = '                '
+    $indent = '    '
+
+    $i = 1
+    foreach ($setting in $Settings)
+    {
+        if ($Settings.Count -gt 1)
+        {
+            $StringContent += "`r`n"
+            $StringContent += "$space"
+        }
+
+        $StringContent += "MSFT_DeviceManagementMobileAppAssignmentSettings { `r`n"
+        $StringContent += "$($space)$($indent)name  = '" + $setting.name + "'`r`n"
+        $StringContent += "$($space)$($indent)value = '" + $setting.value + "'`r`n"
+        $StringContent += "$space}"
+
+        $i++
+    }
+
+    $StringContent += ')'
+    return $StringContent
+}
+
+function ConvertTo-M365DSCIntuneAppCategories
+{
+    [OutputType([System.Object[]])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Collections.ArrayList]
+        $Categories
+    )
+
+    $result = @()
+    foreach ($category in $Categories)
+    {
+        $currentCategory = @{
+            name  = $category.id
+            value = $category.displayName
+        }
+
+        $result += $currentCategory
+    }
+
+    return $result
+}
+
+function Get-M365DSCIntuneAppCategoriesAsString
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Object[]]
+        $Categories
+    )
+
+    $StringContent = '@('
+    $space = '                '
+    $indent = '    '
+
+    $i = 1
+    foreach ($category in $Categories)
+    {
+        if ($Categories.Count -gt 1)
+        {
+            $StringContent += "`r`n"
+            $StringContent += "$space"
+        }
+
+        $StringContent += "MSFT_DeviceManagementMobileAppCategory { `r`n"
+        $StringContent += "$($space)$($indent)id  = '" + $category.id + "'`r`n"
+        $StringContent += "$($space)$($indent)displyName = '" + $category.displayName + "'`r`n"
+        $StringContent += "$space}"
+
+        $i++
+    }
+
+    $StringContent += ')'
+    return $StringContent
+}
+
+#endregion Helper functions
 
 Export-ModuleMember -Function *-TargetResource

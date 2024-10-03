@@ -1252,6 +1252,179 @@ function ConvertTo-IntunePolicyAssignment
     return ,$assignmentResult
 }
 
+function ConvertFrom-IntuneMobileAppAssignment
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable[]])]
+    param (
+        [Parameter(Mandatory = $true)]
+        [Array]
+        $Assignments,
+        [Parameter()]
+        [System.Boolean]
+        $IncludeDeviceFilter = $true
+    )
+
+    $assignmentResult = @()
+    foreach ($assignment in $Assignments)
+    {
+        $hashAssignment = @{}
+        if ($null -ne $assignment.Target.'@odata.type')
+        {
+            $dataType = $assignment.Target.'@odata.type'
+        }
+        else
+        {
+            $dataType = $assignment.Target.AdditionalProperties.'@odata.type'
+        }
+
+        if ($null -ne $assignment.Target.groupId)
+        {
+            $groupId = $assignment.Target.groupId
+        }
+        else
+        {
+            $groupId = $assignment.Target.AdditionalProperties.groupId
+        }
+
+        # if ($null -ne $assignment.Target.collectionId) TODOK: remove this if not needed
+        # {
+        #     $collectionId = $assignment.Target.collectionId
+        # }
+        # else
+        # {
+        #     $collectionId = $assignment.Target.AdditionalProperties.collectionId
+        # }
+
+        $hashAssignment.Add('dataType',$dataType)
+        if (-not [string]::IsNullOrEmpty($groupId))
+        {
+            $hashAssignment.Add('groupId', $groupId)
+
+            $group = Get-MgGroup -GroupId ($groupId) -ErrorAction SilentlyContinue
+            if ($null -ne $group)
+            {
+                $groupDisplayName = $group.DisplayName
+            }
+        }
+
+        # if (-not [string]::IsNullOrEmpty($collectionId))
+        # {
+        #     $hashAssignment.Add('collectionId', $collectionId)
+        # }
+
+        if ($dataType -eq '#microsoft.graph.allLicensedUsersAssignmentTarget')
+        {
+            $groupDisplayName = 'All users'
+        }
+        if ($dataType -eq '#microsoft.graph.allDevicesAssignmentTarget')
+        {
+            $groupDisplayName = 'All devices'
+        }
+        if ($null -ne $groupDisplayName)
+        {
+            $hashAssignment.Add('groupDisplayName', $groupDisplayName)
+        }
+        if ($IncludeDeviceFilter)
+        {
+            if ($null -ne $assignment.Target.DeviceAndAppManagementAssignmentFilterType)
+            {
+                $hashAssignment.Add('deviceAndAppManagementAssignmentFilterType', $assignment.Target.DeviceAndAppManagementAssignmentFilterType.ToString())
+            }
+            if ($null -ne $assignment.Target.DeviceAndAppManagementAssignmentFilterId)
+            {
+                $hashAssignment.Add('deviceAndAppManagementAssignmentFilterId', $assignment.Target.DeviceAndAppManagementAssignmentFilterId)
+            }
+        }
+
+        $assignmentResult += $hashAssignment
+    }
+
+    return ,$assignmentResult
+}
+
+function ConvertTo-IntunePolicyAssignment
+{
+    [CmdletBinding()]
+    [OutputType([Hashtable[]])]
+    param (
+        [Parameter(Mandatory = $true)]
+        [AllowNull()]
+        $Assignments,
+        [Parameter()]
+        [System.Boolean]
+        $IncludeDeviceFilter = $true
+    )
+
+    if ($null -eq $Assignments)
+    {
+        return ,@()
+    }
+
+    $assignmentResult = @()
+    foreach ($assignment in $Assignments)
+    {
+        $target = @{"@odata.type" = $assignment.dataType}
+        if ($IncludeDeviceFilter)
+        {
+            if ($null -ne $assignment.DeviceAndAppManagementAssignmentFilterType)
+            {
+                $target.Add('deviceAndAppManagementAssignmentFilterType', $assignment.DeviceAndAppManagementAssignmentFilterType)
+                $target.Add('deviceAndAppManagementAssignmentFilterId', $assignment.DeviceAndAppManagementAssignmentFilterId)
+            }
+        }
+        if ($assignment.dataType -like '*CollectionAssignmentTarget')
+        {
+            $target.add('collectionId', $assignment.collectionId)
+        }
+        elseif ($assignment.dataType -like '*GroupAssignmentTarget')
+        {
+            $group = Get-MgGroup -GroupId ($assignment.groupId) -ErrorAction SilentlyContinue
+            if ($null -eq $group)
+            {
+                if ($assignment.groupDisplayName)
+                {
+                    $group = Get-MgGroup -Filter "DisplayName eq '$($assignment.groupDisplayName)'" -ErrorAction SilentlyContinue
+                    if ($null -eq $group)
+                    {
+                        $message = "Skipping assignment for the group with DisplayName {$($assignment.groupDisplayName)} as it could not be found in the directory.`r`n"
+                        $message += "Please update your DSC resource extract with the correct groupId or groupDisplayName."
+                        Write-Verbose -Message $message
+                        $target = $null
+                    }
+                    if ($group -and $group.Count -gt 1)
+                    {
+                        $message = "Skipping assignment for the group with DisplayName {$($assignment.groupDisplayName)} as it is not unique in the directory.`r`n"
+                        $message += "Please update your DSC resource extract with the correct groupId or a unique group DisplayName."
+                        Write-Verbose -Message $message
+                        $group = $null
+                        $target = $null
+                    }
+                }
+                else
+                {
+                    $message = "Skipping assignment for the group with Id {$($assignment.groupId)} as it could not be found in the directory.`r`n"
+                    $message += "Please update your DSC resource extract with the correct groupId or a unique group DisplayName."
+                    Write-Verbose -Message $message
+                    $target = $null
+                }
+            }
+            #Skipping assignment if group not found from either groupId or groupDisplayName
+            if ($null -ne $group)
+            {
+                $target.Add('groupId', $group.Id)
+            }
+        }
+
+        if ($target)
+        {
+            $assignmentResult += @{target = $target}
+        }
+    }
+
+    return ,$assignmentResult
+}
+
 function Compare-M365DSCIntunePolicyAssignment
 {
     [CmdletBinding()]
