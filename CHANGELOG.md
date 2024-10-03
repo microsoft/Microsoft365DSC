@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* AADEntitlementManagementSettings
+  * Added support for ApplicationSecret
 * IntuneAppAndBrowserIsolationPolicyWindows10ConfigMgr
   * Initial release.
 
