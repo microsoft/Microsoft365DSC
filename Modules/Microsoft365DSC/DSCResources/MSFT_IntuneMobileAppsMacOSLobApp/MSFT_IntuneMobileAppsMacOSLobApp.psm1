@@ -31,6 +31,10 @@ function Get-TargetResource
         $IsFeatured,
 
         [Parameter()]
+        [System.Boolean]
+        $IgnoreVersionDetection,
+
+        [Parameter()]
         [System.String]
         $Notes,
 
@@ -62,6 +66,7 @@ function Get-TargetResource
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
+
 
         #endregion
 
@@ -121,7 +126,8 @@ function Get-TargetResource
         $instance = Get-MgBetaDeviceAppManagementMobileApp `
             -Filter "(isof('microsoft.graph.macOSLobApp') and displayName eq '$DisplayName')" `
             -ExpandProperty "categories,assignments" `
-            -ErrorAction SilentlyContinue
+            -ErrorAction SilentlyContinue | Where-Object `
+            -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.macOSLobApp' }
 
         if ($null -eq $instance)
         {
@@ -129,7 +135,8 @@ function Get-TargetResource
             $instance = Get-MgBetaDeviceAppManagementMobileApp `
                 -MobileAppId $Id `
                 -ExpandProperty "categories,assignments" `
-                -ErrorAction Stop
+                -ErrorAction Stop | Where-Object `
+                -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.macOSLobApp' }
         }
 
         if ($null -eq $instance)
@@ -153,6 +160,7 @@ function Get-TargetResource
             Publisher             = $instance.Publisher
             PublishingState       = $instance.PublishingState.ToString()
             RoleScopeTagIds       = $instance.RoleScopeTagIds
+            IgnoreVersionDetection = $instance.AdditionalProperties.IgnoreVersionDetection
 
             Ensure                = 'Present'
             Credential            = $Credential
@@ -230,6 +238,10 @@ function Set-TargetResource
         $IsFeatured,
 
         [Parameter()]
+        [System.Boolean]
+        $IgnoreVersionDetection,
+
+        [Parameter()]
         [System.String]
         $Notes,
 
@@ -261,6 +273,7 @@ function Set-TargetResource
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
+
 
         #endregion
 
@@ -320,6 +333,8 @@ function Set-TargetResource
     $setParameters.remove('Categories') | Out-Null
     $setParameters.remove('Assignments') | Out-Null
 
+    $AdditionalProperties = Get-M365DSCIntuneMobileMocOSLobAppAdditionalProperties -Properties ([System.Collections.Hashtable]$PSBoundParameters)
+
     if($null -ne $Categories)
     {
         [System.Object[]]$categoriesValue = ConvertTo-M365DSCIntuneAppCategories -Categories $Categories
@@ -329,8 +344,9 @@ function Set-TargetResource
     # CREATE
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        $app = New-MgBetaDeviceAppManagementMobileApp @setParameters
+        $app = New-MgBetaDeviceAppManagementMobileApp @setParameters -AdditionalProperties $AdditionalProperties
 
+        #region Assignments
         $assignmentsHash = ConvertTo-IntuneMobileAppAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
         if ($app.id)
         {
@@ -338,11 +354,12 @@ function Set-TargetResource
                 -Targets $assignmentsHash `
                 -Repository 'deviceAppManagement/mobileAppAssignments'
         }
+        #endregion Assignments
     }
     # UPDATE
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        Update-MgBetaDeviceAppManagementMobileApp -MobileAppId $currentInstance.Id @setParameters
+        Update-MgBetaDeviceAppManagementMobileApp -MobileAppId $currentInstance.Id @setParameters -AdditionalProperties $AdditionalProperties
 
         $assignmentsHash = ConvertTo-IntuneMobileAppAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
         if ($app.id)
@@ -392,6 +409,10 @@ function Test-TargetResource
         $IsFeatured,
 
         [Parameter()]
+        [System.Boolean]
+        $IgnoreVersionDetection,
+
+        [Parameter()]
         [System.String]
         $Notes,
 
@@ -423,7 +444,6 @@ function Test-TargetResource
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
-
 
         #endregion
 
@@ -583,9 +603,10 @@ function Export-TargetResource
     {
         $Script:ExportMode = $true
         [array] $Script:exportedInstances = Get-MgBetaDeviceAppManagementMobileApp `
-            -Filter "microsoft.graph.managedApp/appAvailability eq null" `
+            -Filter "isof('microsoft.graph.macOSLobApp')" `
             -ExpandProperty "categories,assignments" `
-            -ErrorAction Stop
+            -ErrorAction Stop | Where-Object `
+            -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.macOSLobApp' }
 
         $i = 1
         $dscContent = ''
@@ -614,6 +635,9 @@ function Export-TargetResource
                 Publisher             = $config.Publisher
                 PublishingState       = $config.PublishingState.ToString()
                 RoleScopeTagIds       = $config.RoleScopeTagIds
+
+                IgnoreVersionDetection = $config.AdditionalProperties.IgnoreVersionDetection
+
                 # LargeIcon             = $config.LargeIcon
                 # ChildApps             = $config.ChildApps
 
@@ -828,6 +852,30 @@ function Get-M365DSCIntuneAppCategoriesAsString
 
     $StringContent += ')'
     return $StringContent
+}
+
+function Get-M365DSCIntuneMobileMocOSLobAppAdditionalProperties
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = 'true')]
+        [System.Collections.Hashtable]
+        $Properties
+    )
+
+    $results = @{'@odata.type' = '#microsoft.graph.macOSLobApp' }
+    foreach ($property in $properties.Keys)
+    {
+        if ($property -ne 'Verbose')
+        {
+            $propertyName = $property[0].ToString().ToLower() + $property.Substring(1, $property.Length - 1)
+            $propertyValue = $properties.$property
+            $results.Add($propertyName, $propertyValue)
+        }
+    }
+    return $results
 }
 
 #endregion Helper functions
