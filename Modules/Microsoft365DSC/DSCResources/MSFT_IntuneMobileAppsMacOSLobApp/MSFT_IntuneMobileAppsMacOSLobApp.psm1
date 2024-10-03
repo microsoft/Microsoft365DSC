@@ -118,31 +118,23 @@ function Get-TargetResource
     $nullResult.Ensure = 'Absent'
     try
     {
-        if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
+        $instance = Get-MgBetaDeviceAppManagementMobileApp `
+            -Filter "(isof('microsoft.graph.macOSLobApp') and displayName eq '$DisplayName')" `
+            -ExpandProperty "categories,assignments" `
+            -ErrorAction SilentlyContinue
+
+        if ($null -eq $instance)
         {
-            $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.Id -eq $Id}
-        }
-        else
-        {
+            Write-Verbose -Message "No Mobile app with DisplayName {$DisplayName} was found. Search with DisplayName."
             $instance = Get-MgBetaDeviceAppManagementMobileApp `
                 -MobileAppId $Id `
-                -Filter "microsoft.graph.managedApp/appAvailability eq null" `
                 -ExpandProperty "categories,assignments" `
                 -ErrorAction Stop
         }
 
         if ($null -eq $instance)
         {
-            Write-Verbose -Message "No Mobile app with Id {$Id} was found. Search with DisplayName."
-            $instance = Get-MgBetaDeviceAppManagementMobileApp `
-                -Filter "displayName eq '$DisplayName'" `
-                -ExpandProperty "categories,assignments" `
-                -ErrorAction SilentlyContinue
-        }
-
-        if ($null -eq $instance)
-        {
-            Write-Verbose -Message "No Mobile app with {$DisplayName} was found."
+            Write-Verbose -Message "No Mobile app with {$Id} was found."
             return $nullResult
         }
 
@@ -270,7 +262,6 @@ function Set-TargetResource
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
 
-
         #endregion
 
         [Parameter()]
@@ -320,23 +311,27 @@ function Set-TargetResource
     #endregion
 
     $currentInstance = Get-TargetResource @PSBoundParameters
-    $setParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+    $PSBoundParameters.Remove('Categories') | Out-Null
+    $PSBoundParameters.Remove('Assignments') | Out-Null
 
+    $setParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
     $setParameters.remove('Id') | Out-Null
     $setParameters.remove('Ensure') | Out-Null
+    $setParameters.remove('Categories') | Out-Null
+    $setParameters.remove('Assignments') | Out-Null
+
+    if($null -ne $Categories)
+    {
+        [System.Object[]]$categoriesValue = ConvertTo-M365DSCIntuneAppCategories -Categories $Categories
+        $setParameters.Add('Categories', $categoriesValue)
+    }
 
     # CREATE
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        if($null -ne $Categories)
-        {
-            [System.Object[]]$categoriesValue = ConvertTo-M365DSCIntuneAppCategories -Categories $Categories
-            $setParameters.Add('Categories', $categoriesValue)
-        }
+        $app = New-MgBetaDeviceAppManagementMobileApp @setParameters
 
-        $app = New-MgBetaDeviceAppManagementMobileApp @SetParameters
         $assignmentsHash = ConvertTo-IntuneMobileAppAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
-
         if ($app.id)
         {
             Update-MgBetaDeviceAppManagementMobileAppAssignment -MobileAppId $app.id `
@@ -347,13 +342,7 @@ function Set-TargetResource
     # UPDATE
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        if($null -ne $Categories)
-        {
-            [System.Object[]]$categoriesValue = ConvertTo-M365DSCIntuneAppCategories -Categories $Categories
-            $setParameters.Add('Categories', $categoriesValue)
-        }
-
-        Update-MgBetaDeviceAppManagementMobileApp -MobileAppId $currentInstance.Id @SetParameters
+        Update-MgBetaDeviceAppManagementMobileApp -MobileAppId $currentInstance.Id @setParameters
 
         $assignmentsHash = ConvertTo-IntuneMobileAppAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
         if ($app.id)
@@ -484,20 +473,60 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
+    Write-Verbose -Message "Testing configuration of Intune Mobile MacOS App: {$DisplayName}"
+
     $CurrentValues = Get-TargetResource @PSBoundParameters
-    $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
+    if (-not (Test-M365DSCAuthenticationParameter -BoundParameters $CurrentValues))
+    {
+        Write-Verbose "An error occured in Get-TargetResource, the app {$displayName} will not be processed"
+        throw "An error occured in Get-TargetResource, the app {$displayName} will not be processed. Refer to the event viewer logs for more information."
+    }
+    $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
+    $ValuesToCheck = Remove-M365DSCAuthenticationParameter -BoundParameters $ValuesToCheck
+    $ValuesToCheck.Remove('Id') | Out-Null
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
-    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
+    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
-    $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
-        -Source $($MyInvocation.MyCommand.Source) `
-        -DesiredValues $PSBoundParameters `
-        -ValuesToCheck $ValuesToCheck.Keys
+    if ($CurrentValues.Ensure -ne $Ensure)
+    {
+        Write-Verbose -Message "Test-TargetResource returned $false"
+        return $false
+    }
+    $testResult = $true
 
-    Write-Verbose -Message "Test-TargetResource returned $testResult"
+    #Compare Cim instances
+    foreach ($key in $PSBoundParameters.Keys)
+    {
+        $source = $PSBoundParameters.$key
+        $target = $CurrentValues.$key
+        if ($source.getType().Name -like '*CimInstance*')
+        {
+            $testResult = Compare-M365DSCComplexObject `
+                -Source ($source) `
+                -Target ($target)
 
-    return $testResult
+            if (-Not $testResult)
+            {
+                $testResult = $false
+                break
+            }
+
+            $ValuesToCheck.Remove($key) | Out-Null
+        }
+    }
+
+    if ($testResult)
+    {
+        $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -DesiredValues $PSBoundParameters `
+            -ValuesToCheck $ValuesToCheck.Keys
+    }
+
+    Write-Verbose -Message "Test-TargetResource returned $TestResult"
+
+    return $TestResult
 }
 
 function Export-TargetResource
@@ -756,8 +785,8 @@ function ConvertTo-M365DSCIntuneAppCategories
     foreach ($category in $Categories)
     {
         $currentCategory = @{
-            name  = $category.id
-            value = $category.displayName
+            id  = $category.id
+            displayName = $category.displayName # This 'displayName' property has to exist in microsoft.management.services.api.mobileAppCategory
         }
 
         $result += $currentCategory

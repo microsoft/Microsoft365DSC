@@ -617,6 +617,7 @@ function Compare-M365DSCComplexObject
         }
 
         if ($Source[0].CimClass.CimClassName -eq 'MSFT_DeviceManagementConfigurationPolicyAssignments' -or
+            $Source[0].CimClass.CimClassName -eq 'MSFT_DeviceManagementMobileAppAssignment' -or
             ($Source[0].CimClass.CimClassName -like 'MSFT_Intune*Assignments' -and
             $Source[0].CimClass.CimClassName -ne 'MSFT_IntuneDeviceRemediationPolicyAssignments'))
         {
@@ -734,7 +735,9 @@ function Compare-M365DSCComplexObject
             {
                 if ($Source.$key.GetType().FullName -like '*CimInstance' -and (
                         $Source.$key.CimClass.CimClassName -eq 'MSFT_DeviceManagementConfigurationPolicyAssignments' -or
-                        $Source.$key.CimClass.CimClassName -like 'MSFT_Intune*Assignments'))
+                        $Source.$key.CimClass.CimClassName -like 'MSFT_DeviceManagementMobileAppAssignment' -or
+                        $Source.$key.CimClass.CimClassName -like 'MSFT_Intune*Assignments'
+                    ))
                 {
                     $compareResult = Compare-M365DSCIntunePolicyAssignment `
                         -Source @($Source.$key) `
@@ -1287,7 +1290,7 @@ function ConvertFrom-IntuneMobileAppAssignment
             $groupId = $assignment.Target.AdditionalProperties.groupId
         }
 
-        $hashAssignment.Add('odataType', $dataType)
+        $hashAssignment.Add('dataType', $dataType)
         if (-not [string]::IsNullOrEmpty($groupId))
         {
             $hashAssignment.Add('groupId', $groupId)
@@ -1321,7 +1324,7 @@ function ConvertFrom-IntuneMobileAppAssignment
         # $hashSettings = @{}
         # foreach ($setting in $assignment.Settings)
         # {
-        #   $hashSettings.Add('odatatype', $setting.odataType)
+        #   $hashSettings.Add('datatype', $setting.dataType)
         #   $hashSettings.Add('uninstallOnDeviceRemoval', $setting.uninstallOnDeviceRemoval)
         # }
         # $hashAssignment.Add('settings', $hashSettings)
