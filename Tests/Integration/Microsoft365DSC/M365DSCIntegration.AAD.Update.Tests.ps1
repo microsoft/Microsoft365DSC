@@ -408,6 +408,14 @@
                     );
                     State                           = "enabled";
                 }
+                AADAuthenticationRequirement 'AADAuthenticationRequirement-98ceffcc-7c54-4227-8844-835af5a023ce'
+                {
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
+                    Id                   = "98ceffcc-7c54-4227-8844-835af5a023ce"
+                    PerUserMfaState      = "disabled"
+                }
                 AADAuthenticationStrengthPolicy 'AADAuthenticationStrengthPolicy-Example'
                 {
                     AllowedCombinations  = @("windowsHelloForBusiness","fido2","deviceBasedPush"); # Updated Property
