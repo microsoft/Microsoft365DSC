@@ -106,6 +106,12 @@
                     TenantId              = $TenantId;
                     CertificateThumbprint = $CertificateThumbprint;
                 }
+                IntuneAppCategory 'IntuneAppCategory-Data Management'
+                {
+                    Id                   = "a1fc9fe2-728d-4867-9a72-a61e18f8c606";
+                    DisplayName          = "Custom Data Management";
+                    Ensure               = "Present";
+                }
                 IntuneAppConfigurationDevicePolicy 'IntuneAppConfigurationDevicePolicy-Example'
                 {
                     Assignments           = @();
@@ -2054,6 +2060,44 @@
                     TenantId              = $TenantId;
                     CertificateThumbprint = $CertificateThumbprint;
                 }
+                IntuneDeviceControlPolicyWindows10 'ConfigureDeviceControlPolicy'
+                {
+                    AllowStorageCard      = "1";
+                    Assignments           = @(
+                        MSFT_DeviceManagementConfigurationPolicyAssignments{
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                            dataType = '#microsoft.graph.groupAssignmentTarget'
+                            groupId = '11111111-1111-1111-1111-111111111111'
+                        }
+                    );
+                    Description           = 'Description'
+                    DisplayName           = "Device Control";
+                    DeviceInstall_IDs_Allow      = "1";
+                    DeviceInstall_IDs_Allow_List = @("1234");
+                    PolicyRule                   = @(
+                        MSFT_MicrosoftGraphIntuneSettingsCatalogPolicyRule{
+                            Name = 'asdf'
+                            Entry = @(
+                                MSFT_MicrosoftGraphIntuneSettingsCatalogPolicyRuleEntry{
+                                    AccessMask = @(
+                                        '1'
+                                        '2'
+                                    )
+                                    Sid = '1234'
+                                    ComputerSid = '1234'
+                                    Type = 'allow'
+                                    Options = '4'
+                                }
+                            )
+                        }
+                    );
+                    Ensure                = "Present";
+                    Id                    = '00000000-0000-0000-0000-000000000000'
+                    RoleScopeTagIds       = @("0");
+                    ApplicationId         = $ApplicationId;
+                    TenantId              = $TenantId;
+                    CertificateThumbprint = $CertificateThumbprint;
+                }
                 IntuneDeviceEnrollmentLimitRestriction 'DeviceEnrollmentLimitRestriction'
                 {
                     DisplayName = 'My DSC Limit'
@@ -2402,6 +2446,34 @@
           </AppConfig>
         </MitigationPolicy>"
                     Ensure                            = 'Present'
+                    ApplicationId         = $ApplicationId;
+                    TenantId              = $TenantId;
+                    CertificateThumbprint = $CertificateThumbprint;
+                }
+                IntuneFirewallPolicyWindows10 'ConfigureIntuneFirewallPolicyWindows10'
+                {
+                    Assignments           = @(
+                        MSFT_DeviceManagementConfigurationPolicyAssignments{
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                            dataType = '#microsoft.graph.groupAssignmentTarget'
+                            groupId = '11111111-1111-1111-1111-111111111111'
+                        }
+                    );
+                    Description           = 'Description'
+                    DisplayName           = "Intune Firewall Policy Windows10";
+                    DisableStatefulFtp    = "false";
+                    DomainProfile_AllowLocalIpsecPolicyMerge      = "false";
+                    DomainProfile_EnableFirewall                  = "true";
+                    DomainProfile_LogFilePath                     = "%systemroot%\system32\LogFiles\Firewall\pfirewall.log";
+                    DomainProfile_LogMaxFileSize                  = 1024;
+                    ObjectAccess_AuditFilteringPlatformPacketDrop = "1";
+                    PrivateProfile_EnableFirewall                 = "true";
+                    PublicProfile_EnableFirewall                  = "true";
+                    Target                                        = "wsl";
+                    AllowHostPolicyMerge                          = "false";
+                    Ensure                = "Present";
+                    Id                    = '00000000-0000-0000-0000-000000000000'
+                    RoleScopeTagIds       = @("0");
                     ApplicationId         = $ApplicationId;
                     TenantId              = $TenantId;
                     CertificateThumbprint = $CertificateThumbprint;

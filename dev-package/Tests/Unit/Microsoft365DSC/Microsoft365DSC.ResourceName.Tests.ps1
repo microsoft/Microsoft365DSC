@@ -66,6 +66,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should create a new instance from the Set method' {
                 ##TODO - Replace the New-Cmdlet by the appropriate one
+                Set-TargetResource @testParams
                 Should -Invoke -CommandName New-Cmdlet -Exactly 1
             }
         }
@@ -93,6 +94,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should remove the instance from the Set method' {
+                Set-TargetResource @testParams
                 ##TODO - Replace the Remove-Cmdlet by the appropriate one
                 Should -Invoke -CommandName Remove-Cmdlet -Exactly 1
             }
