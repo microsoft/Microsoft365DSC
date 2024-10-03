@@ -4,7 +4,6 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        ##TODO - Replace the PrimaryKey
         [Parameter(Mandatory = $true)]
         [System.String]
         $Identity,
@@ -15,7 +14,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $ApplicationID,
+        $AppID,
 
         [Parameter()]
         [System.String]
@@ -84,8 +83,6 @@ function Get-TargetResource
         [System.String]
         $Ensure = 'Present',
 
-        ##TODO - Add the list of Parameters
-
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
@@ -111,8 +108,7 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    ##TODO - Replace the workload by the one associated to your resource
-    New-M365DSCConnection -Workload 'Workload' `
+    New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters | Out-Null
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -133,29 +129,45 @@ function Get-TargetResource
     {
         if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
         {
-            ##TODO - Replace the PrimaryKey in the Filter by the one for the resource
-            $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.PrimaryKey -eq $PrimaryKey}
+            $migrationEndpoint = $Script:exportedInstances | Where-Object -FilterScript {$_.Identity -eq $Identity}
         }
         else
         {
-            ##TODO - Replace the cmdlet by the one to retrieve a specific instance.
-            $instance = Get-cmdlet -PrimaryKey $PrimaryKey -ErrorAction Stop
+            $migrationEndpoint = Get-MigrationEndpoint -Identity $Identity -ErrorAction Stop
         }
-        if ($null -eq $instance)
+        if ($null -eq $migrationEndpoint)
         {
             return $nullResult
         }
 
         $results = @{
-            ##TODO - Add the list of parameters to be returned
-            Ensure                = 'Present'
-            Credential            = $Credential
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            CertificateThumbprint = $CertificateThumbprint
-            ManagedIdentity       = $ManagedIdentity.IsPresent
-            AccessTokens          = $AccessTokens
+            Identity                       = $Identity
+            AcceptUntrustedCertificates    = $migrationEndpoint.AcceptUntrustedCertificates
+            AppID                          = $migrationEndpoint.AppID
+            AppSecretKeyVaultUrl           = $migrationEndpoint.AppSecretKeyVaultUrl
+            Authentication                 = $migrationEndpoint.Authentication
+            EndpointType                   = $migrationEndpoint.EndpointType
+            ExchangeServer                 = $migrationEndpoint.ExchangeServer
+            MailboxPermission              = $migrationEndpoint.MailboxPermission
+            MaxConcurrentIncrementalSyncs  = $migrationEndpoint.MaxConcurrentIncrementalSyncs
+            MaxConcurrentMigrations        = $migrationEndpoint.MaxConcurrentMigrations
+            NspiServer                     = $migrationEndpoint.NspiServer
+            Port                           = $migrationEndpoint.Port
+            RemoteServer                   = $migrationEndpoint.RemoteServer
+            RemoteTenant                   = $migrationEndpoint.RemoteTenant
+            RpcProxyServer                 = $migrationEndpoint.RpcProxyServer
+            Security                       = $migrationEndpoint.Security
+            SourceMailboxLegacyDN          = $migrationEndpoint.SourceMailboxLegacyDN
+            UseAutoDiscover                = $migrationEndpoint.UseAutoDiscover
+            Ensure                         = 'Present'
+            Credential                     = $Credential
+            ApplicationId                  = $ApplicationId
+            TenantId                       = $TenantId
+            CertificateThumbprint          = $CertificateThumbprint
+            ManagedIdentity                = $ManagedIdentity.IsPresent
+            AccessTokens                   = $AccessTokens
         }
+
         return [System.Collections.Hashtable] $results
     }
     catch
@@ -175,12 +187,84 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
-        ##TODO - Replace the PrimaryKey
         [Parameter(Mandatory = $true)]
         [System.String]
-        $PrimaryKey,
+        $Identity,
 
-        ##TODO - Add the list of Parameters
+        [Parameter()]
+        [System.Boolean]
+        $AcceptUntrustedCertificates,
+
+        [Parameter()]
+        [System.String]
+        $AppID,
+
+        [Parameter()]
+        [System.String]
+        $AppSecretKeyVaultUrl,
+
+        [Parameter()]
+        [System.String]
+        $Authentication,
+
+        [Parameter()]
+        [ValidateSet('Exchange Remote', 'Outlook Anywhere', 'Google Workspace', 'IMAP')]
+        [System.String]
+        $EndpointType,
+
+        [Parameter()]
+        [System.String]
+        $ExchangeServer,
+
+        [Parameter()]
+        [System.String]
+        $MailboxPermission,
+
+        [Parameter()]
+        [System.String]
+        $MaxConcurrentIncrementalSyncs,
+
+        [Parameter()]
+        [System.String]
+        $MaxConcurrentMigrations,
+
+        [Parameter()]
+        [System.String]
+        $NspiServer,
+
+        [Parameter()]
+        [System.String]
+        $Port,
+
+        [Parameter()]
+        [System.String]
+        $RemoteServer,
+
+        [Parameter()]
+        [System.String]
+        $RemoteTenant,
+
+        [Parameter()]
+        [System.String]
+        $RpcProxyServer,
+
+        [Parameter()]
+        [ValidateSet('None', 'Tls', 'Ssl')]
+        [System.String]
+        $Security,
+
+        [Parameter()]
+        [System.String]
+        $SourceMailboxLegacyDN,
+
+        [Parameter()]
+        [System.String]
+        $UseAutoDiscover,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -221,25 +305,50 @@ function Set-TargetResource
 
     $currentInstance = Get-TargetResource @PSBoundParameters
 
-    $setParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+    $setParams = [System.Collections.Hashtable]($PSBoundParameters)
+    $setParams = Remove-M365DSCAuthenticationParameter -BoundParameters $setParams
+    $setParams.Remove('RemoteTenant')
+    $setParams.Remove('EndpointType')
+    $setParams.Remove('UseAutoDiscover')
+    $setParams.Add('Confirm', $false)
+
+    $newParams = [System.Collections.Hashtable]($PSBoundParameters)
+    $newParams = Remove-M365DSCAuthenticationParameter -BoundParameters $newParams
+    $newParams.Remove('EndpointType')
+    $newParams.Remove('Identity')
+    $newParams.Add('Name', $Identity)
+    $newParams.Add('Confirm', [Switch]$false)
+
+    if ($EndpointType -eq "IMAP")
+    {
+        # Removing mailbox permission parameter as this is valid only for outlook anywhere migration
+        $setParams.Remove('MailboxPermission')
+        $newParams.Remove('MailboxPermission')
+
+        # adding skip verification switch to skip verifying
+        # that the remote server is reachable when creating a migration endpoint.
+        $setParams.Add('SkipVerification', [Switch]$true)
+        $newParams.Add('SkipVerification', [Switch]$true)
+
+        $newParams.Add('IMAP', [Switch]$true)
+    }
+
+    # add the logic for other endpoint types ('Exchange Remote', 'Outlook Anywhere', 'Google Workspace')
 
     # CREATE
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        ##TODO - Replace by the New cmdlet for the resource
-        New-Cmdlet @SetParameters
+        New-MigrationEndpoint @newParams
     }
     # UPDATE
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        ##TODO - Replace by the Update/Set cmdlet for the resource
-        Set-cmdlet @SetParameters
+        Set-MigrationEndpoint @setParams
     }
     # REMOVE
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        ##TODO - Replace by the Remove cmdlet for the resource
-        Remove-cmdlet @SetParameters
+        Remove-MigrationEndpoint -Identity $Identity
     }
 }
 
@@ -249,12 +358,84 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
-        ##TODO - Replace the PrimaryKey
         [Parameter(Mandatory = $true)]
         [System.String]
-        $PrimaryKey,
+        $Identity,
 
-        ##TODO - Add the list of Parameters
+        [Parameter()]
+        [System.Boolean]
+        $AcceptUntrustedCertificates,
+
+        [Parameter()]
+        [System.String]
+        $AppID,
+
+        [Parameter()]
+        [System.String]
+        $AppSecretKeyVaultUrl,
+
+        [Parameter()]
+        [System.String]
+        $Authentication,
+
+        [Parameter()]
+        [ValidateSet('Exchange Remote', 'Outlook Anywhere', 'Google Workspace', 'IMAP')]
+        [System.String]
+        $EndpointType,
+
+        [Parameter()]
+        [System.String]
+        $ExchangeServer,
+
+        [Parameter()]
+        [System.String]
+        $MailboxPermission,
+
+        [Parameter()]
+        [System.String]
+        $MaxConcurrentIncrementalSyncs,
+
+        [Parameter()]
+        [System.String]
+        $MaxConcurrentMigrations,
+
+        [Parameter()]
+        [System.String]
+        $NspiServer,
+
+        [Parameter()]
+        [System.String]
+        $Port,
+
+        [Parameter()]
+        [System.String]
+        $RemoteServer,
+
+        [Parameter()]
+        [System.String]
+        $RemoteTenant,
+
+        [Parameter()]
+        [System.String]
+        $RpcProxyServer,
+
+        [Parameter()]
+        [ValidateSet('None', 'Tls', 'Ssl')]
+        [System.String]
+        $Security,
+
+        [Parameter()]
+        [System.String]
+        $SourceMailboxLegacyDN,
+
+        [Parameter()]
+        [System.String]
+        $UseAutoDiscover,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -344,8 +525,7 @@ function Export-TargetResource
         $AccessTokens
     )
 
-    ##TODO - Replace workload
-    $ConnectionMode = New-M365DSCConnection -Workload 'Workload' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -363,8 +543,7 @@ function Export-TargetResource
     try
     {
         $Script:ExportMode = $true
-        ##TODO - Replace Get-Cmdlet by the cmdlet to retrieve all instances
-        [array] $Script:exportedInstances = Get-Cmdlet -ErrorAction Stop
+        [array] $Script:exportedInstances = Get-MigrationEndpoint -ErrorAction Stop
 
         $i = 1
         $dscContent = ''
@@ -378,11 +557,10 @@ function Export-TargetResource
         }
         foreach ($config in $Script:exportedInstances)
         {
-            $displayedKey = $config.Id
+            $displayedKey = $config.Identity
             Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -NoNewline
             $params = @{
-                ##TODO - Specify the Primary Key
-                #PrimaryKey            = $config.PrimaryKey
+                Identity              = $config.Identity
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
