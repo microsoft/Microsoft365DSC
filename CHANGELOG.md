@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# Unreleased
+
+* EXOMigrationEndpoint
+  * Initial Release
+
 # 1.24.1002.1
 
 * AADAdministrativeUnit
