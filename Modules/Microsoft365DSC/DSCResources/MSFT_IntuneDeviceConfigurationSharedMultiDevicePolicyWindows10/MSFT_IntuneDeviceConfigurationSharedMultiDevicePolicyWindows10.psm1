@@ -775,7 +775,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+        
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -836,6 +840,7 @@ function Export-TargetResource
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
                 Managedidentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
             }
 
             $Results = Get-TargetResource @Params

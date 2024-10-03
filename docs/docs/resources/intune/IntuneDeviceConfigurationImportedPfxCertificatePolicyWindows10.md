@@ -79,9 +79,17 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -97,7 +105,6 @@ Configuration Example
             );
             CertificateValidityPeriodScale = "years";
             CertificateValidityPeriodValue = 1;
-            Credential                     = $Credscredential;
             DisplayName                    = "PKCS Imported";
             Ensure                         = "Present";
             IntendedPurpose                = "unassigned";
@@ -105,6 +112,9 @@ Configuration Example
             RenewalThresholdPercentage     = 50;
             SubjectAlternativeNameType     = "emailAddress";
             SubjectNameFormat              = "commonName";
+            ApplicationId         = $ApplicationId;
+            TenantId              = $TenantId;
+            CertificateThumbprint = $CertificateThumbprint;
         }
     }
 }
@@ -119,9 +129,17 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -137,7 +155,6 @@ Configuration Example
             );
             CertificateValidityPeriodScale = "years";
             CertificateValidityPeriodValue = 1;
-            Credential                     = $Credscredential;
             DisplayName                    = "PKCS Imported";
             Ensure                         = "Present";
             IntendedPurpose                = "unassigned";
@@ -145,6 +162,9 @@ Configuration Example
             RenewalThresholdPercentage     = 60; # Updated Property
             SubjectAlternativeNameType     = "emailAddress";
             SubjectNameFormat              = "commonName";
+            ApplicationId         = $ApplicationId;
+            TenantId              = $TenantId;
+            CertificateThumbprint = $CertificateThumbprint;
         }
     }
 }
@@ -159,9 +179,17 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -169,9 +197,11 @@ Configuration Example
     {
         IntuneDeviceConfigurationImportedPfxCertificatePolicyWindows10 'Example'
         {
-            Credential                     = $Credscredential;
             DisplayName                    = "PKCS Imported";
             Ensure                         = "Absent";
+            ApplicationId         = $ApplicationId;
+            TenantId              = $TenantId;
+            CertificateThumbprint = $CertificateThumbprint;
         }
     }
 }

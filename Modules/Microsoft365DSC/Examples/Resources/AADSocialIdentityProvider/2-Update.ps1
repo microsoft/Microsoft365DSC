@@ -5,11 +5,18 @@ It is not meant to use as a production baseline.
 
 Configuration Example
 {
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $credsCredential
+    param(
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Import-DscResource -ModuleName Microsoft365DSC
@@ -20,7 +27,9 @@ Configuration Example
         {
             ClientId             = "Google-OAUTH";
             ClientSecret         = "FakeSecret-Updated"; # Updated Property
-            Credential           = $credsCredential;
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
             DisplayName          = "My Google Provider";
             Ensure               = "Present";
             IdentityProviderType = "Google";

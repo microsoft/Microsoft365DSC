@@ -124,7 +124,7 @@ function Get-TargetResource
                     -ErrorAction SilentlyContinue
                 if ($null -ne $getValue)
                 {
-                    $getValue = Get-MgBetaDeviceManagementDeviceShellScript -DeviceShellScriptId $getValue.Id
+                    $getValue = Get-MgBetaDeviceManagementDeviceShellScript -DeviceShellScriptId $getValue.Id -ExpandProperty "assignments"
                 }
             }
         }
@@ -346,6 +346,7 @@ function Set-TargetResource
                 $UpdateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters.$key
             }
         }
+
         #region resource generator code
         $UpdateParameters.Add("@odata.type", "#microsoft.graph.DeviceShellScript")
         Update-MgBetaDeviceManagementDeviceShellScript  `

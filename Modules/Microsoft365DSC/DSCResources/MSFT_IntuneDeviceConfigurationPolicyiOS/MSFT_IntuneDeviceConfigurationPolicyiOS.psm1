@@ -1048,7 +1048,7 @@ function Get-TargetResource
 
         $complexAppsSingleAppModeList = @()
         $currentValueArray = $getValue.AdditionalProperties.appsSingleAppModeList
-        if ($null -ne $currentValueArray -and $currentValueArray.count -gt 0 )
+        if ($null -ne $currentValueArray -and $currentValueArray.count -gt 0)
         {
             foreach($currentValue in $currentValueArray)
             {
@@ -1065,7 +1065,7 @@ function Get-TargetResource
 
         $complexAppsVisibilityList= @()
         $currentValueArray = $getValue.AdditionalProperties.appsVisibilityList
-        if ($null -ne $currentValueArray -and $currentValueArray.count -gt 0 )
+        if ($null -ne $currentValueArray -and $currentValueArray.count -gt 0)
         {
             foreach($currentValue in $currentValueArray)
             {
@@ -1082,7 +1082,7 @@ function Get-TargetResource
 
         $complexCompliantAppsList = @()
         $currentValueArray = $getValue.AdditionalProperties.compliantAppsList
-        if ($null -ne $currentValueArray -and $currentValueArray.count -gt 0 )
+        if ($null -ne $currentValueArray -and $currentValueArray.count -gt 0)
         {
             foreach($currentValue in $currentValueArray)
             {
@@ -1130,7 +1130,7 @@ function Get-TargetResource
 
         $complexNetworkUsageRules = @()
         $currentValueArray = $getValue.AdditionalProperties.networkUsageRules
-        if ($null -ne $currentValueArray -and $currentValueArray.count -gt 0 )
+        if ($null -ne $currentValueArray -and $currentValueArray.count -gt 0)
         {
             foreach($currentValue in $currentValueArray)
             {
@@ -1139,7 +1139,7 @@ function Get-TargetResource
                 $currentValueHash.Add('CellularDataBlockWhenRoaming',$currentValue.cellularDataBlockWhenRoaming)
                 $complexManagedApps = @()
                 $currentValueChildArray = $currentValue.managedApps
-                if ($null -ne $currentValueChildArray -and $currentValueChildArray.count -gt 0 )
+                if ($null -ne $currentValueChildArray -and $currentValueChildArray.count -gt 0)
                 {
                     foreach($currentChildValue in $currentValueChildArray)
                     {
@@ -3330,6 +3330,16 @@ function Export-TargetResource
             if ($Results.MediaContentRatingUnitedStates)
             {
                 $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'MediaContentRatingUnitedStates'
+            }
+
+            if ($Results.NetworkUsageRules)
+            {
+                $isCIMArray = $false
+                if ($Results.NetworkUsageRules.getType().Fullname -like '*[[\]]')
+                {
+                    $isCIMArray = $true
+                }
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'NetworkUsageRules' -IsCIMArray:$isCIMArray
             }
 
             if ($Results.Assignments)

@@ -23,6 +23,10 @@ function Get-TargetResource
         $Visibility,
 
         [Parameter()]
+        [System.Boolean]
+        $IsMemberManagementRestricted,
+
+        [Parameter()]
         [validateset('Assigned', 'Dynamic')]
         [System.String]
         $MembershipType,
@@ -120,7 +124,7 @@ function Get-TargetResource
 
         if ($null -eq $getValue -and -not [string]::IsNullOrEmpty($DisplayName))
         {
-            Write-Verbose -Message "Could not find an Azure AD Administrative Unit with Id {$Id}"
+            Write-Verbose -Message "Could not find an Azure AD Administrative Unit by Id, trying by DisplayName {$DisplayName}"
             if (-Not [string]::IsNullOrEmpty($DisplayName))
             {
                 if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
@@ -143,32 +147,33 @@ function Get-TargetResource
         Write-Verbose -Message "An Azure AD Administrative Unit with Id {$Id} and DisplayName {$DisplayName} was found."
         $results = @{
             #region resource generator code
-            Description           = $getValue.Description
-            DisplayName           = $getValue.DisplayName
-            Visibility            = $getValue.Visibility
-            Id                    = $getValue.Id
-            Ensure                = 'Present'
-            Credential            = $Credential
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            ApplicationSecret     = $ApplicationSecret
-            CertificateThumbprint = $CertificateThumbprint
-            Managedidentity       = $ManagedIdentity.IsPresent
-            AccessTokens          = $AccessTokens
+            Description                  = $getValue.Description
+            DisplayName                  = $getValue.DisplayName
+            Visibility                   = $getValue.Visibility
+            IsMemberManagementRestricted = $getValue.IsMemberManagementRestricted
+            Id                           = $getValue.Id
+            Ensure                       = 'Present'
+            Credential                   = $Credential
+            ApplicationId                = $ApplicationId
+            TenantId                     = $TenantId
+            ApplicationSecret            = $ApplicationSecret
+            CertificateThumbprint        = $CertificateThumbprint
+            Managedidentity              = $ManagedIdentity.IsPresent
+            AccessTokens                 = $AccessTokens
             #endregion
         }
 
-        if (-not [string]::IsNullOrEmpty($getValue.AdditionalProperties.membershipType))
+        if (-not [string]::IsNullOrEmpty($getValue.membershipType))
         {
-            $results.Add('MembershipType', $getValue.AdditionalProperties.membershipType)
+            $results.Add('MembershipType', $getValue.membershipType)
         }
-        if (-not [string]::IsNullOrEmpty($getValue.AdditionalProperties.membershipRule))
+        if (-not [string]::IsNullOrEmpty($getValue.membershipRule))
         {
-            $results.Add('MembershipRule', $getValue.AdditionalProperties.membershipRule)
+            $results.Add('MembershipRule', $getValue.membershipRule)
         }
-        if (-not [string]::IsNullOrEmpty($getValue.AdditionalProperties.membershipRuleProcessingState))
+        if (-not [string]::IsNullOrEmpty($getValue.membershipRuleProcessingState))
         {
-            $results.Add('MembershipRuleProcessingState', $getValue.AdditionalProperties.membershipRuleProcessingState)
+            $results.Add('MembershipRuleProcessingState', $getValue.membershipRuleProcessingState)
         }
 
         Write-Verbose -Message "AU {$DisplayName} MembershipType {$($results.MembershipType)}"
@@ -294,6 +299,10 @@ function Set-TargetResource
         $Visibility,
 
         [Parameter()]
+        [System.Boolean]
+        $IsMemberManagementRestricted,
+
+        [Parameter()]
         [validateset('Assigned', 'Dynamic')]
         [System.String]
         $MembershipType,
@@ -352,7 +361,7 @@ function Set-TargetResource
     try
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters `
+            -InboundParameters $PSBoundParameters
     }
     catch
     {
@@ -547,11 +556,7 @@ function Set-TargetResource
         #region resource generator code
         Write-Verbose -Message "Creating new Administrative Unit with: $(Convert-M365DscHashtableToString -Hashtable $CreateParameters)"
 
-        $jsonParams = ConvertTo-Json $CreateParameters
-
-        # TODO - Replace by cmdlet call which has an issue in 2.11.1
-        $url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + 'beta/administrativeUnits'
-        $policy = Invoke-MgGraphRequest -Method POST -Uri $url -Body $jsonParams
+        $policy = New-MgBetaDirectoryAdministrativeUnit @CreateParameters
 
         if ($MembershipType -ne 'Dynamic')
         {
@@ -599,12 +604,8 @@ function Set-TargetResource
         $UpdateParameters.Remove('ScopedRoleMembers') | Out-Null
 
         #region resource generator code
-        $jsonParams = ConvertTo-Json $UpdateParameters
-        $url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/administrativeUnits/$($currentInstance.Id)"
-        Invoke-MgGraphRequest -Method PATCH -Uri $url -Body $jsonParams
-        <#Update-MgBetaDirectoryAdministrativeUnit @UpdateParameters `
-            -AdministrativeUnitId $currentInstance.Id #>
-
+        Update-MgBetaDirectoryAdministrativeUnit @UpdateParameters `
+            -AdministrativeUnitId $currentInstance.Id
         #endregion
 
         if ($MembershipType -ne 'Dynamic')
@@ -817,6 +818,10 @@ function Test-TargetResource
         [validateset('Public', 'HiddenMembership')]
         [System.String]
         $Visibility,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsMemberManagementRestricted,
 
         [Parameter()]
         [validateset('Assigned', 'Dynamic')]

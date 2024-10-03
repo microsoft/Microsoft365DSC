@@ -384,8 +384,24 @@ function Set-TargetResource
 
     $CurrentPolicy = Get-TargetResource @PSBoundParameters
 
+    if ($PSBoundParameters.ContainsKey('SharePointLocation') -or $PSBoundParameters.ContainsKey('OneDriveLocation'))
+    {
+        if ($PSBoundParameters.ContainsKey('Mode') -eq $false)
+        {
+            Write-Verbose "SharePoint or OneDrive location has been specified. Setting Mode to TestWithoutNotifications."
+            $PSBoundParameters.Add('Mode', 'TestWithoutNotifications')
+        }
+        elseif ($PSBoundParameters.Mode -eq 'Enable')
+        {
+            Write-Verbose "SharePoint or OneDrive location has been specified. Changing Mode to TestWithoutNotifications."
+            $PSBoundParameters.Mode = 'TestWithoutNotifications'
+        }
+    }
+
     if (('Present' -eq $Ensure) -and ('Absent' -eq $CurrentPolicy.Ensure))
     {
+        Write-Verbose "Creating new Auto Sensitivity label policy $Name."
+
         $CreationParams = $PSBoundParameters
 
         #Remove parameters not used in New-LabelPolicy
@@ -411,8 +427,6 @@ function Set-TargetResource
         $CreationParams.Remove('ManagedIdentity') | Out-Null
         $CreationParams.Remove('ApplicationSecret') | Out-Null
         $CreationParams.Remove('AccessTokens') | Out-Null
-
-        Write-Verbose "Creating new Auto Sensitivity label policy $Name."
 
         try
         {

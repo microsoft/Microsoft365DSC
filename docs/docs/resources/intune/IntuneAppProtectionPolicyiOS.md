@@ -43,7 +43,7 @@
 | **PinRequiredInsteadOfBiometricTimeout** | Write | String | Timeout in minutes for an app pin instead of non biometrics passcode . | |
 | **AllowedOutboundClipboardSharingExceptionLength** | Write | UInt32 | Specify the number of characters that may be cut or copied from Org data and accounts to any application. This setting overrides the AllowedOutboundClipboardSharingLevel restriction. Default value of '0' means no exception is allowed. | |
 | **NotificationRestriction** | Write | String | Specify app notification restriction. | `allow`, `blockOrganizationalData`, `block` |
-| **TargetedAppManagementLevels** | Write | String | The intended app management levels for this policy. | `unspecified`, `unmanaged`, `mdm`, `androidEnterprise` |
+| **TargetedAppManagementLevels** | Write | StringArray[] | The intended app management levels for this policy. | `unspecified`, `unmanaged`, `mdm`, `androidEnterprise` |
 | **AppDataEncryptionType** | Write | String | Require app data to be encrypted. | `useDeviceSettings`, `afterDeviceRestart`, `whenDeviceLockedExceptOpenFiles`, `whenDeviceLocked` |
 | **ExemptedAppProtocols** | Write | StringArray[] | Apps in this list will be exempt from the policy and will be able to receive data from managed apps. | |
 | **MinimumWipeSdkVersion** | Write | String | Versions less than the specified version will block the managed app from accessing company data. | |
@@ -106,9 +106,17 @@ This example creates a new App ProtectionPolicy for iOS.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -141,7 +149,9 @@ Configuration Example
             SaveAsBlocked                           = $True
             SimplePinBlocked                        = $False
             Ensure                                  = 'Present'
-            Credential                              = $Credscredential
+            ApplicationId         = $ApplicationId;
+            TenantId              = $TenantId;
+            CertificateThumbprint = $CertificateThumbprint;
         }
     }
 }
@@ -155,9 +165,17 @@ This example creates a new App ProtectionPolicy for iOS.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -190,7 +208,9 @@ Configuration Example
             SaveAsBlocked                           = $True
             SimplePinBlocked                        = $False
             Ensure                                  = 'Present'
-            Credential                              = $Credscredential
+            ApplicationId         = $ApplicationId;
+            TenantId              = $TenantId;
+            CertificateThumbprint = $CertificateThumbprint;
         }
     }
 }
@@ -204,9 +224,17 @@ This example creates a new App ProtectionPolicy for iOS.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -216,7 +244,9 @@ Configuration Example
         {
             DisplayName                             = 'My DSC iOS App Protection Policy'
             Ensure                                  = 'Absent'
-            Credential                              = $Credscredential
+            ApplicationId         = $ApplicationId;
+            TenantId              = $TenantId;
+            CertificateThumbprint = $CertificateThumbprint;
         }
     }
 }

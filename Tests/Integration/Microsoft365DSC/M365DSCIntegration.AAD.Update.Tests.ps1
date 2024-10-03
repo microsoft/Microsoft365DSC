@@ -1,31 +1,62 @@
     param
     (
         [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $Credential
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Configuration Master
     {
         param
         (
-            [Parameter(Mandatory = $true)]
-            [System.Management.Automation.PSCredential]
-            $Credscredential
+            [Parameter()]
+            [System.String]
+            $ApplicationId,
+
+            [Parameter()]
+            [System.String]
+            $TenantId,
+
+            [Parameter()]
+            [System.String]
+            $CertificateThumbprint
         )
 
         Import-DscResource -ModuleName Microsoft365DSC
-        $Domain = $Credscredential.Username.Split('@')[1]
+        $Domain = $TenantId
         Node Localhost
         {
                 AADAdministrativeUnit 'TestUnit'
                 {
                     DisplayName                   = 'Test-Unit'
+                    Description                   = 'Test Description Updated' # Updated Property
+                    Visibility                    = 'Public'
                     MembershipRule                = "(user.country -eq `"US`")" # Updated Property
                     MembershipRuleProcessingState = 'On'
                     MembershipType                = 'Dynamic'
-                    Ensure                        = 'Present'
-                    Credential                    = $Credscredential
+                    IsMemberManagementRestricted  = $False
+                    ScopedRoleMembers             = @(
+                        MSFT_MicrosoftGraphScopedRoleMembership
+                        {
+                            RoleName       = 'User Administrator'
+                            RoleMemberInfo = MSFT_MicrosoftGraphMember
+                            {
+                                Identity = "AdeleV@$TenantId" # Updated Property
+                                Type     = "User"
+                            }
+                        }
+                    )
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 AADApplication 'AADApp1'
                 {
@@ -33,12 +64,12 @@
                     AvailableToOtherTenants   = $true # Updated Property
                     Description               = "Application Description"
                     GroupMembershipClaims     = "None"
-                    Homepage                  = "https://$Domain"
-                    IdentifierUris            = "https://$Domain"
+                    Homepage                  = "https://$TenantId"
+                    IdentifierUris            = "https://$TenantId"
                     KnownClientApplications   = ""
-                    LogoutURL                 = "https://$Domain/logout"
+                    LogoutURL                 = "https://$TenantId/logout"
                     PublicClient              = $false
-                    ReplyURLs                 = "https://$Domain"
+                    ReplyURLs                 = "https://$TenantId"
                     Permissions               = @(
                         MSFT_AADApplicationPermission
                         {
@@ -63,11 +94,15 @@
                         }
                     )
                     Ensure                    = "Present"
-                    Credential                = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 AADAttributeSet 'AADAttributeSetTest'
                 {
-                    Credential           = $credsCredential;
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                     Description          = "Attribute set with 420 attributes";
                     Ensure               = "Present";
                     Id                   = "TestAttributeSet";
@@ -75,12 +110,25 @@
                 }
                 AADAuthenticationContextClassReference 'AADAuthenticationContextClassReference-Test'
                 {
-                    Credential           = $credsCredential;
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                     Description          = "Context test Updated"; # Updated Property
                     DisplayName          = "My Context";
                     Ensure               = "Present";
                     Id                   = "c3";
                     IsAvailable          = $False; # Updated Property
+                }
+                AADAuthenticationFlowPolicy 'AADAuthenticationFlowPolicy'
+                {
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
+                    Description              = "Authentication flows policy allows modification of settings related to authentication flows in AAD tenant, such as self-service sign up configuration.";
+                    DisplayName              = "Authentication flows policy";
+                    Id                       = "authenticationFlowsPolicy";
+                    IsSingleInstance         = "Yes";
+                    SelfServiceSignUpEnabled = $True;
                 }
                 AADAuthenticationMethodPolicy 'AADAuthenticationMethodPolicy-Authentication Methods Policy'
                 {
@@ -102,11 +150,23 @@
                             State = 'default'
                         }
                     };
-                    Credential           = $credsCredential;
+                    ReportSuspiciousActivitySettings = MSFT_MicrosoftGraphreportSuspiciousActivitySettings{
+                        VoiceReportingCode = 0
+                        IncludeTarget = MSFT_AADAuthenticationMethodPolicyIncludeTarget{
+                            Id = 'all_users'
+                            TargetType = 'group'
+                        }
+                        State = 'default'
+                    };
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 AADAuthenticationMethodPolicyAuthenticator 'AADAuthenticationMethodPolicyAuthenticator-MicrosoftAuthenticator'
                 {
-                    Credential            = $Credscredential;
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                     Ensure                = "Present";
                     ExcludeTargets        = @(
                         MSFT_AADAuthenticationMethodPolicyAuthenticatorExcludeTarget{
@@ -154,7 +214,9 @@
                 AADAuthenticationMethodPolicyEmail 'AADAuthenticationMethodPolicyEmail-Email'
                 {
                     AllowExternalIdToUseEmailOtp = "enabled";
-                    Credential                   = $Credscredential;
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                     Ensure                       = "Present";
                     ExcludeTargets               = @(
                         MSFT_AADAuthenticationMethodPolicyEmailExcludeTarget{
@@ -177,7 +239,9 @@
                 }
                 AADAuthenticationMethodPolicyFido2 'AADAuthenticationMethodPolicyFido2-Fido2'
                 {
-                    Credential                       = $Credscredential;
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                     Ensure                           = "Present";
                     ExcludeTargets                   = @(
                         MSFT_AADAuthenticationMethodPolicyFido2ExcludeTarget{
@@ -205,9 +269,36 @@
                     };
                     State                            = "enabled"; # Updated Property
                 }
+                AADAuthenticationMethodPolicyHardware 'AADAuthenticationMethodPolicyHardware-HardwareOath'
+                {
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
+                    Ensure               = "Present";
+                    ExcludeTargets       = @(
+                        MSFT_AADAuthenticationMethodPolicyHardwareExcludeTarget{
+                            Id = 'Executives'
+                            TargetType = 'group'
+                        }
+                        MSFT_AADAuthenticationMethodPolicyHardwareExcludeTarget{
+                            Id = 'Paralegals'
+                            TargetType = 'group'
+                        }
+                    );
+                    Id                   = "HardwareOath";
+                    IncludeTargets       = @(
+                        MSFT_AADAuthenticationMethodPolicyHardwareIncludeTarget{
+                            Id = 'Legal Team'
+                            TargetType = 'group'
+                        }
+                    );
+                    State                = "enabled"; # Updated Property
+                }
                 AADAuthenticationMethodPolicySms 'AADAuthenticationMethodPolicySms-Sms'
                 {
-                    Credential           = $Credscredential;
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                     Ensure               = "Present";
                     ExcludeTargets       = @(
                         MSFT_AADAuthenticationMethodPolicySmsExcludeTarget{
@@ -226,7 +317,9 @@
                 }
                 AADAuthenticationMethodPolicySoftware 'AADAuthenticationMethodPolicySoftware-SoftwareOath'
                 {
-                    Credential           = $Credscredential;
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                     Ensure               = "Present";
                     ExcludeTargets       = @(
                         MSFT_AADAuthenticationMethodPolicySoftwareExcludeTarget{
@@ -249,7 +342,9 @@
                 }
                 AADAuthenticationMethodPolicyTemporary 'AADAuthenticationMethodPolicyTemporary-TemporaryAccessPass'
                 {
-                    Credential               = $Credscredential;
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                     DefaultLength            = 9; # Updated Property
                     DefaultLifetimeInMinutes = 60;
                     Ensure                   = "Present";
@@ -294,7 +389,9 @@
                             X509CertificateField = 'SubjectKeyIdentifier'
                         }
                     );
-                    Credential                      = $Credscredential;
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                     Ensure                          = "Present";
                     ExcludeTargets                  = @(
                         MSFT_AADAuthenticationMethodPolicyX509ExcludeTarget{
@@ -317,7 +414,9 @@
                     Description          = "This is an example";
                     DisplayName          = "Example";
                     Ensure               = "Present";
-                    Credential           = $Credscredential;
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 AADAuthorizationPolicy 'AADAuthPol'
                 {
@@ -335,13 +434,17 @@
                     GuestUserRole                                     = 'Guest'
                     PermissionGrantPolicyIdsAssignedToDefaultUserRole = @()
                     Ensure                                            = 'Present'
-                    Credential                                        = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 AADConditionalAccessPolicy 'ConditionalAccessPolicy'
                 {
                     BuiltInControls                          = @("mfa");
                     ClientAppTypes                           = @("all");
-                    Credential                               = $Credscredential;
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                     DeviceFilterMode                         = "exclude";
                     DeviceFilterRule                         = "device.trustType -eq `"AzureAD`" -or device.trustType -eq `"ServerAD`" -or device.trustType -eq `"Workplace`"";
                     DisplayName                              = "Example CAP";
@@ -359,7 +462,9 @@
                 AADCrossTenantAccessPolicy 'AADCrossTenantAccessPolicy'
                 {
                     AllowedCloudEndpoints = @("microsoftonline.us");
-                    Credential            = $Credscredential;
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                     DisplayName           = "MyXTAPPolicy";
                     Ensure                = "Present";
                     IsSingleInstance      = "Yes";
@@ -446,7 +551,9 @@
                             )
                         }
                     }
-                    Credential               = $Credscredential;
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                     Ensure                   = "Present";
                     InboundTrust             = MSFT_AADCrossTenantAccessPolicyInboundTrust {
                         IsCompliantDeviceAccepted           = $False
@@ -482,14 +589,18 @@
                             )
                         }
                     };
-                    Credential                   = $credsCredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                     Ensure                       = "Present";
                 }
                 AADEntitlementManagementAccessPackage 'myAccessPackage'
                 {
                     AccessPackagesIncompatibleWith = @();
                     CatalogId                      = "General";
-                    Credential                     = $Credscredential;
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                     Description                    = "Integration Tests";
                     DisplayName                    = "Integration Package";
                     Ensure                         = "Present";
@@ -521,7 +632,9 @@
                         IsApprovalRequiredForExtension = $False
                     };
                     Ensure                     = "Present"
-                    Credential                 = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 AADEntitlementManagementAccessPackageCatalog 'myAccessPackageCatalog'
                 {
@@ -532,26 +645,27 @@
                     IsExternallyVisible = $False # Updated Property
                     Managedidentity     = $False
                     Ensure              = 'Present'
-                    Credential          = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 AADEntitlementManagementAccessPackageCatalogResource 'myAccessPackageCatalogResource'
                 {
-                    DisplayName         = 'Human Resources'
-                    CatalogId           = 'My Catalog'
-                    Description         = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/HumanResources"
-                    IsPendingOnboarding = $false # Updated Property
-                    OriginId            = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/HumanResources"
-                    OriginSystem        = 'SharePointOnline'
-                    ResourceType        = 'SharePoint Online Site'
-                    Url                 = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/HumanResources"
-                    Ensure              = 'Present'
-                    Credential          = $Credscredential
+                    ApplicationId         = $ApplicationId;
+                    CatalogId             = "My Catalog";
+                    CertificateThumbprint = $CertificateThumbprint;
+                    DisplayName           = "DSCGroup";
+                    OriginSystem          = "AADGroup";
+                    OriginId              = '849b3661-61a8-44a8-92e7-fcc91d296235'
+                    Ensure                = "Present";
+                    IsPendingOnboarding   = $False;
+                    TenantId              = $TenantId;
                 }
                 AADEntitlementManagementConnectedOrganization 'MyConnectedOrganization'
                 {
                     Description           = "This is the tenant partner - Updated"; # Updated Property
                     DisplayName           = "Test Tenant - DSC";
-                    ExternalSponsors      = @("AdeleV@$Domain");
+                    ExternalSponsors      = @("AdeleV@$TenantId");
                     IdentitySources       = @(
                         MSFT_AADEntitlementManagementConnectedOrganizationIdentitySource{
                             ExternalTenantId = "e7a80bcf-696e-40ca-8775-a7f85fbb3ebc"
@@ -559,39 +673,74 @@
                             odataType = '#microsoft.graph.azureActiveDirectoryTenant'
                         }
                     );
-                    InternalSponsors      = @("AdeleV@$Domain");
+                    InternalSponsors      = @("AdeleV@$TenantId");
                     State                 = "configured";
                     Ensure                = "Present"
-                    Credential            = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
+                }
+                AADEntitlementManagementSettings 'AADEntitlementManagementSettings'
+                {
+                    ApplicationId                            = $ApplicationId;
+                    CertificateThumbprint                    = $CertificateThumbprint;
+                    DaysUntilExternalUserDeletedAfterBlocked = 30;
+                    ExternalUserLifecycleAction              = "blockSignInAndDelete";
+                    IsSingleInstance                         = "Yes";
+                    TenantId                                 = $TenantId;
                 }
                 AADExternalIdentityPolicy 'AADExternalIdentityPolicy'
                 {
                     AllowDeletedIdentitiesDataRemoval = $False;
                     AllowExternalIdentitiesToLeave    = $True;
-                    Credential                        = $credsCredential;
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                     IsSingleInstance                  = "Yes";
+                }
+                AADFeatureRolloutPolicy 'AADFeatureRolloutPolicy-CertificateBasedAuthentication rollout policy'
+                {
+                    ApplicationId           = $ApplicationId
+                    TenantId                = $TenantId
+                    CertificateThumbprint   = $CertificateThumbprint
+                    Description             = "CertificateBasedAuthentication rollout policy";
+                    DisplayName             = "CertificateBasedAuthentication rollout policy";
+                    Ensure                  = "Present";
+                    IsAppliedToOrganization = $False;
+                    IsEnabled               = $False;
                 }
                 AADGroup 'MyGroups'
                 {
-                    DisplayName     = "DSCGroup"
-                    Description     = "Microsoft DSC Group Updated" # Updated Property
-                    SecurityEnabled = $True
-                    MailEnabled     = $True
-                    GroupTypes      = @("Unified")
-                    MailNickname    = "M365DSC"
-                    Visibility      = "Private"
-                    Owners          = @("admin@$Domain", "AdeleV@$Domain")
-                    Ensure          = "Present"
-                    Credential      = $Credscredential
+                    DisplayName      = "DSCGroup"
+                    Description      = "Microsoft DSC Group Updated" # Updated Property
+                    SecurityEnabled  = $True
+                    MailEnabled      = $True
+                    GroupTypes       = @("Unified")
+                    MailNickname     = "M365DSC"
+                    Members          = @("AdeleV@$TenantId")
+                    GroupAsMembers   = @("Group1")
+                    Visibility       = "Private"
+                    Owners           = @("admin@$TenantId", "AdeleV@$TenantId")
+                    AssignedLicenses = @(
+                        MSFT_AADGroupLicense {
+                            SkuId          = 'AAD_PREMIUM_P2'
+                        }
+                    )
+                    Ensure           = "Present"
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 AADGroupLifecyclePolicy 'GroupLifecyclePolicy'
                 {
                     IsSingleInstance            = "Yes"
-                    AlternateNotificationEmails = @("john.smith@contoso.com")
+                    AlternateNotificationEmails = @("john.smith@$TenantId")
                     GroupLifetimeInDays         = 99
                     ManagedGroupTypes           = "Selected"
                     Ensure                      = "Present"
-                    Credential                  = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 AADGroupsNamingPolicy 'GroupsNamingPolicy'
                 {
@@ -599,7 +748,9 @@
                     CustomBlockedWordsList        = @("CEO", "President")
                     PrefixSuffixNamingRequirement = "[Title]Test[Company][GroupName][Office]Redmond"
                     Ensure                        = "Present"
-                    Credential                    = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 AADGroupsSettings 'GeneralGroupsSettings'
                 {
@@ -612,7 +763,9 @@
                     GuestUsageGuidelinesUrl       = "https://contoso.com/guestusage"
                     UsageGuidelinesUrl            = "https://contoso.com/usage"
                     Ensure                        = "Present"
-                    Credential                    = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 AADNamedLocationPolicy 'CompanyNetwork'
                 {
@@ -621,7 +774,9 @@
                     IsTrusted   = $False
                     OdataType   = "#microsoft.graph.ipNamedLocation"
                     Ensure      = "Present"
-                    Credential  = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 AADRoleDefinition 'AADRoleDefinition1'
                 {
@@ -632,16 +787,20 @@
                     RolePermissions               = "microsoft.directory/applicationPolicies/allProperties/read","microsoft.directory/applicationPolicies/allProperties/update","microsoft.directory/applicationPolicies/basic/update"
                     Version                       = "1.0"
                     Ensure                        = "Present"
-                    Credential                    = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 AADRoleEligibilityScheduleRequest 'MyRequest'
                 {
                     Action               = "AdminUpdate";
-                    Credential           = $Credscredential;
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                     DirectoryScopeId     = "/";
                     Ensure               = "Present";
                     IsValidationOnly     = $False;
-                    Principal            = "AdeleV@$Domain";
+                    Principal            = "AdeleV@$TenantId";
                     RoleDefinition       = "Teams Communications Administrator";
                     ScheduleInfo         = MSFT_AADRoleEligibilityScheduleRequestSchedule {
                         startDateTime             = '2023-09-01T02:45:44Z' # Updated Property
@@ -693,12 +852,16 @@
                     ExpireEligibleAssignment                                  = "P365D";
                     PermanentActiveAssignmentisExpirationRequired             = $False;
                     PermanentEligibleAssignmentisExpirationRequired           = $False;
-                    Credential                                                = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                     Ensure                                                    = 'Present'
                 }
                 AADSecurityDefaults 'Defaults'
                 {
-                    Credential           = $Credscredential;
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                     Description          = "Security defaults is a set of basic identity security mechanisms recommended by Microsoft. When enabled, these recommendations will be automatically enforced in your organization. Administrators and users will be better protected from common identity related attacks.";
                     DisplayName          = "Security Defaults";
                     IsEnabled            = $False;
@@ -711,19 +874,23 @@
                     AlternativeNames              = "AlternativeName1","AlternativeName3" # Updated Property
                     AccountEnabled                = $true
                     AppRoleAssignmentRequired     = $false
-                    Homepage                      = "https://$Domain"
-                    LogoutUrl                     = "https://$Domain/logout"
-                    ReplyURLs                     = "https://$Domain"
+                    Homepage                      = "https://$TenantId"
+                    LogoutUrl                     = "https://$TenantId/logout"
+                    ReplyURLs                     = "https://$TenantId"
                     ServicePrincipalType          = "Application"
                     Tags                          = "{WindowsAzureActiveDirectoryIntegratedApp}"
                     Ensure                        = "Present"
-                    Credential                    = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 AADSocialIdentityProvider 'AADSocialIdentityProvider-Google'
                 {
                     ClientId             = "Google-OAUTH";
                     ClientSecret         = "FakeSecret-Updated"; # Updated Property
-                    Credential           = $credsCredential;
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                     DisplayName          = "My Google Provider";
                     Ensure               = "Present";
                     IdentityProviderType = "Google";
@@ -733,7 +900,9 @@
                     IsSingleInstance                     = 'Yes'
                     TechnicalNotificationMails           = "example@contoso.com"
                     MarketingNotificationEmails          = "example@contoso.com"
-                    Credential                           = $credsCredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 AADTokenLifetimePolicy 'SetTokenLifetimePolicy'
                 {
@@ -741,11 +910,13 @@
                     Definition            = @("{`"TokenLifetimePolicy`":{`"Version`":1,`"AccessTokenLifetime`":`"02:00:00`"}}");
                     IsOrganizationDefault = $true # Updated
                     Ensure                = "Present"
-                    Credential            = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 AADUser 'ConfigureJohnSMith'
                 {
-                    UserPrincipalName  = "John.Smith@$Domain"
+                    UserPrincipalName  = "John.Smith@$TenantId"
                     FirstName          = "John"
                     LastName           = "Smith"
                     DisplayName        = "John J. Smith"
@@ -754,7 +925,9 @@
                     Office             = "Ottawa - Queen"
                     UsageLocation      = "US"
                     Ensure             = "Present"
-                    Credential         = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
         }
     }
@@ -771,7 +944,7 @@
     # Compile and deploy configuration
     try
     {
-        Master -ConfigurationData $ConfigurationData -Credscredential $Credential
+        Master -ConfigurationData $ConfigurationData -ApplicationId $ApplicationId -TenantId $TenantId -CertificateThumbprint $CertificateThumbprint
         Start-DscConfiguration Master -Wait -Force -Verbose -ErrorAction Stop
     }
     catch

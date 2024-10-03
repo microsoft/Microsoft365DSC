@@ -6,13 +6,19 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
-
-    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         AADApplication 'AADApp1'
@@ -21,12 +27,12 @@ Configuration Example
             AvailableToOtherTenants   = $false
             Description               = "Application Description"
             GroupMembershipClaims     = "None"
-            Homepage                  = "https://$Domain"
-            IdentifierUris            = "https://$Domain"
+            Homepage                  = "https://$TenantId"
+            IdentifierUris            = "https://$TenantId"
             KnownClientApplications   = ""
-            LogoutURL                 = "https://$Domain/logout"
+            LogoutURL                 = "https://$TenantId/logout"
             PublicClient              = $false
-            ReplyURLs                 = "https://$Domain"
+            ReplyURLs                 = "https://$TenantId"
             Permissions               = @(
                 MSFT_AADApplicationPermission
                 {
@@ -51,7 +57,9 @@ Configuration Example
                 }
             )
             Ensure                    = "Present"
-            Credential                = $Credscredential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
 }

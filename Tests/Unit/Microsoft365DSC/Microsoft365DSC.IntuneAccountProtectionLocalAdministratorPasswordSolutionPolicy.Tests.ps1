@@ -57,13 +57,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return ,@()
             }
 
-            Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicyAssignment -MockWith {
-                return @(@{
-                        dataType     = '#microsoft.graph.exclusionGroupAssignmentTarget'
-                        collectionId = '26d60dd1-fab6-47bf-8656-358194c1a49d'
-                    })
-            }
-
             Mock -CommandName Update-DeviceConfigurationPolicyAssignment -MockWith {
             }
 

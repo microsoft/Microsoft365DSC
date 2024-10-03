@@ -14,17 +14,18 @@ Configuration Example
 
     Import-DscResource -ModuleName Microsoft365DSC
 
-    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         AADRoleEligibilityScheduleRequest "MyRequest"
         {
             Action               = "AdminAssign";
-            Credential           = $Credscredential;
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
             DirectoryScopeId     = "/";
             Ensure               = "Present";
             IsValidationOnly     = $False;
-            Principal            = "AdeleV@$Domain";
+            Principal            = "AdeleV@$TenantId";
             RoleDefinition       = "Teams Communications Administrator";
             ScheduleInfo         = MSFT_AADRoleEligibilityScheduleRequestSchedule {
                 startDateTime             = '2023-09-01T02:40:44Z'

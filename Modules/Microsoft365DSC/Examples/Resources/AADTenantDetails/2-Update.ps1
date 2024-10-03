@@ -5,10 +5,18 @@ It is not meant to use as a production baseline.
 
 Configuration Example {
     param(
-        [System.Management.Automation.PSCredential]
-        $credsCredential
-    )
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
 
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
+    )
     Import-DscResource -ModuleName Microsoft365DSC
 
     Node Localhost
@@ -18,7 +26,9 @@ Configuration Example {
             IsSingleInstance                     = 'Yes'
             TechnicalNotificationMails           = "example@contoso.com"
             MarketingNotificationEmails          = "example@contoso.com"
-            Credential                           = $credsCredential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
 }

@@ -8,18 +8,19 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $Credscredential
+        $Credentials
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
-    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
-        EXOMailTips 'OrgWideMailTips'
+        SCUnifiedAuditLogRetentionPolicy 'Example'
         {
-            IsSingleInstance = 'Yes'
-            Ensure           = "Absent"
-            Credential       = $Credscredential
+            Credential           = $Credentials;
+            Ensure               = "Present";
+            Name                 = "Test Policy";
+            Priority             = 1;
+            RetentionDuration    = "SevenDays";
         }
     }
 }
