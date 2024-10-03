@@ -1287,16 +1287,7 @@ function ConvertFrom-IntuneMobileAppAssignment
             $groupId = $assignment.Target.AdditionalProperties.groupId
         }
 
-        # if ($null -ne $assignment.Target.collectionId) TODOK: remove this if not needed
-        # {
-        #     $collectionId = $assignment.Target.collectionId
-        # }
-        # else
-        # {
-        #     $collectionId = $assignment.Target.AdditionalProperties.collectionId
-        # }
-
-        $hashAssignment.Add('dataType',$dataType)
+        $hashAssignment.Add('odataType', $dataType)
         if (-not [string]::IsNullOrEmpty($groupId))
         {
             $hashAssignment.Add('groupId', $groupId)
@@ -1307,11 +1298,6 @@ function ConvertFrom-IntuneMobileAppAssignment
                 $groupDisplayName = $group.DisplayName
             }
         }
-
-        # if (-not [string]::IsNullOrEmpty($collectionId))
-        # {
-        #     $hashAssignment.Add('collectionId', $collectionId)
-        # }
 
         if ($dataType -eq '#microsoft.graph.allLicensedUsersAssignmentTarget')
         {
@@ -1325,6 +1311,21 @@ function ConvertFrom-IntuneMobileAppAssignment
         {
             $hashAssignment.Add('groupDisplayName', $groupDisplayName)
         }
+
+        $hashAssignment.Add('intent', $assignment.intent.ToString())
+        $hashAssignment.Add('source', $assignment.source.ToString())
+
+        # $concatenatedSettings = $assignment.settings.ToString() -join ','
+        # $hashAssignment.Add('settings', $concatenatedSettings)
+
+        # $hashSettings = @{}
+        # foreach ($setting in $assignment.Settings)
+        # {
+        #   $hashSettings.Add('odatatype', $setting.odataType)
+        #   $hashSettings.Add('uninstallOnDeviceRemoval', $setting.uninstallOnDeviceRemoval)
+        # }
+        # $hashAssignment.Add('settings', $hashSettings)
+
         if ($IncludeDeviceFilter)
         {
             if ($null -ne $assignment.Target.DeviceAndAppManagementAssignmentFilterType)
@@ -1343,7 +1344,7 @@ function ConvertFrom-IntuneMobileAppAssignment
     return ,$assignmentResult
 }
 
-function ConvertTo-IntunePolicyAssignment
+function ConvertTo-IntuneMobileAppAssignment
 {
     [CmdletBinding()]
     [OutputType([Hashtable[]])]
@@ -1373,11 +1374,12 @@ function ConvertTo-IntunePolicyAssignment
                 $target.Add('deviceAndAppManagementAssignmentFilterId', $assignment.DeviceAndAppManagementAssignmentFilterId)
             }
         }
-        if ($assignment.dataType -like '*CollectionAssignmentTarget')
-        {
-            $target.add('collectionId', $assignment.collectionId)
-        }
-        elseif ($assignment.dataType -like '*GroupAssignmentTarget')
+
+        $assignmentResult += $assignment.intent;
+        $assignmentResult += $assignment.source;
+        $assignmentResult += $assignment.settings;
+
+        if ($assignment.dataType -like '*GroupAssignmentTarget')
         {
             $group = Get-MgGroup -GroupId ($assignment.groupId) -ErrorAction SilentlyContinue
             if ($null -eq $group)

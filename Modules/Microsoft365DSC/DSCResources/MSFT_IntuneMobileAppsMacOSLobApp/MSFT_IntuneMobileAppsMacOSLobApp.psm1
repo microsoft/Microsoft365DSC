@@ -159,9 +159,8 @@ function Get-TargetResource
             Owner                 = $instance.Owner
             PrivacyInformationUrl = $instance.PrivacyInformationUrl
             Publisher             = $instance.Publisher
-            PublishingState       = $instance.PublishingState
+            PublishingState       = $instance.PublishingState.ToString()
             RoleScopeTagIds       = $instance.RoleScopeTagIds
-            Categories            = $instance.Categories
 
             Ensure                = 'Present'
             Credential            = $Credential
@@ -173,6 +172,14 @@ function Get-TargetResource
             AccessTokens          = $AccessTokens
         }
 
+        if($null -ne $instance.Categories)
+        {
+            $results.Add('Categories', $instance.Categories)
+        }
+        else {
+            $results.Add('Categories', "")
+        }
+
         $resultAssignments = @()
         $appAssignments = Get-MgBetaDeviceAppManagementMobileAppAssignment -MobileAppId $instance.Id
         if ($null -ne $appAssignments -and $appAssignments.count -gt 0)
@@ -182,9 +189,6 @@ function Get-TargetResource
                                 -Assignments ($appAssignments)
 
             $results.Add('Assignments', $resultAssignments)
-        }
-        else {
-            $results.Add('Assignments', $null)
         }
 
         return [System.Collections.Hashtable] $results
@@ -579,7 +583,7 @@ function Export-TargetResource
                 Owner                 = $config.Owner
                 PrivacyInformationUrl = $config.PrivacyInformationUrl
                 Publisher             = $config.Publisher
-                PublishingState       = $config.PublishingState
+                PublishingState       = $config.PublishingState.ToString()
                 RoleScopeTagIds       = $config.RoleScopeTagIds
                 # LargeIcon             = $config.LargeIcon
                 # ChildApps             = $config.ChildApps
@@ -596,17 +600,35 @@ function Export-TargetResource
 
             $Results = Get-TargetResource @params
 
-            #region complex types
-
             if (-not (Test-M365DSCAuthenticationParameter -BoundParameters $Results))
             {
                 Write-Verbose "An error occured in Get-TargetResource, the app {$($params.displayName)} will not be processed."
                 throw "An error occured in Get-TargetResource, the app {$($params.displayName)} will not be processed. Refer to the event viewer logs for more information."
             }
 
-            if ($Results.Categories.Count -gt 0)
+            #region complex types
+
+            if($null -eq $Results.Categories -or $Results.Categories.Count -eq 0)
+            {
+                $Results.Categories = $null
+            }
+            else
             {
                 $Results.Categories = Get-M365DSCIntuneAppCategoriesAsString -Categories $Results.Categories
+            }
+
+            if ($Results.Assignments)
+            {
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject ([Array]$Results.Assignments) -CIMInstanceName DeviceManagementMobileAppAssignment
+
+                if ($complexTypeStringResult)
+                {
+                    $Results.Assignments = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('Assignments') | Out-Null
+                }
             }
 
             #endregion complex types
@@ -677,8 +699,8 @@ function ConvertTo-M365DSCIntuneAppAssignmentSettings
     foreach ($setting in $Settings)
     {
         $currentSetting = @{
-            name  = $setting.name
-            value = $setting.value
+            name  = $setting.odataType
+            value = $setting.uninstallOnDeviceRemoval
         }
         $result += $currentSetting
     }
@@ -710,8 +732,8 @@ function Get-M365DSCIntuneAppAssignmentSettingsAsString
         }
 
         $StringContent += "MSFT_DeviceManagementMobileAppAssignmentSettings { `r`n"
-        $StringContent += "$($space)$($indent)name  = '" + $setting.name + "'`r`n"
-        $StringContent += "$($space)$($indent)value = '" + $setting.value + "'`r`n"
+        $StringContent += "$($space)$($indent)odataType  = '" + $setting.odataType + "'`r`n"
+        $StringContent += "$($space)$($indent)uninstallOnDeviceRemoval = '" + $setting.uninstallOnDeviceRemoval + "'`r`n"
         $StringContent += "$space}"
 
         $i++
@@ -769,7 +791,7 @@ function Get-M365DSCIntuneAppCategoriesAsString
 
         $StringContent += "MSFT_DeviceManagementMobileAppCategory { `r`n"
         $StringContent += "$($space)$($indent)id  = '" + $category.id + "'`r`n"
-        $StringContent += "$($space)$($indent)displyName = '" + $category.displayName + "'`r`n"
+        $StringContent += "$($space)$($indent)displayName = '" + $category.displayName + "'`r`n"
         $StringContent += "$space}"
 
         $i++

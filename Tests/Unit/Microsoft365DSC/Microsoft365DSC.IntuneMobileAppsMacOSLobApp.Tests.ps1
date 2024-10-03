@@ -66,7 +66,27 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Publisher             = "Contoso"
                     PublishingState       = "published"
                     RoleScopeTagIds       = @()
-                    Category              = "Productivity"
+                    Categories           = @(
+                        MSFT_DeviceManagementMobileAppCategory {
+                            id  = '1bff2652-03ec-4a48-941c-152e93736515'
+                            displayName = 'Kajal 3'
+                        })
+                    Assignments          = @(
+                        MSFT_DeviceManagementMobileAppAssignment{
+                            groupId = '57b5e81c-85bb-4644-a4fd-33b03e451c89'
+                            source = direct
+                            intent = required
+                            odataType = '#microsoft.graph.groupAssignmentTarget'
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                        }
+                        MSFT_DeviceManagementMobileAppAssignment{
+                            groupDisplayName = 'All devices'
+                            source = direct
+                            intent = required
+                            odataType = '#microsoft.graph.allDevicesAssignmentTarget'
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                        })
+
                     Ensure                = 'Present'
                     Credential            = $Credential
                 }
@@ -103,7 +123,26 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Publisher             = "Contoso"
                     PublishingState       = "published"
                     RoleScopeTagIds       = @()
-                    Category              = "Productivity"
+                    Categories           = @(
+                        MSFT_DeviceManagementMobileAppCategory {
+                            id  = '1bff2652-03ec-4a48-941c-152e93736515'
+                            displayName = 'Kajal 3'
+                        })
+                    Assignments          = @(
+                        MSFT_DeviceManagementMobileAppAssignment{
+                            groupId = '57b5e81c-85bb-4644-a4fd-33b03e451c89'
+                            source = direct
+                            intent = required
+                            odataType = '#microsoft.graph.groupAssignmentTarget'
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                        }
+                        MSFT_DeviceManagementMobileAppAssignment{
+                            groupDisplayName = 'All devices'
+                            source = direct
+                            intent = required
+                            odataType = '#microsoft.graph.allDevicesAssignmentTarget'
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                        })
                     Ensure                = 'Absent'
                     Credential            = $Credential
                 }
@@ -122,7 +161,26 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Publisher             = "Contoso"
                         PublishingState       = "published"
                         RoleScopeTagIds       = @()
-                        Category              = "Productivity"
+                        Categories           = @(
+                            MSFT_DeviceManagementMobileAppCategory {
+                                id  = '1bff2652-03ec-4a48-941c-152e93736515'
+                                displayName = 'Kajal 3'
+                            })
+                        Assignments          = @(
+                            MSFT_DeviceManagementMobileAppAssignment{
+                                groupId = '57b5e81c-85bb-4644-a4fd-33b03e451c89'
+                                source = direct
+                                intent = required
+                                odataType = '#microsoft.graph.groupAssignmentTarget'
+                                deviceAndAppManagementAssignmentFilterType = 'none'
+                            }
+                            MSFT_DeviceManagementMobileAppAssignment{
+                                groupDisplayName = 'All devices'
+                                source = direct
+                                intent = required
+                                odataType = '#microsoft.graph.allDevicesAssignmentTarget'
+                                deviceAndAppManagementAssignmentFilterType = 'none'
+                            })
                     }
                 }
             }
@@ -154,7 +212,27 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Publisher             = "Contoso"
                     PublishingState       = "published"
                     RoleScopeTagIds       = @()
-                    Category              = "Productivity"
+                    Categories           = @(
+                        MSFT_DeviceManagementMobileAppCategory {
+                            id  = '1bff2652-03ec-4a48-941c-152e93736515'
+                            displayName = 'Kajal 3'
+                        })
+                    Assignments          = @(
+                        MSFT_DeviceManagementMobileAppAssignment{
+                            groupId = '57b5e81c-85bb-4644-a4fd-33b03e451c89'
+                            source = direct
+                            intent = required
+                            odataType = '#microsoft.graph.groupAssignmentTarget'
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                        }
+                        MSFT_DeviceManagementMobileAppAssignment{
+                            groupDisplayName = 'All devices'
+                            source = direct
+                            intent = required
+                            odataType = '#microsoft.graph.allDevicesAssignmentTarget'
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                        })
+
                     Ensure                = 'Present'
                     Credential            = $Credential;
                 }
@@ -173,7 +251,26 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Publisher             = "Contoso"
                         PublishingState       = "published"
                         RoleScopeTagIds       = @()
-                        Category              = "Productivity"
+                        Categories           = @(
+                            MSFT_DeviceManagementMobileAppCategory {
+                                id  = '1bff2652-03ec-4a48-941c-152e93736515'
+                                displayName = 'Kajal 3'
+                            })
+                        Assignments          = @(
+                            MSFT_DeviceManagementMobileAppAssignment{
+                                groupId = '57b5e81c-85bb-4644-a4fd-33b03e451c89'
+                                source = direct
+                                intent = required
+                                odataType = '#microsoft.graph.groupAssignmentTarget'
+                                deviceAndAppManagementAssignmentFilterType = 'none'
+                            }
+                            MSFT_DeviceManagementMobileAppAssignment{
+                                groupDisplayName = 'All devices'
+                                source = direct
+                                intent = required
+                                odataType = '#microsoft.graph.allDevicesAssignmentTarget'
+                                deviceAndAppManagementAssignmentFilterType = 'none'
+                            })
                     }
                 }
             }
@@ -198,7 +295,26 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Publisher             = "Contoso"
                     PublishingState       = "published"
                     RoleScopeTagIds       = @()
-                    Category              = "Productivity"
+                    Categories           = @(
+                        MSFT_DeviceManagementMobileAppCategory {
+                            id  = '1bff2652-03ec-4a48-941c-152e93736515'
+                            displayName = 'Kajal 3'
+                        })
+                    Assignments          = @(
+                        MSFT_DeviceManagementMobileAppAssignment{
+                            groupId = '57b5e81c-85bb-4644-a4fd-33b03e451c89'
+                            source = direct
+                            intent = required
+                            odataType = '#microsoft.graph.groupAssignmentTarget'
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                        }
+                        MSFT_DeviceManagementMobileAppAssignment{
+                            groupDisplayName = 'All devices'
+                            source = direct
+                            intent = required
+                            odataType = '#microsoft.graph.allDevicesAssignmentTarget'
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                        })
                     Ensure                = 'Present'
                     Credential            = $Credential;
                 }
@@ -217,10 +333,26 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Publisher             = "Contoso"
                         PublishingState       = "published"
                         RoleScopeTagIds       = @()
-                        Categories           = @(MSFT_DeviceManagementMobileAppCategory {
-                            id  = '1bff2652-03ec-4a48-941c-152e93736515'
-                            displyName = 'Kajal 3'
-                        });
+                        Categories           = @(
+                            MSFT_DeviceManagementMobileAppCategory {
+                                id  = '1bff2652-03ec-4a48-941c-152e93736515'
+                                displayName = 'Kajal 3'
+                            })
+                        Assignments          = @(
+                            MSFT_DeviceManagementMobileAppAssignment{
+                                groupId = '57b5e81c-85bb-4644-a4fd-33b03e451c89'
+                                source = direct
+                                intent = required
+                                odataType = '#microsoft.graph.groupAssignmentTarget'
+                                deviceAndAppManagementAssignmentFilterType = 'none'
+                            }
+                            MSFT_DeviceManagementMobileAppAssignment{
+                                groupDisplayName = 'All devices'
+                                source = direct
+                                intent = required
+                                odataType = '#microsoft.graph.allDevicesAssignmentTarget'
+                                deviceAndAppManagementAssignmentFilterType = 'none'
+                            })
                     }
                 }
             }
@@ -259,7 +391,26 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Publisher             = "Contoso"
                         PublishingState       = "published"
                         RoleScopeTagIds       = @()
-                        Category              = "Productivity"
+                        Categories           = @(
+                            MSFT_DeviceManagementMobileAppCategory {
+                                id  = '1bff2652-03ec-4a48-941c-152e93736515'
+                                displayName = 'Kajal 3'
+                            })
+                        Assignments          = @(
+                            MSFT_DeviceManagementMobileAppAssignment{
+                                groupId = '57b5e81c-85bb-4644-a4fd-33b03e451c89'
+                                source = direct
+                                intent = required
+                                odataType = '#microsoft.graph.groupAssignmentTarget'
+                                deviceAndAppManagementAssignmentFilterType = 'none'
+                            }
+                            MSFT_DeviceManagementMobileAppAssignment{
+                                groupDisplayName = 'All devices'
+                                source = direct
+                                intent = required
+                                odataType = '#microsoft.graph.allDevicesAssignmentTarget'
+                                deviceAndAppManagementAssignmentFilterType = 'none'
+                            })
                     }
                 }
             }
