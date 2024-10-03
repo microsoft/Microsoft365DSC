@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* AADEntitlementManagementSettings
+  * Added support for ApplicationSecret
 * IntuneAppAndBrowserIsolationPolicyWindows10
   * Initial release.
     FIXES [#3028](https://github.com/microsoft/Microsoft365DSC/issues/3028)
