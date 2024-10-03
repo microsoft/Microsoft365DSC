@@ -8,12 +8,32 @@
     "permissions": {
         "graph": {
             "delegated": {
-                "read": [],
-                "update": []
+                "read":
+                [
+                    {
+                        "name": "UserAuthenticationMethod.Read.All"
+                    }
+                ],
+                "update":
+                [
+                    {
+                        "name": "UserAuthenticationMethod.ReadWrite.All"
+                    }
+                ]
             },
             "application": {
-                "read": [],
-                "update": []
+                "read":
+                [
+                    {
+                        "name": "UserAuthenticationMethod.Read.All"
+                    }
+                ],
+                "update":
+                [
+                    {
+                        "name": "UserAuthenticationMethod.ReadWrite.All"
+                    }
+                ]
             }
         }
     }
