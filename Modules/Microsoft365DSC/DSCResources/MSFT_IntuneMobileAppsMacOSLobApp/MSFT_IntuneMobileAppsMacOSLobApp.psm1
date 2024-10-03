@@ -59,6 +59,10 @@ function Get-TargetResource
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Categories,
 
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Assignments,
+
         #endregion
 
         [Parameter()]
@@ -169,16 +173,19 @@ function Get-TargetResource
             AccessTokens          = $AccessTokens
         }
 
-        #TODOK
-        # $resultAssignments = @()
-        # $appAssignments = Get-MgBetaDeviceAppManagementMobileAppAssignment -MobileAppId $configPolicy.Id
-        # if ($appAssignments.count -gt 0)
-        # {
-        #     $resultAssignments += ConvertFrom-IntuneMobileAppAssignment `
-        #                         -IncludeDeviceFilter:$true `
-        #                         -Assignments ($appAssignments)
-        # }
-        # $returnHashtable.Add('Assignments', $resultAssignments)
+        $resultAssignments = @()
+        $appAssignments = Get-MgBetaDeviceAppManagementMobileAppAssignment -MobileAppId $instance.Id
+        if ($null -ne $appAssignments -and $appAssignments.count -gt 0)
+        {
+            $resultAssignments += ConvertFrom-IntuneMobileAppAssignment `
+                                -IncludeDeviceFilter:$true `
+                                -Assignments ($appAssignments)
+
+            $results.Add('Assignments', $resultAssignments)
+        }
+        else {
+            $results.Add('Assignments', $null)
+        }
 
         return [System.Collections.Hashtable] $results
     }
@@ -255,6 +262,11 @@ function Set-TargetResource
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Categories,
 
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Assignments,
+
+
         #endregion
 
         [Parameter()]
@@ -318,19 +330,15 @@ function Set-TargetResource
             $setParameters.Add('Categories', $categoriesValue)
         }
 
-        #$app = New-MgBetaDeviceAppManagementMobileApp @SetParameters
+        $app = New-MgBetaDeviceAppManagementMobileApp @SetParameters
+        $assignmentsHash = ConvertTo-IntuneMobileAppAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
 
-        New-MgBetaDeviceAppManagementMobileApp @SetParameters
-
-        #TODOK
-        # $assignmentsHash = ConvertTo-IntuneMobileAppAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
-        # if ($app.id)
-        # {
-        #     Update-MgBetaDeviceAppManagementMobileAppAssignment -MobileAppId $app.id `
-        #         -Targets $assignmentsHash `
-        #         -Repository 'deviceAppManagement/mobileAppAssignments'
-        # }
-
+        if ($app.id)
+        {
+            Update-MgBetaDeviceAppManagementMobileAppAssignment -MobileAppId $app.id `
+                -Targets $assignmentsHash `
+                -Repository 'deviceAppManagement/mobileAppAssignments'
+        }
     }
     # UPDATE
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
@@ -343,14 +351,13 @@ function Set-TargetResource
 
         Update-MgBetaDeviceAppManagementMobileApp -MobileAppId $currentInstance.Id @SetParameters
 
-        #TODOK
-        # $assignmentsHash = ConvertTo-IntuneMobileAppAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
-        # if ($app.id)
-        # {
-        #     Update-MgBetaDeviceAppManagementMobileAppAssignment -MobileAppId $app.id `
-        #         -Targets $assignmentsHash `
-        #         -Repository 'deviceAppManagement/mobileAppAssignments'
-        # }
+        $assignmentsHash = ConvertTo-IntuneMobileAppAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
+        if ($app.id)
+        {
+            Update-MgBetaDeviceAppManagementMobileAppAssignment -MobileAppId $app.id `
+                -Targets $assignmentsHash `
+                -Repository 'deviceAppManagement/mobileAppAssignments'
+        }
     }
     # REMOVE
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
@@ -419,6 +426,11 @@ function Test-TargetResource
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Categories,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Assignments,
+
 
         #endregion
 
@@ -569,7 +581,6 @@ function Export-TargetResource
                 Publisher             = $config.Publisher
                 PublishingState       = $config.PublishingState
                 RoleScopeTagIds       = $config.RoleScopeTagIds
-                Categories            = $config.Categories
                 # LargeIcon             = $config.LargeIcon
                 # ChildApps             = $config.ChildApps
 
@@ -583,11 +594,9 @@ function Export-TargetResource
                 AccessTokens          = $AccessTokens
             }
 
-            $Params.remove('Md5HashChunkSize') | Out-Null
-            $Results = Get-TargetResource @Params
+            $Results = Get-TargetResource @params
 
             #region complex types
-
 
             if (-not (Test-M365DSCAuthenticationParameter -BoundParameters $Results))
             {
@@ -616,6 +625,16 @@ function Export-TargetResource
             if ($null -ne $Results.Categories)
             {
                 $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Categories'
+            }
+
+            if ($Results.Assignments)
+            {
+                $isCIMArray = $false
+                if ($Results.Assignments.getType().Fullname -like '*[[\]]')
+                {
+                    $isCIMArray = $true
+                }
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Assignments' -IsCIMArray:$isCIMArray
             }
 
             #endregion complex types
