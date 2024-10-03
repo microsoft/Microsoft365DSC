@@ -85,6 +85,8 @@
   * Add support for more complex Intune Settings Catalog properties
   * Update handling of `Update-IntuneDeviceConfigurationPolicy` to throw on error
     FIXES [#5055](https://github.com/microsoft/Microsoft365DSC/issues/5055)
+  * Fixes an issue for the handling of skipped one-property elements in the
+    Settings Catalog. FIXES [#5086](https://github.com/microsoft/Microsoft365DSC/issues/5086)
 * M365DSCResourceGenerator
   * Update Intune resource generation for the Settings Catalog.
 * O365ExternalConnection
