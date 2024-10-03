@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* ADOPermissionGroupSettings
+  * Initial release.
+
 # 1.24.1002.1
 
 * AADAdministrativeUnit
