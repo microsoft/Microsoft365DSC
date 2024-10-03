@@ -390,8 +390,14 @@ function Export-TargetResource
 
     try
     {
-        Write-Host "`r`n" -NoNewline
-        Write-Host "    |---Getting only the mailbox folders for the current admin" -NoNewline
+        # Ensure the cmdlet is available
+        $cmdletInfo = Get-Command Get-MailboxFolder -ErrorAction SilentlyContinue
+
+        if ($null -eq $cmdletInfo)
+        {
+            Write-Host "    `r`n$($Global:M365DSCEmojiYellowCircle) The Get-MailboxFolder cmdlet is not avalaible. Service Principals do not have mailboxes."
+            return ''
+        }
 
         [Array]$mailboxFolders = Get-MailboxFolder -Recurse
 
