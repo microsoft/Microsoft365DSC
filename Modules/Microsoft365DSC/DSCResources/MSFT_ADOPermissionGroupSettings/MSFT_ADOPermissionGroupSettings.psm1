@@ -195,22 +195,58 @@ function Set-TargetResource
     $info = Invoke-M365DSCAzureDevOPSWebRequest -Uri $uri
     $descriptor = $info.value.descriptor
 
-    $body = @{
-        value = @()
+    # Get all Namespaces from the Allow and Deny
+    $namespacesToUpdate = @()
+    foreach ($namespace in $AllowPermissions)
+    {
+        if ($namespacesToUpdate.Length -eq 0 -or -not $namespacesToUpdate.NameSpaceId.Contains($namespace.namespaceId))
+        {
+            $namespacesToUpdate += $namespace
+        }
+    }
+    foreach ($namespace in $DenyPermissions)
+    {
+        if ($namespacesToUpdate.Length -eq 0 -or -not $namespacesToUpdate.NameSpaceId.Contains($namespace.namespaceId))
+        {
+            $namespacesToUpdate += $namespace
+        }
     }
 
-    foreach ($permission in $AllowPermissions)
+    foreach ($namespace in $namespacesToUpdate)
     {
-        <#$content = @{
-        inheritPermissions = $false
-        "token": "token1",
-        "acesDictionary": {
-            "Microsoft.TeamFoundation.Identity;S-1-9-1551374245-1204400969-2402986413-2179408616-0-0-0-0-1": {
-            "descriptor": "Microsoft.TeamFoundation.Identity;S-1-9-1551374245-1204400969-2402986413-2179408616-0-0-0-0-1",
-            "allow": 31,
-            "deny": 0
-            }
-        }#>
+        $allowPermissionValue = 0
+        $denyPermissionValue = 0
+        $allowPermissionsEntries = $AllowPermissions | Where-Object -FilterScript {$_.NamespaceId -eq $namespace.namespaceId}
+        foreach ($entry in $allowPermissionsEntries)
+        {
+            $allowPermissionValue += [Uint32]::Parse($entry.Bit)
+        }
+
+        $denyPermissionsEntries = $DenyPermissions | Where-Object -FilterScript {$_.NamespaceId -eq $namespace.namespaceId}
+        foreach ($entry in $denyPermissionsEntries)
+        {
+            $denyPermissionValue += [Uint32]::Parse($entry.Bit)
+        }
+
+        $updateParams = @{
+            merge = $false
+            token = $namespace.token
+            accessControlEntries = @(
+                @{
+                    descriptor   = $descriptor
+                    allow        = $allowPermissionValue
+                    deny         = $denyPermissionValue
+                    extendedInfo = @{}
+                }
+            )
+        }
+        $uri = "https://dev.azure.com/$($OrganizationName)/_apis/accesscontrolentries/$($namespace.namespaceId)?api-version=7.1"
+        $body = ConvertTo-Json $updateParams -Depth 10 -Compress
+        Write-Verbose -Message "Updating with payload:`r`n$body"
+        Invoke-M365DSCAzureDevOPSWebRequest -Method POST `
+                                            -Uri $uri `
+                                            -Body $body `
+                                            -ContentType 'application/json'
     }
 }
 
