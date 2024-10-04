@@ -4,9 +4,13 @@
 
 * AADEntitlementManagementSettings
   * Added support for ApplicationSecret
+* IntuneEndpointDetectionAndResponsePolicyWindows10
+  * Migrate to new Settings Catalog cmdlets.
 * M365DSCDRGUtil
   * Fixes an issue for the handling of skipped one-property elements in the
     Settings Catalog. FIXES [#5086](https://github.com/microsoft/Microsoft365DSC/issues/5086)
+  * Add Set support for secret Settings Catalog values
+  * Removed unused functions
 
 # 1.24.1002.1
 
