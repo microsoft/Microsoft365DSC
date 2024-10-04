@@ -459,6 +459,16 @@
                     SignInFrequencyValue                     = 2; # Updated Porperty
                     State                                    = "disabled";
                 }
+                AADConnectorGroupApplicationProxy 'AADConnectorGroupApplicationProxy-testgroup'
+                {
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
+                    Ensure                = "Present";
+                    Id                    = "4984dcf7-d9e9-4663-90b4-5db09f92a669";
+                    Name                  = "testgroup-new";
+                    Region                = "nam";
+                }
                 AADCrossTenantAccessPolicy 'AADCrossTenantAccessPolicy'
                 {
                     AllowedCloudEndpoints = @("microsoftonline.us");
