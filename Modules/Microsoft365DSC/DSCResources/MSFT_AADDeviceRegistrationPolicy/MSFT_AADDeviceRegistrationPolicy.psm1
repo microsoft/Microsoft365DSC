@@ -10,6 +10,10 @@ function Get-TargetResource
         $IsSingleInstance,
 
         [Parameter()]
+        [Boolean]
+        $AzureADJoinIsAdminConfigurable,
+
+        [Parameter()]
         [ValidateSet('All', 'Selected', 'None')]
         [System.String]
         $AzureADAllowedToJoin,
@@ -203,6 +207,10 @@ function Set-TargetResource
         $IsSingleInstance,
 
         [Parameter()]
+        [Boolean]
+        $AzureADJoinIsAdminConfigurable,
+
+        [Parameter()]
         [ValidateSet('All', 'Selected', 'None')]
         [System.String]
         $AzureADAllowedToJoin,
@@ -343,8 +351,9 @@ function Set-TargetResource
         userDeviceQuota = $UserDeviceQuota
         multiFactorAuthConfiguration = $MultiFactorAuthConfigurationValue
         azureADJoin = @{
+            isAdminConfigurable =$AzureADJoinIsAdminConfigurable
             allowedToJoin = @{
-                '@odata.type' = $AzureADAllowedToJoin
+                '@odata.type' = $azureADRegistrationAllowedToRegister
                 users = $AzureADAllowedToJoinUsers
                 groups = $AzureADAllowedToJoinGroups
             }
@@ -357,11 +366,18 @@ function Set-TargetResource
                 }
             }
         }
-        localAdminPasswordSettings = @{
+        localAdminPassword = @{
             isEnabled = $LocalAdminPasswordIsEnabled
+        }
+        azureADRegistration = @{
+            isAdminConfigurable = $false
+            allowedToRegister = @{
+                '@odata.type' = "#microsoft.graph.allDeviceRegistrationMembership"
+            }
         }
     }
     $uri = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + 'beta/policies/deviceRegistrationPolicy'
+    Write-Verbose -Message "Updating Device Registration Policy with payload:`r`n$(ConvertTo-Json $updateParameters -Depth 10)"
     Invoke-MgGraphRequest -Method PUT -Uri $uri -Body $updateParameters
 }
 
@@ -375,6 +391,10 @@ function Test-TargetResource
         [ValidateSet('Yes')]
         [System.String]
         $IsSingleInstance,
+
+        [Parameter()]
+        [Boolean]
+        $AzureADJoinIsAdminConfigurable,
 
         [Parameter()]
         [ValidateSet('All', 'Selected', 'None')]

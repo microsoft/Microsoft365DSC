@@ -2,6 +2,7 @@
 class MSFT_AADDeviceRegistrationPolicy : OMI_BaseResource
 {
     [Key, Description("Only valid value is 'Yes'."), ValueMap{"Yes"}, Values{"Yes"}] String IsSingleInstance;
+    [Write, Description("Determines whether or not administrators can configure Azure AD Join.")] Boolean AzureADJoinIsAdminConfigurable;
     [Write, Description("Specifies the maximum number of devices that a user can have within your organization before blocking new device registrations. The default value is set to 50. If this property isn't specified during the policy update operation, it's automatically reset to 0 to indicate that users aren't allowed to join any devices.")] UInt32 UserDeviceQuota;
     [Write, Description("Scope that a device registration policy applies to."), ValueMap{"All", "Selected", "None"}, Values{"All", "Selected", "None"}] String AzureADAllowedToJoin;
     [Write, Description("List of users that this policy applies to.")] String AzureADAllowedToJoinUsers[];
