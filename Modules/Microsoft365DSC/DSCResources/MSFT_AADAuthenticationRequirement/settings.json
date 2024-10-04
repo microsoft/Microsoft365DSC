@@ -1,0 +1,40 @@
+{
+    "resourceName": "AADAuthenticationRequirement",
+    "description": "This resource configures Azure AD Authentication MFA Requirements for a user.",
+    "roles": {
+        "read": [],
+        "update": []
+    },
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read":
+                [
+                    {
+                        "name": "UserAuthenticationMethod.Read.All"
+                    }
+                ],
+                "update":
+                [
+                    {
+                        "name": "UserAuthenticationMethod.ReadWrite.All"
+                    }
+                ]
+            },
+            "application": {
+                "read":
+                [
+                    {
+                        "name": "UserAuthenticationMethod.Read.All"
+                    }
+                ],
+                "update":
+                [
+                    {
+                        "name": "UserAuthenticationMethod.ReadWrite.All"
+                    }
+                ]
+            }
+        }
+    }
+}

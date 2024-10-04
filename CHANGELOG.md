@@ -2,8 +2,15 @@
 
 # UNRELEASED
 
+* AADDeviceRegistrationPolicy
+  * Initial release.
+* AADEntitlementManagementSettings
+  * Added support for ApplicationSecret
 * ADOPermissionGroupSettings
   * Initial release.
+* M365DSCDRGUtil
+  * Fixes an issue for the handling of skipped one-property elements in the
+    Settings Catalog. FIXES [#5086](https://github.com/microsoft/Microsoft365DSC/issues/5086)
 
 # 1.24.1002.1
 
@@ -19,6 +26,8 @@
 * AADAuthenticationMethodPolicy
   * Added ReportSuspiciousActivitySettings
 * AADAuthenticationMethodPolicyHardware
+  * Initial release.
+* AADAuthenticationRequirement
   * Initial release.
 * AADEntitlementManagementSettings
   * Initial release.
