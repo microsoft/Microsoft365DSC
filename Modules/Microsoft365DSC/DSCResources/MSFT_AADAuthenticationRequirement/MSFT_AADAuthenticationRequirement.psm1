@@ -4,17 +4,14 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
+        [Parameter()]
+        [ValidateSet('enabled', 'disabled')]
+        [System.String]
+        $PerUserMfaState,
+
         [Parameter(Mandatory = $true)]
         [System.String]
-        $IsSingleInstance = 'Yes',
-
-        [Parameter()]
-        [System.UInt32]
-        $DaysUntilExternalUserDeletedAfterBlocked,
-
-        [Parameter()]
-        [System.String]
-        $ExternalUserLifecycleAction,
+        $UserPrincipalName,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -45,47 +42,53 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters | Out-Null
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullResult = $PSBoundParameters
     try
     {
-        $instance = Get-MgBetaEntitlementManagementSetting
-        if ($null -eq $instance)
+        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+            -InboundParameters $PSBoundParameters
+
+        #Ensure the proper dependencies are installed in the current environment.
+        Confirm-M365DSCDependencies
+
+        #region Telemetry
+        $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+        $CommandName = $MyInvocation.MyCommand
+        $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+            -CommandName $CommandName `
+            -Parameters $PSBoundParameters
+        Add-M365DSCTelemetryEvent -Data $data
+        #endregion
+
+        $nullResult = $PSBoundParameters
+
+        $getValue = $null
+        $url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/users/$UserPrincipalName/authentication/requirements"
+        $getValue = Invoke-MgGraphRequest -Method Get -Uri $url
+
+        if ($null -eq $getValue)
         {
+            Write-Verbose -Message "Could not find an Azure AD Authentication Requirement for user with UPN {$UserPrincipalName}"
             return $nullResult
         }
 
+        Write-Verbose -Message "An Azure AD Authentication Method Policy Requirement for a user with UPN {$UserPrincipalName} was found."
+
         $results = @{
-            IsSingleInstance                         = 'Yes'
-            DaysUntilExternalUserDeletedAfterBlocked = $instance.DaysUntilExternalUserDeletedAfterBlocked
-            ExternalUserLifecycleAction              = $instance.ExternalUserLifecycleAction
-            Credential                               = $Credential
-            ApplicationId                            = $ApplicationId
-            TenantId                                 = $TenantId
-            ApplicationSecret                        = $ApplicationSecret
-            CertificateThumbprint                    = $CertificateThumbprint
-            ManagedIdentity                          = $ManagedIdentity.IsPresent
-            AccessTokens                             = $AccessTokens
+            PerUserMfaState       = $getValue.perUserMfaState
+            UserPrincipalName     = $UserPrincipalName
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            ApplicationSecret     = $ApplicationSecret
+            CertificateThumbprint = $CertificateThumbprint
+            Managedidentity       = $ManagedIdentity.IsPresent
+            AccessTokens          = $AccessTokens
         }
+
         return [System.Collections.Hashtable] $results
     }
     catch
     {
-        Write-Verbose -Message $_
         New-M365DSCLogEntry -Message 'Error retrieving data:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
@@ -101,17 +104,14 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
+        [Parameter()]
+        [ValidateSet('enabled', 'disabled')]
+        [System.String]
+        $PerUserMfaState,
+
         [Parameter(Mandatory = $true)]
         [System.String]
-        $IsSingleInstance = 'Yes',
-
-        [Parameter()]
-        [System.UInt32]
-        $DaysUntilExternalUserDeletedAfterBlocked,
-
-        [Parameter()]
-        [System.String]
-        $ExternalUserLifecycleAction,
+        $UserPrincipalName,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -154,10 +154,26 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $setParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
-    $setParameters.Remove('IsSingleInstance') | Out-Null
-    Write-Verbose -Message "Updating Entitlement Management settings"
-    Update-MgBetaEntitlementManagementSetting @setParameters | Out-Null
+    $currentInstance = Get-TargetResource @PSBoundParameters
+    $url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/users/$UserPrincipalName/authentication/requirements"
+
+    $params = @{}
+    if ($PerUserMfaState -eq 'enabled' -and $currentInstance.PerUserMfaState -eq 'disabled')
+    {
+        $params = @{
+            "perUserMfaState" = "enabled"
+        }
+    }
+    elseif ($PerUserMfaState -eq 'disabled' -and $currentInstance.PerUserMfaState -eq 'enabled')
+    {
+        $params = @{
+            "perUserMfaState" = "disabled"
+        }
+    }
+
+    $jsonParams = $params | ConvertTo-Json
+
+    Invoke-MgGraphRequest -Method PATCH -Uri $url -Body $jsonParams
 }
 
 function Test-TargetResource
@@ -166,17 +182,14 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
+        [Parameter()]
+        [ValidateSet('enabled', 'disabled')]
+        [System.String]
+        $PerUserMfaState,
+
         [Parameter(Mandatory = $true)]
         [System.String]
-        $IsSingleInstance = 'Yes',
-
-        [Parameter()]
-        [System.UInt32]
-        $DaysUntilExternalUserDeletedAfterBlocked,
-
-        [Parameter()]
-        [System.String]
-        $ExternalUserLifecycleAction,
+        $UserPrincipalName,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -219,16 +232,26 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
+    Write-Verbose -Message "Testing configuration of the Azure AD Authentication Requirement for a user with UPN {$UserPrincipalName}"
+
     $CurrentValues = Get-TargetResource @PSBoundParameters
-    $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
+    $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
+
+    $testResult = $true
+
+    $CurrentValues.remove('Id') | Out-Null
+    $ValuesToCheck.remove('Id') | Out-Null
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
 
-    $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
-        -Source $($MyInvocation.MyCommand.Source) `
-        -DesiredValues $PSBoundParameters `
-        -ValuesToCheck $ValuesToCheck.Keys
+    if ($testResult)
+    {
+        $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -DesiredValues $PSBoundParameters `
+            -ValuesToCheck $ValuesToCheck.Keys
+    }
 
     Write-Verbose -Message "Test-TargetResource returned $testResult"
 
@@ -287,36 +310,59 @@ function Export-TargetResource
 
     try
     {
-        $Script:ExportMode = $true
+        [array]$getValue = Get-MgUser -ErrorAction Stop | Where-Object -FilterScript {$null -ne $_.Id}
 
-        $params = @{
-            IsSIngleInstance      = 'Yes'
-            Credential            = $Credential
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            ApplicationSecret     = $ApplicationSecret
-            CertificateThumbprint = $CertificateThumbprint
-            ManagedIdentity       = $ManagedIdentity.IsPresent
-            AccessTokens          = $AccessTokens
-        }
-        if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+        $i = 1
+        $dscContent = ''
+        if ($getValue.Length -eq 0)
         {
-            $Global:M365DSCExportResourceInstancesCount++
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
-        $Results = Get-TargetResource @Params
-        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-            -Results $Results
+        else
+        {
+            Write-Host "`r`n" -NoNewline
+        }
+        foreach ($config in $getValue)
+        {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
 
-        $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-            -ConnectionMode $ConnectionMode `
-            -ModulePath $PSScriptRoot `
-            -Results $Results `
-            -Credential $Credential
-        $dscContent += $currentDSCBlock
-        Save-M365DSCPartialExport -Content $currentDSCBlock `
-            -FileName $Global:PartialExportFileName
-        $i++
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
+            $displayedKey = $config.Id
+            if (-not [String]::IsNullOrEmpty($config.DisplayName))
+            {
+                $displayedKey = $config.DisplayName
+            }
+
+            Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
+            $params = @{
+                UserPrincipalName     = $config.UserPrincipalName
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                ApplicationSecret     = $ApplicationSecret
+                CertificateThumbprint = $CertificateThumbprint
+                Managedidentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
+            }
+
+            $Results = Get-TargetResource @Params
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
+
+            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -Credential $Credential
+
+            $dscContent += $currentDSCBlock
+            Save-M365DSCPartialExport -Content $currentDSCBlock `
+                -FileName $Global:PartialExportFileName
+            $i++
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+        }
         return $dscContent
     }
     catch

@@ -105,7 +105,7 @@ function Rename-M365DSCCimInstanceParameter
                     $subValue = Rename-M365DSCCimInstanceParameter $property -KeyMapping $KeyMapping
                     if ($null -ne $subValue)
                     {
-                        $hashProperties.add($keyName, $subValue)
+                        $hashProperties.Add($keyName, $subValue)
                     }
                 }
                 catch
@@ -830,7 +830,7 @@ function Convert-M365DSCDRGComplexTypeToHashtable
                 $propertyName = $key[0].ToString().ToLower() + $key.Substring(1, $key.Length - 1)
                 $propertyValue = $results[$key]
                 $results.remove($key) | Out-Null
-                $results.add($propertyName, $propertyValue)
+                $results.Add($propertyName, $propertyValue)
             }
         }
     }
@@ -1015,11 +1015,11 @@ function Get-SettingCatalogPolicySettingsFromTemplate
         $settingKey = $DSCParams.keys | Where-Object -FilterScript { $templateSetting.settingDefinitionId -like "*$($_)" }
         if ((-not [String]::IsNullOrEmpty($settingKey)) -and $DSCParams."$settingKey")
         {
-            $setting.add('@odata.type', '#microsoft.graph.deviceManagementConfigurationSetting')
+            $setting.Add('@odata.type', '#microsoft.graph.deviceManagementConfigurationSetting')
             $myFormattedSetting = Format-M365DSCParamsToSettingInstance -DSCParams @{$settingKey = $DSCParams."$settingKey" } `
                 -TemplateSetting $templateSetting
 
-            $setting.add('settingInstance', $myFormattedSetting)
+            $setting.Add('settingInstance', $myFormattedSetting)
             $settings += $setting
             $DSCParams.Remove($settingKey) | Out-Null
         }
@@ -1033,23 +1033,23 @@ function Get-SettingCatalogPolicySettingsFromTemplate
     foreach ($groupCollectionTemplateSetting in $groupCollectionTemplateSettings)
     {
         $setting = @{}
-        $setting.add('@odata.type', '#microsoft.graph.deviceManagementConfigurationSetting')
+        $setting.Add('@odata.type', '#microsoft.graph.deviceManagementConfigurationSetting')
         $settingInstance = [ordered]@{}
-        $settingInstance.add('@odata.type', '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance')
-        $settingInstance.add('settingDefinitionId', $groupCollectionTemplateSetting.settingDefinitionId)
-        $settingInstance.add('settingInstanceTemplateReference', @{
+        $settingInstance.Add('@odata.type', '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance')
+        $settingInstance.Add('settingDefinitionId', $groupCollectionTemplateSetting.settingDefinitionId)
+        $settingInstance.Add('settingInstanceTemplateReference', @{
                 '@odata.type'               = '#microsoft.graph.deviceManagementConfigurationSettingInstanceTemplateReference'
                 'settingInstanceTemplateId' = $groupCollectionTemplateSetting.settingInstanceTemplateId
             })
         $groupSettingCollectionValues = @()
         $groupSettingCollectionValueChildren = @()
         $groupSettingCollectionValue = @{}
-        $groupSettingCollectionValue.add('@odata.type', '#microsoft.graph.deviceManagementConfigurationGroupSettingValue')
+        $groupSettingCollectionValue.Add('@odata.type', '#microsoft.graph.deviceManagementConfigurationGroupSettingValue')
 
         $settingValueTemplateId = $groupCollectionTemplateSetting.AdditionalProperties.groupSettingCollectionValueTemplate.settingValueTemplateId
         if (-Not [string]::IsNullOrEmpty($settingValueTemplateId))
         {
-            $groupSettingCollectionValue.add('settingValueTemplateReference', @{'settingValueTemplateId' = $SettingValueTemplateId })
+            $groupSettingCollectionValue.Add('settingValueTemplateReference', @{'settingValueTemplateId' = $SettingValueTemplateId })
         }
 
         foreach ($key in $DSCParams.keys)
@@ -1067,10 +1067,10 @@ function Get-SettingCatalogPolicySettingsFromTemplate
                 $groupSettingCollectionValueChildren += $groupSettingCollectionValueChild
             }
         }
-        $groupSettingCollectionValue.add('children', $groupSettingCollectionValueChildren)
+        $groupSettingCollectionValue.Add('children', $groupSettingCollectionValueChildren)
         $groupSettingCollectionValues += $groupSettingCollectionValue
-        $settingInstance.add('groupSettingCollectionValue', $groupSettingCollectionValues)
-        $setting.add('settingInstance', $settingInstance)
+        $settingInstance.Add('groupSettingCollectionValue', $groupSettingCollectionValues)
+        $setting.Add('settingInstance', $settingInstance)
 
         if ($setting.settingInstance.groupSettingCollectionValue.children.count -gt 0)
         {
@@ -1202,7 +1202,7 @@ function ConvertTo-IntunePolicyAssignment
         }
         if ($assignment.dataType -like '*CollectionAssignmentTarget')
         {
-            $target.add('collectionId', $assignment.collectionId)
+            $target.Add('collectionId', $assignment.collectionId)
         }
         elseif ($assignment.dataType -like '*GroupAssignmentTarget')
         {
@@ -1401,7 +1401,7 @@ function Update-DeviceConfigurationPolicyAssignment
                 #Skipping assignment if group not found from either groupId or groupDisplayName
                 if ($null -ne $group)
                 {
-                    $formattedTarget.add('groupId',$group.Id)
+                    $formattedTarget.Add('groupId',$group.Id)
                 }
             }
             if ($target.collectionId)
@@ -1735,18 +1735,56 @@ function Get-IntuneSettingCatalogPolicySettingInstanceValue
 
                     if ($childSettingValue.Keys.Count -gt 0)
                     {
-                        if ($childSettingValue.Keys -notcontains 'settingDefinitionId')
+                        # If only one child item is allowed but we have multiple values, we need to create an object for each child
+                        # Happens e.g. for the IntuneDeviceControlPolicyWindows10 resource --> {ruleid} and {ruleid}_ruledata definitions
+                        if ($childSettingValue.groupSettingCollectionValue.Count -gt 1 -and
+                            $childDefinition.AdditionalProperties.maximumCount -eq 1 -and
+                            $groupSettingCollectionDefinitionChildren.Count -eq 1)
                         {
-                            $childSettingValue.Add('settingDefinitionId', $childDefinition.Id)
+                            $childSettingValueOld = $childSettingValue
+                            $childSettingValue = @()
+                            foreach ($childSettingValueItem in $childSettingValueOld.groupSettingCollectionValue)
+                            {
+                                $childSettingValueInner = @{
+                                    children = @()
+                                }
+                                $childSettingValueItem.Add('@odata.type', $childSettingType)
+                                $childSettingValueInner.children += @{
+                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
+                                    groupSettingCollectionValue = @(
+                                        @{
+                                            children = $childSettingValueItem.children
+                                        }
+                                    )
+                                    settingDefinitionId = $childDefinition.Id
+                                }
+                                if (-not [string]::IsNullOrEmpty($childSettingInstanceTemplate.settingInstanceTemplateId))
+                                {
+                                    $childSettingValueInner.children[0].groupSettingCollectionValue.settingInstanceTemplateReference = @{
+                                        'settingInstanceTemplateId' = $childSettingInstanceTemplate.settingInstanceTemplateId
+                                    }
+                                }
+                                $childSettingValue += $childSettingValueInner
+                            }
+                            $groupSettingCollectionValue += $childSettingValue
                         }
-                        if (-not [string]::IsNullOrEmpty($childSettingInstanceTemplate.settingInstanceTemplateId))
+                        else
                         {
-                            $childSettingValue.Add('settingInstanceTemplateReference', @{'settingInstanceTemplateId' = $childSettingInstanceTemplate.settingInstanceTemplateId })
+                            if ($childSettingValue.Keys -notcontains 'settingDefinitionId')
+                            {
+                                $childSettingValue.Add('settingDefinitionId', $childDefinition.Id)
+                            }
+                            if (-not [string]::IsNullOrEmpty($childSettingInstanceTemplate.settingInstanceTemplateId))
+                            {
+                                $childSettingValue.Add('settingInstanceTemplateReference', @{'settingInstanceTemplateId' = $childSettingInstanceTemplate.settingInstanceTemplateId })
+                            }
+                            $childSettingValue.Add('@odata.type', $childSettingType)
+                            $groupSettingCollectionValueChildren += $childSettingValue
                         }
-                        $childSettingValue.Add('@odata.type', $childSettingType)
-                        $groupSettingCollectionValueChildren += $childSettingValue
                     }
                 }
+
+                # Does not happen for wrapped children elements
                 if ($groupSettingCollectionValueChildren.Count -gt 0)
                 {
                     $groupSettingCollectionValue += @{
