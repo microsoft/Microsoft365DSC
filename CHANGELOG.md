@@ -2,6 +2,10 @@
 
 # UNRELEASED
 
+* AADAuthenticationRequirement
+  * Initial release.
+* AADConnectorGroupApplicationProxy
+  Initial release.
 * AADEntitlementManagementSettings
   * Added support for ApplicationSecret
 * M365DSCDRGUtil
@@ -22,8 +26,6 @@
 * AADAuthenticationMethodPolicy
   * Added ReportSuspiciousActivitySettings
 * AADAuthenticationMethodPolicyHardware
-  * Initial release.
-* AADConnectorGroupApplicationProxy
   * Initial release.
 * AADEntitlementManagementSettings
   * Initial release.
