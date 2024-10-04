@@ -3825,6 +3825,10 @@ function Get-M365DSCExportContentForResource
     {
         $primaryKey = $Results.DomainName
     }
+    elseif ($Keys.Contains('UserPrincipalName'))
+    {
+        $primaryKey = $Results.UserPrincipalName
+    }
 
     if ([String]::IsNullOrEmpty($primaryKey) -and `
         -not $Keys.Contains('IsSingleInstance'))

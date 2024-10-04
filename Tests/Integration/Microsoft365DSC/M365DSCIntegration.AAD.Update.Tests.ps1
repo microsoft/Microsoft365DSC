@@ -408,6 +408,14 @@
                     );
                     State                           = "enabled";
                 }
+                AADAuthenticationRequirement 'AADAuthenticationRequirement-TestMailbox109@xtasdftestorg.onmicrosoft.com'
+                {
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
+                    PerUserMfaState       = "disabled";
+                    UserPrincipalName     = "TestMailbox109@$OrganizationName";
+                }
                 AADAuthenticationStrengthPolicy 'AADAuthenticationStrengthPolicy-Example'
                 {
                     AllowedCombinations  = @("windowsHelloForBusiness","fido2","deviceBasedPush"); # Updated Property
