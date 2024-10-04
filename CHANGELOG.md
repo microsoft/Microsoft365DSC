@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* AADDeviceRegistrationPolicy
+  * Initial release.
 * AADEntitlementManagementSettings
   * Added support for ApplicationSecret
 * M365DSCDRGUtil
