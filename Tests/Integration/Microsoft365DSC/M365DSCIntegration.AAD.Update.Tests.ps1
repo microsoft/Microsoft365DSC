@@ -408,6 +408,14 @@
                     );
                     State                           = "enabled";
                 }
+                AADAuthenticationRequirement 'AADAuthenticationRequirement-TestMailbox109@xtasdftestorg.onmicrosoft.com'
+                {
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
+                    PerUserMfaState       = "disabled";
+                    UserPrincipalName     = "TestMailbox109@$OrganizationName";
+                }
                 AADAuthenticationStrengthPolicy 'AADAuthenticationStrengthPolicy-Example'
                 {
                     AllowedCombinations  = @("windowsHelloForBusiness","fido2","deviceBasedPush"); # Updated Property
@@ -593,6 +601,23 @@
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                     Ensure                       = "Present";
+                }
+                AADDeviceRegistrationPolicy 'MyDeviceRegistrationPolicy'
+                {
+                    ApplicationId                           = $ApplicationId;
+                    AzureADAllowedToJoin                    = "Selected";
+                    AzureADAllowedToJoinGroups              = @();
+                    AzureADAllowedToJoinUsers               = @("AlexW@M365x73318397.OnMicrosoft.com");
+                    AzureAdJoinLocalAdminsRegisteringGroups = @();
+                    AzureAdJoinLocalAdminsRegisteringMode   = "Selected";
+                    AzureAdJoinLocalAdminsRegisteringUsers  = @("AllanD@M365x73318397.OnMicrosoft.com");
+                    CertificateThumbprint                   = $CertificateThumbprint;
+                    IsSingleInstance                        = "Yes";
+                    LocalAdminPasswordIsEnabled             = $False;
+                    LocalAdminsEnableGlobalAdmins           = $True;
+                    MultiFactorAuthConfiguration            = $False;
+                    TenantId                                = $TenantId;
+                    UserDeviceQuota                         = 50;
                 }
                 AADEntitlementManagementAccessPackage 'myAccessPackage'
                 {
