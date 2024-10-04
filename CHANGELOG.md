@@ -2,8 +2,12 @@
 
 # UNRELEASED
 
+* AADDeviceRegistrationPolicy
+  * Initial release.
 * AADEntitlementManagementSettings
   * Added support for ApplicationSecret
+* ADOPermissionGroupSettings
+  * Initial release.
 * EXOMigrationEndpoint
   * Initial Release
 * M365DSCDRGUtil
