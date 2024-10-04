@@ -18,6 +18,12 @@ function Invoke-AzRest
 }
 #endregion
 
+function Get-MgBetaPolicyDeviceRegistrationPolicy
+{
+    [CmdletBinding()]
+    param()
+}
+
 #region Microsoft.Graph.Beta.Applications
 function Get-MgBetaApplication
 {

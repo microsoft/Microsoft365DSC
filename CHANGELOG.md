@@ -2,8 +2,12 @@
 
 # UNRELEASED
 
+* AADDeviceRegistrationPolicy
+  * Initial release.
 * AADEntitlementManagementSettings
   * Added support for ApplicationSecret
+* ADOPermissionGroupSettings
+  * Initial release.
 * IntuneEndpointDetectionAndResponsePolicyWindows10
   * Migrate to new Settings Catalog cmdlets.
 * M365DSCDRGUtil
@@ -26,6 +30,8 @@
 * AADAuthenticationMethodPolicy
   * Added ReportSuspiciousActivitySettings
 * AADAuthenticationMethodPolicyHardware
+  * Initial release.
+* AADAuthenticationRequirement
   * Initial release.
 * AADEntitlementManagementSettings
   * Initial release.
