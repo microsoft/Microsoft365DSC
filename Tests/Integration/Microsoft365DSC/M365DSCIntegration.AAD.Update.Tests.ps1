@@ -602,6 +602,23 @@
                     CertificateThumbprint = $CertificateThumbprint
                     Ensure                       = "Present";
                 }
+                AADDeviceRegistrationPolicy 'MyDeviceRegistrationPolicy'
+                {
+                    ApplicationId                           = $ApplicationId;
+                    AzureADAllowedToJoin                    = "Selected";
+                    AzureADAllowedToJoinGroups              = @();
+                    AzureADAllowedToJoinUsers               = @("AlexW@M365x73318397.OnMicrosoft.com");
+                    AzureAdJoinLocalAdminsRegisteringGroups = @();
+                    AzureAdJoinLocalAdminsRegisteringMode   = "Selected";
+                    AzureAdJoinLocalAdminsRegisteringUsers  = @("AllanD@M365x73318397.OnMicrosoft.com");
+                    CertificateThumbprint                   = $CertificateThumbprint;
+                    IsSingleInstance                        = "Yes";
+                    LocalAdminPasswordIsEnabled             = $False;
+                    LocalAdminsEnableGlobalAdmins           = $True;
+                    MultiFactorAuthConfiguration            = $False;
+                    TenantId                                = $TenantId;
+                    UserDeviceQuota                         = 50;
+                }
                 AADEntitlementManagementAccessPackage 'myAccessPackage'
                 {
                     AccessPackagesIncompatibleWith = @();
