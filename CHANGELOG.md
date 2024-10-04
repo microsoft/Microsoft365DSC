@@ -2,8 +2,12 @@
 
 # UNRELEASED
 
+* AADDeviceRegistrationPolicy
+  * Initial release.
 * AADEntitlementManagementSettings
   * Added support for ApplicationSecret
+* ADOPermissionGroupSettings
+  * Initial release.
 * IntuneAppAndBrowserIsolationPolicyWindows10
   * Initial release.
     FIXES [#3028](https://github.com/microsoft/Microsoft365DSC/issues/3028)
@@ -25,6 +29,8 @@
 * AADAuthenticationMethodPolicy
   * Added ReportSuspiciousActivitySettings
 * AADAuthenticationMethodPolicyHardware
+  * Initial release.
+* AADAuthenticationRequirement
   * Initial release.
 * AADEntitlementManagementSettings
   * Initial release.
