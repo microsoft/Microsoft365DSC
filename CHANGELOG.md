@@ -23,6 +23,8 @@
   * Added ReportSuspiciousActivitySettings
 * AADAuthenticationMethodPolicyHardware
   * Initial release.
+* AADConnectorGroupApplicationProxy
+  * Initial release.
 * AADEntitlementManagementSettings
   * Initial release.
 * AADFeatureRolloutPolicy
