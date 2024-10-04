@@ -20,7 +20,7 @@ function Invoke-AzRest
 
 function Get-MgBetaPolicyDeviceRegistrationPolicy
 {
-    [CmdletBinding]
+    [CmdletBinding()]
     param()
 }
 
