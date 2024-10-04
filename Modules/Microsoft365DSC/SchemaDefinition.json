@@ -2054,7 +2054,7 @@
                            },
                            {
                                "CIMType":  "String",
-                               "Name":  "Id",
+                               "Name":  "UserPrincipalName",
                                "Option":  "Key"
                            },
                            {
