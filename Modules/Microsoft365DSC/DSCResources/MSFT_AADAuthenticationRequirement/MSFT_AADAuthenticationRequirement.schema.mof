@@ -2,7 +2,7 @@
 class MSFT_AADAuthenticationRequirement : OMI_BaseResource
 {
     [Write, Description("The state of the MFA enablement for the user. Possible values are: enabled, disabled."), ValueMap{"enabled","disabled"}, Values{"enabled","disabled"}] String PerUserMfaState;
-    [Key, Description("The unique identifier for an entity. Read-only.")] String Id;
+    [Key, Description("The unique identifier for an entity. Read-only.")] String UserPrincipalName;
 
     [Write, Description("Credentials of the Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;

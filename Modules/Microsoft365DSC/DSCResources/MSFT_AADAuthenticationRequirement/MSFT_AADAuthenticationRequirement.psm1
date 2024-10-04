@@ -11,7 +11,7 @@ function Get-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        $Id,
+        $UserPrincipalName,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -62,20 +62,20 @@ function Get-TargetResource
         $nullResult = $PSBoundParameters
 
         $getValue = $null
-        $url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/users/$Id/authentication/requirements"
+        $url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/users/$UserPrincipalName/authentication/requirements"
         $getValue = Invoke-MgGraphRequest -Method Get -Uri $url
 
         if ($null -eq $getValue)
         {
-            Write-Verbose -Message "Could not find an Azure AD Authentication Requirement for user with id {$Id}"
+            Write-Verbose -Message "Could not find an Azure AD Authentication Requirement for user with UPN {$UserPrincipalName}"
             return $nullResult
         }
 
-        Write-Verbose -Message "An Azure AD Authentication Method Policy Requirement for a user with Id {$Id} was found."
+        Write-Verbose -Message "An Azure AD Authentication Method Policy Requirement for a user with UPN {$UserPrincipalName} was found."
 
         $results = @{
             PerUserMfaState       = $getValue.perUserMfaState
-            Id                    = $Id
+            UserPrincipalName     = $UserPrincipalName
             Credential            = $Credential
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
@@ -111,7 +111,7 @@ function Set-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        $Id,
+        $UserPrincipalName,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -155,13 +155,14 @@ function Set-TargetResource
     #endregion
 
     $currentInstance = Get-TargetResource @PSBoundParameters
-    $url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/users/$Id/authentication/requirements"
+    $url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/users/$UserPrincipalName/authentication/requirements"
 
     $params = @{}
     if ($PerUserMfaState -eq 'enabled' -and $currentInstance.PerUserMfaState -eq 'disabled')
     {
         $params = @{
             "perUserMfaState" = "enabled"
+        }
     }
     elseif ($PerUserMfaState -eq 'disabled' -and $currentInstance.PerUserMfaState -eq 'enabled')
     {
@@ -188,7 +189,7 @@ function Test-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        $Id,
+        $UserPrincipalName,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -231,7 +232,7 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of the Azure AD Authentication Requirement for a user with Id {$Id}"
+    Write-Verbose -Message "Testing configuration of the Azure AD Authentication Requirement for a user with UPN {$UserPrincipalName}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
@@ -336,7 +337,7 @@ function Export-TargetResource
 
             Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{
-                Id                    = $config.Id
+                UserPrincipalName     = $config.UserPrincipalName
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId

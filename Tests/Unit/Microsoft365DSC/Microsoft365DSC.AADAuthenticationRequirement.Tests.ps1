@@ -45,14 +45,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The instance exists and values are already in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Id                  = "98ceffcc-7c54-4227-8844-835af5a023ce"
+                    UserPrincipalName   = "user@test.com"
                     PerUserMfaState     = 'Enabled'
                     Credential          = $Credential;
                 }
 
                 Mock -CommandName Invoke-MgGraphRequest -MockWith {
                     return @{
-                        Id                  = "98ceffcc-7c54-4227-8844-835af5a023ce"
+                        UserPrincipalName   = "user@test.com"
                         PerUserMfaState     = 'Enabled'
                         Credential          = $Credential;
                     }
@@ -67,14 +67,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The instance exists and values are NOT in the desired state - Enable" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Id                  = "98ceffcc-7c54-4227-8844-835af5a023ce"
+                    UserPrincipalName   = "user@test.com"
                     PerUserMfaState     = 'Enabled'
                     Credential          = $Credential;
                 }
 
                 Mock -CommandName Invoke-MgGraphRequest -MockWith {
                     return @{
-                        Id                  = "98ceffcc-7c54-4227-8844-835af5a023ce"
+                        UserPrincipalName   = "user@test.com"
                         PerUserMfaState     = 'Disabled'
                         Credential          = $Credential;
                     }
@@ -98,14 +98,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The instance exists and values are NOT in the desired state - Disable" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Id                  = "98ceffcc-7c54-4227-8844-835af5a023ce"
+                    UserPrincipalName   = "user@test.com"
                     PerUserMfaState     = 'Disabled'
                     Credential          = $Credential;
                 }
 
                 Mock -CommandName Invoke-MgGraphRequest -MockWith {
                     return @{
-                        Id                  = "98ceffcc-7c54-4227-8844-835af5a023ce"
+                        UserPrincipalName   = "user@test.com"
                         PerUserMfaState     = 'Enabled'
                         Credential          = $Credential;
                     }
@@ -136,7 +136,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Invoke-MgGraphRequest -MockWith {
                     return @{
-                        Id                  = "98ceffcc-7c54-4227-8844-835af5a023ce"
+                        UserPrincipalName   = "user@test.com"
                         PerUserMfaState     = 'Enabled'
                         Credential          = $Credential;
                     }
@@ -144,7 +144,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-MgUser -MockWith {
                     return @{
-                        Id                  = "98ceffcc-7c54-4227-8844-835af5a023ce"
+                        UserPrincipalName   = "user@test.com"
                         Credential          = $Credential;
                     }
                 }

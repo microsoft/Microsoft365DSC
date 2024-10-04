@@ -22,13 +22,13 @@ Configuration Example
 
     Node localhost
     {
-        AADAuthenticationRequirement "AADAuthenticationRequirement-98ceffcc-7c54-4227-8844-835af5a023ce"
+        AADAuthenticationRequirement "AADAuthenticationRequirement-TestMailbox109@xtasdftestorg.onmicrosoft.com"
         {
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint
-            Id                   = "98ceffcc-7c54-4227-8844-835af5a023ce"
-            PerUserMfaState      = "disabled"
+            PerUserMfaState       = "disabled";
+            UserPrincipalName     = "TestMailbox109@$OrganizationName";
         }
     }
 }
