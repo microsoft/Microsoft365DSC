@@ -5,24 +5,39 @@ It is not meant to use as a production baseline.
 
 Configuration Example
 {
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $credsCredential
-    )
+    param(
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
 
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
+    )
     Import-DscResource -ModuleName Microsoft365DSC
 
     node localhost
     {
-        AADAttributeSet "AADAttributeSetTest"
+        AADDeviceRegistrationPolicy "MyDeviceRegistrationPolicy"
         {
-            Credential           = $credsCredential;
-            Description          = "Attribute set with 420 attributes";
-            Ensure               = "Present";
-            Id                   = "TestAttributeSet";
-            MaxAttributesPerSet  = 300; # Updated Property
+            ApplicationId                           = $ApplicationId;
+            AzureADAllowedToJoin                    = "Selected";
+            AzureADAllowedToJoinGroups              = @();
+            AzureADAllowedToJoinUsers               = @("AlexW@M365x73318397.OnMicrosoft.com");
+            AzureAdJoinLocalAdminsRegisteringGroups = @();
+            AzureAdJoinLocalAdminsRegisteringMode   = "Selected";
+            AzureAdJoinLocalAdminsRegisteringUsers  = @("AllanD@M365x73318397.OnMicrosoft.com");
+            CertificateThumbprint                   = $CertificateThumbprint;
+            IsSingleInstance                        = "Yes";
+            LocalAdminPasswordIsEnabled             = $False;
+            LocalAdminsEnableGlobalAdmins           = $True;
+            MultiFactorAuthConfiguration            = $False;
+            TenantId                                = $TenantId;
+            UserDeviceQuota                         = 50;
         }
     }
 }

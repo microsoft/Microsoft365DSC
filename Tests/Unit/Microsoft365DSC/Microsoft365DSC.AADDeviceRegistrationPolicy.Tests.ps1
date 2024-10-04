@@ -15,7 +15,7 @@ Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
         -Resolve)
 
 $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "AADAttributeSet" -GenericStubModule $GenericStubPath
+    -DscResource "AADDeviceRegistrationPolicy" -GenericStubModule $GenericStubPath
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
@@ -33,6 +33,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-MgBetaDirectoryAttributeSet -MockWith {
             }
 
+            Mock -CommandName Get-MgUser -MockWith {
+                return @{
+                    id = '12345-12345-12345-12345-12345'
+                    UserPrincipalName = "john.smith@contoso.com"
+                }
+            }
+
+            Mock -CommandName Invoke-MgGraphRequest -MockWith {
+                return $null
+            }
+
             Mock -CommandName New-M365DSCConnection -MockWith {
                 return "Credentials"
             }
@@ -43,45 +54,57 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $Script:exportedInstances =$null
             $Script:ExportMode = $false
         }
-        # Test contexts
-        Context -Name "The instance should exist but it DOES NOT" -Fixture {
-            BeforeAll {
-                $testParams = @{
-                    Description         = "This is my super context test";
-                    MaxAttributesPerSet = 420;
-                    Ensure              = "Present";
-                    Id                  = "c3";
-                    Credential          = $Credential;
-                }
-
-                Mock -CommandName Get-MgBetaDirectoryAttributeSet -MockWith {
-                    return $null
-                }
-            }
-            It 'Should return Values from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should -Be 'Absent'
-            }
-            It 'Should return false from the Test method' {
-                Test-TargetResource @testParams | Should -Be $false
-            }
-        }
 
 
         Context -Name "The instance exists and values are already in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Description         = "This is my super context test";
-                    MaxAttributesPerSet = 420;
-                    Ensure              = "Present";
-                    Id                  = "c3";
-                    Credential          = $Credential;
+                    AzureADAllowedToJoin                    = "None";
+                    AzureADAllowedToJoinGroups              = @();
+                    AzureADAllowedToJoinUsers               = @();
+                    AzureAdJoinLocalAdminsRegisteringGroups = @();
+                    AzureAdJoinLocalAdminsRegisteringMode   = "Selected";
+                    AzureAdJoinLocalAdminsRegisteringUsers  = @("john.smith@contoso.com");
+                    IsSingleInstance                        = "Yes";
+                    LocalAdminPasswordIsEnabled             = $False;
+                    LocalAdminsEnableGlobalAdmins           = $True;
+                    MultiFactorAuthConfiguration            = $False;
+                    UserDeviceQuota                         = 50;
+                    Credential                              = $Credential;
                 }
 
-                Mock -CommandName Get-MgBetaDirectoryAttributeSet -MockWith {
+                Mock -CommandName Get-MgBetaPolicyDeviceRegistrationPolicy -MockWith {
                     return @{
-                        Description         = "This is my super context test";
-                        MaxAttributesPerSet = 420;
-                        Id                  = "c3";
+                        AzureAdJoin = @{
+                            IsAdminConfigurable = $true
+                            AllowedToJoin = @{
+                                "@odata.type" = "#microsoft.graph.allDeviceRegistrationMembership"
+                            }
+                            LocalAdmins = @{
+                                EnableGlobalAdmins = $true
+                                RegisteringUsers = @{
+                                    AdditionalProperties = @{
+                                        "@odata.type" = "#microsoft.graph.enumeratedDeviceRegistrationMembership"
+                                        users = @('12345-12345-12345-12345-12345')
+                                        groups = @()
+                                    }
+                                }
+                            }
+                        }
+                        AzureADRegistration = @{
+                            IsAdminConfigurable = $false
+                            AllowedToRegister = @{
+                                "@odata.type" = "#microsoft.graph.allDeviceRegistrationMembership"
+                            }
+                        }
+                        Description = "Tenant-wide policy that manages initial provisioning controls using quota restrictions, additional authentication and authorization checks"
+                        DisplayName = "Device Registration Policy"
+                        Id = "deviceRegistrationPolicy"
+                        LocalAdminPassword = @{
+                            IsEnabled = $false
+                        }
+                        MultiFactorAuthConfiguration = "notRequired"
+                        UserDeviceQuota = 50
                     }
                 }
             }
@@ -94,26 +117,52 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The instance exists and values are NOT in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Description         = "This is my super context test";
-                    MaxAttributesPerSet = 420;
-                    Ensure              = "Present";
-                    Id                  = "c3";
-                    Credential          = $Credential;
+                    AzureADAllowedToJoin                    = "Selected";
+                    AzureADAllowedToJoinGroups              = @();
+                    AzureADAllowedToJoinUsers               = @("john.smith@contoso.com");
+                    AzureAdJoinLocalAdminsRegisteringGroups = @();
+                    AzureAdJoinLocalAdminsRegisteringMode   = "Selected";
+                    AzureAdJoinLocalAdminsRegisteringUsers  = @("john.smith@contoso.com");
+                    IsSingleInstance                        = "Yes";
+                    LocalAdminPasswordIsEnabled             = $False;
+                    LocalAdminsEnableGlobalAdmins           = $False; # drift
+                    MultiFactorAuthConfiguration            = $False;
+                    UserDeviceQuota                         = 50;
+                    Credential                              = $Credential;
                 }
 
-                Mock -CommandName Get-MgBetaDirectoryAttributeSet -MockWith {
+                Mock -CommandName Get-MgBetaPolicyDeviceRegistrationPolicy -MockWith {
                     return @{
-                        Description         = "This is my super context test";
-                        MaxAttributesPerSet = 431; #drift
-                        Ensure              = "Present";
-                        Id                  = "c3";
-                        Credential          = $Credential;
+                        AzureAdJoin = @{
+                            IsAdminConfigurable = $true
+                            AllowedToJoin = @{
+                                "@odata.type" = "#microsoft.graph.allDeviceRegistrationMembership"
+                            }
+                            LocalAdmins = @{
+                                EnableGlobalAdmins = $true
+                                RegisteringUsers = @{
+                                    users = @()
+                                    groups = @()
+                                    "@odata.type" = "#microsoft.graph.enumeratedDeviceRegistrationMembership"
+                                }
+                            }
+                        }
+                        AzureADRegistration = @{
+                            IsAdminConfigurable = $false
+                            AllowedToRegister = @{
+                                "@odata.type" = "#microsoft.graph.allDeviceRegistrationMembership"
+                            }
+                        }
+                        Description = "Tenant-wide policy that manages initial provisioning controls using quota restrictions, additional authentication and authorization checks"
+                        DisplayName = "Device Registration Policy"
+                        Id = "deviceRegistrationPolicy"
+                        LocalAdminPassword = @{
+                            IsEnabled = $false
+                        }
+                        MultiFactorAuthConfiguration = "notRequired"
+                        UserDeviceQuota = 50
                     }
                 }
-            }
-
-            It 'Should return Values from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
             It 'Should return false from the Test method' {
@@ -122,7 +171,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should call the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Update-MgBetaDirectoryAttributeSet -Exactly 1
+                Should -Invoke -CommandName Invoke-MgGraphRequest -Exactly 1
             }
         }
 
@@ -134,11 +183,36 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential  = $Credential;
                 }
 
-                Mock -CommandName Get-MgBetaDirectoryAttributeSet -MockWith {
+                Mock -CommandName Get-MgBetaPolicyDeviceRegistrationPolicy -MockWith {
                     return @{
-                        Description         = "This is my super context test";
-                        MaxAttributesPerSet = 420;
-                        Id                  = "c3";
+                        AzureAdJoin = @{
+                            IsAdminConfigurable = $true
+                            AllowedToJoin = @{
+                                "@odata.type" = "#microsoft.graph.allDeviceRegistrationMembership"
+                            }
+                            LocalAdmins = @{
+                                EnableGlobalAdmins = $true
+                                RegisteringUsers = @{
+                                    users = @()
+                                    groups = @()
+                                    "@odata.type" = "#microsoft.graph.enumeratedDeviceRegistrationMembership"
+                                }
+                            }
+                        }
+                        AzureADRegistration = @{
+                            IsAdminConfigurable = $false
+                            AllowedToRegister = @{
+                                "@odata.type" = "#microsoft.graph.allDeviceRegistrationMembership"
+                            }
+                        }
+                        Description = "Tenant-wide policy that manages initial provisioning controls using quota restrictions, additional authentication and authorization checks"
+                        DisplayName = "Device Registration Policy"
+                        Id = "deviceRegistrationPolicy"
+                        LocalAdminPassword = @{
+                            IsEnabled = $false
+                        }
+                        MultiFactorAuthConfiguration = "notRequired"
+                        UserDeviceQuota = 50
                     }
                 }
             }
