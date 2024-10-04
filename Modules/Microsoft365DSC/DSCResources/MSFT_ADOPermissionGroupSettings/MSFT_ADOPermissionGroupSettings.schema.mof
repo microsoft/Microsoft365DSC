@@ -1,20 +1,20 @@
 [ClassVersion("1.0.0")]
 class MSFT_ADOPermission
 {
-    [Write, Description("")] String NamespaceId;
-    [Write, Description("")] String DisplayName;
-    [Write, Description("")] UInt32 Bit;
-    [Write, Description("")] String Token;
+    [Write, Description("Id of the associate security namespace.")] String NamespaceId;
+    [Write, Description("Display name of the permission scope.")] String DisplayName;
+    [Write, Description("Bit mask for the permission")] UInt32 Bit;
+    [Write, Description("Token value")] String Token;
 };
 
 [ClassVersion("1.0.0.0"), FriendlyName("ADOPermissionGroupSettings")]
 class MSFT_ADOPermissionGroupSettings : OMI_BaseResource
 {
-    [Key, Description("")] String GroupName;
-    [Write, Description("")] String OrganizationName;
-    [Write, Description("")] String Descriptor;
-    [Write, Description(""), EmbeddedInstance("MSFT_ADOPermission")] string AllowPermissions[];
-    [Write, Description(""), EmbeddedInstance("MSFT_ADOPermission")] string DenyPermissions[];
+    [Key, Description("Name of the group.")] String GroupName;
+    [Write, Description("Name of the DevOPS Organization.")] String OrganizationName;
+    [Write, Description("Descriptor for the group.")] String Descriptor;
+    [Write, Description("Allow permissions."), EmbeddedInstance("MSFT_ADOPermission")] string AllowPermissions[];
+    [Write, Description("Deny permissions"), EmbeddedInstance("MSFT_ADOPermission")] string DenyPermissions[];
 
     [Write, Description("Credentials of the workload's Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
