@@ -144,6 +144,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-MgUser -MockWith {
                     return @{
+                        Id                  = "98ceffcc-7c54-4227-8844-835af5a023ce"
                         UserPrincipalName   = "user@test.com"
                         Credential          = $Credential;
                     }
