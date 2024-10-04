@@ -25,7 +25,9 @@ Configuration Example
         {
             AcceptUntrustedCertificates   = $True;
             Authentication                = "Basic";
-            Credential                    = $Credscredential;
+            ApplicationId                 = $ApplicationId
+            TenantId                      = $TenantId
+            CertificateThumbprint         = $CertificateThumbprint
             EndpointType                  = "IMAP";
             Ensure                        = "Present";
             Identity                      = "testIMAP";
@@ -37,6 +39,5 @@ Configuration Example
             # value for security updated from Tls to None
             Security                      = "None";
         }
-
     }
 }
