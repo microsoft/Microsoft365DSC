@@ -25,7 +25,7 @@ function Get-TargetResource
         $Authentication,
 
         [Parameter()]
-        [ValidateSet('Exchange Remote', 'Outlook Anywhere', 'Google Workspace', 'IMAP')]
+        [ValidateSet('IMAP')]
         [System.String]
         $EndpointType,
 
@@ -208,7 +208,7 @@ function Set-TargetResource
         $Authentication,
 
         [Parameter()]
-        [ValidateSet('Exchange Remote', 'Outlook Anywhere', 'Google Workspace', 'IMAP')]
+        [ValidateSet('IMAP')]
         [System.String]
         $EndpointType,
 
@@ -379,7 +379,7 @@ function Test-TargetResource
         $Authentication,
 
         [Parameter()]
-        [ValidateSet('Exchange Remote', 'Outlook Anywhere', 'Google Workspace', 'IMAP')]
+        [ValidateSet('IMAP')]
         [System.String]
         $EndpointType,
 

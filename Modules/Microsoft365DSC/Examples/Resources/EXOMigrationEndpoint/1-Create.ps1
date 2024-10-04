@@ -21,6 +21,20 @@ Configuration Example
     Import-DscResource -ModuleName Microsoft365DSC
     node localhost
     {
-        
+        EXOMigrationEndpoint "EXOMigrationEndpoint-testIMAP"
+        {
+            AcceptUntrustedCertificates   = $True;
+            Authentication                = "Basic";
+            Credential                    = $Credscredential;
+            EndpointType                  = "IMAP";
+            Ensure                        = "Present";
+            Identity                      = "testIMAP";
+            MailboxPermission             = "Admin";
+            MaxConcurrentIncrementalSyncs = "10";
+            MaxConcurrentMigrations       = "20";
+            Port                          = 993;
+            RemoteServer                  = "gmail.com";
+            Security                      = "Tls";
+        }
     }
 }
