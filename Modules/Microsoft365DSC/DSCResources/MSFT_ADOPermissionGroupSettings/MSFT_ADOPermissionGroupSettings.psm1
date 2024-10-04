@@ -316,13 +316,46 @@ function Test-TargetResource
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
 
+    # Evaluate Permissions
+    $testResult = $true
+    foreach ($permission in $AllowPermissions)
+    {
+        $instance = $CurrentValues.AllowPermissions | Where-Object -FilterScript {$_.Token -eq $permission.Token -and `
+                                                                                  $_.DisplayName -eq $permission.DisplayName -and `
+                                                                                  $_.Bit -eq $permission.Bit -and `
+                                                                                  $_.NamespaceId -eq $permission.NamespaceId}
+        if ($null -eq $instance)
+        {
+            $testResult = $false
+            Write-Verbose -Message "Drift detected in AllowPermission: {$($permission.DisplayName)}"
+        }
+    }
+
+    foreach ($permission in $DenyPermissions)
+    {
+        $instance = $CurrentValues.DenyPermissions | Where-Object -FilterScript {$_.Token -eq $permission.Token -and `
+                                                                                 $_.DisplayName -eq $permission.DisplayName -and `
+                                                                                 $_.Bit -eq $permission.Bit -and `
+                                                                                 $_.NamespaceId -eq $permission.NamespaceId}
+        if ($null -eq $instance)
+        {
+            $testResult = $false
+            Write-Verbose -Message "Drift detected in DenyPermission: {$($permission.DisplayName)}"
+        }
+    }
+
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
 
-    $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
-        -Source $($MyInvocation.MyCommand.Source) `
-        -DesiredValues $PSBoundParameters `
-        -ValuesToCheck $ValuesToCheck.Keys
+    if ($testResult)
+    {
+        $ValuesToCheck.Remove('AllowPermissions') | Out-Null
+        $ValuesToCheck.Remove('DenyPermissions') | Out-Null
+        $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -DesiredValues $PSBoundParameters `
+            -ValuesToCheck $ValuesToCheck.Keys
+    }
 
     Write-Verbose -Message "Test-TargetResource returned $testResult"
 
@@ -602,6 +635,7 @@ function Get-M365DSCADOGroupPermission
                                     DisplayName = $associatedAction.displayName
                                     Bit         = $associatedAction.bit
                                     NamespaceId = $namespace.namespaceId
+                                    Token       = $token
                                 }
                                 $results.Deny += $entry
                             }
