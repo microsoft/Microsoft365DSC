@@ -23,6 +23,8 @@
   * Added ReportSuspiciousActivitySettings
 * AADAuthenticationMethodPolicyHardware
   * Initial release.
+* AADAuthenticationRequirement
+  * Initial release.
 * AADEntitlementManagementSettings
   * Initial release.
 * AADFeatureRolloutPolicy
