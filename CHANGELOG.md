@@ -8,6 +8,8 @@
   * Added support for ApplicationSecret
 * ADOPermissionGroupSettings
   * Initial release.
+* EXOMigrationEndpoint
+  * Initial Release
 * IntuneAppAndBrowserIsolationPolicyWindows10
   * Initial release.
     FIXES [#3028](https://github.com/microsoft/Microsoft365DSC/issues/3028)
