@@ -8,6 +8,8 @@
   * Added support for ApplicationSecret
 * ADOPermissionGroupSettings
   * Initial release.
+* EXOMigrationEndpoint
+  * Initial Release
 * M365DSCDRGUtil
   * Fixes an issue for the handling of skipped one-property elements in the
     Settings Catalog. FIXES [#5086](https://github.com/microsoft/Microsoft365DSC/issues/5086)

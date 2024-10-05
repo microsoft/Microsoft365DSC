@@ -3362,6 +3362,282 @@ function Remove-MgBetaRoleManagementEntitlementManagementRoleAssignment
     )
 }
 
+function Get-MigrationEndpoint
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $DiagnosticInfo,
+
+        [Parameter()]
+        [System.Object]
+        $Type,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $Partition
+    )
+}
+
+function Set-MigrationEndpoint
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $AcceptUntrustedCertificates,
+
+        [Parameter()]
+        [System.Object]
+        $MaxConcurrentMigrations,
+
+        [Parameter()]
+        [System.Byte[]]
+        $ServiceAccountKeyFileData,
+
+        [Parameter()]
+        [System.Object]
+        $TestMailbox,
+
+        [Parameter()]
+        [System.String]
+        $ExchangeServer,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $SkipVerification,
+
+        [Parameter()]
+        [System.Object]
+        $Authentication,
+
+        [Parameter()]
+        [System.String]
+        $AppSecretKeyVaultUrl,
+
+        [Parameter()]
+        [System.Object]
+        $Port,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.Object]
+        $RemoteServer,
+
+        [Parameter()]
+        [System.Object]
+        $Partition,
+
+        [Parameter()]
+        [System.Object]
+        $MailboxPermission,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $SourceMailboxLegacyDN,
+
+        [Parameter()]
+        [System.String]
+        $NspiServer,
+
+        [Parameter()]
+        [System.Object]
+        $RPCProxyServer,
+
+        [Parameter()]
+        [System.String]
+        $PublicFolderDatabaseServerLegacyDN,
+
+        [Parameter()]
+        [System.Object]
+        $Security,
+
+        [Parameter()]
+        [System.Object]
+        $MaxConcurrentIncrementalSyncs,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credentials
+    )
+}
+
+function New-MigrationEndpoint
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AcceptUntrustedCertificates,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ExchangeRemoteMove,
+
+        [Parameter()]
+        [System.Object]
+        $MaxConcurrentMigrations,
+
+        [Parameter()]
+        [System.Byte[]]
+        $ServiceAccountKeyFileData,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PublicFolder,
+
+        [Parameter()]
+        [System.Object]
+        $TestMailbox,
+
+        [Parameter()]
+        [System.String]
+        $ExchangeServer,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $SkipVerification,
+
+        [Parameter()]
+        [System.Object]
+        $Authentication,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ExchangeOutlookAnywhere,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Gmail,
+
+        [Parameter()]
+        [System.String]
+        $AppSecretKeyVaultUrl,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Compliance,
+
+        [Parameter()]
+        [System.Int32]
+        $Port,
+
+        [Parameter()]
+        [System.Security.SecureString]
+        $OAuthCode,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.Object]
+        $RemoteServer,
+
+        [Parameter()]
+        [System.Object]
+        $Partition,
+
+        [Parameter()]
+        [System.Object]
+        $MailboxPermission,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $SourceMailboxLegacyDN,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IMAP,
+
+        [Parameter()]
+        [System.String]
+        $RemoteTenant,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PublicFolderToUnifiedGroup,
+
+        [Parameter()]
+        [System.String]
+        $NspiServer,
+
+        [Parameter()]
+        [System.String]
+        $RedirectUri,
+
+        [Parameter()]
+        [System.Object]
+        $RPCProxyServer,
+
+        [Parameter()]
+        [System.Object]
+        $EmailAddress,
+
+        [Parameter()]
+        [System.Object]
+        $Security,
+
+        [Parameter()]
+        [System.Object]
+        $MaxConcurrentIncrementalSyncs,
+
+        [Parameter()]
+        [System.String]
+        $PublicFolderDatabaseServerLegacyDN,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credentials,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Autodiscover
+    )
+}
+
+function Remove-MigrationEndpoint
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $Partition
+    )
+}
+
 function Set-ManagementRoleEntry
 {
     [CmdletBinding()]
