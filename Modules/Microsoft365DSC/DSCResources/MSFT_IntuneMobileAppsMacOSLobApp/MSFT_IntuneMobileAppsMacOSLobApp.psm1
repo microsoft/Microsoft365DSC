@@ -67,6 +67,10 @@ function Get-TargetResource
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
 
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $LargeIcon,
+
 
         #endregion
 
@@ -147,6 +151,7 @@ function Get-TargetResource
 
         Write-Verbose -Message "Found Mobile app with {$DisplayName}."
 
+
         $results = @{
             Id                    = $instance.Id
             Description           = $instance.Description
@@ -160,7 +165,8 @@ function Get-TargetResource
             Publisher             = $instance.Publisher
             PublishingState       = $instance.PublishingState.ToString()
             RoleScopeTagIds       = $instance.RoleScopeTagIds
-            IgnoreVersionDetection = $instance.AdditionalProperties.IgnoreVersionDetection
+            # LargeIcon             = $instance.LargeIcon
+            IgnoreVersionDetection = $instance.AdditionalProperties.ignoreVersionDetection
 
             Ensure                = 'Present'
             Credential            = $Credential
@@ -172,6 +178,9 @@ function Get-TargetResource
             AccessTokens          = $AccessTokens
         }
 
+        #region complex types
+
+        #Categories
         if($null -ne $instance.Categories)
         {
             $results.Add('Categories', $instance.Categories)
@@ -180,6 +189,7 @@ function Get-TargetResource
             $results.Add('Categories', "")
         }
 
+        #Assignments
         $resultAssignments = @()
         $appAssignments = Get-MgBetaDeviceAppManagementMobileAppAssignment -MobileAppId $instance.Id
         if ($null -ne $appAssignments -and $appAssignments.count -gt 0)
@@ -190,6 +200,25 @@ function Get-TargetResource
 
             $results.Add('Assignments', $resultAssignments)
         }
+
+        #LargeIcon
+
+        # The large is returned only when Get cmdlet is called with Id parameter. The large icon is a base64 encoded string, so we need to convert it to a byte array.
+        $instanceWithLargeIcon = Get-MgBetaDeviceAppManagementMobileApp -MobileAppId $instance.Id
+
+
+        #$LargeIcon.Type = $typeLargeIconType
+        #$LargeIcon.Value = $base64LargeIconStringValue
+
+        if($null -ne $instanceWithLargeIcon.LargeIcon)
+        {
+            $results.Add('LargeIcon', $instanceWithLargeIcon.LargeIcon)
+        }
+        else {
+            $results.Add('LargeIcon', "")
+        }
+
+        #end region complex types
 
         return [System.Collections.Hashtable] $results
     }
@@ -274,6 +303,10 @@ function Set-TargetResource
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
 
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $LargeIcon,
+
 
         #endregion
 
@@ -326,19 +359,29 @@ function Set-TargetResource
     $currentInstance = Get-TargetResource @PSBoundParameters
     $PSBoundParameters.Remove('Categories') | Out-Null
     $PSBoundParameters.Remove('Assignments') | Out-Null
+    $PSBoundParameters.Remove('LargeIcon') | Out-Null
 
     $setParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
     $setParameters.remove('Id') | Out-Null
     $setParameters.remove('Ensure') | Out-Null
     $setParameters.remove('Categories') | Out-Null
     $setParameters.remove('Assignments') | Out-Null
+    $setParameters.remove('LargeIcon') | Out-Null
 
     $AdditionalProperties = Get-M365DSCIntuneMobileMocOSLobAppAdditionalProperties -Properties ([System.Collections.Hashtable]$PSBoundParameters)
 
+    #Categories
     if($null -ne $Categories)
     {
         [System.Object[]]$categoriesValue = ConvertTo-M365DSCIntuneAppCategories -Categories $Categories
         $setParameters.Add('Categories', $categoriesValue)
+    }
+
+    #LargeIcon
+    if($null -ne $LargeIcon)
+    {
+        [System.Object]$LargeIconValue = ConvertTo-M365DSCIntuneAppLargeIcon -LargeIcon $LargeIcon
+        $setParameters.Add('LargeIcon', $LargeIconValue)
     }
 
     # CREATE
@@ -444,6 +487,10 @@ function Test-TargetResource
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $LargeIcon,
 
         #endregion
 
@@ -635,10 +682,7 @@ function Export-TargetResource
                 Publisher             = $config.Publisher
                 PublishingState       = $config.PublishingState.ToString()
                 RoleScopeTagIds       = $config.RoleScopeTagIds
-
-                IgnoreVersionDetection = $config.AdditionalProperties.IgnoreVersionDetection
-
-                # LargeIcon             = $config.LargeIcon
+                IgnoreVersionDetection = $config.AdditionalProperties.ignoreVersionDetection
                 # ChildApps             = $config.ChildApps
 
                 Ensure                = 'Present'
@@ -661,6 +705,7 @@ function Export-TargetResource
 
             #region complex types
 
+            #Categories
             if($null -eq $Results.Categories -or $Results.Categories.Count -eq 0)
             {
                 $Results.Categories = $null
@@ -670,6 +715,7 @@ function Export-TargetResource
                 $Results.Categories = Get-M365DSCIntuneAppCategoriesAsString -Categories $Results.Categories
             }
 
+            #Assignments
             if ($Results.Assignments)
             {
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject ([Array]$Results.Assignments) -CIMInstanceName DeviceManagementMobileAppAssignment
@@ -683,6 +729,17 @@ function Export-TargetResource
                     $Results.Remove('Assignments') | Out-Null
                 }
             }
+
+            #LargeIcon
+            if($null -eq $Results.LargeIcon)
+            {
+                $Results.LargeIcon = $null
+            }
+            else
+            {
+                $Results.LargeIcon = Get-M365DSCIntuneAppLargeIconAsString -LargeIcon $Results.LargeIcon
+            }
+
 
             #endregion complex types
 
@@ -819,6 +876,25 @@ function ConvertTo-M365DSCIntuneAppCategories
     return $result
 }
 
+function ConvertTo-M365DSCIntuneAppLargeIcon #set
+{
+    [OutputType([System.Object])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Object]
+        $LargeIcon
+    )
+
+    $base64String = [System.Convert]::ToBase64String($LargeIcon.Value)
+
+    $result = @{
+        type  = $LargeIcon.Type
+        value = $base64String
+    }
+
+    return $result
+}
+
 function Get-M365DSCIntuneAppCategoriesAsString
 {
     [CmdletBinding()]
@@ -853,6 +929,38 @@ function Get-M365DSCIntuneAppCategoriesAsString
     $StringContent += ')'
     return $StringContent
 }
+
+function Get-M365DSCIntuneAppLargeIconAsString #Get and export
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Object]
+        $LargeIcon
+    )
+
+    $StringContent = '@('
+    $space = '                '
+    $indent = '    '
+
+    if ($null -ne $LargeIcon)
+    {
+        $StringContent += "`r`n"
+        $StringContent += "$space"
+    }
+
+    # [System.Convert]::ToBase64String($LargeIcon.Value) - converts byte array to base64 string, this might be needed below
+    $base64String = [System.Convert]::ToBase64String($LargeIcon.Value)
+
+    $StringContent += "MSFT_DeviceManagementMimeContent { `r`n"
+    $StringContent += "$($space)$($indent)type  = '" + $LargeIcon.Type + "'`r`n"
+    $StringContent += "$($space)$($indent)value = '" + $base64String + "'`r`n"
+    $StringContent += "$space}"
+    $StringContent += ')'
+
+    return $StringContent
+ }
 
 function Get-M365DSCIntuneMobileMocOSLobAppAdditionalProperties
 {
