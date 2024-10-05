@@ -1,0 +1,32 @@
+{
+    "resourceName": "IntuneDerivedCredential",
+    "description": "Use this resource to create new navigation property to derivedCredentials for deviceManagement",
+    "roles": {
+        "read": [
+            "Role"
+        ],
+        "update": [
+            "Role"
+        ]
+    },
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [],
+                "update": []
+            },
+            "application": {
+                "read": [
+                    {
+                        "name": "Permission for Monitoring and Export"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Permission for deploying"
+                    }
+                ]
+            }
+        }
+    }
+}
