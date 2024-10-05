@@ -8,6 +8,8 @@
   * Added support for ApplicationSecret
 * ADOPermissionGroupSettings
   * Initial release.
+* EXOMigrationEndpoint
+  * Initial Release
 * IntuneEndpointDetectionAndResponsePolicyWindows10
   * Migrate to new Settings Catalog cmdlets.
 * M365DSCDRGUtil
