@@ -737,9 +737,17 @@ function Export-TargetResource
             }
             else
             {
-                $Results.LargeIcon = Get-M365DSCIntuneAppLargeIconAsString -LargeIcon $Results.LargeIcon
-            }
+                #$tempicon = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.LargeIcon -CIMInstanceName DeviceManagementMimeContent -IsArray $false
 
+                if ($tempicon)
+                {
+                    $Results.LargeIcon = Get-M365DSCIntuneAppLargeIconAsString -LargeIcon $Results.LargeIcon
+                }
+                else
+                {
+                    $Results.Remove('LargeIcon') | Out-Null
+                }
+            }
 
             #endregion complex types
 
@@ -867,7 +875,7 @@ function ConvertTo-M365DSCIntuneAppCategories
     {
         $currentCategory = @{
             id  = $category.id
-            displayName = $category.displayName # This 'displayName' property has to exist in microsoft.management.services.api.mobileAppCategory
+            displayName = $category.displayName
         }
 
         $result += $currentCategory
@@ -885,11 +893,12 @@ function ConvertTo-M365DSCIntuneAppLargeIcon #set
         $LargeIcon
     )
 
-    $base64String = [System.Convert]::ToBase64String($LargeIcon.Value)
+    #$iconValue = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($LargeIcon.Value)) => throws string to intance conversion error
+    #$iconValue = [System.Convert]::FromBase64String($LargeIcon.Value) => throws string to intance conversion error
 
     $result = @{
         type  = $LargeIcon.Type
-        value = $base64String
+        value = $iconValue
     }
 
     return $result
@@ -927,6 +936,7 @@ function Get-M365DSCIntuneAppCategoriesAsString
     }
 
     $StringContent += ')'
+
     return $StringContent
 }
 
@@ -940,9 +950,9 @@ function Get-M365DSCIntuneAppLargeIconAsString #Get and export
         $LargeIcon
     )
 
-    $StringContent = '@('
-    $space = '                '
-    $indent = '    '
+    # $StringContent = '@('
+     $space = '                '
+     $indent = '    '
 
     if ($null -ne $LargeIcon)
     {
@@ -950,14 +960,13 @@ function Get-M365DSCIntuneAppLargeIconAsString #Get and export
         $StringContent += "$space"
     }
 
-    # [System.Convert]::ToBase64String($LargeIcon.Value) - converts byte array to base64 string, this might be needed below
-    $base64String = [System.Convert]::ToBase64String($LargeIcon.Value)
+    $base64String = [System.Convert]::ToBase64String($LargeIcon.Value) # This exports the base64 string (blob) of the byte array, same as we see in Graph API response
 
     $StringContent += "MSFT_DeviceManagementMimeContent { `r`n"
     $StringContent += "$($space)$($indent)type  = '" + $LargeIcon.Type + "'`r`n"
     $StringContent += "$($space)$($indent)value = '" + $base64String + "'`r`n"
     $StringContent += "$space}"
-    $StringContent += ')'
+    #$StringContent += ')'
 
     return $StringContent
  }
