@@ -8,6 +8,8 @@
   * Added support for ApplicationSecret
 * ADOPermissionGroupSettings
   * Initial release.
+* EXOMigrationEndpoint
+  * Initial Release
 * IntuneAppAndBrowserIsolationPolicyWindows10ConfigMgr
   * Initial release. 
 * M365DSCDRGUtil
