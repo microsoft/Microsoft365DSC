@@ -731,22 +731,13 @@ function Export-TargetResource
             }
 
             #LargeIcon
-            if($null -eq $Results.LargeIcon)
+            if($Results.LargeIcon)
             {
-                $Results.LargeIcon = $null
+                $Results.LargeIcon = Get-M365DSCIntuneAppLargeIconAsString -LargeIcon $Results.LargeIcon
             }
             else
             {
-                #$tempicon = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.LargeIcon -CIMInstanceName DeviceManagementMimeContent -IsArray $false
-
-                if ($tempicon)
-                {
-                    $Results.LargeIcon = Get-M365DSCIntuneAppLargeIconAsString -LargeIcon $Results.LargeIcon
-                }
-                else
-                {
-                    $Results.Remove('LargeIcon') | Out-Null
-                }
+                $Results.Remove('LargeIcon') | Out-Null
             }
 
             #endregion complex types
@@ -765,6 +756,11 @@ function Export-TargetResource
             if ($null -ne $Results.Categories)
             {
                 $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Categories'
+            }
+
+            if ($null -ne $Results.LargeIcon)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'LargeIcon'
             }
 
             if ($Results.Assignments)
@@ -898,7 +894,7 @@ function ConvertTo-M365DSCIntuneAppLargeIcon #set
 
     $result = @{
         type  = $LargeIcon.Type
-        value = $iconValue
+        value = $LargeIcon.Value
     }
 
     return $result
