@@ -15,30 +15,20 @@ class MSFT_IntuneMobileAppsMacOSLobApp : OMI_BaseResource
     [Write, Description("The publishing state for the app. The app cannot be assigned unless the app is published. Inherited from mobileApp."), ValueMap{"notPublished", "processing","published"}, Values{"notPublished", "processing", "published"}] String PublishingState;
     [Write, Description("List of Scope Tag IDs for mobile app.")] String RoleScopeTagIds[];
 
-
     [Write, Description("The list of categories for this app."), EmbeddedInstance("MSFT_DeviceManagementMobileAppCategory")] String Categories[];
-
-    [Write, Description("The list of child apps for this app package."), EmbeddedInstance("MSFT_DeviceManagementMobileAppChildApp")] ChildApps[];
-
     [Write, Description("The list of assignments for this app."), EmbeddedInstance("MSFT_DeviceManagementMobileAppAssignment")] String Assignments[];
-    [Write, Description("The list of categories for this app."), EmbeddedInstance("MSFT_DeviceManagementMimeContent")] String LargeIcon;
+    [Write, Description("The list of child apps for this app package."), EmbeddedInstance("MSFT_DeviceManagementMobileAppChildApp")] String ChildApps[];
 
     [Write, Description("Wether to ignore the version of the app or not.")] Boolean IgnoreVersionDetection;
 
     [Write, Description("Present ensures the policy exists, absent ensures it is removed."), ValueMap{"Present", "Absent"}, Values{"Present", "Absent"}] String Ensure;
-    [Write, Description("Credentials of the Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
+    [Write, Description("Credentials of the Admin"), EmbeddedInstance("MSFT_Credential")] String Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
     [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
     [Write, Description("Secret of the Azure Active Directory tenant used for authentication."), EmbeddedInstance("MSFT_Credential")] String ApplicationSecret;
     [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
     [Write, Description("Managed ID being used for authentication.")] Boolean ManagedIdentity;
     [Write, Description("Access token used for authentication.")] String AccessTokens[];
-};
-
-class MSFT_DeviceManagementMimeContent
-{
-    [Write, Description("Indicates the type of mime content.")] String Type;
-    [Write, Description("The byte array that contains the actual content.")] String Value;
 };
 
 class MSFT_DeviceManagementMobileAppCategory
@@ -77,13 +67,4 @@ class MSFT_DeviceManagementMobileAppAssignment
         String deviceAndAppManagementAssignmentFilterType;
 
     [Write, Description("The list of settings used with this app assignemnt."), EmbeddedInstance("MSFT_DeviceManagementMobileAppAssignmentSetting")] String settings[];
-};
-
-class MSFT_DeviceManagementMobileAppAssingmentSetting
-{
-    [Write, Description("The mobile app assignment setting type."),
-        ValueMap{"microsoft.graph.macOsLobAppAssignmentSettings"},
-        Values{"microsoft.graph.macOsLobAppAssignmentSettings"}]
-        String dataType;
-    [Write, Description("The mobile app assignment setting name.")] String uninstallOnDeviceRemoval;
 };

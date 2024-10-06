@@ -345,6 +345,10 @@ function Set-TargetResource
         $AccessTokens
     )
 
+    Write-Host "start Set-TargetResource.............................."
+    Write-Verobse "start Set-TargetResource.............................."
+    Write-Debug "start Set-TargetResource.............................."
+
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
@@ -360,14 +364,14 @@ function Set-TargetResource
     $currentInstance = Get-TargetResource @PSBoundParameters
     $PSBoundParameters.Remove('Categories') | Out-Null
     $PSBoundParameters.Remove('Assignments') | Out-Null
-    $PSBoundParameters.Remove('childApps') | Out-Null
+    #$PSBoundParameters.Remove('childApps') | Out-Null
 
     $setParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
     $setParameters.remove('Id') | Out-Null
     $setParameters.remove('Ensure') | Out-Null
     $setParameters.remove('Categories') | Out-Null
     $setParameters.remove('Assignments') | Out-Null
-    $setParameters.remove('childApps') | Out-Null
+    #$setParameters.remove('childApps') | Out-Null
 
     $AdditionalProperties = Get-M365DSCIntuneMobileMocOSLobAppAdditionalProperties -Properties ([System.Collections.Hashtable]$PSBoundParameters)
 
@@ -382,14 +386,12 @@ function Set-TargetResource
     if($null -ne $ChildApps)
     {
         [System.Object[]]$childAppsValue = ConvertTo-M365DSCIntuneAppChildApps -ChildApps $ChildApps
-        #$setParameters.Add('ChildApps', $childApps)
         $AdditionalProperties.Add('childApps', $childAppsValue)
     }
 
     # CREATE
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-
         Write-Host "Create MacOSLobApp: $DisplayName"
 
         foreach ($key in $setParameters.Keys)
@@ -546,6 +548,9 @@ function Test-TargetResource
         [System.String[]]
         $AccessTokens
     )
+    Write-Host "start test-TargetResource.............................."
+    Write-Verobse "start test-TargetResource.............................."
+    Write-Debug "start Set-TargetResource.............................."
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
