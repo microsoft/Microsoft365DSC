@@ -31,7 +31,7 @@ function Get-TargetResource
         $ThresholdPercentage,
 
         [Parameter()]
-        [System.String]
+        [System.Collections.IDictionary]
         $Header
     )
 
@@ -139,7 +139,7 @@ function Set-TargetResource
         $ThresholdPercentage,
 
         [Parameter()]
-        [System.String]
+        [System.Collections.IDictionary]
         $Header
     )
 
@@ -209,7 +209,7 @@ function Test-TargetResource
         $ThresholdPercentage,
 
         [Parameter()]
-        [System.String]
+        [System.Collections.IDictionary]
         $Header
     )
 

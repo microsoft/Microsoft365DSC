@@ -1,40 +1,34 @@
 ﻿{
-    "resourceName": "IntuneDerivedCredential",
-    "description": "Use this resource to create new navigation property to derivedCredentials for deviceManagement",
-    // "roles": {
-    //   "read": [
-    //     "Global Reader"
-    //   ],
-    //   "update": [
-    //     "Intune Administrator"
-    //   ]
-    // },
-
+    "resourceName": "EXOMessageClassification",
+    "description": "",
+    "roles": {
+        "read": [
+            "Global Reader"
+        ],
+        "update": [
+            "Exchange Administrator"
+        ]
+    },
     "permissions": {
-      "graph": {
-        "delegated": {
-          "read": [
-            "DeviceManagementConfiguration.Read.All"
-          ],
-          "update": [
-            "DeviceManagementConfiguration.ReadWrite.All"
-          ]
+        "graph": {
+            "delegated": {
+                "read": [],
+                "update": []
+            },
+            "application": {
+                "read": [],
+                "update": []
+            }
         },
-        "application": {
-          "read": [
-            "DeviceManagementConfiguration.Read.All"
-          ],
-          "update": [
-            "DeviceManagementConfiguration.ReadWrite.All"
-          ]
+        "exchange": {
+            "requiredroles": [
+                "User Options",
+                "Data Loss Prevention",
+                "Transport Rules",
+                "View-Only Configuration",
+                "Mail Recipients"
+            ],
+            "requiredrolegroups": "Organization Management"
         }
-      }
     }
-  }
-
-// PS C:\Windows\system32> Find-MgGraphCommand -Command “Get-MgBetaDeviceManagementDerivedCredential” | select Permissions
-    // OUTPUT:
-    // Permissions
-    // -----------
-    // {}
-    // {}
+}
