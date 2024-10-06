@@ -17,6 +17,7 @@ class MSFT_IntuneMobileAppsMacOSLobApp : OMI_BaseResource
 
     [Write, Description("The list of categories for this app."), EmbeddedInstance("MSFT_DeviceManagementMobileAppCategory")] String Categories[];
     [Write, Description("The list of assignments for this app."), EmbeddedInstance("MSFT_DeviceManagementMobileAppAssignment")] String Assignments[];
+
     [Write, Description("The list of child apps for this app package."), EmbeddedInstance("MSFT_DeviceManagementMobileAppChildApp")] String ChildApps[];
 
     [Write, Description("Wether to ignore the version of the app or not.")] Boolean IgnoreVersionDetection;
@@ -41,7 +42,7 @@ class MSFT_DeviceManagementMobileAppChildApp
 {
     [Write, Description("The bundleId of the app.")] String bundleId;
     [Write, Description("The build number of the app.")] String buildNumber;
-    [Write, Description("The version number of the app.")], String versionNumber;
+    [Write, Description("The version number of the app.")] String versionNumber;
 };
 
 class MSFT_DeviceManagementMobileAppAssignment

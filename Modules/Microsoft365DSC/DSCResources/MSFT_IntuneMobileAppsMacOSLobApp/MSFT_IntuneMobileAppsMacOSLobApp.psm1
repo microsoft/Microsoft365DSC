@@ -346,8 +346,7 @@ function Set-TargetResource
     )
 
     Write-Host "start Set-TargetResource.............................."
-    Write-Verobse "start Set-TargetResource.............................."
-    Write-Debug "start Set-TargetResource.............................."
+
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -548,8 +547,8 @@ function Test-TargetResource
         [System.String[]]
         $AccessTokens
     )
+
     Write-Host "start test-TargetResource.............................."
-    Write-Verobse "start test-TargetResource.............................."
     Write-Debug "start Set-TargetResource.............................."
 
     #Ensure the proper dependencies are installed in the current environment.
