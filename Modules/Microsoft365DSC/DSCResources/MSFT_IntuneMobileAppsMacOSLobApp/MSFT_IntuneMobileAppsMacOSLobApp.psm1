@@ -128,19 +128,19 @@ function Get-TargetResource
     try
     {
         $instance = Get-MgBetaDeviceAppManagementMobileApp `
-            -Filter "(isof('microsoft.graph.macOSLobApp') and displayName eq '$DisplayName')"
-            # -ExpandProperty "categories,assignments" `
-            # -ErrorAction SilentlyContinue | Where-Object `
-            # -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.macOSLobApp' }
+            -Filter "(isof('microsoft.graph.macOSLobApp') and displayName eq '$DisplayName')" `
+            -ExpandProperty "categories,assignments" `
+            -ErrorAction SilentlyContinue | Where-Object `
+            -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.macOSLobApp' }
 
         if ($null -eq $instance)
         {
             Write-Verbose -Message "No Mobile app with DisplayName {$DisplayName} was found. Search with DisplayName."
             $instance = Get-MgBetaDeviceAppManagementMobileApp `
-                -MobileAppId $Id
-                # -ExpandProperty "categories,assignments" `
-                # -ErrorAction Stop | Where-Object `
-                # -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.macOSLobApp' }
+                -MobileAppId $Id `
+                -ExpandProperty "categories,assignments" `
+                -ErrorAction Stop | Where-Object `
+                -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.macOSLobApp' }
         }
 
         if ($null -eq $instance)
@@ -389,12 +389,26 @@ function Set-TargetResource
     # CREATE
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
+
+        Write-Host "Create MacOSLobApp: $DisplayName"
+
+        foreach ($key in $setParameters.Keys)
+        {
+            Write-Host "Create MacOSLobApp: setParameters: $key - $($setParameters.$key)"
+        }
+        foreach ($key in $AdditionalProperties.Keys)
+        {
+            Write-Host "Create MacOSLobApp: AdditionalProperties: $key - $($AdditionalProperties.$key)"
+        }
+
+
         $app = New-MgBetaDeviceAppManagementMobileApp @setParameters -AdditionalProperties $AdditionalProperties
 
         #region Assignments
         $assignmentsHash = ConvertTo-IntuneMobileAppAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
         if ($app.id)
         {
+            Write-host "Assignment updates for MacOSLobApp: $DisplayName"
             Update-MgBetaDeviceAppManagementMobileAppAssignment -MobileAppId $app.id `
                 -Targets $assignmentsHash `
                 -Repository 'deviceAppManagement/mobileAppAssignments'
@@ -404,11 +418,13 @@ function Set-TargetResource
     # UPDATE
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
+        Write-Host "Update MacOSLobApp: $DisplayName"
         Update-MgBetaDeviceAppManagementMobileApp -MobileAppId $currentInstance.Id @setParameters -AdditionalProperties $AdditionalProperties
 
         $assignmentsHash = ConvertTo-IntuneMobileAppAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
         if ($app.id)
         {
+            Write-host "Assignment updates for MacOSLobApp: $DisplayName"
             Update-MgBetaDeviceAppManagementMobileAppAssignment -MobileAppId $app.id `
                 -Targets $assignmentsHash `
                 -Repository 'deviceAppManagement/mobileAppAssignments'
@@ -417,6 +433,7 @@ function Set-TargetResource
     # REMOVE
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
+        Write-Host "Remove MacOSLobApp: $DisplayName"
         Remove-MgBetaDeviceAppManagementMobileApp -MobileAppId $currentInstance.Id -Confirm:$false
     }
 }
@@ -766,12 +783,24 @@ function Export-TargetResource
 
             if ($null -ne $Results.Categories)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Categories'
+                $isCIMArray = $false
+                if ($Results.Categories.getType().Fullname -like '*[[\]]')
+                {
+                    $isCIMArray = $true
+                }
+
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Categories' -IsCIMArray:$isCIMArray
             }
 
             if ($null -ne $Results.childApps)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'ChildApps'
+                $isCIMArray = $false
+                if ($Results.childApps.getType().Fullname -like '*[[\]]')
+                {
+                    $isCIMArray = $true
+                }
+
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'ChildApps' -IsCIMArray:$isCIMArray
             }
 
             if ($Results.Assignments)
@@ -958,8 +987,9 @@ function Get-M365DSCIntuneMobileMocOSLobAppAdditionalProperties
                 $processedValues = @()
                 if($propertyName -eq "childApps" -and $null -ne $propertyValue -and $propertyValue.Count -gt 0)
                 {
-                    $processChildAppsValues = Get-M365DSCIntuneAppChildAppsAsString -ChildApps $Results.ChildApps
-                    $results.Add($propertyName, $processChildAppsValues)
+                    $processedChildAppsValues = Get-M365DSCIntuneAppChildAppsAsString -ChildApps $Results.ChildApps
+                    Write-Host "Get-M365DSCIntuneMobileMocOSLobAppAdditionalProperties: processedChildAppsValues" $processedChildAppsValues
+                    $results.Add($propertyName, $processedChildAppsValues)
                 }
                 else
                 {
