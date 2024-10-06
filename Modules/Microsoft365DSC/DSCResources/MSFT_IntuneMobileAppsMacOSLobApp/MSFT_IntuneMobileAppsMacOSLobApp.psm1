@@ -68,8 +68,8 @@ function Get-TargetResource
         $Assignments,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance]
-        $LargeIcon,
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $ChildApps,
 
 
         #endregion
@@ -128,19 +128,19 @@ function Get-TargetResource
     try
     {
         $instance = Get-MgBetaDeviceAppManagementMobileApp `
-            -Filter "(isof('microsoft.graph.macOSLobApp') and displayName eq '$DisplayName')" `
-            -ExpandProperty "categories,assignments" `
-            -ErrorAction SilentlyContinue | Where-Object `
-            -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.macOSLobApp' }
+            -Filter "(isof('microsoft.graph.macOSLobApp') and displayName eq '$DisplayName')"
+            # -ExpandProperty "categories,assignments" `
+            # -ErrorAction SilentlyContinue | Where-Object `
+            # -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.macOSLobApp' }
 
         if ($null -eq $instance)
         {
             Write-Verbose -Message "No Mobile app with DisplayName {$DisplayName} was found. Search with DisplayName."
             $instance = Get-MgBetaDeviceAppManagementMobileApp `
-                -MobileAppId $Id `
-                -ExpandProperty "categories,assignments" `
-                -ErrorAction Stop | Where-Object `
-                -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.macOSLobApp' }
+                -MobileAppId $Id
+                # -ExpandProperty "categories,assignments" `
+                # -ErrorAction Stop | Where-Object `
+                # -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.macOSLobApp' }
         }
 
         if ($null -eq $instance)
@@ -150,7 +150,6 @@ function Get-TargetResource
         }
 
         Write-Verbose -Message "Found Mobile app with {$DisplayName}."
-
 
         $results = @{
             Id                    = $instance.Id
@@ -165,8 +164,8 @@ function Get-TargetResource
             Publisher             = $instance.Publisher
             PublishingState       = $instance.PublishingState.ToString()
             RoleScopeTagIds       = $instance.RoleScopeTagIds
-            # LargeIcon             = $instance.LargeIcon
             IgnoreVersionDetection = $instance.AdditionalProperties.ignoreVersionDetection
+            #ChildApps             = $instance.AdditionalProperties.childApps
 
             Ensure                = 'Present'
             Credential            = $Credential
@@ -189,6 +188,25 @@ function Get-TargetResource
             $results.Add('Categories', "")
         }
 
+        #childApps
+        Write-Host ".............................."
+        Write-Host "Get- start childApps.............................." $instance.DisplayName
+        if($null -ne $instance.AdditionalProperties.childApps)
+        {
+            foreach ($childApp in $instance.AdditionalProperties.childApps)
+            {
+                Write-Host "Get- print childApps.............................." $childApp.bundleId
+                Write-Host "Get- print childApps.............................." $childApp.buildNumber
+                Write-Host "Get- print childApps.............................." $childApp.versionNumber
+            }
+
+            $results.Add('ChildApps', $instance.AdditionalProperties.childApps)
+        }
+        else {
+            Write-Host "Get- print childApps null.............................."
+            $results.Add('ChildApps', "")
+        }
+
         #Assignments
         $resultAssignments = @()
         $appAssignments = Get-MgBetaDeviceAppManagementMobileAppAssignment -MobileAppId $instance.Id
@@ -199,23 +217,6 @@ function Get-TargetResource
                                 -Assignments ($appAssignments)
 
             $results.Add('Assignments', $resultAssignments)
-        }
-
-        #LargeIcon
-
-        # The large is returned only when Get cmdlet is called with Id parameter. The large icon is a base64 encoded string, so we need to convert it to a byte array.
-        $instanceWithLargeIcon = Get-MgBetaDeviceAppManagementMobileApp -MobileAppId $instance.Id
-
-
-        #$LargeIcon.Type = $typeLargeIconType
-        #$LargeIcon.Value = $base64LargeIconStringValue
-
-        if($null -ne $instanceWithLargeIcon.LargeIcon)
-        {
-            $results.Add('LargeIcon', $instanceWithLargeIcon.LargeIcon)
-        }
-        else {
-            $results.Add('LargeIcon', "")
         }
 
         #end region complex types
@@ -304,8 +305,8 @@ function Set-TargetResource
         $Assignments,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance]
-        $LargeIcon,
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $ChildApps,
 
 
         #endregion
@@ -359,14 +360,14 @@ function Set-TargetResource
     $currentInstance = Get-TargetResource @PSBoundParameters
     $PSBoundParameters.Remove('Categories') | Out-Null
     $PSBoundParameters.Remove('Assignments') | Out-Null
-    $PSBoundParameters.Remove('LargeIcon') | Out-Null
+    $PSBoundParameters.Remove('childApps') | Out-Null
 
     $setParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
     $setParameters.remove('Id') | Out-Null
     $setParameters.remove('Ensure') | Out-Null
     $setParameters.remove('Categories') | Out-Null
     $setParameters.remove('Assignments') | Out-Null
-    $setParameters.remove('LargeIcon') | Out-Null
+    $setParameters.remove('childApps') | Out-Null
 
     $AdditionalProperties = Get-M365DSCIntuneMobileMocOSLobAppAdditionalProperties -Properties ([System.Collections.Hashtable]$PSBoundParameters)
 
@@ -377,11 +378,12 @@ function Set-TargetResource
         $setParameters.Add('Categories', $categoriesValue)
     }
 
-    #LargeIcon
-    if($null -ne $LargeIcon)
+    #childApps
+    if($null -ne $ChildApps)
     {
-        [System.Object]$LargeIconValue = ConvertTo-M365DSCIntuneAppLargeIcon -LargeIcon $LargeIcon
-        $setParameters.Add('LargeIcon', $LargeIconValue)
+        [System.Object[]]$childAppsValue = ConvertTo-M365DSCIntuneAppChildApps -ChildApps $ChildApps
+        #$setParameters.Add('ChildApps', $childApps)
+        $AdditionalProperties.Add('childApps', $childAppsValue)
     }
 
     # CREATE
@@ -489,8 +491,8 @@ function Test-TargetResource
         $Assignments,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance]
-        $LargeIcon,
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $ChildApps,
 
         #endregion
 
@@ -683,7 +685,7 @@ function Export-TargetResource
                 PublishingState       = $config.PublishingState.ToString()
                 RoleScopeTagIds       = $config.RoleScopeTagIds
                 IgnoreVersionDetection = $config.AdditionalProperties.ignoreVersionDetection
-                # ChildApps             = $config.ChildApps
+                #ChildApps             = $config.AdditionalProperties.childApps
 
                 Ensure                = 'Present'
                 Credential            = $Credential
@@ -715,6 +717,24 @@ function Export-TargetResource
                 $Results.Categories = Get-M365DSCIntuneAppCategoriesAsString -Categories $Results.Categories
             }
 
+            #ChildApps
+            if($null -eq $Results.childApps -or $Results.childApps.Count -eq 0)
+            {
+                Write-Host "Export print childApps: IN IF WHERE CHILD APPS NULL.............................."
+            }
+            else
+            {
+                Write-Host "Export print childApps: IN ELSE BEFORE FOR LOOP.............................."
+                foreach ($childApp in $Results.childApps)
+                {
+                    Write-Host "Export print childApps.............................." $childApp.bundleId
+                    Write-Host "Export print childApps.............................." $childApp.buildNumber
+                    Write-Host "Export print childApps.............................." $childApp.versionNumber
+                }
+
+                $Results.childApps = Get-M365DSCIntuneAppChildAppsAsString -ChildApps $Results.childApps
+            }
+
             #Assignments
             if ($Results.Assignments)
             {
@@ -730,15 +750,6 @@ function Export-TargetResource
                 }
             }
 
-            #LargeIcon
-            if($Results.LargeIcon)
-            {
-                $Results.LargeIcon = Get-M365DSCIntuneAppLargeIconAsString -LargeIcon $Results.LargeIcon
-            }
-            else
-            {
-                $Results.Remove('LargeIcon') | Out-Null
-            }
 
             #endregion complex types
 
@@ -758,9 +769,9 @@ function Export-TargetResource
                 $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Categories'
             }
 
-            if ($null -ne $Results.LargeIcon)
+            if ($null -ne $Results.childApps)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'LargeIcon'
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'ChildApps'
             }
 
             if ($Results.Assignments)
@@ -770,6 +781,7 @@ function Export-TargetResource
                 {
                     $isCIMArray = $true
                 }
+
                 $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Assignments' -IsCIMArray:$isCIMArray
             }
 
@@ -800,63 +812,6 @@ function Export-TargetResource
 
 #region Helper functions
 
-function ConvertTo-M365DSCIntuneAppAssignmentSettings
-{
-    [OutputType([System.Object[]])]
-    param(
-        [Parameter(Mandatory = $true)]
-        [System.Collections.ArrayList]
-        $Settings
-    )
-
-    $result = @()
-    foreach ($setting in $Settings)
-    {
-        $currentSetting = @{
-            name  = $setting.odataType
-            value = $setting.uninstallOnDeviceRemoval
-        }
-        $result += $currentSetting
-    }
-
-    return $result
-}
-
-function Get-M365DSCIntuneAppAssignmentSettingsAsString
-{
-    [CmdletBinding()]
-    [OutputType([System.String])]
-    param(
-        [Parameter(Mandatory = $true)]
-        [System.Object[]]
-        $Settings
-    )
-
-    $StringContent = '@('
-    $space = '                '
-    $indent = '    '
-
-    $i = 1
-    foreach ($setting in $Settings)
-    {
-        if ($Settings.Count -gt 1)
-        {
-            $StringContent += "`r`n"
-            $StringContent += "$space"
-        }
-
-        $StringContent += "MSFT_DeviceManagementMobileAppAssignmentSettings { `r`n"
-        $StringContent += "$($space)$($indent)odataType  = '" + $setting.odataType + "'`r`n"
-        $StringContent += "$($space)$($indent)uninstallOnDeviceRemoval = '" + $setting.uninstallOnDeviceRemoval + "'`r`n"
-        $StringContent += "$space}"
-
-        $i++
-    }
-
-    $StringContent += ')'
-    return $StringContent
-}
-
 function ConvertTo-M365DSCIntuneAppCategories
 {
     [OutputType([System.Object[]])]
@@ -875,26 +830,6 @@ function ConvertTo-M365DSCIntuneAppCategories
         }
 
         $result += $currentCategory
-    }
-
-    return $result
-}
-
-function ConvertTo-M365DSCIntuneAppLargeIcon #set
-{
-    [OutputType([System.Object])]
-    param(
-        [Parameter(Mandatory = $true)]
-        [System.Object]
-        $LargeIcon
-    )
-
-    #$iconValue = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($LargeIcon.Value)) => throws string to intance conversion error
-    #$iconValue = [System.Convert]::FromBase64String($LargeIcon.Value) => throws string to intance conversion error
-
-    $result = @{
-        type  = $LargeIcon.Type
-        value = $LargeIcon.Value
     }
 
     return $result
@@ -936,36 +871,66 @@ function Get-M365DSCIntuneAppCategoriesAsString
     return $StringContent
 }
 
-function Get-M365DSCIntuneAppLargeIconAsString #Get and export
+function ConvertTo-M365DSCIntuneAppChildApps
+{
+    [OutputType([System.Object[]])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Collections.ArrayList]
+        $ChildApps
+    )
+
+    $result = @()
+    foreach ($childApp in $ChildApps)
+    {
+        $currentChildApp = @{
+            bundleId  = $childApp.bundleId
+            buildNumber = $childApp.buildNumber
+            versionNumber = $childApp.VersionNumber
+        }
+
+        $result += $currentChildApp
+    }
+
+    return $result
+}
+
+function Get-M365DSCIntuneAppChildAppsAsString
 {
     [CmdletBinding()]
     [OutputType([System.String])]
     param(
         [Parameter(Mandatory = $true)]
-        [System.Object]
-        $LargeIcon
+        [System.Object[]]
+        $ChildApps
     )
 
-    # $StringContent = '@('
-     $space = '                '
-     $indent = '    '
+    $StringContent = '@('
+    $space = '                '
+    $indent = '    '
 
-    if ($null -ne $LargeIcon)
+    $i = 1
+    foreach ($childApp in $ChildApps)
     {
-        $StringContent += "`r`n"
-        $StringContent += "$space"
+        if ($ChildApps.Count -gt 1)
+        {
+            $StringContent += "`r`n"
+            $StringContent += "$space"
+        }
+
+        $StringContent += "MSFT_DeviceManagementMobileAppChildApp { `r`n"
+        $StringContent += "$($space)$($indent)bundleId  = '" + $childApp.bundleId + "'`r`n"
+        $StringContent += "$($space)$($indent)buildNumber = '" + $childApp.buildNumber + "'`r`n"
+        $StringContent += "$($space)$($indent)versionNumber  = '" + $childApp.versionNumber + "'`r`n"
+        $StringContent += "$space}"
+
+        $i++
     }
 
-    $base64String = [System.Convert]::ToBase64String($LargeIcon.Value) # This exports the base64 string (blob) of the byte array, same as we see in Graph API response
-
-    $StringContent += "MSFT_DeviceManagementMimeContent { `r`n"
-    $StringContent += "$($space)$($indent)type  = '" + $LargeIcon.Type + "'`r`n"
-    $StringContent += "$($space)$($indent)value = '" + $base64String + "'`r`n"
-    $StringContent += "$space}"
-    #$StringContent += ')'
+    $StringContent += ')'
 
     return $StringContent
- }
+}
 
 function Get-M365DSCIntuneMobileMocOSLobAppAdditionalProperties
 {
@@ -985,7 +950,31 @@ function Get-M365DSCIntuneMobileMocOSLobAppAdditionalProperties
         {
             $propertyName = $property[0].ToString().ToLower() + $property.Substring(1, $property.Length - 1)
             $propertyValue = $properties.$property
-            $results.Add($propertyName, $propertyValue)
+            # $results.Add($propertyName, $propertyValue) => handles only singular properties
+
+            if (($propertyValue -is [System.Collections.IEnumerable] -or $propertyValue.count -gt 0) -and -not ($propertyValue -is [string]))
+            {
+                # Handle array/collection properties
+                $processedValues = @()
+                if($propertyName -eq "childApps" -and $null -ne $propertyValue -and $propertyValue.Count -gt 0)
+                {
+                    $processChildAppsValues = Get-M365DSCIntuneAppChildAppsAsString -ChildApps $Results.ChildApps
+                    $results.Add($propertyName, $processChildAppsValues)
+                }
+                else
+                {
+                    foreach ($item in $propertyValue)
+                    {
+                        $processedValues += $item
+                    }
+
+                    $results.Add($propertyName, $processedValues)
+                }
+            }
+            else {
+                # Handle singular properties
+                $results.Add($propertyName, $propertyValue)
+            }
         }
     }
     return $results

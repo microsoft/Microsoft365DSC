@@ -35,6 +35,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return "Credentials"
             }
 
+            Mock -CommandName Get-MgBetaDeviceAppManagementMobileApp -MockWith {
+            }
             Mock -CommandName New-MgBetaDeviceAppManagementMobileApp -MockWith {
             }
             Mock -CommandName Update-MgBetaDeviceAppManagementMobileApp -MockWith {
@@ -91,7 +93,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "2. The instance exists but it SHOULD NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Id                    = "8d027f94-0682-431e-97c1-827d1879fa79"
+                    Id                    = "ad027f94-0682-431e-97c1-827d1879fa79"
                     Description           = "TeamsForBusinessInstaller"
                     Developer             = "Contoso"
                     DisplayName           = "TeamsForBusinessInstaller"
@@ -103,6 +105,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Publisher             = "Contoso"
                     PublishingState       = "published"
                     RoleScopeTagIds       = @()
+                    IgnoreVersionDetection = $True
 
                     Ensure                = 'Absent'
                     Credential            = $Credential
@@ -110,7 +113,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-MgBetaDeviceAppManagementMobileApp -MockWith {
                     return @{
-                        Id                    = "8d027f94-0682-431e-97c1-827d1879fa79"
+                        Id                    = "ad027f94-0682-431e-97c1-827d1879fa79"
                         Description           = "TeamsForBusinessInstaller"
                         Developer             = "Contoso"
                         DisplayName           = "TeamsForBusinessInstaller"
@@ -122,6 +125,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Publisher             = "Contoso"
                         PublishingState       = "published"
                         RoleScopeTagIds       = @()
+                        IgnoreVersionDetection = $True
+
+                        Ensure                = 'Present'
                     }
                 }
             }
