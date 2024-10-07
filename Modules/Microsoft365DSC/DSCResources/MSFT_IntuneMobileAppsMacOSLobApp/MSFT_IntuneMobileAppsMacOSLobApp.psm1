@@ -149,8 +149,6 @@ function Get-TargetResource
             return $nullResult
         }
 
-        Write-Verbose -Message "Found Mobile app with {$DisplayName}."
-
         $results = @{
             Id                    = $instance.Id
             Description           = $instance.Description
@@ -189,16 +187,14 @@ function Get-TargetResource
         }
 
         #childApps
-        Write-Host ".............................."
-        Write-Host "Get- start childApps.............................." $instance.DisplayName
         if($null -ne $instance.AdditionalProperties.childApps)
         {
-            foreach ($childApp in $instance.AdditionalProperties.childApps)
-            {
-                Write-Host "Get- print childApps.............................." $childApp.bundleId
-                Write-Host "Get- print childApps.............................." $childApp.buildNumber
-                Write-Host "Get- print childApps.............................." $childApp.versionNumber
-            }
+            # foreach ($childApp in $instance.AdditionalProperties.childApps)
+            # {
+            #     Write-Host "Get- print childApps.............................." $childApp.bundleId
+            #     Write-Host "Get- print childApps.............................." $childApp.buildNumber
+            #     Write-Host "Get- print childApps.............................." $childApp.versionNumber
+            # }
 
             $results.Add('ChildApps', $instance.AdditionalProperties.childApps)
         }
@@ -345,9 +341,6 @@ function Set-TargetResource
         $AccessTokens
     )
 
-    Write-Host "start Set-TargetResource.............................."
-
-
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
@@ -361,49 +354,99 @@ function Set-TargetResource
     #endregion
 
     $currentInstance = Get-TargetResource @PSBoundParameters
-    $PSBoundParameters.Remove('Categories') | Out-Null
-    $PSBoundParameters.Remove('Assignments') | Out-Null
-    #$PSBoundParameters.Remove('childApps') | Out-Null
+    $PSBoundParameters.Remove('Ensure') | Out-Null
+    $PSBoundParameters.Remove('Credential') | Out-Null
+    $PSBoundParameters.Remove('ApplicationId') | Out-Null
+    $PSBoundParameters.Remove('ApplicationSecret') | Out-Null
+    $PSBoundParameters.Remove('TenantId') | Out-Null
+    $PSBoundParameters.Remove('CertificateThumbprint') | Out-Null
+    $PSBoundParameters.Remove('ManagedIdentity') | Out-Null
+    $PSBoundParameters.Remove('AccessTokens') | Out-Null
+    # $PSBoundParameters.Remove('Categories') | Out-Null
+    # $PSBoundParameters.Remove('Assignments') | Out-Null
+    # $PSBoundParameters.Remove('childApps') | Out-Null
+    # $PSBoundParameters.Remove('IgnoreVersionDetection') | Out-Null
 
-    $setParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
-    $setParameters.remove('Id') | Out-Null
-    $setParameters.remove('Ensure') | Out-Null
-    $setParameters.remove('Categories') | Out-Null
-    $setParameters.remove('Assignments') | Out-Null
-    #$setParameters.remove('childApps') | Out-Null
+    $CreateParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
-    $AdditionalProperties = Get-M365DSCIntuneMobileMocOSLobAppAdditionalProperties -Properties ([System.Collections.Hashtable]$PSBoundParameters)
 
-    #Categories
-    if($null -ne $Categories)
-    {
-        [System.Object[]]$categoriesValue = ConvertTo-M365DSCIntuneAppCategories -Categories $Categories
-        $setParameters.Add('Categories', $categoriesValue)
-    }
+    # $AdditionalProperties = Get-M365DSCIntuneMobileMocOSLobAppAdditionalProperties -Properties ([System.Collections.Hashtable]$PSBoundParameters)
 
-    #childApps
-    if($null -ne $ChildApps)
-    {
-        [System.Object[]]$childAppsValue = ConvertTo-M365DSCIntuneAppChildApps -ChildApps $ChildApps
-        $AdditionalProperties.Add('childApps', $childAppsValue)
-    }
+    # Write-Host "Before adding cat and chap @setparameters............................." @setParameters
+    # Write-Host "Before adding cat and chap @AdditionalProperties............................." @AdditionalProperties
+
+    # #Categories
+    # if($null -ne $Categories)
+    # {
+    #     [System.Object[]]$categoriesValue = ConvertTo-M365DSCIntuneAppCategories -Categories $Categories
+    #     $setParameters.Add('Categories', $categoriesValue)
+    # }
+    # else {
+    #      Write-Host "^^^^^^^^^^ Set- categories is null:" $Categories
+    # }
+
+    # #childApps
+    # if($null -ne $ChildApps)
+    # {
+    #     foreach ($childApp in $ChildApps)
+    #     {
+    #         Write-Host "^^^^^^^^^^ Set- childApps.............................." $childApp.bundleId
+    #         Write-Host "^^^^^^^^^^^ Set- childApps.............................." $childApp.buildNumber
+    #         Write-Host "^^^^^^^^ Set- childApps.............................." $childApp.versionNumber
+    #     }
+
+    #     [System.Object[]]$childAppsValue = ConvertTo-M365DSCIntuneAppChildApps -ChildApps $ChildApps
+    #     $AdditionalProperties.Add('childApps', $childAppsValue)
+    # }
+    # else
+    # {
+    #     Write-Host "^^^^^^^^^^ Set- $ChildApps is null:" $ChildApps
+    # }
+
+    # Write-Host "After adding cat and chap @setparameters............................." @setParameters
+    # Write-Host "After adding cat and chap @AdditionalProperties............................." @AdditionalProperties
+
 
     # CREATE
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Host "Create MacOSLobApp: $DisplayName"
 
-        foreach ($key in $setParameters.Keys)
+        $CreateParameters = ([Hashtable]$PSBoundParameters).clone()
+        $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
+
+        $AdditionalProperties = Get-M365DSCIntuneMobileMocOSLobAppAdditionalProperties -Properties ($CreateParameters)
+        foreach ($key in $AdditionalProperties.keys)
         {
-            Write-Host "Create MacOSLobApp: setParameters: $key - $($setParameters.$key)"
-        }
-        foreach ($key in $AdditionalProperties.Keys)
-        {
-            Write-Host "Create MacOSLobApp: AdditionalProperties: $key - $($AdditionalProperties.$key)"
+            if ($key -ne '@odata.type')
+            {
+                $keyName = $key.substring(0, 1).ToUpper() + $key.substring(1, $key.length - 1)
+                $CreateParameters.remove($keyName)
+            }
         }
 
+        $CreateParameters.remove('Id') | Out-Null
+        $CreateParameters.remove('Ensure') | Out-Null
+        $CreateParameters.remove('Categories') | Out-Null
+        $CreateParameters.remove('Assignments') | Out-Null
+        $CreateParameters.remove('childApps') | Out-Null
+        $CreateParameters.remove('IgnoreVersionDetection') | Out-Null
+        $CreateParameters.Remove('Verbose') | Out-Null
 
-        $app = New-MgBetaDeviceAppManagementMobileApp @setParameters -AdditionalProperties $AdditionalProperties
+        foreach ($key in ($CreateParameters.clone()).Keys)
+        {
+            if ($CreateParameters[$key].getType().Fullname -like '*CimInstance*')
+            {
+                $CreateParameters[$key] = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters[$key]
+            }
+        }
+
+        if ($AdditionalProperties)
+        {
+            $CreateParameters.add('AdditionalProperties', $AdditionalProperties)
+        }
+
+        $app = New-MgBetaDeviceAppManagementMobileApp @CreateParameters -AdditionalProperties $AdditionalProperties
 
         #region Assignments
         $assignmentsHash = ConvertTo-IntuneMobileAppAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
@@ -420,8 +463,60 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Host "Update MacOSLobApp: $DisplayName"
-        Update-MgBetaDeviceAppManagementMobileApp -MobileAppId $currentInstance.Id @setParameters -AdditionalProperties $AdditionalProperties
 
+        $PSBoundParameters.Remove('Assignments') | Out-Null
+        $UpdateParameters = ([Hashtable]$PSBoundParameters).clone()
+        $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
+
+        Write-Host "^^^^^^ Update Parameters............................." $UpdateParameters
+
+        $AdditionalProperties = Get-M365DSCIntuneMobileMocOSLobAppAdditionalProperties -Properties ($UpdateParameters)
+
+        Write-Host "^^^^^^ Update AdditionalProperties............................." $AdditionalProperties
+
+        foreach ($key in $AdditionalProperties.keys)
+        {
+            if ($key -ne '@odata.type')
+            {
+                $keyName = $key.substring(0, 1).ToUpper() + $key.substring(1, $key.length - 1)
+                $UpdateParameters.remove($keyName)
+                Write-Host "^^^^^^ Removed key ............................." $keyName
+            }
+        }
+
+        $UpdateParameters.Remove('Id') | Out-Null
+        $UpdateParameters.Remove('Verbose') | Out-Null
+        $UpdateParameters.Remove('Categories') | Out-Null
+        $UpdateParameters.Remove('PublishingState') | Out-Null
+
+        Write-Host "^^^^^^ Removed CAT ONLY ONCE ~~~~~~~~~~~~~~~~~~~~~~"
+
+         Write-Host "^^^^^^ Updated updateParameters (removed, id, verbose, cate, CAT and other props from additionalprops) ............................." $UpdateParameters
+        foreach ($key in ($UpdateParameters.clone()).Keys)
+        {
+            Write-Host "added key-value to updateParameters .............................$key : $value"
+
+            if ($UpdateParameters[$key].getType().Fullname -like '*CimInstance*')
+            {
+                $value = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters[$key]
+                $UpdateParameters[$key] = $value
+            }
+        }
+
+        if ($AdditionalProperties)
+        {
+            $UpdateParameters.add('AdditionalProperties', $AdditionalProperties)
+        }
+
+        Write-Host "^^^^^^ FINAL: updateParameters: right before Calling update-MgBetaDeviceAppManagementMobileApp ............................." $UpdateParameters
+
+
+        $updateResult = Update-MgBetaDeviceAppManagementMobileApp -MobileAppId $currentInstance.Id @UpdateParameters
+
+        Write-Host "^^^^^^ Update result............................." $updateResult
+
+
+        #region Assignments
         $assignmentsHash = ConvertTo-IntuneMobileAppAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
         if ($app.id)
         {
@@ -430,6 +525,7 @@ function Set-TargetResource
                 -Targets $assignmentsHash `
                 -Repository 'deviceAppManagement/mobileAppAssignments'
         }
+        #endregion Assignments
     }
     # REMOVE
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
@@ -976,40 +1072,48 @@ function Get-M365DSCIntuneMobileMocOSLobAppAdditionalProperties
         $Properties
     )
 
+    $additionalProperties = @(
+        'IgnoreVersionDetection'
+        'ChildApps'
+    )
+
     $results = @{'@odata.type' = '#microsoft.graph.macOSLobApp' }
-    foreach ($property in $properties.Keys)
+    $cloneProperties = $Properties.clone()
+    foreach ($property in $cloneProperties.Keys)
     {
-        if ($property -ne 'Verbose')
+        if ($property -in $additionalProperties)
         {
             $propertyName = $property[0].ToString().ToLower() + $property.Substring(1, $property.Length - 1)
-            $propertyValue = $properties.$property
-            # $results.Add($propertyName, $propertyValue) => handles only singular properties
-
-            if (($propertyValue -is [System.Collections.IEnumerable] -or $propertyValue.count -gt 0) -and -not ($propertyValue -is [string]))
+            if ($properties.$property -and $properties.$property.getType().FullName -like '*CIMInstance*')
             {
-                # Handle array/collection properties
-                $processedValues = @()
-                if($propertyName -eq "childApps" -and $null -ne $propertyValue -and $propertyValue.Count -gt 0)
+                if ($properties.$property.getType().FullName -like '*[[\]]')
                 {
-                    $processedChildAppsValues = Get-M365DSCIntuneAppChildAppsAsString -ChildApps $Results.ChildApps
-                    Write-Host "Get-M365DSCIntuneMobileMocOSLobAppAdditionalProperties: processedChildAppsValues" $processedChildAppsValues
-                    $results.Add($propertyName, $processedChildAppsValues)
+                    $array = @()
+                    foreach ($item in $properties.$property)
+                    {
+                        $array += Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $item
+
+                    }
+                    $propertyValue = $array
                 }
                 else
                 {
-                    foreach ($item in $propertyValue)
-                    {
-                        $processedValues += $item
-                    }
-
-                    $results.Add($propertyName, $processedValues)
+                    $propertyValue = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $properties.$property
                 }
+
             }
-            else {
-                # Handle singular properties
-                $results.Add($propertyName, $propertyValue)
+            else
+            {
+                $propertyValue = $properties.$property
             }
+
+            $results.Add($propertyName, $propertyValue)
         }
+    }
+
+    if ($results.Count -eq 1)
+    {
+        return $null
     }
     return $results
 }
