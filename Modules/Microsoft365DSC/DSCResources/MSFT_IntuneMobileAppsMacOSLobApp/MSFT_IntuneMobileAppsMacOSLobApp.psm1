@@ -189,13 +189,6 @@ function Get-TargetResource
         #childApps
         if($null -ne $instance.AdditionalProperties.childApps)
         {
-            # foreach ($childApp in $instance.AdditionalProperties.childApps)
-            # {
-            #     Write-Host "Get- print childApps.............................." $childApp.bundleId
-            #     Write-Host "Get- print childApps.............................." $childApp.buildNumber
-            #     Write-Host "Get- print childApps.............................." $childApp.versionNumber
-            # }
-
             $results.Add('ChildApps', $instance.AdditionalProperties.childApps)
         }
         else {
@@ -452,9 +445,9 @@ function Set-TargetResource
         $assignmentsHash = ConvertTo-IntuneMobileAppAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
         if ($app.id)
         {
-            Write-host "Assignment updates for MacOSLobApp: $DisplayName"
+            Write-host "New and update: Assignment updates for MacOSLobApp: $DisplayName, with assignmenthash:=======================" $assignmentsHash
             Update-MgBetaDeviceAppManagementMobileAppAssignment -MobileAppId $app.id `
-                -Targets $assignmentsHash `
+                -Target $assignmentsHash `
                 -Repository 'deviceAppManagement/mobileAppAssignments'
         }
         #endregion Assignments
@@ -468,34 +461,24 @@ function Set-TargetResource
         $UpdateParameters = ([Hashtable]$PSBoundParameters).clone()
         $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
 
-        Write-Host "^^^^^^ Update Parameters............................." $UpdateParameters
-
         $AdditionalProperties = Get-M365DSCIntuneMobileMocOSLobAppAdditionalProperties -Properties ($UpdateParameters)
-
-        Write-Host "^^^^^^ Update AdditionalProperties............................." $AdditionalProperties
-
         foreach ($key in $AdditionalProperties.keys)
         {
             if ($key -ne '@odata.type')
             {
                 $keyName = $key.substring(0, 1).ToUpper() + $key.substring(1, $key.length - 1)
-                $UpdateParameters.remove($keyName)
-                Write-Host "^^^^^^ Removed key ............................." $keyName
+                #Remove additional keys, so that later they can be added as 'AdditionalProperties'
+                $UpdateParameters.Remove($keyName)
             }
         }
 
         $UpdateParameters.Remove('Id') | Out-Null
         $UpdateParameters.Remove('Verbose') | Out-Null
         $UpdateParameters.Remove('Categories') | Out-Null
-        $UpdateParameters.Remove('PublishingState') | Out-Null
+        $UpdateParameters.Remove('PublishingState') | Out-Null #Not allowed to update as it's a computed property
 
-        Write-Host "^^^^^^ Removed CAT ONLY ONCE ~~~~~~~~~~~~~~~~~~~~~~"
-
-         Write-Host "^^^^^^ Updated updateParameters (removed, id, verbose, cate, CAT and other props from additionalprops) ............................." $UpdateParameters
         foreach ($key in ($UpdateParameters.clone()).Keys)
         {
-            Write-Host "added key-value to updateParameters .............................$key : $value"
-
             if ($UpdateParameters[$key].getType().Fullname -like '*CimInstance*')
             {
                 $value = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters[$key]
@@ -508,23 +491,29 @@ function Set-TargetResource
             $UpdateParameters.add('AdditionalProperties', $AdditionalProperties)
         }
 
-        Write-Host "^^^^^^ FINAL: updateParameters: right before Calling update-MgBetaDeviceAppManagementMobileApp ............................." $UpdateParameters
-
-
-        $updateResult = Update-MgBetaDeviceAppManagementMobileApp -MobileAppId $currentInstance.Id @UpdateParameters
-
-        Write-Host "^^^^^^ Update result............................." $updateResult
-
+        Update-MgBetaDeviceAppManagementMobileApp -MobileAppId $currentInstance.Id @UpdateParameters
+        Write-Host " ################# Returned Update-MgBetaDeviceAppManagementMobileApp ############################### "
 
         #region Assignments
-        $assignmentsHash = ConvertTo-IntuneMobileAppAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
-        if ($app.id)
-        {
-            Write-host "Assignment updates for MacOSLobApp: $DisplayName"
-            Update-MgBetaDeviceAppManagementMobileAppAssignment -MobileAppId $app.id `
-                -Targets $assignmentsHash `
-                -Repository 'deviceAppManagement/mobileAppAssignments'
+
+        $Assignments | ForEach-Object {
+            Write-Host "INPUT: $_"
         }
+
+        $Assignments | ForEach-Object {
+            Write-Host "INPUT Assignment string: $Assignments"
+        }
+
+        $assignmentsHash = ConvertTo-IntuneMobileAppAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
+        $assignmentsHash.GetEnumerator() | ForEach-Object {
+            Write-Host "Converted assignmentsHash key:value: $($_.Key): $($_.Value)" }
+
+        Write-Host " ############### Calling Update-MgBetaDeviceAppManagementMobileAppAssignment now ############################# "
+
+        Update-MgBetaDeviceAppManagementMobileAppAssignment -MobileAppId $currentInstance.id `
+            -Target $assignmentsHash `
+            -Repository 'deviceAppManagement/mobileAppAssignments'
+
         #endregion Assignments
     }
     # REMOVE
@@ -768,7 +757,7 @@ function Export-TargetResource
     try
     {
         $Script:ExportMode = $true
-        [array] $Script:exportedInstances = Get-MgBetaDeviceAppManagementMobileApp `
+        [array] $Script:getInstances = Get-MgBetaDeviceAppManagementMobileApp `
             -Filter "isof('microsoft.graph.macOSLobApp')" `
             -ExpandProperty "categories,assignments" `
             -ErrorAction Stop | Where-Object `
@@ -776,7 +765,7 @@ function Export-TargetResource
 
         $i = 1
         $dscContent = ''
-        if ($Script:exportedInstances.Length -eq 0)
+        if ($Script:getInstances.Length -eq 0)
         {
             Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
@@ -784,10 +773,16 @@ function Export-TargetResource
         {
             Write-Host "`r`n" -NoNewline
         }
-        foreach ($config in $Script:exportedInstances)
+        foreach ($config in $Script:getInstances)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             $displayedKey = $config.Id
-            Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -NoNewline
+            Write-Host "    |---[$i/$($Script:getInstances.Count)] $displayedKey" -NoNewline
+
             $params = @{
                 Id                    = $config.Id
                 Description           = $config.Description
@@ -802,7 +797,6 @@ function Export-TargetResource
                 PublishingState       = $config.PublishingState.ToString()
                 RoleScopeTagIds       = $config.RoleScopeTagIds
                 IgnoreVersionDetection = $config.AdditionalProperties.ignoreVersionDetection
-                #ChildApps             = $config.AdditionalProperties.childApps
 
                 Ensure                = 'Present'
                 Credential            = $Credential
@@ -815,6 +809,8 @@ function Export-TargetResource
             }
 
             $Results = Get-TargetResource @params
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
 
             if (-not (Test-M365DSCAuthenticationParameter -BoundParameters $Results))
             {
@@ -825,30 +821,14 @@ function Export-TargetResource
             #region complex types
 
             #Categories
-            if($null -eq $Results.Categories -or $Results.Categories.Count -eq 0)
-            {
-                $Results.Categories = $null
-            }
-            else
+            if($null -ne $Results.Categories -or $Results.Categories.Count -gt 0)
             {
                 $Results.Categories = Get-M365DSCIntuneAppCategoriesAsString -Categories $Results.Categories
             }
 
             #ChildApps
-            if($null -eq $Results.childApps -or $Results.childApps.Count -eq 0)
+            if($null -ne $Results.childApps -or $Results.childApps.Count -gt 0)
             {
-                Write-Host "Export print childApps: IN IF WHERE CHILD APPS NULL.............................."
-            }
-            else
-            {
-                Write-Host "Export print childApps: IN ELSE BEFORE FOR LOOP.............................."
-                foreach ($childApp in $Results.childApps)
-                {
-                    Write-Host "Export print childApps.............................." $childApp.bundleId
-                    Write-Host "Export print childApps.............................." $childApp.buildNumber
-                    Write-Host "Export print childApps.............................." $childApp.versionNumber
-                }
-
                 $Results.childApps = Get-M365DSCIntuneAppChildAppsAsString -ChildApps $Results.childApps
             }
 
@@ -867,11 +847,7 @@ function Export-TargetResource
                 }
             }
 
-
             #endregion complex types
-
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
 
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `

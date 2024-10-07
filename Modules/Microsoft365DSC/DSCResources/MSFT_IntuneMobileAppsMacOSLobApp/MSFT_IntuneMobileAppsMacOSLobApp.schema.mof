@@ -47,18 +47,9 @@ class MSFT_DeviceManagementMobileAppChildApp
 
 class MSFT_DeviceManagementMobileAppAssignment
 {
-    [Write, Description("Possible values for the install intent chosen by the admin."),
-        ValueMap{"available", "required", "uninstall", "availableWithoutEnrollment"},
-        Values{"available", "required", "uninstall", "availableWithoutEnrollment"}]
-        String intent;
-
-    [Write, Description("The source of this assignment.")] String source;
-
-    [Write, Description("The group Id that is the target of the assignment.")] String groupId;
-    [Write, Description("The group Display Name that is the target of the assignment.")] String groupDisplayName;
-    [Write, Description("The type of the target assignment."),
-        ValueMap{"#microsoft.graph.groupAssignmentTarget","#microsoft.graph.allLicensedUsersAssignmentTarget","#microsoft.graph.allDevicesAssignmentTarget","#microsoft.graph.exclusionGroupAssignmentTarget"},
-        Values{"#microsoft.graph.groupAssignmentTarget","#microsoft.graph.allLicensedUsersAssignmentTarget","#microsoft.graph.allDevicesAssignmentTarget","#microsoft.graph.exclusionGroupAssignmentTarget"}]
+     [Write, Description("The type of the target assignment."),
+        ValueMap{"#microsoft.graph.groupAssignmentTarget","#microsoft.graph.allLicensedUsersAssignmentTarget","#microsoft.graph.allDevicesAssignmentTarget","#microsoft.graph.exclusionGroupAssignmentTarget", "#microsoft.graph.mobileAppAssignment"},
+        Values{"#microsoft.graph.groupAssignmentTarget","#microsoft.graph.allLicensedUsersAssignmentTarget","#microsoft.graph.allDevicesAssignmentTarget","#microsoft.graph.exclusionGroupAssignmentTarget", "#microsoft.graph.mobileAppAssignment"}]
         String dataType;
 
     [Write, Description("The Id of the filter for the target assignment.")] String deviceAndAppManagementAssignmentFilterId;
@@ -67,5 +58,13 @@ class MSFT_DeviceManagementMobileAppAssignment
         Values{"none", "include", "exclude"}]
         String deviceAndAppManagementAssignmentFilterType;
 
-    [Write, Description("The list of settings used with this app assignemnt."), EmbeddedInstance("MSFT_DeviceManagementMobileAppAssignmentSetting")] String settings[];
+    [Write, Description("The group Id that is the target of the assignment.")] String groupId;
+    [Write, Description("The group Display Name that is the target of the assignment.")] String groupDisplayName;
+
+    [Write, Description("Possible values for the install intent chosen by the admin."),
+        ValueMap{"available", "required", "uninstall", "availableWithoutEnrollment"},
+        Values{"available", "required", "uninstall", "availableWithoutEnrollment"}]
+        String intent;
+
+    [Write, Description("The source of this assignment.")] String source;
 };
