@@ -1,7 +1,7 @@
 ﻿[ClassVersion("1.0.0.0"), FriendlyName("EXOActiveSyncMailboxPolicy")]
 class MSFT_EXOActiveSyncMailboxPolicy : OMI_BaseResource
 {
-    [Key, Description("Specifies the name of the policy.")] String Name;
+    [Write, Description("Specifies the name of the policy.")] String Name;
     [Write, Description("Specifies whether push notifications are allowed for Apple mobile devices.")] Boolean AllowApplePushNotifications;
     [Write, Description("Specifies whether the Bluetooth capabilities of the mobile phone are allowed."), ValueMap{"Disable", "HandsfreeOnly", "Allow"}, Values{"Disable", "HandsfreeOnly", "Allow"}] String AllowBluetooth;
     [Write, Description("Specifies whether Microsoft Pocket Internet Explorer is allowed on the mobile phone.")] Boolean AllowBrowser;
