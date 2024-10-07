@@ -13,6 +13,9 @@
 * M365DSCDRGUtil
   * Fixes an issue for the handling of skipped one-property elements in the
     Settings Catalog. FIXES [#5086](https://github.com/microsoft/Microsoft365DSC/issues/5086)
+* DEPENDENCIES
+  * Updated DSCParser to version 2.0.0.11
+  * Updated ReverseDSC to version 2.0.0.21
 
 # 1.24.1002.1
 
