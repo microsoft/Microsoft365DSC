@@ -24,6 +24,12 @@ function Get-MgBetaPolicyDeviceRegistrationPolicy
     param()
 }
 
+function Get-MgBetaPolicyAdminConsentRequestPolicy
+{
+    [CmdletBinding()]
+    param()
+}
+
 #region Microsoft.Graph.Beta.Applications
 function Get-MgBetaApplication
 {

@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* AADAdminConsentRequestPolicy
+  * Initial release.
 * AADDeviceRegistrationPolicy
   * Initial release.
 * AADEntitlementManagementSettings

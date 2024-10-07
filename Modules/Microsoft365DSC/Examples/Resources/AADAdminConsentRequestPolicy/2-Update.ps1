@@ -21,6 +21,38 @@ Configuration Example
     Import-DscResource -ModuleName Microsoft365DSC
     node localhost
     {
-        
+        AADAdminConsentRequestPolicy "AADAdminConsentRequestPolicy"
+        {
+            ApplicationId         = $ApplicationId;
+            CertificateThumbprint = $CertificateThumbprint;
+            IsEnabled             = $True;
+            IsSingleInstance      = "Yes";
+            NotifyReviewers       = $False;
+            RemindersEnabled      = $True;
+            RequestDurationInDays = 30;
+            Reviewers             =                 @(
+                MSFT_AADAdminConsentRequestPolicyReviewer {
+                     ReviewerType = 'User'
+                     ReviewerId   = "AlexW@$TenantId"
+                     QueryRoot    = ''
+                }
+                MSFT_AADAdminConsentRequestPolicyReviewer {
+                     ReviewerType = 'Group'
+                     ReviewerId   = 'Communications'
+                     QueryRoot    = ''
+                }
+                MSFT_AADAdminConsentRequestPolicyReviewer {
+                     ReviewerType = 'Role'
+                     ReviewerId   = 'Attack Payload Author'
+                     QueryRoot    = ''
+                }
+                MSFT_AADAdminConsentRequestPolicyReviewer {
+                     ReviewerType = 'Role'
+                     ReviewerId   = 'Attack Simulation Administrator'
+                     QueryRoot    = ''
+                }
+                );
+            TenantId              = $TenantId;
+        }
     }
 }

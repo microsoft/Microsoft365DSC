@@ -88,7 +88,6 @@ function Get-TargetResource
                 $entry = @{
                     ReviewerType = 'User'
                     ReviewerId   = $userInfo.UserPrincipalName
-                    QueryRoot    = $reviewer.QueryRoot
                 }
             }
             elseif ($reviewer.Query.Contains('/groups/'))
@@ -98,7 +97,6 @@ function Get-TargetResource
                 $entry = @{
                     ReviewerType = 'Group'
                     ReviewerId   = $groupInfo.DisplayName
-                    QueryRoot    = $reviewer.QueryRoot
                 }
             }
             elseif ($reviewer.Query.Contains('directory/roleAssignments?$'))
@@ -108,7 +106,6 @@ function Get-TargetResource
                 $entry = @{
                     ReviewerType = 'Role'
                     ReviewerId   = $roleInfo.DisplayName
-                    QueryRoot    = $roleInfo.QueryRoot
                 }
             }
             $reviewersValue += $entry
@@ -212,7 +209,6 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message 'Updating the Entra Id Admin Consent Request Policy'
     $reviewerValues = @()
     foreach ($reviewer in $Reviewers)
     {
@@ -220,9 +216,8 @@ function Set-TargetResource
         {
             $userInfo = Get-MgUser -Filter "UserPrincipalName eq '$($reviewer.ReviewerId)'"
             $entry = @{
-                Query     = "/v1.0/users/$($userInfo.Id)"
-                QueryType = 'MicrosoftGraph'
-                QueryRoot = $reviewer.QueryRoot
+                query     = "/users/$($userInfo.Id)"
+                queryType = 'MicrosoftGraph'
             }
             $reviewerValues += $entry
         }
@@ -230,9 +225,8 @@ function Set-TargetResource
         {
             $groupInfo = Get-MgGroup -Filter "DisplayName eq '$($reviewer.ReviewerId)'"
             $entry = @{
-                Query     = "/v1.0/groups/$($groupInfo.Id)/transitiveMembers/microsoft.graph.user"
-                QueryType = 'MicrosoftGraph'
-                QueryRoot = $reviewer.QueryRoot
+                query     = "/groups/$($groupInfo.Id)/transitiveMembers/microsoft.graph.user"
+                queryType = 'MicrosoftGraph'
             }
             $reviewerValues += $entry
         }
@@ -240,23 +234,26 @@ function Set-TargetResource
         {
             $roleInfo = Get-MgBetaRoleManagementDirectoryRoleDefinition -Filter "DisplayName eq '$($reviewer.ReviewerId)'"
             $entry = @{
-                Query     = "/beta/roleManagement/directory/roleAssignments?`$filter=roleDefinitionId eq '$($roleInfo.Id)'"
-                QueryType = 'MicrosoftGraph'
-                QueryRoot = $reviewer.QueryRoot
+                query     = "/roleManagement/directory/roleAssignments?`$filter=roleDefinitionId eq '$($roleInfo.Id.Replace('\u0027', ''))'"
+                queryType = 'MicrosoftGraph'
             }
             $reviewerValues += $entry
         }
     }
 
     $updateParameters = @{
-        IsEnabled             = $IsEnabled
-        Reviewers             = $reviewerValues
-        NotifyReviewers       = $NotifyReviewers
-        RemindersEnabled      = $RemindersEnabled
-        RequestDurationInDays = $RequestDurationInDays
+        isEnabled             = $IsEnabled
+        reviewers             = $reviewerValues
+        notifyReviewers       = $NotifyReviewers
+        remindersEnabled      = $RemindersEnabled
+        requestDurationInDays = $RequestDurationInDays
     }
 
-    Update-MgBetaPolicyAdminConsentRequestPolicy -BodyParameter $updateParameters | Out-Null
+    $updateJSON = ConvertTo-Json $updateParameters
+    Write-Verbose -Message "Updating the Entra Id Admin Consent Request Policy with values: $updateJSON"
+    Invoke-MgGraphRequest -Method 'PUT' `
+                          -Uri 'https://graph.microsoft.com/beta/policies/adminConsentRequestPolicy' `
+                          -Body $updateJSON | Out-Null
 }
 
 function Test-TargetResource
@@ -332,10 +329,25 @@ function Test-TargetResource
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
 
-    $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
-        -Source $($MyInvocation.MyCommand.Source) `
-        -DesiredValues $PSBoundParameters `
-        -ValuesToCheck $ValuesToCheck.Keys
+    $testResult = $true
+    foreach ($reviewer in $Reviewers)
+    {
+        $currentEquivalent = $CurrentValues.Reviewers | Where-Object -FilterScript {$_.ReviewerId -eq $reviewer.ReviewerId -and $_.ReviewerType -eq $reviewer.ReviewerType}
+        if ($null -eq $currentEquivalent)
+        {
+            $testResult = $false
+            Write-Verbose -Message "Couldn't find current reviewer {$($reviewer.ReviewerId)}"
+        }
+    }
+
+    if ($testResult)
+    {
+        $ValuesToCheck.Remove('Reviewers') | Out-Null
+        $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -DesiredValues $PSBoundParameters `
+            -ValuesToCheck $ValuesToCheck.Keys
+    }
 
     Write-Verbose -Message "Test-TargetResource returned $testResult"
 
