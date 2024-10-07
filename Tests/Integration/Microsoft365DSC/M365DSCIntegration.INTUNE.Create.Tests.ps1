@@ -2288,6 +2288,9 @@
                     ApplicationId         = $ApplicationId;
                     TenantId              = $TenantId;
                     CertificateThumbprint = $CertificateThumbprint;
+                    ConfigurationBlob = "Blob"
+                    ConfigurationType = "onboard"
+                    SampleSharing = 1
                 }
                 IntuneExploitProtectionPolicyWindows10SettingCatalog 'myWindows10ExploitProtectionPolicy'
                 {

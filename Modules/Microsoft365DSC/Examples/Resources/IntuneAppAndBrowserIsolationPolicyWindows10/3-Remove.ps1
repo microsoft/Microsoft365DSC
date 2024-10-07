@@ -1,6 +1,5 @@
 <#
-This example is used to test new resources and showcase the usage of new resources being worked on.
-It is not meant to use as a production baseline.
+This example removes a Device Remediation.
 #>
 
 Configuration Example
@@ -22,18 +21,14 @@ Configuration Example
 
     node localhost
     {
-        IntuneEndpointDetectionAndResponsePolicyWindows10 'myEDRPolicy'
+        IntuneAppAndBrowserIsolationPolicyWindows10 'ConfigureAppAndBrowserIsolationPolicyWindows10'
         {
-            DisplayName = 'Edr Policy'
-            Assignments = @()
-            Description = 'My revised description'
-            Ensure      = 'Present'
+            Id          = '00000000-0000-0000-0000-000000000000'
+            DisplayName = 'App and Browser Isolation'
+            Ensure      = 'Absent'
             ApplicationId         = $ApplicationId;
             TenantId              = $TenantId;
             CertificateThumbprint = $CertificateThumbprint;
-            ConfigurationBlob = "Blob"
-            ConfigurationType = "onboard"
-            SampleSharing = 1
         }
     }
 }

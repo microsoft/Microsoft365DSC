@@ -14,6 +14,7 @@ class MSFT_IntuneEndpointDetectionAndResponsePolicyWindows10 : OMI_BaseResource
 {
     [Write, Description("Identity of the endpoint detection and response policy for Windows 10.")] String Identity;
     [Key, Description("Display name of the endpoint detection and response policy for Windows 10.")] String DisplayName;
+    [Write, Description("List of Scope Tags for this Entity instance.")] String RoleScopeTagIds[];
     [Write, Description("Description of the endpoint detection and response policy for Windows 10.")] String Description;
     [Write, Description("Assignments of the endpoint detection and response policy for Windows 10."), EmbeddedInstance("MSFT_DeviceManagementConfigurationPolicyAssignments")] String Assignments[];
     [Write, Description("Return or set Windows Defender Advanced Threat Protection Sample Sharing configuration parameter: 0 - none, 1 - All"), ValueMap{"0", "1"}, Values{"0", "1"}] String SampleSharing;

@@ -4,9 +4,10 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
+        #region resource generator code
         [Parameter()]
         [System.String]
-        $Identity,
+        $Description,
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -18,25 +19,100 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $Description,
+        $Id,
 
         [Parameter()]
+        [ValidateSet('0', '1', '2', '3')]
         [System.String]
+        $AllowWindowsDefenderApplicationGuard,
+
+        [Parameter()]
+        [ValidateSet('0', '1', '2', '3')]
+        [System.String]
+        $ClipboardSettings,
+
+        [Parameter()]
         [ValidateSet('0', '1')]
-        $SampleSharing,
+        [System.String]
+        $SaveFilesToHost,
 
         [Parameter()]
+        [ValidateSet('install')]
         [System.String]
-        [ValidateSet('AutoFromConnector', 'Onboard', 'Offboard')]
-        $ConfigurationType,
+        $InstallWindowsDefenderApplicationGuard,
 
         [Parameter()]
+        [ValidateSet('1', '2', '3')]
         [System.String]
-        $ConfigurationBlob,
+        $ClipboardFileType,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $AllowPersistence,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $AllowVirtualGPU,
+
+        [Parameter()]
+        [ValidateSet('0', '1', '2', '4', '8')]
+        [System.Int32[]]
+        $PrintingSettings,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $AllowCameraMicrophoneRedirection,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $AuditApplicationGuard,
+
+        [Parameter()]
+        [System.String[]]
+        $CertificateThumbprints,
+
+        [Parameter()]
+        [System.String[]]
+        $EnterpriseIPRange,
+
+        [Parameter()]
+        [System.String[]]
+        $EnterpriseCloudResources,
+
+        [Parameter()]
+        [System.String[]]
+        $EnterpriseNetworkDomainNames,
+
+        [Parameter()]
+        [System.String[]]
+        $EnterpriseProxyServers,
+
+        [Parameter()]
+        [System.String[]]
+        $EnterpriseInternalProxyServers,
+
+        [Parameter()]
+        [System.String[]]
+        $NeutralResources,
+
+        [Parameter()]
+        [ValidateSet('1', '0')]
+        [System.String]
+        $EnterpriseProxyServersAreAuthoritative,
+
+        [Parameter()]
+        [ValidateSet('1', '0')]
+        [System.String]
+        $EnterpriseIPRangesAreAuthoritative,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
+        #endregion
 
         [Parameter()]
         [System.String]
@@ -72,82 +148,65 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    Write-Verbose -Message "Checking for the Intune Endpoint Protection Policy {$DisplayName}"
-
-    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters `
-        -ErrorAction Stop
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullResult = $PSBoundParameters
-    $nullResult.Ensure = 'Absent'
-
     try
     {
-        #Retrieve policy general settings
-        $policy = Get-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Identity -ErrorAction SilentlyContinue
+        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+            -InboundParameters $PSBoundParameters
 
-        if ($null -eq $policy)
+        #Ensure the proper dependencies are installed in the current environment.
+        Confirm-M365DSCDependencies
+
+        #region Telemetry
+        $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+        $CommandName = $MyInvocation.MyCommand
+        $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+            -CommandName $CommandName `
+            -Parameters $PSBoundParameters
+        Add-M365DSCTelemetryEvent -Data $data
+        #endregion
+
+        $nullResult = $PSBoundParameters
+        $nullResult.Ensure = 'Absent'
+
+        $getValue = $null
+        #region resource generator code
+        $getValue = Get-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Id  -ErrorAction SilentlyContinue
+
+        if ($null -eq $getValue)
         {
-            Write-Verbose -Message "Could not find an Intune Endpoint Detection And Response Policy for Windows10 with Id {$Identity}"
+            Write-Verbose -Message "Could not find an Intune App And Browser Isolation Policy for Windows10 with Id {$Id}"
 
             if (-not [System.String]::IsNullOrEmpty($DisplayName))
             {
-                $policy = Get-MgBetaDeviceManagementConfigurationPolicy `
-                -Filter "Name eq '$DisplayName'" `
-                -ErrorAction SilentlyContinue
+                $getValue = Get-MgBetaDeviceManagementConfigurationPolicy `
+                    -Filter "Name eq '$DisplayName'" `
+                    -ErrorAction SilentlyContinue
             }
         }
-
-        if ($null -eq $policy)
+        #endregion
+        if ($null -eq $getValue)
         {
-            Write-Verbose -Message "Could not find an Intune Endpoint Detection And Response Policy for Windows10 with Name {$DisplayName}."
+            Write-Verbose -Message "Could not find an Intune App And Browser Isolation Policy for Windows10 with Name {$DisplayName}."
             return $nullResult
         }
-        $Identity = $policy.Id
-        Write-Verbose -Message "An Intune Endpoint Detection And Response Policy for Windows10 with Id {$Identity} and Name {$DisplayName} was found"
+        $Id = $getValue.Id
+        Write-Verbose -Message "An Intune App And Browser Isolation Policy for Windows10 with Id {$Id} and Name {$DisplayName} was found"
 
         # Retrieve policy specific settings
         [array]$settings = Get-MgBetaDeviceManagementConfigurationPolicySetting `
-            -DeviceManagementConfigurationPolicyId $Identity `
+            -DeviceManagementConfigurationPolicyId $Id `
             -ExpandProperty 'settingDefinitions' `
             -ErrorAction Stop
 
         $policySettings = @{}
-        $policySettings = Export-IntuneSettingCatalogPolicySettings -Settings $settings -ReturnHashtable $policySettings
-        if ($policySettings.ClientConfigurationPackageType -eq 'onboarding_fromconnector')
-        {
-            $policySettings.Add('ConfigurationType', 'AutoFromConnector')
-        }
-        else
-        {
-            $policySettings.Add('ConfigurationType', $policySettings.ClientConfigurationPackageType)
-        }
-        $policySettings.Remove('ClientConfigurationPackageType')
-        $policySettings.Remove('onboarding')
-        $policySettings.Remove('offboarding')
-        $policySettings.Remove('onboarding_fromconnector')
-
-        # Removing TelemetryReportingFrequency because it's deprecated and doesn't need to be evaluated and enforced
-        $policySettings.Remove('telemetryreportingfrequency')
+        $policySettings = Export-IntuneSettingCatalogPolicySettings -Settings $settings -ReturnHashtable $policySettings 
 
         $results = @{
             #region resource generator code
-            Description           = $policy.Description
-            DisplayName           = $policy.Name
-            RoleScopeTagIds       = $policy.RoleScopeTagIds
-            Identity              = $policy.Id
+            Description           = $getValue.Description
+            DisplayName           = $getValue.Name
+            RoleScopeTagIds       = $getValue.RoleScopeTagIds
+            Id                    = $getValue.Id
             Ensure                = 'Present'
             Credential            = $Credential
             ApplicationId         = $ApplicationId
@@ -159,7 +218,7 @@ function Get-TargetResource
         }
         $results += $policySettings
 
-        $assignmentsValues = Get-MgBetaDeviceManagementConfigurationPolicyAssignment -DeviceManagementConfigurationPolicyId $Identity
+        $assignmentsValues = Get-MgBetaDeviceManagementConfigurationPolicyAssignment -DeviceManagementConfigurationPolicyId $Id
         $assignmentResult = @()
         if ($assignmentsValues.Count -gt 0)
         {
@@ -167,7 +226,7 @@ function Get-TargetResource
         }
         $results.Add('Assignments', $assignmentResult)
 
-        return $results
+        return [System.Collections.Hashtable] $results
     }
     catch
     {
@@ -186,9 +245,10 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
+        #region resource generator code
         [Parameter()]
         [System.String]
-        $Identity,
+        $Description,
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -200,26 +260,100 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $Description,
+        $Id,
 
         [Parameter()]
+        [ValidateSet('0', '1', '2', '3')]
         [System.String]
+        $AllowWindowsDefenderApplicationGuard,
+
+        [Parameter()]
+        [ValidateSet('0', '1', '2', '3')]
+        [System.String]
+        $ClipboardSettings,
+
+        [Parameter()]
         [ValidateSet('0', '1')]
-        $SampleSharing,
+        [System.String]
+        $SaveFilesToHost,
 
         [Parameter()]
+        [ValidateSet('install')]
         [System.String]
-        [ValidateSet('AutoFromConnector', 'Onboard', 'Offboard')]
-        $ConfigurationType,
+        $InstallWindowsDefenderApplicationGuard,
 
         [Parameter()]
+        [ValidateSet('1', '2', '3')]
         [System.String]
-        $ConfigurationBlob,
+        $ClipboardFileType,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $AllowPersistence,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $AllowVirtualGPU,
+
+        [Parameter()]
+        [ValidateSet('0', '1', '2', '4', '8')]
+        [System.Int32[]]
+        $PrintingSettings,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $AllowCameraMicrophoneRedirection,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $AuditApplicationGuard,
+
+        [Parameter()]
+        [System.String[]]
+        $CertificateThumbprints,
+
+        [Parameter()]
+        [System.String[]]
+        $EnterpriseIPRange,
+
+        [Parameter()]
+        [System.String[]]
+        $EnterpriseCloudResources,
+
+        [Parameter()]
+        [System.String[]]
+        $EnterpriseNetworkDomainNames,
+
+        [Parameter()]
+        [System.String[]]
+        $EnterpriseProxyServers,
+
+        [Parameter()]
+        [System.String[]]
+        $EnterpriseInternalProxyServers,
+
+        [Parameter()]
+        [System.String[]]
+        $NeutralResources,
+
+        [Parameter()]
+        [ValidateSet('1', '0')]
+        [System.String]
+        $EnterpriseProxyServersAreAuthoritative,
+
+        [Parameter()]
+        [ValidateSet('1', '0')]
+        [System.String]
+        $EnterpriseIPRangesAreAuthoritative,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
-
+        #endregion
         [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
@@ -258,7 +392,7 @@ function Set-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
     $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
@@ -266,45 +400,18 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $currentPolicy = Get-TargetResource @PSBoundParameters
+    $currentInstance = Get-TargetResource @PSBoundParameters
+
     $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
-    switch ($ConfigurationType)
-    {
-        'AutoFromConnector'
-        {
-            $BoundParameters.Add('ClientConfigurationPackageType', 'onboarding_fromconnector')
-            $BoundParameters.Add('onboarding_fromconnector', $ConfigurationBlob)
-            $BoundParameters.Remove('ConfigurationBlob') | Out-Null
-        }
-        'Onboard'
-        {
-            $BoundParameters.Add('ClientConfigurationPackageType', 'onboard')
-            $BoundParameters.Add('onboarding', $ConfigurationBlob)
-            $BoundParameters.Remove('ConfigurationBlob') | Out-Null
-        }
-        'Offboard'
-        {
-            $BoundParameters.Add('ClientConfigurationPackageType', 'offboard')
-            $BoundParameters.Add('offboarding', $ConfigurationBlob)
-            $BoundParameters.Remove('ConfigurationBlob') | Out-Null
-        }
-    }
-
-    if ([System.String]::IsNullOrEmpty($ConfigurationBlob))
-    {
-        throw "ConfigurationBlob is required for configurationType '$($DSCParams.ConfigurationType)'"
-    }
-    $BoundParameters.Remove('ConfigurationType') | Out-Null
-
-    $templateReferenceId = '0385b795-0f2f-44ac-8602-9f65bf6adede_1'
+    $templateReferenceId = '9f667e40-8f3c-4f88-80d8-457f16906315_1'
     $platforms = 'windows10'
-    $technologies = 'mdm,microsoftSense'
+    $technologies = 'mdm'
 
-    if ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Absent')
+    if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        Write-Verbose -Message "Creating an Intune Endpoint Protection And Response Policy for Windows10 with Name {$DisplayName}"
-        $BoundParameters.Remove('Assignments') | Out-Null
+        Write-Verbose -Message "Creating an Intune App And Browser Isolation Policy for Windows10 with Name {$DisplayName}"
+        $BoundParameters.Remove("Assignments") | Out-Null
 
         $settings = Get-IntuneSettingCatalogPolicySetting `
             -DSCParams ([System.Collections.Hashtable]$BoundParameters) `
@@ -320,7 +427,7 @@ function Set-TargetResource
         }
 
         #region resource generator code
-        $policy = New-MgBetaDeviceManagementConfigurationPolicy -bodyParameter $createParameters
+        $policy = New-MgBetaDeviceManagementConfigurationPolicy -BodyParameter $createParameters
 
         if ($policy.Id)
         {
@@ -332,17 +439,17 @@ function Set-TargetResource
         }
         #endregion
     }
-    elseif ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Present')
+    elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Updating the Intune Endpoint Protection And Response Policy for Windows10 {$($currentPolicy.DisplayName)}"
-        $BoundParameters.Remove('Assignments') | Out-Null
+        Write-Verbose -Message "Updating the Intune App And Browser Isolation Policy for Windows10 with Id {$($currentInstance.Id)}"
+        $BoundParameters.Remove("Assignments") | Out-Null
 
         $settings = Get-IntuneSettingCatalogPolicySetting `
             -DSCParams ([System.Collections.Hashtable]$BoundParameters) `
             -TemplateId $templateReferenceId
 
         Update-IntuneDeviceConfigurationPolicy `
-            -DeviceConfigurationPolicyId $currentPolicy.Identity `
+            -DeviceConfigurationPolicyId $currentInstance.Id `
             -Name $DisplayName `
             -Description $Description `
             -TemplateReferenceId $templateReferenceId `
@@ -353,15 +460,17 @@ function Set-TargetResource
         #region resource generator code
         $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
         Update-DeviceConfigurationPolicyAssignment `
-            -DeviceConfigurationPolicyId $currentPolicy.Identity `
+            -DeviceConfigurationPolicyId $currentInstance.Id `
             -Targets $assignmentsHash `
             -Repository 'deviceManagement/configurationPolicies'
         #endregion
     }
-    elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present')
+    elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing the Intune Endpoint Protection And Response Policy for Windows 10 with Id {$($currentPolicy.Identity)}"
-        Remove-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $currentPolicy.Identity
+        Write-Verbose -Message "Removing the Intune App And Browser Isolation Policy for Windows10 with Id {$($currentInstance.Id)}"
+        #region resource generator code
+        Remove-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $currentInstance.Id
+        #endregion
     }
 }
 
@@ -371,9 +480,10 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
+        #region resource generator code
         [Parameter()]
         [System.String]
-        $Identity,
+        $Description,
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -385,25 +495,100 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $Description,
+        $Id,
 
         [Parameter()]
+        [ValidateSet('0', '1', '2', '3')]
         [System.String]
+        $AllowWindowsDefenderApplicationGuard,
+
+        [Parameter()]
+        [ValidateSet('0', '1', '2', '3')]
+        [System.String]
+        $ClipboardSettings,
+
+        [Parameter()]
         [ValidateSet('0', '1')]
-        $SampleSharing,
+        [System.String]
+        $SaveFilesToHost,
 
         [Parameter()]
+        [ValidateSet('install')]
         [System.String]
-        [ValidateSet('AutoFromConnector', 'Onboard', 'Offboard')]
-        $ConfigurationType,
+        $InstallWindowsDefenderApplicationGuard,
 
         [Parameter()]
+        [ValidateSet('1', '2', '3')]
         [System.String]
-        $ConfigurationBlob,
+        $ClipboardFileType,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $AllowPersistence,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $AllowVirtualGPU,
+
+        [Parameter()]
+        [ValidateSet('0', '1', '2', '4', '8')]
+        [System.Int32[]]
+        $PrintingSettings,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $AllowCameraMicrophoneRedirection,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $AuditApplicationGuard,
+
+        [Parameter()]
+        [System.String[]]
+        $CertificateThumbprints,
+
+        [Parameter()]
+        [System.String[]]
+        $EnterpriseIPRange,
+
+        [Parameter()]
+        [System.String[]]
+        $EnterpriseCloudResources,
+
+        [Parameter()]
+        [System.String[]]
+        $EnterpriseNetworkDomainNames,
+
+        [Parameter()]
+        [System.String[]]
+        $EnterpriseProxyServers,
+
+        [Parameter()]
+        [System.String[]]
+        $EnterpriseInternalProxyServers,
+
+        [Parameter()]
+        [System.String[]]
+        $NeutralResources,
+
+        [Parameter()]
+        [ValidateSet('1', '0')]
+        [System.String]
+        $EnterpriseProxyServersAreAuthoritative,
+
+        [Parameter()]
+        [ValidateSet('1', '0')]
+        [System.String]
+        $EnterpriseIPRangesAreAuthoritative,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
+        #endregion
 
         [Parameter()]
         [System.String]
@@ -443,14 +628,15 @@ function Test-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
     $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-    Write-Verbose -Message "Testing configuration of the Intune Endpoint Protection And Response Policy for Windows10 with Id {$Identity} and Name {$DisplayName}"
+
+    Write-Verbose -Message "Testing configuration of the Intune App And Browser Isolation Policy for Windows10 with Id {$Id} and Name {$DisplayName}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     [Hashtable]$ValuesToCheck = @{}
@@ -495,8 +681,7 @@ function Test-TargetResource
         }
     }
 
-    $ValuesToCheck.Remove('Identity') | Out-Null
-    $ValuesToCheck.Remove('ConfigurationBlob') | Out-Null
+    $ValuesToCheck.Remove('Id') | Out-Null
     $ValuesToCheck = Remove-M365DSCAuthenticationParameter -BoundParameters $ValuesToCheck
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
@@ -561,7 +746,7 @@ function Export-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
     $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
@@ -569,21 +754,22 @@ function Export-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $dscContent = ''
-    $i = 1
-
     try
     {
-        $policyTemplateID = '0385b795-0f2f-44ac-8602-9f65bf6adede_1'
-        [array]$policies = Get-MgBetaDeviceManagementConfigurationPolicy `
-            -All `
+        #region resource generator code
+        $policyTemplateID = "9f667e40-8f3c-4f88-80d8-457f16906315_1"
+        [array]$getValue = Get-MgBetaDeviceManagementConfigurationPolicy `
             -Filter $Filter `
+            -All `
             -ErrorAction Stop | Where-Object `
             -FilterScript {
                 $_.TemplateReference.TemplateId -eq $policyTemplateID
             }
+        #endregion
 
-        if ($policies.Length -eq 0)
+        $i = 1
+        $dscContent = ''
+        if ($getValue.Length -eq 0)
         {
             Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
@@ -591,35 +777,38 @@ function Export-TargetResource
         {
             Write-Host "`r`n" -NoNewline
         }
-        foreach ($policy in $policies)
+        foreach ($config in $getValue)
         {
-            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            $displayedKey = $config.Id
+            if (-not [String]::IsNullOrEmpty($config.displayName))
             {
-                $Global:M365DSCExportResourceInstancesCount++
+                $displayedKey = $config.displayName
             }
-
-            Write-Host "    |---[$i/$($policies.Count)] $($policy.Name)" -NoNewline
-
+            elseif (-not [string]::IsNullOrEmpty($config.name))
+            {
+                $displayedKey = $config.name
+            }
+            Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{
-                Identity              = $policy.id
-                DisplayName           = $policy.Name
-                Ensure                = 'Present'
-                Credential            = $Credential
-                ApplicationId         = $ApplicationId
-                TenantId              = $TenantId
-                ApplicationSecret     = $ApplicationSecret
+                Id = $config.Id
+                DisplayName = $config.Name
+                Ensure = 'Present'
+                Credential = $Credential
+                ApplicationId = $ApplicationId
+                TenantId = $TenantId
+                ApplicationSecret = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
-                Managedidentity       = $ManagedIdentity.IsPresent
-                AccessTokens          = $AccessTokens
+                ManagedIdentity = $ManagedIdentity.IsPresent
+                AccessTokens = $AccessTokens
             }
 
-            $Results = Get-TargetResource @params
+            $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
 
             if ($Results.Assignments)
             {
-                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject ([Array]$Results.Assignments) -CIMInstanceName DeviceManagementConfigurationPolicyAssignments
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.Assignments -CIMInstanceName DeviceManagementConfigurationPolicyAssignments
                 if ($complexTypeStringResult)
                 {
                     $Results.Assignments = $complexTypeStringResult
@@ -651,22 +840,13 @@ function Export-TargetResource
     }
     catch
     {
-        if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
-            $_.Exception -like "*Unable to perform redirect as Location Header is not set in response*" -or `
-            $_.Exception -like "*Request not applicable to target tenant*")
-        {
-            Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
-        }
-        else
-        {
-            Write-Host $Global:M365DSCEmojiRedX
+        Write-Host $Global:M365DSCEmojiRedX
 
-            New-M365DSCLogEntry -Message 'Error during Export:' `
-                -Exception $_ `
-                -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $TenantId `
-                -Credential $Credential
-        }
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
 
         return ''
     }

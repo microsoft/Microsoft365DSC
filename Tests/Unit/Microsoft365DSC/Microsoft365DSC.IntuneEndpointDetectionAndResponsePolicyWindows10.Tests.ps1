@@ -44,10 +44,99 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-MgBetaDeviceManagementConfigurationPolicy -MockWith {
             }
 
-            Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicyTemplate -MockWith {
+            Mock -CommandName Update-IntuneDeviceConfigurationPolicy -MockWith {
+            }
+
+            Mock -CommandName Get-IntuneSettingCatalogPolicySetting -MockWith {
+            }
+
+            Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicy -MockWith {
                 return @{
-                    TemplateId = '0385b795-0f2f-44ac-8602-9f65bf6adede_1'
+                    Id    = '619bd4a4-3b3b-4441-bd6f-3f4c0c444870'
+                    Description = 'My Test Description'
+                    Name        = 'My Test'
+                    Platforms = "windows10"
+                    Technologies = "mdm,microsoftSense"
+                    TemplateReference = @{
+                        TemplateId = '0385b795-0f2f-44ac-8602-9f65bf6adede_1'
+                    }
                 }
+            }
+
+            Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicySetting -MockWith {
+                return @(
+                    @{
+                        Id                   = 0
+                        SettingDefinitions   = @(
+                            @{
+                                Id = 'device_vendor_msft_windowsadvancedthreatprotection_onboarding'
+                                Name = 'Onboarding'
+                                AdditionalProperties = @{
+                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
+                                    valueDefinition = @{
+                                        isSecret = $true
+                                    }
+                                }
+                            }
+                            @{
+                                Id = 'device_vendor_msft_windowsadvancedthreatprotection_configurationtype'
+                                Name = 'ClientConfigurationPackageType'
+                                AdditionalProperties = @{
+                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                }
+                            }
+                        )
+                        SettingInstance = @{
+                            SettingDefinitionId = 'device_vendor_msft_windowsadvancedthreatprotection_configurationtype'
+                            SettingInstanceTemplateReference = @{
+                                SettingInstanceTemplateId = '23ab0ea3-1b12-429a-8ed0-7390cf699160'
+                            }
+                            AdditionalProperties = @{
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                                choiceSettingValue = @{
+                                    children = @(
+                                        @{
+                                            settingDefinitionId = 'device_vendor_msft_windowsadvancedthreatprotection_onboarding'
+                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
+                                            simpleSettingValue = @{
+                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSecretSettingValue'
+                                                value = '84db67dd-caf8-4f86-bf00-b8897972d51f'
+                                                valueState = 'encryptedValueToken'
+                                            }
+                                        }
+                                    )
+                                    value = 'device_vendor_msft_windowsadvancedthreatprotection_configurationtype_onboard'
+                                }
+                                value = "TEST"
+                            }
+                        }
+                    }
+                    @{
+                        Id                 = 1
+                        SettingDefinitions = @(
+                            @{
+                                Id = 'device_vendor_msft_windowsadvancedthreatprotection_configuration_samplesharing'
+                                Name = 'SampleSharing'
+                                AdditionalProperties = @{
+                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                }
+                            }
+                        )
+                        SettingInstance    = @{
+                            SettingDefinitionId              = 'device_vendor_msft_windowsadvancedthreatprotection_configuration_samplesharing'
+                            SettingInstanceTemplateReference = @{
+                                SettingInstanceTemplateId = '6998c81e-2814-4f5e-b492-a6159128a97b'
+                            }
+                            AdditionalProperties             = @{
+                                '@odata.type'      = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                                choiceSettingValue = @{
+                                    children = @()
+                                    value = "device_vendor_msft_windowsadvancedthreatprotection_configuration_samplesharing_0"
+                                }
+                            }
+                        }
+                    }
+                )
             }
 
             Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicyAssignment -MockWith {
@@ -68,18 +157,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     })
             }
             Mock -CommandName Update-DeviceConfigurationPolicyAssignment -MockWith {
-            }
-            Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicyTemplateSettingTemplate -MockWith {
-                return @{
-                    Id       = '12345-12345-12345-12345-12345'
-                    SettingInstanceTemplate = @{
-                        settingDefinitionId = 'device_vendor_msft_windowsadvancedthreatprotection_configuration_samplesharing'
-                        settingInstanceTemplateId = '6998c81e-2814-4f5e-b492-a6159128a97b'
-                        AdditionalProperties = @{
-                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
-                        }
-                    }
-                }
             }
 
             # Mock Write-Host to hide output during the tests
@@ -105,6 +182,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName   = 'My Test'
                     Ensure        = 'Present'
                     Identity      = '619bd4a4-3b3b-4441-bd6f-3f4c0c444870'
+                    ConfigurationBlob = "FakeValue"
+                    ConfigurationType = "onboard"
                     sampleSharing = "0"
                 }
 
@@ -141,39 +220,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName   = 'My Test'
                     Ensure        = 'Present'
                     Identity      = '619bd4a4-3b3b-4441-bd6f-3f4c0c444870'
-                    sampleSharing = "0"
-                }
-
-                Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicy -MockWith {
-                    return @{
-                        Id    = '619bd4a4-3b3b-4441-bd6f-3f4c0c444870'
-                        Description = 'My Test Description'
-                        Name        = 'My Test'
-                    }
-                }
-
-                Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicySetting -MockWith {
-                    return @{
-                        Id                   = 0
-                        SettingDefinitions   = $null
-                        SettingInstance      = @{
-                            SettingDefinitionId              = 'device_vendor_msft_windowsadvancedthreatprotection_configuration_samplesharing'
-                            SettingInstanceTemplateReference = @{
-                                SettingInstanceTemplateId = '6998c81e-2814-4f5e-b492-a6159128a97b'
-                            }
-                            AdditionalProperties             = @{
-                                '@odata.type'      = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                choiceSettingValue = @{
-                                    children = @()
-                                    value = "device_vendor_msft_windowsadvancedthreatprotection_configuration_samplesharing_1"
-                                }
-                            }
-
-                        }
-                        AdditionalProperties = $null
-                    }
-                }
-                Mock -CommandName Update-DeviceManagementConfigurationPolicy -MockWith {
+                    ConfigurationBlob = "FakeValue"
+                    ConfigurationType = "onboard"
+                    sampleSharing = "1" # Drift
                 }
             }
 
@@ -187,7 +236,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should update the instance from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Update-DeviceManagementConfigurationPolicy -Exactly 1
+                Should -Invoke -CommandName Update-IntuneDeviceConfigurationPolicy -Exactly 1
             }
         }
 
@@ -206,32 +255,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             DeviceAndAppManagementAssignmentFilterType = 'none'
                         } -ClientOnly)
                     )
-                }
-
-                Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicy -MockWith {
-                    return @{
-                        Id    = '619bd4a4-3b3b-4441-bd6f-3f4c0c444870'
-                        Description = 'My Test Description'
-                        Name        = 'My Test'
-                        Settings = @{
-                            Id                   = 0
-                            SettingDefinitions   = $null
-                            SettingInstance      = @{
-                                SettingDefinitionId              = 'device_vendor_msft_windowsadvancedthreatprotection_configuration_samplesharing'
-                                SettingInstanceTemplateReference = @{
-                                    SettingInstanceTemplateId = '6998c81e-2814-4f5e-b492-a6159128a97b'
-                                }
-                                AdditionalProperties             = @{
-                                    '@odata.type'      = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                    choiceSettingValue = @{
-                                        children = @()
-                                        value = "device_vendor_msft_windowsadvancedthreatprotection_configuration_samplesharing_0"
-                                    }
-                                }
-                            }
-                            AdditionalProperties = $null
-                        }
-                    }
+                    ConfigurationBlob = "FakeValue"
+                    ConfigurationType = "onboard"
+                    sampleSharing = "0"
                 }
             }
 
@@ -254,35 +280,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName = 'My Test'
                     Ensure      = 'Absent'
                     Identity    = '619bd4a4-3b3b-4441-bd6f-3f4c0c444870'
-                }
-
-                Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicy -MockWith {
-                    return @{
-                        Id    = '619bd4a4-3b3b-4441-bd6f-3f4c0c444870'
-                        Description = 'My Test Description'
-                        Name        = 'My Test'
-                    }
-                }
-
-                Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicySetting -MockWith {
-                    return @{
-                        Id                   = 0
-                        SettingDefinitions   = $null
-                        SettingInstance      = @{
-                            SettingDefinitionId              = 'device_vendor_msft_windowsadvancedthreatprotection_configuration_samplesharing'
-                            SettingInstanceTemplateReference = @{
-                                SettingInstanceTemplateId = '6998c81e-2814-4f5e-b492-a6159128a97b'
-                            }
-                            AdditionalProperties             = @{
-                                '@odata.type'      = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                choiceSettingValue = @{
-                                    children = @()
-                                    value = "device_vendor_msft_windowsadvancedthreatprotection_configuration_samplesharing_0"
-                                }
-                            }
-                        }
-                        AdditionalProperties = $null
-                    }
+                    ConfigurationBlob = "FakeValue"
+                    ConfigurationType = "onboard"
+                    sampleSharing = "1"
                 }
             }
 
@@ -306,38 +306,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
                     Credential = $Credential
-                }
-
-                Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicy -MockWith {
-                    return @{
-                        Id    = '619bd4a4-3b3b-4441-bd6f-3f4c0c444870'
-                        Description = 'My Test Description'
-                        Name        = 'My Test'
-                        TemplateReference = @{
-                            TemplateId = '0385b795-0f2f-44ac-8602-9f65bf6adede_1'
-                        }
-                    }
-                }
-
-                Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicySetting -MockWith {
-                    return @{
-                        Id                   = 0
-                        SettingDefinitions   = $null
-                        SettingInstance      = @{
-                            SettingDefinitionId              = 'device_vendor_msft_windowsadvancedthreatprotection_configuration_samplesharing'
-                            SettingInstanceTemplateReference = @{
-                                SettingInstanceTemplateId = '6998c81e-2814-4f5e-b492-a6159128a97b'
-                            }
-                            AdditionalProperties             = @{
-                                '@odata.type'      = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                choiceSettingValue = @{
-                                    children = @()
-                                    value = "device_vendor_msft_windowsadvancedthreatprotection_configuration_samplesharing_0"
-                                }
-                            }
-                        }
-                        AdditionalProperties = $null
-                    }
                 }
             }
 

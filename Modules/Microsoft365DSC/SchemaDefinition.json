@@ -33908,6 +33908,11 @@
                                "Option":  "Key"
                            },
                            {
+                               "CIMType":  "String[]",
+                               "Name":  "RoleScopeTagIds",
+                               "Option":  "Write"
+                           },
+                           {
                                "CIMType":  "String",
                                "Name":  "Description",
                                "Option":  "Write"
