@@ -92,6 +92,8 @@
                     EnableOrganizationDomainsProtection   = $null
                     EnableUnusualCharactersSafetyTips     = $null
                     TargetedUserActionRecipients          = $null
+                    DmarcQuarantineAction                 = "Quarantine"
+                    DmarcRejectAction                     = "Reject"
                     Ensure                                = "Present"
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
@@ -299,14 +301,6 @@
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                 }
-                EXOMailTips 'OrgWideMailTips'
-                {
-                    IsSingleInstance = 'Yes'
-                    Ensure           = "Absent"
-                    ApplicationId         = $ApplicationId
-                    TenantId              = $TenantId
-                    CertificateThumbprint = $CertificateThumbprint
-                }
                 EXOMalwareFilterPolicy 'ConfigureMalwareFilterPolicy'
                 {
                     Identity                               = "IntegrationMFP"
@@ -346,7 +340,9 @@
                 }
                 EXOManagementScope 'EXOManagementScope-Test New DGs'
                 {
-                    Credential                 = $Credscredential;
+                    ApplicationId              = $ApplicationId
+                    TenantId                   = $TenantId
+                    CertificateThumbprint      = $CertificateThumbprint
                     Ensure                     = "Absent";
                     Exclusive                  = $False;
                     Identity                   = "Test New DGs";
@@ -362,6 +358,23 @@
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
+                }
+                EXOMigrationEndpoint 'EXOMigrationEndpoint-testIMAP'
+                {
+                    AcceptUntrustedCertificates   = $True;
+                    Authentication                = "Basic";
+                    ApplicationId                 = $ApplicationId
+                    TenantId                      = $TenantId
+                    CertificateThumbprint         = $CertificateThumbprint
+                    EndpointType                  = "IMAP";
+                    Ensure                        = "Absent";
+                    Identity                      = "testIMAP";
+                    MailboxPermission             = "Admin";
+                    MaxConcurrentIncrementalSyncs = "10";
+                    MaxConcurrentMigrations       = "20";
+                    Port                          = 993;
+                    RemoteServer                  = "gmail.com";
+                    Security                      = "None";
                 }
                 EXOMobileDeviceMailboxPolicy 'ConfigureMobileDeviceMailboxPolicy'
                 {

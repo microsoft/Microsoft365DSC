@@ -102,6 +102,8 @@
                     EnableUnusualCharactersSafetyTips     = $null
                     TargetedUserActionRecipients          = $null
                     Ensure                                = "Present"
+                    DmarcQuarantineAction                 = "Quarantine"
+                    DmarcRejectAction                     = "Reject"
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
@@ -358,6 +360,14 @@
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                 }
+                EXODnssecForVerifiedDomain 'EXODnssecForVerifiedDomain-nik-charlebois.com'
+                {
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
+                    DnssecFeatureStatus   = "Enabled";
+                    DomainName            = "nik-charlebois.com";
+                }
                 EXOEmailAddressPolicy 'ConfigureEmailAddressPolicy'
                 {
                     Name                              = "Integration Policy"
@@ -369,6 +379,18 @@
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
+                }
+                EXOEmailTenantSettings 'EXOEmailTenantSettings-Test'
+                {
+                    IsSingleInstance                         = "Yes"
+                    EnablePriorityAccountProtection          = $True;
+                    Identity                                 = $TenantId;
+                    IsValid                                  = $True;
+                    ObjectState                              = "Unchanged"
+                    Name                                     = "Default"
+                    TenantId                                 = $TenantId
+                    CertificateThumbprint                    = $CertificateThumbprint
+                    ApplicationId                            = $ApplicationId
                 }
                 EXOFocusedInbox 'EXOFocusedInbox-Test'
                 {
@@ -655,6 +677,28 @@
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                 }
+                EXOMailboxFolderPermission 'EXOMailboxFolderPermission-admin:\Calendar'
+                {
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
+                    Ensure                = "Present";
+                    Identity              = "admin:\Calendar";
+                    UserPermissions       = @(MSFT_EXOMailboxFolderUserPermission {
+                        User                   = 'Default'
+                        AccessRights           = 'AvailabilityOnly'
+                    }
+        MSFT_EXOMailboxFolderUserPermission {
+                        User                   = 'Anonymous'
+                        AccessRights           = 'AvailabilityOnly'
+                    }
+        MSFT_EXOMailboxFolderUserPermission {
+                        User                   = 'AlexW'
+                        AccessRights           = 'Editor'
+        		SharingPermissionFlags = 'Delegate'
+                    }
+                    );
+                }
                 EXOMailboxPermission 'TestPermission'
                 {
                     AccessRights         = @("FullAccess","ReadPermission");
@@ -721,7 +765,6 @@
                     #MailTipsLargeAudienceThreshold        = 100
                     MailTipsMailboxSourcedTipsEnabled     = $True
                     MailTipsExternalRecipientsTipsEnabled = $True
-                    Ensure                                = "Present"
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
@@ -784,7 +827,9 @@
                 }
                 EXOManagementScope 'EXOManagementScope-Test New DGs'
                 {
-                    Credential                 = $Credscredential;
+                    ApplicationId              = $ApplicationId
+                    TenantId                   = $TenantId
+                    CertificateThumbprint      = $CertificateThumbprint
                     Ensure                     = "Present";
                     Exclusive                  = $False;
                     Identity                   = "Test New DGs";
@@ -805,6 +850,24 @@
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
+                }
+                EXOMigrationEndpoint 'EXOMigrationEndpoint-testIMAP'
+                {
+                    AcceptUntrustedCertificates   = $True;
+                    Authentication                = "Basic";
+                    ApplicationId                 = $ApplicationId
+                    TenantId                      = $TenantId
+                    CertificateThumbprint         = $CertificateThumbprint
+                    EndpointType                  = "IMAP";
+                    Ensure                        = "Present";
+                    Identity                      = "testIMAP";
+                    MailboxPermission             = "Admin";
+                    MaxConcurrentIncrementalSyncs = "10";
+                    MaxConcurrentMigrations       = "20";
+                    Port                          = 993;
+                    RemoteServer                  = "gmail.com";
+                    # value for security updated from Tls to None
+                    Security                      = "None";
                 }
                 EXOMobileDeviceMailboxPolicy 'ConfigureMobileDeviceMailboxPolicy'
                 {

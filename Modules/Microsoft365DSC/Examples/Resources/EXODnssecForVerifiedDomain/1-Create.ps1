@@ -21,6 +21,13 @@ Configuration Example
     Import-DscResource -ModuleName Microsoft365DSC
     node localhost
     {
-        
+        EXODnssecForVerifiedDomain "EXODnssecForVerifiedDomain-nik-charlebois.com"
+        {
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
+            DnssecFeatureStatus   = "Enabled";
+            DomainName            = "nik-charlebois.com";
+        }
     }
 }

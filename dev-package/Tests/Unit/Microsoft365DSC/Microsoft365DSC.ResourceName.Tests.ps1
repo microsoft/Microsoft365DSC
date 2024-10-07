@@ -94,6 +94,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should remove the instance from the Set method' {
+                Set-TargetResource @testParams
                 ##TODO - Replace the Remove-Cmdlet by the appropriate one
                 Should -Invoke -CommandName Remove-Cmdlet -Exactly 1
             }

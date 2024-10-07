@@ -5,8 +5,16 @@
             RequiredVersion = '3.0.2'
         },
         @{
+            ModuleName      = 'Az.ResourceGraph'
+            RequiredVersion = '1.0.0'
+        },
+        @{
             ModuleName      = 'Az.Resources'
             RequiredVersion = '7.2.0'
+        },
+        @{
+            ModuleName      = 'Az.ResourceGraph'
+            RequiredVersion = '1.0.0'
         },
         @{
             ModuleName      = 'Az.SecurityInsights'
@@ -14,7 +22,7 @@
         },
         @{
             ModuleName      = 'DSCParser'
-            RequiredVersion = '2.0.0.9'
+            RequiredVersion = '2.0.0.11'
         },
         @{
             ModuleName      = 'ExchangeOnlineManagement'
@@ -23,6 +31,10 @@
         @{
             ModuleName      = 'Microsoft.Graph.Applications'
             RequiredVersion = '2.23.0'
+        },
+        @{
+            ModuleName      = 'Microsoft.Graph.Beta.Applications'
+            Requiredversion = '2.23.0'
         },
         @{
             ModuleName      = 'Microsoft.Graph.Authentication'
@@ -61,6 +73,10 @@
             RequiredVersion = '2.23.0'
         },
         @{
+            ModuleName      = 'Microsoft.Graph.Beta.Search'
+            RequiredVersion = '2.23.0'
+        },
+        @{
             ModuleName      = 'Microsoft.Graph.Beta.Teams'
             RequiredVersion = '2.23.0'
         },
@@ -74,6 +90,10 @@
         },
         @{
             ModuleName      = 'Microsoft.Graph.Groups'
+            RequiredVersion = '2.23.0'
+        },
+        @{
+            ModuleName      = 'Microsoft.Graph.Beta.Groups'
             RequiredVersion = '2.23.0'
         },
         @{
@@ -110,11 +130,6 @@
         },
         @{
             ModuleName      = 'PSDesiredStateConfiguration'
-            RequiredVersion = '1.1'
-            PowerShellCore  = $false
-        },
-        @{
-            ModuleName      = 'PSDesiredStateConfiguration'
             RequiredVersion = '2.0.7'
             PowerShellCore  = $true
             ExplicitLoading = $true
@@ -122,7 +137,7 @@
         },
         @{
             ModuleName      = 'ReverseDSC'
-            RequiredVersion = '2.0.0.20'
+            RequiredVersion = '2.0.0.21'
         }
     )
 }

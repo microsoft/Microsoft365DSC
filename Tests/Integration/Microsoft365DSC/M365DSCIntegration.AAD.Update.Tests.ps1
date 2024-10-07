@@ -34,6 +34,35 @@
         $Domain = $TenantId
         Node Localhost
         {
+                AADAdminConsentRequestPolicy 'AADAdminConsentRequestPolicy'
+                {
+                    ApplicationId         = $ApplicationId;
+                    CertificateThumbprint = $CertificateThumbprint;
+                    IsEnabled             = $True;
+                    IsSingleInstance      = "Yes";
+                    NotifyReviewers       = $False;
+                    RemindersEnabled      = $True;
+                    RequestDurationInDays = 30;
+                    Reviewers             =                 @(
+                        MSFT_AADAdminConsentRequestPolicyReviewer {
+                             ReviewerType = 'User'
+                             ReviewerId   = "AlexW@$TenantId"
+                        }
+                        MSFT_AADAdminConsentRequestPolicyReviewer {
+                             ReviewerType = 'Group'
+                             ReviewerId   = 'Communications'
+                        }
+                        MSFT_AADAdminConsentRequestPolicyReviewer {
+                             ReviewerType = 'Role'
+                             ReviewerId   = 'Attack Payload Author'
+                        }
+                        MSFT_AADAdminConsentRequestPolicyReviewer {
+                             ReviewerType = 'Role'
+                             ReviewerId   = 'Attack Simulation Administrator'
+                        }
+                        );
+                    TenantId              = $TenantId;
+                }
                 AADAdministrativeUnit 'TestUnit'
                 {
                     DisplayName                   = 'Test-Unit'
@@ -42,6 +71,7 @@
                     MembershipRule                = "(user.country -eq `"US`")" # Updated Property
                     MembershipRuleProcessingState = 'On'
                     MembershipType                = 'Dynamic'
+                    IsMemberManagementRestricted  = $False
                     ScopedRoleMembers             = @(
                         MSFT_MicrosoftGraphScopedRoleMembership
                         {
@@ -148,6 +178,14 @@
                             )
                             State = 'default'
                         }
+                    };
+                    ReportSuspiciousActivitySettings = MSFT_MicrosoftGraphreportSuspiciousActivitySettings{
+                        VoiceReportingCode = 0
+                        IncludeTarget = MSFT_AADAuthenticationMethodPolicyIncludeTarget{
+                            Id = 'all_users'
+                            TargetType = 'group'
+                        }
+                        State = 'default'
                     };
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
@@ -259,6 +297,31 @@
                         AaGuids = @()
                     };
                     State                            = "enabled"; # Updated Property
+                }
+                AADAuthenticationMethodPolicyHardware 'AADAuthenticationMethodPolicyHardware-HardwareOath'
+                {
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
+                    Ensure               = "Present";
+                    ExcludeTargets       = @(
+                        MSFT_AADAuthenticationMethodPolicyHardwareExcludeTarget{
+                            Id = 'Executives'
+                            TargetType = 'group'
+                        }
+                        MSFT_AADAuthenticationMethodPolicyHardwareExcludeTarget{
+                            Id = 'Paralegals'
+                            TargetType = 'group'
+                        }
+                    );
+                    Id                   = "HardwareOath";
+                    IncludeTargets       = @(
+                        MSFT_AADAuthenticationMethodPolicyHardwareIncludeTarget{
+                            Id = 'Legal Team'
+                            TargetType = 'group'
+                        }
+                    );
+                    State                = "enabled"; # Updated Property
                 }
                 AADAuthenticationMethodPolicySms 'AADAuthenticationMethodPolicySms-Sms'
                 {
@@ -373,6 +436,14 @@
                         }
                     );
                     State                           = "enabled";
+                }
+                AADAuthenticationRequirement 'AADAuthenticationRequirement-TestMailbox109@xtasdftestorg.onmicrosoft.com'
+                {
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
+                    PerUserMfaState       = "disabled";
+                    UserPrincipalName     = "TestMailbox109@$OrganizationName";
                 }
                 AADAuthenticationStrengthPolicy 'AADAuthenticationStrengthPolicy-Example'
                 {
@@ -560,6 +631,23 @@
                     CertificateThumbprint = $CertificateThumbprint
                     Ensure                       = "Present";
                 }
+                AADDeviceRegistrationPolicy 'MyDeviceRegistrationPolicy'
+                {
+                    ApplicationId                           = $ApplicationId;
+                    AzureADAllowedToJoin                    = "Selected";
+                    AzureADAllowedToJoinGroups              = @();
+                    AzureADAllowedToJoinUsers               = @("AlexW@M365x73318397.OnMicrosoft.com");
+                    AzureAdJoinLocalAdminsRegisteringGroups = @();
+                    AzureAdJoinLocalAdminsRegisteringMode   = "Selected";
+                    AzureAdJoinLocalAdminsRegisteringUsers  = @("AllanD@M365x73318397.OnMicrosoft.com");
+                    CertificateThumbprint                   = $CertificateThumbprint;
+                    IsSingleInstance                        = "Yes";
+                    LocalAdminPasswordIsEnabled             = $False;
+                    LocalAdminsEnableGlobalAdmins           = $True;
+                    MultiFactorAuthConfiguration            = $False;
+                    TenantId                                = $TenantId;
+                    UserDeviceQuota                         = 50;
+                }
                 AADEntitlementManagementAccessPackage 'myAccessPackage'
                 {
                     AccessPackagesIncompatibleWith = @();
@@ -646,6 +734,15 @@
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                 }
+                AADEntitlementManagementSettings 'AADEntitlementManagementSettings'
+                {
+                    ApplicationId                            = $ApplicationId;
+                    CertificateThumbprint                    = $CertificateThumbprint;
+                    DaysUntilExternalUserDeletedAfterBlocked = 30;
+                    ExternalUserLifecycleAction              = "blockSignInAndDelete";
+                    IsSingleInstance                         = "Yes";
+                    TenantId                                 = $TenantId;
+                }
                 AADExternalIdentityPolicy 'AADExternalIdentityPolicy'
                 {
                     AllowDeletedIdentitiesDataRemoval = $False;
@@ -655,19 +752,35 @@
                     CertificateThumbprint = $CertificateThumbprint
                     IsSingleInstance                  = "Yes";
                 }
+                AADFeatureRolloutPolicy 'AADFeatureRolloutPolicy-CertificateBasedAuthentication rollout policy'
+                {
+                    ApplicationId           = $ApplicationId
+                    TenantId                = $TenantId
+                    CertificateThumbprint   = $CertificateThumbprint
+                    Description             = "CertificateBasedAuthentication rollout policy";
+                    DisplayName             = "CertificateBasedAuthentication rollout policy";
+                    Ensure                  = "Present";
+                    IsAppliedToOrganization = $False;
+                    IsEnabled               = $False;
+                }
                 AADGroup 'MyGroups'
                 {
-                    DisplayName     = "DSCGroup"
-                    Description     = "Microsoft DSC Group Updated" # Updated Property
-                    SecurityEnabled = $True
-                    MailEnabled     = $True
-                    GroupTypes      = @("Unified")
-                    MailNickname    = "M365DSC"
-                    Members         = @("AdeleV@$TenantId")
-                    GroupAsMembers  = @("Group1")
-                    Visibility      = "Private"
-                    Owners          = @("admin@$TenantId", "AdeleV@$TenantId")
-                    Ensure          = "Present"
+                    DisplayName      = "DSCGroup"
+                    Description      = "Microsoft DSC Group Updated" # Updated Property
+                    SecurityEnabled  = $True
+                    MailEnabled      = $True
+                    GroupTypes       = @("Unified")
+                    MailNickname     = "M365DSC"
+                    Members          = @("AdeleV@$TenantId")
+                    GroupAsMembers   = @("Group1")
+                    Visibility       = "Private"
+                    Owners           = @("admin@$TenantId", "AdeleV@$TenantId")
+                    AssignedLicenses = @(
+                        MSFT_AADGroupLicense {
+                            SkuId          = 'AAD_PREMIUM_P2'
+                        }
+                    )
+                    Ensure           = "Present"
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
