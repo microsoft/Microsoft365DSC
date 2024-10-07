@@ -4,13 +4,6 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        ##TODO - Replace the PrimaryKey
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $PrimaryKey,
-
-        ##TODO - Add the list of Parameters
-
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
@@ -38,11 +31,94 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String[]]
-        $AccessTokens
+        $AccessTokens,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Wipe,
+
+        [Parameter()]
+        [System.String]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.String]
+        $lastSyncDateTime,
+
+        [Parameter()]
+        [System.String]
+        $applicationVersion,
+
+        [Parameter()]
+        [System.String]
+        $managementSdkVersion,
+
+        [Parameter()]
+        [System.String]
+        $platformVersion,
+
+        [Parameter()]
+        [Switch]
+        $deviceType,
+
+        [Parameter()]
+        [System.String]
+        $deviceTag,
+
+        [Parameter()]
+        [System.String]
+        $deviceName,
+
+        [Parameter()]
+        [System.String]
+        $managedDeviceId,
+
+        [Parameter()]
+        [System.String]
+        $azureADDeviceId,
+
+        [Parameter()]
+        [System.String]
+        $deviceModel,
+
+        [Parameter()]
+        [System.String]
+        $deviceManufacturer,
+
+        [Parameter()]
+        [System.String[]]
+        $flaggedReasons,
+
+        [Parameter()]
+        [System.String]
+        $userId,
+
+        [Parameter()]
+        [System.String]
+        $id,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $patchVersion,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $appIdentifier,
+
+        [Parameter()]
+        [System.String]
+        $operationsContext,
+
+        [Parameter()]
+        [System.Collections.Hashtable[]]
+        $operations
     )
 
-    ##TODO - Replace the workload by the one associated to your resource
-    New-M365DSCConnection -Workload 'Workload' `
+    New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters | Out-Null
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -63,13 +139,11 @@ function Get-TargetResource
     {
         if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
         {
-            ##TODO - Replace the PrimaryKey in the Filter by the one for the resource
-            $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.PrimaryKey -eq $PrimaryKey}
+           $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.Wipe -eq $Wipe}
         }
         else
         {
-            ##TODO - Replace the cmdlet by the one to retrieve a specific instance.
-            $instance = Get-cmdlet -PrimaryKey $PrimaryKey -ErrorAction Stop
+            $instance = Get-MgBetaDeviceAppManagementManagedAppRegistration -ManagedAppRegistrationId $id -ErrorAction Stop
         }
         if ($null -eq $instance)
         {
@@ -77,7 +151,6 @@ function Get-TargetResource
         }
 
         $results = @{
-            ##TODO - Add the list of parameters to be returned
             Ensure                = 'Present'
             Credential            = $Credential
             ApplicationId         = $ApplicationId
@@ -85,6 +158,26 @@ function Get-TargetResource
             CertificateThumbprint = $CertificateThumbprint
             ManagedIdentity       = $ManagedIdentity.IsPresent
             AccessTokens          = $AccessTokens
+            Id                    = $instance.id
+            UserId                = $instance.userId
+            CreatedDateTime       = $instance.createdDateTime
+            LastSyncDateTime      = $instance.lastSyncDateTime
+            ApplicationVersion    = $instance.applicationVersion
+            ManagementSdkVersion  = $instance.managementSdkVersion
+            PlatformVersion       = $instance.platformVersion
+            DeviceType            = $instance.deviceType
+            DeviceTag             = $instance.deviceTag
+            DeviceName            = $instance.deviceName
+            ManagedDeviceId       = $instance.managedDeviceId
+            AzureADDeviceId       = $instance.azureADDeviceId
+            DeviceModel           = $instance.deviceModel
+            DeviceManufacturer    = $instance.deviceManufacturer
+            FlaggedReasons        = $instance.flaggedReasons
+            Version               = $instance.version
+            PatchVersion          = $instance.patchVersion
+            AppIdentifier         = $instance.appIdentifier.packageId
+            OperationsContext     = $instance."operations@odata.context"
+            Operations            = $instance.operations
         }
         return [System.Collections.Hashtable] $results
     }
@@ -106,12 +199,9 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
-        ##TODO - Replace the PrimaryKey
         [Parameter(Mandatory = $true)]
         [System.String]
-        $PrimaryKey,
-
-        ##TODO - Add the list of Parameters
+        $Wipe,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -140,7 +230,27 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String[]]
-        $AccessTokens
+        $AccessTokens,
+
+        [Parameter()]
+        [System.String]
+        $deviceTag,
+
+        [Parameter()]
+        [System.String]
+        $deviceName,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $patchVersion,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $appIdentifier
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -162,20 +272,33 @@ function Set-TargetResource
     # CREATE
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        ##TODO - Replace by the New cmdlet for the resource
-        New-Cmdlet @SetParameters
+        New-MgBetaDeviceAppManagementTargetedManagedAppConfiguration -Id $Wipe `
+        -DisplayName $deviceName `
+        -Description $deviceTag `
+        -ApplicationVersion $applicationVersion `
+        -ManagementSdkVersion $managementSdkVersion `
+        -PlatformVersion $platformVersion `
+        -PatchVersion $patchVersion `
+        @SetParameters
     }
+
     # UPDATE
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        ##TODO - Replace by the Update/Set cmdlet for the resource
-        Set-cmdlet @SetParameters
+        Update-MgBetaDeviceAppManagementTargetedManagedAppConfiguration -TargetedManagedAppConfigurationId $currentInstance.Wipe `
+        -DisplayName $deviceName `
+        -Description $deviceTag `
+        -ApplicationVersion $applicationVersion `
+        -ManagementSdkVersion $managementSdkVersion `
+        -PlatformVersion $platformVersion `
+        -PatchVersion $patchVersion `
+        @SetParameters
     }
     # REMOVE
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        ##TODO - Replace by the Remove cmdlet for the resource
-        Remove-cmdlet @SetParameters
+        Remove-MgBetaDeviceAppManagementTargetedManagedAppConfiguration -TargetedManagedAppConfigurationId $currentInstance.Id `
+        @SetParameters
     }
 }
 
@@ -185,12 +308,9 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
-        ##TODO - Replace the PrimaryKey
         [Parameter(Mandatory = $true)]
         [System.String]
-        $PrimaryKey,
-
-        ##TODO - Add the list of Parameters
+        $Wipe,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -219,7 +339,91 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String[]]
-        $AccessTokens
+        $AccessTokens,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Wipe,
+
+        [Parameter()]
+        [System.String]
+        $createdDateTime,
+
+        [Parameter()]
+        [System.String]
+        $lastSyncDateTime,
+
+        [Parameter()]
+        [System.String]
+        $applicationVersion,
+
+        [Parameter()]
+        [System.String]
+        $managementSdkVersion,
+
+        [Parameter()]
+        [System.String]
+        $platformVersion,
+
+        [Parameter()]
+        [Switch]
+        $deviceType,
+
+        [Parameter()]
+        [System.String]
+        $deviceTag,
+
+        [Parameter()]
+        [System.String]
+        $deviceName,
+
+        [Parameter()]
+        [System.String]
+        $managedDeviceId,
+
+        [Parameter()]
+        [System.String]
+        $azureADDeviceId,
+
+        [Parameter()]
+        [System.String]
+        $deviceModel,
+
+        [Parameter()]
+        [System.String]
+        $deviceManufacturer,
+
+        [Parameter()]
+        [System.String[]]
+        $flaggedReasons,
+
+        [Parameter()]
+        [System.String]
+        $userId,
+
+        [Parameter()]
+        [System.String]
+        $id,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $patchVersion,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $appIdentifier,
+
+        [Parameter()]
+        [System.String]
+        $operationsContext,
+
+        [Parameter()]
+        [System.Collections.Hashtable[]]
+        $operations
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -282,11 +486,30 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String[]]
-        $AccessTokens
+        $AccessTokens,
+
+        [Parameter()]
+        [System.String]
+        $deviceTag,
+
+        [Parameter()]
+        [System.String]
+        $deviceName,
+
+        [Parameter()]
+        [System.String]
+        $version,
+
+        [Parameter()]
+        [System.String]
+        $patchVersion,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $appIdentifier
     )
 
-    ##TODO - Replace workload
-    $ConnectionMode = New-M365DSCConnection -Workload 'Workload' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -304,8 +527,7 @@ function Export-TargetResource
     try
     {
         $Script:ExportMode = $true
-        ##TODO - Replace Get-Cmdlet by the cmdlet to retrieve all instances
-        [array] $Script:exportedInstances = Get-Cmdlet -ErrorAction Stop
+        [array] $Script:exportedInstances = Get-MgBetaDeviceAppManagementTargetedManagedAppConfiguration -ErrorAction Stop
 
         $i = 1
         $dscContent = ''
@@ -327,8 +549,7 @@ function Export-TargetResource
             $displayedKey = $config.Id
             Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -NoNewline
             $params = @{
-                ##TODO - Specify the Primary Key
-                #PrimaryKey            = $config.PrimaryKey
+                PrimaryKey            = $config.Wipe
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
