@@ -1,14 +1,15 @@
-﻿#NewFile
-```powershell
-function Get-TargetResource
+﻿function Get-TargetResource
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        [Parameter(Mandatory = $true)]
         [System.String]
         $Name,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowApplePushNotifications,
 
         [Parameter()]
         [System.String]
@@ -68,7 +69,7 @@ function Get-TargetResource
         $AllowSimpleDevicePassword,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $AllowSMIMEEncryptionAlgorithmNegotiation,
 
         [Parameter()]
@@ -100,6 +101,10 @@ function Get-TargetResource
         $AlphanumericDevicePasswordRequired,
 
         [Parameter()]
+        [System.String[]]
+        $ApprovedApplicationList,
+
+        [Parameter()]
         [System.Boolean]
         $AttachmentsEnabled,
 
@@ -112,7 +117,7 @@ function Get-TargetResource
         $DevicePasswordEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $DevicePasswordExpiration,
 
         [Parameter()]
@@ -120,7 +125,7 @@ function Get-TargetResource
         $DevicePasswordHistory,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $DevicePolicyRefreshInterval,
 
         [Parameter()]
@@ -132,7 +137,11 @@ function Get-TargetResource
         $IsDefault,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
+        $IsDefaultPolicy,
+
+        [Parameter()]
+        [System.String]
         $MaxAttachmentSize,
 
         [Parameter()]
@@ -141,7 +150,7 @@ function Get-TargetResource
         $MaxCalendarAgeFilter,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $MaxDevicePasswordFailedAttempts,
 
         [Parameter()]
@@ -150,15 +159,15 @@ function Get-TargetResource
         $MaxEmailAgeFilter,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $MaxEmailBodyTruncationSize,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $MaxEmailHTMLBodyTruncationSize,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $MaxInactivityTimeDeviceLock,
 
         [Parameter()]
@@ -182,7 +191,7 @@ function Get-TargetResource
         $RequireEncryptedSMIMEMessages,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $RequireEncryptionSMIMEAlgorithm,
 
         [Parameter()]
@@ -190,117 +199,7 @@ function Get-TargetResource
         $RequireManualSyncWhenRoaming,
 
         [Parameter()]
-        [System.Object]
-        $RequireSignedSMIMEAlgorithm,
-
-        [Parameter()]
-        [System.Boolean]
-        $RequireSignedSMIMEMessages,
-
-        [Parameter()]
-        [System.Boolean]
-        $RequireStorageCardEncryption,
-
-        [Parameter()]
-        [System.Boolean]
-        $UNCAccessEnabled,
-
-        [Parameter()]
-        [System.Boolean]
-        $WSSAccessEnabled,
-
-        [Parameter(Mandatory = $true)]
-        [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowApplePushNotifications,
-
-        [Parameter()]
-        [System.Object]
-        $AllowSMIMEEncryptionAlgorithmNegotiation,
-
-        [Parameter()]
-        [System.Object]
-        $ApprovedApplicationList,
-
-        [Parameter()]
-        [System.Object]
-        $DevicePasswordExpiration,
-
-        [Parameter()]
-        [System.Int32]
-        $DevicePasswordHistory,
-
-        [Parameter()]
-        [System.Object]
-        $DevicePolicyRefreshInterval,
-
-        [Parameter()]
-        [System.Boolean]
-        $IsDefaultPolicy,
-
-        [Parameter()]
-        [System.Object]
-        $MaxAttachmentSize,
-
-        [Parameter()]
         [System.String]
-        [ValidateSet("All", "OneDay", "ThreeDays", "OneWeek", "TwoWeeks", "OneMonth")]
-        $MaxCalendarAgeFilter,
-
-        [Parameter()]
-        [System.Object]
-        $MaxDevicePasswordFailedAttempts,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet("All", "OneDay", "ThreeDays", "OneWeek", "TwoWeeks", "OneMonth")]
-        $MaxEmailAgeFilter,
-
-        [Parameter()]
-        [System.Object]
-        $MaxEmailBodyTruncationSize,
-
-        [Parameter()]
-        [System.Object]
-        $MaxEmailHTMLBodyTruncationSize,
-
-        [Parameter()]
-        [System.Object]
-        $MaxInactivityTimeDeviceLock,
-
-        [Parameter()]
-        [System.Int32]
-        $MinDevicePasswordComplexCharacters,
-
-        [Parameter()]
-        [System.Int32]
-        $MinDevicePasswordLength,
-
-        [Parameter()]
-        [System.Boolean]
-        $PasswordRecoveryEnabled,
-
-        [Parameter()]
-        [System.Boolean]
-        $RequireDeviceEncryption,
-
-        [Parameter()]
-        [System.Boolean]
-        $RequireEncryptedSMIMEMessages,
-
-        [Parameter()]
-        [System.Object]
-        $RequireEncryptionSMIMEAlgorithm,
-
-        [Parameter()]
-        [System.Boolean]
-        $RequireManualSyncWhenRoaming,
-
-        [Parameter()]
-        [System.Object]
         $RequireSignedSMIMEAlgorithm,
 
         [Parameter()]
@@ -322,6 +221,15 @@ function Get-TargetResource
         [Parameter()]
         [System.Boolean]
         $WSSAccessEnabled,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -366,11 +274,11 @@ function Get-TargetResource
     {
         if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
         {
-            $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.Name -eq $Name}
+            $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.Identity -eq $Identity}
         }
         else
         {
-            $instance = Get-ActiveSyncMailboxPolicy -Name $Name -ErrorAction Stop
+            $instance = Get-ActiveSyncMailboxPolicy -Identity $Identity -ErrorAction Stop
         }
         if ($null -eq $instance)
         {
@@ -380,6 +288,7 @@ function Get-TargetResource
         $results = @{
             Ensure                = 'Present'
             Name                  = [System.String]$instance.Name
+            AllowApplePushNotifications = [System.Boolean]$instance.AllowApplePushNotifications
             AllowBluetooth        = [System.String]$instance.AllowBluetooth
             AllowBrowser          = [System.Boolean]$instance.AllowBrowser
             AllowCamera           = [System.Boolean]$instance.AllowCamera
@@ -394,7 +303,7 @@ function Get-TargetResource
             AllowPOPIMAPEmail     = [System.Boolean]$instance.AllowPOPIMAPEmail
             AllowRemoteDesktop    = [System.Boolean]$instance.AllowRemoteDesktop
             AllowSimpleDevicePassword = [System.Boolean]$instance.AllowSimpleDevicePassword
-            AllowSMIMEEncryptionAlgorithmNegotiation = $instance.AllowSMIMEEncryptionAlgorithmNegotiation
+            AllowSMIMEEncryptionAlgorithmNegotiation = [System.String]$instance.AllowSMIMEEncryptionAlgorithmNegotiation
             AllowSMIMESoftCerts   = [System.Boolean]$instance.AllowSMIMESoftCerts
             AllowStorageCard      = [System.Boolean]$instance.AllowStorageCard
             AllowTextMessaging    = [System.Boolean]$instance.AllowTextMessaging
@@ -402,61 +311,37 @@ function Get-TargetResource
             AllowUnsignedInstallationPackages = [System.Boolean]$instance.AllowUnsignedInstallationPackages
             AllowWiFi             = [System.Boolean]$instance.AllowWiFi
             AlphanumericDevicePasswordRequired = [System.Boolean]$instance.AlphanumericDevicePasswordRequired
+            ApprovedApplicationList = [System.String[]]$instance.ApprovedApplicationList
             AttachmentsEnabled    = [System.Boolean]$instance.AttachmentsEnabled
             DeviceEncryptionEnabled = [System.Boolean]$instance.DeviceEncryptionEnabled
             DevicePasswordEnabled = [System.Boolean]$instance.DevicePasswordEnabled
-            DevicePasswordExpiration = $instance.DevicePasswordExpiration
+            DevicePasswordExpiration = [System.String]$instance.DevicePasswordExpiration
             DevicePasswordHistory = [System.Int32]$instance.DevicePasswordHistory
-            DevicePolicyRefreshInterval = $instance.DevicePolicyRefreshInterval
+            DevicePolicyRefreshInterval = [System.String]$instance.DevicePolicyRefreshInterval
             IrmEnabled            = [System.Boolean]$instance.IrmEnabled
             IsDefault             = [System.Boolean]$instance.IsDefault
-            MaxAttachmentSize     = $instance.MaxAttachmentSize
-            MaxCalendarAgeFilter  = [System.String]$instance.MaxCalendarAgeFilter
-            MaxDevicePasswordFailedAttempts = $instance.MaxDevicePasswordFailedAttempts
-            MaxEmailAgeFilter     = [System.String]$instance.MaxEmailAgeFilter
-            MaxEmailBodyTruncationSize = $instance.MaxEmailBodyTruncationSize
-            MaxEmailHTMLBodyTruncationSize = $instance.MaxEmailHTMLBodyTruncationSize
-            MaxInactivityTimeDeviceLock = $instance.MaxInactivityTimeDeviceLock
-            MinDevicePasswordComplexCharacters = [System.Int32]$instance.MinDevicePasswordComplexCharacters
-            MinDevicePasswordLength = [System.Int32]$instance.MinDevicePasswordLength
-            PasswordRecoveryEnabled = [System.Boolean]$instance.PasswordRecoveryEnabled
-            RequireDeviceEncryption = [System.Boolean]$instance.RequireDeviceEncryption
-            RequireEncryptedSMIMEMessages = [System.Boolean]$instance.RequireEncryptedSMIMEMessages
-            RequireEncryptionSMIMEAlgorithm = $instance.RequireEncryptionSMIMEAlgorithm
-            RequireManualSyncWhenRoaming = [System.Boolean]$instance.RequireManualSyncWhenRoaming
-            RequireSignedSMIMEAlgorithm = $instance.RequireSignedSMIMEAlgorithm
-            RequireSignedSMIMEMessages = [System.Boolean]$instance.RequireSignedSMIMEMessages
-            RequireStorageCardEncryption = [System.Boolean]$instance.RequireStorageCardEncryption
-            UNCAccessEnabled      = [System.Boolean]$instance.UNCAccessEnabled
-            WSSAccessEnabled      = [System.Boolean]$instance.WSSAccessEnabled
-            Identity              = $instance.Identity
-            AllowApplePushNotifications = [System.Boolean]$instance.AllowApplePushNotifications
-            AllowSMIMEEncryptionAlgorithmNegotiation = $instance.AllowSMIMEEncryptionAlgorithmNegotiation
-            ApprovedApplicationList = $instance.ApprovedApplicationList
-            DevicePasswordExpiration = $instance.DevicePasswordExpiration
-            DevicePasswordHistory = [System.Int32]$instance.DevicePasswordHistory
-            DevicePolicyRefreshInterval = $instance.DevicePolicyRefreshInterval
             IsDefaultPolicy       = [System.Boolean]$instance.IsDefaultPolicy
-            MaxAttachmentSize     = $instance.MaxAttachmentSize
+            MaxAttachmentSize     = [System.String]$instance.MaxAttachmentSize
             MaxCalendarAgeFilter  = [System.String]$instance.MaxCalendarAgeFilter
-            MaxDevicePasswordFailedAttempts = $instance.MaxDevicePasswordFailedAttempts
+            MaxDevicePasswordFailedAttempts = [System.String]$instance.MaxDevicePasswordFailedAttempts
             MaxEmailAgeFilter     = [System.String]$instance.MaxEmailAgeFilter
-            MaxEmailBodyTruncationSize = $instance.MaxEmailBodyTruncationSize
-            MaxEmailHTMLBodyTruncationSize = $instance.MaxEmailHTMLBodyTruncationSize
-            MaxInactivityTimeDeviceLock = $instance.MaxInactivityTimeDeviceLock
+            MaxEmailBodyTruncationSize = [System.String]$instance.MaxEmailBodyTruncationSize
+            MaxEmailHTMLBodyTruncationSize = [System.String]$instance.MaxEmailHTMLBodyTruncationSize
+            MaxInactivityTimeDeviceLock = [System.String]$instance.MaxInactivityTimeDeviceLock
             MinDevicePasswordComplexCharacters = [System.Int32]$instance.MinDevicePasswordComplexCharacters
             MinDevicePasswordLength = [System.Int32]$instance.MinDevicePasswordLength
             PasswordRecoveryEnabled = [System.Boolean]$instance.PasswordRecoveryEnabled
             RequireDeviceEncryption = [System.Boolean]$instance.RequireDeviceEncryption
             RequireEncryptedSMIMEMessages = [System.Boolean]$instance.RequireEncryptedSMIMEMessages
-            RequireEncryptionSMIMEAlgorithm = $instance.RequireEncryptionSMIMEAlgorithm
+            RequireEncryptionSMIMEAlgorithm = [System.String]$instance.RequireEncryptionSMIMEAlgorithm
             RequireManualSyncWhenRoaming = [System.Boolean]$instance.RequireManualSyncWhenRoaming
-            RequireSignedSMIMEAlgorithm = $instance.RequireSignedSMIMEAlgorithm
+            RequireSignedSMIMEAlgorithm = [System.String]$instance.RequireSignedSMIMEAlgorithm
             RequireSignedSMIMEMessages = [System.Boolean]$instance.RequireSignedSMIMEMessages
             RequireStorageCardEncryption = [System.Boolean]$instance.RequireStorageCardEncryption
             UnapprovedInROMApplicationList = [System.String[]]$instance.UnapprovedInROMApplicationList
             UNCAccessEnabled      = [System.Boolean]$instance.UNCAccessEnabled
             WSSAccessEnabled      = [System.Boolean]$instance.WSSAccessEnabled
+            Identity              = [System.String]$Identity
             Credential            = $Credential
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
@@ -477,377 +362,18 @@ function Get-TargetResource
         return $nullResult
     }
 }
-```
-```
+
 function Set-TargetResource
 {
     [CmdletBinding()]
     param
     (
-        ##PrimaryKey
-        [Parameter(Mandatory = $true)]
         [System.String]
         $Name,
 
-        ##Parameters
-        [Parameter()]  
-        [System.String]  
-        [ValidateSet("Disable", "HandsfreeOnly", "Allow")]
-        $AllowBluetooth,  
-
-        [Parameter()]  
-        [System.Boolean]  
-        $AllowBrowser,  
-
-        [Parameter()]  
-        [System.Boolean]  
-        $AllowCamera,  
-
-        [Parameter()]  
-        [System.Boolean]  
-        $AllowConsumerEmail,  
-
-        [Parameter()]  
-        [System.Boolean]  
-        $AllowDesktopSync,  
-
-        [Parameter()]  
-        [System.Boolean]  
-        $AllowExternalDeviceManagement,  
-
-        [Parameter()]  
-        [System.Boolean]  
-        $AllowHTMLEmail,  
-
-        [Parameter()]  
-        [System.Boolean]  
-        $AllowInternetSharing,  
-
-        [Parameter()]  
-        [System.Boolean]  
-        $AllowIrDA,  
-
-        [Parameter()]  
-        [System.Boolean]  
-        $AllowMobileOTAUpdate,  
-
-        [Parameter()]  
-        [System.Boolean]  
-        $AllowNonProvisionableDevices,  
-
-        [Parameter()]  
-        [System.Boolean]  
-        $AllowPOPIMAPEmail,  
-
-        [Parameter()]  
-        [System.Boolean]  
-        $AllowRemoteDesktop,  
-
-        [Parameter()]  
-        [System.Boolean]  
-        $AllowSimpleDevicePassword,  
-
-        [Parameter()]  
-        [System.Object]  
-        $AllowSMIMEEncryptionAlgorithmNegotiation,  
-
-        [Parameter()]  
-        [System.Boolean]  
-        $AllowSMIMESoftCerts,  
-
-        [Parameter()]  
-        [System.Boolean]  
-        $AllowStorageCard,  
-
-        [Parameter()]  
-        [System.Boolean]  
-        $AllowTextMessaging,  
-
-        [Parameter()]  
-        [System.Boolean]  
-        $AllowUnsignedApplications,  
-
-        [Parameter()]  
-        [System.Boolean]  
-        $AllowUnsignedInstallationPackages,  
-
-        [Parameter()]  
-        [System.Boolean]  
-        $AllowWiFi,  
-
-        [Parameter()]  
-        [System.Boolean]  
-        $AlphanumericDevicePasswordRequired,  
-
-        [Parameter()]  
-        [System.Boolean]  
-        $AttachmentsEnabled,  
-
-        [Parameter()]  
-        [System.Boolean]  
-        $DeviceEncryptionEnabled,  
-
-        [Parameter()]  
-        [System.Boolean]  
-        $DevicePasswordEnabled,  
-
-        [Parameter()]  
-        [System.Object]  
-        $DevicePasswordExpiration,  
-
-        [Parameter()]  
-        [System.Int32]  
-        $DevicePasswordHistory,  
-
-        [Parameter()]  
-        [System.Object]  
-        $DevicePolicyRefreshInterval,  
-
-        [Parameter()]  
-        [System.Boolean]  
-        $IrmEnabled,  
-
-        [Parameter()]  
-        [System.Boolean]  
-        $IsDefault,  
-
-        [Parameter()]  
-        [System.Object]  
-        $MaxAttachmentSize,  
-
-        [Parameter()]  
-        [System.String]  
-        [ValidateSet("All", "TwoWeeks", "OneMonth", "ThreeMonths", "SixMonths")]
-        $MaxCalendarAgeFilter,  
-
-        [Parameter()]  
-        [System.Object]  
-        $MaxDevicePasswordFailedAttempts,  
-
-        [Parameter()]  
-        [System.String]  
-        [ValidateSet("All", "OneDay", "ThreeDays", "OneWeek", "TwoWeeks", "OneMonth", "ThreeMonths", "SixMonths")]
-        $MaxEmailAgeFilter,  
-
-        [Parameter()]  
-        [System.Object]  
-        $MaxEmailBodyTruncationSize,  
-
-        [Parameter()]  
-        [System.Object]  
-        $MaxEmailHTMLBodyTruncationSize,  
-
-        [Parameter()]  
-        [System.Object]  
-        $MaxInactivityTimeDeviceLock,  
-
-        [Parameter()]  
-        [System.Int32]  
-        $MinDevicePasswordComplexCharacters,  
-
-        [Parameter()]  
-        [System.Int32]  
-        $MinDevicePasswordLength,  
-
-        [Parameter()]  
-        [System.Boolean]  
-        $PasswordRecoveryEnabled,  
-
-        [Parameter()]  
-        [System.Boolean]  
-        $RequireDeviceEncryption,  
-
-        [Parameter()]  
-        [System.Boolean]  
-        $RequireEncryptedSMIMEMessages,  
-
-        [Parameter()]  
-        [System.Object]  
-        $RequireEncryptionSMIMEAlgorithm,  
-
-        [Parameter()]  
-        [System.Boolean]  
-        $RequireManualSyncWhenRoaming,  
-
-        [Parameter()]  
-        [System.Object]  
-        $RequireSignedSMIMEAlgorithm,  
-
-        [Parameter()]  
-        [System.Boolean]  
-        $RequireSignedSMIMEMessages,  
-
-        [Parameter()]  
-        [System.Boolean]  
-        $RequireStorageCardEncryption,  
-
-        [Parameter()]  
-        [System.Boolean]  
-        $UNCAccessEnabled,  
-
-        [Parameter()]  
-        [System.Boolean]  
-        $WSSAccessEnabled,  
-
-        [Parameter(Mandatory=$true)]  
-        [System.Object]  
-        $Identity,  
-
-        [Parameter()]  
-        [System.Boolean]  
-        $AllowApplePushNotifications,  
-
-        [Parameter()]  
-        [System.Object]  
-        $AllowSMIMEEncryptionAlgorithmNegotiation,  
-
-        [Parameter()]  
-        [System.Object]  
-        $ApprovedApplicationList,  
-
-        [Parameter()]  
-        [System.Object]  
-        $DevicePasswordExpiration,  
-
-        [Parameter()]  
-        [System.Int32]  
-        $DevicePasswordHistory,  
-
-        [Parameter()]  
-        [System.Object]  
-        $DevicePolicyRefreshInterval,  
-
-        [Parameter()]  
-        [System.Boolean]  
-        $IsDefaultPolicy,  
-
-        [Parameter()]  
-        [System.Object]  
-        $MaxAttachmentSize,  
-
-        [Parameter()]  
-        [System.String]  
-        [ValidateSet("All", "OneDay", "ThreeDays", "OneWeek", "TwoWeeks", "OneMonth")]
-        $MaxCalendarAgeFilter,  
-
-        [Parameter()]  
-        [System.Object]  
-        $MaxDevicePasswordFailedAttempts,  
-
-        [Parameter()]  
-        [System.String]  
-        [ValidateSet("All", "OneDay", "ThreeDays", "OneWeek", "TwoWeeks", "OneMonth")]
-        $MaxEmailAgeFilter,  
-
-        [Parameter()]  
-        [System.Object]  
-        $MaxEmailBodyTruncationSize,  
-
-        [Parameter()]  
-        [System.Object]  
-        $MaxEmailHTMLBodyTruncationSize,  
-
-        [Parameter()]  
-        [System.Object]  
-        $MaxInactivityTimeDeviceLock,  
-
-        [Parameter()]  
-        [System.Int32]  
-        $MinDevicePasswordComplexCharacters,  
-
-        [Parameter()]  
-        [System.Int32]  
-        $MinDevicePasswordLength,  
-
-        [Parameter()]  
-        [System.Boolean]  
-        $PasswordRecoveryEnabled,  
-
-        [Parameter()]  
-        [System.Boolean]  
-        $RequireDeviceEncryption,  
-
-        [Parameter()]  
-        [System.Boolean]  
-        $RequireEncryptedSMIMEMessages,  
-
-        [Parameter()]  
-        [System.Object]  
-        $RequireEncryptionSMIMEAlgorithm,  
-
-        [Parameter()]  
-        [System.Boolean]  
-        $RequireManualSyncWhenRoaming,  
-
-        [Parameter()]  
-        [System.Object]  
-        $RequireSignedSMIMEAlgorithm,  
-
-        [Parameter()]  
-        [System.Boolean]  
-        $RequireSignedSMIMEMessages,  
-
-        [Parameter()]  
-        [System.Boolean]  
-        $RequireStorageCardEncryption,  
-
-        [Parameter()]  
-        [System.String[]]  
-        $UnapprovedInROMApplicationList,  
-
-        [Parameter()]  
-        [System.Boolean]  
-        $UNCAccessEnabled,  
-
-        [Parameter()]  
-        [System.Boolean]  
-        $WSSAccessEnabled  
-    )
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $currentInstance = Get-TargetResource @PSBoundParameters
-
-    $setParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
-
-    # CREATE
-    if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
-    {
-        New-ActiveSyncMailboxPolicy @SetParameters
-    }
-    # UPDATE
-    elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
-    {
-        Set-ActiveSyncMailboxPolicy @SetParameters
-    }
-    # REMOVE
-    elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
-    {
-        Remove-ActiveSyncMailboxPolicy -Identity $Name
-    }
-}
-```
-
-```
-function Test-TargetResource
-{
-    [CmdletBinding()]
-    [OutputType([System.Boolean])]
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Name,
+        [Parameter()]
+        [System.Boolean]
+        $AllowApplePushNotifications,
 
         [Parameter()]
         [System.String]
@@ -907,7 +433,7 @@ function Test-TargetResource
         $AllowSimpleDevicePassword,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $AllowSMIMEEncryptionAlgorithmNegotiation,
 
         [Parameter()]
@@ -939,6 +465,10 @@ function Test-TargetResource
         $AlphanumericDevicePasswordRequired,
 
         [Parameter()]
+        [System.String[]]
+        $ApprovedApplicationList,
+
+        [Parameter()]
         [System.Boolean]
         $AttachmentsEnabled,
 
@@ -951,7 +481,7 @@ function Test-TargetResource
         $DevicePasswordEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $DevicePasswordExpiration,
 
         [Parameter()]
@@ -959,7 +489,7 @@ function Test-TargetResource
         $DevicePasswordHistory,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $DevicePolicyRefreshInterval,
 
         [Parameter()]
@@ -971,7 +501,11 @@ function Test-TargetResource
         $IsDefault,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
+        $IsDefaultPolicy,
+
+        [Parameter()]
+        [System.String]
         $MaxAttachmentSize,
 
         [Parameter()]
@@ -980,7 +514,7 @@ function Test-TargetResource
         $MaxCalendarAgeFilter,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $MaxDevicePasswordFailedAttempts,
 
         [Parameter()]
@@ -989,15 +523,15 @@ function Test-TargetResource
         $MaxEmailAgeFilter,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $MaxEmailBodyTruncationSize,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $MaxEmailHTMLBodyTruncationSize,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $MaxInactivityTimeDeviceLock,
 
         [Parameter()]
@@ -1021,7 +555,7 @@ function Test-TargetResource
         $RequireEncryptedSMIMEMessages,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $RequireEncryptionSMIMEAlgorithm,
 
         [Parameter()]
@@ -1029,117 +563,7 @@ function Test-TargetResource
         $RequireManualSyncWhenRoaming,
 
         [Parameter()]
-        [System.Object]
-        $RequireSignedSMIMEAlgorithm,
-
-        [Parameter()]
-        [System.Boolean]
-        $RequireSignedSMIMEMessages,
-
-        [Parameter()]
-        [System.Boolean]
-        $RequireStorageCardEncryption,
-
-        [Parameter()]
-        [System.Boolean]
-        $UNCAccessEnabled,
-
-        [Parameter()]
-        [System.Boolean]
-        $WSSAccessEnabled,
-
-        [Parameter(Mandatory=$true)]
-        [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowApplePushNotifications,
-
-        [Parameter()]
-        [System.Object]
-        $AllowSMIMEEncryptionAlgorithmNegotiation,
-
-        [Parameter()]
-        [System.Object]
-        $ApprovedApplicationList,
-
-        [Parameter()]
-        [System.Object]
-        $DevicePasswordExpiration,
-
-        [Parameter()]
-        [System.Int32]
-        $DevicePasswordHistory,
-
-        [Parameter()]
-        [System.Object]
-        $DevicePolicyRefreshInterval,
-
-        [Parameter()]
-        [System.Boolean]
-        $IsDefaultPolicy,
-
-        [Parameter()]
-        [System.Object]
-        $MaxAttachmentSize,
-
-        [Parameter()]
         [System.String]
-        [ValidateSet("All", "OneDay", "ThreeDays", "OneWeek", "TwoWeeks", "OneMonth")]
-        $MaxCalendarAgeFilter,
-
-        [Parameter()]
-        [System.Object]
-        $MaxDevicePasswordFailedAttempts,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet("All", "OneDay", "ThreeDays", "OneWeek", "TwoWeeks", "OneMonth")]
-        $MaxEmailAgeFilter,
-
-        [Parameter()]
-        [System.Object]
-        $MaxEmailBodyTruncationSize,
-
-        [Parameter()]
-        [System.Object]
-        $MaxEmailHTMLBodyTruncationSize,
-
-        [Parameter()]
-        [System.Object]
-        $MaxInactivityTimeDeviceLock,
-
-        [Parameter()]
-        [System.Int32]
-        $MinDevicePasswordComplexCharacters,
-
-        [Parameter()]
-        [System.Int32]
-        $MinDevicePasswordLength,
-
-        [Parameter()]
-        [System.Boolean]
-        $PasswordRecoveryEnabled,
-
-        [Parameter()]
-        [System.Boolean]
-        $RequireDeviceEncryption,
-
-        [Parameter()]
-        [System.Boolean]
-        $RequireEncryptedSMIMEMessages,
-
-        [Parameter()]
-        [System.Object]
-        $RequireEncryptionSMIMEAlgorithm,
-
-        [Parameter()]
-        [System.Boolean]
-        $RequireManualSyncWhenRoaming,
-
-        [Parameter()]
-        [System.Object]
         $RequireSignedSMIMEAlgorithm,
 
         [Parameter()]
@@ -1161,6 +585,15 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $WSSAccessEnabled,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -1185,6 +618,300 @@ function Test-TargetResource
         [Parameter()]
         [System.String[]]
         $AccessTokens
+
+    )
+
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+    $CommandName = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+
+    $currentInstance = Get-TargetResource @PSBoundParameters
+
+    $setParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+
+    # CREATE
+    if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
+    {
+        $setParameters.Remove("Identity")
+        New-ActiveSyncMailboxPolicy @SetParameters
+    }
+    # UPDATE
+    elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
+    {
+        Set-ActiveSyncMailboxPolicy @SetParameters
+    }
+    # REMOVE
+    elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
+    {
+        Remove-ActiveSyncMailboxPolicy -Identity $Identity
+    }
+}
+
+function Test-TargetResource
+{
+    [CmdletBinding()]
+    [OutputType([System.Boolean])]
+    param
+    (        
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowApplePushNotifications,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("Disable", "HandsfreeOnly", "Allow")]
+        $AllowBluetooth,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowBrowser,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCamera,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowConsumerEmail,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowDesktopSync,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowExternalDeviceManagement,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowHTMLEmail,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowInternetSharing,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowIrDA,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowMobileOTAUpdate,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowNonProvisionableDevices,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowPOPIMAPEmail,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowRemoteDesktop,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowSimpleDevicePassword,
+
+        [Parameter()]
+        [System.String]
+        $AllowSMIMEEncryptionAlgorithmNegotiation,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowSMIMESoftCerts,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowStorageCard,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowTextMessaging,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowUnsignedApplications,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowUnsignedInstallationPackages,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowWiFi,
+
+        [Parameter()]
+        [System.Boolean]
+        $AlphanumericDevicePasswordRequired,
+
+        [Parameter()]
+        [System.String[]]
+        $ApprovedApplicationList,
+
+        [Parameter()]
+        [System.Boolean]
+        $AttachmentsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $DeviceEncryptionEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $DevicePasswordEnabled,
+
+        [Parameter()]
+        [System.String]
+        $DevicePasswordExpiration,
+
+        [Parameter()]
+        [System.Int32]
+        $DevicePasswordHistory,
+
+        [Parameter()]
+        [System.String]
+        $DevicePolicyRefreshInterval,
+
+        [Parameter()]
+        [System.Boolean]
+        $IrmEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsDefault,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsDefaultPolicy,
+
+        [Parameter()]
+        [System.String]
+        $MaxAttachmentSize,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("All", "TwoWeeks", "OneMonth", "ThreeMonths", "SixMonths")]
+        $MaxCalendarAgeFilter,
+
+        [Parameter()]
+        [System.String]
+        $MaxDevicePasswordFailedAttempts,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("All", "OneDay", "ThreeDays", "OneWeek", "TwoWeeks", "OneMonth", "ThreeMonths", "SixMonths")]
+        $MaxEmailAgeFilter,
+
+        [Parameter()]
+        [System.String]
+        $MaxEmailBodyTruncationSize,
+
+        [Parameter()]
+        [System.String]
+        $MaxEmailHTMLBodyTruncationSize,
+
+        [Parameter()]
+        [System.String]
+        $MaxInactivityTimeDeviceLock,
+
+        [Parameter()]
+        [System.Int32]
+        $MinDevicePasswordComplexCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $MinDevicePasswordLength,
+
+        [Parameter()]
+        [System.Boolean]
+        $PasswordRecoveryEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $RequireDeviceEncryption,
+
+        [Parameter()]
+        [System.Boolean]
+        $RequireEncryptedSMIMEMessages,
+
+        [Parameter()]
+        [System.String]
+        $RequireEncryptionSMIMEAlgorithm,
+
+        [Parameter()]
+        [System.Boolean]
+        $RequireManualSyncWhenRoaming,
+
+        [Parameter()]
+        [System.String]
+        $RequireSignedSMIMEAlgorithm,
+
+        [Parameter()]
+        [System.Boolean]
+        $RequireSignedSMIMEMessages,
+
+        [Parameter()]
+        [System.Boolean]
+        $RequireStorageCardEncryption,
+
+        [Parameter()]
+        [System.String[]]
+        $UnapprovedInROMApplicationList,
+
+        [Parameter()]
+        [System.Boolean]
+        $UNCAccessEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $WSSAccessEnabled,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
+
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -1214,8 +941,7 @@ function Test-TargetResource
 
     return $testResult
 }
-```
-```powershell
+
 function Export-TargetResource
 {
     [CmdletBinding()]
@@ -1285,7 +1011,7 @@ function Export-TargetResource
             $displayedKey = $config.Name
             Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -NoNewline
             $params = @{
-                Name                   = $config.Name
+                Identity               = $config.Name
                 Credential             = $Credential
                 ApplicationId          = $ApplicationId
                 TenantId               = $TenantId
@@ -1324,5 +1050,3 @@ function Export-TargetResource
         return ''
     }
 }
-```
-In the updated script, the 'Workload' value in New-M365DSCConnection cmdlet has been replaced with 'ExchangeOnline'. The Get-cmdlet has been updated with the corresponding Get cmdlet from the cmdlets list of the resource template, which is 'Get-ActiveSyncMailboxPolicy'. The PrimaryKey has been selected as 'Name' from the argument list provided in the resource template. The $primaryKey has been updated with the actual primaryKey 'Name'. All the TODO comments have been removed as per the instructions.
