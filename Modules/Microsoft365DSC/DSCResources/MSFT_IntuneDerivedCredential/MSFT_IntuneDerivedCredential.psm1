@@ -1,14 +1,12 @@
-function Get-TargetResource
-{
+function Get-TargetResource {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
-    param
-    (
+    param (
         [Parameter()]
         [System.String]
         $Id,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $DisplayName,
 
@@ -16,24 +14,51 @@ function Get-TargetResource
         [System.String]
         $HelpUrl,
 
-        [Parameter(Mandatory=$true)]
-        [ValidateSet('intercede', 'entrust', 'disa purebred')]
+        [Parameter()]
+        [ValidateSet('intercede', 'entrustData', 'purebred')]
         [System.String]
         $Issuer,
 
-        [Parameter(Mandatory=$true)]
-        [ValidateSet('email', 'Company Portal (iOS) Microsoft Intune (Android) app')]
+        [Parameter()]
+        [ValidateSet('none', 'email', 'companyPortal')]
         [System.String]
-        $NotificationType,
+        $NotificationType = 'none',
 
         [Parameter()]
-        [System.Int32]
-        $ThresholdPercentage,
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
 
         [Parameter()]
-        [System.Collections.IDictionary]
-        $Header
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
+
     )
+    Write-Host "Host: start of get."
 
     New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters | Out-Null
@@ -52,6 +77,7 @@ function Get-TargetResource
 
     $nullResult = $PSBoundParameters
     $nullResult.Ensure = 'Absent'
+
     try
     {
         $instance = $null
@@ -59,39 +85,48 @@ function Get-TargetResource
         {
             $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.Id -eq $Id}
         }
+
         if ($null -eq $instance)
         {
-          $instance = Get-MgBetaDeviceManagementDerivedCredential DerivedCredentialId $Id -ErrorAction Stop
+          $instance = Get-MgBetaDeviceManagementDerivedCredential -DeviceManagementDerivedCredentialSettingsId $Id -ErrorAction Stop
 
           if ($null -eq $instance)
           {
-              Write-Verbose -Message "Could not find DerivedCredential by Id {$Id}."
+              Write-Verbose -Message "Could not find Derived Credential by Id {$Id}."
 
               if (-Not [string]::IsNullOrEmpty($DisplayName))
               {
                   $instance = Get-MgBetaDeviceManagementDerivedCredential `
-                      -Filter "DisplayName eq '$DisplayName'" `
-                      -ErrorAction SilentlyContinue
-              }
-          }
-        }
-        if ($null -eq $instance)
-        {
-            Write-Verbose -Message "Could not find DerivedCredential by DisplayName {$DisplayName}."
-            return $nullResult
-        }
+                    -Filter "DisplayName eq '$DisplayName'" `
+                    -ErrorAction SilentlyContinue
+                    if ($null -eq $instance)
+                    {
+                        Write-Verbose -Message "Could not find Derived Credential by DisplayName {$DisplayName}."
+                        return $nullResult
+                    }
+                }
 
+            }
+
+        }
+        Write-Host "Values of Instance Id: $($instance.Id), DisplayName: $($instance.DisplayName), HelpUrl: $($instance.HelpUrl), Issuer: $($instance.Issuer), NotificationType: $($instance.NotificationType)"
         $results = @{
             Ensure                = 'Present'
             Id                    = $instance.Id
             DisplayName           = $instance.DisplayName
-            HelpUrl               = $HelpUrl
-            Issuer                = $Issuer
-            NotificationType      = $NotificationType
-            ThresholdPercentage   = $ThresholdPercentage
-            Header                = $Header
-
+            HelpUrl               = $instance.HelpUrl
+            Issuer                = $instance.Issuer
+            NotificationType      = $instance.NotificationType
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
+            ApplicationSecret     = $ApplicationSecret
+            ManagedIdentity       = $ManagedIdentity.IsPresent
+            AccessTokens          = $AccessTokens
         }
+        Write-Host "Values of Results:: Id: $($results.Id), DisplayName: $($results.DisplayName), HelpUrl: $($results.HelpUrl), Issuer: $($results.Issuer), NotificationType: $($results.NotificationType)"
+
         return [System.Collections.Hashtable] $results
     }
     catch
@@ -107,16 +142,14 @@ function Get-TargetResource
     }
 }
 
-function Set-TargetResource
-{
+function Set-TargetResource {
     [CmdletBinding()]
-    param
-    (
+    param (
         [Parameter()]
         [System.String]
         $Id,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $DisplayName,
 
@@ -124,23 +157,48 @@ function Set-TargetResource
         [System.String]
         $HelpUrl,
 
-        [Parameter(Mandatory=$true)]
-        [ValidateSet('intercede', 'entrust', 'disa purebred')]
+        [Parameter()]
+        [ValidateSet('intercede', 'entrustData', 'purebred')]
         [System.String]
         $Issuer,
 
-        [Parameter(Mandatory=$true)]
-        [ValidateSet('email', 'Company Portal (iOS) Microsoft Intune (Android) app')]
+        [Parameter()]
+        [ValidateSet('none', 'email', 'companyPortal')]
         [System.String]
-        $NotificationType,
+        $NotificationType = 'none',
 
         [Parameter()]
-        [System.Int32]
-        $ThresholdPercentage,
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure='Present',
 
         [Parameter()]
-        [System.Collections.IDictionary]
-        $Header
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -158,6 +216,8 @@ function Set-TargetResource
     $currentInstance = Get-TargetResource @PSBoundParameters
 
     $setParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+    $setParameters.remove('Id') | Out-Null
+    $setParameters.remove('Ensure') | Out-Null
 
     # CREATE
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
@@ -167,26 +227,24 @@ function Set-TargetResource
     # UPDATE
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        Update-MgBetaDeviceManagementDerivedCredential @SetParameters
+        Update-MgBetaDeviceManagementDerivedCredential -DeviceManagementDerivedCredentialSettingsId $currentInstance.Id @SetParameters
     }
     # REMOVE
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Remove-MgBetaDeviceManagementDerivedCredential @SetParameters
+        Remove-MgBetaDeviceManagementDerivedCredential -DeviceManagementDerivedCredentialSettingsId $currentInstance.Id -Confirm:$false
     }
 }
 
-function Test-TargetResource
-{
+function Test-TargetResource {
     [CmdletBinding()]
     [OutputType([System.Boolean])]
-    param
-    (
+    param (
         [Parameter()]
         [System.String]
         $Id,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $DisplayName,
 
@@ -194,26 +252,50 @@ function Test-TargetResource
         [System.String]
         $HelpUrl,
 
-        [Parameter(Mandatory=$true)]
-        [ValidateSet('intercede', 'entrust', 'disa purebred')]
+        [Parameter()]
+        [ValidateSet('intercede', 'entrustData', 'purebred')]
         [System.String]
         $Issuer,
 
-        [Parameter(Mandatory=$true)]
-        [ValidateSet('email', 'Company Portal (iOS) Microsoft Intune (Android) app')]
+        [Parameter()]
+        [ValidateSet('none', 'email', 'companyPortal')]
         [System.String]
-        $NotificationType,
+        $NotificationType = 'none',
 
         [Parameter()]
-        [System.Int32]
-        $ThresholdPercentage,
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
 
         [Parameter()]
-        [System.Collections.IDictionary]
-        $Header
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
-    #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
@@ -241,17 +323,15 @@ function Test-TargetResource
     return $testResult
 }
 
-function Export-TargetResource
-{
+function Export-TargetResource {
     [CmdletBinding()]
     [OutputType([System.String])]
-    param
-    (
+    param (
         [Parameter()]
         [System.String]
         $Id,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $DisplayName,
 
@@ -259,28 +339,52 @@ function Export-TargetResource
         [System.String]
         $HelpUrl,
 
-        [Parameter(Mandatory=$true)]
-        [ValidateSet('Intercede', 'Entrust', 'DISA Purebred')]
+        [Parameter()]
+        [ValidateSet('intercede', 'entrustData', 'purebred')]
         [System.String]
         $Issuer,
 
-        [Parameter(Mandatory=$true)]
-        [ValidateSet('Email', 'Company Portal (iOS) Microsoft Intune (Android) app')]
+        [Parameter()]
+        [ValidateSet('none', 'email', 'companyPortal')]
         [System.String]
-        $NotificationType,
+        $NotificationType = 'none',
 
         [Parameter()]
-        [System.Int32]
-        $ThresholdPercentage,
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
 
         [Parameter()]
-        [System.Collections.IDictionary]
-        $Header
+        [System.String]
+        $ApplicationId,
 
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
+    Write-Host "Host: start of export."
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters
+    -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -311,24 +415,23 @@ function Export-TargetResource
         }
         foreach ($config in $Script:exportedInstances)
         {
-            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
-            {
-                $Global:M365DSCExportResourceInstancesCount++
-            }
-
             $displayedKey = $config.Id
             Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -NoNewline
-            $results = @{
-            Ensure                = 'Present'
-            Id                    = $instance.Id
-            DisplayName           = $instance.DisplayName
-            HelpUrl               = $HelpUrl
-            Issuer                = $Issuer
-            NotificationType      = $NotificationType
-            ThresholdPercentage   = $ThresholdPercentage
-            Header                = $Header
-
-        }
+            $params = @{
+                Ensure                = 'Present'
+                Id                    = $config.Id
+                DisplayName           = $config.DisplayName
+                HelpUrl               = $config.HelpUrl
+                Issuer                = $config.Issuer
+                NotificationType      = $config.NotificationType
+                Credential            = $Credential
+                AccessTokens          = $AccessTokens
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                ApplicationSecret     = $ApplicationSecret
+                CertificateThumbprint = $CertificateThumbprint
+                ManagedIdentity       = $ManagedIdentity.IsPresent
+            }
 
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
@@ -359,6 +462,7 @@ function Export-TargetResource
 
         return ''
     }
+
 }
 
 Export-ModuleMember -Function *-TargetResource
