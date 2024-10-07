@@ -9,11 +9,11 @@ class MSFT_AADAdminConsentRequestPolicyReviewer
 class MSFT_AADAdminConsentRequestPolicy : OMI_BaseResource
 {
     [Key, Description("Only valid value is 'Yes'."), ValueMap{"Yes"}, Values{"Yes"}] String IsSingleInstance;
-    [Write, Description("")] Boolean IsEnabled;
-    [Write, Description("")] Boolean NotifyReviewers;
-    [Write, Description("")] Boolean RemindersEnabled;
-    [Write, Description("")] UInt32 RequestDurationInDays;
-    [Write, Description(""), EmbeddedInstance("MSFT_AADAdminConsentRequestPolicyReviewer")] String Reviewers[];
+    [Write, Description("Determines if the policy is enabled or not.")] Boolean IsEnabled;
+    [Write, Description("Specifies whether reviewers will receive notifications.")] Boolean NotifyReviewers;
+    [Write, Description("Specifies whether reviewers will receive reminder emails.")] Boolean RemindersEnabled;
+    [Write, Description("Specifies the duration the request is active before it automatically expires if no decision is applied.")] UInt32 RequestDurationInDays;
+    [Write, Description("The list of reviewers for the admin consent."), EmbeddedInstance("MSFT_AADAdminConsentRequestPolicyReviewer")] String Reviewers[];
 
     [Write, Description("Credentials of the workload's Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;

@@ -1,13 +1,9 @@
 ﻿{
-    "resourceName": "ResourceName",
-    "description": "Description of what the resource is about.",
+    "resourceName": "AADAdminConsentRequestPolicy",
+    "description": "Configures the Admin Consent Request Policy in Entra Id.",
     "roles": {
-        "read": [
-            "Role"
-        ],
-        "update": [
-            "Role"
-        ]
+        "read": [],
+        "update": []
     },
     "permissions": {
         "graph": {
@@ -18,12 +14,12 @@
             "application": {
                 "read": [
                     {
-                        "name": "Permission for Monitoring and Export"
+                        "name": "Policy.Read.All"
                     }
                 ],
                 "update": [
                     {
-                        "name": "Permission for deploying"
+                        "name": "Policy.ReadWrite.ConsentRequest"
                     }
                 ]
             }
