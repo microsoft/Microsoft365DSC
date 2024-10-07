@@ -10,9 +10,16 @@
   * Initial release.
 * EXOMigrationEndpoint
   * Initial Release
+* IntuneAppAndBrowserIsolationPolicyWindows10
+  * Initial release.
+    FIXES [#3028](https://github.com/microsoft/Microsoft365DSC/issues/3028)
+* IntuneEndpointDetectionAndResponsePolicyWindows10
+  * Migrate to new Settings Catalog cmdlets.
 * M365DSCDRGUtil
   * Fixes an issue for the handling of skipped one-property elements in the
     Settings Catalog. FIXES [#5086](https://github.com/microsoft/Microsoft365DSC/issues/5086)
+  * Add Set support for secret Settings Catalog values
+  * Removed unused functions
 * DEPENDENCIES
   * Updated DSCParser to version 2.0.0.11
   * Updated ReverseDSC to version 2.0.0.21
