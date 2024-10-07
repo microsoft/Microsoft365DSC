@@ -20,6 +20,9 @@
     Settings Catalog. FIXES [#5086](https://github.com/microsoft/Microsoft365DSC/issues/5086)
   * Add Set support for secret Settings Catalog values
   * Removed unused functions
+* DEPENDENCIES
+  * Updated DSCParser to version 2.0.0.11
+  * Updated ReverseDSC to version 2.0.0.21
 
 # 1.24.1002.1
 
