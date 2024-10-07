@@ -285,6 +285,7 @@ function Get-M365DSCDRGComplexTypeToString
     {
         $indent += '    '
     }
+
     #If ComplexObject is an Array
     if ($ComplexObject.GetType().FullName -like '*[[\]]')
     {
@@ -305,7 +306,7 @@ function Get-M365DSCDRGComplexTypeToString
             $currentProperty += Get-M365DSCDRGComplexTypeToString -IsArray @splat
         }
 
-        # PowerShell returns all non-captured stream output, not just the argument of the return statement.
+        #PowerShell returns all non-captured stream output, not just the argument of the return statement.
         #An empty array is mangled into $null in the process.
         #However, an array can be preserved on return by prepending it with the array construction operator (,)
         return , $currentProperty
@@ -616,6 +617,7 @@ function Compare-M365DSCComplexObject
         }
 
         if ($Source[0].CimClass.CimClassName -eq 'MSFT_DeviceManagementConfigurationPolicyAssignments' -or
+            $Source[0].CimClass.CimClassName -eq 'MSFT_DeviceManagementMobileAppAssignment' -or
             ($Source[0].CimClass.CimClassName -like 'MSFT_Intune*Assignments' -and
             $Source[0].CimClass.CimClassName -ne 'MSFT_IntuneDeviceRemediationPolicyAssignments'))
         {
@@ -733,7 +735,9 @@ function Compare-M365DSCComplexObject
             {
                 if ($Source.$key.GetType().FullName -like '*CimInstance' -and (
                         $Source.$key.CimClass.CimClassName -eq 'MSFT_DeviceManagementConfigurationPolicyAssignments' -or
-                        $Source.$key.CimClass.CimClassName -like 'MSFT_Intune*Assignments'))
+                        $Source.$key.CimClass.CimClassName -like 'MSFT_DeviceManagementMobileAppAssignment' -or
+                        $Source.$key.CimClass.CimClassName -like 'MSFT_Intune*Assignments'
+                    ))
                 {
                     $compareResult = Compare-M365DSCIntunePolicyAssignment `
                         -Source @($Source.$key) `
@@ -933,6 +937,7 @@ function ConvertTo-IntunePolicyAssignment
         [Parameter(Mandatory = $true)]
         [AllowNull()]
         $Assignments,
+
         [Parameter()]
         [System.Boolean]
         $IncludeDeviceFilter = $true
@@ -994,6 +999,182 @@ function ConvertTo-IntunePolicyAssignment
             #Skipping assignment if group not found from either groupId or groupDisplayName
             if ($null -ne $group)
             {
+                $target.Add('groupId', $group.Id)
+            }
+        }
+
+        if ($target)
+        {
+            $assignmentResult += @{target = $target}
+        }
+    }
+
+    return ,$assignmentResult
+}
+
+function ConvertFrom-IntuneMobileAppAssignment
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable[]])]
+    param (
+        [Parameter(Mandatory = $true)]
+        [Array]
+        $Assignments,
+        [Parameter()]
+        [System.Boolean]
+        $IncludeDeviceFilter = $true
+    )
+
+    $assignmentResult = @()
+    foreach ($assignment in $Assignments)
+    {
+        $hashAssignment = @{}
+        if ($null -ne $assignment.Target.'@odata.type')
+        {
+            $dataType = $assignment.Target.'@odata.type'
+        }
+        else
+        {
+            $dataType = $assignment.Target.AdditionalProperties.'@odata.type'
+        }
+
+        if ($null -ne $assignment.Target.groupId)
+        {
+            $groupId = $assignment.Target.groupId
+        }
+        else
+        {
+            $groupId = $assignment.Target.AdditionalProperties.groupId
+        }
+
+        $hashAssignment.Add('dataType', $dataType)
+        if (-not [string]::IsNullOrEmpty($groupId))
+        {
+            $hashAssignment.Add('groupId', $groupId)
+
+            $group = Get-MgGroup -GroupId ($groupId) -ErrorAction SilentlyContinue
+            if ($null -ne $group)
+            {
+                $groupDisplayName = $group.DisplayName
+            }
+        }
+
+        if ($dataType -eq '#microsoft.graph.allLicensedUsersAssignmentTarget')
+        {
+            $groupDisplayName = 'All users'
+        }
+        if ($dataType -eq '#microsoft.graph.allDevicesAssignmentTarget')
+        {
+            $groupDisplayName = 'All devices'
+        }
+        if ($null -ne $groupDisplayName)
+        {
+            $hashAssignment.Add('groupDisplayName', $groupDisplayName)
+        }
+
+        $hashAssignment.Add('intent', $assignment.intent.ToString())
+        $hashAssignment.Add('source', $assignment.source.ToString())
+
+        # $concatenatedSettings = $assignment.settings.ToString() -join ','
+        # $hashAssignment.Add('settings', $concatenatedSettings)
+        # $hashSettings = @{}
+        # foreach ($setting in $assignment.Settings)
+        # {
+        #   $hashSettings.Add('datatype', $setting.dataType)
+        #   $hashSettings.Add('uninstallOnDeviceRemoval', $setting.uninstallOnDeviceRemoval)
+        # }
+        # $hashAssignment.Add('settings', $hashSettings)
+
+        if ($IncludeDeviceFilter)
+        {
+            if ($null -ne $assignment.Target.DeviceAndAppManagementAssignmentFilterType)
+            {
+                $hashAssignment.Add('deviceAndAppManagementAssignmentFilterType', $assignment.Target.DeviceAndAppManagementAssignmentFilterType.ToString())
+            }
+            if ($null -ne $assignment.Target.DeviceAndAppManagementAssignmentFilterId)
+            {
+                $hashAssignment.Add('deviceAndAppManagementAssignmentFilterId', $assignment.Target.DeviceAndAppManagementAssignmentFilterId)
+            }
+        }
+
+        $assignmentResult += $hashAssignment
+    }
+
+    return ,$assignmentResult
+}
+
+function ConvertTo-IntuneMobileAppAssignment
+{
+    [CmdletBinding()]
+    [OutputType([Hashtable[]])]
+    param (
+        [Parameter(Mandatory = $true)]
+        [AllowNull()]
+        $Assignments,
+
+        [Parameter()]
+        [System.Boolean]
+        $IncludeDeviceFilter = $true
+    )
+
+    if ($null -eq $Assignments)
+    {
+        return ,@()
+    }
+
+    $assignmentResult = @()
+    foreach ($assignment in $Assignments)
+    {
+        $target = @{"@odata.type" = $assignment.dataType}
+        if ($IncludeDeviceFilter)
+        {
+            if ($null -ne $assignment.DeviceAndAppManagementAssignmentFilterType)
+            {
+                $target.Add('deviceAndAppManagementAssignmentFilterType', $assignment.DeviceAndAppManagementAssignmentFilterType)
+                $target.Add('deviceAndAppManagementAssignmentFilterId', $assignment.DeviceAndAppManagementAssignmentFilterId)
+
+                $target.GetEnumerator() | ForEach-Object {
+                    Write-Host "target key:value: $($_.Key): $($_.Value)" }
+            }
+        }
+
+        $assignmentResult += $assignment.intent;
+        $assignmentResult += $assignment.source;
+
+        if ($assignment.dataType -like '*groupAssignmentTarget')
+        {
+            $group = Get-MgGroup -GroupId ($assignment.groupId) -ErrorAction SilentlyContinue
+            if ($null -eq $group)
+            {
+                if ($assignment.groupDisplayName)
+                {
+                    $group = Get-MgGroup -Filter "DisplayName eq '$($assignment.groupDisplayName)'" -ErrorAction SilentlyContinue
+                    if ($null -eq $group)
+                    {
+                        $message = "Skipping assignment for the group with DisplayName {$($assignment.groupDisplayName)} as it could not be found in the directory.`r`n"
+                        $message += "Please update your DSC resource extract with the correct groupId or groupDisplayName."
+                        Write-Verbose -Message $message
+                        $target = $null
+                    }
+                    if ($group -and $group.Count -gt 1)
+                    {
+                        $message = "Skipping assignment for the group with DisplayName {$($assignment.groupDisplayName)} as it is not unique in the directory.`r`n"
+                        $message += "Please update your DSC resource extract with the correct groupId or a unique group DisplayName."
+                        Write-Verbose -Message $message
+                        $group = $null
+                        $target = $null
+                    }
+                }
+                else
+                {
+                    $message = "Skipping assignment for the group with Id {$($assignment.groupId)} as it could not be found in the directory.`r`n"
+                    $message += "Please update your DSC resource extract with the correct groupId or a unique group DisplayName."
+                    Write-Verbose -Message $message
+                    $target = $null
+                }
+            }
+            else {
+                #Skipping assignment if group not found from either groupId or groupDisplayName
                 $target.Add('groupId', $group.Id)
             }
         }
