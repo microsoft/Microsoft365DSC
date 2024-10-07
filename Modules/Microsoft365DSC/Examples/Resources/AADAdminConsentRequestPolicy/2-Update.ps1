@@ -34,22 +34,18 @@ Configuration Example
                 MSFT_AADAdminConsentRequestPolicyReviewer {
                      ReviewerType = 'User'
                      ReviewerId   = "AlexW@$TenantId"
-                     QueryRoot    = ''
                 }
                 MSFT_AADAdminConsentRequestPolicyReviewer {
                      ReviewerType = 'Group'
                      ReviewerId   = 'Communications'
-                     QueryRoot    = ''
                 }
                 MSFT_AADAdminConsentRequestPolicyReviewer {
                      ReviewerType = 'Role'
                      ReviewerId   = 'Attack Payload Author'
-                     QueryRoot    = ''
                 }
                 MSFT_AADAdminConsentRequestPolicyReviewer {
                      ReviewerType = 'Role'
                      ReviewerId   = 'Attack Simulation Administrator'
-                     QueryRoot    = ''
                 }
                 );
             TenantId              = $TenantId;
