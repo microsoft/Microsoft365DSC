@@ -1383,36 +1383,16 @@ function ConvertTo-IntuneMobileAppAssignment
             }
         }
 
-        #TODOK: Uncomment it
-        # $assignmentResult += $assignment.intent;
-        # $assignmentResult += $assignment.source;
+        $assignmentResult += $assignment.intent;
+        $assignmentResult += $assignment.source;
 
-        # if($assignment.settings)
-        # {
-        #     $assignmentResult += $assignment.settings;
-        # }
-
-
-        if ($assignment.dataType -like '*groupAssignmentTarget' `
-            -or $assignment.dataType -like '*allDevicesAssignmentTarget' `
-            -or $assignment.dataType -like '*allLicensedUsersAssignmentTarget')
+        if ($assignment.dataType -like '*groupAssignmentTarget')
         {
-            Write-Host "Befgore group call assignment.groupId: " $assignment.groupId
-            Write-Host "After group call assignment.groupId: `"$($assignment.groupId)`"  -----------------------------------------"
-
-            $group = Get-MgGroup -GroupId ($assignment.groupId) -ErrorAction SilentlyContinue #TODOK: SilentlyContinue later
-
-            Write-Host "After group call assignment.group: " $group
-
+            $group = Get-MgGroup -GroupId ($assignment.groupId) -ErrorAction SilentlyContinue
             if ($null -eq $group)
             {
-                Write-Host "After group call group is null: " $group
-
-                Write-Host "After group call assignment.group: " $assignment.groupDisplayName
-
                 if ($assignment.groupDisplayName)
                 {
-                    Write-Host "Befpre group call with NAME assignment.group.NAME: " $assignment.groupDisplayName
                     $group = Get-MgGroup -Filter "DisplayName eq '$($assignment.groupDisplayName)'" -ErrorAction SilentlyContinue
                     if ($null -eq $group)
                     {
@@ -1440,29 +1420,14 @@ function ConvertTo-IntuneMobileAppAssignment
             }
             else {
                 #Skipping assignment if group not found from either groupId or groupDisplayName
-
-                Write-Host "target group:::::::::::::::::::::: "  $group
-
                 $target.Add('groupId', $group.Id)
-
-                Write-Host "groupId added to target."
-
-
-                $target.GetEnumerator() | ForEach-Object {
-                    Write-Host "target key:value with groupId: $($_.Key): $($_.Value)"   }
             }
         }
 
-        Write-Host "1456 target: " $target
         if ($target)
         {
-            Write-Host "target assigned to final assignmentResult."
-
             $assignmentResult += @{target = $target}
         }
-
-        $assignmentResult.GetEnumerator() | ForEach-Object {
-            Write-Host "AssignmentResult key:value AFTER all targets added: $($_.Key): $($_.Value)" }
     }
 
     return ,$assignmentResult
