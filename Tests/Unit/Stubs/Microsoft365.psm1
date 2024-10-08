@@ -94293,6 +94293,26 @@ function Update-MgBetaDeviceManagementWindowsQualityUpdateProfile
 
 #endregion
 
+function Update-MgBetaIdentityGovernanceLifecycleWorkflowSetting
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $EmailSettings,
+
+        [Parameter()]
+        [System.UInt32]
+        $WorkflowScheduleIntervalInHours
+    )
+}
+
+function Get-MgBetaIdentityGovernanceLifecycleWorkflowSetting
+{
+    [CmdletBinding()]
+    param()
+}
+
 #region MgBetaDeviceManagementWindowsQualityUpdateProfileAssignment
 function Get-MgBetaDeviceManagementWindowsQualityUpdateProfileAssignment
 {
