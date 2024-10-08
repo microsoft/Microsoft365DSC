@@ -29,6 +29,8 @@ class MSFT_O365OrgSettings : OMI_BaseResource
     [Write, Description("Defines how often you want your users to get feature updates for Microsoft 365 apps installed on devices running Windows"), ValueMap{"current","monthlyEnterprise","semiAnnual"}, Values{"current","monthlyEnterprise","semiAnnual"}] String InstallationOptionsUpdateChannel;
     [Write, Description("Defines the apps users can install on Windows and mobile devices."), ValueMap{"isVisioEnabled","isSkypeForBusinessEnabled","isProjectEnabled","isMicrosoft365AppsEnabled"}, Values{"isVisioEnabled","isSkypeForBusinessEnabled","isProjectEnabled","isMicrosoft365AppsEnabled"}] String InstallationOptionsAppsForWindows[];
     [Write, Description("Defines the apps users can install on Mac devices."), ValueMap{"isSkypeForBusinessEnabled","isMicrosoft365AppsEnabled"}, Values{"isSkypeForBusinessEnabled","isMicrosoft365AppsEnabled"}] String InstallationOptionsAppsForMac[];
+    [Write, Description("Microsoft 365 Groups - Let guest group members access group content")] Boolean AllowGuestsToAccessGroups;
+    [Write, Description("Microsoft 365 Groups - Let group owners add people outside your organization to Microsoft 365 Groups as guests.")] Boolean AllowToAddGuests;
     [Write, Description("Credentials of the Global Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
     [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;

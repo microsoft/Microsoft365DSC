@@ -121,6 +121,14 @@ function Get-TargetResource
         $InstallationOptionsAppsForMac,
 
         [Parameter()]
+        [System.Boolean]
+        $AllowGuestsToAccessGroups,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowToAddGuests,
+
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -235,60 +243,38 @@ function Get-TargetResource
             }
         }
 
-        # DEPRECATED - Microsoft Viva Briefing Email
-        <#
-        $vivaBriefingEmailValue = $false
         try
         {
-            $currentBriefingConfig = Get-DefaultTenantBriefingConfig -ErrorAction Stop -Verbose:$false
-            if ($currentBriefingConfig.IsEnabledByDefault -eq 'opt-in')
+            $allGroupSettings = Invoke-MgGraphRequest -Method 'Get' `
+                                                      -Uri "https://graph.microsoft.com/v1.0/groupSettings/"
+
+            $GroupsUnifiedPolicy = $allGroupSettings.value | Where-Object -FilterScript {$_.displayName -eq 'Group.Unified'}
+
+            if ($null -ne $GroupsUnifiedPolicy)
             {
-                $vivaBriefingEmailValue = $true
+                $AllowGuestsToAccessGroupsEntry = $GroupsUnifiedPolicy.Values | Where-Object -FilterScript {$_.name -eq 'AllowGuestsToAccessGroups'}
+                if ($null -ne $AllowGuestsToAccessGroupsEntry)
+                {
+                    $AllowGuestsToAccessGroups = ([Boolean]::Parse($AllowGuestsToAccessGroupsEntry.value))
+                    $results += @{
+                        AllowGuestsToAccessGroups = $AllowGuestsToAccessGroups
+                    }
+                }
+
+                $AllowToAddGuestsEntry = $GroupsUnifiedPolicy.Values | Where-Object -FilterScript {$_.name -eq 'AllowToAddGuests'}
+                if ($null -ne $AllowToAddGuestsEntry)
+                {
+                    $AllowToAddGuests = ([Boolean]::Parse($AllowToAddGuestsEntry.value))
+                    $results += @{
+                        AllowToAddGuests = $AllowToAddGuests
+                    }
+                }
             }
         }
         catch
         {
-            if ($_.Exception.Message -like "*Unexpected character encountered while parsing value*")
-            {
-                $vivaBriefingEmailValue = $true
-            }
-            elseif ($_.Exception.Message -like "*A task was canceled*")
-            {
-                $retries = 1
-                $errorContent = $null
-                while ($retries -le 5)
-                {
-                    try
-                    {
-                        Start-Sleep -Seconds 2
-                        $currentBriefingConfig = Get-DefaultTenantBriefingConfig -ErrorAction Stop -Verbose:$false
-                    }
-                    catch
-                    {
-                        $errorContent = $_
-                        $retries++
-                    }
-                }
-                if ($null -eq $currentBriefingConfig)
-                {
-                    throw $errorContent
-                }
-                else
-                {
-                    if ($currentBriefingConfig.IsEnabledByDefault -eq 'opt-in')
-                    {
-                        $vivaBriefingEmailValue = $true
-                    }
-                }
-            }
-            else
-            {
-                throw $_
-            }
+            Write-Verbose -Message $_
         }
-        $results += @{
-            MicrosoftVivaBriefingEmail = $vivaBriefingEmailValue
-        }#>
 
         # Viva Insights settings
         $currentVivaInsightsSettings = Get-DefaultTenantMyAnalyticsFeatureConfig -Verbose:$false
@@ -535,6 +521,14 @@ function Set-TargetResource
         [System.String[]]
         [ValidateSet('isSkypeForBusinessEnabled', 'isMicrosoft365AppsEnabled')]
         $InstallationOptionsAppsForMac,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowGuestsToAccessGroups,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowToAddGuests,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -844,6 +838,40 @@ function Set-TargetResource
         Write-Verbose -Message "Updating the To Do settings with values:$(Convert-M365DscHashtableToString -Hashtable $ToDoParametersToUpdate)"
         Update-M365DSCOrgSettingsToDo -Options $ToDoParametersToUpdate
     }
+
+    # Microsoft 365 Groups
+    try
+    {
+        Write-Verbose -Message "Updating the Microsoft 365 Groups settings."
+        $allGroupSettings = Invoke-MgGraphRequest -Method 'Get' `
+                                            -Uri "https://graph.microsoft.com/v1.0/groupSettings/"
+
+        $GroupsUnifiedPolicy = $allGroupSettings.value | Where-Object -FilterScript {$_.displayName -eq 'Group.Unified'}
+
+        if ($null -ne $GroupsUnifiedPolicy -and -not [System.String]::IsNullOrEmpty($AllowToAddGuests) `
+            -and -not [System.String]::IsNullOrEmpty($AllowGuestsToAccessGroups))
+        {
+            $values = @{
+                values = @(
+                @{
+                    name = 'AllowToAddGuests'
+                    value = $AllowToAddGuests.ToString().ToLower()
+                },
+                @{
+                    name = 'AllowGuestsToAccessGroups'
+                    value = $AllowGuestsToAccessGroups.ToString().ToLower()
+                }
+            )
+            }
+            $body = ConvertTo-Json $values -Depth 10 -Compress
+            Invoke-MgGraphRequest -Method 'PATCH' `
+                                  -Uri "https://graph.microsoft.com/v1.0/groupSettings/$($GroupsUnifiedPolicy.id)" -Body $body
+        }
+    }
+    catch
+    {
+        throw $_
+    }
 }
 
 function Test-TargetResource
@@ -967,6 +995,14 @@ function Test-TargetResource
         [System.String[]]
         [ValidateSet('isSkypeForBusinessEnabled', 'isMicrosoft365AppsEnabled')]
         $InstallationOptionsAppsForMac,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowGuestsToAccessGroups,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowToAddGuests,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]

@@ -22,6 +22,8 @@
   * Migrate to new Settings Catalog cmdlets.
 * IntuneMobileAppsMacOSLobApp
   * Initial release
+* O365OrgSettings
+  * Added support for 2 Microsoft 365 Groups settings.
 * M365DSCDRGUtil
   * Fixes an issue for the handling of skipped one-property elements in the
     Settings Catalog. FIXES [#5086](https://github.com/microsoft/Microsoft365DSC/issues/5086)

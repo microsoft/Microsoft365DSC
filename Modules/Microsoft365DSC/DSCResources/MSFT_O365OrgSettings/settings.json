@@ -102,6 +102,9 @@
                     },
                     {
                         "name": "Tasks.ReadWrite.All"
+                    },
+                    {
+                        "name": "Directory.ReadWrite.All"
                     }
                 ]
             }
