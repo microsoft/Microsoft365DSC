@@ -24,6 +24,12 @@ function Get-MgBetaPolicyDeviceRegistrationPolicy
     param()
 }
 
+function Get-MgBetaPolicyAdminConsentRequestPolicy
+{
+    [CmdletBinding()]
+    param()
+}
+
 #region Microsoft.Graph.Beta.Applications
 function Get-MgBetaApplication
 {
@@ -19341,6 +19347,209 @@ function Get-MgBetaDeviceManagementGroupPolicyConfigurationAssignment
         $HttpPipelineAppend
     )
 }
+
+function New-MgBetaDeviceAppManagementMobileApp {
+    [CmdletBinding()]
+    param (
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $Developer,
+
+        [Parameter()]
+        [System.String]
+        $InformationUrl,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsFeatured,
+
+        [Parameter()]
+        [System.String]
+        $Notes,
+
+        [Parameter()]
+        [System.String]
+        $Owner,
+
+        [Parameter()]
+        [System.String]
+        $PrivacyInformationUrl,
+
+        [Parameter()]
+        [System.String]
+        $Publisher,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('notPublished', 'processing','published')]
+        $PublishingState,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Categories,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Assignments,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $ChildApps,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds
+    )
+}
+
+function Get-MgBetaDeviceAppManagementMobileApp {
+    [CmdletBinding()]
+    param (
+        [Parameter()]
+        [System.String]
+        $MobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $Developer,
+
+        [Parameter()]
+        [System.String]
+        $InformationUrl,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsFeatured,
+
+        [Parameter()]
+        [System.Boolean]
+        $IgnoreVersionDetection,
+
+        [Parameter()]
+        [System.String]
+        $Notes,
+
+        [Parameter()]
+        [System.String]
+        $Owner,
+
+        [Parameter()]
+        [System.String]
+        $PrivacyInformationUrl,
+
+        [Parameter()]
+        [System.String]
+        $Publisher,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('notPublished', 'processing','published')]
+        $PublishingState,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds
+    )
+}
+function Update-MgBetaDeviceAppManagementMobileApp {
+    [CmdletBinding()]
+    param (
+        [Parameter()]
+        [System.String]
+        $MobileAppId,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $Developer,
+
+        [Parameter()]
+        [System.String]
+        $InformationUrl,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsFeatured,
+
+        [Parameter()]
+        [System.String]
+        $Notes,
+
+        [Parameter()]
+        [System.String]
+        $Owner,
+
+        [Parameter()]
+        [System.String]
+        $PrivacyInformationUrl,
+
+        [Parameter()]
+        [System.String]
+        $Publisher,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('notPublished', 'processing','published')]
+        $PublishingState,
+
+        [Parameter()]
+        [System.Object[]]
+        $Categories,
+
+        [Parameter()]
+        [System.Object[]]
+        $Assignments,
+
+        [Parameter()]
+        [System.Object[]]
+        $ChildApps,
+
+        [Parameter()]
+        [System.Object[]]
+        $RoleScopeTagIds
+    )
+}
+
+function Remove-MgBetaDeviceAppManagementMobileApp {
+    [CmdletBinding()]
+    param (
+        [Parameter()]
+        [System.String]
+        $MobileAppId,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm
+    )
+}
+
 function Get-MgBetaDeviceManagementGroupPolicyConfigurationDefinitionValue
 {
     [CmdletBinding()]
@@ -90600,7 +90809,7 @@ function Update-MgBetaDeviceAppManagementPolicySetAssignment
 #endregion
 
 #region MgBetaDeviceAppManagementMobileApp
-function Get-MgBetaDeviceAppManagementMobileApp
+function Get-MgBetaDeviceAppManagementMobileApp # TODOK
 {
     [CmdletBinding()]
     param
@@ -90687,7 +90896,7 @@ function Get-MgBetaDeviceAppManagementMobileApp
     )
 }
 
-function New-MgBetaDeviceAppManagementMobileApp
+function New-MgBetaDeviceAppManagementMobileApp # TODOK
 {
     [CmdletBinding()]
     param
@@ -90826,7 +91035,7 @@ function New-MgBetaDeviceAppManagementMobileApp
     )
 }
 
-function Remove-MgBetaDeviceAppManagementMobileApp
+function Remove-MgBetaDeviceAppManagementMobileApp # TODOK
 {
     [CmdletBinding()]
     param
@@ -90873,74 +91082,15 @@ function Remove-MgBetaDeviceAppManagementMobileApp
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm
     )
 }
 
-function Set-MgBetaDeviceAppManagementMobileApp
-{
-    [CmdletBinding()]
-    param
-    (
-        [Parameter()]
-        [System.String]
-        $MobileAppId,
-
-        [Parameter()]
-        [PSObject]
-        $InputObject,
-
-        [Parameter()]
-        [PSObject]
-        $BodyParameter,
-
-        [Parameter()]
-        [System.String]
-        $ResponseHeadersVariable,
-
-        [Parameter()]
-        [System.Collections.Hashtable]
-        $AdditionalProperties,
-
-        [Parameter()]
-        [PSObject[]]
-        $MobileAppAssignments,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break,
-
-        [Parameter()]
-        [System.Collections.IDictionary]
-        $Headers,
-
-        [Parameter()]
-        [PSObject[]]
-        $HttpPipelineAppend,
-
-        [Parameter()]
-        [PSObject[]]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $PassThru,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials
-    )
-}
-
-function Update-MgBetaDeviceAppManagementMobileApp
+function Update-MgBetaDeviceAppManagementMobileApp # TODOK
 {
     [CmdletBinding()]
     param
@@ -93265,6 +93415,34 @@ function Get-MgBetaDeviceAppManagementMobileAppConfiguration
     )
 }
 
+function Get-MgBetaDeviceAppManagementMobileAppAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $MobileAppId
+    )
+}
+
+function Update-MgBetaDeviceAppManagementMobileAppAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $MobileAppId,
+
+        [Parameter()]
+        [System.Object]
+        $Target,
+
+        [Parameter()]
+        [System.String]
+        $Repository
+    )
+}
+
 function New-MgBetaDeviceAppManagementMobileAppConfiguration
 {
     [CmdletBinding()]
@@ -95004,3 +95182,334 @@ function Update-MgBetaExternalConnection
     )
 }
 #endregion
+#region MgBetaOnPremisePublishingProfileConnectorGroup
+function Get-MgBetaOnPremisePublishingProfileConnectorGroup
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter()]
+        [System.String]
+        $ConnectorGroupId,
+
+        [Parameter()]
+        [System.String]
+        $OnPremisesPublishingProfileId,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $ResponseHeadersVariable,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.Collections.IDictionary]
+        $Headers,
+
+        [Parameter()]
+        [PSObject[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [PSObject[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable
+    )
+}
+
+function New-MgBetaOnPremisePublishingProfileConnectorGroup
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter()]
+        [System.String]
+        $OnPremisesPublishingProfileId,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [PSObject]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $ResponseHeadersVariable,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [PSObject[]]
+        $Applications,
+
+        [Parameter()]
+        [System.String]
+        $ConnectorGroupType,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsDefault,
+
+        [Parameter()]
+        [PSObject[]]
+        $Members,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $Region,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.Collections.IDictionary]
+        $Headers,
+
+        [Parameter()]
+        [PSObject[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [PSObject[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm
+    )
+}
+
+function Remove-MgBetaOnPremisePublishingProfileConnectorGroup
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter()]
+        [System.String]
+        $ConnectorGroupId,
+
+        [Parameter()]
+        [System.String]
+        $OnPremisesPublishingProfileId,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.String]
+        $ResponseHeadersVariable,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.Collections.IDictionary]
+        $Headers,
+
+        [Parameter()]
+        [PSObject[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [PSObject[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm
+    )
+}
+
+function Update-MgBetaOnPremisePublishingProfileConnectorGroup
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter()]
+        [System.String]
+        $ConnectorGroupId,
+
+        [Parameter()]
+        [System.String]
+        $OnPremisesPublishingProfileId,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [PSObject]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $ResponseHeadersVariable,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [PSObject[]]
+        $Applications,
+
+        [Parameter()]
+        [System.String]
+        $ConnectorGroupType,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsDefault,
+
+        [Parameter()]
+        [PSObject[]]
+        $Members,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $Region,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.Collections.IDictionary]
+        $Headers,
+
+        [Parameter()]
+        [PSObject[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [PSObject[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm
+    )
+}
+
+#endregion
+

@@ -34,6 +34,35 @@
         $Domain = $TenantId
         Node Localhost
         {
+                AADAdminConsentRequestPolicy 'AADAdminConsentRequestPolicy'
+                {
+                    ApplicationId         = $ApplicationId;
+                    CertificateThumbprint = $CertificateThumbprint;
+                    IsEnabled             = $True;
+                    IsSingleInstance      = "Yes";
+                    NotifyReviewers       = $False;
+                    RemindersEnabled      = $True;
+                    RequestDurationInDays = 30;
+                    Reviewers             =                 @(
+                        MSFT_AADAdminConsentRequestPolicyReviewer {
+                             ReviewerType = 'User'
+                             ReviewerId   = "AlexW@$TenantId"
+                        }
+                        MSFT_AADAdminConsentRequestPolicyReviewer {
+                             ReviewerType = 'Group'
+                             ReviewerId   = 'Communications'
+                        }
+                        MSFT_AADAdminConsentRequestPolicyReviewer {
+                             ReviewerType = 'Role'
+                             ReviewerId   = 'Attack Payload Author'
+                        }
+                        MSFT_AADAdminConsentRequestPolicyReviewer {
+                             ReviewerType = 'Role'
+                             ReviewerId   = 'Attack Simulation Administrator'
+                        }
+                        );
+                    TenantId              = $TenantId;
+                }
                 AADAdministrativeUnit 'TestUnit'
                 {
                     DisplayName                   = 'Test-Unit'
@@ -466,6 +495,16 @@
                     SignInFrequencyType                      = "hours";
                     SignInFrequencyValue                     = 2; # Updated Porperty
                     State                                    = "disabled";
+                }
+                AADConnectorGroupApplicationProxy 'AADConnectorGroupApplicationProxy-testgroup'
+                {
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
+                    Ensure                = "Present";
+                    Id                    = "4984dcf7-d9e9-4663-90b4-5db09f92a669";
+                    Name                  = "testgroup-new";
+                    Region                = "nam";
                 }
                 AADCrossTenantAccessPolicy 'AADCrossTenantAccessPolicy'
                 {

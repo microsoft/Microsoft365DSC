@@ -89,6 +89,10 @@ function Get-TargetResource
         $Permissions,
 
         [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $OnPremisesPublishing,
+
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -189,8 +193,8 @@ function Get-TargetResource
             Write-Verbose -Message 'An instance of Azure AD App was retrieved.'
 
 
-            $AADBetaApp= Get-MgBetaApplication -Property "id,displayName,appId,authenticationBehaviors" -ApplicationId $ObjectID -ErrorAction SilentlyContinue
-            $AADAppKeyCredentials = Get-MgApplication -Property "keyCredentials" -ApplicationId $ObjectID -ErrorAction SilentlyContinue
+            $AADBetaApp= Get-MgBetaApplication -Property "id,displayName,appId,authenticationBehaviors" -ApplicationId $AADApp.Id -ErrorAction SilentlyContinue
+            $AADAppKeyCredentials = Get-MgApplication -Property "keyCredentials" -ApplicationId $AADApp.Id -ErrorAction SilentlyContinue
 
             $complexAuthenticationBehaviors = @{}
             if ($null -ne $AADBetaApp.authenticationBehaviors.blockAzureADGraphAccess)
@@ -274,7 +278,6 @@ function Get-TargetResource
                 $complexApi = $null
             }
 
-
             $complexKeyCredentials = @()
             foreach ($currentkeyCredentials in $AADAppKeyCredentials.keyCredentials)
             {
@@ -291,7 +294,7 @@ function Get-TargetResource
                 $mykeyCredentials.Add('KeyId', $currentkeyCredentials.keyId)
 
 
-                if($null -ne $currentkeyCredentials.Key) 
+                if($null -ne $currentkeyCredentials.Key)
                 {
                     $mykeyCredentials.Add('Key', [convert]::ToBase64String($currentkeyCredentials.key))
                 }
@@ -379,6 +382,77 @@ function Get-TargetResource
                 $IsFallbackPublicClientValue = $AADApp.IsFallbackPublicClient
             }
 
+            #region OnPremisesPublishing
+            $onPremisesPublishingValue = @{}
+            $oppInfo = $null
+
+            try
+            {
+                $oppInfo = Invoke-MgGraphRequest -Method GET `
+                                                 -Uri "https://graph.microsoft.com/beta/applications/$($AADBetaApp.Id)/onPremisesPublishing" `
+                                                 -ErrorAction SilentlyContinue
+            }
+            catch
+            {
+                Write-Verbose -Message "On-premises publishing is not enabled for App {$($AADBetaApp.DisplayName)}"
+            }
+
+            if ($null -ne $oppInfo)
+            {
+                $onPremisesPublishingValue = @{
+                    alternateUrl                          = $oppInfo.alternateUrl
+                    applicationServerTimeout              = $oppInfo.applicationServerTimeout
+                    externalAuthenticationType            = $oppInfo.externalAuthenticationType
+                    externalUrl                           = $oppInfo.externalUrl
+                    internalUrl                           = $oppInfo.internalUrl
+                    isBackendCertificateValidationEnabled = $oppInfo.isBackendCertificateValidationEnabled
+                    isHttpOnlyCookieEnabled               = $oppInfo.isHttpOnlyCookieEnabled
+                    isPersistentCookieEnabled             = $oppInfo.isPersistentCookieEnabled
+                    isSecureCookieEnabled                 = $oppInfo.isSecureCookieEnabled
+                    isStateSessionEnabled                 = $oppInfo.isStateSessionEnabled
+                    isTranslateHostHeaderEnabled          = $oppInfo.isTranslateHostHeaderEnabled
+                    isTranslateLinksInBodyEnabled         = $oppInfo.isTranslateLinksInBodyEnabled
+                }
+
+                # onPremisesApplicationSegments
+                $segmentValues = @()
+                foreach ($segment in $oppInfo.onPremisesApplicationSegments)
+                {
+                    $entry = @{
+                        alternateUrl = $segment.AlternateUrl
+                        externalUrl  = $segment.externalUrl
+                        internalUrl  = $segment.internalUrl
+                    }
+
+                    $corsConfigurationValues = @()
+                    foreach ($cors in $segment.corsConfigurations)
+                    {
+                        $corsEntry = @{
+                            allowedHeaders  = [Array]($cors.allowedHeaders)
+                            allowedMethods  = [Array]($cors.allowedMethods)
+                            allowedOrigins  = [Array]($cors.allowedOrigins)
+                            maxAgeInSeconds = $cors.maxAgeInSeconds
+                            resource        = $cors.resource
+                        }
+                        $corsConfigurationValues += $corsEntry
+                    }
+                    $entry.Add('corsConfigurations', $corsConfigurationValues)
+                    $segmentValues += $entry
+                }
+                $onPremisesPublishingValue.Add('onPremisesApplicationSegments', $segmentValues)
+
+                # singleSignOnSettings
+                $singleSignOnValues = @{
+                    kerberosSignOnSettings = @{
+                        kerberosServicePrincipalName       = $oppInfo.singleSignOnSettings.kerberosSignOnSettings.kerberosServicePrincipalName
+                        kerberosSignOnMappingAttributeType = $oppInfo.singleSignOnSettings.kerberosSignOnSettings.kerberosSignOnMappingAttributeType
+                    }
+                    singleSignOnMode = $oppInfo.singleSignOnSettings.singleSignOnMode
+                }
+                $onPremisesPublishingValue.Add('singleSignOnSettings', $singleSignOnValues)
+            }
+            #endregion
+
             $result = @{
                 DisplayName             = $AADApp.DisplayName
                 AvailableToOtherTenants = $AvailableToOtherTenantsValue
@@ -401,6 +475,7 @@ function Get-TargetResource
                 PasswordCredentials     = $complexPasswordCredentials
                 AppRoles                = $complexAppRoles
                 Permissions             = $permissionsObj
+                OnPremisesPublishing   = $onPremisesPublishingValue
                 Ensure                  = 'Present'
                 Credential              = $Credential
                 ApplicationId           = $ApplicationId
@@ -523,6 +598,10 @@ function Set-TargetResource
         $Permissions,
 
         [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $OnPremisesPublishing,
+
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -629,7 +708,7 @@ function Set-TargetResource
     if ($PasswordCredentials)
     {
         Write-Warning -Message "PasswordCredentials is a readonly property and cannot be configured."
-           
+
     }
 
     if ($currentParameters.AvailableToOtherTenants)
@@ -678,6 +757,7 @@ function Set-TargetResource
     $currentParameters.Remove('ReplyURLs') | Out-Null
     $currentParameters.Remove('LogoutURL') | Out-Null
     $currentParameters.Remove('Homepage') | Out-Null
+    $currentParameters.Remove('OnPremisesPublishing') | Out-Null
 
 
     $keys = (([Hashtable]$currentParameters).clone()).Keys
@@ -934,7 +1014,7 @@ function Set-TargetResource
     if($needToUpdateKeyCredentials -and $KeyCredentials)
     {
         Write-Verbose -Message "Updating for Azure AD Application {$($currentAADApp.DisplayName)} with KeyCredentials:`r`n$($KeyCredentials| Out-String)"
-        
+
         if((currentAADApp.KeyCredentials.Length -eq 0 -and $KeyCredentials.Length -eq 1) -or (currentAADApp.KeyCredentials.Length -eq 1 -and $KeyCredentials.Length -eq 0))
         {
             Update-MgApplication -ApplicationId $currentAADApp.Id -KeyCredentials $KeyCredentials | Out-Null
@@ -944,6 +1024,74 @@ function Set-TargetResource
             Write-Warning -Message "KeyCredentials cannot be updated for AAD Applications with more than one KeyCredentials due to technical limitation of Update-MgApplication Cmdlet. Learn more at: https://learn.microsoft.com/en-us/graph/api/application-addkey"
         }
     }
+
+    #region OnPremisesPublishing
+    if ($null -ne $OnPremisesPublishing)
+    {
+        $oppInfo = $OnPremisesPublishing
+        $onPremisesPublishingValue = @{
+            alternateUrl                          = $oppInfo.alternateUrl
+            applicationServerTimeout              = $oppInfo.applicationServerTimeout
+            externalAuthenticationType            = $oppInfo.externalAuthenticationType
+            #externalUrl                           = $oppInfo.externalUrl
+            internalUrl                           = $oppInfo.internalUrl
+            isBackendCertificateValidationEnabled = $oppInfo.isBackendCertificateValidationEnabled
+            isHttpOnlyCookieEnabled               = $oppInfo.isHttpOnlyCookieEnabled
+            isPersistentCookieEnabled             = $oppInfo.isPersistentCookieEnabled
+            isSecureCookieEnabled                 = $oppInfo.isSecureCookieEnabled
+            isStateSessionEnabled                 = $oppInfo.isStateSessionEnabled
+            isTranslateHostHeaderEnabled          = $oppInfo.isTranslateHostHeaderEnabled
+            isTranslateLinksInBodyEnabled         = $oppInfo.isTranslateLinksInBodyEnabled
+        }
+
+        # onPremisesApplicationSegments
+        $segmentValues = @()
+        foreach ($segment in $oppInfo.onPremisesApplicationSegments)
+        {
+            $entry = @{
+                alternateUrl = $segment.AlternateUrl
+                externalUrl  = $segment.externalUrl
+                internalUrl  = $segment.internalUrl
+            }
+
+            $corsConfigurationValues = @()
+            foreach ($cors in $segment.corsConfigurations)
+            {
+                $corsEntry = @{
+                    allowedHeaders  = [Array]($cors.allowedHeaders)
+                    allowedMethods  = [Array]($cors.allowedMethods)
+                    allowedOrigins  = [Array]($cors.allowedOrigins)
+                    maxAgeInSeconds = $cors.maxAgeInSeconds
+                    resource        = $cors.resource
+                }
+                $corsConfigurationValues += $corsEntry
+            }
+            $entry.Add('corsConfigurations', $corsConfigurationValues)
+            $segmentValues += $entry
+        }
+        $onPremisesPublishingValue.Add('onPremisesApplicationSegments', $segmentValues)
+
+        # singleSignOnSettings
+        $singleSignOnValues = @{
+            kerberosSignOnSettings = @{
+                kerberosServicePrincipalName       = $oppInfo.singleSignOnSettings.kerberosSignOnSettings.kerberosServicePrincipalName
+                kerberosSignOnMappingAttributeType = $oppInfo.singleSignOnSettings.kerberosSignOnSettings.kerberosSignOnMappingAttributeType
+            }
+            singleSignOnMode = $oppInfo.singleSignOnSettings.singleSignOnMode
+        }
+        if ($null -eq $singleSignOnValues.kerberosSignOnSettings.kerberosServicePrincipalName)
+        {
+            $singleSignOnValues.Remove('kerberosSignOnSettings') | Out-Null
+        }
+
+        $onPremisesPublishingValue.Add('singleSignOnSettings', $singleSignOnValues)
+        $onPremisesPayload = ConvertTo-Json $onPremisesPublishingValue -Depth 10 -Compress
+        Write-Verbose -Message "Updating the OnPremisesPublishing settings for application {$($currentAADApp.DisplayName)} with payload: $onPremisesPayload"
+        Invoke-MgGraphRequest -Method 'PATCH' `
+                              -Uri "https://graph.microsoft.com/beta/applications/$($currentAADApp.Id)/onPremisesPublishing" `
+                              -Body $onPremisesPayload
+    }
+    #endregion
 }
 
 function Test-TargetResource
@@ -1037,6 +1185,10 @@ function Test-TargetResource
         $Permissions,
 
         [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $OnPremisesPublishing,
+
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -1121,7 +1273,7 @@ function Test-TargetResource
     }
 
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
- 
+
     $testTargetResource = $true
 
     #Compare Cim instances
@@ -1134,13 +1286,13 @@ function Test-TargetResource
             $testResult = Compare-M365DSCComplexObject `
                 -Source ($source) `
                 -Target ($target)
- 
+
             if (-not $testResult)
             {
                 Write-Verbose "TestResult returned False for $source"
                 $testTargetResource = $false
             }
-            else { 
+            else {
                 $ValuesToCheck.Remove($key) | Out-Null
             }
         }
@@ -1309,6 +1461,47 @@ function Export-TargetResource
                         }
                     }
 
+                    if ($null -ne $Results.OnPremisesPublishing.singleSignOnSettings)
+                    {
+                        $complexMapping = @(
+                            @{
+                                Name = 'singleSignOnSettings'
+                                CimInstanceName = 'AADApplicationOnPremisesPublishingSingleSignOnSetting'
+                                IsRequired = $False
+                            },
+                            @{
+                                Name = 'onPremisesApplicationSegments'
+                                CimInstanceName = 'AADApplicationOnPremisesPublishingSegment'
+                                IsRequired = $False
+                            },
+                            @{
+                                Name = 'kerberosSignOnSettings'
+                                CimInstanceName = 'AADApplicationOnPremisesPublishingSingleSignOnSettingKerberos'
+                                IsRequired = $False
+                            },
+                            @{
+                                Name = 'corsConfigurations'
+                                CimInstanceName = 'AADApplicationOnPremisesPublishingSegmentCORS'
+                                IsRequired = $False
+                            }
+                        )
+                        $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                            -ComplexObject $Results.OnPremisesPublishing `
+                            -CIMInstanceName 'AADApplicationOnPremisesPublishing' `
+                            -ComplexTypeMapping $complexMapping
+                        if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                        {
+                            $Results.OnPremisesPublishing = $complexTypeStringResult
+                        }
+                        else
+                        {
+                            $Results.Remove('OnPremisesPublishing') | Out-Null
+                        }
+                    }
+                    else
+                    {
+                        $Results.Remove('OnPremisesPublishing') | Out-Null
+                    }
 
                     if ($null -ne $Results.OptionalClaims)
                     {
@@ -1414,6 +1607,10 @@ function Export-TargetResource
                     if ($Results.OptionalClaims)
                     {
                         $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "OptionalClaims" -IsCIMArray:$False
+                    }
+                    if ($Results.OnPremisesPublishing)
+                    {
+                        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "OnPremisesPublishing" -IsCIMArray:$False
                     }
                     if ($Results.AuthenticationBehaviors)
                     {

@@ -60,6 +60,86 @@
                        ]
     },
     {
+        "ClassName":  "MSFT_AADAdminConsentRequestPolicyReviewer",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ReviewerType",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ReviewerId",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_AADAdminConsentRequestPolicy",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IsSingleInstance",
+                               "Option":  "Key"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "IsEnabled",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "NotifyReviewers",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "RemindersEnabled",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "RequestDurationInDays",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_AADAdminConsentRequestPolicyReviewer[]",
+                               "Name":  "Reviewers",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "Credential",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ApplicationId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "TenantId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "CertificateThumbprint",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "ManagedIdentity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
         "ClassName":  "MSFT_MicrosoftGraphMember",
         "Parameters":  [
                            {
@@ -180,6 +260,166 @@
                            {
                                "CIMType":  "String[]",
                                "Name":  "AccessTokens",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_AADApplicationOnPremisesPublishingSegmentCORS",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "allowedHeaders",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "maxAgeInSeconds",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "resource",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "allowedMethods",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "allowedOrigins",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_AADApplicationOnPremisesPublishingSegment",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "alternateUrl",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_AADApplicationOnPremisesPublishingSegmentCORS[]",
+                               "Name":  "corsConfigurations",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "externalUrl",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "internalUrl",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_AADApplicationOnPremisesPublishingSingleSignOnSettingKerberos",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "kerberosServicePrincipalName",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "kerberosSignOnMappingAttributeType",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_AADApplicationOnPremisesPublishingSingleSignOnSetting",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "singleSignOnMode",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_AADApplicationOnPremisesPublishingSingleSignOnSettingKerberos",
+                               "Name":  "kerberosSignOnSettings",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_AADApplicationOnPremisesPublishing",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "alternateUrl",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "applicationServerTimeout",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "externalAuthenticationType",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "externalUrl",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "internalUrl",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "isBackendCertificateValidationEnabled",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "isHttpOnlyCookieEnabled",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "isPersistentCookieEnabled",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "isSecureCookieEnabled",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "isStateSessionEnabled",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "isTranslateHostHeaderEnabled",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "isTranslateLinksInBodyEnabled",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_AADApplicationOnPremisesPublishingSegment[]",
+                               "Name":  "onPremisesApplicationSegments",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_AADApplicationOnPremisesPublishingSingleSignOnSetting",
+                               "Name":  "singleSignOnSettings",
                                "Option":  "Write"
                            }
                        ]
@@ -510,6 +750,11 @@
                            {
                                "CIMType":  "String[]",
                                "Name":  "Owners",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_AADApplicationOnPremisesPublishing",
+                               "Name":  "OnPremisesPublishing",
                                "Option":  "Write"
                            },
                            {
@@ -2509,6 +2754,66 @@
                            },
                            {
                                "CIMType":  "String",
+                               "Name":  "Ensure",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "Credential",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ApplicationId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "TenantId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "ApplicationSecret",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "CertificateThumbprint",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "ManagedIdentity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_AADConnectorGroupApplicationProxy",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Name",
+                               "Option":  "Key"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Region",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Id",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "string",
                                "Name":  "Ensure",
                                "Option":  "Write"
                            },
@@ -19430,6 +19735,171 @@
                        ]
     },
     {
+        "ClassName":  "MSFT_IntuneAppAndBrowserIsolationPolicyWindows10",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Description",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "DisplayName",
+                               "Option":  "Key"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "RoleScopeTagIds",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Id",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AllowWindowsDefenderApplicationGuard",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ClipboardSettings",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "SaveFilesToHost",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "InstallWindowsDefenderApplicationGuard",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ClipboardFileType",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AllowPersistence",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AllowVirtualGPU",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "SInt32[]",
+                               "Name":  "PrintingSettings",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AllowCameraMicrophoneRedirection",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AuditApplicationGuard",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "CertificateThumbprints",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "EnterpriseIPRange",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "EnterpriseCloudResources",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "EnterpriseNetworkDomainNames",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "EnterpriseProxyServers",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "EnterpriseInternalProxyServers",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "NeutralResources",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "EnterpriseProxyServersAreAuthoritative",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "EnterpriseIPRangesAreAuthoritative",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_DeviceManagementConfigurationPolicyAssignments[]",
+                               "Name":  "Assignments",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "string",
+                               "Name":  "Ensure",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "Credential",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ApplicationId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "TenantId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "ApplicationSecret",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "CertificateThumbprint",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "ManagedIdentity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
         "ClassName":  "MSFT_IntuneAppCategory",
         "Parameters":  [
                            {
@@ -34505,6 +34975,241 @@
                            {
                                "CIMType":  "String[]",
                                "Name":  "AccessTokens",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_IntuneMobileAppsMacOSLobApp",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "DisplayName",
+                               "Option":  "Key"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Id",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Description",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Developer",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "InformationUrl",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "IsFeatured",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Notes",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Owner",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "PrivacyInformationUrl",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Publisher",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "PublishingState",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "BundleId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "BuildNumber",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "VersionNumber",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "RoleScopeTagIds",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "IgnoreVersionDetection",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_DeviceManagementMimeContent",
+                               "Name":  "LargeIcon",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_DeviceManagementMobileAppCategory[]",
+                               "Name":  "Categories",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_DeviceManagementMobileAppAssignment[]",
+                               "Name":  "Assignments",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_DeviceManagementMobileAppChildApp[]",
+                               "Name":  "ChildApps",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Ensure",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "Credential",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ApplicationId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "TenantId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "ApplicationSecret",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "CertificateThumbprint",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "ManagedIdentity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_DeviceManagementMimeContent",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "type",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "value",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_DeviceManagementMobileAppCategory",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "displayName",
+                               "Option":  "Key"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "id",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_DeviceManagementMobileAppChildApp",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "bundleId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "buildNumber",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "versionNumber",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_DeviceManagementMobileAppAssignment",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "dataType",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "deviceAndAppManagementAssignmentFilterId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "deviceAndAppManagementAssignmentFilterType",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "groupId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "groupDisplayName",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "intent",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "source",
                                "Option":  "Write"
                            }
                        ]

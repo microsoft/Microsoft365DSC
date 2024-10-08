@@ -2,6 +2,15 @@
 
 # UNRELEASED
 
+* AADAdminConsentRequestPolicy
+  * Initial release.
+* AADApplication
+  * Fixed an issue trying to retrieve the beta instance.
+  * Added support for OnPremisesPublishing.
+* AADAuthenticationRequirement
+  * Initial release.
+* AADConnectorGroupApplicationProxy
+  * Initial release.
 * AADDeviceRegistrationPolicy
   * Initial release.
 * AADEntitlementManagementSettings
@@ -17,11 +26,16 @@
   * Initial release. 
 * IntuneEndpointDetectionAndResponsePolicyWindows10
   * Migrate to new Settings Catalog cmdlets.
+* IntuneMobileAppsMacOSLobApp
+  * Initial release
 * M365DSCDRGUtil
   * Fixes an issue for the handling of skipped one-property elements in the
     Settings Catalog. FIXES [#5086](https://github.com/microsoft/Microsoft365DSC/issues/5086)
   * Add Set support for secret Settings Catalog values
   * Removed unused functions
+* DEPENDENCIES
+  * Updated DSCParser to version 2.0.0.11
+  * Updated ReverseDSC to version 2.0.0.21
 
 # 1.24.1002.1
 
@@ -35,8 +49,6 @@
 * AADAuthenticationMethodPolicy
   * Added ReportSuspiciousActivitySettings
 * AADAuthenticationMethodPolicyHardware
-  * Initial release.
-* AADAuthenticationRequirement
   * Initial release.
 * AADEntitlementManagementSettings
   * Initial release.
