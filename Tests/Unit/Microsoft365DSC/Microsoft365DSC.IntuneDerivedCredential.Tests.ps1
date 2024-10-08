@@ -39,140 +39,149 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
              Mock -CommandName Write-Host -MockWith {
             }
 
-            Mock -CommandName Get-MgBetaDeviceManagementDerivedCredentialy -MockWith {
+            Mock -CommandName Get-MgBetaDeviceManagementDerivedCredential -MockWith {
             }
             Mock -CommandName New-MgBetaDeviceManagementDerivedCredential -MockWith {
-            }
-            Mock -CommandName Update-MgBetaDeviceManagementDerivedCredential -MockWith {
             }
             Mock -CommandName Remove-MgBetaDeviceManagementDerivedCredential -MockWith {
             }
             $Script:exportedInstances =$null
             $Script:ExportMode = $false
         }
+
         # Test contexts
-        Context -Name "The instance should exist but it DOES NOT" -Fixture {
+        Context -Name " 1. The instance should exist but it DOES NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Ensure                = 'Present'
-                    Id                    = $instance.Id
-                    DisplayName           = $instance.DisplayName
-                    HelpUrl               = $HelpUrl
-                    Issuer                = $Issuer
-                    NotificationType      = $NotificationType
-                    ThresholdPercentage   = $ThresholdPercentage
-                    Header                = $Header
+                    Ensure               = 'Present'
+                    DisplayName          = "K5";
+                    HelpUrl              = "http://www.ff.com/";
+                    Id                   = "a409d85f-2a49-440d-884a-80fb52a557ab";
+                    Issuer               = "purebred";
+                    NotificationType     = "email";
+                    Credential           = $Credential
                 }
 
                 Mock -CommandName Get-MgBetaDeviceManagementDerivedCredential -MockWith {
                     return $null
                 }
             }
-            It 'Should return Values from the Get method' {
+            It ' 1.1 Should return Values from the Get method' {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Absent'
             }
-            It 'Should return false from the Test method' {
+            It ' 1.2 Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 
-            It 'Should create a new instance from the Set method' {
+            It ' 1.3 Should create a new instance from the Set method' {
                 Set-TargetResource @testParams
                 Should -Invoke -CommandName New-MgBetaDeviceManagementDerivedCredential -Exactly 1
             }
         }
 
-        Context -Name "The instance exists but it SHOULD NOT" -Fixture {
+        Context -Name " 2. The instance exists but it SHOULD NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Ensure                = 'Present'
-                    Id                    = $instance.Id
-                    DisplayName           = $instance.DisplayName
-                    HelpUrl               = $HelpUrl
-                    Issuer                = $Issuer
-                    NotificationType      = $NotificationType
-                    ThresholdPercentage   = $ThresholdPercentage
-                    Header                = $Header
+                    Ensure               = 'Present'
+                    DisplayName          = "K5";
+                    HelpUrl              = "http://www.ff.com/";
+                    Id                   = "a409d85f-2a49-440d-884a-80fb52a557ab";
+                    Issuer               = "purebred";
+                    NotificationType     = "email";
+                    Credential           = $Credential
                 }
 
                 Mock -CommandName Get-MgBetaDeviceManagementDerivedCredential -MockWith {
                     return @{
-
+                        DisplayName          = "K5";
+                        HelpUrl              = "http://www.ff.com/";
+                        Id                   = "a409d85f-2a49-440d-884a-80fb52a557ab";
+                        Issuer               = "purebred";
+                        NotificationType     = "email";
                     }
                 }
             }
-            It 'Should return Values from the Get method' {
+            It ' 2.1 Should return Values from the Get method' {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
-            It 'Should return false from the Test method' {
+            It ' 2.2 Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 
-            It 'Should remove the instance from the Set method' {
+            It ' 2.3 Should remove the instance from the Set method' {
                 Set-TargetResource @testParams
                 Should -Invoke -CommandName Remove-MgBetaDeviceManagementDerivedCredential -Exactly 1
             }
         }
 
-        Context -Name "The instance exists and values are already in the desired state" -Fixture {
+        Context -Name " 3. The instance exists and values are already in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Ensure                = 'Present'
-                    Id                    = $instance.Id
-                    DisplayName           = $instance.DisplayName
-                    HelpUrl               = $HelpUrl
-                    Issuer                = $Issuer
-                    NotificationType      = $NotificationType
-                    ThresholdPercentage   = $ThresholdPercentage
-                    Header                = $Header
+                    Ensure               = 'Present'
+                    DisplayName          = "K5";
+                    HelpUrl              = "http://www.ff.com/";
+                    Id                   = "a409d85f-2a49-440d-884a-80fb52a557ab";
+                    Issuer               = "purebred";
+                    NotificationType     = "email";
+                    Credential           = $Credential
                 }
 
                 Mock -CommandName Get-MgBetaDeviceManagementDerivedCredential -MockWith {
                     return @{
-
+                        Ensure               = 'Present'
+                        DisplayName          = "K5";
+                        HelpUrl              = "http://www.ff.com/";
+                        Id                   = "a409d85f-2a49-440d-884a-80fb52a557ab";
+                        Issuer               = "purebred";
+                        NotificationType     = "email";
                     }
                 }
             }
 
-            It 'Should return true from the Test method' {
+            It ' 3.0 Should return true from the Test method' {
                 Test-TargetResource @testParams | Should -Be $true
             }
         }
 
-        Context -Name "The instance exists and values are NOT in the desired state" -Fixture {
+        Context -Name " 4. The instance exists and values are NOT in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Ensure                = 'Present'
-                    Id                    = $instance.Id
-                    DisplayName           = $instance.DisplayName
-                    HelpUrl               = $HelpUrl
-                    Issuer                = $Issuer
-                    NotificationType      = $NotificationType
-                    ThresholdPercentage   = $ThresholdPercentage
-                    Header                = $Header
+                    Ensure               = 'Present'
+                    DisplayName          = "K5";
+                    HelpUrl              = "http://www.ff.com/";
+                    Id                   = "a409d85f-2a49-440d-884a-80fb52a557ab";
+                    Issuer               = "purebred";
+                    NotificationType     = "email";
+                    Credential           = $Credential
                 }
 
                 Mock -CommandName Get-MgBetaDeviceManagementDerivedCredential -MockWith {
                     return @{
-
+                        DisplayName          = "K5 drift"; #drift
+                        HelpUrl              = "http://www.ff.com/";
+                        Id                   = "a409d85f-2a49-440d-884a-80fb52a557ab";
+                        Issuer               = "purebred";
+                        NotificationType     = "email";
                     }
                 }
             }
 
-            It 'Should return Values from the Get method' {
+            It ' 4.1 Should return Values from the Get method' {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It 'Should return false from the Test method' {
+            It ' 4.2 Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 
-            It 'Should call the Set method' {
+            # Update is not allowed on DerivedCredential resource so it should be called 0 times.
+            It ' 4.3 Should call the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Update-MgBetaDeviceManagementDerivedCredential -Exactly 1
+                Should -Invoke -CommandName Update-MgBetaDeviceManagementDerivedCredential -Exactly 0
             }
         }
 
-        Context -Name 'ReverseDSC Tests' -Fixture {
+        Context -Name ' 5. ReverseDSC Tests' -Fixture {
             BeforeAll {
                 $Global:CurrentModeIsExport = $true
                 $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
@@ -182,11 +191,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-MgBetaDeviceManagementDerivedCredential -MockWith {
                     return @{
-
+                        DisplayName          = "K5";
+                        HelpUrl              = "http://www.ff.com/";
+                        Id                   = "a409d85f-2a49-440d-884a-80fb52a557ab";
+                        Issuer               = "purebred";
+                        NotificationType     = "email";
                     }
                 }
             }
-            It 'Should Reverse Engineer resource from the Export method' {
+            It ' 5.0 Should Reverse Engineer resource from the Export method' {
                 $result = Export-TargetResource @testParams
                 $result | Should -Not -BeNullOrEmpty
             }

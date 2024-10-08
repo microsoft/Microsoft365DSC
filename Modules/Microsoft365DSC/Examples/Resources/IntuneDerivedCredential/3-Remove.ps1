@@ -14,19 +14,14 @@ Configuration Example {
     Import-DscResource -ModuleName Microsoft365DSC
 
     node localhost {
-        IntuneDerivedCredential "IntuneDerivedCredential-DataManagement" {
-            Id                  = "a1fc9fe2-728d-4867-9a72-a61e18f8c606"
-            DisplayName         = "Custom Data Management"
-            Ensure              = "Present"
-            HelpUrl             = "https://www.microsoft.com"
-            Issuer              = "DISA Purebred"
-            NotificationType    = "Email"
-            ThresholdPercentage = 0
-            Header              = @(
-                [PSCustomObject]@{ Key = 'HeaderKey1'; Value = 'HeaderValue1' }
-                [PSCustomObject]@{ Key = 'HeaderKey2'; Value = 'HeaderValue2' }
-            )
+        IntuneDerivedCredential "IntuneDerivedCredential-K5"
+        {
+            DisplayName          = "K5";
+            HelpUrl              = "http://www.ff.com/";
+            Id                   = "a409d85f-2a49-440d-884a-80fb52a557ab";
+            Issuer               = "purebred";
+            NotificationType     = "email";
+            Ensure               = "Absent";
         }
     }
 }
-
