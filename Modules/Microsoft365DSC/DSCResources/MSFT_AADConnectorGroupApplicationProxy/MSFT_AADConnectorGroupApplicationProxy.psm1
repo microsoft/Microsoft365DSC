@@ -4,7 +4,7 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Name,
 
@@ -13,11 +13,9 @@ function Get-TargetResource
         [System.String]
         $Region,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Id,
-
-        #endregion
 
         [Parameter()]
         [System.String]
@@ -75,19 +73,42 @@ function Get-TargetResource
 
         $getValue = $null
         #region resource generator code
-        $getValue = Get-MgBetaOnPremisePublishingProfileConnectorGroup `
-            -ConnectorGroupId $Id `
-            -OnPremisesPublishingProfileId 'applicationProxy' -ErrorAction SilentlyContinue
-
-        if ($null -eq $getValue)
+        if (-not [string]::IsNullOrEmpty($Id))
         {
-            Write-Verbose -Message "Could not find an Azure AD Connector Group Application Proxy with Id {$Id}"
-            return $nullResult
+            if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
+            {
+                $getValue = $Script:exportedInstances | Where-Object -FilterScript {$_.Id -eq $Id}
+            }
+            else
+            {
+                $getValue = Get-MgBetaOnPremisePublishingProfileConnectorGroup -ConnectorGroupId $Id -OnPremisesPublishingProfileId 'applicationProxy' -ErrorAction SilentlyContinue
+            }
+        }
+
+        if ($null -eq $getValue -and -not [string]::IsNullOrEmpty($Id))
+        {
+            Write-Verbose -Message "Could not find an Azure AD Connector Group Application Proxy with Name {$Name}"
+            if (-Not [string]::IsNullOrEmpty($DisplayName))
+            {
+                if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
+                {
+                    $getValue = $Script:exportedInstances | Where-Object -FilterScript {$_.Name -eq $Name}
+                }
+                else
+                {
+                    $getValue = Get-MgBetaOnPremisePublishingProfileConnectorGroup -OnPremisesPublishingProfileId 'applicationProxy' -Filter "Name eq '$Name'" -ErrorAction Stop
+                }
+            }
         }
         #endregion
+        if ($null -eq $getValue)
+        {
+            Write-Verbose -Message "Could not find an Azure AD Connector Group Application Proxy with Name {$Name}"
+            return $nullResult
+        }
 
         $Id = $getValue.Id
-        Write-Verbose -Message "An Azure AD Connector Group Application Proxy with Id {$Id} was found"
+        Write-Verbose -Message "An Azure AD Connector Group Application Proxy with Id {$Id} and Name {$Name} was found"
 
         $enumRegion = $null
         if ($null -ne $getValue.Region)
@@ -130,7 +151,7 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Name,
 
@@ -139,11 +160,10 @@ function Set-TargetResource
         [System.String]
         $Region,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Id,
 
-        #endregion
         [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
@@ -240,7 +260,7 @@ function Test-TargetResource
     param
     (
         #region resource generator code
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Name,
 
@@ -249,7 +269,7 @@ function Test-TargetResource
         [System.String]
         $Region,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Id,
 
