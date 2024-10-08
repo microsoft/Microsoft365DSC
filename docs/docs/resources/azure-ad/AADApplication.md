@@ -24,6 +24,7 @@
 | **PublicClient** | Write | Boolean | Specifies whether this application is a public client (such as an installed application running on a mobile device). Default is false. | |
 | **ReplyURLs** | Write | StringArray[] | Specifies the URLs that user tokens are sent to for sign in, or the redirect URIs that OAuth 2.0 authorization codes and access tokens are sent to. | |
 | **Owners** | Write | StringArray[] | UPN or ObjectID values of the app's owners. | |
+| **OnPremisesPublishing** | Write | MSFT_AADApplicationOnPremisesPublishing | Represents the set of properties required for configuring Application Proxy for this application. Configuring these properties allows you to publish your on-premises application for secure remote access. | |
 | **Ensure** | Write | String | Specify if the Azure AD App should exist or not. | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials for the Microsoft Graph delegated permissions. | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
@@ -33,6 +34,68 @@
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
 | **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
+
+### MSFT_AADApplicationOnPremisesPublishingSegmentCORS
+
+#### Parameters
+
+| Parameter | Attribute | DataType | Description | Allowed Values |
+| --- | --- | --- | --- | --- |
+| **allowedHeaders** | Write | StringArray[] | The request headers that the origin domain may specify on the CORS request. The wildcard character * indicates that any header beginning with the specified prefix is allowed. | |
+| **maxAgeInSeconds** | Write | UInt32 | The maximum amount of time that a browser should cache the response to the preflight OPTIONS request. | |
+| **resource** | Write | String | Resource within the application segment for which CORS permissions are granted. / grants permission for whole app segment. | |
+| **allowedMethods** | Write | StringArray[] | The HTTP request methods that the origin domain may use for a CORS request. | |
+| **allowedOrigins** | Write | StringArray[] | The origin domains that are permitted to make a request against the service via CORS. The origin domain is the domain from which the request originates. The origin must be an exact case-sensitive match with the origin that the user age sends to the service. | |
+
+### MSFT_AADApplicationOnPremisesPublishingSegment
+
+#### Parameters
+
+| Parameter | Attribute | DataType | Description | Allowed Values |
+| --- | --- | --- | --- | --- |
+| **alternateUrl** | Write | String | If you're configuring a traffic manager in front of multiple App Proxy application segments, contains the user-friendly URL that will point to the traffic manager. | |
+| **corsConfigurations** | Write | MSFT_AADApplicationOnPremisesPublishingSegmentCORS[] | CORS Rule definition for a particular application segment. | |
+| **externalUrl** | Write | String | The published external URL for the application segment; for example, https://intranet.contoso.com./ | |
+| **internalUrl** | Write | String | The internal URL of the application segment; for example, https://intranet/. | |
+
+### MSFT_AADApplicationOnPremisesPublishingSingleSignOnSettingKerberos
+
+#### Parameters
+
+| Parameter | Attribute | DataType | Description | Allowed Values |
+| --- | --- | --- | --- | --- |
+| **kerberosServicePrincipalName** | Write | String | The Internal Application SPN of the application server. This SPN needs to be in the list of services to which the connector can present delegated credentials. | |
+| **kerberosSignOnMappingAttributeType** | Write | String | The Delegated Login Identity for the connector to use on behalf of your users. For more information, see Working with different on-premises and cloud identities . Possible values are: userPrincipalName, onPremisesUserPrincipalName, userPrincipalUsername, onPremisesUserPrincipalUsername, onPremisesSAMAccountName. | |
+
+### MSFT_AADApplicationOnPremisesPublishingSingleSignOnSetting
+
+#### Parameters
+
+| Parameter | Attribute | DataType | Description | Allowed Values |
+| --- | --- | --- | --- | --- |
+| **singleSignOnMode** | Write | String | The preferred single-sign on mode for the application. Possible values are: none, onPremisesKerberos, aadHeaderBased,pingHeaderBased, oAuthToken. | |
+| **kerberosSignOnSettings** | Write | MSFT_AADApplicationOnPremisesPublishingSingleSignOnSettingKerberos | The Kerberos Constrained Delegation settings for applications that use Integrated Window Authentication. | |
+
+### MSFT_AADApplicationOnPremisesPublishing
+
+#### Parameters
+
+| Parameter | Attribute | DataType | Description | Allowed Values |
+| --- | --- | --- | --- | --- |
+| **alternateUrl** | Write | String | If you're configuring a traffic manager in front of multiple App Proxy applications, the alternateUrl is the user-friendly URL that points to the traffic manager. | |
+| **applicationServerTimeout** | Write | String | The duration the connector waits for a response from the backend application before closing the connection. Possible values are default, long. | |
+| **externalAuthenticationType** | Write | String | Details the pre-authentication setting for the application. Pre-authentication enforces that users must authenticate before accessing the app. Pass through doesn't require authentication. Possible values are: passthru, aadPreAuthentication. | |
+| **externalUrl** | Write | String | The published external url for the application. For example, https://intranet-contoso.msappproxy.net/. | |
+| **internalUrl** | Write | String | The internal url of the application. For example, https://intranet/. | |
+| **isBackendCertificateValidationEnabled** | Write | Boolean | Indicates whether backend SSL certificate validation is enabled for the application. For all new Application Proxy apps, the property is set to true by default. For all existing apps, the property is set to false. | |
+| **isHttpOnlyCookieEnabled** | Write | Boolean | Indicates if the HTTPOnly cookie flag should be set in the HTTP response headers. Set this value to true to have Application Proxy cookies include the HTTPOnly flag in the HTTP response headers. If using Remote Desktop Services, set this value to False. Default value is false. | |
+| **isPersistentCookieEnabled** | Write | Boolean | Indicates if the Persistent cookie flag should be set in the HTTP response headers. Keep this value set to false. Only use this setting for applications that can't share cookies between processes. For more information about cookie settings, see Cookie settings for accessing on-premises applications in Microsoft Entra ID. Default value is false. | |
+| **isSecureCookieEnabled** | Write | Boolean | Indicates if the Secure cookie flag should be set in the HTTP response headers. Set this value to true to transmit cookies over a secure channel such as an encrypted HTTPS request. Default value is true. | |
+| **isStateSessionEnabled** | Write | Boolean | Indicates whether validation of the state parameter when the client uses the OAuth 2.0 authorization code grant flow is enabled. This setting allows admins to specify whether they want to enable CSRF protection for their apps. | |
+| **isTranslateHostHeaderEnabled** | Write | Boolean | Indicates if the application should translate urls in the response headers. Keep this value as true unless your application required the original host header in the authentication request. Default value is true. | |
+| **isTranslateLinksInBodyEnabled** | Write | Boolean | Indicates if the application should translate urls in the application body. Keep this value as false unless you have hardcoded HTML links to other on-premises applications and don't use custom domains. For more information, see Link translation with Application Proxy. Default value is false. | |
+| **onPremisesApplicationSegments** | Write | MSFT_AADApplicationOnPremisesPublishingSegment[] | Represents the collection of application segments for an on-premises wildcard application that's published through Microsoft Entra application proxy. | |
+| **singleSignOnSettings** | Write | MSFT_AADApplicationOnPremisesPublishingSingleSignOnSetting | Represents the single sign-on configuration for the on-premises application. | |
 
 ### MSFT_AADApplicationPermission
 

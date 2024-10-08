@@ -44,6 +44,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-MgBetaDeviceAppManagementMobileApp -MockWith {
             }
 
+            Mock -CommandName Update-MgBetaDeviceAppManagementMobileAppAssignment -MockWith{}
+
             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
             }
@@ -126,9 +128,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         PublishingState       = "published"
                         RoleScopeTagIds       = @()
                         IgnoreVersionDetection = $True
-
+                        AdditionalProperties   = @{
+                            '@odata.type' = '#microsoft.graph.macOSLobApp'
+                        }
                         Ensure                = 'Present'
                     }
+                }
+
+                Mock -CommandName Get-MgBetaDeviceAppManagementMobileAppAssignment -MockWith{
+                    return $null
                 }
             }
 
@@ -159,7 +167,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Publisher             = "Contoso"
                     PublishingState       = "published"
                     RoleScopeTagIds       = @()
-
                     Ensure                = 'Present'
                     Credential            = $Credential;
                 }
@@ -178,7 +185,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Publisher             = "Contoso"
                         PublishingState       = "published"
                         RoleScopeTagIds       = @()
+                        AdditionalProperties   = @{
+                            '@odata.type' = '#microsoft.graph.macOSLobApp'
+                        }
                     }
+                }
+                Mock -CommandName Get-MgBetaDeviceAppManagementMobileAppAssignment -MockWith{
+                    return $null
                 }
             }
 
@@ -220,8 +233,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         PrivacyInformationUrl = ""
                         Publisher             = "Contoso"
                         PublishingState       = "published"
-                        RoleScopeTagIds       = @()
+                        AdditionalProperties   = @{
+                            '@odata.type' = '#microsoft.graph.macOSLobApp'
+                        }
                     }
+                }
+                Mock -CommandName Get-MgBetaDeviceAppManagementMobileAppAssignment -MockWith{
+                    return $null
                 }
             }
 
@@ -259,7 +277,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Publisher             = "Contoso"
                         PublishingState       = "published"
                         RoleScopeTagIds       = @()
+                        AdditionalProperties   = @{
+                            '@odata.type' = '#microsoft.graph.macOSLobApp'
+                        }
                     }
+                }
+                Mock -CommandName Get-MgBetaDeviceAppManagementMobileAppAssignment -MockWith{
+                    return $null
                 }
             }
 

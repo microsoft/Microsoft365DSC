@@ -797,22 +797,7 @@ function Export-TargetResource
 
             $params = @{
                 Id                    = $config.Id
-                Description           = $config.Description
-                Developer             = $config.Developer
                 DisplayName           = $config.DisplayName
-                InformationUrl        = $config.InformationUrl
-                IsFeatured            = $config.IsFeatured
-                Notes                 = $config.Notes
-                Owner                 = $config.Owner
-                PrivacyInformationUrl = $config.PrivacyInformationUrl
-                Publisher             = $config.Publisher
-                PublishingState       = $config.PublishingState.ToString()
-                RoleScopeTagIds       = $config.RoleScopeTagIds
-                BundleId              = $config.BundleId
-                BuildNumber           = $config.BuildNumber
-                VersionNumber         = $config.VersionNumber
-                IgnoreVersionDetection = $config.AdditionalProperties.ignoreVersionDetection
-
                 Ensure                = 'Present'
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId

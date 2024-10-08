@@ -1,4 +1,56 @@
 [ClassVersion("1.0.0")]
+class MSFT_AADApplicationOnPremisesPublishingSegmentCORS
+{
+    [Write, Description("The request headers that the origin domain may specify on the CORS request. The wildcard character * indicates that any header beginning with the specified prefix is allowed.")] String allowedHeaders[];
+    [Write, Description("The maximum amount of time that a browser should cache the response to the preflight OPTIONS request.")] UInt32 maxAgeInSeconds;
+    [Write, Description("Resource within the application segment for which CORS permissions are granted. / grants permission for whole app segment.")] String resource;
+    [Write, Description("The HTTP request methods that the origin domain may use for a CORS request.")] String allowedMethods[];
+    [Write, Description("The origin domains that are permitted to make a request against the service via CORS. The origin domain is the domain from which the request originates. The origin must be an exact case-sensitive match with the origin that the user age sends to the service.")] String allowedOrigins[];
+};
+
+[ClassVersion("1.0.0")]
+class MSFT_AADApplicationOnPremisesPublishingSegment
+{
+    [Write, Description("If you're configuring a traffic manager in front of multiple App Proxy application segments, contains the user-friendly URL that will point to the traffic manager.")] String alternateUrl;
+    [Write, Description("CORS Rule definition for a particular application segment."), EmbeddedInstance("MSFT_AADApplicationOnPremisesPublishingSegmentCORS")] String corsConfigurations[];
+    [Write, Description("The published external URL for the application segment; for example, https://intranet.contoso.com./")] String externalUrl;
+    [Write, Description("The internal URL of the application segment; for example, https://intranet/.")] String internalUrl;
+};
+
+[ClassVersion("1.0.0")]
+class MSFT_AADApplicationOnPremisesPublishingSingleSignOnSettingKerberos
+{
+        [Write, Description("The Internal Application SPN of the application server. This SPN needs to be in the list of services to which the connector can present delegated credentials.")] String kerberosServicePrincipalName;
+        [Write, Description("The Delegated Login Identity for the connector to use on behalf of your users. For more information, see Working with different on-premises and cloud identities . Possible values are: userPrincipalName, onPremisesUserPrincipalName, userPrincipalUsername, onPremisesUserPrincipalUsername, onPremisesSAMAccountName.")] String kerberosSignOnMappingAttributeType;
+};
+
+[ClassVersion("1.0.0")]
+class MSFT_AADApplicationOnPremisesPublishingSingleSignOnSetting
+{
+        [Write, Description("The preferred single-sign on mode for the application. Possible values are: none, onPremisesKerberos, aadHeaderBased,pingHeaderBased, oAuthToken.")] String singleSignOnMode;
+        [Write, Description("The Kerberos Constrained Delegation settings for applications that use Integrated Window Authentication."), EmbeddedInstance("MSFT_AADApplicationOnPremisesPublishingSingleSignOnSettingKerberos")] String kerberosSignOnSettings;
+};
+
+[ClassVersion("1.0.0")]
+class MSFT_AADApplicationOnPremisesPublishing
+{
+    [Write, Description("If you're configuring a traffic manager in front of multiple App Proxy applications, the alternateUrl is the user-friendly URL that points to the traffic manager.")] String alternateUrl;
+    [Write, Description("The duration the connector waits for a response from the backend application before closing the connection. Possible values are default, long.")] String applicationServerTimeout;
+    [Write, Description("Details the pre-authentication setting for the application. Pre-authentication enforces that users must authenticate before accessing the app. Pass through doesn't require authentication. Possible values are: passthru, aadPreAuthentication.")] String externalAuthenticationType;
+    [Write, Description("The published external url for the application. For example, https://intranet-contoso.msappproxy.net/.")] String externalUrl;
+    [Write, Description("The internal url of the application. For example, https://intranet/.")] String internalUrl;
+    [Write, Description("Indicates whether backend SSL certificate validation is enabled for the application. For all new Application Proxy apps, the property is set to true by default. For all existing apps, the property is set to false.")] Boolean isBackendCertificateValidationEnabled;
+    [Write, Description("Indicates if the HTTPOnly cookie flag should be set in the HTTP response headers. Set this value to true to have Application Proxy cookies include the HTTPOnly flag in the HTTP response headers. If using Remote Desktop Services, set this value to False. Default value is false.")] Boolean isHttpOnlyCookieEnabled;
+    [Write, Description("Indicates if the Persistent cookie flag should be set in the HTTP response headers. Keep this value set to false. Only use this setting for applications that can't share cookies between processes. For more information about cookie settings, see Cookie settings for accessing on-premises applications in Microsoft Entra ID. Default value is false.")] Boolean isPersistentCookieEnabled;
+    [Write, Description("Indicates if the Secure cookie flag should be set in the HTTP response headers. Set this value to true to transmit cookies over a secure channel such as an encrypted HTTPS request. Default value is true.")] Boolean isSecureCookieEnabled;
+    [Write, Description("Indicates whether validation of the state parameter when the client uses the OAuth 2.0 authorization code grant flow is enabled. This setting allows admins to specify whether they want to enable CSRF protection for their apps.")] Boolean isStateSessionEnabled;
+    [Write, Description("Indicates if the application should translate urls in the response headers. Keep this value as true unless your application required the original host header in the authentication request. Default value is true.")] Boolean isTranslateHostHeaderEnabled;
+    [Write, Description("Indicates if the application should translate urls in the application body. Keep this value as false unless you have hardcoded HTML links to other on-premises applications and don't use custom domains. For more information, see Link translation with Application Proxy. Default value is false.")] Boolean isTranslateLinksInBodyEnabled;
+    [Write, Description("Represents the collection of application segments for an on-premises wildcard application that's published through Microsoft Entra application proxy."), EmbeddedInstance("MSFT_AADApplicationOnPremisesPublishingSegment")] String onPremisesApplicationSegments[];
+    [Write, Description("Represents the single sign-on configuration for the on-premises application."), EmbeddedInstance("MSFT_AADApplicationOnPremisesPublishingSingleSignOnSetting")] String singleSignOnSettings;
+};
+
+[ClassVersion("1.0.0")]
 class MSFT_AADApplicationPermission
 {
     [Write, Description("Name of the requested permission.")] String Name;
@@ -102,6 +154,7 @@ class MSFT_AADApplication : OMI_BaseResource
     [Write, Description("Specifies whether this application is a public client (such as an installed application running on a mobile device). Default is false.")] Boolean PublicClient;
     [Write, Description("Specifies the URLs that user tokens are sent to for sign in, or the redirect URIs that OAuth 2.0 authorization codes and access tokens are sent to.")] String ReplyURLs[];
     [Write, Description("UPN or ObjectID values of the app's owners.")] String Owners[];
+    [Write, Description("Represents the set of properties required for configuring Application Proxy for this application. Configuring these properties allows you to publish your on-premises application for secure remote access."), EmbeddedInstance("MSFT_AADApplicationOnPremisesPublishing")] String OnPremisesPublishing;
     [Write, Description("Specify if the Azure AD App should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
     [Write, Description("Credentials for the Microsoft Graph delegated permissions."), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;

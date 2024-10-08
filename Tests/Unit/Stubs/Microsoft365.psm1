@@ -19520,19 +19520,19 @@ function Update-MgBetaDeviceAppManagementMobileApp {
         $PublishingState,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
+        [System.Object[]]
         $Categories,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
+        [System.Object[]]
         $Assignments,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
+        [System.Object[]]
         $ChildApps,
 
         [Parameter()]
-        [System.String[]]
+        [System.Object[]]
         $RoleScopeTagIds
     )
 }
@@ -93412,6 +93412,34 @@ function Get-MgBetaDeviceAppManagementMobileAppConfiguration
         [Parameter()]
         [System.String]
         $CountVariable
+    )
+}
+
+function Get-MgBetaDeviceAppManagementMobileAppAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $MobileAppId
+    )
+}
+
+function Update-MgBetaDeviceAppManagementMobileAppAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $MobileAppId,
+
+        [Parameter()]
+        [System.Object]
+        $Target,
+
+        [Parameter()]
+        [System.String]
+        $Repository
     )
 }
 

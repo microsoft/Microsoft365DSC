@@ -154,6 +154,7 @@ Configuration Example
                         deviceAndAppManagementAssignmentFilterType = 'none'
                         dataType = '#microsoft.graph.allDevicesAssignmentTarget'
                         intent = 'required'
+                    }
                     MSFT_DeviceManagementMobileAppAssignment{
                         deviceAndAppManagementAssignmentFilterType = 'none'
                         source = 'direct'
@@ -161,7 +162,7 @@ Configuration Example
                         groupId = '57b5e81c-85bb-4644-a4fd-33b03e451c89'
                         intent = 'required'
                     }
-                });
+                );
             Categories           = @(MSFT_DeviceManagementMobileAppCategory {
                     id  = '1bff2652-03ec-4a48-941c-152e93736515'
                     displayName = 'Kajal 3'
@@ -217,6 +218,7 @@ Configuration Example
                         deviceAndAppManagementAssignmentFilterType = 'none'
                         dataType = '#microsoft.graph.allDevicesAssignmentTarget'
                         intent = 'required'
+                    }
                     MSFT_DeviceManagementMobileAppAssignment{
                         deviceAndAppManagementAssignmentFilterType = 'none'
                         source = 'direct'
@@ -224,7 +226,7 @@ Configuration Example
                         groupId = '57b5e81c-85bb-4644-a4fd-33b03e451c89'
                         intent = 'required'
                     }
-                });
+                );
             Categories           = @(MSFT_DeviceManagementMobileAppCategory {
                     id  = '1bff2652-03ec-4a48-941c-152e93736515'
                     displayName = 'Kajal 3'
