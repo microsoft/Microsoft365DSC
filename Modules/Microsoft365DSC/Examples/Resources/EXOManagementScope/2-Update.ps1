@@ -23,7 +23,9 @@ Configuration Example
     {
         EXOManagementScope "EXOManagementScope-Test New DGs"
         {
-            Credential                 = $Credscredential;
+            ApplicationId              = $ApplicationId
+            TenantId                   = $TenantId
+            CertificateThumbprint      = $CertificateThumbprint
             Ensure                     = "Present";
             Exclusive                  = $False;
             Identity                   = "Test New DGs";
