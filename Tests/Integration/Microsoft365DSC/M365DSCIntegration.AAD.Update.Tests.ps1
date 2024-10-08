@@ -34,6 +34,35 @@
         $Domain = $TenantId
         Node Localhost
         {
+                AADAdminConsentRequestPolicy 'AADAdminConsentRequestPolicy'
+                {
+                    ApplicationId         = $ApplicationId;
+                    CertificateThumbprint = $CertificateThumbprint;
+                    IsEnabled             = $True;
+                    IsSingleInstance      = "Yes";
+                    NotifyReviewers       = $False;
+                    RemindersEnabled      = $True;
+                    RequestDurationInDays = 30;
+                    Reviewers             =                 @(
+                        MSFT_AADAdminConsentRequestPolicyReviewer {
+                             ReviewerType = 'User'
+                             ReviewerId   = "AlexW@$TenantId"
+                        }
+                        MSFT_AADAdminConsentRequestPolicyReviewer {
+                             ReviewerType = 'Group'
+                             ReviewerId   = 'Communications'
+                        }
+                        MSFT_AADAdminConsentRequestPolicyReviewer {
+                             ReviewerType = 'Role'
+                             ReviewerId   = 'Attack Payload Author'
+                        }
+                        MSFT_AADAdminConsentRequestPolicyReviewer {
+                             ReviewerType = 'Role'
+                             ReviewerId   = 'Attack Simulation Administrator'
+                        }
+                        );
+                    TenantId              = $TenantId;
+                }
                 AADAdministrativeUnit 'TestUnit'
                 {
                     DisplayName                   = 'Test-Unit'
@@ -408,6 +437,14 @@
                     );
                     State                           = "enabled";
                 }
+                AADAuthenticationRequirement 'AADAuthenticationRequirement-TestMailbox109@xtasdftestorg.onmicrosoft.com'
+                {
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
+                    PerUserMfaState       = "disabled";
+                    UserPrincipalName     = "TestMailbox109@$OrganizationName";
+                }
                 AADAuthenticationStrengthPolicy 'AADAuthenticationStrengthPolicy-Example'
                 {
                     AllowedCombinations  = @("windowsHelloForBusiness","fido2","deviceBasedPush"); # Updated Property
@@ -593,6 +630,23 @@
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                     Ensure                       = "Present";
+                }
+                AADDeviceRegistrationPolicy 'MyDeviceRegistrationPolicy'
+                {
+                    ApplicationId                           = $ApplicationId;
+                    AzureADAllowedToJoin                    = "Selected";
+                    AzureADAllowedToJoinGroups              = @();
+                    AzureADAllowedToJoinUsers               = @("AlexW@M365x73318397.OnMicrosoft.com");
+                    AzureAdJoinLocalAdminsRegisteringGroups = @();
+                    AzureAdJoinLocalAdminsRegisteringMode   = "Selected";
+                    AzureAdJoinLocalAdminsRegisteringUsers  = @("AllanD@M365x73318397.OnMicrosoft.com");
+                    CertificateThumbprint                   = $CertificateThumbprint;
+                    IsSingleInstance                        = "Yes";
+                    LocalAdminPasswordIsEnabled             = $False;
+                    LocalAdminsEnableGlobalAdmins           = $True;
+                    MultiFactorAuthConfiguration            = $False;
+                    TenantId                                = $TenantId;
+                    UserDeviceQuota                         = 50;
                 }
                 AADEntitlementManagementAccessPackage 'myAccessPackage'
                 {

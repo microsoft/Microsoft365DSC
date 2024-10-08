@@ -23,11 +23,13 @@ Configuration Example
     {
         EXOMailboxIRMAccess "EXOMailboxIRMAccess-qwe@testorg.onmicrosoft.com"
         {
-            AccessLevel          = "Block";
-            Credential           = $Credscredential;
-            Ensure               = "Present";
-            Identity             = "qwe@$OrganizationName";
-            User                 = "admin@$OrganizationName";
+            AccessLevel            = "Block";
+            ApplicationId          = $ApplicationId
+            TenantId               = $TenantId
+            CertificateThumbprint  = $CertificateThumbprint
+            Ensure                 = "Present";
+            Identity               = "qwe@$OrganizationName";
+            User                   = "admin@$OrganizationName";
         }
     }
 }
