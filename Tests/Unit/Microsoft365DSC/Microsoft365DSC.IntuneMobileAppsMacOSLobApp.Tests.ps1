@@ -68,9 +68,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Owner                 = ""
                     PrivacyInformationUrl = ""
                     Publisher             = "Contoso"
-                    PublishingState       = "published"
                     RoleScopeTagIds       = @()
-
                     Ensure                = 'Present'
                     Credential            = $Credential
                 }
@@ -105,7 +103,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Owner                 = ""
                     PrivacyInformationUrl = ""
                     Publisher             = "Contoso"
-                    PublishingState       = "published"
                     RoleScopeTagIds       = @()
                     IgnoreVersionDetection = $True
 
@@ -165,7 +162,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Owner                 = ""
                     PrivacyInformationUrl = ""
                     Publisher             = "Contoso"
-                    PublishingState       = "published"
                     RoleScopeTagIds       = @()
                     Ensure                = 'Present'
                     Credential            = $Credential;
@@ -213,9 +209,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Owner                 = ""
                     PrivacyInformationUrl = ""
                     Publisher             = "Contoso"
-                    PublishingState       = "published"
                     RoleScopeTagIds       = @()
-
                     Ensure                = 'Present'
                     Credential            = $Credential;
                 }
