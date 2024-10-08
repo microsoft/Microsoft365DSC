@@ -1,0 +1,28 @@
+﻿{
+    "resourceName": "AADAdminConsentRequestPolicy",
+    "description": "Configures the Admin Consent Request Policy in Entra Id.",
+    "roles": {
+        "read": [],
+        "update": []
+    },
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [],
+                "update": []
+            },
+            "application": {
+                "read": [
+                    {
+                        "name": "Policy.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Policy.ReadWrite.ConsentRequest"
+                    }
+                ]
+            }
+        }
+    }
+}

@@ -1,0 +1,24 @@
+[ClassVersion("1.0.0")]
+class MSFT_AADAdminConsentRequestPolicyReviewer
+{
+    [Write, Description("Type of reviewwer. Can be User, Group or Role")] String ReviewerType;
+    [Write, Description("Identifier for the reviewer instance.")] String ReviewerId;
+};
+
+[ClassVersion("1.0.0.0"), FriendlyName("AADAdminConsentRequestPolicy")]
+class MSFT_AADAdminConsentRequestPolicy : OMI_BaseResource
+{
+    [Key, Description("Only valid value is 'Yes'."), ValueMap{"Yes"}, Values{"Yes"}] String IsSingleInstance;
+    [Write, Description("Determines if the policy is enabled or not.")] Boolean IsEnabled;
+    [Write, Description("Specifies whether reviewers will receive notifications.")] Boolean NotifyReviewers;
+    [Write, Description("Specifies whether reviewers will receive reminder emails.")] Boolean RemindersEnabled;
+    [Write, Description("Specifies the duration the request is active before it automatically expires if no decision is applied.")] UInt32 RequestDurationInDays;
+    [Write, Description("The list of reviewers for the admin consent."), EmbeddedInstance("MSFT_AADAdminConsentRequestPolicyReviewer")] String Reviewers[];
+
+    [Write, Description("Credentials of the workload's Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
+    [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
+    [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
+    [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
+    [Write, Description("Managed ID being used for authentication.")] Boolean ManagedIdentity;
+    [Write, Description("Access token used for authentication.")] String AccessTokens[];
+};

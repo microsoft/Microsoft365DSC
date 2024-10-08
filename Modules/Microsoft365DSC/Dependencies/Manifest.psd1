@@ -22,7 +22,7 @@
         },
         @{
             ModuleName      = 'DSCParser'
-            RequiredVersion = '2.0.0.10'
+            RequiredVersion = '2.0.0.11'
         },
         @{
             ModuleName      = 'ExchangeOnlineManagement'
@@ -137,7 +137,7 @@
         },
         @{
             ModuleName      = 'ReverseDSC'
-            RequiredVersion = '2.0.0.20'
+            RequiredVersion = '2.0.0.21'
         }
     )
 }

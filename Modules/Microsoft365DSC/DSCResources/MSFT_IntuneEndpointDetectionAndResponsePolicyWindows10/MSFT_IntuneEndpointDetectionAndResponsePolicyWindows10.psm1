@@ -13,6 +13,10 @@ function Get-TargetResource
         $DisplayName,
 
         [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
+
+        [Parameter()]
         [System.String]
         $Description,
 
@@ -96,106 +100,74 @@ function Get-TargetResource
 
         if ($null -eq $policy)
         {
-            Write-Verbose -Message "No Endpoint Detection And Response Policy with Id {$Identity} was found"
-            $policyTemplateID = '0385b795-0f2f-44ac-8602-9f65bf6adede_1'
-            $filter = "name eq '$DisplayName' and templateReference/TemplateId eq '$policyTemplateID'"
-            $policy = Get-MgBetaDeviceManagementConfigurationPolicy -Filter $filter -ErrorAction SilentlyContinue
-            if ($null -eq $policy)
+            Write-Verbose -Message "Could not find an Intune Endpoint Detection And Response Policy for Windows10 with Id {$Identity}"
+
+            if (-not [System.String]::IsNullOrEmpty($DisplayName))
             {
-                Write-Verbose -Message "No Endpoint Detection And Response Policy with displayName {$DisplayName} was found"
-                return $nullResult
+                $policy = Get-MgBetaDeviceManagementConfigurationPolicy `
+                -Filter "Name eq '$DisplayName'" `
+                -ErrorAction SilentlyContinue
             }
         }
 
-        $policy = Get-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $policy.Id -ExpandProperty 'settings' -ErrorAction SilentlyContinue
-
+        if ($null -eq $policy)
+        {
+            Write-Verbose -Message "Could not find an Intune Endpoint Detection And Response Policy for Windows10 with Name {$DisplayName}."
+            return $nullResult
+        }
         $Identity = $policy.Id
+        Write-Verbose -Message "An Intune Endpoint Detection And Response Policy for Windows10 with Id {$Identity} and Name {$DisplayName} was found"
 
-        Write-Verbose -Message "Found Endpoint Detection And Response Policy with Id {$($policy.id)} and displayName {$($policy.Name)}"
+        # Retrieve policy specific settings
+        [array]$settings = Get-MgBetaDeviceManagementConfigurationPolicySetting `
+            -DeviceManagementConfigurationPolicyId $Identity `
+            -ExpandProperty 'settingDefinitions' `
+            -ErrorAction Stop
 
-        #Retrieve policy specific settings
-        $settings = @()
-        $settings += $policy.settings
-
-        $returnHashtable = @{}
-        $returnHashtable.Add('Identity', $Identity)
-        $returnHashtable.Add('DisplayName', $policy.name)
-        $returnHashtable.Add('Description', $policy.description)
-
-        foreach ($setting in $settings.settingInstance)
+        $policySettings = @{}
+        $policySettings = Export-IntuneSettingCatalogPolicySettings -Settings $settings -ReturnHashtable $policySettings
+        if ($policySettings.ClientConfigurationPackageType -eq 'onboarding_fromconnector')
         {
-            $addToParameters = $true
-            $settingName = $setting.settingDefinitionId.Split('_') | Select-Object -Last 1
-
-            switch ($setting.AdditionalProperties.'@odata.type')
-            {
-
-                '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
-                {
-                    $settingValue = $setting.AdditionalProperties.simpleSettingValue.value
-                }
-                '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                {
-                    $settingValue = $setting.AdditionalProperties.choiceSettingValue.value.split('_') | Select-Object -Last 1
-                }
-                '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
-                {
-                    $values = @()
-                    foreach ($value in $setting.AdditionalProperties.groupSettingCollectionValue.children)
-                    {
-                        $settingName = $value.settingDefinitionId.split('_') | Select-Object -Last 1
-                        $settingValue = $value.choiceSettingValue.value.split('_') | Select-Object -Last 1
-                        $returnHashtable.Add($settingName, $settingValue)
-                        $addToParameters = $false
-                    }
-                }
-                '#microsoft.graph.deviceManagementConfigurationSimpleSettingCollectionInstance'
-                {
-                    $values = @()
-                    foreach ($value in $setting.AdditionalProperties.simpleSettingCollectionValue.value)
-                    {
-                        $values += $value
-                    }
-                    $settingValue = $values
-                }
-                Default
-                {
-                    $settingValue = $setting.value
-                }
-            }
-
-            if ($addToParameters)
-            {
-                $returnHashtable.Add($settingName, $settingValue)
-            }
-
+            $policySettings.Add('ConfigurationType', 'AutoFromConnector')
         }
-
-        #Removing telemetryreportingfrequency as deprecated and doen't need to be evaluated adn enforced
-        $returnHashtable.Remove('telemetryreportingfrequency')
-
-        $returnAssignments = @()
-        $currentAssignments = Get-MgBetaDeviceManagementConfigurationPolicyAssignment -DeviceManagementConfigurationPolicyId $Identity -All
-
-        if ($null -ne $currentAssignments -and $currentAssignments.count -gt 0 )
+        else
         {
-            $returnAssignments += ConvertFrom-IntunePolicyAssignment -Assignments ($currentAssignments)
+            $policySettings.Add('ConfigurationType', $policySettings.ClientConfigurationPackageType)
         }
+        $policySettings.Remove('ClientConfigurationPackageType')
+        $policySettings.Remove('onboarding')
+        $policySettings.Remove('offboarding')
+        $policySettings.Remove('onboarding_fromconnector')
 
-        $returnHashtable.Add('Assignments', $returnAssignments)
+        # Removing TelemetryReportingFrequency because it's deprecated and doesn't need to be evaluated and enforced
+        $policySettings.Remove('telemetryreportingfrequency')
 
-        Write-Verbose -Message "Found Endpoint Protection Policy {$($policy.name)}"
+        $results = @{
+            #region resource generator code
+            Description           = $policy.Description
+            DisplayName           = $policy.Name
+            RoleScopeTagIds       = $policy.RoleScopeTagIds
+            Identity              = $policy.Id
+            Ensure                = 'Present'
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            ApplicationSecret     = $ApplicationSecret
+            CertificateThumbprint = $CertificateThumbprint
+            ManagedIdentity       = $ManagedIdentity.IsPresent
+            #endregion
+        }
+        $results += $policySettings
 
-        $returnHashtable.Add('Ensure', 'Present')
-        $returnHashtable.Add('Credential', $Credential)
-        $returnHashtable.Add('ApplicationId', $ApplicationId)
-        $returnHashtable.Add('TenantId', $TenantId)
-        $returnHashtable.Add('ApplicationSecret', $ApplicationSecret)
-        $returnHashtable.Add('CertificateThumbprint', $CertificateThumbprint)
-        $returnHashtable.Add('ManagedIdentity', $ManagedIdentity.IsPresent)
-        $returnHashtable.Add("AccessTokens", $AccessTokens)
+        $assignmentsValues = Get-MgBetaDeviceManagementConfigurationPolicyAssignment -DeviceManagementConfigurationPolicyId $Identity
+        $assignmentResult = @()
+        if ($assignmentsValues.Count -gt 0)
+        {
+            $assignmentResult += ConvertFrom-IntunePolicyAssignment -Assignments $assignmentsValues -IncludeDeviceFilter $true
+        }
+        $results.Add('Assignments', $assignmentResult)
 
-        return $returnHashtable
+        return $results
     }
     catch
     {
@@ -221,6 +193,10 @@ function Set-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
 
         [Parameter()]
         [System.String]
@@ -291,14 +267,35 @@ function Set-TargetResource
     #endregion
 
     $currentPolicy = Get-TargetResource @PSBoundParameters
-    $PSBoundParameters.Remove('Ensure') | Out-Null
-    $PSBoundParameters.Remove('Credential') | Out-Null
-    $PSBoundParameters.Remove('ApplicationId') | Out-Null
-    $PSBoundParameters.Remove('TenantId') | Out-Null
-    $PSBoundParameters.Remove('ApplicationSecret') | Out-Null
-    $PSBoundParameters.Remove('CertificateThumbprint') | Out-Null
-    $PSBoundParameters.Remove('ManagedIdentity') | Out-Null
-    $PSBoundParameters.Remove('AccessTokens') | Out-Null
+    $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+
+    switch ($ConfigurationType)
+    {
+        'AutoFromConnector'
+        {
+            $BoundParameters.Add('ClientConfigurationPackageType', 'onboarding_fromconnector')
+            $BoundParameters.Add('onboarding_fromconnector', $ConfigurationBlob)
+            $BoundParameters.Remove('ConfigurationBlob') | Out-Null
+        }
+        'Onboard'
+        {
+            $BoundParameters.Add('ClientConfigurationPackageType', 'onboard')
+            $BoundParameters.Add('onboarding', $ConfigurationBlob)
+            $BoundParameters.Remove('ConfigurationBlob') | Out-Null
+        }
+        'Offboard'
+        {
+            $BoundParameters.Add('ClientConfigurationPackageType', 'offboard')
+            $BoundParameters.Add('offboarding', $ConfigurationBlob)
+            $BoundParameters.Remove('ConfigurationBlob') | Out-Null
+        }
+    }
+
+    if ([System.String]::IsNullOrEmpty($ConfigurationBlob))
+    {
+        throw "ConfigurationBlob is required for configurationType '$($DSCParams.ConfigurationType)'"
+    }
+    $BoundParameters.Remove('ConfigurationType') | Out-Null
 
     $templateReferenceId = '0385b795-0f2f-44ac-8602-9f65bf6adede_1'
     $platforms = 'windows10'
@@ -306,82 +303,64 @@ function Set-TargetResource
 
     if ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Absent')
     {
-        Write-Verbose -Message "Creating new Endpoint Protection Policy {$DisplayName}"
-        $PSBoundParameters.Remove('Assignments') | Out-Null
+        Write-Verbose -Message "Creating an Intune Endpoint Protection And Response Policy for Windows10 with Name {$DisplayName}"
+        $BoundParameters.Remove('Assignments') | Out-Null
 
-        $settings = @()
-        $formattedSettings = Get-IntuneSettingCatalogPolicySetting `
-            -DSCParams ([System.Collections.Hashtable]$PSBoundParameters) `
+        $settings = Get-IntuneSettingCatalogPolicySetting `
+            -DSCParams ([System.Collections.Hashtable]$BoundParameters) `
             -TemplateId $templateReferenceId
 
-        if ($null -ne $formattedSettings)
-        {
-            $settings += $formattedSettings
-        }
-
         $createParameters = @{
-            name              = $DisplayName
-            description       = $Description
-            templateReference = @{templateId = $templateReferenceId }
-            platforms         = $platforms
-            technologies      = $technologies
-            settings          = $settings
+            Name              = $DisplayName
+            Description       = $Description
+            TemplateReference = @{ templateId = $templateReferenceId }
+            Platforms         = $platforms
+            Technologies      = $technologies
+            Settings          = $settings
         }
 
-        write-verbose ($createParameters|convertto-json -depth 100)
+        #region resource generator code
         $policy = New-MgBetaDeviceManagementConfigurationPolicy -bodyParameter $createParameters
 
-        $assignmentsHash = @()
-        if ($null -ne $Assignments -and $Assignments.count -gt 0 )
+        if ($policy.Id)
         {
-            $assignmentsHash +=  ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
+            $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
+            Update-DeviceConfigurationPolicyAssignment `
+                -DeviceConfigurationPolicyId $policy.Id `
+                -Targets $assignmentsHash `
+                -Repository 'deviceManagement/configurationPolicies'
         }
-
-        Update-DeviceConfigurationPolicyAssignment `
-            -DeviceConfigurationPolicyId $policy.id `
-            -Targets $assignmentsHash
-
+        #endregion
     }
     elseif ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Updating existing Endpoint Protection Policy {$($currentPolicy.DisplayName)}"
-        $PSBoundParameters.Remove('Assignments') | Out-Null
+        Write-Verbose -Message "Updating the Intune Endpoint Protection And Response Policy for Windows10 {$($currentPolicy.DisplayName)}"
+        $BoundParameters.Remove('Assignments') | Out-Null
 
-        #format settings from PSBoundParameters for update
-        $settings = @()
-        $formattedSettings = Get-IntuneSettingCatalogPolicySetting `
-            -DSCParams ([System.Collections.Hashtable]$PSBoundParameters) `
+        $settings = Get-IntuneSettingCatalogPolicySetting `
+            -DSCParams ([System.Collections.Hashtable]$BoundParameters) `
             -TemplateId $templateReferenceId
 
-        if ($null -ne $formattedSettings)
-        {
-            $settings += $formattedSettings
-        }
-
-        Update-DeviceManagementConfigurationPolicy `
-            -DeviceManagementConfigurationPolicyId $currentPolicy.Identity `
-            -DisplayName $DisplayName `
+        Update-IntuneDeviceConfigurationPolicy `
+            -DeviceConfigurationPolicyId $currentPolicy.Identity `
+            -Name $DisplayName `
             -Description $Description `
-            -TemplateReference $templateReferenceId `
+            -TemplateReferenceId $templateReferenceId `
             -Platforms $platforms `
             -Technologies $technologies `
             -Settings $settings
 
-        #region update policy assignments
-        $assignmentsHash = @()
-        if ($null -ne $Assignments -and $Assignments.count -gt 0 )
-        {
-            $assignmentsHash += ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
-        }
-
+        #region resource generator code
+        $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
         Update-DeviceConfigurationPolicyAssignment `
             -DeviceConfigurationPolicyId $currentPolicy.Identity `
-            -Targets $assignmentsHash
+            -Targets $assignmentsHash `
+            -Repository 'deviceManagement/configurationPolicies'
         #endregion
     }
     elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing Endpoint Protection Policy {$($currentPolicy.DisplayName)}"
+        Write-Verbose -Message "Removing the Intune Endpoint Protection And Response Policy for Windows 10 with Id {$($currentPolicy.Identity)}"
         Remove-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $currentPolicy.Identity
     }
 }
@@ -399,6 +378,10 @@ function Test-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
 
         [Parameter()]
         [System.String]
@@ -467,34 +450,69 @@ function Test-TargetResource
         -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-    Write-Verbose -Message "Testing configuration of Endpoint Protection Policy {$DisplayName}"
+    Write-Verbose -Message "Testing configuration of the Intune Endpoint Protection And Response Policy for Windows10 with Id {$Identity} and Name {$DisplayName}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
+    [Hashtable]$ValuesToCheck = @{}
+    $MyInvocation.MyCommand.Parameters.GetEnumerator() | ForEach-Object {
+        if ($_.Key -notlike '*Variable' -or $_.Key -notin @('Verbose', 'Debug', 'ErrorAction', 'WarningAction', 'InformationAction'))
+        {
+            if ($null -ne $CurrentValues[$_.Key] -or $null -ne $PSBoundParameters[$_.Key])
+            {
+                $ValuesToCheck.Add($_.Key, $null)
+                if (-not $PSBoundParameters.ContainsKey($_.Key))
+                {
+                    $PSBoundParameters.Add($_.Key, $null)
+                }
+            }
+        }
+    }
+
+    if ($CurrentValues.Ensure -ne $Ensure)
+    {
+        Write-Verbose -Message "Test-TargetResource returned $false"
+        return $false
+    }
+    $testResult = $true
+
+    #Compare Cim instances
+    foreach ($key in $PSBoundParameters.Keys)
+    {
+        $source = $PSBoundParameters.$key
+        $target = $CurrentValues.$key
+        if ($null -ne $source -and $source.GetType().Name -like '*CimInstance*')
+        {
+            $testResult = Compare-M365DSCComplexObject `
+                -Source ($source) `
+                -Target ($target)
+
+            if (-not $testResult)
+            {
+                break
+            }
+
+            $ValuesToCheck.Remove($key) | Out-Null
+        }
+    }
+
+    $ValuesToCheck.Remove('Identity') | Out-Null
+    $ValuesToCheck.Remove('ConfigurationBlob') | Out-Null
+    $ValuesToCheck = Remove-M365DSCAuthenticationParameter -BoundParameters $ValuesToCheck
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
-    $ValuesToCheck = ([hashtable]$PSBoundParameters).clone()
-    $ValuesToCheck.Remove('Identity') | Out-Null
-    $ValuesToCheck.Remove('ConfigurationBlob') | Out-Null
-
-    $source = $PSBoundParameters.Assignments
-    $target = $CurrentValues.Assignments
-    $ValuesToCheck.Remove('Assignments') | Out-Null
-
-    $testResult = Compare-M365DSCIntunePolicyAssignment -Source $source -Target $target
-
     if ($testResult)
     {
-        $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
+        $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
             -Source $($MyInvocation.MyCommand.Source) `
             -DesiredValues $PSBoundParameters `
             -ValuesToCheck $ValuesToCheck.Keys
     }
 
-    Write-Verbose -Message "Test-TargetResource returned $TestResult"
+    Write-Verbose -Message "Test-TargetResource returned $testResult"
 
-    return $TestResult
+    return $testResult
 }
 
 function Export-TargetResource
@@ -558,9 +576,12 @@ function Export-TargetResource
     {
         $policyTemplateID = '0385b795-0f2f-44ac-8602-9f65bf6adede_1'
         [array]$policies = Get-MgBetaDeviceManagementConfigurationPolicy `
-            -All:$true `
+            -All `
             -Filter $Filter `
-            -ErrorAction Stop | Where-Object -FilterScript { $_.TemplateReference.TemplateId -eq $policyTemplateID } `
+            -ErrorAction Stop | Where-Object `
+            -FilterScript {
+                $_.TemplateReference.TemplateId -eq $policyTemplateID
+            }
 
         if ($policies.Length -eq 0)
         {
@@ -593,48 +614,38 @@ function Export-TargetResource
             }
 
             $Results = Get-TargetResource @params
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
 
-            if ($Results.Ensure -eq 'Present')
+            if ($Results.Assignments)
             {
-                $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                    -Results $Results
-
-                if ($Results.Assignments)
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject ([Array]$Results.Assignments) -CIMInstanceName DeviceManagementConfigurationPolicyAssignments
+                if ($complexTypeStringResult)
                 {
-                    $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject ([Array]$Results.Assignments) -CIMInstanceName DeviceManagementConfigurationPolicyAssignments
-                    if ($complexTypeStringResult)
-                    {
-                        $Results.Assignments = $complexTypeStringResult
-                    }
-                    else
-                    {
-                        $Results.Remove('Assignments') | Out-Null
-                    }
+                    $Results.Assignments = $complexTypeStringResult
                 }
-
-                $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                    -ConnectionMode $ConnectionMode `
-                    -ModulePath $PSScriptRoot `
-                    -Results $Results `
-                    -Credential $Credential
-
-                if ($Results.Assignments)
+                else
                 {
-                    $isCIMArray = $false
-                    if ($Results.Assignments.getType().Fullname -like '*[[\]]')
-                    {
-                        $isCIMArray = $true
-                    }
-                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Assignments' -IsCIMArray:$isCIMArray
+                    $Results.Remove('Assignments') | Out-Null
                 }
-
-                $dscContent += $currentDSCBlock
-                Save-M365DSCPartialExport -Content $currentDSCBlock `
-                    -FileName $Global:PartialExportFileName
-
-                Write-Host $Global:M365DSCEmojiGreenCheckMark
-                $i++
             }
+
+            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -Credential $Credential
+
+            if ($Results.Assignments)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Assignments" -IsCIMArray:$true
+            }
+
+            $dscContent += $currentDSCBlock
+            Save-M365DSCPartialExport -Content $currentDSCBlock `
+                -FileName $Global:PartialExportFileName
+            $i++
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
         return $dscContent
     }
@@ -659,280 +670,6 @@ function Export-TargetResource
 
         return ''
     }
-}
-
-function Get-IntuneSettingCatalogPolicySetting
-{
-    [CmdletBinding()]
-    [OutputType([System.Array])]
-    param(
-        [Parameter(Mandatory = 'true')]
-        [System.Collections.Hashtable]
-        $DSCParams,
-        [Parameter(Mandatory = 'true')]
-        [System.String]
-        $TemplateId
-    )
-
-    $DSCParams.Remove('Identity') | Out-Null
-    $DSCParams.Remove('DisplayName') | Out-Null
-    $DSCParams.Remove('Description') | Out-Null
-
-    #Prepare setting definitions mapping
-    $settingDefinitions = Get-MgBetaDeviceManagementConfigurationPolicyTemplateSettingTemplate -DeviceManagementConfigurationPolicyTemplateId $TemplateId
-    $settingInstances = @()
-    foreach ($settingDefinition in $settingDefinitions.SettingInstanceTemplate)
-    {
-
-        $settingInstance = @{}
-        $settingName = $settingDefinition.SettingDefinitionId.split('_') | Select-Object -Last 1
-        $settingType = $settingDefinition.AdditionalProperties.'@odata.type'.replace('InstanceTemplate', 'Instance')
-        $settingInstance.Add('settingDefinitionId', $settingDefinition.settingDefinitionId)
-        $settingInstance.Add('@odata.type', $settingType)
-        if (-Not [string]::IsNullOrEmpty($settingDefinition.settingInstanceTemplateId))
-        {
-            $settingInstance.Add('settingInstanceTemplateReference', @{'settingInstanceTemplateId' = $settingDefinition.settingInstanceTemplateId })
-        }
-        $settingValueName = $settingType.replace('#microsoft.graph.deviceManagementConfiguration', '').replace('Instance', 'Value')
-        $settingValueName = $settingValueName.Substring(0, 1).ToLower() + $settingValueName.Substring(1, $settingValueName.length - 1 )
-        $settingValueType = $settingDefinition.AdditionalProperties."$($settingValueName)Template".'@odata.type'
-        if ($null -ne $settingValueType)
-        {
-            $settingValueType = $settingValueType.replace('ValueTemplate', 'Value')
-        }
-        $settingValueTemplateId = $settingDefinition.AdditionalProperties."$($settingValueName)Template".settingValueTemplateId
-        $settingValue = Get-IntuneSettingCatalogPolicySettingInstanceValue `
-            -DSCParams $DSCParams `
-            -SettingDefinition $settingDefinition `
-            -SettingName $settingName `
-            -SettingType $settingType `
-            -SettingValueName $settingValueName `
-            -SettingValueType $settingValueType `
-            -SettingValueTemplateId $settingValueTemplateId
-
-        if ($null -ne $settingValue) {
-            $childSettingType = ""
-            switch ($DSCParams['ConfigurationType'])
-            {
-                'AutoFromConnector'
-                {
-                    $childSettingType = 'onboarding_fromconnector'
-                }
-                'Onboard'
-                {
-                    $childSettingType = 'onboarding'
-                }
-                'Offboard'
-                {
-                    $childSettingType = 'offboarding'
-                }
-            }
-
-            if ($settingName -eq 'configurationType')
-            {
-                if ([System.String]::IsNullOrEmpty($DSCParams['ConfigurationBlob']))
-                {
-                    throw "ConfigurationBlob is required for configurationType '$($DSCParams['ConfigurationType'])'"
-                }
-
-                $children = @()
-                $children += @{
-                    '@odata.type' = "#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance"
-                    settingDefinitionId = "device_vendor_msft_windowsadvancedthreatprotection_$($childSettingType)"
-                    simpleSettingValue = @{
-                        '@odata.type' = "#microsoft.graph.deviceManagementConfigurationSecretSettingValue"
-                        value = $DSCParams['ConfigurationBlob']
-                        valueState = "NotEncrypted"
-                    }
-                }
-                $settingValue.choiceSettingValue.Add("children", $children)
-            }
-            $settingInstance += ($settingValue)
-            $settingInstances += @{
-                '@odata.type'     = '#microsoft.graph.deviceManagementConfigurationSetting'
-                'settingInstance' = $settingInstance
-            }
-        } else {
-            Continue
-        }
-    }
-
-    return $settingInstances
-}
-
-function Get-IntuneSettingCatalogPolicySettingInstanceValue
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param(
-        [Parameter(Mandatory = 'true')]
-        [System.Collections.Hashtable]
-        $DSCParams,
-
-        [Parameter()]
-        $SettingDefinition,
-
-        [Parameter()]
-        [System.String]
-        $SettingType,
-
-        [Parameter()]
-        [System.String]
-        $SettingName,
-
-        [Parameter()]
-        [System.String]
-        $SettingValueName,
-
-        [Parameter()]
-        [System.String]
-        $SettingValueType,
-
-        [Parameter()]
-        [System.String]
-        $SettingValueTemplateId
-    )
-
-    $settingValueReturn = @{}
-    switch ($settingType)
-    {
-        '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
-        {
-            $groupSettingCollectionValue = @{}
-            $groupSettingCollectionValueChildren = @()
-
-            $groupSettingCollectionDefinitionChildren = $SettingDefinition.AdditionalProperties.groupSettingCollectionValueTemplate.children
-            foreach ($childDefinition in $groupSettingCollectionDefinitionChildren)
-            {
-                $childSettingName = $childDefinition.settingDefinitionId.split('_') | Select-Object -Last 1
-                $childSettingType = $childDefinition.'@odata.type'.replace('InstanceTemplate', 'Instance')
-                $childSettingValueName = $childSettingType.replace('#microsoft.graph.deviceManagementConfiguration', '').replace('Instance', 'Value')
-                $childSettingValueType = "#microsoft.graph.deviceManagementConfiguration$($childSettingValueName)"
-                $childSettingValueName = $childSettingValueName.Substring(0, 1).ToLower() + $childSettingValueName.Substring(1, $childSettingValueName.length - 1 )
-                $childSettingValueTemplateId = $childDefinition.$childSettingValueName.settingValueTemplateId
-                $childSettingValue = Get-IntuneSettingCatalogPolicySettingInstanceValue `
-                    -DSCParams $DSCParams `
-                    -SettingDefinition $childDefinition `
-                    -SettingName $childSettingName `
-                    -SettingType $childDefinition.'@odata.type' `
-                    -SettingValueName $childSettingValueName `
-                    -SettingValueType $childSettingValueType `
-                    -SettingValueTemplateId $childSettingValueTemplateId
-
-                if ($null -ne $childSettingValue)
-                {
-                    $childSettingValue.add('settingDefinitionId', $childDefinition.settingDefinitionId)
-                    $childSettingValue.add('@odata.type', $childSettingType )
-                    $groupSettingCollectionValueChildren += $childSettingValue
-                }
-            }
-            $groupSettingCollectionValue.add('children', $groupSettingCollectionValueChildren)
-            $settingValueReturn.Add('groupSettingCollectionValue', @($groupSettingCollectionValue))
-        }
-        '#microsoft.graph.deviceManagementConfigurationSimpleSettingCollectionInstance'
-        {
-            $values = @()
-            foreach ( $key in $DSCParams.Keys)
-            {
-                if ($settingName -eq ($key.tolower()))
-                {
-                    $values = $DSCParams[$key]
-                    break
-                }
-            }
-            $settingValueCollection = @()
-            foreach ($v in $values)
-            {
-                $settingValueCollection += @{
-                    value         = $v
-                    '@odata.type' = $settingValueType
-                }
-            }
-            $settingValueReturn.Add($settingValueName, $settingValueCollection)
-        }
-        Default
-        {
-            $value = $null
-            foreach ( $key in $DSCParams.Keys)
-            {
-                if ($settingName -eq ($key.tolower()))
-                {
-                    $value = "$($SettingDefinition.settingDefinitionId)_$($DSCParams[$key])"
-                    break
-                }
-            }
-            $settingValue = @{}
-
-            if (-Not [string]::IsNullOrEmpty($settingValueType))
-            {
-                $settingValue.add('@odata.type', $settingValueType)
-            }
-            if (-Not [string]::IsNullOrEmpty($settingValueTemplateId))
-            {
-                $settingValue.Add('settingValueTemplateReference', @{'settingValueTemplateId' = $settingValueTemplateId })
-            }
-            $settingValue.add('value', $value)
-            if ($null -eq $value)
-            {
-                return $null
-            }
-            $settingValueReturn.Add($settingValueName, $settingValue)
-        }
-    }
-    return $settingValueReturn
-}
-
-function Update-DeviceManagementConfigurationPolicy
-{
-    [CmdletBinding()]
-    param (
-        [Parameter(Mandatory = 'true')]
-        [System.String]
-        $DeviceManagementConfigurationPolicyId,
-
-        [Parameter(Mandatory = 'true')]
-        [System.String]
-        $DisplayName,
-
-        [Parameter()]
-        [System.String]
-        $Description,
-
-        [Parameter()]
-        [System.String]
-        $TemplateReferenceId,
-
-        [Parameter()]
-        [System.String]
-        $Platforms,
-
-        [Parameter()]
-        [System.String]
-        $Technologies,
-
-        [Parameter()]
-        [System.Array]
-        $Settings
-    )
-
-    $templateReference = @{
-        'templateId' = $TemplateReferenceId
-    }
-
-    $Uri = "https://graph.microsoft.com/beta/deviceManagement/ConfigurationPolicies/$DeviceManagementConfigurationPolicyId"
-    $policy = [ordered]@{
-        'name'              = $DisplayName
-        'description'       = $Description
-        'platforms'         = $Platforms
-        'technologies'      = $Technologies
-        'templateReference' = $templateReference
-        'settings'          = $Settings
-    }
-    #write-verbose (($policy|ConvertTo-Json -Depth 20))
-    Invoke-MgGraphRequest -Method PUT `
-        -Uri $Uri `
-        -ContentType 'application/json' `
-        -Body ($policy | ConvertTo-Json -Depth 20) 4> $null
 }
 
 Export-ModuleMember -Function *-TargetResource

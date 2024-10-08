@@ -189,8 +189,8 @@ function Get-TargetResource
             Write-Verbose -Message 'An instance of Azure AD App was retrieved.'
 
 
-            $AADBetaApp= Get-MgBetaApplication -Property "id,displayName,appId,authenticationBehaviors" -ApplicationId $ObjectID -ErrorAction SilentlyContinue
-            $AADAppKeyCredentials = Get-MgApplication -Property "keyCredentials" -ApplicationId $ObjectID -ErrorAction SilentlyContinue
+            $AADBetaApp= Get-MgBetaApplication -Property "id,displayName,appId,authenticationBehaviors" -ApplicationId $AADApp.Id -ErrorAction SilentlyContinue
+            $AADAppKeyCredentials = Get-MgApplication -Property "keyCredentials" -ApplicationId $AADApp.Id -ErrorAction SilentlyContinue
 
             $complexAuthenticationBehaviors = @{}
             if ($null -ne $AADBetaApp.authenticationBehaviors.blockAzureADGraphAccess)
@@ -291,7 +291,7 @@ function Get-TargetResource
                 $mykeyCredentials.Add('KeyId', $currentkeyCredentials.keyId)
 
 
-                if($null -ne $currentkeyCredentials.Key) 
+                if($null -ne $currentkeyCredentials.Key)
                 {
                     $mykeyCredentials.Add('Key', [convert]::ToBase64String($currentkeyCredentials.key))
                 }
@@ -629,7 +629,7 @@ function Set-TargetResource
     if ($PasswordCredentials)
     {
         Write-Warning -Message "PasswordCredentials is a readonly property and cannot be configured."
-           
+
     }
 
     if ($currentParameters.AvailableToOtherTenants)
@@ -934,7 +934,7 @@ function Set-TargetResource
     if($needToUpdateKeyCredentials -and $KeyCredentials)
     {
         Write-Verbose -Message "Updating for Azure AD Application {$($currentAADApp.DisplayName)} with KeyCredentials:`r`n$($KeyCredentials| Out-String)"
-        
+
         if((currentAADApp.KeyCredentials.Length -eq 0 -and $KeyCredentials.Length -eq 1) -or (currentAADApp.KeyCredentials.Length -eq 1 -and $KeyCredentials.Length -eq 0))
         {
             Update-MgApplication -ApplicationId $currentAADApp.Id -KeyCredentials $KeyCredentials | Out-Null
@@ -1121,7 +1121,7 @@ function Test-TargetResource
     }
 
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
- 
+
     $testTargetResource = $true
 
     #Compare Cim instances
@@ -1134,13 +1134,13 @@ function Test-TargetResource
             $testResult = Compare-M365DSCComplexObject `
                 -Source ($source) `
                 -Target ($target)
- 
+
             if (-not $testResult)
             {
                 Write-Verbose "TestResult returned False for $source"
                 $testTargetResource = $false
             }
-            else { 
+            else {
                 $ValuesToCheck.Remove($key) | Out-Null
             }
         }

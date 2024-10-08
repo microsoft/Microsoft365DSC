@@ -25,10 +25,12 @@ Configuration Example
     {
         EXOMailboxFolderPermission "EXOMailboxFolderPermission-admin:\Calendar"
         {
-            Credential           = $Credscredential;
-            Ensure               = "Present";
-            Identity             = "amdin:\Calendar";
-            UserPermissions      = @(MSFT_EXOMailboxFolderUserPermission {
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
+            Ensure                = "Present";
+            Identity              = "amdin:\Calendar";
+            UserPermissions       = @(MSFT_EXOMailboxFolderUserPermission {
                 User                   = 'Default'
                 AccessRights           = 'AvailabilityOnly'
             }

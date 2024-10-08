@@ -411,10 +411,12 @@
                 }
                 EXOMailboxFolderPermission 'EXOMailboxFolderPermission-admin:\Calendar'
                 {
-                    Credential           = $Credscredential;
-                    Ensure               = "Present";
-                    Identity             = "amdin:\Calendar";
-                    UserPermissions      = @(MSFT_EXOMailboxFolderUserPermission {
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
+                    Ensure                = "Present";
+                    Identity              = "amdin:\Calendar";
+                    UserPermissions       = @(MSFT_EXOMailboxFolderUserPermission {
                         User                   = 'Default'
                         AccessRights           = 'AvailabilityOnly'
                     }
@@ -431,11 +433,13 @@
                 }
                 EXOMailboxIRMAccess 'EXOMailboxIRMAccess-qwe@testorg.onmicrosoft.com'
                 {
-                    AccessLevel          = "Block";
-                    Credential           = $Credscredential;
-                    Ensure               = "Present";
-                    Identity             = "qwe@$OrganizationName";
-                    User                 = "admin@$OrganizationName";
+                    AccessLevel            = "Block";
+                    ApplicationId          = $ApplicationId
+                    TenantId               = $TenantId
+                    CertificateThumbprint  = $CertificateThumbprint
+                    Ensure                 = "Present";
+                    Identity               = "qwe@$OrganizationName";
+                    User                   = "admin@$OrganizationName";
                 }
                 EXOMailContact 'TestMailContact'
                 {
@@ -508,7 +512,9 @@
                 }
                 EXOManagementScope 'EXOManagementScope-Test New DGs'
                 {
-                    Credential                 = $Credscredential;
+                    ApplicationId              = $ApplicationId
+                    TenantId                   = $TenantId
+                    CertificateThumbprint      = $CertificateThumbprint
                     Ensure                     = "Present";
                     Exclusive                  = $False;
                     Identity                   = "Test New DGs";
@@ -529,6 +535,23 @@
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
+                }
+                EXOMigrationEndpoint 'EXOMigrationEndpoint-testIMAP'
+                {
+                    AcceptUntrustedCertificates   = $True;
+                    Authentication                = "Basic";
+                    ApplicationId                 = $ApplicationId
+                    TenantId                      = $TenantId
+                    CertificateThumbprint         = $CertificateThumbprint
+                    EndpointType                  = "IMAP";
+                    Ensure                        = "Present";
+                    Identity                      = "testIMAP";
+                    MailboxPermission             = "Admin";
+                    MaxConcurrentIncrementalSyncs = "10";
+                    MaxConcurrentMigrations       = "20";
+                    Port                          = 993;
+                    RemoteServer                  = "gmail.com";
+                    Security                      = "Tls";
                 }
                 EXOMobileDeviceMailboxPolicy 'ConfigureMobileDeviceMailboxPolicy'
                 {

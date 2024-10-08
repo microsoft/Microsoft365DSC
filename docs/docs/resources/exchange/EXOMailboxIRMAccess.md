@@ -62,11 +62,13 @@ Configuration Example
     {
         EXOMailboxIRMAccess "EXOMailboxIRMAccess-qwe@testorg.onmicrosoft.com"
         {
-            AccessLevel          = "Block";
-            Credential           = $Credscredential;
-            Ensure               = "Present";
-            Identity             = "qwe@$OrganizationName";
-            User                 = "admin@$OrganizationName";
+            AccessLevel            = "Block";
+            ApplicationId          = $ApplicationId
+            TenantId               = $TenantId
+            CertificateThumbprint  = $CertificateThumbprint
+            Ensure                 = "Present";
+            Identity               = "qwe@$OrganizationName";
+            User                   = "admin@$OrganizationName";
         }
     }
 }
@@ -96,7 +98,16 @@ Configuration Example
     Import-DscResource -ModuleName Microsoft365DSC
     node localhost
     {
-        
+        EXOMailboxIRMAccess "EXOMailboxIRMAccess-qwe@testorg.onmicrosoft.com"
+        {
+            AccessLevel            = "Block";
+            ApplicationId          = $ApplicationId
+            TenantId               = $TenantId
+            CertificateThumbprint  = $CertificateThumbprint
+            Ensure                 = "Absent";
+            Identity               = "qwe@$OrganizationName";
+            User                   = "admin@$OrganizationName";
+        }
     }
 }
 ```
