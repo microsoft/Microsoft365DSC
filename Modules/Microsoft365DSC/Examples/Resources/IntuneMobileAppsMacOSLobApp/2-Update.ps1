@@ -36,14 +36,14 @@ Configuration Example
             PrivacyInformationUrl = "";
             Publisher             = "Contoso";
             PublishingState       = "published";
-            Assignments          = @(
+            Assignments           = @(
                     MSFT_DeviceManagementMobileAppAssignment {
-                            groupDisplayName = 'All devices'
+                        groupDisplayName = 'All devices'
                         source = 'direct'
                         deviceAndAppManagementAssignmentFilterType = 'none'
                         dataType = '#microsoft.graph.allDevicesAssignmentTarget'
                         intent = 'required'
-                    },
+                    }
                     MSFT_DeviceManagementMobileAppAssignment {
                         deviceAndAppManagementAssignmentFilterType = 'none'
                         source = 'direct'
