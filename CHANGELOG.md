@@ -9,7 +9,7 @@
 * AADAuthenticationRequirement
   * Initial release.
 * AADConnectorGroupApplicationProxy
-  Initial release.
+  * Initial release.
 * AADDeviceRegistrationPolicy
   * Initial release.
 * AADEntitlementManagementSettings
