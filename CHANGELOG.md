@@ -6,6 +6,7 @@
   * Initial release.
 * AADApplication
   * Fixed an issue trying to retrieve the beta instance.
+  * Added support for OnPremisesPublishing.
 * AADDeviceRegistrationPolicy
   * Initial release.
 * AADEntitlementManagementSettings
