@@ -93415,6 +93415,16 @@ function Get-MgBetaDeviceAppManagementMobileAppConfiguration
     )
 }
 
+function Get-MgBetaDeviceAppManagementMobileAppAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $MobileAppId
+    )
+}
+
 function Update-MgBetaDeviceAppManagementMobileAppAssignment
 {
     [CmdletBinding()]
