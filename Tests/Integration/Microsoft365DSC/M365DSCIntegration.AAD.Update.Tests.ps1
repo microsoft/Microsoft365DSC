@@ -34,6 +34,35 @@
         $Domain = $TenantId
         Node Localhost
         {
+                AADAdminConsentRequestPolicy 'AADAdminConsentRequestPolicy'
+                {
+                    ApplicationId         = $ApplicationId;
+                    CertificateThumbprint = $CertificateThumbprint;
+                    IsEnabled             = $True;
+                    IsSingleInstance      = "Yes";
+                    NotifyReviewers       = $False;
+                    RemindersEnabled      = $True;
+                    RequestDurationInDays = 30;
+                    Reviewers             =                 @(
+                        MSFT_AADAdminConsentRequestPolicyReviewer {
+                             ReviewerType = 'User'
+                             ReviewerId   = "AlexW@$TenantId"
+                        }
+                        MSFT_AADAdminConsentRequestPolicyReviewer {
+                             ReviewerType = 'Group'
+                             ReviewerId   = 'Communications'
+                        }
+                        MSFT_AADAdminConsentRequestPolicyReviewer {
+                             ReviewerType = 'Role'
+                             ReviewerId   = 'Attack Payload Author'
+                        }
+                        MSFT_AADAdminConsentRequestPolicyReviewer {
+                             ReviewerType = 'Role'
+                             ReviewerId   = 'Attack Simulation Administrator'
+                        }
+                        );
+                    TenantId              = $TenantId;
+                }
                 AADAdministrativeUnit 'TestUnit'
                 {
                     DisplayName                   = 'Test-Unit'
