@@ -165,6 +165,7 @@ function Get-TargetResource
                 $instance = Get-MgBetaDeviceAppManagementMobileApp -MobileAppId $instance.Id `
                     -ExpandProperty "categories" `
                     -ErrorAction SilentlyContinue
+                $Id = $instance.Id
             }
         }
 
@@ -204,10 +205,13 @@ function Get-TargetResource
         }
 
         $complexMinimumSupportedOperatingSystem = @{}
-        $instance.AdditionalProperties.minimumSupportedOperatingSystem.GetEnumerator() | Foreach-Object {
-            if ($_.Value) # Values are either true or false. Only export the true value.
-            {
-                $complexMinimumSupportedOperatingSystem.Add($_.Key, $_.Value)
+        if ($null -ne $instance.AdditionalProperties.minimumSupportedOperatingSystem)
+        {
+            $instance.AdditionalProperties.minimumSupportedOperatingSystem.GetEnumerator() | Foreach-Object {
+                if ($_.Value) # Values are either true or false. Only export the true value.
+                {
+                    $complexMinimumSupportedOperatingSystem.Add($_.Key, $_.Value)
+                }
             }
         }
 
@@ -480,7 +484,9 @@ function Set-TargetResource
         $UpdateParameters.Add('@odata.type', '#microsoft.graph.macOSLobApp')
         Update-MgBetaDeviceAppManagementMobileApp -MobileAppId $currentInstance.Id -BodyParameter $UpdateParameters
 
-        $delta = Compare-Object -ReferenceObject $currentInstance.Categories.DisplayName -DifferenceObject $Categories.DisplayName -PassThru
+        [array]$referenceObject = if ($null -ne $currentInstance.Categories.DisplayName) { $currentInstance.Categories.DisplayName } else { ,@() }
+        [array]$differenceObject = if ($null -ne $Categories.DisplayName) { $Categories.DisplayName } else { ,@() }
+        $delta = Compare-Object -ReferenceObject $referenceObject -DifferenceObject $differenceObject -PassThru
         foreach ($diff in $delta)
         {
             if ($diff.SideIndicator -eq '=>')
