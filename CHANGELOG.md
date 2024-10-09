@@ -7,10 +7,16 @@
 * AADApplication
   * Fixed an issue trying to retrieve the beta instance.
   * Added support for OnPremisesPublishing.
+* AADAuthenticationRequirement
+  * Initial release.
+* AADConnectorGroupApplicationProxy
+  * Initial release.
 * AADDeviceRegistrationPolicy
   * Initial release.
 * AADEntitlementManagementSettings
   * Added support for ApplicationSecret
+* AADLifecycleWorkflowSettings
+  * Initial release.
 * ADOPermissionGroupSettings
   * Initial release.
 * EXOMigrationEndpoint
@@ -45,8 +51,6 @@
 * AADAuthenticationMethodPolicy
   * Added ReportSuspiciousActivitySettings
 * AADAuthenticationMethodPolicyHardware
-  * Initial release.
-* AADAuthenticationRequirement
   * Initial release.
 * AADEntitlementManagementSettings
   * Initial release.
