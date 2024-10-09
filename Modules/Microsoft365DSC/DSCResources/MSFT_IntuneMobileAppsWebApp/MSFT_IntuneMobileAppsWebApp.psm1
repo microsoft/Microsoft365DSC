@@ -6,13 +6,13 @@ function Get-TargetResource
     (
         #region Intune resource parameters
 
-        [Parameter()]
-        [System.String]
-        $Id,
-
         [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Id,
 
         [Parameter()]
         [System.String]
