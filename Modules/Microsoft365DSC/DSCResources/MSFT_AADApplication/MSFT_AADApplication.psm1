@@ -180,7 +180,7 @@ function Get-TargetResource
             }
             else
             {
-                $AADApp = Get-MgBetaApplication -Filter "DisplayName eq '$($DisplayName)'"
+                $AADApp = [Array](Get-MgBetaApplication -Filter "DisplayName eq '$($DisplayName)'")
             }
         }
         if ($null -ne $AADApp -and $AADApp.Count -gt 1)
@@ -197,7 +197,7 @@ function Get-TargetResource
             Write-Verbose -Message 'An instance of Azure AD App was retrieved.'
 
             $AADBetaApp= Get-MgBetaApplication -Property "id,displayName,appId,authenticationBehaviors,additionalProperties" -ApplicationId $AADApp.Id -ErrorAction SilentlyContinue
-            $AADAppKeyCredentials = Get-MgApplication -Property "keyCredentials" -ApplicationId $AADApp.Id -ErrorAction SilentlyContinue
+            $AADAppKeyCredentials = Get-MgBetaApplication -Property "keyCredentials" -ApplicationId $AADApp.Id -ErrorAction SilentlyContinue
 
             $complexAuthenticationBehaviors = @{}
             if ($null -ne $AADBetaApp.authenticationBehaviors.blockAzureADGraphAccess)
@@ -818,6 +818,7 @@ function Set-TargetResource
     # Create from Template
     $createdFromTemplate = $false
     if ($Ensure -eq 'Present' -and $currentAADApp.Ensure -eq 'Absent' -and -not $skipToUpdate -and `
+        -not [System.String]::IsNullOrEmpty($ApplicationTemplateId) -and `
         $ApplicationTemplateId -ne '8adf8e6e-67b2-4cf2-a259-e3dc5476c621')
     {
         $skipToUpdate = $true
@@ -1355,7 +1356,6 @@ function Test-TargetResource
     $ValuesToCheck.Remove('ObjectId') | Out-Null
     $ValuesToCheck.Remove('AppId') | Out-Null
     $ValuesToCheck.Remove('Permissions') | Out-Null
-
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
     -Source $($MyInvocation.MyCommand.Source) `
