@@ -31,7 +31,7 @@ Configuration Example
             Ensure                = "Present";
             InformationUrl        = "";
             IsFeatured            = $False;
-            MinimumSupportedOperatingSystem = MinimumSupportedOperatingSystem{
+            MinimumSupportedOperatingSystem = MSFT_DeviceManagementMinimumOperatingSystem{
                 v11_0 = $true
             }
             Notes                 = "";
