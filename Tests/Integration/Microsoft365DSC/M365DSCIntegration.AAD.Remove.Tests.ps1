@@ -155,6 +155,7 @@
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                     Ensure                = "Absent";
+                    Name                  = "testgroup-new";
                     Id                    = "4984dcf7-d9e9-4663-90b4-5db09f92a669";
                 }
                 AADCrossTenantAccessPolicyConfigurationPartner 'AADCrossTenantAccessPolicyConfigurationPartner'

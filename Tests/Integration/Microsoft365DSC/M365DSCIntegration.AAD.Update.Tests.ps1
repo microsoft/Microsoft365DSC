@@ -831,6 +831,16 @@
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                 }
+                AADLifecycleWorkflowSettings 'AADLifecycleWorkflowSettings'
+                {
+                    ApplicationId                   = $ApplicationId;
+                    CertificateThumbprint           = $CertificateThumbprint;
+                    IsSingleInstance                = "Yes";
+                    SenderDomain                    = "microsoft.com";
+                    TenantId                        = $TenantId;
+                    UseCompanyBranding              = $True;
+                    WorkflowScheduleIntervalInHours = 10;
+                }
                 AADNamedLocationPolicy 'CompanyNetwork'
                 {
                     DisplayName = "Company Network"
