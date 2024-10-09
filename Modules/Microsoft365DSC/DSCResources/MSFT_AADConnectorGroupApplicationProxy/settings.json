@@ -6,7 +6,7 @@
             "delegated": {
                 "read": [
                     {
-                        "name": "Directory.ReadWrite.All"
+                        "name": "Directory.Read.All"
                     }
                 ],
                 "update": [
@@ -18,7 +18,7 @@
             "application": {
                 "read": [
                     {
-                        "name": "Directory.ReadWrite.All"
+                        "name": "Directory.Read.All"
                     }
                 ],
                 "update": [
