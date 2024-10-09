@@ -1,6 +1,6 @@
 
-# ResourceName
+# IntuneMobileAppsWebApp
 
 ## Description
 
-##TODO - Provide a short description of what the resource is set to configure.
+This resource configures an Intune mobile app of WebApp type.
