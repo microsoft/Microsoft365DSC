@@ -35,124 +35,122 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return "Credentials"
             }
 
-            ##TODO - Mock any Remove/Set/New cmdlets
+            Mock -CommandName Get-MgBetaDeviceAppManagementMobileApp -MockWith {
+            }
+            Mock -CommandName New-MgBetaDeviceAppManagementMobileApp -MockWith {
+            }
+            Mock -CommandName Update-MgBetaDeviceAppManagementMobileApp -MockWith {
+            }
+            Mock -CommandName Remove-MgBetaDeviceAppManagementMobileApp -MockWith {
+            }
+
+            Mock -CommandName Update-MgBetaDeviceAppManagementMobileAppAssignment -MockWith{}
 
             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
             }
+
             $Script:exportedInstances =$null
             $Script:ExportMode = $false
         }
+
         # Test contexts
-        Context -Name "The instance should exist but it DOES NOT" -Fixture {
+        Context -Name "1. The instance should exist but it DOES NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    ##TODO - Add Parameters
-                    Ensure              = 'Present'
-                    Credential          = $Credential;
+                    Id                    = "8d027f94-0682-431e-97c1-827d1879fa79"
+                    Description           = "Sample Web App"
+                    Developer             = "Contoso"
+                    DisplayName           = "SampleWebApp"
+                    InformationUrl        = ""
+                    IsFeatured            = $False
+                    Notes                 = ""
+                    Owner                 = ""
+                    PrivacyInformationUrl = ""
+                    Publisher             = "Contoso"
+                    PublishingState       = "published"
+                    RoleScopeTagIds       = @()
+                    Ensure                = 'Present'
+                    Credential            = $Credential
                 }
 
-                ##TODO - Mock the Get-Cmdlet to return $null
-                Mock -CommandName Get-Cmdlet -MockWith {
+                Mock -CommandName Get-MgBetaDeviceAppManagementMobileApp -MockWith {
                     return $null
                 }
             }
-            It 'Should return Values from the Get method' {
+
+            It '1.1 Should return Values from the Get method' {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Absent'
             }
-            It 'Should return false from the Test method' {
+            It '1.2 Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
-
-            It 'Should create a new instance from the Set method' {
-                ##TODO - Replace the New-Cmdlet by the appropriate one
+            It '1.3 Should create a new instance from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName New-Cmdlet -Exactly 1
+                Should -Invoke -CommandName New-MgBetaDeviceAppManagementMobileApp -Exactly 1
             }
         }
 
-        Context -Name "The instance exists but it SHOULD NOT" -Fixture {
+        Context -Name "2. The instance exists but it SHOULD NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    ##TODO - Add Parameters
-                    Ensure              = 'Absent'
-                    Credential          = $Credential;
+                    Id                    = "ad027f94-0682-431e-97c1-827d1879fa79"
+                    Description           = "Sample Web App"
+                    Developer             = "Contoso"
+                    DisplayName           = "SampleWebApp"
+                    InformationUrl        = ""
+                    IsFeatured            = $False
+                    Notes                 = ""
+                    Owner                 = ""
+                    PrivacyInformationUrl = ""
+                    Publisher             = "Contoso"
+                    PublishingState       = "published"
+                    RoleScopeTagIds       = @()
+                    IgnoreVersionDetection = $True
+                    Ensure                = 'Absent'
+                    Credential            = $Credential
                 }
 
-                ##TODO - Mock the Get-Cmdlet to return an instance
-                Mock -CommandName Get-Cmdlet -MockWith {
+                Mock -CommandName Get-MgBetaDeviceAppManagementMobileApp -MockWith {
                     return @{
-
+                        Id                    = "ad027f94-0682-431e-97c1-827d1879fa79"
+                        Description           = "Sample Web App"
+                        Developer             = "Contoso"
+                        DisplayName           = "SampleWebApp"
+                        InformationUrl        = ""
+                        IsFeatured            = $False
+                        Notes                 = ""
+                        Owner                 = ""
+                        PrivacyInformationUrl = ""
+                        Publisher             = "Contoso"
+                        PublishingState       = "published"
+                        RoleScopeTagIds       = @()
+                        IgnoreVersionDetection = $True
+                        AdditionalProperties   = @{
+                            '@odata.type' = '#microsoft.graph.webApp'
+                        }
+                        Ensure                = 'Present'
                     }
                 }
+
+                Mock -CommandName Get-MgBetaDeviceAppManagementMobileAppAssignment -MockWith{
+                    return $null
+                }
             }
-            It 'Should return Values from the Get method' {
+
+            It '2.1 Should return Values from the Get method' {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
-            It 'Should return false from the Test method' {
+            It '2.2 Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
-
-            It 'Should remove the instance from the Set method' {
+            It '2.3 Should remove the instance from the Set method' {
                 Set-TargetResource @testParams
-                ##TODO - Replace the Remove-Cmdlet by the appropriate one
-                Should -Invoke -CommandName Remove-Cmdlet -Exactly 1
+                Should -Invoke -CommandName Remove-MgBetaDeviceAppManagementMobileApp -Exactly 1
             }
         }
 
-        Context -Name "The instance exists and values are already in the desired state" -Fixture {
-            BeforeAll {
-                $testParams = @{
-                    ##TODO - Add Parameters
-                    Ensure              = 'Present'
-                    Credential          = $Credential;
-                }
-
-                ##TODO - Mock the Get-Cmdlet to return the desired values
-                Mock -CommandName Get-Cmdlet -MockWith {
-                    return @{
-
-                    }
-                }
-            }
-
-            It 'Should return true from the Test method' {
-                Test-TargetResource @testParams | Should -Be $true
-            }
-        }
-
-        Context -Name "The instance exists and values are NOT in the desired state" -Fixture {
-            BeforeAll {
-                $testParams = @{
-                    ##TODO - Add Parameters
-                    Ensure              = 'Present'
-                    Credential          = $Credential;
-                }
-
-                ##TODO - Mock the Get-Cmdlet to return a drift
-                Mock -CommandName Get-Cmdlet -MockWith {
-                    return @{
-
-                    }
-                }
-            }
-
-            It 'Should return Values from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
-            }
-
-            It 'Should return false from the Test method' {
-                Test-TargetResource @testParams | Should -Be $false
-            }
-
-            It 'Should call the Set method' {
-                Set-TargetResource @testParams
-                ##TODO - Replace the Update-Cmdlet by the appropriate one
-                Should -Invoke -CommandName Update-Cmdlet -Exactly 1
-            }
-        }
-
-        Context -Name 'ReverseDSC Tests' -Fixture {
+        Context -Name '5. ReverseDSC Tests' -Fixture {
             BeforeAll {
                 $Global:CurrentModeIsExport = $true
                 $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
@@ -160,14 +158,31 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential  = $Credential;
                 }
 
-                ##TODO - Mock the Get-Cmdlet to return an instance
-                Mock -CommandName Get-Cmdlet -MockWith {
+                Mock -CommandName Get-MgBetaDeviceAppManagementMobileApp -MockWith {
                     return @{
-
+                        Id                    = "8d027f94-0682-431e-97c1-827d1879fa79"
+                        Description           = "Sample Web App"
+                        Developer             = "Contoso"
+                        DisplayName           = "SampleWebApp"
+                        InformationUrl        = ""
+                        IsFeatured            = $False
+                        Notes                 = ""
+                        Owner                 = ""
+                        PrivacyInformationUrl = ""
+                        Publisher             = "Contoso"
+                        PublishingState       = "published"
+                        RoleScopeTagIds       = @()
+                        AdditionalProperties   = @{
+                            '@odata.type' = '#microsoft.graph.webApp'
+                        }
                     }
                 }
+                Mock -CommandName Get-MgBetaDeviceAppManagementMobileAppAssignment -MockWith{
+                    return $null
+                }
             }
-            It 'Should Reverse Engineer resource from the Export method' {
+
+            It '5.0 Should Reverse Engineer resource from the Export method' {
                 $result = Export-TargetResource @testParams
                 $result | Should -Not -BeNullOrEmpty
             }
