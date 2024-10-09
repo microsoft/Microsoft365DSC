@@ -101,7 +101,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $useManagedBrowser,
+        $UseManagedBrowser,
 
         #endregion
 
@@ -193,10 +193,15 @@ function Get-TargetResource
             Publisher             = $instance.Publisher
             PublishingState       = $instance.PublishingState.ToString()
             RoleScopeTagIds       = $instance.RoleScopeTagIds
-            BundleId              = $instance.BundleId
-            BuildNumber           = $instance.BuildNumber
-            VersionNumber         = $instance.VersionNumber
-            IgnoreVersionDetection = $instance.AdditionalProperties.ignoreVersionDetection
+            AppUrl                = $instance.AppUrl
+            SupersededAppCount    = $instance.SupersededAppCount
+            SupersedingAppCount   = $instance.SupersedingAppCount
+            DependentAppCount     = $instance.DependentAppCount
+            IsAssigned            = $instance.IsAssigned
+            UploadState           = $instance.UploadState
+            CreatedDateTime       = $instance.CreatedDateTime
+            LastModifiedDateTime  = $instance.LastModifiedDateTime
+            UseManagedBrowser     = $instance.UseManagedBrowser
 
             Ensure                = 'Present'
             Credential            = $Credential
@@ -217,15 +222,6 @@ function Get-TargetResource
         }
         else {
             $results.Add('Categories', "")
-        }
-
-        #childApps
-        if($null -ne $instance.AdditionalProperties.childApps)
-        {
-            $results.Add('ChildApps', $instance.AdditionalProperties.childApps)
-        }
-        else {
-            $results.Add('ChildApps', "")
         }
 
         #Assignments
@@ -416,7 +412,7 @@ function Set-TargetResource
         $CreateParameters = ([Hashtable]$PSBoundParameters).clone()
         $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
 
-        $AdditionalProperties = Get-M365DSCIntuneMobileMocOSLobAppAdditionalProperties -Properties ($CreateParameters)
+        $AdditionalProperties = Get-M365DSCIntuneMobileWebAppAdditionalProperties -Properties ($CreateParameters)
         foreach ($key in $AdditionalProperties.keys)
         {
             if ($key -ne '@odata.type')
@@ -476,7 +472,7 @@ function Set-TargetResource
         $UpdateParameters = ([Hashtable]$PSBoundParameters).clone()
         $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
 
-        $AdditionalProperties = Get-M365DSCIntuneMobileMocOSLobAppAdditionalProperties -Properties ($UpdateParameters)
+        $AdditionalProperties = Get-M365DSCIntuneMobileWebAppAdditionalProperties -Properties ($UpdateParameters)
         foreach ($key in $AdditionalProperties.keys)
         {
             if ($key -ne '@odata.type')
@@ -978,44 +974,7 @@ function Get-M365DSCIntuneAppCategoriesAsString
     return $StringContent
 }
 
-function Get-M365DSCIntuneAppChildAppsAsString
-{
-    [CmdletBinding()]
-    [OutputType([System.String])]
-    param(
-        [Parameter(Mandatory = $true)]
-        [System.Object[]]
-        $ChildApps
-    )
-
-    $StringContent = '@('
-    $space = '                '
-    $indent = '    '
-
-    $i = 1
-    foreach ($childApp in $ChildApps)
-    {
-        if ($ChildApps.Count -gt 1)
-        {
-            $StringContent += "`r`n"
-            $StringContent += "$space"
-        }
-
-        $StringContent += "MSFT_DeviceManagementMobileAppChildApp { `r`n"
-        $StringContent += "$($space)$($indent)bundleId  = '" + $childApp.bundleId + "'`r`n"
-        $StringContent += "$($space)$($indent)buildNumber = '" + $childApp.buildNumber + "'`r`n"
-        $StringContent += "$($space)$($indent)versionNumber  = '" + $childApp.versionNumber + "'`r`n"
-        $StringContent += "$space}"
-
-        $i++
-    }
-
-    $StringContent += ')'
-
-    return $StringContent
-}
-
-function Get-M365DSCIntuneMobileMocOSLobAppAdditionalProperties
+function Get-M365DSCIntuneMobileWebAppAdditionalProperties
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
@@ -1027,8 +986,15 @@ function Get-M365DSCIntuneMobileMocOSLobAppAdditionalProperties
     )
 
     $additionalProperties = @(
-        'IgnoreVersionDetection'
-        'ChildApps'
+        'AppUrl'
+        'SupersededAppCount'
+        'SupersedingAppCount'
+        'DependentAppCount'
+        'IsAssigned'
+        'UploadState'
+        'CreatedDateTime'
+        'LastModifiedDateTime'
+        'UseManagedBrowser'
     )
 
     $results = @{'@odata.type' = '#microsoft.graph.webApp' }
