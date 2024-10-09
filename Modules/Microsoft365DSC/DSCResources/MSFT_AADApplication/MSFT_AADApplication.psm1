@@ -62,6 +62,10 @@ function Get-TargetResource
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance]
+        $OptionalClaims,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $Api,
 
         [Parameter()]
@@ -185,8 +189,8 @@ function Get-TargetResource
             Write-Verbose -Message 'An instance of Azure AD App was retrieved.'
 
 
-            $AADBetaApp= Get-MgBetaApplication -Property "id,displayName,appId,authenticationBehaviors" -ApplicationId $ObjectID -ErrorAction SilentlyContinue
-            $AADAppKeyCredentials = Get-MgApplication -Property "keyCredentials" -ApplicationId $ObjectID -ErrorAction SilentlyContinue
+            $AADBetaApp= Get-MgBetaApplication -Property "id,displayName,appId,authenticationBehaviors" -ApplicationId $AADApp.Id -ErrorAction SilentlyContinue
+            $AADAppKeyCredentials = Get-MgApplication -Property "keyCredentials" -ApplicationId $AADApp.Id -ErrorAction SilentlyContinue
 
             $complexAuthenticationBehaviors = @{}
             if ($null -ne $AADBetaApp.authenticationBehaviors.blockAzureADGraphAccess)
@@ -205,6 +209,52 @@ function Get-TargetResource
             {
                 $complexAuthenticationBehaviors = $null
             }
+
+            $complexOptionalClaims = @{}
+            $complexAccessToken = @()
+            foreach ($currentAccessToken in $AADApp.optionalClaims.accessToken)
+            {
+                $myAccessToken = @{}
+                $myAccessToken.Add('Essential', $currentAccessToken.essential)
+                $myAccessToken.Add('Name', $currentAccessToken.name)
+                $myAccessToken.Add('Source', $currentAccessToken.source)
+                if ($myAccessToken.values.Where({$null -ne $_}).Count -gt 0)
+                {
+                    $complexAccessToken += $myAccessToken
+                }
+            }
+            $complexOptionalClaims.Add('AccessToken',$complexAccessToken)
+            $complexIdToken = @()
+            foreach ($currentIdToken in $AADApp.optionalClaims.idToken)
+            {
+                $myIdToken = @{}
+                $myIdToken.Add('Essential', $currentIdToken.essential)
+                $myIdToken.Add('Name', $currentIdToken.name)
+                $myIdToken.Add('Source', $currentIdToken.source)
+                if ($myIdToken.values.Where({$null -ne $_}).Count -gt 0)
+                {
+                    $complexIdToken += $myIdToken
+                }
+            }
+            $complexOptionalClaims.Add('IdToken',$complexIdToken)
+            $complexSaml2Token = @()
+            foreach ($currentSaml2Token in $AADApp.optionalClaims.saml2Token)
+            {
+                $mySaml2Token = @{}
+                $mySaml2Token.Add('Essential', $currentSaml2Token.essential)
+                $mySaml2Token.Add('Name', $currentSaml2Token.name)
+                $mySaml2Token.Add('Source', $currentSaml2Token.source)
+                if ($mySaml2Token.values.Where({$null -ne $_}).Count -gt 0)
+                {
+                    $complexSaml2Token += $mySaml2Token
+                }
+            }
+            $complexOptionalClaims.Add('Saml2Token',$complexSaml2Token)
+            if ($complexOptionalClaims.values.Where({$null -ne $_}).Count -eq 0)
+            {
+                $complexOptionalClaims = $null
+            }
+
 
             $complexApi = @{}
             $complexPreAuthorizedApplications = @()
@@ -241,7 +291,7 @@ function Get-TargetResource
                 $mykeyCredentials.Add('KeyId', $currentkeyCredentials.keyId)
 
 
-                if($null -ne $currentkeyCredentials.Key) 
+                if($null -ne $currentkeyCredentials.Key)
                 {
                     $mykeyCredentials.Add('Key', [convert]::ToBase64String($currentkeyCredentials.key))
                 }
@@ -344,6 +394,7 @@ function Get-TargetResource
                 Owners                  = $OwnersValues
                 ObjectId                = $AADApp.Id
                 AppId                   = $AADApp.AppId
+                OptionalClaims          = $complexOptionalClaims
                 Api                     = $complexApi
                 AuthenticationBehaviors = $complexAuthenticationBehaviors
                 KeyCredentials          = $complexKeyCredentials
@@ -442,6 +493,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String[]]
         $Owners,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $OptionalClaims,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance]
@@ -574,7 +629,7 @@ function Set-TargetResource
     if ($PasswordCredentials)
     {
         Write-Warning -Message "PasswordCredentials is a readonly property and cannot be configured."
-           
+
     }
 
     if ($currentParameters.AvailableToOtherTenants)
@@ -878,7 +933,16 @@ function Set-TargetResource
 
     if($needToUpdateKeyCredentials -and $KeyCredentials)
     {
-        Write-Warning -Message "KeyCredentials is a readonly property and cannot be configured."
+        Write-Verbose -Message "Updating for Azure AD Application {$($currentAADApp.DisplayName)} with KeyCredentials:`r`n$($KeyCredentials| Out-String)"
+
+        if((currentAADApp.KeyCredentials.Length -eq 0 -and $KeyCredentials.Length -eq 1) -or (currentAADApp.KeyCredentials.Length -eq 1 -and $KeyCredentials.Length -eq 0))
+        {
+            Update-MgApplication -ApplicationId $currentAADApp.Id -KeyCredentials $KeyCredentials | Out-Null
+        }
+        else
+        {
+            Write-Warning -Message "KeyCredentials cannot be updated for AAD Applications with more than one KeyCredentials due to technical limitation of Update-MgApplication Cmdlet. Learn more at: https://learn.microsoft.com/en-us/graph/api/application-addkey"
+        }
     }
 }
 
@@ -943,6 +1007,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String[]]
         $Owners,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $OptionalClaims,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance]
@@ -1053,7 +1121,7 @@ function Test-TargetResource
     }
 
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
- 
+
     $testTargetResource = $true
 
     #Compare Cim instances
@@ -1066,13 +1134,13 @@ function Test-TargetResource
             $testResult = Compare-M365DSCComplexObject `
                 -Source ($source) `
                 -Target ($target)
- 
+
             if (-not $testResult)
             {
                 Write-Verbose "TestResult returned False for $source"
                 $testTargetResource = $false
             }
-            else { 
+            else {
                 $ValuesToCheck.Remove($key) | Out-Null
             }
         }
@@ -1241,6 +1309,47 @@ function Export-TargetResource
                         }
                     }
 
+
+                    if ($null -ne $Results.OptionalClaims)
+                    {
+                        $complexMapping = @(
+                            @{
+                                Name = 'OptionalClaims'
+                                CimInstanceName = 'MicrosoftGraphOptionalClaims'
+                                IsRequired = $False
+                            }
+                            @{
+                                Name = 'AccessToken'
+                                CimInstanceName = 'MicrosoftGraphOptionalClaim'
+                                IsRequired = $False
+                            }
+                            @{
+                                Name = 'IdToken'
+                                CimInstanceName = 'MicrosoftGraphOptionalClaim'
+                                IsRequired = $False
+                            }
+                            @{
+                                Name = 'Saml2Token'
+                                CimInstanceName = 'MicrosoftGraphOptionalClaim'
+                                IsRequired = $False
+                            }
+                        )
+                        $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                        -ComplexObject $Results.OptionalClaims `
+                        -CIMInstanceName 'MicrosoftGraphoptionalClaims' `
+                        -ComplexTypeMapping $complexMapping
+
+                        if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                        {
+                            $Results.OptionalClaims = $complexTypeStringResult
+                        }
+                        else
+                        {
+                            $Results.Remove('OptionalClaims') | Out-Null
+                        }
+                    }
+
+
                     if ($null -ne $Results.KeyCredentials)
                     {
                         $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
@@ -1302,7 +1411,10 @@ function Export-TargetResource
                         $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
                             -ParameterName 'Permissions'
                     }
-
+                    if ($Results.OptionalClaims)
+                    {
+                        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "OptionalClaims" -IsCIMArray:$False
+                    }
                     if ($Results.AuthenticationBehaviors)
                     {
                         $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "AuthenticationBehaviors" -IsCIMArray:$False

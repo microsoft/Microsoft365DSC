@@ -1,0 +1,32 @@
+{
+    "resourceName": "IntuneMobileAppsWin32LobApp",
+    "description": "Configures a resource for navigation property for Intune mobile app.",
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [
+                    {
+                        "name": "DeviceManagementApps.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "DeviceManagementApps.ReadWrite.All"
+                    }
+                ]
+            },
+            "application": {
+                "read": [
+                    {
+                        "name": "DeviceManagementApps.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "DeviceManagementApps.ReadWrite.All"
+                    }
+                ]
+            }
+        }
+    }
+}

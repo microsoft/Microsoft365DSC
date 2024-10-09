@@ -147,6 +147,31 @@
 | **RecordingTimeframePostEventInSec** | Write | String | Official documentation to come. | |
 | **BandwidthCapInMb** | Write | String | Official documentation to come. | |
 | **OfflineRecordingStorageLimitInMb** | Write | String | Official documentation to come. | |
+| **AdaptiveProtectionEnabled** | Write | Boolean | Determines if Adaptive Protection is enabled for Purview. | |
+| **AdaptiveProtectionHighProfileSourceType** | Write | UInt32 | Official documentation to come. | |
+| **AdaptiveProtectionHighProfileConfirmedIssueSeverity** | Write | UInt32 | Official documentation to come. | |
+| **AdaptiveProtectionHighProfileGeneratedIssueSeverity** | Write | UInt32 | Official documentation to come. | |
+| **AdaptiveProtectionHighProfileInsightSeverity** | Write | UInt32 | Official documentation to come. | |
+| **AdaptiveProtectionHighProfileInsightCount** | Write | UInt32 | Official documentation to come. | |
+| **AdaptiveProtectionHighProfileInsightTypes** | Write | StringArray[] | Official documentation to come. | |
+| **AdaptiveProtectionHighProfileConfirmedIssue** | Write | Boolean | Official documentation to come. | |
+| **AdaptiveProtectionMediumProfileSourceType** | Write | UInt32 | Official documentation to come. | |
+| **AdaptiveProtectionMediumProfileConfirmedIssueSeverity** | Write | UInt32 | Official documentation to come. | |
+| **AdaptiveProtectionMediumProfileGeneratedIssueSeverity** | Write | UInt32 | Official documentation to come. | |
+| **AdaptiveProtectionMediumProfileInsightSeverity** | Write | UInt32 | Official documentation to come. | |
+| **AdaptiveProtectionMediumProfileInsightCount** | Write | UInt32 | Official documentation to come. | |
+| **AdaptiveProtectionMediumProfileInsightTypes** | Write | StringArray[] | Official documentation to come. | |
+| **AdaptiveProtectionMediumProfileConfirmedIssue** | Write | Boolean | Official documentation to come. | |
+| **AdaptiveProtectionLowProfileSourceType** | Write | UInt32 | Official documentation to come. | |
+| **AdaptiveProtectionLowProfileConfirmedIssueSeverity** | Write | UInt32 | Official documentation to come. | |
+| **AdaptiveProtectionLowProfileGeneratedIssueSeverity** | Write | UInt32 | Official documentation to come. | |
+| **AdaptiveProtectionLowProfileInsightSeverity** | Write | UInt32 | Official documentation to come. | |
+| **AdaptiveProtectionLowProfileInsightCount** | Write | UInt32 | Official documentation to come. | |
+| **AdaptiveProtectionLowProfileInsightTypes** | Write | StringArray[] | Official documentation to come. | |
+| **AdaptiveProtectionLowProfileConfirmedIssue** | Write | Boolean | Official documentation to come. | |
+| **RetainSeverityAfterTriage** | Write | Boolean | Official documentation to come. | |
+| **LookbackTimeSpan** | Write | UInt32 | Official documentation to come. | |
+| **ProfileInScopeTimeSpan** | Write | UInt32 | Official documentation to come. | |
 | **Ensure** | Write | String | Present ensures the instance exists, absent ensures it is removed. | `Absent`, `Present` |
 | **Credential** | Write | PSCredential | Credentials of the workload's Admin | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |

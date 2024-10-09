@@ -212,6 +212,30 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             DisplayName = 'anexas_test_2'
                         } -ClientOnly
                     )
+                    OptionalClaims = New-CimInstance -ClassName MSFT_MicrosoftGraphoptionalClaims -Property @{
+                        Saml2Token = [CimInstance[]]@(
+                            New-CimInstance -ClassName MSFT_MicrosoftGraphOptionalClaim -Property @{
+                                Name = 'groups'
+                                Essential = $False
+                            } -ClientOnly
+                        )
+                        AccessToken = [CimInstance[]]@(
+                            New-CimInstance -ClassName MSFT_MicrosoftGraphOptionalClaim -Property @{
+                                Name = 'groups'
+                                Essential = $False
+                            } -ClientOnly
+                        )
+                        IdToken = [CimInstance[]]@(
+                            New-CimInstance -ClassName MSFT_MicrosoftGraphOptionalClaim -Property @{
+                                Name = 'acrs'
+                                Essential = $False
+                            } -ClientOnly
+                            New-CimInstance -ClassName MSFT_MicrosoftGraphOptionalClaim -Property @{
+                                Name = 'groups'
+                                Essential = $False
+                            } -ClientOnly
+                        )
+                    } -ClientOnly
                     AuthenticationBehaviors   = New-CimInstance -ClassName MSFT_MicrosoftGraphAuthenticationBehaviors -Property @{
                              blockAzureADGraphAccess       = $false
                              removeUnverifiedEmailClaim    = $true
@@ -249,6 +273,30 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     $AADApp | Add-Member -MemberType NoteProperty -Name Description -Value 'App description'
                     $AADApp | Add-Member -MemberType NoteProperty -Name GroupMembershipClaims -Value 0
                     $AADApp | Add-Member -MemberType NoteProperty -Name SignInAudience -Value 'AzureADMyOrg'
+                    $AADApp | Add-Member -MemberType NoteProperty -Name OptionalClaims -Value @{
+                            Saml2Token = @(
+                                @{
+                                    Name = 'groups'
+                                    Essential = $False
+                                }
+                            )
+                            AccessToken = @(
+                                @{
+                                    Name = 'groups'
+                                    Essential = $False
+                                }
+                            )
+                            IdToken = @(
+                                @{
+                                    Name = 'acrs'
+                                    Essential = $False
+                                }
+                                @{
+                                    Name = 'groups'
+                                    Essential = $False
+                                }
+                            )
+                    }
                     $AADApp | Add-Member -MemberType NoteProperty -Name Web -Value @{
                         HomepageUrl  = 'https://app.contoso.com'
                         LogoutURL    = 'https://app.contoso.com/logout'

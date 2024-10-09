@@ -7,9 +7,9 @@ $Global:SessionSecurityCompliance = $null
 $Global:DefaultComponents = @('SPOApp', 'SPOSiteDesign')
 
 $Global:FullComponents = @('AADGroup', 'AADServicePrincipal', 'ADOSecurityPolicy', 'AzureSubscription','FabricAdminTenantSettings', `
-        'EXOCalendarProcessing', 'EXODistributionGroup', 'EXOMailboxAutoReplyConfiguration', `
+        'DefenderSubscriptionPlan', 'EXOCalendarProcessing', 'EXODistributionGroup', 'EXOMailboxAutoReplyConfiguration', `
         'EXOMailboxPermission','EXOMailboxCalendarFolder','EXOMailboxSettings', 'EXOManagementRole', 'O365Group', 'AADUser', `
-        'PlannerPlan', 'PlannerBucket', 'PlannerTask', 'PPPowerAppsEnvironment', 'PPTenantSettings', `
+        'PlannerPlan', 'PlannerBucket', 'PlannerTask', 'PPPowerAppsEnvironment', 'PPTenantSettings', 'SentinelSetting', 'SentinelWatchlist', `
         'SPOSiteAuditSettings', 'SPOSiteGroup', 'SPOSite', 'SPOUserProfileProperty', 'SPOPropertyBag', 'TeamsTeam', 'TeamsChannel', `
         'TeamsUser', 'TeamsChannelTab', 'TeamsOnlineVoicemailUserSettings', 'TeamsUserCallingSettings', 'TeamsUserPolicyAssignment')
 #endregion
@@ -1645,6 +1645,58 @@ function Remove-M365DSCInvalidDependenciesFromSession
                 }
             }
         }
+    }
+}
+
+<#
+.Description
+This function retrieves the various endpoint urls based on the cloud environment.
+
+.Example
+Get-M365DSCAPIEndpoint -TenantId 'contoso.onmicrosoft.com'
+
+.Functionality
+Private
+#>
+function Get-M365DSCAPIEndpoint
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $TenantId
+    )
+
+    try
+    {
+        $webrequest = Invoke-WebRequest -Uri "https://login.windows.net/$($TenantId)/.well-known/openid-configuration" -UseBasicParsing
+        $response = ConvertFrom-Json $webrequest.Content
+        $tenantRegionScope = $response."tenant_region_scope"
+
+        $endpoints = @{
+            AzureManagement = $null
+        }
+
+        switch ($tenantRegionScope)
+        {
+            'USGov'
+            {
+                if ($null -ne $response.'tenant_region_sub_scope' -and $response.'tenant_region_sub_scope' -eq 'DODCON')
+                {
+                    $endpoints.AzureManagement = "https://management.usgovcloudapi.net"
+                }
+            }
+            default
+            {
+                $endpoints.AzureManagement = "https://management.azure.com"
+            }
+        }
+        return $endpoints
+    }
+    catch
+    {
+        throw $_
     }
 }
 
@@ -3773,6 +3825,10 @@ function Get-M365DSCExportContentForResource
     {
         $primaryKey = $Results.DomainName
     }
+    elseif ($Keys.Contains('UserPrincipalName'))
+    {
+        $primaryKey = $Results.UserPrincipalName
+    }
 
     if ([String]::IsNullOrEmpty($primaryKey) -and `
         -not $Keys.Contains('IsSingleInstance'))
@@ -5103,6 +5159,7 @@ Export-ModuleMember -Function @(
     'Export-M365DSCConfiguration',
     'Get-AllSPOPackages',
     'Get-M365DSCAllResources',
+    'Get-M365DSCAPIEndpoint'
     'Get-M365DSCAuthenticationMode',
     'Get-M365DSCComponentsForAuthenticationType',
     'Get-M365DSCComponentsWithMostSecureAuthenticationType',

@@ -10,7 +10,6 @@
 | **MailTipsLargeAudienceThreshold** | Write | UInt32 | Specifies what a large audience is. | |
 | **MailTipsMailboxSourcedTipsEnabled** | Write | Boolean | Specifies whether MailTips that rely on mailbox data (out-of-office or full mailbox) are enabled. | |
 | **MailTipsExternalRecipientsTipsEnabled** | Write | Boolean | Specifies whether MailTips for external recipients are enabled. | |
-| **Ensure** | Write | String | Specifies if this MailTip should exist. | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials of the Exchange Global Admin | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
 | **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. | |
@@ -69,90 +68,10 @@ Configuration Example
         {
             IsSingleInstance                      = 'Yes'
             MailTipsAllTipsEnabled                = $True
-            MailTipsGroupMetricsEnabled           = $True
-            #MailTipsLargeAudienceThreshold        = 100
-            MailTipsMailboxSourcedTipsEnabled     = $True
-            MailTipsExternalRecipientsTipsEnabled = $True
-            Ensure                                = "Present"
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            CertificateThumbprint = $CertificateThumbprint
-        }
-    }
-}
-```
-
-### Example 2
-
-This example is used to test new resources and showcase the usage of new resources being worked on.
-It is not meant to use as a production baseline.
-
-```powershell
-Configuration Example
-{
-    param(
-        [Parameter()]
-        [System.String]
-        $ApplicationId,
-
-        [Parameter()]
-        [System.String]
-        $TenantId,
-
-        [Parameter()]
-        [System.String]
-        $CertificateThumbprint
-    )
-    Import-DscResource -ModuleName Microsoft365DSC
-
-    node localhost
-    {
-        EXOMailTips 'OrgWideMailTips'
-        {
-            IsSingleInstance                      = 'Yes'
-            MailTipsAllTipsEnabled                = $True
             MailTipsGroupMetricsEnabled           = $False # Updated Property
             #MailTipsLargeAudienceThreshold        = 100
             MailTipsMailboxSourcedTipsEnabled     = $True
             MailTipsExternalRecipientsTipsEnabled = $True
-            Ensure                                = "Present"
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            CertificateThumbprint = $CertificateThumbprint
-        }
-    }
-}
-```
-
-### Example 3
-
-This example is used to test new resources and showcase the usage of new resources being worked on.
-It is not meant to use as a production baseline.
-
-```powershell
-Configuration Example
-{
-    param(
-        [Parameter()]
-        [System.String]
-        $ApplicationId,
-
-        [Parameter()]
-        [System.String]
-        $TenantId,
-
-        [Parameter()]
-        [System.String]
-        $CertificateThumbprint
-    )
-    Import-DscResource -ModuleName Microsoft365DSC
-
-    node localhost
-    {
-        EXOMailTips 'OrgWideMailTips'
-        {
-            IsSingleInstance = 'Yes'
-            Ensure           = "Absent"
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint

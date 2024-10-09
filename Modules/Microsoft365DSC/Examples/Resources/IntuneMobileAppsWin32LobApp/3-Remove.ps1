@@ -8,19 +8,21 @@ Configuration Example
     param(
         [Parameter()]
         [System.String]
-        $ApplicationId,
+        $Id,
 
         [Parameter()]
         [System.String]
-        $TenantId,
-
-        [Parameter()]
-        [System.String]
-        $CertificateThumbprint
+        $DisplayName
     )
+
     Import-DscResource -ModuleName Microsoft365DSC
     node localhost
     {
-        
+        IntuneMobileAppsWin32LobApp "IntuneMobileAppsWin32LobApp-Data Management"
+        {
+            Id                   = "a1fc9fe2-728d-4867-9a72-a61e18f8c606";
+            DisplayName          = "Custom Data Management";
+            Ensure               = "Absent";
+        }
     }
 }
