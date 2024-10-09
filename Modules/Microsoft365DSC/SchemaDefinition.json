@@ -759,6 +759,11 @@
                            },
                            {
                                "CIMType":  "String",
+                               "Name":  "ApplicationTemplateId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
                                "Name":  "Ensure",
                                "Option":  "Write"
                            },
