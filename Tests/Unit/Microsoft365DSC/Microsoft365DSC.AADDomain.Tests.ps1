@@ -79,7 +79,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should create a new instance from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName New-MgBetaDomain-Exactly 1
+                Should -Invoke -CommandName New-MgBetaDomain -Exactly 1
             }
         }
 
@@ -119,7 +119,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should remove the instance from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Remove-MgBetaDomain -Exactly 1
+                Should -Invoke -CommandName Invoke-MgBetaForceDomainDelete -Exactly 1
             }
         }
 
@@ -141,6 +141,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-MgBetaDomain -MockWith {
                     return @{
                         Id                               = "contoso.com";
+                        AuthenticationType               = "Managed";
                         IsAdminManaged                   = $True;
                         IsDefault                        = $True;
                         IsRoot                           = $True;
