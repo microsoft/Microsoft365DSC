@@ -23,6 +23,9 @@
   * Initial Release
 * IntuneAccountProtectionPolicy
   * Added deprecation notice.
+* IntuneAccountProtectionPolicyWindows10
+  * Initial Release
+    FIXES [#5073](https://github.com/microsoft/Microsoft365DSC/issues/5073)
 * IntuneAppAndBrowserIsolationPolicyWindows10
   * Initial release.
     FIXES [#3028](https://github.com/microsoft/Microsoft365DSC/issues/3028)
@@ -37,6 +40,9 @@
     Settings Catalog. FIXES [#5086](https://github.com/microsoft/Microsoft365DSC/issues/5086)
   * Add Set support for secret Settings Catalog values
   * Removed unused functions
+  * Add support for device / user scoped settings.
+* ResourceGenerator
+  * Add support for device / user scoped settings.
 * DEPENDENCIES
   * Updated DSCParser to version 2.0.0.11
   * Updated ReverseDSC to version 2.0.0.21
