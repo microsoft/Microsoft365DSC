@@ -21,9 +21,13 @@
   * Initial release.
 * EXOMigrationEndpoint
   * Initial Release
+* IntuneAccountProtectionPolicy
+  * Added deprecation notice.
 * IntuneAppAndBrowserIsolationPolicyWindows10
   * Initial release.
     FIXES [#3028](https://github.com/microsoft/Microsoft365DSC/issues/3028)
+* IntuneDeviceConfigurationIdentityProtectionPolicyWindows10
+  * Added deprecation notice.
 * IntuneEndpointDetectionAndResponsePolicyWindows10
   * Migrate to new Settings Catalog cmdlets.
 * IntuneMobileAppsMacOSLobApp

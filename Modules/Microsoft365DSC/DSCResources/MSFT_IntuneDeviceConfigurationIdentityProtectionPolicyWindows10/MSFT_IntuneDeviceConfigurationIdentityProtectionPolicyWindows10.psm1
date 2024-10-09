@@ -214,7 +214,7 @@ function Get-TargetResource
             AccessTokens                                 = $AccessTokens
             #endregion
         }
-        
+
         $assignmentsValues = Get-MgBetaDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId $Id
         $assignmentResult = @()
         if ($assignmentsValues.Count -gt 0)
@@ -358,6 +358,9 @@ function Set-TargetResource
         [System.String[]]
         $AccessTokens
     )
+
+    Write-Warning -Message "The resource 'IntuneDeviceConfigurationIdentityProtectionPolicyWindows10' is deprecated. It will be removed in a future release. Please use 'IntuneAccountProtectionPolicyWindows10' instead."
+    Write-Warning -Message "For more information, please visit https://learn.microsoft.com/en-us/mem/intune/fundamentals/whats-new#consolidation-of-intune-profiles-for-identity-protection-and-account-protection-"
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
