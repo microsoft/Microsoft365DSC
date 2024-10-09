@@ -1,7 +1,7 @@
 [ClassVersion("1.0.0.0"), FriendlyName("AADDomain")]
 class MSFT_AADDomain : OMI_BaseResource
 {
-    [Key, Description("")] String Id;
+    [Key, Description("Custom domain name.")] String Id;
     [Write, Description("Indicates the configured authentication type for the domain. The value is either Managed or Federated. Managed indicates a cloud managed domain where Microsoft Entra ID performs user authentication. Federated indicates authentication is federated with an identity provider such as the tenant's on-premises Active Directory via Active Directory Federation Services.")] String AuthenticationType;
     [Write, Description("This property is always null except when the verify action is used. When the verify action is used, a domain entity is returned in the response. The availabilityStatus property of the domain entity in the response is either AvailableImmediately or EmailVerifiedDomainTakeoverScheduled.")] String AvailabilityStatus;
     [Write, Description("The value of the property is false if the DNS record management of the domain is delegated to Microsoft 365. Otherwise, the value is true. Not nullable")] Boolean IsAdminManaged;
