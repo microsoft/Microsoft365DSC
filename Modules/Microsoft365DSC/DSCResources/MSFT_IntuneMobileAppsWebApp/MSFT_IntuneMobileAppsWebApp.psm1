@@ -143,10 +143,10 @@ function Get-TargetResource
     try
     {
         $instance = Get-MgBetaDeviceAppManagementMobileApp `
-            -Filter "(isof('microsoft.graph.macOSLobApp') and displayName eq '$DisplayName')" `
+            -Filter "(isof('microsoft.graph.webApp') and displayName eq '$DisplayName')" `
             -ExpandProperty "categories,assignments" `
             -ErrorAction SilentlyContinue | Where-Object `
-            -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.macOSLobApp' }
+            -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.webApp' }
 
         if ($null -eq $instance)
         {
@@ -155,7 +155,7 @@ function Get-TargetResource
                 -MobileAppId $Id `
                 -ExpandProperty "categories,assignments" `
                 -ErrorAction Stop | Where-Object `
-                -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.macOSLobApp' }
+                -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.webApp' }
         }
 
         if ($null -eq $instance)
@@ -403,7 +403,7 @@ function Set-TargetResource
     # CREATE
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        Write-Host "Create MacOS app: $DisplayName"
+        Write-Host "Create web app: $DisplayName"
 
         $CreateParameters = ([Hashtable]$PSBoundParameters).clone()
         $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
@@ -462,7 +462,7 @@ function Set-TargetResource
     # UPDATE
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Host "Update MacOS app: $DisplayName"
+        Write-Host "Update web app: $DisplayName"
 
         $PSBoundParameters.Remove('Assignments') | Out-Null
         $UpdateParameters = ([Hashtable]$PSBoundParameters).clone()
@@ -506,7 +506,7 @@ function Set-TargetResource
          }
 
         Update-MgBetaDeviceAppManagementMobileApp -MobileAppId $currentInstance.Id @UpdateParameters
-        Write-Host "Updated MacOS App: $DisplayName."
+        Write-Host "Updated web App: $DisplayName."
 
         #Assignments
         $assignmentsHash = ConvertTo-IntuneMobileAppAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
@@ -517,7 +517,7 @@ function Set-TargetResource
     # REMOVE
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Host "Remove MacOS app: $DisplayName"
+        Write-Host "Remove web app: $DisplayName"
         Remove-MgBetaDeviceAppManagementMobileApp -MobileAppId $currentInstance.Id -Confirm:$false
     }
 }
@@ -659,7 +659,7 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of Intune Mobile MacOS App: {$DisplayName}"
+    Write-Verbose -Message "Testing configuration of Intune Mobile web App: {$DisplayName}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     if (-not (Test-M365DSCAuthenticationParameter -BoundParameters $CurrentValues))
@@ -769,10 +769,10 @@ function Export-TargetResource
     {
         $Script:ExportMode = $true
         [array] $Script:getInstances = Get-MgBetaDeviceAppManagementMobileApp `
-            -Filter "isof('microsoft.graph.macOSLobApp')" `
+            -Filter "isof('microsoft.graph.webApp')" `
             -ExpandProperty "categories,assignments" `
             -ErrorAction Stop | Where-Object `
-            -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.macOSLobApp' }
+            -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.webApp' }
 
         $i = 1
         $dscContent = ''
@@ -1031,7 +1031,7 @@ function Get-M365DSCIntuneMobileMocOSLobAppAdditionalProperties
         'ChildApps'
     )
 
-    $results = @{'@odata.type' = '#microsoft.graph.macOSLobApp' }
+    $results = @{'@odata.type' = '#microsoft.graph.webApp' }
     $cloneProperties = $Properties.clone()
     foreach ($property in $cloneProperties.Keys)
     {
