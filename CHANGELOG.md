@@ -2,17 +2,52 @@
 
 # UNRELEASED
 
+* AADAdminConsentRequestPolicy
+  * Initial release.
+* AADApplication
+  * Fixed an issue trying to retrieve the beta instance.
+  * Added support for OnPremisesPublishing.
+* AADAuthenticationRequirement
+  * Initial release.
+* AADConnectorGroupApplicationProxy
+  * Initial release.
 * AADDeviceRegistrationPolicy
   * Initial release.
 * AADEntitlementManagementSettings
   * Added support for ApplicationSecret
 * AADIdentityGovernanceLifecycleWorkflow
   * Initial release.
+* AADLifecycleWorkflowSettings
+  * Initial release.
 * ADOPermissionGroupSettings
   * Initial release.
+* EXOMigrationEndpoint
+  * Initial Release
+* IntuneAccountProtectionPolicy
+  * Added deprecation notice.
+* IntuneAccountProtectionPolicyWindows10
+  * Initial Release
+    FIXES [#5073](https://github.com/microsoft/Microsoft365DSC/issues/5073)
+* IntuneAppAndBrowserIsolationPolicyWindows10
+  * Initial release.
+    FIXES [#3028](https://github.com/microsoft/Microsoft365DSC/issues/3028)
+* IntuneDeviceConfigurationIdentityProtectionPolicyWindows10
+  * Added deprecation notice.
+* IntuneEndpointDetectionAndResponsePolicyWindows10
+  * Migrate to new Settings Catalog cmdlets.
+* IntuneMobileAppsMacOSLobApp
+  * Initial release
 * M365DSCDRGUtil
   * Fixes an issue for the handling of skipped one-property elements in the
     Settings Catalog. FIXES [#5086](https://github.com/microsoft/Microsoft365DSC/issues/5086)
+  * Add Set support for secret Settings Catalog values
+  * Removed unused functions
+  * Add support for device / user scoped settings.
+* ResourceGenerator
+  * Add support for device / user scoped settings.
+* DEPENDENCIES
+  * Updated DSCParser to version 2.0.0.11
+  * Updated ReverseDSC to version 2.0.0.21
 
 # 1.24.1002.1
 
@@ -28,8 +63,6 @@
 * AADAuthenticationMethodPolicy
   * Added ReportSuspiciousActivitySettings
 * AADAuthenticationMethodPolicyHardware
-  * Initial release.
-* AADAuthenticationRequirement
   * Initial release.
 * AADEntitlementManagementSettings
   * Initial release.

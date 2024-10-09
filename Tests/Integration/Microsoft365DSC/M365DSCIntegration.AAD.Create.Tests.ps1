@@ -149,6 +149,16 @@
                     SignInFrequencyValue                     = 1;
                     State                                    = "disabled";
                 }
+                AADConnectorGroupApplicationProxy 'AADConnectorGroupApplicationProxy-testgroup'
+                {
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
+                    Ensure                = "Present";
+                    Id                    = "4984dcf7-d9e9-4663-90b4-5db09f92a669";
+                    Name                  = "testgroup";
+                    Region                = "nam";
+                }
                 AADCrossTenantAccessPolicyConfigurationPartner 'AADCrossTenantAccessPolicyConfigurationPartner'
                 {
                     PartnerTenantId              = "e7a80bcf-696e-40ca-8775-a7f85fbb3ebc"; # O365DSC.onmicrosoft.com

@@ -19,8 +19,18 @@ Configuration Example
         $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
+
     node localhost
     {
-        
+        AADConnectorGroupApplicationProxy "AADConnectorGroupApplicationProxy-testgroup"
+        {
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
+            Ensure                = "Present";
+            Id                    = "4984dcf7-d9e9-4663-90b4-5db09f92a669";
+            Name                  = "testgroup";
+            Region                = "nam";
+        }
     }
 }

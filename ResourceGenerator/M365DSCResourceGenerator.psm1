@@ -245,20 +245,87 @@ function New-M365DSCResource
             }
 
             $templateSettings = @()
-            $allSettingDefinitions = $SettingsCatalogSettingTemplates.SettingDefinitions
-            foreach ($settingTemplate in $SettingsCatalogSettingTemplates)
+            $deviceSettingsCatalogTemplates = $SettingsCatalogSettingTemplates | Where-Object -FilterScript { $_.SettingInstanceTemplate.SettingDefinitionId.StartsWith("device_") }
+            $deviceSettingDefinitions = $deviceSettingsCatalogTemplates.SettingDefinitions
+
+            $userSettingsCatalogTemplates = $SettingsCatalogSettingTemplates | Where-Object -FilterScript { $_.SettingInstanceTemplate.SettingDefinitionId.StartsWith("user_") }
+            $userSettingDefinitions = $userSettingsCatalogTemplates.SettingDefinitions
+
+            $containsDeviceAndUserSettings = $false
+            if ($deviceSettingDefinitions.Count -gt 0 -and $userSettingDefinitions.Count -gt 0)
             {
-                $templateSettings += New-SettingsCatalogSettingDefinitionSettingsFromTemplate `
-                    -FromRoot `
-                    -SettingTemplate $settingTemplate `
-                    -AllSettingDefinitions $allSettingDefinitions
+                $containsDeviceAndUserSettings = $true
             }
 
-            $definitionSettings = @()
-            foreach ($templateSetting in $templateSettings)
+            $deviceTemplateSettings = @()
+            foreach ($deviceSettingTemplate in $deviceSettingsCatalogTemplates)
             {
-                $definitionSettings += New-ParameterDefinitionFromSettingsCatalogTemplateSetting `
-                    -TemplateSetting $templateSetting
+                $deviceTemplateSettings += New-SettingsCatalogSettingDefinitionSettingsFromTemplate `
+                    -FromRoot `
+                    -SettingTemplate $deviceSettingTemplate `
+                    -AllSettingDefinitions $deviceSettingDefinitions
+            }
+
+            $userTemplateSettings = @()
+            foreach ($userSettingTemplate in $userSettingsCatalogTemplates)
+            {
+                $userTemplateSettings += New-SettingsCatalogSettingDefinitionSettingsFromTemplate `
+                    -FromRoot `
+                    -SettingTemplate $userSettingTemplate `
+                    -AllSettingDefinitions $userSettingDefinitions
+            }
+
+            $deviceDefinitionSettings = @()
+            foreach ($deviceTemplateSetting in $deviceTemplateSettings)
+            {
+                $deviceDefinitionSettings += New-ParameterDefinitionFromSettingsCatalogTemplateSetting `
+                    -TemplateSetting $deviceTemplateSetting
+            }
+
+            $userDefinitionSettings = @()
+            foreach ($userTemplateSetting in $userTemplateSettings)
+            {
+                $userDefinitionSettings += New-ParameterDefinitionFromSettingsCatalogTemplateSetting `
+                    -TemplateSetting $userTemplateSetting
+            }
+
+            if ($containsDeviceAndUserSettings)
+            {
+                $definitionSettings = @{
+                    PowerShell = @(
+
+@"
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        `$DeviceSettings
+"@,
+@"
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        `$UserSettings
+"@
+                    )
+                    MOFInstance = @(
+@"
+[ClassVersion("1.0.0.0")]
+class MSFT_MicrosoftGraphIntuneSettingsCatalogDeviceSettings
+{
+$($deviceDefinitionSettings.MOF -join "`r`n")
+};
+"@,
+@"
+[ClassVersion("1.0.0.0")]
+class MSFT_MicrosoftGraphIntuneSettingsCatalogUserSettings
+{
+$($userDefinitionSettings.MOF -join "`r`n")
+};
+"@
+                    )
+                }
+            }
+            else
+            {
+                $definitionSettings = $deviceDefinitionSettings + $userDefinitionSettings
             }
 
             $parameterString += $definitionSettings.PowerShell -join ",`r`n`r`n"
@@ -475,7 +542,7 @@ function New-M365DSCResource
             -ErrorAction Stop
 
         `$policySettings = @{}
-        `$policySettings = Export-IntuneSettingCatalogPolicySettings -Settings `$settings -ReturnHashtable `$policySettings `r`n
+        `$policySettings = Export-IntuneSettingCatalogPolicySettings -Settings `$settings -ReturnHashtable `$policySettings$(if ($containsDeviceAndUserSettings) { ' -ContainsDeviceAndUserSettings' })`r`n
 "@
             $settingsCatalogAddSettings = "        `$results += `$policySettings`r`n`r`n"
         }
@@ -595,7 +662,7 @@ function New-M365DSCResource
             $defaultCreateParameters = @"
         `$settings = Get-IntuneSettingCatalogPolicySetting ``
             -DSCParams ([System.Collections.Hashtable]`$BoundParameters) ``
-            -TemplateId `$templateReferenceId
+            -TemplateId `$templateReferenceId$(if ($containsDeviceAndUserSettings) { " ```r`n            -ContainsDeviceAndUserSettings" })`r`n
 
         `$createParameters = @{
             Name              = `$DisplayName
@@ -718,7 +785,7 @@ function New-M365DSCResource
             $defaultUpdateParameters = @"
         `$settings = Get-IntuneSettingCatalogPolicySetting ``
             -DSCParams ([System.Collections.Hashtable]`$BoundParameters) ``
-            -TemplateId `$templateReferenceId
+            -TemplateId `$templateReferenceId$(if ($containsDeviceAndUserSettings) { " ```r`n            -ContainsDeviceAndUserSettings" })`r`n
 
         Update-IntuneDeviceConfigurationPolicy ``
             -DeviceConfigurationPolicyId `$currentInstance.Id ``
