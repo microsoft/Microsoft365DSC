@@ -1,5 +1,5 @@
-[ClassVersion("1.0.0.0"), FriendlyName("IntuneAppCategory")]
-class MSFT_IntuneAppCategory : OMI_BaseResource
+[ClassVersion("1.0.0.0"), FriendlyName("IntuneMobileAppsWin32LobApp")]
+class MSFT_IntuneMobileAppsWin32LobApp : OMI_BaseResource
 {
     [Key, Description("The name of the app.")] String DisplayName;
     [Write, Description("The unique identifier for an entity. Read-only.")] String Id;
