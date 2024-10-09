@@ -6,6 +6,8 @@
   * Initial release.
 * AADEntitlementManagementSettings
   * Added support for ApplicationSecret
+* AADIdentityGovernanceLifecycleWorkflow
+  * Initial release.
 * ADOPermissionGroupSettings
   * Initial release.
 * M365DSCDRGUtil
