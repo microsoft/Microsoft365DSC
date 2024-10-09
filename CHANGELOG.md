@@ -7,6 +7,7 @@
 * AADApplication
   * Fixed an issue trying to retrieve the beta instance.
   * Added support for OnPremisesPublishing.
+  * Added support for ApplicationTemplate.
 * AADAuthenticationRequirement
   * Initial release.
 * AADConnectorGroupApplicationProxy
