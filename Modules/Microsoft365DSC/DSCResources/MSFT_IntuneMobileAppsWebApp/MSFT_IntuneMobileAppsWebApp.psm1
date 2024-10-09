@@ -31,10 +31,6 @@ function Get-TargetResource
         $IsFeatured,
 
         [Parameter()]
-        [System.Boolean]
-        $IgnoreVersionDetection,
-
-        [Parameter()]
         [System.String]
         $Notes,
 
@@ -60,18 +56,6 @@ function Get-TargetResource
         $RoleScopeTagIds,
 
         [Parameter()]
-        [System.String]
-        $BundleId,
-
-        [Parameter()]
-        [System.String]
-        $BuildNumber,
-
-        [Parameter()]
-        [System.String]
-        $VersionNumber,
-
-        [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Categories,
 
@@ -80,12 +64,44 @@ function Get-TargetResource
         $Assignments,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
-        $ChildApps,
-
-        [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance]
         $LargeIcon,
+
+        [Parameter()]
+        [System.String]
+        $AppUrl,
+
+        [Parameter()]
+        [System.Int32]
+        $SupersededAppCount,
+
+        [Parameter()]
+        [System.Int32]
+        $SupersedingAppCount,
+
+        [Parameter()]
+        [System.Int32]
+        $DependentAppCount,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsAssigned,
+
+        [Parameter()]
+        [System.Int32]
+        $UploadState,
+
+        [Parameter()]
+        [System.DateTime]
+        $CreatedDateTime,
+
+        [Parameter()]
+        [System.DateTime]
+        $LastModifiedDateTime,
+
+        [Parameter()]
+        [System.Boolean]
+        $useManagedBrowser,
 
         #endregion
 
@@ -284,10 +300,6 @@ function Set-TargetResource
         $IsFeatured,
 
         [Parameter()]
-        [System.Boolean]
-        $IgnoreVersionDetection,
-
-        [Parameter()]
         [System.String]
         $Notes,
 
@@ -313,18 +325,6 @@ function Set-TargetResource
         $RoleScopeTagIds,
 
         [Parameter()]
-        [System.String]
-        $BundleId,
-
-        [Parameter()]
-        [System.String]
-        $BuildNumber,
-
-        [Parameter()]
-        [System.String]
-        $VersionNumber,
-
-        [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Categories,
 
@@ -333,12 +333,20 @@ function Set-TargetResource
         $Assignments,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
-        $ChildApps,
-
-        [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance]
         $LargeIcon,
+
+        [Parameter()]
+        [System.String]
+        $AppUrl,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsAssigned,
+
+        [Parameter()]
+        [System.Boolean]
+        $useManagedBrowser,
 
         #endregion
 
@@ -555,10 +563,6 @@ function Test-TargetResource
         $IsFeatured,
 
         [Parameter()]
-        [System.Boolean]
-        $IgnoreVersionDetection,
-
-        [Parameter()]
         [System.String]
         $Notes,
 
@@ -584,18 +588,6 @@ function Test-TargetResource
         $RoleScopeTagIds,
 
         [Parameter()]
-        [System.String]
-        $BundleId,
-
-        [Parameter()]
-        [System.String]
-        $BuildNumber,
-
-        [Parameter()]
-        [System.String]
-        $VersionNumber,
-
-        [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Categories,
 
@@ -604,12 +596,20 @@ function Test-TargetResource
         $Assignments,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
-        $ChildApps,
-
-        [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance]
         $LargeIcon,
+
+        [Parameter()]
+        [System.String]
+        $AppUrl,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsAssigned,
+
+        [Parameter()]
+        [System.Boolean]
+        $useManagedBrowser
 
         #endregion
 
