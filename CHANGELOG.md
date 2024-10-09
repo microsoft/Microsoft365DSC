@@ -15,6 +15,8 @@
   * Initial release.
 * AADEntitlementManagementSettings
   * Added support for ApplicationSecret
+* AADLifecycleWorkflowSettings
+  * Initial release.
 * ADOPermissionGroupSettings
   * Initial release.
 * EXOMigrationEndpoint
