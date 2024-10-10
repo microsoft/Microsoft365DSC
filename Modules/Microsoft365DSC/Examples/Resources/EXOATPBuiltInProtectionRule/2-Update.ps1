@@ -21,6 +21,13 @@ Configuration Example
     Import-DscResource -ModuleName Microsoft365DSC
     node localhost
     {
-        
+        EXOATPBuiltInProtectionRule "EXOATPBuiltInProtectionRule"
+        {
+            ApplicationId             = $ApplicationId;
+            CertificateThumbprint     = $CertificateThumbprint;
+            ExceptIfRecipientDomainIs = @("contoso.com","fabrikam.com");
+            Identity                  = "ATP Built-In Protection Rule";
+            TenantId                  = $TenantId;
+        }
     }
 }
