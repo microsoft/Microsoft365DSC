@@ -88,6 +88,24 @@
                     TenantId              = $TenantId;
                     CertificateThumbprint = $CertificateThumbprint;
                 }
+                IntuneAccountProtectionPolicyWindows10 'myAccountProtectionPolicy'
+                {
+                    DisplayName           = 'test'
+                    DeviceSettings = MSFT_MicrosoftGraphIntuneSettingsCatalogDeviceSettings
+                    {
+                        History = 10
+                        EnablePinRecovery = 'true'
+                    }
+                    UserSettings = MSFT_MicrosoftGraphIntuneSettingsCatalogUserSettings
+                    {
+                        History = 20
+                        EnablePinRecovery = 'true'
+                    }
+                    Ensure                = 'Present'
+                    ApplicationId         = $ApplicationId;
+                    TenantId              = $TenantId;
+                    CertificateThumbprint = $CertificateThumbprint;
+                }
                 IntuneAntivirusPolicyWindows10SettingCatalog 'myAVWindows10Policy'
                 {
                     DisplayName        = 'av exclusions'

@@ -25,6 +25,7 @@
 | **ReplyURLs** | Write | StringArray[] | Specifies the URLs that user tokens are sent to for sign in, or the redirect URIs that OAuth 2.0 authorization codes and access tokens are sent to. | |
 | **Owners** | Write | StringArray[] | UPN or ObjectID values of the app's owners. | |
 | **OnPremisesPublishing** | Write | MSFT_AADApplicationOnPremisesPublishing | Represents the set of properties required for configuring Application Proxy for this application. Configuring these properties allows you to publish your on-premises application for secure remote access. | |
+| **ApplicationTemplateId** | Write | String | Identifier of the associated Application Template. | |
 | **Ensure** | Write | String | Specify if the Azure AD App should exist or not. | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials for the Microsoft Graph delegated permissions. | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |

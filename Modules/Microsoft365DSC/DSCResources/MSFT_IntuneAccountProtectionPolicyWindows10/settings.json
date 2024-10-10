@@ -1,0 +1,32 @@
+{
+    "resourceName":"IntuneAccountProtectionPolicyWindows10",
+    "description":"This resource configures an Intune Account Protection Policy for Windows10.",
+    "permissions":{
+        "graph":{
+            "delegated":{
+                "read":[
+                    {
+                        "name":"DeviceManagementConfiguration.Read.All"
+                    }
+                ],
+                "update":[
+                    {
+                        "name":"DeviceManagementConfiguration.ReadWrite.All"
+                    }
+                ]
+            },
+            "application":{
+                "read":[
+                    {
+                        "name":"DeviceManagementConfiguration.Read.All"
+                    }
+                ],
+                "update":[
+                    {
+                        "name":"DeviceManagementConfiguration.ReadWrite.All"
+                    }
+                ]
+            }
+        }
+    }
+}

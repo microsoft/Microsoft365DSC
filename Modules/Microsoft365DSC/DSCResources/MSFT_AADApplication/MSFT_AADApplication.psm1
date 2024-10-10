@@ -93,6 +93,10 @@ function Get-TargetResource
         $OnPremisesPublishing,
 
         [Parameter()]
+        [System.String]
+        $ApplicationTemplateId,
+
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -157,7 +161,7 @@ function Get-TargetResource
                 }
                 else
                 {
-                    $AADApp = Get-MgApplication -Filter "AppId eq '$AppId'"
+                    $AADApp = Get-MgBetaApplication -Filter "AppId eq '$AppId'"
                 }
             }
         }
@@ -176,7 +180,7 @@ function Get-TargetResource
             }
             else
             {
-                $AADApp = Get-MgApplication -Filter "DisplayName eq '$($DisplayName)'"
+                $AADApp = [Array](Get-MgBetaApplication -Filter "DisplayName eq '$($DisplayName)'")
             }
         }
         if ($null -ne $AADApp -and $AADApp.Count -gt 1)
@@ -192,9 +196,8 @@ function Get-TargetResource
         {
             Write-Verbose -Message 'An instance of Azure AD App was retrieved.'
 
-
-            $AADBetaApp= Get-MgBetaApplication -Property "id,displayName,appId,authenticationBehaviors" -ApplicationId $AADApp.Id -ErrorAction SilentlyContinue
-            $AADAppKeyCredentials = Get-MgApplication -Property "keyCredentials" -ApplicationId $AADApp.Id -ErrorAction SilentlyContinue
+            $AADBetaApp= Get-MgBetaApplication -Property "id,displayName,appId,authenticationBehaviors,additionalProperties" -ApplicationId $AADApp.Id -ErrorAction SilentlyContinue
+            $AADAppKeyCredentials = Get-MgBetaApplication -Property "keyCredentials" -ApplicationId $AADApp.Id -ErrorAction SilentlyContinue
 
             $complexAuthenticationBehaviors = @{}
             if ($null -ne $AADBetaApp.authenticationBehaviors.blockAzureADGraphAccess)
@@ -475,7 +478,8 @@ function Get-TargetResource
                 PasswordCredentials     = $complexPasswordCredentials
                 AppRoles                = $complexAppRoles
                 Permissions             = $permissionsObj
-                OnPremisesPublishing   = $onPremisesPublishingValue
+                OnPremisesPublishing    = $onPremisesPublishingValue
+                ApplicationTemplateId   = $AADApp.AdditionalProperties.applicationTemplateId
                 Ensure                  = 'Present'
                 Credential              = $Credential
                 ApplicationId           = $ApplicationId
@@ -600,6 +604,10 @@ function Set-TargetResource
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance]
         $OnPremisesPublishing,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationTemplateId,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -806,10 +814,44 @@ function Set-TargetResource
             Write-Verbose -Message "Multiple instances of a deleted application with name {$DisplayName} wehre found. Creating a new instance since we can't determine what instance to restore."
         }
     }
+
+    # Create from Template
+    $createdFromTemplate = $false
+    if ($Ensure -eq 'Present' -and $currentAADApp.Ensure -eq 'Absent' -and -not $skipToUpdate -and `
+        -not [System.String]::IsNullOrEmpty($ApplicationTemplateId) -and `
+        $ApplicationTemplateId -ne '8adf8e6e-67b2-4cf2-a259-e3dc5476c621')
+    {
+        $skipToUpdate = $true
+        Write-Verbose -Message "Creating application {$DisplayName} from Application Template {$ApplicationTemplateId}"
+        $newApp = Invoke-MgBetaInstantiateApplicationTemplate -DisplayName $DisplayName `
+                                                              -ApplicationTemplateId $ApplicationTemplateId
+        $currentAADApp = @{
+            AppId       = $newApp.Application.AppId
+            Id          = $newApp.Application.AppId
+            DisplayName = $newApp.Application.DisplayName
+            ObjectId    = $newApp.Application.AdditionalProperties.objectId
+        }
+
+        $createdFromTemplate = $true
+
+        do
+        {
+            Write-Verbose -Message 'Waiting for 10 seconds'
+            Start-Sleep -Seconds 10
+            $appEntity = Get-MgApplication -ApplicationId $currentAADApp.AppId -ErrorAction SilentlyContinue
+            $tries++
+        } until ($null -eq $appEntity -or $tries -le 12)
+    }
+    Write-Host "Ensure = $Ensure"
+    Write-Host "ApplicationTemplateId = $ApplicationTemplateId"
+    Write-Host "skipToUpdate = $skipToUpdate"
+    Write-Host "currentAADApp.Ensure = $($currentAADApp.Ensure))"
     if ($Ensure -eq 'Present' -and $currentAADApp.Ensure -eq 'Absent' -and -not $skipToUpdate)
     {
-        Write-Verbose -Message "Creating New AzureAD Application {$DisplayName} with values:`r`n$($currentParameters | Out-String)"
         $currentParameters.Remove('ObjectId') | Out-Null
+        $currentParameters.Remove('ApplicationTemplateId') | Out-Null
+        Write-Verbose -Message "Creating New AzureAD Application {$DisplayName} with values:`r`n$($currentParameters | Out-String)"
+
         $currentAADApp = New-MgApplication @currentParameters
         Write-Verbose -Message "Azure AD Application {$DisplayName} was successfully created"
         $needToUpdatePermissions = $true
@@ -831,15 +873,21 @@ function Set-TargetResource
     elseif (($Ensure -eq 'Present' -and $currentAADApp.Ensure -eq 'Present') -or $skipToUpdate)
     {
         $currentParameters.Remove('ObjectId') | Out-Null
+        $currentParameters.Remove('ApplicationTemplateId') | Out-Null
 
-        if (-not $skipToUpdate)
+        if (-not $skipToUpdate -or $createdFromTemplate)
         {
             $AppIdValue = $currentAADApp.ObjectId
         }
+
         $currentParameters.Add('ApplicationId', $AppIdValue)
         Write-Verbose -Message "Updating existing AzureAD Application {$DisplayName} with values:`r`n$($currentParameters | Out-String)"
         Update-MgApplication @currentParameters
-        $currentAADApp.Add('ID', $AppIdValue)
+
+        if (-not $currentAADApp.ContainsKey('ID'))
+        {
+            $currentAADApp.Add('ID', $AppIdValue)
+        }
         $needToUpdatePermissions = $true
         $needToUpdateAuthenticationBehaviors = $true
         $needToUpdateKeyCredentials = $true
@@ -1189,6 +1237,10 @@ function Test-TargetResource
         $OnPremisesPublishing,
 
         [Parameter()]
+        [System.String]
+        $ApplicationTemplateId,
+
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -1305,7 +1357,6 @@ function Test-TargetResource
     $ValuesToCheck.Remove('AppId') | Out-Null
     $ValuesToCheck.Remove('Permissions') | Out-Null
 
-
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
     -Source $($MyInvocation.MyCommand.Source) `
     -DesiredValues $PSBoundParameters `
@@ -1383,7 +1434,7 @@ function Export-TargetResource
     try
     {
         $Script:ExportMode = $true
-        [array] $Script:exportedInstances = Get-MgApplication -Filter $Filter -All -ErrorAction Stop
+        [array] $Script:exportedInstances = Get-MgBetaApplication -Filter $Filter -All -ErrorAction Stop
         foreach ($AADApp in $Script:exportedInstances)
         {
             if ($null -ne $Global:M365DSCExportResourceInstancesCount)
