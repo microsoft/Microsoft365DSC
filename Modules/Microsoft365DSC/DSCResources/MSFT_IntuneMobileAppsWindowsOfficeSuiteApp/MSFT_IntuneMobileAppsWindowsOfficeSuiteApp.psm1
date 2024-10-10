@@ -61,10 +61,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String[]]
+        [ValidateSet('O365ProPlusRetail', 'O365BusinessRetail', 'VisioProRetail', 'ProjectProRetail')]
         $ProductIds,
 
         [Parameter()]
-        [PSCustomObject]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $ExcludedApps,
 
         [Parameter()]
@@ -73,18 +74,18 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('current', 'monthlyEnterprise', 'semiAnnual')]
-        $UpdateChannel = 'monthlyEnterprise',
+        [ValidateSet('None', 'Current', 'Deferred', 'FirstReleaseCurrent', 'FirstReleaseDeferred', 'MonthlyEnterprise')]
+        $UpdateChannel,
 
         [Parameter()]
         [System.String]
-        [ValidateSet('officeOpenDocumentFormat', 'binaryFormat')]
+        [ValidateSet('NotConfigured', 'OfficeOpenXMLFormat', 'OfficeOpenDocumentFormat', 'UnknownFutureValue')]
         $OfficeSuiteAppDefaultFileFormat,
 
         [Parameter()]
         [System.String]
-        [ValidateSet('x86', 'x64')]
-        $OfficePlatformArchitecture = 'x64',
+        [ValidateSet('None', 'X86', 'X64', 'Arm', 'Neutral', 'Arm64')]
+        $OfficePlatformArchitecture,
 
         [Parameter()]
         [System.String[]]
@@ -92,20 +93,20 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('none', 'full')]
-        $InstallProgressDisplayLevel = 'none',
+        [ValidateSet('None', 'Full')]
+        $InstallProgressDisplayLevel,
 
         [Parameter()]
         [System.Boolean]
-        $ShouldUninstallOlderVersionsOfOffice = $true,
+        $ShouldUninstallOlderVersionsOfOffice,
 
         [Parameter()]
         [System.String]
-        $TargetVersion = "",
->
+        $TargetVersion,
+
         [Parameter()]
         [System.String]
-        $UpdateVersion = "",
+        $UpdateVersion,
 
         [Parameter()]
         [System.Byte[]]
@@ -202,21 +203,30 @@ function Get-TargetResource
 
         $results = @{
             Id                    = $instance.Id
-            Description           = $instance.Description
-            Developer             = $instance.Developer
             DisplayName           = $instance.DisplayName
-            InformationUrl        = $instance.InformationUrl
-            IsFeatured            = $instance.IsFeatured
-            Notes                 = $instance.Notes
-            Owner                 = $instance.Owner
-            PrivacyInformationUrl = $instance.PrivacyInformationUrl
+            Description           = $instance.Description
             Publisher             = $instance.Publisher
+            IsFeatured            = $instance.IsFeatured
+            PrivacyInformationUrl = $instance.PrivacyInformationUrl
+            InformationUrl        = $instance.InformationUrl
+            Owner                 = $instance.Owner
+            Developer             = $instance.Developer
+            Notes                 = $instance.Notes
             PublishingState       = $instance.PublishingState.ToString()
             RoleScopeTagIds       = $instance.RoleScopeTagIds
-            BundleId              = $instance.BundleId
-            BuildNumber           = $instance.BuildNumber
-            VersionNumber         = $instance.VersionNumber
-            IgnoreVersionDetection = $instance.AdditionalProperties.ignoreVersionDetection
+            ProductIds            = $instance.ProductIds
+            ExcludedApps          = $instance.ExcludedApps
+            UseSharedComputerActivation = $instance.UseSharedComputerActivation
+            UpdateChannel         = $instance.UpdateChannel
+            OfficeSuiteAppDefaultFileFormat = $instance.OfficeSuiteAppDefaultFileFormat
+            OfficePlatformArchitecture = $instance.OfficePlatformArchitecture
+            LocalesToInstall      = $instance.LocalesToInstall
+            InstallProgressDisplayLevel = $instance.InstallProgressDisplayLevel
+            ShouldUninstallOlderVersionsOfOffice = $instance.ShouldUninstallOlderVersionsOfOffice
+            TargetVersion         = $instance.TargetVersion
+            UpdateVersion         = $instance.UpdateVersion
+            OfficeConfigurationXml = $instance.OfficeConfigurationXml
+            AutoAcceptEula        = $instance.AdditionalProperties.AutoAcceptEula
 
             Ensure                = 'Present'
             Credential            = $Credential
@@ -350,10 +360,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String[]]
+        [ValidateSet('O365ProPlusRetail', 'O365BusinessRetail', 'VisioProRetail', 'ProjectProRetail')]
         $ProductIds,
 
         [Parameter()]
-        [PSCustomObject]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $ExcludedApps,
 
         [Parameter()]
@@ -362,18 +373,18 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('current', 'monthlyEnterprise', 'semiAnnual')]
-        $UpdateChannel = 'monthlyEnterprise',
+        [ValidateSet('None', 'Current', 'Deferred', 'FirstReleaseCurrent', 'FirstReleaseDeferred', 'MonthlyEnterprise')]
+        $UpdateChannel,
 
         [Parameter()]
         [System.String]
-        [ValidateSet('officeOpenDocumentFormat', 'binaryFormat')]
+        [ValidateSet('NotConfigured', 'OfficeOpenXMLFormat', 'OfficeOpenDocumentFormat', 'UnknownFutureValue')]
         $OfficeSuiteAppDefaultFileFormat,
 
         [Parameter()]
         [System.String]
-        [ValidateSet('x86', 'x64')]
-        $OfficePlatformArchitecture = 'x64',
+        [ValidateSet('None', 'X86', 'X64', 'Arm', 'Neutral', 'Arm64')]
+        $OfficePlatformArchitecture,
 
         [Parameter()]
         [System.String[]]
@@ -381,20 +392,20 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('none', 'full')]
-        $InstallProgressDisplayLevel = 'none',
+        [ValidateSet('None', 'Full')]
+        $InstallProgressDisplayLevel,
 
         [Parameter()]
         [System.Boolean]
-        $ShouldUninstallOlderVersionsOfOffice = $true,
+        $ShouldUninstallOlderVersionsOfOffice,
 
         [Parameter()]
         [System.String]
-        $TargetVersion = "",
->
+        $TargetVersion,
+
         [Parameter()]
         [System.String]
-        $UpdateVersion = "",
+        $UpdateVersion,
 
         [Parameter()]
         [System.Byte[]]
@@ -475,7 +486,7 @@ function Set-TargetResource
     # CREATE
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        Write-Host "Create MacOS app: $DisplayName"
+        Write-Host "Create office suite app: $DisplayName"
 
         $CreateParameters = ([Hashtable]$PSBoundParameters).clone()
         $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
@@ -534,7 +545,7 @@ function Set-TargetResource
     # UPDATE
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Host "Update MacOS app: $DisplayName"
+        Write-Host "Update office suite app: $DisplayName"
 
         $PSBoundParameters.Remove('Assignments') | Out-Null
         $UpdateParameters = ([Hashtable]$PSBoundParameters).clone()
@@ -578,7 +589,7 @@ function Set-TargetResource
          }
 
         Update-MgBetaDeviceAppManagementMobileApp -MobileAppId $currentInstance.Id @UpdateParameters
-        Write-Host "Updated MacOS App: $DisplayName."
+        Write-Host "Updated office suite App: $DisplayName."
 
         #Assignments
         $assignmentsHash = ConvertTo-IntuneMobileAppAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
@@ -589,7 +600,7 @@ function Set-TargetResource
     # REMOVE
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Host "Remove MacOS app: $DisplayName"
+        Write-Host "Remove office suite app: $DisplayName"
         Remove-MgBetaDeviceAppManagementMobileApp -MobileAppId $currentInstance.Id -Confirm:$false
     }
 }
@@ -657,10 +668,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String[]]
+        [ValidateSet('O365ProPlusRetail', 'O365BusinessRetail', 'VisioProRetail', 'ProjectProRetail')]
         $ProductIds,
 
         [Parameter()]
-        [PSCustomObject]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $ExcludedApps,
 
         [Parameter()]
@@ -669,18 +681,18 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('current', 'monthlyEnterprise', 'semiAnnual')]
-        $UpdateChannel = 'monthlyEnterprise',
+        [ValidateSet('None', 'Current', 'Deferred', 'FirstReleaseCurrent', 'FirstReleaseDeferred', 'MonthlyEnterprise')]
+        $UpdateChannel,
 
         [Parameter()]
         [System.String]
-        [ValidateSet('officeOpenDocumentFormat', 'binaryFormat')]
+        [ValidateSet('NotConfigured', 'OfficeOpenXMLFormat', 'OfficeOpenDocumentFormat', 'UnknownFutureValue')]
         $OfficeSuiteAppDefaultFileFormat,
 
         [Parameter()]
         [System.String]
-        [ValidateSet('x86', 'x64')]
-        $OfficePlatformArchitecture = 'x64',
+        [ValidateSet('None', 'X86', 'X64', 'Arm', 'Neutral', 'Arm64')]
+        $OfficePlatformArchitecture,
 
         [Parameter()]
         [System.String[]]
@@ -688,20 +700,20 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('none', 'full')]
-        $InstallProgressDisplayLevel = 'none',
+        [ValidateSet('None', 'Full')]
+        $InstallProgressDisplayLevel,
 
         [Parameter()]
         [System.Boolean]
-        $ShouldUninstallOlderVersionsOfOffice = $true,
+        $ShouldUninstallOlderVersionsOfOffice,
 
         [Parameter()]
         [System.String]
-        $TargetVersion = "",
->
+        $TargetVersion,
+
         [Parameter()]
         [System.String]
-        $UpdateVersion = "",
+        $UpdateVersion,
 
         [Parameter()]
         [System.Byte[]]
@@ -767,7 +779,7 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of Intune Mobile MacOS App: {$DisplayName}"
+    Write-Verbose -Message "Testing configuration of Intune Mobile office suite App: {$DisplayName}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     if (-not (Test-M365DSCAuthenticationParameter -BoundParameters $CurrentValues))
