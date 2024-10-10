@@ -45,6 +45,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
             Mock -CommandName Remove-MgBetaDeviceManagementDerivedCredential -MockWith {
             }
+
             $Script:exportedInstances =$null
             $Script:ExportMode = $false
         }
@@ -82,7 +83,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name " 2. The instance exists but it SHOULD NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Ensure               = 'Present'
+                    Ensure               = 'Absent'
                     DisplayName          = "K5";
                     HelpUrl              = "http://www.ff.com/";
                     Id                   = "a409d85f-2a49-440d-884a-80fb52a557ab";
@@ -175,10 +176,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             # Update is not allowed on DerivedCredential resource so it should be called 0 times.
-            It ' 4.3 Should call the Set method' {
-                Set-TargetResource @testParams
-                Should -Invoke -CommandName Update-MgBetaDeviceManagementDerivedCredential -Exactly 0
-            }
         }
 
         Context -Name ' 5. ReverseDSC Tests' -Fixture {

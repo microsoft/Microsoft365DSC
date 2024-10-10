@@ -19381,7 +19381,7 @@ function Get-MgBetaDeviceManagementDerivedCredential {
     param (
         [Parameter()]
         [System.String]
-        $Id,
+        $DeviceManagementDerivedCredentialSettingsId,
 
         [Parameter()]
         [System.String]
@@ -19409,7 +19409,7 @@ function Remove-MgBetaDeviceManagementDerivedCredential
     param(
         [Parameter()]
         [System.String]
-        $DerivedCredentialId,
+        $DeviceManagementDerivedCredentialSettingsId,
 
         [Parameter()]
         [System.Boolean]
@@ -19422,7 +19422,7 @@ function New-MgBetaDeviceAppManagementMobileApp {
     param (
         [Parameter()]
         [System.String]
-        $Id,
+        $DeviceManagementDerivedCredentialSettingsId,
 
         [Parameter()]
         [System.String]
