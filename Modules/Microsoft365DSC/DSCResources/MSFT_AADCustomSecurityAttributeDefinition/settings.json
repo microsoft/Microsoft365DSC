@@ -1,12 +1,12 @@
 ﻿{
-    "resourceName": "ResourceName",
-    "description": "Description of what the resource is about.",
+    "resourceName": "AADCustomSecurityAttributeDefinition",
+    "description": "Configures custom security attribute definitions in Entra Id.",
     "roles": {
         "read": [
-            "Role"
+            "Attribute Definition Reader"
         ],
         "update": [
-            "Role"
+            "Attribute Definition Administrator"
         ]
     },
     "permissions": {
@@ -18,12 +18,12 @@
             "application": {
                 "read": [
                     {
-                        "name": "Permission for Monitoring and Export"
+                        "name": "CustomSecAttributeDefinition.Read.All"
                     }
                 ],
                 "update": [
                     {
-                        "name": "Permission for deploying"
+                        "name": "CustomSecAttributeDefinition.ReadWrite.All"
                     }
                 ]
             }

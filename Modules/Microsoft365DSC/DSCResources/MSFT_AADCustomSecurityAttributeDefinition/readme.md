@@ -1,6 +1,6 @@
 
-# ResourceName
+# AADCustomSecurityAttributeDefinition
 
 ## Description
 
-##TODO - Provide a short description of what the resource is set to configure.
+Configures custom security attribute definitions in Entra Id.
