@@ -12,6 +12,8 @@
   * Initial release.
 * AADConnectorGroupApplicationProxy
   * Initial release.
+* AADCustomSecurityAttributeDefinition
+  * Initial release.
 * AADDeviceRegistrationPolicy
   * Initial release.
 * AADEntitlementManagementSettings
