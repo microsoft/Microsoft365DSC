@@ -20,6 +20,8 @@
   * Initial release.
 * ADOPermissionGroupSettings
   * Initial release.
+* EXOATPBuiltInProtectionRule
+  * Initial release.
 * EXOMigrationEndpoint
   * Initial Release
 * IntuneAccountProtectionPolicy
