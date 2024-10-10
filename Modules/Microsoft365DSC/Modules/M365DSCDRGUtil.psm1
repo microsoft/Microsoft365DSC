@@ -1089,7 +1089,6 @@ function ConvertFrom-IntuneMobileAppAssignment
         }
 
         $hashAssignment.Add('intent', $assignment.intent.ToString())
-        $hashAssignment.Add('source', $assignment.source.ToString())
 
         # $concatenatedSettings = $assignment.settings.ToString() -join ','
         # $hashAssignment.Add('settings', $concatenatedSettings)
@@ -1141,6 +1140,7 @@ function ConvertTo-IntuneMobileAppAssignment
     $assignmentResult = @()
     foreach ($assignment in $Assignments)
     {
+        $formattedAssignment = @{}
         $target = @{"@odata.type" = $assignment.dataType}
         if ($IncludeDeviceFilter)
         {
@@ -1148,14 +1148,10 @@ function ConvertTo-IntuneMobileAppAssignment
             {
                 $target.Add('deviceAndAppManagementAssignmentFilterType', $assignment.DeviceAndAppManagementAssignmentFilterType)
                 $target.Add('deviceAndAppManagementAssignmentFilterId', $assignment.DeviceAndAppManagementAssignmentFilterId)
-
-                $target.GetEnumerator() | ForEach-Object {
-                    Write-Host "target key:value: $($_.Key): $($_.Value)" }
             }
         }
 
-        $assignmentResult += $assignment.intent;
-        $assignmentResult += $assignment.source;
+        $formattedAssignment.Add('intent', $assignment.intent)
 
         if ($assignment.dataType -like '*groupAssignmentTarget')
         {
@@ -1197,8 +1193,9 @@ function ConvertTo-IntuneMobileAppAssignment
 
         if ($target)
         {
-            $assignmentResult += @{target = $target}
+            $formattedAssignment.Add('target', $target)
         }
+        $assignmentResult += $formattedAssignment
     }
 
     return ,$assignmentResult
@@ -1225,6 +1222,8 @@ function Compare-M365DSCIntunePolicyAssignment
             {
                 $assignmentTarget = $Target | Where-Object -FilterScript { $_.dataType -eq $assignment.DataType -and $_.groupId -eq $assignment.groupId }
                 $testResult = $null -ne $assignmentTarget
+                # Check for mobile app assignments with intent
+                $testResult = $assignment.intent -eq $assignmentTarget.intent
                 # Using assignment groupDisplayName only if the groupId is not found in the directory otherwise groupId should be the key
                 if (-not $testResult)
                 {
@@ -1330,14 +1329,14 @@ function Update-DeviceConfigurationPolicyAssignment
                         {
                             $message = "Skipping assignment for the group with DisplayName {$($target.groupDisplayName)} as it could not be found in the directory.`r`n"
                             $message += "Please update your DSC resource extract with the correct groupId or groupDisplayName."
-                            write-verbose -Message $message
+                            Write-Verbose -Message $message
                             $target = $null
                         }
                         if ($group -and $group.count -gt 1)
                         {
                             $message = "Skipping assignment for the group with DisplayName {$($target.groupDisplayName)} as it is not unique in the directory.`r`n"
                             $message += "Please update your DSC resource extract with the correct groupId or a unique group DisplayName."
-                            write-verbose -Message $message
+                            Write-Verbose -Message $message
                             $group = $null
                             $target = $null
                         }
@@ -1346,7 +1345,7 @@ function Update-DeviceConfigurationPolicyAssignment
                     {
                         $message = "Skipping assignment for the group with Id {$($target.groupId)} as it could not be found in the directory.`r`n"
                         $message += "Please update your DSC resource extract with the correct groupId or a unique group DisplayName."
-                        write-verbose -Message $message
+                        Write-Verbose -Message $message
                         $target = $null
                     }
                 }
@@ -1372,6 +1371,126 @@ function Update-DeviceConfigurationPolicyAssignment
         }
 
         $body = @{$RootIdentifier = $deviceManagementPolicyAssignments} | ConvertTo-Json -Depth 20
+        Write-Verbose -Message $body
+
+        Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $body -ErrorAction Stop
+    }
+    catch
+    {
+        New-M365DSCLogEntry -Message 'Error updating data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return $null
+    }
+}
+
+function Update-DeviceAppManagementPolicyAssignment
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $AppManagementPolicyId,
+
+        [Parameter()]
+        [Array]
+        $Assignments,
+
+        [Parameter()]
+        [System.String]
+        $Repository = 'deviceAppManagement/mobileApps',
+
+        [Parameter()]
+        [ValidateSet('v1.0','beta')]
+        [System.String]
+        $APIVersion = 'beta',
+
+        [Parameter()]
+        [System.String]
+        $RootIdentifier = 'mobileAppAssignments'
+    )
+
+    try
+    {
+        $appManagementPolicyAssignments = @()
+        $Uri = "/$APIVersion/$Repository/$AppManagementPolicyId/assign"
+
+        foreach ($assignment in $Assignments)
+        {
+            $formattedAssignment = @{
+                '@odata.type' = '#microsoft.graph.mobileAppAssignment'
+                intent = $assignment.intent
+            }
+            if ($assigment.settings)
+            {
+                $formattedAssignment.Add('settings', $assignment.settings)
+            }
+
+            if ($assignment.target -is [hashtable])
+            {
+                $target = $assignment.target
+            }
+
+            $formattedTarget = @{"@odata.type" = $target.dataType}
+            if(-not $formattedTarget."@odata.type" -and $target."@odata.type")
+            {
+                $formattedTarget."@odata.type" = $target."@odata.type"
+            }
+            if ($target.groupId)
+            {
+                $group = Get-MgGroup -GroupId ($target.groupId) -ErrorAction SilentlyContinue
+                if ($null -eq $group)
+                {
+                    if ($target.groupDisplayName)
+                    {
+                        $group = Get-MgGroup -Filter "DisplayName eq '$($target.groupDisplayName)'" -ErrorAction SilentlyContinue
+                        if ($null -eq $group)
+                        {
+                            $message = "Skipping assignment for the group with DisplayName {$($target.groupDisplayName)} as it could not be found in the directory.`r`n"
+                            $message += "Please update your DSC resource extract with the correct groupId or groupDisplayName."
+                            Write-Verbose -Message $message
+                            $target = $null
+                        }
+                        if ($group -and $group.count -gt 1)
+                        {
+                            $message = "Skipping assignment for the group with DisplayName {$($target.groupDisplayName)} as it is not unique in the directory.`r`n"
+                            $message += "Please update your DSC resource extract with the correct groupId or a unique group DisplayName."
+                            Write-Verbose -Message $message
+                            $group = $null
+                            $target = $null
+                        }
+                    }
+                    else
+                    {
+                        $message = "Skipping assignment for the group with Id {$($target.groupId)} as it could not be found in the directory.`r`n"
+                        $message += "Please update your DSC resource extract with the correct groupId or a unique group DisplayName."
+                        Write-Verbose -Message $message
+                        $target = $null
+                    }
+                }
+                #Skipping assignment if group not found from either groupId or groupDisplayName
+                if ($null -ne $group)
+                {
+                    $formattedTarget.Add('groupId',$group.Id)
+                }
+            }
+            if ($target.deviceAndAppManagementAssignmentFilterType)
+            {
+                $formattedTarget.Add('deviceAndAppManagementAssignmentFilterType',$target.deviceAndAppManagementAssignmentFilterType)
+            }
+            if ($target.deviceAndAppManagementAssignmentFilterId)
+            {
+                $formattedTarget.Add('deviceAndAppManagementAssignmentFilterId',$target.deviceAndAppManagementAssignmentFilterId)
+            }
+            $formattedAssignment.Add('target', $formattedTarget)
+            $appManagementPolicyAssignments += $formattedAssignment
+        }
+
+        $body = @{$RootIdentifier = $appManagementPolicyAssignments} | ConvertTo-Json -Depth 20
         Write-Verbose -Message $body
 
         Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $body -ErrorAction Stop
