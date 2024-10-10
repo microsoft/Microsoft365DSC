@@ -35,6 +35,14 @@ function Get-TargetResource
         $IgnoreVersionDetection,
 
         [Parameter()]
+        [System.Boolean]
+        $InstallAsManaged,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $MinimumSupportedOperatingSystem,
+
+        [Parameter()]
         [System.String]
         $Notes,
 
@@ -49,11 +57,6 @@ function Get-TargetResource
         [Parameter()]
         [System.String]
         $Publisher,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet('notPublished', 'processing','published')]
-        $PublishingState,
 
         [Parameter()]
         [System.String[]]
@@ -142,74 +145,105 @@ function Get-TargetResource
     $nullResult.Ensure = 'Absent'
     try
     {
-        $instance = Get-MgBetaDeviceAppManagementMobileApp `
-            -Filter "(isof('microsoft.graph.macOSLobApp') and displayName eq '$DisplayName')" `
-            -ExpandProperty "categories,assignments" `
-            -ErrorAction SilentlyContinue | Where-Object `
-            -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.macOSLobApp' }
+        $instance = Get-MgBetaDeviceAppManagementMobileApp -MobileAppId $Id `
+            -ExpandProperty "categories" `
+            -ErrorAction SilentlyContinue
 
         if ($null -eq $instance)
         {
-            Write-Verbose -Message "No Mobile app with DisplayName {$DisplayName} was found. Search with DisplayName."
-            $instance = Get-MgBetaDeviceAppManagementMobileApp `
-                -MobileAppId $Id `
-                -ExpandProperty "categories,assignments" `
-                -ErrorAction Stop | Where-Object `
-                -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.macOSLobApp' }
+            Write-Verbose -Message "Could not find an Intune MacOS Lob App with Id {$Id}."
+
+            if (-not [System.String]::IsNullOrEmpty($DisplayName))
+            {
+                $instance = Get-MgBetaDeviceAppManagementMobileApp `
+                    -Filter "(isof('microsoft.graph.macOSLobApp') and displayName eq '$DisplayName')" `
+                    -ErrorAction SilentlyContinue
+            }
+
+            if ($null -ne $instance)
+            {
+                $instance = Get-MgBetaDeviceAppManagementMobileApp -MobileAppId $instance.Id `
+                    -ExpandProperty "categories" `
+                    -ErrorAction SilentlyContinue
+                $Id = $instance.Id
+            }
         }
 
         if ($null -eq $instance)
         {
-            Write-Verbose -Message "No Mobile app with {$Id} was found."
+            Write-Verbose -Message "Could not find an Intune MacOS Lob App with DisplayName {$DisplayName} was found."
             return $nullResult
         }
 
-        $results = @{
-            Id                    = $instance.Id
-            Description           = $instance.Description
-            Developer             = $instance.Developer
-            DisplayName           = $instance.DisplayName
-            InformationUrl        = $instance.InformationUrl
-            IsFeatured            = $instance.IsFeatured
-            Notes                 = $instance.Notes
-            Owner                 = $instance.Owner
-            PrivacyInformationUrl = $instance.PrivacyInformationUrl
-            Publisher             = $instance.Publisher
-            PublishingState       = $instance.PublishingState.ToString()
-            RoleScopeTagIds       = $instance.RoleScopeTagIds
-            BundleId              = $instance.BundleId
-            BuildNumber           = $instance.BuildNumber
-            VersionNumber         = $instance.VersionNumber
-            IgnoreVersionDetection = $instance.AdditionalProperties.ignoreVersionDetection
-
-            Ensure                = 'Present'
-            Credential            = $Credential
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            CertificateThumbprint = $CertificateThumbprint
-            ApplicationSecret     = $ApplicationSecret
-            ManagedIdentity       = $ManagedIdentity.IsPresent
-            AccessTokens          = $AccessTokens
-        }
+        Write-Verbose "An Intune MacOS Lob App with Id {$Id} and DisplayName {$DisplayName} was found."
 
         #region complex types
-
-        #Categories
-        if($null -ne $instance.Categories)
+        $complexCategories = @()
+        foreach ($category in $instance.Categories)
         {
-            $results.Add('Categories', $instance.Categories)
-        }
-        else {
-            $results.Add('Categories', "")
+            $myCategory = @{}
+            $myCategory.Add('Id', $category.id)
+            $myCategory.Add('DisplayName', $category.displayName)
+            $complexCategories += $myCategory
         }
 
-        #childApps
-        if($null -ne $instance.AdditionalProperties.childApps)
+        $complexChildApps = @()
+        foreach ($childApp in $instance.AdditionalProperties.childApps)
         {
-            $results.Add('ChildApps', $instance.AdditionalProperties.childApps)
+            $myChildApp = @{}
+            $myChildApp.Add('BundleId', $childApp.bundleId)
+            $myChildApp.Add('BuildNumber', $childApp.buildNumber)
+            $myChildApp.Add('VersionNumber', $childApp.versionNumber)
+            $complexChildApps += $myChildApp
         }
-        else {
-            $results.Add('ChildApps', "")
+
+        $complexLargeIcon = @{}
+        if ($null -ne $instance.LargeIcon.Value)
+        {
+            $complexLargeIcon.Add('Value', [System.Convert]::ToBase64String($instance.LargeIcon.Value))
+            $complexLargeIcon.Add('Type', $instance.LargeIcon.Type)
+        }
+
+        $complexMinimumSupportedOperatingSystem = @{}
+        if ($null -ne $instance.AdditionalProperties.minimumSupportedOperatingSystem)
+        {
+            $instance.AdditionalProperties.minimumSupportedOperatingSystem.GetEnumerator() | Foreach-Object {
+                if ($_.Value) # Values are either true or false. Only export the true value.
+                {
+                    $complexMinimumSupportedOperatingSystem.Add($_.Key, $_.Value)
+                }
+            }
+        }
+
+        $results = @{
+            Id                              = $instance.Id
+            BundleId                        = $instance.AdditionalProperties.bundleId
+            BuildNumber                     = $instance.AdditionalProperties.buildNumber
+            Categories                      = $complexCategories
+            ChildApps                       = $complexChildApps
+            Description                     = $instance.Description
+            Developer                       = $instance.Developer
+            DisplayName                     = $instance.DisplayName
+            IgnoreVersionDetection          = $instance.AdditionalProperties.ignoreVersionDetection
+            InformationUrl                  = $instance.InformationUrl
+            IsFeatured                      = $instance.IsFeatured
+            InstallAsManaged                = $instance.AdditionalProperties.installAsManaged
+            LargeIcon                       = $complexLargeIcon
+            MinimumSupportedOperatingSystem = $complexMinimumSupportedOperatingSystem
+            Notes                           = $instance.Notes
+            Owner                           = $instance.Owner
+            PrivacyInformationUrl           = $instance.PrivacyInformationUrl
+            Publisher                       = $instance.Publisher
+            RoleScopeTagIds                 = $instance.RoleScopeTagIds
+            VersionNumber                   = $instance.AdditionalProperties.versionNumber
+            Ensure                          = 'Present'
+            Credential                      = $Credential
+            ApplicationId                   = $ApplicationId
+            TenantId                        = $TenantId
+            CertificateThumbprint           = $CertificateThumbprint
+            ApplicationSecret               = $ApplicationSecret
+            ManagedIdentity                 = $ManagedIdentity.IsPresent
+            AccessTokens                    = $AccessTokens
         }
 
         #Assignments
@@ -220,22 +254,8 @@ function Get-TargetResource
             $resultAssignments += ConvertFrom-IntuneMobileAppAssignment `
                                 -IncludeDeviceFilter:$true `
                                 -Assignments ($appAssignments)
-
-            $results.Add('Assignments', $resultAssignments)
         }
-
-        #LargeIcon
-        # The large is returned only when Get cmdlet is called with Id parameter. The large icon is a base64 encoded string, so we need to convert it to a byte array.
-        $instanceWithLargeIcon = Get-MgBetaDeviceAppManagementMobileApp -MobileAppId $instance.Id
-        if($null -ne $instanceWithLargeIcon.LargeIcon)
-        {
-            $results.Add('LargeIcon', $instanceWithLargeIcon.LargeIcon)
-        }
-        else {
-            $results.Add('LargeIcon', "")
-        }
-
-        #end region complex types
+        $results.Add('Assignments', $resultAssignments)
 
         return [System.Collections.Hashtable] $results
     }
@@ -258,7 +278,6 @@ function Set-TargetResource
     param
     (
         #region Intune resource parameters
-
         [Parameter()]
         [System.String]
         $Id,
@@ -288,6 +307,14 @@ function Set-TargetResource
         $IgnoreVersionDetection,
 
         [Parameter()]
+        [System.Boolean]
+        $InstallAsManaged,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $MinimumSupportedOperatingSystem,
+
+        [Parameter()]
         [System.String]
         $Notes,
 
@@ -302,11 +329,6 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $Publisher,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet('notPublished', 'processing','published')]
-        $PublishingState,
 
         [Parameter()]
         [System.String[]]
@@ -389,135 +411,120 @@ function Set-TargetResource
     #endregion
 
     $currentInstance = Get-TargetResource @PSBoundParameters
-    $PSBoundParameters.Remove('Ensure') | Out-Null
-    $PSBoundParameters.Remove('Credential') | Out-Null
-    $PSBoundParameters.Remove('ApplicationId') | Out-Null
-    $PSBoundParameters.Remove('ApplicationSecret') | Out-Null
-    $PSBoundParameters.Remove('TenantId') | Out-Null
-    $PSBoundParameters.Remove('CertificateThumbprint') | Out-Null
-    $PSBoundParameters.Remove('ManagedIdentity') | Out-Null
-    $PSBoundParameters.Remove('AccessTokens') | Out-Null
+    $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
-    $CreateParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
-
-    # CREATE
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        Write-Host "Create MacOS app: $DisplayName"
+        Write-Verbose -Message "Creating an Intune MacOS Lob App with DisplayName {$DisplayName}"
+        $BoundParameters.Remove('Assignments') | Out-Null
 
-        $CreateParameters = ([Hashtable]$PSBoundParameters).clone()
+        $CreateParameters = ([Hashtable]$BoundParameters).Clone()
         $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
+        $CreateParameters.Remove('Id') | Out-Null
+        $CreateParameters.Remove('Categories') | Out-Null
 
-        $AdditionalProperties = Get-M365DSCIntuneMobileMocOSLobAppAdditionalProperties -Properties ($CreateParameters)
-        foreach ($key in $AdditionalProperties.keys)
+        foreach ($key in ($CreateParameters.Clone()).Keys)
         {
-            if ($key -ne '@odata.type')
+            if ($null -ne $CreateParameters.$key -and $CreateParameters.$key.GetType().Name -like '*CimInstance*')
             {
-                $keyName = $key.substring(0, 1).ToUpper() + $key.substring(1, $key.length - 1)
-                $CreateParameters.remove($keyName)
+                $CreateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters.$key
             }
         }
 
-        $CreateParameters.remove('Id') | Out-Null
-        $CreateParameters.remove('Ensure') | Out-Null
-        $CreateParameters.remove('Categories') | Out-Null
-        $CreateParameters.remove('Assignments') | Out-Null
-        $CreateParameters.remove('childApps') | Out-Null
-        $CreateParameters.remove('IgnoreVersionDetection') | Out-Null
-        $CreateParameters.Remove('Verbose') | Out-Null
-        $CreateParameters.Remove('PublishingState') | Out-Null #Not allowed to update as it's a computed property
-        $CreateParameters.Remove('LargeIcon') | Out-Null
+        $CreateParameters.Add('@odata.type', '#microsoft.graph.macOSLobApp')
+        $app = New-MgBetaDeviceAppManagementMobileApp -BodyParameter $CreateParameters
 
-        foreach ($key in ($CreateParameters.clone()).Keys)
+        foreach ($category in $Categories)
         {
-            if ($CreateParameters[$key].getType().Fullname -like '*CimInstance*')
+            if ($category.Id)
             {
-                $CreateParameters[$key] = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters[$key]
+                $currentCategory = Get-MgBetaDeviceAppManagementMobileAppCategory -CategoryId $category.Id
+            }
+            else
+            {
+                $currentCategory = Get-MgBetaDeviceAppManagementMobileAppCategory -Filter "displayName eq '$($category.DisplayName)'"
+            }
+
+            if ($null -eq $currentCategory)
+            {
+                throw "Mobile App Category with DisplayName $($category.DisplayName) not found."
+            }
+
+            Invoke-MgBetaGraphRequest -Uri "/beta/deviceAppManagement/mobileApps/$($app.Id)/categories/`$ref" -Method 'POST' -Body @{
+                '@odata.id' = "https://graph.microsoft.com/beta/deviceAppManagement/mobileAppCategories/$($currentCategory.Id)"
             }
         }
-
-        if ($AdditionalProperties)
-        {
-            $CreateParameters.add('AdditionalProperties', $AdditionalProperties)
-        }
-
-        #LargeIcon
-        if($LargeIcon)
-        {
-            [System.Object]$LargeIconValue = ConvertTo-M365DSCIntuneAppLargeIcon -LargeIcon $LargeIcon
-            $CreateParameters.Add('LargeIcon', $LargeIconValue)
-        }
-
-        $app = New-MgBetaDeviceAppManagementMobileApp @CreateParameters
 
         #Assignments
-        $assignmentsHash = ConvertTo-IntuneMobileAppAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
-        if ($app.id)
+        if ($app.Id)
         {
-            Update-MgBetaDeviceAppManagementMobileAppAssignment -MobileAppId $app.id `
-                -Target $assignmentsHash `
-                -Repository 'deviceAppManagement/mobileAppAssignments'
+            $assignmentsHash = ConvertTo-IntuneMobileAppAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
+            Update-DeviceAppManagementPolicyAssignment -AppManagementPolicyId $app.Id `
+                -Assignments $assignmentsHash
         }
     }
-    # UPDATE
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Host "Update MacOS app: $DisplayName"
+        Write-Host "Updating the Intune MacOS Lob App with DisplayName {$DisplayName}"
+        $BoundParameters.Remove('Assignments') | Out-Null
 
-        $PSBoundParameters.Remove('Assignments') | Out-Null
-        $UpdateParameters = ([Hashtable]$PSBoundParameters).clone()
+        $UpdateParameters = ([Hashtable]$BoundParameters).Clone()
         $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
-
-        $AdditionalProperties = Get-M365DSCIntuneMobileMocOSLobAppAdditionalProperties -Properties ($UpdateParameters)
-        foreach ($key in $AdditionalProperties.keys)
-        {
-            if ($key -ne '@odata.type')
-            {
-                $keyName = $key.substring(0, 1).ToUpper() + $key.substring(1, $key.length - 1)
-                #Remove additional keys, so that later they can be added as 'AdditionalProperties'
-                $UpdateParameters.Remove($keyName)
-            }
-        }
-
         $UpdateParameters.Remove('Id') | Out-Null
-        $UpdateParameters.Remove('Verbose') | Out-Null
         $UpdateParameters.Remove('Categories') | Out-Null
-        $UpdateParameters.Remove('PublishingState') | Out-Null #Not allowed to update as it's a computed property
 
-        foreach ($key in ($UpdateParameters.clone()).Keys)
+        foreach ($key in ($UpdateParameters.Clone()).Keys)
         {
-            if ($UpdateParameters[$key].getType().Fullname -like '*CimInstance*')
+            if ($null -ne $UpdateParameters.$key -and $UpdateParameters.$key.GetType().Name -like '*CimInstance*')
             {
-                $value = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters[$key]
-                $UpdateParameters[$key] = $value
+                $UpdateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters.$key
             }
         }
 
-        if ($AdditionalProperties)
+        $UpdateParameters.Add('@odata.type', '#microsoft.graph.macOSLobApp')
+        Update-MgBetaDeviceAppManagementMobileApp -MobileAppId $currentInstance.Id -BodyParameter $UpdateParameters
+
+        [array]$referenceObject = if ($null -ne $currentInstance.Categories.DisplayName) { $currentInstance.Categories.DisplayName } else { ,@() }
+        [array]$differenceObject = if ($null -ne $Categories.DisplayName) { $Categories.DisplayName } else { ,@() }
+        $delta = Compare-Object -ReferenceObject $referenceObject -DifferenceObject $differenceObject -PassThru
+        foreach ($diff in $delta)
         {
-            $UpdateParameters.Add('AdditionalProperties', $AdditionalProperties)
+            if ($diff.SideIndicator -eq '=>')
+            {
+                $category = $Categories | Where-Object { $_.DisplayName -eq $diff }
+                if ($category.Id)
+                {
+                    $currentCategory = Get-MgBetaDeviceAppManagementMobileAppCategory -MobileAppCategoryId $category.Id
+                }
+                else
+                {
+                    $currentCategory = Get-MgBetaDeviceAppManagementMobileAppCategory -Filter "displayName eq '$($category.DisplayName)'"
+                }
+
+                if ($null -eq $currentCategory)
+                {
+                    throw "Mobile App Category with DisplayName $($category.DisplayName) not found."
+                }
+
+                Invoke-MgGraphRequest -Uri "/beta/deviceAppManagement/mobileApps/$($currentInstance.Id)/categories/`$ref" -Method 'POST' -Body @{
+                    '@odata.id' = "https://graph.microsoft.com/beta/deviceAppManagement/mobileAppCategories/$($currentCategory.Id)"
+                }
+            }
+            else
+            {
+                $category = $currentInstance.Categories | Where-Object { $_.DisplayName -eq $diff }
+                Invoke-MgGraphRequest -Uri "/beta/deviceAppManagement/mobileApps/$($currentInstance.Id)/categories/$($category.Id)/`$ref" -Method 'DELETE'
+            }
         }
-
-         #LargeIcon
-         if($LargeIcon)
-         {
-             [System.Object]$LargeIconValue = ConvertTo-M365DSCIntuneAppLargeIcon -LargeIcon $LargeIcon
-             $UpdateParameters.Add('LargeIcon', $LargeIconValue)
-         }
-
-        Update-MgBetaDeviceAppManagementMobileApp -MobileAppId $currentInstance.Id @UpdateParameters
-        Write-Host "Updated MacOS App: $DisplayName."
 
         #Assignments
         $assignmentsHash = ConvertTo-IntuneMobileAppAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
-        Update-MgBetaDeviceAppManagementMobileAppAssignment -MobileAppId $currentInstance.id `
-            -Target $assignmentsHash `
-            -Repository 'deviceAppManagement/mobileAppAssignments'
+        Update-DeviceAppManagementPolicyAssignment -AppManagementPolicyId $currentInstance.Id `
+            -Assignments $assignmentsHash
     }
-    # REMOVE
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Host "Remove MacOS app: $DisplayName"
+        Write-Host "Remove the Intune MacOS Lob App with Id {$($currentInstance.Id)}"
         Remove-MgBetaDeviceAppManagementMobileApp -MobileAppId $currentInstance.Id -Confirm:$false
     }
 }
@@ -559,6 +566,14 @@ function Test-TargetResource
         $IgnoreVersionDetection,
 
         [Parameter()]
+        [System.Boolean]
+        $InstallAsManaged,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $MinimumSupportedOperatingSystem,
+
+        [Parameter()]
         [System.String]
         $Notes,
 
@@ -573,11 +588,6 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $Publisher,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet('notPublished', 'processing','published')]
-        $PublishingState,
 
         [Parameter()]
         [System.String[]]
@@ -610,7 +620,6 @@ function Test-TargetResource
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance]
         $LargeIcon,
-
         #endregion
 
         [Parameter()]
@@ -659,20 +668,10 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of Intune Mobile MacOS App: {$DisplayName}"
+    Write-Verbose -Message "Testing configuration of the Intune MacOS Lob App with Id {$Id} and DisplayName {$DisplayName}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
-    if (-not (Test-M365DSCAuthenticationParameter -BoundParameters $CurrentValues))
-    {
-        Write-Verbose "An error occured in Get-TargetResource, the app {$displayName} will not be processed"
-        throw "An error occured in Get-TargetResource, the app {$displayName} will not be processed. Refer to the event viewer logs for more information."
-    }
-    $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
-    $ValuesToCheck = Remove-M365DSCAuthenticationParameter -BoundParameters $ValuesToCheck
-    $ValuesToCheck.Remove('Id') | Out-Null
-
-    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
-    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
+    $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
 
     if ($CurrentValues.Ensure -ne $Ensure)
     {
@@ -686,21 +685,31 @@ function Test-TargetResource
     {
         $source = $PSBoundParameters.$key
         $target = $CurrentValues.$key
-        if ($source.getType().Name -like '*CimInstance*')
+        if ($null -ne $source -and $source.GetType().Name -like '*CimInstance*')
         {
             $testResult = Compare-M365DSCComplexObject `
                 -Source ($source) `
                 -Target ($target)
 
-            if (-Not $testResult)
+            if (-not $testResult)
             {
-                $testResult = $false
                 break
             }
 
             $ValuesToCheck.Remove($key) | Out-Null
         }
     }
+
+    # Prevent screen from filling up with the LargeIcon value
+    # Comparison will already be done because it's a CimInstance
+    $CurrentValues.Remove('LargeIcon') | Out-Null
+    $PSBoundParameters.Remove('LargeIcon') | Out-Null
+
+    $ValuesToCheck.Remove('Id') | Out-Null
+    $ValuesToCheck = Remove-M365DSCAuthenticationParameter -BoundParameters $ValuesToCheck
+
+    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     if ($testResult)
     {
@@ -721,6 +730,10 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
+        [Parameter()]
+        [System.String]
+        $Filter,
+
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
@@ -770,9 +783,7 @@ function Export-TargetResource
         $Script:ExportMode = $true
         [array] $Script:getInstances = Get-MgBetaDeviceAppManagementMobileApp `
             -Filter "isof('microsoft.graph.macOSLobApp')" `
-            -ExpandProperty "categories,assignments" `
-            -ErrorAction Stop | Where-Object `
-            -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.macOSLobApp' }
+            -ErrorAction Stop
 
         $i = 1
         $dscContent = ''
@@ -812,57 +823,89 @@ function Export-TargetResource
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
 
-            if (-not (Test-M365DSCAuthenticationParameter -BoundParameters $Results))
-            {
-                Write-Verbose "An error occured in Get-TargetResource, the app {$($params.displayName)} will not be processed."
-                throw "An error occured in Get-TargetResource, the app {$($params.displayName)} will not be processed. Refer to the event viewer logs for more information."
-            }
-
             #region complex types
-
-            #Categories
-            if($null -ne $Results.Categories)
+            if ($null -ne $Results.Categories)
             {
-                $Results.Categories = Get-M365DSCIntuneAppCategoriesAsString -Categories $Results.Categories
-            }
-            else {
-                $Results.Remove('Categories') | Out-Null
-            }
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                    -ComplexObject $Results.Categories `
+                    -CIMInstanceName 'DeviceManagementMobileAppCategory'
 
-            #ChildApps
-            if($null -ne $Results.childApps)
-            {
-                $Results.childApps = Get-M365DSCIntuneAppChildAppsAsString -ChildApps $Results.childApps
-            }
-            else {
-                $Results.Remove('childApps') | Out-Null
-            }
-
-            #Assignments
-            if ($null -ne $Results.Assignments)
-            {
-                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject ([Array]$Results.Assignments) -CIMInstanceName DeviceManagementMobileAppAssignment
-
-                if ($complexTypeStringResult)
+                if (-not [System.String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
-                    $Results.Assignments = $complexTypeStringResult
+                    $Results.Categories = $complexTypeStringResult
                 }
                 else
                 {
-                    $Results.Remove('Assignments') | Out-Null
+                    $Results.Remove('Categories') | Out-Null
                 }
             }
 
-            #LargeIcon
-            if($null -ne $Results.LargeIcon)
+            if ($null -ne $Results.ChildApps)
             {
-                $Results.LargeIcon = Get-M365DSCIntuneAppLargeIconAsString -LargeIcon $Results.LargeIcon
-            }
-            else
-            {
-                $Results.Remove('LargeIcon') | Out-Null
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                    -ComplexObject $Results.ChildApps `
+                    -CIMInstanceName 'DeviceManagementMobileAppChildApp'
+
+                if (-not [System.String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                {
+                    $Results.ChildApps = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('ChildApps') | Out-Null
+                }
             }
 
+            if ($null -ne $Results.LargeIcon)
+            {
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                    -ComplexObject $Results.LargeIcon `
+                    -CIMInstanceName 'DeviceManagementMimeContent'
+
+                if (-not [System.String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                {
+                    $Results.LargeIcon = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('LargeIcon') | Out-Null
+                }
+            }
+
+            if ($null -ne $Results.MinimumSupportedOperatingSystem)
+            {
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                    -ComplexObject $Results.MinimumSupportedOperatingSystem `
+                    -CIMInstanceName 'DeviceManagementMinimumOperatingSystem'
+
+                if (-not [System.String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                {
+                    $Results.MinimumSupportedOperatingSystem = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('MinimumSupportedOperatingSystem') | Out-Null
+                }
+            }
+
+            if ($null -ne $Results.Assignments)
+            {
+                if ($Results.Assignments)
+                {
+                    $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                        -ComplexObject $Results.Assignments `
+                        -CIMInstanceName DeviceManagementMobileAppAssignment
+
+                    if ($complexTypeStringResult)
+                    {
+                        $Results.Assignments = $complexTypeStringResult
+                    }
+                    else
+                    {
+                        $Results.Remove('Assignments') | Out-Null
+                    }
+                }
+            }
             #endregion complex types
 
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
@@ -872,49 +915,30 @@ function Export-TargetResource
                 -Credential $Credential
 
             #region complex types
-
-            #Categories
             if ($null -ne $Results.Categories)
             {
-                $isCIMArray = $false
-                if ($Results.Categories.getType().Fullname -like '*[[\]]')
-                {
-                    $isCIMArray = $true
-                }
-
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Categories' -IsCIMArray:$isCIMArray
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Categories' -IsCIMArray:$true
             }
 
-            #ChildApps
-            if ($null -ne $Results.childApps)
+            if ($null -ne $Results.ChildApps)
             {
-                $isCIMArray = $false
-                if ($Results.childApps.getType().Fullname -like '*[[\]]')
-                {
-                    $isCIMArray = $true
-                }
-
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'ChildApps' -IsCIMArray:$isCIMArray
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'ChildApps' -IsCIMArray:$true
             }
 
-            #Assignments
-            if ($null -ne $Results.Assignments)
-            {
-                $isCIMArray = $false
-                if ($Results.Assignments.getType().Fullname -like '*[[\]]')
-                {
-                    $isCIMArray = $true
-                }
-
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Assignments' -IsCIMArray:$isCIMArray
-            }
-
-            #LargeIcon
             if ($null -ne $Results.LargeIcon)
             {
                 $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'LargeIcon' -IsCIMArray:$false
             }
 
+            if ($null -ne $Results.MinimumSupportedOperatingSystem)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'MinimumSupportedOperatingSystem' -IsCIMArray:$false
+            }
+
+            if ($null -ne $Results.Assignments)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Assignments' -IsCIMArray:$true
+            }
             #endregion complex types
 
             $dscContent += $currentDSCBlock
@@ -939,185 +963,5 @@ function Export-TargetResource
         return ''
     }
 }
-
-#region Helper functions
-
-function Get-M365DSCIntuneAppCategoriesAsString
-{
-    [CmdletBinding()]
-    [OutputType([System.String])]
-    param(
-        [Parameter(Mandatory = $true)]
-        [System.Object[]]
-        $Categories
-    )
-
-    $StringContent = '@('
-    $space = '                '
-    $indent = '    '
-
-    $i = 1
-    foreach ($category in $Categories)
-    {
-        if ($Categories.Count -gt 1)
-        {
-            $StringContent += "`r`n"
-            $StringContent += "$space"
-        }
-
-        #Only export the displayName, not Id
-        $StringContent += "MSFT_DeviceManagementMobileAppCategory { `r`n"
-        $StringContent += "$($space)$($indent)displayName = '" + $category.displayName + "'`r`n"
-        $StringContent += "$space}"
-
-        $i++
-    }
-
-    $StringContent += ')'
-
-    return $StringContent
-}
-
-function Get-M365DSCIntuneAppChildAppsAsString
-{
-    [CmdletBinding()]
-    [OutputType([System.String])]
-    param(
-        [Parameter(Mandatory = $true)]
-        [System.Object[]]
-        $ChildApps
-    )
-
-    $StringContent = '@('
-    $space = '                '
-    $indent = '    '
-
-    $i = 1
-    foreach ($childApp in $ChildApps)
-    {
-        if ($ChildApps.Count -gt 1)
-        {
-            $StringContent += "`r`n"
-            $StringContent += "$space"
-        }
-
-        $StringContent += "MSFT_DeviceManagementMobileAppChildApp { `r`n"
-        $StringContent += "$($space)$($indent)bundleId  = '" + $childApp.bundleId + "'`r`n"
-        $StringContent += "$($space)$($indent)buildNumber = '" + $childApp.buildNumber + "'`r`n"
-        $StringContent += "$($space)$($indent)versionNumber  = '" + $childApp.versionNumber + "'`r`n"
-        $StringContent += "$space}"
-
-        $i++
-    }
-
-    $StringContent += ')'
-
-    return $StringContent
-}
-
-function Get-M365DSCIntuneMobileMocOSLobAppAdditionalProperties
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param
-    (
-        [Parameter(Mandatory = 'true')]
-        [System.Collections.Hashtable]
-        $Properties
-    )
-
-    $additionalProperties = @(
-        'IgnoreVersionDetection'
-        'ChildApps'
-    )
-
-    $results = @{'@odata.type' = '#microsoft.graph.macOSLobApp' }
-    $cloneProperties = $Properties.clone()
-    foreach ($property in $cloneProperties.Keys)
-    {
-        if ($property -in $additionalProperties)
-        {
-            $propertyName = $property[0].ToString().ToLower() + $property.Substring(1, $property.Length - 1)
-            if ($properties.$property -and $properties.$property.getType().FullName -like '*CIMInstance*')
-            {
-                if ($properties.$property.getType().FullName -like '*[[\]]')
-                {
-                    $array = @()
-                    foreach ($item in $properties.$property)
-                    {
-                        $array += Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $item
-
-                    }
-                    $propertyValue = $array
-                }
-                else
-                {
-                    $propertyValue = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $properties.$property
-                }
-
-            }
-            else
-            {
-                $propertyValue = $properties.$property
-            }
-
-            $results.Add($propertyName, $propertyValue)
-        }
-    }
-
-    if ($results.Count -eq 1)
-    {
-        return $null
-    }
-    return $results
-}
-
-function Get-M365DSCIntuneAppLargeIconAsString #Get and Export
-{
-    [CmdletBinding()]
-    [OutputType([System.String])]
-    param(
-        [Parameter(Mandatory = $true)]
-        [System.Object]
-        $LargeIcon
-    )
-
-     $space = '                '
-     $indent = '    '
-
-    if ($null -ne $LargeIcon.Value)
-    {
-        $StringContent += "`r`n"
-        $StringContent += "$space"
-
-        $base64String = [System.Convert]::ToBase64String($LargeIcon.Value) # This exports the base64 string (blob) of the byte array, same as we see in Graph API response
-
-        $StringContent += "MSFT_DeviceManagementMimeContent { `r`n"
-        $StringContent += "$($space)$($indent)type  = '" + $LargeIcon.Type + "'`r`n"
-        $StringContent += "$($space)$($indent)value = '" + $base64String + "'`r`n"
-        $StringContent += "$space}"
-    }
-
-    return $StringContent
- }
-
-function ConvertTo-M365DSCIntuneAppLargeIcon #set
-{
-    [OutputType([System.Object])]
-    param(
-        [Parameter(Mandatory = $true)]
-        [System.Object]
-        $LargeIcon
-    )
-
-    $result = @{
-        type  = $LargeIcon.Type
-        value = $iconValue
-    }
-
-    return $result
-}
-
-#endregion Helper functions
 
 Export-ModuleMember -Function *-TargetResource
