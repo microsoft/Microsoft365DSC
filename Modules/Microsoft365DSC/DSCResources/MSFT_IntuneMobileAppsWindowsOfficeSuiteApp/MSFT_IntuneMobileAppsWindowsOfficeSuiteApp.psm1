@@ -215,7 +215,6 @@ function Get-TargetResource
             PublishingState       = $instance.PublishingState.ToString()
             RoleScopeTagIds       = $instance.RoleScopeTagIds
             ProductIds            = $instance.ProductIds
-            ExcludedApps          = $instance.ExcludedApps
             UseSharedComputerActivation = $instance.UseSharedComputerActivation
             UpdateChannel         = $instance.UpdateChannel
             OfficeSuiteAppDefaultFileFormat = $instance.OfficeSuiteAppDefaultFileFormat
@@ -249,13 +248,13 @@ function Get-TargetResource
             $results.Add('Categories', "")
         }
 
-        #childApps
-        if($null -ne $instance.AdditionalProperties.childApps)
+        #ExcludedApps
+        if($null -ne $instance.AdditionalProperties.excludedApps)
         {
-            $results.Add('ChildApps', $instance.AdditionalProperties.childApps)
+            $results.Add('ExcludedApps', $instance.AdditionalProperties.excludedApps)
         }
         else {
-            $results.Add('ChildApps', "")
+            $results.Add('ExcludedApps', "")
         }
 
         #Assignments
