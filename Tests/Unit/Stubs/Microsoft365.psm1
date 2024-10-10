@@ -96332,3 +96332,21 @@ function Set-AdminDlpPolicy
         $Environments
     )
 }
+
+function Remove-AdminDlpPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $ApiVersion,
+
+        [Parameter()]
+        [System.String]
+        $PolicyName,
+
+        [Parameter()]
+        [System.String]
+        $EnvironmentName
+    )
+}
