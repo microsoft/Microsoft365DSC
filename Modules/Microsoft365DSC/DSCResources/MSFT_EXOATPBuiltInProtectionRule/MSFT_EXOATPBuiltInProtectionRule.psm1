@@ -170,7 +170,6 @@ function Set-TargetResource
 
     $currentInstance = Get-TargetResource @PSBoundParameters
     $setParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
-    $setParameters.Remove('Identity') | Out-Null
 
     Write-Verbose -Message "Updating ATP Built-In Protection Rule {$Identity}"
     Set-ATPBuiltInProtectionRule @setParameters
