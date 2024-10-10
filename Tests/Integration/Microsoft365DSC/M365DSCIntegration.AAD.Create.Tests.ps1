@@ -191,6 +191,36 @@
                     CertificateThumbprint = $CertificateThumbprint
                     Ensure                       = "Present";
                 }
+                AADCustomSecurityAttributeDefinition 'AADCustomSecurityAttributeDefinition-ShoeSize'
+                {
+                    ApplicationId           = $ApplicationId;
+                    AttributeSet            = "TestAttributeSet";
+                    CertificateThumbprint   = $CertificateThumbprint;
+                    Ensure                  = "Present";
+                    IsCollection            = $False;
+                    IsSearchable            = $True;
+                    Name                    = "ShoeSize";
+                    Status                  = "Available";
+                    TenantId                = $TenantId;
+                    Type                    = "String";
+                    UsePreDefinedValuesOnly = $False;
+                    Description             = "What size of shoe is the person wearing?"
+                }
+                AADDomain 'AADDomain-Contoso'
+                {
+                    ApplicationId                    = $ApplicationId;
+                    AuthenticationType               = "Managed";
+                    CertificateThumbprint            = $CertificateThumbprint;
+                    Ensure                           = "Present";
+                    Id                               = "contoso.com";
+                    IsAdminManaged                   = $True;
+                    IsDefault                        = $True;
+                    IsRoot                           = $True;
+                    IsVerified                       = $True;
+                    PasswordNotificationWindowInDays = 14;
+                    PasswordValidityPeriodInDays     = 2147483647;
+                    TenantId                         = $TenantId;
+                }
                 AADEntitlementManagementAccessPackage 'myAccessPackage'
                 {
                     AccessPackagesIncompatibleWith = @();
