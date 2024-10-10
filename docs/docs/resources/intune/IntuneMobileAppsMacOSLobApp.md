@@ -14,13 +14,14 @@
 | **Owner** | Write | String | The owner of the app. Inherited from mobileApp. | |
 | **PrivacyInformationUrl** | Write | String | The privacy statement Url. Inherited from mobileApp. | |
 | **Publisher** | Write | String | The publisher of the app. Inherited from mobileApp. | |
-| **PublishingState** | Write | String | The publishing state for the app. The app cannot be assigned unless the app is published. Inherited from mobileApp. | `notPublished`, `processing`, `published` |
 | **BundleId** | Write | String | The bundleId of the app. | |
 | **BuildNumber** | Write | String | The build number of the app. | |
 | **VersionNumber** | Write | String | The version number of the app. | |
 | **RoleScopeTagIds** | Write | StringArray[] | List of Scope Tag IDs for mobile app. | |
-| **IgnoreVersionDetection** | Write | Boolean | Wether to ignore the version of the app or not. | |
+| **IgnoreVersionDetection** | Write | Boolean | Whether to ignore the version of the app or not. | |
+| **InstallAsManaged** | Write | Boolean | Install the app as managed. Requires macOS 11.0. | |
 | **LargeIcon** | Write | MSFT_DeviceManagementMimeContent | The icon for this app. | |
+| **MinimumSupportedOperatingSystem** | Write | MSFT_DeviceManagementMinimumOperatingSystem | The minimum supported operating system to install the app. | |
 | **Categories** | Write | MSFT_DeviceManagementMobileAppCategory[] | The list of categories for this app. | |
 | **Assignments** | Write | MSFT_DeviceManagementMobileAppAssignment[] | The list of assignments for this app. | |
 | **ChildApps** | Write | MSFT_DeviceManagementMobileAppChildApp[] | The list of child apps for this app package. | |
@@ -32,34 +33,6 @@
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
 | **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
-
-### MSFT_DeviceManagementMimeContent
-
-#### Parameters
-
-| Parameter | Attribute | DataType | Description | Allowed Values |
-| --- | --- | --- | --- | --- |
-| **type** | Write | String | Indicates the type of content mime. | |
-| **value** | Write | StringArray[] | The byte array that contains the actual content. | |
-
-### MSFT_DeviceManagementMobileAppCategory
-
-#### Parameters
-
-| Parameter | Attribute | DataType | Description | Allowed Values |
-| --- | --- | --- | --- | --- |
-| **displayName** | Key | String | The name of the app category. | |
-| **id** | Write | String | The unique identifier for an entity. Read-only. | |
-
-### MSFT_DeviceManagementMobileAppChildApp
-
-#### Parameters
-
-| Parameter | Attribute | DataType | Description | Allowed Values |
-| --- | --- | --- | --- | --- |
-| **bundleId** | Write | String | The bundleId of the app. | |
-| **buildNumber** | Write | String | The build number of the app. | |
-| **versionNumber** | Write | String | The version number of the app. | |
 
 ### MSFT_DeviceManagementMobileAppAssignment
 
@@ -73,7 +46,54 @@
 | **groupId** | Write | String | The group Id that is the target of the assignment. | |
 | **groupDisplayName** | Write | String | The group Display Name that is the target of the assignment. | |
 | **intent** | Write | String | Possible values for the install intent chosen by the admin. | `available`, `required`, `uninstall`, `availableWithoutEnrollment` |
-| **source** | Write | String | The source of this assignment. | |
+
+### MSFT_DeviceManagementMinimumOperatingSystem
+
+#### Parameters
+
+| Parameter | Attribute | DataType | Description | Allowed Values |
+| --- | --- | --- | --- | --- |
+| **v10_7** | Write | Boolean | Indicates if Mac OS X 10.7 or later is required to install the app. | |
+| **v10_8** | Write | Boolean | Indicates if Mac OS X 10.8 or later is required to install the app. | |
+| **v10_9** | Write | Boolean | Indicates if Mac OS X 10.9 or later is required to install the app. | |
+| **v10_10** | Write | Boolean | Indicates if Mac OS X 10.10 or later is required to install the app. | |
+| **v10_11** | Write | Boolean | Indicates if Mac OS X 10.11 or later is required to install the app. | |
+| **v10_12** | Write | Boolean | Indicates if Mac OS X 10.12 or later is required to install the app. | |
+| **v10_13** | Write | Boolean | Indicates if Mac OS X 10.13 or later is required to install the app. | |
+| **v10_14** | Write | Boolean | Indicates if Mac OS X 10.14 or later is required to install the app. | |
+| **v10_15** | Write | Boolean | Indicates if Mac OS X 10.15 or later is required to install the app. | |
+| **v11_0** | Write | Boolean | Indicates if Mac OS X 11.0 or later is required to install the app. | |
+| **v12_0** | Write | Boolean | Indicates if Mac OS X 12.0 or later is required to install the app. | |
+| **v13_0** | Write | Boolean | Indicates if Mac OS X 13.0 or later is required to install the app. | |
+| **v14_0** | Write | Boolean | Indicates if Mac OS X 14.0 or later is required to install the app. | |
+
+### MSFT_DeviceManagementMimeContent
+
+#### Parameters
+
+| Parameter | Attribute | DataType | Description | Allowed Values |
+| --- | --- | --- | --- | --- |
+| **Type** | Write | String | Indicates the type of content mime. | |
+| **Value** | Write | String | The Base64 encoded string content. | |
+
+### MSFT_DeviceManagementMobileAppCategory
+
+#### Parameters
+
+| Parameter | Attribute | DataType | Description | Allowed Values |
+| --- | --- | --- | --- | --- |
+| **DisplayName** | Key | String | The name of the app category. | |
+| **Id** | Write | String | The unique identifier for an entity. Read-only. | |
+
+### MSFT_DeviceManagementMobileAppChildApp
+
+#### Parameters
+
+| Parameter | Attribute | DataType | Description | Allowed Values |
+| --- | --- | --- | --- | --- |
+| **BundleId** | Write | String | The bundleId of the app. | |
+| **BuildNumber** | Write | String | The build number of the app. | |
+| **VersionNumber** | Write | String | The version number of the app. | |
 
 
 ## Description
@@ -142,30 +162,31 @@ Configuration Example
             Ensure                = "Present";
             InformationUrl        = "";
             IsFeatured            = $False;
+            MinimumSupportedOperatingSystem = MSFT_DeviceManagementMinimumOperatingSystem{
+                v11_0 = $true
+            }
             Notes                 = "";
             Owner                 = "";
             PrivacyInformationUrl = "";
             Publisher             = "Contoso";
-            PublishingState       = "published";
             Assignments          = @(
                     MSFT_DeviceManagementMobileAppAssignment{
-                            groupDisplayName = 'All devices'
-                        source = 'direct'
+                        groupDisplayName = 'All devices'
                         deviceAndAppManagementAssignmentFilterType = 'none'
                         dataType = '#microsoft.graph.allDevicesAssignmentTarget'
                         intent = 'required'
                     }
                     MSFT_DeviceManagementMobileAppAssignment{
                         deviceAndAppManagementAssignmentFilterType = 'none'
-                        source = 'direct'
                         dataType = '#microsoft.graph.groupAssignmentTarget'
                         groupId = '57b5e81c-85bb-4644-a4fd-33b03e451c89'
                         intent = 'required'
                     }
                 );
-            Categories           = @(MSFT_DeviceManagementMobileAppCategory {
-                    id  = '1bff2652-03ec-4a48-941c-152e93736515'
-                    displayName = 'Kajal 3'
+            Categories           = @(
+                MSFT_DeviceManagementMobileAppCategory {
+                    Id  = '1bff2652-03ec-4a48-941c-152e93736515'
+                    DisplayName = 'Kajal 3'
                 });
         }
     }
@@ -206,30 +227,30 @@ Configuration Example
             Ensure                = "Present";
             InformationUrl        = "";
             IsFeatured            = $False;
+            MinimumSupportedOperatingSystem = MSFT_DeviceManagementMinimumOperatingSystem{
+                v11_0 = $true
+            }
             Notes                 = "";
             Owner                 = "";
             PrivacyInformationUrl = "";
             Publisher             = "Contoso";
-            PublishingState       = "published";
             Assignments          = @(
                     MSFT_DeviceManagementMobileAppAssignment{
-                            groupDisplayName = 'All devices'
-                        source = 'direct'
+                        groupDisplayName = 'All devices'
                         deviceAndAppManagementAssignmentFilterType = 'none'
                         dataType = '#microsoft.graph.allDevicesAssignmentTarget'
                         intent = 'required'
                     }
                     MSFT_DeviceManagementMobileAppAssignment{
                         deviceAndAppManagementAssignmentFilterType = 'none'
-                        source = 'direct'
                         dataType = '#microsoft.graph.groupAssignmentTarget'
                         groupId = '57b5e81c-85bb-4644-a4fd-33b03e451c89'
                         intent = 'required'
                     }
                 );
             Categories           = @(MSFT_DeviceManagementMobileAppCategory {
-                    id  = '1bff2652-03ec-4a48-941c-152e93736515'
-                    displayName = 'Kajal 3'
+                    Id  = '1bff2652-03ec-4a48-941c-152e93736515'
+                    DisplayName = 'Kajal 3'
                 });
         }
     }
@@ -264,17 +285,8 @@ Configuration Example
         IntuneMobileAppsMacOSLobApp "IntuneMobileAppsMacOSLobApp-TeamsForBusinessInstaller"
         {
             Id                    = "8d027f94-0682-431e-97c1-827d1879fa79";
-            Description           = "TeamsForBusinessInstaller";
-            Developer             = "Contoso";
             DisplayName           = "TeamsForBusinessInstaller";
             Ensure                = "Absent";
-            InformationUrl        = "";
-            IsFeatured            = $False;
-            Notes                 = "";
-            Owner                 = "";
-            PrivacyInformationUrl = "";
-            Publisher             = "Contoso";
-            PublishingState       = "published";
         }
     }
 }
