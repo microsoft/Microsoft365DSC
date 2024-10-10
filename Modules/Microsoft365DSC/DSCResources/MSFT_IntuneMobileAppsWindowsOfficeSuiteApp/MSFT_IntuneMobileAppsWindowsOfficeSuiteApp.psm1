@@ -65,7 +65,7 @@ function Get-TargetResource
         $ProductIds,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance]
+        [PSCustomObject]
         $ExcludedApps,
 
         [Parameter()]
@@ -249,12 +249,12 @@ function Get-TargetResource
         }
 
         #ExcludedApps
-        if($null -ne $instance.AdditionalProperties.excludedApps)
+        if ($null -ne $instance.AdditionalProperties -and $null -ne $instance.AdditionalProperties.excludedApps)
         {
-            $results.Add('ExcludedApps', $instance.AdditionalProperties.excludedApps)
+            $results['ExcludedApps'] = [PSCustomObject]$instance.AdditionalProperties.excludedApps
         }
         else {
-            $results.Add('ExcludedApps', "")
+            $results.Add('ExcludedApps', $null)
         }
 
         #Assignments
@@ -363,7 +363,7 @@ function Set-TargetResource
         $ProductIds,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance]
+        [PSCustomObject]
         $ExcludedApps,
 
         [Parameter()]
@@ -504,8 +504,7 @@ function Set-TargetResource
         $CreateParameters.remove('Ensure') | Out-Null
         $CreateParameters.remove('Categories') | Out-Null
         $CreateParameters.remove('Assignments') | Out-Null
-        $CreateParameters.remove('childApps') | Out-Null
-        $CreateParameters.remove('IgnoreVersionDetection') | Out-Null
+        $CreateParameters.remove('excludedApps') | Out-Null
         $CreateParameters.Remove('Verbose') | Out-Null
         $CreateParameters.Remove('PublishingState') | Out-Null #Not allowed to update as it's a computed property
         $CreateParameters.Remove('LargeIcon') | Out-Null
@@ -671,7 +670,7 @@ function Test-TargetResource
         $ProductIds,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance]
+        [PSCustomObject]
         $ExcludedApps,
 
         [Parameter()]
@@ -948,13 +947,13 @@ function Export-TargetResource
                 $Results.Remove('Categories') | Out-Null
             }
 
-            #ChildApps
-            if($null -ne $Results.childApps)
+            #ExcludedApps
+            if($null -ne $Results.excludedApps)
             {
-                $Results.childApps = Get-M365DSCIntuneAppChildAppsAsString -ChildApps $Results.childApps
+                $Results.excludedApps = Get-M365DSCIntuneAppExcludedAppsAsString -ExcludedApps $Results.excludedApps
             }
             else {
-                $Results.Remove('childApps') | Out-Null
+                $Results.Remove('excludedApps') | Out-Null
             }
 
             #Assignments
@@ -1004,16 +1003,16 @@ function Export-TargetResource
                 $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Categories' -IsCIMArray:$isCIMArray
             }
 
-            #ChildApps
-            if ($null -ne $Results.childApps)
+            #ExcludedApps
+            if ($null -ne $Results.excludedApps)
             {
                 $isCIMArray = $false
-                if ($Results.childApps.getType().Fullname -like '*[[\]]')
+                if ($Results.excludedApps.getType().Fullname -like '*[[\]]')
                 {
                     $isCIMArray = $true
                 }
 
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'ChildApps' -IsCIMArray:$isCIMArray
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'ExcludedApps' -IsCIMArray:$isCIMArray
             }
 
             #Assignments
@@ -1097,39 +1096,33 @@ function Get-M365DSCIntuneAppCategoriesAsString
     return $StringContent
 }
 
-function Get-M365DSCIntuneAppChildAppsAsString
+function Get-M365DSCIntuneAppExcludedAppsAsString
 {
     [CmdletBinding()]
     [OutputType([System.String])]
     param(
         [Parameter(Mandatory = $true)]
-        [System.Object[]]
-        $ChildApps
+        [System.Object]
+        $ExcludedApps
     )
 
-    $StringContent = '@('
-    $space = '                '
-    $indent = '    '
-
-    $i = 1
-    foreach ($childApp in $ChildApps)
-    {
-        if ($ChildApps.Count -gt 1)
-        {
-            $StringContent += "`r`n"
-            $StringContent += "$space"
-        }
-
-        $StringContent += "MSFT_DeviceManagementMobileAppChildApp { `r`n"
-        $StringContent += "$($space)$($indent)bundleId  = '" + $childApp.bundleId + "'`r`n"
-        $StringContent += "$($space)$($indent)buildNumber = '" + $childApp.buildNumber + "'`r`n"
-        $StringContent += "$($space)$($indent)versionNumber  = '" + $childApp.versionNumber + "'`r`n"
-        $StringContent += "$space}"
-
-        $i++
-    }
-
-    $StringContent += ')'
+    $StringContent = "@{"
+    $StringContent += "`n    Access = '$($ExcludedApps.Access)'"
+    $StringContent += "`n    Bing = '$($ExcludedApps.Bing)'"
+    $StringContent += "`n    Excel = '$($ExcludedApps.Excel)'"
+    $StringContent += "`n    Groove = '$($ExcludedApps.Groove)'"
+    $StringContent += "`n    InfoPath = '$($ExcludedApps.InfoPath)'"
+    $StringContent += "`n    Lync = '$($ExcludedApps.Lync)'"
+    $StringContent += "`n    OneDrive = '$($ExcludedApps.OneDrive)'"
+    $StringContent += "`n    OneNote = '$($ExcludedApps.OneNote)'"
+    $StringContent += "`n    Outlook = '$($ExcludedApps.Outlook)'"
+    $StringContent += "`n    PowerPoint = '$($ExcludedApps.PowerPoint)'"
+    $StringContent += "`n    Publisher = '$($ExcludedApps.Publisher)'"
+    $StringContent += "`n    SharePointDesigner = '$($ExcludedApps.SharePointDesigner)'"
+    $StringContent += "`n    Teams = '$($ExcludedApps.Teams)'"
+    $StringContent += "`n    Visio = '$($ExcludedApps.Visio)'"
+    $StringContent += "`n    Word = '$($ExcludedApps.Word)'"
+    $StringContent += "`n}"
 
     return $StringContent
 }
@@ -1146,8 +1139,8 @@ function Get-M365DSCIntuneMobileMocOSLobAppAdditionalProperties
     )
 
     $additionalProperties = @(
-        'IgnoreVersionDetection'
-        'ChildApps'
+        'AutoAcceptEula'
+        'ExcludedApps'
     )
 
     $results = @{'@odata.type' = '#microsoft.graph.officeSuiteApp' }
