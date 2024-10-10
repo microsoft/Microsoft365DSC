@@ -19348,7 +19348,7 @@ function Get-MgBetaDeviceManagementGroupPolicyConfigurationAssignment
     )
 }
 
-New-MgBetaDeviceManagementDerivedCredential {
+function New-MgBetaDeviceManagementDerivedCredential {
 
     [CmdletBinding()]
     param (
@@ -19376,7 +19376,7 @@ New-MgBetaDeviceManagementDerivedCredential {
     )
 }
 
-Get-MgBetaDeviceManagementDerivedCredential {
+function Get-MgBetaDeviceManagementDerivedCredential {
     [CmdletBinding()]
     param (
         [Parameter()]
@@ -19403,7 +19403,7 @@ Get-MgBetaDeviceManagementDerivedCredential {
     )
 }
 
-Remove-MgBetaDeviceManagementDerivedCredential
+function Remove-MgBetaDeviceManagementDerivedCredential
 {
     [CmdletBinding()]
     param(

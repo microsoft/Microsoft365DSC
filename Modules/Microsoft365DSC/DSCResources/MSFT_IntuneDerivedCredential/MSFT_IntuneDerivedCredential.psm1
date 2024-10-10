@@ -239,6 +239,7 @@ function Set-TargetResource {
     {
         New-MgBetaDeviceManagementDerivedCredential @SetParameters
     }
+    # UPDATE is not supported API, it always creates a new Derived Credential instance
     # REMOVE
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
