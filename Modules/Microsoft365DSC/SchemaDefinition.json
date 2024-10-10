@@ -35400,6 +35400,161 @@
                        ]
     },
     {
+        "ClassName":  "MSFT_DeviceManagementMobileAppAssignment",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "dataType",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "deviceAndAppManagementAssignmentFilterId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "deviceAndAppManagementAssignmentFilterType",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "groupId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "groupDisplayName",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "intent",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_DeviceManagementMinimumOperatingSystem",
+        "Parameters":  [
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "v10_7",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "v10_8",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "v10_9",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "v10_10",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "v10_11",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "v10_12",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "v10_13",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "v10_14",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "v10_15",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "v11_0",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "v12_0",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "v13_0",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "v14_0",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_DeviceManagementMimeContent",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Type",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Value",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_DeviceManagementMobileAppCategory",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "DisplayName",
+                               "Option":  "Key"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Id",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_DeviceManagementMobileAppChildApp",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "BundleId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "BuildNumber",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "VersionNumber",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
         "ClassName":  "MSFT_IntuneMobileAppsMacOSLobApp",
         "Parameters":  [
                            {
@@ -35454,11 +35609,6 @@
                            },
                            {
                                "CIMType":  "String",
-                               "Name":  "PublishingState",
-                               "Option":  "Write"
-                           },
-                           {
-                               "CIMType":  "String",
                                "Name":  "BundleId",
                                "Option":  "Write"
                            },
@@ -35483,8 +35633,18 @@
                                "Option":  "Write"
                            },
                            {
+                               "CIMType":  "Boolean",
+                               "Name":  "InstallAsManaged",
+                               "Option":  "Write"
+                           },
+                           {
                                "CIMType":  "MSFT_DeviceManagementMimeContent",
                                "Name":  "LargeIcon",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_DeviceManagementMinimumOperatingSystem",
+                               "Name":  "MinimumSupportedOperatingSystem",
                                "Option":  "Write"
                            },
                            {
@@ -35540,96 +35700,6 @@
                            {
                                "CIMType":  "String[]",
                                "Name":  "AccessTokens",
-                               "Option":  "Write"
-                           }
-                       ]
-    },
-    {
-        "ClassName":  "MSFT_DeviceManagementMimeContent",
-        "Parameters":  [
-                           {
-                               "CIMType":  "String",
-                               "Name":  "type",
-                               "Option":  "Write"
-                           },
-                           {
-                               "CIMType":  "String[]",
-                               "Name":  "value",
-                               "Option":  "Write"
-                           }
-                       ]
-    },
-    {
-        "ClassName":  "MSFT_DeviceManagementMobileAppCategory",
-        "Parameters":  [
-                           {
-                               "CIMType":  "String",
-                               "Name":  "displayName",
-                               "Option":  "Key"
-                           },
-                           {
-                               "CIMType":  "String",
-                               "Name":  "id",
-                               "Option":  "Write"
-                           }
-                       ]
-    },
-    {
-        "ClassName":  "MSFT_DeviceManagementMobileAppChildApp",
-        "Parameters":  [
-                           {
-                               "CIMType":  "String",
-                               "Name":  "bundleId",
-                               "Option":  "Write"
-                           },
-                           {
-                               "CIMType":  "String",
-                               "Name":  "buildNumber",
-                               "Option":  "Write"
-                           },
-                           {
-                               "CIMType":  "String",
-                               "Name":  "versionNumber",
-                               "Option":  "Write"
-                           }
-                       ]
-    },
-    {
-        "ClassName":  "MSFT_DeviceManagementMobileAppAssignment",
-        "Parameters":  [
-                           {
-                               "CIMType":  "String",
-                               "Name":  "dataType",
-                               "Option":  "Write"
-                           },
-                           {
-                               "CIMType":  "String",
-                               "Name":  "deviceAndAppManagementAssignmentFilterId",
-                               "Option":  "Write"
-                           },
-                           {
-                               "CIMType":  "String",
-                               "Name":  "deviceAndAppManagementAssignmentFilterType",
-                               "Option":  "Write"
-                           },
-                           {
-                               "CIMType":  "String",
-                               "Name":  "groupId",
-                               "Option":  "Write"
-                           },
-                           {
-                               "CIMType":  "String",
-                               "Name":  "groupDisplayName",
-                               "Option":  "Write"
-                           },
-                           {
-                               "CIMType":  "String",
-                               "Name":  "intent",
-                               "Option":  "Write"
-                           },
-                           {
-                               "CIMType":  "String",
-                               "Name":  "source",
                                "Option":  "Write"
                            }
                        ]
