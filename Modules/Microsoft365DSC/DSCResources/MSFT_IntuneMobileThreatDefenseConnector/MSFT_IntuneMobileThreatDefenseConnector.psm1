@@ -11,6 +11,10 @@ function Get-TargetResource
         $Id,
 
         [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
         [System.Boolean]
         $AllowPartnerToCollectIosApplicationMetadata,
 
@@ -131,15 +135,41 @@ function Get-TargetResource
         }
         else
         {
-            $instance = Get-MgDeviceManagementMobileThreatDefenseConnector -PrimaryKey $Id -ErrorAction Stop
+            $instance = Get-MgDeviceManagementMobileThreatDefenseConnector -MobileThreatDefenseConnectorId $Id -ErrorAction Stop
         }
+
         if ($null -eq $instance)
         {
-            return $nullResult
+            Write-Verbose -Message "Could not find MobileThreatDefenseConnector by Id: {$Id}."
+            if (-Not [string]::IsNullOrEmpty($DisplayName))
+            {
+                # There is no API which searches MobileThreatDefenseConnector by its DisplayName so the below code is commented out.
+                # $instance = Get-MgBetaDeviceAppManagementMobileAppConfiguration `
+                #       -Filter "DisplayName eq '$DisplayName'" `
+
+                # The DisplayName property is not supported by the any API of this resource, hence hard-coded in below function for convenience.
+                $connectorId = Get-MobileThreatDefenseConnectorIdOrDisplayName -DisplayName $DisplayName
+                $instance = Get-MgBetaDeviceAppManagementMobileAppConfiguration `
+                    -MobileThreatDefenseConnectorId $connectorId
+                    -ErrorAction SilentlyContinue
+            }
+
+            if ($null -eq $instance)
+            {
+                Write-Verbose -Message "Could not find MobileThreatDefenseConnector by DisplayName: {$DisplayName}."
+                return $nullResult
+            }
+        }
+
+        if([string]::IsNullOrEmpty($DisplayName))
+        {
+            $funcres = Get-MobileThreatDefenseConnectorIdOrDisplayName -Id $instance.Id
+            $DisplayName = $funcres.DisplayName
         }
 
         $results = @{
-            Id                                             = $Id
+            Id                                             = $instance.Id
+            DisplayName                                    = $DisplayName
             ResponseHeadersVariable                        = $ResponseHeadersVariable
             AdditionalProperties                           = $AdditionalProperties
             AllowPartnerToCollectIosApplicationMetadata    = $AllowPartnerToCollectIosApplicationMetadata
@@ -193,6 +223,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $Id,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
 
         [Parameter()]
         [System.Boolean]
@@ -309,17 +343,17 @@ function Set-TargetResource
     # CREATE
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        New-MgDeviceManagementMobileThreatDefenseConnector @SetParameters
+        New-MgBetaDeviceManagementMobileThreatDefenseConnector @SetParameters
     }
     # UPDATE
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        Update-MgDeviceManagementMobileThreatDefenseConnector @SetParameters
+        Update-MgBetaDeviceManagementMobileThreatDefenseConnector @SetParameters
     }
     # REMOVE
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Remove-MgDeviceManagementMobileThreatDefenseConnector @SetParameters
+        Remove-MgBetaDeviceManagementMobileThreatDefenseConnector @SetParameters
     }
 }
 
@@ -334,6 +368,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $Id,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
 
         [Parameter()]
         [System.Boolean]
@@ -479,10 +517,6 @@ function Export-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ApplicationSecret,
-
-        [Parameter()]
         [System.String]
         $CertificateThumbprint,
 
@@ -529,12 +563,14 @@ function Export-TargetResource
         {
             Write-Host "`r`n" -NoNewline
         }
+
         foreach ($config in $Script:exportedInstances)
         {
             $displayedKey = $config.Id
             Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -NoNewline
             $params = @{
                 Id                    = $config.Id
+                DisplayName           = $config.DisplayName
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
@@ -572,6 +608,63 @@ function Export-TargetResource
             -Credential $Credential
 
         return ''
+    }
+}
+
+#region Helper functions
+
+function Get-MobileThreatDefenseConnectorIdOrDisplayName {
+    param (
+        [Parameter(Mandatory = $false)]
+        [string]$Id,
+
+        [Parameter(Mandatory = $false)]
+        [string]$DisplayName
+    )
+
+    # Hashtable mapping IDs to Display Names
+    $IdToDisplayNameMap = @{
+        "fc780465-2017-40d4-a0c5-307022471b92" = "Microsoft Defender for Endpoint"
+        "860d3ab4-8fd1-45f5-89cd-ecf51e4f92e5" = "BETTER Mobile Security"
+        "d3ddeae8-441f-4681-b80f-aef644f7195a" = "Check Point Harmony Mobile"
+        "8d0ed095-8191-4bd3-8a41-953b22d51ff7" = "Pradeo"
+        "1f58d6d2-02cc-4c80-b008-1bfe7396a10a" = "Jamf Trust"
+        "4873197-ffec-4dfc-9816-db65f34c7cb9"  = "Trellix Mobile Security"
+        "a447eca6-a986-4d3f-9838-5862bf50776c" = "CylancePROTECT Mobile"
+        "4928f0f6-2660-4f69-b4c5-5170ec921f7b" = "Trend Micro"
+        "bb13fe25-ce1f-45aa-b278-cabbc6b9072e" = "SentinelOne"
+        "e6f777f8-e4c2-4a5b-be01-50b5c124bc7f" = "Windows Security Center"
+        "29ee2d98-e795-475f-a0f8-0802dc3384a9" = "CrowdStrike Falcon for Mobile"
+        "870b252b-0ef0-4707-8847-50fc571472b3" = "Sophos"
+        "2c7790de-8b02-4814-85cf-e0c59380dee8" = "Lookout for Work"
+        "28fd67fd-b179-4629-a8b0-dad420b697c7" = "Symantec Endpoint Protection"
+        "08a8455c-48dd-45ff-ad82-7211355354f3" = "Zimperium"
+    }
+
+    # If Id is provided, look up the DisplayName
+    if($null -ne $Id)
+    {
+        $displayName = $IdToDisplayNameMap[$Id]
+    }
+
+    # If DisplayName is provided, look up the Id
+    # Create a reverse lookup hashtable for DisplayName to Id
+    $DisplayNameToIdMap = @{}
+    foreach ($key in $IdToDisplayNameMap.Keys) {
+        $DisplayNameToIdMap[$IdToDisplayNameMap[$key]] = $key
+    }
+    if (-not [string]::IsNullOrEmpty($DisplayName)) {
+        $Id = $DisplayNameToIdMap[$DisplayName]
+        if (-not $Id) {
+            Write-Host "Internal func: DisplayName '$DisplayName' not found."
+            return
+        }
+    }
+
+    # Create the results tuple
+    return @{
+        Id = $Id
+        DisplayName = $displayName
     }
 }
 
