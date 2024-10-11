@@ -44,6 +44,8 @@
   * Initial release
 * PPAdminDLPPolicy
   * Initial release.
+* PPDLPPolicyConnectorConfigurations
+  * Initial release.
 * PPPowerAppPolicyUrlPatterns
   * Initial release.
 * M365DSCDRGUtil
