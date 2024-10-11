@@ -96248,3 +96248,105 @@ function Get-MgBetaDirectoryCustomSecurityAttributeDefinition
         $HttpPipelineAppend
     )
 }
+
+function Get-AdminDlpPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $PolicyName,
+
+        [Parameter()]
+        [System.Object]
+        $ApiVersion,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $CreatedBy
+    )
+}
+function New-AdminDlpPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $ApiVersion,
+
+        [Parameter()]
+        [System.Boolean]
+        $BlockNonBusinessDataGroup,
+
+        [Parameter()]
+        [System.String]
+        $EnvironmentName,
+
+        [Parameter()]
+        [System.String]
+        $SchemaVersion
+    )
+}
+function Set-AdminDlpPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $SchemaVersion,
+
+        [Parameter()]
+        [System.String]
+        $FilterType,
+
+        [Parameter()]
+        [System.String]
+        $EnvironmentName,
+
+        [Parameter()]
+        [System.String]
+        $SetNonBusinessDataGroupState,
+
+        [Parameter()]
+        [System.String]
+        $DefaultGroup,
+
+        [Parameter()]
+        [System.String]
+        $ApiVersion,
+
+        [Parameter()]
+        [System.String]
+        $PolicyName,
+
+        [Parameter()]
+        [System.String]
+        $Environments
+    )
+}
+
+function Remove-AdminDlpPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $ApiVersion,
+
+        [Parameter()]
+        [System.String]
+        $PolicyName,
+
+        [Parameter()]
+        [System.String]
+        $EnvironmentName
+    )
+}
