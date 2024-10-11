@@ -2555,6 +2555,23 @@ function Export-IntuneSettingCatalogPolicySettings
         {
             $settingName = Get-SettingDefinitionNameWithParentFromOffsetUri -OffsetUri $settingDefinition.OffsetUri -SettingName $settingName
         }
+
+        # Simplify names from the OffsetUri. This is done to make the names more readable, especially in case of long and complex OffsetUris. 
+        switch -wildcard ($settingName)
+        {
+            { 'access16v2~Policy~L_MicrosoftOfficeaccess~L_ApplicationSettings~L_Security*' } { $settingName = $settingName.Replace('access16v2~Policy~L_MicrosoftOfficeaccess~L_ApplicationSettings', 'MicrosoftAccess_') }
+            { 'excel16v2~Policy~L_MicrosoftOfficeExcel~L_ExcelOptions~*' } { $settingName = $settingName.Replace('excel16v2~Policy~L_MicrosoftOfficeExcel~L_ExcelOptions', 'MicrosoftExcel_') }
+            { 'word16v2~Policy~L_MicrosoftOfficeWord~L_WordOptions~*' } { $settingName = $settingName.Replace('word16v2~Policy~L_MicrosoftOfficeWord~L_WordOptions', 'MicrosoftWord_') }
+            { 'ppt16v2~Policy~L_MicrosoftOfficePowerPoint~L_PowerPointOptions~*' } { $settingName = $settingName.Replace('ppt16v2~Policy~L_MicrosoftOfficePowerPoint~L_PowerPointOptions', 'MicrosoftPowerPoint_') }
+            { 'proj16v2~Policy~L_Proj~L_ProjectOptions~*' } { $settingName = $settingName.Replace('proj16v2~Policy~L_Proj~L_ProjectOptions', 'MicrosoftProject_') }
+            { 'visio16v2~Policy~L_MicrosoftVisio~L_VisioOptions~*' } { $settingName = $settingName.Replace('visio16v2~Policy~L_MicrosoftVisio~L_VisioOptions', 'MicrosoftVisio_') }
+            { 'pub16v*~Policy~L_MicrosoftOfficePublisher~' } { $settingName = [Regex]::replace($settingName, 'pub16v(.*)~Policy~L_MicrosoftOfficePublisher', 'MicrosoftPublisher_') }
+            { '*~L_Security~*' } { $settingName = $settingName.Replace('~L_Security', 'Security') }
+            { '*~L_TrustCenter_'}  { $settingName = $settingName.Replace('~L_TrustCenter', '_TrustCenter') }
+            { '*~L_ProtectedView_' } { $settingName = $settingName.Replace('~L_ProtectedView', 'ProtectedView') }
+            { '*~L_FileBlockSettings_' } { $settingName = $settingName.Replace('~L_FileBlockSettings', 'FileBlockSettings') }
+            { '*~L_TrustedLocations' } { $settingName = $settingName.Replace('~L_TrustedLocations', 'TrustedLocations') }
+        }
     }
 
     $odataType = if ($IsRoot) { $SettingInstance.AdditionalProperties.'@odata.type' } else { $SettingInstance.'@odata.type' }
