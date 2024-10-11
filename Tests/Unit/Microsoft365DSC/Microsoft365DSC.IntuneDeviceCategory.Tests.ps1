@@ -49,7 +49,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         }
 
         # Test contexts
-        Context -Name "When the category doesn't already exist" -Fixture {
+        Context -Name " 1. When the category doesn't already exist" -Fixture {
             BeforeAll {
                 $testParams = @{
                     DisplayName = 'Test Category'
@@ -63,21 +63,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            It 'Should return absent from the Get method' {
+            It ' 1.1 Should return absent from the Get method' {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Absent'
             }
 
-            It 'Should return false from the Test method' {
+            It ' 1.2 Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 
-            It 'Should create the category from the Set method' {
+            It ' 1.3 Should create the category from the Set method' {
                 Set-TargetResource @testParams
                 Should -Invoke -CommandName 'New-MgBetaDeviceManagementDeviceCategory' -Exactly 1
             }
         }
 
-        Context -Name 'When the policy exists and it SHOULD NOT' -Fixture {
+        Context -Name ' 2. When the policy exists and it SHOULD NOT' -Fixture {
             BeforeAll {
                 $testParams = @{
                     DisplayName = 'Test Category'
@@ -95,21 +95,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            It 'Should return Present from the Get method' {
+            It ' 2.1 Should return Present from the Get method' {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It 'Should return true from the Test method' {
+            It '2.2 Should return true from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 
-            It 'Should remove the category from the Set method' {
+            It ' 2.3 Should remove the category from the Set method' {
                 Set-TargetResource @testParams
                 Should -Invoke -CommandName Remove-MgBetaDeviceManagementDeviceCategory -Exactly 1
             }
         }
 
-        Context -Name 'When the policy already exists and IS in the Desired State' -Fixture {
+        Context -Name ' 3. When the policy already exists and IS in the Desired State' -Fixture {
             BeforeAll {
                 $testParams = @{
                     DisplayName = 'Test Category'
@@ -127,12 +127,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            It 'Should return true from the Test method' {
+            It ' 3.0 Should return true from the Test method' {
                 Test-TargetResource @testParams | Should -Be $true
             }
         }
 
-        Context -Name 'When the policy already exists and is NOT in the Desired State' -Fixture {
+        Context -Name ' 4. When the policy already exists and is NOT in the Desired State' -Fixture {
             BeforeAll {
                 $testParams = @{
                     DisplayName = 'Test Category'
@@ -150,21 +150,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            It 'Should return Present from the Get method' {
+            It ' 4.1 Should return Present from the Get method' {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It 'Should return false from the Test method' {
+            It '4.2 Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 
-            It 'Should update the category from the Set method' {
+            It '4.3 Should update the category from the Set method' {
                 Set-TargetResource @testParams
                 Should -Invoke -CommandName Update-MgBetaDeviceManagementDeviceCategory -Exactly 1
             }
         }
 
-        Context -Name 'ReverseDSC Tests' -Fixture {
+        Context -Name ' 5. ReverseDSC Tests' -Fixture {
             BeforeAll {
                 $Global:CurrentModeIsExport = $true
                 $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
@@ -181,7 +181,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            It 'Should Reverse Engineer resource from the Export method' {
+            It '5.0 Should Reverse Engineer resource from the Export method' {
                 $result = Export-TargetResource @testParams
                 $result | Should -Not -BeNullOrEmpty
             }

@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+IntuneMobileThreatDefenseConnector
+  * Initial release.
 * AADAdminConsentRequestPolicy
   * Initial release.
 * AADApplication

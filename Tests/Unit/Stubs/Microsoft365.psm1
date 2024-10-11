@@ -18284,7 +18284,9 @@ function Invoke-MgGraphRequest
     )
 }
 #endregion
+
 #region Microsoft.Graph.Beta.DeviceManagement
+
 function Get-MgBetaDeviceManagement
 {
     [CmdletBinding()]
@@ -18322,6 +18324,47 @@ function Get-MgBetaDeviceManagement
         $Break
     )
 }
+
+function New-MgDeviceManagementMobileThreatDefenseConnector
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Id
+    )
+}
+
+function Get-MgDeviceManagementMobileThreatDefenseConnector
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $MobileThreatDefenseConnectorId
+    )
+}
+
+function Update-MgDeviceManagementMobileThreatDefenseConnector
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $MobileThreatDefenseConnectorId
+    )
+}
+
+function Remove-MgDeviceManagementMobileThreatDefenseConnector
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $MobileThreatDefenseConnectorId
+    )
+}
+
 function Get-MgBetaDeviceManagementAssignmentFilter
 {
     [CmdletBinding()]
@@ -39250,6 +39293,239 @@ function Remove-MgBetaDeviceAppManagementMobileAppCategory
         [Parameter()]
         [System.String]
         $MobileAppCategoryId,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm
+    )
+}
+
+function Get-MgBetaDeviceManagementMobileThreatDefenseConnector {
+
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $MobileThreatDefenseConnectorId,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowPartnerToCollectIosApplicationMetadata,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowPartnerToCollectIosPersonalApplicationMetadata,
+
+        [Parameter()]
+        [System.Boolean]
+        $AndroidDeviceBlockedOnMissingPartnerData,
+
+        [Parameter()]
+        [System.Boolean]
+        $AndroidEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $AndroidMobileApplicationManagementEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $IosDeviceBlockedOnMissingPartnerData,
+
+        [Parameter()]
+        [System.Boolean]
+        $IosEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $IosMobileApplicationManagementEnabled,
+
+        [Parameter()]
+        [System.DateTime]
+        $LastHeartbeatDateTime,
+
+        [Parameter()]
+        [System.Boolean]
+        $MicrosoftDefenderForEndpointAttachEnabled,
+
+        [Parameter()]
+        [System.String]
+        $PartnerState,
+
+        [Parameter()]
+        [System.Int32]
+        $PartnerUnresponsivenessThresholdInDays,
+
+        [Parameter()]
+        [System.Boolean]
+        $PartnerUnsupportedOSVersionBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $WindowsDeviceBlockedOnMissingPartnerData,
+
+        [Parameter()]
+        [System.Boolean]
+        $WindowsEnabled
+    )
+}
+
+function New-MgBetaDeviceManagementMobileThreatDefenseConnector {
+
+    [CmdletBinding()]
+    param(
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowPartnerToCollectIosApplicationMetadata,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowPartnerToCollectIosPersonalApplicationMetadata,
+
+        [Parameter()]
+        [System.Boolean]
+        $AndroidDeviceBlockedOnMissingPartnerData,
+
+        [Parameter()]
+        [System.Boolean]
+        $AndroidEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $AndroidMobileApplicationManagementEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $IosDeviceBlockedOnMissingPartnerData,
+
+        [Parameter()]
+        [System.Boolean]
+        $IosEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $IosMobileApplicationManagementEnabled,
+
+        [Parameter()]
+        [System.DateTime]
+        $LastHeartbeatDateTime,
+
+        [Parameter()]
+        [System.Boolean]
+        $MicrosoftDefenderForEndpointAttachEnabled,
+
+        [Parameter()]
+        [System.String]
+        $PartnerState,
+
+        [Parameter()]
+        [System.Int32]
+        $PartnerUnresponsivenessThresholdInDays,
+
+        [Parameter()]
+        [System.Boolean]
+        $PartnerUnsupportedOSVersionBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $WindowsDeviceBlockedOnMissingPartnerData,
+
+        [Parameter()]
+        [System.Boolean]
+        $WindowsEnabled
+    )
+}
+
+function Update-MgBetaDeviceManagementMobileThreatDefenseConnector {
+
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $MobileThreatDefenseConnectorId,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowPartnerToCollectIosApplicationMetadata,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowPartnerToCollectIosPersonalApplicationMetadata,
+
+        [Parameter()]
+        [System.Boolean]
+        $AndroidDeviceBlockedOnMissingPartnerData,
+
+        [Parameter()]
+        [System.Boolean]
+        $AndroidEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $AndroidMobileApplicationManagementEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $IosDeviceBlockedOnMissingPartnerData,
+
+        [Parameter()]
+        [System.Boolean]
+        $IosEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $IosMobileApplicationManagementEnabled,
+
+        [Parameter()]
+        [System.DateTime]
+        $LastHeartbeatDateTime,
+
+        [Parameter()]
+        [System.Boolean]
+        $MicrosoftDefenderForEndpointAttachEnabled,
+
+        [Parameter()]
+        [System.String]
+        $PartnerState,
+
+        [Parameter()]
+        [System.Int32]
+        $PartnerUnresponsivenessThresholdInDays,
+
+        [Parameter()]
+        [System.Boolean]
+        $PartnerUnsupportedOSVersionBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $WindowsDeviceBlockedOnMissingPartnerData,
+
+        [Parameter()]
+        [System.Boolean]
+        $WindowsEnabled
+    )
+}
+
+function Remove-MgBetaDeviceManagementMobileThreatDefenseConnector {
+
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $MobileThreatDefenseConnectorId,
 
         [Parameter()]
         [System.Boolean]

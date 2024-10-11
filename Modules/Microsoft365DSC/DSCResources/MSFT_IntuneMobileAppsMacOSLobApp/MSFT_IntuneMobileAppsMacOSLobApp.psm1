@@ -74,6 +74,7 @@ function Get-TargetResource
         [System.String]
         $VersionNumber,
 
+
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Categories,
