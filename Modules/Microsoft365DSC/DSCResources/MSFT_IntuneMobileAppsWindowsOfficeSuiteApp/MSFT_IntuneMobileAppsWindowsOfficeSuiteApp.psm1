@@ -65,7 +65,7 @@ function Get-TargetResource
         $ProductIds,
 
         [Parameter()]
-        [PSCustomObject]
+        [System.Collections.Hashtable]
         $ExcludedApps,
 
         [Parameter()]
@@ -248,10 +248,12 @@ function Get-TargetResource
             $results.Add('Categories', "")
         }
 
-        #ExcludedApps
+        # ExcludedApps
         if ($null -ne $instance.AdditionalProperties -and $null -ne $instance.AdditionalProperties.excludedApps)
         {
-            $results['ExcludedApps'] = [PSCustomObject]$instance.AdditionalProperties.excludedApps
+            $excludedAppsHashtable = @{}
+            $excludedAppsHashtable = [System.Collections.Hashtable]$instance.AdditionalProperties.excludedApps
+            $results['ExcludedApps'] = $excludedAppsHashtable
         }
         else {
             $results.Add('ExcludedApps', $null)
@@ -363,7 +365,7 @@ function Set-TargetResource
         $ProductIds,
 
         [Parameter()]
-        [PSCustomObject]
+        [System.Collections.Hashtable]
         $ExcludedApps,
 
         [Parameter()]
@@ -490,7 +492,7 @@ function Set-TargetResource
         $CreateParameters = ([Hashtable]$PSBoundParameters).clone()
         $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
 
-        $AdditionalProperties = Get-M365DSCIntuneMobileMocOSLobAppAdditionalProperties -Properties ($CreateParameters)
+        $AdditionalProperties = Get-M365DSCIntuneMobileWindowsOfficeSuiteAppAdditionalProperties -Properties ($CreateParameters)
         foreach ($key in $AdditionalProperties.keys)
         {
             if ($key -ne '@odata.type')
@@ -549,7 +551,7 @@ function Set-TargetResource
         $UpdateParameters = ([Hashtable]$PSBoundParameters).clone()
         $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
 
-        $AdditionalProperties = Get-M365DSCIntuneMobileMocOSLobAppAdditionalProperties -Properties ($UpdateParameters)
+        $AdditionalProperties = Get-M365DSCIntuneMobileWindowsOfficeSuiteAppAdditionalProperties -Properties ($UpdateParameters)
         foreach ($key in $AdditionalProperties.keys)
         {
             if ($key -ne '@odata.type')
@@ -670,7 +672,7 @@ function Test-TargetResource
         $ProductIds,
 
         [Parameter()]
-        [PSCustomObject]
+        [System.Collections.Hashtable]
         $ExcludedApps,
 
         [Parameter()]
@@ -948,12 +950,12 @@ function Export-TargetResource
             }
 
             #ExcludedApps
-            if($null -ne $Results.excludedApps)
+            if ($null -ne $Results.ExcludedApps)
             {
-                $Results.excludedApps = Get-M365DSCIntuneAppExcludedAppsAsString -ExcludedApps $Results.excludedApps
+                $Results.ExcludedApps = Get-M365DSCIntuneAppExcludedAppsAsString -ExcludedApps $Results.ExcludedApps
             }
             else {
-                $Results.Remove('excludedApps') | Out-Null
+                $Results.Remove('ExcludedApps') | Out-Null
             }
 
             #Assignments
@@ -1106,81 +1108,59 @@ function Get-M365DSCIntuneAppExcludedAppsAsString
         $ExcludedApps
     )
 
-    $StringContent = "@{"
-    $StringContent += "`n    Access = '$($ExcludedApps.Access)'"
-    $StringContent += "`n    Bing = '$($ExcludedApps.Bing)'"
-    $StringContent += "`n    Excel = '$($ExcludedApps.Excel)'"
-    $StringContent += "`n    Groove = '$($ExcludedApps.Groove)'"
-    $StringContent += "`n    InfoPath = '$($ExcludedApps.InfoPath)'"
-    $StringContent += "`n    Lync = '$($ExcludedApps.Lync)'"
-    $StringContent += "`n    OneDrive = '$($ExcludedApps.OneDrive)'"
-    $StringContent += "`n    OneNote = '$($ExcludedApps.OneNote)'"
-    $StringContent += "`n    Outlook = '$($ExcludedApps.Outlook)'"
-    $StringContent += "`n    PowerPoint = '$($ExcludedApps.PowerPoint)'"
-    $StringContent += "`n    Publisher = '$($ExcludedApps.Publisher)'"
-    $StringContent += "`n    SharePointDesigner = '$($ExcludedApps.SharePointDesigner)'"
-    $StringContent += "`n    Teams = '$($ExcludedApps.Teams)'"
-    $StringContent += "`n    Visio = '$($ExcludedApps.Visio)'"
-    $StringContent += "`n    Word = '$($ExcludedApps.Word)'"
+    # Create the embedded instance for ExcludedApps
+    $StringContent = "MSFT_DeviceManagementMobileAppExcludedApp {"
+    foreach ($key in $ExcludedApps.Keys) {
+        $value = if ($ExcludedApps[$key]) { '$true' } else { '$false' }
+        $StringContent += "`n    $key = $value;"
+    }
     $StringContent += "`n}"
 
     return $StringContent
 }
 
-function Get-M365DSCIntuneMobileMocOSLobAppAdditionalProperties
+function Get-M365DSCIntuneMobileWindowsOfficeSuiteAppAdditionalProperties
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        [Parameter(Mandatory = 'true')]
+        [Parameter(Mandatory = $true)]
         [System.Collections.Hashtable]
         $Properties
     )
 
-    $additionalProperties = @(
-        'AutoAcceptEula'
-        'ExcludedApps'
-    )
+    # Define the list of additional properties to include in the final payload
+    $additionalProperties = @('AutoAcceptEula', 'ExcludedApps')
 
-    $results = @{'@odata.type' = '#microsoft.graph.officeSuiteApp' }
+    # Initialize a hashtable to store the additional properties
+    $results = @{'@odata.type' = '#microsoft.graph.officeSuiteApp'}
+
+    # Clone the original properties to manipulate
     $cloneProperties = $Properties.clone()
+
+    # Loop through the clone and process each property based on its type
     foreach ($property in $cloneProperties.Keys)
     {
         if ($property -in $additionalProperties)
         {
+            # Convert property name to expected format
             $propertyName = $property[0].ToString().ToLower() + $property.Substring(1, $property.Length - 1)
-            if ($properties.$property -and $properties.$property.getType().FullName -like '*CIMInstance*')
+            $propertyValue = $Properties.$property
+
+            # Handle ExcludedApps: Convert to PSCustomObject if it's a Hashtable
+            if ($propertyName -eq 'excludedApps' -and $propertyValue -is [System.Collections.Hashtable])
             {
-                if ($properties.$property.getType().FullName -like '*[[\]]')
-                {
-                    $array = @()
-                    foreach ($item in $properties.$property)
-                    {
-                        $array += Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $item
-
-                    }
-                    $propertyValue = $array
-                }
-                else
-                {
-                    $propertyValue = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $properties.$property
-                }
-
+                $results.Add($propertyName, [PSCustomObject]$propertyValue)
             }
             else
             {
-                $propertyValue = $properties.$property
+                # For simple types like Boolean (AutoAcceptEula), add directly
+                $results.Add($propertyName, $propertyValue)
             }
-
-            $results.Add($propertyName, $propertyValue)
         }
     }
 
-    if ($results.Count -eq 1)
-    {
-        return $null
-    }
     return $results
 }
 
