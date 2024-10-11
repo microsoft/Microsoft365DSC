@@ -140,6 +140,14 @@
                     CertificateThumbprint                    = $CertificateThumbprint;
                     ApplicationId                            = $ApplicationId;
                 }
+                EXOATPBuiltInProtectionRule 'EXOATPBuiltInProtectionRule'
+                {
+                    ApplicationId             = $ApplicationId;
+                    CertificateThumbprint     = $CertificateThumbprint;
+                    ExceptIfRecipientDomainIs = @("contoso.com","fabrikam.com");
+                    Identity                  = "ATP Built-In Protection Rule";
+                    TenantId                  = $TenantId;
+                }
                 EXOAtpPolicyForO365 'ConfigureAntiPhishPolicy'
                 {
                     IsSingleInstance        = "Yes"

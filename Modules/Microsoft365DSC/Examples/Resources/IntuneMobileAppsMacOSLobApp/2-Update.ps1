@@ -31,6 +31,9 @@ Configuration Example
             Ensure                = "Present";
             InformationUrl        = "";
             IsFeatured            = $False;
+            MinimumSupportedOperatingSystem = MSFT_DeviceManagementMinimumOperatingSystem{
+                v11_0 = $true
+            }
             Notes                 = "";
             Owner                 = "";
             PrivacyInformationUrl = "";
@@ -46,15 +49,14 @@ Configuration Example
                     }
                     MSFT_DeviceManagementMobileAppAssignment {
                         deviceAndAppManagementAssignmentFilterType = 'none'
-                        source = 'direct'
                         dataType = '#microsoft.graph.groupAssignmentTarget'
                         groupId = '57b5e81c-85bb-4644-a4fd-33b03e451c89'
                         intent = 'required'
                     }
                 );
             Categories           = @(MSFT_DeviceManagementMobileAppCategory {
-                    id  = '1bff2652-03ec-4a48-941c-152e93736515'
-                    displayName = 'Kajal 3'
+                    Id  = '1bff2652-03ec-4a48-941c-152e93736515'
+                    DisplayName = 'Kajal 3'
                 });
         }
     }

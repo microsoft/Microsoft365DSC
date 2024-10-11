@@ -1,0 +1,28 @@
+﻿{
+    "resourceName": "AADDomain",
+    "description": "Configures custom domain names in Entra Id.",
+    "roles": {
+        "read": [],
+        "update": []
+    },
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [],
+                "update": []
+            },
+            "application": {
+                "read": [
+                    {
+                        "name": "Domain.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Domain.ReadWrite.All"
+                    }
+                ]
+            }
+        }
+    }
+}
