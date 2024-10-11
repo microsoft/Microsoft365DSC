@@ -1,3 +1,6 @@
+# https://learn.microsoft.com/en-us/graph/api/resources/intune-onboarding-mobilethreatdefenseconnector?view=graph-rest-1.0
+# https://learn.microsoft.com/en-us/powershell/module/microsoft.graph.devicemanagement.administration/new-mgdevicemanagementmobilethreatdefenseconnector?view=graph-powershell-1.0
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -135,7 +138,7 @@ function Get-TargetResource
         }
         else
         {
-            $instance = Get-MgDeviceManagementMobileThreatDefenseConnector -MobileThreatDefenseConnectorId $Id -ErrorAction Stop
+            $instance = Get-MgBetaDeviceManagementMobileThreatDefenseConnector -MobileThreatDefenseConnectorId $Id -ErrorAction Stop
         }
 
         if ($null -eq $instance)
@@ -144,12 +147,12 @@ function Get-TargetResource
             if (-Not [string]::IsNullOrEmpty($DisplayName))
             {
                 # There is no API which searches MobileThreatDefenseConnector by its DisplayName so the below code is commented out.
-                # $instance = Get-MgBetaDeviceAppManagementMobileAppConfiguration `
+                # $instance = Get-MgBetaDeviceManagementMobileThreatDefenseConnector `
                 #       -Filter "DisplayName eq '$DisplayName'" `
 
                 # The DisplayName property is not supported by the any API of this resource, hence hard-coded in below function for convenience.
-                $connectorId = Get-MobileThreatDefenseConnectorIdOrDisplayName -DisplayName $DisplayName
-                $instance = Get-MgBetaDeviceAppManagementMobileAppConfiguration `
+                $connectorId = (Get-MobileThreatDefenseConnectorIdOrDisplayName -DisplayName $DisplayName).Id
+                $instance = Get-MgBetaDeviceManagementMobileThreatDefenseConnector `
                     -MobileThreatDefenseConnectorId $connectorId
                     -ErrorAction SilentlyContinue
             }
@@ -163,30 +166,28 @@ function Get-TargetResource
 
         if([string]::IsNullOrEmpty($DisplayName))
         {
-            $funcres = Get-MobileThreatDefenseConnectorIdOrDisplayName -Id $instance.Id
-            $DisplayName = $funcres.DisplayName
+            $DisplayName = (Get-MobileThreatDefenseConnectorIdOrDisplayName -Id $instance.Id).DisplayName
         }
 
         $results = @{
             Id                                             = $instance.Id
             DisplayName                                    = $DisplayName
-            ResponseHeadersVariable                        = $ResponseHeadersVariable
-            AdditionalProperties                           = $AdditionalProperties
-            AllowPartnerToCollectIosApplicationMetadata    = $AllowPartnerToCollectIosApplicationMetadata
-            AllowPartnerToCollectIosPersonalApplicationMetadata = $AllowPartnerToCollectIosPersonalApplicationMetadata
-            AndroidDeviceBlockedOnMissingPartnerData       = $AndroidDeviceBlockedOnMissingPartnerData
-            AndroidEnabled                                 = $AndroidEnabled
-            AndroidMobileApplicationManagementEnabled      = $AndroidMobileApplicationManagementEnabled
-            IosDeviceBlockedOnMissingPartnerData           = $IosDeviceBlockedOnMissingPartnerData
-            IosEnabled                                     = $IosEnabled
-            IosMobileApplicationManagementEnabled          = $IosMobileApplicationManagementEnabled
-            LastHeartbeatDateTime                          = $LastHeartbeatDateTime
-            MicrosoftDefenderForEndpointAttachEnabled      = $MicrosoftDefenderForEndpointAttachEnabled
-            PartnerState                                   = $PartnerState
-            PartnerUnresponsivenessThresholdInDays         = $PartnerUnresponsivenessThresholdInDays
-            PartnerUnsupportedOSVersionBlocked             = $PartnerUnsupportedOSVersionBlocked
-            WindowsDeviceBlockedOnMissingPartnerData       = $WindowsDeviceBlockedOnMissingPartnerData
-            WindowsEnabled                                 = $WindowsEnabled
+            ResponseHeadersVariable                        = $instance.ResponseHeadersVariable
+            AllowPartnerToCollectIosApplicationMetadata    = $instance.AllowPartnerToCollectIosApplicationMetadata
+            AllowPartnerToCollectIosPersonalApplicationMetadata = $instance.AllowPartnerToCollectIosPersonalApplicationMetadata
+            AndroidDeviceBlockedOnMissingPartnerData       = $instance.AndroidDeviceBlockedOnMissingPartnerData
+            AndroidEnabled                                 = $instance.AndroidEnabled
+            AndroidMobileApplicationManagementEnabled      = $instance.AndroidMobileApplicationManagementEnabled
+            IosDeviceBlockedOnMissingPartnerData           = $instance.IosDeviceBlockedOnMissingPartnerData
+            IosEnabled                                     = $instance.IosEnabled
+            IosMobileApplicationManagementEnabled          = $instance.IosMobileApplicationManagementEnabled
+            LastHeartbeatDateTime                          = $instance.LastHeartbeatDateTime
+            MicrosoftDefenderForEndpointAttachEnabled      = $instance.MicrosoftDefenderForEndpointAttachEnabled
+            PartnerState                                   = $instance.PartnerState.ToString()
+            PartnerUnresponsivenessThresholdInDays         = $instance.PartnerUnresponsivenessThresholdInDays
+            PartnerUnsupportedOSVersionBlocked             = $instance.PartnerUnsupportedOSVersionBlocked
+            WindowsDeviceBlockedOnMissingPartnerData       = $instance.WindowsDeviceBlockedOnMissingPartnerData
+            WindowsEnabled                                 = $instance.WindowsEnabled
 
             Ensure                                         = 'Present'
             Credential                                     = $Credential
@@ -337,8 +338,12 @@ function Set-TargetResource
     #endregion
 
     $currentInstance = Get-TargetResource @PSBoundParameters
+    $SetParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
-    $setParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+    # Remove the DisplayName parameter as the Graph API does not support it
+    $SetParameters.Remove('DisplayName') | Out-Null
+    $SetParameters.Remove('Id') | Out-Null
+    $SetParameters.Remove('LastHeartbeatDateTime') | Out-Null
 
     # CREATE
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
@@ -348,12 +353,12 @@ function Set-TargetResource
     # UPDATE
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        Update-MgBetaDeviceManagementMobileThreatDefenseConnector @SetParameters
+        Update-MgBetaDeviceManagementMobileThreatDefenseConnector -MobileThreatDefenseConnectorId $Id @SetParameters
     }
     # REMOVE
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Remove-MgBetaDeviceManagementMobileThreatDefenseConnector @SetParameters
+        Remove-MgBetaDeviceManagementMobileThreatDefenseConnector -MobileThreatDefenseConnectorId $Id -Confirm:$false
     }
 }
 
@@ -415,7 +420,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('unavailable', 'available', 'enabled', 'unresponsive')]
+        [ValidateSet('unavailable', 'available', 'enabled', 'unresponsive', 'notSetUp', 'error')]
         $PartnerState,
 
         [Parameter()]
@@ -551,7 +556,7 @@ function Export-TargetResource
     try
     {
         $Script:ExportMode = $true
-        [array] $Script:exportedInstances = Get-MgDeviceManagementMobileThreatDefenseConnector -ErrorAction Stop
+        [array] $Script:exportedInstances = Get-MgBetaDeviceManagementMobileThreatDefenseConnector -ErrorAction Stop
 
         $i = 1
         $dscContent = ''
@@ -569,15 +574,32 @@ function Export-TargetResource
             $displayedKey = $config.Id
             Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -NoNewline
             $params = @{
-                Id                    = $config.Id
-                DisplayName           = $config.DisplayName
-                Credential            = $Credential
-                ApplicationId         = $ApplicationId
-                TenantId              = $TenantId
-                CertificateThumbprint = $CertificateThumbprint
-                ApplicationSecret     = $ApplicationSecret
-                ManagedIdentity       = $ManagedIdentity.IsPresent
-                AccessTokens          = $AccessTokens
+                Id                                             = $config.Id
+                DisplayName                                    = $config.DisplayName
+                AllowPartnerToCollectIosApplicationMetadata    = $config.AllowPartnerToCollectIosApplicationMetadata
+                AllowPartnerToCollectIosPersonalApplicationMetadata = $config.AllowPartnerToCollectIosPersonalApplicationMetadata
+                AndroidDeviceBlockedOnMissingPartnerData       = $config.AndroidDeviceBlockedOnMissingPartnerData
+                AndroidEnabled                                 = $config.AndroidEnabled
+                AndroidMobileApplicationManagementEnabled      = $config.AndroidMobileApplicationManagementEnabled
+                IosDeviceBlockedOnMissingPartnerData           = $config.IosDeviceBlockedOnMissingPartnerData
+                IosEnabled                                     = $config.IosEnabled
+                IosMobileApplicationManagementEnabled          = $config.IosMobileApplicationManagementEnabled
+                LastHeartbeatDateTime                          = $config.LastHeartbeatDateTime
+                MicrosoftDefenderForEndpointAttachEnabled      = $config.MicrosoftDefenderForEndpointAttachEnabled
+                PartnerState                                   = $config.PartnerState.ToString()
+                PartnerUnresponsivenessThresholdInDays         = $config.PartnerUnresponsivenessThresholdInDays
+                PartnerUnsupportedOSVersionBlocked             = $config.PartnerUnsupportedOSVersionBlocked
+                WindowsDeviceBlockedOnMissingPartnerData       = $config.WindowsDeviceBlockedOnMissingPartnerData
+                WindowsEnabled                                 = $config.WindowsEnabled
+
+                Ensure                                         = 'Present'
+                Credential                                     = $Credential
+                ApplicationId                                  = $ApplicationId
+                TenantId                                       = $TenantId
+                CertificateThumbprint                          = $CertificateThumbprint
+                ApplicationSecret                              = $ApplicationSecret
+                ManagedIdentity                                = $ManagedIdentity.IsPresent
+                AccessTokens                                   = $AccessTokens
             }
 
             $Results = Get-TargetResource @Params

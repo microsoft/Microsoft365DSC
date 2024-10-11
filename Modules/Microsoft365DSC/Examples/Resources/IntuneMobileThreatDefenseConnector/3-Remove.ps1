@@ -21,6 +21,26 @@ Configuration Example
     Import-DscResource -ModuleName Microsoft365DSC
     node localhost
     {
-        
+        IntuneMobileThreatDefenseConnector "IntuneMobileThreatDefenseConnector-Microsoft Defender for Endpoint"
+        {
+            AllowPartnerToCollectIosApplicationMetadata         = $False;
+            AllowPartnerToCollectIosPersonalApplicationMetadata = $False;
+            AndroidDeviceBlockedOnMissingPartnerData            = $False;
+            AndroidEnabled                                      = $False;
+            AndroidMobileApplicationManagementEnabled           = $False;
+            DisplayName                                         = "Microsoft Defender for Endpoint";
+            Id                                                  = "fc780465-2017-40d4-a0c5-307022471b92";
+            IosDeviceBlockedOnMissingPartnerData                = $False;
+            IosEnabled                                          = $False;
+            IosMobileApplicationManagementEnabled               = $False;
+            LastHeartbeatDateTime                               = "1/1/0001 12:00:00 AM";
+            MicrosoftDefenderForEndpointAttachEnabled           = $False;
+            PartnerState                                        = "notSetUp";
+            PartnerUnresponsivenessThresholdInDays              = 7;
+            PartnerUnsupportedOSVersionBlocked                  = $False;
+            WindowsDeviceBlockedOnMissingPartnerData            = $False;
+            WindowsEnabled                                      = $False;
+            Ensure                                              = "Absent";
+        }
     }
 }

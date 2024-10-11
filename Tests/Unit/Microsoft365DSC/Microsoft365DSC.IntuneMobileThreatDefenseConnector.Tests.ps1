@@ -33,13 +33,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return "Credentials"
             }
 
-            Mock -CommandName New-MgDeviceManagementMobileThreatDefenseConnector -MockWith {
+            Mock -CommandName Get-MgBetaDeviceManagementMobileThreatDefenseConnector -MockWith {
             }
-
-            Mock -CommandName Update-MgDeviceManagementMobileThreatDefenseConnector -MockWith {
+            Mock -CommandName New-MgBetaDeviceManagementMobileThreatDefenseConnector -MockWith {
             }
-
-            Mock -CommandName Remove-MgDeviceManagementMobileThreatDefenseConnector -MockWith {
+            Mock -CommandName Update-MgBetaDeviceManagementMobileThreatDefenseConnector -MockWith {
+            }
+            Mock -CommandName Remove-MgBetaDeviceManagementMobileThreatDefenseConnector -MockWith {
             }
 
             # Mock Write-Host to hide output during the tests
@@ -51,7 +51,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         # Test contexts
 
-        Context -Name "The instance should exist but it DOES NOT" -Fixture {
+        Context -Name " 1. The instance should exist but it DOES NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
                     AllowPartnerToCollectIosApplicationMetadata         = $False;
@@ -64,33 +64,33 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     IosEnabled                                          = $False;
                     IosMobileApplicationManagementEnabled               = $False;
                     MicrosoftDefenderForEndpointAttachEnabled           = $False;
-                    PartnerState                                        = "";
+                    PartnerState                                        = "available";
                     PartnerUnresponsivenessThresholdInDays              = 0;
                     PartnerUnsupportedOSVersionBlocked                  = $False;
                     WindowsDeviceBlockedOnMissingPartnerData            = $False;
                     WindowsEnabled                                      = $False;
-                    Ensure              = 'Present'
-                    Credential          = $Credential;
+                    Ensure                                              = 'Present'
+                    Credential                                          = $Credential;
                 }
 
-                Mock -CommandName Get-MgDeviceManagementMobileThreatDefenseConnector -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementMobileThreatDefenseConnector -MockWith {
                     return $null
                 }
             }
 
-            It 'Should return Values from the Get method' {
+            It ' 1.1 Should return Values from the Get method' {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Absent'
             }
-            It 'Should return false from the Test method' {
+            It ' 1.2 Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
-            It 'Should create a new instance from the Set method' {
+            It ' 1.3 Should create a new instance from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName New-MgDeviceManagementMobileThreatDefenseConnector -Exactly 1
+                Should -Invoke -CommandName New-MgBetaDeviceManagementMobileThreatDefenseConnector -Exactly 1
             }
         }
 
-        Context -Name "The instance exists but it SHOULD NOT" -Fixture {
+        Context -Name " 2. The instance exists but it SHOULD NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
                     AllowPartnerToCollectIosApplicationMetadata         = $False;
@@ -103,7 +103,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     IosEnabled                                          = $False;
                     IosMobileApplicationManagementEnabled               = $False;
                     MicrosoftDefenderForEndpointAttachEnabled           = $False;
-                    PartnerState                                        = "";
+                    PartnerState                                        = "available";
                     PartnerUnresponsivenessThresholdInDays              = 0;
                     PartnerUnsupportedOSVersionBlocked                  = $False;
                     WindowsDeviceBlockedOnMissingPartnerData            = $False;
@@ -112,7 +112,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential          = $Credential;
                 }
 
-                Mock -CommandName Get-MgDeviceManagementMobileThreatDefenseConnector -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementMobileThreatDefenseConnector -MockWith {
                     return @{
                         AllowPartnerToCollectIosApplicationMetadata         = $False;
                         AllowPartnerToCollectIosPersonalApplicationMetadata = $False;
@@ -124,7 +124,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         IosEnabled                                          = $False;
                         IosMobileApplicationManagementEnabled               = $False;
                         MicrosoftDefenderForEndpointAttachEnabled           = $False;
-                        PartnerState                                        = "";
+                        PartnerState                                        = "available";
                         PartnerUnresponsivenessThresholdInDays              = 0;
                         PartnerUnsupportedOSVersionBlocked                  = $False;
                         WindowsDeviceBlockedOnMissingPartnerData            = $False;
@@ -133,19 +133,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            It 'Should return Values from the Get method' {
+            It ' 2.1 Should return Values from the Get method' {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
-            It 'Should return false from the Test method' {
+            It ' 2.2 Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
-            It 'Should remove the instance from the Set method' {
+            It ' 2.3 Should remove the instance from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Remove-MgDeviceManagementMobileThreatDefenseConnector -Exactly 1
+                Should -Invoke -CommandName Remove-MgBetaDeviceManagementMobileThreatDefenseConnector -Exactly 1
             }
         }
 
-        Context -Name "The instance exists and values are already in the desired state" -Fixture {
+        Context -Name " 3. The instance exists and values are already in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
                     AllowPartnerToCollectIosApplicationMetadata         = $False;
@@ -158,7 +158,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     IosEnabled                                          = $False;
                     IosMobileApplicationManagementEnabled               = $False;
                     MicrosoftDefenderForEndpointAttachEnabled           = $False;
-                    PartnerState                                        = "";
+                    PartnerState                                        = "available";
                     PartnerUnresponsivenessThresholdInDays              = 0;
                     PartnerUnsupportedOSVersionBlocked                  = $False;
                     WindowsDeviceBlockedOnMissingPartnerData            = $False;
@@ -167,7 +167,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential          = $Credential;
                 }
 
-                Mock -CommandName Get-MgDeviceManagementMobileThreatDefenseConnector -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementMobileThreatDefenseConnector -MockWith {
                     return @{
                         AllowPartnerToCollectIosApplicationMetadata         = $False;
                         AllowPartnerToCollectIosPersonalApplicationMetadata = $False;
@@ -179,7 +179,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         IosEnabled                                          = $False;
                         IosMobileApplicationManagementEnabled               = $False;
                         MicrosoftDefenderForEndpointAttachEnabled           = $False;
-                        PartnerState                                        = "";
+                        PartnerState                                        = "available";
                         PartnerUnresponsivenessThresholdInDays              = 0;
                         PartnerUnsupportedOSVersionBlocked                  = $False;
                         WindowsDeviceBlockedOnMissingPartnerData            = $False;
@@ -188,12 +188,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            It 'Should return true from the Test method' {
+            It ' 3.0 Should return true from the Test method' {
                 Test-TargetResource @testParams | Should -Be $true
             }
         }
 
-        Context -Name "The instance exists and values are NOT in the desired state" -Fixture {
+        Context -Name " 4. The instance exists and values are NOT in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
                     AllowPartnerToCollectIosApplicationMetadata         = $False;
@@ -215,7 +215,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential          = $Credential;
                 }
 
-                Mock -CommandName Get-MgDeviceManagementMobileThreatDefenseConnector -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementMobileThreatDefenseConnector -MockWith {
                     return @{
                         AllowPartnerToCollectIosApplicationMetadata         = $False;
                         AllowPartnerToCollectIosPersonalApplicationMetadata = $False;
@@ -227,7 +227,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         IosEnabled                                          = $False;
                         IosMobileApplicationManagementEnabled               = $False;
                         MicrosoftDefenderForEndpointAttachEnabled           = $False;
-                        PartnerState                                        = "";
+                        PartnerState                                        = "available";
                         PartnerUnresponsivenessThresholdInDays              = 0;
                         PartnerUnsupportedOSVersionBlocked                  = $False;
                         WindowsDeviceBlockedOnMissingPartnerData            = $False;
@@ -236,21 +236,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            It 'Should return Values from the Get method' {
+            It ' 4.1 Should return Values from the Get method' {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It 'Should return false from the Test method' {
+            It ' 4.2 Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 
-            It 'Should call the Set method' {
+            It ' 4.3 Should call the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Update-MgDeviceManagementMobileThreatDefenseConnector -Exactly 1
+                Should -Invoke -CommandName Update-MgBetaDeviceManagementMobileThreatDefenseConnector -Exactly 1
             }
         }
 
-        Context -Name 'ReverseDSC Tests' -Fixture {
+        Context -Name ' 5. ReverseDSC Tests' -Fixture {
             BeforeAll {
                 $Global:CurrentModeIsExport = $true
                 $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
@@ -258,7 +258,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential  = $Credential;
                 }
 
-                Mock -CommandName Get-MgDeviceManagementMobileThreatDefenseConnector -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementMobileThreatDefenseConnector -MockWith {
                     return @{
                         AllowPartnerToCollectIosApplicationMetadata         = $False;
                         AllowPartnerToCollectIosPersonalApplicationMetadata = $False;
@@ -270,7 +270,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         IosEnabled                                          = $False;
                         IosMobileApplicationManagementEnabled               = $False;
                         MicrosoftDefenderForEndpointAttachEnabled           = $False;
-                        PartnerState                                        = "SetUp";
+                        PartnerState                                        = "available";
                         PartnerUnresponsivenessThresholdInDays              = 0;
                         PartnerUnsupportedOSVersionBlocked                  = $False;
                         WindowsDeviceBlockedOnMissingPartnerData            = $False;
@@ -278,7 +278,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
             }
-            It 'Should Reverse Engineer resource from the Export method' {
+            It ' 5.0 Should Reverse Engineer resource from the Export method' {
                 $result = Export-TargetResource @testParams
                 $result | Should -Not -BeNullOrEmpty
             }
