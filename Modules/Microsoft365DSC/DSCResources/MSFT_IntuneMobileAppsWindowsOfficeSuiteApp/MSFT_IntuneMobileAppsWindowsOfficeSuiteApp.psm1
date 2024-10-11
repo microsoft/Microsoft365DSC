@@ -65,7 +65,7 @@ function Get-TargetResource
         $ProductIds,
 
         [Parameter()]
-        [System.Collections.Hashtable]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
         $ExcludedApps,
 
         [Parameter()]
@@ -248,14 +248,14 @@ function Get-TargetResource
             $results.Add('Categories', "")
         }
 
-        # ExcludedApps
         if ($null -ne $instance.AdditionalProperties -and $null -ne $instance.AdditionalProperties.excludedApps)
         {
-            $excludedAppsHashtable = @{}
-            $excludedAppsHashtable = [System.Collections.Hashtable]$instance.AdditionalProperties.excludedApps
-            $results['ExcludedApps'] = $excludedAppsHashtable
-        }
-        else {
+            $formattedExcludedApps = @{}
+            foreach ($key in $instance.AdditionalProperties.excludedApps.Keys) {
+                $formattedExcludedApps[$key] = if ($instance.AdditionalProperties.excludedApps[$key]) { $true } else { $false }
+            }
+            $results['ExcludedApps'] = $formattedExcludedApps
+        } else {
             $results.Add('ExcludedApps', $null)
         }
 
@@ -274,12 +274,10 @@ function Get-TargetResource
         #LargeIcon
         # The large is returned only when Get cmdlet is called with Id parameter. The large icon is a base64 encoded string, so we need to convert it to a byte array.
         $instanceWithLargeIcon = Get-MgBetaDeviceAppManagementMobileApp -MobileAppId $instance.Id
-        if($null -ne $instanceWithLargeIcon.LargeIcon)
-        {
+        if (-not $results.ContainsKey('LargeIcon')) {
             $results.Add('LargeIcon', $instanceWithLargeIcon.LargeIcon)
-        }
-        else {
-            $results.Add('LargeIcon', "")
+        } else {
+            $results['LargeIcon'] = $instanceWithLargeIcon.LargeIcon  # Update the existing key
         }
 
         #end region complex types
@@ -365,7 +363,7 @@ function Set-TargetResource
         $ProductIds,
 
         [Parameter()]
-        [System.Collections.Hashtable]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
         $ExcludedApps,
 
         [Parameter()]
@@ -485,14 +483,26 @@ function Set-TargetResource
     $CreateParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
     # CREATE
+    Write-Host "WE REACHED CREAAATE"
+    Write-Output "WE REACHED CREAAATE"
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
+        Write-Output "INSIDE IF STATEMENT"
+        Write-Host "INSIDE IF STATEMENT"
         Write-Host "Create office suite app: $DisplayName"
 
         $CreateParameters = ([Hashtable]$PSBoundParameters).clone()
         $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
-
+        Write-Host "Before AdditionalProperties creation: $($CreateParameters | Out-String)"
+        Write-Output "Before AdditionalProperties creation: $($CreateParameters | Out-String)"
         $AdditionalProperties = Get-M365DSCIntuneMobileWindowsOfficeSuiteAppAdditionalProperties -Properties ($CreateParameters)
+        Write-Host "AdditionalProperties: $($AdditionalProperties | Out-String)"
+        Write-Output "AdditionalProperties: $($AdditionalProperties | Out-String)"
+        # Explicitly enforce Hashtable type for AdditionalProperties
+        if ($null -ne $AdditionalProperties -and $AdditionalProperties -isnot [System.Collections.Hashtable])
+        {
+            $AdditionalProperties = [System.Collections.Hashtable]$AdditionalProperties
+        }
         foreach ($key in $AdditionalProperties.keys)
         {
             if ($key -ne '@odata.type')
@@ -528,15 +538,21 @@ function Set-TargetResource
         if($LargeIcon)
         {
             [System.Object]$LargeIconValue = ConvertTo-M365DSCIntuneAppLargeIcon -LargeIcon $LargeIcon
-            $CreateParameters.Add('LargeIcon', $LargeIconValue)
+            if (-not $CreateParameters.ContainsKey('LargeIcon')) {
+                $CreateParameters.Add('LargeIcon', $LargeIconValue)
+            } else {
+                $CreateParameters['LargeIcon'] = $LargeIconValue
+            }
         }
-
+        Write-Output "CreateParameters before API call: $($CreateParameters | Out-String)"
         $app = New-MgBetaDeviceAppManagementMobileApp @CreateParameters
 
         #Assignments
         $assignmentsHash = ConvertTo-IntuneMobileAppAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
         if ($app.id)
         {
+            Write-Host "Type of AdditionalProperties: $($AdditionalProperties.GetType().FullName)"
+            Write-Host "Contents of AdditionalProperties: $(ConvertTo-Json $AdditionalProperties)"
             Update-MgBetaDeviceAppManagementMobileAppAssignment -MobileAppId $app.id `
                 -Target $assignmentsHash `
                 -Repository 'deviceAppManagement/mobileAppAssignments'
@@ -546,12 +562,16 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Host "Update office suite app: $DisplayName"
-
+        Write-Output "INSIDE ELSE IF STATEMENT"
+        Write-Host "INSIDE ELSE IF STATEMENT"
         $PSBoundParameters.Remove('Assignments') | Out-Null
         $UpdateParameters = ([Hashtable]$PSBoundParameters).clone()
         $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
-
+        Write-Host "Before AdditionalProperties creation: $($CreateParameters | Out-String)"
+        Write-Output "Before AdditionalProperties creation: $($CreateParameters | Out-String)"
         $AdditionalProperties = Get-M365DSCIntuneMobileWindowsOfficeSuiteAppAdditionalProperties -Properties ($UpdateParameters)
+        Write-Host "AdditionalProperties after it's populated is: $($AdditionalProperties | Out-String)"
+        Write-Output "AdditionalProperties after it's populated is: $($AdditionalProperties | Out-String)"
         foreach ($key in $AdditionalProperties.keys)
         {
             if ($key -ne '@odata.type')
@@ -584,8 +604,12 @@ function Set-TargetResource
          #LargeIcon
          if($LargeIcon)
          {
-             [System.Object]$LargeIconValue = ConvertTo-M365DSCIntuneAppLargeIcon -LargeIcon $LargeIcon
-             $UpdateParameters.Add('LargeIcon', $LargeIconValue)
+            [System.Object]$LargeIconValue = ConvertTo-M365DSCIntuneAppLargeIcon -LargeIcon $LargeIcon
+            if (-not $CreateParameters.ContainsKey('LargeIcon')) {
+                $UpdateParameters.Add('LargeIcon', $LargeIconValue)
+            } else {
+                $UpdateParameters['LargeIcon'] = $LargeIconValue
+            }
          }
 
         Update-MgBetaDeviceAppManagementMobileApp -MobileAppId $currentInstance.Id @UpdateParameters
@@ -601,6 +625,8 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Host "Remove office suite app: $DisplayName"
+        Write-Output "INSIDE SECOND ELSE IF STATEMENT"
+        Write-Host "INSIDE SECOND ELSE IF STATEMENT"
         Remove-MgBetaDeviceAppManagementMobileApp -MobileAppId $currentInstance.Id -Confirm:$false
     }
 }
@@ -672,7 +698,7 @@ function Test-TargetResource
         $ProductIds,
 
         [Parameter()]
-        [System.Collections.Hashtable]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
         $ExcludedApps,
 
         [Parameter()]
@@ -949,9 +975,13 @@ function Export-TargetResource
                 $Results.Remove('Categories') | Out-Null
             }
 
-            #ExcludedApps
+            # ExcludedApps
             if ($null -ne $Results.ExcludedApps)
             {
+                # Convert to a Hashtable if still an array
+                if ($Results.ExcludedApps -is [System.Object[]]) {
+                    $Results.ExcludedApps = Convert-ObjectArrayToHashtable -InputArray $Results.ExcludedApps
+                }
                 $Results.ExcludedApps = Get-M365DSCIntuneAppExcludedAppsAsString -ExcludedApps $Results.ExcludedApps
             }
             else {
@@ -1062,6 +1092,21 @@ function Export-TargetResource
 
 #region Helper functions
 
+function Convert-ObjectArrayToHashtable {
+    param (
+        [Parameter(Mandatory = $true)]
+        [System.Object[]]
+        $InputArray
+    )
+    $outputHashTable = @{}
+    foreach ($element in $InputArray) {
+        if ($element -is [System.Collections.Hashtable]) {
+            $outputHashTable += $element
+        }
+    }
+    return $outputHashTable
+}
+
 function Get-M365DSCIntuneAppCategoriesAsString
 {
     [CmdletBinding()]
@@ -1119,8 +1164,7 @@ function Get-M365DSCIntuneAppExcludedAppsAsString
     return $StringContent
 }
 
-function Get-M365DSCIntuneMobileWindowsOfficeSuiteAppAdditionalProperties
-{
+function Get-M365DSCIntuneMobileWindowsOfficeSuiteAppAdditionalProperties {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
     param
@@ -1130,8 +1174,14 @@ function Get-M365DSCIntuneMobileWindowsOfficeSuiteAppAdditionalProperties
         $Properties
     )
 
+    Write-Host "WERE INSIDE THE HELPER FUNCTION"
+    Write-Output "WERE INSIDE THE HELPER FUNCTION"
+
     # Define the list of additional properties to include in the final payload
-    $additionalProperties = @('AutoAcceptEula', 'ExcludedApps')
+    $additionalProperties = @(
+        'AutoAcceptEula'
+        'ExcludedApps'
+    )
 
     # Initialize a hashtable to store the additional properties
     $results = @{'@odata.type' = '#microsoft.graph.officeSuiteApp'}
@@ -1140,29 +1190,70 @@ function Get-M365DSCIntuneMobileWindowsOfficeSuiteAppAdditionalProperties
     $cloneProperties = $Properties.clone()
 
     # Loop through the clone and process each property based on its type
-    foreach ($property in $cloneProperties.Keys)
-    {
-        if ($property -in $additionalProperties)
-        {
+    foreach ($property in $cloneProperties.Keys) {
+        if ($property -in $additionalProperties) {
             # Convert property name to expected format
             $propertyName = $property[0].ToString().ToLower() + $property.Substring(1, $property.Length - 1)
             $propertyValue = $Properties.$property
 
-            # Handle ExcludedApps: Convert to PSCustomObject if it's a Hashtable
-            if ($propertyName -eq 'excludedApps' -and $propertyValue -is [System.Collections.Hashtable])
-            {
-                $results.Add($propertyName, [PSCustomObject]$propertyValue)
+            # Handle ExcludedApps: Build a single PSCustomObject with key-value pairs
+            if ($propertyName -eq 'excludedApps') {
+                $formattedExcludedApps = @{}
+
+                # Convert each key in ExcludedApps to a key-value pair in a hashtable
+                foreach ($key in $propertyValue.Keys) {
+                    # Ensure the value is correctly formatted as boolean $true or $false
+                    $formattedExcludedApps[$key] = if ($propertyValue[$key]) { $true } else { $false }
+                }
+
+                # Convert to PSCustomObject to match the expected format
+                $results.Add($propertyName, [PSCustomObject]$formattedExcludedApps)
             }
-            else
-            {
+            else {
                 # For simple types like Boolean (AutoAcceptEula), add directly
                 $results.Add($propertyName, $propertyValue)
             }
         }
     }
-
+    Write-Host "Formatted ExcludedApps: $(ConvertTo-Json $results['excludedApps'])"
+    Write-Output "Formatted ExcludedApps: $(ConvertTo-Json $results['excludedApps'])"
+    Write-Host "Formatted AdditionalProperties: $(ConvertTo-Json $results)"
+    Write-Output "Formatted AdditionalProperties Type: $($results.GetType().FullName)"
     return $results
 }
+
+# function Get-M365DSCIntuneMobileWindowsOfficeSuiteAppAdditionalProperties {
+#     [CmdletBinding()]
+#     [OutputType([System.Collections.Hashtable])]
+#     param
+#     (
+#         [Parameter(Mandatory = $true)]
+#         [System.Collections.Hashtable]
+#         $Properties
+#     )
+
+#     # Initialize a hashtable to store only the relevant additional properties
+#     $results = @{}
+
+#     # Add `excludedApps` if present
+#     if ($Properties.ContainsKey('ExcludedApps')) {
+#         $results.Add('excludedApps', $Properties['ExcludedApps'])
+#     }
+
+#     # Add `autoAcceptEula` if present
+#     if ($Properties.ContainsKey('AutoAcceptEula')) {
+#         $results.Add('autoAcceptEula', $Properties['AutoAcceptEula'])
+#     }
+
+#     # Debug output to ensure correct structure
+#     Write-Output "Formatted AdditionalProperties Type: $($results.GetType().FullName)"
+#     Write-Host "Formatted AdditionalProperties: $(ConvertTo-Json $results)"
+#     Write-Host "Formatted ExcludedApps: $(ConvertTo-Json $results['excludedApps'])"
+#     Write-Output "Formatted ExcludedApps: $(ConvertTo-Json $results['excludedApps'])"
+#     return $results
+# }
+
+
 
 function Get-M365DSCIntuneAppLargeIconAsString #Get and Export
 {
