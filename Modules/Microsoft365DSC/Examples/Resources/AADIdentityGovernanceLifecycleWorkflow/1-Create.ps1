@@ -24,7 +24,6 @@ Configuration Example
         AADIdentityGovernanceLifecycleWorkflow "AADIdentityGovernanceLifecycleWorkflow-Onboard pre-hire employee updated version"
         {
             Category             = "joiner";
-            Credential           = $Credscredential;
             Description          = "Description the onboard of prehire employee";
             DisplayName          = "Onboard pre-hire employee updated version";
             Ensure               = "Present";
@@ -59,6 +58,9 @@ Configuration Example
                     )
                 }
             );
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
 }
