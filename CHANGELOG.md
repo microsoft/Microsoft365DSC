@@ -18,6 +18,8 @@
   * Initial release.
 * AADEntitlementManagementSettings
   * Added support for ApplicationSecret
+* AADIdentityGovernanceLifecycleWorkflow
+  * Initial release.
 * AADLifecycleWorkflowSettings
   * Initial release.
 * ADOPermissionGroupSettings
