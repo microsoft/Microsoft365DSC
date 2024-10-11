@@ -79,7 +79,7 @@ function Get-TargetResource
             $Group = Find-CsGroup -SearchQuery $GroupId -ExactMatchOnly $true -ErrorAction SilentlyContinue
         }
         else {
-            $GroupId = $null
+            $Group = $null
         }
         if ($null -eq $Group)
         {
