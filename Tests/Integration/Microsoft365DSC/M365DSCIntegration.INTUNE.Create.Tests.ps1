@@ -2534,30 +2534,31 @@
                     Ensure                = "Present";
                     InformationUrl        = "";
                     IsFeatured            = $False;
+                    MinimumSupportedOperatingSystem = MSFT_DeviceManagementMinimumOperatingSystem{
+                        v11_0 = $true
+                    }
                     Notes                 = "";
                     Owner                 = "";
                     PrivacyInformationUrl = "";
                     Publisher             = "Contoso";
-                    PublishingState       = "published";
                     Assignments          = @(
                             MSFT_DeviceManagementMobileAppAssignment{
-                                    groupDisplayName = 'All devices'
-                                source = 'direct'
+                                groupDisplayName = 'All devices'
                                 deviceAndAppManagementAssignmentFilterType = 'none'
                                 dataType = '#microsoft.graph.allDevicesAssignmentTarget'
                                 intent = 'required'
                             }
                             MSFT_DeviceManagementMobileAppAssignment{
                                 deviceAndAppManagementAssignmentFilterType = 'none'
-                                source = 'direct'
                                 dataType = '#microsoft.graph.groupAssignmentTarget'
                                 groupId = '57b5e81c-85bb-4644-a4fd-33b03e451c89'
                                 intent = 'required'
                             }
                         );
-                    Categories           = @(MSFT_DeviceManagementMobileAppCategory {
-                            id  = '1bff2652-03ec-4a48-941c-152e93736515'
-                            displayName = 'Kajal 3'
+                    Categories           = @(
+                        MSFT_DeviceManagementMobileAppCategory {
+                            Id  = '1bff2652-03ec-4a48-941c-152e93736515'
+                            DisplayName = 'Kajal 3'
                         });
                 }
                 IntunePolicySets 'Example'

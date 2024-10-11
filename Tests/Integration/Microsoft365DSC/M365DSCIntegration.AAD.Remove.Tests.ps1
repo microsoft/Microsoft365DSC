@@ -166,6 +166,29 @@
                     Ensure                   = "Absent";
                     PartnerTenantId          = "12345-12345-12345-12345-12345";
                 }
+                AADCustomSecurityAttributeDefinition 'AADCustomSecurityAttributeDefinition-ShoeSize'
+                {
+                    ApplicationId           = $ApplicationId;
+                    AttributeSet            = "TestAttributeSet";
+                    CertificateThumbprint   = $CertificateThumbprint;
+                    Ensure                  = "Absent";
+                    IsCollection            = $False;
+                    IsSearchable            = $True;
+                    Name                    = "ShoeSize";
+                    Status                  = "Available";
+                    TenantId                = $TenantId;
+                    Type                    = "String";
+                    UsePreDefinedValuesOnly = $False;
+                    Description             = "What size of shoe is the person wearing?"
+                }
+                AADDomain 'AADDomain-Contoso'
+                {
+                    ApplicationId                    = $ApplicationId;
+                    CertificateThumbprint            = $CertificateThumbprint;
+                    Ensure                           = "Absent";
+                    Id                               = "contoso.com";
+                    TenantId                         = $TenantId;
+                }
                 AADEntitlementManagementAccessPackage 'myAccessPackage'
                 {
                     DisplayName                     = 'Integration Package'
