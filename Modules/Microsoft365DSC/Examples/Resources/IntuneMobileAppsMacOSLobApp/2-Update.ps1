@@ -42,7 +42,7 @@ Configuration Example
             Assignments           = @(
                     MSFT_DeviceManagementMobileAppAssignment {
                         groupDisplayName = 'All devices'
-                        source = 'direct'
+                        source = 'dataType'
                         deviceAndAppManagementAssignmentFilterType = 'none'
                         dataType = '#microsoft.graph.allDevicesAssignmentTarget'
                         intent = 'required'
