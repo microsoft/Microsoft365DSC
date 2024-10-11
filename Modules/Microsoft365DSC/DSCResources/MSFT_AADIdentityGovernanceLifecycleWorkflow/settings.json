@@ -1,0 +1,40 @@
+﻿{
+    "resourceName": "AADIdentityGovernanceLifecycleWorkflow",
+    "description": "Use this resource to manage Lifecycle workflows.",
+    "roles": {
+        "read": [
+            "Security Reader"
+        ],
+        "update": [
+            "Security Administrator"
+        ]
+    },
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [
+                    {
+                        "name": "LifecycleWorkflows.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "LifecycleWorkflows.ReadWrite.All"
+                    }
+                ]
+            },
+            "application": {
+                "read": [
+                    {
+                        "name": "LifecycleWorkflows.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "LifecycleWorkflows.ReadWrite.All"
+                    }
+                ]
+            }
+        }
+    }
+}
