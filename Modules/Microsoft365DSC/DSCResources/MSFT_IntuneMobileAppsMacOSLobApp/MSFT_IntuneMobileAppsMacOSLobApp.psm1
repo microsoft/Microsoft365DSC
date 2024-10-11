@@ -44,7 +44,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $Notes,
+        $Notes,   klkdslakd
 
         [Parameter()]
         [System.String]
