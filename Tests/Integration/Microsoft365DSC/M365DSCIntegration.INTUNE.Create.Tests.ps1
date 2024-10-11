@@ -88,6 +88,24 @@
                     TenantId              = $TenantId;
                     CertificateThumbprint = $CertificateThumbprint;
                 }
+                IntuneAccountProtectionPolicyWindows10 'myAccountProtectionPolicy'
+                {
+                    DisplayName           = 'test'
+                    DeviceSettings = MSFT_MicrosoftGraphIntuneSettingsCatalogDeviceSettings
+                    {
+                        History = 10
+                        EnablePinRecovery = 'true'
+                    }
+                    UserSettings = MSFT_MicrosoftGraphIntuneSettingsCatalogUserSettings
+                    {
+                        History = 20
+                        EnablePinRecovery = 'true'
+                    }
+                    Ensure                = 'Present'
+                    ApplicationId         = $ApplicationId;
+                    TenantId              = $TenantId;
+                    CertificateThumbprint = $CertificateThumbprint;
+                }
                 IntuneAntivirusPolicyWindows10SettingCatalog 'myAVWindows10Policy'
                 {
                     DisplayName        = 'av exclusions'
@@ -105,6 +123,32 @@
                     ApplicationId         = $ApplicationId;
                     TenantId              = $TenantId;
                     CertificateThumbprint = $CertificateThumbprint;
+                }
+                IntuneAppAndBrowserIsolationPolicyWindows10 'ConfigureAppAndBrowserIsolationPolicyWindows10'
+                {
+                    Assignments              = @(
+                        MSFT_DeviceManagementConfigurationPolicyAssignments{
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                            dataType = '#microsoft.graph.groupAssignmentTarget'
+                            groupId = '11111111-1111-1111-1111-111111111111'
+                        }
+                    );
+                    AllowCameraMicrophoneRedirection       = "1";
+                    AllowPersistence                       = "0";
+                    AllowVirtualGPU                        = "0";
+                    AllowWindowsDefenderApplicationGuard   = "1";
+                    ClipboardFileType                      = "1";
+                    ClipboardSettings                      = "0";
+                    Description                            = 'Description'
+                    DisplayName                            = "App and Browser Isolation";
+                    Ensure                                 = "Present";
+                    Id                                     = '00000000-0000-0000-0000-000000000000'
+                    InstallWindowsDefenderApplicationGuard = "install";
+                    SaveFilesToHost                        = "0";
+                    RoleScopeTagIds                        = @("0");
+                    ApplicationId                          = $ApplicationId;
+                    TenantId                               = $TenantId;
+                    CertificateThumbprint                  = $CertificateThumbprint;
                 }
                 IntuneAppCategory 'IntuneAppCategory-Data Management'
                 {
@@ -2288,6 +2332,9 @@
                     ApplicationId         = $ApplicationId;
                     TenantId              = $TenantId;
                     CertificateThumbprint = $CertificateThumbprint;
+                    ConfigurationBlob = "Blob"
+                    ConfigurationType = "onboard"
+                    SampleSharing = 1
                 }
                 IntuneExploitProtectionPolicyWindows10SettingCatalog 'myWindows10ExploitProtectionPolicy'
                 {
@@ -2477,6 +2524,42 @@
                     ApplicationId         = $ApplicationId;
                     TenantId              = $TenantId;
                     CertificateThumbprint = $CertificateThumbprint;
+                }
+                IntuneMobileAppsMacOSLobApp 'IntuneMobileAppsMacOSLobApp-TeamsForBusinessInstaller'
+                {
+                    Id                    = "8d027f94-0682-431e-97c1-827d1879fa79";
+                    Description           = "TeamsForBusinessInstaller";
+                    Developer             = "Contoso";
+                    DisplayName           = "TeamsForBusinessInstaller";
+                    Ensure                = "Present";
+                    InformationUrl        = "";
+                    IsFeatured            = $False;
+                    MinimumSupportedOperatingSystem = MSFT_DeviceManagementMinimumOperatingSystem{
+                        v11_0 = $true
+                    }
+                    Notes                 = "";
+                    Owner                 = "";
+                    PrivacyInformationUrl = "";
+                    Publisher             = "Contoso";
+                    Assignments          = @(
+                            MSFT_DeviceManagementMobileAppAssignment{
+                                groupDisplayName = 'All devices'
+                                deviceAndAppManagementAssignmentFilterType = 'none'
+                                dataType = '#microsoft.graph.allDevicesAssignmentTarget'
+                                intent = 'required'
+                            }
+                            MSFT_DeviceManagementMobileAppAssignment{
+                                deviceAndAppManagementAssignmentFilterType = 'none'
+                                dataType = '#microsoft.graph.groupAssignmentTarget'
+                                groupId = '57b5e81c-85bb-4644-a4fd-33b03e451c89'
+                                intent = 'required'
+                            }
+                        );
+                    Categories           = @(
+                        MSFT_DeviceManagementMobileAppCategory {
+                            Id  = '1bff2652-03ec-4a48-941c-152e93736515'
+                            DisplayName = 'Kajal 3'
+                        });
                 }
                 IntunePolicySets 'Example'
                 {

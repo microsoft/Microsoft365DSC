@@ -31,6 +31,9 @@ Configuration Example
             ApplicationId         = $ApplicationId;
             TenantId              = $TenantId;
             CertificateThumbprint = $CertificateThumbprint;
+            ConfigurationBlob = "Blob"
+            ConfigurationType = "onboard"
+            SampleSharing = 1
         }
     }
 }

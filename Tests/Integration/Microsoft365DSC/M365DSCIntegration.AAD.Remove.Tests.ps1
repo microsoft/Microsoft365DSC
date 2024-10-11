@@ -149,6 +149,15 @@
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                 }
+                AADConnectorGroupApplicationProxy 'AADConnectorGroupApplicationProxy-testgroup'
+                {
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
+                    Ensure                = "Absent";
+                    Name                  = "testgroup-new";
+                    Id                    = "4984dcf7-d9e9-4663-90b4-5db09f92a669";
+                }
                 AADCrossTenantAccessPolicyConfigurationPartner 'AADCrossTenantAccessPolicyConfigurationPartner'
                 {
                     ApplicationId         = $ApplicationId
@@ -156,6 +165,29 @@
                     CertificateThumbprint = $CertificateThumbprint
                     Ensure                   = "Absent";
                     PartnerTenantId          = "12345-12345-12345-12345-12345";
+                }
+                AADCustomSecurityAttributeDefinition 'AADCustomSecurityAttributeDefinition-ShoeSize'
+                {
+                    ApplicationId           = $ApplicationId;
+                    AttributeSet            = "TestAttributeSet";
+                    CertificateThumbprint   = $CertificateThumbprint;
+                    Ensure                  = "Absent";
+                    IsCollection            = $False;
+                    IsSearchable            = $True;
+                    Name                    = "ShoeSize";
+                    Status                  = "Available";
+                    TenantId                = $TenantId;
+                    Type                    = "String";
+                    UsePreDefinedValuesOnly = $False;
+                    Description             = "What size of shoe is the person wearing?"
+                }
+                AADDomain 'AADDomain-Contoso'
+                {
+                    ApplicationId                    = $ApplicationId;
+                    CertificateThumbprint            = $CertificateThumbprint;
+                    Ensure                           = "Absent";
+                    Id                               = "contoso.com";
+                    TenantId                         = $TenantId;
                 }
                 AADEntitlementManagementAccessPackage 'myAccessPackage'
                 {

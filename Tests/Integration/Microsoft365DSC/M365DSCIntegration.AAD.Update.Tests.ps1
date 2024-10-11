@@ -34,6 +34,35 @@
         $Domain = $TenantId
         Node Localhost
         {
+                AADAdminConsentRequestPolicy 'AADAdminConsentRequestPolicy'
+                {
+                    ApplicationId         = $ApplicationId;
+                    CertificateThumbprint = $CertificateThumbprint;
+                    IsEnabled             = $True;
+                    IsSingleInstance      = "Yes";
+                    NotifyReviewers       = $False;
+                    RemindersEnabled      = $True;
+                    RequestDurationInDays = 30;
+                    Reviewers             =                 @(
+                        MSFT_AADAdminConsentRequestPolicyReviewer {
+                             ReviewerType = 'User'
+                             ReviewerId   = "AlexW@$TenantId"
+                        }
+                        MSFT_AADAdminConsentRequestPolicyReviewer {
+                             ReviewerType = 'Group'
+                             ReviewerId   = 'Communications'
+                        }
+                        MSFT_AADAdminConsentRequestPolicyReviewer {
+                             ReviewerType = 'Role'
+                             ReviewerId   = 'Attack Payload Author'
+                        }
+                        MSFT_AADAdminConsentRequestPolicyReviewer {
+                             ReviewerType = 'Role'
+                             ReviewerId   = 'Attack Simulation Administrator'
+                        }
+                        );
+                    TenantId              = $TenantId;
+                }
                 AADAdministrativeUnit 'TestUnit'
                 {
                     DisplayName                   = 'Test-Unit'
@@ -467,6 +496,16 @@
                     SignInFrequencyValue                     = 2; # Updated Porperty
                     State                                    = "disabled";
                 }
+                AADConnectorGroupApplicationProxy 'AADConnectorGroupApplicationProxy-testgroup'
+                {
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
+                    Ensure                = "Present";
+                    Id                    = "4984dcf7-d9e9-4663-90b4-5db09f92a669";
+                    Name                  = "testgroup-new";
+                    Region                = "nam";
+                }
                 AADCrossTenantAccessPolicy 'AADCrossTenantAccessPolicy'
                 {
                     AllowedCloudEndpoints = @("microsoftonline.us");
@@ -602,6 +641,21 @@
                     CertificateThumbprint = $CertificateThumbprint
                     Ensure                       = "Present";
                 }
+                AADCustomSecurityAttributeDefinition 'AADCustomSecurityAttributeDefinition-ShoeSize'
+                {
+                    ApplicationId           = $ApplicationId;
+                    AttributeSet            = "TestAttributeSet";
+                    CertificateThumbprint   = $CertificateThumbprint;
+                    Ensure                  = "Present";
+                    IsCollection            = $False;
+                    IsSearchable            = $True;
+                    Name                    = "ShoeSize";
+                    Status                  = "Available";
+                    TenantId                = $TenantId;
+                    Type                    = "String";
+                    UsePreDefinedValuesOnly = $False;
+                    Description             = "What size of shoe is the person wearing? Drifted" # Drift
+                }
                 AADDeviceRegistrationPolicy 'MyDeviceRegistrationPolicy'
                 {
                     ApplicationId                           = $ApplicationId;
@@ -618,6 +672,21 @@
                     MultiFactorAuthConfiguration            = $False;
                     TenantId                                = $TenantId;
                     UserDeviceQuota                         = 50;
+                }
+                AADDomain 'AADDomain-Contoso'
+                {
+                    ApplicationId                    = $ApplicationId;
+                    AuthenticationType               = "Managed";
+                    CertificateThumbprint            = $CertificateThumbprint;
+                    Ensure                           = "Present";
+                    Id                               = "contoso.com";
+                    IsAdminManaged                   = $True;
+                    IsDefault                        = $True;
+                    IsRoot                           = $True;
+                    IsVerified                       = $False; #Drift
+                    PasswordNotificationWindowInDays = 14;
+                    PasswordValidityPeriodInDays     = 2147483647;
+                    TenantId                         = $TenantId;
                 }
                 AADEntitlementManagementAccessPackage 'myAccessPackage'
                 {
@@ -791,6 +860,16 @@
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
+                }
+                AADLifecycleWorkflowSettings 'AADLifecycleWorkflowSettings'
+                {
+                    ApplicationId                   = $ApplicationId;
+                    CertificateThumbprint           = $CertificateThumbprint;
+                    IsSingleInstance                = "Yes";
+                    SenderDomain                    = "microsoft.com";
+                    TenantId                        = $TenantId;
+                    UseCompanyBranding              = $True;
+                    WorkflowScheduleIntervalInHours = 10;
                 }
                 AADNamedLocationPolicy 'CompanyNetwork'
                 {
