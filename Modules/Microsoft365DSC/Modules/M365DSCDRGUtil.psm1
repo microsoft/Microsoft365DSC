@@ -798,10 +798,20 @@ function Convert-M365DSCDRGComplexTypeToHashtable
     [OutputType([hashtable], [hashtable[]])]
     param(
         [Parameter(Mandatory = $true)]
-        $ComplexObject
+        [AllowNull()]
+        $ComplexObject,
+
+        [Parameter()]
+        [switch]
+        $SingleLevel
     )
 
-    if ($ComplexObject.getType().Fullname -like '*[[\]]')
+    if ($null -eq $ComplexObject)
+    {
+        return @{}
+    }
+
+    if ($ComplexObject.GetType().Fullname -like '*[[\]]')
     {
         $results = @()
         foreach ($item in $ComplexObject)
@@ -820,11 +830,16 @@ function Convert-M365DSCDRGComplexTypeToHashtable
 
     if ($null -ne $hashComplexObject)
     {
-        $results = $hashComplexObject.clone()
+        $results = $hashComplexObject.Clone()
+        if ($SingleLevel)
+        {
+            return [hashtable]$results
+        }
+
         $keys = $hashComplexObject.Keys | Where-Object -FilterScript { $_ -ne 'PSComputerName' }
         foreach ($key in $keys)
         {
-            if ($hashComplexObject[$key] -and $hashComplexObject[$key].getType().Fullname -like '*CimInstance*')
+            if ($hashComplexObject[$key] -and $hashComplexObject[$key].GetType().Fullname -like '*CimInstance*')
             {
                 $results[$key] = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $hashComplexObject[$key]
             }
@@ -832,11 +847,12 @@ function Convert-M365DSCDRGComplexTypeToHashtable
             {
                 $propertyName = $key[0].ToString().ToLower() + $key.Substring(1, $key.Length - 1)
                 $propertyValue = $results[$key]
-                $results.remove($key) | Out-Null
+                $results.Remove($key) | Out-Null
                 $results.Add($propertyName, $propertyValue)
             }
         }
     }
+
     return [hashtable]$results
 }
 
@@ -1073,7 +1089,6 @@ function ConvertFrom-IntuneMobileAppAssignment
         }
 
         $hashAssignment.Add('intent', $assignment.intent.ToString())
-        $hashAssignment.Add('source', $assignment.source.ToString())
 
         # $concatenatedSettings = $assignment.settings.ToString() -join ','
         # $hashAssignment.Add('settings', $concatenatedSettings)
@@ -1125,6 +1140,7 @@ function ConvertTo-IntuneMobileAppAssignment
     $assignmentResult = @()
     foreach ($assignment in $Assignments)
     {
+        $formattedAssignment = @{}
         $target = @{"@odata.type" = $assignment.dataType}
         if ($IncludeDeviceFilter)
         {
@@ -1132,14 +1148,10 @@ function ConvertTo-IntuneMobileAppAssignment
             {
                 $target.Add('deviceAndAppManagementAssignmentFilterType', $assignment.DeviceAndAppManagementAssignmentFilterType)
                 $target.Add('deviceAndAppManagementAssignmentFilterId', $assignment.DeviceAndAppManagementAssignmentFilterId)
-
-                $target.GetEnumerator() | ForEach-Object {
-                    Write-Host "target key:value: $($_.Key): $($_.Value)" }
             }
         }
 
-        $assignmentResult += $assignment.intent;
-        $assignmentResult += $assignment.source;
+        $formattedAssignment.Add('intent', $assignment.intent)
 
         if ($assignment.dataType -like '*groupAssignmentTarget')
         {
@@ -1181,8 +1193,9 @@ function ConvertTo-IntuneMobileAppAssignment
 
         if ($target)
         {
-            $assignmentResult += @{target = $target}
+            $formattedAssignment.Add('target', $target)
         }
+        $assignmentResult += $formattedAssignment
     }
 
     return ,$assignmentResult
@@ -1209,6 +1222,8 @@ function Compare-M365DSCIntunePolicyAssignment
             {
                 $assignmentTarget = $Target | Where-Object -FilterScript { $_.dataType -eq $assignment.DataType -and $_.groupId -eq $assignment.groupId }
                 $testResult = $null -ne $assignmentTarget
+                # Check for mobile app assignments with intent
+                $testResult = $assignment.intent -eq $assignmentTarget.intent
                 # Using assignment groupDisplayName only if the groupId is not found in the directory otherwise groupId should be the key
                 if (-not $testResult)
                 {
@@ -1314,14 +1329,14 @@ function Update-DeviceConfigurationPolicyAssignment
                         {
                             $message = "Skipping assignment for the group with DisplayName {$($target.groupDisplayName)} as it could not be found in the directory.`r`n"
                             $message += "Please update your DSC resource extract with the correct groupId or groupDisplayName."
-                            write-verbose -Message $message
+                            Write-Verbose -Message $message
                             $target = $null
                         }
                         if ($group -and $group.count -gt 1)
                         {
                             $message = "Skipping assignment for the group with DisplayName {$($target.groupDisplayName)} as it is not unique in the directory.`r`n"
                             $message += "Please update your DSC resource extract with the correct groupId or a unique group DisplayName."
-                            write-verbose -Message $message
+                            Write-Verbose -Message $message
                             $group = $null
                             $target = $null
                         }
@@ -1330,7 +1345,7 @@ function Update-DeviceConfigurationPolicyAssignment
                     {
                         $message = "Skipping assignment for the group with Id {$($target.groupId)} as it could not be found in the directory.`r`n"
                         $message += "Please update your DSC resource extract with the correct groupId or a unique group DisplayName."
-                        write-verbose -Message $message
+                        Write-Verbose -Message $message
                         $target = $null
                     }
                 }
@@ -1356,6 +1371,126 @@ function Update-DeviceConfigurationPolicyAssignment
         }
 
         $body = @{$RootIdentifier = $deviceManagementPolicyAssignments} | ConvertTo-Json -Depth 20
+        Write-Verbose -Message $body
+
+        Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $body -ErrorAction Stop
+    }
+    catch
+    {
+        New-M365DSCLogEntry -Message 'Error updating data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return $null
+    }
+}
+
+function Update-DeviceAppManagementPolicyAssignment
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $AppManagementPolicyId,
+
+        [Parameter()]
+        [Array]
+        $Assignments,
+
+        [Parameter()]
+        [System.String]
+        $Repository = 'deviceAppManagement/mobileApps',
+
+        [Parameter()]
+        [ValidateSet('v1.0','beta')]
+        [System.String]
+        $APIVersion = 'beta',
+
+        [Parameter()]
+        [System.String]
+        $RootIdentifier = 'mobileAppAssignments'
+    )
+
+    try
+    {
+        $appManagementPolicyAssignments = @()
+        $Uri = "/$APIVersion/$Repository/$AppManagementPolicyId/assign"
+
+        foreach ($assignment in $Assignments)
+        {
+            $formattedAssignment = @{
+                '@odata.type' = '#microsoft.graph.mobileAppAssignment'
+                intent = $assignment.intent
+            }
+            if ($assigment.settings)
+            {
+                $formattedAssignment.Add('settings', $assignment.settings)
+            }
+
+            if ($assignment.target -is [hashtable])
+            {
+                $target = $assignment.target
+            }
+
+            $formattedTarget = @{"@odata.type" = $target.dataType}
+            if(-not $formattedTarget."@odata.type" -and $target."@odata.type")
+            {
+                $formattedTarget."@odata.type" = $target."@odata.type"
+            }
+            if ($target.groupId)
+            {
+                $group = Get-MgGroup -GroupId ($target.groupId) -ErrorAction SilentlyContinue
+                if ($null -eq $group)
+                {
+                    if ($target.groupDisplayName)
+                    {
+                        $group = Get-MgGroup -Filter "DisplayName eq '$($target.groupDisplayName)'" -ErrorAction SilentlyContinue
+                        if ($null -eq $group)
+                        {
+                            $message = "Skipping assignment for the group with DisplayName {$($target.groupDisplayName)} as it could not be found in the directory.`r`n"
+                            $message += "Please update your DSC resource extract with the correct groupId or groupDisplayName."
+                            Write-Verbose -Message $message
+                            $target = $null
+                        }
+                        if ($group -and $group.count -gt 1)
+                        {
+                            $message = "Skipping assignment for the group with DisplayName {$($target.groupDisplayName)} as it is not unique in the directory.`r`n"
+                            $message += "Please update your DSC resource extract with the correct groupId or a unique group DisplayName."
+                            Write-Verbose -Message $message
+                            $group = $null
+                            $target = $null
+                        }
+                    }
+                    else
+                    {
+                        $message = "Skipping assignment for the group with Id {$($target.groupId)} as it could not be found in the directory.`r`n"
+                        $message += "Please update your DSC resource extract with the correct groupId or a unique group DisplayName."
+                        Write-Verbose -Message $message
+                        $target = $null
+                    }
+                }
+                #Skipping assignment if group not found from either groupId or groupDisplayName
+                if ($null -ne $group)
+                {
+                    $formattedTarget.Add('groupId',$group.Id)
+                }
+            }
+            if ($target.deviceAndAppManagementAssignmentFilterType)
+            {
+                $formattedTarget.Add('deviceAndAppManagementAssignmentFilterType',$target.deviceAndAppManagementAssignmentFilterType)
+            }
+            if ($target.deviceAndAppManagementAssignmentFilterId)
+            {
+                $formattedTarget.Add('deviceAndAppManagementAssignmentFilterId',$target.deviceAndAppManagementAssignmentFilterId)
+            }
+            $formattedAssignment.Add('target', $formattedTarget)
+            $appManagementPolicyAssignments += $formattedAssignment
+        }
+
+        $body = @{$RootIdentifier = $appManagementPolicyAssignments} | ConvertTo-Json -Depth 20
         Write-Verbose -Message $body
 
         Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $body -ErrorAction Stop
@@ -1443,9 +1578,24 @@ function Get-IntuneSettingCatalogPolicySetting
         [Parameter(Mandatory = 'true')]
         [System.Collections.Hashtable]
         $DSCParams,
-        [Parameter(Mandatory = 'true')]
+
+        [Parameter(
+            Mandatory = 'true',
+            ParameterSetName = 'Start'
+        )]
         [System.String]
-        $TemplateId
+        $TemplateId,
+
+        [Parameter(
+            Mandatory = 'true',
+            ParameterSetName = 'DeviceAndUserSettings'
+        )]
+        [System.Array]
+        $SettingTemplates,
+
+        [Parameter(ParameterSetName = 'Start')]
+        [switch]
+        $ContainsDeviceAndUserSettings
     )
 
     $global:excludedDefinitionIds = @()
@@ -1454,18 +1604,38 @@ function Get-IntuneSettingCatalogPolicySetting
     $DSCParams.Remove('DisplayName') | Out-Null
     $DSCParams.Remove('Description') | Out-Null
 
-    # Prepare setting definitions mapping
-    $settingTemplates = Get-MgBetaDeviceManagementConfigurationPolicyTemplateSettingTemplate `
-        -DeviceManagementConfigurationPolicyTemplateId $TemplateId `
-        -ExpandProperty 'SettingDefinitions' `
-        -All
     $settingInstances = @()
+    if ($PSCmdlet.ParameterSetName -eq 'Start')
+    {
+        # Prepare setting definitions mapping
+        $SettingTemplates = Get-MgBetaDeviceManagementConfigurationPolicyTemplateSettingTemplate `
+            -DeviceManagementConfigurationPolicyTemplateId $TemplateId `
+            -ExpandProperty 'SettingDefinitions' `
+            -All
+
+        if ($ContainsDeviceAndUserSettings)
+        {
+            $deviceSettingTemplates = $SettingTemplates | Where-object -FilterScript {
+                $_.SettingInstanceTemplate.SettingDefinitionId.StartsWith("device_")
+            }
+            $userSettingTemplates = $SettingTemplates | Where-object -FilterScript {
+                $_.SettingInstanceTemplate.SettingDefinitionId.StartsWith("user_")
+            }
+            $deviceDscParams = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $DSCParams.DeviceSettings -SingleLevel
+            $userDscParams = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $DSCParams.UserSettings -SingleLevel
+            $combinedSettingInstances = @()
+            $combinedSettingInstances += Get-IntuneSettingCatalogPolicySetting -DSCParams $deviceDscParams -SettingTemplates $deviceSettingTemplates
+            $combinedSettingInstances += Get-IntuneSettingCatalogPolicySetting -DSCParams $userDscParams -SettingTemplates $userSettingTemplates
+
+            return ,$combinedSettingInstances
+        }
+    }
 
     # Iterate over all setting instance templates in the setting template
-    foreach ($settingInstanceTemplate in $settingTemplates.SettingInstanceTemplate)
+    foreach ($settingInstanceTemplate in $SettingTemplates.SettingInstanceTemplate)
     {
         $settingInstance = @{}
-        $settingDefinition = $settingTemplates.SettingDefinitions | Where-Object {
+        $settingDefinition = $SettingTemplates.SettingDefinitions | Where-Object {
             $_.Id -eq $settingInstanceTemplate.SettingDefinitionId -and `
             ($_.AdditionalProperties.dependentOn.Count -eq 0 -and $_.AdditionalProperties.options.dependentOn.Count -eq 0)
         }
@@ -2269,14 +2439,51 @@ function Export-IntuneSettingCatalogPolicySettings
         [Parameter(
             ParameterSetName = 'Setting'
         )]
-        [switch]$IsRoot
+        [switch]$IsRoot,
+
+        [Parameter(
+            ParameterSetName = 'Start'
+        )]
+        [switch]$ContainsDeviceAndUserSettings
     )
 
     if ($PSCmdlet.ParameterSetName -eq 'Start')
     {
-        foreach ($setting in $Settings)
+        if ($ContainsDeviceAndUserSettings)
         {
-            Export-IntuneSettingCatalogPolicySettings -SettingInstance $setting.SettingInstance -SettingDefinitions $setting.SettingDefinitions -ReturnHashtable $ReturnHashtable -AllSettingDefinitions $Settings.SettingDefinitions -IsRoot
+            $deviceSettingsReturnHashtable = @{}
+            $deviceSettings = $Settings | Where-Object -FilterScript {
+                $_.SettingInstance.settingDefinitionId.StartsWith("device_")
+            }
+            foreach ($setting in $deviceSettings)
+            {
+                Export-IntuneSettingCatalogPolicySettings -SettingInstance $setting.SettingInstance -SettingDefinitions $setting.SettingDefinitions -ReturnHashtable $deviceSettingsReturnHashtable -AllSettingDefinitions $deviceSettings.SettingDefinitions -IsRoot
+            }
+
+            $userSettings = $Settings | Where-Object -FilterScript {
+                $_.SettingInstance.settingDefinitionId.StartsWith("user_")
+            }
+            $userSettingsReturnHashtable = @{}
+            foreach ($setting in $userSettings)
+            {
+                Export-IntuneSettingCatalogPolicySettings -SettingInstance $setting.SettingInstance -SettingDefinitions $setting.SettingDefinitions -ReturnHashtable $userSettingsReturnHashtable -AllSettingDefinitions $userSettings.SettingDefinitions -IsRoot
+            }
+
+            if ($deviceSettingsReturnHashtable.Keys.Count -gt 0)
+            {
+                $ReturnHashtable.Add('DeviceSettings', $deviceSettingsReturnHashtable)
+            }
+            if ($userSettingsReturnHashtable.Keys.Count -gt 0)
+            {
+                $ReturnHashtable.Add('UserSettings', $userSettingsReturnHashtable)
+            }
+        }
+        else
+        {
+            foreach ($setting in $Settings)
+            {
+                Export-IntuneSettingCatalogPolicySettings -SettingInstance $setting.SettingInstance -SettingDefinitions $setting.SettingDefinitions -ReturnHashtable $ReturnHashtable -AllSettingDefinitions $Settings.SettingDefinitions -IsRoot
+            }
         }
         return $ReturnHashtable
     }

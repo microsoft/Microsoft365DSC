@@ -31,6 +31,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
             }
 
+            Mock -CommandName Get-PSSession -MockWith {
+            }
+
+            Mock -CommandName Remove-PSSession -MockWith {
+            }
+
             Mock -CommandName New-M365DSCConnection -MockWith {
                 return "Credentials"
             }
@@ -43,6 +49,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
             Mock -CommandName Remove-MgBetaDeviceAppManagementMobileApp -MockWith {
             }
+
+            Mock -CommandName Update-MgBetaDeviceAppManagementMobileAppAssignment -MockWith{}
 
             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
@@ -57,18 +65,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     Id                    = "8d027f94-0682-431e-97c1-827d1879fa79"
+                    Categories            = @()
                     Description           = "TeamsForBusinessInstaller"
                     Developer             = "Contoso"
                     DisplayName           = "TeamsForBusinessInstaller"
                     InformationUrl        = ""
                     IsFeatured            = $False
+                    MinimumSupportedOperatingSystem = [CimInstance](
+                        New-CimInstance -ClassName MSFT_DeviceManagementMinimumOperatingSystem -Property @{
+                        v11_0 = $true
+                    } -ClientOnly)
                     Notes                 = ""
                     Owner                 = ""
                     PrivacyInformationUrl = ""
                     Publisher             = "Contoso"
-                    PublishingState       = "published"
                     RoleScopeTagIds       = @()
-
                     Ensure                = 'Present'
                     Credential            = $Credential
                 }
@@ -94,19 +105,22 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     Id                    = "ad027f94-0682-431e-97c1-827d1879fa79"
+                    Categories            = @()
                     Description           = "TeamsForBusinessInstaller"
                     Developer             = "Contoso"
                     DisplayName           = "TeamsForBusinessInstaller"
                     InformationUrl        = ""
                     IsFeatured            = $False
+                    MinimumSupportedOperatingSystem = [CimInstance](
+                        New-CimInstance -ClassName MSFT_DeviceManagementMinimumOperatingSystem -Property @{
+                        v11_0 = $true
+                    } -ClientOnly)
                     Notes                 = ""
                     Owner                 = ""
                     PrivacyInformationUrl = ""
                     Publisher             = "Contoso"
-                    PublishingState       = "published"
                     RoleScopeTagIds       = @()
                     IgnoreVersionDetection = $True
-
                     Ensure                = 'Absent'
                     Credential            = $Credential
                 }
@@ -114,6 +128,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-MgBetaDeviceAppManagementMobileApp -MockWith {
                     return @{
                         Id                    = "ad027f94-0682-431e-97c1-827d1879fa79"
+                        Categories            = @()
                         Description           = "TeamsForBusinessInstaller"
                         Developer             = "Contoso"
                         DisplayName           = "TeamsForBusinessInstaller"
@@ -126,9 +141,18 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         PublishingState       = "published"
                         RoleScopeTagIds       = @()
                         IgnoreVersionDetection = $True
-
+                        AdditionalProperties   = @{
+                            '@odata.type' = '#microsoft.graph.macOSLobApp'
+                            minimumSupportedOperatingSystem = @{
+                                v11_0 = $true
+                            }
+                        }
                         Ensure                = 'Present'
                     }
+                }
+
+                Mock -CommandName Get-MgBetaDeviceAppManagementMobileAppAssignment -MockWith{
+                    return $null
                 }
             }
 
@@ -148,18 +172,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     Id                    = "8d027f94-0682-431e-97c1-827d1879fa79"
+                    Categories            = @()
                     Description           = "TeamsForBusinessInstaller"
                     Developer             = "Contoso"
                     DisplayName           = "TeamsForBusinessInstaller"
                     InformationUrl        = ""
                     IsFeatured            = $False
+                    MinimumSupportedOperatingSystem = [CimInstance](
+                        New-CimInstance -ClassName MSFT_DeviceManagementMinimumOperatingSystem -Property @{
+                        v11_0 = $true
+                    } -ClientOnly)
                     Notes                 = ""
                     Owner                 = ""
                     PrivacyInformationUrl = ""
                     Publisher             = "Contoso"
-                    PublishingState       = "published"
                     RoleScopeTagIds       = @()
-
                     Ensure                = 'Present'
                     Credential            = $Credential;
                 }
@@ -167,6 +194,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-MgBetaDeviceAppManagementMobileApp -MockWith {
                     return @{
                         Id                    = "8d027f94-0682-431e-97c1-827d1879fa79"
+                        Categories            = @()
                         Description           = "TeamsForBusinessInstaller"
                         Developer             = "Contoso"
                         DisplayName           = "TeamsForBusinessInstaller"
@@ -178,7 +206,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Publisher             = "Contoso"
                         PublishingState       = "published"
                         RoleScopeTagIds       = @()
+                        AdditionalProperties   = @{
+                            '@odata.type' = '#microsoft.graph.macOSLobApp'
+                            minimumSupportedOperatingSystem = @{
+                                v11_0 = $true
+                            }
+                        }
                     }
+                }
+                Mock -CommandName Get-MgBetaDeviceAppManagementMobileAppAssignment -MockWith{
+                    return $null
                 }
             }
 
@@ -191,18 +228,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     Id                    = "8d027f94-0682-431e-97c1-827d1879fa79"
+                    Categories            = @()
                     Description           = "TeamsForBusinessInstaller"
                     Developer             = "Contoso"
                     DisplayName           = "TeamsForBusinessInstaller"
                     InformationUrl        = ""
                     IsFeatured            = $False
+                    MinimumSupportedOperatingSystem = [CimInstance](
+                        New-CimInstance -ClassName MSFT_DeviceManagementMinimumOperatingSystem -Property @{
+                        v11_0 = $true
+                    } -ClientOnly)
                     Notes                 = ""
                     Owner                 = ""
                     PrivacyInformationUrl = ""
                     Publisher             = "Contoso"
-                    PublishingState       = "published"
                     RoleScopeTagIds       = @()
-
                     Ensure                = 'Present'
                     Credential            = $Credential;
                 }
@@ -210,6 +250,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-MgBetaDeviceAppManagementMobileApp -MockWith {
                     return @{
                         Id                    = "8d027f94-0682-431e-97c1-827d1879fa79"
+                        Categories            = @()
                         Description           = "TeamsForBusinessInstaller"
                         Developer             = "Contoso"
                         DisplayName           = "TeamsForBusinessInstaller drift"
@@ -220,8 +261,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         PrivacyInformationUrl = ""
                         Publisher             = "Contoso"
                         PublishingState       = "published"
-                        RoleScopeTagIds       = @()
+                        AdditionalProperties   = @{
+                            '@odata.type' = '#microsoft.graph.macOSLobApp'
+                            minimumSupportedOperatingSystem = @{
+                                v11_0 = $true
+                            }
+                        }
                     }
+                }
+                Mock -CommandName Get-MgBetaDeviceAppManagementMobileAppAssignment -MockWith{
+                    return $null
                 }
             }
 
@@ -248,6 +297,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-MgBetaDeviceAppManagementMobileApp -MockWith {
                     return @{
                         Id                    = "8d027f94-0682-431e-97c1-827d1879fa79"
+                        Categories            = @()
                         Description           = "TeamsForBusinessInstaller"
                         Developer             = "Contoso"
                         DisplayName           = "TeamsForBusinessInstaller drift"
@@ -259,7 +309,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Publisher             = "Contoso"
                         PublishingState       = "published"
                         RoleScopeTagIds       = @()
+                        AdditionalProperties   = @{
+                            '@odata.type' = '#microsoft.graph.macOSLobApp'
+                            minimumSupportedOperatingSystem = @{
+                                v11_0 = $true
+                            }
+                        }
                     }
+                }
+                Mock -CommandName Get-MgBetaDeviceAppManagementMobileAppAssignment -MockWith{
+                    return $null
                 }
             }
 
