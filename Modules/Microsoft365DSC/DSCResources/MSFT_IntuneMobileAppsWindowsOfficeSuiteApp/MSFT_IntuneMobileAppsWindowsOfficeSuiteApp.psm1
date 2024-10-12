@@ -505,8 +505,10 @@ function Set-TargetResource
         $CreateParameters = ([Hashtable]$PSBoundParameters).clone()
         $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
         Write-Output "Before AdditionalProperties creation: $($CreateParameters | Out-String)"
+        Write-Host "Before AdditionalProperties creation: $($CreateParameters | Out-String)"
         $AdditionalProperties = Get-M365DSCIntuneMobileWindowsOfficeSuiteAppAdditionalProperties -Properties ($CreateParameters)
         Write-Output "AdditionalProperties: $($AdditionalProperties | Out-String)"
+        Write-Host "Before AdditionalProperties creation: $($CreateParameters | Out-String)"
         foreach ($key in $AdditionalProperties.keys)
         {
             if ($key -ne '@odata.type')
@@ -569,8 +571,35 @@ function Set-TargetResource
         $PSBoundParameters.Remove('Assignments') | Out-Null
         $UpdateParameters = ([Hashtable]$PSBoundParameters).clone()
         $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
-
         $AdditionalProperties = Get-M365DSCIntuneMobileWindowsOfficeSuiteAppAdditionalProperties -Properties ($UpdateParameters)
+        # AdditionalProperties
+        Write-Host "AdditionalProperties content: $($AdditionalProperties | Out-String)"
+
+        # If you want to specifically print the 'excludedApps' property within AdditionalProperties
+        if ($AdditionalProperties.ContainsKey('excludedApps')) {
+            Write-Host "ExcludedApps content: $($AdditionalProperties['excludedApps'] | Out-String)"
+        } else {
+            Write-Host "ExcludedApps not found in AdditionalProperties"
+        }
+        # Print the type of AdditionalProperties
+        if ($null -ne $AdditionalProperties) {
+            Write-Host "Type of AdditionalProperties: $($AdditionalProperties.GetType().FullName)"
+        } else {
+            Write-Host "AdditionalProperties is null."
+        }
+        # Check and print the type of ExcludedApps within AdditionalProperties
+        if ($AdditionalProperties.ContainsKey('excludedApps')) {
+            Write-Host "Type of excludedApps: $($AdditionalProperties['excludedApps'].GetType().FullName)"
+        } else {
+            Write-Host "excludedApps not found in AdditionalProperties."
+        }
+        $AdditionalProperties = Get-M365DSCIntuneMobileWindowsOfficeSuiteAppAdditionalProperties -Properties $CreateParameters
+
+        # ExcludedApps should be properly formatted and passed to the API
+        if ($AdditionalProperties.ContainsKey('excludedApps')) {
+            Write-Host "Formatted ExcludedApps: $($AdditionalProperties['excludedApps'] | ConvertTo-Json -Depth 3)"
+        }
+
         foreach ($key in $AdditionalProperties.keys)
         {
             if ($key -ne '@odata.type')
@@ -582,9 +611,15 @@ function Set-TargetResource
         }
 
         $UpdateParameters.Remove('Id') | Out-Null
-        $UpdateParameters.Remove('Verbose') | Out-Null
+        # $UpdateParameters.Remove('Verbose') | Out-Null
         $UpdateParameters.Remove('Categories') | Out-Null
         $UpdateParameters.Remove('PublishingState') | Out-Null #Not allowed to update as it's a computed property
+        # Remove read-only properties before updating
+        $UpdateParameters.Remove('Developer') | Out-Null
+        $UpdateParameters.Remove('Owner') | Out-Null
+        $UpdateParameters.Remove('Publisher') | Out-Null
+
+        Write-Host "UpdateParameters before API call: $($UpdateParameters | Out-String)"
 
         foreach ($key in ($UpdateParameters.clone()).Keys)
         {
@@ -1161,15 +1196,12 @@ function Get-M365DSCIntuneAppExcludedAppsAsString
     return $StringContent
 }
 
-function Get-M365DSCIntuneMobileWindowsOfficeSuiteAppAdditionalProperties
-{
+function Get-M365DSCIntuneMobileWindowsOfficeSuiteAppAdditionalProperties {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
-    param
-    (
+    param (
         [Parameter(Mandatory = $true)]
-        [System.Collections.Hashtable]
-        $Properties
+        [System.Collections.Hashtable] $Properties
     )
 
     # Define the list of additional properties to include in the final payload
@@ -1178,94 +1210,34 @@ function Get-M365DSCIntuneMobileWindowsOfficeSuiteAppAdditionalProperties
     # Initialize a hashtable to store the additional properties
     $results = @{'@odata.type' = '#microsoft.graph.officeSuiteApp'}
 
-    # Clone the original properties to manipulate
-    $cloneProperties = $Properties.clone()
-
-    # Loop through the clone and process each property based on its type
-    foreach ($property in $cloneProperties.Keys)
-    {
-        if ($property -in $additionalProperties)
-        {
-            # Convert property name to expected format
-            $propertyName = $property[0].ToString().ToLower() + $property.Substring(1, $property.Length - 1)
+    # Loop through and process each property based on its type
+    foreach ($property in $Properties.Keys) {
+        if ($property -in $additionalProperties) {
+            $propertyName = $property.Substring(0, 1).ToLower() + $property.Substring(1)
             $propertyValue = $Properties.$property
 
-            # Handle ExcludedApps: Convert to a hashtable with camelCase properties
-            if ($propertyName -eq 'excludedApps' -and $propertyValue -is [System.Collections.Hashtable])
-            {
+            # Handle ExcludedApps as a hashtable with camelCase properties
+            if ($propertyName -eq 'excludedApps' -and $propertyValue -is [System.Array]) {
                 $formattedExcludedApps = @{}
 
-                # Convert each key in ExcludedApps to camelCase and add to formattedExcludedApps
-                foreach ($key in $propertyValue.Keys)
-                {
-                    $camelCaseKey = $key.Substring(0, 1).ToLower() + $key.Substring(1)
-                    $formattedExcludedApps[$camelCaseKey] = $propertyValue[$key]
+                # Iterate over each CIMInstance object and extract the Name/Value pairs, converting to camelCase
+                foreach ($app in $propertyValue) {
+                    foreach ($instanceProperty in $app.CimInstanceProperties) {
+                        $camelCaseKey = $instanceProperty.Name.Substring(0, 1).ToLower() + $instanceProperty.Name.Substring(1)
+                        $formattedExcludedApps[$camelCaseKey] = $instanceProperty.Value
+                    }
                 }
 
-                # Convert to PSCustomObject to match the expected format
-                $results.Add($propertyName, [PSCustomObject]$formattedExcludedApps)
-            }
-            else
-            {
+                # Add the formatted ExcludedApps to results
+                $results[$propertyName] = $formattedExcludedApps
+            } else {
                 # For simple types like Boolean (AutoAcceptEula), add directly
-                $results.Add($propertyName, $propertyValue)
+                $results[$propertyName] = $propertyValue
             }
         }
     }
-
     return $results
 }
-
-# function Get-M365DSCIntuneMobileWindowsOfficeSuiteAppAdditionalProperties
-# {
-#     [CmdletBinding()]
-#     [OutputType([System.Collections.Hashtable])]
-#     param
-#     (
-#         [Parameter(Mandatory = $true)]
-#         [System.Collections.Hashtable]
-#         $Properties
-#     )
-
-#     # Define the list of additional properties to include in the final payload
-#     $additionalProperties = @('AutoAcceptEula', 'ExcludedApps')
-
-#     # Initialize a hashtable to store the additional properties
-#     $results = @{'@odata.type' = '#microsoft.graph.officeSuiteApp'}
-
-#     # Loop through the clone and process each property based on its type
-#     foreach ($property in $Properties.Keys)
-#     {
-#         if ($property -in $additionalProperties)
-#         {
-#             $propertyName = $property.Substring(0, 1).ToLower() + $property.Substring(1)
-#             $propertyValue = $Properties.$property
-
-#             # Handle ExcludedApps as a hashtable with camelCase properties
-#             if ($propertyName -eq 'excludedApps' -and $propertyValue -is [System.Collections.Hashtable])
-#             {
-#                 $formattedExcludedApps = @{}
-
-#                 # Ensure the keys are camelCase
-#                 foreach ($key in $propertyValue.Keys)
-#                 {
-#                     $camelCaseKey = $key.Substring(0, 1).ToLower() + $key.Substring(1)
-#                     $formattedExcludedApps[$camelCaseKey] = $propertyValue[$key]
-#                 }
-
-#                 # Convert it to PSCustomObject
-#                 $results[$propertyName] = [PSCustomObject]$formattedExcludedApps
-#             }
-#             else
-#             {
-#                 # For simple types, just add the value directly
-#                 $results[$propertyName] = $propertyValue
-#             }
-#         }
-#     }
-
-#     return $results
-# }
 
 function Get-M365DSCIntuneAppLargeIconAsString #Get and Export
 {
