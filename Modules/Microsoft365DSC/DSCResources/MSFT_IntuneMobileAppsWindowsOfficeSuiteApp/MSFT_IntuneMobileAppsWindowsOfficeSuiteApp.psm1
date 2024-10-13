@@ -179,99 +179,108 @@ function Get-TargetResource
     $nullResult.Ensure = 'Absent'
     try
     {
-        $instance = Get-MgBetaDeviceAppManagementMobileApp `
-            -Filter "(isof('microsoft.graph.officeSuiteApp') and displayName eq '$DisplayName')" `
-            -ExpandProperty "categories,assignments" `
-            -ErrorAction SilentlyContinue | Where-Object `
-            -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.officeSuiteApp' }
+        $instance = Get-MgBetaDeviceAppManagementMobileApp -MobileAppId $Id `
+            -ExpandProperty "categories" `
+            -ErrorAction SilentlyContinue
 
         if ($null -eq $instance)
         {
-            Write-Verbose -Message "No Mobile app with DisplayName {$DisplayName} was found. Search with DisplayName."
-            $instance = Get-MgBetaDeviceAppManagementMobileApp `
-                -MobileAppId $Id `
-                -ExpandProperty "categories,assignments" `
-                -ErrorAction Stop | Where-Object `
-                -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.officeSuiteApp' }
+            Write-Verbose -Message "Could not find an Intune Windows Office Suite App with Id {$Id}."
+
+            if (-not [System.String]::IsNullOrEmpty($DisplayName))
+            {
+                $instance = Get-MgBetaDeviceAppManagementMobileApp `
+                    -Filter "(isof('microsoft.graph.officeSuiteApp') and displayName eq '$DisplayName')" `
+                    -ErrorAction SilentlyContinue
+            }
+
+            if ($null -ne $instance)
+            {
+                $instance = Get-MgBetaDeviceAppManagementMobileApp -MobileAppId $instance.Id `
+                    -ExpandProperty "categories" `
+                    -ErrorAction SilentlyContinue
+                $Id = $instance.Id
+            }
         }
 
         if ($null -eq $instance)
         {
-            Write-Verbose -Message "No Mobile app with {$Id} was found."
+            Write-Verbose -Message "Could not find an Intune Windows Office Suite App with DisplayName {$DisplayName} was found."
             return $nullResult
         }
 
-        $results = @{
-            Id                    = $instance.Id
-            DisplayName           = $instance.DisplayName
-            Description           = $instance.Description
-            Publisher             = $instance.Publisher
-            IsFeatured            = $instance.IsFeatured
-            PrivacyInformationUrl = $instance.PrivacyInformationUrl
-            InformationUrl        = $instance.InformationUrl
-            Owner                 = $instance.Owner
-            Developer             = $instance.Developer
-            Notes                 = $instance.Notes
-            PublishingState       = $instance.PublishingState.ToString()
-            RoleScopeTagIds       = $instance.RoleScopeTagIds
-            ProductIds            = $instance.ProductIds
-            UseSharedComputerActivation = $instance.UseSharedComputerActivation
-            UpdateChannel         = $instance.UpdateChannel
-            OfficeSuiteAppDefaultFileFormat = $instance.OfficeSuiteAppDefaultFileFormat
-            OfficePlatformArchitecture = $instance.OfficePlatformArchitecture
-            LocalesToInstall      = $instance.LocalesToInstall
-            InstallProgressDisplayLevel = $instance.InstallProgressDisplayLevel
-            ShouldUninstallOlderVersionsOfOffice = $instance.ShouldUninstallOlderVersionsOfOffice
-            TargetVersion         = $instance.TargetVersion
-            UpdateVersion         = $instance.UpdateVersion
-            OfficeConfigurationXml = $instance.OfficeConfigurationXml
-            AutoAcceptEula        = $instance.AdditionalProperties.AutoAcceptEula
-
-            Ensure                = 'Present'
-            Credential            = $Credential
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            CertificateThumbprint = $CertificateThumbprint
-            ApplicationSecret     = $ApplicationSecret
-            ManagedIdentity       = $ManagedIdentity.IsPresent
-            AccessTokens          = $AccessTokens
-        }
+        Write-Verbose "An Intune Windows Office Suite App with Id {$Id} and DisplayName {$DisplayName} was found."
 
         #region complex types
-
-        #Categories
-        if($null -ne $instance.Categories)
+        $complexCategories = @()
+        foreach ($category in $instance.Categories)
         {
-            $results.Add('Categories', $instance.Categories)
-        }
-        else {
-            $results.Add('Categories', "")
+            $myCategory = @{}
+            $myCategory.Add('Id', $category.id)
+            $myCategory.Add('DisplayName', $category.displayName)
+            $complexCategories += $myCategory
         }
 
-        # ExcludedApps
-        if ($null -ne $instance.AdditionalProperties -and $null -ne $instance.AdditionalProperties.excludedApps)
+        $complexExcludedApps = [ordered]@{
+            "access" = $instance.AdditionalProperties.excludedApps["access"]
+            "bing" = $instance.AdditionalProperties.excludedApps["bing"]
+            "excel" = $instance.AdditionalProperties.excludedApps["excel"]
+            "groove" = $instance.AdditionalProperties.excludedApps["groove"]
+            "infoPath" = $instance.AdditionalProperties.excludedApps["infoPath"]
+            "lync" = $instance.AdditionalProperties.excludedApps["lync"]
+            "oneDrive" = $instance.AdditionalProperties.excludedApps["oneDrive"]
+            "oneNote" = $instance.AdditionalProperties.excludedApps["oneNote"]
+            "outlook" = $instance.AdditionalProperties.excludedApps["outlook"]
+            "powerPoint" = $instance.AdditionalProperties.excludedApps["powerPoint"]
+            "publisher" = $instance.AdditionalProperties.excludedApps["publisher"]
+            "sharePointDesigner" = $instance.AdditionalProperties.excludedApps["sharePointDesigner"]
+            "teams" = $instance.AdditionalProperties.excludedApps["teams"]
+            "visio" = $instance.AdditionalProperties.excludedApps["visio"]
+            "word" = $instance.AdditionalProperties.excludedApps["word"]
+        }
+
+        $complexLargeIcon = @{}
+        if ($null -ne $instance.LargeIcon.Value)
         {
-            # Convert to Hashtable if it is an array
-            if ($instance.AdditionalProperties.excludedApps -is [System.Object[]]) {
-                $formattedExcludedApps = @{}
-                foreach ($app in $instance.AdditionalProperties.excludedApps) {
-                    foreach ($key in $app.Keys) {
-                        $formattedExcludedApps[$key] = $app[$key]
-                    }
-                }
-            }
-            else {
-                $formattedExcludedApps = $instance.AdditionalProperties.excludedApps
-            }
-
-            # Ensure ExcludedApps is returned as a Hashtable
-            $results['ExcludedApps'] = @{}
-            foreach ($key in $formattedExcludedApps.Keys) {
-                $results['ExcludedApps'].Add($key, $formattedExcludedApps[$key])
-            }
+            $complexLargeIcon.Add('Value', [System.Convert]::ToBase64String($instance.LargeIcon.Value))
+            $complexLargeIcon.Add('Type', $instance.LargeIcon.Type)
         }
-        else {
-            $results.Add('ExcludedApps', $null)
+
+        $results = @{
+            Id                              = $instance.Id
+            DisplayName                     = $instance.DisplayName
+            Description                     = $instance.Description
+            Publisher                       = $instance.Publisher
+            IsFeatured                      = $instance.IsFeatured
+            PrivacyInformationUrl           = $instance.PrivacyInformationUrl
+            InformationUrl                  = $instance.InformationUrl
+            Owner                           = $instance.Owner
+            Developer                       = $instance.Developer
+            Notes                           = $instance.Notes
+            RoleScopeTagIds                 = $instance.RoleScopeTagIds
+            AutoAcceptEula                  = $instance.AdditionalProperties.autoAcceptEula
+            ProductIds                      = $instance.AdditionalProperties.productIds
+            UseSharedComputerActivation     = $instance.AdditionalProperties.useSharedComputerActivation
+            UpdateChannel                   = $instance.AdditionalProperties.updateChannel
+            OfficeSuiteAppDefaultFileFormat = $instance.AdditionalProperties.officeSuiteAppDefaultFileFormat
+            OfficePlatformArchitecture      = $instance.AdditionalProperties.officePlatformArchitecture
+            LocalesToInstall                = $instance.AdditionalProperties.localesToInstall
+            InstallProgressDisplayLevel     = $instance.AdditionalProperties.installProgressDisplayLevel
+            ShouldUninstallOlderVersionsOfOffice = $instance.AdditionalProperties.shouldUninstallOlderVersionsOfOffice
+            TargetVersion                   = $instance.AdditionalProperties.targetVersion
+            UpdateVersion                   = $instance.AdditionalProperties.updateVersion
+            OfficeConfigurationXml          = $instance.AdditionalProperties.officeConfigurationXml
+            LargeIcon                       = $complexLargeIcon
+            ExcludedApps                    = $complexExcludedApps
+            Categories                      = $complexCategories
+            Ensure                          = 'Present'
+            Credential                      = $Credential
+            ApplicationId                   = $ApplicationId
+            TenantId                        = $TenantId
+            CertificateThumbprint           = $CertificateThumbprint
+            ApplicationSecret               = $ApplicationSecret
+            ManagedIdentity                 = $ManagedIdentity.IsPresent
+            AccessTokens                    = $AccessTokens
         }
 
         #Assignments
@@ -279,24 +288,20 @@ function Get-TargetResource
         $appAssignments = Get-MgBetaDeviceAppManagementMobileAppAssignment -MobileAppId $instance.Id
         if ($null -ne $appAssignments -and $appAssignments.count -gt 0)
         {
-            $resultAssignments += ConvertFrom-IntuneMobileAppAssignment `
-                                -IncludeDeviceFilter:$true `
-                                -Assignments ($appAssignments)
+            $convertedAssignments = ConvertFrom-IntuneMobileAppAssignment `
+                                    -IncludeDeviceFilter:$true `
+                                    -Assignments ($appAssignments)
 
-            $results.Add('Assignments', $resultAssignments)
+            # Filter out 'source' from the assignment objects
+            foreach ($assignment in $convertedAssignments) {
+                if ($assignment.ContainsKey('source')) {
+                    $assignment.Remove('source')
+                }
+            }
+
+            $resultAssignments += $convertedAssignments
         }
-
-        #LargeIcon
-        # The large is returned only when Get cmdlet is called with Id parameter. The large icon is a base64 encoded string, so we need to convert it to a byte array.
-        $instanceWithLargeIcon = Get-MgBetaDeviceAppManagementMobileApp -MobileAppId $instance.Id
-        if (-not $results.ContainsKey('LargeIcon')) {
-            $results.Add('LargeIcon', $instanceWithLargeIcon.LargeIcon)
-        } else {
-            $results['LargeIcon'] = $instanceWithLargeIcon.LargeIcon  # Update the existing key
-        }
-
-        #end region complex types
-
+        $results.Add('Assignments', $resultAssignments)
         return [System.Collections.Hashtable] $results
     }
     catch
@@ -315,7 +320,7 @@ function Get-TargetResource
 function Set-TargetResource
 {
     [CmdletBinding()]
-    param
+     param
     (
         #region Intune resource parameters
 
@@ -486,179 +491,154 @@ function Set-TargetResource
     #endregion
 
     $currentInstance = Get-TargetResource @PSBoundParameters
-    $PSBoundParameters.Remove('Ensure') | Out-Null
-    $PSBoundParameters.Remove('Credential') | Out-Null
-    $PSBoundParameters.Remove('ApplicationId') | Out-Null
-    $PSBoundParameters.Remove('ApplicationSecret') | Out-Null
-    $PSBoundParameters.Remove('TenantId') | Out-Null
-    $PSBoundParameters.Remove('CertificateThumbprint') | Out-Null
-    $PSBoundParameters.Remove('ManagedIdentity') | Out-Null
-    $PSBoundParameters.Remove('AccessTokens') | Out-Null
+    $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
-    $CreateParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
-
-    # CREATE
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        Write-Host "Create office suite app: $DisplayName"
+        Write-Verbose -Message "Creating an Intune Windows Office Suite App with DisplayName {$DisplayName}"
+        $BoundParameters.Remove('Assignments') | Out-Null
 
-        $CreateParameters = ([Hashtable]$PSBoundParameters).clone()
+        $CreateParameters = ([Hashtable]$BoundParameters).Clone()
         $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
-        Write-Output "Before AdditionalProperties creation: $($CreateParameters | Out-String)"
-        Write-Host "Before AdditionalProperties creation: $($CreateParameters | Out-String)"
-        $AdditionalProperties = Get-M365DSCIntuneMobileWindowsOfficeSuiteAppAdditionalProperties -Properties ($CreateParameters)
-        Write-Output "AdditionalProperties: $($AdditionalProperties | Out-String)"
-        Write-Host "Before AdditionalProperties creation: $($CreateParameters | Out-String)"
-        foreach ($key in $AdditionalProperties.keys)
+        $CreateParameters.Remove('Id') | Out-Null
+        $CreateParameters.Remove('Categories') | Out-Null
+
+        foreach ($key in ($CreateParameters.Clone()).Keys)
         {
-            if ($key -ne '@odata.type')
+            if ($null -ne $CreateParameters.$key -and $CreateParameters.$key.GetType().Name -like '*CimInstance*')
             {
-                $keyName = $key.substring(0, 1).ToUpper() + $key.substring(1, $key.length - 1)
-                $CreateParameters.remove($keyName)
+                $CreateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters.$key
             }
         }
 
-        $CreateParameters.remove('Id') | Out-Null
-        $CreateParameters.remove('Ensure') | Out-Null
-        $CreateParameters.remove('Categories') | Out-Null
-        $CreateParameters.remove('Assignments') | Out-Null
-        $CreateParameters.remove('excludedApps') | Out-Null
-        $CreateParameters.Remove('Verbose') | Out-Null
-        $CreateParameters.Remove('PublishingState') | Out-Null #Not allowed to update as it's a computed property
-        $CreateParameters.Remove('LargeIcon') | Out-Null
+        $CreateParameters.Add('@odata.type', '#microsoft.graph.officeSuiteApp')
+        $app = New-MgBetaDeviceAppManagementMobileApp -BodyParameter $CreateParameters
 
-        foreach ($key in ($CreateParameters.clone()).Keys)
+        foreach ($category in $Categories)
         {
-            if ($CreateParameters[$key].getType().Fullname -like '*CimInstance*')
+            if ($category.Id)
             {
-                $CreateParameters[$key] = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters[$key]
+                $currentCategory = Get-MgBetaDeviceAppManagementMobileAppCategory -CategoryId $category.Id
+            }
+            else
+            {
+                $currentCategory = Get-MgBetaDeviceAppManagementMobileAppCategory -Filter "displayName eq '$($category.DisplayName)'"
+            }
+
+            if ($null -eq $currentCategory)
+            {
+                throw "Mobile App Category with DisplayName $($category.DisplayName) not found."
+            }
+
+            Invoke-MgBetaGraphRequest -Uri "/beta/deviceAppManagement/mobileApps/$($app.Id)/categories/`$ref" -Method 'POST' -Body @{
+                '@odata.id' = "https://graph.microsoft.com/beta/deviceAppManagement/mobileAppCategories/$($currentCategory.Id)"
             }
         }
-
-        if ($AdditionalProperties)
-        {
-            $CreateParameters.add('AdditionalProperties', $AdditionalProperties)
-        }
-
-        #LargeIcon
-        if($LargeIcon)
-        {
-            [System.Object]$LargeIconValue = ConvertTo-M365DSCIntuneAppLargeIcon -LargeIcon $LargeIcon
-            if (-not $CreateParameters.ContainsKey('LargeIcon')) {
-                $CreateParameters.Add('LargeIcon', $LargeIconValue)
-            } else {
-                $CreateParameters['LargeIcon'] = $LargeIconValue
-            }
-        }
-        Write-Output "CreateParameters before API call: $($CreateParameters | Out-String)"
-        $app = New-MgBetaDeviceAppManagementMobileApp @CreateParameters
 
         #Assignments
-        $assignmentsHash = ConvertTo-IntuneMobileAppAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
-        if ($app.id)
+        if ($app.Id)
         {
-            Write-Output "UpdateParameters before API call: $($UpdateParameters | Out-String)"
-            Update-MgBetaDeviceAppManagementMobileAppAssignment -MobileAppId $app.id `
-                -Target $assignmentsHash `
-                -Repository 'deviceAppManagement/mobileAppAssignments'
+            $assignmentsHash = ConvertTo-IntuneMobileAppAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
+            Update-DeviceAppManagementPolicyAssignment -AppManagementPolicyId $app.Id `
+                -Assignments $assignmentsHash
         }
     }
-    # UPDATE
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Host "Update office suite app: $DisplayName"
+        Write-Host "Updating the Intune Windows Office Suite App with DisplayName {$DisplayName}"
+        $BoundParameters.Remove('Assignments') | Out-Null
 
-        $PSBoundParameters.Remove('Assignments') | Out-Null
-        $UpdateParameters = ([Hashtable]$PSBoundParameters).clone()
+        $UpdateParameters = ([Hashtable]$BoundParameters).Clone()
         $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
-        $AdditionalProperties = Get-M365DSCIntuneMobileWindowsOfficeSuiteAppAdditionalProperties -Properties ($UpdateParameters)
-        # AdditionalProperties
-        Write-Host "AdditionalProperties content: $($AdditionalProperties | Out-String)"
-
-        # If you want to specifically print the 'excludedApps' property within AdditionalProperties
-        if ($AdditionalProperties.ContainsKey('excludedApps')) {
-            Write-Host "ExcludedApps content: $($AdditionalProperties['excludedApps'] | Out-String)"
-        } else {
-            Write-Host "ExcludedApps not found in AdditionalProperties"
-        }
-        # Print the type of AdditionalProperties
-        if ($null -ne $AdditionalProperties) {
-            Write-Host "Type of AdditionalProperties: $($AdditionalProperties.GetType().FullName)"
-        } else {
-            Write-Host "AdditionalProperties is null."
-        }
-        # Check and print the type of ExcludedApps within AdditionalProperties
-        if ($AdditionalProperties.ContainsKey('excludedApps')) {
-            Write-Host "Type of excludedApps: $($AdditionalProperties['excludedApps'].GetType().FullName)"
-        } else {
-            Write-Host "excludedApps not found in AdditionalProperties."
-        }
-        $AdditionalProperties = Get-M365DSCIntuneMobileWindowsOfficeSuiteAppAdditionalProperties -Properties $CreateParameters
-
-        # ExcludedApps should be properly formatted and passed to the API
-        if ($AdditionalProperties.ContainsKey('excludedApps')) {
-            Write-Host "Formatted ExcludedApps: $($AdditionalProperties['excludedApps'] | ConvertTo-Json -Depth 3)"
-        }
-
-        foreach ($key in $AdditionalProperties.keys)
-        {
-            if ($key -ne '@odata.type')
-            {
-                $keyName = $key.substring(0, 1).ToUpper() + $key.substring(1, $key.length - 1)
-                #Remove additional keys, so that later they can be added as 'AdditionalProperties'
-                $UpdateParameters.Remove($keyName)
-            }
-        }
-
         $UpdateParameters.Remove('Id') | Out-Null
-        # $UpdateParameters.Remove('Verbose') | Out-Null
         $UpdateParameters.Remove('Categories') | Out-Null
-        $UpdateParameters.Remove('PublishingState') | Out-Null #Not allowed to update as it's a computed property
-        # Remove read-only properties before updating
+        $UpdateParameters.Remove('OfficePlatformArchitecture') | Out-Null
         $UpdateParameters.Remove('Developer') | Out-Null
         $UpdateParameters.Remove('Owner') | Out-Null
         $UpdateParameters.Remove('Publisher') | Out-Null
+        $UpdateParameters.Remove('RoleScopeTagIds') | Out-Null
+        Write-Host "Initial ExcludedApps Data:" $ExcludedApps
 
-        Write-Host "UpdateParameters before API call: $($UpdateParameters | Out-String)"
+        if ($UpdateParameters.ContainsKey('ExcludedApps')) {
+            # Convert ExcludedApps into an ordered hashtable using the same pattern as in the helper functions
+            $excludedAppsDict = [ordered]@{}
 
-        foreach ($key in ($UpdateParameters.clone()).Keys)
+            # Define the list of known apps to exclude
+            $excludedAppsKeys = @(
+                'access', 'bing', 'excel', 'groove', 'infoPath', 'lync',
+                'oneDrive', 'oneNote', 'outlook', 'powerPoint', 'publisher',
+                'sharePointDesigner', 'teams', 'visio', 'word'
+            )
+
+            # Loop through the known app keys and dynamically populate the dictionary
+            foreach ($key in $excludedAppsKeys) {
+                if ($AdditionalProperties['excludedApps'].ContainsKey($key)) {
+                    $excludedAppsDict[$key] = $AdditionalProperties['excludedApps'][$key]
+                } else {
+                    # Set default values for each key if not explicitly provided
+                    if ($key -in @('groove', 'infoPath', 'lync', 'sharePointDesigner')) {
+                        $excludedAppsDict[$key] = $true
+                    } else {
+                        $excludedAppsDict[$key] = $false
+                    }
+                }
+            }
+
+            # Convert to JSON before sending to the API
+            $excludedAppsJson = $excludedAppsDict | ConvertTo-Json -Depth 3
+
+            # Add this JSON to your parameters for the API
+            $UpdateParameters['excludedApps'] = $excludedAppsJson
+        } else {
+            Write-Host "ExcludedApps parameter not found in UpdateParameters."
+        }
+
+        # Print the entire UpdateParameters being sent to the API
+        Write-Host "Now ExcludedApps Data:" $UpdateParameters['excludedApps']
+
+        Update-MgBetaDeviceAppManagementMobileApp -MobileAppId $currentInstance.Id -BodyParameter $UpdateParameters
+
+        [array]$referenceObject = if ($null -ne $currentInstance.Categories.DisplayName) { $currentInstance.Categories.DisplayName } else { ,@() }
+        [array]$differenceObject = if ($null -ne $Categories.DisplayName) { $Categories.DisplayName } else { ,@() }
+        $delta = Compare-Object -ReferenceObject $referenceObject -DifferenceObject $differenceObject -PassThru
+        foreach ($diff in $delta)
         {
-            if ($UpdateParameters[$key].getType().Fullname -like '*CimInstance*')
+            if ($diff.SideIndicator -eq '=>')
             {
-                $value = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters[$key]
-                $UpdateParameters[$key] = $value
+                $category = $Categories | Where-Object { $_.DisplayName -eq $diff }
+                if ($category.Id)
+                {
+                    $currentCategory = Get-MgBetaDeviceAppManagementMobileAppCategory -MobileAppCategoryId $category.Id
+                }
+                else
+                {
+                    $currentCategory = Get-MgBetaDeviceAppManagementMobileAppCategory -Filter "displayName eq '$($category.DisplayName)'"
+                }
+
+                if ($null -eq $currentCategory)
+                {
+                    throw "Mobile App Category with DisplayName $($category.DisplayName) not found."
+                }
+
+                Invoke-MgGraphRequest -Uri "/beta/deviceAppManagement/mobileApps/$($currentInstance.Id)/categories/`$ref" -Method 'POST' -Body @{
+                    '@odata.id' = "https://graph.microsoft.com/beta/deviceAppManagement/mobileAppCategories/$($currentCategory.Id)"
+                }
+            }
+            else
+            {
+                $category = $currentInstance.Categories | Where-Object { $_.DisplayName -eq $diff }
+                Invoke-MgGraphRequest -Uri "/beta/deviceAppManagement/mobileApps/$($currentInstance.Id)/categories/$($category.Id)/`$ref" -Method 'DELETE'
             }
         }
-
-        if ($AdditionalProperties)
-        {
-            $UpdateParameters.Add('AdditionalProperties', $AdditionalProperties)
-        }
-
-         #LargeIcon
-         if($LargeIcon)
-         {
-            [System.Object]$LargeIconValue = ConvertTo-M365DSCIntuneAppLargeIcon -LargeIcon $LargeIcon
-            if (-not $CreateParameters.ContainsKey('LargeIcon')) {
-                $UpdateParameters.Add('LargeIcon', $LargeIconValue)
-            } else {
-                $UpdateParameters['LargeIcon'] = $LargeIconValue
-            }
-         }
-
-        Update-MgBetaDeviceAppManagementMobileApp -MobileAppId $currentInstance.Id @UpdateParameters
-        Write-Host "Updated office suite App: $DisplayName."
 
         #Assignments
         $assignmentsHash = ConvertTo-IntuneMobileAppAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
-        Update-MgBetaDeviceAppManagementMobileAppAssignment -MobileAppId $currentInstance.id `
-            -Target $assignmentsHash `
-            -Repository 'deviceAppManagement/mobileAppAssignments'
+        Update-DeviceAppManagementPolicyAssignment -AppManagementPolicyId $currentInstance.Id `
+            -Assignments $assignmentsHash
     }
-    # REMOVE
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Host "Remove office suite app: $DisplayName"
+        Write-Host "Remove the Intune MacOS Lob App with Id {$($currentInstance.Id)}"
         Remove-MgBetaDeviceAppManagementMobileApp -MobileAppId $currentInstance.Id -Confirm:$false
     }
 }
@@ -667,7 +647,7 @@ function Test-TargetResource
 {
     [CmdletBinding()]
     [OutputType([System.Boolean])]
-    param
+     param
     (
         #region Intune resource parameters
 
@@ -837,20 +817,10 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of Intune Mobile office suite App: {$DisplayName}"
+    Write-Verbose -Message "Testing configuration of the Intune Windows Suite App with Id {$Id} and DisplayName {$DisplayName}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
-    if (-not (Test-M365DSCAuthenticationParameter -BoundParameters $CurrentValues))
-    {
-        Write-Verbose "An error occured in Get-TargetResource, the app {$displayName} will not be processed"
-        throw "An error occured in Get-TargetResource, the app {$displayName} will not be processed. Refer to the event viewer logs for more information."
-    }
-    $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
-    $ValuesToCheck = Remove-M365DSCAuthenticationParameter -BoundParameters $ValuesToCheck
-    $ValuesToCheck.Remove('Id') | Out-Null
-
-    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
-    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
+    $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
 
     if ($CurrentValues.Ensure -ne $Ensure)
     {
@@ -864,21 +834,31 @@ function Test-TargetResource
     {
         $source = $PSBoundParameters.$key
         $target = $CurrentValues.$key
-        if ($source.getType().Name -like '*CimInstance*')
+        if ($null -ne $source -and $source.GetType().Name -like '*CimInstance*')
         {
             $testResult = Compare-M365DSCComplexObject `
                 -Source ($source) `
                 -Target ($target)
 
-            if (-Not $testResult)
+            if (-not $testResult)
             {
-                $testResult = $false
                 break
             }
 
             $ValuesToCheck.Remove($key) | Out-Null
         }
     }
+
+    # Prevent screen from filling up with the LargeIcon value
+    # Comparison will already be done because it's a CimInstance
+    $CurrentValues.Remove('LargeIcon') | Out-Null
+    $PSBoundParameters.Remove('LargeIcon') | Out-Null
+
+    $ValuesToCheck.Remove('Id') | Out-Null
+    $ValuesToCheck = Remove-M365DSCAuthenticationParameter -BoundParameters $ValuesToCheck
+
+    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     if ($testResult)
     {
@@ -899,6 +879,10 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
+        [Parameter()]
+        [System.String]
+        $Filter,
+
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
@@ -948,9 +932,7 @@ function Export-TargetResource
         $Script:ExportMode = $true
         [array] $Script:getInstances = Get-MgBetaDeviceAppManagementMobileApp `
             -Filter "isof('microsoft.graph.officeSuiteApp')" `
-            -ExpandProperty "categories,assignments" `
-            -ErrorAction Stop | Where-Object `
-            -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.officeSuiteApp' }
+            -ErrorAction Stop
 
         $i = 1
         $dscContent = ''
@@ -990,61 +972,73 @@ function Export-TargetResource
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
 
-            if (-not (Test-M365DSCAuthenticationParameter -BoundParameters $Results))
-            {
-                Write-Verbose "An error occured in Get-TargetResource, the app {$($params.displayName)} will not be processed."
-                throw "An error occured in Get-TargetResource, the app {$($params.displayName)} will not be processed. Refer to the event viewer logs for more information."
-            }
-
             #region complex types
-
-            #Categories
-            if($null -ne $Results.Categories)
+            if ($null -ne $Results.Categories)
             {
-                $Results.Categories = Get-M365DSCIntuneAppCategoriesAsString -Categories $Results.Categories
-            }
-            else {
-                $Results.Remove('Categories') | Out-Null
-            }
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                    -ComplexObject $Results.Categories `
+                    -CIMInstanceName 'DeviceManagementMobileAppCategory'
 
-            # ExcludedApps
-            if ($null -ne $Results.ExcludedApps)
-            {
-                # Convert to a Hashtable if still an array
-                if ($Results.ExcludedApps -is [System.Object[]]) {
-                    $Results.ExcludedApps = Convert-ObjectArrayToHashtable -InputArray $Results.ExcludedApps
-                }
-                $Results.ExcludedApps = Get-M365DSCIntuneAppExcludedAppsAsString -ExcludedApps $Results.ExcludedApps
-            }
-            else {
-                $Results.Remove('ExcludedApps') | Out-Null
-            }
-
-            #Assignments
-            if ($null -ne $Results.Assignments)
-            {
-                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject ([Array]$Results.Assignments) -CIMInstanceName DeviceManagementMobileAppAssignment
-
-                if ($complexTypeStringResult)
+                if (-not [System.String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
-                    $Results.Assignments = $complexTypeStringResult
+                    $Results.Categories = $complexTypeStringResult
                 }
                 else
                 {
-                    $Results.Remove('Assignments') | Out-Null
+                    $Results.Remove('Categories') | Out-Null
                 }
             }
 
-            #LargeIcon
-            if($null -ne $Results.LargeIcon)
+            if ($null -ne $Results.ExcludedApps)
             {
-                $Results.LargeIcon = Get-M365DSCIntuneAppLargeIconAsString -LargeIcon $Results.LargeIcon
-            }
-            else
-            {
-                $Results.Remove('LargeIcon') | Out-Null
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                    -ComplexObject $Results.ExcludedApps `
+                    -CIMInstanceName 'DeviceManagementMobileAppExcludedApp'
+
+                if (-not [System.String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                {
+                    $Results.ExcludedApps = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('ExcludedApps') | Out-Null
+                }
             }
 
+            if ($null -ne $Results.LargeIcon)
+            {
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                    -ComplexObject $Results.LargeIcon `
+                    -CIMInstanceName 'DeviceManagementMimeContent'
+
+                if (-not [System.String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                {
+                    $Results.LargeIcon = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('LargeIcon') | Out-Null
+                }
+            }
+
+            if ($null -ne $Results.Assignments)
+            {
+                if ($Results.Assignments)
+                {
+                    $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                        -ComplexObject $Results.Assignments `
+                        -CIMInstanceName DeviceManagementMobileAppAssignment
+
+                    if ($complexTypeStringResult)
+                    {
+                        $Results.Assignments = $complexTypeStringResult
+                    }
+                    else
+                    {
+                        $Results.Remove('Assignments') | Out-Null
+                    }
+                }
+            }
             #endregion complex types
 
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
@@ -1054,49 +1048,25 @@ function Export-TargetResource
                 -Credential $Credential
 
             #region complex types
-
-            #Categories
             if ($null -ne $Results.Categories)
             {
-                $isCIMArray = $false
-                if ($Results.Categories.getType().Fullname -like '*[[\]]')
-                {
-                    $isCIMArray = $true
-                }
-
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Categories' -IsCIMArray:$isCIMArray
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Categories' -IsCIMArray:$true
             }
 
-            #ExcludedApps
-            if ($null -ne $Results.excludedApps)
+            if ($null -ne $Results.ExcludedApps)
             {
-                $isCIMArray = $false
-                if ($Results.excludedApps.getType().Fullname -like '*[[\]]')
-                {
-                    $isCIMArray = $true
-                }
-
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'ExcludedApps' -IsCIMArray:$isCIMArray
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'ExcludedApps' -IsCIMArray:$true
             }
 
-            #Assignments
-            if ($null -ne $Results.Assignments)
-            {
-                $isCIMArray = $false
-                if ($Results.Assignments.getType().Fullname -like '*[[\]]')
-                {
-                    $isCIMArray = $true
-                }
-
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Assignments' -IsCIMArray:$isCIMArray
-            }
-
-            #LargeIcon
             if ($null -ne $Results.LargeIcon)
             {
                 $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'LargeIcon' -IsCIMArray:$false
             }
 
+            if ($null -ne $Results.Assignments)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Assignments' -IsCIMArray:$true
+            }
             #endregion complex types
 
             $dscContent += $currentDSCBlock
@@ -1121,170 +1091,5 @@ function Export-TargetResource
         return ''
     }
 }
-
-#region Helper functions
-
-function Convert-ObjectArrayToHashtable {
-    param (
-        [Parameter(Mandatory = $true)]
-        [System.Object[]]
-        $InputArray
-    )
-    $outputHashTable = @{}
-    foreach ($element in $InputArray) {
-        if ($element -is [System.Collections.Hashtable]) {
-            $outputHashTable += $element
-        }
-    }
-    return $outputHashTable
-}
-
-function Get-M365DSCIntuneAppCategoriesAsString
-{
-    [CmdletBinding()]
-    [OutputType([System.String])]
-    param(
-        [Parameter(Mandatory = $true)]
-        [System.Object[]]
-        $Categories
-    )
-
-    $StringContent = '@('
-    $space = '                '
-    $indent = '    '
-
-    $i = 1
-    foreach ($category in $Categories)
-    {
-        if ($Categories.Count -gt 1)
-        {
-            $StringContent += "`r`n"
-            $StringContent += "$space"
-        }
-
-        #Only export the displayName, not Id
-        $StringContent += "MSFT_DeviceManagementMobileAppCategory { `r`n"
-        $StringContent += "$($space)$($indent)displayName = '" + $category.displayName + "'`r`n"
-        $StringContent += "$space}"
-
-        $i++
-    }
-
-    $StringContent += ')'
-
-    return $StringContent
-}
-
-function Get-M365DSCIntuneAppExcludedAppsAsString
-{
-    [CmdletBinding()]
-    [OutputType([System.String])]
-    param(
-        [Parameter(Mandatory = $true)]
-        [System.Object]
-        $ExcludedApps
-    )
-
-    # Create the embedded instance for ExcludedApps
-    $StringContent = "MSFT_DeviceManagementMobileAppExcludedApp {"
-    foreach ($key in $ExcludedApps.Keys) {
-        $value = if ($ExcludedApps[$key]) { '$true' } else { '$false' }
-        $StringContent += "`n    $key = $value;"
-    }
-    $StringContent += "`n}"
-
-    return $StringContent
-}
-
-function Get-M365DSCIntuneMobileWindowsOfficeSuiteAppAdditionalProperties {
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param (
-        [Parameter(Mandatory = $true)]
-        [System.Collections.Hashtable] $Properties
-    )
-
-    # Define the list of additional properties to include in the final payload
-    $additionalProperties = @('AutoAcceptEula', 'ExcludedApps')
-
-    # Initialize a hashtable to store the additional properties
-    $results = @{'@odata.type' = '#microsoft.graph.officeSuiteApp'}
-
-    # Loop through and process each property based on its type
-    foreach ($property in $Properties.Keys) {
-        if ($property -in $additionalProperties) {
-            $propertyName = $property.Substring(0, 1).ToLower() + $property.Substring(1)
-            $propertyValue = $Properties.$property
-
-            # Handle ExcludedApps as a hashtable with camelCase properties
-            if ($propertyName -eq 'excludedApps' -and $propertyValue -is [System.Array]) {
-                $formattedExcludedApps = @{}
-
-                # Iterate over each CIMInstance object and extract the Name/Value pairs, converting to camelCase
-                foreach ($app in $propertyValue) {
-                    foreach ($instanceProperty in $app.CimInstanceProperties) {
-                        $camelCaseKey = $instanceProperty.Name.Substring(0, 1).ToLower() + $instanceProperty.Name.Substring(1)
-                        $formattedExcludedApps[$camelCaseKey] = $instanceProperty.Value
-                    }
-                }
-
-                # Add the formatted ExcludedApps to results
-                $results[$propertyName] = $formattedExcludedApps
-            } else {
-                # For simple types like Boolean (AutoAcceptEula), add directly
-                $results[$propertyName] = $propertyValue
-            }
-        }
-    }
-    return $results
-}
-
-function Get-M365DSCIntuneAppLargeIconAsString #Get and Export
-{
-    [CmdletBinding()]
-    [OutputType([System.String])]
-    param(
-        [Parameter(Mandatory = $true)]
-        [System.Object]
-        $LargeIcon
-    )
-
-     $space = '                '
-     $indent = '    '
-
-    if ($null -ne $LargeIcon.Value)
-    {
-        $StringContent += "`r`n"
-        $StringContent += "$space"
-
-        $base64String = [System.Convert]::ToBase64String($LargeIcon.Value) # This exports the base64 string (blob) of the byte array, same as we see in Graph API response
-
-        $StringContent += "MSFT_DeviceManagementMimeContent { `r`n"
-        $StringContent += "$($space)$($indent)type  = '" + $LargeIcon.Type + "'`r`n"
-        $StringContent += "$($space)$($indent)value = '" + $base64String + "'`r`n"
-        $StringContent += "$space}"
-    }
-
-    return $StringContent
- }
-
-function ConvertTo-M365DSCIntuneAppLargeIcon #set
-{
-    [OutputType([System.Object])]
-    param(
-        [Parameter(Mandatory = $true)]
-        [System.Object]
-        $LargeIcon
-    )
-
-    $result = @{
-        type  = $LargeIcon.Type
-        value = $iconValue
-    }
-
-    return $result
-}
-
-#endregion Helper functions
 
 Export-ModuleMember -Function *-TargetResource
