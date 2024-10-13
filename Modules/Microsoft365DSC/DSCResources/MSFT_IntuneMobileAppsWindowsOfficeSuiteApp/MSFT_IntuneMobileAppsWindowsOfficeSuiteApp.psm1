@@ -65,7 +65,7 @@ function Get-TargetResource
         $ProductIds,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $ExcludedApps,
 
         [Parameter()]
@@ -221,22 +221,12 @@ function Get-TargetResource
             $complexCategories += $myCategory
         }
 
-        $complexExcludedApps = [ordered]@{
-            "access" = $instance.AdditionalProperties.excludedApps["access"]
-            "bing" = $instance.AdditionalProperties.excludedApps["bing"]
-            "excel" = $instance.AdditionalProperties.excludedApps["excel"]
-            "groove" = $instance.AdditionalProperties.excludedApps["groove"]
-            "infoPath" = $instance.AdditionalProperties.excludedApps["infoPath"]
-            "lync" = $instance.AdditionalProperties.excludedApps["lync"]
-            "oneDrive" = $instance.AdditionalProperties.excludedApps["oneDrive"]
-            "oneNote" = $instance.AdditionalProperties.excludedApps["oneNote"]
-            "outlook" = $instance.AdditionalProperties.excludedApps["outlook"]
-            "powerPoint" = $instance.AdditionalProperties.excludedApps["powerPoint"]
-            "publisher" = $instance.AdditionalProperties.excludedApps["publisher"]
-            "sharePointDesigner" = $instance.AdditionalProperties.excludedApps["sharePointDesigner"]
-            "teams" = $instance.AdditionalProperties.excludedApps["teams"]
-            "visio" = $instance.AdditionalProperties.excludedApps["visio"]
-            "word" = $instance.AdditionalProperties.excludedApps["word"]
+        $complexExcludedApps = [ordered]@{}
+        if ($null -ne $instance.AdditionalProperties.excludedApps) {
+            foreach ($property in $instance.AdditionalProperties.excludedApps.CimInstanceProperties) {
+                $camelCaseName = $property.Name.Substring(0, 1).ToLower() + $property.Name.Substring(1)
+                $complexExcludedApps[$camelCaseName] = $property.Value
+            }
         }
 
         $complexLargeIcon = @{}
@@ -383,7 +373,7 @@ function Set-TargetResource
         $ProductIds,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $ExcludedApps,
 
         [Parameter()]
@@ -560,35 +550,24 @@ function Set-TargetResource
         Write-Host "Initial ExcludedApps Data:" $ExcludedApps
 
         if ($UpdateParameters.ContainsKey('ExcludedApps')) {
-            # Convert ExcludedApps into an ordered hashtable using the same pattern as in the helper functions
-            $excludedAppsDict = [ordered]@{}
+            if ($ExcludedApps -ne $null) {
+                $excludedAppsDict = [ordered]@{}
 
-            # Define the list of known apps to exclude
-            $excludedAppsKeys = @(
-                'access', 'bing', 'excel', 'groove', 'infoPath', 'lync',
-                'oneDrive', 'oneNote', 'outlook', 'powerPoint', 'publisher',
-                'sharePointDesigner', 'teams', 'visio', 'word'
-            )
-
-            # Loop through the known app keys and dynamically populate the dictionary
-            foreach ($key in $excludedAppsKeys) {
-                if ($AdditionalProperties['excludedApps'].ContainsKey($key)) {
-                    $excludedAppsDict[$key] = $AdditionalProperties['excludedApps'][$key]
-                } else {
-                    # Set default values for each key if not explicitly provided
-                    if ($key -in @('groove', 'infoPath', 'lync', 'sharePointDesigner')) {
-                        $excludedAppsDict[$key] = $true
-                    } else {
-                        $excludedAppsDict[$key] = $false
-                    }
+                foreach ($property in $ExcludedApps.CimInstanceProperties) {
+                    $camelCaseName = $property.Name.Substring(0, 1).ToLower() + $property.Name.Substring(1)
+                    $excludedAppsDict[$camelCaseName] = $property.Value
                 }
+
+                # Convert the hashtable to a dictionary for API submission
+                $excludedAppsDictTyped = [System.Collections.Generic.Dictionary[string, bool]]::new()
+                foreach ($key in $excludedAppsDict.Keys) {
+                    $excludedAppsDictTyped.Add($key, $excludedAppsDict[$key])
+                }
+
+                $UpdateParameters['excludedApps'] = $excludedAppsDictTyped
+            } else {
+                Write-Host "ExcludedApps is null."
             }
-
-            # Convert to JSON before sending to the API
-            $excludedAppsJson = $excludedAppsDict | ConvertTo-Json -Depth 3
-
-            # Add this JSON to your parameters for the API
-            $UpdateParameters['excludedApps'] = $excludedAppsJson
         } else {
             Write-Host "ExcludedApps parameter not found in UpdateParameters."
         }
@@ -710,7 +689,7 @@ function Test-TargetResource
         $ProductIds,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $ExcludedApps,
 
         [Parameter()]
