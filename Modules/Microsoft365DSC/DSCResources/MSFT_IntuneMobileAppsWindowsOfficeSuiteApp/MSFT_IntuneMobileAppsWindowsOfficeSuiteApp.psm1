@@ -221,13 +221,13 @@ function Get-TargetResource
             $complexCategories += $myCategory
         }
 
-        $complexExcludedApps = [ordered]@{}
-        if ($null -ne $instance.AdditionalProperties.excludedApps) {
-            foreach ($property in $instance.AdditionalProperties.excludedApps.CimInstanceProperties) {
-                $camelCaseName = $property.Name.Substring(0, 1).ToLower() + $property.Name.Substring(1)
-                $complexExcludedApps[$camelCaseName] = $property.Value
-            }
-        }
+        # $complexExcludedApps = [ordered]@{}
+        # if ($null -ne $instance.AdditionalProperties.excludedApps) {
+        #     foreach ($property in $instance.AdditionalProperties.excludedApps.CimInstanceProperties) {
+        #         $camelCaseName = $property.Name.Substring(0, 1).ToLower() + $property.Name.Substring(1)
+        #         $complexExcludedApps[$camelCaseName] = $property.Value
+        #     }
+        # }
 
         $complexLargeIcon = @{}
         if ($null -ne $instance.LargeIcon.Value)
@@ -261,7 +261,7 @@ function Get-TargetResource
             UpdateVersion                   = $instance.AdditionalProperties.updateVersion
             OfficeConfigurationXml          = $instance.AdditionalProperties.officeConfigurationXml
             LargeIcon                       = $complexLargeIcon
-            ExcludedApps                    = $complexExcludedApps
+            ExcludedApps                    = $instance.AdditionalProperties.excludedApps
             Categories                      = $complexCategories
             Ensure                          = 'Present'
             Credential                      = $Credential
@@ -549,27 +549,36 @@ function Set-TargetResource
         $UpdateParameters.Remove('RoleScopeTagIds') | Out-Null
         Write-Host "Initial ExcludedApps Data:" $ExcludedApps
 
+        # if ($UpdateParameters.ContainsKey('ExcludedApps')) {
+        #     if ($ExcludedApps -ne $null) {
+        #         $excludedAppsDict = [ordered]@{}
+
+        #         foreach ($property in $ExcludedApps.CimInstanceProperties) {
+        #             $camelCaseName = $property.Name.Substring(0, 1).ToLower() + $property.Name.Substring(1)
+        #             $excludedAppsDict[$camelCaseName] = $property.Value
+        #         }
+
+        #         # Convert the hashtable to a dictionary for API submission
+        #         $excludedAppsDictTyped = [System.Collections.Generic.Dictionary[string, bool]]::new()
+        #         foreach ($key in $excludedAppsDict.Keys) {
+        #             $excludedAppsDictTyped.Add($key, $excludedAppsDict[$key])
+        #         }
+
+        #         $UpdateParameters['excludedApps'] = $excludedAppsDictTyped
+        #     } else {
+        #         Write-Host "ExcludedApps is null."
+        #     }
+        # } else {
+        #     Write-Host "ExcludedApps parameter not found in UpdateParameters."
+        # }
+
         if ($UpdateParameters.ContainsKey('ExcludedApps')) {
             if ($ExcludedApps -ne $null) {
-                $excludedAppsDict = [ordered]@{}
-
-                foreach ($property in $ExcludedApps.CimInstanceProperties) {
-                    $camelCaseName = $property.Name.Substring(0, 1).ToLower() + $property.Name.Substring(1)
-                    $excludedAppsDict[$camelCaseName] = $property.Value
-                }
-
-                # Convert the hashtable to a dictionary for API submission
-                $excludedAppsDictTyped = [System.Collections.Generic.Dictionary[string, bool]]::new()
-                foreach ($key in $excludedAppsDict.Keys) {
-                    $excludedAppsDictTyped.Add($key, $excludedAppsDict[$key])
-                }
-
-                $UpdateParameters['excludedApps'] = $excludedAppsDictTyped
+                # Directly assign the CimInstance to the UpdateParameters without converting
+                $UpdateParameters['excludedApps'] = $ExcludedApps
             } else {
                 Write-Host "ExcludedApps is null."
             }
-        } else {
-            Write-Host "ExcludedApps parameter not found in UpdateParameters."
         }
 
         # Print the entire UpdateParameters being sent to the API
