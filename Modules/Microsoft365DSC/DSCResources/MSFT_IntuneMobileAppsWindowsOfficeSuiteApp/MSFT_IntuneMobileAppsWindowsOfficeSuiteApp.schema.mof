@@ -51,7 +51,6 @@ class MSFT_IntuneMobileAppsWindowsOfficeSuiteApp : OMI_BaseResource
     [Write, Description("The InformationUrl of the app. Inherited from mobileApp.")] String InformationUrl;
     [Write, Description("Notes for the app. Inherited from mobileApp.")] String Notes;
     [Write, Description("List of Scope Tag IDs for mobile app.")] String RoleScopeTagIds[];
-    [Write, Description("The icon for this app."), EmbeddedInstance("MSFT_DeviceManagementMimeContent")] String LargeIcon;
     [Write, Description("Specifies if the EULA is accepted automatically on the end user's device.")] Boolean AutoAcceptEula;
     [Write, Description("The Product IDs that represent the Office 365 Suite SKU, such as 'O365ProPlusRetail' or 'VisioProRetail'.")] String ProductIds[];
     [Write, Description("Indicates whether shared computer activation is used for Office installations.")] Boolean UseSharedComputerActivation;
