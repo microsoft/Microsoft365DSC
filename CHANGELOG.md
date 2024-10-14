@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* IntuneDerivedCredential
+  * Initial release.
 * AADAdminConsentRequestPolicy
   * Initial release.
 * AADApplication
