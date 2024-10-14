@@ -23,7 +23,7 @@ Configuration Example
     {
         IntuneDeviceManagementAndroidDeviceOwnerEnrollmentProfile 'UpdateProfile'
         {
-            Id                      = "164655f7-1232-4d56-ae8f-b095196a0309";
+            Id                      = "164655f7-1232-4d56-ae8f-b095196a0309"
             DisplayName             = "Updated Android Owner Enrollment Profile"
             Description             = "Updated Profile for enrolling Android devices"
             TokenExpirationDateTime = "2024-12-31T23:59:59Z"
@@ -33,7 +33,10 @@ Configuration Example
             WifiSsid                = "your-updated-wifi-ssid"
             WifiPassword            = "your-updated-wifi-password"
             WifiSecurityType        = "wpa"
-            Ensure                  = "Present";
+            Ensure                  = "Present"
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint;
         }
     }
 }

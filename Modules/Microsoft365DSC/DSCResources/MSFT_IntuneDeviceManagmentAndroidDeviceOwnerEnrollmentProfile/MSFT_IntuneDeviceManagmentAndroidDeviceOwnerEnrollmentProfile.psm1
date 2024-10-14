@@ -21,10 +21,6 @@ function Get-TargetResource
         $ConfigureWifi,
 
         [Parameter()]
-        [System.DateTime]
-        $CreatedDateTime,
-
-        [Parameter()]
         [System.String]
         $Description,
 
@@ -50,28 +46,16 @@ function Get-TargetResource
         $IsTeamsDeviceProfile,
 
         [Parameter()]
-        [System.DateTime]
-        $LastModifiedDateTime,
-
-        [Parameter()]
         [System.String]
         $QrCodeContent,
 
         [Parameter()]
-        [Microsoft.Graph.IMicrosoftGraphMimeContent]
+        [System.String]
         $QrCodeImage,
 
         [Parameter()]
         [System.String[]]
         $RoleScopeTagIds,
-
-        [Parameter()]
-        [System.DateTime]
-        $TokenCreationDateTime,
-
-        [Parameter()]
-        [System.DateTime]
-        $TokenExpirationDateTime,
 
         [Parameter()]
         [System.String]
@@ -82,10 +66,11 @@ function Get-TargetResource
         $WifiHidden,
 
         [Parameter()]
-        [System.Security.SecureString]
+        [System.Management.Automation.PSCredential]
         $WifiPassword,
 
         [Parameter()]
+        [System.String]
         [ValidateSet( 'none', 'wpa', 'wep' )]
         $WifiSecurityType,
 
@@ -94,8 +79,8 @@ function Get-TargetResource
         $WifiSsid,
 
         [Parameter()]
-        [ValidateSet('Present', 'Absent')]
         [System.String]
+        [ValidateSet('Present', 'Absent')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -143,7 +128,7 @@ function Get-TargetResource
     $nullResult.Ensure = 'Absent'
     try
     {
-        $androidDeviceOwnerEnrollmentProfile = Get-MgAndroidDeviceOwnerEnrollmentProfile
+        $androidDeviceOwnerEnrollmentProfile = Get-MgAndroidDeviceOwnerEnrollmentProfile `
         -Filter "displayName eq '$DisplayName')"
         -ErrorAction SilentlyContinue | Where-Object
 
@@ -165,19 +150,15 @@ function Get-TargetResource
             DisplayName           = $androidDeviceOwnerEnrollmentProfile.DisplayName
             AccountId             = $androidDeviceOwnerEnrollmentProfile.AccountId
             ConfigureWifi         = $androidDeviceOwnerEnrollmentProfile.ConfigureWifi
-            CreatedDateTime       = $androidDeviceOwnerEnrollmentProfile.CreatedDateTime
             Description           = $androidDeviceOwnerEnrollmentProfile.Description
             EnrolledDeviceCount   = $androidDeviceOwnerEnrollmentProfile.EnrolledDeviceCount
             EnrollmentMode        = $androidDeviceOwnerEnrollmentProfile.EnrollmentMode
             EnrollmentTokenType   = $androidDeviceOwnerEnrollmentProfile.EnrollmentTokenType
             EnrollmentTokenUsageCount = $androidDeviceOwnerEnrollmentProfile.EnrollmentTokenUsageCount
             IsTeamsDeviceProfile  = $androidDeviceOwnerEnrollmentProfile.IsTeamsDeviceProfile
-            LastModifiedDateTime  = $androidDeviceOwnerEnrollmentProfile.LastModifiedDateTime
             QrCodeContent         = $androidDeviceOwnerEnrollmentProfile.QrCodeContent
             QrCodeImage           = $androidDeviceOwnerEnrollmentProfile.QrCodeImage
             RoleScopeTagIds       = $androidDeviceOwnerEnrollmentProfile.RoleScopeTagIds
-            TokenCreationDateTime = $androidDeviceOwnerEnrollmentProfile.TokenCreationDateTime
-            TokenExpirationDateTime = $androidDeviceOwnerEnrollmentProfile.TokenExpirationDateTime
             TokenValue            = $androidDeviceOwnerEnrollmentProfile.TokenValue
             WifiHidden            = $androidDeviceOwnerEnrollmentProfile.WifiHidden
             WifiPassword          = $androidDeviceOwnerEnrollmentProfile.WifiPassword
@@ -229,10 +210,6 @@ function Set-TargetResource
         $ConfigureWifi,
 
         [Parameter()]
-        [System.DateTime]
-        $CreatedDateTime,
-
-        [Parameter()]
         [System.String]
         $Description,
 
@@ -258,28 +235,16 @@ function Set-TargetResource
         $IsTeamsDeviceProfile,
 
         [Parameter()]
-        [System.DateTime]
-        $LastModifiedDateTime,
-
-        [Parameter()]
         [System.String]
         $QrCodeContent,
 
         [Parameter()]
-        [Microsoft.Graph.IMicrosoftGraphMimeContent]
+        [System.String]
         $QrCodeImage,
 
         [Parameter()]
         [System.String[]]
         $RoleScopeTagIds,
-
-        [Parameter()]
-        [System.DateTime]
-        $TokenCreationDateTime,
-
-        [Parameter()]
-        [System.DateTime]
-        $TokenExpirationDateTime,
 
         [Parameter()]
         [System.String]
@@ -290,10 +255,11 @@ function Set-TargetResource
         $WifiHidden,
 
         [Parameter()]
-        [System.Security.SecureString]
+        [System.Management.Automation.PSCredential]
         $WifiPassword,
 
         [Parameter()]
+        [System.String]
         [ValidateSet( 'none', 'wpa', 'wep' )]
         $WifiSecurityType,
 
@@ -302,8 +268,8 @@ function Set-TargetResource
         $WifiSsid,
 
         [Parameter()]
-        [ValidateSet('Present', 'Absent')]
         [System.String]
+        [ValidateSet('Present', 'Absent')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -410,10 +376,6 @@ function Test-TargetResource
         $ConfigureWifi,
 
         [Parameter()]
-        [System.DateTime]
-        $CreatedDateTime,
-
-        [Parameter()]
         [System.String]
         $Description,
 
@@ -439,28 +401,16 @@ function Test-TargetResource
         $IsTeamsDeviceProfile,
 
         [Parameter()]
-        [System.DateTime]
-        $LastModifiedDateTime,
-
-        [Parameter()]
         [System.String]
         $QrCodeContent,
 
         [Parameter()]
-        [Microsoft.Graph.IMicrosoftGraphMimeContent]
+        [System.String]
         $QrCodeImage,
 
         [Parameter()]
         [System.String[]]
         $RoleScopeTagIds,
-
-        [Parameter()]
-        [System.DateTime]
-        $TokenCreationDateTime,
-
-        [Parameter()]
-        [System.DateTime]
-        $TokenExpirationDateTime,
 
         [Parameter()]
         [System.String]
@@ -471,10 +421,11 @@ function Test-TargetResource
         $WifiHidden,
 
         [Parameter()]
-        [System.Security.SecureString]
+        [System.Management.Automation.PSCredential]
         $WifiPassword,
 
         [Parameter()]
+        [System.String]
         [ValidateSet( 'none', 'wpa', 'wep' )]
         $WifiSecurityType,
 
@@ -483,8 +434,8 @@ function Test-TargetResource
         $WifiSsid,
 
         [Parameter()]
-        [ValidateSet('Present', 'Absent')]
         [System.String]
+        [ValidateSet('Present', 'Absent')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -545,7 +496,8 @@ function Test-TargetResource
         return $false
     }
 
-    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues
+    $TestResult = Test-M365DSCParameterState `
+            -CurrentValues $CurrentValues
             -Source $($MyInvocation.MyCommand.Source)
             -DesiredValues $PSBoundParameters
             -ValuesToCheck $ValuesToCheck.Keys
@@ -608,8 +560,7 @@ function Export-TargetResource
     try
     {
         $Script:ExportMode = $true
-        ##TODO - Replace Get-Cmdlet by the cmdlet to retrieve all instances
-        [array] $Script:exportedInstances = Get-MgAndroidDeviceOwnerEnrollmentProfile
+        [array] $Script:exportedInstances = Get-MgAndroidDeviceOwnerEnrollmentProfile `
          -ErrorAction Stop
 
         $i = 1
@@ -629,26 +580,6 @@ function Export-TargetResource
             $params = @{
             Id                    = $androidDeviceOwnerEnrollmentProfile.Id
             DisplayName           = $androidDeviceOwnerEnrollmentProfile.DisplayName
-            AccountId             = $androidDeviceOwnerEnrollmentProfile.AccountId
-            ConfigureWifi         = $androidDeviceOwnerEnrollmentProfile.ConfigureWifi
-            CreatedDateTime       = $androidDeviceOwnerEnrollmentProfile.CreatedDateTime
-            Description           = $androidDeviceOwnerEnrollmentProfile.Description
-            EnrolledDeviceCount   = $androidDeviceOwnerEnrollmentProfile.EnrolledDeviceCount
-            EnrollmentMode        = $androidDeviceOwnerEnrollmentProfile.EnrollmentMode
-            EnrollmentTokenType   = $androidDeviceOwnerEnrollmentProfile.EnrollmentTokenType
-            EnrollmentTokenUsageCount = $androidDeviceOwnerEnrollmentProfile.EnrollmentTokenUsageCount
-            IsTeamsDeviceProfile  = $androidDeviceOwnerEnrollmentProfile.IsTeamsDeviceProfile
-            LastModifiedDateTime  = $androidDeviceOwnerEnrollmentProfile.LastModifiedDateTime
-            QrCodeContent         = $androidDeviceOwnerEnrollmentProfile.QrCodeContent
-            QrCodeImage           = $androidDeviceOwnerEnrollmentProfile.QrCodeImage
-            RoleScopeTagIds       = $androidDeviceOwnerEnrollmentProfile.RoleScopeTagIds
-            TokenCreationDateTime = $androidDeviceOwnerEnrollmentProfile.TokenCreationDateTime
-            TokenExpirationDateTime = $androidDeviceOwnerEnrollmentProfile.TokenExpirationDateTime
-            TokenValue            = $androidDeviceOwnerEnrollmentProfile.TokenValue
-            WifiHidden            = $androidDeviceOwnerEnrollmentProfile.WifiHidden
-            WifiPassword          = $androidDeviceOwnerEnrollmentProfile.WifiPassword
-            WifiSecurityType      = $androidDeviceOwnerEnrollmentProfile.WifiSecurityType
-            WifiSsid              = $androidDeviceOwnerEnrollmentProfile.WifiSsid
 
             Ensure                = 'Present'
             Credential            = $Credential

@@ -1,6 +1,8 @@
 # Change log for Microsoft365DSC
 
 # UNRELEASED
+* IntuneDeviceManagementAndroidDeviceOwnerEnrollmentProfile
+  * Initial release
 * MdcSubscriptionDefenderPlan
   * Initial release
 * AADPasswordRuleSettings

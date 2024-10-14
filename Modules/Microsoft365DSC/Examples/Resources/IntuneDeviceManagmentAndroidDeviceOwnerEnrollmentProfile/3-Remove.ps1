@@ -23,9 +23,12 @@ Configuration Example
     {
         IntuneDeviceManagementAndroidDeviceOwnerEnrollmentProfile 'RemoveProfile'
         {
-            Id                      = "164655f7-1232-4d56-ae8f-b095196a0309";
+            Id                      = "164655f7-1232-4d56-ae8f-b095196a0309"
             DisplayName             = "Android Owner Enrollment Profile"
             Ensure                  = "Absent"
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint;
         }
     }
 }
