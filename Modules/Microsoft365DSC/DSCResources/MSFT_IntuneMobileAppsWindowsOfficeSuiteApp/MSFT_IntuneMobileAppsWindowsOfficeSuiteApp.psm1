@@ -19,10 +19,6 @@ function Get-TargetResource
         $Description,
 
         [Parameter()]
-        [System.String]
-        $Publisher,
-
-        [Parameter()]
         [System.Boolean]
         $IsFeatured,
 
@@ -36,20 +32,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $Owner,
-
-        [Parameter()]
-        [System.String]
-        $Developer,
-
-        [Parameter()]
-        [System.String]
         $Notes,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet('notPublished', 'processing','published')]
-        $PublishingState,
 
         [Parameter()]
         [System.String[]]
@@ -221,13 +204,13 @@ function Get-TargetResource
             $complexCategories += $myCategory
         }
 
-        # $complexExcludedApps = [ordered]@{}
-        # if ($null -ne $instance.AdditionalProperties.excludedApps) {
-        #     foreach ($property in $instance.AdditionalProperties.excludedApps.CimInstanceProperties) {
-        #         $camelCaseName = $property.Name.Substring(0, 1).ToLower() + $property.Name.Substring(1)
-        #         $complexExcludedApps[$camelCaseName] = $property.Value
-        #     }
-        # }
+        $complexExcludedApps = @{}
+        if ($null -ne $instance.AdditionalProperties.excludedApps)
+        {
+            $instance.AdditionalProperties.excludedApps.GetEnumerator() | Foreach-Object {
+                $complexExcludedApps.Add($_.Key, $_.Value)
+            }
+        }
 
         $complexLargeIcon = @{}
         if ($null -ne $instance.LargeIcon.Value)
@@ -240,12 +223,9 @@ function Get-TargetResource
             Id                              = $instance.Id
             DisplayName                     = $instance.DisplayName
             Description                     = $instance.Description
-            Publisher                       = $instance.Publisher
             IsFeatured                      = $instance.IsFeatured
             PrivacyInformationUrl           = $instance.PrivacyInformationUrl
             InformationUrl                  = $instance.InformationUrl
-            Owner                           = $instance.Owner
-            Developer                       = $instance.Developer
             Notes                           = $instance.Notes
             RoleScopeTagIds                 = $instance.RoleScopeTagIds
             AutoAcceptEula                  = $instance.AdditionalProperties.autoAcceptEula
@@ -261,7 +241,7 @@ function Get-TargetResource
             UpdateVersion                   = $instance.AdditionalProperties.updateVersion
             OfficeConfigurationXml          = $instance.AdditionalProperties.officeConfigurationXml
             LargeIcon                       = $complexLargeIcon
-            ExcludedApps                    = $instance.AdditionalProperties.excludedApps
+            ExcludedApps                    = $complexExcludedApps
             Categories                      = $complexCategories
             Ensure                          = 'Present'
             Credential                      = $Credential
@@ -327,10 +307,6 @@ function Set-TargetResource
         $Description,
 
         [Parameter()]
-        [System.String]
-        $Publisher,
-
-        [Parameter()]
         [System.Boolean]
         $IsFeatured,
 
@@ -344,20 +320,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $Owner,
-
-        [Parameter()]
-        [System.String]
-        $Developer,
-
-        [Parameter()]
-        [System.String]
         $Notes,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet('notPublished', 'processing','published')]
-        $PublishingState,
 
         [Parameter()]
         [System.String[]]
@@ -492,6 +455,9 @@ function Set-TargetResource
         $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
         $CreateParameters.Remove('Id') | Out-Null
         $CreateParameters.Remove('Categories') | Out-Null
+        $CreateParameters.Add('Publisher', 'Microsoft')
+        $CreateParameters.Add('Developer', 'Microsoft')
+        $CreateParameters.Add('Owner', 'Microsoft')
 
         foreach ($key in ($CreateParameters.Clone()).Keys)
         {
@@ -508,7 +474,7 @@ function Set-TargetResource
         {
             if ($category.Id)
             {
-                $currentCategory = Get-MgBetaDeviceAppManagementMobileAppCategory -CategoryId $category.Id
+                $currentCategory = Get-MgBetaDeviceAppManagementMobileAppCategory -MobileAppCategoryId $category.Id
             }
             else
             {
@@ -520,7 +486,7 @@ function Set-TargetResource
                 throw "Mobile App Category with DisplayName $($category.DisplayName) not found."
             }
 
-            Invoke-MgBetaGraphRequest -Uri "/beta/deviceAppManagement/mobileApps/$($app.Id)/categories/`$ref" -Method 'POST' -Body @{
+            Invoke-MgGraphRequest -Uri "/beta/deviceAppManagement/mobileApps/$($app.Id)/categories/`$ref" -Method 'POST' -Body @{
                 '@odata.id' = "https://graph.microsoft.com/beta/deviceAppManagement/mobileAppCategories/$($currentCategory.Id)"
             }
         }
@@ -543,47 +509,16 @@ function Set-TargetResource
         $UpdateParameters.Remove('Id') | Out-Null
         $UpdateParameters.Remove('Categories') | Out-Null
         $UpdateParameters.Remove('OfficePlatformArchitecture') | Out-Null
-        $UpdateParameters.Remove('Developer') | Out-Null
-        $UpdateParameters.Remove('Owner') | Out-Null
-        $UpdateParameters.Remove('Publisher') | Out-Null
-        $UpdateParameters.Remove('RoleScopeTagIds') | Out-Null
-        Write-Host "Initial ExcludedApps Data:" $ExcludedApps
 
-        # if ($UpdateParameters.ContainsKey('ExcludedApps')) {
-        #     if ($ExcludedApps -ne $null) {
-        #         $excludedAppsDict = [ordered]@{}
-
-        #         foreach ($property in $ExcludedApps.CimInstanceProperties) {
-        #             $camelCaseName = $property.Name.Substring(0, 1).ToLower() + $property.Name.Substring(1)
-        #             $excludedAppsDict[$camelCaseName] = $property.Value
-        #         }
-
-        #         # Convert the hashtable to a dictionary for API submission
-        #         $excludedAppsDictTyped = [System.Collections.Generic.Dictionary[string, bool]]::new()
-        #         foreach ($key in $excludedAppsDict.Keys) {
-        #             $excludedAppsDictTyped.Add($key, $excludedAppsDict[$key])
-        #         }
-
-        #         $UpdateParameters['excludedApps'] = $excludedAppsDictTyped
-        #     } else {
-        #         Write-Host "ExcludedApps is null."
-        #     }
-        # } else {
-        #     Write-Host "ExcludedApps parameter not found in UpdateParameters."
-        # }
-
-        if ($UpdateParameters.ContainsKey('ExcludedApps')) {
-            if ($ExcludedApps -ne $null) {
-                # Directly assign the CimInstance to the UpdateParameters without converting
-                $UpdateParameters['excludedApps'] = $ExcludedApps
-            } else {
-                Write-Host "ExcludedApps is null."
+        foreach ($key in ($UpdateParameters.Clone()).Keys)
+        {
+            if ($null -ne $UpdateParameters.$key -and $UpdateParameters.$key.GetType().Name -like '*CimInstance*')
+            {
+                $UpdateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters.$key
             }
         }
 
-        # Print the entire UpdateParameters being sent to the API
-        Write-Host "Now ExcludedApps Data:" $UpdateParameters['excludedApps']
-
+        $UpdateParameters.Add('@odata.type', '#microsoft.graph.officeSuiteApp')
         Update-MgBetaDeviceAppManagementMobileApp -MobileAppId $currentInstance.Id -BodyParameter $UpdateParameters
 
         [array]$referenceObject = if ($null -ne $currentInstance.Categories.DisplayName) { $currentInstance.Categories.DisplayName } else { ,@() }
@@ -652,10 +587,6 @@ function Test-TargetResource
         $Description,
 
         [Parameter()]
-        [System.String]
-        $Publisher,
-
-        [Parameter()]
         [System.Boolean]
         $IsFeatured,
 
@@ -669,20 +600,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $Owner,
-
-        [Parameter()]
-        [System.String]
-        $Developer,
-
-        [Parameter()]
-        [System.String]
         $Notes,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet('notPublished', 'processing','published')]
-        $PublishingState,
 
         [Parameter()]
         [System.String[]]
@@ -843,6 +761,7 @@ function Test-TargetResource
     $PSBoundParameters.Remove('LargeIcon') | Out-Null
 
     $ValuesToCheck.Remove('Id') | Out-Null
+    $ValuesToCheck.Remove('OfficePlatformArchitecture') | Out-Null # Cannot be changed after creation
     $ValuesToCheck = Remove-M365DSCAuthenticationParameter -BoundParameters $ValuesToCheck
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
@@ -1043,7 +962,7 @@ function Export-TargetResource
 
             if ($null -ne $Results.ExcludedApps)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'ExcludedApps' -IsCIMArray:$true
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'ExcludedApps' -IsCIMArray:$false
             }
 
             if ($null -ne $Results.LargeIcon)

@@ -46,14 +46,10 @@ class MSFT_IntuneMobileAppsWindowsOfficeSuiteApp : OMI_BaseResource
     [Write, Description("The unique identifier for an entity. Read-only. Inherited from mobileApp object.")] String Id;
 
     [Write, Description("The description of the app. Inherited from mobileApp.")] String Description;
-    [Write, Description("The publisher of the app. Inherited from mobileApp.")] String Publisher;
     [Write, Description("The value indicating whether the app is marked as featured by the admin. Inherited from mobileApp.")] Boolean IsFeatured;
     [Write, Description("The privacy statement Url. Inherited from mobileApp.")] String PrivacyInformationUrl;
     [Write, Description("The InformationUrl of the app. Inherited from mobileApp.")] String InformationUrl;
-    [Write, Description("The owner of the app. Inherited from mobileApp.")] String Owner;
-    [Write, Description("The dewveloper of the app. Inherited from mobileApp.")] String Developer;
     [Write, Description("Notes for the app. Inherited from mobileApp.")] String Notes;
-    [Write, Description("The publishing state for the app. The app cannot be assigned unless the app is published. Inherited from mobileApp."), ValueMap{"notPublished", "processing","published"}, Values{"notPublished", "processing", "published"}] String PublishingState;
     [Write, Description("List of Scope Tag IDs for mobile app.")] String RoleScopeTagIds[];
     [Write, Description("The icon for this app."), EmbeddedInstance("MSFT_DeviceManagementMimeContent")] String LargeIcon;
     [Write, Description("Specifies if the EULA is accepted automatically on the end user's device.")] Boolean AutoAcceptEula;
@@ -61,7 +57,7 @@ class MSFT_IntuneMobileAppsWindowsOfficeSuiteApp : OMI_BaseResource
     [Write, Description("Indicates whether shared computer activation is used for Office installations.")] Boolean UseSharedComputerActivation;
     [Write, Description("Specifies the update channel for the Office 365 app suite, such as 'Current' or 'Deferred'.")] String UpdateChannel;
     [Write, Description("Specifies the default file format type for Office apps, such as 'OfficeOpenXMLFormat' or 'OfficeOpenDocumentFormat'.")] String OfficeSuiteAppDefaultFileFormat;
-    [Write, Description("The architecture of the Office installation (e.g., 'X86', 'X64', or 'Arm64').")] String OfficePlatformArchitecture;
+    [Write, Description("The architecture of the Office installation (e.g., 'X86', 'X64', or 'Arm64'). Cannot be changed after creation.")] String OfficePlatformArchitecture;
     [Write, Description("Specifies the locales to be installed when the Office 365 apps are deployed. Uses the standard RFC 5646 format (e.g., 'en-US', 'fr-FR').")] String LocalesToInstall[];
     [Write, Description("Specifies the display level of the installation progress for Office apps. Use 'Full' to display the installation UI, or 'None' for a silent installation.")] String InstallProgressDisplayLevel;
     [Write, Description("Indicates whether older versions of Office should be uninstalled when deploying the Office 365 app suite.")] Boolean ShouldUninstallOlderVersionsOfOffice;
