@@ -67,7 +67,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Id                    = "8d027f94-0682-431e-97c1-827d1879fa79"
                     Categories            = @()
                     Description           = "Microsoft 365 Apps for Windows 10 and later"
-                    Developer             = "Contoso"
                     DisplayName           = "Microsoft 365 Apps for Windows 10 and later"
                     InformationUrl        = ""
                     IsFeatured            = $False
@@ -75,10 +74,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         New-CimInstance -ClassName MSFT_DeviceManagementMinimumOperatingSystem -Property @{
                         v11_0 = $true
                     } -ClientOnly)
-                    Notes                 = ""
-                    Owner                 = ""
                     PrivacyInformationUrl = ""
-                    Publisher             = "Contoso"
                     RoleScopeTagIds       = @()
                     Ensure                = 'Present'
                     Credential            = $Credential
