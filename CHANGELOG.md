@@ -2,8 +2,6 @@
 
 # UNRELEASED
 
-* IntuneDeviceManagementAndroidDeviceOwnerEnrollmentProfile
-  * Initial release
 * IntuneDerivedCredential
   * Initial release.
 * AADAdminConsentRequestPolicy
