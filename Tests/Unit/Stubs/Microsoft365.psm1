@@ -96910,3 +96910,123 @@ function Remove-AdminDlpPolicy
         $EnvironmentName
     )
 }
+
+function New-PowerAppPolicyUrlPatterns
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $PolicyName,
+
+        [Parameter()]
+        [System.Object]
+        $NewUrlPatterns,
+
+        [Parameter()]
+        [System.String]
+        $ApiVersion
+    )
+}
+function Remove-PowerAppPolicyUrlPatterns
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $PolicyName,
+
+        [Parameter()]
+        [System.String]
+        $ApiVersion
+    )
+}
+function Get-PowerAppPolicyUrlPatterns
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $PolicyName,
+
+        [Parameter()]
+        [System.String]
+        $ApiVersion
+    )
+}
+function Get-TenantDetailsFromGraph
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $GraphApiVersion
+    )
+}
+function Remove-PowerAppDlpPolicyConnectorConfigurations
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $PolicyName,
+
+        [Parameter()]
+        [System.String]
+        $ApiVersion
+    )
+}
+function New-PowerAppDlpPolicyConnectorConfigurations
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $PolicyName,
+
+        [Parameter()]
+        [System.String]
+        $ApiVersion,
+
+        [Parameter()]
+        [System.Object]
+        $NewDlpPolicyConnectorConfigurations
+    )
+}
+function Get-PowerAppDlpPolicyConnectorConfigurations
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $PolicyName,
+
+        [Parameter()]
+        [System.String]
+        $ApiVersion
+    )
+}

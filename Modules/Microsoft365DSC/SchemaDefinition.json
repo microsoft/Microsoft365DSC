@@ -39895,6 +39895,171 @@
                        ]
     },
     {
+        "ClassName":  "MSFT_PPDLPPolicyConnectorConfigurationsActionRules",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "actionId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "behavior",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_PPDLPPolicyConnectorConfigurationsAction",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "connectorId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "defaultConnectorActionRuleBehavior",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_PPDLPPolicyConnectorConfigurationsActionRules[]",
+                               "Name":  "actionRules",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_PPDLPPolicyConnectorConfigurations",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "PolicyName",
+                               "Option":  "Key"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "PPTenantId",
+                               "Option":  "Key"
+                           },
+                           {
+                               "CIMType":  "MSFT_PPDLPPolicyConnectorConfigurationsAction[]",
+                               "Name":  "ConnectorActionConfigurations",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "string",
+                               "Name":  "Ensure",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "Credential",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ApplicationId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "TenantId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "CertificateThumbprint",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "ManagedIdentity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_PPPowerAPpPolicyUrlPatternsRule",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "order",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "customConnectorRuleClassification",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "pattern",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_PPPowerAppPolicyUrlPatterns",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "PolicyName",
+                               "Option":  "Key"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "PPTenantId",
+                               "Option":  "Key"
+                           },
+                           {
+                               "CIMType":  "MSFT_PPPowerAPpPolicyUrlPatternsRule[]",
+                               "Name":  "RuleSet",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "string",
+                               "Name":  "Ensure",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "Credential",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ApplicationId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "TenantId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "CertificateThumbprint",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "ManagedIdentity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
         "ClassName":  "MSFT_PPPowerAppsEnvironment",
         "Parameters":  [
                            {
