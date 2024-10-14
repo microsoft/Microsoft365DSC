@@ -103,9 +103,9 @@ function Get-TargetResource
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
 
-        [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance]
-        $LargeIcon,
+        # [Parameter()]
+        # [Microsoft.Management.Infrastructure.CimInstance]
+        # $LargeIcon,
 
         #endregion
 
@@ -212,12 +212,12 @@ function Get-TargetResource
             }
         }
 
-        $complexLargeIcon = @{}
-        if ($null -ne $instance.LargeIcon.Value)
-        {
-            $complexLargeIcon.Add('Value', [System.Convert]::ToBase64String($instance.LargeIcon.Value))
-            $complexLargeIcon.Add('Type', $instance.LargeIcon.Type)
-        }
+        # $complexLargeIcon = @{}
+        # if ($null -ne $instance.LargeIcon.Value)
+        # {
+        #     $complexLargeIcon.Add('Value', [System.Convert]::ToBase64String($instance.LargeIcon.Value))
+        #     $complexLargeIcon.Add('Type', $instance.LargeIcon.Type)
+        # }
 
         $results = @{
             Id                              = $instance.Id
@@ -240,7 +240,7 @@ function Get-TargetResource
             TargetVersion                   = $instance.AdditionalProperties.targetVersion
             UpdateVersion                   = $instance.AdditionalProperties.updateVersion
             OfficeConfigurationXml          = $instance.AdditionalProperties.officeConfigurationXml
-            LargeIcon                       = $complexLargeIcon
+            # LargeIcon                       = $complexLargeIcon
             ExcludedApps                    = $complexExcludedApps
             Categories                      = $complexCategories
             Ensure                          = 'Present'
@@ -391,9 +391,9 @@ function Set-TargetResource
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
 
-        [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance]
-        $LargeIcon,
+        # [Parameter()]
+        # [Microsoft.Management.Infrastructure.CimInstance]
+        # $LargeIcon,
 
         #endregion
 
@@ -561,7 +561,7 @@ function Set-TargetResource
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Host "Remove the Intune MacOS Lob App with Id {$($currentInstance.Id)}"
+        Write-Host "Remove the Intune Windows Office Suite App with Id {$($currentInstance.Id)}"
         Remove-MgBetaDeviceAppManagementMobileApp -MobileAppId $currentInstance.Id -Confirm:$false
     }
 }
@@ -671,9 +671,9 @@ function Test-TargetResource
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
 
-        [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance]
-        $LargeIcon,
+        # [Parameter()]
+        # [Microsoft.Management.Infrastructure.CimInstance]
+        # $LargeIcon,
 
         #endregion
 
@@ -757,8 +757,8 @@ function Test-TargetResource
 
     # Prevent screen from filling up with the LargeIcon value
     # Comparison will already be done because it's a CimInstance
-    $CurrentValues.Remove('LargeIcon') | Out-Null
-    $PSBoundParameters.Remove('LargeIcon') | Out-Null
+    # $CurrentValues.Remove('LargeIcon') | Out-Null
+    # $PSBoundParameters.Remove('LargeIcon') | Out-Null
 
     $ValuesToCheck.Remove('Id') | Out-Null
     $ValuesToCheck.Remove('OfficePlatformArchitecture') | Out-Null # Cannot be changed after creation
@@ -912,21 +912,21 @@ function Export-TargetResource
                 }
             }
 
-            if ($null -ne $Results.LargeIcon)
-            {
-                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
-                    -ComplexObject $Results.LargeIcon `
-                    -CIMInstanceName 'DeviceManagementMimeContent'
+            # if ($null -ne $Results.LargeIcon)
+            # {
+            #     $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+            #         -ComplexObject $Results.LargeIcon `
+            #         -CIMInstanceName 'DeviceManagementMimeContent'
 
-                if (-not [System.String]::IsNullOrWhiteSpace($complexTypeStringResult))
-                {
-                    $Results.LargeIcon = $complexTypeStringResult
-                }
-                else
-                {
-                    $Results.Remove('LargeIcon') | Out-Null
-                }
-            }
+            #     if (-not [System.String]::IsNullOrWhiteSpace($complexTypeStringResult))
+            #     {
+            #         $Results.LargeIcon = $complexTypeStringResult
+            #     }
+            #     else
+            #     {
+            #         $Results.Remove('LargeIcon') | Out-Null
+            #     }
+            # }
 
             if ($null -ne $Results.Assignments)
             {
@@ -965,10 +965,10 @@ function Export-TargetResource
                 $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'ExcludedApps' -IsCIMArray:$false
             }
 
-            if ($null -ne $Results.LargeIcon)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'LargeIcon' -IsCIMArray:$false
-            }
+            # if ($null -ne $Results.LargeIcon)
+            # {
+            #     $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'LargeIcon' -IsCIMArray:$false
+            # }
 
             if ($null -ne $Results.Assignments)
             {
