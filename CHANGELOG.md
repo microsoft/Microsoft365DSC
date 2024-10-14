@@ -2,7 +2,7 @@
 
 # UNRELEASED
 
-IntuneMobileThreatDefenseConnector
+* IntuneDerivedCredential
   * Initial release.
 * AADAdminConsentRequestPolicy
   * Initial release.
@@ -45,6 +45,8 @@ IntuneMobileThreatDefenseConnector
 * IntuneMobileAppsMacOSLobApp
   * Initial release
 * PPAdminDLPPolicy
+  * Initial release.
+* PPDLPPolicyConnectorConfigurations
   * Initial release.
 * PPPowerAppPolicyUrlPatterns
   * Initial release.
