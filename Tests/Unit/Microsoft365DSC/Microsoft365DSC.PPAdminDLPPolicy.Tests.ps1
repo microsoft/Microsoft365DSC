@@ -39,217 +39,138 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Set-AdminDlpPolicy -MockWith {}
             Mock -CommandName Remove-AdminDlpPolicy -MockWith {}
 
-<<<<<<<< HEAD:Tests/Unit/Microsoft365DSC/Microsoft365DSC.PPAdminDLPPolicy.Tests.ps1
             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
-========
-            Mock -CommandName Get-MgBetaDeviceManagementDerivedCredential -MockWith {
             }
-            Mock -CommandName New-MgBetaDeviceManagementDerivedCredential -MockWith {
-            }
-            Mock -CommandName Remove-MgBetaDeviceManagementDerivedCredential -MockWith {
->>>>>>>> Dev:Tests/Unit/Microsoft365DSC/Microsoft365DSC.IntuneDerivedCredential.Tests.ps1
-            }
-
             $Script:exportedInstances =$null
             $Script:ExportMode = $false
         }
-
         # Test contexts
-        Context -Name " 1. The instance should exist but it DOES NOT" -Fixture {
+        Context -Name "The instance should exist but it DOES NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
-<<<<<<<< HEAD:Tests/Unit/Microsoft365DSC/Microsoft365DSC.PPAdminDLPPolicy.Tests.ps1
                     DisplayName           = "SuperTest";
                     Ensure                = "Present";
                     Environments          = "Default-xxxxx-xxxxx-xxxxx-xxxxx-xxxxx";
                     FilterType            = "include";
                     Credential            = $Credential;
-========
-                    Ensure               = 'Present'
-                    DisplayName          = "K5";
-                    HelpUrl              = "http://www.ff.com/";
-                    Id                   = "a409d85f-2a49-440d-884a-80fb52a557ab";
-                    Issuer               = "purebred";
-                    NotificationType     = "email";
-                    Credential           = $Credential
->>>>>>>> Dev:Tests/Unit/Microsoft365DSC/Microsoft365DSC.IntuneDerivedCredential.Tests.ps1
                 }
 
                 Mock -CommandName Get-AdminDlpPolicy -MockWith {
                     return $null
                 }
             }
-            It ' 1.1 Should return Values from the Get method' {
+            It 'Should return Values from the Get method' {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Absent'
             }
-            It ' 1.2 Should return false from the Test method' {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 
-            It ' 1.3 Should create a new instance from the Set method' {
+            It 'Should create a new instance from the Set method' {
                 Set-TargetResource @testParams
                 Should -Invoke -CommandName New-AdminDLPPolicy -Exactly 1
             }
         }
 
-        Context -Name " 2. The instance exists but it SHOULD NOT" -Fixture {
+        Context -Name "The instance exists but it SHOULD NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
-<<<<<<<< HEAD:Tests/Unit/Microsoft365DSC/Microsoft365DSC.PPAdminDLPPolicy.Tests.ps1
                     DisplayName           = "SuperTest";
                     Ensure                = "Absent";
                     Environments          = "Default-xxxxx-xxxxx-xxxxx-xxxxx-xxxxx";
                     FilterType            = "include";
                     Credential            = $Credential;
-========
-                    Ensure               = 'Absent'
-                    DisplayName          = "K5";
-                    HelpUrl              = "http://www.ff.com/";
-                    Id                   = "a409d85f-2a49-440d-884a-80fb52a557ab";
-                    Issuer               = "purebred";
-                    NotificationType     = "email";
-                    Credential           = $Credential
->>>>>>>> Dev:Tests/Unit/Microsoft365DSC/Microsoft365DSC.IntuneDerivedCredential.Tests.ps1
                 }
 
                 Mock -CommandName Get-AdminDlpPolicy -MockWith {
                     return @{
-<<<<<<<< HEAD:Tests/Unit/Microsoft365DSC/Microsoft365DSC.PPAdminDLPPolicy.Tests.ps1
                         PolicyName  = "MyPolicy"
                         DisplayName = "SuperTest"
                         Environments = @(@{
                             name = 'Default-xxxxx-xxxxx-xxxxx-xxxxx-xxxxx'
                         })
                         FilterType = 'include'
-========
-                        DisplayName          = "K5";
-                        HelpUrl              = "http://www.ff.com/";
-                        Id                   = "a409d85f-2a49-440d-884a-80fb52a557ab";
-                        Issuer               = "purebred";
-                        NotificationType     = "email";
->>>>>>>> Dev:Tests/Unit/Microsoft365DSC/Microsoft365DSC.IntuneDerivedCredential.Tests.ps1
                     }
                 }
             }
-            It ' 2.1 Should return Values from the Get method' {
+            It 'Should return Values from the Get method' {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
-            It ' 2.2 Should return false from the Test method' {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 
-            It ' 2.3 Should remove the instance from the Set method' {
+            It 'Should remove the instance from the Set method' {
                 Set-TargetResource @testParams
                 Should -Invoke -CommandName Remove-AdminDlpPolicy -Exactly 1
             }
         }
 
-        Context -Name " 3. The instance exists and values are already in the desired state" -Fixture {
+        Context -Name "The instance exists and values are already in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-<<<<<<<< HEAD:Tests/Unit/Microsoft365DSC/Microsoft365DSC.PPAdminDLPPolicy.Tests.ps1
                     DisplayName           = "SuperTest";
                     Ensure                = "Present";
                     Environments          = "Default-xxxxx-xxxxx-xxxxx-xxxxx-xxxxx";
                     FilterType            = "include";
                     Credential            = $Credential;
-========
-                    Ensure               = 'Present'
-                    DisplayName          = "K5";
-                    HelpUrl              = "http://www.ff.com/";
-                    Id                   = "a409d85f-2a49-440d-884a-80fb52a557ab";
-                    Issuer               = "purebred";
-                    NotificationType     = "email";
-                    Credential           = $Credential
->>>>>>>> Dev:Tests/Unit/Microsoft365DSC/Microsoft365DSC.IntuneDerivedCredential.Tests.ps1
                 }
 
                 Mock -CommandName Get-AdminDlpPolicy -MockWith {
                     return @{
-<<<<<<<< HEAD:Tests/Unit/Microsoft365DSC/Microsoft365DSC.PPAdminDLPPolicy.Tests.ps1
                         PolicyName  = "MyPolicy"
                         DisplayName = "SuperTest"
                         Environments = @(@{
                             name = 'Default-xxxxx-xxxxx-xxxxx-xxxxx-xxxxx'
                         })
                         FilterType = 'include'
-========
-                        Ensure               = 'Present'
-                        DisplayName          = "K5";
-                        HelpUrl              = "http://www.ff.com/";
-                        Id                   = "a409d85f-2a49-440d-884a-80fb52a557ab";
-                        Issuer               = "purebred";
-                        NotificationType     = "email";
->>>>>>>> Dev:Tests/Unit/Microsoft365DSC/Microsoft365DSC.IntuneDerivedCredential.Tests.ps1
                     }
                 }
             }
 
-            It ' 3.0 Should return true from the Test method' {
+            It 'Should return true from the Test method' {
                 Test-TargetResource @testParams | Should -Be $true
             }
         }
 
-        Context -Name " 4. The instance exists and values are NOT in the desired state" -Fixture {
+        Context -Name "The instance exists and values are NOT in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-<<<<<<<< HEAD:Tests/Unit/Microsoft365DSC/Microsoft365DSC.PPAdminDLPPolicy.Tests.ps1
                     DisplayName           = "SuperTest";
                     Ensure                = "Present";
                     Environments          = "Default-xxxxx-xxxxx-xxxxx-xxxxx-xxxxx";
                     FilterType            = "exclude"; #drift
                     Credential            = $Credential;
-========
-                    Ensure               = 'Present'
-                    DisplayName          = "K5";
-                    HelpUrl              = "http://www.ff.com/";
-                    Id                   = "a409d85f-2a49-440d-884a-80fb52a557ab";
-                    Issuer               = "purebred";
-                    NotificationType     = "email";
-                    Credential           = $Credential
->>>>>>>> Dev:Tests/Unit/Microsoft365DSC/Microsoft365DSC.IntuneDerivedCredential.Tests.ps1
                 }
 
                 Mock -CommandName Get-AdminDlpPolicy -MockWith {
                     return @{
-<<<<<<<< HEAD:Tests/Unit/Microsoft365DSC/Microsoft365DSC.PPAdminDLPPolicy.Tests.ps1
                         PolicyName  = "MyPolicy"
                         DisplayName = "SuperTest"
                         Environments = @(@{
                             name = 'Default-xxxxx-xxxxx-xxxxx-xxxxx-xxxxx'
                         })
                         FilterType = 'include'
-========
-                        DisplayName          = "K5 drift"; #drift
-                        HelpUrl              = "http://www.ff.com/";
-                        Id                   = "a409d85f-2a49-440d-884a-80fb52a557ab";
-                        Issuer               = "purebred";
-                        NotificationType     = "email";
->>>>>>>> Dev:Tests/Unit/Microsoft365DSC/Microsoft365DSC.IntuneDerivedCredential.Tests.ps1
                     }
                 }
             }
 
-            It ' 4.1 Should return Values from the Get method' {
+            It 'Should return Values from the Get method' {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It ' 4.2 Should return false from the Test method' {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 
-<<<<<<<< HEAD:Tests/Unit/Microsoft365DSC/Microsoft365DSC.PPAdminDLPPolicy.Tests.ps1
             It 'Should call the Set method' {
                 Set-TargetResource @testParams
                 Should -Invoke -CommandName Set-AdminDlpPolicy -Exactly 1
             }
-========
-            # Update is not allowed on DerivedCredential resource so it should be called 0 times.
->>>>>>>> Dev:Tests/Unit/Microsoft365DSC/Microsoft365DSC.IntuneDerivedCredential.Tests.ps1
         }
 
-        Context -Name ' 5. ReverseDSC Tests' -Fixture {
+        Context -Name 'ReverseDSC Tests' -Fixture {
             BeforeAll {
                 $Global:CurrentModeIsExport = $true
                 $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
@@ -259,20 +180,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-AdminDlpPolicy -MockWith {
                     return @{
-<<<<<<<< HEAD:Tests/Unit/Microsoft365DSC/Microsoft365DSC.PPAdminDLPPolicy.Tests.ps1
                         PolicyName  = "MyPolicy"
                         DisplayName = "SuperTest"
-========
-                        DisplayName          = "K5";
-                        HelpUrl              = "http://www.ff.com/";
-                        Id                   = "a409d85f-2a49-440d-884a-80fb52a557ab";
-                        Issuer               = "purebred";
-                        NotificationType     = "email";
->>>>>>>> Dev:Tests/Unit/Microsoft365DSC/Microsoft365DSC.IntuneDerivedCredential.Tests.ps1
                     }
                 }
             }
-            It ' 5.0 Should Reverse Engineer resource from the Export method' {
+            It 'Should Reverse Engineer resource from the Export method' {
                 $result = Export-TargetResource @testParams
                 $result | Should -Not -BeNullOrEmpty
             }
