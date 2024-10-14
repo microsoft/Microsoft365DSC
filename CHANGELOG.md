@@ -1,10 +1,97 @@
 # Change log for Microsoft365DSC
 
 # UNRELEASED
+
 * IntuneDeviceManagementAndroidDeviceOwnerEnrollmentProfile
   * Initial release
-* MdcSubscriptionDefenderPlan
+* IntuneDerivedCredential
+  * Initial release.
+* AADAdminConsentRequestPolicy
+  * Initial release.
+* AADApplication
+  * Fixed an issue trying to retrieve the beta instance.
+  * Added support for OnPremisesPublishing.
+  * Added support for ApplicationTemplate.
+* AADAuthenticationRequirement
+  * Initial release.
+* AADConnectorGroupApplicationProxy
+  * Initial release.
+* AADCustomSecurityAttributeDefinition
+  * Initial release.
+* AADDeviceRegistrationPolicy
+  * Initial release.
+* AADEntitlementManagementSettings
+  * Added support for ApplicationSecret
+* AADIdentityGovernanceLifecycleWorkflow
+  * Initial release.
+* AADLifecycleWorkflowSettings
+  * Initial release.
+* ADOPermissionGroupSettings
+  * Initial release.
+* EXOATPBuiltInProtectionRule
+  * Initial release.
+* EXOMigrationEndpoint
+  * Initial Release
+* IntuneAccountProtectionPolicy
+  * Added deprecation notice.
+* IntuneAccountProtectionPolicyWindows10
+  * Initial Release
+    FIXES [#5073](https://github.com/microsoft/Microsoft365DSC/issues/5073)
+* IntuneAppAndBrowserIsolationPolicyWindows10
+  * Initial release.
+    FIXES [#3028](https://github.com/microsoft/Microsoft365DSC/issues/3028)
+* IntuneDeviceConfigurationIdentityProtectionPolicyWindows10
+  * Added deprecation notice.
+* IntuneEndpointDetectionAndResponsePolicyWindows10
+  * Migrate to new Settings Catalog cmdlets.
+* IntuneMobileAppsMacOSLobApp
   * Initial release
+* PPAdminDLPPolicy
+  * Initial release.
+* PPDLPPolicyConnectorConfigurations
+  * Initial release.
+* PPPowerAppPolicyUrlPatterns
+  * Initial release.
+* M365DSCDRGUtil
+  * Fixes an issue for the handling of skipped one-property elements in the
+    Settings Catalog. FIXES [#5086](https://github.com/microsoft/Microsoft365DSC/issues/5086)
+  * Add Set support for secret Settings Catalog values
+  * Removed unused functions
+  * Add support for device / user scoped settings.
+* ResourceGenerator
+  * Add support for device / user scoped settings.
+* DEPENDENCIES
+  * Updated DSCParser to version 2.0.0.11
+  * Updated ReverseDSC to version 2.0.0.21
+
+# 1.24.1002.1
+
+* AADAdministrativeUnit
+  * Added support for property IsMemberManagementRestricted.
+* AADApplication
+  * Added AppRoles
+  * Added AuthenticationBehavior
+  * Added KeyCredentials
+  * Added OptionalClaims
+  * Added PasswordCredentials
+  * Added PreAuthorizationApplications
+* AADAuthenticationMethodPolicy
+  * Added ReportSuspiciousActivitySettings
+* AADAuthenticationMethodPolicyHardware
+  * Initial release.
+* AADEntitlementManagementSettings
+  * Initial release.
+* AADFeatureRolloutPolicy
+  * Initial release
+* AADGroup
+  * Fixes issue with incorrect removal of assigned license(s)
+    FIXES [#5128](https://github.com/microsoft/Microsoft365DSC/issues/5128)
+  * Fixes logic to evaluate license assignments and disabled plans.
+    FIXES [#5101](https://github.com/microsoft/Microsoft365DSC/issues/5101)
+  * Fixes issue with code that is never executed
+    FIXES [#5001](https://github.com/microsoft/Microsoft365DSC/issues/5001)
+  * Adds support to assign Service Principal as members or owners.
+    FIXES [#4972](https://github.com/microsoft/Microsoft365DSC/issues/4972)
 * AADPasswordRuleSettings
   * Initial release
 * ADOOrganizationOwner
@@ -15,7 +102,17 @@
   * Initial release.
 * AzureSubscription
   * Initial Release.
+* DefenderSubscriptionDefenderPlan
+  * Initial release.
+* EXOAntiPhishPolicy
+  * Use correct type integer for variable `PhishThresholdLevel`
 * EXOArcConfig
+  * Initial Release.
+* EXOAuthenticationPolicy
+  * If policy needs changes then recreate it to avoid issue with
+    `Set-AuthenticationPolicy` cmdlet
+    FIXES [#4819](https://github.com/microsoft/Microsoft365DSC/issues/4819)
+* EXODnssecForVerifiedDomain
   * Initial Release.
 * EXOEmailTenantSettings
   * Initial Release.
@@ -25,15 +122,28 @@
   * Initial Release.
 * EXOMailboxIRMAccess
   * Initial Release.
+* EXOMailboxFolderPermission
+  * Initial Release.
+* EXOMailboxIRMAccess
+  * Initial Release.
+* EXOMailTips
+  * Remove property `Ensure` since this resource is of type `IsSingleInstance`
 * EXOManagementScope
   * Initial Release.
-* EXORetenionPolicy
+* EXORetentionPolicy
   * Initial Release.
 * EXOPhishSimOverrideRule
   * Initial Release.
 * IntuneAntivirusPolicyWindows10SettingCatalog
   * Fixes an issue with invalid parameter definition.
     FIXES [#5015](https://github.com/microsoft/Microsoft365DSC/issues/5015)
+  * Fixes an issue where the `AccessTokens` parameter was not available.
+    FIXES [#5121](https://github.com/microsoft/Microsoft365DSC/issues/5121)
+* IntuneAppCategory
+  * Initial release.
+* IntuneAppProtectionPolicyiOS
+  * Improve `TargetedAppManagementLevels` property to specify multiple values.
+    FIXES [#5032](https://github.com/microsoft/Microsoft365DSC/issues/5032)
 * IntuneDeviceCompliancePolicyWindows10
   * Fixes an issue where the property `ValidOperatingSystemBuildRanges` was
     not exported properly.
@@ -41,22 +151,60 @@
 * IntuneDeviceConfigurationSharedMultiDevicePolicyWindows10
   * Add missing `AccessTokens` parameter to `Export-TargetResource`
     FIXES [#5034](https://github.com/microsoft/Microsoft365DSC/issues/5034)
+* IntuneFirewallPolicyWindows10
+  * Initial release
+    FIXES [#3033](https://github.com/microsoft/Microsoft365DSC/issues/3033)
+* IntuneSettingCatalogCustomPolicyWindows10
+  * Update export logic to target more specific policy types.
+  * Prevent thrown exception to be caught by exception handler.
+    FIXES [#5088](https://github.com/microsoft/Microsoft365DSC/issues/5088)
+* M365DSCDRGUtil
+  * Add support for more complex Intune Settings Catalog properties
+  * Update handling of `Update-IntuneDeviceConfigurationPolicy` to throw on error
+    FIXES [#5055](https://github.com/microsoft/Microsoft365DSC/issues/5055)
+* M365DSCResourceGenerator
+  * Update Intune resource generation for the Settings Catalog.
+* O365ExternalConnection
+  * Initial release.
+* SCDeviceConditionalAccessRule
+  * Initial release.
+* SCDeviceConfigurationRule
+  * Initial release.
 * SCInsiderRiskEntityList
+  * Initial release.
+* SCInsiderRiskPolicy
+  * Initial release.
+* SCRecordReviewNotificationTemplateConfig
   * Initial release.
 * SCRoleGroup
   * Fixes an issue with creation without specifying Displayname
   * Fixes an issue with Drifts because of returned Role format
     FIXES [#5036](https://github.com/microsoft/Microsoft365DSC/issues/5036)
+* SCAutoSensitivityLabelRule
+  * Fixed issue with incorrectly applying HeaderMatchesPatterns, even when
+    parameter wasn't specified.
+    FIXES [#4641](https://github.com/microsoft/Microsoft365DSC/issues/4641)
+* SCSensitivityLabel
+  * Added support for Auto Labeling settings
+    FIXES [#3784](https://github.com/microsoft/Microsoft365DSC/issues/3784)
 * SentinelSetting
+  * Initial release.
+* SentinelWatchlist
   * Initial release.
 * SPOAccessControlSettings
   * Added support for property EnableRestrictedAccessControl.
+* M365DSCUtil
+  * Fixes an issue where the O365Group workload was not properly detected.
+    FIXES [#5095](https://github.com/microsoft/Microsoft365DSC/issues/5095)
 * DEPENDENCIES
   * Updated DSCParser to version 2.0.0.10.
   * Updated Microsoft.Graph to version 2.23.0.
-  * Added dependencies on Az.Accounts, Az.Resources and Az.SecurityInsights
+  * Added dependencies on Az.Accounts, Az.Resources, Az.ResourceGraph
+    and Az.SecurityInsights.
   * Updated DSCParser to version 2.0.0.9.
   * Updated MSCloudLoginAssistant to version 1.1.25.
+  * Added dependency on Microsoft.Graph.Beta.Search.
+  * Removed unnecessary dependency PSDesiredStateConfiguration v1.1
 
 # 1.24.904.1
 
@@ -648,6 +796,8 @@
   * Added EnableAIPIntegration.
 * TeamsChannelTab
   * Fixed schema file
+* TeamsComplianceRecordingPolicy
+  * FIXES [[#3712](https://github.com/microsoft/Microsoft365DSC/issues/3712)]
 * TeamsGroupPolicyAssignment
   * Skip assignments that have orphaned/deleted groups or without display name
     instead of throwing an error
