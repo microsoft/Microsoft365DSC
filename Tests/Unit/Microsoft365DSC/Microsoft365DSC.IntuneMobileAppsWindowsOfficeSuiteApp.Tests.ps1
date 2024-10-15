@@ -70,12 +70,26 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName           = "Microsoft 365 Apps for Windows 10 and later"
                     InformationUrl        = ""
                     IsFeatured            = $False
-                    MinimumSupportedOperatingSystem = [CimInstance](
-                        New-CimInstance -ClassName MSFT_DeviceManagementMinimumOperatingSystem -Property @{
-                        v11_0 = $true
-                    } -ClientOnly)
                     PrivacyInformationUrl = ""
+                    ExcludedApps          = (New-CimInstance -ClassName MSFT_DeviceManagementMobileAppExcludedApp -Property @{
+                        teams = $false
+                        sharePointDesigner = $true
+                        powerPoint = $false
+                        outlook = $false
+                        groove = $true
+                        word = $false
+                        lync = $true
+                        oneNote = $false
+                        oneDrive = $false
+                        publisher = $false
+                        bing = $false
+                        visio = $false
+                        access = $false
+                        infoPath = $true
+                        excel = $false
+                    } -ClientOnly)
                     RoleScopeTagIds       = @()
+                    Notes                 = ""
                     Ensure                = 'Present'
                     Credential            = $Credential
                 }
@@ -103,20 +117,29 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Id                    = "ad027f94-0682-431e-97c1-827d1879fa79"
                     Categories            = @()
                     Description           = "Microsoft 365 Apps for Windows 10 and later"
-                    Developer             = "Contoso"
                     DisplayName           = "Microsoft 365 Apps for Windows 10 and later"
                     InformationUrl        = ""
                     IsFeatured            = $False
-                    MinimumSupportedOperatingSystem = [CimInstance](
-                        New-CimInstance -ClassName MSFT_DeviceManagementMinimumOperatingSystem -Property @{
-                        v11_0 = $true
+                    ExcludedApps          = (New-CimInstance -ClassName MSFT_DeviceManagementMobileAppExcludedApp -Property @{
+                        teams = $false
+                        sharePointDesigner = $true
+                        powerPoint = $false
+                        outlook = $false
+                        groove = $true
+                        word = $false
+                        lync = $true
+                        oneNote = $false
+                        oneDrive = $false
+                        publisher = $false
+                        bing = $false
+                        visio = $false
+                        access = $false
+                        infoPath = $true
+                        excel = $false
                     } -ClientOnly)
                     Notes                 = ""
-                    Owner                 = ""
                     PrivacyInformationUrl = ""
-                    Publisher             = "Contoso"
                     RoleScopeTagIds       = @()
-                    IgnoreVersionDetection = $True
                     Ensure                = 'Absent'
                     Credential            = $Credential
                 }
@@ -126,23 +149,29 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Id                    = "ad027f94-0682-431e-97c1-827d1879fa79"
                         Categories            = @()
                         Description           = "Microsoft 365 Apps for Windows 10 and laterr"
-                        Developer             = "Contoso"
                         DisplayName           = "Microsoft 365 Apps for Windows 10 and later"
                         InformationUrl        = ""
                         IsFeatured            = $False
                         Notes                 = ""
-                        Owner                 = ""
                         PrivacyInformationUrl = ""
-                        Publisher             = "Contoso"
-                        PublishingState       = "published"
                         RoleScopeTagIds       = @()
-                        IgnoreVersionDetection = $True
-                        AdditionalProperties   = @{
-                            '@odata.type' = '#microsoft.graph.officeSuiteApp'
-                            minimumSupportedOperatingSystem = @{
-                                v11_0 = $true
-                            }
-                        }
+                        ExcludedApps          = (New-CimInstance -ClassName MSFT_DeviceManagementMobileAppExcludedApp -Property @{
+                            teams = $false
+                            sharePointDesigner = $true
+                            powerPoint = $false
+                            outlook = $false
+                            groove = $true
+                            word = $false
+                            lync = $true
+                            oneNote = $false
+                            oneDrive = $false
+                            publisher = $false
+                            bing = $false
+                            visio = $false
+                            access = $false
+                            infoPath = $true
+                            excel = $false
+                        } -ClientOnly)
                         Ensure                = 'Present'
                     }
                 }
@@ -170,18 +199,28 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Id                    = "8d027f94-0682-431e-97c1-827d1879fa79"
                     Categories            = @()
                     Description           = "Microsoft 365 Apps for Windows 10 and later"
-                    Developer             = "Contoso"
                     DisplayName           = "Microsoft 365 Apps for Windows 10 and later"
                     InformationUrl        = ""
                     IsFeatured            = $False
-                    MinimumSupportedOperatingSystem = [CimInstance](
-                        New-CimInstance -ClassName MSFT_DeviceManagementMinimumOperatingSystem -Property @{
-                        v11_0 = $true
-                    } -ClientOnly)
                     Notes                 = ""
-                    Owner                 = ""
                     PrivacyInformationUrl = ""
-                    Publisher             = "Contoso"
+                    ExcludedApps          = (New-CimInstance -ClassName MSFT_DeviceManagementMobileAppExcludedApp -Property @{
+                        teams = $false
+                        sharePointDesigner = $true
+                        powerPoint = $false
+                        outlook = $false
+                        groove = $true
+                        word = $false
+                        lync = $true
+                        oneNote = $false
+                        oneDrive = $false
+                        publisher = $false
+                        bing = $false
+                        visio = $false
+                        access = $false
+                        infoPath = $true
+                        excel = $false
+                    } -ClientOnly)
                     RoleScopeTagIds       = @()
                     Ensure                = 'Present'
                     Credential            = $Credential;
@@ -192,22 +231,39 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Id                    = "8d027f94-0682-431e-97c1-827d1879fa79"
                         Categories            = @()
                         Description           = "Microsoft 365 Apps for Windows 10 and later"
-                        Developer             = "Contoso"
                         DisplayName           = "Microsoft 365 Apps for Windows 10 and later"
                         InformationUrl        = ""
                         IsFeatured            = $False
                         Notes                 = ""
-                        Owner                 = ""
                         PrivacyInformationUrl = ""
-                        Publisher             = "Contoso"
-                        PublishingState       = "published"
                         RoleScopeTagIds       = @()
-                        AdditionalProperties   = @{
-                            '@odata.type' = '#microsoft.graph.officeSuiteApp'
-                            minimumSupportedOperatingSystem = @{
-                                v11_0 = $true
-                            }
-                        }
+                        ExcludedApps          = (New-CimInstance -ClassName MSFT_DeviceManagementMobileAppExcludedApp -Property @{
+                            teams = $false
+                            sharePointDesigner = $true
+                            powerPoint = $false
+                            outlook = $false
+                            groove = $true
+                            word = $false
+                            lync = $true
+                            oneNote = $false
+                            oneDrive = $false
+                            publisher = $false
+                            bing = $false
+                            visio = $false
+                            access = $false
+                            infoPath = $true
+                            excel = $false
+                        } -ClientOnly)
+                        Assignments           = @(
+                            (New-CimInstance -ClassName MSFT_DeviceManagementMobileAppAssignment -Property @{
+                                deviceAndAppManagementAssignmentFilterType = 'none'
+                                source = 'direct'
+                                dataType = '#microsoft.graph.groupAssignmentTarget'
+                                groupId = '42c02b60-f28c-4eef-b3e1-973184cc4a6c'
+                                intent = 'required'
+                            } -ClientOnly)
+                        )
+                        Ensure                = 'Present'
                     }
                 }
                 Mock -CommandName Get-MgBetaDeviceAppManagementMobileAppAssignment -MockWith{
@@ -226,18 +282,28 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Id                    = "8d027f94-0682-431e-97c1-827d1879fa79"
                     Categories            = @()
                     Description           = "Microsoft 365 Apps for Windows 10 and later"
-                    Developer             = "Contoso"
                     DisplayName           = "Microsoft 365 Apps for Windows 10 and later"
                     InformationUrl        = ""
                     IsFeatured            = $False
-                    MinimumSupportedOperatingSystem = [CimInstance](
-                        New-CimInstance -ClassName MSFT_DeviceManagementMinimumOperatingSystem -Property @{
-                        v11_0 = $true
+                    ExcludedApps          = (New-CimInstance -ClassName MSFT_DeviceManagementMobileAppExcludedApp -Property @{
+                        teams = $false
+                        sharePointDesigner = $true
+                        powerPoint = $false
+                        outlook = $false
+                        groove = $true
+                        word = $false
+                        lync = $true
+                        oneNote = $false
+                        oneDrive = $false
+                        publisher = $false
+                        bing = $false
+                        visio = $false
+                        access = $false
+                        infoPath = $true
+                        excel = $false
                     } -ClientOnly)
                     Notes                 = ""
-                    Owner                 = ""
                     PrivacyInformationUrl = ""
-                    Publisher             = "Contoso"
                     RoleScopeTagIds       = @()
                     Ensure                = 'Present'
                     Credential            = $Credential;
@@ -248,15 +314,28 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Id                    = "8d027f94-0682-431e-97c1-827d1879fa79"
                         Categories            = @()
                         Description           = "Microsoft 365 Apps for Windows 10 and later"
-                        Developer             = "Contoso"
                         DisplayName           = "Microsoft 365 Apps for Windows 10 and later drift"
                         InformationUrl        = ""
                         IsFeatured            = $False
                         Notes                 = ""
-                        Owner                 = ""
                         PrivacyInformationUrl = ""
-                        Publisher             = "Contoso"
-                        PublishingState       = "published"
+                        ExcludedApps          = (New-CimInstance -ClassName MSFT_DeviceManagementMobileAppExcludedApp -Property @{
+                            teams = $false
+                            sharePointDesigner = $true
+                            powerPoint = $false
+                            outlook = $false
+                            groove = $true
+                            word = $false
+                            lync = $true
+                            oneNote = $false
+                            oneDrive = $false
+                            publisher = $false
+                            bing = $false
+                            visio = $false
+                            access = $false
+                            infoPath = $true
+                            excel = $false
+                        } -ClientOnly)
                         AdditionalProperties   = @{
                             '@odata.type' = '#microsoft.graph.officeSuiteApp'
                             minimumSupportedOperatingSystem = @{
@@ -295,15 +374,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Id                    = "8d027f94-0682-431e-97c1-827d1879fa79"
                         Categories            = @()
                         Description           = "Microsoft 365 Apps for Windows 10 and later"
-                        Developer             = "Contoso"
                         DisplayName           = "Microsoft 365 Apps for Windows 10 and later drift"
                         InformationUrl        = ""
                         IsFeatured            = $False
                         Notes                 = ""
-                        Owner                 = ""
                         PrivacyInformationUrl = ""
-                        Publisher             = "Contoso"
-                        PublishingState       = "published"
                         RoleScopeTagIds       = @()
                         AdditionalProperties   = @{
                             '@odata.type' = '#microsoft.graph.officeSuiteApp'
