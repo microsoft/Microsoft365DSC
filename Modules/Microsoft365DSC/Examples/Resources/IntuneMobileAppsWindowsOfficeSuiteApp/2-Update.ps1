@@ -33,23 +33,6 @@ Configuration Example
             Notes                 = ""
             PrivacyInformationUrl = ""
             RoleScopeTagIds       = @()
-            ExcludedApps          = (New-CimInstance -ClassName MSFT_DeviceManagementMobileAppExcludedApp -Property @{
-                teams = $false
-                sharePointDesigner = $true
-                powerPoint = $false
-                outlook = $false
-                groove = $true
-                word = $false
-                lync = $true
-                oneNote = $false
-                oneDrive = $false
-                publisher = $false
-                bing = $false
-                visio = $false
-                access = $false
-                infoPath = $true
-                excel = $false
-            } -ClientOnly)
             Assignments          = @(
                 MSFT_DeviceManagementMobileAppAssignment{
                     deviceAndAppManagementAssignmentFilterType = 'none'
