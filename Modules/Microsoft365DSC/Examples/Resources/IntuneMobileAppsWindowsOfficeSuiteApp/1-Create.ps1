@@ -19,7 +19,7 @@ Configuration Example
         $CertificateThumbprint
     )
 
-    # Import-DscResource -ModuleName Microsoft365DSC
+    Import-DscResource -ModuleName Microsoft365DSC
     node localhost
     {
         IntuneMobileAppsWindowsOfficeSuiteApp "IntuneMobileAppsWindowsOfficeSuiteApp-Microsoft 365 Apps for Windows 10 and later"
