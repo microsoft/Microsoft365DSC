@@ -19348,12 +19348,81 @@ function Get-MgBetaDeviceManagementGroupPolicyConfigurationAssignment
     )
 }
 
-function New-MgBetaDeviceAppManagementMobileApp {
+function New-MgBetaDeviceManagementDerivedCredential {
+
     [CmdletBinding()]
     param (
         [Parameter()]
         [System.String]
         $Id,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $HelpUrl,
+
+        [Parameter()]
+        [ValidateSet('intercede', 'entrustData', 'purebred')]
+        [System.String]
+        $Issuer,
+
+        [Parameter()]
+        [ValidateSet('none', 'email', 'companyPortal')]
+        [System.String]
+        $NotificationType = 'none'
+    )
+}
+
+function Get-MgBetaDeviceManagementDerivedCredential {
+    [CmdletBinding()]
+    param (
+        [Parameter()]
+        [System.String]
+        $DeviceManagementDerivedCredentialSettingsId,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $HelpUrl,
+
+        [Parameter()]
+        [ValidateSet('intercede', 'entrustData', 'purebred')]
+        [System.String]
+        $Issuer,
+
+        [Parameter()]
+        [ValidateSet('none', 'email', 'companyPortal')]
+        [System.String]
+        $NotificationType = 'none'
+    )
+}
+
+function Remove-MgBetaDeviceManagementDerivedCredential
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $DeviceManagementDerivedCredentialSettingsId,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm
+    )
+}
+
+function New-MgBetaDeviceAppManagementMobileApp {
+    [CmdletBinding()]
+    param (
+        [Parameter()]
+        [System.String]
+        $DeviceManagementDerivedCredentialSettingsId,
 
         [Parameter()]
         [System.String]
