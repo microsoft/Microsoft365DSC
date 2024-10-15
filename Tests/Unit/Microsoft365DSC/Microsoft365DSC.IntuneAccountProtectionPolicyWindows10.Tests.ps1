@@ -219,7 +219,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     )
                     Description = "My Test"
                     DeviceSettings = [CimInstance](
-                        New-CimInstance -ClassName MSFT_MicrosoftGraphIntuneSettingsCatalogDeviceSettings -Property @{
+                        New-CimInstance -ClassName MSFT_MicrosoftGraphIntuneSettingsCatalogDeviceSettings_IntuneAccountProtectionPolicyWindows10 -Property @{
                             History = 10
                         } -ClientOnly
                     )
@@ -227,7 +227,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName = "My Test"
                     RoleScopeTagIds = @("FakeStringValue")
                     UserSettings = [CimInstance](
-                        New-CimInstance -ClassName MSFT_MicrosoftGraphIntuneSettingsCatalogUserSettings -Property @{
+                        New-CimInstance -ClassName MSFT_MicrosoftGraphIntuneSettingsCatalogUserSettings_IntuneAccountProtectionPolicyWindows10 -Property @{
                             History = 20
                         } -ClientOnly
                     )
@@ -263,7 +263,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     )
                     Description = "My Test"
                     DeviceSettings = [CimInstance](
-                        New-CimInstance -ClassName MSFT_MicrosoftGraphIntuneSettingsCatalogDeviceSettings -Property @{
+                        New-CimInstance -ClassName MSFT_MicrosoftGraphIntuneSettingsCatalogDeviceSettings_IntuneAccountProtectionPolicyWindows10 -Property @{
                             History = 10
                         } -ClientOnly
                     )
@@ -271,7 +271,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName = "My Test"
                     RoleScopeTagIds = @("FakeStringValue")
                     UserSettings = [CimInstance](
-                        New-CimInstance -ClassName MSFT_MicrosoftGraphIntuneSettingsCatalogUserSettings -Property @{
+                        New-CimInstance -ClassName MSFT_MicrosoftGraphIntuneSettingsCatalogUserSettings_IntuneAccountProtectionPolicyWindows10 -Property @{
                             History = 20
                         } -ClientOnly
                     )
@@ -305,7 +305,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     )
                     Description = "My Test"
                     DeviceSettings = [CimInstance](
-                        New-CimInstance -ClassName MSFT_MicrosoftGraphIntuneSettingsCatalogDeviceSettings -Property @{
+                        New-CimInstance -ClassName MSFT_MicrosoftGraphIntuneSettingsCatalogDeviceSettings_IntuneAccountProtectionPolicyWindows10 -Property @{
                             History = 10
                         } -ClientOnly
                     )
@@ -313,7 +313,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName = "My Test"
                     RoleScopeTagIds = @("FakeStringValue")
                     UserSettings = [CimInstance](
-                        New-CimInstance -ClassName MSFT_MicrosoftGraphIntuneSettingsCatalogUserSettings -Property @{
+                        New-CimInstance -ClassName MSFT_MicrosoftGraphIntuneSettingsCatalogUserSettings_IntuneAccountProtectionPolicyWindows10 -Property @{
                             History = 20
                         } -ClientOnly
                     )
@@ -339,7 +339,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     )
                     Description = "My Test"
                     DeviceSettings = [CimInstance](
-                        New-CimInstance -ClassName MSFT_MicrosoftGraphIntuneSettingsCatalogDeviceSettings -Property @{
+                        New-CimInstance -ClassName MSFT_MicrosoftGraphIntuneSettingsCatalogDeviceSettings_IntuneAccountProtectionPolicyWindows10 -Property @{
                             History = 10
                         } -ClientOnly
                     )
@@ -347,7 +347,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName = "My Test"
                     RoleScopeTagIds = @("FakeStringValue")
                     UserSettings = [CimInstance](
-                        New-CimInstance -ClassName MSFT_MicrosoftGraphIntuneSettingsCatalogUserSettings -Property @{
+                        New-CimInstance -ClassName MSFT_MicrosoftGraphIntuneSettingsCatalogUserSettings_IntuneAccountProtectionPolicyWindows10 -Property @{
                             History = 30 # Drift
                         } -ClientOnly
                     )
