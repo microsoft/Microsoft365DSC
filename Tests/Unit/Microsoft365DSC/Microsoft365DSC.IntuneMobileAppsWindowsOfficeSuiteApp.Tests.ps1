@@ -223,7 +223,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     } -ClientOnly)
                     RoleScopeTagIds       = @()
                     Ensure                = 'Present'
-                    Credential            = $Credential;
+                    Credential            = $Credential
+                    Assignments = @(
+                        (New-CimInstance -ClassName MSFT_DeviceManagementMobileAppAssignment -Property @{
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                            source = 'direct'
+                            dataType = '#microsoft.graph.groupAssignmentTarget'
+                            groupId = '42c02b60-f28c-4eef-b3e1-973184cc4a6c'
+                            intent = 'required'
+                        } -ClientOnly)
+                    )
                 }
 
                 Mock -CommandName Get-MgBetaDeviceAppManagementMobileApp -MockWith {
@@ -254,6 +263,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             infoPath = $true
                             excel = $false
                         } -ClientOnly)
+                        Ensure                = 'Present'
+                        Credential            = $Credential
                         Assignments           = @(
                             (New-CimInstance -ClassName MSFT_DeviceManagementMobileAppAssignment -Property @{
                                 deviceAndAppManagementAssignmentFilterType = 'none'
@@ -263,7 +274,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 intent = 'required'
                             } -ClientOnly)
                         )
-                        Ensure                = 'Present'
                     }
                 }
                 Mock -CommandName Get-MgBetaDeviceAppManagementMobileAppAssignment -MockWith{
@@ -380,6 +390,23 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Notes                 = ""
                         PrivacyInformationUrl = ""
                         RoleScopeTagIds       = @()
+                        ExcludedApps          = (New-CimInstance -ClassName MSFT_DeviceManagementMobileAppExcludedApp -Property @{
+                            teams = $false
+                            sharePointDesigner = $true
+                            powerPoint = $false
+                            outlook = $false
+                            groove = $true
+                            word = $false
+                            lync = $true
+                            oneNote = $false
+                            oneDrive = $false
+                            publisher = $false
+                            bing = $false
+                            visio = $false
+                            access = $false
+                            infoPath = $true
+                            excel = $false
+                        } -ClientOnly)
                         AdditionalProperties   = @{
                             '@odata.type' = '#microsoft.graph.officeSuiteApp'
                             minimumSupportedOperatingSystem = @{
