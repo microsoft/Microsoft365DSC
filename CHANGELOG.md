@@ -18,6 +18,8 @@
   * Initial release.
 * AADEntitlementManagementSettings
   * Added support for ApplicationSecret
+* AADIdentityGovernanceLifecycleWorkflow
+  * Initial release.
 * AADLifecycleWorkflowSettings
   * Initial release.
 * ADOPermissionGroupSettings
@@ -42,6 +44,8 @@
   * Initial release
 * IntuneSecurityBaselineMicrosoft365AppsForEnterprise
   * Initial release
+* PPAdminDLPPolicy
+  * Initial release.
 * M365DSCDRGUtil
   * Fixes an issue for the handling of skipped one-property elements in the
     Settings Catalog. FIXES [#5086](https://github.com/microsoft/Microsoft365DSC/issues/5086)
