@@ -42,6 +42,8 @@
   * Migrate to new Settings Catalog cmdlets.
 * IntuneMobileAppsMacOSLobApp
   * Initial release
+* IntuneMobileAppsWindowsOfficeSuiteApp
+  * Initial release
 * PPAdminDLPPolicy
   * Initial release.
 * PPDLPPolicyConnectorConfigurations
