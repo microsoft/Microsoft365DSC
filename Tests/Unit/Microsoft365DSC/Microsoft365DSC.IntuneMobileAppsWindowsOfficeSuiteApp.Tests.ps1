@@ -204,7 +204,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 IsFeatured            = $False
                 Notes                 = ""
                 PrivacyInformationUrl = ""
-                ExcludedApps          = @()
                 RoleScopeTagIds       = @()
                 Ensure                = 'Present'
                 Credential            = $Credential
@@ -220,9 +219,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     IsFeatured            = $False
                     Notes                 = ""
                     PrivacyInformationUrl = ""
-                    ExcludedApps          = @()
                     RoleScopeTagIds       = @()
-                    AdditionalProperties   = @{}
+                    AdditionalProperties   = @{
+                        '@odata.type' = '#microsoft.graph.officeSuiteApp'
+                        minimumSupportedOperatingSystem = @{
+                            v11_0 = $true
+                        }
+                    }
                     Ensure                = 'Present'
                 }
             }
