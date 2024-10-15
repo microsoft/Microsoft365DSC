@@ -222,12 +222,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     PrivacyInformationUrl = ""
                     ExcludedApps          = @()
                     RoleScopeTagIds       = @()
-                    AdditionalProperties   = @{
-                        '@odata.type' = '#microsoft.graph.officeSuiteApp'
-                        minimumSupportedOperatingSystem = @{
-                            v11_0 = $true
-                        }
-                    }
+                    AdditionalProperties   = @{}
                     Ensure                = 'Present'
                 }
             }
