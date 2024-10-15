@@ -8,8 +8,8 @@
 | **DisplayName** | Key | String | Policy name | |
 | **RoleScopeTagIds** | Write | StringArray[] | List of Scope Tags for this Entity instance. | |
 | **Id** | Write | String | The unique identifier for an entity. Read-only. | |
-| **DeviceSettings** | Write | MSFT_MicrosoftGraphIntuneSettingsCatalogDeviceSettings | The policy settings for the device scope. | |
-| **UserSettings** | Write | MSFT_MicrosoftGraphIntuneSettingsCatalogUserSettings | The policy settings for the user scope | |
+| **DeviceSettings** | Write | MSFT_MicrosoftGraphIntuneSettingsCatalogDeviceSettings_IntuneAccountProtectionPolicyWindows10 | The policy settings for the device scope. | |
+| **UserSettings** | Write | MSFT_MicrosoftGraphIntuneSettingsCatalogUserSettings_IntuneAccountProtectionPolicyWindows10 | The policy settings for the user scope | |
 | **Assignments** | Write | MSFT_DeviceManagementConfigurationPolicyAssignments[] | Represents the assignment to the Intune policy. | |
 | **Ensure** | Write | String | Present ensures the policy exists, absent ensures it is removed. | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials of the Admin | |
@@ -33,7 +33,7 @@
 | **groupDisplayName** | Write | String | The group Display Name that is the target of the assignment. | |
 | **collectionId** | Write | String | The collection Id that is the target of the assignment.(ConfigMgr) | |
 
-### MSFT_MicrosoftGraphIntuneSettingsCatalogDeviceSettings
+### MSFT_MicrosoftGraphIntuneSettingsCatalogDeviceSettings_IntuneAccountProtectionPolicyWindows10
 
 #### Parameters
 
@@ -53,7 +53,7 @@
 | **UseCertificateForOnPremAuth** | Write | String | Use Certificate For On Prem Auth (false: Disabled, true: Enabled) | `false`, `true` |
 | **UsePassportForWork** | Write | String | Use Windows Hello For Business (Device) (false: Disabled, true: Enabled) | `false`, `true` |
 
-### MSFT_MicrosoftGraphIntuneSettingsCatalogUserSettings
+### MSFT_MicrosoftGraphIntuneSettingsCatalogUserSettings_IntuneAccountProtectionPolicyWindows10
 
 #### Parameters
 
@@ -131,12 +131,12 @@ Configuration Example
         IntuneAccountProtectionPolicyWindows10 'myAccountProtectionPolicy'
         {
             DisplayName           = 'test'
-            DeviceSettings = MSFT_MicrosoftGraphIntuneSettingsCatalogDeviceSettings
+            DeviceSettings = MSFT_MicrosoftGraphIntuneSettingsCatalogDeviceSettings_IntuneAccountProtectionPolicyWindows10
             {
                 History = 10
                 EnablePinRecovery = 'true'
             }
-            UserSettings = MSFT_MicrosoftGraphIntuneSettingsCatalogUserSettings
+            UserSettings = MSFT_MicrosoftGraphIntuneSettingsCatalogUserSettings_IntuneAccountProtectionPolicyWindows10
             {
                 History = 20
                 EnablePinRecovery = 'true'
@@ -178,12 +178,12 @@ Configuration Example
         IntuneAccountProtectionPolicyWindows10 'myAccountProtectionPolicy'
         {
             DisplayName           = 'test'
-            DeviceSettings = MSFT_MicrosoftGraphIntuneSettingsCatalogDeviceSettings
+            DeviceSettings = MSFT_MicrosoftGraphIntuneSettingsCatalogDeviceSettings_IntuneAccountProtectionPolicyWindows10
             {
                 History = 10
                 EnablePinRecovery = 'true'
             }
-            UserSettings = MSFT_MicrosoftGraphIntuneSettingsCatalogUserSettings
+            UserSettings = MSFT_MicrosoftGraphIntuneSettingsCatalogUserSettings_IntuneAccountProtectionPolicyWindows10
             {
                 History = 30 # Updated property
                 EnablePinRecovery = 'true'
