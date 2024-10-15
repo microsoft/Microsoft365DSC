@@ -25,7 +25,6 @@ Configuration Example
         IntuneMobileAppsWindowsOfficeSuiteApp "IntuneMobileAppsWindowsOfficeSuiteApp-Microsoft 365 Apps for Windows 10 and later"
         {
             Id                    = "8e683524-4ec1-4813-bb3e-6256b2f293d"
-            Categories            = @()
             Description           = "Microsoft 365 Apps for Windows 10 and laterr"
             DisplayName           = "Microsoft 365 Apps for Windows 10 and later"
             Ensure                = "Present";
