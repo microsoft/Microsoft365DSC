@@ -682,7 +682,7 @@ function Export-TargetResource
             {
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                     -ComplexObject $Results.DeviceSettings `
-                    -CIMInstanceName 'MicrosoftGraphIntuneSettingsCatalogDeviceSettings'
+                    -CIMInstanceName 'MicrosoftGraphIntuneSettingsCatalogDeviceSettings_IntuneAccountProtectionPolicyWindows10'
                 if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.DeviceSettings = $complexTypeStringResult
@@ -696,7 +696,7 @@ function Export-TargetResource
             {
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                     -ComplexObject $Results.UserSettings `
-                    -CIMInstanceName 'MicrosoftGraphIntuneSettingsCatalogUserSettings'
+                    -CIMInstanceName 'MicrosoftGraphIntuneSettingsCatalogUserSettings_IntuneAccountProtectionPolicyWindows10'
                 if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.UserSettings = $complexTypeStringResult
