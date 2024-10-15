@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* IntuneDerivedCredential
+  * Initial release.
 * AADAdminConsentRequestPolicy
   * Initial release.
 * AADApplication
@@ -18,6 +20,8 @@
   * Initial release.
 * AADEntitlementManagementSettings
   * Added support for ApplicationSecret
+* AADIdentityGovernanceLifecycleWorkflow
+  * Initial release.
 * AADLifecycleWorkflowSettings
   * Initial release.
 * ADOPermissionGroupSettings
@@ -40,6 +44,12 @@
   * Migrate to new Settings Catalog cmdlets.
 * IntuneMobileAppsMacOSLobApp
   * Initial release
+* PPAdminDLPPolicy
+  * Initial release.
+* PPDLPPolicyConnectorConfigurations
+  * Initial release.
+* PPPowerAppPolicyUrlPatterns
+  * Initial release.
 * TeamsGroupPolicyAssignments
   * FIXES [#5179](https://github.com/microsoft/Microsoft365DSC/issues/5179)
 * M365DSCDRGUtil
