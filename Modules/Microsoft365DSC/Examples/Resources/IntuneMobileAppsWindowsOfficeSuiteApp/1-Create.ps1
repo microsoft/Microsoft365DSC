@@ -22,41 +22,48 @@ Configuration Example
     # Import-DscResource -ModuleName Microsoft365DSC
     node localhost
     {
-        # IntuneMobileAppsWindowsOfficeSuiteApp "IntuneMobileAppsWindowsOfficeSuiteApp-TeamsForBusinessInstaller"
-        # {
-        #     Id                    = "8d027f94-0682-431e-97c1-827d1879fa79";
-        #     Description           = "TeamsForBusinessInstaller";
-        #     Developer             = "Contoso";
-        #     DisplayName           = "TeamsForBusinessInstaller";
-        #     Ensure                = "Present";
-        #     InformationUrl        = "";
-        #     IsFeatured            = $False;
-        #     MinimumSupportedOperatingSystem = MSFT_DeviceManagementMinimumOperatingSystem{
-        #         v11_0 = $true
-        #     }
-        #     Notes                 = "";
-        #     Owner                 = "";
-        #     PrivacyInformationUrl = "";
-        #     Publisher             = "Contoso";
-        #     Assignments          = @(
-        #             MSFT_DeviceManagementMobileAppAssignment{
-        #                 groupDisplayName = 'All devices'
-        #                 deviceAndAppManagementAssignmentFilterType = 'none'
-        #                 dataType = '#microsoft.graph.allDevicesAssignmentTarget'
-        #                 intent = 'required'
-        #             }
-        #             MSFT_DeviceManagementMobileAppAssignment{
-        #                 deviceAndAppManagementAssignmentFilterType = 'none'
-        #                 dataType = '#microsoft.graph.groupAssignmentTarget'
-        #                 groupId = '57b5e81c-85bb-4644-a4fd-33b03e451c89'
-        #                 intent = 'required'
-        #             }
-        #         );
-        #     Categories           = @(
-        #         MSFT_DeviceManagementMobileAppCategory {
-        #             Id  = '1bff2652-03ec-4a48-941c-152e93736515'
-        #             DisplayName = 'Kajal 3'
-        #         });
-        # }
+        IntuneMobileAppsWindowsOfficeSuiteApp "IntuneMobileAppsWindowsOfficeSuiteApp-Microsoft 365 Apps for Windows 10 and later"
+        {
+            Id                    = "8e683524-4ec1-4813-bb3e-6256b2f293d"
+            Categories            = @()
+            Description           = "Microsoft 365 Apps for Windows 10 and laterr"
+            DisplayName           = "Microsoft 365 Apps for Windows 10 and later"
+            Ensure                = "Present";
+            InformationUrl        = "";
+            IsFeatured            = $False;
+            Notes                 = ""
+            PrivacyInformationUrl = ""
+            RoleScopeTagIds       = @()
+            ExcludedApps          = (New-CimInstance -ClassName MSFT_DeviceManagementMobileAppExcludedApp -Property @{
+                teams = $false
+                sharePointDesigner = $true
+                powerPoint = $false
+                outlook = $false
+                groove = $true
+                word = $false
+                lync = $true
+                oneNote = $false
+                oneDrive = $false
+                publisher = $false
+                bing = $false
+                visio = $false
+                access = $false
+                infoPath = $true
+                excel = $false
+            } -ClientOnly)
+            Assignments          = @(
+                MSFT_DeviceManagementMobileAppAssignment{
+                    deviceAndAppManagementAssignmentFilterType = 'none'
+                    dataType = '#microsoft.graph.groupAssignmentTarget'
+                    groupId = '42c02b60-f28c-4eef-b3e1-973184cc4a6c'
+                    intent = 'required'
+                }
+            );
+            Categories           = @(
+                MSFT_DeviceManagementMobileAppCategory {
+                    Id  = '8e683524-4ec1-4813-bb3e-6256b2f293d8'
+                    DisplayName = 'Productivity'
+                });
+        }
     }
 }

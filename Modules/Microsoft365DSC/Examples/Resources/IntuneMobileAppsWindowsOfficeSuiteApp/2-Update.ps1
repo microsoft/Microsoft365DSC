@@ -18,9 +18,52 @@ Configuration Example
         [System.String]
         $CertificateThumbprint
     )
+
     Import-DscResource -ModuleName Microsoft365DSC
     node localhost
     {
-        
+        IntuneMobileAppsWindowsOfficeSuiteApp "IntuneMobileAppsWindowsOfficeSuiteApp-Microsoft 365 Apps for Windows 10 and later"
+        {
+            Id                    = "8e683524-4ec1-4813-bb3e-6256b2f293d"
+            Categories            = @()
+            Description           = "Microsoft 365 Apps for Windows 10 and laterr"
+            DisplayName           = "Microsoft 365 Apps for Windows 10 and later"
+            Ensure                = "Present";
+            InformationUrl        = "";
+            IsFeatured            = $False;
+            Notes                 = ""
+            PrivacyInformationUrl = ""
+            RoleScopeTagIds       = @()
+            ExcludedApps          = (New-CimInstance -ClassName MSFT_DeviceManagementMobileAppExcludedApp -Property @{
+                teams = $false
+                sharePointDesigner = $true
+                powerPoint = $false
+                outlook = $false
+                groove = $true
+                word = $false
+                lync = $true
+                oneNote = $false
+                oneDrive = $false
+                publisher = $false
+                bing = $false
+                visio = $false
+                access = $false
+                infoPath = $true
+                excel = $false
+            } -ClientOnly)
+            Assignments          = @(
+                MSFT_DeviceManagementMobileAppAssignment{
+                    deviceAndAppManagementAssignmentFilterType = 'none'
+                    dataType = '#microsoft.graph.groupAssignmentTarget'
+                    groupId = '42c02b60-f28c-4eef-b3e1-973184cc4a6c'
+                    intent = 'required'
+                }
+            );
+            Categories           = @(
+                MSFT_DeviceManagementMobileAppCategory {
+                    Id  = '8e683524-4ec1-4813-bb3e-6256b2f293d8'
+                    DisplayName = 'Productivity'
+                });
+        }
     }
 }
