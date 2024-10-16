@@ -52,6 +52,10 @@
   * Initial release.
 * PPPowerAppPolicyUrlPatterns
   * Initial release.
+* TeamsClientConfiguration
+  * Fixed bug where RestrictedSenderList was always empty in the MSFT_TeamsClientConfiguration resource
+    FIXES [#5190](https://github.com/microsoft/Microsoft365DSC/issues/5190)
+  * Changed Set-TargetResource to always use semicolon as separator as mentioned in the MS documentation
 * TeamsUpgradePolicy
   * Added support for tenant wide changes using the * value for users.
     FIXES [#5174](https://github.com/microsoft/Microsoft365DSC/issues/5174)
