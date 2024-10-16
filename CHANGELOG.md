@@ -46,6 +46,8 @@
   * Initial release
 * IntuneSecurityBaselineMicrosoft365AppsForEnterprise
   * Initial release
+* IntuneSecurityBaselineMicrosoftEdge
+  * Initial release
 * PPAdminDLPPolicy
   * Initial release.
 * PPDLPPolicyConnectorConfigurations
