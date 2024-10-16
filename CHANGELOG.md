@@ -8,7 +8,8 @@
   * Fixed an issue trying to retrieve the beta instance.
   * Added support for OnPremisesPublishing.
   * Added support for ApplicationTemplate.
-  * Fixes an issue with granting the permissions.
+  * Fixes an issue where trying to apply permissions complained about
+    duplicate entries.
 * AADAuthenticationRequirement
   * Initial release.
 * AADConnectorGroupApplicationProxy
