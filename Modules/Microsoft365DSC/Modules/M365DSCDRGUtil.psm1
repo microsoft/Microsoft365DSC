@@ -2121,6 +2121,7 @@ function Get-IntuneSettingCatalogPolicySettingDSCValue
         $matchCombined = $false
         $matchesId = $false
         $matchesOffsetUri = $false
+        $offsetUriFound = $false
         $settingDefinitions = $SettingTemplates.SettingDefinitions `
             | Where-Object -FilterScript { $_.Name -eq $key }
 
@@ -2206,6 +2207,19 @@ function Get-IntuneSettingCatalogPolicySettingDSCValue
                         $global:excludedDscParams += $key
                         $matchesId = $true
                         $SettingDefinition = $_
+                    }
+                }
+
+                if (-not $matchesId)
+                {
+                    $definition = Get-SettingDefinitionFromNameWithParentFromOffsetUri -OffsetUriName $key -SettingDefinitions $SettingTemplates.SettingDefinitions
+                    if ($null -ne $definition)
+                    {
+                        $offsetUriFound = $true
+                        if ($SettingDefinition.Id -eq $definition.Id)
+                        {
+                            $matchesOffsetUri = $true
+                        }
                     }
                 }
             }
@@ -2334,6 +2348,7 @@ function Get-SettingDefinitionFromNameWithParentFromOffsetUri
         $settingsWithSameName = $filteredDefinitions
         foreach ($definition in $filteredDefinitions)
         {
+            $parentSetting = Get-ParentSettingDefinition -SettingDefinition $definition -AllSettingDefinitions $SettingDefinitions
             $skip = 0
             $breakCounter = 0
             $newSettingName = $settingName
@@ -2361,7 +2376,18 @@ function Get-SettingDefinitionFromNameWithParentFromOffsetUri
 
             if ($breakCounter -eq 8)
             {
-                throw "Could not find a unique setting definition for $settingName with parent from OffsetUri $OffsetUriName"
+                if ($null -ne $parentSetting)
+                {
+                    # Alternative way if no unique setting name can be found
+                    $parentSettingIdProperty = $parentSetting.Id.Split('_')[-1]
+                    $parentSettingIdWithoutProperty = $parentSetting.Id.Replace("_$parentSettingIdProperty", "")
+                    # We can't use the entire setting here, because the child setting id does not have to come after the parent setting id
+                    $settingNameV2 = $definition.Id.Replace($parentSettingIdWithoutProperty + "_", "").Replace($parentSettingIdProperty + "_", "")
+                    if ($settingNameV2 -eq $OffsetUriName)
+                    {
+                        $newSettingName = $settingNameV2
+                    }
+                }
             }
 
             if ($newSettingName -eq $OffsetUriName)
@@ -2423,6 +2449,12 @@ function Get-SettingDefinitionNameWithParentFromOffsetUri {
     {
         $splittedOffsetUri = $splittedOffsetUri[1..($splittedOffsetUri.Length - 1)]
     }
+
+    if ($Skip -gt $splittedOffsetUri.Length - 1)
+    {
+        return $SettingName
+    }
+
     $splittedOffsetUri = $splittedOffsetUri[0..($splittedOffsetUri.Length - 1 - $Skip)]
     $traversed = $false
     while (-not $traversed -and $splittedOffsetUri.Length -gt 1) # Prevent adding the first element of the OffsetUri

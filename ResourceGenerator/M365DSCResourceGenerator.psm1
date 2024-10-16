@@ -4035,6 +4035,12 @@ function Get-SettingDefinitionNameWithParentFromOffsetUri {
     {
         $splittedOffsetUri = $splittedOffsetUri[1..($splittedOffsetUri.Length - 1)]
     }
+
+    if ($Skip -gt $splittedOffsetUri.Length - 1)
+    {
+        return $SettingName
+    }
+
     $splittedOffsetUri = $splittedOffsetUri[0..($splittedOffsetUri.Length - 1 - $Skip)]
     $traversed = $false
     while (-not $traversed -and $splittedOffsetUri.Length -gt 1) # Prevent adding the first element of the OffsetUri
