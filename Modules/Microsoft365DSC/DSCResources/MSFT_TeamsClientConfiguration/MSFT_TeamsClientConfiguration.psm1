@@ -140,7 +140,7 @@ function Get-TargetResource
             ManagedIdentity                  = $ManagedIdentity.IsPresent
             AccessTokens                     = $AccessTokens
         }
-        if ([System.String]::IsNullOrEmpty($RestrictedSenderList))
+        if ([System.String]::IsNullOrEmpty($Config.RestrictedSenderList))
         {
             $result.Remove('RestrictedSenderList') | Out-Null
         }
