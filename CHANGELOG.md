@@ -44,6 +44,8 @@
   * Migrate to new Settings Catalog cmdlets.
 * IntuneMobileAppsMacOSLobApp
   * Initial release
+* IntuneMobileAppsWindowsOfficeSuiteApp
+  * Initial release
 * IntuneSecurityBaselineMicrosoft365AppsForEnterprise
   * Initial release
 * IntuneSecurityBaselineMicrosoftEdge
