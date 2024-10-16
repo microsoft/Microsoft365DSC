@@ -2,14 +2,14 @@
 
 # UNRELEASED
 
-* IntuneDerivedCredential
-  * Initial release.
 * AADAdminConsentRequestPolicy
   * Initial release.
 * AADApplication
   * Fixed an issue trying to retrieve the beta instance.
   * Added support for OnPremisesPublishing.
   * Added support for ApplicationTemplate.
+  * Fixes an issue where trying to apply permissions complained about
+    duplicate entries.
 * AADAuthenticationRequirement
   * Initial release.
 * AADConnectorGroupApplicationProxy
@@ -38,6 +38,8 @@
 * IntuneAppAndBrowserIsolationPolicyWindows10
   * Initial release.
     FIXES [#3028](https://github.com/microsoft/Microsoft365DSC/issues/3028)
+* IntuneDerivedCredential
+  * Initial release.
 * IntuneDeviceConfigurationIdentityProtectionPolicyWindows10
   * Added deprecation notice.
 * IntuneEndpointDetectionAndResponsePolicyWindows10
