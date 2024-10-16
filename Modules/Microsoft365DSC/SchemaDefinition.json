@@ -6025,6 +6025,21 @@
                        ]
     },
     {
+        "ClassName":  "MSFT_AADServicePrincipalDelegatedPermissionClassification",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Classification",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "PermissionName",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
         "ClassName":  "MSFT_AADServicePrincipal",
         "Parameters":  [
                            {
@@ -6110,6 +6125,11 @@
                            {
                                "CIMType":  "String[]",
                                "Name":  "Tags",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_AADServicePrincipalDelegatedPermissionClassification[]",
+                               "Name":  "DelegatedPermissionClassifications",
                                "Option":  "Write"
                            },
                            {
