@@ -24,6 +24,8 @@
   * Initial release.
 * AADLifecycleWorkflowSettings
   * Initial release.
+* AADServicePrincipal
+  * Adding Delegated Permission Classification Property
 * ADOPermissionGroupSettings
   * Initial release.
 * EXOATPBuiltInProtectionRule
