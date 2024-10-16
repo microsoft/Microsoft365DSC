@@ -2663,6 +2663,18 @@
                     TenantId              = $TenantId;
                     CertificateThumbprint = $CertificateThumbprint;
                 }
+                IntuneSecurityBaselineMicrosoftEdge 'mySecurityBaselineMicrosoftEdge'
+                {
+                    DisplayName           = 'test'
+                    InsecurePrivateNetworkRequestsAllowed                   = "0";
+                    InternetExplorerIntegrationReloadInIEModeAllowed        = "0";
+                    InternetExplorerIntegrationZoneIdentifierMhtFileAllowed = "0";
+                    InternetExplorerModeToolbarButtonEnabled                = "0";
+                    Ensure                = 'Present'
+                    ApplicationId         = $ApplicationId;
+                    TenantId              = $TenantId;
+                    CertificateThumbprint = $CertificateThumbprint;
+                }
                 IntuneSettingCatalogASRRulesPolicyWindows10 'myASRRulesPolicy'
                 {
                     DisplayName                                                                = 'asr 2'
