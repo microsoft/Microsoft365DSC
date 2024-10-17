@@ -326,6 +326,14 @@
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                 }
+                AADIdentityGovernanceProgram 'AADIdentityGovernanceProgram-Example'
+                {
+                    ApplicationId           = $ApplicationId
+                    TenantId                = $TenantId
+                    CertificateThumbprint   = $CertificateThumbprint
+                    DisplayName             = "Example";
+                    Ensure                  = "Absent";
+                }
                 AADNamedLocationPolicy 'CompanyNetwork'
                 {
                     DisplayName = "Company Network"

@@ -2,6 +2,13 @@
 
 # UNRELEASED
 
+* AADIdentityGovernanceProgram
+  * Initial release.
+* IntuneAppAndBrowserIsolationPolicyWindows10ConfigMgr
+  * Initial release.
+
+# 1.24.1016.1
+
 * AADAdminConsentRequestPolicy
   * Initial release.
 * AADApplication
@@ -40,8 +47,6 @@
 * IntuneAppAndBrowserIsolationPolicyWindows10
   * Initial release.
     FIXES [#3028](https://github.com/microsoft/Microsoft365DSC/issues/3028)
-* IntuneAppAndBrowserIsolationPolicyWindows10ConfigMgr
-  * Initial release. 
 * IntuneDerivedCredential
   * Initial release.
 * IntuneDeviceConfigurationIdentityProtectionPolicyWindows10
@@ -83,6 +88,8 @@
 
 # 1.24.1002.1
 
+* AADAdministrativeUnit
+  * Added support for property IsMemberManagementRestricted.
 * AADApplication
   * Added AppRoles
   * Added AuthenticationBehavior
