@@ -1,5 +1,84 @@
 # Change log for Microsoft365DSC
 
+# 1.24.1016.1
+
+* AADAdminConsentRequestPolicy
+  * Initial release.
+* AADApplication
+  * Fixed an issue trying to retrieve the beta instance.
+  * Added support for OnPremisesPublishing.
+  * Added support for ApplicationTemplate.
+  * Fixes an issue where trying to apply permissions complained about
+    duplicate entries.
+* AADAuthenticationRequirement
+  * Initial release.
+* AADConnectorGroupApplicationProxy
+  * Initial release.
+* AADCustomSecurityAttributeDefinition
+  * Initial release.
+* AADDeviceRegistrationPolicy
+  * Initial release.
+* AADEntitlementManagementSettings
+  * Added support for ApplicationSecret
+* AADIdentityGovernanceLifecycleWorkflow
+  * Initial release.
+* AADLifecycleWorkflowSettings
+  * Initial release.
+* AADServicePrincipal
+  * Adding Delegated Permission Classification Property
+* ADOPermissionGroupSettings
+  * Initial release.
+* EXOATPBuiltInProtectionRule
+  * Initial release.
+* EXOMigrationEndpoint
+  * Initial Release
+* IntuneAccountProtectionPolicy
+  * Added deprecation notice.
+* IntuneAccountProtectionPolicyWindows10
+  * Initial Release
+    FIXES [#5073](https://github.com/microsoft/Microsoft365DSC/issues/5073)
+* IntuneAppAndBrowserIsolationPolicyWindows10
+  * Initial release.
+    FIXES [#3028](https://github.com/microsoft/Microsoft365DSC/issues/3028)
+* IntuneDerivedCredential
+  * Initial release.
+* IntuneDeviceConfigurationIdentityProtectionPolicyWindows10
+  * Added deprecation notice.
+* IntuneEndpointDetectionAndResponsePolicyWindows10
+  * Migrate to new Settings Catalog cmdlets.
+* IntuneMobileAppsMacOSLobApp
+  * Initial release
+* IntuneMobileAppsWindowsOfficeSuiteApp
+  * Initial release
+* IntuneSecurityBaselineMicrosoft365AppsForEnterprise
+  * Initial release
+* IntuneSecurityBaselineMicrosoftEdge
+  * Initial release
+* PPAdminDLPPolicy
+  * Initial release.
+* PPDLPPolicyConnectorConfigurations
+  * Initial release.
+* PPPowerAppPolicyUrlPatterns
+  * Initial release.
+* TeamsClientConfiguration
+  * Fixed bug where RestrictedSenderList was always empty in the MSFT_TeamsClientConfiguration resource
+    FIXES [#5190](https://github.com/microsoft/Microsoft365DSC/issues/5190)
+  * Changed Set-TargetResource to always use semicolon as separator as mentioned in the MS documentation
+* TeamsUpgradePolicy
+  * Added support for tenant wide changes using the * value for users.
+    FIXES [#5174](https://github.com/microsoft/Microsoft365DSC/issues/5174)
+* M365DSCDRGUtil
+  * Fixes an issue for the handling of skipped one-property elements in the
+    Settings Catalog. FIXES [#5086](https://github.com/microsoft/Microsoft365DSC/issues/5086)
+  * Add Set support for secret Settings Catalog values
+  * Removed unused functions
+  * Add support for device / user scoped settings.
+* ResourceGenerator
+  * Add support for device / user scoped settings.
+* DEPENDENCIES
+  * Updated DSCParser to version 2.0.0.11
+  * Updated ReverseDSC to version 2.0.0.21
+
 # 1.24.1002.1
 
 * AADAdministrativeUnit

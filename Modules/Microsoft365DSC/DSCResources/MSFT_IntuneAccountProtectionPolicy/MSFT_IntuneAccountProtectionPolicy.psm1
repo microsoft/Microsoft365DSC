@@ -371,6 +371,9 @@ function Set-TargetResource
         $AccessTokens
     )
 
+    Write-Warning -Message "The resource 'IntuneAccountProtectionPolicy' is deprecated. It will be removed in a future release. Please use 'IntuneAccountProtectionPolicyWindows10' instead."
+    Write-Warning -Message "For more information, please visit https://learn.microsoft.com/en-us/mem/intune/fundamentals/whats-new#consolidation-of-intune-profiles-for-identity-protection-and-account-protection-"
+
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 

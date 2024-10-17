@@ -21,6 +21,13 @@ Configuration Example
     Import-DscResource -ModuleName Microsoft365DSC
     node localhost
     {
-        
+        PPAdminDLPPolicy "PPAdminDLPPolicy-Test"
+        {
+            ApplicationId         = $ApplicationId;
+            CertificateThumbprint = $CertificateThumbprint;
+            DisplayName           = "SuperTest";
+            Ensure                = "Absent";
+            TenantId              = $TenantId;
+        }
     }
 }

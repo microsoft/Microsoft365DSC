@@ -34,6 +34,35 @@
         $Domain = $TenantId
         Node Localhost
         {
+                AADAdminConsentRequestPolicy 'AADAdminConsentRequestPolicy'
+                {
+                    ApplicationId         = $ApplicationId;
+                    CertificateThumbprint = $CertificateThumbprint;
+                    IsEnabled             = $True;
+                    IsSingleInstance      = "Yes";
+                    NotifyReviewers       = $False;
+                    RemindersEnabled      = $True;
+                    RequestDurationInDays = 30;
+                    Reviewers             =                 @(
+                        MSFT_AADAdminConsentRequestPolicyReviewer {
+                             ReviewerType = 'User'
+                             ReviewerId   = "AlexW@$TenantId"
+                        }
+                        MSFT_AADAdminConsentRequestPolicyReviewer {
+                             ReviewerType = 'Group'
+                             ReviewerId   = 'Communications'
+                        }
+                        MSFT_AADAdminConsentRequestPolicyReviewer {
+                             ReviewerType = 'Role'
+                             ReviewerId   = 'Attack Payload Author'
+                        }
+                        MSFT_AADAdminConsentRequestPolicyReviewer {
+                             ReviewerType = 'Role'
+                             ReviewerId   = 'Attack Simulation Administrator'
+                        }
+                        );
+                    TenantId              = $TenantId;
+                }
                 AADAdministrativeUnit 'TestUnit'
                 {
                     DisplayName                   = 'Test-Unit'
@@ -408,6 +437,14 @@
                     );
                     State                           = "enabled";
                 }
+                AADAuthenticationRequirement 'AADAuthenticationRequirement-TestMailbox109@xtasdftestorg.onmicrosoft.com'
+                {
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
+                    PerUserMfaState       = "disabled";
+                    UserPrincipalName     = "TestMailbox109@$OrganizationName";
+                }
                 AADAuthenticationStrengthPolicy 'AADAuthenticationStrengthPolicy-Example'
                 {
                     AllowedCombinations  = @("windowsHelloForBusiness","fido2","deviceBasedPush"); # Updated Property
@@ -458,6 +495,16 @@
                     SignInFrequencyType                      = "hours";
                     SignInFrequencyValue                     = 2; # Updated Porperty
                     State                                    = "disabled";
+                }
+                AADConnectorGroupApplicationProxy 'AADConnectorGroupApplicationProxy-testgroup'
+                {
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
+                    Ensure                = "Present";
+                    Id                    = "4984dcf7-d9e9-4663-90b4-5db09f92a669";
+                    Name                  = "testgroup-new";
+                    Region                = "nam";
                 }
                 AADCrossTenantAccessPolicy 'AADCrossTenantAccessPolicy'
                 {
@@ -593,6 +640,53 @@
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                     Ensure                       = "Present";
+                }
+                AADCustomSecurityAttributeDefinition 'AADCustomSecurityAttributeDefinition-ShoeSize'
+                {
+                    ApplicationId           = $ApplicationId;
+                    AttributeSet            = "TestAttributeSet";
+                    CertificateThumbprint   = $CertificateThumbprint;
+                    Ensure                  = "Present";
+                    IsCollection            = $False;
+                    IsSearchable            = $True;
+                    Name                    = "ShoeSize";
+                    Status                  = "Available";
+                    TenantId                = $TenantId;
+                    Type                    = "String";
+                    UsePreDefinedValuesOnly = $False;
+                    Description             = "What size of shoe is the person wearing? Drifted" # Drift
+                }
+                AADDeviceRegistrationPolicy 'MyDeviceRegistrationPolicy'
+                {
+                    ApplicationId                           = $ApplicationId;
+                    AzureADAllowedToJoin                    = "Selected";
+                    AzureADAllowedToJoinGroups              = @();
+                    AzureADAllowedToJoinUsers               = @("AlexW@M365x73318397.OnMicrosoft.com");
+                    AzureAdJoinLocalAdminsRegisteringGroups = @();
+                    AzureAdJoinLocalAdminsRegisteringMode   = "Selected";
+                    AzureAdJoinLocalAdminsRegisteringUsers  = @("AllanD@M365x73318397.OnMicrosoft.com");
+                    CertificateThumbprint                   = $CertificateThumbprint;
+                    IsSingleInstance                        = "Yes";
+                    LocalAdminPasswordIsEnabled             = $False;
+                    LocalAdminsEnableGlobalAdmins           = $True;
+                    MultiFactorAuthConfiguration            = $False;
+                    TenantId                                = $TenantId;
+                    UserDeviceQuota                         = 50;
+                }
+                AADDomain 'AADDomain-Contoso'
+                {
+                    ApplicationId                    = $ApplicationId;
+                    AuthenticationType               = "Managed";
+                    CertificateThumbprint            = $CertificateThumbprint;
+                    Ensure                           = "Present";
+                    Id                               = "contoso.com";
+                    IsAdminManaged                   = $True;
+                    IsDefault                        = $True;
+                    IsRoot                           = $True;
+                    IsVerified                       = $False; #Drift
+                    PasswordNotificationWindowInDays = 14;
+                    PasswordValidityPeriodInDays     = 2147483647;
+                    TenantId                         = $TenantId;
                 }
                 AADEntitlementManagementAccessPackage 'myAccessPackage'
                 {
@@ -766,6 +860,60 @@
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
+                }
+                AADIdentityGovernanceLifecycleWorkflow 'AADIdentityGovernanceLifecycleWorkflow-Onboard pre-hire employee updated version'
+                {
+                    Category             = "joiner";
+                    #updated description
+                    Description          = "Updated description the onboard of prehire employee";
+                    DisplayName          = "Onboard pre-hire employee updated version";
+                    Ensure               = "Present";
+                    ExecutionConditions  = MSFT_IdentityGovernanceWorkflowExecutionConditions {
+                        ScopeValue = MSFT_IdentityGovernanceScope {
+                            #updated rule
+                            Rule = '(not (country eq ''America''))'
+                            ODataType = '#microsoft.graph.identityGovernance.ruleBasedSubjectSet'
+                        }
+                        TriggerValue = MSFT_IdentityGovernanceTrigger {
+                            OffsetInDays = 4
+                            TimeBasedAttribute = 'employeeHireDate'
+                            ODataType = '#microsoft.graph.identityGovernance.timeBasedAttributeTrigger'
+                        }
+                        ODataType = '#microsoft.graph.identityGovernance.triggerAndScopeBasedConditions'
+                    };
+                    IsEnabled            = $True;
+                    IsSchedulingEnabled  = $False;
+                    Tasks                = @(
+                        MSFT_AADIdentityGovernanceTask {
+                            DisplayName       = 'Add user to groups'
+                            #updated description
+                            Description       = 'Add user to selected groups updated'
+                            Category          = 'joiner,leaver,mover'
+                            IsEnabled         = $True
+                            ExecutionSequence = 1
+                            ContinueOnError   = $True
+                            TaskDefinitionId   = '22085229-5809-45e8-97fd-270d28d66910'
+                            Arguments         = @(
+                                MSFT_AADIdentityGovernanceTaskArguments {
+                                    Name  = 'groupID'
+                                    Value = '7ad01e00-8c3a-42a6-baaf-39f2390b2565'
+                                }
+                            )
+                        }
+                    );
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
+                }
+                AADLifecycleWorkflowSettings 'AADLifecycleWorkflowSettings'
+                {
+                    ApplicationId                   = $ApplicationId;
+                    CertificateThumbprint           = $CertificateThumbprint;
+                    IsSingleInstance                = "Yes";
+                    SenderDomain                    = "microsoft.com";
+                    TenantId                        = $TenantId;
+                    UseCompanyBranding              = $True;
+                    WorkflowScheduleIntervalInHours = 10;
                 }
                 AADNamedLocationPolicy 'CompanyNetwork'
                 {

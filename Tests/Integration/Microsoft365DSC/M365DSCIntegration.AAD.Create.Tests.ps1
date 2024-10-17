@@ -149,6 +149,16 @@
                     SignInFrequencyValue                     = 1;
                     State                                    = "disabled";
                 }
+                AADConnectorGroupApplicationProxy 'AADConnectorGroupApplicationProxy-testgroup'
+                {
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
+                    Ensure                = "Present";
+                    Id                    = "4984dcf7-d9e9-4663-90b4-5db09f92a669";
+                    Name                  = "testgroup";
+                    Region                = "nam";
+                }
                 AADCrossTenantAccessPolicyConfigurationPartner 'AADCrossTenantAccessPolicyConfigurationPartner'
                 {
                     PartnerTenantId              = "e7a80bcf-696e-40ca-8775-a7f85fbb3ebc"; # O365DSC.onmicrosoft.com
@@ -180,6 +190,36 @@
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                     Ensure                       = "Present";
+                }
+                AADCustomSecurityAttributeDefinition 'AADCustomSecurityAttributeDefinition-ShoeSize'
+                {
+                    ApplicationId           = $ApplicationId;
+                    AttributeSet            = "TestAttributeSet";
+                    CertificateThumbprint   = $CertificateThumbprint;
+                    Ensure                  = "Present";
+                    IsCollection            = $False;
+                    IsSearchable            = $True;
+                    Name                    = "ShoeSize";
+                    Status                  = "Available";
+                    TenantId                = $TenantId;
+                    Type                    = "String";
+                    UsePreDefinedValuesOnly = $False;
+                    Description             = "What size of shoe is the person wearing?"
+                }
+                AADDomain 'AADDomain-Contoso'
+                {
+                    ApplicationId                    = $ApplicationId;
+                    AuthenticationType               = "Managed";
+                    CertificateThumbprint            = $CertificateThumbprint;
+                    Ensure                           = "Present";
+                    Id                               = "contoso.com";
+                    IsAdminManaged                   = $True;
+                    IsDefault                        = $True;
+                    IsRoot                           = $True;
+                    IsVerified                       = $True;
+                    PasswordNotificationWindowInDays = 14;
+                    PasswordValidityPeriodInDays     = 2147483647;
+                    TenantId                         = $TenantId;
                 }
                 AADEntitlementManagementAccessPackage 'myAccessPackage'
                 {
@@ -316,6 +356,47 @@
                     Visibility      = "Private"
                     Owners          = @("admin@$TenantId", "AdeleV@$TenantId")
                     Ensure          = "Present"
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
+                }
+                AADIdentityGovernanceLifecycleWorkflow 'AADIdentityGovernanceLifecycleWorkflow-Onboard pre-hire employee updated version'
+                {
+                    Category             = "joiner";
+                    Description          = "Description the onboard of prehire employee";
+                    DisplayName          = "Onboard pre-hire employee updated version";
+                    Ensure               = "Present";
+                    ExecutionConditions  = MSFT_IdentityGovernanceWorkflowExecutionConditions {
+                        ScopeValue = MSFT_IdentityGovernanceScope {
+                            Rule = '(not (country eq ''Brazil''))'
+                            ODataType = '#microsoft.graph.identityGovernance.ruleBasedSubjectSet'
+                        }
+                        TriggerValue = MSFT_IdentityGovernanceTrigger {
+                            OffsetInDays = 4
+                            TimeBasedAttribute = 'employeeHireDate'
+                            ODataType = '#microsoft.graph.identityGovernance.timeBasedAttributeTrigger'
+                        }
+                        ODataType = '#microsoft.graph.identityGovernance.triggerAndScopeBasedConditions'
+                    };
+                    IsEnabled            = $True;
+                    IsSchedulingEnabled  = $False;
+                    Tasks                = @(
+                        MSFT_AADIdentityGovernanceTask {
+                            DisplayName       = 'Add user to groups'
+                            Description       = 'Add user to selected groups'
+                            Category          = 'joiner,leaver,mover'
+                            IsEnabled         = $True
+                            ExecutionSequence = 1
+                            ContinueOnError   = $True
+                            TaskDefinitionId   = '22085229-5809-45e8-97fd-270d28d66910'
+                            Arguments         = @(
+                                MSFT_AADIdentityGovernanceTaskArguments {
+                                    Name  = 'groupID'
+                                    Value = '7ad01e00-8c3a-42a6-baaf-39f2390b2565'
+                                }
+                            )
+                        }
+                    );
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint

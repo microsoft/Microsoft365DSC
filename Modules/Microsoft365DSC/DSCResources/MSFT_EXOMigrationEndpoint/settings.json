@@ -1,0 +1,34 @@
+﻿{
+    "resourceName": "EXOMigrationEndpoint",
+    "description": "Use this resource to create and monitor migration endpoint in exchange",
+    "roles": {
+        "read": [
+            "Global Reader"
+        ],
+        "update": [
+            "Exchange Administrator"
+        ]
+    },
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [],
+                "update": []
+            },
+            "application": {
+                "read": [],
+                "update": []
+            }
+        },
+        "exchange": {
+            "requiredroles": [
+                "Recipient Policies",
+                "View-Only Recipients",
+                "Mail Recipient Creation",
+                "View-Only Configuration",
+                "Mail Recipients"
+            ],
+            "requiredrolegroups": "Organization Management"
+        }
+    }
+}
