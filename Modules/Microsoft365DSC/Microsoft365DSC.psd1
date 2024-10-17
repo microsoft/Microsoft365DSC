@@ -219,7 +219,7 @@
   * Add support for device / user scoped settings.
 * DEPENDENCIES
   * Updated DSCParser to version 2.0.0.11
-  * Updated ReverseDSC to version 2.0.0.21'
+  * Updated ReverseDSC to version 2.0.0.22'
 
       # Flag to indicate whether the module requires explicit user acceptance for install/update
       # RequireLicenseAcceptance = $false
