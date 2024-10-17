@@ -231,34 +231,6 @@ function Get-TargetResource
             }
 
             $result = @{
-<<<<<<< HEAD
-                AppId                     = $AADServicePrincipal.AppId
-                AppRoleAssignedTo         = $AppRoleAssignedToValues
-                ObjectID                  = $AADServicePrincipal.Id
-                DisplayName               = $AADServicePrincipal.DisplayName
-                AlternativeNames          = $AADServicePrincipal.AlternativeNames
-                AccountEnabled            = [boolean]$AADServicePrincipal.AccountEnabled
-                AppRoleAssignmentRequired = $AADServicePrincipal.AppRoleAssignmentRequired
-                ErrorUrl                  = $AADServicePrincipal.ErrorUrl
-                Homepage                  = $AADServicePrincipal.Homepage
-                LogoutUrl                 = $AADServicePrincipal.LogoutUrl
-                Owners                    = $ownersValues
-                PreferredSingleSignOnMode = $AADServicePrincipal.PreferredSingleSignOnMode
-                PublisherName             = $AADServicePrincipal.PublisherName
-                ReplyURLs                 = $AADServicePrincipal.ReplyURLs
-                SamlMetadataURL           = $AADServicePrincipal.SamlMetadataURL
-                ServicePrincipalNames     = $AADServicePrincipal.ServicePrincipalNames
-                ServicePrincipalType      = $AADServicePrincipal.ServicePrincipalType
-                Tags                      = $AADServicePrincipal.Tags
-                Ensure                    = 'Present'
-                Credential                = $Credential
-                ApplicationId             = $ApplicationId
-                ApplicationSecret         = $ApplicationSecret
-                TenantId                  = $TenantId
-                CertificateThumbprint     = $CertificateThumbprint
-                Managedidentity           = $ManagedIdentity.IsPresent
-                AccessTokens              = $AccessTokens
-=======
                 AppId                              = $AADServicePrincipal.AppId
                 AppRoleAssignedTo                  = $AppRoleAssignedToValues
                 ObjectID                           = $AADServicePrincipal.Id
@@ -271,6 +243,7 @@ function Get-TargetResource
                 Homepage                           = $AADServicePrincipal.Homepage
                 LogoutUrl                          = $AADServicePrincipal.LogoutUrl
                 Owners                             = $ownersValues
+                PreferredSingleSignOnMode          = $AADServicePrincipal.PreferredSingleSignOnMode
                 PublisherName                      = $AADServicePrincipal.PublisherName
                 ReplyURLs                          = $AADServicePrincipal.ReplyURLs
                 SamlMetadataURL                    = $AADServicePrincipal.SamlMetadataURL
@@ -285,7 +258,6 @@ function Get-TargetResource
                 CertificateThumbprint              = $CertificateThumbprint
                 Managedidentity                    = $ManagedIdentity.IsPresent
                 AccessTokens                       = $AccessTokens
->>>>>>> 120553154f48aa5f7a810d7e4cc1583c3fdbb067
             }
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
             return $result
@@ -503,18 +475,13 @@ function Set-TargetResource
         Write-Verbose -Message "CurrentParameters: $($currentParameters | Out-String)"
         Write-Verbose -Message "ServicePrincipalID: $($currentAADServicePrincipal.ObjectID)"
         $currentParameters.Remove('AppRoleAssignedTo') | Out-Null
-<<<<<<< HEAD
+        $currentParameters.Remove('DelegatedPermissionClassifications') | Out-Null
         if ($preferredSingleSignOnMode -eq 'saml')
         {
             $identifierUris = $ServicePrincipalNames | Where-Object { $_ -notmatch $AppId }
             $currentParameters.Remove('ServicePrincipalNames')
         }
-=======
-        $currentParameters.Remove('Owners') | Out-Null
-        $currentParameters.Remove('DelegatedPermissionClassifications') | Out-Null
->>>>>>> 120553154f48aa5f7a810d7e4cc1583c3fdbb067
         Update-MgServicePrincipal -ServicePrincipalId $currentAADServicePrincipal.ObjectID @currentParameters
-
         if ($identifierUris)
         {
             Write-Verbose -Message "Updating the Application ID Uri on the application instance."
