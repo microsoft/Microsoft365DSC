@@ -107,6 +107,26 @@ function Get-TargetResource
         $TenantDefaultTimezone,
 
         [Parameter()]
+        [System.Boolean]
+        $ExemptNativeUsersFromTenantLevelRestricedAccessControl,
+
+        [Parameter()]
+        [System.String[]]
+        $AllowSelectSGsInODBListInTenant,
+
+        [Parameter()]
+        [System.String[]]
+        $DenySelectSGsInODBListInTenant,
+
+        [Parameter()]
+        [System.String[]]
+        $DenySelectSecurityGroupsInSPSitesList,
+
+        [Parameter()]
+        [System.String[]]
+        $AllowSelectSecurityGroupsInSPSitesList,
+
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -184,41 +204,56 @@ function Get-TargetResource
             $MaxCompat = $CompatibilityRange[1]
         }
 
+        # Additional Properties via REST
+        $parametersToRetrieve = @('ExemptNativeUsersFromTenantLevelRestricedAccessControl',
+                                  'AllowSelectSGsInODBListInTenant',
+                                  'DenySelectSGsInODBListInTenant',
+                                  'DenySelectSecurityGroupsInSPSitesList',
+                                  'AllowSelectSecurityGroupsInSPSitesList')
+
+        $response = Invoke-PnPSPRestMethod -Method Get `
+                       -Url "$($Global:MSCloudLoginConnectionProfile.PnP.AdminUrl)/_api/SPO.Tenant?`$select=$($parametersToRetrieve -join ',')"
+
+
         return @{
-            IsSingleInstance                              = 'Yes'
-            MinCompatibilityLevel                         = $MinCompat
-            MaxCompatibilityLevel                         = $MaxCompat
-            SearchResolveExactEmailOrUPN                  = $SPOTenantSettings.SearchResolveExactEmailOrUPN
-            OfficeClientADALDisabled                      = $SPOTenantSettings.OfficeClientADALDisabled
-            LegacyAuthProtocolsEnabled                    = $SPOTenantSettings.LegacyAuthProtocolsEnabled
-            SignInAccelerationDomain                      = $SPOTenantSettings.SignInAccelerationDomain
-            UsePersistentCookiesForExplorerView           = $SPOTenantSettings.UsePersistentCookiesForExplorerView
-            #UserVoiceForFeedbackEnabled                   = $SPOTenantSettings.UserVoiceForFeedbackEnabled
-            PublicCdnEnabled                              = $SPOTenantSettings.PublicCdnEnabled
-            PublicCdnAllowedFileTypes                     = $SPOTenantSettings.PublicCdnAllowedFileTypes
-            UseFindPeopleInPeoplePicker                   = $SPOTenantSettings.UseFindPeopleInPeoplePicker
-            NotificationsInSharePointEnabled              = $SPOTenantSettings.NotificationsInSharePointEnabled
-            OwnerAnonymousNotification                    = $SPOTenantSettings.OwnerAnonymousNotification
-            ApplyAppEnforcedRestrictionsToAdHocRecipients = $SPOTenantSettings.ApplyAppEnforcedRestrictionsToAdHocRecipients
-            FilePickerExternalImageSearchEnabled          = $SPOTenantSettings.FilePickerExternalImageSearchEnabled
-            HideDefaultThemes                             = $SPOTenantSettings.HideDefaultThemes
-            HideSyncButtonOnTeamSite                      = $SPOTenantSettings.HideSyncButtonOnTeamSite
-            MarkNewFilesSensitiveByDefault                = $SPOTenantSettings.MarkNewFilesSensitiveByDefault
-            DisabledWebPartIds                            = [String[]]$SPOTenantSettings.DisabledWebPartIds
-            SocialBarOnSitePagesDisabled                  = $SPOTenantSettings.SocialBarOnSitePagesDisabled
-            CommentsOnSitePagesDisabled                   = $SPOTenantSettings.CommentsOnSitePagesDisabled
-            EnableAIPIntegration                          = $SPOTenantSettings.EnableAIPIntegration
-            TenantDefaultTimezone                         = $SPOTenantGraphSettings.TenantDefaultTimeZone
-            Credential                                    = $Credential
-            ApplicationId                                 = $ApplicationId
-            TenantId                                      = $TenantId
-            ApplicationSecret                             = $ApplicationSecret
-            CertificatePassword                           = $CertificatePassword
-            CertificatePath                               = $CertificatePath
-            CertificateThumbprint                         = $CertificateThumbprint
-            Managedidentity                               = $ManagedIdentity.IsPresent
-            Ensure                                        = 'Present'
-            AccessTokens                                  = $AccessTokens
+            IsSingleInstance                                       = 'Yes'
+            ExemptNativeUsersFromTenantLevelRestricedAccessControl = $response.ExemptNativeUsersFromTenantLevelRestricedAccessControl
+            AllowSelectSGsInODBListInTenant                        = $response.AllowSelectSGsInODBListInTenant
+            DenySelectSGsInODBListInTenant                         = $response.DenySelectSGsInODBListInTenant
+            DenySelectSecurityGroupsInSPSitesList                  = $response.DenySelectSecurityGroupsInSPSitesList
+            AllowSelectSecurityGroupsInSPSitesList                 = $response.AllowSelectSecurityGroupsInSPSitesList
+            MinCompatibilityLevel                                  = $MinCompat
+            MaxCompatibilityLevel                                  = $MaxCompat
+            SearchResolveExactEmailOrUPN                           = $SPOTenantSettings.SearchResolveExactEmailOrUPN
+            OfficeClientADALDisabled                               = $SPOTenantSettings.OfficeClientADALDisabled
+            LegacyAuthProtocolsEnabled                             = $SPOTenantSettings.LegacyAuthProtocolsEnabled
+            SignInAccelerationDomain                               = $SPOTenantSettings.SignInAccelerationDomain
+            UsePersistentCookiesForExplorerView                    = $SPOTenantSettings.UsePersistentCookiesForExplorerView
+            PublicCdnEnabled                                       = $SPOTenantSettings.PublicCdnEnabled
+            PublicCdnAllowedFileTypes                              = $SPOTenantSettings.PublicCdnAllowedFileTypes
+            UseFindPeopleInPeoplePicker                            = $SPOTenantSettings.UseFindPeopleInPeoplePicker
+            NotificationsInSharePointEnabled                       = $SPOTenantSettings.NotificationsInSharePointEnabled
+            OwnerAnonymousNotification                             = $SPOTenantSettings.OwnerAnonymousNotification
+            ApplyAppEnforcedRestrictionsToAdHocRecipients          = $SPOTenantSettings.ApplyAppEnforcedRestrictionsToAdHocRecipients
+            FilePickerExternalImageSearchEnabled                   = $SPOTenantSettings.FilePickerExternalImageSearchEnabled
+            HideDefaultThemes                                      = $SPOTenantSettings.HideDefaultThemes
+            HideSyncButtonOnTeamSite                               = $SPOTenantSettings.HideSyncButtonOnTeamSite
+            MarkNewFilesSensitiveByDefault                         = $SPOTenantSettings.MarkNewFilesSensitiveByDefault
+            DisabledWebPartIds                                     = [String[]]$SPOTenantSettings.DisabledWebPartIds
+            SocialBarOnSitePagesDisabled                           = $SPOTenantSettings.SocialBarOnSitePagesDisabled
+            CommentsOnSitePagesDisabled                            = $SPOTenantSettings.CommentsOnSitePagesDisabled
+            EnableAIPIntegration                                   = $SPOTenantSettings.EnableAIPIntegration
+            TenantDefaultTimezone                                  = $SPOTenantGraphSettings.TenantDefaultTimeZone
+            Credential                                             = $Credential
+            ApplicationId                                          = $ApplicationId
+            TenantId                                               = $TenantId
+            ApplicationSecret                                      = $ApplicationSecret
+            CertificatePassword                                    = $CertificatePassword
+            CertificatePath                                        = $CertificatePath
+            CertificateThumbprint                                  = $CertificateThumbprint
+            Managedidentity                                        = $ManagedIdentity.IsPresent
+            Ensure                                                 = 'Present'
+            AccessTokens                                           = $AccessTokens
         }
     }
     catch
@@ -340,6 +375,26 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $TenantDefaultTimezone,
+
+        [Parameter()]
+        [System.Boolean]
+        $ExemptNativeUsersFromTenantLevelRestricedAccessControl,
+
+        [Parameter()]
+        [System.String[]]
+        $AllowSelectSGsInODBListInTenant,
+
+        [Parameter()]
+        [System.String[]]
+        $DenySelectSGsInODBListInTenant,
+
+        [Parameter()]
+        [System.String[]]
+        $DenySelectSecurityGroupsInSPSitesList,
+
+        [Parameter()]
+        [System.String[]]
+        $AllowSelectSecurityGroupsInSPSitesList,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -540,6 +595,26 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $TenantDefaultTimezone,
+
+        [Parameter()]
+        [System.Boolean]
+        $ExemptNativeUsersFromTenantLevelRestricedAccessControl,
+
+        [Parameter()]
+        [System.String[]]
+        $AllowSelectSGsInODBListInTenant,
+
+        [Parameter()]
+        [System.String[]]
+        $DenySelectSGsInODBListInTenant,
+
+        [Parameter()]
+        [System.String[]]
+        $DenySelectSecurityGroupsInSPSitesList,
+
+        [Parameter()]
+        [System.String[]]
+        $AllowSelectSecurityGroupsInSPSitesList,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
