@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* AADIdentityGovernanceProgram
+  * Initial release.
+
 # 1.24.1016.1
 
 * AADAdminConsentRequestPolicy
