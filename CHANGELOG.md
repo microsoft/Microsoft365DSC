@@ -4,6 +4,8 @@
 
 * AADIdentityGovernanceProgram
   * Initial release.
+* IntuneAppAndBrowserIsolationPolicyWindows10ConfigMgr
+  * Initial release.
 
 # 1.24.1016.1
 
