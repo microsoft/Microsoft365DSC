@@ -50,6 +50,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
+        $PreferredSingleSignOnMode,
+
+        [Parameter()]
+        [System.String]
         $PublisherName,
 
         [Parameter()]
@@ -224,6 +228,7 @@ function Get-TargetResource
                 Homepage                  = $AADServicePrincipal.Homepage
                 LogoutUrl                 = $AADServicePrincipal.LogoutUrl
                 Owners                    = $ownersValues
+                PreferredSingleSignOnMode = $AADServicePrincipal.PreferredSingleSignOnMode
                 PublisherName             = $AADServicePrincipal.PublisherName
                 ReplyURLs                 = $AADServicePrincipal.ReplyURLs
                 SamlMetadataURL           = $AADServicePrincipal.SamlMetadataURL
@@ -304,6 +309,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String[]]
         $Owners,
+
+        [Parameter()]
+        [System.String]
+        $PreferredSingleSignOnMode,
 
         [Parameter()]
         [System.String]
@@ -390,13 +399,14 @@ function Set-TargetResource
     $currentParameters.Remove('ObjectID') | Out-Null
     $currentParameters.Remove('ApplicationSecret') | Out-Null
     $currentParameters.Remove('AccessTokens') | Out-Null
+    $currentParameters.Remove('Owners') | Out-Null
 
     # ServicePrincipal should exist but it doesn't
     if ($Ensure -eq 'Present' -and $currentAADServicePrincipal.Ensure -eq 'Absent')
     {
         if ($null -ne $AppRoleAssignedTo)
         {
-            $currentParameters.AppRoleAssignedTo = $AppRoleAssignedToValue
+            $currentParameters.AppRoleAssignedTo = $AppRoleAssignedToValues
         }
         $ObjectGuid = [System.Guid]::empty
         if (-not [System.Guid]::TryParse($AppId, [System.Management.Automation.PSReference]$ObjectGuid))
@@ -433,9 +443,19 @@ function Set-TargetResource
         Write-Verbose -Message "CurrentParameters: $($currentParameters | Out-String)"
         Write-Verbose -Message "ServicePrincipalID: $($currentAADServicePrincipal.ObjectID)"
         $currentParameters.Remove('AppRoleAssignedTo') | Out-Null
-        $currentParameters.Remove('Owners') | Out-Null
+        if ($preferredSingleSignOnMode -eq 'saml')
+        {
+            $identifierUris = $ServicePrincipalNames | Where-Object { $_ -notmatch $AppId }
+            $currentParameters.Remove('ServicePrincipalNames')
+        }
         Update-MgServicePrincipal -ServicePrincipalId $currentAADServicePrincipal.ObjectID @currentParameters
 
+        if ($identifierUris)
+        {
+            Write-Verbose -Message "Updating the Application ID Uri on the application instance."
+            $appInstance = Get-MgApplication -Filter "AppId eq '$AppId'"
+            Update-MgApplication -ApplicationId $appInstance.Id -IdentifierUris $identifierUris
+        }
         if ($AppRoleAssignedTo)
         {
             [Array]$currentPrincipals = $currentAADServicePrincipal.AppRoleAssignedTo.Identity
@@ -604,6 +624,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String[]]
         $Owners,
+
+        [Parameter()]
+        [System.String]
+        $PreferredSingleSignOnMode,
 
         [Parameter()]
         [System.String]
