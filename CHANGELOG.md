@@ -1,15 +1,15 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.24.1016.1
 
-* IntuneDerivedCredential
-  * Initial release.
 * AADAdminConsentRequestPolicy
   * Initial release.
 * AADApplication
   * Fixed an issue trying to retrieve the beta instance.
   * Added support for OnPremisesPublishing.
   * Added support for ApplicationTemplate.
+  * Fixes an issue where trying to apply permissions complained about
+    duplicate entries.
 * AADAuthenticationRequirement
   * Initial release.
 * AADConnectorGroupApplicationProxy
@@ -25,8 +25,12 @@
 * AADLifecycleWorkflowSettings
   * Initial release.
 * AADServicePrincipal
+<<<<<<< HEAD
   * Added support for SAML.
   * Fix issue with Owners.
+=======
+  * Adding Delegated Permission Classification Property
+>>>>>>> 120553154f48aa5f7a810d7e4cc1583c3fdbb067
 * ADOPermissionGroupSettings
   * Initial release.
 * EXOATPBuiltInProtectionRule
@@ -41,13 +45,19 @@
 * IntuneAppAndBrowserIsolationPolicyWindows10
   * Initial release.
     FIXES [#3028](https://github.com/microsoft/Microsoft365DSC/issues/3028)
+* IntuneDerivedCredential
+  * Initial release.
 * IntuneDeviceConfigurationIdentityProtectionPolicyWindows10
   * Added deprecation notice.
 * IntuneEndpointDetectionAndResponsePolicyWindows10
   * Migrate to new Settings Catalog cmdlets.
 * IntuneMobileAppsMacOSLobApp
   * Initial release
+* IntuneMobileAppsWindowsOfficeSuiteApp
+  * Initial release
 * IntuneSecurityBaselineMicrosoft365AppsForEnterprise
+  * Initial release
+* IntuneSecurityBaselineMicrosoftEdge
   * Initial release
 * PPAdminDLPPolicy
   * Initial release.
@@ -55,6 +65,10 @@
   * Initial release.
 * PPPowerAppPolicyUrlPatterns
   * Initial release.
+* TeamsClientConfiguration
+  * Fixed bug where RestrictedSenderList was always empty in the MSFT_TeamsClientConfiguration resource
+    FIXES [#5190](https://github.com/microsoft/Microsoft365DSC/issues/5190)
+  * Changed Set-TargetResource to always use semicolon as separator as mentioned in the MS documentation
 * TeamsUpgradePolicy
   * Added support for tenant wide changes using the * value for users.
     FIXES [#5174](https://github.com/microsoft/Microsoft365DSC/issues/5174)
