@@ -24,6 +24,9 @@
   * Initial release.
 * AADLifecycleWorkflowSettings
   * Initial release.
+* AADServicePrincipal
+  * Added support for SAML.
+  * Fix issue with Owners.
 * ADOPermissionGroupSettings
   * Initial release.
 * EXOATPBuiltInProtectionRule
