@@ -71,6 +71,11 @@
                                "CIMType":  "String",
                                "Name":  "ReviewerId",
                                "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "QueryRoot",
+                               "Option":  "Write"
                            }
                        ]
     },
@@ -3165,7 +3170,7 @@
                            {
                                "CIMType":  "String",
                                "Name":  "AttributeSet",
-                               "Option":  "Write"
+                               "Option":  "Key"
                            },
                            {
                                "CIMType":  "String",
