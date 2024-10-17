@@ -641,6 +641,21 @@
                     CertificateThumbprint = $CertificateThumbprint
                     Ensure                       = "Present";
                 }
+                AADCustomSecurityAttributeDefinition 'AADCustomSecurityAttributeDefinition-ShoeSize'
+                {
+                    ApplicationId           = $ApplicationId;
+                    AttributeSet            = "TestAttributeSet";
+                    CertificateThumbprint   = $CertificateThumbprint;
+                    Ensure                  = "Present";
+                    IsCollection            = $False;
+                    IsSearchable            = $True;
+                    Name                    = "ShoeSize";
+                    Status                  = "Available";
+                    TenantId                = $TenantId;
+                    Type                    = "String";
+                    UsePreDefinedValuesOnly = $False;
+                    Description             = "What size of shoe is the person wearing? Drifted" # Drift
+                }
                 AADDeviceRegistrationPolicy 'MyDeviceRegistrationPolicy'
                 {
                     ApplicationId                           = $ApplicationId;
@@ -657,6 +672,21 @@
                     MultiFactorAuthConfiguration            = $False;
                     TenantId                                = $TenantId;
                     UserDeviceQuota                         = 50;
+                }
+                AADDomain 'AADDomain-Contoso'
+                {
+                    ApplicationId                    = $ApplicationId;
+                    AuthenticationType               = "Managed";
+                    CertificateThumbprint            = $CertificateThumbprint;
+                    Ensure                           = "Present";
+                    Id                               = "contoso.com";
+                    IsAdminManaged                   = $True;
+                    IsDefault                        = $True;
+                    IsRoot                           = $True;
+                    IsVerified                       = $False; #Drift
+                    PasswordNotificationWindowInDays = 14;
+                    PasswordValidityPeriodInDays     = 2147483647;
+                    TenantId                         = $TenantId;
                 }
                 AADEntitlementManagementAccessPackage 'myAccessPackage'
                 {
@@ -827,6 +857,50 @@
                     GuestUsageGuidelinesUrl       = "https://contoso.com/guestusage"
                     UsageGuidelinesUrl            = "https://contoso.com/usage"
                     Ensure                        = "Present"
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
+                }
+                AADIdentityGovernanceLifecycleWorkflow 'AADIdentityGovernanceLifecycleWorkflow-Onboard pre-hire employee updated version'
+                {
+                    Category             = "joiner";
+                    #updated description
+                    Description          = "Updated description the onboard of prehire employee";
+                    DisplayName          = "Onboard pre-hire employee updated version";
+                    Ensure               = "Present";
+                    ExecutionConditions  = MSFT_IdentityGovernanceWorkflowExecutionConditions {
+                        ScopeValue = MSFT_IdentityGovernanceScope {
+                            #updated rule
+                            Rule = '(not (country eq ''America''))'
+                            ODataType = '#microsoft.graph.identityGovernance.ruleBasedSubjectSet'
+                        }
+                        TriggerValue = MSFT_IdentityGovernanceTrigger {
+                            OffsetInDays = 4
+                            TimeBasedAttribute = 'employeeHireDate'
+                            ODataType = '#microsoft.graph.identityGovernance.timeBasedAttributeTrigger'
+                        }
+                        ODataType = '#microsoft.graph.identityGovernance.triggerAndScopeBasedConditions'
+                    };
+                    IsEnabled            = $True;
+                    IsSchedulingEnabled  = $False;
+                    Tasks                = @(
+                        MSFT_AADIdentityGovernanceTask {
+                            DisplayName       = 'Add user to groups'
+                            #updated description
+                            Description       = 'Add user to selected groups updated'
+                            Category          = 'joiner,leaver,mover'
+                            IsEnabled         = $True
+                            ExecutionSequence = 1
+                            ContinueOnError   = $True
+                            TaskDefinitionId   = '22085229-5809-45e8-97fd-270d28d66910'
+                            Arguments         = @(
+                                MSFT_AADIdentityGovernanceTaskArguments {
+                                    Name  = 'groupID'
+                                    Value = '7ad01e00-8c3a-42a6-baaf-39f2390b2565'
+                                }
+                            )
+                        }
+                    );
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
