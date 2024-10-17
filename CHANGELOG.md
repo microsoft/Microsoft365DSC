@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* AADIdentityGovernanceProgram
+  * Initial release.
 * SPOTenantSettings
   * Added support for AllowSelectSGsInODBListInTenant,
     DenySelectSGsInODBListInTenant, DenySelectSecurityGroupsInSPSitesList,
