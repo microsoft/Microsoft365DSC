@@ -505,31 +505,31 @@ function Set-TargetResource
         if ($null -ne $ExemptNativeUsersFromTenantLevelRestricedAccessControl)
         {
             $needToUpdate = $true
-            $params.Add("ExemptNativeUsersFromTenantLevelRestricedAccessControl", $ExemptNativeUsersFromTenantLevelRestricedAccessControl)
+            $paramsToUpdate.Add("ExemptNativeUsersFromTenantLevelRestricedAccessControl", $ExemptNativeUsersFromTenantLevelRestricedAccessControl)
         }
 
         if ($null -ne $AllowSelectSGsInODBListInTenant)
         {
             $needToUpdate = $true
-            $params.Add("AllowSelectSGsInODBListInTenant", $AllowSelectSGsInODBListInTenant)
+            $paramsToUpdate.Add("AllowSelectSGsInODBListInTenant", $AllowSelectSGsInODBListInTenant)
         }
 
         if ($null -ne $DenySelectSGsInODBListInTenant)
         {
             $needToUpdate = $true
-            $params.Add("DenySelectSGsInODBListInTenant", $DenySelectSGsInODBListInTenant)
+            $paramsToUpdate.Add("DenySelectSGsInODBListInTenant", $DenySelectSGsInODBListInTenant)
         }
 
         if ($null -ne $DenySelectSecurityGroupsInSPSitesList)
         {
             $needToUpdate = $true
-            $params.Add("DenySelectSecurityGroupsInSPSitesList", $DenySelectSecurityGroupsInSPSitesList)
+            $paramsToUpdate.Add("DenySelectSecurityGroupsInSPSitesList", $DenySelectSecurityGroupsInSPSitesList)
         }
 
         if ($null -ne $AllowSelectSecurityGroupsInSPSitesList)
         {
             $needToUpdate = $true
-            $params.Add("AllowSelectSecurityGroupsInSPSitesList", $AllowSelectSecurityGroupsInSPSitesList)
+            $paramsToUpdate.Add("AllowSelectSecurityGroupsInSPSitesList", $AllowSelectSecurityGroupsInSPSitesList)
         }
 
         if ($needToUpdate)
