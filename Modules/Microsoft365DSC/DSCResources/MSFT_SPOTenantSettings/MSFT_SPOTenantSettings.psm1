@@ -502,31 +502,31 @@ function Set-TargetResource
         $paramsToUpdate = @{}
         $needToUpdate = $false
 
-        if (null -ne $ExemptNativeUsersFromTenantLevelRestricedAccessControl)
+        if ($null -ne $ExemptNativeUsersFromTenantLevelRestricedAccessControl)
         {
             $needToUpdate = $true
             $params.Add("ExemptNativeUsersFromTenantLevelRestricedAccessControl", $ExemptNativeUsersFromTenantLevelRestricedAccessControl)
         }
 
-        if (null -ne $AllowSelectSGsInODBListInTenant)
+        if ($null -ne $AllowSelectSGsInODBListInTenant)
         {
             $needToUpdate = $true
             $params.Add("AllowSelectSGsInODBListInTenant", $AllowSelectSGsInODBListInTenant)
         }
 
-        if (null -ne $DenySelectSGsInODBListInTenant)
+        if ($null -ne $DenySelectSGsInODBListInTenant)
         {
             $needToUpdate = $true
             $params.Add("DenySelectSGsInODBListInTenant", $DenySelectSGsInODBListInTenant)
         }
 
-        if (null -ne $DenySelectSecurityGroupsInSPSitesList)
+        if ($null -ne $DenySelectSecurityGroupsInSPSitesList)
         {
             $needToUpdate = $true
             $params.Add("DenySelectSecurityGroupsInSPSitesList", $DenySelectSecurityGroupsInSPSitesList)
         }
 
-        if (null -ne $AllowSelectSecurityGroupsInSPSitesList)
+        if ($null -ne $AllowSelectSecurityGroupsInSPSitesList)
         {
             $needToUpdate = $true
             $params.Add("AllowSelectSecurityGroupsInSPSitesList", $AllowSelectSecurityGroupsInSPSitesList)
