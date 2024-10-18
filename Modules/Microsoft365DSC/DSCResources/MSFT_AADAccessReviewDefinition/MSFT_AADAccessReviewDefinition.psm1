@@ -237,7 +237,7 @@ function Get-TargetResource
         {
             $myStageSettings = @{}
             $myStageSettings.Add('DecisionsThatWillMoveToNextStage', $currentStageSettings.decisionsThatWillMoveToNextStage)
-            $myStageSettings.Add('DependsOn', $currentStageSettings.dependsOn)
+            $myStageSettings.Add('DependsOnValue', $currentStageSettings.dependsOn)
             $myStageSettings.Add('DurationInDays', $currentStageSettings.durationInDays)
             $complexRecommendationInsightSettings = @()
             foreach ($currentRecommendationInsightSettings in $currentStageSettings.recommendationInsightSettings)
@@ -385,12 +385,16 @@ function Set-TargetResource
     if($StageSettings -ne $null)
     {
         Write-Verbose -Message "StageSettings cannot be updated after creation of access review definition."
-        Write-Verbose -Message "Removing the Azure AD Access Review Definition with Id {$($currentInstance.Id)}"
 
-        Remove-MgBetaIdentityGovernanceAccessReviewDefinition -AccessReviewScheduleDefinitionId $currentInstance.Id
+        if($currentInstance.Ensure -ne 'Absent') {
+            Write-Verbose -Message "Removing the Azure AD Access Review Definition with Id {$($currentInstance.Id)}"
+            Remove-MgBetaIdentityGovernanceAccessReviewDefinition -AccessReviewScheduleDefinitionId $currentInstance.Id
+        }
 
         Write-Verbose -Message "Creating an Azure AD Access Review Definition with DisplayName {$DisplayName}"
+
         $createParameters = ([Hashtable]$BoundParameters).Clone()
+
         $createParameters = Rename-M365DSCCimInstanceParameter -Properties $createParameters
         $createParameters.Remove('Id') | Out-Null
 
@@ -399,6 +403,30 @@ function Set-TargetResource
 
         $createParameters.Add('Settings', $createParameters.SettingsValue)
         $createParameters.Remove('SettingsValue') | Out-Null
+
+        foreach ($hashtable in $createParameters.StageSettings) {
+            $propertyToRemove = 'DependsOnValue'
+            $newProperty = 'DependsOn'
+            if ($hashtable.ContainsKey($propertyToRemove)) {
+                $value = $hashtable[$propertyToRemove]
+                $hashtable[$newProperty] = $value
+                $hashtable.Remove($propertyToRemove)
+            }
+        }
+
+        foreach ($hashtable in $createParameters.StageSettings) {
+            $keys = (([Hashtable]$hashtable).Clone()).Keys
+            foreach ($key in $keys)
+            {
+                $value = $hashtable.$key
+                $hashtable.Remove($key)
+                $hashtable.Add($key.Substring(0,1).ToLower() + $key.Substring(1), $value)
+            }
+        }
+
+        foreach ($hashtable in $createParameters.StageSettings) {
+            Write-Verbose -Message "Priting Values: $(Convert-M365DscHashtableToString -Hashtable $hashtable)"
+        }
 
         $keys = (([Hashtable]$createParameters).Clone()).Keys
         foreach ($key in $keys)
@@ -418,7 +446,9 @@ function Set-TargetResource
         Write-Verbose -Message "Creating an Azure AD Access Review Definition with DisplayName {$DisplayName}"
 
         $createParameters = ([Hashtable]$BoundParameters).Clone()
+
         $createParameters = Rename-M365DSCCimInstanceParameter -Properties $createParameters
+
         $createParameters.Remove('Id') | Out-Null
 
         $createParameters.Add('Scope', $createParameters.ScopeValue)
@@ -426,6 +456,30 @@ function Set-TargetResource
 
         $createParameters.Add('Settings', $createParameters.SettingsValue)
         $createParameters.Remove('SettingsValue') | Out-Null
+
+        foreach ($hashtable in $createParameters.StageSettings) {
+            $propertyToRemove = 'DependsOnValue'
+            $newProperty = 'DependsOn'
+            if ($hashtable.ContainsKey($propertyToRemove)) {
+                $value = $hashtable[$propertyToRemove]
+                $hashtable[$newProperty] = $value
+                $hashtable.Remove($propertyToRemove)
+            }
+        }
+
+        foreach ($hashtable in $createParameters.StageSettings) {
+            $keys = (([Hashtable]$hashtable).Clone()).Keys
+            foreach ($key in $keys)
+            {
+                $value = $hashtable.$key
+                $hashtable.Remove($key)
+                $hashtable.Add($key.Substring(0,1).ToLower() + $key.Substring(1), $value)
+            }
+        }
+
+        foreach ($hashtable in $createParameters.StageSettings) {
+            Write-Verbose -Message "Priting Values: $(Convert-M365DscHashtableToString -Hashtable $hashtable)"
+        }
 
         $keys = (([Hashtable]$createParameters).Clone()).Keys
         foreach ($key in $keys)
@@ -454,6 +508,7 @@ function Set-TargetResource
 
         $updateParameters.Add('Settings', $updateParameters.SettingsValue)
         $updateParameters.Remove('SettingsValue') | Out-Null
+
 
         $keys = (([Hashtable]$updateParameters).Clone()).Keys
         foreach ($key in $keys)
