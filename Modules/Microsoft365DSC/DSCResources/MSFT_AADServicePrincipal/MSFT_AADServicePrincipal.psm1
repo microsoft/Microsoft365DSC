@@ -34,6 +34,10 @@ function Get-TargetResource
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
+        $CustomSecurityAttributes,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
         $DelegatedPermissionClassifications,
 
         [Parameter()]
@@ -226,6 +230,8 @@ function Get-TargetResource
                 $complexDelegatedPermissionClassifications += $hashtable
             }
 
+            $complexCustomSecurityAttributes = [Array](Get-CustomSecurityAttributes -AppId $AppId)
+
             $result = @{
                 AppId                              = $AADServicePrincipal.AppId
                 AppRoleAssignedTo                  = $AppRoleAssignedToValues
@@ -234,6 +240,7 @@ function Get-TargetResource
                 AlternativeNames                   = $AADServicePrincipal.AlternativeNames
                 AccountEnabled                     = [boolean]$AADServicePrincipal.AccountEnabled
                 AppRoleAssignmentRequired          = $AADServicePrincipal.AppRoleAssignmentRequired
+                CustomSecurityAttributes           = $complexCustomSecurityAttributes
                 DelegatedPermissionClassifications = [Array]$complexDelegatedPermissionClassifications
                 ErrorUrl                           = $AADServicePrincipal.ErrorUrl
                 Homepage                           = $AADServicePrincipal.Homepage
@@ -303,6 +310,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $AppRoleAssignmentRequired,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $CustomSecurityAttributes,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
@@ -467,6 +478,39 @@ function Set-TargetResource
         $currentParameters.Remove('AppRoleAssignedTo') | Out-Null
         $currentParameters.Remove('Owners') | Out-Null
         $currentParameters.Remove('DelegatedPermissionClassifications') | Out-Null
+
+        # logic to update the custom security attributes to be cmdlet comsumable
+        $updatedCustomSecurityAttributes = @{}
+        foreach ($attributeSet in $currentParameters.CustomSecurityAttributes) {
+            $attributeSetKey = $attributeSet.AttributeName
+
+            $valuesHashtable = @{}
+            foreach ($attribute in $attributeSet.AttributeValues) {
+                $attributeKey = $attribute.AttributeName
+                $attributeValue
+                if ($null -ne $attribute.StringArrayValue) {
+                    if ($attribute.StringArrayValue.Count -gt 1) {
+                        $valuesHashtable($attributeKey + '@odata.type', "#Collection(String)")
+                        $attributeValue = $attribute.StringArrayValue
+                    } else {
+                        $attributeValue = $attribute.StringArrayValue[0]
+                    }
+                }
+                elseif ($null -ne $attribute.IntArrayValue) {
+                    if ($attribute.IntArrayValue.Count -gt 1) {
+                        $attributeValue = $attribute.IntArrayValue
+                    } else {
+                        $attributeValue = $attribute.IntArrayValue[0]
+                    }
+                }
+                elseif ($null -ne $attribute.BoolValue) {
+                    $attributeValue = $attribute.BoolValue
+                }
+                $valuesHashtable.Add($attributeKey, $attributeValue)
+            }
+            $updatedCustomSecurityAttributes.Add($attributeSetKey, $valuesHashtable)
+        }
+
         Update-MgServicePrincipal -ServicePrincipalId $currentAADServicePrincipal.ObjectID @currentParameters
 
         if ($AppRoleAssignedTo)
@@ -644,6 +688,10 @@ function Test-TargetResource
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
+        $CustomSecurityAttributes,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
         $DelegatedPermissionClassifications,
 
         [Parameter()]
@@ -743,12 +791,14 @@ function Test-TargetResource
     {
         $source = $PSBoundParameters.$key
         $target = $CurrentValues.$key
+
         if ($null -ne $source -and $source.GetType().Name -like '*CimInstance*')
         {
             $testResult = Compare-M365DSCComplexObject `
                 -Source ($source) `
                 -Target ($target)
 
+            Write-Host "Key: $key, Cim comparison value: $testResult"
             if (-not $testResult)
             {
                 $testTargetResource = $false
@@ -843,6 +893,9 @@ function Export-TargetResource
                                                                    -ErrorAction Stop
         foreach ($AADServicePrincipal in $Script:exportedInstances)
         {
+            if($AADServicePrincipal.AppId -ne 'e4763382-ff8d-4c4c-97e1-65e2241986df') {
+                continue
+            }
             if ($null -ne $Global:M365DSCExportResourceInstancesCount)
             {
                 $Global:M365DSCExportResourceInstancesCount++
@@ -873,6 +926,10 @@ function Export-TargetResource
                 {
                     $Results.DelegatedPermissionClassifications = Get-M365DSCAzureADServicePrincipalDelegatedPermissionClassifications -PermissionClassifications $Results.DelegatedPermissionClassifications
                 }
+                if ($Results.CustomSecurityAttributes.Count -gt 0)
+                {
+                    $Results.CustomSecurityAttributes = Get-M365DSCAADServicePrincipalCustomSecurityAttributesAsString -CustomSecurityAttributes $Results.CustomSecurityAttributes
+                }
                 $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                     -ConnectionMode $ConnectionMode `
                     -ModulePath $PSScriptRoot `
@@ -887,6 +944,11 @@ function Export-TargetResource
                 {
                     $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
                         -ParameterName 'DelegatedPermissionClassifications'
+                }
+                if ($null -ne $Results.CustomSecurityAttributes)
+                {
+                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
+                        -ParameterName 'CustomSecurityAttributes'
                 }
                 $dscContent += $currentDSCBlock
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
@@ -910,6 +972,129 @@ function Export-TargetResource
 
         return ''
     }
+}
+
+# Function to create MSFT_AttributeValue
+function Create-AttributeValue {
+    param (
+        [string]$AttributeName,
+        [object]$Value
+    )
+
+    $attributeValue = @{
+        AttributeName = $AttributeName
+        StringArrayValue = $null
+        IntArrayValue = $null
+        BoolValue = $null
+    }
+
+    # Handle different types of values
+    if ($Value -is [string]) {
+        $attributeValue.StringArrayValue = @($Value)
+    }
+    elseif ($Value -is [System.Int32] -or $Value -is [System.Int64]) {
+        $attributeValue.IntArrayValue = @($Value)
+    }
+    elseif ($Value -is [bool]) {
+        $attributeValue.BoolValue = @($Value)
+    }
+    elseif ($Value -is [array]) {
+        if ($Value[0] -is [string]) {
+            $attributeValue.StringArrayValue = $Value
+        }
+        elseif ($Value[0] -is [System.Int32] -or $Value[0] -is [System.Int64]) {
+            $attributeValue.IntArrayValue = $Value
+        }
+    }
+
+    return $attributeValue
+}
+
+
+function Get-CustomSecurityAttributes {
+    [OutputType([System.Array])]
+    param (
+        [String]$AppId
+    )
+
+    $customSecurityAttributes = Invoke-MgGraphRequest -Uri "https://graph.microsoft.com/beta/servicePrincipals(appId='$AppId')`?`$select=customSecurityAttributes" -Method Get
+    $customSecurityAttributes = $customSecurityAttributes.customSecurityAttributes
+    $newCustomSecurityAttributes = @()
+
+    foreach ($key in $customSecurityAttributes.Keys) {
+        $attributeSet = @{
+            AttributeSetName = $key
+            AttributeValues  = @()
+        }
+
+        foreach ($attribute in $customSecurityAttributes[$key].Keys) {
+            # Skip properties that end with '@odata.type'
+            if ($attribute -like "*@odata.type") {
+                continue
+            }
+
+            $value = $customSecurityAttributes[$key][$attribute]
+            $attributeName = $attribute # Keep the attribute name as it is
+
+            # Create the attribute value and add it to the set
+            $attributeSet.AttributeValues += Create-AttributeValue -AttributeName $attributeName -Value $value
+        }
+
+        #Add the attribute set to the final structure
+        $newCustomSecurityAttributes += $attributeSet
+    }
+
+    # Display the new structure
+    return [Array]$newCustomSecurityAttributes
+}
+
+function Get-M365DSCAADServicePrincipalCustomSecurityAttributesAsString
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Collections.ArrayList]
+        $CustomSecurityAttributes
+    )
+
+    $StringContent = "@(`r`n"
+    foreach ($customSecurityAttribute in $CustomSecurityAttributes)
+    {
+        $StringContent += "                MSFT_AADServicePrincipalAttributeSet {`r`n"
+        $StringContent += "                     AttributeSetName = '" + $customSecurityAttribute.AttributeSetName + "'`r`n"
+        if ($customSecurityAttribute.AttributeValues.Length -gt 0)
+        {
+            $StringContent += "                     AttributeValues        = @(`r`n"
+            foreach ($attributeValue in $customSecurityAttribute.AttributeValues)
+            {
+                $StringContent += "                        MSFT_AADServicePrincipalAttributeValue {`r`n"
+                $StringContent += "                            AttributeName  = '" + $attributeValue.AttributeName + "'`r`n"
+                if ($null -ne $attributeValue.BoolValue){
+                    $StringContent += "                            BoolValue = '$" + $attributeValue.BoolValue + "'`r`n"
+                }
+                elseif ($null -ne $attributeValue.StringArrayValue){
+                    $StringContent += "                            StringArrayValue = @("
+                    $StringContent += ($attributeValue.StringArrayValue | ForEach-Object { "'$_'" }) -join ","
+                    $StringContent += ")`r`n"
+                }
+                elseif ($null -ne $attributeValue.IntArrayValue){
+                    $StringContent += "                            IntArrayValue = @("
+                    $StringContent += $attributeValue.IntArrayValue -join ","
+                    $StringContent += ")`r`n"
+                }
+                $StringContent += "                        }`r`n"
+            }
+            $StringContent += "                    )`r`n"
+        }
+        else
+        {
+            $StringContent += "                    AttributeValues         = @()`r`n"
+        }
+        $StringContent += "                }`r`n"
+    }
+    $StringContent += '            )'
+    return $StringContent
 }
 
 function Get-M365DSCAzureADServicePrincipalAssignmentAsString
@@ -956,4 +1141,65 @@ function Get-M365DSCAzureADServicePrincipalDelegatedPermissionClassifications
     return $StringContent
 }
 
-Export-ModuleMember -Function *-TargetResource
+
+
+function Print-Hashtable {
+    param (
+        [Parameter(Mandatory=$true)]
+        [hashtable]$Hashtable,
+        [int]$IndentLevel = 0
+    )
+
+    # Helper function to handle arrays and nested objects
+    function Print-Value {
+        param (
+            [Parameter(Mandatory=$true)]
+            $Value,
+            [int]$IndentLevel
+        )
+
+        $indent = " " * ($IndentLevel * 4)
+
+        if ($Value -is [hashtable]) {
+            # Recursively call the Print-Hashtable function for nested hashtables
+            Print-Hashtable -Hashtable $Value -IndentLevel ($IndentLevel + 1)
+        } elseif ($Value -is [array]) {
+            # Handle arrays
+            Write-Host "${indent}Array:"
+            for ($i = 0; $i -lt $Value.Count; $i++) {
+                $item = $Value[$i]
+                Write-Host "${indent}[$i]:"
+                if ($item -is [hashtable]) {
+                    Print-Hashtable -Hashtable $item -IndentLevel ($IndentLevel + 1)
+                } else {
+                Print-Value -Value $item -IndentLevel ($IndentLevel + 1)
+                }
+            }
+        } else {
+            # Print simple values (non-hashtable, non-array)
+            Write-Host "${indent}$Value"
+        }
+    }
+
+    # Iterate through each key-value pair in the hashtable
+    foreach ($key in $Hashtable.Keys) {
+        $indent = " " * ($IndentLevel * 4)
+        $value = $Hashtable[$key]
+
+        if ($value -is [hashtable]) {
+            # Print key and call recursively if value is a nested hashtable
+            Write-Host "${indent}$key :"
+            Print-Hashtable -Hashtable $value -IndentLevel ($IndentLevel + 1)
+        } elseif ($value -is [array]) {
+            # Print arrays with an index for each element
+            Write-Host "${indent}$key :"
+            Print-Value -Value $value -IndentLevel ($IndentLevel + 1)
+        } else {
+            # Print key-value pairs for non-complex data types
+            Write-Host "${indent}$key : $value"
+        }
+    }
+}
+
+
+Export-ModuleMember -Function *
