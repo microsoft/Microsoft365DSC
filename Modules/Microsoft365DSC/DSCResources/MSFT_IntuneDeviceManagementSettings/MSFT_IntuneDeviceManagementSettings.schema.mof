@@ -1,0 +1,27 @@
+[ClassVersion("1.0.0.0"), FriendlyName("IntuneDeviceManagementSettings")]
+class MSFT_IntuneDeviceManagementSettings : OMI_BaseResource
+{
+    [Write, Description("Determines if the setting is a single instance.")] Boolean IsSingleInstance;
+    [Write, Description("The property to determine if Android device administrator enrollment is enabled for this account.")] Boolean AndroidDeviceAdministratorEnrollmentEnabled;
+    [Write, Description("The Derived Credential Provider to use for this account. Possible values are: notConfigured, entrustDataCard, purebred, xTec, intercede."), ValueMap{"notConfigured","entrustDataCard","purebred","xTec","intercede"}, Values{"notConfigured","entrustDataCard","purebred","xTec","intercede"}] String DerivedCredentialProvider;
+    [Write, Description("The Derived Credential Provider self-service URI.")] String DerivedCredentialUrl;
+    [Write, Description("The number of days a device is allowed to go without checking in to remain compliant.")] UInt32 DeviceComplianceCheckinThresholdDays;
+    [Write, Description("When the device does not check in for specified number of days, the company data might be removed and the device will not be under management. Valid values 30 to 270")] UInt32 DeviceInactivityBeforeRetirementInDay;
+    [Write, Description("Determines whether the autopilot diagnostic feature is enabled or not.")] Boolean EnableAutopilotDiagnostics;
+    [Write, Description("Determines whether the device group membership report feature is enabled or not.")] Boolean EnableDeviceGroupMembershipReport;
+    [Write, Description("Determines whether the enhanced troubleshooting UX is enabled or not.")] Boolean EnableEnhancedTroubleshootingExperience;
+    [Write, Description("Determines whether the log collection feature should be available for use.")] Boolean EnableLogCollection;
+    [Write, Description("Is feature enabled or not for enhanced jailbreak detection.")] Boolean EnhancedJailBreak;
+    [Write, Description("The property to determine whether to ignore unsupported compliance settings on certian models of devices.")] Boolean IgnoreDevicesForUnsupportedSettingsEnabled;
+    [Write, Description("Is feature enabled or not for scheduled action for rule.")] Boolean IsScheduledActionEnabled;
+    [Write, Description("The property to determine if M365 App log collection is enabled for account. When TRUE it indicates that M365 app log collection is enabled for account.  When FALSE it indicates that M365 app log collection is disabled for account. Default value is FALSE")] Boolean M365AppDiagnosticsEnabled;
+    [Write, Description("Device should be noncompliant when there is no compliance policy targeted when this is true")] Boolean SecureByDefault;
+    [Write, Description("Present ensures the policy exists, absent ensures it is removed."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] string Ensure;
+    [Write, Description("Credentials of the Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
+    [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
+    [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
+    [Write, Description("Secret of the Azure Active Directory tenant used for authentication."), EmbeddedInstance("MSFT_Credential")] String ApplicationSecret;
+    [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
+    [Write, Description("Managed ID being used for authentication.")] Boolean ManagedIdentity;
+    [Write, Description("Access token used for authentication.")] String AccessTokens[];
+};

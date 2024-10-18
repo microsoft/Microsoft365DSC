@@ -1,0 +1,81 @@
+{
+    "resourceName": "IntuneDeviceManagementSettings",
+    "description": "This resource configures the Intune Device Management Settings.",
+    "permissions":    {
+  "graph": {
+    "application": {
+      "read": [
+        {
+          "name": "DeviceManagementApps.Read.All"
+        },
+        {
+          "name": "DeviceManagementServiceConfig.Read.All"
+        },
+        {
+          "name": "DeviceManagementRBAC.Read.All"
+        },
+        {
+          "name": "DeviceManagementManagedDevices.Read.All"
+        },
+        {
+          "name": "DeviceManagementConfiguration.Read.All"
+        }
+      ],
+      "update": [
+        {
+          "name": "DeviceManagementApps.ReadWrite.All"
+        },
+        {
+          "name": "DeviceManagementServiceConfig.ReadWrite.All"
+        },
+        {
+          "name": "DeviceManagementRBAC.ReadWrite.All"
+        },
+        {
+          "name": "DeviceManagementManagedDevices.ReadWrite.All"
+        },
+        {
+          "name": "DeviceManagementConfiguration.ReadWrite.All"
+        }
+      ]
+    },
+    "delegated": {
+      "read": [
+        {
+          "name": "DeviceManagementApps.Read.All"
+        },
+        {
+          "name": "DeviceManagementServiceConfig.Read.All"
+        },
+        {
+          "name": "DeviceManagementRBAC.Read.All"
+        },
+        {
+          "name": "DeviceManagementManagedDevices.Read.All"
+        },
+        {
+          "name": "DeviceManagementConfiguration.Read.All"
+        }
+      ],
+      "update": [
+        {
+          "name": "DeviceManagementApps.ReadWrite.All"
+        },
+        {
+          "name": "DeviceManagementServiceConfig.ReadWrite.All"
+        },
+        {
+          "name": "DeviceManagementRBAC.ReadWrite.All"
+        },
+        {
+          "name": "DeviceManagementManagedDevices.ReadWrite.All"
+        },
+        {
+          "name": "DeviceManagementConfiguration.ReadWrite.All"
+        }
+      ]
+    }
+  }
+}
+
+}
