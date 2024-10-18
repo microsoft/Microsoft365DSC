@@ -97630,7 +97630,7 @@ function Invoke-PnPSPRestMethod
         $Method,
 
         [Parameter()]
-        [System.Url]
+        [System.String]
         $Url,
 
         [Parameter()]
