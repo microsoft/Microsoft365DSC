@@ -19348,12 +19348,81 @@ function Get-MgBetaDeviceManagementGroupPolicyConfigurationAssignment
     )
 }
 
-function New-MgBetaDeviceAppManagementMobileApp {
+function New-MgBetaDeviceManagementDerivedCredential {
+
     [CmdletBinding()]
     param (
         [Parameter()]
         [System.String]
         $Id,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $HelpUrl,
+
+        [Parameter()]
+        [ValidateSet('intercede', 'entrustData', 'purebred')]
+        [System.String]
+        $Issuer,
+
+        [Parameter()]
+        [ValidateSet('none', 'email', 'companyPortal')]
+        [System.String]
+        $NotificationType = 'none'
+    )
+}
+
+function Get-MgBetaDeviceManagementDerivedCredential {
+    [CmdletBinding()]
+    param (
+        [Parameter()]
+        [System.String]
+        $DeviceManagementDerivedCredentialSettingsId,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $HelpUrl,
+
+        [Parameter()]
+        [ValidateSet('intercede', 'entrustData', 'purebred')]
+        [System.String]
+        $Issuer,
+
+        [Parameter()]
+        [ValidateSet('none', 'email', 'companyPortal')]
+        [System.String]
+        $NotificationType = 'none'
+    )
+}
+
+function Remove-MgBetaDeviceManagementDerivedCredential
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $DeviceManagementDerivedCredentialSettingsId,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm
+    )
+}
+
+function New-MgBetaDeviceAppManagementMobileApp {
+    [CmdletBinding()]
+    param (
+        [Parameter()]
+        [System.String]
+        $DeviceManagementDerivedCredentialSettingsId,
 
         [Parameter()]
         [System.String]
@@ -30062,6 +30131,82 @@ function Get-MgBetaDirectoryDeletedApplication
 }
 #endregion
 #region Microsoft.Graph.Beta.Identity.Governance
+function Get-MgBetaProgram
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $ProgramId,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Filter
+    )
+}
+
+function Remove-MgBetaProgram
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $ProgramId
+    )
+}
+
+function Update-MgBetaProgram
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $ProgramId,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [PSObject]
+        $BodyParameter
+    )
+}
+
+function New-MgBetaProgram
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [PSObject]
+        $BodyParameter
+    )
+}
+
 function Get-MgBetaAgreement
 {
     [CmdletBinding()]
