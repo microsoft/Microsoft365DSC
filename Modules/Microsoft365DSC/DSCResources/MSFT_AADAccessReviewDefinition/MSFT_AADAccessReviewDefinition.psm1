@@ -280,7 +280,12 @@ function Get-TargetResource
             foreach ($currentRecommendationInsightSettings in $currentStageSettings.recommendationInsightSettings)
             {
                 $myRecommendationInsightSettings = @{}
-                $myRecommendationInsightSettings.Add('RecommendationLookBackDuration', $currentRecommendationInsightSettings.recommendationLookBackDuration)
+
+                if ($null -ne $currentRecommendationInsightSettings.recommendationLookBackDuration)
+                {
+
+                    $myRecommendationInsightSettings.Add('RecommendationLookBackDuration', $currentRecommendationInsightSettings.recommendationLookBackDuration.ToString())
+                }
                 if ($null -ne $currentRecommendationInsightSettings.signInScope)
                 {
                     $myRecommendationInsightSettings.Add('SignInScope', $currentRecommendationInsightSettings.signInScope.ToString())
