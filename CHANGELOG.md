@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* AADAccessReviewDefinition
+  * Initial release.
 * AADAdminConsentRequestPolicy
   * Initial release.
 * AADApplication
