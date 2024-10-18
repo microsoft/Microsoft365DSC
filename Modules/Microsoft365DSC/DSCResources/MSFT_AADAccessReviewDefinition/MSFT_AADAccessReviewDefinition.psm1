@@ -118,6 +118,43 @@ function Get-TargetResource
         $complexScope.Add('Query', $getValue.Scope.AdditionalProperties.query)
         $complexScope.Add('QueryRoot', $getValue.Scope.AdditionalProperties.queryRoot)
         $complexScope.Add('QueryType', $getValue.Scope.AdditionalProperties.queryType)
+
+        $complexPrincipalScopes = @()
+        foreach ($currentPrincipalScopes in $getValue.Scope.AdditionalProperties.principalScopes)
+        {
+            $myPrincipalScopes = @{}
+            $myPrincipalScopes.Add('Query', $currentPrincipalScopes.query)
+            $myPrincipalScopes.Add('QueryRoot', $currentPrincipalScopes.queryRoot)
+            $myPrincipalScopes.Add('QueryType', $currentPrincipalScopes.queryType)
+            if ($null -ne $currentPrincipalScopes.'@odata.type')
+            {
+                $myPrincipalScopes.Add('odataType', $currentPrincipalScopes.'@odata.type'.ToString())
+            }
+            if ($myPrincipalScopes.values.Where({$null -ne $_}).Count -gt 0)
+            {
+                $complexPrincipalScopes += $myPrincipalScopes
+            }
+        }
+        $complexScope.Add('PrincipalScopes',$complexPrincipalScopes)
+        $complexResourceScopes = @()
+        foreach ($currentResourceScopes in $getValue.Scope.AdditionalProperties.resourceScopes)
+        {
+            $myResourceScopes = @{}
+            $myResourceScopes.Add('Query', $currentResourceScopes.query)
+            $myResourceScopes.Add('QueryRoot', $currentResourceScopes.queryRoot)
+            $myResourceScopes.Add('QueryType', $currentResourceScopes.queryType)
+            if ($null -ne $currentResourceScopes.'@odata.type')
+            {
+                $myResourceScopes.Add('odataType', $currentResourceScopes.'@odata.type'.ToString())
+            }
+            if ($myResourceScopes.values.Where({$null -ne $_}).Count -gt 0)
+            {
+                $complexResourceScopes += $myResourceScopes
+            }
+        }
+        $complexScope.Add('ResourceScopes',$complexResourceScopes)
+
+
         if ($null -ne $getValue.Scope.AdditionalProperties.'@odata.type')
         {
             $complexScope.Add('odataType', $getValue.Scope.AdditionalProperties.'@odata.type'.ToString())
@@ -772,6 +809,16 @@ function Export-TargetResource
                 $complexMapping = @(
                     @{
                         Name = 'ScopeValue'
+                        CimInstanceName = 'MicrosoftGraphAccessReviewScope'
+                        IsRequired = $False
+                    }
+                    @{
+                        Name = 'PrincipalScopes'
+                        CimInstanceName = 'MicrosoftGraphAccessReviewScope'
+                        IsRequired = $False
+                    }
+                    @{
+                        Name = 'ResourceScopes'
                         CimInstanceName = 'MicrosoftGraphAccessReviewScope'
                         IsRequired = $False
                     }
