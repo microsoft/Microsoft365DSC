@@ -463,6 +463,11 @@
                                "Option":  "Write"
                            },
                            {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "ApplicationSecret",
+                               "Option":  "Write"
+                           },
+                           {
                                "CIMType":  "String",
                                "Name":  "TenantId",
                                "Option":  "Write"
@@ -50705,6 +50710,31 @@
                            {
                                "CIMType":  "boolean",
                                "Name":  "EnableAIPIntegration",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "ExemptNativeUsersFromTenantLevelRestricedAccessControl",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AllowSelectSGsInODBListInTenant",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "DenySelectSGsInODBListInTenant",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "DenySelectSecurityGroupsInSPSitesList",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AllowSelectSecurityGroupsInSPSitesList",
                                "Option":  "Write"
                            },
                            {
