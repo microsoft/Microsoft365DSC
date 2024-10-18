@@ -6,6 +6,12 @@
   * Initial release.
 * AADIdentityGovernanceProgram
   * Initial release.
+* SPOTenantSettings
+  * Added support for AllowSelectSGsInODBListInTenant,
+    DenySelectSGsInODBListInTenant, DenySelectSecurityGroupsInSPSitesList,
+    AllowSelectSecurityGroupsInSPSitesList,
+    ExemptNativeUsersFromTenantLevelRestricedAccessControl properties.
+  * TenantDefaultTimezone changed to String instead of Array.
 * M365DSCDRGUtil
   * Fixes an issue where non-unique properties were not combined
     properly with their respective parent setting.
