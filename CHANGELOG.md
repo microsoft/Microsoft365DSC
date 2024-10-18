@@ -9,6 +9,7 @@
     DenySelectSGsInODBListInTenant, DenySelectSecurityGroupsInSPSitesList,
     AllowSelectSecurityGroupsInSPSitesList,
     ExemptNativeUsersFromTenantLevelRestricedAccessControl properties.
+  * TenantDefaultTimezone changed to String instead of Array.
 
 # 1.24.1016.1
 

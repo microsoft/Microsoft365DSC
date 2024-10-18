@@ -471,6 +471,11 @@ function Set-TargetResource
     $CurrentParameters.Remove('ManagedIdentity') | Out-Null
     $CurrentParameters.Remove('ApplicationSecret') | Out-Null
     $CurrentParameters.Remove('AccessTokens') | Out-Null
+    $CurrentParameters.Remove('ExemptNativeUsersFromTenantLevelRestricedAccessControl') | Out-Null
+    $CurrentParameters.Remove('AllowSelectSGsInODBListInTenant') | Out-Null
+    $CurrentParameters.Remove('DenySelectSGsInODBListInTenant') | Out-Null
+    $CurrentParameters.Remove('DenySelectSecurityGroupsInSPSitesList') | Out-Null
+    $CurrentParameters.Remove('AllowSelectSecurityGroupsInSPSitesList') | Out-Null
 
     $CurrentParameters.Remove('TenantDefaultTimezone') | Out-Null # this one is updated separately using Graph
     if ($CurrentParameters.Keys.Contains('UserVoiceForFeedbackEnabled'))
@@ -489,6 +494,62 @@ function Set-TargetResource
     if (-not [string]::IsNullOrEmpty($TenantDefaultTimezone))
     {
         $tenantGraph = Update-MgAdminSharepointSetting -TenantDefaultTimezone $TenantDefaultTimezone -ErrorAction Stop
+    }
+
+    # Updating via REST
+    try
+    {
+        $paramsToUpdate = @{}
+        $needToUpdate = $false
+
+        if (null -ne $ExemptNativeUsersFromTenantLevelRestricedAccessControl)
+        {
+            $needToUpdate = $true
+            $params.Add("ExemptNativeUsersFromTenantLevelRestricedAccessControl", $ExemptNativeUsersFromTenantLevelRestricedAccessControl)
+        }
+
+        if (null -ne $AllowSelectSGsInODBListInTenant)
+        {
+            $needToUpdate = $true
+            $params.Add("AllowSelectSGsInODBListInTenant", $AllowSelectSGsInODBListInTenant)
+        }
+
+        if (null -ne $DenySelectSGsInODBListInTenant)
+        {
+            $needToUpdate = $true
+            $params.Add("DenySelectSGsInODBListInTenant", $DenySelectSGsInODBListInTenant)
+        }
+
+        if (null -ne $DenySelectSecurityGroupsInSPSitesList)
+        {
+            $needToUpdate = $true
+            $params.Add("DenySelectSecurityGroupsInSPSitesList", $DenySelectSecurityGroupsInSPSitesList)
+        }
+
+        if (null -ne $AllowSelectSecurityGroupsInSPSitesList)
+        {
+            $needToUpdate = $true
+            $params.Add("AllowSelectSecurityGroupsInSPSitesList", $AllowSelectSecurityGroupsInSPSitesList)
+        }
+
+        if ($needToUpdate)
+        {
+            Write-Verbose -Message "Updating properties via REST PATCH call."
+            Invoke-PnPSPRestMethod -Method PATCH `
+                        -Url "$($Global:MSCloudLoginConnectionProfile.PnP.AdminUrl)/_api/SPO.Tenant" `
+                        -Content $paramsToUpdate
+        }
+    }
+    catch
+    {
+        if ($_.Exception.Message.Contains("The requested operation is part of an experimental feature that is not supported in the current environment."))
+        {
+            Write-Verbose -Message "Updating via REST: The associated feature is not available in the given tenant."
+        }
+        else
+        {
+            throw $_
+        }
     }
 }
 
