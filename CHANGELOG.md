@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* AADAccessReviewDefinition
+  * Initial release.
 * AADIdentityGovernanceProgram
   * Initial release.
 * SPOTenantSettings
@@ -10,6 +12,9 @@
     AllowSelectSecurityGroupsInSPSitesList,
     ExemptNativeUsersFromTenantLevelRestricedAccessControl properties.
   * TenantDefaultTimezone changed to String instead of Array.
+* M365DSCDRGUtil
+  * Fixes an issue where non-unique properties were not combined
+    properly with their respective parent setting.
 
 # 1.24.1016.1
 
