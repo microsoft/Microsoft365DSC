@@ -30131,6 +30131,82 @@ function Get-MgBetaDirectoryDeletedApplication
 }
 #endregion
 #region Microsoft.Graph.Beta.Identity.Governance
+function Get-MgBetaProgram
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $ProgramId,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Filter
+    )
+}
+
+function Remove-MgBetaProgram
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $ProgramId
+    )
+}
+
+function Update-MgBetaProgram
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $ProgramId,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [PSObject]
+        $BodyParameter
+    )
+}
+
+function New-MgBetaProgram
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [PSObject]
+        $BodyParameter
+    )
+}
+
 function Get-MgBetaAgreement
 {
     [CmdletBinding()]

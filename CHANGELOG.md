@@ -2,6 +2,11 @@
 
 # UNRELEASED
 
+* AADIdentityGovernanceProgram
+  * Initial release.
+
+# 1.24.1016.1
+
 * AADAdminConsentRequestPolicy
   * Initial release.
 * AADApplication

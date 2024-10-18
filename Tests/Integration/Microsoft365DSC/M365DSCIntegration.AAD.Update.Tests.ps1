@@ -905,6 +905,15 @@
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                 }
+                AADIdentityGovernanceProgram 'AADIdentityGovernanceProgram-Example'
+                {
+                    ApplicationId           = $ApplicationId
+                    TenantId                = $TenantId
+                    CertificateThumbprint   = $CertificateThumbprint
+                    Description             = "Example Program Description Updated";
+                    DisplayName             = "Example";
+                    Ensure                  = "Present";
+                }
                 AADLifecycleWorkflowSettings 'AADLifecycleWorkflowSettings'
                 {
                     ApplicationId                   = $ApplicationId;
