@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* AADAccessReviewDefinition
+  * Initial release.
 * AADIdentityGovernanceProgram
   * Initial release.
 
