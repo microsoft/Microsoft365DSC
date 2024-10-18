@@ -97621,3 +97621,20 @@ function Stop-MgBetaIdentityGovernanceAccessReviewDefinition
 
 #endregion
 
+function Invoke-PnPSPRestMethod
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Method,
+
+        [Parameter()]
+        [System.Url]
+        $Url,
+
+        [Parameter()]
+        [System.Object]
+        $Content
+    )
+}
