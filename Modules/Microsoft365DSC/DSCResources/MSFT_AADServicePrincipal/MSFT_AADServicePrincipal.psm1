@@ -231,6 +231,9 @@ function Get-TargetResource
             }
 
             $complexCustomSecurityAttributes = [Array](Get-CustomSecurityAttributes -AppId $AppId)
+            if ($null -eq $complexCustomSecurityAttributes) {
+                $complexCustomSecurityAttributes = @()
+            }
 
             $result = @{
                 AppId                              = $AADServicePrincipal.AppId
@@ -421,6 +424,13 @@ function Set-TargetResource
     $currentParameters.Remove('ApplicationSecret') | Out-Null
     $currentParameters.Remove('AccessTokens') | Out-Null
 
+    # update the custom security attributes to be cmdlet comsumable
+    if ($null -ne $currentParameters.CustomSecurityAttributes -and $currentParameters.CustomSecurityAttributes -gt 0) {
+        $currentParameters.CustomSecurityAttributes = Get-M365DSCAADServicePrincipalCustomSecurityAttributesAsCmdletHashtable -CustomSecurityAttributes $currentParameters.CustomSecurityAttributes
+    } else {
+        $currentParameters.CustomSecurityAttributes = @()
+    }
+
     # ServicePrincipal should exist but it doesn't
     if ($Ensure -eq 'Present' -and $currentAADServicePrincipal.Ensure -eq 'Absent')
     {
@@ -479,36 +489,13 @@ function Set-TargetResource
         $currentParameters.Remove('Owners') | Out-Null
         $currentParameters.Remove('DelegatedPermissionClassifications') | Out-Null
 
-        # logic to update the custom security attributes to be cmdlet comsumable
-        $updatedCustomSecurityAttributes = @{}
-        foreach ($attributeSet in $currentParameters.CustomSecurityAttributes) {
-            $attributeSetKey = $attributeSet.AttributeName
-
-            $valuesHashtable = @{}
-            foreach ($attribute in $attributeSet.AttributeValues) {
-                $attributeKey = $attribute.AttributeName
-                $attributeValue
-                if ($null -ne $attribute.StringArrayValue) {
-                    if ($attribute.StringArrayValue.Count -gt 1) {
-                        $valuesHashtable($attributeKey + '@odata.type', "#Collection(String)")
-                        $attributeValue = $attribute.StringArrayValue
-                    } else {
-                        $attributeValue = $attribute.StringArrayValue[0]
-                    }
-                }
-                elseif ($null -ne $attribute.IntArrayValue) {
-                    if ($attribute.IntArrayValue.Count -gt 1) {
-                        $attributeValue = $attribute.IntArrayValue
-                    } else {
-                        $attributeValue = $attribute.IntArrayValue[0]
-                    }
-                }
-                elseif ($null -ne $attribute.BoolValue) {
-                    $attributeValue = $attribute.BoolValue
-                }
-                $valuesHashtable.Add($attributeKey, $attributeValue)
+        #removing the current custom security attributes
+        if ($currentAADServicePrincipal.CustomSecurityAttributes.Count -gt 0) {
+            $currentAADServicePrincipal.CustomSecurityAttributes = Get-M365DSCAADServicePrincipalCustomSecurityAttributesAsCmdletHashtable -CustomSecurityAttributes $currentAADServicePrincipal.CustomSecurityAttributes -GetForDelete $true
+            $CSAParams = @{
+                customSecurityAttributes = $currentAADServicePrincipal.CustomSecurityAttributes
             }
-            $updatedCustomSecurityAttributes.Add($attributeSetKey, $valuesHashtable)
+            Invoke-MgGraphRequest -Uri "https://graph.microsoft.com/beta/servicePrincipals(appId='$($currentParameters.AppId)')" -Method Patch -Body $CSAParams
         }
 
         Update-MgServicePrincipal -ServicePrincipalId $currentAADServicePrincipal.ObjectID @currentParameters
@@ -798,7 +785,6 @@ function Test-TargetResource
                 -Source ($source) `
                 -Target ($target)
 
-            Write-Host "Key: $key, Cim comparison value: $testResult"
             if (-not $testResult)
             {
                 $testTargetResource = $false
@@ -885,7 +871,6 @@ function Export-TargetResource
     try
     {
         $i = 1
-        Write-Host "`r`n" -NoNewline
         $Script:ExportMode = $true
         [array] $Script:exportedInstances = Get-MgServicePrincipal -All:$true `
                                                                    -Filter $Filter `
@@ -893,7 +878,7 @@ function Export-TargetResource
                                                                    -ErrorAction Stop
         foreach ($AADServicePrincipal in $Script:exportedInstances)
         {
-            if($AADServicePrincipal.AppId -ne 'e4763382-ff8d-4c4c-97e1-65e2241986df') {
+            if($AADServicePrincipal.AppId -ne '0b750897-174f-4aed-ad21-ab3799c7e404') {
                 continue
             }
             if ($null -ne $Global:M365DSCExportResourceInstancesCount)
@@ -901,7 +886,6 @@ function Export-TargetResource
                 $Global:M365DSCExportResourceInstancesCount++
             }
 
-            Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $($AADServicePrincipal.DisplayName)" -NoNewline
             $Params = @{
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
@@ -954,7 +938,6 @@ function Export-TargetResource
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
                     -FileName $Global:PartialExportFileName
 
-                Write-Host $Global:M365DSCEmojiGreenCheckMark
                 $i++
             }
         }
@@ -962,7 +945,6 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
 
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `
@@ -972,6 +954,64 @@ function Export-TargetResource
 
         return ''
     }
+}
+
+function Get-M365DSCAADServicePrincipalCustomSecurityAttributesAsCmdletHashtable
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Collections.ArrayList]
+        $CustomSecurityAttributes,
+
+        [Parameter()]
+        [System.Boolean]
+        $GetForDelete = $false
+    )
+
+    # logic to update the custom security attributes to be cmdlet comsumable
+    $updatedCustomSecurityAttributes = @{}
+    foreach ($attributeSet in $CustomSecurityAttributes) {
+        $attributeSetKey = $attributeSet.AttributeSetName
+
+        $valuesHashtable = @{}
+        $valuesHashtable.Add('@odata.type', '#Microsoft.DirectoryServices.CustomSecurityAttributeValue')
+        foreach ($attribute in $attributeSet.AttributeValues) {
+            $attributeKey = $attribute.AttributeName
+            # supply attributeName = $null in the body, if you want to delete this attribute
+            if ($GetForDelete -eq $true) {
+                $valuesHashtable.Add($attributeKey, $null)
+                continue
+            }
+
+            $odataKey = $attributeKey + '@odata.type'
+
+            if ($null -ne $attribute.StringArrayValue) {
+                $valuesHashtable.Add($odataKey, "#Collection(String)")
+                $attributeValue = $attribute.StringArrayValue
+            }
+            elseif ($null -ne $attribute.IntArrayValue) {
+                $valuesHashtable.Add($odataKey, "#Collection(Int32)")
+                $attributeValue = $attribute.IntArrayValue
+            }
+            elseif ($null -ne $attribute.StringValue) {
+                $valuesHashtable.Add($odataKey, "#String")
+                $attributeValue = $attribute.StringValue
+            }
+            elseif ($null -ne $attribute.IntValue) {
+                $valuesHashtable.Add($odataKey, "#Int32")
+                $attributeValue = $attribute.IntValue
+            }
+            elseif ($null -ne $attribute.BoolValue) {
+                $attributeValue = $attribute.BoolValue
+            }
+
+            $valuesHashtable.Add($attributeKey, $attributeValue)
+        }
+        $updatedCustomSecurityAttributes.Add($attributeSetKey, $valuesHashtable)
+    }
+    return $updatedCustomSecurityAttributes
 }
 
 # Function to create MSFT_AttributeValue
@@ -985,18 +1025,20 @@ function Create-AttributeValue {
         AttributeName = $AttributeName
         StringArrayValue = $null
         IntArrayValue = $null
+        StringValue = $null
+        IntValue = $null
         BoolValue = $null
     }
 
     # Handle different types of values
     if ($Value -is [string]) {
-        $attributeValue.StringArrayValue = @($Value)
+        $attributeValue.StringValue = $Value
     }
     elseif ($Value -is [System.Int32] -or $Value -is [System.Int64]) {
-        $attributeValue.IntArrayValue = @($Value)
+        $attributeValue.IntValue = $Value
     }
     elseif ($Value -is [bool]) {
-        $attributeValue.BoolValue = @($Value)
+        $attributeValue.BoolValue = $Value
     }
     elseif ($Value -is [array]) {
         if ($Value[0] -is [string]) {
@@ -1071,7 +1113,13 @@ function Get-M365DSCAADServicePrincipalCustomSecurityAttributesAsString
                 $StringContent += "                        MSFT_AADServicePrincipalAttributeValue {`r`n"
                 $StringContent += "                            AttributeName  = '" + $attributeValue.AttributeName + "'`r`n"
                 if ($null -ne $attributeValue.BoolValue){
-                    $StringContent += "                            BoolValue = '$" + $attributeValue.BoolValue + "'`r`n"
+                    $StringContent += "                            BoolValue = $" + $attributeValue.BoolValue + "`r`n"
+                }
+                elseif ($null -ne $attributeValue.StringValue){
+                    $StringContent += "                            StringValue = '" + $attributeValue.StringValue + "'`r`n"
+                }
+                elseif ($null -ne $attributeValue.IntValue){
+                    $StringContent += "                            IntValue = " + $attributeValue.IntValue + "`r`n"
                 }
                 elseif ($null -ne $attributeValue.StringArrayValue){
                     $StringContent += "                            StringArrayValue = @("
@@ -1141,65 +1189,4 @@ function Get-M365DSCAzureADServicePrincipalDelegatedPermissionClassifications
     return $StringContent
 }
 
-
-
-function Print-Hashtable {
-    param (
-        [Parameter(Mandatory=$true)]
-        [hashtable]$Hashtable,
-        [int]$IndentLevel = 0
-    )
-
-    # Helper function to handle arrays and nested objects
-    function Print-Value {
-        param (
-            [Parameter(Mandatory=$true)]
-            $Value,
-            [int]$IndentLevel
-        )
-
-        $indent = " " * ($IndentLevel * 4)
-
-        if ($Value -is [hashtable]) {
-            # Recursively call the Print-Hashtable function for nested hashtables
-            Print-Hashtable -Hashtable $Value -IndentLevel ($IndentLevel + 1)
-        } elseif ($Value -is [array]) {
-            # Handle arrays
-            Write-Host "${indent}Array:"
-            for ($i = 0; $i -lt $Value.Count; $i++) {
-                $item = $Value[$i]
-                Write-Host "${indent}[$i]:"
-                if ($item -is [hashtable]) {
-                    Print-Hashtable -Hashtable $item -IndentLevel ($IndentLevel + 1)
-                } else {
-                Print-Value -Value $item -IndentLevel ($IndentLevel + 1)
-                }
-            }
-        } else {
-            # Print simple values (non-hashtable, non-array)
-            Write-Host "${indent}$Value"
-        }
-    }
-
-    # Iterate through each key-value pair in the hashtable
-    foreach ($key in $Hashtable.Keys) {
-        $indent = " " * ($IndentLevel * 4)
-        $value = $Hashtable[$key]
-
-        if ($value -is [hashtable]) {
-            # Print key and call recursively if value is a nested hashtable
-            Write-Host "${indent}$key :"
-            Print-Hashtable -Hashtable $value -IndentLevel ($IndentLevel + 1)
-        } elseif ($value -is [array]) {
-            # Print arrays with an index for each element
-            Write-Host "${indent}$key :"
-            Print-Value -Value $value -IndentLevel ($IndentLevel + 1)
-        } else {
-            # Print key-value pairs for non-complex data types
-            Write-Host "${indent}$key : $value"
-        }
-    }
-}
-
-
-Export-ModuleMember -Function *
+Export-ModuleMember -Function *-TargetResource

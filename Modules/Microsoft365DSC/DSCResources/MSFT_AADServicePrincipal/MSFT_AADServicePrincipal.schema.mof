@@ -18,6 +18,8 @@ class MSFT_AADServicePrincipalAttributeValue
     [Write, Description("Name of the Attribute")] String AttributeName;
     [Write, Description("If the attribute has a string array value")] String StringArrayValue[];
 	[Write, Description("If the attribute has a int array value")] UInt32 IntArrayValue[];
+    [Write, Description("If the attribute has a string value")] String StringValue;
+	[Write, Description("If the attribute has a int value")] UInt32 IntValue;
 	[Write, Description("If the attribute has a boolean value")] Boolean BoolValue;
 };
 
