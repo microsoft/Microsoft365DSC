@@ -4,8 +4,14 @@
 
 * AADAccessReviewDefinition
   * Initial release.
+* AADCustomSecurityAttributeDefinition
+  * Fixed missing permissions in settings.json
 * AADIdentityGovernanceProgram
   * Initial release.
+* AADSocialIdentityProvider
+  * Fixed missing permissions in settings.json
+* Intune workload
+  * Fixed missing permissions in settings.json
 * SPOTenantSettings
   * Added support for AllowSelectSGsInODBListInTenant,
     DenySelectSGsInODBListInTenant, DenySelectSecurityGroupsInSPSitesList,
