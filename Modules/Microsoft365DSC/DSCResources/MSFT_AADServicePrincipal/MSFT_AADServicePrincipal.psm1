@@ -217,7 +217,8 @@ function Get-TargetResource
             }
 
             [Array]$complexDelegatedPermissionClassifications = @()
-            $permissionClassifications = Invoke-MgGraphRequest -Uri "https://graph.microsoft.com/v1.0/servicePrincipals(appId='$AppId')/delegatedPermissionClassifications" -Method Get
+            $Uri = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "v1.0/servicePrincipals(appId='$AppId')/delegatedPermissionClassifications"
+            $permissionClassifications = Invoke-MgGraphRequest -Uri $Uri -Method Get
             foreach ($permissionClassification in $permissionClassifications.Value){
                 $hashtable = @{
                     classification = $permissionClassification.Classification
@@ -448,7 +449,8 @@ function Set-TargetResource
                     classification = $permissionClassification.Classification
                     permissionName = $permissionClassification.permissionName
                 }
-                Invoke-MgGraphRequest -Uri "https://graph.microsoft.com/v1.0/servicePrincipals(appId='$($currentParameters.AppId)')/delegatedPermissionClassifications" -Method Post -Body $params
+                $Uri = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "v1.0/servicePrincipals(appId='$($currentParameters.AppId)')/delegatedPermissionClassifications"
+                Invoke-MgGraphRequest -Uri $Uri -Method Post -Body $params
             }
         }
     }
@@ -585,9 +587,10 @@ function Set-TargetResource
         if ($null -ne $DelegatedPermissionClassifications)
         {
             # removing old perm classifications
-            $permissionClassificationList = Invoke-MgGraphRequest -Uri "https://graph.microsoft.com/v1.0/servicePrincipals(appId='$($currentParameters.AppId)')/delegatedPermissionClassifications" -Method Get
+            $Uri = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "v1.0/servicePrincipals(appId='$($currentParameters.AppId)')/delegatedPermissionClassifications"
+            $permissionClassificationList = Invoke-MgGraphRequest -Uri $Uri -Method Get
             foreach($permissionClassification in $permissionClassificationList.Value){
-                Invoke-MgGraphRequest -Uri "https://graph.microsoft.com/v1.0/servicePrincipals(appId='$($currentParameters.AppId)')/delegatedPermissionClassifications/$($permissionClassification.Id)" -Method Delete
+                Invoke-MgGraphRequest -Uri "$($Uri)/$($permissionClassification.Id)" -Method Delete
             }
 
             # adding new perm classifications
@@ -596,7 +599,7 @@ function Set-TargetResource
                     classification = $permissionClassification.Classification
                     permissionName = $permissionClassification.permissionName
                 }
-                Invoke-MgGraphRequest -Uri "https://graph.microsoft.com/v1.0/servicePrincipals(appId='$($currentParameters.AppId)')/delegatedPermissionClassifications" -Method Post -Body $params
+                Invoke-MgGraphRequest -Uri $Uri -Method Post -Body $params
             }
         }
     }

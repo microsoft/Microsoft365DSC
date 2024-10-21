@@ -391,8 +391,9 @@ function Get-TargetResource
 
             try
             {
+                $Uri = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/applications/$($AADBetaApp.Id)/onPremisesPublishing"
                 $oppInfo = Invoke-MgGraphRequest -Method GET `
-                                                 -Uri "https://graph.microsoft.com/beta/applications/$($AADBetaApp.Id)/onPremisesPublishing" `
+                                                 -Uri $Uri `
                                                  -ErrorAction SilentlyContinue
             }
             catch
@@ -1135,8 +1136,10 @@ function Set-TargetResource
         $onPremisesPublishingValue.Add('singleSignOnSettings', $singleSignOnValues)
         $onPremisesPayload = ConvertTo-Json $onPremisesPublishingValue -Depth 10 -Compress
         Write-Verbose -Message "Updating the OnPremisesPublishing settings for application {$($currentAADApp.DisplayName)} with payload: $onPremisesPayload"
+        
+        $Uri = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/applications/$($currentAADApp.Id)/onPremisesPublishing"
         Invoke-MgGraphRequest -Method 'PATCH' `
-                              -Uri "https://graph.microsoft.com/beta/applications/$($currentAADApp.Id)/onPremisesPublishing" `
+                              -Uri $Uri `
                               -Body $onPremisesPayload
     }
     #endregion
