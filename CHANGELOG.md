@@ -2,10 +2,29 @@
 
 # UNRELEASED
 
+* AADAccessReviewDefinition
+  * Initial release.
+* AADCustomSecurityAttributeDefinition
+  * Fixed missing permissions in settings.json
+* AADIdentityB2XUserFlow
+  * Initial release.
 * AADIdentityGovernanceProgram
   * Initial release.
+* AADSocialIdentityProvider
+  * Fixed missing permissions in settings.json
 * IntuneAppAndBrowserIsolationPolicyWindows10ConfigMgr
   * Initial release.
+* Intune workload
+  * Fixed missing permissions in settings.json
+* SPOTenantSettings
+  * Added support for AllowSelectSGsInODBListInTenant,
+    DenySelectSGsInODBListInTenant, DenySelectSecurityGroupsInSPSitesList,
+    AllowSelectSecurityGroupsInSPSitesList,
+    ExemptNativeUsersFromTenantLevelRestricedAccessControl properties.
+  * TenantDefaultTimezone changed to String instead of Array.
+* M365DSCDRGUtil
+  * Fixes an issue where non-unique properties were not combined
+    properly with their respective parent setting.
 
 # 1.24.1016.1
 
@@ -74,6 +93,8 @@
 * TeamsUpgradePolicy
   * Added support for tenant wide changes using the * value for users.
     FIXES [#5174](https://github.com/microsoft/Microsoft365DSC/issues/5174)
+* TeamsGroupPolicyAssignments
+  * FIXES [#5179](https://github.com/microsoft/Microsoft365DSC/issues/5179)
 * M365DSCDRGUtil
   * Fixes an issue for the handling of skipped one-property elements in the
     Settings Catalog. FIXES [#5086](https://github.com/microsoft/Microsoft365DSC/issues/5086)
