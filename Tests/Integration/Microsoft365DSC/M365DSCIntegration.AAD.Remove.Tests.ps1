@@ -34,6 +34,17 @@
         $Domain = $TenantId
         Node Localhost
         {
+                AADAccessReviewDefinition 'AADAccessReviewDefinition-Example'
+                {
+                    DescriptionForAdmins    = "description for admins";
+                    DescriptionForReviewers = "description for reviewers";
+                    DisplayName             = "Test Access Review Definition";
+                    Ensure                  = "Absent";
+                    Id                      = "613854e6-c458-4a2c-83fc-e0f4b8b17d60";
+                    ApplicationId           = $ApplicationId
+                    TenantId                = $TenantId
+                    CertificateThumbprint   = $CertificateThumbprint
+                }
                 AADAdministrativeUnit 'TestUnit'
                 {
                     DisplayName                   = 'Test-Unit'

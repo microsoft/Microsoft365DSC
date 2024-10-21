@@ -36,11 +36,11 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - None
+    - CustomSecAttributeDefinition.Read.All
 
 - **Update**
 
-    - None
+    - CustomSecAttributeDefinition.ReadWrite.All
 
 #### Application permissions
 
