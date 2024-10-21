@@ -6,6 +6,8 @@
   * Initial release.
 * AADCustomSecurityAttributeDefinition
   * Fixed missing permissions in settings.json
+* AADIdentityB2XUserFlow
+  * Initial release.
 * AADIdentityGovernanceProgram
   * Initial release.
 * AADSocialIdentityProvider
