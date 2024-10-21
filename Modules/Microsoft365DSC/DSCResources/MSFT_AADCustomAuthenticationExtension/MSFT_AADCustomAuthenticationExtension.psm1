@@ -4,6 +4,7 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
+        [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
 
@@ -38,7 +39,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Int32]
-        $ClientConfigurationTimeoutMillisesonds,
+        $ClientConfigurationTimeoutMilliseconds,
 
         [Parameter()]
         [System.Int32]
@@ -50,7 +51,7 @@ function Get-TargetResource
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
-        $ClaimsForTokenConfguration,
+        $ClaimsForTokenConfiguration,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -79,7 +80,7 @@ function Get-TargetResource
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure = 'Present',
+        $Ensure = 'Present'
     )
 
     New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -99,6 +100,7 @@ function Get-TargetResource
 
     $nullResult = $PSBoundParameters
     $nullResult.Ensure = 'Absent'
+    Write-Verbose -Message "Fetching result...."
     try
     {
         # check for export.
@@ -120,7 +122,7 @@ function Get-TargetResource
         {
             if (-not [System.String]::IsNullOrEmpty($Id))
             {
-                $instance = Get-MgBetaIdentityCustomAuthenticationExtension --CustomAuthenticationExtensionId $Id `
+                $instance = Get-MgBetaIdentityCustomAuthenticationExtension -CustomAuthenticationExtensionId $Id `
                                                                                  -ErrorAction SilentlyContinue
             }
             if ($null -eq $instance)
@@ -134,10 +136,13 @@ function Get-TargetResource
             return $nullResult
         }
 
+        Write-Verbose "Instance found for the resource. Calculating result...."
+
         $results = @{
             DisplayName = $instance.DisplayName
             Id          = $instance.Id
             Description = $instance.Description
+            Ensure      = 'Present'
         }
 
         if ($instance.AdditionalProperties -ne $null)
@@ -157,25 +162,25 @@ function Get-TargetResource
             $results.Add('ClientConfigurationMaximumRetries', $instance.ClientConfiguration.MaximumRetries)
         }
 
-        $endpointConfiguration = @{}
+        $endpointConfigurationInstance = @{}
         if ($instance.EndPointConfiguration -ne $null -and $instance.EndPointConfiguration.AdditionalProperties -ne $null)
         {
-            $endpointConfiguration.Add("EndpointType", $instance.EndPointConfiguration.AdditionalProperties["@odata.type"])
+            $endpointConfigurationInstance.Add("EndpointType", $instance.EndPointConfiguration.AdditionalProperties["@odata.type"])
 
-            if ($endpointConfiguration["EndpointType"] -eq '#microsoft.graph.httpRequestEndpoint')
+            if ($endpointConfigurationInstance["EndpointType"] -eq '#microsoft.graph.httpRequestEndpoint')
             {
-                $endpointConfiguration.Add("TargetUrl", $instance.EndPointConfiguration.AdditionalProperties["targetUrl"])
+                $endpointConfigurationInstance.Add("TargetUrl", $instance.EndPointConfiguration.AdditionalProperties["targetUrl"])
             }
 
-            if ($endpointConfiguration["EndpointType"] -eq '#microsoft.graph.logicAppTriggerEndpointConfiguration')
+            if ($endpointConfigurationInstance["EndpointType"] -eq '#microsoft.graph.logicAppTriggerEndpointConfiguration')
             {
-                $endpointConfiguration.Add("SubscriptionId", $instance.EndPointConfiguration.AdditionalProperties["subscriptionId"])
-                $endpointConfiguration.Add("ResourceGroupName", $instance.EndPointConfiguration.AdditionalProperties["resourceGroupName"])
-                $endpointConfiguration.Add("LogicAppWorkflowName", $instance.EndPointConfiguration.AdditionalProperties["logicAppWorkflowName"])
+                $endpointConfigurationInstance.Add("SubscriptionId", $instance.EndPointConfiguration.AdditionalProperties["subscriptionId"])
+                $endpointConfigurationInstance.Add("ResourceGroupName", $instance.EndPointConfiguration.AdditionalProperties["resourceGroupName"])
+                $endpointConfigurationInstance.Add("LogicAppWorkflowName", $instance.EndPointConfiguration.AdditionalProperties["logicAppWorkflowName"])
             }
         }
 
-        $claimsForTokenConfguration = @()
+        $ClaimsForTokenConfigurationInstance = @()
         if ($instance.AdditionalProperties -ne $null -and $instance.AdditionalProperties["claimsForTokenConfiguration"] -ne $null)
         {
             foreach ($claim in $instance.AdditionalProperties["claimsForTokenConfiguration"])
@@ -184,12 +189,12 @@ function Get-TargetResource
                     ClaimIdInApiResponse = $claim.claimIdInApiResponse
                 }
 
-                $claimsForTokenConfguration += $c
+                $ClaimsForTokenConfigurationInstance += $c
             }
         }
 
-        $results.Add('EndPointConfiguration', $endpointConfiguration)
-        $results.Add('ClaimsForTokenConfguration', $claimsForTokenConfguration)
+        $results.Add('EndPointConfiguration', $endpointConfigurationInstance)
+        $results.Add('ClaimsForTokenConfiguration', $ClaimsForTokenConfigurationInstance)
 
         return [System.Collections.Hashtable] $results
     }
@@ -211,6 +216,7 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
+        [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
 
@@ -245,7 +251,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Int32]
-        $ClientConfigurationTimeoutMillisesonds,
+        $ClientConfigurationTimeoutMilliseconds,
 
         [Parameter()]
         [System.Int32]
@@ -257,7 +263,7 @@ function Set-TargetResource
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
-        $ClaimsForTokenConfguration,
+        $ClaimsForTokenConfiguration,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -323,24 +329,24 @@ function Set-TargetResource
             timeoutInMilliseconds = $setParameters["ClientConfigurationTimeoutMilliseconds"]
             maximumRetries = $setParameters["ClientConfigurationMaximumRetries"]
         }
-        claimsForTokenConfguration = @()
-    }
-
-    foreach ($claim in $setParameters["ClaimsForTokenConfguration"])
-    {
-        $c = @{
-            "claimIdInApiResponse" = $claim["ClaimIdInApiResponse"]
-        }
-
-        $params["claimsForTokenConfiguration"] += $c
     }
 
     # CREATE
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
+        $params.Add("ClaimsForTokenConfiguration", @())
+        foreach ($claim in $setParameters["ClaimsForTokenConfiguration"])
+        {
+            $c = @{
+                "claimIdInApiResponse" = $claim["ClaimIdInApiResponse"]
+            }
+
+            $params["claimsForTokenConfiguration"] += $c
+        }
+
         $params.Remove('Id') | Out-Null
         Write-Verbose -Message "Creating new Custom authentication extension with display name {$DisplayName}"
-        New-MgBetaIdentityCustomAuthenticationExtension @params
+        New-MgBetaIdentityCustomAuthenticationExtension -BodyParameter $params
     }
 
     # UPDATE
@@ -348,8 +354,22 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Updating custom authentication extension {$DisplayName}"
         $params.Add('CustomAuthenticationExtensionId', $currentInstance.Id)
+        $params.Remove("@odata.type") | Out-Null
         $params.Remove('Id') | Out-Null
-        Update-MgBetaIdentityCustomAuthenticationExtension @SetParameters
+
+        $params.Add("AdditionalProperties", @{})
+        $params["AdditionalProperties"].Add("ClaimsForTokenConfiguration", @())
+
+        foreach ($claim in $setParameters["ClaimsForTokenConfiguration"])
+        {
+            $c = @{
+                "claimIdInApiResponse" = $claim["ClaimIdInApiResponse"]
+            }
+
+            $params["AdditionalProperties"]["claimsForTokenConfiguration"] += $c
+        }
+
+        Update-MgBetaIdentityCustomAuthenticationExtension @params
     }
     # REMOVE
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
@@ -365,6 +385,7 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
+        [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
 
@@ -399,7 +420,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Int32]
-        $ClientConfigurationTimeoutMillisesonds,
+        $ClientConfigurationTimeoutMilliseconds,
 
         [Parameter()]
         [System.Int32]
@@ -411,7 +432,7 @@ function Test-TargetResource
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
-        $ClaimsForTokenConfguration,
+        $ClaimsForTokenConfiguration,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -457,6 +478,28 @@ function Test-TargetResource
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
+
+    #Compare Cim instances
+    foreach ($key in $PSBoundParameters.Keys)
+    {
+        $source = $PSBoundParameters.$key
+        $target = $CurrentValues.$key
+        if ($null -ne $source -and $source.GetType().Name -like '*CimInstance*')
+        {
+            $testResult = Compare-M365DSCComplexObject `
+                -Source ($source) `
+                -Target ($target)
+
+            if (-not $testResult)
+            {
+                Write-Verbose "TestResult returned False for $source"
+                $testTargetResource = $false
+            }
+            else {
+                $ValuesToCheck.Remove($key) | Out-Null
+            }
+        }
+    }
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
@@ -547,7 +590,7 @@ function Export-TargetResource
             Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -NoNewline
             $params = @{
                 Id                    = $config.Id
-                DisplayNames          = $config.DisplayName
+                DisplayName           = $config.DisplayName
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
@@ -557,6 +600,18 @@ function Export-TargetResource
             }
 
             $Results = Get-TargetResource @Params
+
+            $endpointConfigurationCimString = Get-M365DSCDRGComplexTypeToString `
+                        -ComplexObject $Results.EndpointConfiguration `
+                        -CIMInstanceName 'MSFT_AADCustomAuthenticationExtensionEndPointConfiguration'
+
+            $ClaimsForTokenConfigurationCimString = Get-M365DSCDRGComplexTypeToString `
+                        -ComplexObject $Results.ClaimsForTokenConfiguration `
+                        -CIMInstanceName 'MSFT_AADCustomAuthenticationExtensionClaimForTokenConfiguration'
+
+            $Results.EndPointConfiguration = $endpointConfigurationCimString
+            $Results.ClaimsForTokenConfiguration = $ClaimsForTokenConfigurationCimString
+
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
 
@@ -565,7 +620,19 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
+
+            if ($Results.EndPointConfiguration -ne $null)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "EndPointConfiguration"
+            }
+
+            if ($Results.ClaimsForTokenConfiguration -ne $null)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "ClaimsForTokenConfiguration" -IsCIMArray $true
+            }
+
             $dscContent += $currentDSCBlock
+
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
