@@ -296,6 +296,13 @@
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                 }
+                AADIdentityB2XUserFlow 'AADIdentityB2XUserFlow-B2X_1_TestFlow'
+                {
+                    ApplicationId             = $ApplicationId
+                    TenantId                  = $TenantId
+                    CertificateThumbprint     = $CertificateThumbprint
+                    Id                        = "B2X_1_TestFlow";
+                }
                 AADIdentityGovernanceLifecycleWorkflow 'AADIdentityGovernanceLifecycleWorkflow-Onboard pre-hire employee updated version'
                 {
                     Category             = "joiner";
