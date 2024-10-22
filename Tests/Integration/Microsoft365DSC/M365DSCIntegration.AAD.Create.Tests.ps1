@@ -209,6 +209,32 @@
                     Id                   = "c3";
                     IsAvailable          = $True;
                 }
+                AADAuthenticationMethodPolicyExternal 'AADAuthenticationMethodPolicyExternal-Cisco Duo'
+                {
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
+                    AppId                 = "e35c54ff-bd24-4c52-921a-4b90a35808eb";
+                    DisplayName           = "Cisco Duo";
+                    Ensure                = "Present";
+                    ExcludeTargets        = @(
+                        MSFT_AADAuthenticationMethodPolicyExternalExcludeTarget{
+                            Id = 'Design'
+                            TargetType = 'group'
+                        }
+                    );
+                    IncludeTargets        = @(
+                        MSFT_AADAuthenticationMethodPolicyExternalIncludeTarget{
+                            Id = 'Contoso'
+                            TargetType = 'group'
+                        }
+                    );
+                    OpenIdConnectSetting  = MSFT_AADAuthenticationMethodPolicyExternalOpenIdConnectSetting{
+                        discoveryUrl = 'https://graph.microsoft.com/'
+                        clientId = '7698a352-4939-486e-9974-4ea5aff93f74'
+                    };
+                    State                 = "disabled";
+                }
                 AADAuthenticationStrengthPolicy 'AADAuthenticationStrengthPolicy-Example'
                 {
                     AllowedCombinations  = @("windowsHelloForBusiness","fido2","x509CertificateMultiFactor","deviceBasedPush");
@@ -281,6 +307,33 @@
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                     Ensure                       = "Present";
+                }
+                AADCustomAuthenticationExtension 'AADCustomAuthenticationExtension1'
+                {
+                    AuthenticationConfigurationResourceId  = "api://microsoft365dsc.com/11105949-846e-42a1-a873-f12db8345013"
+                    AuthenticationConfigurationType        = "#microsoft.graph.azureAdTokenAuthentication"
+                    ClaimsForTokenConfiguration            = @(
+                        MSFT_AADCustomAuthenticationExtensionClaimForTokenConfiguration{
+                            ClaimIdInApiResponse = 'MyClaim'
+                        }
+                        MSFT_AADCustomAuthenticationExtensionClaimForTokenConfiguration{
+                            ClaimIdInApiResponse = 'My2ndClaim'
+                        }
+                    )
+                    ClientConfigurationMaximumRetries      = 1
+                    ClientConfigurationTimeoutMilliseconds = 2000
+                    CustomAuthenticationExtensionType      = "#microsoft.graph.onTokenIssuanceStartCustomExtension"
+                    Description                            = "DSC Testing 1"
+                    DisplayName                            = "DSCTestExtension"
+                    EndPointConfiguration                  = MSFT_AADCustomAuthenticationExtensionEndPointConfiguration{
+                        EndpointType = '#microsoft.graph.httpRequestEndpoint'
+                        TargetUrl = 'https://Microsoft365DSC.com'
+                    }
+                    Ensure                                 = "Present";
+                    Id                                     = "11105949-846e-42a1-a873-f12db8345013"
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 AADCustomSecurityAttributeDefinition 'AADCustomSecurityAttributeDefinition-ShoeSize'
                 {
@@ -458,8 +511,8 @@
                     CertificateThumbprint     = $CertificateThumbprint
                     ApiConnectorConfiguration = MSFT_MicrosoftGraphuserFlowApiConnectorConfiguration
                     {
-                        postAttributeCollectionConnectorId = 'RestApi_f6e8e73d-6b17-433e-948f-f578f12bd57c'
-                        postFederationSignupConnectorId = 'RestApi_beeb7152-673c-48b3-b143-9975949a93ca'
+                        postAttributeCollectionConnectorName = 'RestApi_f6e8e73d-6b17-433e-948f-f578f12bd57c'
+                        postFederationSignupConnectorName = 'RestApi_beeb7152-673c-48b3-b143-9975949a93ca'
                     };
                     Credential                = $Credscredential;
                     Ensure                    = "Present";
@@ -564,6 +617,27 @@
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
+                }
+                AADOrganizationCertificateBasedAuthConfiguration 'AADOrganizationCertificateBasedAuthConfiguration-58b6e58e-10d1-4b8c-845d-d6aefaaecba2'
+                {
+                    ApplicationId             = $ApplicationId
+                    TenantId                  = $TenantId
+                    CertificateThumbprint     = $CertificateThumbprint
+                    CertificateAuthorities = @(
+                        MSFT_MicrosoftGraphcertificateAuthority{
+                            IsRootAuthority = $True
+        					DeltaCertificateRevocationListUrl = 'pqr.com'
+                            Certificate = '<Base64 encoded cert>'
+                        }
+                        MSFT_MicrosoftGraphcertificateAuthority{
+                            IsRootAuthority = $True
+                            CertificateRevocationListUrl = 'xyz.com'
+                            DeltaCertificateRevocationListUrl = 'pqr.com'
+                            Certificate = '<Base64 encoded cert>'
+                        }
+                    );
+                    Ensure                 = "Present";
+                    OrganizationId         = "e91d4e0e-d5a5-4e3a-be14-2192592a59af";
                 }
                 AADRoleDefinition 'AADRoleDefinition1'
                 {

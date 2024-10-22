@@ -4,11 +4,15 @@
 
 * AADAccessReviewDefinition
   * Initial release.
+* AADAuthenticationMethodPolicyExternal
+  * Initial release.
 * AADCustomSecurityAttributeDefinition
   * Fixed missing permissions in settings.json
 * AADIdentityB2XUserFlow
   * Initial release.
 * AADIdentityGovernanceProgram
+  * Initial release.
+* AADOrganizationCertificateBasedAuthConfiguration
   * Initial release.
 * AADSocialIdentityProvider
   * Fixed missing permissions in settings.json
@@ -16,6 +20,8 @@
   * Initial release.
 * Intune workload
   * Fixed missing permissions in settings.json
+* SentinelThreatIntelligenceIndicator
+  * Initial release.
 * SPOTenantSettings
   * Added support for AllowSelectSGsInODBListInTenant,
     DenySelectSGsInODBListInTenant, DenySelectSecurityGroupsInSPSitesList,
@@ -25,6 +31,12 @@
 * M365DSCDRGUtil
   * Fixes an issue where non-unique properties were not combined
     properly with their respective parent setting.
+* DEPENDENCIES
+  * Updated ExchangeOnlineManagement to version 3.6.0.
+  * Updated Microsoft.Graph to version 2.24.0.
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.199.
+  * Updated MSCloudLoginAssistant to version 1.1.27
+  * Updated MicrosoftTeams to version 6.6.0.
 
 # 1.24.1016.1
 
@@ -39,6 +51,8 @@
 * AADAuthenticationRequirement
   * Initial release.
 * AADConnectorGroupApplicationProxy
+  * Initial release.
+* AADCustomAuthenticationExtension
   * Initial release.
 * AADCustomSecurityAttributeDefinition
   * Initial release.
