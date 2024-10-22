@@ -3,6 +3,7 @@ class MSFT_AADIdentityAPIConnectionCertificate
 {
     [Write, Description("")] String Pkcs12Value;
     [Write, Description("")] String Thumbprint;
+    [Write, Description("")] String Password;
     [Write, Description("")] Boolean IsActive;
 };
 

@@ -128,6 +128,7 @@ function Get-TargetResource
             $myCertificate= @{}
             $myCertificate.Add('Pkcs12Value', "Please insert a valid Pkcs12Value")
             $myCertificate.Add('Thumbprint', $currentCertificate.thumbprint)
+            $myCertificate.Add('Password', "Please insert a valid Password for the certificate")
             $myCertificate.Add('IsActive', $currentCertificate.isActive)
 
             if ($myCertificate.values.Where({$null -ne $_}).Count -gt 0)
@@ -311,7 +312,90 @@ function Set-TargetResource
         }
     }
     else {
+
+        # Remove the existing instance if already present
+        if($currentInstance.Ensure -ne 'Absent') {
+            Write-Verbose -Message "Removing the Azure AD Identity API Connector with Id {$($currentInstance.Id)}"
             Remove-MgBetaIdentityAPIConnector -IdentityApiConnectorId $currentInstance.Id
+        }
+
+        # Create a new instance with the certificates
+        Write-Verbose -Message "Creating an Azure AD Identity API Connector with DisplayName {$DisplayName}"
+
+        $createParameters = ([Hashtable]$BoundParameters).Clone()
+        $createParameters = Rename-M365DSCCimInstanceParameter -Properties $createParameters
+        $createParameters.Remove('Id') | Out-Null
+
+        $createParameters.Remove('Password') | Out-Null
+        $createParameters.Remove('Pkcs12Value') | Out-Null
+
+        # Get the active and inactive certificates
+        $activeCertificates = @()
+        $inactiveCertificates = @()
+        foreach ($currentCertificate in $Certificates)
+        {
+            $myCertificate = @{}
+            $myCertificate.Add('Pkcs12Value', $currentCertificate.Pkcs12Value)
+            $myCertificate.Add('Password', $currentCertificate.Password)
+
+            if($currentCertificate.IsActive -eq $true) {
+                $activeCertificates += $myCertificate
+            }
+            else {
+                $inactiveCertificates += $myCertificate
+            }
+        }
+
+        # Only one certificate can be active
+        if($activeCertificates.Count -ne 1) {
+            Write-Error "There should be one active certificate"
+            throw
+        }
+        
+        if($inactiveCertificates.Count -eq 0) {
+            $createParameters.Add("AuthenticationConfiguration", @{
+                '@odata.type' = "microsoft.graph.pkcs12Certificate"
+                "password" = $activeCertificates[0].Password
+                "pkcs12Value" = $activeCertificates[0].Pkcs12Value
+            })
+            $activeCertificates = $activeCertificates[1..$activeCertificates.Count]
+        }
+        else {
+            $createParameters.Add("AuthenticationConfiguration", @{
+                '@odata.type' = "microsoft.graph.pkcs12Certificate"
+                "password" = $inactiveCertificates[0].Password
+                "pkcs12Value" = $inactiveCertificates[0].Pkcs12Value
+            })
+            # remove the first element from the inactive certificates
+            $inactiveCertificates = $inactiveCertificates[1..$inactiveCertificates.Count]
+        }
+
+        $createParameters.Add("@odata.type", "#microsoft.graph.IdentityApiConnector")
+        $policy = New-MgBetaIdentityAPIConnector -BodyParameter $createParameters
+
+
+        # Upload the inactive certificates
+        foreach ($currentCertificate in $inactiveCertificates)
+        {
+            $params = @{
+                pkcs12Value = $currentCertificate.Pkcs12Value
+                password = $currentCertificate.Password
+            }
+
+            Invoke-MgBetaUploadIdentityApiConnectorClientCertificate -IdentityApiConnectorId $policy.Id -BodyParameter $params
+        }
+
+        # Upload active certificate
+        foreach ($currentCertificate in $activeCertificates)
+        {
+            $params = @{
+                pkcs12Value = $currentCertificate.Pkcs12Value
+                password = $currentCertificate.Password
+            }
+
+            Invoke-MgBetaUploadIdentityApiConnectorClientCertificate -IdentityApiConnectorId $policy.Id -BodyParameter $params
+        }
+
     }
 }
 
@@ -428,7 +512,6 @@ function Test-TargetResource
 
     $ValuesToCheck.Remove('Id') | Out-Null
     $ValuesToCheck.Remove('Password') | Out-Null
-    $ValuesToCheck.Remove('Pkcs12Value') | Out-Null
     $ValuesToCheck = Remove-M365DSCAuthenticationParameter -BoundParameters $ValuesToCheck
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
