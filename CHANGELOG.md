@@ -10,6 +10,8 @@
   * Initial release.
 * AADIdentityGovernanceProgram
   * Initial release.
+* AADOrganizationCertificateBasedAuthConfiguration
+  * Initial release.
 * AADSocialIdentityProvider
   * Fixed missing permissions in settings.json
 * Intune workload
