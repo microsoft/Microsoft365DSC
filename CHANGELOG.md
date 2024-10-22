@@ -16,6 +16,8 @@
   * Fixed missing permissions in settings.json
 * Intune workload
   * Fixed missing permissions in settings.json
+* SentinelThreatIntelligenceIndicator
+  * Initial release.
 * SPOTenantSettings
   * Added support for AllowSelectSGsInODBListInTenant,
     DenySelectSGsInODBListInTenant, DenySelectSecurityGroupsInSPSitesList,
