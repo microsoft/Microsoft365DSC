@@ -494,16 +494,64 @@ function Test-TargetResource
         $target = $CurrentValues.$key
         if ($null -ne $source -and $source.GetType().Name -like '*CimInstance*')
         {
-            $testResult = Compare-M365DSCComplexObject `
-                -Source ($source) `
-                -Target ($target)
-
-            if (-not $testResult)
+            
+            # create a list of thumbprints from the source list
+            $sourceThumbprints = @()
+            foreach ($item in $source)
             {
-                break
+                $myCertificate = @{}
+                $myCertificate.Add('Thumbprint', $item.Thumbprint)
+                $myCertificate.Add('IsActive', $item.IsActive)
+                $sourceThumbprints += $myCertificate
             }
 
-            $ValuesToCheck.Remove($key) | Out-Null
+            # create a list of thumbprints from the target list
+            $targetThumbprints = @()
+            foreach ($item in $target)
+            {
+                $myCertificate = @{}
+                $myCertificate.Add('Thumbprint', $item.Thumbprint)
+                $myCertificate.Add('IsActive', $item.IsActive)
+                $targetThumbprints += $myCertificate
+            }
+            # sort the lists
+            $sourceThumbprints = $sourceThumbprints | Sort-Object -Property { $_.Thumbprint }
+            $targetThumbprints = $targetThumbprints | Sort-Object -Property { $_.Thumbprint }
+
+            # print the list in verbose logs
+            foreach ($item in $sourceThumbprints)
+            {
+                Write-Verbose -Message "Source Thumbprints: $(Convert-M365DscHashtableToString -Hashtable $item)"
+            }
+
+            foreach ($item in $targetThumbprints)
+            {
+                Write-Verbose -Message "Target Thumbprints: $(Convert-M365DscHashtableToString -Hashtable $item)"
+            }
+            
+            # check if the lists are identical
+            $compareResult = $true
+            if ($sourceThumbprints.Count -ne $targetThumbprints.Count)
+            {
+                $compareResult = $false
+            }
+            else
+            {
+                for ($i = 0; $i -lt $sourceThumbprints.Count; $i++)
+                {
+                    if ($sourceThumbprints[$i].Thumbprint -ne $targetThumbprints[$i].Thumbprint)
+                    {
+                        $compareResult = $false
+                        Write-Verbose -Message "Thumbprint mismatch: $($sourceThumbprints[$i].Thumbprint) - $($targetThumbprints[$i].Thumbprint)"
+                        break
+                    }
+                }
+            }
+
+            if($compareResult -eq $true)
+            {
+                $ValuesToCheck.Remove($key) | Out-Null
+            }
         }
     }
 
