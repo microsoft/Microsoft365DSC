@@ -33,13 +33,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-PSSession -MockWith {
             }
 
-            Mock -CommandName Set-MgBetaOrganizationCertificateBasedAuthConfiguration -MockWith {
-            }
-
-            Mock -CommandName New-MgBetaOrganizationCertificateBasedAuthConfiguration -MockWith {
-            }
-
-            Mock -CommandName Remove-MgBetaOrganizationCertificateBasedAuthConfiguration -MockWith {
+            Mock -CommandName Invoke-MgGraphRequest -MockWith {
+                return $null
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
@@ -58,14 +53,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     CertificateAuthorities = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_MicrosoftGraphcertificateAuthority -Property @{
-                            IssuerSki = "FakeStringValue"
                             DeltaCertificateRevocationListUrl = "FakeStringValue"
                             IsRootAuthority = $True
                             CertificateRevocationListUrl = "FakeStringValue"
-                            Issuer = "FakeStringValue"
+                            Certificate = "VGVzdA==" # "Test"
                         } -ClientOnly)
                     )
-                    Id = "FakeStringValue"
+                    OrganizationId = "FakeStringValue"
                     Ensure = "Present"
                     Credential = $Credential;
                 }
@@ -82,7 +76,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
             It 'Should Create the group from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName New-MgBetaOrganizationCertificateBasedAuthConfiguration -Exactly 1
+                Should -Invoke -CommandName Invoke-MgGraphRequest -ParameterFilter { $Method -eq 'POST' } -Exactly 1
             }
         }
 
@@ -91,15 +85,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     CertificateAuthorities = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_MicrosoftGraphcertificateAuthority -Property @{
-                            IssuerSki = "FakeStringValue"
                             DeltaCertificateRevocationListUrl = "FakeStringValue"
                             IsRootAuthority = $True
                             CertificateRevocationListUrl = "FakeStringValue"
-                            Issuer = "FakeStringValue"
+                            Certificate = "VGVzdA==" # "Test"
                         } -ClientOnly)
                     )
-                    Id = "FakeStringValue"
-                    Ensure = 'Absent'
+                    OrganizationId = "FakeStringValue"
+                    Ensure = "Absent"
                     Credential = $Credential;
                 }
 
@@ -115,6 +108,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 IsRootAuthority = $True
                                 CertificateRevocationListUrl = "FakeStringValue"
                                 Issuer = "FakeStringValue"
+                                Certificate = [byte[]] @(84, 101, 115, 116) # "Test"
                             }
                         )
                         Id = "FakeStringValue"
@@ -133,7 +127,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should Remove the group from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Remove-MgBetaOrganizationCertificateBasedAuthConfiguration -Exactly 1
+                Should -Invoke -CommandName Invoke-MgGraphRequest -ParameterFilter { $Method -eq 'DELETE' } -Exactly 1
             }
         }
         Context -Name "The AADOrganizationCertificateBasedAuthConfiguration Exists and Values are already in the desired state" -Fixture {
@@ -141,14 +135,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     CertificateAuthorities = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_MicrosoftGraphcertificateAuthority -Property @{
-                            IssuerSki = "FakeStringValue"
                             DeltaCertificateRevocationListUrl = "FakeStringValue"
                             IsRootAuthority = $True
                             CertificateRevocationListUrl = "FakeStringValue"
-                            Issuer = "FakeStringValue"
+                            Certificate = "VGVzdA==" # "Test"
                         } -ClientOnly)
                     )
-                    Id = "FakeStringValue"
+                    OrganizationId = "FakeStringValue"
                     Ensure = 'Present'
                     Credential = $Credential;
                 }
@@ -165,6 +158,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 IsRootAuthority = $True
                                 CertificateRevocationListUrl = "FakeStringValue"
                                 Issuer = "FakeStringValue"
+                                Certificate = [byte[]] @(84, 101, 115, 116) # "Test"
                             }
                         )
                         Id = "FakeStringValue"
@@ -184,29 +178,34 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     CertificateAuthorities = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_MicrosoftGraphcertificateAuthority -Property @{
-                            IssuerSki = "FakeStringValue"
                             DeltaCertificateRevocationListUrl = "FakeStringValue"
                             IsRootAuthority = $True
                             CertificateRevocationListUrl = "FakeStringValue"
-                            Issuer = "FakeStringValue"
+                            Certificate = "VGVzdA==" # "Test"
                         } -ClientOnly)
                     )
-                    Id = "FakeStringValue"
+                    OrganizationId = "FakeStringValue"
                     Ensure = 'Present'
                     Credential = $Credential;
                 }
 
                 Mock -CommandName Get-MgBetaOrganizationCertificateBasedAuthConfiguration -MockWith {
                     return @{
+                        AdditionalProperties = @{
+                            '@odata.type' = "#microsoft.graph.CertificateBasedAuthConfiguration"
+                        }
                         CertificateAuthorities = @(
                             @{
                                 IssuerSki = "FakeStringValue"
-                                DeltaCertificateRevocationListUrl = "FakeStringValue"
+                                DeltaCertificateRevocationListUrl = "NewFakeStringValue"
+                                IsRootAuthority = $False
                                 CertificateRevocationListUrl = "FakeStringValue"
                                 Issuer = "FakeStringValue"
+                                Certificate = [byte[]] @(84, 101, 115, 116) # "Test"
                             }
                         )
                         Id = "FakeStringValue"
+
                     }
                 }
             }
@@ -221,7 +220,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should call the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Set-MgBetaOrganizationCertificateBasedAuthConfiguration -Exactly 1
+                Should -Invoke -CommandName Invoke-MgGraphRequest -ParameterFilter { $Method -eq 'DELETE' } -Exactly 1
+                Should -Invoke -CommandName Invoke-MgGraphRequest -ParameterFilter { $Method -eq 'POST' } -Exactly 1
             }
         }
 
@@ -241,14 +241,22 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         CertificateAuthorities = @(
                             @{
                                 IssuerSki = "FakeStringValue"
-                                DeltaCertificateRevocationListUrl = "FakeStringValue"
-                                IsRootAuthority = $True
+                                DeltaCertificateRevocationListUrl = "NewFakeStringValue"
+                                IsRootAuthority = $False
                                 CertificateRevocationListUrl = "FakeStringValue"
                                 Issuer = "FakeStringValue"
+                                Certificate = [byte[]] @(84, 101, 115, 116) # "Test"
                             }
                         )
                         Id = "FakeStringValue"
 
+                    }
+                }
+
+                Mock -CommandName Get-MgBetaOrganization -MockWith {
+                    return @{
+                        Id = "00000000-0000-0000-0000-000000000000"
+                        DisplayName = "Fakegroup"
                     }
                 }
             }

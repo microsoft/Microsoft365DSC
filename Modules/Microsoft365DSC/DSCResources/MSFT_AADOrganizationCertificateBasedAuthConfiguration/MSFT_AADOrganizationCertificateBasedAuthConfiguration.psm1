@@ -92,7 +92,7 @@ function Get-TargetResource
         foreach ($currentCertificateAuthorities in $getValue.certificateAuthorities)
         {
             $myCertificateAuthorities = @{}
-            $myCertificateAuthorities.Add('Certificate', [convert]::ToBase64String($currentCertificateAuthorities.certificate))
+            $myCertificateAuthorities.Add('Certificate', [System.Convert]::ToBase64String($currentCertificateAuthorities.certificate))
             $myCertificateAuthorities.Add('CertificateRevocationListUrl', $currentCertificateAuthorities.certificateRevocationListUrl)
             $myCertificateAuthorities.Add('DeltaCertificateRevocationListUrl', $currentCertificateAuthorities.deltaCertificateRevocationListUrl)
             $myCertificateAuthorities.Add('IsRootAuthority', $currentCertificateAuthorities.isRootAuthority)
@@ -201,10 +201,7 @@ function Set-TargetResource
 
     # Delete the old configuration
     Write-Verbose -Message "Removing the current Azure AD Organization Certificate Based Auth Configuration."
-
-    Remove-MgBetaOrganizationCertificateBasedAuthConfiguration  `
-        -CertificateBasedAuthConfigurationId $CertificateBasedAuthConfigurationId `
-        -OrganizationId $OrganizationId
+    Invoke-MgGraphRequest -Uri "https://graph.microsoft.com/beta/organization/$OrganizationId/certificateBasedAuthConfiguration/$CertificateBasedAuthConfigurationId" -Method DELETE
 
     if ($Ensure -eq 'Present')
     {
@@ -212,19 +209,23 @@ function Set-TargetResource
 
         $createParameters = ([Hashtable]$BoundParameters).Clone()
         $createParameters = Rename-M365DSCCimInstanceParameter -Properties $createParameters
-        $createParameters.Remove('Id') | Out-Null
+        $createParameters.Remove('OrganizationId') | Out-Null
 
-        $keys = (([Hashtable]$createParameters).Clone()).Keys
-        foreach ($key in $keys)
+        $createCertAuthorities = @()
+        foreach ($CertificateAuthority in $CertificateAuthorities)
         {
-            if ($null -ne $createParameters.$key -and $createParameters.$key.GetType().Name -like '*CimInstance*')
-            {
-                $createParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $createParameters.$key
+            $createCertAuthorities += @{
+                certificate = $CertificateAuthority.Certificate
+                certificateRevocationListUrl = $CertificateAuthority.CertificateRevocationListUrl
+                deltaCertificateRevocationListUrl = $CertificateAuthority.DeltaCertificateRevocationListUrl
+                isRootAuthority = $CertificateAuthority.IsRootAuthority
             }
         }
+        $params = @{
+            certificateAuthorities = $createCertAuthorities
+        }
 
-        $policy = New-MgBetaOrganizationCertificateBasedAuthConfiguration -OrganizationId $OrganizationId -BodyParameter $createParameters
-        Write-Host "Policy: $policy"
+        $policy = Invoke-MgGraphRequest -Uri "https://graph.microsoft.com/beta/organization/$OrganizationId/certificateBasedAuthConfiguration/" -Method POST -Body $params
     }
 }
 
