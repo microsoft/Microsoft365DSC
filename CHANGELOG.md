@@ -46,6 +46,8 @@
   * Initial release.
 * AADConnectorGroupApplicationProxy
   * Initial release.
+* AADCustomAuthenticationExtension
+  * Initial release.
 * AADCustomSecurityAttributeDefinition
   * Initial release.
 * AADDeviceRegistrationPolicy
