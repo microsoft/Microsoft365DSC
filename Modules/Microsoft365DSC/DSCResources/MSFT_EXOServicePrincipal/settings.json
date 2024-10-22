@@ -1,0 +1,24 @@
+{
+    "resourceName": "EXOServicePrincipal",
+    "description": "Use the New-ServicePrincipal cmdlet to create service principals in your cloud-based organization.",
+    "roles": {
+        "read": [
+            "Exchange Admin"
+        ],
+        "update": [
+            "Exchange Admin"
+        ]
+    },
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [],
+                "update": []
+            },
+            "application": {
+                "read": [],
+                "update": []
+            }
+        }
+    }
+}
