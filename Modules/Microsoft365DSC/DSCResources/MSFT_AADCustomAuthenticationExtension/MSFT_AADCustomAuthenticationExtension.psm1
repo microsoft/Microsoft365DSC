@@ -311,19 +311,15 @@ function Set-TargetResource
     $setParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
     $params = @{
-        "@odata.type" = $setParameters["CustomAuthenticationExtensionType"]
-        displayName = $setParameters["DisplayName"]
-        description = $setParameters["Description"]
+        "@odata.type" = $setParameters.CustomAuthenticationExtensionType
+        displayName = $setParameters.DisplayName
+        description = $setParameters.Description
         endpointConfiguration = @{
-            "@odata.type" = $setParameters["EndpointType"]
-            targetUrl = $setParameters["TargetUrl"]
-            subscriptionId = $setParameters["SubscriptionId"]
-            resourceGroupName = $setParameters["ResourceGroupName"]
-            logicAppWorkflowName = $setParameters["LogicAppWorkflowName"]
+            "@odata.type" = $setParameters.EndPointConfiguration.EndpointType
         }
         authenticationConfiguration = @{
-            "@odata.type" = $setParameters["AuthenticationConfigurationType"]
-            resourceId = $setParameters["AuthenticationConfigurationResourceId"]
+            "@odata.type" = $setParameters.AuthenticationConfigurationType
+            resourceId = $setParameters.AuthenticationConfigurationResourceId
         }
         clientConfiguration = @{
             timeoutInMilliseconds = $setParameters["ClientConfigurationTimeoutMilliseconds"]
@@ -331,21 +327,37 @@ function Set-TargetResource
         }
     }
 
+    if ($params.endpointConfiguration["@odata.type"] -eq "#microsoft.graph.httpRequestEndpoint")
+    {
+        Write-Verbose -Message "{$setParameters.EndPointConfiguration.TargetUrl}"
+        $params.endpointConfiguration["targetUrl"] = $setParameters.EndPointConfiguration.TargetUrl
+    }
+
+    if ($params.endpointConfiguration["@odata.type"] -eq "#microsoft.graph.logicAppTriggerEndpointConfiguration")
+    {
+        $params.endpointConfiguration["subscriptionId"] = $setParameters.EndPointConfiguration["SubscriptionId"]
+        $params.endpointConfiguration["resourceGroupName"] = $setParameters.EndPointConfiguration["ResourceGroupName"]
+        $params.endpointConfiguration["logicAppWorkflowName"] = $setParameters.EndPointConfiguration["LogicAppWorkflowName"]
+    }
+
     # CREATE
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        $params.Add("ClaimsForTokenConfiguration", @())
-        foreach ($claim in $setParameters["ClaimsForTokenConfiguration"])
+        $params.Add("claimsForTokenConfiguration", @())
+        foreach ($claim in $setParameters.claimsForTokenConfiguration)
         {
+            $val = $claim.claimIdInApiResponse
+            Write-Verbose -Message "{$val}"
             $c = @{
-                "claimIdInApiResponse" = $claim["ClaimIdInApiResponse"]
+                "claimIdInApiResponse" = $claim.claimIdInApiResponse
             }
 
-            $params["claimsForTokenConfiguration"] += $c
+            $params.claimsForTokenConfiguration += $c
         }
 
         $params.Remove('Id') | Out-Null
-        Write-Verbose -Message "Creating new Custom authentication extension with display name {$DisplayName}"
+        $type = $params["@odata.type"]
+        Write-Verbose -Message "Creating new Custom authentication extension with display name {$DisplayName} and type {$type}"
         New-MgBetaIdentityCustomAuthenticationExtension -BodyParameter $params
     }
 
@@ -354,7 +366,6 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Updating custom authentication extension {$DisplayName}"
         $params.Add('CustomAuthenticationExtensionId', $currentInstance.Id)
-        $params.Remove("@odata.type") | Out-Null
         $params.Remove('Id') | Out-Null
 
         $params.Add("AdditionalProperties", @{})
@@ -369,7 +380,8 @@ function Set-TargetResource
             $params["AdditionalProperties"]["claimsForTokenConfiguration"] += $c
         }
 
-        Update-MgBetaIdentityCustomAuthenticationExtension @params
+        Write-Verbose -Message "{$params['@odata.type']}"
+        Update-MgBetaIdentityCustomAuthenticationExtension -CustomAuthenticationExtensionId $Id -BodyParameter $params
     }
     # REMOVE
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
