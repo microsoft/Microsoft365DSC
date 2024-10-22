@@ -251,54 +251,67 @@ function Set-TargetResource
 
     $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
+    # If the certificates array is not empty, then we need to create a new instance of New-MgBetaAADIdentityAPIConnector
 
-    if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
-    {
-        Write-Verbose -Message "Creating an Azure AD Identity API Connector with DisplayName {$DisplayName}"
-
-        $createParameters = ([Hashtable]$BoundParameters).Clone()
-        $createParameters = Rename-M365DSCCimInstanceParameter -Properties $createParameters
-        $createParameters.Remove('Id') | Out-Null
-
-        $createParameters.Remove('Password') | Out-Null
-        $createParameters.Remove('Pkcs12Value') | Out-Null
-
-        $createParameters.Add("AuthenticationConfiguration", @{
-            '@odata.type' = "microsoft.graph.basicAuthentication"
-            "password" = $Password.GetNetworkCredential().Password
-            "username" = $Username
-        })
-
-        $createParameters.Add("@odata.type", "#microsoft.graph.IdentityApiConnector")
-        $policy = New-MgBetaIdentityAPIConnector -BodyParameter $createParameters
+    $needToUpdateCertificates = $false
+    if($null -ne $Certificates -and $Certificates.Count -gt 0) {
+        $needToUpdateCertificates = $true
     }
-    elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
-    {
-        Write-Verbose -Message "Updating the Azure AD Identity API Connector with Id {$($currentInstance.Id)}"
 
-        $updateParameters = ([Hashtable]$BoundParameters).Clone()
-        $updateParameters = Rename-M365DSCCimInstanceParameter -Properties $updateParameters
+    if($needToUpdateCertificates -eq $false) {
+        if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
+        {
+            Write-Verbose -Message "Creating an Azure AD Identity API Connector with DisplayName {$DisplayName}"
 
-        $updateParameters.Remove('Id') | Out-Null
+            $createParameters = ([Hashtable]$BoundParameters).Clone()
+            $createParameters = Rename-M365DSCCimInstanceParameter -Properties $createParameters
+            $createParameters.Remove('Id') | Out-Null
 
-        $updateParameters.Remove('Password') | Out-Null
-        $updateParameters.Remove('Pkcs12Value') | Out-Null
+            $createParameters.Remove('Password') | Out-Null
+            $createParameters.Remove('Pkcs12Value') | Out-Null
 
-        $updateParameters.Add("AuthenticationConfiguration", @{
-            '@odata.type' = "microsoft.graph.basicAuthentication"
-            "password" = $Password.GetNetworkCredential().Password
-            "username" = $Username
-        })
+            if($username -ne $null) {
+                $createParameters.Add("AuthenticationConfiguration", @{
+                    '@odata.type' = "microsoft.graph.basicAuthentication"
+                    "password" = $Password.GetNetworkCredential().Password
+                    "username" = $Username
+                })
+            }
 
-        $UpdateParameters.Add("@odata.type", "#microsoft.graph.IdentityApiConnector")
-        Update-MgBetaIdentityAPIConnector `
+            $createParameters.Add("@odata.type", "#microsoft.graph.IdentityApiConnector")
+            $policy = New-MgBetaIdentityAPIConnector -BodyParameter $createParameters
+        }
+        elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
+        {
+            Write-Verbose -Message "Updating the Azure AD Identity API Connector with Id {$($currentInstance.Id)}"
+
+            $updateParameters = ([Hashtable]$BoundParameters).Clone()
+            $updateParameters = Rename-M365DSCCimInstanceParameter -Properties $updateParameters
+
+            $updateParameters.Remove('Id') | Out-Null
+
+            $updateParameters.Remove('Password') | Out-Null
+            $updateParameters.Remove('Pkcs12Value') | Out-Null
+
+            $updateParameters.Add("AuthenticationConfiguration", @{
+                '@odata.type' = "microsoft.graph.basicAuthentication"
+                "password" = $Password.GetNetworkCredential().Password
+                "username" = $Username
+            })
+
+            $UpdateParameters.Add("@odata.type", "#microsoft.graph.IdentityApiConnector")
+            Update-MgBetaIdentityAPIConnector `
             -IdentityApiConnectorId $currentInstance.Id `
             -BodyParameter $UpdateParameters
+        }
+        elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
+        {
+            Write-Verbose -Message "Removing the Azure AD Identity API Connector with Id {$($currentInstance.Id)}"
+            Remove-MgBetaIdentityAPIConnector -IdentityApiConnectorId $currentInstance.Id
+        }
     }
-    elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
-    {
-        Write-Verbose -Message "Removing the Azure AD Identity API Connector with Id {$($currentInstance.Id)}"
-        Remove-MgBetaIdentityAPIConnector -IdentityApiConnectorId $currentInstance.Id
+    else {
+            Remove-MgBetaIdentityAPIConnector -IdentityApiConnectorId $currentInstance.Id
     }
 }
 
