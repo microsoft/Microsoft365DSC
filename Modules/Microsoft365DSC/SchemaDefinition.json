@@ -1845,6 +1845,126 @@
                        ]
     },
     {
+        "ClassName":  "MSFT_AADAuthenticationMethodPolicyExternalExcludeTarget",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Id",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "TargetType",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_AADAuthenticationMethodPolicyExternalIncludeTarget",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Id",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "TargetType",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_AADAuthenticationMethodPolicyExternalOpenIdConnectSetting",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ClientId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "DiscoveryUrl",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_AADAuthenticationMethodPolicyExternal",
+        "Parameters":  [
+                           {
+                               "CIMType":  "MSFT_AADAuthenticationMethodPolicyExternalExcludeTarget[]",
+                               "Name":  "ExcludeTargets",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_AADAuthenticationMethodPolicyExternalIncludeTarget[]",
+                               "Name":  "IncludeTargets",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_AADAuthenticationMethodPolicyExternalOpenIdConnectSetting",
+                               "Name":  "OpenIdConnectSetting",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "State",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AppId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "DisplayName",
+                               "Option":  "Key"
+                           },
+                           {
+                               "CIMType":  "string",
+                               "Name":  "Ensure",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "Credential",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ApplicationId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "TenantId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "ApplicationSecret",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "CertificateThumbprint",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "ManagedIdentity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
         "ClassName":  "MSFT_MicrosoftGraphFido2KeyRestrictions",
         "Parameters":  [
                            {
