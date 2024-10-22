@@ -1,9 +1,9 @@
 [ClassVersion("1.0.0")]
 class MSFT_AADIdentityAPIConnectionCertificate
 {
-    [Write, Description("")] String Pkcs12Value;
+    [Write, Description(""), EmbeddedInstance("MSFT_Credential")] String Pkcs12Value;
     [Write, Description("")] String Thumbprint;
-    [Write, Description("")] String Password;
+    [Write, Description(""), EmbeddedInstance("MSFT_Credential")] String Password;
     [Write, Description("")] Boolean IsActive;
 };
 

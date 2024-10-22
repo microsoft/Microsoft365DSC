@@ -97,10 +97,7 @@ function Get-TargetResource
             {
                 $getValue = Get-MgBetaIdentityAPIConnector `
                     -Filter "DisplayName eq '$DisplayName'" `
-                    -ErrorAction SilentlyContinue | Where-Object `
-                    -FilterScript {
-                        $_.AdditionalProperties.'@odata.type' -eq "#microsoft.graph.IdentityApiConnector"
-                    }
+                    -ErrorAction SilentlyContinue 
             }
         }
         #endregion
@@ -335,8 +332,8 @@ function Set-TargetResource
         foreach ($currentCertificate in $Certificates)
         {
             $myCertificate = @{}
-            $myCertificate.Add('Pkcs12Value', $currentCertificate.Pkcs12Value)
-            $myCertificate.Add('Password', $currentCertificate.Password)
+            $myCertificate.Add('Pkcs12Value', ($currentCertificate.Pkcs12Value).Password)
+            $myCertificate.Add('Password', ($currentCertificate.Password).Password)
 
             if($currentCertificate.IsActive -eq $true) {
                 $activeCertificates += $myCertificate
@@ -629,7 +626,7 @@ function Export-TargetResource
             }
 
             $Results = Get-TargetResource @Params
-            $Results.Password = "New-Object System.Management.Automation.PSCredential('Password', (ConvertTo-SecureString ((New-Guid).ToString()) -AsPlainText -Force));"
+            $Results.Password = "Please insert a valid Password"
 
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
@@ -655,9 +652,6 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
-
-
-            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Password'
 
 
             if ($Results.Certificates)
