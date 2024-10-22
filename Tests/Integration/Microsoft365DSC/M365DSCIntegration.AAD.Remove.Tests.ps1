@@ -185,6 +185,14 @@
                     Ensure                   = "Absent";
                     PartnerTenantId          = "12345-12345-12345-12345-12345";
                 }
+                AADCustomAuthenticationExtension 'AADCustomAuthenticationExtension1'
+                {
+                    DisplayName               = "DSCTestExtension"
+                    Ensure                    = "Absent"
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
+                }
                 AADCustomSecurityAttributeDefinition 'AADCustomSecurityAttributeDefinition-ShoeSize'
                 {
                     ApplicationId           = $ApplicationId;
