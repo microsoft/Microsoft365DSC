@@ -26,8 +26,8 @@ function Get-TargetResource
         $Password,
 
         [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $Pkcs12Value,
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Certificates,
 
         #endregion
 
@@ -121,10 +121,19 @@ function Get-TargetResource
             $Password = New-Object System.Management.Automation.PSCredential ('Password', $securePassword)
         }
 
-        if($null -ne $getValue.AuthenticationConfiguration.AdditionalProperties.pkcs12Value) {
-            $securePassword = ConvertTo-SecureString $getValue.AuthenticationConfiguration.AdditionalProperties.pkcs12Value -AsPlainText -Force
 
-            $pkcs12Value = New-Object System.Management.Automation.PSCredential ('pkcs12Value', $securePassword)
+        $complexCertificates = @()
+        foreach ($currentCertificate in $getValue.AuthenticationConfiguration.AdditionalProperties.certificateList)
+        {
+            $myCertificate= @{}
+            $myCertificate.Add('Pkcs12Value', "Please insert a valid Pkcs12Value")
+            $myCertificate.Add('Thumbprint', $currentCertificate.thumbprint)
+            $myCertificate.Add('IsActive', $currentCertificate.isActive)
+
+            if ($myCertificate.values.Where({$null -ne $_}).Count -gt 0)
+            {
+                $complexCertificates += $myCertificate
+            }
         }
         #endregion
 
@@ -135,7 +144,7 @@ function Get-TargetResource
             Id                          = $getValue.Id
             Username                    = $getValue.AuthenticationConfiguration.AdditionalProperties.username
             Password                    = $Password
-            Pkcs12Value                 = $pkcs12Value
+            Certificates                = $complexCertificates
             Ensure                      = 'Present'
             Credential                  = $Credential
             ApplicationId               = $ApplicationId
@@ -187,8 +196,8 @@ function Set-TargetResource
         $Password,
 
         [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $Pkcs12Value,
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Certificates,
 
         #endregion
 
@@ -321,8 +330,8 @@ function Test-TargetResource
         $Password,
 
         [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $Pkcs12Value,
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Certificates,
 
         #endregion
 
@@ -526,10 +535,24 @@ function Export-TargetResource
             $Results = Get-TargetResource @Params
             $Results.Password = "New-Object System.Management.Automation.PSCredential('Password', (ConvertTo-SecureString ((New-Guid).ToString()) -AsPlainText -Force));"
 
-            $Results.Pkcs12Value = "New-Object System.Management.Automation.PSCredential('Pkcs12Value', (ConvertTo-SecureString ((New-Guid).ToString()) -AsPlainText -Force));"
-
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
+
+
+            if ($null -ne $Results.Certificates)
+            {
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                -ComplexObject $Results.Certificates`
+                -CIMInstanceName 'AADIdentityAPIConnectionCertificate'
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                {
+                    $Results.Certificates = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('Certificates') | Out-Null
+                }
+            }
 
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
@@ -538,8 +561,13 @@ function Export-TargetResource
                 -Credential $Credential
 
 
-            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Pkcs12Value'
             $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Password'
+
+
+            if ($Results.Certificates)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Certificates" -IsCIMArray:$True
+            }
 
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
