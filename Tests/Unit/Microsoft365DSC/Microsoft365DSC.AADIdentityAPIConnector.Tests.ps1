@@ -225,6 +225,60 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
+
+        Context -Name "The AADIdentityAPIConnector with certificates exists and values are in the desired state" -Fixture {
+
+            BeforeAll {
+                $testParams = @{
+                    DisplayName = 'FakeStringValue' 
+                    TargetUrl = 'FakeStringValue'
+                    Id = 'FakeStringValue'
+                    Certificates = @(
+                         New-CimInstance -ClassName 'MSFT_AADIdentityAPIConnectionCertificate' -Property @{
+                             Thumbprint = 'FakeStringValue'
+                             Pkcs12Value = (New-CimInstance -ClassName 'MSFT_Credential' -Property @{
+                                 Username = 'FakeStringValue'
+                                 Password = 'FakeStringValue'
+                             } -ClientOnly)
+                             Password = (New-CimInstance -ClassName 'MSFT_Credential' -Property @{
+                                 Username = 'FakeStringValue'
+                                 Password = 'FakeStringValue'
+                             } -ClientOnly)
+                             IsActive = $true
+                         } -ClientOnly
+                    )
+                    Credential = $Credential
+                    Ensure = 'Present'
+                }
+
+                Mock -CommandName Get-MgBetaIdentityAPIConnector -MockWith {
+                    return @{
+                        DisplayName = 'FakeStringValue'
+                        TargetUrl = 'FakeStringValue'
+                        Id = 'FakeStringValue'
+                        AuthenticationConfiguration = @{
+                            AdditionalProperties = @{
+                                certificateList = @(
+                                    @{
+                                        Thumbprint = 'FakeStringValue'
+                                        IsActive = $true
+                                    }
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+
+            It 'Should return Values from the Get method' {
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
+            }
+
+            It 'Should return false from the Test method' {
+                Test-TargetResource @testParams | Should -Be $true
+            }
+        }
+
         Context -Name 'ReverseDSC Tests' -Fixture {
             BeforeAll {
                 $Global:CurrentModeIsExport = $true
