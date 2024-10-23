@@ -4,11 +4,43 @@
 
 * AADAccessReviewDefinition
   * Initial release.
+* AADAuthenticationMethodPolicyExternal
+  * Initial release.
+* AADCustomSecurityAttributeDefinition
+  * Fixed missing permissions in settings.json
+* AADIdentityB2XUserFlow
+  * Initial release.
 * AADIdentityGovernanceProgram
   * Initial release.
+* AADIdentityAPIConnector
+  * Initial release.
+* AADOrganizationCertificateBasedAuthConfiguration
+  * Initial release.
+* AADSocialIdentityProvider
+  * Fixed missing permissions in settings.json
+* EXOMailboxAuditBypassAssociation
+  * Initial release.
+* Intune workload
+  * Fixed missing permissions in settings.json
+* SentinelAlertRule
+  * Initial release.
+* SentinelThreatIntelligenceIndicator
+  * Initial release.
+* SPOTenantSettings
+  * Added support for AllowSelectSGsInODBListInTenant,
+    DenySelectSGsInODBListInTenant, DenySelectSecurityGroupsInSPSitesList,
+    AllowSelectSecurityGroupsInSPSitesList,
+    ExemptNativeUsersFromTenantLevelRestricedAccessControl properties.
+  * TenantDefaultTimezone changed to String instead of Array.
 * M365DSCDRGUtil
   * Fixes an issue where non-unique properties were not combined
     properly with their respective parent setting.
+* DEPENDENCIES
+  * Updated ExchangeOnlineManagement to version 3.6.0.
+  * Updated Microsoft.Graph to version 2.24.0.
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.199.
+  * Updated MSCloudLoginAssistant to version 1.1.27
+  * Updated MicrosoftTeams to version 6.6.0.
 
 # 1.24.1016.1
 
@@ -24,6 +56,8 @@
   * Initial release.
 * AADConnectorGroupApplicationProxy
   * Initial release.
+* AADCustomAuthenticationExtension
+  * Initial release.
 * AADCustomSecurityAttributeDefinition
   * Initial release.
 * AADDeviceRegistrationPolicy
@@ -35,7 +69,8 @@
 * AADLifecycleWorkflowSettings
   * Initial release.
 * AADServicePrincipal
-  * Adding Delegated Permission Classification Property
+  * Added Delegated Permission Classification Property
+  * Added Custom Security Attributes Property
 * ADOPermissionGroupSettings
   * Initial release.
 * EXOATPBuiltInProtectionRule
@@ -77,6 +112,8 @@
 * TeamsUpgradePolicy
   * Added support for tenant wide changes using the * value for users.
     FIXES [#5174](https://github.com/microsoft/Microsoft365DSC/issues/5174)
+* TeamsGroupPolicyAssignments
+  * FIXES [#5179](https://github.com/microsoft/Microsoft365DSC/issues/5179)
 * M365DSCDRGUtil
   * Fixes an issue for the handling of skipped one-property elements in the
     Settings Catalog. FIXES [#5086](https://github.com/microsoft/Microsoft365DSC/issues/5086)
