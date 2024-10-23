@@ -36864,11 +36864,6 @@
                            },
                            {
                                "CIMType":  "String",
-                               "Name":  "PublishingState",
-                               "Option":  "Write"
-                           },
-                           {
-                               "CIMType":  "String",
                                "Name":  "BundleId",
                                "Option":  "Write"
                            },
@@ -36890,6 +36885,11 @@
                            {
                                "CIMType":  "Boolean",
                                "Name":  "IgnoreVersionDetection",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "InstallAsManaged",
                                "Option":  "Write"
                            },
                            {
