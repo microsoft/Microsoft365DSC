@@ -6,6 +6,8 @@
   * Initial release.
 * AADIdentityGovernanceProgram
   * Initial release.
+* AADIdentityAPIConnector
+  * Initial release.
 * SPOTenantSettings
   * Added support for AllowSelectSGsInODBListInTenant,
     DenySelectSGsInODBListInTenant, DenySelectSecurityGroupsInSPSitesList,
