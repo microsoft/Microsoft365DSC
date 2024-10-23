@@ -428,7 +428,7 @@ function Set-TargetResource
     if ($null -ne $currentParameters.CustomSecurityAttributes -and $currentParameters.CustomSecurityAttributes -gt 0) {
         $currentParameters.CustomSecurityAttributes = Get-M365DSCAADServicePrincipalCustomSecurityAttributesAsCmdletHashtable -CustomSecurityAttributes $currentParameters.CustomSecurityAttributes
     } else {
-        $currentParameters.CustomSecurityAttributes = @()
+        $currentParameters.Remove('CustomSecurityAttributes')
     }
 
     # ServicePrincipal should exist but it doesn't
@@ -879,9 +879,6 @@ function Export-TargetResource
                                                                    -ErrorAction Stop
         foreach ($AADServicePrincipal in $Script:exportedInstances)
         {
-            if($AADServicePrincipal.AppId -ne '0b750897-174f-4aed-ad21-ab3799c7e404') {
-                continue
-            }
             if ($null -ne $Global:M365DSCExportResourceInstancesCount)
             {
                 $Global:M365DSCExportResourceInstancesCount++
