@@ -22,12 +22,6 @@ function Get-TargetResource
         $Policies,
 
         #endregion
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet('Absent', 'Present')]
-        $Ensure = 'Present',
-
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
@@ -75,7 +69,6 @@ function Get-TargetResource
         #endregion
 
         $nullResult = $PSBoundParameters
-        $nullResult.Ensure = 'Absent'
 
         $getValue = $null
         #region resource generator code
@@ -83,6 +76,7 @@ function Get-TargetResource
         {
             $getValue = Get-MgBetaNetworkAccessForwardingProfile -ForwardingProfileId $Id -ErrorAction SilentlyContinue
         }
+
         if ($null -eq $getValue)
         {
             Write-Verbose -Message "Could not find an Azure AD Network Access Forwarding Profile with  Id:{$Id}"
@@ -97,7 +91,7 @@ function Get-TargetResource
         #endregion
         if ($null -eq $getValue)
         {
-            Write-Verbose -Message "Could not find an Azure AD Network Access Forwarding Profile with  {$Name}."
+            Write-Verbose -Message "Could not find an Azure AD Network Access Forwarding Profile with  name {$Name}."
             return $nullResult
         }
 
@@ -115,7 +109,7 @@ function Get-TargetResource
             $myPolicies = @{}
             $myPolicies.Add('Name', $currentPolicy.Policy.Name)
             $myPolicies.Add('State', $currentPolicy.State)
-            $myPolicies.Add('Id', $currentPolicy.Id)
+            $myPolicies.Add('PolicyLinkId', $currentPolicy.Id)
             if ($myPolicies.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexPolicies += $myPolicies
@@ -129,7 +123,6 @@ function Get-TargetResource
             State                 = $getValue.State
             Policies              = $complexPolicies
             # 'Policies@Odata.Context' = $getValue.AdditionalProperties['policies@odata.context']
-            Ensure                = 'Present'
             Credential            = $Credential
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
@@ -176,11 +169,6 @@ function Set-TargetResource
 
         #endregion
         [Parameter()]
-        [System.String]
-        [ValidateSet('Absent', 'Present')]
-        $Ensure = 'Present',
-
-        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -212,52 +200,59 @@ function Set-TargetResource
     # Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
-    # #region Telemetry
-    # $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
-    # $CommandName = $MyInvocation.MyCommand
-    # $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-    #     -CommandName $CommandName `
-    #     -Parameters $PSBoundParameters
-    # Add-M365DSCTelemetryEvent -Data $data
-    # #endregion
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+    $CommandName = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
 
-    # $currentInstance = Get-TargetResource @PSBoundParameters
+    $currentInstance = Get-TargetResource @PSBoundParameters
 
-    # $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+    $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
+    if ($null -ne $currentInstance)
+    {
+        Write-Verbose -Message "Updating the Azure AD Network Access Forwarding Profile with  {$($currentInstance.Id)}"
 
-    # if ( $Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
-    # {
-    #     Write-Warning -Message "Can not create the Azure AD Network Access Forwarding Profile with {$($currentInstance.Name)}."
-    # }
-    # elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
-    # {
-    #     Write-Verbose -Message "Updating the Azure AD Network Access Forwarding Profile with  {$($currentInstance.Id)}"
+        $updateParameters = ([Hashtable]$BoundParameters).Clone()
+        $updateParameters = Rename-M365DSCCimInstanceParameter -Properties $updateParameters
 
-    #     $updateParameters = ([Hashtable]$BoundParameters).Clone()
-    #     $updateParameters = Rename-M365DSCCimInstanceParameter -Properties $updateParameters
+        $updateParameters.Remove('Id') | Out-Null
 
-    #     $updateParameters.Remove('Id') | Out-Null
+        $keys = (([Hashtable]$updateParameters).Clone()).Keys
+        foreach ($key in $keys)
+        {
+            if ($null -ne $updateParameters.$key -and $updateParameters.$key.GetType().Name -like '*CimInstance*')
+            {
+                $updateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $updateParameters.$key
+            }
+        }
+        Write-Verbose -Message "Updating the Azure AD Network Access Forwarding Profile with  {$($currentInstance.Id)} {$($currentInstance.Name)} State"
+        Update-MgBetaNetworkAccessForwardingProfile `
+            -ForwardingProfileId $currentInstance.Id `
+            -State $updateParameters.State
 
-    #     $keys = (([Hashtable]$updateParameters).Clone()).Keys
-    #     foreach ($key in $keys)
-    #     {
-    #         if ($null -ne $updateParameters.$key -and $updateParameters.$key.GetType().Name -like '*CimInstance*')
-    #         {
-    #             $updateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $updateParameters.$key
-    #         }
-    #     }
+        $currentPolicies = $currentInstance.Policies
+        $updatedPolicies = $updateParameters.Policies
 
-    #     #region resource generator code
-    #     Update-MgBetaNetworkAccessForwardingProfile `
-    #         -ForwardingProfileId $Id `
-    #         -BodyParameter $UpdateParameters
-    #     #endregion
-    # }
-    # elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
-    # {
-    #     Write-Warning -Message "Can not remove the Azure AD Network Access Forwarding Profile with {$($currentInstance.Name)}."
-    # }
+        # update the current policy's state with the updated policy's state.
+        foreach ($currentPolicy in $currentPolicies)
+        {
+            $updatedPolicy = $updatedPolicies | Where-Object { $_.Name -eq $currentPolicy.Name }
+            if ($null -ne $updatedPolicy)
+            {
+                Write-Verbose -Message "Updating the Azure AD Network Access Forwarding Profile Policy with  Id {$($currentPolicy.PolicyLinkId)} {$($currentPolicy.Name)}"
+                Update-MgBetaNetworkAccessForwardingProfilePolicy `
+                    -ForwardingProfileId $currentInstance.Id `
+                    -PolicyLinkId $currentPolicy.PolicyLinkId `
+                    -State $updatedPolicy.State
+            }
+        }
+        #endregion
+    }
 }
 
 function Test-TargetResource
@@ -285,11 +280,6 @@ function Test-TargetResource
         $Policies,
 
         #endregion
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet('Absent', 'Present')]
-        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -337,7 +327,7 @@ function Test-TargetResource
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
 
-    if ($CurrentValues.Ensure -ne $Ensure)
+    if ($null -eq $CurrentValues)
     {
         Write-Verbose -Message "Test-TargetResource returned $false"
         return $false
@@ -467,7 +457,6 @@ function Export-TargetResource
             $params = @{
                 Id                    = $config.Id
                 Name                  = $config.Name
-                Ensure                = 'Present'
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
@@ -535,7 +524,7 @@ function Get-PoliciesAsString
     {
         $StringContent += "MSFT_MicrosoftGraphNetworkaccessPolicyLink {`r`n"
         $StringContent += "                State = '" + $policy.State + "'`r`n"
-        $StringContent += "                Id  = '" + $policy.Id + "'`r`n"
+        $StringContent += "                PolicyLinkId  = '" + $policy.PolicyLinkId + "'`r`n"
         $StringContent += "                Name = '" + $policy.Name + "'`r`n"
         $StringContent += "            }`r`n"
     }
