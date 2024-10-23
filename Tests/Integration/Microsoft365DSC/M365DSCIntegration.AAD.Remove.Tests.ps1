@@ -34,6 +34,17 @@
         $Domain = $TenantId
         Node Localhost
         {
+                AADAccessReviewDefinition 'AADAccessReviewDefinition-Example'
+                {
+                    DescriptionForAdmins    = "description for admins";
+                    DescriptionForReviewers = "description for reviewers";
+                    DisplayName             = "Test Access Review Definition";
+                    Ensure                  = "Absent";
+                    Id                      = "613854e6-c458-4a2c-83fc-e0f4b8b17d60";
+                    ApplicationId           = $ApplicationId
+                    TenantId                = $TenantId
+                    CertificateThumbprint   = $CertificateThumbprint
+                }
                 AADAdministrativeUnit 'TestUnit'
                 {
                     DisplayName                   = 'Test-Unit'
@@ -76,6 +87,14 @@
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
+                }
+                AADAuthenticationMethodPolicyExternal 'AADAuthenticationMethodPolicyExternal-Cisco Duo'
+                {
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
+                    DisplayName           = "Cisco Duo";
+                    Ensure                = "Absent";
                 }
                 AADAuthenticationMethodPolicyFido2 'AADAuthenticationMethodPolicyFido2-Fido2'
                 {
@@ -165,6 +184,14 @@
                     CertificateThumbprint = $CertificateThumbprint
                     Ensure                   = "Absent";
                     PartnerTenantId          = "12345-12345-12345-12345-12345";
+                }
+                AADCustomAuthenticationExtension 'AADCustomAuthenticationExtension1'
+                {
+                    DisplayName               = "DSCTestExtension"
+                    Ensure                    = "Absent"
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 AADCustomSecurityAttributeDefinition 'AADCustomSecurityAttributeDefinition-ShoeSize'
                 {
@@ -285,6 +312,13 @@
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                 }
+                AADIdentityB2XUserFlow 'AADIdentityB2XUserFlow-B2X_1_TestFlow'
+                {
+                    ApplicationId             = $ApplicationId
+                    TenantId                  = $TenantId
+                    CertificateThumbprint     = $CertificateThumbprint
+                    Id                        = "B2X_1_TestFlow";
+                }
                 AADIdentityGovernanceLifecycleWorkflow 'AADIdentityGovernanceLifecycleWorkflow-Onboard pre-hire employee updated version'
                 {
                     Category             = "joiner";
@@ -326,6 +360,14 @@
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                 }
+                AADIdentityGovernanceProgram 'AADIdentityGovernanceProgram-Example'
+                {
+                    ApplicationId           = $ApplicationId
+                    TenantId                = $TenantId
+                    CertificateThumbprint   = $CertificateThumbprint
+                    DisplayName             = "Example";
+                    Ensure                  = "Absent";
+                }
                 AADNamedLocationPolicy 'CompanyNetwork'
                 {
                     DisplayName = "Company Network"
@@ -333,6 +375,14 @@
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
+                }
+                AADOrganizationCertificateBasedAuthConfiguration 'AADOrganizationCertificateBasedAuthConfiguration-58b6e58e-10d1-4b8c-845d-d6aefaaecba2'
+                {
+                    ApplicationId             = $ApplicationId
+                    TenantId                  = $TenantId
+                    CertificateThumbprint     = $CertificateThumbprint
+                    Ensure                 = "Absent";
+                    OrganizationId         = "e91d4e0e-d5a5-4e3a-be14-2192592a59af";
                 }
                 AADRoleDefinition 'AADRoleDefinition1'
                 {

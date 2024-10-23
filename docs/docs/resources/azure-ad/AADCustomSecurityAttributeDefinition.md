@@ -5,7 +5,7 @@
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
 | **Name** | Key | String | Name of the custom security attribute. Must be unique within an attribute set. Can be up to 32 characters long and include Unicode characters. Can't contain spaces or special characters. Can't be changed later. Case sensitive. | |
-| **AttributeSet** | Write | String | Name of the attribute set. Case sensitive. | |
+| **AttributeSet** | Key | String | Name of the attribute set. Case sensitive. | |
 | **Id** | Write | String | Unique identifier of the Attribute Definition. | |
 | **Description** | Write | String | Description of the custom security attribute. Can be up to 128 characters long and include Unicode characters. Can't contain spaces or special characters. Can be changed later.  | |
 | **IsCollection** | Write | Boolean | Indicates whether multiple values can be assigned to the custom security attribute. Can't be changed later. If type is set to Boolean, isCollection can't be set to true. | |
@@ -17,6 +17,7 @@
 | **Credential** | Write | PSCredential | Credentials of the workload's Admin | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
 | **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. | |
+| **ApplicationSecret** | Write | PSCredential | Secret of the Azure Active Directory tenant used for authentication. | |
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
 | **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
@@ -36,11 +37,11 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - None
+    - CustomSecAttributeDefinition.Read.All
 
 - **Update**
 
-    - None
+    - CustomSecAttributeDefinition.ReadWrite.All
 
 #### Application permissions
 
