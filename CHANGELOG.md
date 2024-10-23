@@ -16,6 +16,8 @@
   * Initial release.
 * AADSocialIdentityProvider
   * Fixed missing permissions in settings.json
+* EXOMailboxAuditBypassAssociation
+  * Initial release.
 * Intune workload
   * Fixed missing permissions in settings.json
 * SentinelAlertRule
