@@ -2769,6 +2769,19 @@ function Get-Mailbox
         $IncludeEmailAddressDisplayNames
     )
 }
+function Get-MailboxAuditBypassAssociation
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $ResultSize
+    )
+}
 function Get-MailboxAutoReplyConfiguration
 {
     [CmdletBinding()]
@@ -12122,6 +12135,19 @@ function Set-Mailbox
         [Parameter()]
         [System.Boolean]
         $MessageTrackingReadStatusEnabled
+    )
+}
+function Set-MailboxAuditBypassAssociation
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $AuditBypassEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $Identity
     )
 }
 function Set-MailboxAutoReplyConfiguration
