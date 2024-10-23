@@ -55,26 +55,28 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         # Test contexts
         Context -Name "The AADIdentityAPIConnector should exist but it DOES NOT" -Fixture {
             BeforeAll {
+
                 $testParams = @{
-                    AuthenticationConfiguration = (New-CimInstance -ClassName MSFT_MicrosoftGraphapiAuthenticationConfigurationBase -Property @{
-                        Password = "FakeStringValue"
-                        Pkcs12Value = "FakeStringValue"
-                        CertificateList = [CimInstance[]]@(
-                            (New-CimInstance -ClassName MSFT_MicrosoftGraphpkcs12CertificateInformation -Property @{
-                                IsActive = $True
-                                NotAfter = $True
-                                Thumbprint = "FakeStringValue"
-                                NotBefore = $True
-                            } -ClientOnly)
-                        )
-                        Username = "FakeStringValue"
-                        odataType = "#microsoft.graph.basicAuthentication"
-                    } -ClientOnly)
-                    DisplayName = "FakeStringValue"
-                    Id = "FakeStringValue"
-                    TargetUrl = "FakeStringValue"
-                    Ensure = "Present"
-                    Credential = $Credential;
+                    DisplayName = 'FakeStringValue'
+                    TargetUrl = 'FakeStringValue'
+                    Id = 'FakeStringValue'
+                    Username = 'FakeStringValue'
+                    Password = $Credential
+                    Certificates = @(
+                         New-CimInstance -ClassName 'MSFT_AADIdentityAPIConnectionCertificate' -Property @{
+                             Thumbprint = 'FakeStringValue'
+                             Pkcs12Value = (New-CimInstance -ClassName 'MSFT_Credential' -Property @{
+                                 Username = 'FakeStringValue'
+                                 Password = 'FakeStringValue'
+                             } -ClientOnly)
+                             Password = (New-CimInstance -ClassName 'MSFT_Credential' -Property @{
+                                 Username = 'FakeStringValue'
+                                 Password = 'FakeStringValue'
+                             } -ClientOnly)
+                             IsActive = $true
+                         } -ClientOnly
+                    )
+                    Credential = $Credential
                 }
 
                 Mock -CommandName Get-MgBetaIdentityAPIConnector -MockWith {
@@ -96,50 +98,40 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The AADIdentityAPIConnector exists but it SHOULD NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    AuthenticationConfiguration = (New-CimInstance -ClassName MSFT_MicrosoftGraphapiAuthenticationConfigurationBase -Property @{
-                        Password = "FakeStringValue"
-                        Pkcs12Value = "FakeStringValue"
-                        CertificateList = [CimInstance[]]@(
-                            (New-CimInstance -ClassName MSFT_MicrosoftGraphpkcs12CertificateInformation -Property @{
-                                IsActive = $True
-                                NotAfter = $True
-                                Thumbprint = "FakeStringValue"
-                                NotBefore = $True
-                            } -ClientOnly)
-                        )
-                        Username = "FakeStringValue"
-                        odataType = "#microsoft.graph.basicAuthentication"
-                    } -ClientOnly)
-                    DisplayName = "FakeStringValue"
-                    Id = "FakeStringValue"
-                    TargetUrl = "FakeStringValue"
+                    DisplayName = 'FakeStringValue'
+                    TargetUrl = 'FakeStringValue'
+                    Id = 'FakeStringValue'
+                    Username = 'FakeStringValue'
+                    Password = $Credential
+                    Certificates = @(
+                         New-CimInstance -ClassName 'MSFT_AADIdentityAPIConnectionCertificate' -Property @{
+                             Thumbprint = 'FakeStringValue'
+                             Pkcs12Value = (New-CimInstance -ClassName 'MSFT_Credential' -Property @{
+                                 Username = 'FakeStringValue'
+                                 Password = 'FakeStringValue'
+                             } -ClientOnly)
+                             Password = (New-CimInstance -ClassName 'MSFT_Credential' -Property @{
+                                 Username = 'FakeStringValue'
+                                 Password = 'FakeStringValue'
+                             } -ClientOnly)
+                             IsActive = $true
+                         } -ClientOnly
+                    )
+                    Credential = $Credential
                     Ensure = 'Absent'
-                    Credential = $Credential;
                 }
 
                 Mock -CommandName Get-MgBetaIdentityAPIConnector -MockWith {
                     return @{
-                        AdditionalProperties = @{
-                            '@odata.type' = "#microsoft.graph.IdentityApiConnector"
-                        }
+                        DisplayName = 'FakeStringValue'
+                        TargetUrl = 'FakeStringValue'
+                        Id = 'FakeStringValue'
                         AuthenticationConfiguration = @{
-                            '@odata.type' = "#microsoft.graph.basicAuthentication"
-                            Pkcs12Value = "FakeStringValue"
-                            Password = "FakeStringValue"
-                            Username = "FakeStringValue"
-                            CertificateList = @(
-                                @{
-                                    IsActive = $True
-                                    NotAfter = $True
-                                    Thumbprint = "FakeStringValue"
-                                    NotBefore = $True
-                                }
-                            )
+                            AdditionalProperties = @{
+                                Username = 'FakeStringValue'
+                                Password = $Cred
+                            }
                         }
-                        DisplayName = "FakeStringValue"
-                        Id = "FakeStringValue"
-                        TargetUrl = "FakeStringValue"
-
                     }
                 }
             }
@@ -159,51 +151,28 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         }
         Context -Name "The AADIdentityAPIConnector Exists and Values are already in the desired state" -Fixture {
             BeforeAll {
+
                 $testParams = @{
-                    AuthenticationConfiguration = (New-CimInstance -ClassName MSFT_MicrosoftGraphapiAuthenticationConfigurationBase -Property @{
-                        Password = "FakeStringValue"
-                        Pkcs12Value = "FakeStringValue"
-                        CertificateList = [CimInstance[]]@(
-                            (New-CimInstance -ClassName MSFT_MicrosoftGraphpkcs12CertificateInformation -Property @{
-                                IsActive = $True
-                                NotAfter = $True
-                                Thumbprint = "FakeStringValue"
-                                NotBefore = $True
-                            } -ClientOnly)
-                        )
-                        Username = "FakeStringValue"
-                        odataType = "#microsoft.graph.basicAuthentication"
-                    } -ClientOnly)
-                    DisplayName = "FakeStringValue"
-                    Id = "FakeStringValue"
-                    TargetUrl = "FakeStringValue"
+                    DisplayName = 'FakeStringValue'
+                    TargetUrl = 'FakeStringValue'
+                    Id = 'FakeStringValue'
+                    Username = 'FakeStringValue'
+                    Password = $Credential
+                    Credential = $Credential
                     Ensure = 'Present'
-                    Credential = $Credential;
                 }
 
                 Mock -CommandName Get-MgBetaIdentityAPIConnector -MockWith {
                     return @{
-                        AdditionalProperties = @{
-                            '@odata.type' = "#microsoft.graph.IdentityApiConnector"
-                        }
+                        DisplayName = 'FakeStringValue'
+                        TargetUrl = 'FakeStringValue'
+                        Id = 'FakeStringValue'
                         AuthenticationConfiguration = @{
-                            '@odata.type' = "#microsoft.graph.basicAuthentication"
-                            Pkcs12Value = "FakeStringValue"
-                            Password = "FakeStringValue"
-                            Username = "FakeStringValue"
-                            CertificateList = @(
-                                @{
-                                    IsActive = $True
-                                    NotAfter = $True
-                                    Thumbprint = "FakeStringValue"
-                                    NotBefore = $True
-                                }
-                            )
+                            AdditionalProperties = @{
+                                Username = 'FakeStringValue'
+                                Password = $Cred
+                            }
                         }
-                        DisplayName = "FakeStringValue"
-                        Id = "FakeStringValue"
-                        TargetUrl = "FakeStringValue"
-
                     }
                 }
             }
@@ -215,45 +184,29 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         }
 
         Context -Name "The AADIdentityAPIConnector exists and values are NOT in the desired state" -Fixture {
+
             BeforeAll {
                 $testParams = @{
-                    AuthenticationConfiguration = (New-CimInstance -ClassName MSFT_MicrosoftGraphapiAuthenticationConfigurationBase -Property @{
-                        Password = "FakeStringValue"
-                        Pkcs12Value = "FakeStringValue"
-                        CertificateList = [CimInstance[]]@(
-                            (New-CimInstance -ClassName MSFT_MicrosoftGraphpkcs12CertificateInformation -Property @{
-                                IsActive = $True
-                                NotAfter = $True
-                                Thumbprint = "FakeStringValue"
-                                NotBefore = $True
-                            } -ClientOnly)
-                        )
-                        Username = "FakeStringValue"
-                        odataType = "#microsoft.graph.basicAuthentication"
-                    } -ClientOnly)
-                    DisplayName = "FakeStringValue"
-                    Id = "FakeStringValue"
-                    TargetUrl = "FakeStringValue"
+                    DisplayName = 'FakeStringValue2' #drift
+                    TargetUrl = 'FakeStringValue'
+                    Id = 'FakeStringValue'
+                    Username = 'FakeStringValue'
+                    Password = $Credential
+                    Credential = $Credential
                     Ensure = 'Present'
-                    Credential = $Credential;
                 }
 
                 Mock -CommandName Get-MgBetaIdentityAPIConnector -MockWith {
                     return @{
+                        DisplayName = 'FakeStringValue'
+                        TargetUrl = 'FakeStringValue'
+                        Id = 'FakeStringValue'
                         AuthenticationConfiguration = @{
-                            '@odata.type' = "#microsoft.graph.basicAuthentication"
-                            Pkcs12Value = "FakeStringValue"
-                            Password = "FakeStringValue"
-                            Username = "FakeStringValue"
-                            CertificateList = @(
-                                @{
-                                    Thumbprint = "FakeStringValue"
-                                }
-                            )
+                            AdditionalProperties = @{
+                                Username = 'FakeStringValue'
+                                Password = 'FakeStringValue' 
+                            }
                         }
-                        DisplayName = "FakeStringValue"
-                        Id = "FakeStringValue"
-                        TargetUrl = "FakeStringValue"
                     }
                 }
             }
@@ -282,27 +235,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-MgBetaIdentityAPIConnector -MockWith {
                     return @{
-                        AdditionalProperties = @{
-                            '@odata.type' = "#microsoft.graph.IdentityApiConnector"
-                        }
+                        DisplayName = 'FakeStringValue'
+                        TargetUrl = 'FakeStringValue'
+                        Id = 'FakeStringValue'
                         AuthenticationConfiguration = @{
-                            '@odata.type' = "#microsoft.graph.basicAuthentication"
-                            Pkcs12Value = "FakeStringValue"
-                            Password = "FakeStringValue"
-                            Username = "FakeStringValue"
-                            CertificateList = @(
-                                @{
-                                    IsActive = $True
-                                    NotAfter = $True
-                                    Thumbprint = "FakeStringValue"
-                                    NotBefore = $True
-                                }
-                            )
+                            AdditionalProperties = @{
+                                Username = 'FakeStringValue'
+                                Password = 'FakeStringValue' 
+                            }
                         }
-                        DisplayName = "FakeStringValue"
-                        Id = "FakeStringValue"
-                        TargetUrl = "FakeStringValue"
-
                     }
                 }
             }
