@@ -20,6 +20,10 @@
   * Fixed missing permissions in settings.json
 * EXOMailboxAuditBypassAssociation
   * Initial release.
+* IntuneAppCategory
+  * Fixed retrieval of resource which could then result in multiple categories
+    being created with same name
+  * Added a few verbose messages
 * Intune workload
   * Fixed missing permissions in settings.json
 * SentinelAlertRule
