@@ -87,7 +87,6 @@ function Get-TargetResource
             }
         }
 
-
         #endregion
         if ($null -eq $getValue)
         {
@@ -98,6 +97,7 @@ function Get-TargetResource
         Write-Verbose -Message "An Azure AD Network Access Forwarding Profile with  {$Id} and  {$Name} was found"
 
         $forwardingProfilePolicies = Get-MgBetaNetworkAccessForwardingProfilePolicy -ForwardingProfileId $getValue.Id -ErrorAction SilentlyContinue
+
         if ($null -ne $forwardingProfilePolicies)
         {
             Write-Verbose -Message "An Azure AD Network Access Forwarding Profile Policy with  $($forwardingProfilePolicies.Id) and  $($forwardingProfilePolicies.Name) was found"
