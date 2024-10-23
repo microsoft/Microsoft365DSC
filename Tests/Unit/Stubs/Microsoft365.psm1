@@ -17380,6 +17380,10 @@ function New-MgServicePrincipal
         $DelegatedPermissionClassifications,
 
         [Parameter()]
+        [System.Collections.Hashtable]
+        $CustomSecurityAttributes,
+
+        [Parameter()]
         [PSObject]
         $PasswordCredentials,
 
@@ -18023,6 +18027,10 @@ function Update-MgServicePrincipal
         [Parameter()]
         [PSObject]
         $DelegatedPermissionClassifications,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $CustomSecurityAttributes,
 
         [Parameter()]
         [PSObject]
@@ -50410,6 +50418,10 @@ function New-MgServicePrincipal
         $DelegatedPermissionClassifications,
 
         [Parameter()]
+        [System.Collections.Hashtable]
+        $CustomSecurityAttributes,
+
+        [Parameter()]
         [PSObject]
         $PasswordCredentials,
 
@@ -51053,6 +51065,10 @@ function Update-MgServicePrincipal
         [Parameter()]
         [PSObject]
         $DelegatedPermissionClassifications,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $CustomSecurityAttributes,
 
         [Parameter()]
         [PSObject]
