@@ -49145,6 +49145,361 @@
                        ]
     },
     {
+        "ClassName":  "MSFT_SentinelAlertRuleEventGroupingSettings",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "aggregationKind",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_SentinelAlertRuleCustomDetails",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "DetailKey",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "DetailValue",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_SentinelAlertRuleEntityMapping",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "entityType",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_SentinelAlertRuleEntityMappingFieldMapping[]",
+                               "Name":  "fieldMappings",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_SentinelAlertRuleEntityMappingFieldMapping",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "columnName",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "identifier",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_SentinelAlertRuleAlertDetailsOverride",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "alertDescriptionFormat",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "alertDisplayNameFormat",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "alertSeverityColumnName",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "alertTacticsColumnName",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_SentinelAlertRuleAlertDetailsOverrideAlertDynamicProperty[]",
+                               "Name":  "alertDynamicProperties",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_SentinelAlertRuleAlertDetailsOverrideAlertDynamicProperty",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "alertProperty",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "alertPropertyValue",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_SentinelAlertRuleIncidentConfiguration",
+        "Parameters":  [
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "createIncident",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_SentinelAlertRuleIncidentConfigurationGroupingConfiguration",
+                               "Name":  "groupingConfiguration",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_SentinelAlertRuleIncidentConfigurationGroupingConfiguration",
+        "Parameters":  [
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "enabled",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_SentinelAlertRuleIncidentConfigurationGroupingConfigurationAlertDetail[]",
+                               "Name":  "groupByAlertDetails",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "groupByCustomDetails",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "groupByEntities",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "lookbackDuration",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "matchingMethod",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "reopenClosedIncident",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_SentinelAlertRuleIncidentConfigurationGroupingConfigurationAlertDetail",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "DisplayName",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Severity",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_SentinelAlertRule",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "DisplayName",
+                               "Option":  "Key"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "SubscriptionId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ResourceGroupName",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "WorkspaceName",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Id",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Description",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ProductFilter",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "Enabled",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Severity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "Tactics",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "Techniques",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "SubTechniques",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Query",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "QueryFrequency",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "QueryPeriod",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "TriggerOperator",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "TriggerThreshold",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "SuppressionDuration",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "SuppressionEnabled",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AlertRuleTemplateName",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "DisplayNamesExcludeFilter",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "DisplayNamesFilter",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "SeveritiesFilter",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_SentinelAlertRuleEventGroupingSettings",
+                               "Name":  "EventGroupingSettings",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_SentinelAlertRuleCustomDetails[]",
+                               "Name":  "CustomDetails",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_SentinelAlertRuleEntityMapping[]",
+                               "Name":  "EntityMappings",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_SentinelAlertRuleAlertDetailsOverride",
+                               "Name":  "AlertDetailsOverride",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_SentinelAlertRuleIncidentConfiguration",
+                               "Name":  "IncidentConfiguration",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Kind",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "string",
+                               "Name":  "Ensure",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "Credential",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ApplicationId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "TenantId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "CertificateThumbprint",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "ManagedIdentity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
         "ClassName":  "MSFT_SentinelSetting",
         "Parameters":  [
                            {
