@@ -6925,6 +6925,56 @@
                        ]
     },
     {
+        "ClassName":  "MSFT_AADServicePrincipalAttributeValue",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AttributeName",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "StringArrayValue",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32[]",
+                               "Name":  "IntArrayValue",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "StringValue",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "IntValue",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "BoolValue",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_AADServicePrincipalAttributeSet",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AttributeSetName",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_AADServicePrincipalAttributeValue[]",
+                               "Name":  "AttributeValues",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
         "ClassName":  "MSFT_AADServicePrincipal",
         "Parameters":  [
                            {
@@ -7015,6 +7065,11 @@
                            {
                                "CIMType":  "MSFT_AADServicePrincipalDelegatedPermissionClassification[]",
                                "Name":  "DelegatedPermissionClassifications",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_AADServicePrincipalAttributeSet[]",
+                               "Name":  "CustomSecurityAttributes",
                                "Option":  "Write"
                            },
                            {
