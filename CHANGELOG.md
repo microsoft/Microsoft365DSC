@@ -12,6 +12,8 @@
   * Initial release.
 * AADIdentityGovernanceProgram
   * Initial release.
+* AADIdentityAPIConnector
+  * Initial release.
 * AADOrganizationCertificateBasedAuthConfiguration
   * Initial release.
 * AADSocialIdentityProvider
