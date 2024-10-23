@@ -26,6 +26,7 @@ Configuration Example
             CertificateThumbprint     = $CertificateThumbprint;
             TenantId                  = $TenantId;
             ApplicationId             = $ApplicationId;
+            Ensure                    = "Absent";
         }
     }
 }
