@@ -1,5 +1,5 @@
 ﻿{
-    "resourceName": "SCDeviceConfigurationPolicy",
+    "resourceName": "SCDeviceTenantPolicy",
     "description": "",
     "permissions": {
         "graph": {
