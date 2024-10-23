@@ -286,7 +286,7 @@ function Set-TargetResource
 
     if ($ConfigurationType -ne 'AutoFromConnector' -and [System.String]::IsNullOrEmpty($ConfigurationBlob))
     {
-        throw "ConfigurationBlob is required for configurationType '$($DSCParams.ConfigurationType)'"
+        throw "ConfigurationBlob is required for configurationType '$($ConfigurationType)'"
     }
     $BoundParameters.Remove('ConfigurationType') | Out-Null
 
