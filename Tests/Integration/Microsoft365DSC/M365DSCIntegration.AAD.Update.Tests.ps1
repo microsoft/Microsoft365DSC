@@ -357,6 +357,32 @@
                     );
                     State                        = "enabled"; # Updated Property
                 }
+                AADAuthenticationMethodPolicyExternal 'AADAuthenticationMethodPolicyExternal-Cisco Duo'
+                {
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
+                    AppId                 = "e35c54ff-bd24-4c52-921a-4b90a35808eb";
+                    DisplayName           = "Cisco Duo";
+                    Ensure                = "Present";
+                    ExcludeTargets        = @(
+                        MSFT_AADAuthenticationMethodPolicyExternalExcludeTarget{
+                            Id = 'Design'
+                            TargetType = 'group'
+                        }
+                    );
+                    IncludeTargets        = @(
+                        MSFT_AADAuthenticationMethodPolicyExternalIncludeTarget{
+                            Id = 'Contoso'
+                            TargetType = 'group'
+                        }
+                    );
+                    OpenIdConnectSetting  = MSFT_AADAuthenticationMethodPolicyExternalOpenIdConnectSetting{
+                        discoveryUrl = 'https://graph.microsoft.com/'
+                        clientId = '7698a352-4939-486e-9974-4ea5aff93f74'
+                    };
+                    State                 = "disabled";
+                }
                 AADAuthenticationMethodPolicyFido2 'AADAuthenticationMethodPolicyFido2-Fido2'
                 {
                     ApplicationId         = $ApplicationId
@@ -732,6 +758,33 @@
                     CertificateThumbprint = $CertificateThumbprint
                     Ensure                       = "Present";
                 }
+                AADCustomAuthenticationExtension 'AADCustomAuthenticationExtension1'
+                {
+                    AuthenticationConfigurationResourceId  = "api://microsoft365dsc.com/11105949-846e-42a1-a873-f12db8345013"
+                    AuthenticationConfigurationType        = "#microsoft.graph.azureAdTokenAuthentication"
+                    ClaimsForTokenConfiguration            = @(
+                        MSFT_AADCustomAuthenticationExtensionClaimForTokenConfiguration{
+                            ClaimIdInApiResponse = 'MyClaim'
+                        }
+                        MSFT_AADCustomAuthenticationExtensionClaimForTokenConfiguration{
+                            ClaimIdInApiResponse = 'My2ndClaim'
+                        }
+                    )
+                    ClientConfigurationMaximumRetries      = 1
+                    ClientConfigurationTimeoutMilliseconds = 2000
+                    CustomAuthenticationExtensionType      = "#microsoft.graph.onTokenIssuanceStartCustomExtension"
+                    Description                            = "DSC Testing 1"
+                    DisplayName                            = "DSCTestExtension"
+                    EndPointConfiguration                  = MSFT_AADCustomAuthenticationExtensionEndPointConfiguration{
+                        EndpointType = '#microsoft.graph.httpRequestEndpoint'
+                        TargetUrl = 'https://Microsoft365DSC.com'
+                    }
+                    Ensure                                 = "Present";
+                    Id                                     = "11105949-846e-42a1-a873-f12db8345013"
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
+                }
                 AADCustomSecurityAttributeDefinition 'AADCustomSecurityAttributeDefinition-ShoeSize'
                 {
                     ApplicationId           = $ApplicationId;
@@ -951,6 +1004,71 @@
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
+                }
+                AADIdentityAPIConnector 'AADIdentityAPIConnector-TestConnector'
+                {
+                    DisplayName           = "NewTestConnector";
+                    Id                    = "RestApi_NewTestConnector";
+                    Username              = "anexas 1"; #drift
+                    Password              = New-Object System.Management.Automation.PSCredential('Password', (ConvertTo-SecureString "anexas" -AsPlainText -Force));
+                    TargetUrl             = "https://graph.microsoft.com";
+                    Ensure                = "Present"
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
+                }
+                AADIdentityB2XUserFlow 'AADIdentityB2XUserFlow-B2X_1_TestFlow'
+                {
+                    ApplicationId             = $ApplicationId
+                    TenantId                  = $TenantId
+                    CertificateThumbprint     = $CertificateThumbprint
+                    ApiConnectorConfiguration = MSFT_MicrosoftGraphuserFlowApiConnectorConfiguration
+                    {
+                        postAttributeCollectionConnectorName = 'RestApi_f6e8e73d-6b17-433e-948f-f578f12bd57c'
+                        postFederationSignupConnectorName = 'RestApi_beeb7152-673c-48b3-b143-9975949a93ca'
+                    };
+                    Credential                = $Credscredential;
+                    Ensure                    = "Present";
+                    Id                        = "B2X_1_TestFlow";
+                    IdentityProviders         = @("MSASignup-OAUTH","EmailOtpSignup-OAUTH");
+                    UserAttributeAssignments  = @(
+                        MSFT_MicrosoftGraphuserFlowUserAttributeAssignment
+                        {
+                            UserInputType = 'textBox'
+                            IsOptional = $True
+                            DisplayName = 'Email Address'
+                            Id = 'emailReadonly'
+        
+                        }
+                        MSFT_MicrosoftGraphuserFlowUserAttributeAssignment
+                        {
+                            UserInputType = 'dropdownSingleSelect'
+                            IsOptional = $True
+                            DisplayName = 'Random'
+                            Id = 'city'
+                            UserAttributeValues = @(
+                                MSFT_MicrosoftGraphuserFlowUserAttributeAssignmentUserAttributeValues
+                                {
+                                    IsDefault = $True
+                                    Name = 'S'
+                                    Value = '2'
+                                }
+                                MSFT_MicrosoftGraphuserFlowUserAttributeAssignmentUserAttributeValues
+                                {
+                                    IsDefault = $True
+                                    Name = 'X'
+                                    Value = '1'
+                                }
+                            )
+                        }
+                        MSFT_MicrosoftGraphuserFlowUserAttributeAssignment{
+                            UserInputType = 'textBox'
+                            IsOptional = $False
+                            DisplayName = 'Piyush1'
+                            Id = 'extension_91d51274096941f786b07b9d723d93f4_Piyush1'
+        
+                        }
+                    );
                 }
                 AADIdentityGovernanceLifecycleWorkflow 'AADIdentityGovernanceLifecycleWorkflow-Onboard pre-hire employee updated version'
                 {
