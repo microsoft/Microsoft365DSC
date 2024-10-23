@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* IntuneMobileThreatDefenseConnector
+  * Initial release.
 * AADAccessReviewDefinition
   * Initial release.
 * AADAuthenticationMethodPolicyExternal
