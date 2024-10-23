@@ -308,6 +308,33 @@
                     CertificateThumbprint = $CertificateThumbprint
                     Ensure                       = "Present";
                 }
+                AADCustomAuthenticationExtension 'AADCustomAuthenticationExtension1'
+                {
+                    AuthenticationConfigurationResourceId  = "api://microsoft365dsc.com/11105949-846e-42a1-a873-f12db8345013"
+                    AuthenticationConfigurationType        = "#microsoft.graph.azureAdTokenAuthentication"
+                    ClaimsForTokenConfiguration            = @(
+                        MSFT_AADCustomAuthenticationExtensionClaimForTokenConfiguration{
+                            ClaimIdInApiResponse = 'MyClaim'
+                        }
+                        MSFT_AADCustomAuthenticationExtensionClaimForTokenConfiguration{
+                            ClaimIdInApiResponse = 'My2ndClaim'
+                        }
+                    )
+                    ClientConfigurationMaximumRetries      = 1
+                    ClientConfigurationTimeoutMilliseconds = 2000
+                    CustomAuthenticationExtensionType      = "#microsoft.graph.onTokenIssuanceStartCustomExtension"
+                    Description                            = "DSC Testing 1"
+                    DisplayName                            = "DSCTestExtension"
+                    EndPointConfiguration                  = MSFT_AADCustomAuthenticationExtensionEndPointConfiguration{
+                        EndpointType = '#microsoft.graph.httpRequestEndpoint'
+                        TargetUrl = 'https://Microsoft365DSC.com'
+                    }
+                    Ensure                                 = "Present";
+                    Id                                     = "11105949-846e-42a1-a873-f12db8345013"
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
+                }
                 AADCustomSecurityAttributeDefinition 'AADCustomSecurityAttributeDefinition-ShoeSize'
                 {
                     ApplicationId           = $ApplicationId;
@@ -590,6 +617,27 @@
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
+                }
+                AADOrganizationCertificateBasedAuthConfiguration 'AADOrganizationCertificateBasedAuthConfiguration-58b6e58e-10d1-4b8c-845d-d6aefaaecba2'
+                {
+                    ApplicationId             = $ApplicationId
+                    TenantId                  = $TenantId
+                    CertificateThumbprint     = $CertificateThumbprint
+                    CertificateAuthorities = @(
+                        MSFT_MicrosoftGraphcertificateAuthority{
+                            IsRootAuthority = $True
+        					DeltaCertificateRevocationListUrl = 'pqr.com'
+                            Certificate = '<Base64 encoded cert>'
+                        }
+                        MSFT_MicrosoftGraphcertificateAuthority{
+                            IsRootAuthority = $True
+                            CertificateRevocationListUrl = 'xyz.com'
+                            DeltaCertificateRevocationListUrl = 'pqr.com'
+                            Certificate = '<Base64 encoded cert>'
+                        }
+                    );
+                    Ensure                 = "Present";
+                    OrganizationId         = "e91d4e0e-d5a5-4e3a-be14-2192592a59af";
                 }
                 AADRoleDefinition 'AADRoleDefinition1'
                 {

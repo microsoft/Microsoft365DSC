@@ -12,10 +12,16 @@
   * Initial release.
 * AADIdentityGovernanceProgram
   * Initial release.
+* AADOrganizationCertificateBasedAuthConfiguration
+  * Initial release.
 * AADSocialIdentityProvider
   * Fixed missing permissions in settings.json
 * Intune workload
   * Fixed missing permissions in settings.json
+* SentinelAlertRule
+  * Initial release.
+* SentinelThreatIntelligenceIndicator
+  * Initial release.
 * SPOTenantSettings
   * Added support for AllowSelectSGsInODBListInTenant,
     DenySelectSGsInODBListInTenant, DenySelectSecurityGroupsInSPSitesList,
@@ -45,6 +51,8 @@
 * AADAuthenticationRequirement
   * Initial release.
 * AADConnectorGroupApplicationProxy
+  * Initial release.
+* AADCustomAuthenticationExtension
   * Initial release.
 * AADCustomSecurityAttributeDefinition
   * Initial release.
