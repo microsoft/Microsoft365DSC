@@ -23,6 +23,7 @@ Configuration Example
     {
         SCDeviceTenantPolicy "DeviceTenantPolicy"
         {
+            Guid                      = "sample guid";
             CertificateThumbprint     = $CertificateThumbprint;
             Ensure                    = "Present";
             TenantId                  = $TenantId;
