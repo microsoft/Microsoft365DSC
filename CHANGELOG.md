@@ -4,6 +4,8 @@
 
 * AADAccessReviewDefinition
   * Initial release.
+* AADNetworkAccessForwardingProfile
+  * Initial release.
 * AADAuthenticationMethodPolicyExternal
   * Initial release.
 * AADCustomSecurityAttributeDefinition
