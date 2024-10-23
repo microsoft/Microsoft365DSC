@@ -5,6 +5,10 @@ function Get-TargetResource
     param
     (
         [Parameter()]
+        [System.String]
+        $Guid,
+
+        [Parameter()]
         [System.Boolean]
         $Enabled,
 
@@ -84,6 +88,7 @@ function Get-TargetResource
         {
             Write-Verbose "Found existing Device tenant Policy"
             $result = @{
+                Guid                  = $PolicyObject.Guid
                 Ensure                = 'Present'
                 Enabled               = $PolicyObject.Enabled
                 Credential            = $Credential
@@ -117,6 +122,10 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
+        [Parameter()]
+        [System.String]
+        $Guid,
+
         [Parameter()]
         [System.Boolean]
         $Enabled,
@@ -205,6 +214,10 @@ function Test-TargetResource
     param
     (
         [Parameter()]
+        [System.String]
+        $Guid,
+
+        [Parameter()]
         [System.Boolean]
         $Enabled,
 
@@ -278,6 +291,10 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
+        [Parameter()]
+        [System.String]
+        $Guid,
+
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
