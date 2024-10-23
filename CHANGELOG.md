@@ -14,6 +14,8 @@
   * Fixed missing permissions in settings.json
 * Intune workload
   * Fixed missing permissions in settings.json
+* SCDeviceTenantPolicy
+  * Initial Release.
 * SPOTenantSettings
   * Added support for AllowSelectSGsInODBListInTenant,
     DenySelectSGsInODBListInTenant, DenySelectSecurityGroupsInSPSitesList,
