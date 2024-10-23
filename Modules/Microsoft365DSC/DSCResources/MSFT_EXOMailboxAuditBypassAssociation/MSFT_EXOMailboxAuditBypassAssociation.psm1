@@ -13,11 +13,6 @@ function Get-TargetResource
         $AuditBypassEnabled,
 
         [Parameter()]
-        [ValidateSet('Present', 'Absent')]
-        [System.String]
-        $Ensure,
-
-        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -58,7 +53,6 @@ function Get-TargetResource
     #endregion
 
     $nullResult = $PSBoundParameters
-    $nullResult.Ensure = 'Absent'
     try
     {
         if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
@@ -77,7 +71,6 @@ function Get-TargetResource
         $results = @{
             Identity              = [System.String]$Identity
             AuditBypassEnabled    = [System.Boolean]$instance.AuditBypassEnabled
-            Ensure                = 'Present'
             Credential            = $Credential
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
@@ -111,11 +104,6 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $AuditBypassEnabled,
-
-        [Parameter()]
-        [ValidateSet('Present', 'Absent')]
-        [System.String]
-        $Ensure,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -174,11 +162,6 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $AuditBypassEnabled,
-
-        [Parameter()]
-        [ValidateSet('Present', 'Absent')]
-        [System.String]
-        $Ensure,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]

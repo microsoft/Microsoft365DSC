@@ -28,7 +28,8 @@
             ],
             "requiredrolegroups": [
                 "Organization Management",
-                "Compliance Management"
+                "Compliance Management",
+                "Records Management"
             ]
         }
     }

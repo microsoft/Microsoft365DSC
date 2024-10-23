@@ -26,9 +26,10 @@ Configuration Example
         EXOMailboxAuditBypassAssociation "EXOMailboxAuditBypassAssociation-Test"
         {
             AuditBypassEnabled   = $True;  #Updated Property
-            Credential           = $Credscredential;
-            Ensure               = "Present";
             Identity             = "TestMailbox109";
+            ApplicationId         = $ApplicationId;
+            TenantId              = $TenantId;
+            CertificateThumbprint = $CertificateThumbprint;
         }
     }
 }

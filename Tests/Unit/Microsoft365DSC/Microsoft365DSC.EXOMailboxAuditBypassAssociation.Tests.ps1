@@ -52,7 +52,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     AuditBypassEnabled   = $False;
                     Credential           = $Credscredential;
-                    Ensure               = "Present";
                     Identity             = "TestMailbox109";
                 }
 
@@ -60,7 +59,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return @{
                         AuditBypassEnabled   = $True;  #Drift
                         Credential           = $Credscredential;
-                        Ensure               = "Present";
                         Identity             = "TestMailbox109";
                     }
                 }
@@ -74,10 +72,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Set-TargetResource @testParams
                 Should -Invoke -CommandName Set-MailboxAuditBypassAssociation -Exactly 1
             }
-
-            It 'Should return Present from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
-            }
         }
 
         Context -Name 'Settings are already in the desired state' -Fixture {
@@ -85,7 +79,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     AuditBypassEnabled   = $False;
                     Credential           = $Credscredential;
-                    Ensure               = "Present";
                     Identity             = "TestMailbox109";
                 }
 
@@ -93,7 +86,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return @{
                         AuditBypassEnabled   = $False;
                         Credential           = $Credscredential;
-                        Ensure               = "Present";
                         Identity             = "TestMailbox109";
                     }
                 }
@@ -102,37 +94,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $true
             }
-
-            It 'Should return Present from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
-            }
         }
-
-        Context -Name "User doesn't exist" -Fixture {
-            BeforeAll {
-                $testParams = @{
-                    AuditBypassEnabled   = $False;
-                    Credential           = $Credscredential;
-                    Ensure               = "Present";
-                    Identity             = "TestMailbox109";
-                }
-
-                Mock -CommandName Get-MailboxAuditBypassAssociation -MockWith {
-                    return $null
-                }
-            }
-
-            It 'Should return false from the Test method' {
-                Test-TargetResource @testParams | Should -Be $false
-            }
-
-            It 'Should return Absent from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should -Be 'Absent'
-            }
-        }
-
-
-
 
         Context -Name 'ReverseDSC Tests' -Fixture {
             BeforeAll {
@@ -146,7 +108,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return @{
                         AuditBypassEnabled   = $False;
                         Credential           = $Credscredential;
-                        Ensure               = "Present";
                         Identity             = "TestMailbox109";
                     }
                 }
