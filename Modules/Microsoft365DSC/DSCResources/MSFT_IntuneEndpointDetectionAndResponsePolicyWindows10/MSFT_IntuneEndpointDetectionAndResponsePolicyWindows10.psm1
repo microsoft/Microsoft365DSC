@@ -267,7 +267,7 @@ function Set-TargetResource
         'AutoFromConnector'
         {
             $BoundParameters.Add('ClientConfigurationPackageType', 'autofromconnector')
-            $BoundParameters.Add('autofromconnector', 'autoConnectPlaceholder')
+            $BoundParameters.Add('onboarding_fromconnector', 'autoConnectPlaceholder')
             $BoundParameters.Remove('ConfigurationBlob') | Out-Null
         }
         'Onboard'
