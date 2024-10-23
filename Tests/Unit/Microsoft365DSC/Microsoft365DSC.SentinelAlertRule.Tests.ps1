@@ -35,7 +35,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return "Credentials"
             }
 
-            ##TODO - Mock any Remove/Set/New cmdlets
+            Mock -CommandName Get-AzResource -MockWith {
+                return @{
+                    ResourceGroupName = "MyResourceGroup"
+                    Name              = 'MySentinelWorkspace'
+                    ResourceId        = "name/part/resourceId/"
+                }
+            }
+
+            Mock -CommandName New-M365DSCSentinelAlertRule -MockWith {
+
+            }
+
+            Mock -CommandName Remove-M365DSCSentinelAlertRule -MockWith {
+
+            }
 
             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
@@ -47,13 +61,47 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The instance should exist but it DOES NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    ##TODO - Add Parameters
-                    Ensure              = 'Present'
-                    Credential          = $Credential;
+                    AlertDetailsOverride  = (New-CimInstance -ClassName MSFT_SentinelAlertRuleAlertDetailsOverride -Property @{
+                        alertDescriptionFormat = 'This is an example of the alert content'
+                        alertDisplayNameFormat = 'Alert from {{{TimeGenerated}} '
+                    } -ClientOnly)
+                    CustomDetails         = @(
+                        (New-CimInstance -ClassName MSFT_SentinelAlertRuleCustomDetails -Property @{
+                            DetailKey = 'Color'
+                            DetailValue = 'TenantId'
+                        } -ClientOnly)
+                    )
+                    Description           = "Test";
+                    DisplayName           = "TestDSC1";
+                    Enabled               = $True;
+                    Ensure                = "Present";
+                    EventGroupingSettings = (New-CimInstance -ClassName MSFT_SentinelAlertRuleEventGroupingSettings -Property @{
+                        aggregationKind = 'AlertPerResult'
+                    } -ClientOnly)
+                    IncidentConfiguration = (New-CimInstance -ClassName MSFT_SentinelAlertRuleIncidentConfiguration -Property @{
+                        groupingConfiguration = (New-CimInstance -ClassName MSFT_SentinelAlertRuleIncidentConfigurationGroupingConfiguration -Property @{
+                            lookbackDuration = 'PT5H'
+                            matchingMethod = 'Selected'
+                            groupByCustomDetails = @('Color')
+                            groupByEntities = @('CloudApplication')
+                            reopenClosedIncident = $True
+                            enabled = $True
+                        } -ClientOnly)
+                        createIncident = $True
+                    } -ClientOnly)
+                    Kind                  = "NRT";
+                    Query                 = "ThreatIntelIndicators";
+                    ResourceGroupName     = "TBDSentinel";
+                    Severity              = "Medium";
+                    SubscriptionId        = "42136a41-5030-4140-aba0-7e6211115d3a";
+                    SuppressionDuration   = "PT5H";
+                    Tactics               = @();
+                    Techniques            = @();
+                    WorkspaceName         = "SentinelWorkspace";
+                    Credential            = $Credential;
                 }
 
-                ##TODO - Mock the Get-Cmdlet to return $null
-                Mock -CommandName Get-Cmdlet -MockWith {
+                Mock -CommandName Get-M365DSCSentinelAlertRule -MockWith {
                     return $null
                 }
             }
@@ -65,24 +113,91 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should create a new instance from the Set method' {
-                ##TODO - Replace the New-Cmdlet by the appropriate one
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName New-Cmdlet -Exactly 1
+                Should -Invoke -CommandName New-M365DSCSentinelAlertRule -Exactly 1
             }
         }
 
         Context -Name "The instance exists but it SHOULD NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    ##TODO - Add Parameters
-                    Ensure              = 'Absent'
-                    Credential          = $Credential;
+                    AlertDetailsOverride  = (New-CimInstance -ClassName MSFT_SentinelAlertRuleAlertDetailsOverride -Property @{
+                        alertDescriptionFormat = 'This is an example of the alert content'
+                        alertDisplayNameFormat = 'Alert from {{{TimeGenerated}} '
+                    } -ClientOnly)
+                    CustomDetails         = @(
+                        (New-CimInstance -ClassName MSFT_SentinelAlertRuleCustomDetails -Property @{
+                            DetailKey = 'Color'
+                            DetailValue = 'TenantId'
+                        } -ClientOnly)
+                    )
+                    Description           = "Test";
+                    DisplayName           = "TestDSC1";
+                    Enabled               = $True;
+                    Ensure                = "Absent";
+                    EventGroupingSettings = (New-CimInstance -ClassName MSFT_SentinelAlertRuleEventGroupingSettings -Property @{
+                        aggregationKind = 'AlertPerResult'
+                    } -ClientOnly)
+                    IncidentConfiguration = (New-CimInstance -ClassName MSFT_SentinelAlertRuleIncidentConfiguration -Property @{
+                        groupingConfiguration = (New-CimInstance -ClassName MSFT_SentinelAlertRuleIncidentConfigurationGroupingConfiguration -Property @{
+                            lookbackDuration = 'PT5H'
+                            matchingMethod = 'Selected'
+                            groupByCustomDetails = @('Color')
+                            groupByEntities = @('CloudApplication')
+                            reopenClosedIncident = $True
+                            enabled = $True
+                        } -ClientOnly)
+                        createIncident = $True
+                    } -ClientOnly)
+                    Kind                  = "NRT";
+                    Query                 = "ThreatIntelIndicators";
+                    ResourceGroupName     = "TBDSentinel";
+                    Severity              = "Medium";
+                    SubscriptionId        = "42136a41-5030-4140-aba0-7e6211115d3a";
+                    SuppressionDuration   = "PT5H";
+                    Tactics               = @();
+                    Techniques            = @();
+                    WorkspaceName         = "SentinelWorkspace";
+                    Credential            = $Credential;
                 }
 
-                ##TODO - Mock the Get-Cmdlet to return an instance
-                Mock -CommandName Get-Cmdlet -MockWith {
+                Mock -CommandName Get-M365DSCSentinelAlertRule -MockWith {
                     return @{
-
+                        Kind = 'NRT'
+                        name = '12345-12345-12345-12345-12345'
+                        properties = @{
+                            Query                 = "ThreatIntelIndicators";
+                            Severity              = "Medium";
+                            SuppressionDuration   = "PT5H";
+                            Tactics               = @();
+                            Techniques            = @();
+                            Description           = "Test";
+                            DisplayName           = "TestDSC1";
+                            Enabled               = $True;
+                            AlertDetailsOverride  = @{
+                                alertDescriptionFormat = 'This is an example of the alert content'
+                                alertDisplayNameFormat = 'Alert from {{{TimeGenerated}} '
+                            }
+                            CustomDetails         = @(
+                                @{
+                                    Color = 'TenantId'
+                                }
+                            )
+                            EventGroupingSettings = @{
+                                aggregationKind = 'AlertPerResult'
+                            }
+                            IncidentConfiguration = @{
+                                groupingConfiguration = @{
+                                    lookbackDuration = 'PT5H'
+                                    matchingMethod = 'Selected'
+                                    groupByCustomDetails = @('Color')
+                                    groupByEntities = @('CloudApplication')
+                                    reopenClosedIncident = $True
+                                    enabled = $True
+                                }
+                                createIncident = $True
+                            }
+                        }
                     }
                 }
             }
@@ -95,23 +210,89 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should remove the instance from the Set method' {
                 Set-TargetResource @testParams
-                ##TODO - Replace the Remove-Cmdlet by the appropriate one
-                Should -Invoke -CommandName Remove-Cmdlet -Exactly 1
+                Should -Invoke -CommandName Remove-M365DSCSentinelAlertRule -Exactly 1
             }
         }
 
         Context -Name "The instance exists and values are already in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    ##TODO - Add Parameters
-                    Ensure              = 'Present'
-                    Credential          = $Credential;
+                    AlertDetailsOverride  = (New-CimInstance -ClassName MSFT_SentinelAlertRuleAlertDetailsOverride -Property @{
+                        alertDescriptionFormat = 'This is an example of the alert content'
+                        alertDisplayNameFormat = 'Alert from {{{TimeGenerated}} '
+                    } -ClientOnly)
+                    CustomDetails         = @(
+                        (New-CimInstance -ClassName MSFT_SentinelAlertRuleCustomDetails -Property @{
+                            DetailKey = 'Color'
+                            DetailValue = 'TenantId'
+                        } -ClientOnly)
+                    )
+                    Description           = "Test";
+                    DisplayName           = "TestDSC1";
+                    Enabled               = $True;
+                    Ensure                = "Present";
+                    EventGroupingSettings = (New-CimInstance -ClassName MSFT_SentinelAlertRuleEventGroupingSettings -Property @{
+                        aggregationKind = 'AlertPerResult'
+                    } -ClientOnly)
+                    IncidentConfiguration = (New-CimInstance -ClassName MSFT_SentinelAlertRuleIncidentConfiguration -Property @{
+                        groupingConfiguration = (New-CimInstance -ClassName MSFT_SentinelAlertRuleIncidentConfigurationGroupingConfiguration -Property @{
+                            lookbackDuration = 'PT5H'
+                            matchingMethod = 'Selected'
+                            groupByCustomDetails = @('Color')
+                            groupByEntities = @('CloudApplication')
+                            reopenClosedIncident = $True
+                            enabled = $True
+                        } -ClientOnly)
+                        createIncident = $True
+                    } -ClientOnly)
+                    Kind                  = "NRT";
+                    Query                 = "ThreatIntelIndicators";
+                    ResourceGroupName     = "TBDSentinel";
+                    Severity              = "Medium";
+                    SubscriptionId        = "42136a41-5030-4140-aba0-7e6211115d3a";
+                    SuppressionDuration   = "PT5H";
+                    Tactics               = @();
+                    Techniques            = @();
+                    WorkspaceName         = "SentinelWorkspace";
+                    Credential            = $Credential;
                 }
 
-                ##TODO - Mock the Get-Cmdlet to return the desired values
-                Mock -CommandName Get-Cmdlet -MockWith {
+                Mock -CommandName Get-M365DSCSentinelAlertRule -MockWith {
                     return @{
-
+                        Kind = 'NRT'
+                        name = '12345-12345-12345-12345-12345'
+                        properties = @{
+                            Query                 = "ThreatIntelIndicators";
+                            Severity              = "Medium";
+                            SuppressionDuration   = "PT5H";
+                            Tactics               = @();
+                            Techniques            = @();
+                            Description           = "Test";
+                            DisplayName           = "TestDSC1";
+                            Enabled               = $True;
+                            AlertDetailsOverride  = @{
+                                alertDescriptionFormat = 'This is an example of the alert content'
+                                alertDisplayNameFormat = 'Alert from {{{TimeGenerated}} '
+                            }
+                            CustomDetails         = 
+                                [PSCustomObject]@{
+                                    Color = 'TenantId'
+                                }
+                            EventGroupingSettings = @{
+                                aggregationKind = 'AlertPerResult'
+                            }
+                            IncidentConfiguration = @{
+                                groupingConfiguration = @{
+                                    lookbackDuration = 'PT5H'
+                                    matchingMethod = 'Selected'
+                                    groupByCustomDetails = @('Color')
+                                    groupByEntities = @('CloudApplication')
+                                    reopenClosedIncident = $True
+                                    enabled = $True
+                                }
+                                createIncident = $True
+                            }
+                        }
                     }
                 }
             }
@@ -124,15 +305,83 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The instance exists and values are NOT in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    ##TODO - Add Parameters
-                    Ensure              = 'Present'
-                    Credential          = $Credential;
+                    AlertDetailsOverride  = (New-CimInstance -ClassName MSFT_SentinelAlertRuleAlertDetailsOverride -Property @{
+                        alertDescriptionFormat = 'This is an example of the alert content'
+                        alertDisplayNameFormat = 'Alert from {{{TimeGenerated}} '
+                    } -ClientOnly)
+                    CustomDetails         = @(
+                        (New-CimInstance -ClassName MSFT_SentinelAlertRuleCustomDetails -Property @{
+                            DetailKey = 'Color'
+                            DetailValue = 'TenantId'
+                        } -ClientOnly)
+                    )
+                    Description           = "Test";
+                    DisplayName           = "TestDSC1";
+                    Enabled               = $False; #Drift
+                    Ensure                = "Present";
+                    EventGroupingSettings = (New-CimInstance -ClassName MSFT_SentinelAlertRuleEventGroupingSettings -Property @{
+                        aggregationKind = 'AlertPerResult'
+                    } -ClientOnly)
+                    IncidentConfiguration = (New-CimInstance -ClassName MSFT_SentinelAlertRuleIncidentConfiguration -Property @{
+                        groupingConfiguration = (New-CimInstance -ClassName MSFT_SentinelAlertRuleIncidentConfigurationGroupingConfiguration -Property @{
+                            lookbackDuration = 'PT5H'
+                            matchingMethod = 'Selected'
+                            groupByCustomDetails = @('Color')
+                            groupByEntities = @('CloudApplication')
+                            reopenClosedIncident = $True
+                            enabled = $True
+                        } -ClientOnly)
+                        createIncident = $True
+                    } -ClientOnly)
+                    Kind                  = "NRT";
+                    Query                 = "ThreatIntelIndicators";
+                    ResourceGroupName     = "TBDSentinel";
+                    Severity              = "Medium";
+                    SubscriptionId        = "42136a41-5030-4140-aba0-7e6211115d3a";
+                    SuppressionDuration   = "PT5H";
+                    Tactics               = @();
+                    Techniques            = @();
+                    WorkspaceName         = "SentinelWorkspace";
+                    Credential            = $Credential;
                 }
 
-                ##TODO - Mock the Get-Cmdlet to return a drift
-                Mock -CommandName Get-Cmdlet -MockWith {
+                Mock -CommandName Get-M365DSCSentinelAlertRule -MockWith {
                     return @{
-
+                        Kind = 'NRT'
+                        name = '12345-12345-12345-12345-12345'
+                        properties = @{
+                            Query                 = "ThreatIntelIndicators";
+                            Severity              = "Medium";
+                            SuppressionDuration   = "PT5H";
+                            Tactics               = @();
+                            Techniques            = @();
+                            Description           = "Test";
+                            DisplayName           = "TestDSC1";
+                            Enabled               = $True;
+                            AlertDetailsOverride  = @{
+                                alertDescriptionFormat = 'This is an example of the alert content'
+                                alertDisplayNameFormat = 'Alert from {{{TimeGenerated}} '
+                            }
+                            CustomDetails         = @(
+                                @{
+                                    Color = 'TenantId'
+                                }
+                            )
+                            EventGroupingSettings = @{
+                                aggregationKind = 'AlertPerResult'
+                            }
+                            IncidentConfiguration = @{
+                                groupingConfiguration = @{
+                                    lookbackDuration = 'PT5H'
+                                    matchingMethod = 'Selected'
+                                    groupByCustomDetails = @('Color')
+                                    groupByEntities = @('CloudApplication')
+                                    reopenClosedIncident = $True
+                                    enabled = $True
+                                }
+                                createIncident = $True
+                            }
+                        }
                     }
                 }
             }
@@ -147,8 +396,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should call the Set method' {
                 Set-TargetResource @testParams
-                ##TODO - Replace the Update-Cmdlet by the appropriate one
-                Should -Invoke -CommandName Update-Cmdlet -Exactly 1
+                Should -Invoke -CommandName New-M365DSCSentinelAlertRule -Exactly 1
             }
         }
 
@@ -160,10 +408,43 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential  = $Credential;
                 }
 
-                ##TODO - Mock the Get-Cmdlet to return an instance
-                Mock -CommandName Get-Cmdlet -MockWith {
+                Mock -CommandName Get-M365DSCSentinelAlertRule -MockWith {
                     return @{
-
+                        Kind = 'NRT'
+                        name = '12345-12345-12345-12345-12345'
+                        properties = @{
+                            Query                 = "ThreatIntelIndicators";
+                            Severity              = "Medium";
+                            SuppressionDuration   = "PT5H";
+                            Tactics               = @();
+                            Techniques            = @();
+                            Description           = "Test";
+                            DisplayName           = "TestDSC1";
+                            Enabled               = $True;
+                            AlertDetailsOverride  = @{
+                                alertDescriptionFormat = 'This is an example of the alert content'
+                                alertDisplayNameFormat = 'Alert from {{{TimeGenerated}} '
+                            }
+                            CustomDetails         = @(
+                                @{
+                                    Color = 'TenantId'
+                                }
+                            )
+                            EventGroupingSettings = @{
+                                aggregationKind = 'AlertPerResult'
+                            }
+                            IncidentConfiguration = @{
+                                groupingConfiguration = @{
+                                    lookbackDuration = 'PT5H'
+                                    matchingMethod = 'Selected'
+                                    groupByCustomDetails = @('Color')
+                                    groupByEntities = @('CloudApplication')
+                                    reopenClosedIncident = $True
+                                    enabled = $True
+                                }
+                                createIncident = $True
+                            }
+                        }
                     }
                 }
             }

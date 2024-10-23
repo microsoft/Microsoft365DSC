@@ -18,6 +18,8 @@
   * Fixed missing permissions in settings.json
 * Intune workload
   * Fixed missing permissions in settings.json
+* SentinelAlertRule
+  * Initial release.
 * SentinelThreatIntelligenceIndicator
   * Initial release.
 * SPOTenantSettings

@@ -1,5 +1,5 @@
 [ClassVersion("1.0.0")]
-class MSFT_SentinelAlertRuleEventGroupSettings
+class MSFT_SentinelAlertRuleEventGroupingSettings
 {
     [Write, Description("")] String aggregationKind;
 };
@@ -32,7 +32,7 @@ class MSFT_SentinelAlertRuleAlertDetailsOverride
     [Write, Description("")] String alertDisplayNameFormat;
     [Write, Description("")] String alertColumnName;
     [Write, Description("")] String alertTacticsColumnName;
-    [Write, Description(""), EmbeddedInstance("MSFT_SentinelAlertRuleAlertDetailsOverrideAlertDynamicProperty")] String alertDynamicProperties;
+    [Write, Description(""), EmbeddedInstance("MSFT_SentinelAlertRuleAlertDetailsOverrideAlertDynamicProperty")] String alertDynamicProperties[];
 };
 
 [ClassVersion("1.0.0")]
@@ -53,7 +53,7 @@ class MSFT_SentinelAlertRuleIncidentConfiguration
 class MSFT_SentinelAlertRuleIncidentConfigurationGroupingConfiguration
 {
     [Write, Description("")] Boolean enabled;
-    [Write, Description(""), EmbeddedInstance("MSFT_SentinelAlertRuleIncidentConfigurationGroupingConfigurationAlertDetail")] groupByAlertDetails[];
+    [Write, Description(""), EmbeddedInstance("MSFT_SentinelAlertRuleIncidentConfigurationGroupingConfigurationAlertDetail")] String groupByAlertDetails[];
     [Write, Description("")] String groupByCustomDetails[];
     [Write, Description("")] String groupByEntities[];
     [Write, Description("")] String lookbackDuration;
@@ -68,8 +68,8 @@ class MSFT_SentinelAlertRuleIncidentConfigurationGroupingConfigurationAlertDetai
     [Write, Description("")] String Severity;
 };
 
-[ClassVersion("1.0.0.0"), FriendlyName("ResourceName")]
-class MSFT_ResourceName : OMI_BaseResource
+[ClassVersion("1.0.0.0"), FriendlyName("SentinelAlertRule")]
+class MSFT_SentinelAlertRule : OMI_BaseResource
 {
     [Key, Description("The display name of the indicator")] String DisplayName;
     [Write, Description("The name of the resource group. The name is case insensitive.")] String SubscriptionId;
@@ -82,22 +82,24 @@ class MSFT_ResourceName : OMI_BaseResource
     [Write, Description("")] String Severity;
     [Write, Description("")] String Tactics[];
     [Write, Description("")] String Techniques[];
+    [Write, Description("")] String SubTechniques[];
     [Write, Description("")] String Query;
     [Write, Description("")] String QueryFrequency;
     [Write, Description("")] String QueryPeriod;
     [Write, Description("")] String TriggerOperator;
     [Write, Description("")] UInt32 TriggerThreshold;
     [Write, Description("")] String SuppressionDuration;
-    [Write, Description("")] String SuppresionEnabled;
+    [Write, Description("")] String SuppressionEnabled;
     [Write, Description("")] String AlertRuleTemplateName;
     [Write, Description("")] String DisplayNamesExcludeFilter[];
     [Write, Description("")] String DisplayNamesFilter[];
     [Write, Description("")] String SeveritiesFilter[];
-    [Write, Description(""), EmbeddedInstance("MSFT_SentinelAlertRuleEventGroupSettings")] String EventGroupSettings;
-    [Write, Description(""), EmbeddedInstance("MSFT_SentinelAlertRuleCustomDetails")] String CustomDetails;
+    [Write, Description(""), EmbeddedInstance("MSFT_SentinelAlertRuleEventGroupingSettings")] String EventGroupingSettings;
+    [Write, Description(""), EmbeddedInstance("MSFT_SentinelAlertRuleCustomDetails")] String CustomDetails[];
     [Write, Description(""), EmbeddedInstance("MSFT_SentinelAlertRuleEntityMapping")] String EntityMappings[];
     [Write, Description(""), EmbeddedInstance("MSFT_SentinelAlertRuleAlertDetailsOverride")] String AlertDetailsOverride;
     [Write, Description(""), EmbeddedInstance("MSFT_SentinelAlertRuleIncidentConfiguration")] String IncidentConfiguration;
+    [Write, Description("")] String Kind;
 
     [Write, Description("Present ensures the instance exists, absent ensures it is removed."), ValueMap{"Absent","Present"}, Values{"Absent","Present"}] string Ensure;
     [Write, Description("Credentials of the workload's Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;

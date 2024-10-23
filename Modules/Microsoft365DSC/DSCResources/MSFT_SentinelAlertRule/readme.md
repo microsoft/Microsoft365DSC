@@ -1,6 +1,6 @@
 
-# ResourceName
+# SentinelAlertRule
 
 ## Description
 
-##TODO - Provide a short description of what the resource is set to configure.
+Configures alert rules in Azure Sentinel.

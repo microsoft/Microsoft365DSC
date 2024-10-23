@@ -21,6 +21,18 @@ Configuration Example
     Import-DscResource -ModuleName Microsoft365DSC
     node localhost
     {
-        
+        SentinelAlertRule "SentinelAlertRule-MyNRTRule"
+        {
+            ApplicationId         = $ApplicationId;
+            CertificateThumbprint = $CertificateThumbprint;
+            Description           = "Test";
+            DisplayName           = "MyNRTRule";
+            Ensure                = "Absent";
+            ResourceGroupName     = "ResourceGroupName";
+            Severity              = "Medium";
+            SubscriptionId        = "xxxx";
+            TenantId              = $TenantId;
+            WorkspaceName         = "SentinelWorkspace";
+        }
     }
 }
