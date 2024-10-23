@@ -21,7 +21,7 @@
 * EXOMailboxAuditBypassAssociation
   * Initial release.
 * IntuneDerivedCredential
-  * Fixed export and deployment when `NotificateType` had more than one option
+  * Fixed export and deployment when `NotificationType` had more than one option
     selected
   * Fixed retrieval of resource when it cannot be found by `Id`
   * Added a few verbose messages
