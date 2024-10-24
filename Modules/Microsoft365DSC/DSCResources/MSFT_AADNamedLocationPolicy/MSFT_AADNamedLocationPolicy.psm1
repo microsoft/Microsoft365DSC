@@ -293,7 +293,7 @@ function Set-TargetResource
         Write-Verbose -Message "Creating New AAD Named Location {$Displayname)} with attributes: $VerboseAttributes"
         $JSONValue = ConvertTo-Json $desiredValues | Out-String
         Write-Verbose -Message "JSON: $JSONValue"
-        $APIUrl = 'https://graph.microsoft.com/v1.0/identity/conditionalAccess/namedLocations'
+        $APIUrl = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "v1.0/identity/conditionalAccess/namedLocations"
         Invoke-MgGraphRequest -Method POST `
             -Uri $APIUrl `
             -Body $JSONValue | Out-Null
@@ -308,7 +308,7 @@ function Set-TargetResource
         Write-Verbose -Message "Updating AAD Named Location {$Displayname)} with attributes: $VerboseAttributes"
         $JSONValue = ConvertTo-Json $desiredValues | Out-String
         Write-Verbose -Message "JSON: $JSONValue"
-        $APIUrl = "https://graph.microsoft.com/v1.0/identity/conditionalAccess/namedLocations/$($currentAADNamedLocation.Id)"
+        $APIUrl = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "v1.0/identity/conditionalAccess/namedLocations/$($currentAADNamedLocation.Id)"
         Invoke-MgGraphRequest -Method PATCH `
             -Uri $APIUrl `
             -Body $JSONValue | Out-Null

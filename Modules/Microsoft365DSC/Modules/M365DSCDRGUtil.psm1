@@ -2814,8 +2814,8 @@ function Update-IntuneDeviceConfigurationPolicy
 
     try
     {
-        $Uri = "https://graph.microsoft.com/beta/deviceManagement/configurationPolicies/$DeviceConfigurationPolicyId"
-
+        $Uri = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/deviceManagement/configurationPolicies/$DeviceConfigurationPolicyId"
+        
         $policy = @{
             'name'              = $Name
             'description'       = $Description

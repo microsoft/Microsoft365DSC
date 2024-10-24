@@ -52,6 +52,8 @@
 * M365DSCDRGUtil
   * Fixes an issue where non-unique properties were not combined
     properly with their respective parent setting.
+* Fixed refrences to graph.microsoft.com with dynamic domain name based on target cloud
+  * Impacted AADAdminConsentRequestPolicy, AADApplication, AADConditionalAccessPolicy, AADGroup, AADNamedLocationPolicy, AADServiePrincipal, IntuneASRRulesPolicyWindows10, IntuneAccountProtectionLocalUsersGroupMembershipPolicy, IntuneAccountProtectionPolicy,IntuneAppProtectionPolicyiOS,IntuneDeviceConfigurationAdministrativeTemplatePolicyWindows10,IntuneDeviceConfigurationSCEPCertificatePolicyWindows10, IntuneDeviceConfigurationWiredNetworkPolicyWindows10,IntuneDeviceEnrollmentStatusPageWindows10, IntuneDiskEncryptionMacOS, IntunePolicySets, IntuneSettingCatalogCustomPolicyWindows10, M365DSCRGUtil
 * DEPENDENCIES
   * Updated ExchangeOnlineManagement to version 3.6.0.
   * Updated Microsoft.Graph to version 2.24.0.
