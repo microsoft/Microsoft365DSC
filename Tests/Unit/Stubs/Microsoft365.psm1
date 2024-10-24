@@ -1984,6 +1984,10 @@ function Get-DataEncryptionPolicy
         $DomainController
     )
 }
+function Get-DeviceTenantPolicy
+{
+}
+
 function Get-DeviceConditionalAccessPolicy
 {
     [CmdletBinding()]
