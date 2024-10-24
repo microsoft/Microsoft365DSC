@@ -22,6 +22,11 @@
   * Fixed missing permissions in settings.json
 * EXOMailboxAuditBypassAssociation
   * Initial release.
+* IntuneDerivedCredential
+  * Fixed export and deployment when `NotificationType` had more than one option
+    selected
+  * Fixed retrieval of resource when it cannot be found by `Id`
+  * Added a few verbose messages
 * Intune workload
   * Fixed missing permissions in settings.json
 * SentinelAlertRule
