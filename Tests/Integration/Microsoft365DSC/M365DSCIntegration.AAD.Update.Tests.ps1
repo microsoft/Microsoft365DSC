@@ -125,6 +125,14 @@
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                 }
+                AADAccessReviewPolicy 'AADAccessReviewPolicy'
+                {
+                    ApplicationId                 = $ConfigurationData.NonNodeData.ApplicationId;
+                    CertificateThumbprint         = $ConfigurationData.NonNodeData.CertificateThumbprint;
+                    IsGroupOwnerManagementEnabled = $False;
+                    IsSingleInstance              = "Yes";
+                    TenantId                      = $OrganizationName;
+                }
                 AADAdminConsentRequestPolicy 'AADAdminConsentRequestPolicy'
                 {
                     ApplicationId         = $ApplicationId;
