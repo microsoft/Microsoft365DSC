@@ -80,8 +80,17 @@
 * AADLifecycleWorkflowSettings
   * Initial release.
 * AADServicePrincipal
+<<<<<<< HEAD
+<<<<<<< HEAD
+  * Added support for SAML.
+  * Fix issue with Owners.
+=======
+  * Adding Delegated Permission Classification Property
+>>>>>>> 120553154f48aa5f7a810d7e4cc1583c3fdbb067
+=======
   * Added Delegated Permission Classification Property
   * Added Custom Security Attributes Property
+>>>>>>> cbe5a16c113582a9a35ca3034c5baa4602ee393e
 * ADOPermissionGroupSettings
   * Initial release.
 * EXOATPBuiltInProtectionRule
