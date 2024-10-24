@@ -4,6 +4,8 @@
 
 * AADAccessReviewDefinition
   * Initial release.
+* AADAccessReviewPolicy
+  * Initial release.
 * AADAuthenticationMethodPolicyExternal
   * Initial release.
 * AADCustomSecurityAttributeDefinition
