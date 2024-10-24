@@ -4,6 +4,8 @@
 
 * AADAccessReviewDefinition
   * Initial release.
+* AADAccessReviewPolicy
+  * Initial release.
 * AADCustomSecurityAttributeDefinition
   * Fixed missing permissions in settings.json
 * AADIdentityB2XUserFlow
