@@ -4,7 +4,7 @@
 
 * AADAccessReviewDefinition
   * Initial release.
-* AADNetworkAccessForwardingProfile
+* AADAccessReviewPolicy
   * Initial release.
 * AADAuthenticationMethodPolicyExternal
   * Initial release.
@@ -15,6 +15,8 @@
 * AADIdentityGovernanceProgram
   * Initial release.
 * AADIdentityAPIConnector
+  * Initial release.
+* AADNetworkAccessForwardingProfile
   * Initial release.
 * AADOrganizationCertificateBasedAuthConfiguration
   * Initial release.
