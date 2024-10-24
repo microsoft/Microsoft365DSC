@@ -168,8 +168,7 @@ function Set-TargetResource
     # CREATE
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        $setParameters.Remove("Identity")
-        New-ServicePrincipal @SetParameters
+        New-ServicePrincipal -AppId $AppId -ObjectId $Identity
     }
     # UPDATE
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
