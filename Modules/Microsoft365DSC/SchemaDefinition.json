@@ -5560,6 +5560,106 @@
                        ]
     },
     {
+        "ClassName":  "MSFT_AADIdentityAPIConnectionCertificate",
+        "Parameters":  [
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "Pkcs12Value",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Thumbprint",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "Password",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "IsActive",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_AADIdentityAPIConnector",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "DisplayName",
+                               "Option":  "Required"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "TargetUrl",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Id",
+                               "Option":  "Key"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Username",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "Password",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_AADIdentityAPIConnectionCertificate[]",
+                               "Name":  "Certificates",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "string",
+                               "Name":  "Ensure",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "Credential",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ApplicationId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "TenantId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "ApplicationSecret",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "CertificateThumbprint",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "ManagedIdentity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
         "ClassName":  "MSFT_MicrosoftGraphUserFlowApiConnectorConfiguration",
         "Parameters":  [
                            {
@@ -6925,6 +7025,56 @@
                        ]
     },
     {
+        "ClassName":  "MSFT_AADServicePrincipalAttributeValue",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AttributeName",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "StringArrayValue",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32[]",
+                               "Name":  "IntArrayValue",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "StringValue",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "IntValue",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "BoolValue",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_AADServicePrincipalAttributeSet",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AttributeSetName",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_AADServicePrincipalAttributeValue[]",
+                               "Name":  "AttributeValues",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
         "ClassName":  "MSFT_AADServicePrincipal",
         "Parameters":  [
                            {
@@ -7015,6 +7165,11 @@
                            {
                                "CIMType":  "MSFT_AADServicePrincipalDelegatedPermissionClassification[]",
                                "Name":  "DelegatedPermissionClassifications",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_AADServicePrincipalAttributeSet[]",
+                               "Name":  "CustomSecurityAttributes",
                                "Option":  "Write"
                            },
                            {
@@ -12380,6 +12535,51 @@
                            {
                                "CIMType":  "String",
                                "Name":  "CertificatePath",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "ManagedIdentity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_EXOMailboxAuditBypassAssociation",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Identity",
+                               "Option":  "Key"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "AuditBypassEnabled",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "Credential",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ApplicationId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "TenantId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "CertificateThumbprint",
                                "Option":  "Write"
                            },
                            {

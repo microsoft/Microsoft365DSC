@@ -504,6 +504,18 @@
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                 }
+                AADIdentityAPIConnector 'AADIdentityAPIConnector-TestConnector'
+                {
+                    DisplayName           = "NewTestConnector";
+                    Id                    = "RestApi_NewTestConnector";
+                    Username              = "anexas";
+                    Password              = New-Object System.Management.Automation.PSCredential('Password', (ConvertTo-SecureString "anexas" -AsPlainText -Force));
+                    TargetUrl             = "https://graph.microsoft.com";
+                    Ensure                = "Present"
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
+                }
                 AADIdentityB2XUserFlow 'AADIdentityB2XUserFlow-B2X_1_TestFlow'
                 {
                     ApplicationId             = $ApplicationId
