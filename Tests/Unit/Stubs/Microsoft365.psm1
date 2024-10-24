@@ -1148,6 +1148,31 @@ function Get-SweepRule
         $ResultSize
     )
 }
+function New-ServicePrincipal
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $ObjectId,
+
+        [Parameter()]
+        [System.String]
+        $ServiceId,
+
+        [Parameter()]
+        [System.String]
+        $AppId
+    )
+}
 function New-SweepRule
 {
     [CmdletBinding()]
@@ -1197,6 +1222,19 @@ function New-SweepRule
         $Enabled
     )
 }
+function Remove-ServicePrincipal
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
 function Remove-SweepRule
 {
     [CmdletBinding()]
@@ -1208,6 +1246,23 @@ function Remove-SweepRule
         [Parameter()]
         [System.Object]
         $Mailbox,
+
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
+function Set-ServicePrincipal
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
 
         [Parameter()]
         [System.Object]
@@ -4228,6 +4283,19 @@ function Get-SafeLinksRule
         [Parameter()]
         [System.Object]
         $State
+    )
+}
+function Get-ServicePrincipal
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $Organization
     )
 }
 function Get-ServicePrincipal
