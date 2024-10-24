@@ -57,6 +57,10 @@
             RequiredVersion = '2.24.0'
         },
         @{
+            ModuleName      = 'Microsoft.Graph.Beta.NetworkAccess'
+            RequiredVersion = '2.24.0'
+        },
+        @{
             ModuleName      = 'Microsoft.Graph.Beta.Identity.DirectoryManagement'
             RequiredVersion = '2.24.0'
         },
