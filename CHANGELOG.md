@@ -26,6 +26,8 @@
   * Initial release.
 * EXOTenantAllowBlockListItems
   * Fixed `Test-TargetResource` to correctly mark when this resource is removed
+* IntuneAppAndBrowserIsolationPolicyWindows10ConfigMgr
+  * Initial release.
 * IntuneAppCategory
   * Fixed retrieval of resource which could then result in multiple categories
     being created with same name.
