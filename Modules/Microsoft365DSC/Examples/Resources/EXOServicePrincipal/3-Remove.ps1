@@ -25,10 +25,12 @@ Configuration Example
         EXOServicePrincipal 'ServicePrincipal'
         {
             AppId                = "703005d9-c467-413e-a085-295c3e09e6cb";
-            Credential           = $Credscredential;
             DisplayName          = "Aditya Mukund";
             Ensure               = "Absent";
             Identity             = "6dfb8885-0297-42e6-9c81-7bf7ee15551d";
+            ApplicationId         = $ApplicationId;
+            TenantId              = $TenantId;
+            CertificateThumbprint = $CertificateThumbprint;
         }
     }
 }
