@@ -6,16 +6,33 @@
   * Initial release.
 * AADAccessReviewPolicy
   * Initial release.
+* AADAuthenticationMethodPolicyExternal
+  * Initial release.
 * AADCustomSecurityAttributeDefinition
   * Fixed missing permissions in settings.json
 * AADIdentityB2XUserFlow
   * Initial release.
 * AADIdentityGovernanceProgram
   * Initial release.
+* AADIdentityAPIConnector
+  * Initial release.
+* AADOrganizationCertificateBasedAuthConfiguration
+  * Initial release.
 * AADSocialIdentityProvider
   * Fixed missing permissions in settings.json
+* EXOMailboxAuditBypassAssociation
+  * Initial release.
+* IntuneDerivedCredential
+  * Fixed export and deployment when `NotificationType` had more than one option
+    selected
+  * Fixed retrieval of resource when it cannot be found by `Id`
+  * Added a few verbose messages
 * Intune workload
   * Fixed missing permissions in settings.json
+* SentinelAlertRule
+  * Initial release.
+* SentinelThreatIntelligenceIndicator
+  * Initial release.
 * SPOTenantSettings
   * Added support for AllowSelectSGsInODBListInTenant,
     DenySelectSGsInODBListInTenant, DenySelectSecurityGroupsInSPSitesList,
@@ -46,6 +63,8 @@
   * Initial release.
 * AADConnectorGroupApplicationProxy
   * Initial release.
+* AADCustomAuthenticationExtension
+  * Initial release.
 * AADCustomSecurityAttributeDefinition
   * Initial release.
 * AADDeviceRegistrationPolicy
@@ -57,7 +76,8 @@
 * AADLifecycleWorkflowSettings
   * Initial release.
 * AADServicePrincipal
-  * Adding Delegated Permission Classification Property
+  * Added Delegated Permission Classification Property
+  * Added Custom Security Attributes Property
 * ADOPermissionGroupSettings
   * Initial release.
 * EXOATPBuiltInProtectionRule
