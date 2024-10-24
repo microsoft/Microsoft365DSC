@@ -20,6 +20,8 @@
   * Fixed missing permissions in settings.json
 * EXOMailboxAuditBypassAssociation
   * Initial release.
+* EXOTenantAllowBlockListItems
+  * Fixed `Test-TargetResource` to correctly mark when this resource is removed
 * IntuneDerivedCredential
   * Fixed export and deployment when `NotificationType` had more than one option
     selected
