@@ -122,7 +122,6 @@ function Get-TargetResource
             Id                    = $getValue.Id
             State                 = $getValue.State
             Policies              = $complexPolicies
-            # 'Policies@Odata.Context' = $getValue.AdditionalProperties['policies@odata.context']
             Credential            = $Credential
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
