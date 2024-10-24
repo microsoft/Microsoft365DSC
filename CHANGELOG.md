@@ -39,6 +39,8 @@
     FIXES [#5246](https://github.com/microsoft/Microsoft365DSC/issues/5246)
 * Intune workload
   * Fixed missing permissions in settings.json
+* PPPowerAppsEnvironment
+  * FIXES [#5207](https://github.com/microsoft/Microsoft365DSC/issues/5207)
 * SentinelAlertRule
   * Initial release.
 * SentinelThreatIntelligenceIndicator
