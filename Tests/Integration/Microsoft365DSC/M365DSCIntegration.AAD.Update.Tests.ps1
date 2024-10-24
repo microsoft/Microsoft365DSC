@@ -125,6 +125,14 @@
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                 }
+                AADAccessReviewPolicy 'AADAccessReviewPolicy'
+                {
+                    ApplicationId                 = $ConfigurationData.NonNodeData.ApplicationId;
+                    CertificateThumbprint         = $ConfigurationData.NonNodeData.CertificateThumbprint;
+                    IsGroupOwnerManagementEnabled = $False;
+                    IsSingleInstance              = "Yes";
+                    TenantId                      = $OrganizationName;
+                }
                 AADAdminConsentRequestPolicy 'AADAdminConsentRequestPolicy'
                 {
                     ApplicationId         = $ApplicationId;
@@ -1001,6 +1009,18 @@
                     GuestUsageGuidelinesUrl       = "https://contoso.com/guestusage"
                     UsageGuidelinesUrl            = "https://contoso.com/usage"
                     Ensure                        = "Present"
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
+                }
+                AADIdentityAPIConnector 'AADIdentityAPIConnector-TestConnector'
+                {
+                    DisplayName           = "NewTestConnector";
+                    Id                    = "RestApi_NewTestConnector";
+                    Username              = "anexas 1"; #drift
+                    Password              = New-Object System.Management.Automation.PSCredential('Password', (ConvertTo-SecureString "anexas" -AsPlainText -Force));
+                    TargetUrl             = "https://graph.microsoft.com";
+                    Ensure                = "Present"
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint

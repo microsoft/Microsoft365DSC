@@ -4,6 +4,8 @@
 
 * AADAccessReviewDefinition
   * Initial release.
+* AADAccessReviewPolicy
+  * Initial release.
 * AADAuthenticationMethodPolicyExternal
   * Initial release.
 * AADCustomSecurityAttributeDefinition
@@ -12,14 +14,35 @@
   * Initial release.
 * AADIdentityGovernanceProgram
   * Initial release.
+* AADIdentityAPIConnector
+  * Initial release.
+* AADNetworkAccessForwardingProfile
+  * Initial release.
 * AADOrganizationCertificateBasedAuthConfiguration
   * Initial release.
 * AADSocialIdentityProvider
   * Fixed missing permissions in settings.json
+* EXOMailboxAuditBypassAssociation
+  * Initial release.
+* EXOTenantAllowBlockListItems
+  * Fixed `Test-TargetResource` to correctly mark when this resource is removed
 * IntuneAppAndBrowserIsolationPolicyWindows10ConfigMgr
   * Initial release.
+* IntuneAppCategory
+  * Fixed retrieval of resource which could then result in multiple categories
+    being created with same name.
+* IntuneDerivedCredential
+  * Fixed export and deployment when `NotificationType` had more than one option
+    selected
+  * Fixed retrieval of resource when it cannot be found by `Id`
+  * Added a few verbose messages
+* IntuneEndpointDetectionAndResponsePolicyWindows10
+  * Fixes an issue with `AutoFromConnector` as the Configuration package type.
+    FIXES [#5246](https://github.com/microsoft/Microsoft365DSC/issues/5246)
 * Intune workload
   * Fixed missing permissions in settings.json
+* SentinelAlertRule
+  * Initial release.
 * SentinelThreatIntelligenceIndicator
   * Initial release.
 * SPOTenantSettings
@@ -65,7 +88,8 @@
 * AADLifecycleWorkflowSettings
   * Initial release.
 * AADServicePrincipal
-  * Adding Delegated Permission Classification Property
+  * Added Delegated Permission Classification Property
+  * Added Custom Security Attributes Property
 * ADOPermissionGroupSettings
   * Initial release.
 * EXOATPBuiltInProtectionRule
