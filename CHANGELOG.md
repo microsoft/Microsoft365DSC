@@ -26,6 +26,9 @@
   * Initial release.
 * EXOTenantAllowBlockListItems
   * Fixed `Test-TargetResource` to correctly mark when this resource is removed
+* IntuneAppCategory
+  * Fixed retrieval of resource which could then result in multiple categories
+    being created with same name.
 * IntuneDerivedCredential
   * Fixed export and deployment when `NotificationType` had more than one option
     selected
