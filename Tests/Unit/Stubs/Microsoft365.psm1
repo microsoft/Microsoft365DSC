@@ -1984,6 +1984,10 @@ function Get-DataEncryptionPolicy
         $DomainController
     )
 }
+function Get-DeviceTenantPolicy
+{
+}
+
 function Get-DeviceConditionalAccessPolicy
 {
     [CmdletBinding()]
@@ -74548,6 +74552,16 @@ function New-DeviceConfigurationPolicy
         $Enabled
     )
 }
+function New-DeviceTenantPolicy
+{
+    [CmdletBinding()]
+    param(
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled
+    )
+}
 function New-DlpCompliancePolicy
 {
     [CmdletBinding()]
@@ -76467,6 +76481,14 @@ function Remove-DeviceConfigurationPolicy
         $Identity
     )
 }
+
+function Remove-DeviceTenantPolicy
+{
+    [CmdletBinding()]
+    param(
+    )
+}
+
 function Remove-DlpCompliancePolicy
 {
     [CmdletBinding()]
@@ -77535,6 +77557,17 @@ function Set-DeviceConditionalAccessPolicy
         $Force
     )
 }
+
+function Set-DeviceTenantPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $Enabled
+    )
+}
+
 function Set-DeviceConfigurationPolicy
 {
     [CmdletBinding()]

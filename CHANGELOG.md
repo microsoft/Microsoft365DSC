@@ -43,6 +43,8 @@
   * Initial release.
 * SentinelThreatIntelligenceIndicator
   * Initial release.
+* SCDeviceTenantPolicy
+  * Initial Release.
 * SPOTenantSettings
   * Added support for AllowSelectSGsInODBListInTenant,
     DenySelectSGsInODBListInTenant, DenySelectSecurityGroupsInSPSitesList,
