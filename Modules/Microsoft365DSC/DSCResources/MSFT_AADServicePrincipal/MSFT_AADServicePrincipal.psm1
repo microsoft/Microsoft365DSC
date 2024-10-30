@@ -81,6 +81,14 @@ function Get-TargetResource
         $Tags,
 
         [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $KeyCredentials,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $PasswordCredentials,
+
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -230,6 +238,60 @@ function Get-TargetResource
                 $complexDelegatedPermissionClassifications += $hashtable
             }
 
+            $complexKeyCredentials = @()
+            foreach ($currentkeyCredentials in $AADServicePrincipal.keyCredentials)
+            {
+                $mykeyCredentials = @{}
+                if($null -ne $currentkeyCredentials.customKeyIdentifier)
+                {
+                    $mykeyCredentials.Add('CustomKeyIdentifier', [convert]::ToBase64String($currentkeyCredentials.customKeyIdentifier))
+                }
+                $mykeyCredentials.Add('DisplayName', $currentkeyCredentials.displayName)
+                if ($null -ne $currentkeyCredentials.endDateTime)
+                {
+                    $mykeyCredentials.Add('EndDateTime', ([DateTimeOffset]$currentkeyCredentials.endDateTime).ToString('o'))
+                }
+                $mykeyCredentials.Add('KeyId', $currentkeyCredentials.keyId)
+
+
+                if($null -ne $currentkeyCredentials.Key)
+                {
+                    $mykeyCredentials.Add('Key', [convert]::ToBase64String($currentkeyCredentials.key))
+                }
+
+                if ($null -ne $currentkeyCredentials.startDateTime)
+                {
+                    $mykeyCredentials.Add('StartDateTime', ([DateTimeOffset]$currentkeyCredentials.startDateTime).ToString('o'))
+                }
+                $mykeyCredentials.Add('Type', $currentkeyCredentials.type)
+                $mykeyCredentials.Add('Usage', $currentkeyCredentials.usage)
+                if ($mykeyCredentials.values.Where({$null -ne $_}).Count -gt 0)
+                {
+                    $complexKeyCredentials += $mykeyCredentials
+                }
+            }
+
+            $complexPasswordCredentials = @()
+            foreach ($currentpasswordCredentials in $AADServicePrincipal.passwordCredentials)
+            {
+                $mypasswordCredentials = @{}
+                $mypasswordCredentials.Add('DisplayName', $currentpasswordCredentials.displayName)
+                if ($null -ne $currentpasswordCredentials.endDateTime)
+                {
+                    $mypasswordCredentials.Add('EndDateTime', ([DateTimeOffset]$currentpasswordCredentials.endDateTime).ToString('o'))
+                }
+                $mypasswordCredentials.Add('Hint', $currentpasswordCredentials.hint)
+                $mypasswordCredentials.Add('KeyId', $currentpasswordCredentials.keyId)
+                if ($null -ne $currentpasswordCredentials.startDateTime)
+                {
+                    $mypasswordCredentials.Add('StartDateTime', ([DateTimeOffset]$currentpasswordCredentials.startDateTime).ToString('o'))
+                }
+                if ($mypasswordCredentials.values.Where({$null -ne $_}).Count -gt 0)
+                {
+                    $complexPasswordCredentials += $mypasswordCredentials
+                }
+            }
+
             $complexCustomSecurityAttributes = [Array](Get-CustomSecurityAttributes -AppId $AppId)
             if ($null -eq $complexCustomSecurityAttributes) {
                 $complexCustomSecurityAttributes = @()
@@ -255,6 +317,8 @@ function Get-TargetResource
                 ServicePrincipalNames              = $AADServicePrincipal.ServicePrincipalNames
                 ServicePrincipalType               = $AADServicePrincipal.ServicePrincipalType
                 Tags                               = $AADServicePrincipal.Tags
+                KeyCredentials                     = $complexKeyCredentials
+                PasswordCredentials                = $complexPasswordCredentials
                 Ensure                             = 'Present'
                 Credential                         = $Credential
                 ApplicationId                      = $ApplicationId
@@ -363,6 +427,14 @@ function Set-TargetResource
         $Tags,
 
         [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $KeyCredentials,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $PasswordCredentials,
+
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -462,7 +534,7 @@ function Set-TargetResource
             $newOwner = New-MgServicePrincipalOwnerByRef -ServicePrincipalId $newSP.Id -BodyParameter $body
         }
 
-        #adding delegated permissions classifications
+        # Adding delegated permissions classifications
         if($null -ne $DelegatedPermissionClassifications){
             foreach ($permissionClassification in $DelegatedPermissionClassifications){
                 $params = @{
@@ -722,6 +794,14 @@ function Test-TargetResource
         $Tags,
 
         [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $KeyCredentials,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $PasswordCredentials,
+
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -851,6 +931,7 @@ function Export-TargetResource
         [Parameter()]
         [System.String[]]
         $AccessTokens
+
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
@@ -909,6 +990,34 @@ function Export-TargetResource
                 {
                     $Results.DelegatedPermissionClassifications = Get-M365DSCAzureADServicePrincipalDelegatedPermissionClassifications -PermissionClassifications $Results.DelegatedPermissionClassifications
                 }
+                if ($null -ne $Results.KeyCredentials)
+                {
+                    $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                    -ComplexObject $Results.KeyCredentials `
+                    -CIMInstanceName 'MicrosoftGraphkeyCredential'
+                    if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                    {
+                        $Results.KeyCredentials = $complexTypeStringResult
+                    }
+                    else
+                    {
+                        $Results.Remove('KeyCredentials') | Out-Null
+                    }
+                }
+                if ($null -ne $Results.PasswordCredentials)
+                {
+                    $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                    -ComplexObject $Results.PasswordCredentials `
+                    -CIMInstanceName 'MicrosoftGraphpasswordCredential'
+                    if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                    {
+                        $Results.PasswordCredentials = $complexTypeStringResult
+                    }
+                    else
+                    {
+                        $Results.Remove('PasswordCredentials') | Out-Null
+                    }
+                }
                 if ($Results.CustomSecurityAttributes.Count -gt 0)
                 {
                     $Results.CustomSecurityAttributes = Get-M365DSCAADServicePrincipalCustomSecurityAttributesAsString -CustomSecurityAttributes $Results.CustomSecurityAttributes
@@ -928,11 +1037,24 @@ function Export-TargetResource
                     $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
                         -ParameterName 'DelegatedPermissionClassifications'
                 }
+                if ($null -ne $Results.KeyCredentials)
+                {
+                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
+                        -ParameterName "KeyCredentials" -IsCIMArray:$True
+                }
+
+                if ($null -ne $Results.PasswordCredentials)
+                {
+                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
+                        -ParameterName "PasswordCredentials" -IsCIMArray:$True
+                }
+
                 if ($null -ne $Results.CustomSecurityAttributes)
                 {
                     $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
                         -ParameterName 'CustomSecurityAttributes'
                 }
+
                 $dscContent += $currentDSCBlock
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
                     -FileName $Global:PartialExportFileName

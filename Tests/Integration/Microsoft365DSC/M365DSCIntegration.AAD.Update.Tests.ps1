@@ -965,6 +965,56 @@
                     IsAppliedToOrganization = $False;
                     IsEnabled               = $False;
                 }
+                AADFilteringPolicy 'AADFilteringPolicy-MyPolicy'
+                {
+                    Action                = "allow"; #drift
+                    ApplicationId         = $ApplicationId;
+                    CertificateThumbprint = $CertificateThumbprint;
+                    Description           = "This is a demo policy";
+                    Ensure                = "Present";
+                    Name                  = "MyPolicy";
+                    TenantId              = $TenantId;
+                }
+                AADFilteringPolicyRule 'AADFilteringPolicyRule-FQDN'
+                {
+                    ApplicationId         = $ApplicationId;
+                    CertificateThumbprint = $CertificateThumbprint;
+                    Destinations          = @(
+                        MSFT_AADFilteringPolicyRuleDestination{
+                            value = 'contoso.com' #Drift
+                        }
+                    );
+                    Ensure                = "Present";
+                    Name                  = "MyFQDN";
+                    Policy                = "AMyPolicy";
+                    RuleType              = "fqdn";
+                    TenantId              = $TenantId;
+                }
+                AADFilteringProfile 'AADFilteringProfile-My Profile'
+                {
+                    ApplicationId         = $ApplicationId;
+                    CertificateThumbprint = $CertificateThumbprint;
+                    Description           = "Description of profile";
+                    Ensure                = "Present";
+                    Name                  = "My PRofile";
+                    Policies              = @(
+                        MSFT_AADFilteringProfilePolicyLink{
+                            Priority = 100
+                            LoggingState = 'enabled'
+                            PolicyName = 'MyPolicyChoseBine'
+                            State = 'enabled'
+                        }
+                        MSFT_AADFilteringProfilePolicyLink{
+                            Priority = 200
+                            LoggingState = 'enabled'
+                            PolicyName = 'MyTopPolicy'
+                            State = 'enabled'
+                        }
+                    );
+                    Priority              = 130; #Drift
+                    State                 = "enabled";
+                    TenantId              = $TenantId;
+                }
                 AADGroup 'MyGroups'
                 {
                     DisplayName      = "DSCGroup"
@@ -1210,6 +1260,49 @@
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
+                }
+                AADNetworkAccessForwardingPolicy 'AADNetworkAccessForwardingPolicy-Custom Bypass'
+                {
+                    Name                  = "Custom Bypass";
+                    PolicyRules           = @(
+                        MSFT_MicrosoftGraphNetworkAccessForwardingPolicyRule {
+                            Name           = 'Custom policy internet rule'
+                            ActionValue    = 'bypass'
+                            RuleType       = 'fqdn'
+                            Protocol       = 'tcp'
+                            Ports          = @(80, 443)
+                            Destinations   = @('www.microsoft.com')
+                        }
+        
+                        MSFT_MicrosoftGraphNetworkAccessForwardingPolicyRule {
+                            Name           = 'Custom policy internet rule'
+                            ActionValue    = 'bypass'
+                            RuleType       = 'ipAddress'
+                            Protocol       = 'tcp'
+                            Ports          = @(80, 443)
+                            Destinations   = @('192.168.1.1')
+                        }
+        
+                        MSFT_MicrosoftGraphNetworkAccessForwardingPolicyRule {
+                            Name           = 'Custom policy internet rule'
+                            ActionValue    = 'bypass'
+                            RuleType       = 'ipSubnet'
+                            Protocol       = 'tcp'
+                            Ports          = @(80, 443)
+                            Destinations   = @('192.164.0.0/24')
+                        }
+                    );
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
+                }
+                AADNetworkAccessSettingConditionalAccess 'AADNetworkAccessSettingConditionalAccess'
+                {
+                    ApplicationId         = $ApplicationId;
+                    CertificateThumbprint = $CertificateThumbprint;
+                    IsSingleInstance      = "Yes";
+                    SignalingStatus       = "disabled";
+                    TenantId              = $TenantId;
                 }
                 AADNetworkAccessSettingCrossTenantAccess 'AADNetworkAccessSettingCrossTenantAccess'
                 {

@@ -10,7 +10,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $NetworkPacketTaggingStatus,
+        $SignalingStatus,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -55,10 +55,10 @@ function Get-TargetResource
     $nullResult = $PSBoundParameters
     try
     {
-        $instance = Get-MgBetaNetworkAccessSettingCrossTenantAccess
+        $instance = Get-MgBetaNetworkAccessSettingCOnditionalAccess
         $results = @{
             IsSingleInstance           = 'Yes'
-            NetworkPacketTaggingStatus = $instance.NetworkPacketTaggingStatus
+            SignalingStatus            = $instance.SignalingStatus
             Credential                 = $Credential
             ApplicationId              = $ApplicationId
             TenantId                   = $TenantId
@@ -92,7 +92,7 @@ function Set-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        $NetworkPacketTaggingStatus,
+        $SignalingStatus,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -134,8 +134,8 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Updating the Cross Tenant Access Settings"
-    Update-MgBetaNetworkAccessSettingCrossTenantAccess -NetworkPacketTaggingStatus $NetworkPacketTaggingStatus
+    Write-Verbose -Message "Updating the Conditional Access Settings"
+    Update-MgBetaNetworkAccessSettingConditionalAccess -SignalingStatus $SignalingStatus
 }
 
 function Test-TargetResource
@@ -150,7 +150,7 @@ function Test-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        $NetworkPacketTaggingStatus,
+        $SignalingStatus,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]

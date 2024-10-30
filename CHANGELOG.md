@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* AADServicePrincipal
+  * Added support for KeyCredentials and PasswordCredentials.
 * AADAccessReviewDefinition
   * Initial release.
 * AADAccessReviewPolicy
@@ -13,6 +15,12 @@
 * AADCustomSecurityAttributeDefinition
   * Fixed missing permissions in settings.json
 * AADEnrichedAuditLogs
+  * Initial release.
+* AADFilteringPolicy
+  * Initial release.
+* AADFilteringPolicyRule
+  * Initial release.
+* AADFilteringProfile
   * Initial release.
 * AADHomeRealmDiscoveryPolicy
   * Initial Release
@@ -29,6 +37,10 @@
 * AADNamedLocationPolicy
   * Fixed issue where duplicate names were not detected correctly.
 * AADNetworkAccessForwardingProfile
+  * Initial release.
+* AADNetworkAccessForwardingPolicy
+  * Initial release.
+* AADNetworkAccessSettingConditionalAccess
   * Initial release.
 * AADNetworkAccessSettingCrossTenantAccess
   * Initial release.
@@ -60,6 +72,8 @@
 * IntuneAppCategory
   * Fixed retrieval of resource which could then result in multiple categories
     being created with same name.
+* IntuneAppleMDMPushNotificationCertificate
+  * Initial release.
 * IntuneDerivedCredential
   * Fixed export and deployment when `NotificationType` had more than one option
     selected

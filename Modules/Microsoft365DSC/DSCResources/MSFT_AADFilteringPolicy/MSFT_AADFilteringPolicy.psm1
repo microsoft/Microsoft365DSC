@@ -6,11 +6,24 @@ function Get-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $IsSingleInstance,
+        $Name,
 
         [Parameter()]
         [System.String]
-        $NetworkPacketTaggingStatus,
+        $Id,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $Action,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -53,18 +66,52 @@ function Get-TargetResource
     #endregion
 
     $nullResult = $PSBoundParameters
+    $nullResult.Ensure = 'Absent'
     try
     {
-        $instance = Get-MgBetaNetworkAccessSettingCrossTenantAccess
+        if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
+        {
+            if (-not [System.String]::IsNullOrEmpty($Id))
+            {
+                Write-Verbose -Message "Retrieving policy by id {$Id}"
+                $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.Id -eq $Id}
+            }
+            if ($null -eq $instance)
+            {
+                Write-Verbose -Message "Retrieving policy by name {$Name}"
+                $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.Name -eq $Name}
+            }
+        }
+        else
+        {
+            if (-not [System.String]::IsNullOrEmpty($Id))
+            {
+                Write-Verbose -Message "Retrieving policy by id {$Id}"
+                $instance = Get-MgBetaNetworkAccessFilteringPolicy -FilteringPolicyId $Id -ErrorAction SilentlyContinue
+            }
+            if ($null -eq $instance)
+            {
+                Write-Verbose -Message "Retrieving policy by name {$Name}"
+                $instance = Get-MgBetaNetworkAccessFilteringPolicy -All | Where-Object -FilterScript {$_.Name -eq $Name}
+            }
+        }
+        if ($null -eq $instance)
+        {
+            return $nullResult
+        }
+
         $results = @{
-            IsSingleInstance           = 'Yes'
-            NetworkPacketTaggingStatus = $instance.NetworkPacketTaggingStatus
-            Credential                 = $Credential
-            ApplicationId              = $ApplicationId
-            TenantId                   = $TenantId
-            CertificateThumbprint      = $CertificateThumbprint
-            ManagedIdentity            = $ManagedIdentity.IsPresent
-            AccessTokens               = $AccessTokens
+            Name                  = $instance.Name
+            Id                    = $instance.Id
+            Description           = $instance.Description
+            Action                = $instance.Action
+            Ensure                = 'Present'
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
+            ManagedIdentity       = $ManagedIdentity.IsPresent
+            AccessTokens          = $AccessTokens
         }
         return [System.Collections.Hashtable] $results
     }
@@ -88,11 +135,24 @@ function Set-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $IsSingleInstance,
+        $Name,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
-        $NetworkPacketTaggingStatus,
+        $Id,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $Action,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -119,9 +179,6 @@ function Set-TargetResource
         $AccessTokens
     )
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters
-
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
@@ -134,8 +191,33 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Updating the Cross Tenant Access Settings"
-    Update-MgBetaNetworkAccessSettingCrossTenantAccess -NetworkPacketTaggingStatus $NetworkPacketTaggingStatus
+    $currentInstance = Get-TargetResource @PSBoundParameters
+
+    $instanceParams = @{
+        name        = $Name
+        action      = $Action
+        description = $Description
+    }
+
+    # CREATE
+    if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
+    {
+        Write-Verbose -Message "Creating new filtering policy {$Name}"
+        New-MgBetaNetworkAccessFilteringPolicy -BodyParameter $instanceParams
+    }
+    # UPDATE
+    elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
+    {
+        Write-Verbose -Message "Updating filtering policy {$Name}"
+        Update-MgBetaNetworkAccessFilteringPolicy -FilteringPolicyId $currentInstance.Id `
+                                                  -BodyParameter $instanceParams
+    }
+    # REMOVE
+    elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
+    {
+        Write-Verbose -Message "Removing filtering policy {$Name}"
+        Remove-MgBetaNetworkAccessFilteringPolicy -FilteringPolicyId $currentInstance.Id
+    }
 }
 
 function Test-TargetResource
@@ -146,11 +228,24 @@ function Test-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $IsSingleInstance,
+        $Name,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
-        $NetworkPacketTaggingStatus,
+        $Id,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $Action,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -258,33 +353,53 @@ function Export-TargetResource
     try
     {
         $Script:ExportMode = $true
+        [array] $Script:exportedInstances = Get-MgBetaNetworkAccessFilteringPolicy -ErrorAction Stop
 
-        $Global:M365DSCExportResourceInstancesCount++
-
-        $params = @{
-            IsSingleInstance      = 'Yes'
-            Credential            = $Credential
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            CertificateThumbprint = $CertificateThumbprint
-            ManagedIdentity       = $ManagedIdentity.IsPresent
-            AccessTokens          = $AccessTokens
+        $i = 1
+        $dscContent = ''
+        if ($Script:exportedInstances.Length -eq 0)
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
+        else
+        {
+            Write-Host "`r`n" -NoNewline
+        }
+        foreach ($config in $Script:exportedInstances)
+        {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
 
-        $Results = Get-TargetResource @Params
-        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-            -Results $Results
+            $displayedKey = $config.Name
+            Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -NoNewline
+            $params = @{
+                Name                  = $config.Name
+                Id                    = $config.Id
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+                ManagedIdentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
+            }
 
-        $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-            -ConnectionMode $ConnectionMode `
-            -ModulePath $PSScriptRoot `
-            -Results $Results `
-            -Credential $Credential
-        $dscContent += $currentDSCBlock
-        Save-M365DSCPartialExport -Content $currentDSCBlock `
-            -FileName $Global:PartialExportFileName
-        $i++
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
+            $Results = Get-TargetResource @Params
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
+
+            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -Credential $Credential
+            $dscContent += $currentDSCBlock
+            Save-M365DSCPartialExport -Content $currentDSCBlock `
+                -FileName $Global:PartialExportFileName
+            $i++
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+        }
         return $dscContent
     }
     catch
