@@ -4671,7 +4671,7 @@ function Test-M365DSCModuleValidity
     [CmdletBinding()]
     param()
 
-    if ('AzureAutomation/' -eq $env:AZUREPS_HOST_ENVIRONMENT)
+    if ($env:AZUREPS_HOST_ENVIRONMENT -like 'AzureAutomation*')
     {
         $message = 'Skipping check for newer version of Microsoft365DSC due to Azure Automation Environment restrictions.'
         Write-Verbose -Message $message

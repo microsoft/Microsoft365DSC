@@ -41,7 +41,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Id = '12345-12345-12345-12345-12345'
                 }
             }
-            
 
             Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicy -MockWith {
                 return @{
@@ -70,6 +69,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             @{
                                 Id = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockexecutionofpotentiallyobfuscatedscripts'
                                 Name = 'BlockExecutionOfPotentiallyObfuscatedScripts'
+                                OffsetUri = '/Config/Defender/AttackSurfaceReductionRules'
                                 AdditionalProperties = @{
                                     '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
                                     options=@(
@@ -84,12 +84,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                             itemId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockexecutionofpotentiallyobfuscatedscripts_off'
                                         }
                                     )
-                                    
+
                                 }
                             },
                             @{
                                 Id = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockwin32apicallsfromofficemacros'
                                 Name = 'BlockWin32APICallsFromOfficeMacros'
+                                OffsetUri = '/Config/Defender/AttackSurfaceReductionRules'
                                 AdditionalProperties = @{
                                     '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
                                     options=@(
@@ -109,6 +110,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             @{
                                 Id = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules'
                                 Name = 'AttackSurfaceReductionRules'
+                                OffsetUri = '/Config/Defender/AttackSurfaceReductionRules'
                                 AdditionalProperties = @{
                                     '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSettingGroupCollectionDefinition'
                                     maximumCount = 1
@@ -145,13 +147,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                                     value = "device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockwin32apicallsfromofficemacros_warn"
                                                 }
                                                 settingDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockwin32apicallsfromofficemacros'
-                                            }                                                                                                                                
+                                            }
                                         )
                                     }
                                 )
-                            }                            
-                         }                        
-                        
+                            }
+                         }
+
                     },
 
                     @{
@@ -160,6 +162,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             @{
                                 Id = 'device_vendor_msft_policy_config_defender_allowrealtimemonitoring'
                                 Name = 'AllowRealtimeMonitoring'
+                                OffsetUri = '/Config/Defender/AllowRealtimeMonitoring'
                                 AdditionalProperties = @{
                                     '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
                                     options=@(
@@ -168,9 +171,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                             itemId = 'device_vendor_msft_policy_config_defender_allowrealtimemonitoring_1'
                                         }
                                     )
-                                    
+
                                 }
-                            }                            
+                            }
                         )
                         SettingInstance = @{
                             AdditionalProperties = @{
@@ -192,17 +195,18 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             @{
                                 Id = 'user_vendor_msft_policy_config_internetexplorer_disablebypassofsmartscreenwarningsaboutuncommonfiles'
                                 Name = 'DisableSafetyFilterOverrideForAppRepUnknown'
+                                OffsetUri = '/Config/InternetExplorer/DisableBypassOfSmartScreenWarningsAboutUncommonFiles'
                                 AdditionalProperties = @{
                                     '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
                                     options=@(
                                         @{
                                             name ='Enabled'
-                                            itemId = 'user_vendor_msft_policy_config_internetexplorer_disablebypassofsmartscreenwarningsaboutuncommonfiles_1'                                           
+                                            itemId = 'user_vendor_msft_policy_config_internetexplorer_disablebypassofsmartscreenwarningsaboutuncommonfiles_1'
                                         }
                                     )
                                 }
-                            } 
-                        ) 
+                            }
+                        )
                         SettingInstance = @{
                             SettingDefinitionId = 'user_vendor_msft_policy_config_internetexplorer_disablebypassofsmartscreenwarningsaboutuncommonfiles'
                             SettingInstanceTemplateReference = @{
@@ -319,7 +323,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     } -ClientOnly)
                     Ensure = "Absent"
                     Credential = $Credential;
-                }                
+                }
             }
 
             It 'Should return Values from the Get method' {
@@ -359,7 +363,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     } -ClientOnly)
                     Ensure = "Present"
                     Credential = $Credential;
-                }                
+                }
             }
 
             It 'Should return true from the Test method' {
@@ -416,7 +420,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential
                 }
             }
-                
+
             It 'Should Reverse Engineer resource from the Export method' {
                 $result = Export-TargetResource @testParams
                 $result | Should -Not -BeNullOrEmpty

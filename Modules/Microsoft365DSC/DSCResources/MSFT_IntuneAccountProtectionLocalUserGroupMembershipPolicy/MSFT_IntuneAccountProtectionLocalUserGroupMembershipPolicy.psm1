@@ -819,8 +819,8 @@ function Update-DeviceManagementConfigurationPolicy
     $templateReference = @{
         'templateId' = $TemplateReferenceId
     }
-
-    $Uri = "https://graph.microsoft.com/beta/deviceManagement/ConfigurationPolicies/$DeviceManagementConfigurationPolicyId"
+    
+    $Uri = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/deviceManagement/ConfigurationPolicies/$DeviceManagementConfigurationPolicyId"
     $policy = @{
         'name'              = $DisplayName
         'description'       = $Description

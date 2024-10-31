@@ -1753,7 +1753,9 @@ function Set-TargetResource
         try
         {
             Write-Verbose -Message "Updating existing policy with values: $(Convert-M365DscHashtableToString -Hashtable $NewParameters)"
-            Invoke-MgGraphRequest -Method PATCH -Uri "https://graph.microsoft.com/beta/identity/conditionalAccess/policies/$($currentPolicy.Id)" -Body $NewParameters
+
+            $Uri = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/identity/conditionalAccess/policies/$($currentPolicy.Id)"
+            Invoke-MgGraphRequest -Method PATCH -Uri $Uri -Body $NewParameters
         }
         catch
         {
@@ -1776,7 +1778,8 @@ function Set-TargetResource
         {
             try
             {
-                Invoke-MgGraphRequest -Method POST -Uri 'https://graph.microsoft.com/beta/identity/conditionalAccess/policies' -Body $NewParameters
+                $Uri = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/identity/conditionalAccess/policies"
+                Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $NewParameters
             }
             catch
             {

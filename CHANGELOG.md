@@ -10,6 +10,8 @@
   * Initial release.
 * AADAuthenticationMethodPolicyExternal
   * Initial release.
+* AADClaimsMappingPolicy
+  * Initial release.
 * AADConditionalAccessPolicy
   * FIXES [#5282](https://github.com/microsoft/Microsoft365DSC/issues/5282)
 * AADCustomSecurityAttributeDefinition
@@ -46,6 +48,10 @@
   * Initial release.
 * AADOrganizationCertificateBasedAuthConfiguration
   * Initial release.
+* AADRemoteNetwork
+  * Initial release.
+* AADRoleManagementPolicyRule
+  * Initial release.
 * AADSocialIdentityProvider
   * Fixed missing permissions in settings.json
 * AADVerifiedIdAuthority
@@ -55,6 +61,10 @@
 * AzureBillingAccountsAssociatedTenant
   * Initial release.
 * AzureBillingAccountsRoleAssignment
+  * Initial release.
+* AzureDiagnosticSettings
+  * Initial release.
+* AzureDiagnosticSettingsCustomSecurityAttribute
   * Initial release.
 * AzureVerifiedIdFaceCheck
   * Initial release.
@@ -69,6 +79,8 @@
   * Initial release.
 * EXOTenantAllowBlockListItems
   * Fixed `Test-TargetResource` to correctly mark when this resource is removed
+* IntuneAppAndBrowserIsolationPolicyWindows10ConfigMgr
+  * Initial release.
 * IntuneAppCategory
   * Fixed retrieval of resource which could then result in multiple categories
     being created with same name.
@@ -95,6 +107,8 @@
 * SCSensitivityLabel
   * Fixed issue with setting label priority
     FIXES [#5266](https://github.com/microsoft/Microsoft365DSC/issues/5266)
+* PPPowerAppsEnvironment
+  * FIXES [#5207](https://github.com/microsoft/Microsoft365DSC/issues/5207)
 * SentinelAlertRule
   * Initial release.
 * SentinelThreatIntelligenceIndicator
@@ -114,6 +128,16 @@
 * M365DSCDRGUtil
   * Fixes an issue where non-unique properties were not combined
     properly with their respective parent setting.
+* MISC
+  * Fixed references to graph.microsoft.com with dynamic domain name based on target cloud.
+   Impacted AADAdminConsentRequestPolicy, AADApplication, AADConditionalAccessPolicy, AADGroup, 
+   AADNamedLocationPolicy, AADServiePrincipal, IntuneASRRulesPolicyWindows10, 
+   IntuneAccountProtectionLocalUsersGroupMembershipPolicy, IntuneAccountProtectionPolicy,
+   IntuneAppProtectionPolicyiOS,IntuneDeviceConfigurationAdministrativeTemplatePolicyWindows10,
+   IntuneDeviceConfigurationSCEPCertificatePolicyWindows10, IntuneDeviceConfigurationWiredNetworkPolicyWindows10,
+   IntuneDeviceEnrollmentStatusPageWindows10, IntuneDiskEncryptionMacOS, IntunePolicySets, 
+   IntuneSettingCatalogCustomPolicyWindows10, M365DSCRGUtil
+  * Exponential performance improvements by reducing complexity and roundtrips.
 * DEPENDENCIES
   * Updated Microsoft.Graph to version 2.24.0.
   * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.199.

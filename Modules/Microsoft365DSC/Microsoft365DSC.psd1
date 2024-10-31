@@ -77,6 +77,7 @@
     'Modules/M365DSCTelemetryEngine.psm1',
     'Modules/M365DSCUtil.psm1',
     'Modules/M365DSCDRGUtil.psm1',
+    'Modules/M365DSCIntuneSettingsCatalogUtil.psm1',
     'Modules/EncodingHelpers/M365DSCEmojis.psm1',
     'Modules/EncodingHelpers/M365DSCStringEncoding.psm1',
     'Modules/WorkloadHelpers/M365DSCAzureHelper.psm1',

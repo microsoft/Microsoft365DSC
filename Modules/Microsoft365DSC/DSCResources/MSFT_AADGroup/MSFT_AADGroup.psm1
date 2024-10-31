@@ -268,8 +268,10 @@ function Get-TargetResource
 
             # Licenses
             $assignedLicensesValues = $null
+            $uri = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "v1.0/groups/$($Group.Id)/assignedLicenses"
+            
             $assignedLicensesRequest = Invoke-MgGraphRequest -Method 'GET' `
-                -Uri "https://graph.microsoft.com/v1.0/groups/$($Group.Id)/assignedLicenses"
+                -Uri $uri
 
             if ($assignedLicensesRequest.value.Length -gt 0)
             {
