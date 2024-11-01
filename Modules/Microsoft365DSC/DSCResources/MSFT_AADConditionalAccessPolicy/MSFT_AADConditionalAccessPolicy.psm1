@@ -219,6 +219,10 @@ function Get-TargetResource
         [System.String]
         $TransferMethods,
 
+        [Parameter()]
+        [System.String]
+        $InsiderRiskLevels,
+
         #generic
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -709,6 +713,7 @@ function Get-TargetResource
         TransferMethods                          = [System.String]$Policy.Conditions.AuthenticationFlows.TransferMethods
         #Standard part
         TermsOfUse                               = $termOfUseName
+        InsiderRiskLevels                        = $Policy.Conditions.InsiderRiskLevels
         Ensure                                   = 'Present'
         Credential                               = $Credential
         ApplicationSecret                        = $ApplicationSecret
@@ -942,6 +947,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $TransferMethods,
+
+        [Parameter()]
+        [System.String]
+        $InsiderRiskLevels,
 
         #generic
         [Parameter()]
@@ -1577,6 +1586,11 @@ function Set-TargetResource
             }
         }
 
+        if ($null -ne $InsiderRiskLevels)
+        {
+            $conditions.Add("insiderRiskLevels", $InsiderRiskLevels)
+        }
+
         Write-Verbose -Message 'Set-Targetresource: process risk levels and app types'
         Write-Verbose -Message "Set-Targetresource: UserRiskLevels: $UserRiskLevels"
         If ($currentParameters.ContainsKey('UserRiskLevels'))
@@ -2043,6 +2057,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $TransferMethods,
+
+        [Parameter()]
+        [System.String]
+        $InsiderRiskLevels,
 
         #generic
         [Parameter()]

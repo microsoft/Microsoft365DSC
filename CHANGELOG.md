@@ -14,9 +14,12 @@
   * Initial release.
 * AADConditionalAccessPolicy
   * FIXES [#5282](https://github.com/microsoft/Microsoft365DSC/issues/5282)
+  * Added support for InsiderRiskLevels.
 * AADCustomSecurityAttributeDefinition
   * Fixed missing permissions in settings.json
 * AADEnrichedAuditLogs
+  * Initial release.
+* AADFederationConfiguration
   * Initial release.
 * AADFilteringPolicy
   * Initial release.
@@ -45,6 +48,8 @@
 * AADNetworkAccessSettingConditionalAccess
   * Initial release.
 * AADNetworkAccessSettingCrossTenantAccess
+  * Initial release.
+* AADOnPremisesPublishingProfilesSettings
   * Initial release.
 * AADOrganizationCertificateBasedAuthConfiguration
   * Initial release.
@@ -75,6 +80,9 @@
   * Initial Release
 * EXOMailboxAuditBypassAssociation
   * Initial release.
+* EXOMailboxSettings
+  * Added support for AddressBookPolicy, RetentionPolicy, RoleAssignmentPolicy
+    and SharingPolicy.
 * EXOServicePrincipal
   * Initial release.
 * EXOTenantAllowBlockListItems
@@ -109,6 +117,8 @@
     FIXES [#5266](https://github.com/microsoft/Microsoft365DSC/issues/5266)
 * PPPowerAppsEnvironment
   * FIXES [#5207](https://github.com/microsoft/Microsoft365DSC/issues/5207)
+* PPTenantSettings
+  * Updated to support latest settings.
 * SentinelAlertRule
   * Initial release.
 * SentinelThreatIntelligenceIndicator
@@ -130,12 +140,12 @@
     properly with their respective parent setting.
 * MISC
   * Fixed references to graph.microsoft.com with dynamic domain name based on target cloud.
-   Impacted AADAdminConsentRequestPolicy, AADApplication, AADConditionalAccessPolicy, AADGroup, 
-   AADNamedLocationPolicy, AADServiePrincipal, IntuneASRRulesPolicyWindows10, 
+   Impacted AADAdminConsentRequestPolicy, AADApplication, AADConditionalAccessPolicy, AADGroup,
+   AADNamedLocationPolicy, AADServiePrincipal, IntuneASRRulesPolicyWindows10,
    IntuneAccountProtectionLocalUsersGroupMembershipPolicy, IntuneAccountProtectionPolicy,
    IntuneAppProtectionPolicyiOS,IntuneDeviceConfigurationAdministrativeTemplatePolicyWindows10,
    IntuneDeviceConfigurationSCEPCertificatePolicyWindows10, IntuneDeviceConfigurationWiredNetworkPolicyWindows10,
-   IntuneDeviceEnrollmentStatusPageWindows10, IntuneDiskEncryptionMacOS, IntunePolicySets, 
+   IntuneDeviceEnrollmentStatusPageWindows10, IntuneDiskEncryptionMacOS, IntunePolicySets,
    IntuneSettingCatalogCustomPolicyWindows10, M365DSCRGUtil
   * Exponential performance improvements by reducing complexity and roundtrips.
 * DEPENDENCIES

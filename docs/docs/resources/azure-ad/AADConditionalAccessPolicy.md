@@ -53,6 +53,7 @@
 | **AuthenticationStrength** | Write | String | Name of the associated authentication strength policy. | |
 | **TransferMethods** | Write | String | Names of the associated authentication flow transfer methods. Possible values are '', 'deviceCodeFlow', 'authenticationTransfer', or 'deviceCodeFlow,authenticationTransfer'. | |
 | **AuthenticationContexts** | Write | StringArray[] | Authentication context class references. | |
+| **InsiderRiskLevels** | Write | String | Insider risk levels conditions. | |
 | **Ensure** | Write | String | Specify if the Azure AD CA Policy should exist or not. | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials for the Microsoft Graph delegated permissions. | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |

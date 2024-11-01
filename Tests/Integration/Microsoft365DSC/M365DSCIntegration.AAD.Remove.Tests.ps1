@@ -283,6 +283,20 @@
                     DisplayName             = "CertificateBasedAuthentication rollout policy";
                     Ensure                  = "Absent";
                 }
+                AADFederationConfiguration 'MyFederation'
+                {
+                    IssuerUri                       = 'https://contoso.com/issuerUri'
+                    DisplayName                     = 'contoso display name'
+                    MetadataExchangeUri             ='https://contoso.com/metadataExchangeUri'
+                    PassiveSignInUri                = 'https://contoso.com/signin'
+                    PreferredAuthenticationProtocol = 'wsFed'
+                    Domains                         = @('contoso.com')
+                    SigningCertificate              = 'MIIDADCCAeigAwIBAgIQEX41y8r6'
+                    Ensure                          = 'Absent'
+                    ApplicationId                   = $ApplicationId
+                    TenantId                        = $TenantId
+                    CertificateThumbprint           = $CertificateThumbprint
+                }
                 AADFilteringPolicy 'AADFilteringPolicy-MyPolicy'
                 {
                     Action                = "block";
