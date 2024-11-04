@@ -618,6 +618,17 @@
                     Name                  = "From Michelle";
                     TenantId              = $TenantId;
                 }
+                EXOTenantAllowBlockListSpoofItems 'EXOTenantAllowBlockListSpoofItems-b66ffa0c-ad85-df9d-0a16-ad3cb9956f71'
+                {
+                    Action                = "Allow";
+                    ApplicationId         = $ApplicationId;
+                    CertificateThumbprint = $CertificateThumbprint;
+                    Ensure                = "Absent";
+                    SendingInfrastructure = "121.0.0.7";
+                    SpoofedUser           = "contoso.com";
+                    SpoofType             = "Internal";
+                    TenantId              = $TenantId;
+                }
                 EXOTransportRule 'ConfigureTransportRule'
                 {
                     Name                                          = "Ethical Wall - Sales and Brokerage Departments"

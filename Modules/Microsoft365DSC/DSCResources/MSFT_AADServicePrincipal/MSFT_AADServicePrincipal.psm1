@@ -53,6 +53,10 @@ function Get-TargetResource
         $LogoutUrl,
 
         [Parameter()]
+        [System.String]
+        $Notes,
+
+        [Parameter()]
         [System.String[]]
         $Owners,
 
@@ -311,6 +315,7 @@ function Get-TargetResource
                 ErrorUrl                           = $AADServicePrincipal.ErrorUrl
                 Homepage                           = $AADServicePrincipal.Homepage
                 LogoutUrl                          = $AADServicePrincipal.LogoutUrl
+                Notes                              = $AADServicePrincipal.Notes
                 Owners                             = $ownersValues
                 PublisherName                      = $AADServicePrincipal.PublisherName
                 ReplyURLs                          = $AADServicePrincipal.ReplyURLs
@@ -398,6 +403,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $LogoutUrl,
+
+        [Parameter()]
+        [System.String]
+        $Notes,
 
         [Parameter()]
         [System.String[]]
@@ -767,6 +776,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $LogoutUrl,
+
+        [Parameter()]
+        [System.String]
+        $Notes,
 
         [Parameter()]
         [System.String[]]

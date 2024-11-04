@@ -3835,7 +3835,7 @@ function Get-M365DSCExportContentForResource
     {
         $instanceName += "-$primaryKey"
     }
-    else
+    elseif (-not $Keys.Contains('IsSingleInstance'))
     {
         $instanceName += "-" + (New-Guid).ToString()
     }

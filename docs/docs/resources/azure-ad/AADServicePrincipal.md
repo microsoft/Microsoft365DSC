@@ -14,6 +14,7 @@
 | **ErrorUrl** | Write | String | Specifies the error URL of the ServicePrincipal. | |
 | **Homepage** | Write | String | Specifies the homepage of the ServicePrincipal. | |
 | **LogoutUrl** | Write | String | Specifies the LogoutURL of the ServicePrincipal. | |
+| **Notes** | Write | String | Notes associated with the ServicePrincipal. | |
 | **PublisherName** | Write | String | Specifies the PublisherName of the ServicePrincipal. | |
 | **Owners** | Write | StringArray[] | List of the owners of the service principal. | |
 | **ReplyUrls** | Write | StringArray[] | The URLs that user tokens are sent to for sign in with the associated application, or the redirect URIs that OAuth 2.0 authorization codes and access tokens are sent to for the associated application. | |
