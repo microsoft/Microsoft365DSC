@@ -1703,6 +1703,17 @@ function Get-ActiveSyncDevice
         $ResultSize
     )
 }
+
+function Get-ActiveSyncMailboxPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
+
 function Get-ActiveSyncDeviceAccessRule
 {
     [CmdletBinding()]
@@ -4496,6 +4507,233 @@ function New-ActiveSyncDeviceAccessRule
         $AccessLevel
     )
 }
+
+function New-ActiveSyncMailboxPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $AllowUnsignedApplications,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowUnsignedInstallationPackages,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowExternalDeviceManagement,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowIrDA,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowStorageCard,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowNonProvisionableDevices,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowRemoteDesktop,
+
+        [Parameter()]
+        [System.Object]
+        $UnapprovedInROMApplicationList,
+
+        [Parameter()]
+        [System.Boolean]
+        $DevicePasswordEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $RequireEncryptedSMIMEMessages,
+
+        [Parameter()]
+        [System.Int32]
+        $DevicePasswordHistory,
+
+        [Parameter()]
+        [System.Boolean]
+        $RequireDeviceEncryption,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowInternetSharing,
+
+        [Parameter()]
+        [System.Int32]
+        $MinDevicePasswordComplexCharacters,
+
+        [Parameter()]
+        [System.Object]
+        $RequireSignedSMIMEAlgorithm,
+
+        [Parameter()]
+        [System.Object]
+        $MaxEmailHTMLBodyTruncationSize,
+
+        [Parameter()]
+        [System.Object]
+        $DevicePasswordExpiration,
+
+        [Parameter()]
+        [System.Boolean]
+        $UNCAccessEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCamera,
+
+        [Parameter()]
+        [System.Object]
+        $MaxDevicePasswordFailedAttempts,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowBrowser,
+
+        [Parameter()]
+        [System.Boolean]
+        $RequireManualSyncWhenRoaming,
+
+        [Parameter()]
+        [System.Object]
+        $AllowSMIMEEncryptionAlgorithmNegotiation,
+
+        [Parameter()]
+        [System.Boolean]
+        $DeviceEncryptionEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $MaxEmailBodyTruncationSize,
+
+        [Parameter()]
+        [System.Object]
+        $AllowBluetooth,
+
+        [Parameter()]
+        [System.Object]
+        $RequireEncryptionSMIMEAlgorithm,
+
+        [Parameter()]
+        [System.Object]
+        $DevicePolicyRefreshInterval,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowMobileOTAUpdate,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Object]
+        $MaxAttachmentSize,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowConsumerEmail,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowDesktopSync,
+
+        [Parameter()]
+        [System.Object]
+        $MaxInactivityTimeDeviceLock,
+
+        [Parameter()]
+        [System.Boolean]
+        $AlphanumericDevicePasswordRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $RequireStorageCardEncryption,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $AttachmentsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowSMIMESoftCerts,
+
+        [Parameter()]
+        [System.Object]
+        $MaxEmailAgeFilter,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowSimpleDevicePassword,
+
+        [Parameter()]
+        [System.Boolean]
+        $PasswordRecoveryEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $MaxCalendarAgeFilter,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowWiFi,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowApplePushNotifications,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowPOPIMAPEmail,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsDefault,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsDefaultPolicy,
+
+        [Parameter()]
+        [System.Object]
+        $ApprovedApplicationList,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowTextMessaging,
+
+        [Parameter()]
+        [System.Boolean]
+        $WSSAccessEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $RequireSignedSMIMEMessages,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowHTMLEmail,
+
+        [Parameter()]
+        [System.Object]
+        $MinDevicePasswordLength,
+
+        [Parameter()]
+        [System.Boolean]
+        $IrmEnabled
+    )
+}
+
 function New-AddressBookPolicy
 {
     [CmdletBinding()]
@@ -8633,6 +8871,25 @@ function Remove-ActiveSyncDevice
         $Identity
     )
 }
+
+function Remove-ActiveSyncMailboxPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force
+    )
+}
+
 function Remove-ActiveSyncDeviceAccessRule
 {
     [CmdletBinding()]
@@ -9568,6 +9825,237 @@ function Set-ActiveSyncDeviceAccessRule
         $AccessLevel
     )
 }
+
+function Set-ActiveSyncMailboxPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $AllowUnsignedApplications,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowUnsignedInstallationPackages,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowExternalDeviceManagement,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowIrDA,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowStorageCard,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowNonProvisionableDevices,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowRemoteDesktop,
+
+        [Parameter()]
+        [System.Object]
+        $UnapprovedInROMApplicationList,
+
+        [Parameter()]
+        [System.Boolean]
+        $DevicePasswordEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $RequireEncryptedSMIMEMessages,
+
+        [Parameter()]
+        [System.Int32]
+        $DevicePasswordHistory,
+
+        [Parameter()]
+        [System.Boolean]
+        $RequireDeviceEncryption,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowInternetSharing,
+
+        [Parameter()]
+        [System.Int32]
+        $MinDevicePasswordComplexCharacters,
+
+        [Parameter()]
+        [System.Object]
+        $RequireSignedSMIMEAlgorithm,
+
+        [Parameter()]
+        [System.Object]
+        $MaxEmailHTMLBodyTruncationSize,
+
+        [Parameter()]
+        [System.Object]
+        $DevicePasswordExpiration,
+
+        [Parameter()]
+        [System.Boolean]
+        $UNCAccessEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCamera,
+
+        [Parameter()]
+        [System.Object]
+        $MaxDevicePasswordFailedAttempts,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowBrowser,
+
+        [Parameter()]
+        [System.Boolean]
+        $RequireManualSyncWhenRoaming,
+
+        [Parameter()]
+        [System.Object]
+        $AllowSMIMEEncryptionAlgorithmNegotiation,
+
+        [Parameter()]
+        [System.Boolean]
+        $DeviceEncryptionEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $MaxEmailBodyTruncationSize,
+
+        [Parameter()]
+        [System.Object]
+        $AllowBluetooth,
+
+        [Parameter()]
+        [System.Object]
+        $RequireEncryptionSMIMEAlgorithm,
+
+        [Parameter()]
+        [System.Object]
+        $DevicePolicyRefreshInterval,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowMobileOTAUpdate,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Object]
+        $MaxAttachmentSize,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowConsumerEmail,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowDesktopSync,
+
+        [Parameter()]
+        [System.Object]
+        $MaxInactivityTimeDeviceLock,
+
+        [Parameter()]
+        [System.Boolean]
+        $AlphanumericDevicePasswordRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $RequireStorageCardEncryption,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $AttachmentsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowSMIMESoftCerts,
+
+        [Parameter()]
+        [System.Object]
+        $MaxEmailAgeFilter,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowSimpleDevicePassword,
+
+        [Parameter()]
+        [System.Boolean]
+        $PasswordRecoveryEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $MaxCalendarAgeFilter,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowWiFi,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowApplePushNotifications,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowPOPIMAPEmail,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsDefault,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsDefaultPolicy,
+
+        [Parameter()]
+        [System.Object]
+        $ApprovedApplicationList,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowTextMessaging,
+
+        [Parameter()]
+        [System.Boolean]
+        $WSSAccessEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $RequireSignedSMIMEMessages,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowHTMLEmail,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $MinDevicePasswordLength,
+
+        [Parameter()]
+        [System.Boolean]
+        $IrmEnabled
+    )
+}
+
 function Set-AddressBookPolicy
 {
     [CmdletBinding()]
