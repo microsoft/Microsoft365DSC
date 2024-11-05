@@ -25,13 +25,11 @@ Configuration Example
         {
             AndroidEnrollmentAssignments = @(
                 MSFT_IntunecomplianceManagementPartnerAssignment{
-                    Target = MSFT_IntunedeviceAndAppManagementAssignmentTarget{
-                        DeviceAndAppManagementAssignmentFilterId = "FakeStringValue"
-                        GroupId = '11111111-2222-2222-2222-111111111111'
-                        CollectionId = '22222222-2222-2222-2222-222222222222'
-                        odataType = "#microsoft.graph.allDevicesAssignmentTarget"
-                        DeviceAndAppManagementAssignmentFilterType = "none"
-                    }
+                    DeviceAndAppManagementAssignmentFilterId = "FakeStringValue"
+                    GroupDisplayName = 'SomeOtherGroup'
+                    CollectionId = '22222222-2222-2222-2222-222222222222'
+                    odataType = "#microsoft.graph.allDevicesAssignmentTarget"
+                    DeviceAndAppManagementAssignmentFilterType = "none"
                 }
             )
             AndroidOnboarded      = $True

@@ -26,10 +26,6 @@ function Get-TargetResource
         $IosOnboarded,
 
         [Parameter()]
-        [System.String]
-        $LastHeartbeatDateTime,
-
-        [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $MacOsEnrollmentAssignments,
 
@@ -126,26 +122,34 @@ function Get-TargetResource
         {
             $myAndroidEnrollmentAssignments = @{}
             $complexTarget = @{}
-            $complexTarget.Add('DeviceAndAppManagementAssignmentFilterId', $currentAndroidEnrollmentAssignments.target.deviceAndAppManagementAssignmentFilterId)
-            if ($null -ne $currentAndroidEnrollmentAssignments.target.deviceAndAppManagementAssignmentFilterType)
+            $complexTarget.Add('DeviceAndAppManagementAssignmentFilterId', $currentAndroidEnrollmentAssignments.deviceAndAppManagementAssignmentFilterId)
+            if ($null -ne $currentAndroidEnrollmentAssignments.deviceAndAppManagementAssignmentFilterType)
             {
-                $complexTarget.Add('DeviceAndAppManagementAssignmentFilterType', $currentAndroidEnrollmentAssignments.target.deviceAndAppManagementAssignmentFilterType.ToString())
+                $complexTarget.Add('DeviceAndAppManagementAssignmentFilterType', $currentAndroidEnrollmentAssignments.deviceAndAppManagementAssignmentFilterType.ToString())
             }
-            $complexTarget.Add('GroupId', $currentAndroidEnrollmentAssignments.target.groupId)
-            $complexTarget.Add('CollectionId', $currentAndroidEnrollmentAssignments.target.collectionId)
-            if ($null -ne $currentAndroidEnrollmentAssignments.target.'@odata.type')
+            $complexTarget.Add('GroupId', $currentAndroidEnrollmentAssignments.groupId)
+            $groupObj = Get-MgGroup -GroupId $currentAndroidEnrollmentAssignments.groupId -Property DisplayName
+            $complexTarget.Add('GroupDisplayName', $groupObj.DisplayName)
+            $complexTarget.Add('CollectionId', $currentAndroidEnrollmentAssignments.collectionId)
+            if ($null -ne $currentAndroidEnrollmentAssignments.'@odata.type')
             {
-                $complexTarget.Add('odataType', $currentAndroidEnrollmentAssignments.target.'@odata.type'.ToString())
+                $complexTarget.Add('odataType', $currentAndroidEnrollmentAssignments.'@odata.type'.ToString())
             }
             if ($complexTarget.values.Where({$null -ne $_}).Count -eq 0)
             {
                 $complexTarget = $null
             }
+            else
+            {
+                $complexAndroidEnrollmentAssignments += $complexTarget
+            }
+            <#
             $myAndroidEnrollmentAssignments.Add('Target',$complexTarget)
             if ($myAndroidEnrollmentAssignments.values.Where({$null -ne $_}).Count -gt 0)
             {
                 $complexAndroidEnrollmentAssignments += $myAndroidEnrollmentAssignments
             }
+            #>
         }
 
         $complexIosEnrollmentAssignments = @()
@@ -153,26 +157,34 @@ function Get-TargetResource
         {
             $myIosEnrollmentAssignments = @{}
             $complexTarget = @{}
-            $complexTarget.Add('DeviceAndAppManagementAssignmentFilterId', $currentIosEnrollmentAssignments.target.deviceAndAppManagementAssignmentFilterId)
-            if ($null -ne $currentIosEnrollmentAssignments.target.deviceAndAppManagementAssignmentFilterType)
+            $complexTarget.Add('DeviceAndAppManagementAssignmentFilterId', $currentIosEnrollmentAssignments.deviceAndAppManagementAssignmentFilterId)
+            if ($null -ne $currentIosEnrollmentAssignments.deviceAndAppManagementAssignmentFilterType)
             {
-                $complexTarget.Add('DeviceAndAppManagementAssignmentFilterType', $currentIosEnrollmentAssignments.target.deviceAndAppManagementAssignmentFilterType.ToString())
+                $complexTarget.Add('DeviceAndAppManagementAssignmentFilterType', $currentIosEnrollmentAssignments.deviceAndAppManagementAssignmentFilterType.ToString())
             }
-            $complexTarget.Add('GroupId', $currentIosEnrollmentAssignments.target.groupId)
-            $complexTarget.Add('CollectionId', $currentIosEnrollmentAssignments.target.collectionId)
-            if ($null -ne $currentIosEnrollmentAssignments.target.'@odata.type')
+            $complexTarget.Add('GroupId', $currentIosEnrollmentAssignments.groupId)
+            $groupObj = Get-MgGroup -GroupId $currentIosEnrollmentAssignments.groupId -Property DisplayName
+            $complexTarget.Add('GroupDisplayName', $groupObj.DisplayName)
+            $complexTarget.Add('CollectionId', $currentIosEnrollmentAssignments.collectionId)
+            if ($null -ne $currentIosEnrollmentAssignments.'@odata.type')
             {
-                $complexTarget.Add('odataType', $currentIosEnrollmentAssignments.target.'@odata.type'.ToString())
+                $complexTarget.Add('odataType', $currentIosEnrollmentAssignments.'@odata.type'.ToString())
             }
             if ($complexTarget.values.Where({$null -ne $_}).Count -eq 0)
             {
                 $complexTarget = $null
             }
+            else
+            {
+                $complexIosEnrollmentAssignments += $complexTarget
+            }
+            <#
             $myIosEnrollmentAssignments.Add('Target',$complexTarget)
             if ($myIosEnrollmentAssignments.values.Where({$null -ne $_}).Count -gt 0)
             {
                 $complexIosEnrollmentAssignments += $myIosEnrollmentAssignments
             }
+            #>
         }
 
         $complexMacOsEnrollmentAssignments = @()
@@ -180,26 +192,34 @@ function Get-TargetResource
         {
             $myMacOsEnrollmentAssignments = @{}
             $complexTarget = @{}
-            $complexTarget.Add('DeviceAndAppManagementAssignmentFilterId', $currentMacOsEnrollmentAssignments.target.deviceAndAppManagementAssignmentFilterId)
-            if ($null -ne $currentMacOsEnrollmentAssignments.target.deviceAndAppManagementAssignmentFilterType)
+            $complexTarget.Add('DeviceAndAppManagementAssignmentFilterId', $currentMacOsEnrollmentAssignments.deviceAndAppManagementAssignmentFilterId)
+            if ($null -ne $currentMacOsEnrollmentAssignments.deviceAndAppManagementAssignmentFilterType)
             {
-                $complexTarget.Add('DeviceAndAppManagementAssignmentFilterType', $currentMacOsEnrollmentAssignments.target.deviceAndAppManagementAssignmentFilterType.ToString())
+                $complexTarget.Add('DeviceAndAppManagementAssignmentFilterType', $currentMacOsEnrollmentAssignments.deviceAndAppManagementAssignmentFilterType.ToString())
             }
-            $complexTarget.Add('GroupId', $currentMacOsEnrollmentAssignments.target.groupId)
-            $complexTarget.Add('CollectionId', $currentMacOsEnrollmentAssignments.target.collectionId)
-            if ($null -ne $currentMacOsEnrollmentAssignments.target.'@odata.type')
+            $complexTarget.Add('GroupId', $currentMacOsEnrollmentAssignments.groupId)
+            $groupObj = Get-MgGroup -GroupId $currentMacOsEnrollmentAssignments.groupId -Property DisplayName
+            $complexTarget.Add('GroupDisplayName', $groupObj.DisplayName)
+            $complexTarget.Add('CollectionId', $currentMacOsEnrollmentAssignments.collectionId)
+            if ($null -ne $currentMacOsEnrollmentAssignments.'@odata.type')
             {
-                $complexTarget.Add('odataType', $currentMacOsEnrollmentAssignments.target.'@odata.type'.ToString())
+                $complexTarget.Add('odataType', $currentMacOsEnrollmentAssignments.'@odata.type'.ToString())
             }
             if ($complexTarget.values.Where({$null -ne $_}).Count -eq 0)
             {
                 $complexTarget = $null
             }
+            else
+            {
+                $complexMacOsEnrollmentAssignments += $complexTarget
+            }
+            <#
             $myMacOsEnrollmentAssignments.Add('Target',$complexTarget)
             if ($myMacOsEnrollmentAssignments.values.Where({$null -ne $_}).Count -gt 0)
             {
                 $complexMacOsEnrollmentAssignments += $myMacOsEnrollmentAssignments
             }
+            #>
         }
         #endregion
 
@@ -211,14 +231,6 @@ function Get-TargetResource
         }
         #endregion
 
-        #region resource generator code
-        $dateLastHeartbeatDateTime = $null
-        if ($null -ne $getValue.LastHeartbeatDateTime)
-        {
-            $dateLastHeartbeatDateTime = ([DateTimeOffset]$getValue.LastHeartbeatDateTime).ToString('o')
-        }
-        #endregion
-
         $results = @{
             #region resource generator code
             AndroidEnrollmentAssignments = $complexAndroidEnrollmentAssignments
@@ -226,7 +238,6 @@ function Get-TargetResource
             DisplayName                  = $getValue.DisplayName
             IosEnrollmentAssignments     = $complexIosEnrollmentAssignments
             IosOnboarded                 = $getValue.IosOnboarded
-            LastHeartbeatDateTime        = $dateLastHeartbeatDateTime
             MacOsEnrollmentAssignments   = $complexMacOsEnrollmentAssignments
             MacOsOnboarded               = $getValue.MacOsOnboarded
             PartnerState                 = $enumPartnerState
@@ -280,10 +291,6 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $IosOnboarded,
-
-        [Parameter()]
-        [System.String]
-        $LastHeartbeatDateTime,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
@@ -363,17 +370,38 @@ function Set-TargetResource
         $createParameters.Remove('Id') | Out-Null
 
         $keys = (([Hashtable]$createParameters).Clone()).Keys
+        $errorFound = $false
         foreach ($key in $keys)
         {
-            if ($null -ne $createParameters.$key -and $createParameters.$key.GetType().Name -like '*CimInstance*')
+            if ($null -ne $createParameters.$key -and $createParameters[$key].GetType().Name -like '*CimInstance*')
             {
-                $createParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $createParameters.$key
+                $complexObject = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $createParameters.$key
+                $createParameters.Add($key, @())
+                foreach ($instance in $complexObject)
+                {
+                    $targetObject = $instance.Clone()
+                    $groupObj = Get-MgGroup -Filter "DisplayName eq '$($instance.GroupDisplayName)'"
+                    if ($groupObj -and $groupObj.SecurityEnabled -eq $true)
+                    {
+                        $targetObject.Add('groupId', $groupObj.Id)
+                        $targetObject.Remove('GroupDisplayName')
+                        $createParameters[$key] += @{target = $targetObject}
+                    }
+                    else
+                    {
+                        $errorFound = $true
+                        Add-M365DSCEvent -Message "Cannot create DeviceManagementComplianceManagementPartner {$DisplayName}, Group '$($instance.GroupDisplayName)' in $key does not exist or is not a security-group" -Source $($MyInvocation.MyCommand.Source) -EventId 19 -EntryType Error -TenantId $TenantId
+                    }
+                }
             }
         }
+        if ($errorFound -eq $false)
+        {
         #region resource generator code
-        $createParameters.Add("@odata.type", "#microsoft.graph.ComplianceManagementPartner")
-        $policy = New-MgBetaDeviceManagementComplianceManagementPartner -BodyParameter $createParameters
+            $createParameters.Add("@odata.type", "#microsoft.graph.ComplianceManagementPartner")
+            $policy = New-MgBetaDeviceManagementComplianceManagementPartner -BodyParameter $createParameters
         #endregion
+        }
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
@@ -385,20 +413,40 @@ function Set-TargetResource
         $updateParameters.Remove('Id') | Out-Null
 
         $keys = (([Hashtable]$updateParameters).Clone()).Keys
+        $errorFound = $false
         foreach ($key in $keys)
         {
             if ($null -ne $pdateParameters.$key -and $updateParameters.$key.GetType().Name -like '*CimInstance*')
             {
-                $updateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $updateParameters.ComplianceManagementPartnerId
+                $complexObject = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $updateParameters.$key
+                $updateParameters.Add($key, @())
+                foreach ($instance in $complexObject)
+                {
+                    $targetObject = $instance.Clone()
+                    $groupObj = Get-MgGroup -Filter "DisplayName eq '$($instance.GroupDisplayName)'"
+                    if ($groupObj -and $groupObj.SecurityEnabled -eq $true)
+                    {
+                        $targetObject.Add('groupId', $groupObj.Id)
+                        $targetObject.Remove('GroupDisplayName')
+                        $updateParameters[$key] += @{target = $targetObject}
+                    }
+                    else
+                    {
+                        $errorFound = $true
+                        Add-M365DSCEvent -Message "Cannot update DeviceManagementComplianceManagementPartner {$DisplayName}, Group '$($instance.GroupDisplayName)' in $key does not exist or is not a security-group" -Source $($MyInvocation.MyCommand.Source) -EventId 19 -EntryType Error -TenantId $TenantId
+                    }
+                }
             }
         }
-
-        #region resource generator code
-        $UpdateParameters.Add("@odata.type", "#microsoft.graph.ComplianceManagementPartner")
-        Update-MgBetaDeviceManagementComplianceManagementPartner `
-            -ComplianceManagementPartnerId $currentInstance.Id `
-            -BodyParameter $UpdateParameters
-        #endregion
+        if ($errorFOund -eq $false)
+        {
+            #region resource generator code
+            $UpdateParameters.Add("@odata.type", "#microsoft.graph.ComplianceManagementPartner")
+            Update-MgBetaDeviceManagementComplianceManagementPartner `
+                -ComplianceManagementPartnerId $currentInstance.Id `
+                -BodyParameter $UpdateParameters
+            #endregion
+        }
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
@@ -435,10 +483,6 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $IosOnboarded,
-
-        [Parameter()]
-        [System.String]
-        $LastHeartbeatDateTime,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
@@ -659,6 +703,7 @@ function Export-TargetResource
                 -Results $Results
             if ($null -ne $Results.AndroidEnrollmentAssignments)
             {
+                <#
                 $complexMapping = @(
                     @{
                         Name = 'AndroidEnrollmentAssignments'
@@ -671,10 +716,11 @@ function Export-TargetResource
                         IsRequired = $False
                     }
                 )
+                #>
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                     -ComplexObject $Results.AndroidEnrollmentAssignments `
-                    -CIMInstanceName 'IntunecomplianceManagementPartnerAssignment' `
-                    -ComplexTypeMapping $complexMapping
+                    -CIMInstanceName 'IntuneDeviceAndAppManagementAssignmentTarget' <#`
+                    -ComplexTypeMapping $complexMapping#>
 
                 if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
@@ -687,6 +733,7 @@ function Export-TargetResource
             }
             if ($null -ne $Results.IosEnrollmentAssignments)
             {
+                <#
                 $complexMapping = @(
                     @{
                         Name = 'IosEnrollmentAssignments'
@@ -699,10 +746,11 @@ function Export-TargetResource
                         IsRequired = $False
                     }
                 )
+                #>
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                     -ComplexObject $Results.IosEnrollmentAssignments `
-                    -CIMInstanceName 'IntunecomplianceManagementPartnerAssignment' `
-                    -ComplexTypeMapping $complexMapping
+                    -CIMInstanceName 'IntuneDeviceAndAppManagementAssignmentTarget' <#`
+                    -ComplexTypeMapping $complexMapping#>
 
                 if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
@@ -715,6 +763,7 @@ function Export-TargetResource
             }
             if ($null -ne $Results.MacOsEnrollmentAssignments)
             {
+                <#
                 $complexMapping = @(
                     @{
                         Name = 'MacOsEnrollmentAssignments'
@@ -727,10 +776,11 @@ function Export-TargetResource
                         IsRequired = $False
                     }
                 )
+                #>
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                     -ComplexObject $Results.MacOsEnrollmentAssignments `
-                    -CIMInstanceName 'IntunecomplianceManagementPartnerAssignment' `
-                    -ComplexTypeMapping $complexMapping
+                    -CIMInstanceName 'IntuneDeviceAndAppManagementAssignmentTarget' <#`
+                    -ComplexTypeMapping $complexMapping#>
 
                 if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
