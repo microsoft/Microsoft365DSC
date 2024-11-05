@@ -57,41 +57,34 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     AndroidEnrollmentAssignments = [CimInstance[]]@(
-                        (New-CimInstance -ClassName MSFT_IntunecomplianceManagementPartnerAssignment -Property @{
-                            Target = (New-CimInstance -ClassName MSFT_IntunedeviceAndAppManagementAssignmentTarget -Property @{
-                                DeviceAndAppManagementAssignmentFilterId = "FakeStringValue"
-                                GroupId = "FakeStringValue"
-                                CollectionId = "FakeStringValue"
-                                odataType = "#microsoft.graph.allDevicesAssignmentTarget"
-                                DeviceAndAppManagementAssignmentFilterType = "none"
-                            } -ClientOnly)
+                        (New-CimInstance -ClassName MSFT_IntunedeviceAndAppManagementAssignmentTarget -Property @{
+                            DeviceAndAppManagementAssignmentFilterId = "FakeStringValue"
+                            GroupDisplayName = "FakeStringValue"
+                            CollectionId = "FakeStringValue"
+                            odataType = "#microsoft.graph.allDevicesAssignmentTarget"
+                            DeviceAndAppManagementAssignmentFilterType = "none"
                         } -ClientOnly)
                     )
                     AndroidOnboarded = $True
                     DisplayName = "FakeStringValue"
                     Id = "FakeStringValue"
                     IosEnrollmentAssignments = [CimInstance[]]@(
-                        (New-CimInstance -ClassName MSFT_IntunecomplianceManagementPartnerAssignment -Property @{
-                            Target = (New-CimInstance -ClassName MSFT_IntunedeviceAndAppManagementAssignmentTarget -Property @{
-                                DeviceAndAppManagementAssignmentFilterId = "FakeStringValue"
-                                GroupId = "FakeStringValue"
-                                CollectionId = "FakeStringValue"
-                                odataType = "#microsoft.graph.allDevicesAssignmentTarget"
-                                DeviceAndAppManagementAssignmentFilterType = "none"
-                            } -ClientOnly)
+                        (New-CimInstance -ClassName MSFT_IntunedeviceAndAppManagementAssignmentTarget -Property @{
+                            DeviceAndAppManagementAssignmentFilterId = "FakeStringValue"
+                            GroupDisplayName = "FakeStringValue"
+                            CollectionId = "FakeStringValue"
+                            odataType = "#microsoft.graph.allDevicesAssignmentTarget"
+                            DeviceAndAppManagementAssignmentFilterType = "none"
                         } -ClientOnly)
                     )
                     IosOnboarded = $True
-                    LastHeartbeatDateTime = "2023-01-01T00:00:00.0000000+01:00"
                     MacOsEnrollmentAssignments = [CimInstance[]]@(
-                        (New-CimInstance -ClassName MSFT_IntunecomplianceManagementPartnerAssignment -Property @{
-                            Target = (New-CimInstance -ClassName MSFT_IntunedeviceAndAppManagementAssignmentTarget -Property @{
-                                DeviceAndAppManagementAssignmentFilterId = "FakeStringValue"
-                                GroupId = "FakeStringValue"
-                                CollectionId = "FakeStringValue"
-                                odataType = "#microsoft.graph.allDevicesAssignmentTarget"
-                                DeviceAndAppManagementAssignmentFilterType = "none"
-                            } -ClientOnly)
+                        (New-CimInstance -ClassName MSFT_IntunedeviceAndAppManagementAssignmentTarget -Property @{
+                            DeviceAndAppManagementAssignmentFilterId = "FakeStringValue"
+                            GroupDisplayName = "FakeStringValue"
+                            CollectionId = "FakeStringValue"
+                            odataType = "#microsoft.graph.allDevicesAssignmentTarget"
+                            DeviceAndAppManagementAssignmentFilterType = "none"
                         } -ClientOnly)
                     )
                     MacOsOnboarded = $True
@@ -102,6 +95,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-MgBetaDeviceManagementComplianceManagementPartner -MockWith {
                     return $null
+                }
+
+                Mock -CommandName Get-MgGroup -MockWith {
+                    return @{
+                        DisplayName     = "FakeStringValue"
+                        Id              = "FakeStringValue"
+                        SecurityEnabled = $true
+                    }
                 }
             }
             It 'Should return Values from the Get method' {
@@ -120,41 +121,34 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     AndroidEnrollmentAssignments = [CimInstance[]]@(
-                        (New-CimInstance -ClassName MSFT_IntunecomplianceManagementPartnerAssignment -Property @{
-                            Target = (New-CimInstance -ClassName MSFT_IntunedeviceAndAppManagementAssignmentTarget -Property @{
-                                DeviceAndAppManagementAssignmentFilterId = "FakeStringValue"
-                                GroupId = "FakeStringValue"
-                                CollectionId = "FakeStringValue"
-                                odataType = "#microsoft.graph.allDevicesAssignmentTarget"
-                                DeviceAndAppManagementAssignmentFilterType = "none"
-                            } -ClientOnly)
+                        (New-CimInstance -ClassName MSFT_IntunedeviceAndAppManagementAssignmentTarget -Property @{
+                            DeviceAndAppManagementAssignmentFilterId = "FakeStringValue"
+                            GroupDisplayName = "FakeStringValue"
+                            CollectionId = "FakeStringValue"
+                            odataType = "#microsoft.graph.allDevicesAssignmentTarget"
+                            DeviceAndAppManagementAssignmentFilterType = "none"
                         } -ClientOnly)
                     )
                     AndroidOnboarded = $True
                     DisplayName = "FakeStringValue"
                     Id = "FakeStringValue"
                     IosEnrollmentAssignments = [CimInstance[]]@(
-                        (New-CimInstance -ClassName MSFT_IntunecomplianceManagementPartnerAssignment -Property @{
-                            Target = (New-CimInstance -ClassName MSFT_IntunedeviceAndAppManagementAssignmentTarget -Property @{
-                                DeviceAndAppManagementAssignmentFilterId = "FakeStringValue"
-                                GroupId = "FakeStringValue"
-                                CollectionId = "FakeStringValue"
-                                odataType = "#microsoft.graph.allDevicesAssignmentTarget"
-                                DeviceAndAppManagementAssignmentFilterType = "none"
-                            } -ClientOnly)
+                        (New-CimInstance -ClassName MSFT_IntunedeviceAndAppManagementAssignmentTarget -Property @{
+                            DeviceAndAppManagementAssignmentFilterId = "FakeStringValue"
+                            GroupDisplayName = "FakeStringValue"
+                            CollectionId = "FakeStringValue"
+                            odataType = "#microsoft.graph.allDevicesAssignmentTarget"
+                            DeviceAndAppManagementAssignmentFilterType = "none"
                         } -ClientOnly)
                     )
                     IosOnboarded = $True
-                    LastHeartbeatDateTime = "2023-01-01T00:00:00.0000000+01:00"
                     MacOsEnrollmentAssignments = [CimInstance[]]@(
-                        (New-CimInstance -ClassName MSFT_IntunecomplianceManagementPartnerAssignment -Property @{
-                            Target = (New-CimInstance -ClassName MSFT_IntunedeviceAndAppManagementAssignmentTarget -Property @{
-                                DeviceAndAppManagementAssignmentFilterId = "FakeStringValue"
-                                GroupId = "FakeStringValue"
-                                CollectionId = "FakeStringValue"
-                                odataType = "#microsoft.graph.allDevicesAssignmentTarget"
-                                DeviceAndAppManagementAssignmentFilterType = "none"
-                            } -ClientOnly)
+                        (New-CimInstance -ClassName MSFT_IntunedeviceAndAppManagementAssignmentTarget -Property @{
+                            DeviceAndAppManagementAssignmentFilterId = "FakeStringValue"
+                            GroupDisplayName = "FakeStringValue"
+                            CollectionId = "FakeStringValue"
+                            odataType = "#microsoft.graph.allDevicesAssignmentTarget"
+                            DeviceAndAppManagementAssignmentFilterType = "none"
                         } -ClientOnly)
                     )
                     MacOsOnboarded = $True
@@ -211,6 +205,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                     }
                 }
+
+                Mock -CommandName Get-MgGroup -MockWith {
+                    return @{
+                        DisplayName     = "FakeStringValue"
+                        Id              = "FakeStringValue"
+                        SecurityEnabled = $true
+                    }
+                }
             }
 
             It 'Should return Values from the Get method' {
@@ -230,41 +232,35 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     AndroidEnrollmentAssignments = [CimInstance[]]@(
-                        (New-CimInstance -ClassName MSFT_IntunecomplianceManagementPartnerAssignment -Property @{
-                            Target = (New-CimInstance -ClassName MSFT_IntunedeviceAndAppManagementAssignmentTarget -Property @{
-                                DeviceAndAppManagementAssignmentFilterId = "FakeStringValue"
-                                GroupId = "FakeStringValue"
-                                CollectionId = "FakeStringValue"
-                                odataType = "#microsoft.graph.allDevicesAssignmentTarget"
-                                DeviceAndAppManagementAssignmentFilterType = "none"
-                            } -ClientOnly)
+                        (New-CimInstance -ClassName MSFT_IntunedeviceAndAppManagementAssignmentTarget -Property @{
+                            DeviceAndAppManagementAssignmentFilterId = "FakeStringValue"
+                            GroupDisplayName = "FakeStringValue"
+                            CollectionId = "FakeStringValue"
+                            odataType = "#microsoft.graph.allDevicesAssignmentTarget"
+                            DeviceAndAppManagementAssignmentFilterType = "none"
                         } -ClientOnly)
                     )
                     AndroidOnboarded = $True
                     DisplayName = "FakeStringValue"
                     Id = "FakeStringValue"
                     IosEnrollmentAssignments = [CimInstance[]]@(
-                        (New-CimInstance -ClassName MSFT_IntunecomplianceManagementPartnerAssignment -Property @{
-                            Target = (New-CimInstance -ClassName MSFT_IntunedeviceAndAppManagementAssignmentTarget -Property @{
-                                DeviceAndAppManagementAssignmentFilterId = "FakeStringValue"
-                                GroupId = "FakeStringValue"
-                                CollectionId = "FakeStringValue"
-                                odataType = "#microsoft.graph.allDevicesAssignmentTarget"
-                                DeviceAndAppManagementAssignmentFilterType = "none"
-                            } -ClientOnly)
+                        (New-CimInstance -ClassName MSFT_IntunedeviceAndAppManagementAssignmentTarget -Property @{
+                            DeviceAndAppManagementAssignmentFilterId = "FakeStringValue"
+                            GroupDisplayName = "FakeStringValue"
+                            CollectionId = "FakeStringValue"
+                            odataType = "#microsoft.graph.allDevicesAssignmentTarget"
+                            DeviceAndAppManagementAssignmentFilterType = "none"
                         } -ClientOnly)
                     )
                     IosOnboarded = $True
                     LastHeartbeatDateTime = "2023-01-01T00:00:00.0000000+01:00"
                     MacOsEnrollmentAssignments = [CimInstance[]]@(
-                        (New-CimInstance -ClassName MSFT_IntunecomplianceManagementPartnerAssignment -Property @{
-                            Target = (New-CimInstance -ClassName MSFT_IntunedeviceAndAppManagementAssignmentTarget -Property @{
-                                DeviceAndAppManagementAssignmentFilterId = "FakeStringValue"
-                                GroupId = "FakeStringValue"
-                                CollectionId = "FakeStringValue"
-                                odataType = "#microsoft.graph.allDevicesAssignmentTarget"
-                                DeviceAndAppManagementAssignmentFilterType = "none"
-                            } -ClientOnly)
+                        (New-CimInstance -ClassName MSFT_IntunedeviceAndAppManagementAssignmentTarget -Property @{
+                            DeviceAndAppManagementAssignmentFilterId = "FakeStringValue"
+                            GroupDisplayName = "FakeStringValue"
+                            CollectionId = "FakeStringValue"
+                            odataType = "#microsoft.graph.allDevicesAssignmentTarget"
+                            DeviceAndAppManagementAssignmentFilterType = "none"
                         } -ClientOnly)
                     )
                     MacOsOnboarded = $True
@@ -321,6 +317,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                     }
                 }
+
+                Mock -CommandName Get-MgGroup -MockWith {
+                    return @{
+                        DisplayName     = "FakeStringValue"
+                        Id              = "FakeStringValue"
+                        SecurityEnabled = $true
+                    }
+                }
             }
 
 
@@ -333,41 +337,34 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     AndroidEnrollmentAssignments = [CimInstance[]]@(
-                        (New-CimInstance -ClassName MSFT_IntunecomplianceManagementPartnerAssignment -Property @{
-                            Target = (New-CimInstance -ClassName MSFT_IntunedeviceAndAppManagementAssignmentTarget -Property @{
-                                DeviceAndAppManagementAssignmentFilterId = "FakeStringValue"
-                                GroupId = "FakeStringValue"
-                                CollectionId = "FakeStringValue"
-                                odataType = "#microsoft.graph.allDevicesAssignmentTarget"
-                                DeviceAndAppManagementAssignmentFilterType = "none"
-                            } -ClientOnly)
+                        (New-CimInstance -ClassName MSFT_IntunedeviceAndAppManagementAssignmentTarget -Property @{
+                            DeviceAndAppManagementAssignmentFilterId = "FakeStringValue"
+                            GroupDisplayName = "FakeStringValue"
+                            CollectionId = "FakeStringValue"
+                            odataType = "#microsoft.graph.allDevicesAssignmentTarget"
+                            DeviceAndAppManagementAssignmentFilterType = "none"
                         } -ClientOnly)
                     )
                     AndroidOnboarded = $True
                     DisplayName = "FakeStringValue"
                     Id = "FakeStringValue"
                     IosEnrollmentAssignments = [CimInstance[]]@(
-                        (New-CimInstance -ClassName MSFT_IntunecomplianceManagementPartnerAssignment -Property @{
-                            Target = (New-CimInstance -ClassName MSFT_IntunedeviceAndAppManagementAssignmentTarget -Property @{
-                                DeviceAndAppManagementAssignmentFilterId = "FakeStringValue"
-                                GroupId = "FakeStringValue"
-                                CollectionId = "FakeStringValue"
-                                odataType = "#microsoft.graph.allDevicesAssignmentTarget"
-                                DeviceAndAppManagementAssignmentFilterType = "none"
-                            } -ClientOnly)
+                        (New-CimInstance -ClassName MSFT_IntunedeviceAndAppManagementAssignmentTarget -Property @{
+                            DeviceAndAppManagementAssignmentFilterId = "FakeStringValue"
+                            GroupDisplayName = "FakeStringValue"
+                            CollectionId = "FakeStringValue"
+                            odataType = "#microsoft.graph.allDevicesAssignmentTarget"
+                            DeviceAndAppManagementAssignmentFilterType = "none"
                         } -ClientOnly)
                     )
                     IosOnboarded = $True
-                    LastHeartbeatDateTime = "2023-01-01T00:00:00.0000000+01:00"
                     MacOsEnrollmentAssignments = [CimInstance[]]@(
-                        (New-CimInstance -ClassName MSFT_IntunecomplianceManagementPartnerAssignment -Property @{
-                            Target = (New-CimInstance -ClassName MSFT_IntunedeviceAndAppManagementAssignmentTarget -Property @{
-                                DeviceAndAppManagementAssignmentFilterId = "FakeStringValue"
-                                GroupId = "FakeStringValue"
-                                CollectionId = "FakeStringValue"
-                                odataType = "#microsoft.graph.allDevicesAssignmentTarget"
-                                DeviceAndAppManagementAssignmentFilterType = "none"
-                            } -ClientOnly)
+                        (New-CimInstance -ClassName MSFT_IntunedeviceAndAppManagementAssignmentTarget -Property @{
+                            DeviceAndAppManagementAssignmentFilterId = "FakeStringValue"
+                            GroupDisplayName = "FakeStringValue"
+                            CollectionId = "FakeStringValue"
+                            odataType = "#microsoft.graph.allDevicesAssignmentTarget"
+                            DeviceAndAppManagementAssignmentFilterType = "none"
                         } -ClientOnly)
                     )
                     MacOsOnboarded = $True
@@ -415,6 +412,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             }
                         )
                         PartnerState = "unknown"
+                    }
+                }
+
+                Mock -CommandName Get-MgGroup -MockWith {
+                    return @{
+                        DisplayName     = "FakeStringValue"
+                        Id              = "FakeStringValue"
+                        SecurityEnabled = $true
                     }
                 }
             }
@@ -487,6 +492,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         MacOsOnboarded = $True
                         PartnerState = "unknown"
 
+                    }
+                }
+
+                Mock -CommandName Get-MgGroup -MockWith {
+                    return @{
+                        DisplayName     = "FakeStringValue"
+                        Id              = "FakeStringValue"
+                        SecurityEnabled = $true
                     }
                 }
             }
