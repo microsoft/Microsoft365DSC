@@ -101990,6 +101990,268 @@ function Update-MgBetaDeviceManagementApplePushNotificationCertificate
         $HttpPipelineAppend
     )
 }
+
+function Get-MgBetaDeviceManagementComplianceManagementPartner
+{
+    [Cmdletbinding()]
+    param(
+    	[Parameter()]
+    	[string]$ComplianceManagementPartnerId,
+
+    	[Parameter()]
+    	[Microsoft.Graph.Beta.PowerShell.Models.IDeviceManagementAdministrationIdentity]$InputObject,
+
+    	[Parameter()]
+    	[string[]]$ExpandProperty,
+
+    	[Parameter()]
+    	[string[]]$Property,
+
+    	[Parameter()]
+    	[string]$Filter,
+
+    	[Parameter()]
+    	[string]$Search,
+
+    	[Parameter()]
+    	[int]$Skip,
+
+    	[Parameter()]
+    	[string[]]$Sort,
+
+    	[Parameter()]
+    	[int]$Top,
+
+    	[Parameter()]
+    	[string]$ResponseHeadersVariable,
+
+    	[Parameter()]
+    	[switch]$Break,
+
+    	[Parameter()]
+    	[System.Collections.IDictionary]$Headers,
+
+    	[Parameter()]
+    	[Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]$HttpPipelineAppend,
+
+    	[Parameter()]
+    	[Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]$HttpPipelinePrepend,
+
+    	[Parameter()]
+    	[uri]$Proxy,
+
+    	[Parameter()]
+    	[pscredential]$ProxyCredential,
+
+    	[Parameter()]
+    	[switch]$ProxyUseDefaultCredentials,
+
+    	[Parameter()]
+    	[int]$PageSize,
+
+    	[Parameter()]
+    	[switch]$All,
+
+    	[Parameter()]
+    	[string]$CountVariable
+    )
+}
+
+function New-MgBetaDeviceManagementComplianceManagementPartner
+{
+    [Cmdletbinding()]
+    param(
+		[Parameter()]
+		[Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphComplianceManagementPartner]$BodyParameter,
+
+		[Parameter()]
+		[string]$ResponseHeadersVariable,
+
+		[Parameter()]
+		[hashtable]$AdditionalProperties,
+
+		[Parameter()]
+		[Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphComplianceManagementPartnerAssignment[]]$AndroidEnrollmentAssignments,
+
+		[Parameter()]
+		[switch]$AndroidOnboarded,
+
+		[Parameter()]
+		[string]$DisplayName,
+
+		[Parameter()]
+		[string]$Id,
+
+		[Parameter()]
+		[Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphComplianceManagementPartnerAssignment[]]$IosEnrollmentAssignments,
+
+		[Parameter()]
+		[switch]$IosOnboarded,
+
+		[Parameter()]
+		[datetime]$LastHeartbeatDateTime,
+
+		[Parameter()]
+		[Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphComplianceManagementPartnerAssignment[]]$MacOSEnrollmentAssignments,
+
+		[Parameter()]
+		[switch]$MacOSOnboarded,
+
+		[Parameter()]
+		[Microsoft.Graph.Beta.PowerShell.Support.DeviceManagementPartnerTenantState]$PartnerState,
+
+		[Parameter()]
+		[switch]$Break,
+
+		[Parameter()]
+		[System.Collections.IDictionary]$Headers,
+
+		[Parameter()]
+		[Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]$HttpPipelineAppend,
+
+		[Parameter()]
+		[Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]$HttpPipelinePrepend,
+
+		[Parameter()]
+		[uri]$Proxy,
+
+		[Parameter()]
+		[pscredential]$ProxyCredential,
+
+		[Parameter()]
+		[switch]$ProxyUseDefaultCredentials,
+
+		[Parameter()]
+		[switch]$Confirm,
+
+		[Parameter()]
+		[switch]$WhatIf
+	)
+}
+function Update-MgBetaDeviceManagementComplianceManagementPartner
+{
+    [Cmdletbinding()]
+    param(
+        [Parameter()]
+        [string]$ComplianceManagementPartnerId,
+
+        [Parameter()]
+        [Microsoft.Graph.Beta.PowerShell.Models.IDeviceManagementAdministrationIdentity]$InputObject,
+
+        [Parameter()]
+        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphComplianceManagementPartner]$BodyParameter,
+
+        [Parameter()]
+        [string]$ResponseHeadersVariable,
+
+        [Parameter()]
+        [hashtable]$AdditionalProperties,
+
+        [Parameter()]
+        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphComplianceManagementPartnerAssignment[]]$AndroidEnrollmentAssignments,
+
+        [Parameter()]
+        [switch]$AndroidOnboarded,
+
+        [Parameter()]
+        [string]$DisplayName,
+
+        [Parameter()]
+        [string]$Id,
+
+        [Parameter()]
+        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphComplianceManagementPartnerAssignment[]]$IosEnrollmentAssignments,
+
+        [Parameter()]
+        [switch]$IosOnboarded,
+
+        [Parameter()]
+        [datetime]$LastHeartbeatDateTime,
+
+        [Parameter()]
+        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphComplianceManagementPartnerAssignment[]]$MacOSEnrollmentAssignments,
+
+        [Parameter()]
+        [switch]$MacOSOnboarded,
+
+        [Parameter()]
+        [Microsoft.Graph.Beta.PowerShell.Support.DeviceManagementPartnerTenantState]$PartnerState,
+
+        [Parameter()]
+        [switch]$Break,
+
+        [Parameter()]
+        [System.Collections.IDictionary]$Headers,
+
+        [Parameter()]
+        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]$HttpPipelineAppend,
+
+        [Parameter()]
+        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]$HttpPipelinePrepend,
+
+        [Parameter()]
+        [uri]$Proxy,
+
+        [Parameter()]
+        [pscredential]$ProxyCredential,
+
+        [Parameter()]
+        [switch]$ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [switch]$WhatIf,
+
+        [Parameter()]
+        [switch]$Confirm
+    )
+}
+function Remove-MgBetaDeviceManagementComplianceManagementPartner
+{
+    [Cmdletbinding()]
+    param(
+		[Parameter()]
+		[string]$ComplianceManagementPartnerId,
+
+		[Parameter()]
+		[Microsoft.Graph.Beta.PowerShell.Models.IDeviceManagementAdministrationIdentity]$InputObject,
+
+		[Parameter()]
+		[string]$IfMatch,
+
+		[Parameter()]
+		[string]$ResponseHeadersVariable,
+
+		[Parameter()]
+		[switch]$Break,
+
+		[Parameter()]
+		[System.Collections.IDictionary]$Headers,
+
+		[Parameter()]
+		[Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]$HttpPipelineAppend,
+
+		[Parameter()]
+		[Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]$HttpPipelinePrepend,
+
+		[Parameter()]
+		[switch]$PassThru,
+
+		[Parameter()]
+		[uri]$Proxy,
+
+		[Parameter()]
+		[pscredential]$ProxyCredential,
+
+		[Parameter()]
+		[switch]$ProxyUseDefaultCredentials,
+
+		[Parameter()]
+		[switch]$Confirm,
+
+		[Parameter()]
+		[switch]$WhatIf
+	)
+}
 #endregion
 #region Microsoft.Graph.Authentication
 function Update-MgBetaNetworkAccessFilteringPolicyRule
