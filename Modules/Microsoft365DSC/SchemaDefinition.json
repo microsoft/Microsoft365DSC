@@ -10265,7 +10265,7 @@
         "Parameters":  [
                            {
                                "CIMType":  "String",
-                               "Name":  "Name",
+                               "Name":  "DisplayName",
                                "Option":  "Key"
                            },
                            {
@@ -10274,8 +10274,13 @@
                                "Option":  "Write"
                            },
                            {
-                               "CIMType":  "Boolean",
-                               "Name":  "Enabled",
+                               "CIMType":  "String",
+                               "Name":  "InvoiceSectionId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Status",
                                "Option":  "Write"
                            },
                            {
