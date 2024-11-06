@@ -122,18 +122,18 @@ function Get-TargetResource
         {
             $myAndroidEnrollmentAssignments = @{}
             $complexTarget = @{}
-            $complexTarget.Add('DeviceAndAppManagementAssignmentFilterId', $currentAndroidEnrollmentAssignments.deviceAndAppManagementAssignmentFilterId)
-            if ($null -ne $currentAndroidEnrollmentAssignments.deviceAndAppManagementAssignmentFilterType)
+            $complexTarget.Add('DeviceAndAppManagementAssignmentFilterId', $currentAndroidEnrollmentAssignments.target.deviceAndAppManagementAssignmentFilterId)
+            if ($null -ne $currentAndroidEnrollmentAssignments.target.deviceAndAppManagementAssignmentFilterType)
             {
-                $complexTarget.Add('DeviceAndAppManagementAssignmentFilterType', $currentAndroidEnrollmentAssignments.deviceAndAppManagementAssignmentFilterType.ToString())
+                $complexTarget.Add('DeviceAndAppManagementAssignmentFilterType', $currentAndroidEnrollmentAssignments.target.deviceAndAppManagementAssignmentFilterType.ToString())
             }
-            $complexTarget.Add('GroupId', $currentAndroidEnrollmentAssignments.groupId)
-            $groupObj = Get-MgGroup -GroupId $currentAndroidEnrollmentAssignments.groupId -Property DisplayName
+            $complexTarget.Add('GroupId', $currentAndroidEnrollmentAssignments.target.groupId)
+            $groupObj = Get-MgGroup -GroupId $currentAndroidEnrollmentAssignments.target.groupId -Property DisplayName
             $complexTarget.Add('GroupDisplayName', $groupObj.DisplayName)
-            $complexTarget.Add('CollectionId', $currentAndroidEnrollmentAssignments.collectionId)
-            if ($null -ne $currentAndroidEnrollmentAssignments.'@odata.type')
+            $complexTarget.Add('CollectionId', $currentAndroidEnrollmentAssignments.target.collectionId)
+            if ($null -ne $currentAndroidEnrollmentAssignments.target.'@odata.type')
             {
-                $complexTarget.Add('odataType', $currentAndroidEnrollmentAssignments.'@odata.type'.ToString())
+                $complexTarget.Add('odataType', $currentAndroidEnrollmentAssignments.target.'@odata.type'.ToString())
             }
             if ($complexTarget.values.Where({$null -ne $_}).Count -eq 0)
             {
@@ -157,18 +157,18 @@ function Get-TargetResource
         {
             $myIosEnrollmentAssignments = @{}
             $complexTarget = @{}
-            $complexTarget.Add('DeviceAndAppManagementAssignmentFilterId', $currentIosEnrollmentAssignments.deviceAndAppManagementAssignmentFilterId)
-            if ($null -ne $currentIosEnrollmentAssignments.deviceAndAppManagementAssignmentFilterType)
+            $complexTarget.Add('DeviceAndAppManagementAssignmentFilterId', $currentIosEnrollmentAssignments.target.deviceAndAppManagementAssignmentFilterId)
+            if ($null -ne $currentIosEnrollmentAssignments.target.deviceAndAppManagementAssignmentFilterType)
             {
-                $complexTarget.Add('DeviceAndAppManagementAssignmentFilterType', $currentIosEnrollmentAssignments.deviceAndAppManagementAssignmentFilterType.ToString())
+                $complexTarget.Add('DeviceAndAppManagementAssignmentFilterType', $currentIosEnrollmentAssignments.target.deviceAndAppManagementAssignmentFilterType.ToString())
             }
-            $complexTarget.Add('GroupId', $currentIosEnrollmentAssignments.groupId)
-            $groupObj = Get-MgGroup -GroupId $currentIosEnrollmentAssignments.groupId -Property DisplayName
+            $complexTarget.Add('GroupId', $currentIosEnrollmentAssignments.target.groupId)
+            $groupObj = Get-MgGroup -GroupId $currentIosEnrollmentAssignments.target.groupId -Property DisplayName
             $complexTarget.Add('GroupDisplayName', $groupObj.DisplayName)
-            $complexTarget.Add('CollectionId', $currentIosEnrollmentAssignments.collectionId)
-            if ($null -ne $currentIosEnrollmentAssignments.'@odata.type')
+            $complexTarget.Add('CollectionId', $currentIosEnrollmentAssignments.target.collectionId)
+            if ($null -ne $currentIosEnrollmentAssignments.target.'@odata.type')
             {
-                $complexTarget.Add('odataType', $currentIosEnrollmentAssignments.'@odata.type'.ToString())
+                $complexTarget.Add('odataType', $currentIosEnrollmentAssignments.target.'@odata.type'.ToString())
             }
             if ($complexTarget.values.Where({$null -ne $_}).Count -eq 0)
             {
@@ -192,18 +192,18 @@ function Get-TargetResource
         {
             $myMacOsEnrollmentAssignments = @{}
             $complexTarget = @{}
-            $complexTarget.Add('DeviceAndAppManagementAssignmentFilterId', $currentMacOsEnrollmentAssignments.deviceAndAppManagementAssignmentFilterId)
-            if ($null -ne $currentMacOsEnrollmentAssignments.deviceAndAppManagementAssignmentFilterType)
+            $complexTarget.Add('DeviceAndAppManagementAssignmentFilterId', $currentMacOsEnrollmentAssignments.target.deviceAndAppManagementAssignmentFilterId)
+            if ($null -ne $currentMacOsEnrollmentAssignments.target.deviceAndAppManagementAssignmentFilterType)
             {
-                $complexTarget.Add('DeviceAndAppManagementAssignmentFilterType', $currentMacOsEnrollmentAssignments.deviceAndAppManagementAssignmentFilterType.ToString())
+                $complexTarget.Add('DeviceAndAppManagementAssignmentFilterType', $currentMacOsEnrollmentAssignments.target.deviceAndAppManagementAssignmentFilterType.ToString())
             }
-            $complexTarget.Add('GroupId', $currentMacOsEnrollmentAssignments.groupId)
-            $groupObj = Get-MgGroup -GroupId $currentMacOsEnrollmentAssignments.groupId -Property DisplayName
+            $complexTarget.Add('GroupId', $currentMacOsEnrollmentAssignments.target.groupId)
+            $groupObj = Get-MgGroup -GroupId $currentMacOsEnrollmentAssignments.target.groupId -Property DisplayName
             $complexTarget.Add('GroupDisplayName', $groupObj.DisplayName)
-            $complexTarget.Add('CollectionId', $currentMacOsEnrollmentAssignments.collectionId)
-            if ($null -ne $currentMacOsEnrollmentAssignments.'@odata.type')
+            $complexTarget.Add('CollectionId', $currentMacOsEnrollmentAssignments.target.collectionId)
+            if ($null -ne $currentMacOsEnrollmentAssignments.target.'@odata.type')
             {
-                $complexTarget.Add('odataType', $currentMacOsEnrollmentAssignments.'@odata.type'.ToString())
+                $complexTarget.Add('odataType', $currentMacOsEnrollmentAssignments.target.'@odata.type'.ToString())
             }
             if ($complexTarget.values.Where({$null -ne $_}).Count -eq 0)
             {
