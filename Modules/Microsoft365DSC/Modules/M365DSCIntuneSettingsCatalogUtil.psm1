@@ -50,38 +50,10 @@
             # If the combination of parent setting and setting name is still not unique, do it with the OffsetUri of the current setting
             else
             {
-                $skip = 0
-                $breakCounter = 0
-                $newSettingName = $settingName
-                do {
-                    $previousSettingName = $newSettingName
-                    $newSettingName = Get-SettingDefinitionNameWithParentFromOffsetUri -OffsetUri $SettingDefinition.OffsetUri -SettingName $newSettingName -Skip $skip
-
-                    $combinationMatchesWithOffsetUri = @()
-                    $settingsWithSameName | ForEach-Object {
-                        $newName = Get-SettingDefinitionNameWithParentFromOffsetUri -OffsetUri $_.OffsetUri -SettingName $previousSettingName -Skip $skip
-                        if ($newName -eq $newSettingName)
-                        {
-                            # Exclude v2 versions from the comparison
-                            if ($SettingDefinition.Id -like "*_v2" -and $_.Id -ne $SettingDefinition.Id.Replace('_v2', '') -or
-                                $SettingDefinition.Id -notlike "*_v2" -and $_.Id -ne $SettingDefinition.Id + "_v2")
-                            {
-                                $combinationMatchesWithOffsetUri += $_
-                            }
-                        }
-                    }
-                    $settingsWithSameName = $combinationMatchesWithOffsetUri
-                    $skip++
-                    $breakCounter++
-                } while ($combinationMatchesWithOffsetUri.Count -gt 1 -and $breakCounter -lt 8)
-
-                if ($breakCounter -lt 8)
+                $settingResult = Get-UniqueSettingDefinitionNameFromMultipleMatches -SettingDefinition $SettingDefinition -SettingName $settingName -SettingsWithSameName $settingsWithSameName
+                if ($settingResult.Success)
                 {
-                    if ($SettingDefinition.Id -like "*_v2" -and $newSettingName -notlike "*_v2")
-                    {
-                        $newSettingName += "_v2"
-                    }
-                    $settingName = $newSettingName
+                    $settingName = $settingResult.SettingName
                 }
                 else
                 {
@@ -89,18 +61,28 @@
                     $parentSettingIdProperty = $parentSetting.Id.Split('_')[-1]
                     $parentSettingIdWithoutProperty = $parentSetting.Id.Replace("_$parentSettingIdProperty", "")
                     # We can't use the entire setting here, because the child setting id does not have to come after the parent setting id
-                    $settingName = $settingDefinition.Id.Replace($parentSettingIdWithoutProperty + "_", "").Replace($parentSettingIdProperty + "_", "")
+                    $settingName = $SettingDefinition.Id.Replace($parentSettingIdWithoutProperty + "_", "").Replace($parentSettingIdProperty + "_", "")
                 }
             }
         }
 
         # When there is no parent, we can't use the parent setting name to make the setting name unique
-        # Instead, we traverse up the OffsetUri. Since no parent setting can only happen at the root level, the result
-        # of Get-SettingDefinitionNameWithParentFromOffsetUri is absolute and cannot change. There cannot be multiple settings with the same name
-        # in the same level of OffsetUri
+        # Instead, we traverse up the OffsetUri. 
         if ($null -eq $parentSetting)
         {
-            $settingName = Get-SettingDefinitionNameWithParentFromOffsetUri -OffsetUri $SettingDefinition.OffsetUri -SettingName $settingName
+            $settingResult = Get-UniqueSettingDefinitionNameFromMultipleMatches -SettingDefinition $SettingDefinition -SettingName $settingName -SettingsWithSameName $settingsWithSameName
+            if ($settingResult.Success)
+            {
+                $settingName = $settingResult.SettingName
+            }
+            else
+            {
+                # Can happen if both settings have the same name and the same OffsetUri, e.g. "enforcementLevel" in the IntuneAntivirusPolicyLinux resource
+                # Potential risk of overwriting settings with the same name but different OffsetUri
+                $settingIdWithoutName = $SettingDefinition.Id -replace "_$settingName", ""
+                $settingIdWithoutNameSplitted = $settingIdWithoutName.Split("_")[-1]
+                $settingName = $settingIdWithoutNameSplitted + "_" + $settingName
+            }
         }
 
         # Simplify names from the OffsetUri. This is done to make the names more readable, especially in case of long and complex OffsetUris.
@@ -153,7 +135,64 @@ function Get-ParentSettingDefinition {
     $parentSetting
 }
 
-function Get-SettingDefinitionNameWithParentFromOffsetUri {
+function Get-UniqueSettingDefinitionNameFromMultipleMatches {
+    param (
+        [Parameter(Mandatory = $true)]
+        $SettingDefinition,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $SettingName,
+
+        [Parameter(Mandatory = $true)]
+        [System.Array]
+        $SettingsWithSameName
+    )
+
+    $skip = 0
+    $breakCounter = 0
+    $threshold = 8
+    $newSettingName = $SettingName
+    do {
+        $previousSettingName = $newSettingName
+        $newSettingName = Get-SettingDefinitionNameFromOffsetUri -OffsetUri $SettingDefinition.OffsetUri -SettingName $newSettingName -Skip $skip
+
+        $combinationMatchesWithOffsetUri = @()
+        $SettingsWithSameName | ForEach-Object {
+            $newName = Get-SettingDefinitionNameFromOffsetUri -OffsetUri $_.OffsetUri -SettingName $previousSettingName -Skip $skip
+            if ($newName -eq $newSettingName)
+            {
+                # Exclude v2 versions from the comparison
+                if ($SettingDefinition.Id -like "*_v2" -and $_.Id -ne $SettingDefinition.Id.Replace('_v2', '') -or
+                    $SettingDefinition.Id -notlike "*_v2" -and $_.Id -ne $SettingDefinition.Id + "_v2")
+                {
+                    $combinationMatchesWithOffsetUri += $_
+                }
+            }
+        }
+        $SettingsWithSameName = $combinationMatchesWithOffsetUri
+        $skip++
+        $breakCounter++
+    } while ($combinationMatchesWithOffsetUri.Count -gt 1 -and $breakCounter -lt $threshold)
+
+    $success = $false
+    if ($breakCounter -lt $threshold)
+    {
+        if ($SettingDefinition.Id -like "*_v2" -and $newSettingName -notlike "*_v2")
+        {
+            $newSettingName += "_v2"
+        }
+        $settingName = $newSettingName
+        $success = $true
+    }
+
+    @{
+        Success = $success
+        SettingName = $settingName
+    }
+}
+
+function Get-SettingDefinitionNameFromOffsetUri {
     param (
         [Parameter(Mandatory = $true)]
         [System.String]

@@ -106,6 +106,41 @@
                     TenantId              = $TenantId;
                     CertificateThumbprint = $CertificateThumbprint;
                 }
+                IntuneAntivirusPolicyLinux 'myIntuneAntivirusPolicyLinux'
+                {
+                    allowedThreats                     = @("Threat 1");
+                    Assignments                        = @();
+                    Description                        = "";
+                    disallowedThreatActions            = @("Disallowed Thread Action 1");
+                    DisplayName                        = "Test";
+                    enabled                            = "true";
+                    Ensure                             = "Present";
+                    exclusions                         = @(
+                        MSFT_MicrosoftGraphIntuneSettingsCatalogExclusions{
+                            Exclusions_item_extension = '.exe'
+                            Exclusions_item_type = '1'
+                        }
+                        MSFT_MicrosoftGraphIntuneSettingsCatalogExclusions{
+                            Exclusions_item_name = 'process1'
+                            Exclusions_item_type = '2'
+                        }
+                    );
+                    RoleScopeTagIds                    = @("0");
+                    threatTypeSettings                 = @(
+                        MSFT_MicrosoftGraphIntuneSettingsCatalogThreatTypeSettings{
+                            ThreatTypeSettings_item_key = '0'
+                            ThreatTypeSettings_item_value = '0'
+                        }
+                        MSFT_MicrosoftGraphIntuneSettingsCatalogThreatTypeSettings{
+                            ThreatTypeSettings_item_key = '1'
+                            ThreatTypeSettings_item_value = '1'
+                        }
+                    );
+                    unmonitoredFilesystems             = @("Filesystem 1");
+                    ApplicationId         = $ApplicationId;
+                    TenantId              = $TenantId;
+                    CertificateThumbprint = $CertificateThumbprint;
+                }
                 IntuneAntivirusPolicyWindows10SettingCatalog 'myAVWindows10Policy'
                 {
                     DisplayName        = 'av exclusions'

@@ -17,6 +17,7 @@
 | **Notes** | Write | String | Notes associated with the ServicePrincipal. | |
 | **PublisherName** | Write | String | Specifies the PublisherName of the ServicePrincipal. | |
 | **Owners** | Write | StringArray[] | List of the owners of the service principal. | |
+| **PreferredSingleSignOnMode** | Write | String | Specifies the signle sign-on mode configured for this application. | |
 | **ReplyUrls** | Write | StringArray[] | The URLs that user tokens are sent to for sign in with the associated application, or the redirect URIs that OAuth 2.0 authorization codes and access tokens are sent to for the associated application. | |
 | **SamlMetadataUrl** | Write | String | The URL for the SAML metadata of the ServicePrincipal. | |
 | **ServicePrincipalNames** | Write | StringArray[] | Specifies an array of service principal names. Based on the identifierURIs collection, plus the application's appId property, these URIs are used to reference an application's service principal. | |
