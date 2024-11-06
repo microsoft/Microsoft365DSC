@@ -62,6 +62,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
+        $PreferredSingleSignOnMode,
+
+        [Parameter()]
+        [System.String]
         $PublisherName,
 
         [Parameter()]
@@ -233,7 +237,7 @@ function Get-TargetResource
             }
 
             [Array]$complexDelegatedPermissionClassifications = @()
-            $Uri = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "v1.0/servicePrincipals(appId='$AppId')/delegatedPermissionClassifications"
+            $Uri = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "v1.0/servicePrincipals/$($AADServicePrincipal.Id)/delegatedPermissionClassifications"
             $permissionClassifications = Invoke-MgGraphRequest -Uri $Uri -Method Get
             foreach ($permissionClassification in $permissionClassifications.Value){
                 $hashtable = @{
@@ -297,13 +301,13 @@ function Get-TargetResource
                 }
             }
 
-            $complexCustomSecurityAttributes = [Array](Get-CustomSecurityAttributes -AppId $AppId)
+            $complexCustomSecurityAttributes = [Array](Get-CustomSecurityAttributes -ServicePrincipalId $AADServicePrincipal.Id)
             if ($null -eq $complexCustomSecurityAttributes) {
                 $complexCustomSecurityAttributes = @()
             }
 
             $result = @{
-                AppId                              = $AADServicePrincipal.AppId
+                AppId                              = $appInstance.DisplayName
                 AppRoleAssignedTo                  = $AppRoleAssignedToValues
                 ObjectID                           = $AADServicePrincipal.Id
                 DisplayName                        = $AADServicePrincipal.DisplayName
@@ -317,6 +321,7 @@ function Get-TargetResource
                 LogoutUrl                          = $AADServicePrincipal.LogoutUrl
                 Notes                              = $AADServicePrincipal.Notes
                 Owners                             = $ownersValues
+                PreferredSingleSignOnMode          = $AADServicePrincipal.PreferredSingleSignOnMode
                 PublisherName                      = $AADServicePrincipal.PublisherName
                 ReplyURLs                          = $AADServicePrincipal.ReplyURLs
                 SamlMetadataURL                    = $AADServicePrincipal.SamlMetadataURL
@@ -414,6 +419,10 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
+        $PreferredSingleSignOnMode,
+
+        [Parameter()]
+        [System.String]
         $PublisherName,
 
         [Parameter()]
@@ -505,6 +514,7 @@ function Set-TargetResource
     $currentParameters.Remove('ObjectID') | Out-Null
     $currentParameters.Remove('ApplicationSecret') | Out-Null
     $currentParameters.Remove('AccessTokens') | Out-Null
+    $currentParameters.Remove('Owners') | Out-Null
 
     # update the custom security attributes to be cmdlet comsumable
     if ($null -ne $currentParameters.CustomSecurityAttributes -and $currentParameters.CustomSecurityAttributes -gt 0) {
@@ -518,7 +528,7 @@ function Set-TargetResource
     {
         if ($null -ne $AppRoleAssignedTo)
         {
-            $currentParameters.AppRoleAssignedTo = $AppRoleAssignedToValue
+            $currentParameters.AppRoleAssignedTo = $AppRoleAssignedToValues
         }
         # removing Delegated permission classifications from this new call, as adding below separately
         $currentParameters.Remove('DelegatedPermissionClassifications') | Out-Null
@@ -538,7 +548,7 @@ function Set-TargetResource
         {
             $userInfo = Get-MgUser -UserId $owner
             $body = @{
-                '@odata.id' = "https://graph.microsoft.com/v1.0/directoryObjects/$($userInfo.Id)"
+                '@odata.id' = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "v1.0/directoryObjects/$($userInfo.Id)"
             }
             Write-Verbose -Message "Adding new owner {$owner}"
             $newOwner = New-MgServicePrincipalOwnerByRef -ServicePrincipalId $newSP.Id -BodyParameter $body
@@ -569,8 +579,13 @@ function Set-TargetResource
         Write-Verbose -Message "CurrentParameters: $($currentParameters | Out-String)"
         Write-Verbose -Message "ServicePrincipalID: $($currentAADServicePrincipal.ObjectID)"
         $currentParameters.Remove('AppRoleAssignedTo') | Out-Null
-        $currentParameters.Remove('Owners') | Out-Null
         $currentParameters.Remove('DelegatedPermissionClassifications') | Out-Null
+
+        if ($PreferredSingleSignOnMode -eq 'saml')
+        {
+            $IdentifierUris = $ServicePrincipalNames | Where-Object { $_ -notmatch $AppId }
+            $currentParameters.Remove('ServicePrincipalNames')
+        }
 
         #removing the current custom security attributes
         if ($currentAADServicePrincipal.CustomSecurityAttributes.Count -gt 0) {
@@ -578,11 +593,17 @@ function Set-TargetResource
             $CSAParams = @{
                 customSecurityAttributes = $currentAADServicePrincipal.CustomSecurityAttributes
             }
-            Invoke-MgGraphRequest -Uri "https://graph.microsoft.com/beta/servicePrincipals(appId='$($currentParameters.AppId)')" -Method Patch -Body $CSAParams
+            Invoke-MgGraphRequest -Uri $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/servicePrincipals(appId='$($currentParameters.AppId)')" -Method Patch -Body $CSAParams
         }
 
         Update-MgServicePrincipal -ServicePrincipalId $currentAADServicePrincipal.ObjectID @currentParameters
 
+        if ($IdentifierUris)
+        {
+            Write-Verbose -Message "Updating the Application ID Uri on the application instance."
+            $appInstance = Get-MgApplication -Filter "AppId eq '$AppId'"
+            Update-MgApplication -ApplicationId $appInstance.Id -IdentifierUris $IdentifierUris
+        }
         if ($AppRoleAssignedTo)
         {
             [Array]$currentPrincipals = $currentAADServicePrincipal.AppRoleAssignedTo.Identity
@@ -680,7 +701,7 @@ function Set-TargetResource
             if ($diff.SideIndicator -eq '=>')
             {
                 $body = @{
-                    '@odata.id' = "https://graph.microsoft.com/v1.0/directoryObjects/$($userInfo.Id)"
+                    '@odata.id' = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "v1.0/directoryObjects/$($userInfo.Id)"
                 }
                 Write-Verbose -Message "Adding owner {$($userInfo.Id)}"
                 New-MgServicePrincipalOwnerByRef -ServicePrincipalId $currentAADServicePrincipal.ObjectId `
@@ -784,6 +805,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String[]]
         $Owners,
+
+        [Parameter()]
+        [System.String]
+        $PreferredSingleSignOnMode,
 
         [Parameter()]
         [System.String]
@@ -1195,10 +1220,10 @@ function Create-AttributeValue {
 function Get-CustomSecurityAttributes {
     [OutputType([System.Array])]
     param (
-        [String]$AppId
+        [String]$ServicePrincipalId
     )
 
-    $customSecurityAttributes = Invoke-MgGraphRequest -Uri "https://graph.microsoft.com/beta/servicePrincipals(appId='$AppId')`?`$select=customSecurityAttributes" -Method Get
+    $customSecurityAttributes = Invoke-MgGraphRequest -Uri $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/servicePrincipals/$($ServicePrincipalId)`?`$select=customSecurityAttributes" -Method Get
     $customSecurityAttributes = $customSecurityAttributes.customSecurityAttributes
     $newCustomSecurityAttributes = @()
 

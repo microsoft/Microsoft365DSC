@@ -1410,7 +1410,7 @@ function Set-TargetResource
         if ($currentParameters.ContainsKey('ServicePrincipalFilterMode') -and $currentParameters.ContainsKey('ServicePrincipalFilterRule'))
         {
             #check if the custom attribute exist.
-            $customattribute = Invoke-MgGraphRequest -Method GET -Uri https://graph.microsoft.com/v1.0/directory/customSecurityAttributeDefinitions
+            $customattribute = Invoke-MgGraphRequest -Method GET -Uri $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "v1.0/directory/customSecurityAttributeDefinitions"
             $ServicePrincipalFilterRule -match "CustomSecurityAttribute.(?<attribute>.*) -.*"
             $attrinrule = $matches.attribute
             if ($customattribute.value.id -contains $attrinrule){

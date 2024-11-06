@@ -4,6 +4,8 @@
 
 * AADServicePrincipal
   * Added support for KeyCredentials and PasswordCredentials.
+  * Added support for SAML.
+  * Fixed issue with Owners.
 * AADAccessReviewDefinition
   * Initial release.
 * AADAccessReviewPolicy
@@ -27,6 +29,9 @@
   * Initial release.
 * AADFilteringProfile
   * Initial release.
+* AADGroup
+  * Added support for custom roles assignment.
+    FIXES [#5322](https://github.com/microsoft/Microsoft365DSC/issues/5322)
 * AADHomeRealmDiscoveryPolicy
   * Initial Release
 * AADIdentityAPIConnector
@@ -55,12 +60,20 @@
   * Initial release.
 * AADRemoteNetwork
   * Initial release.
+* AADRoleEligibilityScheduleRequest
+  * Fixes for Custom roles.
+    FIXES [#5330](https://github.com/microsoft/Microsoft365DSC/issues/5330)
+  * Fixes to remove elegibility schedule for custom roles.
+    FIXES [#5331](https://github.com/microsoft/Microsoft365DSC/issues/5331)
 * AADRoleManagementPolicyRule
   * Initial release.
 * AADServicePrincipal
   * Added the notes field.
+  * FIXES [#5312](https://github.com/microsoft/Microsoft365DSC/issues/5312)
 * AADSocialIdentityProvider
   * Fixed missing permissions in settings.json
+* AADUserFlowAttribute
+  * Initial Release
 * AADVerifiedIdAuthority
   * Initial release.
 * AADVerifiedIdAuthorityContract
@@ -77,13 +90,13 @@
   * Renamed parameters and added logic flow to create new subscriptions.
 * AzureVerifiedIdFaceCheck
   * Initial release.
+* DefenderDeviceAuthenticatedScanDefinition
+  * Initial release.
 * EXOActiveSyncMailboxPolicy
   * Initial release.
 * EXOArcConfig
   * Fixed `Test-TargetResource` to correctly check property `ArcTrustedSealers`
     when it has an array
-* AADUserFlowAttribute
-  * Initial Release
 * EXOMailboxAuditBypassAssociation
   * Initial release.
 * EXOMailboxSettings
@@ -94,6 +107,11 @@
 * EXOTenantAllowBlockListItems
   * Fixed `Test-TargetResource` to correctly mark when this resource is removed
 * EXOTenantAllowBlockListSpoofItems
+  * Initial release.
+* IntuneAccountProtectionLocalUserGroupMembershipPolicy
+  * Updates values in `UserSelectionType`.
+    FIXES [#5318](https://github.com/microsoft/Microsoft365DSC/issues/5318)
+* IntuneAntivirusPolicyLinux
   * Initial release.
 * IntuneAppAndBrowserIsolationPolicyWindows10ConfigMgr
   * Initial release.
@@ -128,6 +146,13 @@
     breaking the DSCParser process. The impact of this breaking the parsing
     process is important enough to justify an out-of-band breaking change of
     this resource.
+* ODSettings
+  * Deprecated property NotifyOwnersWhenInvitationsAccepted.
+    FIXES [#4979](https://github.com/microsoft/Microsoft365DSC/issues/4979)
+* PPPowerAppsEnvironment
+  * FIXES [#5207](https://github.com/microsoft/Microsoft365DSC/issues/5207)
+* PPTenantSettings
+  * Updated to support latest settings.
 * SCInsiderRiskPolicy
   * Added support for property MDATPTriageStatus.
   * Added support for GPUUtilizationLimit and CPUUtilizationLimit.
@@ -136,14 +161,13 @@
 * SCSensitivityLabel
   * Fixed issue with setting label priority
     FIXES [#5266](https://github.com/microsoft/Microsoft365DSC/issues/5266)
-* PPPowerAppsEnvironment
-  * FIXES [#5207](https://github.com/microsoft/Microsoft365DSC/issues/5207)
-* PPTenantSettings
-  * Updated to support latest settings.
 * SentinelAlertRule
   * Initial release.
 * SentinelThreatIntelligenceIndicator
   * Initial release.
+* SPOSharingSettings
+  * Deprecated property RequireAcceptingAccountMatchInvitedAccount.
+    FIXES [#4979](https://github.com/microsoft/Microsoft365DSC/issues/4979)
 * SPOTenantSettings
   * Added support for AllowSelectSGsInODBListInTenant,
     DenySelectSGsInODBListInTenant, DenySelectSecurityGroupsInSPSitesList,
@@ -156,6 +180,9 @@
     ContentSharingInExternalMeetings, Copilot, CopyRestriction,
     DetectSensitiveContentDuringScreenSharing, ExternalMeetingJoin, ParticipantNameChange,
     VoiceIsolation
+* TeamsOrgWideAppSettings
+  * Fixed an issue where ManagedIdentity wasn't define in the methods' signatures.
+    FIXES [#5188](https://github.com/microsoft/Microsoft365DSC/issues/5188)
 * M365DSCDRGUtil
   * Fixes an issue where non-unique properties were not combined
     properly with their respective parent setting.
@@ -171,6 +198,18 @@
   * Exponential performance improvements by reducing complexity and roundtrips.
   * Changed the logic that appends GUID in the resource name when primary key is not found during an
     export. We will only append a GUID if the IsSingleInstance property is not found on the resource.
+  * Add check in AADGroupSettings for NewUnifiedGroupWritebackDefault not existing in Government by default
+    FIXES [#5213](https://github.com/microsoft/Microsoft365DSC/issues/5213)
+  * Fix static refrences to graph.microsoft.com
+    FIXES [#5339](https://github.com/microsoft/Microsoft365DSC/issues/5339)
+    AADNetworkAccessForwardingPolicy. AADOrganizationCertificateBasedAuthConfiguration,
+    AADAuthenticationMethodPolicyExternal, AADEnrichedAuditLogs
+    FIXES [#5340](https://github.com/microsoft/Microsoft365DSC/issues/5340)
+    IntuneDeviceManagementEnrollmentAndroidGooglePlay, IntuneAppleMDMPushNotificationCertificate
+  * Fixes static OData refrences to graph.microsoft.com
+    AADApplication, AADEntitlementManagementAccessPackage, AADEntitlementManagementConnectedOrganization
+    AADServicePrincipal
+    FIXES [#5342](https://github.com/microsoft/Microsoft365DSC/issues/5342)
 * DEPENDENCIES
   * Updated Microsoft.Graph to version 2.24.0.
   * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.199.

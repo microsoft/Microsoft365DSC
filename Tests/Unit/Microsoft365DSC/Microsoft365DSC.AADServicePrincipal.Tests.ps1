@@ -43,6 +43,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return 'Credentials'
             }
 
+            Mock -CommandName Get-MgApplication -MockWith {
+                return @{
+                    AppId = "12345-12345-12345-12345-12345"
+                    DisplayName = "App1"
+                }
+            }
+
             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
             }
@@ -206,7 +213,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'The app exists and values are already in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    AppId                     = 'b4f08c68-7276-4cb8-b9ae-e75fca5ff834'
+                    AppId                     = 'App1'
                     DisplayName               = 'App1'
                     AlternativeNames          = 'AlternativeName1', 'AlternativeName2'
                     AccountEnabled            = $true

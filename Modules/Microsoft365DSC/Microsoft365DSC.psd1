@@ -82,6 +82,7 @@
     'Modules/EncodingHelpers/M365DSCStringEncoding.psm1',
     'Modules/WorkloadHelpers/M365DSCAzureHelper.psm1',
     'Modules/WorkloadHelpers/M365DSCAzureDevOPSHelper.psm1',
+    'Modules/WorkloadHelpers/M365DSCDefenderHelper.psm1',
     'Modules/WorkloadHelpers/M365DSCFabricHelper.psm1',
     'Modules/M365DSCConfigurationHelper.psm1'
   )
