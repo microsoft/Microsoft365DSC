@@ -102487,7 +102487,7 @@ function Get-MgBetaDeviceManagementComplianceManagementPartner
     	[string]$ComplianceManagementPartnerId,
 
     	[Parameter()]
-    	[Microsoft.Graph.Beta.PowerShell.Models.IDeviceManagementAdministrationIdentity]$InputObject,
+    	[object]$InputObject,
 
     	[Parameter()]
     	[string[]]$ExpandProperty,
@@ -102520,10 +102520,10 @@ function Get-MgBetaDeviceManagementComplianceManagementPartner
     	[System.Collections.IDictionary]$Headers,
 
     	[Parameter()]
-    	[Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]$HttpPipelineAppend,
+    	[PSObject]$HttpPipelineAppend,
 
     	[Parameter()]
-    	[Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]$HttpPipelinePrepend,
+    	[PSObject]$HttpPipelinePrepend,
 
     	[Parameter()]
     	[uri]$Proxy,
@@ -102550,7 +102550,7 @@ function New-MgBetaDeviceManagementComplianceManagementPartner
     [Cmdletbinding()]
     param(
 		[Parameter()]
-		[Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphComplianceManagementPartner]$BodyParameter,
+		[object]$BodyParameter,
 
 		[Parameter()]
 		[string]$ResponseHeadersVariable,
@@ -102559,7 +102559,7 @@ function New-MgBetaDeviceManagementComplianceManagementPartner
 		[hashtable]$AdditionalProperties,
 
 		[Parameter()]
-		[Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphComplianceManagementPartnerAssignment[]]$AndroidEnrollmentAssignments,
+		[object[]]$AndroidEnrollmentAssignments,
 
 		[Parameter()]
 		[switch]$AndroidOnboarded,
@@ -102571,7 +102571,7 @@ function New-MgBetaDeviceManagementComplianceManagementPartner
 		[string]$Id,
 
 		[Parameter()]
-		[Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphComplianceManagementPartnerAssignment[]]$IosEnrollmentAssignments,
+		[object[]]$IosEnrollmentAssignments,
 
 		[Parameter()]
 		[switch]$IosOnboarded,
@@ -102580,13 +102580,13 @@ function New-MgBetaDeviceManagementComplianceManagementPartner
 		[datetime]$LastHeartbeatDateTime,
 
 		[Parameter()]
-		[Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphComplianceManagementPartnerAssignment[]]$MacOSEnrollmentAssignments,
+		[object[]]$MacOSEnrollmentAssignments,
 
 		[Parameter()]
 		[switch]$MacOSOnboarded,
 
 		[Parameter()]
-		[Microsoft.Graph.Beta.PowerShell.Support.DeviceManagementPartnerTenantState]$PartnerState,
+		[object]$PartnerState,
 
 		[Parameter()]
 		[switch]$Break,
@@ -102595,10 +102595,10 @@ function New-MgBetaDeviceManagementComplianceManagementPartner
 		[System.Collections.IDictionary]$Headers,
 
 		[Parameter()]
-		[Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]$HttpPipelineAppend,
+		[PSObject]$HttpPipelineAppend,
 
 		[Parameter()]
-		[Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]$HttpPipelinePrepend,
+		[PSObject]$HttpPipelinePrepend,
 
 		[Parameter()]
 		[uri]$Proxy,
@@ -102624,10 +102624,10 @@ function Update-MgBetaDeviceManagementComplianceManagementPartner
         [string]$ComplianceManagementPartnerId,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IDeviceManagementAdministrationIdentity]$InputObject,
+        [object]$InputObject,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphComplianceManagementPartner]$BodyParameter,
+        [object]$BodyParameter,
 
         [Parameter()]
         [string]$ResponseHeadersVariable,
@@ -102636,7 +102636,7 @@ function Update-MgBetaDeviceManagementComplianceManagementPartner
         [hashtable]$AdditionalProperties,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphComplianceManagementPartnerAssignment[]]$AndroidEnrollmentAssignments,
+        [object[]]$AndroidEnrollmentAssignments,
 
         [Parameter()]
         [switch]$AndroidOnboarded,
@@ -102648,7 +102648,7 @@ function Update-MgBetaDeviceManagementComplianceManagementPartner
         [string]$Id,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphComplianceManagementPartnerAssignment[]]$IosEnrollmentAssignments,
+        [object[]]$IosEnrollmentAssignments,
 
         [Parameter()]
         [switch]$IosOnboarded,
@@ -102657,13 +102657,13 @@ function Update-MgBetaDeviceManagementComplianceManagementPartner
         [datetime]$LastHeartbeatDateTime,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Models.IMicrosoftGraphComplianceManagementPartnerAssignment[]]$MacOSEnrollmentAssignments,
+        [object[]]$MacOSEnrollmentAssignments,
 
         [Parameter()]
         [switch]$MacOSOnboarded,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Support.DeviceManagementPartnerTenantState]$PartnerState,
+        [object]$PartnerState,
 
         [Parameter()]
         [switch]$Break,
@@ -102672,10 +102672,10 @@ function Update-MgBetaDeviceManagementComplianceManagementPartner
         [System.Collections.IDictionary]$Headers,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]$HttpPipelineAppend,
+        [PSObject]$HttpPipelineAppend,
 
         [Parameter()]
-        [Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]$HttpPipelinePrepend,
+        [PSObject]$HttpPipelinePrepend,
 
         [Parameter()]
         [uri]$Proxy,
@@ -102701,7 +102701,7 @@ function Remove-MgBetaDeviceManagementComplianceManagementPartner
 		[string]$ComplianceManagementPartnerId,
 
 		[Parameter()]
-		[Microsoft.Graph.Beta.PowerShell.Models.IDeviceManagementAdministrationIdentity]$InputObject,
+		[object]$InputObject,
 
 		[Parameter()]
 		[string]$IfMatch,
@@ -102716,10 +102716,10 @@ function Remove-MgBetaDeviceManagementComplianceManagementPartner
 		[System.Collections.IDictionary]$Headers,
 
 		[Parameter()]
-		[Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]$HttpPipelineAppend,
+		[PSObject]$HttpPipelineAppend,
 
 		[Parameter()]
-		[Microsoft.Graph.Beta.PowerShell.Runtime.SendAsyncStep[]]$HttpPipelinePrepend,
+		[PSObject]$HttpPipelinePrepend,
 
 		[Parameter()]
 		[switch]$PassThru,
