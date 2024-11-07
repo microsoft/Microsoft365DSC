@@ -117,109 +117,40 @@ function Get-TargetResource
         Write-Verbose -Message "An Intune Device Management Compliance Management Partner with Id {$Id} and DisplayName {$DisplayName} was found"
 
         #region resource generator code
-        $complexAndroidEnrollmentAssignments = @()
-        foreach ($currentAndroidEnrollmentAssignments in $getValue.androidEnrollmentAssignments)
+        if ($getValue.androidEnrollmentAssignments.Count -gt 0)
         {
-            $myAndroidEnrollmentAssignments = @{}
-            $complexTarget = @{}
-            $complexTarget.Add('DeviceAndAppManagementAssignmentFilterId', $currentAndroidEnrollmentAssignments.target.deviceAndAppManagementAssignmentFilterId)
-            if ($null -ne $currentAndroidEnrollmentAssignments.target.deviceAndAppManagementAssignmentFilterType)
-            {
-                $complexTarget.Add('DeviceAndAppManagementAssignmentFilterType', $currentAndroidEnrollmentAssignments.target.deviceAndAppManagementAssignmentFilterType.ToString())
-            }
-            $complexTarget.Add('GroupId', $currentAndroidEnrollmentAssignments.target.groupId)
-            $groupObj = Get-MgGroup -GroupId $currentAndroidEnrollmentAssignments.target.groupId -Property DisplayName
-            $complexTarget.Add('GroupDisplayName', $groupObj.DisplayName)
-            $complexTarget.Add('CollectionId', $currentAndroidEnrollmentAssignments.target.collectionId)
-            if ($null -ne $currentAndroidEnrollmentAssignments.target.'@odata.type')
-            {
-                $complexTarget.Add('odataType', $currentAndroidEnrollmentAssignments.target.'@odata.type'.ToString())
-            }
-            if ($complexTarget.values.Where({$null -ne $_}).Count -eq 0)
-            {
-                $complexTarget = $null
-            }
-            else
-            {
-                $complexAndroidEnrollmentAssignments += $complexTarget
-            }
-            <#
-            $myAndroidEnrollmentAssignments.Add('Target',$complexTarget)
-            if ($myAndroidEnrollmentAssignments.values.Where({$null -ne $_}).Count -gt 0)
-            {
-                $complexAndroidEnrollmentAssignments += $myAndroidEnrollmentAssignments
-            }
-            #>
+            $returnAndroidEnrollmentAssignments = @()
+            $returnAndroidEnrollmentAssignments += ConvertFrom-IntunePolicyAssignment `
+                -IncludeDeviceFilter $true `
+                -Assignments ($getValue.androidEnrollmentAssignments)
+        }
+        else
+        {
+            $returnAndroidEnrollmentAssignments = $null
         }
 
-        $complexIosEnrollmentAssignments = @()
-        foreach ($currentIosEnrollmentAssignments in $getValue.iosEnrollmentAssignments)
+        if ($getValue.iosEnrollmentAssignments.Count -gt 0)
         {
-            $myIosEnrollmentAssignments = @{}
-            $complexTarget = @{}
-            $complexTarget.Add('DeviceAndAppManagementAssignmentFilterId', $currentIosEnrollmentAssignments.target.deviceAndAppManagementAssignmentFilterId)
-            if ($null -ne $currentIosEnrollmentAssignments.target.deviceAndAppManagementAssignmentFilterType)
-            {
-                $complexTarget.Add('DeviceAndAppManagementAssignmentFilterType', $currentIosEnrollmentAssignments.target.deviceAndAppManagementAssignmentFilterType.ToString())
-            }
-            $complexTarget.Add('GroupId', $currentIosEnrollmentAssignments.target.groupId)
-            $groupObj = Get-MgGroup -GroupId $currentIosEnrollmentAssignments.target.groupId -Property DisplayName
-            $complexTarget.Add('GroupDisplayName', $groupObj.DisplayName)
-            $complexTarget.Add('CollectionId', $currentIosEnrollmentAssignments.target.collectionId)
-            if ($null -ne $currentIosEnrollmentAssignments.target.'@odata.type')
-            {
-                $complexTarget.Add('odataType', $currentIosEnrollmentAssignments.target.'@odata.type'.ToString())
-            }
-            if ($complexTarget.values.Where({$null -ne $_}).Count -eq 0)
-            {
-                $complexTarget = $null
-            }
-            else
-            {
-                $complexIosEnrollmentAssignments += $complexTarget
-            }
-            <#
-            $myIosEnrollmentAssignments.Add('Target',$complexTarget)
-            if ($myIosEnrollmentAssignments.values.Where({$null -ne $_}).Count -gt 0)
-            {
-                $complexIosEnrollmentAssignments += $myIosEnrollmentAssignments
-            }
-            #>
+            $returnIosEnrollmentAssignments = @()
+            $returnIosEnrollmentAssignments += ConvertFrom-IntunePolicyAssignment `
+                -IncludeDeviceFilter $true `
+                -Assignments ($getValue.iosEnrollmentAssignments)
+        }
+        else
+        {
+            $returnIosEnrollmentAssignments = $null
         }
 
-        $complexMacOsEnrollmentAssignments = @()
-        foreach ($currentMacOsEnrollmentAssignments in $getValue.macOsEnrollmentAssignments)
+        if ($getValue.macOsEnrollmentAssignments.Count -gt 0)
         {
-            $myMacOsEnrollmentAssignments = @{}
-            $complexTarget = @{}
-            $complexTarget.Add('DeviceAndAppManagementAssignmentFilterId', $currentMacOsEnrollmentAssignments.target.deviceAndAppManagementAssignmentFilterId)
-            if ($null -ne $currentMacOsEnrollmentAssignments.target.deviceAndAppManagementAssignmentFilterType)
-            {
-                $complexTarget.Add('DeviceAndAppManagementAssignmentFilterType', $currentMacOsEnrollmentAssignments.target.deviceAndAppManagementAssignmentFilterType.ToString())
-            }
-            $complexTarget.Add('GroupId', $currentMacOsEnrollmentAssignments.target.groupId)
-            $groupObj = Get-MgGroup -GroupId $currentMacOsEnrollmentAssignments.target.groupId -Property DisplayName
-            $complexTarget.Add('GroupDisplayName', $groupObj.DisplayName)
-            $complexTarget.Add('CollectionId', $currentMacOsEnrollmentAssignments.target.collectionId)
-            if ($null -ne $currentMacOsEnrollmentAssignments.target.'@odata.type')
-            {
-                $complexTarget.Add('odataType', $currentMacOsEnrollmentAssignments.target.'@odata.type'.ToString())
-            }
-            if ($complexTarget.values.Where({$null -ne $_}).Count -eq 0)
-            {
-                $complexTarget = $null
-            }
-            else
-            {
-                $complexMacOsEnrollmentAssignments += $complexTarget
-            }
-            <#
-            $myMacOsEnrollmentAssignments.Add('Target',$complexTarget)
-            if ($myMacOsEnrollmentAssignments.values.Where({$null -ne $_}).Count -gt 0)
-            {
-                $complexMacOsEnrollmentAssignments += $myMacOsEnrollmentAssignments
-            }
-            #>
+            $returnMacOsEnrollmentAssignments = @()
+            $returnMacOsEnrollmentAssignments += ConvertFrom-IntunePolicyAssignment `
+                -IncludeDeviceFilter $true `
+                -Assignments ($getValue.macOsEnrollmentAssignments)
+        }
+        else
+        {
+            $returnMacOsEnrollmentAssignments = $null
         }
         #endregion
 
@@ -233,12 +164,12 @@ function Get-TargetResource
 
         $results = @{
             #region resource generator code
-            AndroidEnrollmentAssignments = $complexAndroidEnrollmentAssignments
+            AndroidEnrollmentAssignments = $returnAndroidEnrollmentAssignments
             AndroidOnboarded             = $getValue.AndroidOnboarded
             DisplayName                  = $getValue.DisplayName
-            IosEnrollmentAssignments     = $complexIosEnrollmentAssignments
+            IosEnrollmentAssignments     = $returnIosEnrollmentAssignments
             IosOnboarded                 = $getValue.IosOnboarded
-            MacOsEnrollmentAssignments   = $complexMacOsEnrollmentAssignments
+            MacOsEnrollmentAssignments   = $returnMacOsEnrollmentAssignments
             MacOsOnboarded               = $getValue.MacOsOnboarded
             PartnerState                 = $enumPartnerState
             Id                           = $getValue.Id
@@ -369,39 +300,33 @@ function Set-TargetResource
         $createParameters = Rename-M365DSCCimInstanceParameter -Properties $createParameters
         $createParameters.Remove('Id') | Out-Null
 
-        $keys = (([Hashtable]$createParameters).Clone()).Keys
-        $errorFound = $false
-        foreach ($key in $keys)
+        foreach ($key in ($CreateParameters.clone()).Keys)
         {
-            if ($null -ne $createParameters.$key -and $createParameters[$key].GetType().Name -like '*CimInstance*')
+            if ($CreateParameters[$key].getType().Fullname -like '*CimInstance*')
             {
-                $complexObject = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $createParameters.$key
-                $createParameters.Add($key, @())
-                foreach ($instance in $complexObject)
-                {
-                    $targetObject = $instance.Clone()
-                    $groupObj = Get-MgGroup -Filter "DisplayName eq '$($instance.GroupDisplayName)'"
-                    if ($groupObj -and $groupObj.SecurityEnabled -eq $true)
-                    {
-                        $targetObject.Add('groupId', $groupObj.Id)
-                        $targetObject.Remove('GroupDisplayName')
-                        $createParameters[$key] += @{target = $targetObject}
-                    }
-                    else
-                    {
-                        $errorFound = $true
-                        Add-M365DSCEvent -Message "Cannot create DeviceManagementComplianceManagementPartner {$DisplayName}, Group '$($instance.GroupDisplayName)' in $key does not exist or is not a security-group" -Source $($MyInvocation.MyCommand.Source) -EventId 19 -EntryType Error -TenantId $TenantId
-                    }
-                }
+                $CreateParameters[$key] = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters[$key]
             }
         }
-        if ($errorFound -eq $false)
+
+        if ($createParameters.AndroidEnrollmentAssignments.Count -gt 0)
         {
-        #region resource generator code
-            $createParameters.Add("@odata.type", "#microsoft.graph.ComplianceManagementPartner")
-            $policy = New-MgBetaDeviceManagementComplianceManagementPartner -BodyParameter $createParameters
-        #endregion
+            $androidEnrollmentAssignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter $true -Assignments $createParameters.AndroidEnrollmentAssignments #-DataTypeName '@odata.Type'
+            $createParameters.AndroidEnrollmentAssignments = $androidEnrollmentAssignmentsHash
         }
+        if ($createParameters.IosEnrollmentAssignments.Count -gt 0)
+        {
+            $iosEnrollmentAssignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter $true -Assignments $createParameters.IosEnrollmentAssignments #-DataTypeName '@odata.Type'
+            $createParameters.IosEnrollmentAssignments = $iosEnrollmentAssignmentsHash
+        }
+        if ($createParameters.MacOsEnrollmentAssignments.Count -gt 0)
+        {
+            $macOsEnrollmentAssignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter $true -Assignments $createParameters.MacOsEnrollmentAssignments #-DataTypeName '@odata.Type'
+            $createParameters.MacOsEnrollmentAssignments = $macOsEnrollmentAssignmentsHash
+        }
+        #region resource generator code
+        $createParameters.Add("@odata.type", "#microsoft.graph.ComplianceManagementPartner")
+        $policy = New-MgBetaDeviceManagementComplianceManagementPartner -BodyParameter $createParameters
+        #endregion
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
@@ -412,41 +337,34 @@ function Set-TargetResource
 
         $updateParameters.Remove('Id') | Out-Null
 
-        $keys = (([Hashtable]$updateParameters).Clone()).Keys
-        $errorFound = $false
-        foreach ($key in $keys)
+        foreach ($key in ($UpdateParameters.clone()).Keys)
         {
-            if ($null -ne $pdateParameters.$key -and $updateParameters.$key.GetType().Name -like '*CimInstance*')
+            if ($updateParameters[$key].getType().Fullname -like '*CimInstance*')
             {
-                $complexObject = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $updateParameters.$key
-                $updateParameters.Add($key, @())
-                foreach ($instance in $complexObject)
-                {
-                    $targetObject = $instance.Clone()
-                    $groupObj = Get-MgGroup -Filter "DisplayName eq '$($instance.GroupDisplayName)'"
-                    if ($groupObj -and $groupObj.SecurityEnabled -eq $true)
-                    {
-                        $targetObject.Add('groupId', $groupObj.Id)
-                        $targetObject.Remove('GroupDisplayName')
-                        $updateParameters[$key] += @{target = $targetObject}
-                    }
-                    else
-                    {
-                        $errorFound = $true
-                        Add-M365DSCEvent -Message "Cannot update DeviceManagementComplianceManagementPartner {$DisplayName}, Group '$($instance.GroupDisplayName)' in $key does not exist or is not a security-group" -Source $($MyInvocation.MyCommand.Source) -EventId 19 -EntryType Error -TenantId $TenantId
-                    }
-                }
+                $updateParameters[$key] = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $updateParameters[$key]
             }
         }
-        if ($errorFOund -eq $false)
+        if ($updateParameters.AndroidEnrollmentAssignments.Count -gt 0)
         {
-            #region resource generator code
-            $UpdateParameters.Add("@odata.type", "#microsoft.graph.ComplianceManagementPartner")
-            Update-MgBetaDeviceManagementComplianceManagementPartner `
-                -ComplianceManagementPartnerId $currentInstance.Id `
-                -BodyParameter $UpdateParameters
-            #endregion
+            $androidEnrollmentAssignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter $true -Assignments $updateParameters.AndroidEnrollmentAssignments #-DataTypeName 'odataType'
+            $updateParameters.AndroidEnrollmentAssignments = $androidEnrollmentAssignmentsHash
         }
+        if ($updateParameters.IosEnrollmentAssignments.Count -gt 0)
+        {
+            $iosEnrollmentAssignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter $true -Assignments $updateParameters.IosEnrollmentAssignments #-DataTypeName 'odataType'
+            $updateParameters.IosEnrollmentAssignments = $iosEnrollmentAssignmentsHash
+        }
+        if ($updateParameters.MacOsEnrollmentAssignments.Count -gt 0)
+        {
+            $macOsEnrollmentAssignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter $true -Assignments $updateParameters.MacOsEnrollmentAssignments #-DataTypeName 'odataType'
+            $updateParameters.MacOsEnrollmentAssignments = $macOsEnrollmentAssignmentsHash
+        }
+        #region resource generator code
+        $UpdateParameters.Add("@odata.type", "#microsoft.graph.ComplianceManagementPartner")
+        Update-MgBetaDeviceManagementComplianceManagementPartner `
+            -ComplianceManagementPartnerId $currentInstance.Id `
+            -BodyParameter $UpdateParameters
+        #endregion
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
@@ -703,24 +621,9 @@ function Export-TargetResource
                 -Results $Results
             if ($null -ne $Results.AndroidEnrollmentAssignments)
             {
-                <#
-                $complexMapping = @(
-                    @{
-                        Name = 'AndroidEnrollmentAssignments'
-                        CimInstanceName = 'IntuneComplianceManagementPartnerAssignment'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'Target'
-                        CimInstanceName = 'IntuneDeviceAndAppManagementAssignmentTarget'
-                        IsRequired = $False
-                    }
-                )
-                #>
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                     -ComplexObject $Results.AndroidEnrollmentAssignments `
-                    -CIMInstanceName 'IntuneDeviceAndAppManagementAssignmentTarget' <#`
-                    -ComplexTypeMapping $complexMapping#>
+                    -CIMInstanceName 'IntuneDeviceAndAppManagementAssignmentTarget'
 
                 if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
@@ -733,24 +636,9 @@ function Export-TargetResource
             }
             if ($null -ne $Results.IosEnrollmentAssignments)
             {
-                <#
-                $complexMapping = @(
-                    @{
-                        Name = 'IosEnrollmentAssignments'
-                        CimInstanceName = 'IntuneComplianceManagementPartnerAssignment'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'Target'
-                        CimInstanceName = 'IntuneDeviceAndAppManagementAssignmentTarget'
-                        IsRequired = $False
-                    }
-                )
-                #>
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                     -ComplexObject $Results.IosEnrollmentAssignments `
-                    -CIMInstanceName 'IntuneDeviceAndAppManagementAssignmentTarget' <#`
-                    -ComplexTypeMapping $complexMapping#>
+                    -CIMInstanceName 'IntuneDeviceAndAppManagementAssignmentTarget'
 
                 if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
@@ -763,24 +651,9 @@ function Export-TargetResource
             }
             if ($null -ne $Results.MacOsEnrollmentAssignments)
             {
-                <#
-                $complexMapping = @(
-                    @{
-                        Name = 'MacOsEnrollmentAssignments'
-                        CimInstanceName = 'IntuneComplianceManagementPartnerAssignment'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'Target'
-                        CimInstanceName = 'IntuneDeviceAndAppManagementAssignmentTarget'
-                        IsRequired = $False
-                    }
-                )
-                #>
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                     -ComplexObject $Results.MacOsEnrollmentAssignments `
-                    -CIMInstanceName 'IntuneDeviceAndAppManagementAssignmentTarget' <#`
-                    -ComplexTypeMapping $complexMapping#>
+                    -CIMInstanceName 'IntuneDeviceAndAppManagementAssignmentTarget'
 
                 if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
@@ -797,18 +670,6 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
-            if ($Results.AndroidEnrollmentAssignments)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "AndroidEnrollmentAssignments" -IsCIMArray:$True
-            }
-            if ($Results.IosEnrollmentAssignments)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "IosEnrollmentAssignments" -IsCIMArray:$True
-            }
-            if ($Results.MacOsEnrollmentAssignments)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "MacOsEnrollmentAssignments" -IsCIMArray:$True
-            }
 
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `

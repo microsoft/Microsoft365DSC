@@ -11,7 +11,7 @@ class MSFT_IntuneDeviceAndAppManagementAssignmentTarget
     [Write, Description("AAD Group Id.")] String GroupId;
     [Write, Description("AAD Group DisplayName.")] String GroupDisplayName;
     [Write, Description("The collection Id that is the target of the assignment.")] String CollectionId;
-    [Write, Description("The type of the entity."), ValueMap{"#microsoft.graph.allDevicesAssignmentTarget","#microsoft.graph.allLicensedUsersAssignmentTarget","#microsoft.graph.androidFotaDeploymentAssignmentTarget","#microsoft.graph.configurationManagerCollectionAssignmentTarget","#microsoft.graph.groupAssignmentTarget"}, Values{"#microsoft.graph.allDevicesAssignmentTarget","#microsoft.graph.allLicensedUsersAssignmentTarget","#microsoft.graph.androidFotaDeploymentAssignmentTarget","#microsoft.graph.configurationManagerCollectionAssignmentTarget","#microsoft.graph.groupAssignmentTarget"}] String odataType;
+    [Write, Description("The type of the entity."), ValueMap{"#microsoft.graph.allDevicesAssignmentTarget","#microsoft.graph.allLicensedUsersAssignmentTarget","#microsoft.graph.androidFotaDeploymentAssignmentTarget","#microsoft.graph.configurationManagerCollectionAssignmentTarget","#microsoft.graph.groupAssignmentTarget"}, Values{"#microsoft.graph.allDevicesAssignmentTarget","#microsoft.graph.allLicensedUsersAssignmentTarget","#microsoft.graph.androidFotaDeploymentAssignmentTarget","#microsoft.graph.configurationManagerCollectionAssignmentTarget","#microsoft.graph.groupAssignmentTarget"}] String dataType;
 };
 
 [ClassVersion("1.0.0.0"), FriendlyName("IntuneDeviceManagementComplianceManagementPartner")]
