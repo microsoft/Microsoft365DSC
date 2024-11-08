@@ -106,6 +106,27 @@
                     TenantId              = $TenantId;
                     CertificateThumbprint = $CertificateThumbprint;
                 }
+                IntuneAntivirusExclusionsPolicyLinux 'myIntuneAntivirusExclusionsPolicyLinux'
+                {
+                    Assignments = @();
+                    Description = "";
+                    DisplayName = "Test";
+                    Ensure      = "Present";
+                    Exclusions  = @(
+                        MSFT_MicrosoftGraphIntuneSettingsCatalogExclusions{
+                            Exclusions_item_extension = '.exe'
+                            Exclusions_item_type = '1'
+                        }
+                        MSFT_MicrosoftGraphIntuneSettingsCatalogExclusions{
+                            Exclusions_item_name = 'process1'
+                            Exclusions_item_type = '2'
+                        }
+                    );
+                    RoleScopeTagIds                    = @("0");
+                    ApplicationId         = $ApplicationId;
+                    TenantId              = $TenantId;
+                    CertificateThumbprint = $CertificateThumbprint;
+                }
                 IntuneAntivirusPolicyLinux 'myIntuneAntivirusPolicyLinux'
                 {
                     allowedThreats                     = @("Threat 1");
