@@ -171,6 +171,20 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                         }
                                     )
                                 }
+                            },
+                            @{
+                                Id = 'linux_mdatp_managed_antivirusengine_exclusions_item_name'
+                                Name = 'exclusions_item_name'
+                                OffsetUri = 'exclusions/[{0}]/name'
+                                AdditionalProperties = @{
+                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
+                                    dependentOn = @(
+                                        @{
+                                            dependentOn = 'linux_mdatp_managed_antivirusengine_exclusions_item_$type_2'
+                                            parentSettingId = 'linux_mdatp_managed_antivirusengine_exclusions_item_$type'
+                                        }
+                                    )
+                                }
                             }
                         )
                         SettingInstance = @{
@@ -198,6 +212,27 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                                         }
                                                     )
                                                     value = 'linux_mdatp_managed_antivirusengine_exclusions_item_$type_1'
+                                                }
+                                            }
+                                        )
+                                    },
+                                    @{
+                                        children = @(
+                                            @{
+                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                                                settingDefinitionId = 'linux_mdatp_managed_antivirusengine_exclusions_item_$type'
+                                                choiceSettingValue = @{
+                                                    children = @(
+                                                        @{
+                                                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
+                                                            settingDefinitionId = 'linux_mdatp_managed_antivirusengine_exclusions_item_name'
+                                                            simpleSettingValue = @{
+                                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
+                                                                value = 'Test'
+                                                            }
+                                                        }
+                                                    )
+                                                    value = 'linux_mdatp_managed_antivirusengine_exclusions_item_$type_2'
                                                 }
                                             }
                                         )
@@ -383,6 +418,20 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                         }
                                     )
                                 }
+                            },
+                            @{
+                                Id = 'linux_mdatp_managed_antivirusengine_exclusions_item_name'
+                                Name = 'exclusions_item_name'
+                                OffsetUri = 'exclusions/[{0}]/name'
+                                AdditionalProperties = @{
+                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
+                                    dependentOn = @(
+                                        @{
+                                            dependentOn = 'linux_mdatp_managed_antivirusengine_exclusions_item_$type_2'
+                                            parentSettingId = 'linux_mdatp_managed_antivirusengine_exclusions_item_$type'
+                                        }
+                                    )
+                                }
                             }
                         )
                         SettingInstance = @{
@@ -503,6 +552,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             Exclusions_item_extension = '.exe'
                             Exclusions_item_type = '1'
                         } -ClientOnly)
+                        (New-CimInstance -ClassName MSFT_MicrosoftGraphIntuneSettingsCatalogExclusions -Property @{
+                            Exclusions_item_name = 'Test'
+                            Exclusions_item_type = '2'
+                        } -ClientOnly)
                     );
                     Id = "12345-12345-12345-12345-12345"
                     DisplayName = "My Test"
@@ -551,6 +604,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             Exclusions_item_extension = '.exe'
                             Exclusions_item_type = '1'
                         } -ClientOnly)
+                        (New-CimInstance -ClassName MSFT_MicrosoftGraphIntuneSettingsCatalogExclusions -Property @{
+                            Exclusions_item_name = 'Test'
+                            Exclusions_item_type = '2'
+                        } -ClientOnly)
                     );
                     Id = "12345-12345-12345-12345-12345"
                     DisplayName = "My Test"
@@ -597,6 +654,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             Exclusions_item_extension = '.exe'
                             Exclusions_item_type = '1'
                         } -ClientOnly)
+                        (New-CimInstance -ClassName MSFT_MicrosoftGraphIntuneSettingsCatalogExclusions -Property @{
+                            Exclusions_item_name = 'Test'
+                            Exclusions_item_type = '2'
+                        } -ClientOnly)
                     );
                     Id = "12345-12345-12345-12345-12345"
                     DisplayName = "My Test"
@@ -635,6 +696,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             Exclusions_item_extension = '.pdf' # Drift
                             Exclusions_item_type = '1'
                         } -ClientOnly)
+                        (New-CimInstance -ClassName MSFT_MicrosoftGraphIntuneSettingsCatalogExclusions -Property @{
+                            Exclusions_item_name = 'Test'
+                            Exclusions_item_type = '2'
+                        } -ClientOnly)
                     );
                     Id = "12345-12345-12345-12345-12345"
                     DisplayName = "My Test"
@@ -672,6 +737,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential
                 }
             }
+            
             It 'Should Reverse Engineer resource from the Export method' {
                 $result = Export-TargetResource @testParams
                 $result | Should -Not -BeNullOrEmpty
