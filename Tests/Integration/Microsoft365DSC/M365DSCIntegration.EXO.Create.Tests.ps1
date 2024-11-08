@@ -276,6 +276,18 @@
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                 }
+                EXODataAtRestEncryptionPolicy 'M365DataAtRestEncryptionPolicy-Riyansh_Policy'
+                {
+                    AzureKeyIDs          = @("https://m365dataatrestencryption.vault.azure.net/keys/EncryptionKey","https://m365datariyansh.vault.azure.net/keys/EncryptionRiyansh");
+                    Description          = "Tenant default policy 1";
+                    Enabled              = $True;
+                    Ensure               = "Present";
+                    Identity             = "Riyansh_Policy";
+                    Name                 = "Riyansh_Policy";
+                    ApplicationId         = $ApplicationId;
+                    TenantId              = $TenantId;
+                    CertificateThumbprint = $CertificateThumbprint;
+                }
                 EXODistributionGroup 'DemoDG'
                 {
                     Alias                              = "demodg";
@@ -470,6 +482,18 @@
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
+                }
+                EXOM365DataAtRestEncryptionPolicy 'M365DataAtRestEncryptionPolicy-Riyansh_Policy'
+                {
+                    AzureKeyIDs          = @("https://m365dataatrestencryption.vault.azure.net/keys/EncryptionKey","https://m365datariyansh.vault.azure.net/keys/EncryptionRiyansh");
+                    Description          = "Tenant default policy 1";
+                    Enabled              = $True;
+                    Ensure               = "Present";
+                    Identity             = "Riyansh_Policy";
+                    Name                 = "Riyansh_Policy";
+                    ApplicationId         = $ApplicationId;
+                    TenantId              = $TenantId;
+                    CertificateThumbprint = $CertificateThumbprint;
                 }
                 EXOMailboxFolderPermission 'EXOMailboxFolderPermission-admin:\Calendar'
                 {

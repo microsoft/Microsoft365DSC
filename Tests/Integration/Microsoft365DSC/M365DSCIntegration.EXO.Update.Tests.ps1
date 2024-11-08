@@ -383,6 +383,26 @@
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                 }
+                EXODataAtRestEncryptionPolicy 'M365DataAtRestEncryptionPolicy-Riyansh_Policy'
+                {
+                    AzureKeyIDs          = @("https://m365dataatrestencryption.vault.azure.net/keys/EncryptionKey","https://m365datariyansh.vault.azure.net/keys/EncryptionRiyansh");
+                    Description          = "Tenant default policy 2"; # drift
+                    Enabled              = $True;
+                    Ensure               = "Present";
+                    Identity             = "Riyansh_Policy";
+                    Name                 = "Riyansh_Policy";
+                    ApplicationId         = $ApplicationId;
+                    TenantId              = $TenantId;
+                    CertificateThumbprint = $CertificateThumbprint;
+                }
+                EXODataAtRestEncryptionPolicyAssignment 'M365DataAtRestEncryptionPolicyAssignment'
+                {
+                    DataEncryptionPolicy          = "Riyansh_Policy"
+                    IsSingleInstance              = "Yes";
+                    ApplicationId                 = $ApplicationId
+                    TenantId                      = $TenantId
+                    CertificateThumbprint         = $CertificateThumbprint
+                }
                 EXODataClassification 'ConfigureDataClassification'
                 {
                     Description          = "Detects formatted and unformatted Canadian social insurance number.";
@@ -668,6 +688,18 @@
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
+                }
+                EXOM365DataAtRestEncryptionPolicy 'M365DataAtRestEncryptionPolicy-Riyansh_Policy'
+                {
+                    AzureKeyIDs          = @("https://m365dataatrestencryption.vault.azure.net/keys/EncryptionKey","https://m365datariyansh.vault.azure.net/keys/EncryptionRiyansh");
+                    Description          = "Tenant default policy 2"; # drift
+                    Enabled              = $True;
+                    Ensure               = "Present";
+                    Identity             = "Riyansh_Policy";
+                    Name                 = "Riyansh_Policy";
+                    ApplicationId         = $ApplicationId;
+                    TenantId              = $TenantId;
+                    CertificateThumbprint = $CertificateThumbprint;
                 }
                 EXOMailboxAuditBypassAssociation 'EXOMailboxAuditBypassAssociation-Test'
                 {

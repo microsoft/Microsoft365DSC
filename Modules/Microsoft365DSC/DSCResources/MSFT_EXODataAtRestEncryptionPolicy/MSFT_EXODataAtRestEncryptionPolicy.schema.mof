@@ -1,5 +1,5 @@
-[ClassVersion("1.0.0.0"), FriendlyName("M365DataAtRestEncryptionPolicy")]
-class MSFT_M365DataAtRestEncryptionPolicy : OMI_BaseResource
+[ClassVersion("1.0.0.0"), FriendlyName("EXODataAtRestEncryptionPolicy")]
+class MSFT_EXODataAtRestEncryptionPolicy : OMI_BaseResource
 {
     [Key, Description("The Identity parameter specifies the data-at-rest encryption policy that you want to modify.")] String Identity;
     [Write, Description("The Name parameter specifies a unique name for the Microsoft 365 data-at-rest encryption policy.")] String Name;
