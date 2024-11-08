@@ -58,11 +58,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     AndroidEnrollmentAssignments = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_IntunedeviceAndAppManagementAssignmentTarget -Property @{
-                            DeviceAndAppManagementAssignmentFilterId = "FakeStringValue"
-                            GroupDisplayName = "FakeStringValue"
+                            dataType = "#microsoft.graph.configurationManagerCollectionAssignmentTarget"
                             CollectionId = "FakeStringValue"
-                            odataType = "#microsoft.graph.allDevicesAssignmentTarget"
-                            DeviceAndAppManagementAssignmentFilterType = "none"
                         } -ClientOnly)
                     )
                     AndroidOnboarded = $True
@@ -70,21 +67,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Id = "FakeStringValue"
                     IosEnrollmentAssignments = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_IntunedeviceAndAppManagementAssignmentTarget -Property @{
-                            DeviceAndAppManagementAssignmentFilterId = "FakeStringValue"
-                            GroupDisplayName = "FakeStringValue"
-                            CollectionId = "FakeStringValue"
-                            odataType = "#microsoft.graph.allDevicesAssignmentTarget"
-                            DeviceAndAppManagementAssignmentFilterType = "none"
+                            dataType = "#microsoft.graph.allDevicesAssignmentTarget"
+                            GroupDisplayName = "All devices"
                         } -ClientOnly)
                     )
                     IosOnboarded = $True
                     MacOsEnrollmentAssignments = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_IntunedeviceAndAppManagementAssignmentTarget -Property @{
-                            DeviceAndAppManagementAssignmentFilterId = "FakeStringValue"
-                            GroupDisplayName = "FakeStringValue"
-                            CollectionId = "FakeStringValue"
-                            odataType = "#microsoft.graph.allDevicesAssignmentTarget"
-                            DeviceAndAppManagementAssignmentFilterType = "none"
+                            dataType = "#microsoft.graph.allDevicesAssignmentTarget"
+                            GroupDisplayName = "All devices"
                         } -ClientOnly)
                     )
                     MacOsOnboarded = $True
@@ -100,7 +91,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-MgGroup -MockWith {
                     return @{
                         DisplayName     = "FakeStringValue"
-                        Id              = "FakeStringValue"
+                        Id              = "FakeIdValue"
                         SecurityEnabled = $true
                     }
                 }
@@ -111,7 +102,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
-            It 'Should Create the group from the Set method' {
+            It 'Should Create the Management Partner instance from the Set method' {
                 Set-TargetResource @testParams
                 Should -Invoke -CommandName New-MgBetaDeviceManagementComplianceManagementPartner -Exactly 1
             }
@@ -122,11 +113,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     AndroidEnrollmentAssignments = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_IntunedeviceAndAppManagementAssignmentTarget -Property @{
-                            DeviceAndAppManagementAssignmentFilterId = "FakeStringValue"
-                            GroupDisplayName = "FakeStringValue"
-                            CollectionId = "FakeStringValue"
-                            odataType = "#microsoft.graph.allDevicesAssignmentTarget"
-                            DeviceAndAppManagementAssignmentFilterType = "none"
+                            dataType = "#microsoft.graph.allDevicesAssignmentTarget"
+                            GroupDisplayName = 'All devices'
                         } -ClientOnly)
                     )
                     AndroidOnboarded = $True
@@ -134,20 +122,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Id = "FakeStringValue"
                     IosEnrollmentAssignments = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_IntunedeviceAndAppManagementAssignmentTarget -Property @{
-                            DeviceAndAppManagementAssignmentFilterId = "FakeStringValue"
-                            GroupDisplayName = "FakeStringValue"
-                            CollectionId = "FakeStringValue"
-                            odataType = "#microsoft.graph.allDevicesAssignmentTarget"
-                            DeviceAndAppManagementAssignmentFilterType = "none"
+                            dataType = "#microsoft.graph.allDevicesAssignmentTarget"
+                            GroupDisplayName = "All devices"
                         } -ClientOnly)
                     )
                     IosOnboarded = $True
                     MacOsEnrollmentAssignments = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_IntunedeviceAndAppManagementAssignmentTarget -Property @{
-                            DeviceAndAppManagementAssignmentFilterId = "FakeStringValue"
-                            GroupDisplayName = "FakeStringValue"
+                            dataType = "#microsoft.graph.configurationManagerCollectionAssignmentTarget"
                             CollectionId = "FakeStringValue"
-                            odataType = "#microsoft.graph.allDevicesAssignmentTarget"
+                            DeviceAndAppManagementAssignmentFilterId = "FakeStringValue"
                             DeviceAndAppManagementAssignmentFilterType = "none"
                         } -ClientOnly)
                     )
@@ -165,11 +149,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         AndroidEnrollmentAssignments = @(
                             @{
                                 Target = @{
-                                    DeviceAndAppManagementAssignmentFilterId = "FakeStringValue"
-                                    GroupId = "FakeStringValue"
-                                    CollectionId = "FakeStringValue"
                                     '@odata.type' = "#microsoft.graph.allDevicesAssignmentTarget"
-                                    DeviceAndAppManagementAssignmentFilterType = "none"
                                 }
                             }
                         )
@@ -179,11 +159,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         IosEnrollmentAssignments = @(
                             @{
                                 Target = @{
-                                    DeviceAndAppManagementAssignmentFilterId = "FakeStringValue"
-                                    GroupId = "FakeStringValue"
-                                    CollectionId = "FakeStringValue"
                                     '@odata.type' = "#microsoft.graph.allDevicesAssignmentTarget"
-                                    DeviceAndAppManagementAssignmentFilterType = "none"
                                 }
                             }
                         )
@@ -192,11 +168,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         MacOsEnrollmentAssignments = @(
                             @{
                                 Target = @{
-                                    DeviceAndAppManagementAssignmentFilterId = "FakeStringValue"
-                                    GroupId = "FakeStringValue"
-                                    CollectionId = "FakeStringValue"
-                                    '@odata.type' = "#microsoft.graph.allDevicesAssignmentTarget"
-                                    DeviceAndAppManagementAssignmentFilterType = "none"
+                                    '@odata.type' = "#microsoft.graph.configurationManagerCollectionAssignmentTarget"
+                                    collectionId = "FakeStringValue"
                                 }
                             }
                         )
@@ -209,7 +182,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-MgGroup -MockWith {
                     return @{
                         DisplayName     = "FakeStringValue"
-                        Id              = "FakeStringValue"
+                        Id              = "FakeIdValue"
                         SecurityEnabled = $true
                     }
                 }
@@ -223,21 +196,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Test-TargetResource @testParams | Should -Be $false
             }
 
-            It 'Should Remove the group from the Set method' {
+            It 'Should Remove the Management Partner instance from the Set method' {
                 Set-TargetResource @testParams
                 Should -Invoke -CommandName Remove-MgBetaDeviceManagementComplianceManagementPartner -Exactly 1
             }
         }
+
         Context -Name "The IntuneDeviceManagementComplianceManagementPartner Exists and Values are already in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
                     AndroidEnrollmentAssignments = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_IntunedeviceAndAppManagementAssignmentTarget -Property @{
-                            DeviceAndAppManagementAssignmentFilterId = "FakeStringValue"
-                            GroupDisplayName = "FakeStringValue"
-                            CollectionId = "FakeStringValue"
-                            odataType = "#microsoft.graph.allDevicesAssignmentTarget"
-                            DeviceAndAppManagementAssignmentFilterType = "none"
+                            dataType = "#microsoft.graph.allDevicesAssignmentTarget"
+                            GroupDisplayName = "All devices"
                         } -ClientOnly)
                     )
                     AndroidOnboarded = $True
@@ -245,22 +216,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Id = "FakeStringValue"
                     IosEnrollmentAssignments = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_IntunedeviceAndAppManagementAssignmentTarget -Property @{
-                            DeviceAndAppManagementAssignmentFilterId = "FakeStringValue"
-                            GroupDisplayName = "FakeStringValue"
-                            CollectionId = "FakeStringValue"
-                            odataType = "#microsoft.graph.allDevicesAssignmentTarget"
-                            DeviceAndAppManagementAssignmentFilterType = "none"
+                            GroupDisplayName = "All devices"
+                            dataType = "#microsoft.graph.allDevicesAssignmentTarget"
                         } -ClientOnly)
                     )
                     IosOnboarded = $True
-                    LastHeartbeatDateTime = "2023-01-01T00:00:00.0000000+01:00"
                     MacOsEnrollmentAssignments = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_IntunedeviceAndAppManagementAssignmentTarget -Property @{
-                            DeviceAndAppManagementAssignmentFilterId = "FakeStringValue"
-                            GroupDisplayName = "FakeStringValue"
+                            dataType = "#microsoft.graph.configurationManagerCollectionAssignmentTarget"
                             CollectionId = "FakeStringValue"
-                            odataType = "#microsoft.graph.allDevicesAssignmentTarget"
-                            DeviceAndAppManagementAssignmentFilterType = "none"
                         } -ClientOnly)
                     )
                     MacOsOnboarded = $True
@@ -277,11 +241,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         AndroidEnrollmentAssignments = @(
                             @{
                                 Target = @{
-                                    DeviceAndAppManagementAssignmentFilterId = "FakeStringValue"
-                                    GroupId = "FakeStringValue"
-                                    CollectionId = "FakeStringValue"
                                     '@odata.type' = "#microsoft.graph.allDevicesAssignmentTarget"
-                                    DeviceAndAppManagementAssignmentFilterType = "none"
                                 }
                             }
                         )
@@ -291,11 +251,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         IosEnrollmentAssignments = @(
                             @{
                                 Target = @{
-                                    DeviceAndAppManagementAssignmentFilterId = "FakeStringValue"
-                                    GroupId = "FakeStringValue"
-                                    CollectionId = "FakeStringValue"
                                     '@odata.type' = "#microsoft.graph.allDevicesAssignmentTarget"
-                                    DeviceAndAppManagementAssignmentFilterType = "none"
                                 }
                             }
                         )
@@ -304,11 +260,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         MacOsEnrollmentAssignments = @(
                             @{
                                 Target = @{
-                                    DeviceAndAppManagementAssignmentFilterId = "FakeStringValue"
-                                    GroupId = "FakeStringValue"
-                                    CollectionId = "FakeStringValue"
-                                    '@odata.type' = "#microsoft.graph.allDevicesAssignmentTarget"
-                                    DeviceAndAppManagementAssignmentFilterType = "none"
+                                    '@odata.type' = "#microsoft.graph.configurationManagerCollectionAssignmentTarget"
+                                    collectionId = "FakeStringValue"
                                 }
                             }
                         )
@@ -321,7 +274,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-MgGroup -MockWith {
                     return @{
                         DisplayName     = "FakeStringValue"
-                        Id              = "FakeStringValue"
+                        Id              = "FakeIdValue"
                         SecurityEnabled = $true
                     }
                 }
@@ -338,11 +291,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     AndroidEnrollmentAssignments = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_IntunedeviceAndAppManagementAssignmentTarget -Property @{
-                            DeviceAndAppManagementAssignmentFilterId = "FakeStringValue"
-                            GroupDisplayName = "FakeStringValue"
-                            CollectionId = "FakeStringValue"
-                            odataType = "#microsoft.graph.allDevicesAssignmentTarget"
-                            DeviceAndAppManagementAssignmentFilterType = "none"
+                            dataType = "#microsoft.graph.allDevicesAssignmentTarget"
+                            GroupDisplayName = "All devices"
                         } -ClientOnly)
                     )
                     AndroidOnboarded = $True
@@ -350,21 +300,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Id = "FakeStringValue"
                     IosEnrollmentAssignments = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_IntunedeviceAndAppManagementAssignmentTarget -Property @{
-                            DeviceAndAppManagementAssignmentFilterId = "FakeStringValue"
-                            GroupDisplayName = "FakeStringValue"
-                            CollectionId = "FakeStringValue"
-                            odataType = "#microsoft.graph.allDevicesAssignmentTarget"
-                            DeviceAndAppManagementAssignmentFilterType = "none"
+                            dataType = "#microsoft.graph.allDevicesAssignmentTarget"
+                            GroupDisplayName = "All devices"
                         } -ClientOnly)
                     )
                     IosOnboarded = $True
                     MacOsEnrollmentAssignments = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_IntunedeviceAndAppManagementAssignmentTarget -Property @{
-                            DeviceAndAppManagementAssignmentFilterId = "FakeStringValue"
-                            GroupDisplayName = "FakeStringValue"
-                            CollectionId = "FakeStringValue"
-                            odataType = "#microsoft.graph.allDevicesAssignmentTarget"
-                            DeviceAndAppManagementAssignmentFilterType = "none"
+                            dataType = "#microsoft.graph.allDevicesAssignmentTarget"
+                            GroupDisplayName = "All devices"
                         } -ClientOnly)
                     )
                     MacOsOnboarded = $True
@@ -378,11 +322,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         AndroidEnrollmentAssignments = @(
                             @{
                                 Target = @{
-                                    DeviceAndAppManagementAssignmentFilterId = "FakeStringValue"
-                                    GroupId = "FakeStringValue"
-                                    CollectionId = "FakeStringValue"
                                     '@odata.type' = "#microsoft.graph.allDevicesAssignmentTarget"
-                                    DeviceAndAppManagementAssignmentFilterType = "none"
                                 }
                             }
                         )
@@ -391,11 +331,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         IosEnrollmentAssignments = @(
                             @{
                                 Target = @{
-                                    DeviceAndAppManagementAssignmentFilterId = "FakeStringValue"
-                                    GroupId = "FakeStringValue"
-                                    CollectionId = "FakeStringValue"
                                     '@odata.type' = "#microsoft.graph.allDevicesAssignmentTarget"
-                                    DeviceAndAppManagementAssignmentFilterType = "none"
                                 }
                             }
                         )
@@ -403,11 +339,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         MacOsEnrollmentAssignments = @(
                             @{
                                 Target = @{
-                                    DeviceAndAppManagementAssignmentFilterId = "FakeStringValue"
-                                    GroupId = "FakeStringValue"
-                                    CollectionId = "FakeStringValue"
                                     '@odata.type' = "#microsoft.graph.allDevicesAssignmentTarget"
-                                    DeviceAndAppManagementAssignmentFilterType = "none"
                                 }
                             }
                         )
@@ -418,7 +350,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-MgGroup -MockWith {
                     return @{
                         DisplayName     = "FakeStringValue"
-                        Id              = "FakeStringValue"
+                        Id              = "FakeIdValue"
                         SecurityEnabled = $true
                     }
                 }
@@ -432,7 +364,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Test-TargetResource @testParams | Should -Be $false
             }
 
-            It 'Should call the Set method' {
+            It 'Should update the Management Partner instance from the Set method' {
                 Set-TargetResource @testParams
                 Should -Invoke -CommandName Update-MgBetaDeviceManagementComplianceManagementPartner -Exactly 1
             }
@@ -454,11 +386,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         AndroidEnrollmentAssignments = @(
                             @{
                                 Target = @{
-                                    DeviceAndAppManagementAssignmentFilterId = "FakeStringValue"
-                                    GroupId = "FakeStringValue"
-                                    CollectionId = "FakeStringValue"
                                     '@odata.type' = "#microsoft.graph.allDevicesAssignmentTarget"
-                                    DeviceAndAppManagementAssignmentFilterType = "none"
                                 }
                             }
                         )
@@ -468,11 +396,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         IosEnrollmentAssignments = @(
                             @{
                                 Target = @{
-                                    DeviceAndAppManagementAssignmentFilterId = "FakeStringValue"
-                                    GroupId = "FakeStringValue"
-                                    CollectionId = "FakeStringValue"
                                     '@odata.type' = "#microsoft.graph.allDevicesAssignmentTarget"
-                                    DeviceAndAppManagementAssignmentFilterType = "none"
                                 }
                             }
                         )
@@ -481,11 +405,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         MacOsEnrollmentAssignments = @(
                             @{
                                 Target = @{
-                                    DeviceAndAppManagementAssignmentFilterId = "FakeStringValue"
-                                    GroupId = "FakeStringValue"
-                                    CollectionId = "FakeStringValue"
                                     '@odata.type' = "#microsoft.graph.allDevicesAssignmentTarget"
-                                    DeviceAndAppManagementAssignmentFilterType = "none"
                                 }
                             }
                         )
@@ -498,7 +418,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-MgGroup -MockWith {
                     return @{
                         DisplayName     = "FakeStringValue"
-                        Id              = "FakeStringValue"
+                        Id              = "FakeIdValue"
                         SecurityEnabled = $true
                     }
                 }
@@ -508,6 +428,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $result | Should -Not -BeNullOrEmpty
             }
         }
+        #>
     }
 }
 

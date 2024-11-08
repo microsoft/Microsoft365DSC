@@ -222,7 +222,7 @@ function Set-TargetResource
         # so first check if it is $false, then make a post call to agree to the consent, this set the DataSharingConsetGranted to $true.
         $consentInstance = Get-MgBetaDeviceManagementDataSharingConsent -DataSharingConsentId "appleMDMPushCertificate"
         If($consentInstance.Granted -eq $False) {
-            Invoke-MgGraphRequest -Method POST -Uri $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/deviceManagement/dataSharingConsents/appleMDMPushCertificate/consentToDataSharing" -Headers @{ "Content-Type" = "application/json" }
+            Invoke-MgGraphRequest -Method POST -Uri ($Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/deviceManagement/dataSharingConsents/appleMDMPushCertificate/consentToDataSharing") -Headers @{ "Content-Type" = "application/json" }
         }
         else {
             Write-Host "Data sharing conset is already granted, so it can't be revoked."

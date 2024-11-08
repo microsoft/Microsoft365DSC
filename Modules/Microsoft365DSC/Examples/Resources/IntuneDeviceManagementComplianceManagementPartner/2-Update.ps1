@@ -23,17 +23,14 @@ Configuration Example
     {
         IntuneDeviceManagementComplianceManagementPartner '6b43c039-c1d0-4a9f-aab9-48c5531acbd6'
         {
-            AndroidEnrollmentAssignments = @(
+            IosEnrollmentAssignments = @(
                 MSFT_IntuneDeviceAndAppManagementAssignmentTarget{
-                    DeviceAndAppManagementAssignmentFilterId = "FakeStringValue"
-                    GroupDisplayName = 'SomeOtherGroup'
-                    CollectionId = '22222222-2222-2222-2222-222222222222'
-                    odataType = "#microsoft.graph.allDevicesAssignmentTarget"
-                    DeviceAndAppManagementAssignmentFilterType = "none"
+                    GroupDisplayName = 'All devices'
+                    dataType = "#microsoft.graph.allDevicesAssignmentTarget"
                 }
             )
-            AndroidOnboarded      = $True
-            DisplayName           = "3rdPartyPartnerAndroidManagement"
+            IosOnboarded          = $True
+            DisplayName           = "3rdPartyPartnerIosManagement"
             PartnerState          = "enabled"
             Ensure                = "Present"
             ApplicationId         = $ApplicationId

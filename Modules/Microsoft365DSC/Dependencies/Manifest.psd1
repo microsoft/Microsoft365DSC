@@ -13,10 +13,6 @@
             RequiredVersion = '7.2.0'
         },
         @{
-            ModuleName      = 'Az.ResourceGraph'
-            RequiredVersion = '1.0.0'
-        },
-        @{
             ModuleName      = 'Az.SecurityInsights'
             RequiredVersion = '3.1.2'
         },

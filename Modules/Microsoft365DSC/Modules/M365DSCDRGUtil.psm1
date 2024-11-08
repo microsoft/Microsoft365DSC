@@ -86,7 +86,6 @@ function Rename-M365DSCCimInstanceParameter
     {
         $hashProperties = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $result
         $keys = ($hashProperties.clone()).keys
-
         foreach ($key in $keys)
         {
             $keyName = $key.substring(0, 1).tolower() + $key.substring(1, $key.length - 1)
@@ -864,9 +863,14 @@ function ConvertFrom-IntunePolicyAssignment
         [Parameter(Mandatory = $true)]
         [Array]
         $Assignments,
+
         [Parameter()]
         [System.Boolean]
-        $IncludeDeviceFilter = $true
+        $IncludeDeviceFilter = $true<#,
+
+        [Parameter()]
+        [System.string]
+        $DataTypeName = 'dataType'#>
     )
 
     $assignmentResult = @()
@@ -900,12 +904,17 @@ function ConvertFrom-IntunePolicyAssignment
             $collectionId = $assignment.Target.AdditionalProperties.collectionId
         }
 
-        $hashAssignment.Add('dataType',$dataType)
+        $hashAssignment.Add('dataType', $dataType)
         if (-not [string]::IsNullOrEmpty($groupId))
         {
             $hashAssignment.Add('groupId', $groupId)
 
-            $group = Get-MgGroup -GroupId ($groupId) -ErrorAction SilentlyContinue
+            try {
+                $group = Get-MgGroup -GroupId $groupId -ErrorAction Stop
+            }
+            catch {
+                write-verbose "ConvertFrom-IntunePolicyAssignment: Error in Get-MgGroup: $($_.exception.message)"
+            }
             if ($null -ne $group)
             {
                 $groupDisplayName = $group.DisplayName
@@ -956,9 +965,12 @@ function ConvertTo-IntunePolicyAssignment
 
         [Parameter()]
         [System.Boolean]
-        $IncludeDeviceFilter = $true
-    )
+        $IncludeDeviceFilter = $true<#,
 
+        [Parameter()]
+        [System.String]
+        $DataTypeName = 'dataType'#>
+    )
     if ($null -eq $Assignments)
     {
         return ,@()
@@ -967,7 +979,7 @@ function ConvertTo-IntunePolicyAssignment
     $assignmentResult = @()
     foreach ($assignment in $Assignments)
     {
-        $target = @{"@odata.type" = $assignment.dataType}
+        $target = @{"@odata.type" = $assignment['dataType']}
         if ($IncludeDeviceFilter)
         {
             if ($null -ne $assignment.DeviceAndAppManagementAssignmentFilterType)
@@ -982,12 +994,29 @@ function ConvertTo-IntunePolicyAssignment
         }
         elseif ($assignment.dataType -like '*GroupAssignmentTarget')
         {
-            $group = Get-MgGroup -GroupId ($assignment.groupId) -ErrorAction SilentlyContinue
+            if ($assignment.groupId)
+            {
+                try {
+                    $group = Get-MgGroup -GroupId ($assignment.groupId) -ErrorAction SilentlyContinue
+                }
+                catch {
+                    write-verbose "ConvertTo-IntunePolicyAssignment: Error in Get-MgGroup (GroupId '$($assignment.groupId)'): $($_.exception.message)"
+                }
+            }
+            else
+            {
+                $group = $null
+            }
             if ($null -eq $group)
             {
                 if ($assignment.groupDisplayName)
                 {
-                    $group = Get-MgGroup -Filter "DisplayName eq '$($assignment.groupDisplayName)'" -ErrorAction SilentlyContinue
+                    try {
+                        $group = Get-MgGroup -Filter "DisplayName eq '$($assignment.groupDisplayName)'" -ErrorAction Stop
+                    }
+                    catch {
+                        write-verbose "ConvertTo-IntunePolicyAssignment: Error in Get-MgGroup (DisplayName '$($assignment.groupDisplayName)'): $($_.exception.message)" -ForegroundColor Yellow
+                    }
                     if ($null -eq $group)
                     {
                         $message = "Skipping assignment for the group with DisplayName {$($assignment.groupDisplayName)} as it could not be found in the directory.`r`n"

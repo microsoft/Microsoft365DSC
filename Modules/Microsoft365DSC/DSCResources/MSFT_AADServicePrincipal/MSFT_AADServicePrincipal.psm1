@@ -593,7 +593,7 @@ function Set-TargetResource
             $CSAParams = @{
                 customSecurityAttributes = $currentAADServicePrincipal.CustomSecurityAttributes
             }
-            Invoke-MgGraphRequest -Uri $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/servicePrincipals(appId='$($currentParameters.AppId)')" -Method Patch -Body $CSAParams
+            Invoke-MgGraphRequest -Uri ($Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/servicePrincipals(appId='$($currentParameters.AppId)')") -Method Patch -Body $CSAParams
         }
 
         Update-MgServicePrincipal -ServicePrincipalId $currentAADServicePrincipal.ObjectID @currentParameters
@@ -1223,7 +1223,7 @@ function Get-CustomSecurityAttributes {
         [String]$ServicePrincipalId
     )
 
-    $customSecurityAttributes = Invoke-MgGraphRequest -Uri $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/servicePrincipals/$($ServicePrincipalId)`?`$select=customSecurityAttributes" -Method Get
+    $customSecurityAttributes = Invoke-MgGraphRequest -Uri ($Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/servicePrincipals/$($ServicePrincipalId)`?`$select=customSecurityAttributes") -Method Get
     $customSecurityAttributes = $customSecurityAttributes.customSecurityAttributes
     $newCustomSecurityAttributes = @()
 

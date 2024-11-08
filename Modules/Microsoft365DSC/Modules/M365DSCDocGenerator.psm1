@@ -958,14 +958,26 @@ function Update-M365DSCResourceDocumentationPage
             'AAD*'
             { $targetFolder = 'azure-ad'
             }
+            'ADO*'
+            { $targetFolder = 'azure-devops'
+            }
+            'Azure*'
+            { $targetFolder = 'azure'
+            }
             'Defender*'
             { $targetFolder = 'Defender'
             }
             'EXO*'
             { $targetFolder = 'exchange'
             }
+            'Fabric*'
+            { $targetFolder = 'fabric'
+            }
             'Intune*'
             { $targetFolder = 'intune'
+            }
+            'M365DSC*'
+            { $targetFolder = 'general'
             }
             'O365*'
             { $targetFolder = 'office365'
@@ -982,6 +994,9 @@ function Update-M365DSCResourceDocumentationPage
             'SC*'
             { $targetFolder = 'security-compliance'
             }
+            'Sentinel*'
+            { $targetFolder = 'sentinel'
+            }
             'SPO*'
             { $targetFolder = 'sharepoint'
             }
@@ -990,6 +1005,10 @@ function Update-M365DSCResourceDocumentationPage
             }
         }
         $destinationFolder = Join-Path -Path $resourceDocsRoot -ChildPath $targetFolder
+        if ((Test-Path -Path $destinationFolder) -eq $false)
+        {
+            $null = New-Item -Path $destinationFolder -ItemType 'Directory'
+        }
         Move-Item -Path $file.FullName -Destination $destinationFolder -Force
     }
 
