@@ -26,7 +26,7 @@ Configuration Example
             IosEnrollmentAssignments = @(
                 MSFT_IntuneDeviceAndAppManagementAssignmentTarget{
                     GroupDisplayName = 'All devices'
-                    odataType = "#microsoft.graph.allDevicesAssignmentTarget"
+                    dataType = "#microsoft.graph.allDevicesAssignmentTarget"
                 }
             )
             IosOnboarded          = $True

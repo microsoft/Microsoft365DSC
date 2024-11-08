@@ -26,7 +26,7 @@ Configuration Example
             AndroidEnrollmentAssignments = @(
                 MSFT_IntuneDeviceAndAppManagementAssignmentTarget{
                     GroupDisplayName = 'All devices'
-                    odataType = "#microsoft.graph.allDevicesAssignmentTarget"
+                    dataType = "#microsoft.graph.allDevicesAssignmentTarget"
                 }
             )
             AndroidOnboarded      = $True
@@ -34,7 +34,7 @@ Configuration Example
             IosEnrollmentAssignments = @(
                 MSFT_IntuneDeviceAndAppManagementAssignmentTarget{
                     GroupDisplayName = 'SomeGroup'
-                    odataType = "#microsoft.graph.groupAssignmentTarget"
+                    dataType = "#microsoft.graph.groupAssignmentTarget"
                 }
             )
             IosOnboarded          = $True
@@ -42,7 +42,7 @@ Configuration Example
                 MSFT_IntuneDeviceAndAppManagementAssignmentTarget{
                     DeviceAndAppManagementAssignmentFilterId = "FakeStringValue"
                     CollectionId = 'SomeCollectionId'
-                    odataType = "#microsoft.graph.configurationManagerCollectionAAssignmentTarget"
+                    dataType = "#microsoft.graph.configurationManagerCollectionAAssignmentTarget"
                     DeviceAndAppManagementAssignmentFilterType = "none"
                 }
             )
