@@ -42,7 +42,7 @@ Configuration Example
                 MSFT_IntuneDeviceAndAppManagementAssignmentTarget{
                     DeviceAndAppManagementAssignmentFilterId = "FakeStringValue"
                     CollectionId = 'SomeCollectionId'
-                    dataType = "#microsoft.graph.configurationManagerCollectionAAssignmentTarget"
+                    dataType = "#microsoft.graph.configurationManagerCollectionAssignmentTarget"
                     DeviceAndAppManagementAssignmentFilterType = "none"
                 }
             )
