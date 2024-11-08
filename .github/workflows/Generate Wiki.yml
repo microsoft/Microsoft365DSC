@@ -22,7 +22,7 @@ jobs:
                -Type 'Wiki' `
                -MainModulePath 'Modules\Microsoft365DSC' `
                -ResourceModuleName 'Microsoft365DSC'
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: Upload Wiki Content
           path: D:\a\Microsoft365DSC\Microsoft365DSC\Microsoft365DSC_1.0.0_wikicontent.zip

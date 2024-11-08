@@ -272,23 +272,30 @@ function Get-TargetResource
 
     try
     {
-        $policy = Get-MgBetaDeviceAppManagementiOSManagedAppProtection -IosManagedAppProtectionId $Identity -ErrorAction SilentlyContinue
-
-        if ($null -eq $policy)
+        if (-not [System.String]::IsNullOrEmpty($Identity))
         {
-            Write-Verbose -Message "No iOS App Protection Policy {$Identity} was found"
-            $policy = Get-MgBetaDeviceAppManagementiOSManagedAppProtection -Filter "displayName eq '$DisplayName'" -ErrorAction SilentlyContinue
+            [Array]$policy = Get-MgBetaDeviceAppManagementiOSManagedAppProtection -IosManagedAppProtectionId $Identity -ErrorAction SilentlyContinue
+        }
+        if ($policy.Length -eq 0)
+        {
+            Write-Verbose -Message "No iOS App Protection Policy {$Identity} was found by Identity. Trying to retrieve by DisplayName"
+            [Array]$policy = Get-MgBetaDeviceAppManagementiOSManagedAppProtection -Filter "DisplayName eq '$DisplayName'" -ErrorAction SilentlyContinue
+        }
+
+        if ($policy.Length -gt 1)
+        {
+            throw "Multiple policies with display name {$DisplayName} were found. Please ensure only one instance exists."
         }
 
         if ($null -eq $policy)
         {
-            Write-Verbose -Message "No iOS App Protection Policy {$DisplayName} was found."
+            Write-Verbose -Message "No iOS App Protection Policy {$DisplayName} was found by Display Name. Instance doesn't exist."
             return $nullResult
         }
 
         Write-Verbose -Message "Found iOS App Protection Policy {$DisplayName}"
 
-        $policyApps = Get-MgBetaDeviceAppManagementiOSManagedAppProtectionApp -IosManagedAppProtectionId $policy.id
+        $policyApps = Get-MgBetaDeviceAppManagementiOSManagedAppProtectionApp -IosManagedAppProtectionId $policy.Id
 
         $appsArray = @()
         foreach ($app in $policyApps)
@@ -296,19 +303,26 @@ function Get-TargetResource
             $appsArray += $app.mobileAppIdentifier.additionalProperties.bundleId
         }
 
-        $policyAssignments = Get-IntuneAppProtectionPolicyiOSAssignment -IosManagedAppProtectionId $policy.id
+        $policyAssignments = Get-IntuneAppProtectionPolicyiOSAssignment -IosManagedAppProtectionId $policy.Id
         $assignmentsArray = @()
         $exclusionArray = @()
+        $ObjectGuid = [System.Guid]::empty
         foreach ($policyAssignment in $policyAssignments)
         {
+            $assignmentValue = $policyAssignment.target.groupId
+            if ([System.Guid]::TryParse($policyAssignment.target.groupId, [System.Management.Automation.PSReference]$ObjectGuid))
+            {
+                $groupInfo = Get-MgGroup -GroupId $policyAssignment.target.groupId
+                $assignmentValue = $groupInfo.DisplayName
+            }
             if ($policyAssignment.target.'@odata.type' -eq '#microsoft.graph.groupAssignmentTarget')
             {
-                $assignmentsArray += $policyAssignment.target.groupId
+                $assignmentsArray += $assignmentValue
             }
 
             if ($policyAssignment.target.'@odata.type' -eq '#microsoft.graph.exclusionGroupAssignmentTarget')
             {
-                $exclusionArray += $policyAssignment.target.groupId
+                $exclusionArray += $assignmentValue
             }
         }
 
@@ -419,7 +433,14 @@ function Get-TargetResource
             -TenantId $TenantId `
             -Credential $Credential
 
-        return $nullResult
+        if ($_.Exception.Message -eq "Multiple policies with display name {$DisplayName} were found. Please ensure only one instance exists.")
+        {
+            throw $_
+        }
+        else
+        {
+            return $nullResult
+        }
     }
 }
 
@@ -753,6 +774,7 @@ function Set-TargetResource
 
         Update-IntuneAppProtectionPolicyiOSApp -IosManagedAppProtectionId $policy.id -Apps $myApps
 
+        Write-Verbose -Message "Updating policy assignments"
         Update-IntuneAppProtectionPolicyiOSAssignment -IosManagedAppProtectionId $policy.id -Assignments $myAssignments
     }
     elseif ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Present')
@@ -796,6 +818,7 @@ function Set-TargetResource
 
         Update-IntuneAppProtectionPolicyiOSApp -IosManagedAppProtectionId $Identity -Apps $myApps
 
+        Write-Verbose -Message "Updating policy assignments: $myassignments"
         Update-IntuneAppProtectionPolicyiOSAssignment -IosManagedAppProtectionId $Identity -Assignments $myAssignments
 
     }
@@ -1267,21 +1290,34 @@ function Get-IntuneAppProtectionPolicyiOSAssignmentToHashtable
         $Parameters
     )
 
+    $ObjectGuid = [System.Guid]::empty
     $assignments = @()
     foreach ($assignment in $Parameters.Assignments)
     {
+        $assignmentValue = $assignment
+        if (-not [System.Guid]::TryParse($assignment,[System.Management.Automation.PSReference]$ObjectGuid))
+        {
+            $groupInfo = Get-MgGroup -Filter "DisplayName eq '$assignment'"
+            $assignmentValue = $groupInfo.Id
+        }
         $assignments += @{
             'target' = @{
-                groupId       = $assignment
+                groupId       = $assignmentValue
                 '@odata.type' = '#microsoft.graph.groupAssignmentTarget'
             }
         }
     }
     foreach ($exclusion in $Parameters.Exclusions)
     {
+        $assignmentValue = $exclusion
+        if (-not [System.Guid]::TryParse($exclusion,[System.Management.Automation.PSReference]$ObjectGuid))
+        {
+            $groupInfo = Get-MgGroup -Filter "DisplayName eq '$exclusion'"
+            $assignmentValue = $groupInfo.Id
+        }
         $assignments += @{
             'target' = @{
-                groupId       = $assignment
+                groupId       = $assignmentValue
                 '@odata.type' = '#microsoft.graph.exclusionGroupAssignmentTarget'
             }
         }
@@ -1334,11 +1370,12 @@ function Update-IntuneAppProtectionPolicyiOSAssignment
     try
     {
         $Url =  $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/deviceAppManagement/iosManagedAppProtections('$IosManagedAppProtectionId')/assign"
-        # Write-Verbose -Message "Group Assignment for iOS App Protection policy with JSON payload: `r`n$JSONContent"
+        $body = ($Assignments | ConvertTo-Json -Depth 20 -Compress)
+        Write-Verbose -Message "Group Assignment for iOS App Protection policy with JSON payload {$Url}: `r`n$body"
         Invoke-MgGraphRequest -Method POST `
             -Uri $Url `
-            -Body ($Assignments | ConvertTo-Json -Depth 20) `
-            -Headers @{'Content-Type' = 'application/json' } | Out-Null
+            -Body $body `
+            -Headers @{'Content-Type' = 'application/json' }
     }
     catch
     {

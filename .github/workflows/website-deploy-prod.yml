@@ -30,7 +30,7 @@ jobs:
           REACT_APP_SITE_DESCRIPTION: ${{ secrets.REACT_APP_SITE_DESCRIPTION }}
           REACT_APP_INSTRUMENTATION_KEY: ${{ secrets.REACT_APP_INSTRUMENTATION_KEY }}
       - name: Publish Artifact
-        uses: actions/upload-artifact@master
+        uses: actions/upload-artifact@4
         with:
           name: website-build
           path: ${{ github.workspace }}/generator/build
@@ -43,7 +43,7 @@ jobs:
     name: Deploy to Production
     needs: build
     steps:
-      - uses: actions/download-artifact@master
+      - uses: actions/download-artifact@4
         with:
           name: website-build
       - name: Deploy

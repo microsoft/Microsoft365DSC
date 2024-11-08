@@ -1,0 +1,30 @@
+﻿{
+    "resourceName": "M365DataAtRestEncryptionPolicy",
+    "description": "Microsoft 365 data-at-rest encryption policy for multi-workload usage.",
+    "roles": {
+        "read": [
+            "Global Reader"
+        ],
+        "update": [
+            "Exchange Administrator"
+        ]
+    },
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [],
+                "update": []
+            },
+            "application": {
+                "read": [],
+                "update": []
+            }
+        },
+        "exchange": {
+            "requiredroles": [
+                "Compliance Admin"
+            ],
+            "requiredrolegroups": "Organization Management"
+        }
+    }
+}

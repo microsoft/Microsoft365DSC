@@ -6,19 +6,28 @@ function Get-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $IsSingleInstance = 'Yes',
+        $Identity,
 
         [Parameter()]
         [System.String]
-        $Exchange,
+        $Description,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled,
 
         [Parameter()]
         [System.String]
-        $SharePoint,
+        $Name,
 
         [Parameter()]
+        [System.String[]]
+        $AzureKeyIDs,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Teams,
+        $Ensure,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -45,42 +54,53 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    New-M365DSCConnection -Workload 'MicrosoftGraph' `
+    New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters | Out-Null
 
-    #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
-    #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
     $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-    $nullResults = $PSBoundParameters
+
+    $nullResult = $PSBoundParameters
+    $nullResult.Ensure = 'Absent'
     try
     {
-        $instance = Get-MgBetaNetworkAccessSettingEnrichedAuditLog
+        if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
+        {
+            $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.Identity.Name -eq $Identity}
+        }
+        else
+        {
+            $instance = Get-M365DataAtRestEncryptionPolicy -Identity $Identity -ErrorAction Stop
+        }
+        if ($null -eq $instance)
+        {
+            return $nullResult
+        }
 
         $results = @{
-            IsSingleInstance      = 'Yes'
-            Exchange              = $instance.Exchange.Status
-            SharePoint            = $instance.SharePoint.Status
-            Teams                 = $instance.Teams.Status
-            Credential            = $Credential
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            CertificateThumbprint = $CertificateThumbprint
-            ManagedIdentity       = $ManagedIdentity.IsPresent
-            AccessTokens          = $AccessTokens
+            Identity                = $Identity
+            Description             = [System.String]$instance.Description
+            Enabled                 = [System.Boolean]$instance.Enabled
+            Name                    = [System.String]$instance.Name
+            AzureKeyIDs             = [System.String[]]$instance.AzureKeyIDs
+            Ensure                  = 'Present'
+            Credential              = $Credential
+            ApplicationId           = $ApplicationId
+            TenantId                = $TenantId
+            CertificateThumbprint   = $CertificateThumbprint
+            ManagedIdentity         = $ManagedIdentity.IsPresent
+            AccessTokens            = $AccessTokens
         }
         return [System.Collections.Hashtable] $results
     }
     catch
     {
-        Write-Verbose -Message $_
         New-M365DSCLogEntry -Message 'Error retrieving data:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
@@ -98,19 +118,28 @@ function Set-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $IsSingleInstance = 'Yes',
+        $Identity,
 
         [Parameter()]
         [System.String]
-        $Exchange,
+        $Description,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled,
 
         [Parameter()]
         [System.String]
-        $SharePoint,
+        $Name,
 
         [Parameter()]
+        [System.String[]]
+        $AzureKeyIDs,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Teams,
+        $Ensure,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -149,25 +178,27 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message 'Updating Enriched Audit Logs settings'
+    $currentInstance = Get-TargetResource @PSBoundParameters
 
-    $values = @{
-        "@odata.type" = "#microsoft.graph.networkaccess.enrichedAuditLogs"
-        exchange = @{
-            "@odata.type" = "#microsoft.graph.networkaccess.enrichedAuditLogsSettings"
-            status = $ExchangeOnline
-        }
-        sharepoint = @{
-            "@odata.type" = "#microsoft.graph.networkaccess.enrichedAuditLogsSettings"
-            status = $SharePoint
-        }
-        teams = @{
-            "@odata.type" = "#microsoft.graph.networkaccess.enrichedAuditLogsSettings"
-            status = $Teams
-        }
+    $setParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+
+    # CREATE
+    if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
+    {
+        $setParameters.Remove('Identity')
+        New-M365DataAtRestEncryptionPolicy @SetParameters
     }
-    $body = ConvertTo-Json $values -Depth 10 -Compress
-    Invoke-MgGraphRequest -Uri ($Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + 'beta/networkAccess/settings/enrichedAuditLogs') -Method PATCH -Body $body
+    # UPDATE
+    elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
+    {
+        $setParameters.Remove('AzureKeyIDs')
+        $setParameters.Remove('Name')
+        Set-M365DataAtRestEncryptionPolicy @SetParameters
+    }
+    elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
+    {
+        Write-Warning "Removal of M365DataAtRestEncryptionPolicy is not supported."
+    }
 }
 
 function Test-TargetResource
@@ -178,19 +209,28 @@ function Test-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $IsSingleInstance = 'Yes',
+        $Identity,
 
         [Parameter()]
         [System.String]
-        $Exchange,
+        $Description,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled,
 
         [Parameter()]
         [System.String]
-        $SharePoint,
+        $Name,
 
         [Parameter()]
+        [System.String[]]
+        $AzureKeyIDs,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Teams,
+        $Ensure,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -280,10 +320,9 @@ function Export-TargetResource
         $AccessTokens
     )
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
-    #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
@@ -298,38 +337,47 @@ function Export-TargetResource
     try
     {
         $Script:ExportMode = $true
+        [array] $Script:exportedInstances = Get-M365DataAtRestEncryptionPolicy -ErrorAction Stop
 
         $i = 1
         $dscContent = ''
-        if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+        if ($Script:exportedInstances.Length -eq 0)
         {
-            $Global:M365DSCExportResourceInstancesCount++
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
+        else
+        {
+            Write-Host "`r`n" -NoNewline
+        }
+        foreach ($config in $Script:exportedInstances)
+        {
+            $displayedKey = $config.Identity
+            Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -NoNewline
+            $params = @{
+                Identity              = $config.Identity
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+                ManagedIdentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
+            }
 
-        $params = @{
-            IsSingleInstance      = 'Yes'
-            Credential            = $Credential
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            CertificateThumbprint = $CertificateThumbprint
-            ManagedIdentity       = $ManagedIdentity.IsPresent
-            AccessTokens          = $AccessTokens
-         }
+            $Results = Get-TargetResource @Params
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
 
-        $Results = Get-TargetResource @Params
-        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-            -Results $Results
-
-        $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-            -ConnectionMode $ConnectionMode `
-            -ModulePath $PSScriptRoot `
-            -Results $Results `
-            -Credential $Credential
-        $dscContent += $currentDSCBlock
-        Save-M365DSCPartialExport -Content $currentDSCBlock `
-            -FileName $Global:PartialExportFileName
-        $i++
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
+            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -Credential $Credential
+            $dscContent += $currentDSCBlock
+            Save-M365DSCPartialExport -Content $currentDSCBlock `
+                -FileName $Global:PartialExportFileName
+            $i++
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+        }
         return $dscContent
     }
     catch
@@ -345,5 +393,3 @@ function Export-TargetResource
         return ''
     }
 }
-
-Export-ModuleMember -Function *-TargetResource
