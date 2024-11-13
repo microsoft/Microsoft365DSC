@@ -717,7 +717,7 @@ function Convert-AssignmentListToTargetList
     )
     process {
         #$outputParameters = [hashtable]$InputParameters.Clone()
-        if ($InputParameters.AndroidEnrollmentAssignments.Count -gt 0)
+        if ($Parameters.AndroidEnrollmentAssignments.Count -gt 0)
         {
             $androidEnrollmentAssignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter $true `
                 -Assignments $Parameters.AndroidEnrollmentAssignments #-DataTypeName '@odata.Type'
@@ -762,7 +762,6 @@ function Convert-AssignmentListToTargetList
             }
             $Parameters.MacOsEnrollmentAssignments = $macOsEnrollmentAssignmentsHash
         }
-        #outputParameters
     }
 }
 
