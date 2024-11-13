@@ -34,7 +34,7 @@ Configuration Example
                 }
             );
             BackupDirectory          = "1";
-            PasswordAgeDays_AAD      = 10;
+            passwordagedays_aad      = 10;
             AdministratorAccountName = "Administrator";
             PasswordAgeDays          = 20;
             ApplicationId         = $ApplicationId;

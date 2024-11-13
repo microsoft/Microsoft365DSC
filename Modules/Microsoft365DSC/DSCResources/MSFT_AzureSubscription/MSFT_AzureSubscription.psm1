@@ -228,7 +228,10 @@ function Set-TargetResource
     # REMOVE
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        throw "This resource cannot remove Azure subscriptions."
+        Write-Verbose -Message "Deleting subscription {$Name}"
+        $uri = "https://management.azure.com/subscriptions/$($currentInstance.Id)/providers/Microsoft.Subscription/cancel?api-version=2019-03-01-preview&ImmediateDelete=true"
+        $response = Invoke-AzRest -Uri $uri -Method POST
+        Write-Verbose -Message "Response:`r`n$($response.Content)"
     }
 }
 

@@ -1,6 +1,6 @@
-﻿{
-    "resourceName": "EXOM365DataAtRestEncryptionPolicy",
-    "description": "Microsoft 365 data-at-rest encryption policy for multi-workload usage.",
+{
+    "resourceName": "EXOMigration",
+    "description": "",
     "roles": {
         "read": [
             "Global Reader"
@@ -22,7 +22,11 @@
         },
         "exchange": {
             "requiredroles": [
-                "Compliance Admin"
+                "User Options",
+                "Data Loss Prevention",
+                "Transport Rules",
+                "View-Only Configuration",
+                "Mail Recipients"
             ],
             "requiredrolegroups": "Organization Management"
         }

@@ -22,14 +22,10 @@ Configuration Example
 
     node localhost
     {
-        EXOM365DataAtRestEncryptionPolicy "M365DataAtRestEncryptionPolicy-Riyansh_Policy"
+        IntuneAntivirusPolicyMacOS 'myIntuneAntivirusPolicyMacOS'
         {
-            AzureKeyIDs          = @("https://m365dataatrestencryption.vault.azure.net/keys/EncryptionKey","https://m365datariyansh.vault.azure.net/keys/EncryptionRiyansh");
-            Description          = "Tenant default policy 1";
-            Enabled              = $True;
-            Ensure               = "Present";
-            Identity             = "Riyansh_Policy";
-            Name                 = "Riyansh_Policy";
+            DisplayName           = 'test'
+            Ensure                = 'Absent'
             ApplicationId         = $ApplicationId;
             TenantId              = $TenantId;
             CertificateThumbprint = $CertificateThumbprint;

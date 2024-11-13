@@ -68,13 +68,13 @@ function Get-TargetResource
 
         if ($Identity -eq 'Global')
         {
-            [array]$users = Get-CsOnlineUser | Where-Object -Filter { $_.TeamsUpgradePolicy -eq $null }
+            [array]$users = Get-CsOnlineUser -Filter "TeamsUpgradePolicy eq null"
         }
         else
         {
             try
             {
-                [array]$users = Get-CsOnlineUser -Filter "TeamsUpgradePolicy -eq '$Identity'"
+                [array]$users = Get-CsOnlineUser -Filter "TeamsUpgradePolicy eq '$Identity'"
             }
             catch
             {

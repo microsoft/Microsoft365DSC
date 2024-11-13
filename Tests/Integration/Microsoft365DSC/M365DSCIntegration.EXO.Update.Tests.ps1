@@ -689,18 +689,6 @@
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                 }
-                EXOM365DataAtRestEncryptionPolicy 'M365DataAtRestEncryptionPolicy-Riyansh_Policy'
-                {
-                    AzureKeyIDs          = @("https://m365dataatrestencryption.vault.azure.net/keys/EncryptionKey","https://m365datariyansh.vault.azure.net/keys/EncryptionRiyansh");
-                    Description          = "Tenant default policy 2"; # drift
-                    Enabled              = $True;
-                    Ensure               = "Present";
-                    Identity             = "Riyansh_Policy";
-                    Name                 = "Riyansh_Policy";
-                    ApplicationId         = $ApplicationId;
-                    TenantId              = $TenantId;
-                    CertificateThumbprint = $CertificateThumbprint;
-                }
                 EXOMailboxAuditBypassAssociation 'EXOMailboxAuditBypassAssociation-Test'
                 {
                     AuditBypassEnabled   = $True;  #Updated Property
@@ -960,6 +948,23 @@
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
+                }
+                EXOMigration 'EXOMigration-test'
+                {
+                    AddUsers             = $True;  #Updated Property
+                    BadItemLimit         = "";
+                    CompleteAfter        = "12/31/9999 11:59:59 PM";
+                    Ensure               = "Present";
+                    Identity             = "test";
+                    LargeItemLimit       = "";
+                    MoveOptions          = @();
+                    NotificationEmails   = @("eac_admin@bellred.org");
+                    SkipMerging          = @();
+                    Status               = "Completed";
+                    Update               = $False;
+                    ApplicationId         = $ApplicationId;
+                    TenantId              = $TenantId;
+                    CertificateThumbprint = $CertificateThumbprint;
                 }
                 EXOMigrationEndpoint 'EXOMigrationEndpoint-testIMAP'
                 {

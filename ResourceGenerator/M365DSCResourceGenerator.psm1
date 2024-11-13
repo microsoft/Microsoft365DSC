@@ -497,6 +497,7 @@ $($userDefinitionSettings.MOF -join "`r`n")
             'Mac O S' = 'for macOS'
             'I O S' = 'for iOS'
             'A A D' = 'Azure AD'
+            'Linux' = 'for Linux'
         }
         $resourceDescription = ($ResourceName -split '_')[0] -creplace '(?<=\w)([A-Z])', ' $1'
         foreach ($platform in $platforms.keys)

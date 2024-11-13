@@ -201,7 +201,7 @@ function Get-TargetResource
 
         if ($null -eq $getValue)
         {
-            Write-Verbose -Message "Could not find an Intune Antivirus Policy Linux with Id {$Id}"
+            Write-Verbose -Message "Could not find an Intune Antivirus Policy for Linux with Id {$Id}"
 
             if (-not [System.String]::IsNullOrEmpty($DisplayName))
             {
@@ -213,11 +213,11 @@ function Get-TargetResource
         #endregion
         if ($null -eq $getValue)
         {
-            Write-Verbose -Message "Could not find an Intune Antivirus Policy Linux with Name {$DisplayName}."
+            Write-Verbose -Message "Could not find an Intune Antivirus Policy for Linux with Name {$DisplayName}."
             return $nullResult
         }
         $Id = $getValue.Id
-        Write-Verbose -Message "An Intune Antivirus Policy Linux with Id {$Id} and Name {$DisplayName} was found"
+        Write-Verbose -Message "An Intune Antivirus Policy for Linux with Id {$Id} and Name {$DisplayName} was found"
 
         # Retrieve policy specific settings
         [array]$settings = Get-MgBetaDeviceManagementConfigurationPolicySetting `
@@ -526,7 +526,7 @@ function Set-TargetResource
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        Write-Verbose -Message "Creating an Intune Antivirus Policy Linux with Name {$DisplayName}"
+        Write-Verbose -Message "Creating an Intune Antivirus Policy for Linux with Name {$DisplayName}"
         $BoundParameters.Remove("Assignments") | Out-Null
 
         $settings = Get-IntuneSettingCatalogPolicySetting `
@@ -557,7 +557,7 @@ function Set-TargetResource
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Updating the Intune Antivirus Policy Linux with Id {$($currentInstance.Id)}"
+        Write-Verbose -Message "Updating the Intune Antivirus Policy for Linux with Id {$($currentInstance.Id)}"
         $BoundParameters.Remove("Assignments") | Out-Null
 
         $settings = Get-IntuneSettingCatalogPolicySetting `
@@ -583,7 +583,7 @@ function Set-TargetResource
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing the Intune Antivirus Policy Linux with Id {$($currentInstance.Id)}"
+        Write-Verbose -Message "Removing the Intune Antivirus Policy for Linux with Id {$($currentInstance.Id)}"
         #region resource generator code
         Remove-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $currentInstance.Id
         #endregion
@@ -779,7 +779,7 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of the Intune Antivirus Policy Linux with Id {$Id} and Name {$DisplayName}"
+    Write-Verbose -Message "Testing configuration of the Intune Antivirus Policy for Linux with Id {$Id} and Name {$DisplayName}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     [Hashtable]$ValuesToCheck = @{}

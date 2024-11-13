@@ -1,16 +1,47 @@
 # Change log for Microsoft365DSC
 
-# 1.24.1106.2
+# UNRELEASED
 
+* IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicy
+  * Update property `PasswordAgeDays_AAD` to be lower-case.
+    FIXES [#5378](https://github.com/microsoft/Microsoft365DSC/issues/5378) (1/2)
+* IntuneAntivirusExclusionsPolicyMacOS
+  * Initial release.
+* IntuneAntivirusPolicyWindows10SettingCatalog
+  * Update properties to be upper-case.
+    Fixes [#5373](https://github.com/microsoft/Microsoft365DSC/issues/5373)
+* IntuneSecurityBaselineMicrosoftEdge
+  * Deprecate property `authschemes` and replace with `AuthSchemes_AuthSchemes`
+* M365DSCDRGUtil
+  * Restrict CIM instance access to properties that appear multiple times.
+  * Switch log type for not found Intune assignments to `Warning`.
+* M365DSCIntuneSettingsCatalogUtil
+  * Add ADMX handling for `edge~httpauthentication_`.
+    FIXES [#5378](https://github.com/microsoft/Microsoft365DSC/issues/5378) (2/2)
+* TeamsUpgradePolicy
+  * Changes to how we're retrieving the users to improve performance.
+* DEPENDENCIES
+  * Updated DSCParser to version 2.0.0.12.
+  * Updated MSCloudLoginAssistant to version 1.1.28.
+
+# 1.24.1106.3
+
+* AzureBillingAccountScheduledAction
+  * Initial release.
+* AzureSubscription
+  * Added the ability to delete subscriptions.
 * EXODataAtRestEncryptionPolicyAssignment
   * Initial release.
 * EXODataAtRestEncryptionPolicy
   * Initial release.
-* MISC
-  * Fixed issues with API Url's parsing.
-
+* IntuneAntivirusPolicyMacOS
+  * Initial release.
 * IntuneAntivirusExclusionsPolicyLinux
   * Initial release.
+* IntuneFirewallRulesPolicyWindows10
+  * Initial release.
+* MISC
+  * Fixed issues with API Url's parsing.
 
 # 1.24.1106.1
 
@@ -108,13 +139,13 @@
 * EXOArcConfig
   * Fixed `Test-TargetResource` to correctly check property `ArcTrustedSealers`
     when it has an array
-* EXOM365DataAtRestEncryptionPolicy
-  * Initial release.
 * EXOMailboxAuditBypassAssociation
   * Initial release.
 * EXOMailboxSettings
   * Added support for AddressBookPolicy, RetentionPolicy, RoleAssignmentPolicy
     and SharingPolicy.
+* EXOMigration
+  * Initial release.
 * EXOServicePrincipal
   * Initial release.
 * EXOTenantAllowBlockListItems

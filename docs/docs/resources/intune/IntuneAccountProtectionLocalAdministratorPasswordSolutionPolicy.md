@@ -9,7 +9,7 @@
 | **Description** | Write | String | Description of the account protection local administrator password solution policy. | |
 | **Assignments** | Write | MSFT_IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicyAssignments[] | Assignments of the account protection local administrator password solution policy. | |
 | **BackupDirectory** | Write | UInt32 | Configures which directory the local admin account password is backed up to. 0 - Disabled, 1 - Azure AD, 2 - AD | `0`, `1`, `2` |
-| **PasswordAgeDays_AAD** | Write | UInt32 | Configures the maximum password age of the managed local administrator account for Azure AD. Minimum - 7, Maximum - 365 | |
+| **passwordagedays_aad** | Write | UInt32 | Configures the maximum password age of the managed local administrator account for Azure AD. Minimum - 7, Maximum - 365 | |
 | **PasswordAgeDays** | Write | UInt32 | Configures the maximum password age of the managed local administrator account for Active Directory. Minimum - 1, Maximum - 365 | |
 | **PasswordExpirationProtectionEnabled** | Write | Boolean | Configures additional enforcement of maximum password age for the managed local administrator account. | |
 | **AdEncryptedPasswordHistorySize** | Write | UInt32 | Configures how many previous encrypted passwords will be remembered in Active Directory. Minimum - 0, Maximum - 12 | |
@@ -112,7 +112,7 @@ Configuration Example
                 }
             );
             BackupDirectory          = "1";
-            PasswordAgeDays_AAD      = 10;
+            passwordagedays_aad      = 10;
             AdministratorAccountName = "Administrator";
             PasswordAgeDays          = 20;
             ApplicationId         = $ApplicationId;
@@ -160,7 +160,7 @@ Configuration Example
                 }
             );
             BackupDirectory          = "1";
-            PasswordAgeDays_AAD      = 15; # Updated Property
+            passwordagedays_aad      = 15; # Updated Property
             AdministratorAccountName = "Administrator";
             PasswordAgeDays          = 20;
             ApplicationId         = $ApplicationId;
