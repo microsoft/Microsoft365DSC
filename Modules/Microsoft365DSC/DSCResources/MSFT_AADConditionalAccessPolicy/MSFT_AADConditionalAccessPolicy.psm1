@@ -220,6 +220,7 @@ function Get-TargetResource
         $TransferMethods,
 
         [Parameter()]
+        [ValidateSet('minor', 'moderate', 'elevated', 'unknownFutureValue')]
         [System.String]
         $InsiderRiskLevels,
 
@@ -949,6 +950,7 @@ function Set-TargetResource
         $TransferMethods,
 
         [Parameter()]
+        [ValidateSet('minor', 'moderate', 'elevated', 'unknownFutureValue')]
         [System.String]
         $InsiderRiskLevels,
 
@@ -1029,11 +1031,54 @@ function Set-TargetResource
         Write-Verbose -Message 'Set-Targetresource: create Application Condition object'
         if ($currentParameters.ContainsKey('IncludeApplications'))
         {
-            $conditions.Applications.Add('includeApplications', $IncludeApplications)
+            $IncludeApplicationsValue = @()
+            foreach ($app in $IncludeApplications)
+            {
+                $ObjectGuid = [System.Guid]::empty
+                if ([System.Guid]::TryParse($app, [System.Management.Automation.PSReference]$ObjectGuid))
+                {
+                    $IncludeApplicationsValue += $app
+                }
+                else
+                {
+                    $appInfo = Get-MgApplication -Filter "DisplayName eq '$app'" -ErrorAction SilentlyContinue
+                    if ($null -ne $appInfo)
+                    {
+                        $IncludeApplicationsValue += $appInfo.AppId
+                    }
+                    else
+                    {
+                        $IncludeApplicationsValue += $app
+                    }
+                }
+            }
+
+            $conditions.Applications.Add('includeApplications', $IncludeApplicationsValue)
         }
         if ($currentParameters.ContainsKey('excludeApplications'))
         {
-            $conditions.Applications.Add('excludeApplications', $ExcludeApplications)
+            $ExcludeApplicationsValue = @()
+            foreach ($app in $ExcludeApplications)
+            {
+                $ObjectGuid = [System.Guid]::empty
+                if ([System.Guid]::TryParse($app, [System.Management.Automation.PSReference]$ObjectGuid))
+                {
+                    $ExcludeApplicationsValue += $app
+                }
+                else
+                {
+                    $appInfo = Get-MgApplication -Filter "DisplayName eq '$app'" -ErrorAction SilentlyContinue
+                    if ($null -ne $appInfo)
+                    {
+                        $ExcludeApplicationsValue += $appInfo.AppId
+                    }
+                    else
+                    {
+                        $ExcludeApplicationsValue += $app
+                    }
+                }
+            }
+            $conditions.Applications.Add('excludeApplications', $ExcludeApplicationsValue)
         }
         if ($ApplicationsFilter -and $ApplicationsFilterMode)
         {
@@ -1586,7 +1631,7 @@ function Set-TargetResource
             }
         }
 
-        if ($null -ne $InsiderRiskLevels)
+        if ([String]::IsNullOrEmpty($InsiderRiskLevels) -eq $false)
         {
             $conditions.Add("insiderRiskLevels", $InsiderRiskLevels)
         }
@@ -2059,6 +2104,7 @@ function Test-TargetResource
         $TransferMethods,
 
         [Parameter()]
+        [ValidateSet('minor', 'moderate', 'elevated', 'unknownFutureValue')]
         [System.String]
         $InsiderRiskLevels,
 

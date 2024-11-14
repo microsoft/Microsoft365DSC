@@ -249,6 +249,21 @@ function Test-TargetResource
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
 
+    foreach ($key in $ValuesToCheck.Keys)
+    {
+        if ($null -eq $CurrentValues[$key])
+        {
+            switch -regex ($key)
+            {
+                "^ExceptIf\w+$"
+                {
+                    $CurrentValues[$key] = @()
+                    break
+                }
+            }
+        }
+    }
+
     $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `

@@ -125,7 +125,6 @@ function Get-TargetResource
 
             if ($currentomaSettings.isEncrypted -eq $true)
             {
-                write-verbose ("IsEncrypted = true -- $($currentomaSettings.displayName)")
                 $SecretReferenceValueId = $currentomaSettings.secretReferenceValueId
                 $OmaSettingPlainTextValue = Get-OmaSettingPlainTextValue -SecretReferenceValueId $SecretReferenceValueId
                 if (![String]::IsNullOrEmpty($OmaSettingPlainTextValue))
@@ -144,7 +143,7 @@ function Get-TargetResource
             $myomaSettings.Add('IsEncrypted', $currentomaSettings.isEncrypted)
             $myomaSettings.Add('OmaUri', $currentomaSettings.omaUri)
             $myomaSettings.Add('FileName', $currentomaSettings.fileName)
-            $myomaSettings.Add('Value', $currentomaSettings.value)
+            $myomaSettings.Add('Value', [System.String]$currentomaSettings.value)
             if ($currentomaSettings.'@odata.type' -eq '#microsoft.graph.omaSettingInteger')
             {
                 $myomaSettings.Add('IsReadOnly', $currentomaSettings.isReadOnly)

@@ -2,6 +2,25 @@
 
 # UNRELEASED
 
+* AADRoleEligibilityScheduleRequest
+  * Adds support for custom role assignments at app scope.
+
+# 1.24.1113.1
+
+* AADConditionalAccessPolicy
+  * Fixed bug where an empty value was passed in the request for the
+    insiderRiskLevels parameter, which throws an error.
+    FIXES [#5389](https://github.com/microsoft/Microsoft365DSC/issues/5389)
+  * Fixes a bug where 3P apps could not be assigned by DisplayName for both
+    IncludeApplications and ExcludeApplications
+    FIXES [#5390](https://github.com/microsoft/Microsoft365DSC/issues/5390)
+* AADRoleEligibilityScheduleRequest
+  * FIXES [#3787](https://github.com/microsoft/Microsoft365DSC/issues/3787)
+  * FIXES [#5089](https://github.com/microsoft/Microsoft365DSC/issues/5089)
+* EXOATPBuiltInProtectionRule, EXOEOPProtectionRule
+  * Fixed issue where empty arrays were being compared incorrectly to null
+    strings
+    FIXES [#5394](https://github.com/microsoft/Microsoft365DSC/issues/5394)
 * IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicy
   * Update property `PasswordAgeDays_AAD` to be lower-case.
     FIXES [#5378](https://github.com/microsoft/Microsoft365DSC/issues/5378) (1/2)
@@ -10,6 +29,13 @@
 * IntuneAntivirusPolicyWindows10SettingCatalog
   * Update properties to be upper-case.
     Fixes [#5373](https://github.com/microsoft/Microsoft365DSC/issues/5373)
+* IntuneDeviceConfigurationCustomPolicyWindows10
+  * Fixed issue where `Value`, from `OmaSettings`, could not be compared
+    correctly if it was boolean and set to `$False`
+    FIXES [#5384](https://github.com/microsoft/Microsoft365DSC/issues/5384)
+* IntuneEndpointDetectionAndResponsePolicyWindows10
+  * Remove changed property name from export.
+    FIXES [#5300](https://github.com/microsoft/Microsoft365DSC/issues/5300)
 * IntuneSecurityBaselineMicrosoftEdge
   * Deprecate property `authschemes` and replace with `AuthSchemes_AuthSchemes`
 * M365DSCDRGUtil
@@ -19,7 +45,7 @@
   * Add ADMX handling for `edge~httpauthentication_`.
     FIXES [#5378](https://github.com/microsoft/Microsoft365DSC/issues/5378) (2/2)
 * TeamsUpgradePolicy
-  * Changes to how we're retrieving the users to improve performance.
+  * Changes to how we are retrieving the users to improve performance.
 * DEPENDENCIES
   * Updated DSCParser to version 2.0.0.12.
   * Updated MSCloudLoginAssistant to version 1.1.28.

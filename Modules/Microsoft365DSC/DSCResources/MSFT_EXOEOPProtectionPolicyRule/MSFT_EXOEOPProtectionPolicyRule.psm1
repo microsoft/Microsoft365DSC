@@ -374,13 +374,26 @@ function Test-TargetResource
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
 
-    #Convert any DateTime to String
     foreach ($key in $ValuesToCheck.Keys)
     {
+        # Convert any DateTime to String
         if (($null -ne $CurrentValues[$key]) `
                 -and ($CurrentValues[$key].GetType().Name -eq 'DateTime'))
         {
             $CurrentValues[$key] = $CurrentValues[$key].toString()
+            continue
+        }
+
+        if ($null -eq $CurrentValues[$key])
+        {
+            switch -regex ($key)
+            {
+                "^ExceptIf\w+$|^RecipientDomainIs$|^SentTo(\w+)?$"
+                {
+                    $CurrentValues[$key] = @()
+                    break
+                }
+            }
         }
     }
 

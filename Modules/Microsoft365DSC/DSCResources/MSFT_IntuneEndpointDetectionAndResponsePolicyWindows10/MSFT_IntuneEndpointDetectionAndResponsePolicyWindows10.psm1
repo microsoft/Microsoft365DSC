@@ -122,6 +122,7 @@ function Get-TargetResource
         [array]$settings = Get-MgBetaDeviceManagementConfigurationPolicySetting `
             -DeviceManagementConfigurationPolicyId $Identity `
             -ExpandProperty 'settingDefinitions' `
+            -All `
             -ErrorAction Stop
 
         $policySettings = @{}
@@ -130,7 +131,7 @@ function Get-TargetResource
         $policySettings.Remove('ClientConfigurationPackageType')
         $policySettings.Remove('onboarding')
         $policySettings.Remove('offboarding')
-        $policySettings.Remove('autofromconnector')
+        $policySettings.Remove('onboarding_fromconnector')
 
         # Removing TelemetryReportingFrequency because it's deprecated and doesn't need to be evaluated and enforced
         $policySettings.Remove('telemetryreportingfrequency')
