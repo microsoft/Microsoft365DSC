@@ -328,7 +328,6 @@ function Set-TargetResource
 
     $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
-
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating an Intune Device Management Compliance Management Partner with DisplayName {$DisplayName}"
@@ -345,7 +344,7 @@ function Set-TargetResource
             }
         }
 
-        #Assignments in DSC are flattened and must be re-inflated so each assignment refer to targets
+        #Assignments in DSC are flattened and must be re-inflated so each assignment refer to one or more targets
         Convert-AssignmentListToTargetList -Parameters $createParameters
 
         #region resource generator code
@@ -370,7 +369,7 @@ function Set-TargetResource
             }
         }
 
-        #Assignments in DSC are flattened and must be re-inflated so each assignment refer to targets
+        #Assignments in DSC are flattened and must be re-inflated so each assignment refer to one or more targets
         Convert-AssignmentListToTargetList -Parameters $updateParameters
 
         #region resource generator code
@@ -715,7 +714,12 @@ function Convert-AssignmentListToTargetList
         [Parameter(Mandatory)]
         [System.Collections.Hashtable]$Parameters
     )
-    process {
+    begin
+    {
+        $calledBy = $null
+    }
+    process
+    {
         #$outputParameters = [hashtable]$InputParameters.Clone()
         if ($Parameters.AndroidEnrollmentAssignments.Count -gt 0)
         {
@@ -723,12 +727,34 @@ function Convert-AssignmentListToTargetList
                 -Assignments $Parameters.AndroidEnrollmentAssignments #-DataTypeName '@odata.Type'
             if ($androidEnrollmentAssignmentsHash.Count -ne $Parameters.AndroidEnrollmentAssignments.Count)
             {
+                if ($null -eq $calledBy)
+                {
+                    $calledBy = Get-PSCallStack | Select-Object -Skip 1 -First 1 -ExpandProperty InvocationInfo
+                }
                 Add-M365DSCEvent -Message "One or more group-assignments in AndroidEnrollmentAssignments refer to unknown groups" `
-                    -Source $MyInvocation.MyCommand.Name `
+                    -Source $calledBy.MyCommand.Source `
                     -EntryType Error `
                     -EventId 29 `
                     -EventType Error `
                     -TenantId $TenantId
+            }
+            $collectionsOk = $true
+            foreach ($assigment in $Parameters.AndroidEnrollmentAssignments)
+            {
+                if ($assignment.dataType -match 'Collection' -and $null -eq $assignment.CollectionId)
+                {
+                    $collectionsOk = $false
+                }
+            }
+            if (-not $collectionsOk)
+            {
+                Add-M365DSCEvent -Message "One or more collection-assignments in AndroidEnrollmentAssignments is missing a CollectionId" `
+                    -Source $calledBy.MyCommand.Source `
+                    -EntryType Error `
+                    -EventId 39 `
+                    -EventType Error `
+                    -TenantId $TenantId
+
             }
             $Parameters.AndroidEnrollmentAssignments = $androidEnrollmentAssignmentsHash
         }
@@ -738,12 +764,34 @@ function Convert-AssignmentListToTargetList
                 -Assignments $Parameters.IosEnrollmentAssignments #-DataTypeName '@odata.Type'
             if ($iosEnrollmentAssignmentsHash.Count -ne $Parameters.IosEnrollmentAssignments.Count)
             {
+                if ($null -eq $calledBy)
+                {
+                    $calledBy = Get-PSCallStack | Select-Object -Skip 1 -First 1 -ExpandProperty InvocationInfo
+                }
                 Add-M365DSCEvent -Message "One or more group-assignments in IosEnrollmentAssignments refer to unknown groups" `
-                    -Source $MyInvocation.MyCommand.Name `
+                    -Source $calledBy.MyCommand.Source `
                     -EntryType Error `
-                    -EventId 29 `
+                    -EventId 39 `
                     -EventType Error `
                     -TenantId $TenantId
+            }
+            $collectionsOk = $true
+            foreach ($assigment in $Parameters.IosEnrollmentAssignments)
+            {
+                if ($assignment.dataType -match 'Collection' -and $null -eq $assignment.CollectionId)
+                {
+                    $collectionsOk = $false
+                }
+            }
+            if (-not $collectionsOk)
+            {
+                Add-M365DSCEvent -Message "One or more collection-assignments in IosEnrollmentAssignments is missing a CollectionId" `
+                    -Source $calledBy.MyCommand.Source `
+                    -EntryType Error `
+                    -EventId 39 `
+                    -EventType Error `
+                    -TenantId $TenantId
+
             }
             $Parameters.IosEnrollmentAssignments = $iosEnrollmentAssignmentsHash
         }
@@ -753,12 +801,34 @@ function Convert-AssignmentListToTargetList
                 -Assignments $Parameters.MacOsEnrollmentAssignments #-DataTypeName '@odata.Type'
             if ($macOsEnrollmentAssignmentsHash.Count -ne $Parameters.MacOsEnrollmentAssignments.Count)
             {
+                if ($null -eq $calledBy)
+                {
+                    $calledBy = Get-PSCallStack | Select-Object -Skip 1 -First 1 -ExpandProperty InvocationInfo
+                }
                 Add-M365DSCEvent -Message "One or more group-assignments in MacOsEnrollmentAssignments refer to unknown groups" `
-                    -Source $MyInvocation.MyCommand.Name `
+                    -Source $calledBy.MyCommand.Source `
                     -EntryType Error `
                     -EventId 29 `
                     -EventType Error `
                     -TenantId $TenantId
+            }
+            $collectionsOk = $true
+            foreach ($assigment in $Parameters.MacOsEnrollmentAssignments)
+            {
+                if ($assignment.dataType -match 'Collection' -and $null -eq $assignment.CollectionId)
+                {
+                    $collectionsOk = $false
+                }
+            }
+            if (-not $collectionsOk)
+            {
+                Add-M365DSCEvent -Message "One or more collection-assignments in MacOsEnrollmentAssignments is missing a CollectionId" `
+                    -Source $calledBy.MyCommand.Source `
+                    -EntryType Error `
+                    -EventId 39 `
+                    -EventType Error `
+                    -TenantId $TenantId
+
             }
             $Parameters.MacOsEnrollmentAssignments = $macOsEnrollmentAssignmentsHash
         }
