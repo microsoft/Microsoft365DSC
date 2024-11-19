@@ -1807,13 +1807,15 @@ function Get-IntuneSettingCatalogPolicySettingInstanceValue
                 ($Level -eq 1 -and $SettingDefinition.AdditionalProperties.maximumCount -gt 1 -and $groupSettingCollectionDefinitionChildren.Count -ge 1 -and $groupSettingCollectionDefinitionChildren.AdditionalProperties.'@odata.type' -notcontains "#microsoft.graph.deviceManagementConfigurationSettingGroupCollectionDefinition"))
             {
                 $SettingInstanceName += Get-SettingsCatalogSettingName -SettingDefinition $SettingDefinition -AllSettingDefinitions $AllSettingDefinitions
+                $settingInstanceNameAlternate = $SettingInstanceName + "_Intune"
                 $cimDSCParams = @()
                 $cimDSCParamsName = ""
-                $DSCParams.GetEnumerator() | Where-Object -FilterScript {
-                    $_.Value.CimClass.CimClassName -contains $SettingInstanceName
-                } | Foreach-Object -Process {
-                    $cimDSCParams += $_.Value
-                    $cimDSCParamsName = $_.Key
+                $DSCParams.GetEnumerator() | ForEach-Object {
+                    if ($_.Value.CimClass.CimClassName -eq $SettingInstanceName -or $_.Value.CimClass.CimClassName -like "$settingInstanceNameAlternate*")
+                    {
+                        $cimDSCParams += $_.Value
+                        $cimDSCParamsName = $_.Key
+                    }
                 }
                 $newDSCParams = @{
                     $cimDSCParamsName = @()

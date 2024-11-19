@@ -2,8 +2,24 @@
 
 # UNRELEASED
 
+* AADConditionalAccessPolicy
+  * Fixed bug where a null value was passed in the request for the
+    excludePlatforms parameter when just values were assigned to includePlatforms, which throws an error.
+  * Fixed bug where a null value was passed in the request for the
+    sessionControl parameter when there are no session controls, which throws an error.
+  * Fixed bug where a null value was passed in the request for the
+    applicationEnforcedRestrictions parameter when value was set to false, which throws an error.
 * AADRoleEligibilityScheduleRequest
   * Adds support for custom role assignments at app scope.
+* IntuneDeviceConfigurationPolicyAndroidDeviceOwner
+  * Fixed issue when properties `DetailedHelpText`,
+    `DeviceOwnerLockScreenMessage` or `ShortHelpText` were defined but the
+    request was not being sent correctly
+    FIXES [#5411](https://github.com/microsoft/Microsoft365DSC/issues/5411)
+* IntuneFirewallRulesHyperVPolicyWindows10
+  * Initial release.
+* M365DSCDRGUtil
+  * Improve CIM instance detection for specific Intune resources.
 
 # 1.24.1113.1
 
@@ -17,6 +33,8 @@
 * AADRoleEligibilityScheduleRequest
   * FIXES [#3787](https://github.com/microsoft/Microsoft365DSC/issues/3787)
   * FIXES [#5089](https://github.com/microsoft/Microsoft365DSC/issues/5089)
+* AzureBillingAccountPolicy
+  * Initial release.
 * EXOATPBuiltInProtectionRule, EXOEOPProtectionRule
   * Fixed issue where empty arrays were being compared incorrectly to null
     strings

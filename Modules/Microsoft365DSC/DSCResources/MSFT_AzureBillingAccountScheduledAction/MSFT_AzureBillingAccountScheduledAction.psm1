@@ -81,7 +81,7 @@ function Get-TargetResource
     $nullResult.Ensure = 'Absent'
     try
     {
-        $uri = "https://management.azure.com/providers/Microsoft.Billing/billingAccounts/$($account.name)/providers/Microsoft.CostManagement/scheduledActions?api-version=2023-11-01"
+        $uri = "https://management.azure.com/providers/Microsoft.Billing/billingAccounts/$($BillingAccount)/providers/Microsoft.CostManagement/scheduledActions?api-version=2023-11-01"
         $response = Invoke-AzRest -Uri $uri -Method GET
         $actions = (ConvertFrom-Json ($response.Content)).value
 
