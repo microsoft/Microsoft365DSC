@@ -1485,13 +1485,11 @@ function Set-TargetResource
                 if (-not $conditions.Contains('platforms'))
                 {
                     $conditions.Add('platforms', @{
-                            excludePlatforms = @()
                             includePlatforms = @()
                         })
                 }
                 else
                 {
-                    $conditions.platforms.Add('excludePlatforms', @())
                     $conditions.platforms.Add('includePlatforms', @())
                 }
                 Write-Verbose -Message "Set-Targetresource: IncludePlatforms: $IncludePlatforms"
@@ -1504,8 +1502,11 @@ function Set-TargetResource
                     $conditions.platforms.includePlatforms = @() + $IncludePlatforms
                 }
                 #no translation or conversion needed
-                Write-Verbose -Message "Set-Targetresource: ExcludePlatforms: $ExcludePlatforms"
-                $conditions.platforms.excludePlatforms = @() + $ExcludePlatforms
+                if (([Array]$ExcludePlatforms).Length -ne 0)
+                {
+                    $conditions.platforms.Add('excludePlatforms', @())
+                    $conditions.platforms.excludePlatforms = @() + $ExcludePlatforms
+                }
                 #no translation or conversion needed
             }
             else
@@ -1729,18 +1730,16 @@ function Set-TargetResource
             $NewParameters.Add('grantControls', $GrantControls)
         }
 
-        Write-Verbose -Message 'Set-Targetresource: process session controls'
-
-        $sessioncontrols = $null
         if ($ApplicationEnforcedRestrictionsIsEnabled -or $CloudAppSecurityIsEnabled -or $SignInFrequencyIsEnabled -or $PersistentBrowserIsEnabled)
         {
+            Write-Verbose -Message 'Set-Targetresource: process session controls'
+            $sessioncontrols = $null
             Write-Verbose -Message 'Set-Targetresource: create provision Session Control object'
-            $sessioncontrols = @{
-                applicationEnforcedRestrictions = @{}
-            }
+            $sessioncontrols = @{}
 
             if ($ApplicationEnforcedRestrictionsIsEnabled -eq $true)
             {
+                $sessioncontrols.Add('applicationEnforcedRestrictions', @{})
                 #create and provision ApplicationEnforcedRestrictions object if used
                 $sessioncontrols.applicationEnforcedRestrictions.Add('IsEnabled', $true)
             }
@@ -1798,9 +1797,9 @@ function Set-TargetResource
                 $sessioncontrols.persistentBrowser.isEnabled = $true
                 $sessioncontrols.persistentBrowser.mode = $PersistentBrowserMode
             }
+            $NewParameters.Add('sessionControls', $sessioncontrols)
+            #add SessionControls to the parameter list
         }
-        $NewParameters.Add('sessionControls', $sessioncontrols)
-        #add SessionControls to the parameter list
     }
 
     Write-Host "newparameters: $($NewParameters | ConvertTo-Json -Depth 5)"

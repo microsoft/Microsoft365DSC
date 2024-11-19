@@ -667,7 +667,7 @@ function Get-TargetResource
 
         $complexAzureAdSharedDeviceDataClearApps = @()
         $currentValueArray = $getValue.AdditionalProperties.azureAdSharedDeviceDataClearApps
-        if ($null -ne $currentValueArray -and $currentValueArray.count -gt 0 )
+        if ($null -ne $currentValueArray -and $currentValueArray.count -gt 0)
         {
             foreach($currentValue in $currentValueArray)
             {
@@ -686,10 +686,10 @@ function Get-TargetResource
         $currentValue = $getValue.AdditionalProperties.detailedHelpText
         if ($null -ne $currentValue)
         {
-            $complexDetailedHelpText.Add('DefaultMessage',$currentValue.defaultMessage)
+            $complexDetailedHelpText.Add('DefaultMessage', $currentValue.defaultMessage)
             $complexLocalizedMessages = @()
             $currentValueArray = $currentValue.localizedMessages
-            if ($null -ne $currentValueArray -and $currentValueArray.count -gt 0 )
+            if ($null -ne $currentValueArray -and $currentValueArray.count -gt 0)
             {
                 foreach($currentChildValue in $currentValueArray)
                 {
@@ -700,17 +700,17 @@ function Get-TargetResource
                     $complexLocalizedMessages += $currentHash
                 }
             }
-            $complexDetailedHelpText.Add('LocalizedMessages',$complexLocalizedMessages)
+            $complexDetailedHelpText.Add('LocalizedMessages', $complexLocalizedMessages)
         }
 
         $complexDeviceOwnerLockScreenMessage = @{}
         $currentValue = $getValue.AdditionalProperties.deviceOwnerLockScreenMessage
         if ($null -ne $currentValue)
         {
-            $complexDeviceOwnerLockScreenMessage.Add('DefaultMessage',$currentValue.defaultMessage)
+            $complexDeviceOwnerLockScreenMessage.Add('DefaultMessage', $currentValue.defaultMessage)
             $complexLocalizedMessages = @()
             $currentValueArray = $currentValue.localizedMessages
-            if ($null -ne $currentValueArray -and $currentValueArray.count -gt 0 )
+            if ($null -ne $currentValueArray -and $currentValueArray.count -gt 0)
             {
                 foreach($currentChildValue in $currentValueArray)
                 {
@@ -721,48 +721,48 @@ function Get-TargetResource
                     $complexLocalizedMessages += $currentHash
                 }
             }
-            $complexDeviceOwnerLockScreenMessage.Add('LocalizedMessages',$complexLocalizedMessages)
+            $complexDeviceOwnerLockScreenMessage.Add('LocalizedMessages', $complexLocalizedMessages)
         }
 
         $complexGlobalProxy = @{}
         $currentValue = $getValue.AdditionalProperties.globalProxy
         if ($null -ne $currentValue)
         {
-            $complexGlobalProxy.Add('ProxyAutoConfigURL',$currentValue.proxyAutoConfigURL)
-            $complexGlobalProxy.Add('ExcludedHosts',$currentValue.excludedHosts)
-            $complexGlobalProxy.Add('Host',$currentValue.host)
-            $complexGlobalProxy.Add('Port',$currentValue.port)
-            $complexGlobalProxy.Add('oDataType',$currentValue.'@odata.type')
+            $complexGlobalProxy.Add('ProxyAutoConfigURL', $currentValue.proxyAutoConfigURL)
+            $complexGlobalProxy.Add('ExcludedHosts', $currentValue.excludedHosts)
+            $complexGlobalProxy.Add('Host', $currentValue.host)
+            $complexGlobalProxy.Add('Port', $currentValue.port)
+            $complexGlobalProxy.Add('oDataType', $currentValue.'@odata.type')
         }
 
         $complexKioskModeApps = @()
         $currentValueArray = $getValue.AdditionalProperties.kioskModeApps
-        if ($null -ne $currentValueArray -and $currentValueArray.count -gt 0 )
+        if ($null -ne $currentValueArray -and $currentValueArray.count -gt 0)
         {
             foreach($currentValue in $currentValueArray)
             {
                 $currentHash = @{}
-                $currentHash.add('AppId',$currentValue.appid)
-                $currentHash.add('Publisher',$currentValue.publisher)
-                $currentHash.add('AppStoreUrl',$currentValue.appStoreUrl)
-                $currentHash.add('Name',$currentValue.name)
-                $currentHash.add('oDataType',$currentValue.'@odata.type')
+                $currentHash.add('AppId', $currentValue.appid)
+                $currentHash.add('Publisher', $currentValue.publisher)
+                $currentHash.add('AppStoreUrl', $currentValue.appStoreUrl)
+                $currentHash.add('Name', $currentValue.name)
+                $currentHash.add('oDataType', $currentValue.'@odata.type')
                 $complexKioskModeApps += $currentHash
             }
         }
 
         $complexPersonalProfilePersonalApplications = @()
         $currentValueArray = $getValue.AdditionalProperties.personalProfilePersonalApplications
-        if ($null -ne $currentValueArray -and $currentValueArray.count -gt 0 )
+        if ($null -ne $currentValueArray -and $currentValueArray.count -gt 0)
         {
             foreach($currentValue in $currentValueArray)
             {
                 $currentHash = @{}
-                $currentHash.add('AppId',$currentValue.appid)
-                $currentHash.add('Publisher',$currentValue.publisher)
-                $currentHash.add('AppStoreUrl',$currentValue.appStoreUrl)
-                $currentHash.add('Name',$currentValue.name)
-                $currentHash.add('oDataType',$currentValue.'@odata.type')
+                $currentHash.add('AppId', $currentValue.appid)
+                $currentHash.add('Publisher', $currentValue.publisher)
+                $currentHash.add('AppStoreUrl', $currentValue.appStoreUrl)
+                $currentHash.add('Name', $currentValue.name)
+                $currentHash.add('oDataType', $currentValue.'@odata.type')
                 $complexPersonalProfilePersonalApplications += $currentHash
             }
         }
@@ -771,10 +771,10 @@ function Get-TargetResource
         $currentValue = $getValue.AdditionalProperties.shortHelpText
         if ($null -ne $currentValue)
         {
-            $complexShortHelpText.Add('DefaultMessage',$currentValue.defaultMessage)
+            $complexShortHelpText.Add('DefaultMessage', $currentValue.defaultMessage)
             $complexLocalizedMessages = @()
             $currentValueArray = $currentValue.localizedMessages
-            if ($null -ne $currentValueArray -and $currentValueArray.count -gt 0 )
+            if ($null -ne $currentValueArray -and $currentValueArray.count -gt 0)
             {
                 foreach($currentChildValue in $currentValueArray)
                 {
@@ -785,20 +785,20 @@ function Get-TargetResource
                     $complexLocalizedMessages += $currentHash
                 }
             }
-            $complexShortHelpText.Add('LocalizedMessages',$complexLocalizedMessages)
+            $complexShortHelpText.Add('LocalizedMessages', $complexLocalizedMessages)
         }
 
         $complexSystemUpdateFreezePeriods = @()
         $currentValueArray = $getValue.AdditionalProperties.systemUpdateFreezePeriods
-        if ($null -ne $currentValueArray -and $currentValueArray.count -gt 0 )
+        if ($null -ne $currentValueArray -and $currentValueArray.count -gt 0)
         {
             foreach($currentValue in $currentValueArray)
             {
                 $currentHash = @{}
-                $currentHash.Add('StartDay',$currentValue.startDay)
-                $currentHash.Add('EndDay',$currentValue.endDay)
-                $currentHash.Add('StartMonth',$currentValue.startMonth)
-                $currentHash.Add('EndMonth',$currentValue.endMonth)
+                $currentHash.Add('StartDay', $currentValue.startDay)
+                $currentHash.Add('EndDay', $currentValue.endDay)
+                $currentHash.Add('StartMonth', $currentValue.startMonth)
+                $currentHash.Add('EndMonth', $currentValue.endMonth)
                 $complexSystemUpdateFreezePeriods += $currentHash
             }
         }
@@ -1644,6 +1644,19 @@ function Set-TargetResource
 
         foreach ($key in ($CreateParameters.clone()).Keys)
         {
+            if ($key -eq 'DetailedHelpText' -or $key -eq 'DeviceOwnerLockScreenMessage' -or $key -eq 'ShortHelpText')
+            {
+                if ($null -ne $CreateParameters.$key.DefaultMessage -or $null -ne $CreateParameters.$key.LocalizedMessages)
+                {
+                    $CreateParameters.$key.Add('@odata.type', '#microsoft.graph.androidDeviceOwnerUserFacingMessage')
+                }
+
+                if ($null -eq $CreateParameters.$key.LocalizedMessages)
+                {
+                    $CreateParameters.$key.Add('localizedMessages', @())
+                }
+            }
+
             if ($CreateParameters[$key].getType().Fullname -like '*CimInstance*')
             {
                 $CreateParameters[$key] = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters[$key]
@@ -1684,6 +1697,19 @@ function Set-TargetResource
 
         foreach ($key in (($UpdateParameters.clone()).Keys | Sort-Object))
         {
+            if ($key -eq 'DetailedHelpText' -or $key -eq 'DeviceOwnerLockScreenMessage' -or $key -eq 'ShortHelpText')
+            {
+                if ($null -ne $UpdateParameters.$key.DefaultMessage -or $null -ne $UpdateParameters.$key.LocalizedMessages)
+                {
+                    $UpdateParameters.$key.Add('@odata.type', '#microsoft.graph.androidDeviceOwnerUserFacingMessage')
+                }
+
+                if ($null -eq $UpdateParameters.$key.LocalizedMessages)
+                {
+                    $UpdateParameters.$key.Add('localizedMessages', @())
+                }
+            }
+
             if ($UpdateParameters.$key.getType().Fullname -like '*CimInstance*')
             {
                 $UpdateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters.$key
