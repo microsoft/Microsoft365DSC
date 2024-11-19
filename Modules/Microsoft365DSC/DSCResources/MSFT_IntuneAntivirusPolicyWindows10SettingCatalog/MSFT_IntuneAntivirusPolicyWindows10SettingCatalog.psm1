@@ -19,151 +19,156 @@ function Get-TargetResource
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $allowarchivescanning,
+        $AllowArchiveScanning,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $allowbehaviormonitoring,
+        $AllowBehaviorMonitoring,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $allowcloudprotection,
+        $AllowCloudProtection,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $allowdatagramprocessingonwinserver,
+        $AllowDatagramProcessingOnWinServer,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $allowemailscanning,
+        $AllowEmailScanning,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $allowfullscanonmappednetworkdrives,
+        $AllowFullScanOnMappedNetworkDrives,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $allowfullscanremovabledrivescanning,
+        $AllowFullScanRemovableDriveScanning,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $allowintrusionpreventionsystem,
+        $AllowIntrusionPreventionSystem,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $allowioavprotection,
+        $AllowIOAVProtection,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $allownetworkprotectiondownlevel,
+        $AllowNetworkProtectionDownLevel,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $allowrealtimemonitoring,
+        $AllowOnAccessProtection,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $allowscanningnetworkfiles,
+        $AllowRealtimeMonitoring,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $allowscriptscanning,
+        $AllowScanningNetworkFiles,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $allowuseruiaccess,
+        $AllowScriptScanning,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $AllowUserUIAccess,
 
         [Parameter()]
         [System.int32]
-        $avgcpuloadfactor,
+        $AvgCPULoadFactor,
 
         [Parameter()]
         [System.Int32]
-        $archivemaxdepth,
+        $ArchiveMaxDepth,
 
         [Parameter()]
         [System.Int32]
-        $archivemaxsize,
+        $ArchiveMaxSize,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $checkforsignaturesbeforerunningscan,
+        $CheckForSignaturesBeforeRunningScan,
 
         [Parameter()]
         [ValidateSet('0', '2', '4', '6')]
         [System.String]
-        $cloudblocklevel,
+        $CloudBlockLevel,
 
         [Parameter()]
         [System.Int32]
-        $cloudextendedtimeout,
+        $CloudExtendedTimeout,
 
         [Parameter()]
         [System.String]
-        $companyname,
+        $CompanyName,
 
         [Parameter()]
         [System.Int32]
-        $daystoretaincleanedmalware,
+        $DaysToRetainCleanedMalware,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $disableaccountprotectionui,
+        $DisableAccountProtectionUI,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $disableappbrowserui,
+        $DisableAppBrowserUI,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $disablecleartpmbutton,
+        $DisableClearTpmButton,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $disabledevicesecurityui,
+        $DisableDeviceSecurityUI,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $disablednsovertcpparsing,
+        $DisableDnsOverTcpParsing,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $disableenhancednotifications,
+        $DisableEnhancedNotifications,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $disablefamilyui,
+        $DisableFamilyUI,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $disablehealthui,
+        $DisableHealthUI,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $disablehttpparsing,
+        $DisableHttpParsing,
 
         [Parameter()]
         [ValidateSet('1', '0')]
@@ -173,203 +178,208 @@ function Get-TargetResource
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $disablenetworkui,
+        $DisableNetworkUI,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $disabletpmfirmwareupdatewarning,
+        $DisableTpmFirmwareUpdateWarning,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $disablevirusui,
+        $DisableVirusUI,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $disablecatchupfullscan,
+        $DisableCatchupFullScan,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $disablecatchupquickscan,
-
-        [Parameter()]
-        [System.String]
-        $email,
+        $DisableCatchupQuickScan,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $enablecustomizedtoasts,
+        $DisableCoreServiceECSIntegration,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $enableinappcustomization,
+        $DisableCoreServiceTelemetry,
+
+        [Parameter()]
+        [System.String]
+        $Email,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $enablelowcpupriority,
+        $EnableCustomizedToasts,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $EnableInAppCustomization,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $EnableLowCPUPriority,
 
         [Parameter()]
         [ValidateSet('0', '1', '2')]
         [System.String]
-        $enablenetworkprotection,
+        $EnableNetworkProtection,
 
         [Parameter()]
         [System.String[]]
-        $excludedextensions,
+        $ExcludedExtensions,
 
         [Parameter()]
         [System.String[]]
-        $excludedpaths,
+        $ExcludedPaths,
 
         [Parameter()]
         [System.String[]]
-        $excludedprocesses,
+        $ExcludedProcesses,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $hideransomwaredatarecovery,
+        $HideRansomwareDataRecovery,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $hidewindowssecuritynotificationareacontrol,
+        $HideWindowsSecurityNotificationAreaControl,
 
         [Parameter()]
         [System.String]
-        $phone,
+        $Phone,
 
         [Parameter()]
         [ValidateSet('0', '1', '2')]
         [System.String]
-        $puaprotection,
+        $PUAProtection,
 
         [Parameter()]
         [ValidateSet('0', '2', '3', '4', '5', '6')]
         [System.String]
-        $engineupdateschannel,
+        $EngineUpdatesChannel,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $meteredconnectionupdates,
+        $MeteredConnectionUpdates,
 
         [Parameter()]
         [ValidateSet('0', '2', '3', '4', '5', '6')]
         [System.String]
-        $platformupdateschannel,
+        $PlatformUpdatesChannel,
 
         [Parameter()]
         [ValidateSet('0', '4', '5')]
         [System.String]
-        $securityintelligenceupdateschannel,
+        $SecurityIntelligenceUpdatesChannel,
 
         [Parameter()]
         [ValidateSet('0', '1', '2')]
         [System.String]
-        $realtimescandirection,
+        $RealTimeScanDirection,
 
         [Parameter()]
         [ValidateSet('1', '2')]
         [System.String]
-        $scanparameter,
+        $ScanParameter,
 
         [Parameter()]
         [System.Int32]
-        $schedulequickscantime,
+        $ScheduleQuickScanTime,
 
         [Parameter()]
         [ValidateSet('0', '1', '2', '3', '4', '5', '6', '7', '8')]
         [System.String]
-        $schedulescanday,
+        $ScheduleScanDay,
 
         [Parameter()]
         [ValidateRange(0, 1380)]
         [System.Int32]
-        $schedulescantime,
+        $ScheduleScanTime,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $disabletlsparsing,
+        $DisableTlsParsing,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $randomizescheduletasktimes,
+        $RandomizeScheduleTaskTimes,
 
         [Parameter()]
         [ValidateRange(1,23)]
         [System.Int32]
-        $schedulerrandomizationtime,
+        $SchedulerRandomizationTime,
 
         [Parameter()]
         [System.String[]]
-        $signatureupdatefallbackorder,
+        $SignatureUpdateFallbackOrder,
 
         [Parameter()]
         [System.String[]]
-        $signatureupdatefilesharessources,
+        $SignatureUpdateFileSharesSources,
 
         [Parameter()]
         [ValidateRange(0, 24)]
         [System.Int32]
-        $signatureupdateinterval,
+        $SignatureUpdateInterval,
 
         [Parameter()]
         [ValidateSet('0', '1', '2', '3')]
         [System.String]
-        $submitsamplesconsent,
+        $SubmitSamplesConsent,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $tamperprotection,
+        $TamperProtection,
 
         [Parameter()]
         [System.String]
-        $url,
-
-        [Parameter()]
-        [ValidateSet('0', '1')]
-        [System.String]
-        $disablelocaladminmerge,
+        $URL,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $allowonaccessprotection,
+        $DisableLocalAdminMerge,
 
         [Parameter()]
         [ValidateSet('clean', 'quarantine', 'remove', 'allow', 'userdefined', 'block')]
         [System.String]
-        $lowseveritythreats,
+        $LowSeverityThreats,
 
         [Parameter()]
         [ValidateSet('clean', 'quarantine', 'remove', 'allow', 'userdefined', 'block')]
         [System.String]
-        $moderateseveritythreats,
+        $ModerateSeverityThreats,
 
         [Parameter()]
         [ValidateSet('clean', 'quarantine', 'remove', 'allow', 'userdefined', 'block')]
         [System.String]
-        $severethreats,
+        $SevereThreats,
 
         [Parameter()]
         [ValidateSet('clean', 'quarantine', 'remove', 'allow', 'userdefined', 'block')]
         [System.String]
-        $highseveritythreats,
+        $HighSeverityThreats,
 
         [Parameter()]
         [ValidateSet('d948ff9b-99cb-4ee0-8012-1fbc09685377_1', 'e3f74c5a-a6de-411d-aef6-eb15628f3a0a_1', '45fea5e9-280d-4da1-9792-fb5736da0ca9_1', '804339ad-1553-4478-a742-138fb5807418_1')]
         [System.String]
-        $templateId,
+        $TemplateId,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
@@ -473,7 +483,28 @@ function Get-TargetResource
         $returnHashtable.Add('Identity', $Identity)
         $returnHashtable.Add('DisplayName', $policy.name)
         $returnHashtable.Add('Description', $policy.description)
-        $returnHashtable.Add('templateId', $policy.templateReference.templateId)
+        $returnHashtable.Add('TemplateId', $policy.templateReference.TemplateId)
+
+        if ($null -ne $policySettings.SevereThreatDefaultAction)
+        {
+            $returnHashtable.Add('SevereThreats', $policySettings.SevereThreatDefaultAction)
+            $policySettings.Remove('SevereThreatDefaultAction')
+        }
+        if ($null -ne $policySettings.HighSeverityThreatDefaultAction)
+        {
+            $returnHashtable.Add('HighSeverityThreats', $policySettings.HighSeverityThreatDefaultAction)
+            $policySettings.Remove('HighSeverityThreatDefaultAction')
+        }
+        if ($null -ne $policySettings.ModerateSeverityThreatDefaultAction)
+        {
+            $returnHashtable.Add('ModerateSeverityThreats', $policySettings.ModerateSeverityThreatDefaultAction)
+            $policySettings.Remove('ModerateSeverityThreatDefaultAction')
+        }
+        if ($null -ne $policySettings.LowSeverityThreatDefaultAction)
+        {
+            $returnHashtable.Add('LowSeverityThreats', $policySettings.LowSeverityThreatDefaultAction)
+            $policySettings.Remove('LowSeverityThreatDefaultAction')
+        }
         $returnHashtable += $policySettings
 
         $returnAssignments = @()
@@ -530,151 +561,156 @@ function Set-TargetResource
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $allowarchivescanning,
+        $AllowArchiveScanning,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $allowbehaviormonitoring,
+        $AllowBehaviorMonitoring,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $allowcloudprotection,
+        $AllowCloudProtection,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $allowdatagramprocessingonwinserver,
+        $AllowDatagramProcessingOnWinServer,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $allowemailscanning,
+        $AllowEmailScanning,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $allowfullscanonmappednetworkdrives,
+        $AllowFullScanOnMappedNetworkDrives,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $allowfullscanremovabledrivescanning,
+        $AllowFullScanRemovableDriveScanning,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $allowintrusionpreventionsystem,
+        $AllowIntrusionPreventionSystem,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $allowioavprotection,
+        $AllowIOAVProtection,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $allownetworkprotectiondownlevel,
+        $AllowNetworkProtectionDownLevel,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $allowrealtimemonitoring,
+        $AllowOnAccessProtection,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $allowscanningnetworkfiles,
+        $AllowRealtimeMonitoring,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $allowscriptscanning,
+        $AllowScanningNetworkFiles,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $allowuseruiaccess,
+        $AllowScriptScanning,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $AllowUserUIAccess,
 
         [Parameter()]
         [System.int32]
-        $avgcpuloadfactor,
+        $AvgCPULoadFactor,
 
         [Parameter()]
         [System.Int32]
-        $archivemaxdepth,
+        $ArchiveMaxDepth,
 
         [Parameter()]
         [System.Int32]
-        $archivemaxsize,
+        $ArchiveMaxSize,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $checkforsignaturesbeforerunningscan,
+        $CheckForSignaturesBeforeRunningScan,
 
         [Parameter()]
         [ValidateSet('0', '2', '4', '6')]
         [System.String]
-        $cloudblocklevel,
+        $CloudBlockLevel,
 
         [Parameter()]
         [System.Int32]
-        $cloudextendedtimeout,
+        $CloudExtendedTimeout,
 
         [Parameter()]
         [System.String]
-        $companyname,
+        $CompanyName,
 
         [Parameter()]
         [System.Int32]
-        $daystoretaincleanedmalware,
+        $DaysToRetainCleanedMalware,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $disableaccountprotectionui,
+        $DisableAccountProtectionUI,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $disableappbrowserui,
+        $DisableAppBrowserUI,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $disablecleartpmbutton,
+        $DisableClearTpmButton,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $disabledevicesecurityui,
+        $DisableDeviceSecurityUI,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $disablednsovertcpparsing,
+        $DisableDnsOverTcpParsing,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $disableenhancednotifications,
+        $DisableEnhancedNotifications,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $disablefamilyui,
+        $DisableFamilyUI,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $disablehealthui,
+        $DisableHealthUI,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $disablehttpparsing,
+        $DisableHttpParsing,
 
         [Parameter()]
         [ValidateSet('1', '0')]
@@ -684,203 +720,208 @@ function Set-TargetResource
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $disablenetworkui,
+        $DisableNetworkUI,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $disabletpmfirmwareupdatewarning,
+        $DisableTpmFirmwareUpdateWarning,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $disablevirusui,
+        $DisableVirusUI,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $disablecatchupfullscan,
+        $DisableCatchupFullScan,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $disablecatchupquickscan,
-
-        [Parameter()]
-        [System.String]
-        $email,
+        $DisableCatchupQuickScan,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $enablecustomizedtoasts,
+        $DisableCoreServiceECSIntegration,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $enableinappcustomization,
+        $DisableCoreServiceTelemetry,
+
+        [Parameter()]
+        [System.String]
+        $Email,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $enablelowcpupriority,
+        $EnableCustomizedToasts,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $EnableInAppCustomization,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $EnableLowCPUPriority,
 
         [Parameter()]
         [ValidateSet('0', '1', '2')]
         [System.String]
-        $enablenetworkprotection,
+        $EnableNetworkProtection,
 
         [Parameter()]
         [System.String[]]
-        $excludedextensions,
+        $ExcludedExtensions,
 
         [Parameter()]
         [System.String[]]
-        $excludedpaths,
+        $ExcludedPaths,
 
         [Parameter()]
         [System.String[]]
-        $excludedprocesses,
+        $ExcludedProcesses,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $hideransomwaredatarecovery,
+        $HideRansomwareDataRecovery,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $hidewindowssecuritynotificationareacontrol,
+        $HideWindowsSecurityNotificationAreaControl,
 
         [Parameter()]
         [System.String]
-        $phone,
+        $Phone,
 
         [Parameter()]
         [ValidateSet('0', '1', '2')]
         [System.String]
-        $puaprotection,
+        $PUAProtection,
 
         [Parameter()]
         [ValidateSet('0', '2', '3', '4', '5', '6')]
         [System.String]
-        $engineupdateschannel,
+        $EngineUpdatesChannel,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $meteredconnectionupdates,
+        $MeteredConnectionUpdates,
 
         [Parameter()]
         [ValidateSet('0', '2', '3', '4', '5', '6')]
         [System.String]
-        $platformupdateschannel,
+        $PlatformUpdatesChannel,
 
         [Parameter()]
         [ValidateSet('0', '4', '5')]
         [System.String]
-        $securityintelligenceupdateschannel,
+        $SecurityIntelligenceUpdatesChannel,
 
         [Parameter()]
         [ValidateSet('0', '1', '2')]
         [System.String]
-        $realtimescandirection,
+        $RealTimeScanDirection,
 
         [Parameter()]
         [ValidateSet('1', '2')]
         [System.String]
-        $scanparameter,
+        $ScanParameter,
 
         [Parameter()]
         [System.Int32]
-        $schedulequickscantime,
+        $ScheduleQuickScanTime,
 
         [Parameter()]
         [ValidateSet('0', '1', '2', '3', '4', '5', '6', '7', '8')]
         [System.String]
-        $schedulescanday,
+        $ScheduleScanDay,
 
         [Parameter()]
         [ValidateRange(0, 1380)]
         [System.Int32]
-        $schedulescantime,
+        $ScheduleScanTime,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $disabletlsparsing,
+        $DisableTlsParsing,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $randomizescheduletasktimes,
+        $RandomizeScheduleTaskTimes,
 
         [Parameter()]
         [ValidateRange(1,23)]
         [System.Int32]
-        $schedulerrandomizationtime,
+        $SchedulerRandomizationTime,
 
         [Parameter()]
         [System.String[]]
-        $signatureupdatefallbackorder,
+        $SignatureUpdateFallbackOrder,
 
         [Parameter()]
         [System.String[]]
-        $signatureupdatefilesharessources,
+        $SignatureUpdateFileSharesSources,
 
         [Parameter()]
         [ValidateRange(0, 24)]
         [System.Int32]
-        $signatureupdateinterval,
+        $SignatureUpdateInterval,
 
         [Parameter()]
         [ValidateSet('0', '1', '2', '3')]
         [System.String]
-        $submitsamplesconsent,
+        $SubmitSamplesConsent,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $tamperprotection,
+        $TamperProtection,
 
         [Parameter()]
         [System.String]
-        $url,
-
-        [Parameter()]
-        [ValidateSet('0', '1')]
-        [System.String]
-        $disablelocaladminmerge,
+        $URL,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $allowonaccessprotection,
+        $DisableLocalAdminMerge,
 
         [Parameter()]
         [ValidateSet('clean', 'quarantine', 'remove', 'allow', 'userdefined', 'block')]
         [System.String]
-        $lowseveritythreats,
+        $LowSeverityThreats,
 
         [Parameter()]
         [ValidateSet('clean', 'quarantine', 'remove', 'allow', 'userdefined', 'block')]
         [System.String]
-        $moderateseveritythreats,
+        $ModerateSeverityThreats,
 
         [Parameter()]
         [ValidateSet('clean', 'quarantine', 'remove', 'allow', 'userdefined', 'block')]
         [System.String]
-        $severethreats,
+        $SevereThreats,
 
         [Parameter()]
         [ValidateSet('clean', 'quarantine', 'remove', 'allow', 'userdefined', 'block')]
         [System.String]
-        $highseveritythreats,
+        $HighSeverityThreats,
 
         [Parameter()]
         [ValidateSet('d948ff9b-99cb-4ee0-8012-1fbc09685377_1', 'e3f74c5a-a6de-411d-aef6-eb15628f3a0a_1', '45fea5e9-280d-4da1-9792-fb5736da0ca9_1', '804339ad-1553-4478-a742-138fb5807418_1')]
         [System.String]
-        $templateId,
+        $TemplateId,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
@@ -938,7 +979,28 @@ function Set-TargetResource
     $currentPolicy = Get-TargetResource @PSBoundParameters
     $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
-    $templateReferenceId = $templateId
+    if ($BoundParameters.ContainsKey('SevereThreats'))
+    {
+        $BoundParameters.Add('SevereThreatDefaultAction', $BoundParameters['SevereThreats'])
+        $BoundParameters.Remove('SevereThreats')
+    }
+    if ($BoundParameters.ContainsKey('HighSeverityThreats'))
+    {
+        $BoundParameters.Add('HighSeverityThreatDefaultAction', $BoundParameters['HighSeverityThreats'])
+        $BoundParameters.Remove('HighSeverityThreats')
+    }
+    if ($BoundParameters.ContainsKey('ModerateSeverityThreats'))
+    {
+        $BoundParameters.Add('ModerateSeverityThreatDefaultAction', $BoundParameters['ModerateSeverityThreats'])
+        $BoundParameters.Remove('ModerateSeverityThreats')
+    }
+    if ($BoundParameters.ContainsKey('LowSeverityThreats'))
+    {
+        $BoundParameters.Add('LowSeverityThreatDefaultAction', $BoundParameters['LowSeverityThreats'])
+        $BoundParameters.Remove('LowSeverityThreats')
+    }
+
+    $templateReferenceId = $TemplateId
     $platforms = 'windows10'
     $technologies = 'mdm,microsoftSense'
 
@@ -976,6 +1038,7 @@ function Set-TargetResource
         Write-Verbose -Message "Updating existing Endpoint Protection Policy {$($currentPolicy.DisplayName)}"
         $BoundParameters.Remove('Identity') | Out-Null
         $BoundParameters.Remove('Assignments') | Out-Null
+        $BoundParameters.Remove('TemplateId') | Out-Null
 
         $settings = Get-IntuneSettingCatalogPolicySetting `
             -DSCParams ([System.Collections.Hashtable]$BoundParameters) `
@@ -1024,151 +1087,156 @@ function Test-TargetResource
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $allowarchivescanning,
+        $AllowArchiveScanning,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $allowbehaviormonitoring,
+        $AllowBehaviorMonitoring,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $allowcloudprotection,
+        $AllowCloudProtection,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $allowdatagramprocessingonwinserver,
+        $AllowDatagramProcessingOnWinServer,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $allowemailscanning,
+        $AllowEmailScanning,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $allowfullscanonmappednetworkdrives,
+        $AllowFullScanOnMappedNetworkDrives,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $allowfullscanremovabledrivescanning,
+        $AllowFullScanRemovableDriveScanning,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $allowintrusionpreventionsystem,
+        $AllowIntrusionPreventionSystem,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $allowioavprotection,
+        $AllowIOAVProtection,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $allownetworkprotectiondownlevel,
+        $AllowNetworkProtectionDownLevel,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $allowrealtimemonitoring,
+        $AllowOnAccessProtection,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $allowscanningnetworkfiles,
+        $AllowRealtimeMonitoring,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $allowscriptscanning,
+        $AllowScanningNetworkFiles,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $allowuseruiaccess,
+        $AllowScriptScanning,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $AllowUserUIAccess,
 
         [Parameter()]
         [System.int32]
-        $avgcpuloadfactor,
+        $AvgCPULoadFactor,
 
         [Parameter()]
         [System.Int32]
-        $archivemaxdepth,
+        $ArchiveMaxDepth,
 
         [Parameter()]
         [System.Int32]
-        $archivemaxsize,
+        $ArchiveMaxSize,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $checkforsignaturesbeforerunningscan,
+        $CheckForSignaturesBeforeRunningScan,
 
         [Parameter()]
         [ValidateSet('0', '2', '4', '6')]
         [System.String]
-        $cloudblocklevel,
+        $CloudBlockLevel,
 
         [Parameter()]
         [System.Int32]
-        $cloudextendedtimeout,
+        $CloudExtendedTimeout,
 
         [Parameter()]
         [System.String]
-        $companyname,
+        $CompanyName,
 
         [Parameter()]
         [System.Int32]
-        $daystoretaincleanedmalware,
+        $DaysToRetainCleanedMalware,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $disableaccountprotectionui,
+        $DisableAccountProtectionUI,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $disableappbrowserui,
+        $DisableAppBrowserUI,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $disablecleartpmbutton,
+        $DisableClearTpmButton,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $disabledevicesecurityui,
+        $DisableDeviceSecurityUI,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $disablednsovertcpparsing,
+        $DisableDnsOverTcpParsing,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $disableenhancednotifications,
+        $DisableEnhancedNotifications,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $disablefamilyui,
+        $DisableFamilyUI,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $disablehealthui,
+        $DisableHealthUI,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $disablehttpparsing,
+        $DisableHttpParsing,
 
         [Parameter()]
         [ValidateSet('1', '0')]
@@ -1178,203 +1246,208 @@ function Test-TargetResource
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $disablenetworkui,
+        $DisableNetworkUI,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $disabletpmfirmwareupdatewarning,
+        $DisableTpmFirmwareUpdateWarning,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $disablevirusui,
+        $DisableVirusUI,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $disablecatchupfullscan,
+        $DisableCatchupFullScan,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $disablecatchupquickscan,
-
-        [Parameter()]
-        [System.String]
-        $email,
+        $DisableCatchupQuickScan,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $enablecustomizedtoasts,
+        $DisableCoreServiceECSIntegration,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $enableinappcustomization,
+        $DisableCoreServiceTelemetry,
+
+        [Parameter()]
+        [System.String]
+        $Email,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $enablelowcpupriority,
+        $EnableCustomizedToasts,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $EnableInAppCustomization,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $EnableLowCPUPriority,
 
         [Parameter()]
         [ValidateSet('0', '1', '2')]
         [System.String]
-        $enablenetworkprotection,
+        $EnableNetworkProtection,
 
         [Parameter()]
         [System.String[]]
-        $excludedextensions,
+        $ExcludedExtensions,
 
         [Parameter()]
         [System.String[]]
-        $excludedpaths,
+        $ExcludedPaths,
 
         [Parameter()]
         [System.String[]]
-        $excludedprocesses,
+        $ExcludedProcesses,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $hideransomwaredatarecovery,
+        $HideRansomwareDataRecovery,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $hidewindowssecuritynotificationareacontrol,
+        $HideWindowsSecurityNotificationAreaControl,
 
         [Parameter()]
         [System.String]
-        $phone,
+        $Phone,
 
         [Parameter()]
         [ValidateSet('0', '1', '2')]
         [System.String]
-        $puaprotection,
+        $PUAProtection,
 
         [Parameter()]
         [ValidateSet('0', '2', '3', '4', '5', '6')]
         [System.String]
-        $engineupdateschannel,
+        $EngineUpdatesChannel,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $meteredconnectionupdates,
+        $MeteredConnectionUpdates,
 
         [Parameter()]
         [ValidateSet('0', '2', '3', '4', '5', '6')]
         [System.String]
-        $platformupdateschannel,
+        $PlatformUpdatesChannel,
 
         [Parameter()]
         [ValidateSet('0', '4', '5')]
         [System.String]
-        $securityintelligenceupdateschannel,
+        $SecurityIntelligenceUpdatesChannel,
 
         [Parameter()]
         [ValidateSet('0', '1', '2')]
         [System.String]
-        $realtimescandirection,
+        $RealTimeScanDirection,
 
         [Parameter()]
         [ValidateSet('1', '2')]
         [System.String]
-        $scanparameter,
+        $ScanParameter,
 
         [Parameter()]
         [System.Int32]
-        $schedulequickscantime,
+        $ScheduleQuickScanTime,
 
         [Parameter()]
         [ValidateSet('0', '1', '2', '3', '4', '5', '6', '7', '8')]
         [System.String]
-        $schedulescanday,
+        $ScheduleScanDay,
 
         [Parameter()]
         [ValidateRange(0, 1380)]
         [System.Int32]
-        $schedulescantime,
+        $ScheduleScanTime,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $disabletlsparsing,
+        $DisableTlsParsing,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $randomizescheduletasktimes,
+        $RandomizeScheduleTaskTimes,
 
         [Parameter()]
         [ValidateRange(1,23)]
         [System.Int32]
-        $schedulerrandomizationtime,
+        $SchedulerRandomizationTime,
 
         [Parameter()]
         [System.String[]]
-        $signatureupdatefallbackorder,
+        $SignatureUpdateFallbackOrder,
 
         [Parameter()]
         [System.String[]]
-        $signatureupdatefilesharessources,
+        $SignatureUpdateFileSharesSources,
 
         [Parameter()]
         [ValidateRange(0, 24)]
         [System.Int32]
-        $signatureupdateinterval,
+        $SignatureUpdateInterval,
 
         [Parameter()]
         [ValidateSet('0', '1', '2', '3')]
         [System.String]
-        $submitsamplesconsent,
+        $SubmitSamplesConsent,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $tamperprotection,
+        $TamperProtection,
 
         [Parameter()]
         [System.String]
-        $url,
-
-        [Parameter()]
-        [ValidateSet('0', '1')]
-        [System.String]
-        $disablelocaladminmerge,
+        $URL,
 
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
-        $allowonaccessprotection,
+        $DisableLocalAdminMerge,
 
         [Parameter()]
         [ValidateSet('clean', 'quarantine', 'remove', 'allow', 'userdefined', 'block')]
         [System.String]
-        $lowseveritythreats,
+        $LowSeverityThreats,
 
         [Parameter()]
         [ValidateSet('clean', 'quarantine', 'remove', 'allow', 'userdefined', 'block')]
         [System.String]
-        $moderateseveritythreats,
+        $ModerateSeverityThreats,
 
         [Parameter()]
         [ValidateSet('clean', 'quarantine', 'remove', 'allow', 'userdefined', 'block')]
         [System.String]
-        $severethreats,
+        $SevereThreats,
 
         [Parameter()]
         [ValidateSet('clean', 'quarantine', 'remove', 'allow', 'userdefined', 'block')]
         [System.String]
-        $highseveritythreats,
+        $HighSeverityThreats,
 
         [Parameter()]
         [ValidateSet('d948ff9b-99cb-4ee0-8012-1fbc09685377_1', 'e3f74c5a-a6de-411d-aef6-eb15628f3a0a_1', '45fea5e9-280d-4da1-9792-fb5736da0ca9_1', '804339ad-1553-4478-a742-138fb5807418_1')]
         [System.String]
-        $templateId,
+        $TemplateId,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]

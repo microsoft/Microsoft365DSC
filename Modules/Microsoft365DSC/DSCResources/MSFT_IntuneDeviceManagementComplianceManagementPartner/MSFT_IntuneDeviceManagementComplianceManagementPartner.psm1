@@ -80,7 +80,7 @@ function Get-TargetResource
 
     try
     {
-        $ConnectionMode = New-M365DSCConnection -Workload 'Intune' `
+        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters
 
         #Ensure the proper dependencies are installed in the current environment.
@@ -123,6 +123,19 @@ function Get-TargetResource
             $returnAndroidEnrollmentAssignments += ConvertFrom-IntunePolicyAssignment `
                 -IncludeDeviceFilter $true `
                 -Assignments ($getValue.androidEnrollmentAssignments)
+            foreach ($assignment in $returnAndroidEnrollmentAssignments)
+            {
+                if ($assignment.dataType -match 'groupAssignment' -and $null -eq $assignment.groupDisplayName)
+                {
+                    Add-M365DSCEvent -Message "AndroidOsEnrollmentAssignments contain groupId $($assignment.groupId) that is an unknown group" `
+                    -Source $MyInvocation.MyCommand.Source `
+                    -EntryType Warning `
+                    -EventId 29 `
+                    -EventType Warning `
+                    -TenantId $Global:MSCloudLoginConnectionProfile.Intune.TenantId
+
+                }
+            }
         }
         else
         {
@@ -135,6 +148,18 @@ function Get-TargetResource
             $returnIosEnrollmentAssignments += ConvertFrom-IntunePolicyAssignment `
                 -IncludeDeviceFilter $true `
                 -Assignments ($getValue.iosEnrollmentAssignments)
+            foreach ($assignment in $returnAndroidEnrollmentAssignments)
+            {
+                if ($assignment.dataType -match 'groupAssignment' -and $null -eq $assignment.groupDisplayName)
+                {
+                    Add-M365DSCEvent -Message "IosEnrollmentAssignments contain groupId $($assignment.groupId) that is an unknown group" `
+                    -Source $MyInvocation.MyCommand.Source `
+                    -EntryType Warning `
+                    -EventId 29 `
+                    -EventType Warning `
+                    -TenantId $TenantId
+                }
+            }
         }
         else
         {
@@ -147,6 +172,18 @@ function Get-TargetResource
             $returnMacOsEnrollmentAssignments += ConvertFrom-IntunePolicyAssignment `
                 -IncludeDeviceFilter $true `
                 -Assignments ($getValue.macOsEnrollmentAssignments)
+            foreach ($assignment in $returnMacOsEnrollmentAssignments)
+            {
+                if ($assignment.dataType -match 'groupAssignment' -and $null -eq $assignment.groupDisplayName)
+                {
+                    Add-M365DSCEvent -Message "MacOsEnrollmentAssignments contain groupId $($assignment.groupId) that is an unknown group" `
+                    -Source $MyInvocation.MyCommand.Source `
+                    -EntryType Warning `
+                    -EventId 29 `
+                    -EventType Warning `
+                    -TenantId $TenantId
+                }
+            }
         }
         else
         {
@@ -291,7 +328,6 @@ function Set-TargetResource
 
     $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
-
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating an Intune Device Management Compliance Management Partner with DisplayName {$DisplayName}"
@@ -308,21 +344,9 @@ function Set-TargetResource
             }
         }
 
-        if ($createParameters.AndroidEnrollmentAssignments.Count -gt 0)
-        {
-            $androidEnrollmentAssignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter $true -Assignments $createParameters.AndroidEnrollmentAssignments #-DataTypeName '@odata.Type'
-            $createParameters.AndroidEnrollmentAssignments = $androidEnrollmentAssignmentsHash
-        }
-        if ($createParameters.IosEnrollmentAssignments.Count -gt 0)
-        {
-            $iosEnrollmentAssignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter $true -Assignments $createParameters.IosEnrollmentAssignments #-DataTypeName '@odata.Type'
-            $createParameters.IosEnrollmentAssignments = $iosEnrollmentAssignmentsHash
-        }
-        if ($createParameters.MacOsEnrollmentAssignments.Count -gt 0)
-        {
-            $macOsEnrollmentAssignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter $true -Assignments $createParameters.MacOsEnrollmentAssignments #-DataTypeName '@odata.Type'
-            $createParameters.MacOsEnrollmentAssignments = $macOsEnrollmentAssignmentsHash
-        }
+        #Assignments in DSC are flattened and must be re-inflated so each assignment refer to one or more targets
+        Convert-AssignmentListToTargetList -Parameters $createParameters
+
         #region resource generator code
         $createParameters.Add("@odata.type", "#microsoft.graph.ComplianceManagementPartner")
         $policy = New-MgBetaDeviceManagementComplianceManagementPartner -BodyParameter $createParameters
@@ -344,21 +368,10 @@ function Set-TargetResource
                 $updateParameters[$key] = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $updateParameters[$key]
             }
         }
-        if ($updateParameters.AndroidEnrollmentAssignments.Count -gt 0)
-        {
-            $androidEnrollmentAssignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter $true -Assignments $updateParameters.AndroidEnrollmentAssignments #-DataTypeName 'odataType'
-            $updateParameters.AndroidEnrollmentAssignments = $androidEnrollmentAssignmentsHash
-        }
-        if ($updateParameters.IosEnrollmentAssignments.Count -gt 0)
-        {
-            $iosEnrollmentAssignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter $true -Assignments $updateParameters.IosEnrollmentAssignments #-DataTypeName 'odataType'
-            $updateParameters.IosEnrollmentAssignments = $iosEnrollmentAssignmentsHash
-        }
-        if ($updateParameters.MacOsEnrollmentAssignments.Count -gt 0)
-        {
-            $macOsEnrollmentAssignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter $true -Assignments $updateParameters.MacOsEnrollmentAssignments #-DataTypeName 'odataType'
-            $updateParameters.MacOsEnrollmentAssignments = $macOsEnrollmentAssignmentsHash
-        }
+
+        #Assignments in DSC are flattened and must be re-inflated so each assignment refer to one or more targets
+        Convert-AssignmentListToTargetList -Parameters $updateParameters
+
         #region resource generator code
         $UpdateParameters.Add("@odata.type", "#microsoft.graph.ComplianceManagementPartner")
         Update-MgBetaDeviceManagementComplianceManagementPartner `
@@ -557,7 +570,7 @@ function Export-TargetResource
         $AccessTokens
     )
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'Intune' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -690,6 +703,147 @@ function Export-TargetResource
             -Credential $Credential
 
         return ''
+    }
+}
+
+function Convert-AssignmentListToTargetList
+{
+    [CmdletBinding()]
+    #[OutputType([System.Collections.Hashtable])]
+    param(
+        [Parameter(Mandatory)]
+        [System.Collections.Hashtable]$Parameters
+    )
+    begin
+    {
+        $calledBy = $null
+    }
+    process
+    {
+        #$outputParameters = [hashtable]$InputParameters.Clone()
+        if ($Parameters.AndroidEnrollmentAssignments.Count -gt 0)
+        {
+            $androidEnrollmentAssignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter $true `
+                -Assignments $Parameters.AndroidEnrollmentAssignments #-DataTypeName '@odata.Type'
+            if ($androidEnrollmentAssignmentsHash.Count -ne $Parameters.AndroidEnrollmentAssignments.Count)
+            {
+                if ($null -eq $calledBy)
+                {
+                    $calledBy = Get-PSCallStack | Select-Object -Skip 1 -First 1 -ExpandProperty InvocationInfo
+                }
+                Add-M365DSCEvent -Message "One or more group-assignments in AndroidEnrollmentAssignments refer to unknown groups" `
+                    -Source $calledBy.MyCommand.Source `
+                    -EntryType Error `
+                    -EventId 29 `
+                    -EventType Error `
+                    -TenantId $TenantId
+            }
+            $collectionsOk = $true
+            foreach ($assigment in $Parameters.AndroidEnrollmentAssignments)
+            {
+                if ($assignment.dataType -match 'Collection' -and $null -eq $assignment.CollectionId)
+                {
+                    $collectionsOk = $false
+                }
+            }
+            if (-not $collectionsOk)
+            {
+                if ($null -eq $calledBy)
+                {
+                    $calledBy = Get-PSCallStack | Select-Object -Skip 1 -First 1 -ExpandProperty InvocationInfo
+                }
+                Add-M365DSCEvent -Message "One or more collection-assignments in AndroidEnrollmentAssignments is missing a CollectionId" `
+                    -Source $calledBy.MyCommand.Source `
+                    -EntryType Error `
+                    -EventId 39 `
+                    -EventType Error `
+                    -TenantId $TenantId
+
+            }
+            $Parameters.AndroidEnrollmentAssignments = $androidEnrollmentAssignmentsHash
+        }
+        if ($Parameters.IosEnrollmentAssignments.Count -gt 0)
+        {
+            $iosEnrollmentAssignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter $true `
+                -Assignments $Parameters.IosEnrollmentAssignments #-DataTypeName '@odata.Type'
+            if ($iosEnrollmentAssignmentsHash.Count -ne $Parameters.IosEnrollmentAssignments.Count)
+            {
+                if ($null -eq $calledBy)
+                {
+                    $calledBy = Get-PSCallStack | Select-Object -Skip 1 -First 1 -ExpandProperty InvocationInfo
+                }
+                Add-M365DSCEvent -Message "One or more group-assignments in IosEnrollmentAssignments refer to unknown groups" `
+                    -Source $calledBy.MyCommand.Source `
+                    -EntryType Error `
+                    -EventId 39 `
+                    -EventType Error `
+                    -TenantId $TenantId
+            }
+            $collectionsOk = $true
+            foreach ($assigment in $Parameters.IosEnrollmentAssignments)
+            {
+                if ($assignment.dataType -match 'Collection' -and $null -eq $assignment.CollectionId)
+                {
+                    $collectionsOk = $false
+                }
+            }
+            if (-not $collectionsOk)
+            {
+                if ($null -eq $calledBy)
+                {
+                    $calledBy = Get-PSCallStack | Select-Object -Skip 1 -First 1 -ExpandProperty InvocationInfo
+                }
+                Add-M365DSCEvent -Message "One or more collection-assignments in IosEnrollmentAssignments is missing a CollectionId" `
+                    -Source $calledBy.MyCommand.Source `
+                    -EntryType Error `
+                    -EventId 39 `
+                    -EventType Error `
+                    -TenantId $TenantId
+
+            }
+            $Parameters.IosEnrollmentAssignments = $iosEnrollmentAssignmentsHash
+        }
+        if ($Parameters.MacOsEnrollmentAssignments.Count -gt 0)
+        {
+            $macOsEnrollmentAssignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter $true `
+                -Assignments $Parameters.MacOsEnrollmentAssignments #-DataTypeName '@odata.Type'
+            if ($macOsEnrollmentAssignmentsHash.Count -ne $Parameters.MacOsEnrollmentAssignments.Count)
+            {
+                if ($null -eq $calledBy)
+                {
+                    $calledBy = Get-PSCallStack | Select-Object -Skip 1 -First 1 -ExpandProperty InvocationInfo
+                }
+                Add-M365DSCEvent -Message "One or more group-assignments in MacOsEnrollmentAssignments refer to unknown groups" `
+                    -Source $calledBy.MyCommand.Source `
+                    -EntryType Error `
+                    -EventId 29 `
+                    -EventType Error `
+                    -TenantId $TenantId
+            }
+            $collectionsOk = $true
+            foreach ($assigment in $Parameters.MacOsEnrollmentAssignments)
+            {
+                if ($assignment.dataType -match 'Collection' -and $null -eq $assignment.CollectionId)
+                {
+                    $collectionsOk = $false
+                }
+            }
+            if (-not $collectionsOk)
+            {
+                if ($null -eq $calledBy)
+                {
+                    $calledBy = Get-PSCallStack | Select-Object -Skip 1 -First 1 -ExpandProperty InvocationInfo
+                }
+                Add-M365DSCEvent -Message "One or more collection-assignments in MacOsEnrollmentAssignments is missing a CollectionId" `
+                    -Source $calledBy.MyCommand.Source `
+                    -EntryType Error `
+                    -EventId 39 `
+                    -EventType Error `
+                    -TenantId $TenantId
+
+            }
+            $Parameters.MacOsEnrollmentAssignments = $macOsEnrollmentAssignmentsHash
+        }
     }
 }
 

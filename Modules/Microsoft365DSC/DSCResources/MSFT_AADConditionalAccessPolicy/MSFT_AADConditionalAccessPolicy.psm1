@@ -220,6 +220,7 @@ function Get-TargetResource
         $TransferMethods,
 
         [Parameter()]
+        [ValidateSet('minor', 'moderate', 'elevated', 'unknownFutureValue')]
         [System.String]
         $InsiderRiskLevels,
 
@@ -949,6 +950,7 @@ function Set-TargetResource
         $TransferMethods,
 
         [Parameter()]
+        [ValidateSet('minor', 'moderate', 'elevated', 'unknownFutureValue')]
         [System.String]
         $InsiderRiskLevels,
 
@@ -1029,11 +1031,54 @@ function Set-TargetResource
         Write-Verbose -Message 'Set-Targetresource: create Application Condition object'
         if ($currentParameters.ContainsKey('IncludeApplications'))
         {
-            $conditions.Applications.Add('includeApplications', $IncludeApplications)
+            $IncludeApplicationsValue = @()
+            foreach ($app in $IncludeApplications)
+            {
+                $ObjectGuid = [System.Guid]::empty
+                if ([System.Guid]::TryParse($app, [System.Management.Automation.PSReference]$ObjectGuid))
+                {
+                    $IncludeApplicationsValue += $app
+                }
+                else
+                {
+                    $appInfo = Get-MgApplication -Filter "DisplayName eq '$app'" -ErrorAction SilentlyContinue
+                    if ($null -ne $appInfo)
+                    {
+                        $IncludeApplicationsValue += $appInfo.AppId
+                    }
+                    else
+                    {
+                        $IncludeApplicationsValue += $app
+                    }
+                }
+            }
+
+            $conditions.Applications.Add('includeApplications', $IncludeApplicationsValue)
         }
         if ($currentParameters.ContainsKey('excludeApplications'))
         {
-            $conditions.Applications.Add('excludeApplications', $ExcludeApplications)
+            $ExcludeApplicationsValue = @()
+            foreach ($app in $ExcludeApplications)
+            {
+                $ObjectGuid = [System.Guid]::empty
+                if ([System.Guid]::TryParse($app, [System.Management.Automation.PSReference]$ObjectGuid))
+                {
+                    $ExcludeApplicationsValue += $app
+                }
+                else
+                {
+                    $appInfo = Get-MgApplication -Filter "DisplayName eq '$app'" -ErrorAction SilentlyContinue
+                    if ($null -ne $appInfo)
+                    {
+                        $ExcludeApplicationsValue += $appInfo.AppId
+                    }
+                    else
+                    {
+                        $ExcludeApplicationsValue += $app
+                    }
+                }
+            }
+            $conditions.Applications.Add('excludeApplications', $ExcludeApplicationsValue)
         }
         if ($ApplicationsFilter -and $ApplicationsFilterMode)
         {
@@ -1440,13 +1485,11 @@ function Set-TargetResource
                 if (-not $conditions.Contains('platforms'))
                 {
                     $conditions.Add('platforms', @{
-                            excludePlatforms = @()
                             includePlatforms = @()
                         })
                 }
                 else
                 {
-                    $conditions.platforms.Add('excludePlatforms', @())
                     $conditions.platforms.Add('includePlatforms', @())
                 }
                 Write-Verbose -Message "Set-Targetresource: IncludePlatforms: $IncludePlatforms"
@@ -1459,8 +1502,11 @@ function Set-TargetResource
                     $conditions.platforms.includePlatforms = @() + $IncludePlatforms
                 }
                 #no translation or conversion needed
-                Write-Verbose -Message "Set-Targetresource: ExcludePlatforms: $ExcludePlatforms"
-                $conditions.platforms.excludePlatforms = @() + $ExcludePlatforms
+                if (([Array]$ExcludePlatforms).Length -ne 0)
+                {
+                    $conditions.platforms.Add('excludePlatforms', @())
+                    $conditions.platforms.excludePlatforms = @() + $ExcludePlatforms
+                }
                 #no translation or conversion needed
             }
             else
@@ -1586,7 +1632,7 @@ function Set-TargetResource
             }
         }
 
-        if ($null -ne $InsiderRiskLevels)
+        if ([String]::IsNullOrEmpty($InsiderRiskLevels) -eq $false)
         {
             $conditions.Add("insiderRiskLevels", $InsiderRiskLevels)
         }
@@ -1684,18 +1730,16 @@ function Set-TargetResource
             $NewParameters.Add('grantControls', $GrantControls)
         }
 
-        Write-Verbose -Message 'Set-Targetresource: process session controls'
-
-        $sessioncontrols = $null
         if ($ApplicationEnforcedRestrictionsIsEnabled -or $CloudAppSecurityIsEnabled -or $SignInFrequencyIsEnabled -or $PersistentBrowserIsEnabled)
         {
+            Write-Verbose -Message 'Set-Targetresource: process session controls'
+            $sessioncontrols = $null
             Write-Verbose -Message 'Set-Targetresource: create provision Session Control object'
-            $sessioncontrols = @{
-                applicationEnforcedRestrictions = @{}
-            }
+            $sessioncontrols = @{}
 
             if ($ApplicationEnforcedRestrictionsIsEnabled -eq $true)
             {
+                $sessioncontrols.Add('applicationEnforcedRestrictions', @{})
                 #create and provision ApplicationEnforcedRestrictions object if used
                 $sessioncontrols.applicationEnforcedRestrictions.Add('IsEnabled', $true)
             }
@@ -1753,9 +1797,9 @@ function Set-TargetResource
                 $sessioncontrols.persistentBrowser.isEnabled = $true
                 $sessioncontrols.persistentBrowser.mode = $PersistentBrowserMode
             }
+            $NewParameters.Add('sessionControls', $sessioncontrols)
+            #add SessionControls to the parameter list
         }
-        $NewParameters.Add('sessionControls', $sessioncontrols)
-        #add SessionControls to the parameter list
     }
 
     Write-Host "newparameters: $($NewParameters | ConvertTo-Json -Depth 5)"
@@ -2059,6 +2103,7 @@ function Test-TargetResource
         $TransferMethods,
 
         [Parameter()]
+        [ValidateSet('minor', 'moderate', 'elevated', 'unknownFutureValue')]
         [System.String]
         $InsiderRiskLevels,
 

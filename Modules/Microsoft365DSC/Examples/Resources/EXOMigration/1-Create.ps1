@@ -22,14 +22,19 @@ Configuration Example
 
     node localhost
     {
-        EXOM365DataAtRestEncryptionPolicy "M365DataAtRestEncryptionPolicy-Riyansh_Policy"
+        EXOMigration "EXOMigration-test"
         {
-            AzureKeyIDs          = @("https://m365dataatrestencryption.vault.azure.net/keys/EncryptionKey","https://m365datariyansh.vault.azure.net/keys/EncryptionRiyansh");
-            Description          = "Tenant default policy 1";
-            Enabled              = $True;
-            Ensure               = "Absent";
-            Identity             = "Riyansh_Policy";
-            Name                 = "Riyansh_Policy";
+            AddUsers             = $False;
+            BadItemLimit         = "";
+            CompleteAfter        = "12/31/9999 11:59:59 PM";
+            Ensure               = "Present";
+            Identity             = "test";
+            LargeItemLimit       = "";
+            MoveOptions          = @();
+            NotificationEmails   = @("eac_admin@bellred.org");
+            SkipMerging          = @();
+            Status               = "Completed";
+            Update               = $False;
             ApplicationId         = $ApplicationId;
             TenantId              = $TenantId;
             CertificateThumbprint = $CertificateThumbprint;

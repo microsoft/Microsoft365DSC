@@ -1,0 +1,20 @@
+﻿{
+    "resourceName": "AzureBillingAccountPolicy",
+    "description": "Configures policies settings for an Azure billing account.",
+    "roles": {
+        "read": [],
+        "update": []
+    },
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [],
+                "update": []
+            },
+            "application": {
+                "read": [],
+                "update": []
+            }
+        }
+    }
+}

@@ -1,0 +1,44 @@
+{
+  "resourceName":"IntuneAntivirusPolicyMacOS",
+  "description":"This resource configures an Intune Antivirus Policy for macOS.",
+  "permissions":{
+     "graph":{
+        "application":{
+           "read":[
+              {
+                 "name":"DeviceManagementConfiguration.Read.All"
+              },
+              {
+                 "name":"Group.Read.All"
+              }
+           ],
+           "update":[
+              {
+                 "name":"DeviceManagementConfiguration.ReadWrite.All"
+              },
+              {
+                 "name":"Group.Read.All"
+              }
+           ]
+        },
+        "delegated":{
+           "read":[
+              {
+                 "name":"DeviceManagementConfiguration.Read.All"
+              },
+              {
+                 "name":"Group.Read.All"
+              }
+           ],
+           "update":[
+              {
+                 "name":"DeviceManagementConfiguration.ReadWrite.All"
+              },
+              {
+                 "name":"Group.Read.All"
+              }
+           ]
+        }
+     }
+  }
+}

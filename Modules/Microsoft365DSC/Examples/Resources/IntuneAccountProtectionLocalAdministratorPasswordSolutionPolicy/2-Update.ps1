@@ -34,7 +34,7 @@ Configuration Example
                 }
             );
             BackupDirectory          = "1";
-            PasswordAgeDays_AAD      = 15; # Updated Property
+            passwordagedays_aad      = 15; # Updated Property
             AdministratorAccountName = "Administrator";
             PasswordAgeDays          = 20;
             ApplicationId         = $ApplicationId;

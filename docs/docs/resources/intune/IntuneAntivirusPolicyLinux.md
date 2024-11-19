@@ -79,7 +79,7 @@
 
 ## Description
 
-Intune Antivirus Policy Linux
+Intune Antivirus Policy for Linux
 
 ## Permissions
 

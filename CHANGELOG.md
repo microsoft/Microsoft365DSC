@@ -1,16 +1,91 @@
 # Change log for Microsoft365DSC
 
-# 1.24.1106.2
+# UNRELEASED
 
+* AADConditionalAccessPolicy
+  * Fixed bug where a null value was passed in the request for the
+    excludePlatforms parameter when just values were assigned to includePlatforms, which throws an error.
+  * Fixed bug where a null value was passed in the request for the
+    sessionControl parameter when there are no session controls, which throws an error.
+  * Fixed bug where a null value was passed in the request for the
+    applicationEnforcedRestrictions parameter when value was set to false, which throws an error.
+* AADRoleEligibilityScheduleRequest
+  * Adds support for custom role assignments at app scope.
+* IntuneDeviceConfigurationPolicyAndroidDeviceOwner
+  * Fixed issue when properties `DetailedHelpText`,
+    `DeviceOwnerLockScreenMessage` or `ShortHelpText` were defined but the
+    request was not being sent correctly
+    FIXES [#5411](https://github.com/microsoft/Microsoft365DSC/issues/5411)
+* IntuneFirewallRulesHyperVPolicyWindows10
+  * Initial release.
+* M365DSCDRGUtil
+  * Improve CIM instance detection for specific Intune resources.
+
+# 1.24.1113.1
+
+* AADConditionalAccessPolicy
+  * Fixed bug where an empty value was passed in the request for the
+    insiderRiskLevels parameter, which throws an error.
+    FIXES [#5389](https://github.com/microsoft/Microsoft365DSC/issues/5389)
+  * Fixes a bug where 3P apps could not be assigned by DisplayName for both
+    IncludeApplications and ExcludeApplications
+    FIXES [#5390](https://github.com/microsoft/Microsoft365DSC/issues/5390)
+* AADRoleEligibilityScheduleRequest
+  * FIXES [#3787](https://github.com/microsoft/Microsoft365DSC/issues/3787)
+  * FIXES [#5089](https://github.com/microsoft/Microsoft365DSC/issues/5089)
+* AzureBillingAccountPolicy
+  * Initial release.
+* EXOATPBuiltInProtectionRule, EXOEOPProtectionRule
+  * Fixed issue where empty arrays were being compared incorrectly to null
+    strings
+    FIXES [#5394](https://github.com/microsoft/Microsoft365DSC/issues/5394)
+* IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicy
+  * Update property `PasswordAgeDays_AAD` to be lower-case.
+    FIXES [#5378](https://github.com/microsoft/Microsoft365DSC/issues/5378) (1/2)
+* IntuneAntivirusExclusionsPolicyMacOS
+  * Initial release.
+* IntuneAntivirusPolicyWindows10SettingCatalog
+  * Update properties to be upper-case.
+    Fixes [#5373](https://github.com/microsoft/Microsoft365DSC/issues/5373)
+* IntuneDeviceConfigurationCustomPolicyWindows10
+  * Fixed issue where `Value`, from `OmaSettings`, could not be compared
+    correctly if it was boolean and set to `$False`
+    FIXES [#5384](https://github.com/microsoft/Microsoft365DSC/issues/5384)
+* IntuneEndpointDetectionAndResponsePolicyWindows10
+  * Remove changed property name from export.
+    FIXES [#5300](https://github.com/microsoft/Microsoft365DSC/issues/5300)
+* IntuneSecurityBaselineMicrosoftEdge
+  * Deprecate property `authschemes` and replace with `AuthSchemes_AuthSchemes`
+* M365DSCDRGUtil
+  * Restrict CIM instance access to properties that appear multiple times.
+  * Switch log type for not found Intune assignments to `Warning`.
+* M365DSCIntuneSettingsCatalogUtil
+  * Add ADMX handling for `edge~httpauthentication_`.
+    FIXES [#5378](https://github.com/microsoft/Microsoft365DSC/issues/5378) (2/2)
+* TeamsUpgradePolicy
+  * Changes to how we are retrieving the users to improve performance.
+* DEPENDENCIES
+  * Updated DSCParser to version 2.0.0.12.
+  * Updated MSCloudLoginAssistant to version 1.1.28.
+
+# 1.24.1106.3
+
+* AzureBillingAccountScheduledAction
+  * Initial release.
+* AzureSubscription
+  * Added the ability to delete subscriptions.
 * EXODataAtRestEncryptionPolicyAssignment
   * Initial release.
 * EXODataAtRestEncryptionPolicy
   * Initial release.
-* MISC
-  * Fixed issues with API Url's parsing.
-
+* IntuneAntivirusPolicyMacOS
+  * Initial release.
 * IntuneAntivirusExclusionsPolicyLinux
   * Initial release.
+* IntuneFirewallRulesPolicyWindows10
+  * Initial release.
+* MISC
+  * Fixed issues with API Url's parsing.
 
 # 1.24.1106.1
 
@@ -108,13 +183,13 @@
 * EXOArcConfig
   * Fixed `Test-TargetResource` to correctly check property `ArcTrustedSealers`
     when it has an array
-* EXOM365DataAtRestEncryptionPolicy
-  * Initial release.
 * EXOMailboxAuditBypassAssociation
   * Initial release.
 * EXOMailboxSettings
   * Added support for AddressBookPolicy, RetentionPolicy, RoleAssignmentPolicy
     and SharingPolicy.
+* EXOMigration
+  * Initial release.
 * EXOServicePrincipal
   * Initial release.
 * EXOTenantAllowBlockListItems

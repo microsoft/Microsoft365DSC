@@ -104233,3 +104233,448 @@ function Set-TenantAllowBlockListSpoofItems
 }
 
 #endregion
+
+#region Microsoft.Graph.Authentication
+function Stop-MigrationBatch
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $Partition
+    )
+}
+function Start-MigrationBatch
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $Partition
+    )
+}
+function Set-MigrationBatch
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Byte[]]
+        $CSVData,
+
+        [Parameter()]
+        [System.Object]
+        $ReportInterval,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $MoveOptions,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Update,
+
+        [Parameter()]
+        [System.Object]
+        $NotificationEmails,
+
+        [Parameter()]
+        [System.Boolean]
+        $SkipReports,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ApproveSkippedItems,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $SyncNow,
+
+        [Parameter()]
+        [System.Object]
+        $SkipMerging,
+
+        [Parameter()]
+        [System.Object]
+        $SkipMoving,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AddUsers,
+
+        [Parameter()]
+        [System.Object]
+        $CompleteAfter,
+
+        [Parameter()]
+        [System.Object]
+        $Partition,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $BadItemLimit,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowUnknownColumnsInCSV,
+
+        [Parameter()]
+        [System.Object]
+        $StartAfter,
+
+        [Parameter()]
+        [System.Object]
+        $LargeItemLimit
+    )
+}
+function New-MigrationBatch
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Partition,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $SkipRules,
+
+        [Parameter()]
+        [System.Object]
+        $TargetDatabases,
+
+        [Parameter()]
+        [System.Byte[]]
+        $CSVData,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $SkipDelegates,
+
+        [Parameter()]
+        [System.Object]
+        $Users,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $SkipMail,
+
+        [Parameter()]
+        [System.Globalization.CultureInfo]
+        $ContentFilterLanguage,
+
+        [Parameter()]
+        [System.Object]
+        $TimeZone,
+
+        [Parameter()]
+        [System.Object]
+        $NotificationEmails,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $SkipCalendar,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AutoStart,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowUnknownColumnsInCSV,
+
+        [Parameter()]
+        [System.Object]
+        $MoveOptions,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AdoptPreexisting,
+
+        [Parameter()]
+        [System.Object]
+        $TargetEndpoint,
+
+        [Parameter()]
+        [System.Object]
+        $SkipMoving,
+
+        [Parameter()]
+        [System.Object]
+        $StartAfter,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $RemoveOnCopy,
+
+        [Parameter()]
+        [System.Byte[]]
+        $XMLData,
+
+        [Parameter()]
+        [System.Object]
+        $UserIds,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PublicFolderToUnifiedGroup,
+
+        [Parameter()]
+        [System.Object]
+        $ReportInterval,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AutoProvisioning,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $DisableOnCopy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ArchiveOnly,
+
+        [Parameter()]
+        [System.Object]
+        $SkipMerging,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $MigrateTasks,
+
+        [Parameter()]
+        [System.Object]
+        $CompleteAfter,
+
+        [Parameter()]
+        [System.Object]
+        $ExcludeFolders,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $GoogleResource,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Analyze,
+
+        [Parameter()]
+        [System.Guid]
+        $SourcePFPrimaryMailboxGuid,
+
+        [Parameter()]
+        [System.Object]
+        $TargetDeliveryDomain,
+
+        [Parameter()]
+        [System.String]
+        $ArchiveDomain,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PrimaryOnly,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $SkipProvisioning,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $SimplifiedSwitchOver,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Restore,
+
+        [Parameter()]
+        [System.Object]
+        $IncludeFolders,
+
+        [Parameter()]
+        [System.String]
+        $ContentFilter,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ManagedGmailTeams,
+
+        [Parameter()]
+        [System.String]
+        $WorkflowTemplate,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $SourceEndpoint,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AvoidMergeOverlap,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $SkipReports,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $SkipContacts,
+
+        [Parameter()]
+        [System.Object]
+        $BadItemLimit,
+
+        [Parameter()]
+        [System.Object]
+        $TargetArchiveDatabases,
+
+        [Parameter()]
+        [System.Object]
+        $WorkflowControlFlags,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AutoComplete,
+
+        [Parameter()]
+        [System.Object]
+        $LargeItemLimit,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Object]
+        $ForwardingDisposition,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ExcludeDumpsters,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $RenamePrimaryCalendar
+    )
+}
+function Get-MigrationBatch
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $DiagnosticInfo,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IncludeReport,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $Partition,
+
+        [Parameter()]
+        [System.Object]
+        $ResultSize,
+
+        [Parameter()]
+        [System.Object]
+        $Status,
+
+        [Parameter()]
+        [System.Object]
+        $Endpoint
+    )
+}
+function Remove-MigrationBatch
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $Partition
+    )
+}
+#endregion
+
+#region Microsoft.Graph.Authentication
+function Get-MigrationUser
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $EmailAddress,
+
+        [Parameter()]
+        [System.Object]
+        $MailboxGuid,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IncludeAssociatedUsers,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $BatchId,
+
+        [Parameter()]
+        [System.Object]
+        $Partition,
+
+        [Parameter()]
+        [System.Object]
+        $ResultSize,
+
+        [Parameter()]
+        [System.Object]
+        $Status,
+
+        [Parameter()]
+        [System.Object]
+        $StatusSummary
+    )
+}
+#endregion

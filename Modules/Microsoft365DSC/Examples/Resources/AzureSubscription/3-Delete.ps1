@@ -19,20 +19,17 @@ Configuration Example
         $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
-
     node localhost
     {
-        EXOM365DataAtRestEncryptionPolicy "M365DataAtRestEncryptionPolicy-Riyansh_Policy"
+        AzureSubscription "AzureSubscription-MySubscription"
         {
-            AzureKeyIDs          = @("https://m365dataatrestencryption.vault.azure.net/keys/EncryptionKey","https://m365datariyansh.vault.azure.net/keys/EncryptionRiyansh");
-            Description          = "Tenant default policy 2"; # drift
-            Enabled              = $True;
-            Ensure               = "Present";
-            Identity             = "Riyansh_Policy";
-            Name                 = "Riyansh_Policy";
             ApplicationId         = $ApplicationId;
-            TenantId              = $TenantId;
             CertificateThumbprint = $CertificateThumbprint;
+            DisplayName           = "My Subscription";
+            Ensure                = "Absent";
+            InvoiceSectionId      = "/providers/Microsoft.Billing/billingAccounts/0b32abd9-f0e6-4fc9-8b2f-404350313179:0b32abd9-f0e6-4fc9-8b2f-404350313179_2019-05-31/billingProfiles/OHZY-JSSA-BG7-M77W-XXX/invoiceSections/E6RO-KYS7-P2D-MAOR-SGB";
+            Status                = "Active";
+            TenantId              = $TenantId;
         }
     }
 }

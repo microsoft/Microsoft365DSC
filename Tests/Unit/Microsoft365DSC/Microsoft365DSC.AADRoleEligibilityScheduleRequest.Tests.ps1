@@ -55,6 +55,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-MgBetaRoleManagementDirectoryRoleEligibilitySchedule -MockWith {
                 return @{
                     Id          = '12345-12345-12345-12345-12345'
+                    RoleDefinitionId = "12345"
                 }
             }
 
