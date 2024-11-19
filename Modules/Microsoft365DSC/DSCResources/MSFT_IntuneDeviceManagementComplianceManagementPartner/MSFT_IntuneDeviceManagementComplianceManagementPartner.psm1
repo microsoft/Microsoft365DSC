@@ -80,7 +80,7 @@ function Get-TargetResource
 
     try
     {
-        $ConnectionMode = New-M365DSCConnection -Workload 'Intune' `
+        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters
 
         #Ensure the proper dependencies are installed in the current environment.
@@ -570,7 +570,7 @@ function Export-TargetResource
         $AccessTokens
     )
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'Intune' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -748,6 +748,10 @@ function Convert-AssignmentListToTargetList
             }
             if (-not $collectionsOk)
             {
+                if ($null -eq $calledBy)
+                {
+                    $calledBy = Get-PSCallStack | Select-Object -Skip 1 -First 1 -ExpandProperty InvocationInfo
+                }
                 Add-M365DSCEvent -Message "One or more collection-assignments in AndroidEnrollmentAssignments is missing a CollectionId" `
                     -Source $calledBy.MyCommand.Source `
                     -EntryType Error `
@@ -785,6 +789,10 @@ function Convert-AssignmentListToTargetList
             }
             if (-not $collectionsOk)
             {
+                if ($null -eq $calledBy)
+                {
+                    $calledBy = Get-PSCallStack | Select-Object -Skip 1 -First 1 -ExpandProperty InvocationInfo
+                }
                 Add-M365DSCEvent -Message "One or more collection-assignments in IosEnrollmentAssignments is missing a CollectionId" `
                     -Source $calledBy.MyCommand.Source `
                     -EntryType Error `
@@ -822,6 +830,10 @@ function Convert-AssignmentListToTargetList
             }
             if (-not $collectionsOk)
             {
+                if ($null -eq $calledBy)
+                {
+                    $calledBy = Get-PSCallStack | Select-Object -Skip 1 -First 1 -ExpandProperty InvocationInfo
+                }
                 Add-M365DSCEvent -Message "One or more collection-assignments in MacOsEnrollmentAssignments is missing a CollectionId" `
                     -Source $calledBy.MyCommand.Source `
                     -EntryType Error `
