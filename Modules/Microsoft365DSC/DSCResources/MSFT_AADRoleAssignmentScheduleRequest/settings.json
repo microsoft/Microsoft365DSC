@@ -1,0 +1,28 @@
+﻿{
+    "resourceName": "AADRoleAssignmentScheduleRequest",
+    "description": "This resource configures an Azure Active Directory Privilege Identity Management assignment.",
+    "roles": {
+        "read": [
+            "Security Reader"
+        ],
+        "update": [
+            "Privileged Role Administrator"
+        ]
+    },
+    "permissions": {
+        "graph": {
+            "application": {
+                "read": [
+                    {
+                        "name": "RoleAssignmentSchedule.Read.Directory"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "RoleAssignmentSchedule.ReadWrite.Directory"
+                    }
+                ]
+            }
+        }
+    }
+}

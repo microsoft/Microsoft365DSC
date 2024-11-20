@@ -351,6 +351,14 @@ function Test-TargetResource
 
     $ValuesToCheck = Remove-M365DSCAuthenticationParameter -BoundParameters $ValuesToCheck
 
+    if ($PSBoundParameters.ContainsKey('UpdateTimeOfDay'))
+    {
+        Write-Verbose -Message "Converting UpdateTimeOfDay ($UpdateTimeOfDay) to the current culture format"
+        $dtUpdateTimeOfDay = [datetime]::Parse($PSBoundParameters.UpdateTimeOfDay)
+        $PSBoundParameters.UpdateTimeOfDay = $dtUpdateTimeOfDay.ToShortTimeString()
+        Write-Verbose -Message "  Converted value $($PSBoundParameters.UpdateTimeOfDay))"
+    }
+
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 

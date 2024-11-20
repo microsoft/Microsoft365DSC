@@ -99,6 +99,7 @@
             'pub16v3~Policy~L_MicrosoftOfficePublisher~*' { $settingName = $settingName.Replace('pub16v3~Policy~L_MicrosoftOfficePublisher', 'MicrosoftPublisherV3_') }
             'microsoft_edge~Policy~microsoft_edge~*' { $settingName = $settingName.Replace('microsoft_edge~Policy~microsoft_edge', 'MicrosoftEdge_') }
             'edge~httpauthentication*' { $settingName = $settingName.Replace('edge~httpauthentication', 'MicrosoftEdge_HTTPAuthentication') }
+            'edge~contentsettings*' { $settingName = $settingName.Replace('edge~contentsettings', 'MicrosoftEdge_ContentSettings') }
             '*~L_Security~*' { $settingName = $settingName.Replace('~L_Security', 'Security') }
             '*~L_TrustCenter*' { $settingName = $settingName.Replace('~L_TrustCenter', '_TrustCenter') }
             '*~L_ProtectedView_*' { $settingName = $settingName.Replace('~L_ProtectedView', 'ProtectedView') }

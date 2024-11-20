@@ -96,17 +96,34 @@ function Get-TargetResource
         foreach ($currentExcludeTargets in $getValue.excludeTargets)
         {
             $myExcludeTargets = @{}
-            if ($currentExcludeTargets.id -ne 'all_users'){
-                $myExcludeTargetsDisplayName = get-MgGroup -GroupId $currentExcludeTargets.id
-                $myExcludeTargets.Add('Id', $myExcludeTargetsDisplayName.DisplayName)
+            if ($currentExcludeTargets.id -ne 'all_users')
+            {
+                try
+                {
+                    $myExcludeTargetsDisplayName = Get-MgGroup -GroupId $currentExcludeTargets.id -ErrorAction Stop
+                    $myExcludeTargets.Add('Id', $myExcludeTargetsDisplayName.DisplayName)
+                }
+                catch
+                {
+                    $message = "Could not find a group with id $($currentExcludeTargets.id) specified in ExcludeTargets. Skipping group!"
+                    New-M365DSCLogEntry -Message $message `
+                        -Exception $_ `
+                        -Source $($MyInvocation.MyCommand.Source) `
+                        -TenantId $TenantId `
+                        -Credential $Credential
+                    continue
+                }
             }
-            else{
+            else
+            {
                 $myExcludeTargets.Add('Id', $currentExcludeTargets.id)
             }
+
             if ($null -ne $currentExcludeTargets.targetType)
             {
                 $myExcludeTargets.Add('TargetType', $currentExcludeTargets.targetType.toString())
             }
+
             if ($myExcludeTargets.values.Where({ $null -ne $_ }).count -gt 0)
             {
                 $complexExcludeTargets += $myExcludeTargets
@@ -118,17 +135,35 @@ function Get-TargetResource
         foreach ($currentincludeTargets in $getValue.AdditionalProperties.includeTargets)
         {
             $myincludeTargets = @{}
-            if ($currentIncludeTargets.id -ne 'all_users'){
-                $myIncludeTargetsDisplayName = get-MgGroup -GroupId $currentIncludeTargets.id
-                $myIncludeTargets.Add('Id', $myIncludeTargetsDisplayName.DisplayName)
+            if ($currentIncludeTargets.id -ne 'all_users')
+            {
+                try
+                {
+                    $myIncludeTargetsDisplayName = Get-MgGroup -GroupId $currentIncludeTargets.id -ErrorAction Stop
+                    $myIncludeTargets.Add('Id', $myIncludeTargetsDisplayName.DisplayName)
+
+                }
+                catch
+                {
+                    $message = "Could not find a group with id $($currentIncludeTargets.id) specified in IncludeTargets. Skipping group!"
+                    New-M365DSCLogEntry -Message $message `
+                        -Exception $_ `
+                        -Source $($MyInvocation.MyCommand.Source) `
+                        -TenantId $TenantId `
+                        -Credential $Credential
+                    continue
+                }
             }
-            else{
+            else
+            {
                 $myIncludeTargets.Add('Id', $currentIncludeTargets.id)
             }
+
             if ($null -ne $currentincludeTargets.targetType)
             {
                 $myincludeTargets.Add('TargetType', $currentincludeTargets.targetType.toString())
             }
+
             if ($myincludeTargets.values.Where({ $null -ne $_ }).count -gt 0)
             {
                 $complexincludeTargets += $myincludeTargets
@@ -266,11 +301,12 @@ function Set-TargetResource
             if ($key -eq 'IncludeTargets')
             {
                 $i = 0
-                foreach ($entry in $UpdateParameters.$key){
+                foreach ($entry in $UpdateParameters.$key)
+                {
                     if ($entry.id -notmatch '^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$|all_users')
                     {
                         $Filter = "Displayname eq '$($entry.id)'" | Out-String
-                        $UpdateParameters.$key[$i].foreach('id',(Get-MgGroup -Filter $Filter).id.ToString())
+                        $UpdateParameters.$key[$i].foreach('id', (Get-MgGroup -Filter $Filter).id.ToString())
                     }
                     $i++
                 }
@@ -278,11 +314,12 @@ function Set-TargetResource
             if ($key -eq 'ExcludeTargets')
             {
                 $i = 0
-                foreach ($entry in $UpdateParameters.$key){
+                foreach ($entry in $UpdateParameters.$key)
+                {
                     if ($entry.id -notmatch '^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$|all_users')
                     {
                         $Filter = "Displayname eq '$($entry.id)'" | Out-String
-                        $UpdateParameters.$key[$i].foreach('id',(Get-MgGroup -Filter $Filter).id.ToString())
+                        $UpdateParameters.$key[$i].foreach('id', (Get-MgGroup -Filter $Filter).id.ToString())
                     }
                     $i++
                 }
@@ -484,7 +521,7 @@ function Export-TargetResource
         #region resource generator code
         [array]$getValue = Get-MgBetaPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration `
             -AuthenticationMethodConfigurationId HardwareOath  `
-            -ErrorAction Stop | Where-Object -FilterScript {$null -ne $_.Id}
+            -ErrorAction Stop | Where-Object -FilterScript { $null -ne $_.Id }
         #endregion
 
         $i = 1

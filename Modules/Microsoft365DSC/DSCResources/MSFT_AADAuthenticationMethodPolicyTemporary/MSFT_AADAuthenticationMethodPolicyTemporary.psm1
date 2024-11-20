@@ -5,6 +5,10 @@ function Get-TargetResource
     param
     (
         #region resource generator code
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Id,
+
         [Parameter()]
         [System.Int32]
         $DefaultLength,
@@ -37,11 +41,6 @@ function Get-TargetResource
         [ValidateSet('enabled', 'disabled')]
         [System.String]
         $State,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Id,
-
         #endregion
 
         [Parameter()]
@@ -78,6 +77,8 @@ function Get-TargetResource
         $AccessTokens
     )
 
+    Write-Verbose -Message "Getting the Azure AD Authentication Method Policy Temporary with Id {$Id}"
+
     try
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -105,29 +106,47 @@ function Get-TargetResource
         #endregion
         if ($null -eq $getValue)
         {
-            Write-Verbose -Message "Could not find an Azure AD Authentication Method Policy Temporary"
+            Write-Verbose -Message 'Could not find an Azure AD Authentication Method Policy Temporary'
             return $nullResult
         }
         $Id = $getValue.Id
         Write-Verbose -Message "An Azure AD Authentication Method Policy Temporary with Id {$($currentExcludeTargets.id))} was found."
 
         #region resource generator code
+        Write-Verbose -Message "Processing ExcludeTargets"
         $complexExcludeTargets = @()
         foreach ($currentExcludeTargets in $getValue.excludeTargets)
         {
             Write-Verbose -Message "Retrieving ExcludeTarget {$currentExcludeTargets}"
             $myExcludeTargets = @{}
-            if ($currentExcludeTargets.id -ne 'all_users'){
-                $myExcludeTargetsDisplayName = get-MgGroup -GroupId $currentExcludeTargets.id
-                $myExcludeTargets.Add('Id', $myExcludeTargetsDisplayName.DisplayName)
+            if ($currentExcludeTargets.id -ne 'all_users')
+            {
+                try
+                {
+                    $myExcludeTargetsDisplayName = Get-MgGroup -GroupId $currentExcludeTargets.id -ErrorAction Stop
+                    $myExcludeTargets.Add('Id', $myExcludeTargetsDisplayName.DisplayName)
+                }
+                catch
+                {
+                    $message = "Could not find a group with id $($currentExcludeTargets.id) specified in ExcludeTargets. Skipping group!"
+                    New-M365DSCLogEntry -Message $message `
+                        -Exception $_ `
+                        -Source $($MyInvocation.MyCommand.Source) `
+                        -TenantId $TenantId `
+                        -Credential $Credential
+                    continue
+                }
             }
-            else{
+            else
+            {
                 $myExcludeTargets.Add('Id', $currentExcludeTargets.id)
             }
+
             if ($null -ne $currentExcludeTargets.targetType)
             {
                 $myExcludeTargets.Add('TargetType', $currentExcludeTargets.targetType.toString())
             }
+
             if ($myExcludeTargets.values.Where({ $null -ne $_ }).count -gt 0)
             {
                 $complexExcludeTargets += $myExcludeTargets
@@ -135,27 +154,46 @@ function Get-TargetResource
         }
         #endregion
 
+        Write-Verbose -Message "Processing IncludeTargets"
         $complexincludeTargets = @()
         foreach ($currentincludeTargets in $getValue.AdditionalProperties.includeTargets)
         {
             Write-Verbose -Message "Retrieving IncludeTarget {$($currentincludeTargets.id)}"
             $myincludeTargets = @{}
-            if ($currentIncludeTargets.id -ne 'all_users'){
-                $myIncludeTargetsDisplayName = get-MgGroup -GroupId $currentIncludeTargets.id
-                $myIncludeTargets.Add('Id', $myIncludeTargetsDisplayName.DisplayName)
+            if ($currentIncludeTargets.id -ne 'all_users')
+            {
+                try
+                {
+                    $myIncludeTargetsDisplayName = Get-MgGroup -GroupId $currentIncludeTargets.id -ErrorAction Stop
+                    $myIncludeTargets.Add('Id', $myIncludeTargetsDisplayName.DisplayName)
+                }
+                catch
+                {
+                    $message = "Could not find a group with id $($currentIncludeTargets.id) specified in IncludeTargets. Skipping group!"
+                    New-M365DSCLogEntry -Message $message `
+                        -Exception $_ `
+                        -Source $($MyInvocation.MyCommand.Source) `
+                        -TenantId $TenantId `
+                        -Credential $Credential
+                    continue
+                }
             }
-            else{
+            else
+            {
                 $myIncludeTargets.Add('Id', $currentIncludeTargets.id)
             }
+
             if ($null -ne $currentincludeTargets.targetType)
             {
                 $myincludeTargets.Add('TargetType', $currentincludeTargets.targetType.toString())
             }
+
             if ($myincludeTargets.values.Where({ $null -ne $_ }).count -gt 0)
             {
                 $complexincludeTargets += $myincludeTargets
             }
         }
+
         #region resource generator code
         $enumState = $null
         if ($null -ne $getValue.State)
@@ -164,7 +202,7 @@ function Get-TargetResource
         }
         #endregion
 
-        Write-Verbose -Message "Get-TargetResource returned values"
+        Write-Verbose -Message 'Get-TargetResource returned values'
         $results = @{
             #region resource generator code
             DefaultLength            = $getValue.AdditionalProperties.defaultLength
@@ -207,6 +245,10 @@ function Set-TargetResource
     param
     (
         #region resource generator code
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Id,
+
         [Parameter()]
         [System.Int32]
         $DefaultLength,
@@ -239,12 +281,8 @@ function Set-TargetResource
         [ValidateSet('enabled', 'disabled')]
         [System.String]
         $State,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Id,
-
         #endregion
+
         [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
@@ -278,6 +316,8 @@ function Set-TargetResource
         [System.String[]]
         $AccessTokens
     )
+
+    Write-Verbose -Message "Setting the Azure AD Authentication Method Policy Temporary with Id {$Id}"
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -314,11 +354,12 @@ function Set-TargetResource
             if ($key -eq 'IncludeTargets')
             {
                 $i = 0
-                foreach ($entry in $UpdateParameters.$key){
+                foreach ($entry in $UpdateParameters.$key)
+                {
                     if ($entry.id -notmatch '^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$|all_users')
                     {
                         $Filter = "Displayname eq '$($entry.id)'" | Out-String
-                        $UpdateParameters.$key[$i].foreach('id',(Get-MgGroup -Filter $Filter).id.ToString())
+                        $UpdateParameters.$key[$i].foreach('id', (Get-MgGroup -Filter $Filter).id.ToString())
                     }
                     $i++
                 }
@@ -326,11 +367,12 @@ function Set-TargetResource
             if ($key -eq 'ExcludeTargets')
             {
                 $i = 0
-                foreach ($entry in $UpdateParameters.$key){
+                foreach ($entry in $UpdateParameters.$key)
+                {
                     if ($entry.id -notmatch '^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$|all_users')
                     {
                         $Filter = "Displayname eq '$($entry.id)'" | Out-String
-                        $UpdateParameters.$key[$i].foreach('id',(Get-MgGroup -Filter $Filter).id.ToString())
+                        $UpdateParameters.$key[$i].foreach('id', (Get-MgGroup -Filter $Filter).id.ToString())
                     }
                     $i++
                 }
@@ -359,6 +401,10 @@ function Test-TargetResource
     param
     (
         #region resource generator code
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Id,
+
         [Parameter()]
         [System.Int32]
         $DefaultLength,
@@ -391,11 +437,6 @@ function Test-TargetResource
         [ValidateSet('enabled', 'disabled')]
         [System.String]
         $State,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Id,
-
         #endregion
 
         [Parameter()]
@@ -457,7 +498,7 @@ function Test-TargetResource
     $testResult = $true
 
     #Compare Cim instances
-    Write-Verbose -Message "Evaluating keys"
+    Write-Verbose -Message 'Evaluating keys'
     foreach ($key in $PSBoundParameters.Keys)
     {
         $source = $PSBoundParameters.$key
@@ -553,7 +594,7 @@ function Export-TargetResource
         #region resource generator code
         [array]$getValue = Get-MgBetaPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration `
             -AuthenticationMethodConfigurationId TemporaryAccessPass `
-            -ErrorAction Stop | Where-Object -FilterScript {$null -ne $_.Id}
+            -ErrorAction Stop | Where-Object -FilterScript { $null -ne $_.Id }
         #endregion
 
         $i = 1

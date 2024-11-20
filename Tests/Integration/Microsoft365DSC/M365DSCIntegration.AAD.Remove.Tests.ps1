@@ -565,6 +565,26 @@
                         }
                     );
                 }
+                AADRoleAssignmentScheduleRequest 'MyRequest'
+                {
+                    Action               = "AdminAssign";
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
+                    DirectoryScopeId     = "/";
+                    Ensure               = "Absent";
+                    IsValidationOnly     = $True; # Updated Property
+                    Principal            = "AdeleV@$TenantId";
+                    RoleDefinition       = "Teams Communications Administrator";
+                    ScheduleInfo         = MSFT_AADRoleAssignmentScheduleRequestSchedule {
+                        startDateTime             = '2023-09-01T02:40:44Z'
+                        expiration                = MSFT_AADRoleAssignmentScheduleRequestScheduleExpiration
+                            {
+                                endDateTime = '2025-10-31T02:40:09Z'
+                                type        = 'afterDateTime'
+                            }
+                    };
+                }
                 AADRoleDefinition 'AADRoleDefinition1'
                 {
                     IsEnabled                     = $true

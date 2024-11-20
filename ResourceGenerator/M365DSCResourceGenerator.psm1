@@ -370,6 +370,10 @@ $($userDefinitionSettings.MOF -join "`r`n")
 "@
                     )
                 }
+
+                $definitionSettings.MOFInstance = ($deviceDefinitionSettings.MOFInstance -join "`r`n") + "`r`n" + ($definitionSettings.MOFInstance -join "`r`n")
+                $definitionSettings.MOFInstance = ($userDefinitionSettings.MOFInstance -join "`r`n") + "`r`n" + ($definitionSettings.MOFInstance -join "`r`n")
+                $definitionSettings.MOFInstance = ($defaultDefinitionSettings.MOFInstance -join "`r`n") + "`r`n" + ($definitionSettings.MOFInstance -join "`r`n")
             }
             else
             {
@@ -4039,7 +4043,7 @@ class <ClassName>
     }
 
     $mofDefinition = $mofDefinition.Replace("<Name>", $TemplateSetting.Name)
-    $isCollection = ($TemplateSetting.Type -like "*Collection" -and $TemplateSetting.Type -ne "GroupCollection") -or $TemplateSetting.Type -eq "GroupColletionCollection"
+    $isCollection = ($TemplateSetting.Type -like "*Collection" -and $TemplateSetting.Type -ne "GroupCollection") -or $TemplateSetting.Type -eq "GroupCollectionCollection"
     $mofDefinition = $mofDefinition.Replace("<Collection>", $( if ($isCollection) { "[]" } else { "" } ))
 
     $powerShellDefinition = $powerShellParameterTemplate.Replace("<Name>", $TemplateSetting.Name)

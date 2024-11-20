@@ -41,6 +41,8 @@ function Get-TargetResource
         $AccessTokens
     )
 
+    Write-Verbose -Message "Getting configuration of the <ResourceDescription> with <PrimaryKey> {$<PrimaryKey>} and <FilterKey> {$<FilterKey>}"
+
     try
     {
         $ConnectionMode = New-M365DSCConnection -Workload '<#Workload#>' `
@@ -143,6 +145,8 @@ function Set-TargetResource
         [System.String[]]
         $AccessTokens
     )
+
+    Write-Verbose -Message "Setting configuration of the <ResourceDescription> with <PrimaryKey> {$<PrimaryKey>} and <FilterKey> {$<FilterKey>}"
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies

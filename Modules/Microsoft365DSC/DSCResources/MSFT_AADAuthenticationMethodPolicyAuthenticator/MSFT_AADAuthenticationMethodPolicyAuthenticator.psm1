@@ -5,6 +5,10 @@ function Get-TargetResource
     param
     (
         #region resource generator code
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Id,
+
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance]
         $FeatureSettings,
@@ -25,10 +29,6 @@ function Get-TargetResource
         [ValidateSet('enabled', 'disabled')]
         [System.String]
         $State,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Id,
         #endregion
 
         [Parameter()]
@@ -65,6 +65,8 @@ function Get-TargetResource
         $AccessTokens
     )
 
+    Write-Verbose -Message "Getting the Azure AD Authentication Method Policy with Id {$Id}"
+
     try
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -100,12 +102,26 @@ function Get-TargetResource
 
         #region resource generator code
         $complexFeatureSettings = @{}
+
+        Write-Verbose "Processing FeatureSettings > companionAppAllowedState > excludeTarget"
         $complexCompanionAppAllowedState = @{}
         $complexExcludeTarget = @{}
         if ($getValue.additionalProperties.featureSettings.companionAppAllowedState.excludeTarget.id -notmatch 'all_users|00000000-0000-0000-0000-000000000000')
         {
-            $myExcludeTargetsDisplayName = Get-MgGroup -GroupId $getValue.additionalProperties.featureSettings.companionAppAllowedState.excludeTarget.id
-            $complexExcludeTarget.Add('Id', $myExcludeTargetsDisplayName.DisplayName)
+            try
+            {
+                $myExcludeTargetsDisplayName = Get-MgGroup -GroupId $getValue.additionalProperties.featureSettings.companionAppAllowedState.excludeTarget.id -ErrorAction Stop
+                $complexExcludeTarget.Add('Id', $myExcludeTargetsDisplayName.DisplayName)
+            }
+            catch
+            {
+                $message = "Could not find a group with id $($getValue.additionalProperties.featureSettings.companionAppAllowedState.excludeTarget.id) specified in excludeTarget. Skipping group!"
+                New-M365DSCLogEntry -Message $message `
+                    -Exception $_ `
+                    -Source $($MyInvocation.MyCommand.Source) `
+                    -TenantId $TenantId `
+                    -Credential $Credential
+            }
         }
         else
         {
@@ -118,20 +134,36 @@ function Get-TargetResource
                 $complexExcludeTarget.Add('Id', 'all_users')
             }
         }
+
         if ($null -ne $getValue.additionalProperties.featureSettings.companionAppAllowedState.excludeTarget.targetType)
         {
             $complexExcludeTarget.Add('TargetType', $getValue.additionalProperties.featureSettings.companionAppAllowedState.excludeTarget.targetType.toString())
         }
+
         if ($complexExcludeTarget.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexExcludeTarget = $null
         }
         $complexCompanionAppAllowedState.Add('ExcludeTarget', $complexExcludeTarget)
+
+        Write-Verbose "Processing FeatureSettings > companionAppAllowedState > includeTarget"
         $complexIncludeTarget = @{}
         if ($getValue.additionalProperties.featureSettings.companionAppAllowedState.includeTarget.id -notmatch 'all_users|00000000-0000-0000-0000-000000000000')
         {
-            $myIncludeTargetsDisplayName = Get-MgGroup -GroupId $getValue.additionalProperties.featureSettings.companionAppAllowedState.includeTarget.id
-            $complexIncludeTarget.Add('Id', $myIncludeTargetsDisplayName.DisplayName)
+            try
+            {
+                $myIncludeTargetsDisplayName = Get-MgGroup -GroupId $getValue.additionalProperties.featureSettings.companionAppAllowedState.includeTarget.id -ErrorAction Stop
+                $complexIncludeTarget.Add('Id', $myIncludeTargetsDisplayName.DisplayName)
+            }
+            catch
+            {
+                $message = "Could not find a group with id $($getValue.additionalProperties.featureSettings.companionAppAllowedState.includeTarget.id) specified in includeTarget. Skipping group!"
+                New-M365DSCLogEntry -Message $message `
+                    -Exception $_ `
+                    -Source $($MyInvocation.MyCommand.Source) `
+                    -TenantId $TenantId `
+                    -Credential $Credential
+            }
         }
         else
         {
@@ -144,31 +176,50 @@ function Get-TargetResource
                 $complexIncludeTarget.Add('Id', 'all_users')
             }
         }
+
         if ($null -ne $getValue.additionalProperties.featureSettings.companionAppAllowedState.includeTarget.targetType)
         {
             $complexIncludeTarget.Add('TargetType', $getValue.additionalProperties.featureSettings.companionAppAllowedState.includeTarget.targetType.toString())
         }
+
         if ($complexIncludeTarget.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexIncludeTarget = $null
         }
         $complexCompanionAppAllowedState.Add('IncludeTarget', $complexIncludeTarget)
+
+        Write-Verbose "Processing FeatureSettings > companionAppAllowedState > state"
         if ($null -ne $getValue.additionalProperties.featureSettings.companionAppAllowedState.state)
         {
             $complexCompanionAppAllowedState.Add('State', $getValue.additionalProperties.featureSettings.companionAppAllowedState.state.toString())
         }
+
         if ($complexCompanionAppAllowedState.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexCompanionAppAllowedState = $null
         }
+
         $complexFeatureSettings.Add('CompanionAppAllowedState', $complexCompanionAppAllowedState)
         $complexDisplayAppInformationRequiredState = @{}
 
+        Write-Verbose "Processing FeatureSettings > displayAppInformationRequiredState > excludeTarget"
         $complexExcludeTarget = @{}
         if ($getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.excludeTarget.id -notmatch 'all_users|00000000-0000-0000-0000-000000000000')
         {
-            $myExcludeTargetsDisplayName = Get-MgGroup -GroupId $getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.excludeTarget.id
-            $complexExcludeTarget.Add('Id', $myExcludeTargetsDisplayName.DisplayName)
+            try
+            {
+                $myExcludeTargetsDisplayName = Get-MgGroup -GroupId $getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.excludeTarget.id -ErrorAction Stop
+                $complexExcludeTarget.Add('Id', $myExcludeTargetsDisplayName.DisplayName)
+            }
+            catch
+            {
+                $message = "Could not find a group with id $($getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.excludeTarget.id) specified in excludeTarget. Skipping group!"
+                New-M365DSCLogEntry -Message $message `
+                    -Exception $_ `
+                    -Source $($MyInvocation.MyCommand.Source) `
+                    -TenantId $TenantId `
+                    -Credential $Credential
+            }
         }
         else
         {
@@ -181,6 +232,7 @@ function Get-TargetResource
                 $complexExcludeTarget.Add('Id', 'all_users')
             }
         }
+
         if ($null -ne $getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.excludeTarget.targetType)
         {
             $complexExcludeTarget.Add('TargetType', $getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.excludeTarget.targetType.toString())
@@ -190,11 +242,25 @@ function Get-TargetResource
             $complexExcludeTarget = $null
         }
         $complexDisplayAppInformationRequiredState.Add('ExcludeTarget', $complexExcludeTarget)
+
+        Write-Verbose "Processing FeatureSettings > displayAppInformationRequiredState > includeTarget"
         $complexIncludeTarget = @{}
         if ($getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.includeTarget.id -notmatch 'all_users|00000000-0000-0000-0000-000000000000')
         {
-            $myIncludeTargetsDisplayName = Get-MgGroup -GroupId $getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.includeTarget.id
-            $complexIncludeTarget.Add('Id', $myIncludeTargetsDisplayName.DisplayName)
+            try
+            {
+                $myIncludeTargetsDisplayName = Get-MgGroup -GroupId $getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.includeTarget.id -ErrorAction Stop
+                $complexIncludeTarget.Add('Id', $myIncludeTargetsDisplayName.DisplayName)
+            }
+            catch
+            {
+                $message = "Could not find a group with id $($getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.includeTarget.id) specified in includeTarget. Skipping group!"
+                New-M365DSCLogEntry -Message $message `
+                    -Exception $_ `
+                    -Source $($MyInvocation.MyCommand.Source) `
+                    -TenantId $TenantId `
+                    -Credential $Credential
+            }
         }
         else
         {
@@ -207,30 +273,50 @@ function Get-TargetResource
                 $complexIncludeTarget.Add('Id', 'all_users')
             }
         }
+
         if ($null -ne $getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.includeTarget.targetType)
         {
             $complexIncludeTarget.Add('TargetType', $getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.includeTarget.targetType.toString())
         }
+
         if ($complexIncludeTarget.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexIncludeTarget = $null
         }
         $complexDisplayAppInformationRequiredState.Add('IncludeTarget', $complexIncludeTarget)
+
+        Write-Verbose "Processing FeatureSettings > displayAppInformationRequiredState > state"
         if ($null -ne $getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.state)
         {
             $complexDisplayAppInformationRequiredState.Add('State', $getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.state.toString())
         }
+
         if ($complexDisplayAppInformationRequiredState.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexDisplayAppInformationRequiredState = $null
         }
+
         $complexFeatureSettings.Add('DisplayAppInformationRequiredState', $complexDisplayAppInformationRequiredState)
+
+        Write-Verbose "Processing FeatureSettings > displayLocationInformationRequiredState > excludeTarget"
         $complexDisplayLocationInformationRequiredState = @{}
         $complexExcludeTarget = @{}
         if ($getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.excludeTarget.id -notmatch 'all_users|00000000-0000-0000-0000-000000000000')
         {
-            $myExcludeTargetsDisplayName = Get-MgGroup -GroupId $getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.excludeTarget.id
-            $complexExcludeTarget.Add('Id', $myExcludeTargetsDisplayName.DisplayName)
+            try
+            {
+                $myExcludeTargetsDisplayName = Get-MgGroup -GroupId $getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.excludeTarget.id -ErrorAction Stop
+                $complexExcludeTarget.Add('Id', $myExcludeTargetsDisplayName.DisplayName)
+            }
+            catch
+            {
+                $message = "Could not find a group with id $($getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.excludeTarget.id) specified in excludeTarget. Skipping group!"
+                New-M365DSCLogEntry -Message $message `
+                    -Exception $_ `
+                    -Source $($MyInvocation.MyCommand.Source) `
+                    -TenantId $TenantId `
+                    -Credential $Credential
+            }
         }
         else
         {
@@ -243,20 +329,37 @@ function Get-TargetResource
                 $complexExcludeTarget.Add('Id', 'all_users')
             }
         }
+
         if ($null -ne $getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.excludeTarget.targetType)
         {
             $complexExcludeTarget.Add('TargetType', $getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.excludeTarget.targetType.toString())
         }
+
         if ($complexExcludeTarget.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexExcludeTarget = $null
         }
+
         $complexDisplayLocationInformationRequiredState.Add('ExcludeTarget', $complexExcludeTarget)
+
+        Write-Verbose "Processing FeatureSettings > displayLocationInformationRequiredState > includeTarget"
         $complexIncludeTarget = @{}
         if ($getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.includeTarget.id -notmatch 'all_users|00000000-0000-0000-0000-000000000000')
         {
-            $myIncludeTargetsDisplayName = Get-MgGroup -GroupId $getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.includeTarget.id
-            $complexIncludeTarget.Add('Id', $myIncludeTargetsDisplayName.DisplayName)
+            try
+            {
+                $myIncludeTargetsDisplayName = Get-MgGroup -GroupId $getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.includeTarget.id -ErrorAction Stop
+                $complexIncludeTarget.Add('Id', $myIncludeTargetsDisplayName.DisplayName)
+            }
+            catch
+            {
+                $message = "Could not find a group with id $($getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.includeTarget.id) specified in includeTarget. Skipping group!"
+                New-M365DSCLogEntry -Message $message `
+                    -Exception $_ `
+                    -Source $($MyInvocation.MyCommand.Source) `
+                    -TenantId $TenantId `
+                    -Credential $Credential
+            }
         }
         else
         {
@@ -269,23 +372,30 @@ function Get-TargetResource
                 $complexIncludeTarget.Add('Id', 'all_users')
             }
         }
+
         if ($null -ne $getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.includeTarget.targetType)
         {
             $complexIncludeTarget.Add('TargetType', $getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.includeTarget.targetType.toString())
         }
+
         if ($complexIncludeTarget.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexIncludeTarget = $null
         }
+
         $complexDisplayLocationInformationRequiredState.Add('IncludeTarget', $complexIncludeTarget)
+
+        Write-Verbose "Processing FeatureSettings > displayLocationInformationRequiredState > state"
         if ($null -ne $getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.state)
         {
             $complexDisplayLocationInformationRequiredState.Add('State', $getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.state.toString())
         }
+
         if ($complexDisplayLocationInformationRequiredState.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexDisplayLocationInformationRequiredState = $null
         }
+
         $complexFeatureSettings.Add('DisplayLocationInformationRequiredState', $complexDisplayLocationInformationRequiredState)
 
         $complexExcludeTargets = @()
@@ -305,10 +415,12 @@ function Get-TargetResource
             {
                 $myExcludeTargets.Add('Id', $currentExcludeTargets.id)
             }
+
             if ($null -ne $currentExcludeTargets.targetType)
             {
                 $myExcludeTargets.Add('TargetType', $currentExcludeTargets.targetType.toString())
             }
+
             if ($myExcludeTargets.values.Where({ $null -ne $_ }).count -gt 0)
             {
                 $complexExcludeTargets += $myExcludeTargets
@@ -332,10 +444,12 @@ function Get-TargetResource
             {
                 $myIncludeTargets.Add('Id', $currentIncludeTargets.id)
             }
+
             if ($null -ne $currentIncludeTargets.targetType)
             {
                 $myIncludeTargets.Add('TargetType', $currentIncludeTargets.targetType.toString())
             }
+
             if ($myIncludeTargets.values.Where({ $null -ne $_ }).count -gt 0)
             {
                 $complexIncludeTargets += $myIncludeTargets
@@ -389,6 +503,10 @@ function Set-TargetResource
     param
     (
         #region resource generator code
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Id,
+
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance]
         $FeatureSettings,
@@ -409,12 +527,8 @@ function Set-TargetResource
         [ValidateSet('enabled', 'disabled')]
         [System.String]
         $State,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Id,
-
         #endregion
+
         [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
@@ -448,6 +562,8 @@ function Set-TargetResource
         [System.String[]]
         $AccessTokens
     )
+
+    Write-Verbose -Message "Setting the Azure AD Authentication Method Policy Authenticator with Id {$Id}"
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -589,6 +705,10 @@ function Test-TargetResource
     param
     (
         #region resource generator code
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Id,
+
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance]
         $FeatureSettings,
@@ -609,11 +729,6 @@ function Test-TargetResource
         [ValidateSet('enabled', 'disabled')]
         [System.String]
         $State,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Id,
-
         #endregion
 
         [Parameter()]

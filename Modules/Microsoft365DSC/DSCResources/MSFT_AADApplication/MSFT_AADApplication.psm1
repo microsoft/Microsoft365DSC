@@ -457,13 +457,19 @@ function Get-TargetResource
             }
             #endregion
 
+            $IdentifierUrisValue = @()
+            if ($null -ne $AADApp.IdentifierUris)
+            {
+                $IdentifierUrisValue = $AADApp.IdentifierUris
+            }
+
             $result = @{
                 DisplayName             = $AADApp.DisplayName
                 AvailableToOtherTenants = $AvailableToOtherTenantsValue
                 Description             = $AADApp.Description
                 GroupMembershipClaims   = $AADApp.GroupMembershipClaims
                 Homepage                = $AADApp.web.HomepageUrl
-                IdentifierUris          = $AADApp.IdentifierUris
+                IdentifierUris          = $IdentifierUrisValue
                 IsFallbackPublicClient  = $IsFallbackPublicClientValue
                 KnownClientApplications = $AADApp.Api.KnownClientApplications
                 LogoutURL               = $AADApp.web.LogoutURL

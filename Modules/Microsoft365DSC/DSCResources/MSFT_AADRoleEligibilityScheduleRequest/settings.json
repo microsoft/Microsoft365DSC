@@ -1,6 +1,6 @@
 ﻿{
     "resourceName": "AADRoleEligibilityScheduleRequest",
-    "description": "This resource configures an Azure Active Directory administrative unit.",
+    "description": "This resource configures an Azure Active Directory Privilege Identity Management eligibility request.",
     "roles": {
         "read": [
             "Security Reader"
