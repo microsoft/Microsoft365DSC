@@ -116,14 +116,40 @@ function Get-TargetResource
 
             foreach ($userId in $getValue.AzureAdJoin.AllowedToJoin.AdditionalProperties.users)
             {
-                $userInfo = Get-MgUser -UserId $userId
-                $AzureADAllowedToJoinUsers += $userInfo.UserPrincipalName
+                try
+                {
+                    $userInfo = Get-MgUser -UserId $userId -ErrorAction Stop
+                    $AzureADAllowedToJoinUsers += $userInfo.UserPrincipalName
+                }
+                catch
+                {
+                    $message = "Could not find a user with id $($userId) specified in AllowedToJoin. Skipping user!"
+                    New-M365DSCLogEntry -Message $message `
+                        -Exception $_ `
+                        -Source $($MyInvocation.MyCommand.Source) `
+                        -TenantId $TenantId `
+                        -Credential $Credential
+                    continue
+                }
             }
 
             foreach ($groupId in $getValue.AzureAdJoin.AllowedToJoin.AdditionalProperties.groups)
             {
-                $groupInfo = Get-MgGroup -GroupId $groupId
-                $AzureADAllowedToJoinGroups += $groupInfo.DisplayName
+                try
+                {
+                    $groupInfo = Get-MgGroup -GroupId $groupId -ErrorAction Stop
+                    $AzureADAllowedToJoinGroups += $groupInfo.DisplayName
+                }
+                catch
+                {
+                    $message = "Could not find a group with id $($groupId) specified in AllowedToJoin. Skipping group!"
+                    New-M365DSCLogEntry -Message $message `
+                        -Exception $_ `
+                        -Source $($MyInvocation.MyCommand.Source) `
+                        -TenantId $TenantId `
+                        -Credential $Credential
+                    continue
+                }
             }
         }
 
@@ -140,14 +166,40 @@ function Get-TargetResource
             $AzureAdJoinLocalAdminsRegisteringMode = 'Selected'
             foreach ($userId in $getValue.AzureAdJoin.LocalAdmins.RegisteringUsers.AdditionalProperties.users)
             {
-                $userInfo = Get-MgUser -UserId $userId
-                $AzureAdJoinLocalAdminsRegisteringUsers += $userInfo.UserPrincipalName
+                try
+                {
+                    $userInfo = Get-MgUser -UserId $userId -ErrorAction Stop
+                    $AzureAdJoinLocalAdminsRegisteringUsers += $userInfo.UserPrincipalName
+                }
+                catch
+                {
+                    $message = "Could not find a user with id $($userId) specified in AllowedToJoin. Skipping user!"
+                    New-M365DSCLogEntry -Message $message `
+                        -Exception $_ `
+                        -Source $($MyInvocation.MyCommand.Source) `
+                        -TenantId $TenantId `
+                        -Credential $Credential
+                    continue
+                }
             }
 
             foreach ($groupId in $getValue.AzureAdJoin.LocalAdmins.RegisteringUsers.AdditionalProperties.groups)
             {
-                $groupInfo = Get-MgGroup -GroupId $groupId
-                $AzureAdJoinLocalAdminsRegisteringGroups += $groupInfo.DisplayName
+                try
+                {
+                    $groupInfo = Get-MgGroup -GroupId $groupId -ErrorAction Stop
+                    $AzureAdJoinLocalAdminsRegisteringGroups += $groupInfo.DisplayName
+                }
+                catch
+                {
+                    $message = "Could not find a group with id $($groupId) specified in AllowedToJoin. Skipping group!"
+                    New-M365DSCLogEntry -Message $message `
+                        -Exception $_ `
+                        -Source $($MyInvocation.MyCommand.Source) `
+                        -TenantId $TenantId `
+                        -Credential $Credential
+                    continue
+                }
             }
         }
 

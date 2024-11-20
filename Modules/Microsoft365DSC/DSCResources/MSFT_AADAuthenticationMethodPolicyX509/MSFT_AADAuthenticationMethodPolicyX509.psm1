@@ -4,6 +4,10 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Id,
+
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance]
         $AuthenticationModeConfiguration,
@@ -24,10 +28,6 @@ function Get-TargetResource
         [ValidateSet('enabled', 'disabled')]
         [System.String]
         $State,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Id,
 
         [Parameter()]
         [System.String]
@@ -62,6 +62,8 @@ function Get-TargetResource
         [System.String[]]
         $AccessTokens
     )
+
+    Write-Verbose -Message "Getting the Azure AD Authentication Method Policy X509 with Id {$Id}"
 
     try
     {
@@ -99,7 +101,8 @@ function Get-TargetResource
         #region resource generator code
         $complexAuthenticationModeConfiguration = @{}
         $complexRules = @()
-        if ($getValue.AdditionalProperties.authenticationModeConfiguration.rules.length -ne 0){
+        if ($getValue.AdditionalProperties.authenticationModeConfiguration.rules.length -ne 0)
+        {
             foreach ($currentRules in $getValue.AdditionalProperties.authenticationModeConfiguration.rules)
             {
                 $myRules = @{}
@@ -150,21 +153,39 @@ function Get-TargetResource
             }
         }
 
+        Write-Verbose 'Processing ExcludeTargets'
         $complexExcludeTargets = @()
         foreach ($currentExcludeTargets in $getValue.excludeTargets)
         {
             $myExcludeTargets = @{}
-            if ($currentExcludeTargets.id -ne 'all_users'){
-                $myExcludeTargetsDisplayName = get-MgGroup -GroupId $currentExcludeTargets.id
-                $myExcludeTargets.Add('Id', $myExcludeTargetsDisplayName.DisplayName)
+            if ($currentExcludeTargets.id -ne 'all_users')
+            {
+                try
+                {
+                    $myExcludeTargetsDisplayName = Get-MgGroup -GroupId $currentExcludeTargets.id -ErrorAction Stop
+                    $myExcludeTargets.Add('Id', $myExcludeTargetsDisplayName.DisplayName)
+                }
+                catch
+                {
+                    $message = "Could not find a group with id $($currentExcludeTargets.id) specified in ExcludeTargets. Skipping group!"
+                    New-M365DSCLogEntry -Message $message `
+                        -Exception $_ `
+                        -Source $($MyInvocation.MyCommand.Source) `
+                        -TenantId $TenantId `
+                        -Credential $Credential
+                    continue
+                }
             }
-            else{
+            else
+            {
                 $myExcludeTargets.Add('Id', $currentExcludeTargets.id)
             }
+
             if ($null -ne $currentExcludeTargets.targetType)
             {
                 $myExcludeTargets.Add('TargetType', $currentExcludeTargets.targetType.toString())
             }
+
             if ($myExcludeTargets.values.Where({ $null -ne $_ }).count -gt 0)
             {
                 $complexExcludeTargets += $myExcludeTargets
@@ -172,25 +193,44 @@ function Get-TargetResource
         }
         #endregion
 
+        Write-Verbose 'Processing IncludeTargets'
         $complexIncludeTargets = @()
         foreach ($currentIncludeTargets in $getValue.AdditionalProperties.includeTargets)
         {
             $myIncludeTargets = @{}
-            if ($currentIncludeTargets.id -ne 'all_users'){
-                $myIncludeTargetsDisplayName = get-MgGroup -GroupId $currentIncludeTargets.id
-                $myIncludeTargets.Add('Id', $myIncludeTargetsDisplayName.DisplayName)
+            if ($currentIncludeTargets.id -ne 'all_users')
+            {
+                try
+                {
+                    $myIncludeTargetsDisplayName = Get-MgGroup -GroupId $currentIncludeTargets.id -ErrorAction Stop
+                    $myIncludeTargets.Add('Id', $myIncludeTargetsDisplayName.DisplayName)
+                }
+                catch
+                {
+                    $message = "Could not find a group with id $($currentIncludeTargets.id) specified in IncludeTargets. Skipping group!"
+                    New-M365DSCLogEntry -Message $message `
+                        -Exception $_ `
+                        -Source $($MyInvocation.MyCommand.Source) `
+                        -TenantId $TenantId `
+                        -Credential $Credential
+                    continue
+                }
             }
-            else{
+            else
+            {
                 $myIncludeTargets.Add('Id', $currentIncludeTargets.id)
             }
+
             if ($null -ne $currentIncludeTargets.targetType)
             {
                 $myIncludeTargets.Add('TargetType', $currentIncludeTargets.targetType.toString())
             }
+
             if ($null -ne $currentIncludeTargets.isRegistrationRequired)
             {
                 $myIncludeTargets.Add('isRegistrationRequired', [Boolean]$currentIncludeTargets.isRegistrationRequired)
             }
+
             if ($myIncludeTargets.values.Where({ $null -ne $_ }).count -gt 0)
             {
                 $complexIncludeTargets += $myIncludeTargets
@@ -243,6 +283,10 @@ function Set-TargetResource
     param
     (
         #region resource generator code
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Id,
+
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance]
         $AuthenticationModeConfiguration,
@@ -263,12 +307,8 @@ function Set-TargetResource
         [ValidateSet('enabled', 'disabled')]
         [System.String]
         $State,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Id,
-
         #endregion
+
         [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
@@ -302,6 +342,8 @@ function Set-TargetResource
         [System.String[]]
         $AccessTokens
     )
+
+    Write-Verbose -Message "Setting the Azure AD Authentication Method Policy X509 with Id {$Id}"
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -379,6 +421,10 @@ function Test-TargetResource
     param
     (
         #region resource generator code
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Id,
+
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance]
         $AuthenticationModeConfiguration,
@@ -399,11 +445,6 @@ function Test-TargetResource
         [ValidateSet('enabled', 'disabled')]
         [System.String]
         $State,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Id,
-
         #endregion
 
         [Parameter()]
@@ -560,7 +601,7 @@ function Export-TargetResource
         #region resource generator code
         [array]$getValue = Get-MgBetaPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration `
             -AuthenticationMethodConfigurationId X509Certificate `
-            -ErrorAction Stop | Where-Object -FilterScript {$null -ne $_.Id}
+            -ErrorAction Stop | Where-Object -FilterScript { $null -ne $_.Id }
         #endregion
 
         $i = 1

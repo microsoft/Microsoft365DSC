@@ -2458,6 +2458,21 @@
                     TenantId              = $TenantId;
                     CertificateThumbprint = $CertificateThumbprint;
                 }
+                IntuneDiskEncryptionPDEPolicyWindows10 'IntuneDiskEncryptionPDEPolicyWindows10'
+                {
+                    Assignments                  = @();
+                    Description                  = "test";
+                    DisplayName                  = "test";
+                    Ensure                       = "Present";
+                    EnablePersonalDataEncryption = "1";
+                    ProtectDesktop               = "0";
+                    ProtectDocuments             = "0";
+                    ProtectPictures              = "0";
+                    RoleScopeTagIds              = @("0");
+                    ApplicationId                = $ApplicationId;
+                    TenantId                     = $TenantId;
+                    CertificateThumbprint        = $CertificateThumbprint;
+                }
                 IntuneDiskEncryptionWindows10 'myDiskEncryption'
                 {
                     DisplayName        = 'Disk Encryption'

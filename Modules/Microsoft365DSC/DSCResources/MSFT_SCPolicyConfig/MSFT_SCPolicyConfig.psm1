@@ -1287,12 +1287,12 @@ function Export-TargetResource
             $Results.BusinessJustificationList = ConvertTo-BusinessJustificationListString -ObjectHash $Results.BusinessJustificationList
         }
 
-        if ($null -ne $Results.DLPAppGroups)
+        if ($null -ne $Results.DLPAppGroups -and $Results.DLPAppGroups.Length -gt 0)
         {
             $Results.DLPAppGroups = ConvertTo-DLPAppGroupsString -ObjectHash $Results.DLPAppGroups
         }
 
-        if ($null -ne $Results.DLPNetworkShareGroups)
+        if ($null -ne $Results.DLPNetworkShareGroups -and $Results.DLPNetworkShareGroups.Length -gt 0)
         {
             $Results.DLPNetworkShareGroups = ConvertTo-DLPNetworkShareGroupsString -ObjectHash $Results.DLPNetworkShareGroups
         }
@@ -1302,7 +1302,7 @@ function Export-TargetResource
             $Results.DLPPrinterGroups = ConvertTo-DLPPrinterGroupsString -ObjectHash $Results.DLPPrinterGroups
         }
 
-        if ($null -ne $Results.DLPRemovableMediaGroups)
+        if ($null -ne $Results.DLPRemovableMediaGroups -and $Results.DLPRemovableMediaGroups.Length -gt 0)
         {
             $Results.DLPRemovableMediaGroups = ConvertTo-DLPRemovableMediaGroupsString -ObjectHash $Results.DLPRemovableMediaGroups
         }
@@ -1312,7 +1312,7 @@ function Export-TargetResource
             $Results.EvidenceStoreSettings = ConvertTo-EvidenceStoreSettingsString -ObjectHash $Results.EvidenceStoreSettings
         }
 
-        if ($null -ne $Results.SiteGroups)
+        if ($null -ne $Results.SiteGroups -and $Results.SiteGroups.Length -gt 0)
         {
             $Results.SiteGroups = ConvertTo-SiteGroupsString -ObjectHash $Results.SiteGroups
         }

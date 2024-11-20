@@ -33371,6 +33371,83 @@ function Get-MgBetaRoleManagementDirectoryRoleEligibilityScheduleRequest
         $HttpPipelineAppend
     )
 }
+function Get-MgBetaRoleManagementDirectoryRoleEAssignmentScheduleRequest
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [System.String]
+        $UnifiedRoleEligibilityScheduleRequestId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend
+    )
+}
 function New-MgBetaEntitlementManagementAccessPackage
 {
     [CmdletBinding()]
@@ -34526,6 +34603,136 @@ function New-MgBetaRoleManagementDirectoryRoleEligibilitySchedule
     )
 }
 function New-MgBetaRoleManagementDirectoryRoleEligibilityScheduleRequest
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Justification,
+
+        [Parameter()]
+        [PSObject]
+        $Principal,
+
+        [Parameter()]
+        [System.DateTime]
+        $CreatedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $Action,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [PSObject]
+        $ScheduleInfo,
+
+        [Parameter()]
+        [PSObject]
+        $DirectoryScope,
+
+        [Parameter()]
+        [PSObject]
+        $TargetSchedule,
+
+        [Parameter()]
+        [System.String]
+        $ApprovalId,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.String]
+        $CustomData,
+
+        [Parameter()]
+        [PSObject]
+        $CreatedBy,
+
+        [Parameter()]
+        [System.String]
+        $PrincipalId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsValidationOnly,
+
+        [Parameter()]
+        [System.DateTime]
+        $CompletedDateTime,
+
+        [Parameter()]
+        [PSObject]
+        $TicketInfo,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [PSObject]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $Status,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $TargetScheduleId,
+
+        [Parameter()]
+        [System.String]
+        $RoleDefinitionId,
+
+        [Parameter()]
+        [PSObject]
+        $RoleDefinition,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [PSObject]
+        $AppScope,
+
+        [Parameter()]
+        [System.String]
+        $DirectoryScopeId,
+
+        [Parameter()]
+        [System.String]
+        $AppScopeId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend
+    )
+}
+
+function New-MgBetaRoleManagementDirectoryRoleAssignmentScheduleRequest
 {
     [CmdletBinding()]
     param(
@@ -43390,91 +43597,6 @@ function Get-MgBetaRoleManagementDirectoryRoleEligibilitySchedule
         $HttpPipelineAppend
     )
 }
-function Get-MgBetaRoleManagementDirectoryRoleEligibilityScheduleRequest
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.String[]]
-        $Property,
-
-        [Parameter()]
-        [System.String]
-        $UnifiedRoleEligibilityScheduleRequestId,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [System.Int32]
-        $PageSize,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.Int32]
-        $Skip,
-
-        [Parameter()]
-        [PSObject]
-        $InputObject,
-
-        [Parameter()]
-        [System.Int32]
-        $Top,
-
-        [Parameter()]
-        [System.String]
-        $CountVariable,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [System.String[]]
-        $Sort,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $All,
-
-        [Parameter()]
-        [System.String]
-        $Filter,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [System.String]
-        $Search,
-
-        [Parameter()]
-        [System.String]
-        $ResponseHeadersVariable,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break,
-
-        [Parameter()]
-        [System.String[]]
-        $ExpandProperty,
-
-        [Parameter()]
-        [System.Collections.IDictionary]
-        $Headers,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelineAppend
-    )
-}
 function Get-MgBetaRoleManagementEntitlementManagement
 {
     [CmdletBinding()]
@@ -44918,143 +45040,6 @@ function New-MgBetaRoleManagementDirectoryRoleEligibilitySchedule
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
-
-        [Parameter()]
-        [System.String]
-        $RoleDefinitionId,
-
-        [Parameter()]
-        [PSObject]
-        $RoleDefinition,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [PSObject]
-        $AppScope,
-
-        [Parameter()]
-        [System.String]
-        $DirectoryScopeId,
-
-        [Parameter()]
-        [System.String]
-        $ResponseHeadersVariable,
-
-        [Parameter()]
-        [System.String]
-        $AppScopeId,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break,
-
-        [Parameter()]
-        [System.Collections.IDictionary]
-        $Headers,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelineAppend
-    )
-}
-function New-MgBetaRoleManagementDirectoryRoleEligibilityScheduleRequest
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.String]
-        $Justification,
-
-        [Parameter()]
-        [PSObject]
-        $Principal,
-
-        [Parameter()]
-        [System.DateTime]
-        $CreatedDateTime,
-
-        [Parameter()]
-        [System.String]
-        $Action,
-
-        [Parameter()]
-        [System.Collections.Hashtable]
-        $AdditionalProperties,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [PSObject]
-        $ScheduleInfo,
-
-        [Parameter()]
-        [PSObject]
-        $DirectoryScope,
-
-        [Parameter()]
-        [PSObject]
-        $TargetSchedule,
-
-        [Parameter()]
-        [System.String]
-        $ApprovalId,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.String]
-        $CustomData,
-
-        [Parameter()]
-        [PSObject]
-        $CreatedBy,
-
-        [Parameter()]
-        [System.String]
-        $PrincipalId,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $IsValidationOnly,
-
-        [Parameter()]
-        [System.DateTime]
-        $CompletedDateTime,
-
-        [Parameter()]
-        [PSObject]
-        $TicketInfo,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [PSObject]
-        $BodyParameter,
-
-        [Parameter()]
-        [System.String]
-        $Status,
-
-        [Parameter()]
-        [System.String]
-        $Id,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.String]
-        $TargetScheduleId,
 
         [Parameter()]
         [System.String]
@@ -104675,6 +104660,181 @@ function Get-MigrationUser
         [Parameter()]
         [System.Object]
         $StatusSummary
+    )
+}
+#endregion
+#region Microsoft.Graph.Authentication
+function Get-MgBetaRoleManagementDirectoryRoleAssignmentSchedule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.String]
+        $UnifiedRoleAssignmentScheduleId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.String]
+        $ResponseHeadersVariable,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [System.Collections.IDictionary]
+        $Headers,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend
+    )
+}
+#endregion
+
+#region Microsoft.Graph.Authentication
+function Get-MgBetaRoleManagementDirectoryRoleAssignmentScheduleRequest
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.String]
+        $UnifiedRoleAssignmentScheduleRequestId,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.String]
+        $ResponseHeadersVariable,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [System.Collections.IDictionary]
+        $Headers,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend
     )
 }
 #endregion

@@ -92,12 +92,12 @@ function Get-TargetResource
         {
             if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
             {
-                $getValue = $Script:exportedInstances | Where-Object -FilterScript {$_.DisplayName -eq $DisplayName}
+                $getValue = $Script:exportedInstances | Where-Object -FilterScript { $_.DisplayName -eq $DisplayName }
             }
             else
             {
-                $response = Invoke-MgGraphRequest -Method Get -Uri ($Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/policies/authenticationMethodsPolicy/")
-                $getValue = $response.authenticationMethodConfigurations | Where-Object -FilterScript {$_.DisplayName -eq $DisplayName}
+                $response = Invoke-MgGraphRequest -Method Get -Uri ($Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + 'beta/policies/authenticationMethodsPolicy/')
+                $getValue = $response.authenticationMethodConfigurations | Where-Object -FilterScript { $_.DisplayName -eq $DisplayName }
             }
         }
 
@@ -115,17 +115,34 @@ function Get-TargetResource
         foreach ($currentExcludeTargets in $getValue.excludeTargets)
         {
             $myExcludeTargets = @{}
-            if ($currentExcludeTargets.id -ne 'all_users'){
-                $myExcludeTargetsDisplayName = get-MgGroup -GroupId $currentExcludeTargets.id
-                $myExcludeTargets.Add('Id', $myExcludeTargetsDisplayName.DisplayName)
+            if ($currentExcludeTargets.id -ne 'all_users')
+            {
+                try
+                {
+                    $myExcludeTargetsDisplayName = Get-MgGroup -GroupId $currentExcludeTargets.id -ErrorAction Stop
+                    $myExcludeTargets.Add('Id', $myExcludeTargetsDisplayName.DisplayName)
+                }
+                catch
+                {
+                    $message = "Could not find a group with id $($currentExcludeTargets.id) specified in ExcludeTargets. Skipping group!"
+                    New-M365DSCLogEntry -Message $message `
+                        -Exception $_ `
+                        -Source $($MyInvocation.MyCommand.Source) `
+                        -TenantId $TenantId `
+                        -Credential $Credential
+                    continue
+                }
             }
-            else{
+            else
+            {
                 $myExcludeTargets.Add('Id', $currentExcludeTargets.id)
             }
+
             if ($null -ne $currentExcludeTargets.targetType)
             {
                 $myExcludeTargets.Add('TargetType', $currentExcludeTargets.targetType.toString())
             }
+
             if ($myExcludeTargets.values.Where({ $null -ne $_ }).count -gt 0)
             {
                 $complexExcludeTargets += $myExcludeTargets
@@ -137,17 +154,34 @@ function Get-TargetResource
         foreach ($currentincludeTargets in $getValue.includeTargets)
         {
             $myincludeTargets = @{}
-            if ($currentIncludeTargets.id -ne 'all_users'){
-                $myIncludeTargetsDisplayName = get-MgGroup -GroupId $currentIncludeTargets.id
-                $myIncludeTargets.Add('Id', $myIncludeTargetsDisplayName.DisplayName)
+            if ($currentIncludeTargets.id -ne 'all_users')
+            {
+                try
+                {
+                    $myIncludeTargetsDisplayName = Get-MgGroup -GroupId $currentIncludeTargets.id -ErrorAction Stop
+                    $myIncludeTargets.Add('Id', $myIncludeTargetsDisplayName.DisplayName)
+                }
+                catch
+                {
+                    $message = "Could not find a group with id $($currentIncludeTargets.id) specified in IncludeTargets. Skipping group!"
+                    New-M365DSCLogEntry -Message $message `
+                        -Exception $_ `
+                        -Source $($MyInvocation.MyCommand.Source) `
+                        -TenantId $TenantId `
+                        -Credential $Credential
+                    continue
+                }
             }
-            else{
+            else
+            {
                 $myIncludeTargets.Add('Id', $currentIncludeTargets.id)
             }
+
             if ($null -ne $currentincludeTargets.targetType)
             {
                 $myincludeTargets.Add('TargetType', $currentincludeTargets.targetType.toString())
             }
+
             if ($myincludeTargets.values.Where({ $null -ne $_ }).count -gt 0)
             {
                 $complexincludeTargets += $myincludeTargets
@@ -155,7 +189,7 @@ function Get-TargetResource
         }
 
         $complexOpenIdConnectSetting = @{
-            clientId = $getValue.OpenIdConnectSetting.ClientId
+            clientId     = $getValue.OpenIdConnectSetting.ClientId
             discoveryUrl = $getValue.OpenIdConnectSetting.DiscoveryUrl
         }
 
@@ -300,8 +334,8 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Updating the Azure AD Authentication Method Policy External with name {$($currentInstance.displayName)}"
 
-        $response = Invoke-MgGraphRequest -Method Get -Uri ($Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/policies/authenticationMethodsPolicy/")
-        $getValue = $response.authenticationMethodConfigurations | Where-Object -FilterScript {$_.displayName -eq $currentInstance.displayName}
+        $response = Invoke-MgGraphRequest -Method Get -Uri ($Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + 'beta/policies/authenticationMethodsPolicy/')
+        $getValue = $response.authenticationMethodConfigurations | Where-Object -FilterScript { $_.displayName -eq $currentInstance.displayName }
 
         $params.Remove('displayName') | Out-Null
 
@@ -313,8 +347,8 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Removing the Azure AD Authentication Method Policy External with Id {$($currentInstance.displayName)}"
 
-        $response = Invoke-MgGraphRequest -Method Get -Uri ($Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/policies/authenticationMethodsPolicy/")
-        $getValue = $response.authenticationMethodConfigurations | Where-Object -FilterScript {$_.displayName -eq $currentInstance.displayName}
+        $response = Invoke-MgGraphRequest -Method Get -Uri ($Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + 'beta/policies/authenticationMethodsPolicy/')
+        $getValue = $response.authenticationMethodConfigurations | Where-Object -FilterScript { $_.displayName -eq $currentInstance.displayName }
 
         Remove-MgBetaPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration -AuthenticationMethodConfigurationId $getValue.Id
     }
@@ -504,9 +538,9 @@ function Export-TargetResource
     try
     {
         #region resource generator code
-        $desiredType = "#microsoft.graph.externalAuthenticationMethodConfiguration"
-        $getPolicy = Invoke-MgGraphRequest -Method Get -Uri ($Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/policies/authenticationMethodsPolicy/")
-        $getValue = $getPolicy.AuthenticationMethodConfigurations | Where-Object -FilterScript {$_.'@odata.type' -eq $desiredType}
+        $desiredType = '#microsoft.graph.externalAuthenticationMethodConfiguration'
+        $getPolicy = Invoke-MgGraphRequest -Method Get -Uri ($Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + 'beta/policies/authenticationMethodsPolicy/')
+        $getValue = $getPolicy.AuthenticationMethodConfigurations | Where-Object -FilterScript { $_.'@odata.type' -eq $desiredType }
         #endregion
 
         $i = 1
@@ -649,11 +683,12 @@ function Get-UpdatedTargetProperty
         if ($key -eq 'IncludeTargets')
         {
             $i = 0
-            foreach ($entry in $params.$key){
+            foreach ($entry in $params.$key)
+            {
                 if ($entry.id -notmatch '^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$|all_users')
                 {
                     $Filter = "Displayname eq '$($entry.id)'" | Out-String
-                    $params.$key[$i].foreach('id',(Get-MgGroup -Filter $Filter).id.ToString())
+                    $params.$key[$i].foreach('id', (Get-MgGroup -Filter $Filter).id.ToString())
                 }
                 $i++
             }
@@ -661,11 +696,12 @@ function Get-UpdatedTargetProperty
         if ($key -eq 'ExcludeTargets')
         {
             $i = 0
-            foreach ($entry in $params.$key){
+            foreach ($entry in $params.$key)
+            {
                 if ($entry.id -notmatch '^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$|all_users')
                 {
                     $Filter = "Displayname eq '$($entry.id)'" | Out-String
-                    $params.$key[$i].foreach('id',(Get-MgGroup -Filter $Filter).id.ToString())
+                    $params.$key[$i].foreach('id', (Get-MgGroup -Filter $Filter).id.ToString())
                 }
                 $i++
             }

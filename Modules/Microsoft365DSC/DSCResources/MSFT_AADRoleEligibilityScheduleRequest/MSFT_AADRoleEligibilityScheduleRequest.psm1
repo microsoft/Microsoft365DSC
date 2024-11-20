@@ -12,16 +12,16 @@
         [System.String]
         $RoleDefinition,
 
-        [Parameter()]
-        [ValidateSet('User', 'Group')]
+        [Parameter(Mandatory = $true)]
+        [ValidateSet('User', 'Group', 'ServicePrincipal')]
         [System.String]
-        $PrincipalType = 'User',
+        $PrincipalType,
 
         [Parameter()]
         [System.String]
         $Id,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $DirectoryScopeId,
 
@@ -83,18 +83,11 @@
         [System.String[]]
         $AccessTokens
     )
-    try
-    {
-        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters
-    }
-    catch
-    {
-        Write-Verbose -Message ($_)
-    }
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+        -InboundParameters $PSBoundParameters
 
-        #Ensure the proper dependencies are installed in the current environment.
-        Confirm-M365DSCDependencies
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
@@ -124,137 +117,58 @@
             }
         }
 
-        if ($null -eq $request)
+        Write-Verbose -Message "Getting Role Eligibility by PrincipalId and RoleDefinitionId"
+        $PrincipalValue = $null
+        if ($PrincipalType -eq 'User')
         {
-            if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
-            {
-                    Write-Verbose -Message "Getting Role Eligibility by PrincipalId and RoleDefinitionId"
-                    $PrincipalTypeValue = $null
-                    if ($PrincipalType -eq 'User')
-                    {
-                        Write-Verbose -Message "Retrieving Principal by UserPrincipalName {$Principal}"
-                        $PrincipalIdValue = Get-MgUser -Filter "UserPrincipalName eq '$Principal'" -ErrorAction SilentlyContinue
-                        $PrincipalTypeValue = 'User'
-                    }
-                    if ($null -eq $PrincipalIdValue -or $PrincipalType -eq 'Group')
-                    {
-                        Write-Verbose -Message "Retrieving Principal by DisplayName {$Principal}"
-                        $PrincipalIdValue = Get-MgGroup -Filter "DisplayName eq '$Principal'" -ErrorAction SilentlyContinue
-                        $PrincipalTypeValue = 'Group'
-                    }
-
-                    if ($null -ne $PrincipalIdValue)
-                    {
-                        $PrincipalId = $PrincipalIdValue.Id
-                    }
-                    else
-                    {
-                        return $nullResult
-                    }
-                    Write-Verbose -Message "Found Principal {$PrincipalId}"
-                    $RoleDefinitionId = (Get-MgBetaRoleManagementDirectoryRoleDefinition -Filter "DisplayName eq '$RoleDefinition'").Id
-                    $request = $Script:exportedInstances | Where-Object -FilterScript {$_.PrincipalId -eq $PrincipalId -and $_.RoleDefinitionId -eq $RoleDefinition} | Sort-Object -Property CompletedDateTime -Descending
-            }
-            else
-            {
-                Write-Verbose -Message "Getting Role Eligibility by PrincipalId and RoleDefinitionId"
-                if ($PrincipalType -eq 'User')
-                {
-                    Write-Verbose -Message "Retrieving principal {$Principal} of type {$PrincipalType}"
-                    $PrincipalIdValue = Get-MgUser -Filter "UserPrincipalName eq '$Principal'" -ErrorAction SilentlyContinue
-                    $PrincipalTypeValue = 'User'
-                }
-
-                if ($null -eq $PrincipalIdValue -or $PrincipalType -eq 'Group')
-                {
-                    Write-Verbose -Message "Retrieving principal {$Principal} of type {$PrincipalType}"
-                    $PrincipalIdValue = Get-MgGroup -Filter "DisplayName eq '$Principal'" -ErrorAction SilentlyContinue
-                    $PrincipalTypeValue = 'Group'
-                }
-
-                if ($null -ne $PrincipalIdValue)
-                {
-                    $PrincipalId = $PrincipalIdValue.Id
-                }
-                else
-                {
-                    return $nullResult
-                }
-                Write-Verbose -Message "Found Principal {$PrincipalId}"
-                $schedulesForPrincipal = Get-MgBetaRoleManagementDirectoryRoleEligibilitySchedule -Filter "PrincipalId eq '$PrincipalId'"
-                foreach ($instance in $schedulesForPrincipal)
-                {
-                    $roleInfo = Get-MgBetaRoleManagementDirectoryRoleDefinition -UnifiedRoleDefinitionId $instance.RoleDefinitionId
-                    if ($roleInfo.DisplayName -eq $RoleDefinition)
-                    {
-                        $schedule = $instance
-                    }
-                }
-                [Array]$request = Get-MgBetaRoleManagementDirectoryRoleEligibilityScheduleRequest -Filter "PrincipalId eq '$PrincipalId'" | Where-Object -FilterScript {$_.RoleDefinitionId -eq $schedule.RoleDefinitionId} | Sort-Object -Property CompletedDateTime -Descending
-`
-                if ($request.Length -gt 1)
-                {
-                    $request = $request[0]
-                }
-            }
+            Write-Verbose -Message "Retrieving Principal by UserPrincipalName {$Principal}"
+            $PrincipalInstance = Get-MgUser -Filter "UserPrincipalName eq '$Principal'" -ErrorAction SilentlyContinue
+            $PrincipalValue = $PrincipalInstance.UserPrincipalName
+        }
+        elseif ($null -eq $PrincipalIdValue -and $PrincipalType -eq 'Group')
+        {
+            Write-Verbose -Message "Retrieving Principal by DisplayName {$Principal}"
+            $PrincipalInstance = Get-MgGroup -Filter "DisplayName eq '$Principal'" -ErrorAction SilentlyContinue
+            $PrincipalValue = $PrincipalInstance.DisplayName
         }
         else
         {
-            Write-Verbose -Message "Request is not null: $request"
-            $ObjectGuid = [System.Guid]::empty
-            if ($PrincipalType -eq 'User')
-            {
-                Write-Verbose -Message "Retrieving principal {$Principal} of type {$PrincipalType}"
+            Write-Verbose -Message "Retrieving Principal by DisplayName {$Principal}"
+            $PrincipalInstance = Get-MgServicePrincipal -Filter "DisplayName eq '$Principal'" -ErrorAction SilentlyContinue
+            $PrincipalValue = $PrincipalInstance.DisplayName
+        }
 
-                if ([System.Guid]::TryParse($Principal,[System.Management.Automation.PSReference]$ObjectGuid))
-                {
-                    $PrincipalIdValue = Get-MgUser -UserId $Principal -ErrorAction SilentlyContinue
-                }
-                else
-                {
-                    $PrincipalIdValue = Get-MgUser -Filter "UserPrincipalName eq '$Principal'" -ErrorAction SilentlyContinue
-                }
-                $PrincipalTypeValue = 'User'
-            }
+        Write-Verbose -Message "Found Principal"
+        $RoleDefinitionId = (Get-MgBetaRoleManagementDirectoryRoleDefinition -Filter "DisplayName eq '$RoleDefinition'").Id
+        Write-Verbose -Message "Retrieved role definition {$RoleDefinition} with ID {$RoleDefinitionId}"
 
-            if ($null -eq $PrincipalIdValue -or $PrincipalType -eq 'Group')
-            {
-                Write-Verbose -Message "Retrieving principal {$Principal} of type {$PrincipalType}"
-                if ([System.Guid]::TryParse($Principal,[System.Management.Automation.PSReference]$ObjectGuid))
-                {
-                    $PrincipalIdValue = Get-MgGroup -GroupId $Principal -ErrorAction SilentlyContinue
-                }
-                else
-                {
-                    $PrincipalIdValue = Get-MgGroup -Filter "DisplayName eq '$Principal'" -ErrorAction SilentlyContinue
-                }
-                $PrincipalTypeValue = 'Group'
-            }
-
-            if ($null -ne $PrincipalIdValue)
-            {
-                $PrincipalId = $PrincipalIdValue.Id
-            }
-            else
+        if ($null -eq $request)
+        {
+            Write-Verbose -Message "Retrieving the request by PrincipalId {$($PrincipalInstance.Id)}, RoleDefinitionId {$($RoleDefinitionId)} and DirectoryScopeId {$($DirectoryScopeId)}"
+            [Array] $requests = Get-MgBetaRoleManagementDirectoryRoleEligibilityScheduleRequest -Filter "PrincipalId eq '$($PrincipalInstance.Id)' and RoleDefinitionId eq '$($RoleDefinitionId)' and DirectoryScopeId eq '$($DirectoryScopeId)'"
+            if ($requests.Length -eq 0)
             {
                 return $nullResult
             }
-            $RoleDefinitionId = (Get-MgBetaRoleManagementDirectoryRoleDefinition -Filter "DisplayName eq '$RoleDefinition'").Id
-            $schedules = Get-MgBetaRoleManagementDirectoryRoleEligibilitySchedule -Filter "PrincipalId eq '$($request.PrincipalId)'"
-            $schedule = $schedules | Where-Object -FilterScript {$_.RoleDefinitionId -eq $RoleDefinitionId}
-            if ($null -eq $schedule)
+
+            $request = $requests[0]
+        }
+
+        $schedules = Get-MgBetaRoleManagementDirectoryRoleEligibilitySchedule -Filter "PrincipalId eq '$($request.PrincipalId)'"
+        $schedule = $schedules | Where-Object -FilterScript {$_.RoleDefinitionId -eq $RoleDefinitionId}
+        if ($null -eq $schedule)
+        {
+            foreach ($instance in $schedules)
             {
-                foreach ($instance in $schedules)
+                $roleDefinitionInfo = Get-MgBetaRoleManagementDirectoryRoleDefinition -UnifiedRoleDefinitionId $instance.RoleDefinitionId
+                if ($null -ne $roleDefinitionInfo -and $RoleDefinitionInfo.DisplayName -eq $RoleDefinition)
                 {
-                    $roleDefinitionInfo = Get-MgBetaRoleManagementDirectoryRoleDefinition -UnifiedRoleDefinitionId $instance.RoleDefinitionId
-                    if ($null -ne $roleDefinitionInfo -and $RoleDefinitionInfo.DisplayName -eq $RoleDefinition)
-                    {
-                        $schedule = $instance
-                        break
-                    }
+                    $schedule = $instance
+                    break
                 }
             }
         }
+
         if ($null -eq $schedule -or $null -eq $request)
         {
             if ($null -eq $schedule)
@@ -265,32 +179,6 @@
             {
                 Write-Verbose -Message "Could not request the schedule for {$RoleDefinition}"
             }
-            return $nullResult
-        }
-
-        Write-Verbose -Message "Found existing AADRolelLigibilityScheduleRequest"
-        if ($PrincipalType -eq 'User')
-        {
-            Write-Verbose -Message "Retrieving Principal by UserId {$($request.PrincipalId)}"
-            $PrincipalInstance = Get-MgUser -UserId $request.PrincipalId -ErrorAction SilentlyContinue
-            $PrincipalTypeValue = 'User'
-        }
-        if ($null -eq $PrincipalInstance -or $PrincipalType -eq 'Group')
-        {
-            Write-Verbose -Message "Retrieving Principal by GroupId {$($request.PrincipalId)}"
-            $requestArray = [Array]$request
-            if ($requestArray.Count -gt 1)
-            {
-                $requestArray = $requestArray | Sort-Object -Property CreatedDateTime -Descending
-                $request = $requestArray[0]
-            }
-            $PrincipalInstance = Get-MGGroup -GroupId $request.PrincipalId -ErrorAction SilentlyContinue
-            $PrincipalTypeValue = 'Group'
-        }
-
-        if ($null -eq $PrincipalInstance)
-        {
-            Write-Verbose -Message "Couldn't retrieve Principal {$($request.PrincipalId)}"
             return $nullResult
         }
 
@@ -344,19 +232,9 @@
             }
         }
 
-        $PrincipalValue = $null
-        if ($PrincipalType -eq 'User')
-        {
-            $PrincipalValue = $PrincipalInstance.UserPrincipalName
-        }
-        if ($null -eq $PrincipalValue -or $PrincipalTypeValue -eq 'Group')
-        {
-            $PrincipalValue = $PrincipalInstance.DisplayName
-        }
-
         $results = @{
             Principal             = $PrincipalValue
-            PrincipalType         = $PrincipalTypeValue
+            PrincipalType         = $PrincipalType
             RoleDefinition        = $RoleDefinition
             DirectoryScopeId      = $request.DirectoryScopeId
             AppScopeId            = $request.AppScopeId
@@ -403,16 +281,16 @@ function Set-TargetResource
         [System.String]
         $RoleDefinition,
 
-        [Parameter()]
-        [ValidateSet('User', 'Group')]
+        [Parameter(Mandatory = $true)]
+        [ValidateSet('User', 'Group', 'ServicePrincipal')]
         [System.String]
-        $PrincipalType = 'User',
+        $PrincipalType,
 
         [Parameter()]
         [System.String]
         $Id,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $DirectoryScopeId,
 
@@ -518,6 +396,10 @@ function Set-TargetResource
     {
         [Array]$PrincipalIdValue = (Get-MgGroup -Filter "DisplayName eq '$Principal'").Id
     }
+    elseif ($PrincipalType -eq 'ServicePrincipal')
+    {
+        [Array]$PrincipalIdValue = (Get-MgServicePrincipal -Filter "DisplayName eq '$Principal'").Id
+    }
 
     if ($null -eq $PrincipalIdValue)
     {
@@ -598,21 +480,21 @@ function Set-TargetResource
     $ParametersOps.Remove("PrincipalType") | Out-Null
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        Write-Verbose -Message "Creating a Role Eligibility Schedule Request for user {$Principal} and role {$RoleDefinition}"
+        Write-Verbose -Message "Creating a Role Assignment Schedule Request for principal {$Principal} and role {$RoleDefinition}"
         $ParametersOps.Remove("Id") | Out-Null
         Write-Verbose -Message "Values: $(Convert-M365DscHashtableToString -Hashtable $ParametersOps)"
         New-MgBetaRoleManagementDirectoryRoleEligibilityScheduleRequest @ParametersOps
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Updating the Role Eligibility Schedule Request for user {$Principal} and role {$RoleDefinition}"
+        Write-Verbose -Message "Updating the Role Assignment Schedule Request for principal {$Principal} and role {$RoleDefinition}"
         $ParametersOps.Remove("Id") | Out-Null
         $ParametersOps.Action = 'AdminUpdate'
         New-MgBetaRoleManagementDirectoryRoleEligibilityScheduleRequest @ParametersOps
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing the Role Eligibility Schedule Request for user {$Principal} and role {$RoleDefinition}"
+        Write-Verbose -Message "Removing the Role Assignment Schedule Request for principal {$Principal} and role {$RoleDefinition}"
         $ParametersOps.Remove("Id") | Out-Null
         $ParametersOps.Action = 'AdminRemove'
         New-MgBetaRoleManagementDirectoryRoleEligibilityScheduleRequest @ParametersOps
@@ -633,16 +515,16 @@ function Test-TargetResource
         [System.String]
         $RoleDefinition,
 
-        [Parameter()]
-        [ValidateSet('User', 'Group')]
+        [Parameter(Mandatory = $true)]
+        [ValidateSet('User', 'Group', 'ServicePrincipal')]
         [System.String]
-        $PrincipalType = 'User',
+        $PrincipalType,
 
         [Parameter()]
         [System.String]
         $Id,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $DirectoryScopeId,
 
@@ -862,10 +744,36 @@ function Export-TargetResource
             $displayedKey = $request.Id
             Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -NoNewline
 
+            # Find the Principal Type
+            $principalType = 'User'
+            $userInfo = Get-MgUser -UserId $request.PrincipalId -ErrorAction SilentlyContinue
+
+            if ($null -eq $userInfo)
+            {
+                $principalType = 'Group'
+                $groupInfo = Get-MgGroup -GroupId $request.PrincipalId -ErrorAction SilentlyContinue
+                if ($null -eq $groupInfo)
+                {
+                    $principalType = 'ServicePrincipal'
+                    $spnInfo = Get-MgServicePrincipal -ServicePrincipalId $request.PrincipalId
+                    $PrincipalValue = $spnInfo.DisplayName
+                }
+                else
+                {
+                    $PrincipalValue = $groupInfo.DisplayName
+                }
+            }
+            else
+            {
+                $PrincipalValue = $userInfo.UserPrincipalName
+            }
+
             $RoleDefinitionId = Get-MgBetaRoleManagementDirectoryRoleDefinition -UnifiedRoleDefinitionId $request.RoleDefinitionId
             $params = @{
                 Id                    = $request.Id
-                Principal             = $request.PrincipalId
+                Principal             = $PrincipalValue
+                PrincipalType         = $principalType
+                DirectoryScopeId      = $request.DirectoryScopeId
                 RoleDefinition        = $RoleDefinitionId.DisplayName
                 Ensure                = 'Present'
                 Credential            = $Credential

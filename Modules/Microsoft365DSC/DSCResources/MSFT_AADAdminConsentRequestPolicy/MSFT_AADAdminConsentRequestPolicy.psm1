@@ -97,10 +97,22 @@ function Get-TargetResource
             elseif ($reviewer.Query.Contains('/groups/'))
             {
                 $groupId = $reviewer.Query.Split('/')[3]
-                $groupInfo = Get-MgGroup -GroupId $groupId
-                $entry = @{
-                    ReviewerType = 'Group'
-                    ReviewerId   = $groupInfo.DisplayName
+                try
+                {
+                    $groupInfo = Get-MgGroup -GroupId $groupId -ErrorAction SilentlyContinue
+                    $entry = @{
+                        ReviewerType = 'Group'
+                        ReviewerId   = $groupInfo.DisplayName
+                    }
+                }
+                catch
+                {
+                    $message = "Group with ID $groupId specified in Reviewers not found"
+                    New-M365DSCLogEntry -Message $message `
+                        -Source $($MyInvocation.MyCommand.Source) `
+                        -TenantId $TenantId `
+                        -Credential $Credential
+                    continue
                 }
             }
             elseif ($reviewer.Query.Contains('directory/roleAssignments?$'))

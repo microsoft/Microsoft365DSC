@@ -968,15 +968,8 @@ function Set-TargetResource
                     {
                         #is not a guid try with user
                         $Filter = "UserPrincipalName eq '" + $item + "'"
-                        try
-                        {
-                            $user = Get-MgUser -Filter $Filter -ErrorAction Stop
-                        }
-                        catch
-                        {
-                            Write-Verbose -Message 'User not found, try with group'
-                        }
-                        if ($user.length -gt 0)
+                        $user = Get-MgUser -Filter $Filter
+                        if ($null -ne $user)
                         {
                             $ActivateApprovers = @{}
                             $ActivateApprovers.Add('@odata.type', '#microsoft.graph.singleUser')
@@ -986,23 +979,21 @@ function Set-TargetResource
                         }
                         else
                         {
-                            #try with group
+                            Write-Verbose -Message "User '$item' not found, trying with group"
+
                             $Filter = "displayName eq '" + $item + "'"
-                            try
-                            {
-                                $group = Get-MgGroup -Filter $Filter -ErrorAction Stop
-                            }
-                            catch
-                            {
-                                Write-Verbose -Message 'Group not found'
-                            }
-                            if ($group.length -gt 0)
+                            $group = Get-MgGroup -Filter $Filter
+                            if ($null -ne $group)
                             {
                                 $ActivateApprovers = @{}
                                 $ActivateApprovers.Add('@odata.type', '#microsoft.graph.groupMembers')
                                 $ActivateApprovers.Add('groupId', $group.Id)
                                 $primaryApprovers += $ActivateApprovers
                                 $group = $null
+                            }
+                            else
+                            {
+                                throw "Group '$item' not found. Cannot add as approver."
                             }
                         }
                     }
@@ -1012,6 +1003,7 @@ function Set-TargetResource
                 $approvalStages.Add('isApproverJustificationRequired', 'true')
                 $approvalStages.Add('escalationTimeInMinutes', '0')
                 $approvalStages.Add('isEscalationEnabled', 'False')
+
                 if ($primaryApprovers.Count -gt 0)
                 {
                     $approvalStages.Add('primaryApprovers', @($primaryApprovers))

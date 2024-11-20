@@ -1,0 +1,44 @@
+{
+  "resourceName":"IntuneDiskEncryptionPDEPolicyWindows10",
+  "description":"This resource configures an Intune Disk Encryption P D E Policy for Windows10.",
+  "permissions":{
+      "graph":{
+          "application":{
+              "update":[
+                  {
+                      "name":"DeviceManagementConfiguration.ReadWrite.All"
+                  },
+                  {
+                      "name":"Group.Read.All"
+                  }
+              ],
+              "read":[
+                  {
+                      "name":"DeviceManagementConfiguration.Read.All"
+                  },
+                  {
+                      "name":"Group.Read.All"
+                  }
+              ]
+          },
+          "delegated":{
+              "update":[
+                  {
+                      "name":"DeviceManagementConfiguration.ReadWrite.All"
+                  },
+                  {
+                      "name":"Group.Read.All"
+                  }
+              ],
+              "read":[
+                  {
+                      "name":"DeviceManagementConfiguration.Read.All"
+                  },
+                  {
+                      "name":"Group.Read.All"
+                  }
+              ]
+          }
+      }
+  }
+}
