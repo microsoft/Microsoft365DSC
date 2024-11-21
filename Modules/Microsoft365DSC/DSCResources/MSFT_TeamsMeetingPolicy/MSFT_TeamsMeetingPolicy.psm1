@@ -473,6 +473,12 @@ function Get-TargetResource
             TeamsCameraFarEndPTZMode                   = $policy.TeamsCameraFarEndPTZMode
             WhoCanRegister                             = $policy.WhoCanRegister
             Ensure                                     = 'Present'
+            Credential                                 = $Credential
+            ApplicationId                              = $ApplicationId
+            TenantId                                   = $TenantId
+            CertificateThumbprint                      = $CertificateThumbprint
+            ManagedIdentity                            = $ManagedIdentity.IsPresent
+            AccessTokens                               = $AccessTokens
         }
     }
     catch
