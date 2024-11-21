@@ -492,7 +492,7 @@ function Set-TargetResource
         Write-Verbose -Message "Updating Task with:`r`n$JSONDetails"
         # Need to continue to rely on Invoke-MgGraphRequest
         Invoke-MgGraphRequest -Method PATCH `
-            -Uri "https://graph.microsoft.com/v1.0/planner/tasks/$taskId" `
+            -Uri "$($Global:MSCloudLoginAssistant.MicrosoftGraph.ResourceUrl)v1.0/planner/tasks/$taskId" `
             -Headers $Headers `
             -Body $JSONDetails
 
@@ -504,7 +504,7 @@ function Set-TargetResource
         $JSONDetails = (ConvertTo-Json $details)
         Write-Verbose -Message "Updating Task's details with:`r`n$JSONDetails"
         Invoke-MgGraphRequest -Method PATCH `
-            -Uri "https://graph.microsoft.com/v1.0/planner/tasks/$taskId/details" `
+            -Uri "$($Global:MSCloudLoginAssistant.MicrosoftGraph.ResourceUrl)v1.0/planner/tasks/$taskId/details" `
             -Headers $Headers `
             -Body $JSONDetails
 
@@ -940,7 +940,7 @@ function Get-M365DSCPlannerTasksFromPlan
         $Credential
     )
     $results = @()
-    $uri = "https://graph.microsoft.com/v1.0/planner/plans/$PlanId/tasks"
+    $uri = "$($Global:MSCloudLoginAssistant.MicrosoftGraph.ResourceUrl)v1.0/planner/plans/$PlanId/tasks"
     $taskResponse = Invoke-MSCloudLoginMicrosoftGraphAPI -Credential $Credential `
         -Uri $uri `
         -Method Get

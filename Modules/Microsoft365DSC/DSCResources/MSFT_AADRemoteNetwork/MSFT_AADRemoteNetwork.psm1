@@ -262,7 +262,7 @@ function Set-TargetResource
             "@context" = '#$delta'
             value = @(@{})
         }
-        Invoke-MgGraphRequest -Uri https://graph.microsoft.com/beta/networkAccess/connectivity/remoteNetworks/$($currentInstance.Id)/forwardingProfiles -Method Patch -Body $params
+        Invoke-MgGraphRequest -Uri "$($Global:MSCloudLoginAssistant.MicrosoftGraph.ResourceUrl)beta/networkAccess/connectivity/remoteNetworks/$($currentInstance.Id)/forwardingProfiles" -Method Patch -Body $params
 
         #adding forwarding profiles if required
         if ($forwardingProfilesList.Count -gt 0) {
@@ -270,7 +270,7 @@ function Set-TargetResource
                 "@context" = '#$delta'
                 value = $forwardingProfilesList
             }
-            Invoke-MgGraphRequest -Uri https://graph.microsoft.com/beta/networkAccess/connectivity/remoteNetworks/$($currentInstance.Id)/forwardingProfiles -Method Patch -Body $params
+            Invoke-MgGraphRequest -Uri "$($Global:MSCloudLoginAssistant.MicrosoftGraph.ResourceUrl)beta/networkAccess/connectivity/remoteNetworks/$($currentInstance.Id)/forwardingProfiles" -Method Patch -Body $params
         }
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')

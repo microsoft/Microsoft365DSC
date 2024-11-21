@@ -480,16 +480,16 @@ function Export-TargetResource
         {
             Write-Host "`r`n" -NoNewline
         }
-        foreach ($account in $accounts)
+        foreach ($account in $accounts.Value)
         {
-            $organization = $account.Value.accountName
+            $organization = $account.accountName
             if ($null -ne $Global:M365DSCExportResourceInstancesCount)
             {
                 $Global:M365DSCExportResourceInstancesCount++
             }
 
             $displayedKey = $organization
-            Write-Host "    |---[$i/$($accounts.Count)] $displayedKey" -NoNewline
+            Write-Host "    |---[$i/$($accounts.Value.Count)] $displayedKey" -NoNewline
             $params = @{
                 OrganizationName      = $organization
                 Credential            = $Credential
