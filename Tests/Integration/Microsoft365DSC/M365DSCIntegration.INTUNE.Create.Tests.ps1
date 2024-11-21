@@ -2777,6 +2777,59 @@
                     TenantId              = $TenantId;
                     CertificateThumbprint = $CertificateThumbprint;
                 }
+                IntuneFirewallRulesPolicyWindows10ConfigMgr 'myIntuneFirewallRulesPolicyWindows10ConfigMgr'
+                {
+                    Assignments           = @(
+                        MSFT_DeviceManagementConfigurationPolicyAssignments{
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                            dataType = '#microsoft.graph.groupAssignmentTarget'
+                            groupId = '11111111-1111-1111-1111-111111111111'
+                        }
+                    );
+                    FirewallRuleName = @(
+                        MSFT_MicrosoftGraphIntuneSettingsCatalogFirewallRuleName_IntuneFirewallRulesPolicyWindows10ConfigMgr{
+                            Direction = 'out'
+                            InterfaceTypes = @('lan')
+                            RemotePortRanges = @('0-100')
+                            Name = 'Rule1'
+                            FilePath = 'C:\Temp'
+                            Protocol = 80
+                            ServiceName = 'mysvc'
+                            Enabled = '1'
+                            Type = '1'
+                        }
+                    )
+                    Description           = 'Description'
+                    DisplayName           = "Intune Firewall Rules Policy Windows10 ConfigMgr";
+                    Ensure                = "Present";
+                    Id                    = '00000000-0000-0000-0000-000000000000'
+                    RoleScopeTagIds       = @("0");
+                    ApplicationId         = $ApplicationId;
+                    TenantId              = $TenantId;
+                    CertificateThumbprint = $CertificateThumbprint;
+                }
+                IntuneMobileAppConfigurationPolicyIOS 'ConfigureIntuneMobileAppConfigurationPolicyIOS'
+                {
+                    Description           = "IntuneMobileAppConfigurationPolicyIOS Description";
+                    DisplayName           = "IntuneMobileAppConfigurationPolicyIOS DisplayName";
+                    Ensure                = "Present";
+                    settings              = @(
+                        MSFT_appConfigurationSettingItem{
+                            appConfigKey = 'ConfigKey1'
+                            appConfigKeyType = 'stringType'
+                            appConfigKeyValue = 'KeyValue1'
+                        }
+                        MSFT_appConfigurationSettingItem{
+                            appConfigKey = 'ConfigKey2'
+                            appConfigKeyType = 'stringType'
+                            appConfigKeyValue = 'keyValue2'
+                        }
+                    );
+                    targetedMobileApps    = @("06131066-8adf-42a9-86aa-e4b59e27da5d");
+                    ApplicationId         = $ApplicationId;
+                    TenantId              = $TenantId;
+                    CertificateThumbprint = $CertificateThumbprint;
+                }
                 IntuneMobileAppsMacOSLobApp 'IntuneMobileAppsMacOSLobApp-TeamsForBusinessInstaller'
                 {
                     Id                    = "8d027f94-0682-431e-97c1-827d1879fa79";

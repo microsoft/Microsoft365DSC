@@ -423,7 +423,7 @@ function Set-TargetResource
                 {
                     $value = $presentationValue.clone()
                     $value = Rename-M365DSCCimInstanceParameter -Properties $value -KeyMapping $keyToRename
-                    $value.add('presentation@odata.bind', "https://graph.microsoft.com/beta/deviceManagement/groupPolicyDefinitions('$($definitionValue.Definition.Id)')/presentations('$($presentationValue.presentationDefinitionId)')")
+                    $value.add('presentation@odata.bind', $Global:MSCloudLoginAssistant.MicrosoftGraph.ResourceUrl + "beta/deviceManagement/groupPolicyDefinitions('$($definitionValue.Definition.Id)')/presentations('$($presentationValue.presentationDefinitionId)')")
                     $value.remove('PresentationDefinitionId')
                     $value.remove('PresentationDefinitionLabel')
                     $value.remove('id')
@@ -431,7 +431,7 @@ function Set-TargetResource
                 }
             }
             $complexDefinitionValue = @{
-                'definition@odata.bind' = "https://graph.microsoft.com/beta/deviceManagement/groupPolicyDefinitions('$($definitionValue.Definition.Id)')"
+                'definition@odata.bind' = $Global:MSCloudLoginAssistant.MicrosoftGraph.ResourceUrl + "beta/deviceManagement/groupPolicyDefinitions('$($definitionValue.Definition.Id)')"
                 enabled                 = $definitionValue.Enabled
                 presentationValues      = $complexPresentationValues
             }
@@ -519,7 +519,7 @@ function Set-TargetResource
                 {
                     $value = $presentationValue.clone()
                     $value = Rename-M365DSCCimInstanceParameter -Properties $value -KeyMapping $keyToRename
-                    $value.add('presentation@odata.bind', "https://graph.microsoft.com/beta/deviceManagement/groupPolicyDefinitions('$($definitionValue.Definition.Id)')/presentations('$($presentationValue.presentationDefinitionId)')")
+                    $value.add('presentation@odata.bind', "$($Global:MSCloudLoginAssistant.MicrosoftGraph.ResourceUrl)beta/deviceManagement/groupPolicyDefinitions('$($definitionValue.Definition.Id)')/presentations('$($presentationValue.presentationDefinitionId)')")
                     $value.remove('PresentationDefinitionId')
                     $value.remove('PresentationDefinitionLabel')
                     $value.remove('id')
@@ -527,7 +527,7 @@ function Set-TargetResource
                 }
             }
             $complexDefinitionValue = @{
-                'definition@odata.bind' = "https://graph.microsoft.com/beta/deviceManagement/groupPolicyDefinitions('$($definitionValue.Definition.Id)')"
+                'definition@odata.bind' = $Global:MSCloudLoginAssistant.MicrosoftGraph.ResourceUrl + "beta/deviceManagement/groupPolicyDefinitions('$($definitionValue.Definition.Id)')"
                 enabled                 = $definitionValue.Enabled
                 presentationValues      = $complexPresentationValues
             }
@@ -553,7 +553,7 @@ function Set-TargetResource
                     $currentPresentationValue = $currentDefinitionValue.PresentationValues | Where-Object { $_.PresentationDefinitionId -eq $presentationValue.presentationDefinitionId }
                     $value = $presentationValue.clone()
                     $value = Rename-M365DSCCimInstanceParameter -Properties $value -KeyMapping $keyToRename
-                    $value.add('presentation@odata.bind', "https://graph.microsoft.com/beta/deviceManagement/groupPolicyDefinitions('$($definitionValue.Definition.Id)')/presentations('$($presentationValue.presentationDefinitionId)')")
+                    $value.add('presentation@odata.bind', "$($Global:MSCloudLoginAssistant.MicrosoftGraph.ResourceUrl)beta/deviceManagement/groupPolicyDefinitions('$($definitionValue.Definition.Id)')/presentations('$($presentationValue.presentationDefinitionId)')")
                     $value.remove('PresentationDefinitionId')
                     $value.remove('PresentationDefinitionLabel')
                     $value.remove('id')
@@ -563,7 +563,7 @@ function Set-TargetResource
             }
             $complexDefinitionValue = @{
                 id                      = $currentDefinitionValue.Id
-                'definition@odata.bind' = "https://graph.microsoft.com/beta/deviceManagement/groupPolicyDefinitions('$($definitionValue.Definition.Id)')"
+                'definition@odata.bind' = $Global:MSCloudLoginAssistant.MicrosoftGraph.ResourceUrl + "beta/deviceManagement/groupPolicyDefinitions('$($definitionValue.Definition.Id)')"
                 enabled                 = $definitionValue.Enabled
                 presentationValues      = $complexPresentationValues
             }

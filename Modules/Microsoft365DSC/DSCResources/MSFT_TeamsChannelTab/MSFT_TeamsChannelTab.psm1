@@ -368,7 +368,7 @@ function Set-TargetResource
         Write-Verbose -Message "Params: $($CurrentParameters | Out-String)"
 
         $additionalProperties = @{
-            'teamsApp@odata.bind' = "https://graph.microsoft.com/v1.0/appCatalogs/teamsApps/$TeamsApp"
+            'teamsApp@odata.bind' = "$($Global:MSCloudLoginAssistant.MicrosoftGraph.ResourceUrl)v1.0/appCatalogs/teamsApps/$TeamsApp"
         }
         $CurrentParameters.Add('AdditionalProperties', $additionalProperties)
 

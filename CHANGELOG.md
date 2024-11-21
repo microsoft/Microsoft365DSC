@@ -2,6 +2,11 @@
 
 # UNRELEASED
 
+* MISC
+  * Removed hardcoded Graph urls and replaced by MSCloudLoginAssistant values.
+
+# 1.24.1120.1
+
 * AADAdminConsentRequestPolicy
   * Added error handling to Group display name retrieval to prevent errors
     when an assigned group no longer exists.
@@ -54,6 +59,8 @@
     when an approver does not exist.
     FIXES [#5423](https://github.com/microsoft/Microsoft365DSC/issues/5423)
     FIXES [#5415](https://github.com/microsoft/Microsoft365DSC/issues/5415)
+* ADOSecurityPolicy
+  * Fixed an error in the export when using a Service Principal to authenticate.
 * AzureBillingAccountPolicy
   * Initial release.
 * IntuneDeviceConfigurationPolicyAndroidDeviceOwner
@@ -66,6 +73,8 @@
 * IntuneFirewallRulesHyperVPolicyWindows10
   * Initial release.
 * IntuneFirewallRulesPolicyWindows10ConfigMgr
+  * Initial release.
+* IntuneMobileAppConfigurationPolicyIOS
   * Initial release.
 * SCPolicyConfig
   * Fixed an issue extracting empty groups properties.
@@ -106,8 +115,7 @@
     FIXES [#5384](https://github.com/microsoft/Microsoft365DSC/issues/5384)
 * IntuneEndpointDetectionAndResponsePolicyWindows10
   * Remove changed property name from export.
-    FIXES [#5300](https://github.com/microsoft/Microsoft365DSC/issues/5300)
-* IntuneSecurityBaselineMicrosoftEdge
+    FIXES [#5300](https://github.com/microsoft/Microsoft365DSC/issues/5300)* IntuneSecurityBaselineMicrosoftEdge
   * Deprecate property `authschemes` and replace with `AuthSchemes_AuthSchemes`
 * M365DSCDRGUtil
   * Restrict CIM instance access to properties that appear multiple times.

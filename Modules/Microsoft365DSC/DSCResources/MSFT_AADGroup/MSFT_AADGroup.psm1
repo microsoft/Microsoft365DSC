@@ -689,7 +689,7 @@ function Set-TargetResource
                 {
                     Write-Verbose -Message "Adding new owner {$($diff.InputObject)} to AAD Group {$($currentGroup.DisplayName)}"
                     $ownerObject = @{
-                        '@odata.id' = "https://graph.microsoft.com/v1.0/directoryObjects/{$($directoryObject.Id)}"
+                        '@odata.id' = $Global:MSCloudLoginAssistant.MicrosoftGraph.ResourceUrl + "v1.0/directoryObjects/{$($directoryObject.Id)}"
                     }
                     try
                     {
@@ -751,7 +751,7 @@ function Set-TargetResource
                 {
                     Write-Verbose -Message "Adding new member {$($diff.InputObject)} to AAD Group {$($currentGroup.DisplayName)}"
                     $memberObject = @{
-                        '@odata.id' = "https://graph.microsoft.com/v1.0/directoryObjects/{$($directoryObject.Id)}"
+                        '@odata.id' = $Global:MSCloudLoginAssistant.MicrosoftGraph.ResourceUrl + "v1.0/directoryObjects/{$($directoryObject.Id)}"
                     }
                     New-MgGroupMemberByRef -GroupId ($currentGroup.Id) -BodyParameter $memberObject | Out-Null
                 }
@@ -759,7 +759,7 @@ function Set-TargetResource
                 {
                     Write-Verbose -Message "Removing new member {$($diff.InputObject)} to AAD Group {$($currentGroup.DisplayName)}"
                     $memberObject = @{
-                        '@odata.id' = "https://graph.microsoft.com/v1.0/directoryObjects/{$($directoryObject.Id)}"
+                        '@odata.id' = $Global:MSCloudLoginAssistant.MicrosoftGraph.ResourceUrl + "v1.0/directoryObjects/{$($directoryObject.Id)}"
                     }
                     Remove-MgGroupMemberDirectoryObjectByRef -GroupId ($currentGroup.Id) -DirectoryObjectId ($directoryObject.Id) | Out-Null
                 }
@@ -809,7 +809,7 @@ function Set-TargetResource
                     {
                         Write-Verbose -Message "Adding AAD group {$($groupAsMember.DisplayName)} as member of AAD group {$($currentGroup.DisplayName)}"
                         $groupAsMemberObject = @{
-                            "@odata.id"= "https://graph.microsoft.com/v1.0/directoryObjects/$($groupAsMember.Id)"
+                            "@odata.id"= $Global:MSCloudLoginAssistant.MicrosoftGraph.ResourceUrl + "v1.0/directoryObjects/$($groupAsMember.Id)"
                         }
                         New-MgBetaGroupMemberByRef -GroupId ($currentGroup.Id) -Body $groupAsMemberObject | Out-Null
                     }
@@ -863,9 +863,6 @@ function Set-TargetResource
                         if ($memberOfgroup.psobject.Typenames -match 'Group')
                         {
                             Write-Verbose -Message "Adding AAD group {$($currentGroup.DisplayName)} as member of AAD group {$($memberOfGroup.DisplayName)}"
-                            #$memberOfObject = @{
-                            #    "@odata.id"= "https://graph.microsoft.com/v1.0/groups/{$($group.Id)}"
-                            #}
                             New-MgGroupMember -GroupId ($memberOfGroup.Id) -DirectoryObject ($currentGroup.Id) | Out-Null
                         }
                         else

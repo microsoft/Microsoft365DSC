@@ -394,7 +394,7 @@ function Set-TargetResource
             scopeType                   = $ScopeType
             members                     = $Members
             '@odata.type'               = '#microsoft.graph.deviceAndAppManagementRoleAssignment'
-            'roleDefinition@odata.bind' = "https://graph.microsoft.com/beta/deviceManagement/roleDefinitions('$roleDefinition')"
+            'roleDefinition@odata.bind' = "$($Global:MSCloudLoginAssistant.MicrosoftGraph.ResourceUrl)beta/deviceManagement/roleDefinitions('$roleDefinition')"
         }
         $policy = New-MgBetaDeviceManagementRoleAssignment -BodyParameter $CreateParameters
 
@@ -410,7 +410,7 @@ function Set-TargetResource
             scopeType                   = $ScopeType
             members                     = $Members
             '@odata.type'               = '#microsoft.graph.deviceAndAppManagementRoleAssignment'
-            'roleDefinition@odata.bind' = "https://graph.microsoft.com/beta/deviceManagement/roleDefinitions('$roleDefinition')"
+            'roleDefinition@odata.bind' = "$($Global:MSCloudLoginAssistant.MicrosoftGraph.ResourceUrl)beta/deviceManagement/roleDefinitions('$roleDefinition')"
         }
 
         Update-MgBetaDeviceManagementRoleAssignment -BodyParameter $UpdateParameters `

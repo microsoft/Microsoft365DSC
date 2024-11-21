@@ -443,7 +443,7 @@ function Set-TargetResource
 
             Write-Verbose -Message "Retrieving Group Owner {$currentOwner}"
             $ownerUser = Get-MgUser -Search $currentOwner -ConsistencyLevel eventual
-            $ownerOdataID = "https://graph.microsoft.com/v1.0/directoryObjects/$($ownerUser.Id)"
+            $ownerOdataID = "$($Global:MSCloudLoginAssistant.MicrosoftGraph.ResourceUrl)v1.0/directoryObjects/$($ownerUser.Id)"
 
             Write-Verbose -Message "Adding Owner {$($ownerUser.Id)} to Group {$($group.Id)}"
             try
