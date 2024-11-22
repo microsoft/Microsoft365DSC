@@ -368,6 +368,11 @@
                                "Option":  "Write"
                            },
                            {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "ApplicationSecret",
+                               "Option":  "Write"
+                           },
+                           {
                                "CIMType":  "String",
                                "Name":  "CertificateThumbprint",
                                "Option":  "Write"
@@ -3993,6 +3998,11 @@
                                "Option":  "Write"
                            },
                            {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "ApplicationSecret",
+                               "Option":  "Write"
+                           },
+                           {
                                "CIMType":  "String",
                                "Name":  "CertificateThumbprint",
                                "Option":  "Write"
@@ -4330,6 +4340,11 @@
                            {
                                "CIMType":  "String",
                                "Name":  "TenantId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "ApplicationSecret",
                                "Option":  "Write"
                            },
                            {
@@ -5563,6 +5578,11 @@
                                "Option":  "Write"
                            },
                            {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "ApplicationSecret",
+                               "Option":  "Write"
+                           },
+                           {
                                "CIMType":  "String",
                                "Name":  "CertificateThumbprint",
                                "Option":  "Write"
@@ -5620,6 +5640,11 @@
                            {
                                "CIMType":  "String",
                                "Name":  "TenantId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "ApplicationSecret",
                                "Option":  "Write"
                            },
                            {
@@ -5700,6 +5725,11 @@
                            {
                                "CIMType":  "String",
                                "Name":  "TenantId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "ApplicationSecret",
                                "Option":  "Write"
                            },
                            {
@@ -5795,6 +5825,11 @@
                            {
                                "CIMType":  "String",
                                "Name":  "TenantId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "ApplicationSecret",
                                "Option":  "Write"
                            },
                            {
@@ -6813,6 +6848,11 @@
                                "Option":  "Write"
                            },
                            {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "ApplicationSecret",
+                               "Option":  "Write"
+                           },
+                           {
                                "CIMType":  "String",
                                "Name":  "CertificateThumbprint",
                                "Option":  "Write"
@@ -6918,6 +6958,11 @@
                                "Option":  "Write"
                            },
                            {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "ApplicationSecret",
+                               "Option":  "Write"
+                           },
+                           {
                                "CIMType":  "String",
                                "Name":  "CertificateThumbprint",
                                "Option":  "Write"
@@ -6970,6 +7015,11 @@
                            {
                                "CIMType":  "String",
                                "Name":  "TenantId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "ApplicationSecret",
                                "Option":  "Write"
                            },
                            {
@@ -7138,6 +7188,11 @@
                                "Option":  "Write"
                            },
                            {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "ApplicationSecret",
+                               "Option":  "Write"
+                           },
+                           {
                                "CIMType":  "String",
                                "Name":  "CertificateThumbprint",
                                "Option":  "Write"
@@ -7263,6 +7318,11 @@
                                "Option":  "Write"
                            },
                            {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "ApplicationSecret",
+                               "Option":  "Write"
+                           },
+                           {
                                "CIMType":  "String",
                                "Name":  "CertificateThumbprint",
                                "Option":  "Write"
@@ -7308,6 +7368,11 @@
                                "Option":  "Write"
                            },
                            {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "ApplicationSecret",
+                               "Option":  "Write"
+                           },
+                           {
                                "CIMType":  "String",
                                "Name":  "CertificateThumbprint",
                                "Option":  "Write"
@@ -7350,6 +7415,11 @@
                            {
                                "CIMType":  "String",
                                "Name":  "TenantId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "ApplicationSecret",
                                "Option":  "Write"
                            },
                            {

@@ -513,6 +513,7 @@ function Set-TargetResource
 
             $CreationParams.Add('UserId', $UserPrincipalName)
             Update-MgUser @CreationParams
+            $userId = (Get-MgUser -UserId $UserPrincipalName).Id
         }
         else
         {
@@ -559,6 +560,7 @@ function Set-TargetResource
             $CreationParams.Add('MailNickName', $UserPrincipalName.Split('@')[0])
             Write-Verbose -Message "Creating new user with values: $(Convert-M365DscHashtableToString -Hashtable $CreationParams)"
             $user = New-MgUser @CreationParams
+            $userId = $user.Id
         }
 
         #region Assign Licenses
@@ -611,14 +613,14 @@ function Set-TargetResource
 
                         throw "Cannot add user $UserPrincipalName to group '$memberOfGroup' because it is a dynamic group"
                     }
-                    New-MgGroupMember -GroupId $group.Id -DirectoryObjectId $user.Id
+                    New-MgGroupMember -GroupId $group.Id -DirectoryObjectId $userId
                 }
             }
             else
             {
                 # user is a member of some groups, ensure that user is only a member of groups listed in MemberOf
                 Compare-Object -ReferenceObject $MemberOf -DifferenceObject $user.MemberOf | ForEach-Object {
-                    $group = Get-MgGroup -Filter "DisplayName eq '$($_.InputObject)" -Property Id, GroupTypes
+                    $group = Get-MgGroup -Filter "DisplayName eq '$($_.InputObject)'" -Property Id, GroupTypes
                     if ($_.SideIndicator -eq '<=')
                     {
                         # Group in MemberOf not present in groups that user is a member of, add user to group
@@ -642,13 +644,14 @@ function Set-TargetResource
 
                             throw "Cannot add user $UserPrincipalName to group '$($_.InputObject)' because it is a dynamic group"
                         }
-                        New-MgGroupMember -GroupId $group.Id -DirectoryObjectId $user.Id
+                        New-MgGroupMember -GroupId $group.Id -DirectoryObjectId $userId
                     }
                     else
                     {
+
                         # Group that user is a member of is not present in MemberOf, remove user from group
                         # (no need to test for dynamic groups as they are ignored in Get-TargetResource)
-                        Remove-MgGroupMemberDirectoryObjectByRef -GroupId $group.Id -DirectoryObjectId $user.Id
+                        Remove-MgGroupMemberDirectoryObjectByRef -GroupId $group.Id -DirectoryObjectId $userId
                     }
                 }
             }
@@ -675,7 +678,6 @@ function Set-TargetResource
             foreach ($roleDifference in $diffRoles)
             {
                 $roleDefinitionId = (Get-MgBetaRoleManagementDirectoryRoleDefinition -Filter "DisplayName eq '$($roleDifference.InputObject)'").Id
-                $userId = (Get-MgUser -UserId $UserPrincipalName).Id
 
                 # Roles to remove
                 if ($roleDifference.SideIndicator -eq '=>')
