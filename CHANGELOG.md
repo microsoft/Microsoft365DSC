@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* AAD
+  * Added ApplicationSecret auth method to multiple resources
 * MISC
   * Removed hardcoded Graph urls and replaced by MSCloudLoginAssistant values.
 
@@ -86,6 +88,9 @@
     FIXES [#5424](https://github.com/microsoft/Microsoft365DSC/issues/5424)
 * M365DSCDRGUtil
   * Improve CIM instance detection for specific Intune resources.
+* AADUser
+  * Fixed issue updating user group membership when looking for the group by DisplayName.
+  * Fixed missing User Id when changing  group membership in Set-TargetResource function.
 
 # 1.24.1113.1
 
