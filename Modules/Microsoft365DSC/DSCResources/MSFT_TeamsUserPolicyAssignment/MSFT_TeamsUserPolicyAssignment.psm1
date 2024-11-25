@@ -143,31 +143,164 @@ function Get-TargetResource
             Write-Verbose -Message "User Policy Assignment not found for $User"
             return $null
         }
+
+        $CallingLineIdentityValue = ($assignment | Where-Object -FilterScript {$_.PolicyType -eq 'CallingLineIdentity'}).PolicyName
+        if ([System.String]::IsNullOrEmpty($CallingLineIdentityValue))
+        {
+            $CallingLineIdentityValue = 'Global'
+        }
+
+        $ExternalAccessPolicyValue = ($assignment | Where-Object -FilterScript {$_.PolicyType -eq 'ExternalAccessPolicy'}).PolicyName
+        if ([System.String]::IsNullOrEmpty($ExternalAccessPolicyValue))
+        {
+            $ExternalAccessPolicyValue = 'Global'
+        }
+
+        $OnlineVoicemailPolicyValue = ($assignment | Where-Object -FilterScript {$_.PolicyType -eq 'OnlineVoicemailPolicy'}).PolicyName
+        if ([System.String]::IsNullOrEmpty($OnlineVoicemailPolicyValue))
+        {
+            $OnlineVoicemailPolicyValue = 'Global'
+        }
+
+        $OnlineVoiceRoutingPolicyValue = ($assignment | Where-Object -FilterScript {$_.PolicyType -eq 'OnlineVoiceRoutingPolicy'}).PolicyName
+        if ([System.String]::IsNullOrEmpty($OnlineVoiceRoutingPolicyValue))
+        {
+            $OnlineVoiceRoutingPolicyValue = 'Global'
+        }
+
+        $TeamsAppPermissionPolicyValue = ($assignment | Where-Object -FilterScript {$_.PolicyType -eq 'TeamsAppPermissionPolicy'}).PolicyName
+        if ([System.String]::IsNullOrEmpty($TeamsAppPermissionPolicyValue))
+        {
+            $TeamsAppPermissionPolicyValue = 'Global'
+        }
+
+        $TeamsAppSetupPolicyValue = ($assignment | Where-Object -FilterScript {$_.PolicyType -eq 'TeamsAppSetupPolicy'}).PolicyName
+        if ([System.String]::IsNullOrEmpty($TeamsAppSetupPolicyValue))
+        {
+            $TeamsAppSetupPolicyValue = 'Global'
+        }
+
+        $TeamsAudioConferencingPolicyValue = ($assignment | Where-Object -FilterScript {$_.PolicyType -eq 'TeamsAudioConferencingPolicy'}).PolicyName
+        if ([System.String]::IsNullOrEmpty($TeamsAudioConferencingPolicyValue))
+        {
+            $TeamsAudioConferencingPolicyValue = 'Global'
+        }
+
+        $TeamsCallHoldPolicyValue = ($assignment | Where-Object -FilterScript {$_.PolicyType -eq 'TeamsCallHoldPolicy'}).PolicyName
+        if ([System.String]::IsNullOrEmpty($TeamsCallHoldPolicyValue))
+        {
+            $TeamsCallHoldPolicyValue = 'Global'
+        }
+
+        $TeamsCallingPolicyValue = ($assignment | Where-Object -FilterScript {$_.PolicyType -eq 'TeamsCallingPolicy'}).PolicyName
+        if ([System.String]::IsNullOrEmpty($TeamsCallingPolicyValue))
+        {
+            $TeamsCallingPolicyValue = 'Global'
+        }
+
+        $TeamsCallParkPolicyValue = ($assignment | Where-Object -FilterScript {$_.PolicyType -eq 'TeamsCallParkPolicy'}).PolicyName
+        if ([System.String]::IsNullOrEmpty($TeamsCallParkPolicyValue))
+        {
+            $TeamsCallParkPolicyValue = 'Global'
+        }
+
+        $TeamsChannelsPolicyValue = ($assignment | Where-Object -FilterScript {$_.PolicyType -eq 'TeamsChannelsPolicy'}).PolicyName
+        if ([System.String]::IsNullOrEmpty($TeamsChannelsPolicyValue))
+        {
+            $TeamsChannelsPolicyValue = 'Global'
+        }
+
+        $TeamsEmergencyCallingPolicyValue = ($assignment | Where-Object -FilterScript {$_.PolicyType -eq 'TeamsEmergencyCallingPolicy'}).PolicyName
+        if ([System.String]::IsNullOrEmpty($TeamsEmergencyCallingPolicyValue))
+        {
+            $TeamsEmergencyCallingPolicyValue = 'Global'
+        }
+
+        $TeamsEmergencyCallRoutingPolicyValue = ($assignment | Where-Object -FilterScript {$_.PolicyType -eq 'TeamsEmergencyCallRoutingPolicy'}).PolicyName
+        if ([System.String]::IsNullOrEmpty($TeamsEmergencyCallRoutingPolicyValue))
+        {
+            $TeamsEmergencyCallRoutingPolicyValue = 'Global'
+        }
+
+        $TeamsEnhancedEncryptionPolicyValue = ($assignment | Where-Object -FilterScript {$_.PolicyType -eq 'TeamsEnhancedEncryptionPolicy'}).PolicyName
+        if ([System.String]::IsNullOrEmpty($TeamsEnhancedEncryptionPolicyValue))
+        {
+            $TeamsEnhancedEncryptionPolicyValue = 'Global'
+        }
+
+        $TeamsEventsPolicyValue = ($assignment | Where-Object -FilterScript {$_.PolicyType -eq 'TeamsEventsPolicy'}).PolicyName
+        if ([System.String]::IsNullOrEmpty($TeamsEventsPolicyValue))
+        {
+            $TeamsEventsPolicyValue = 'Global'
+        }
+
+        $TeamsMeetingBroadcastPolicyValue = ($assignment | Where-Object -FilterScript {$_.PolicyType -eq 'TeamsMeetingBroadcastPolicy'}).PolicyName
+        if ([System.String]::IsNullOrEmpty($TeamsMeetingBroadcastPolicyValue))
+        {
+            $TeamsMeetingBroadcastPolicyValue = 'Global'
+        }
+
+        $TeamsMeetingPolicyValue = ($assignment | Where-Object -FilterScript {$_.PolicyType -eq 'TeamsMeetingPolicy'}).PolicyName
+        if ([System.String]::IsNullOrEmpty($TeamsMeetingPolicyValue))
+        {
+            $TeamsMeetingPolicyValue = 'Global'
+        }
+
+        $TeamsMessagingPolicyValue = ($assignment | Where-Object -FilterScript {$_.PolicyType -eq 'TeamsMessagingPolicy'}).PolicyName
+        if ([System.String]::IsNullOrEmpty($TeamsMessagingPolicyValue))
+        {
+            $TeamsMessagingPolicyValue = 'Global'
+        }
+
+        $TeamsMobilityPolicyValue = ($assignment | Where-Object -FilterScript {$_.PolicyType -eq 'TeamsMobilityPolicy'}).PolicyName
+        if ([System.String]::IsNullOrEmpty($TeamsMobilityPolicyValue))
+        {
+            $TeamsMobilityPolicyValue = 'Global'
+        }
+
+        $TeamsUpdateManagementPolicyValue = ($assignment | Where-Object -FilterScript {$_.PolicyType -eq 'TeamsUpdateManagementPolicy'}).PolicyName
+        if ([System.String]::IsNullOrEmpty($TeamsUpdateManagementPolicyValue))
+        {
+            $TeamsUpdateManagementPolicyValue = 'Global'
+        }
+
+        $TeamsUpgradePolicyValue = ($assignment | Where-Object -FilterScript {$_.PolicyType -eq 'TeamsUpgradePolicy'}).PolicyName
+        if ([System.String]::IsNullOrEmpty($TeamsUpgradePolicyValue))
+        {
+            $TeamsUpgradePolicyValue = 'Global'
+        }
+
+        $TenantDialPlanValue = ($assignment | Where-Object -FilterScript {$_.PolicyType -eq 'TenantDialPlan'}).PolicyName
+        if ([System.String]::IsNullOrEmpty($TenantDialPlanValue))
+        {
+            $TenantDialPlanValue = 'Global'
+        }
+
         Write-Verbose -Message "Found Policy Assignment for user {$User}"
         return @{
             User                            = $User
-            CallingLineIdentity             = ($assignment | Where-Object -FilterScript {$_.PolicyType -eq 'CallingLineIdentity'}).PolicyName
-            ExternalAccessPolicy            = ($assignment | Where-Object -FilterScript {$_.PolicyType -eq 'ExternalAccessPolicy'}).PolicyName
-            OnlineVoicemailPolicy           = ($assignment | Where-Object -FilterScript {$_.PolicyType -eq 'OnlineVoicemailPolicy'}).PolicyName
-            OnlineVoiceRoutingPolicy        = ($assignment | Where-Object -FilterScript {$_.PolicyType -eq 'OnlineVoiceRoutingPolicy'}).PolicyName
-            TeamsAppPermissionPolicy        = ($assignment | Where-Object -FilterScript {$_.PolicyType -eq 'TeamsAppPermissionPolicy'}).PolicyName
-            TeamsAppSetupPolicy             = ($assignment | Where-Object -FilterScript {$_.PolicyType -eq 'TeamsAppSetupPolicy'}).PolicyName
-            TeamsAudioConferencingPolicy    = ($assignment | Where-Object -FilterScript {$_.PolicyType -eq 'TeamsAudioConferencingPolicy'}).PolicyName
-            TeamsCallHoldPolicy             = ($assignment | Where-Object -FilterScript {$_.PolicyType -eq 'TeamsCallHoldPolicy'}).PolicyName
-            TeamsCallingPolicy              = ($assignment | Where-Object -FilterScript {$_.PolicyType -eq 'TeamsCallingPolicy'}).PolicyName
-            TeamsCallParkPolicy             = ($assignment | Where-Object -FilterScript {$_.PolicyType -eq 'TeamsCallParkPolicy'}).PolicyName
-            TeamsChannelsPolicy             = ($assignment | Where-Object -FilterScript {$_.PolicyType -eq 'TeamsChannelsPolicy'}).PolicyName
-            TeamsEmergencyCallingPolicy     = ($assignment | Where-Object -FilterScript {$_.PolicyType -eq 'TeamsEmergencyCallingPolicy'}).PolicyName
-            TeamsEmergencyCallRoutingPolicy = ($assignment | Where-Object -FilterScript {$_.PolicyType -eq 'TeamsEmergencyCallRoutingPolicy'}).PolicyName
-            TeamsEnhancedEncryptionPolicy   = ($assignment | Where-Object -FilterScript {$_.PolicyType -eq 'TeamsEnhancedEncryptionPolicy'}).PolicyName
-            TeamsEventsPolicy               = ($assignment | Where-Object -FilterScript {$_.PolicyType -eq 'TeamsEventsPolicy'}).PolicyName
-            TeamsMeetingBroadcastPolicy     = ($assignment | Where-Object -FilterScript {$_.PolicyType -eq 'TeamsMeetingBroadcastPolicy'}).PolicyName
-            TeamsMeetingPolicy              = ($assignment | Where-Object -FilterScript {$_.PolicyType -eq 'TeamsMeetingPolicy'}).PolicyName
-            TeamsMessagingPolicy            = ($assignment | Where-Object -FilterScript {$_.PolicyType -eq 'TeamsMessagingPolicy'}).PolicyName
-            TeamsMobilityPolicy             = ($assignment | Where-Object -FilterScript {$_.PolicyType -eq 'TeamsMobilityPolicy'}).PolicyName
-            TeamsUpdateManagementPolicy     = ($assignment | Where-Object -FilterScript {$_.PolicyType -eq 'TeamsUpdateManagementPolicy'}).PolicyName
-            TeamsUpgradePolicy              = ($assignment | Where-Object -FilterScript {$_.PolicyType -eq 'TeamsUpgradePolicy'}).PolicyName
-            TenantDialPlan                  = ($assignment | Where-Object -FilterScript {$_.PolicyType -eq 'TenantDialPlan'}).PolicyName
+            CallingLineIdentity             = $CallingLineIdentityValue
+            ExternalAccessPolicy            = $ExternalAccessPolicyValue
+            OnlineVoicemailPolicy           = $OnlineVoicemailPolicyValue
+            OnlineVoiceRoutingPolicy        = $OnlineVoiceRoutingPolicyValue
+            TeamsAppPermissionPolicy        = $TeamsAppPermissionPolicyValue
+            TeamsAppSetupPolicy             = $TeamsAppSetupPolicyValue
+            TeamsAudioConferencingPolicy    = $TeamsAudioConferencingPolicyValue
+            TeamsCallHoldPolicy             = $TeamsCallHoldPolicyValue
+            TeamsCallingPolicy              = $TeamsCallingPolicyValue
+            TeamsCallParkPolicy             = $TeamsCallParkPolicyValue
+            TeamsChannelsPolicy             = $TeamsChannelsPolicyValue
+            TeamsEmergencyCallingPolicy     = $TeamsEmergencyCallingPolicyValue
+            TeamsEmergencyCallRoutingPolicy = $TeamsEmergencyCallRoutingPolicyValue
+            TeamsEnhancedEncryptionPolicy   = $TeamsEnhancedEncryptionPolicyValue
+            TeamsEventsPolicy               = $TeamsEventsPolicyValue
+            TeamsMeetingBroadcastPolicy     = $TeamsMeetingBroadcastPolicyValue
+            TeamsMeetingPolicy              = $TeamsMeetingPolicyValue
+            TeamsMessagingPolicy            = $TeamsMessagingPolicyValue
+            TeamsMobilityPolicy             = $TeamsMobilityPolicyValue
+            TeamsUpdateManagementPolicy     = $TeamsUpdateManagementPolicyValue
+            TeamsUpgradePolicy              = $TeamsUpgradePolicyValue
+            TenantDialPlan                  = $TenantDialPlanValue
             Credential                      = $Credential
             ApplicationId                   = $ApplicationId
             TenantId                        = $TenantId
@@ -324,116 +457,205 @@ function Set-TargetResource
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' -InboundParameters $PSBoundParameters
 
+    $currentInstance = Get-TargetResource @PSBoundParameters
     try
     {
-        if ($null -ne $CallingLineIdentity)
+        if ($null -ne $CallingLineIdentity -and $CallingLineIdentity -ne $currentInstance.CallingLineIdentity)
         {
             Write-Verbose -Message "Assigning the Call Line Identity Policy {$CallingLineIdentity} to user {$User}"
+            if ($CallingLineIdentity -eq 'Global')
+            {
+                $CallingLineIdentity = $null
+            }
             Grant-CsCallingLineIdentity -Identity $User -PolicyName $CallingLineIdentity | Out-Null
         }
-        if ($null -ne $ExternalAccessPolicy)
+        if ($null -ne $ExternalAccessPolicy -and $ExternalAccessPolicy -ne $currentInstance.ExternalAccessPolicy)
         {
             Write-Verbose -Message "Assigning the External Access Policy {$ExternalAccessPolicy} to user {$User}"
-            Grant-CsExternalAccessPolicy -Identity $User -PolicyName $CallingLineIdentity | Out-Null
+            if ($ExternalAccessPolicy -eq 'Global')
+            {
+                $ExternalAccessPolicy = $null
+            }
+            Grant-CsExternalAccessPolicy -Identity $User -PolicyName $ExternalAccessPolicy | Out-Null
         }
-        if ($null -ne $OnlineVoicemailPolicy)
+        if ($null -ne $OnlineVoicemailPolicy -and $OnlineVoicemailPolicy -ne $currentInstance.OnlineVoicemailPolicy)
         {
             Write-Verbose -Message "Assigning the Online Voicemail Policy {$OnlineVoicemailPolicy} to user {$User}"
+            if ($OnlineVoicemailPolicy -eq 'Global')
+            {
+                $OnlineVoicemailPolicy = $null
+            }
             Grant-CsOnlineVoicemailPolicy -Identity $User -PolicyName $OnlineVoicemailPolicy | Out-Null
         }
-        if ($null -ne $OnlineVoiceRoutingPolicy)
+        if ($null -ne $OnlineVoiceRoutingPolicy -and $OnlineVoiceRoutingPolicy -ne $currentInstance.OnlineVoiceRoutingPolicy)
         {
             Write-Verbose -Message "Assigning the Online Voice Routing Policy {$OnlineVoiceRoutingPolicy} to user {$User}"
+            if ($OnlineVoiceRoutingPolicy -eq 'Global')
+            {
+                $OnlineVoiceRoutingPolicy = $null
+            }
             Grant-CsOnlineVoiceRoutingPolicy -Identity $User -PolicyName $OnlineVoiceRoutingPolicy | Out-Null
         }
-        if ($null -ne $TeamsAppPermissionPolicy)
+        if ($null -ne $TeamsAppPermissionPolicy -and $TeamsAppPermissionPolicy -ne $currentInstance.TeamsAppPermissionPolicy)
         {
             Write-Verbose -Message "Assigning the Apps Permission Policy {$TeamsAppPermissionPolicy} to user {$User}"
+            if ($TeamsAppPermissionPolicy -eq 'Global')
+            {
+                $TeamsAppPermissionPolicy = $null
+            }
             Grant-CsTeamsAppPermissionPolicy -Identity $User -PolicyName $TeamsAppPermissionPolicy | Out-Null
         }
-        if ($null -ne $TeamsAppSetupPolicy)
+        if ($null -ne $TeamsAppSetupPolicy -and $TeamsAppSetupPolicy -ne $currentInstance.TeamsAppSetupPolicy)
         {
             Write-Verbose -Message "Assigning the Apps Setup Policy {$TeamsAppSetupPolicy} to user {$User}"
+            if ($TeamsAppSetupPolicy -eq 'Global')
+            {
+                $TeamsAppSetupPolicy = $null
+            }
             Grant-CsTeamsAppSetupPolicy -Identity $User -PolicyName $TeamsAppSetupPolicy | Out-Null
         }
-        if ($null -ne $TeamsAudioConferencingPolicy)
+        if ($null -ne $TeamsAudioConferencingPolicy -and $TeamsAudioConferencingPolicy -ne $currentInstance.TeamsAudioConferencingPolicy)
         {
             Write-Verbose -Message "Assigning the Audio COnferencing Policy {$TeamsAudioConferencingPolicy} to user {$User}"
+            if ($TeamsAudioConferencingPolicy -eq 'Global')
+            {
+                $TeamsAudioConferencingPolicy = $null
+            }
             Grant-CsTeamsAudioConferencingPolicy -Identity $User -PolicyName $TeamsAudioConferencingPolicy | Out-Null
         }
-        if ($null -ne $TeamsCallHoldPolicy)
+        if ($null -ne $TeamsCallHoldPolicy -and $TeamsCallHoldPolicy -ne $currentInstance.TeamsCallHoldPolicy)
         {
             Write-Verbose -Message "Assigning the Call Hold Policy {$TeamsCallHoldPolicy} to user {$User}"
+            if ($TeamsCallHoldPolicy -eq 'Global')
+            {
+                $TeamsCallHoldPolicy = $null
+            }
             Grant-CsTeamsCallHoldPolicy -Identity $User -PolicyName $TeamsCallHoldPolicy | Out-Null
         }
-        if ($null -ne $TeamsCallingPolicy)
+        if ($null -ne $TeamsCallingPolicy -and $TeamsCallingPolicy -ne $currentInstance.TeamsCallingPolicy)
         {
-            Write-Verbose -Message "Assigning the Calling Policy {$TeamsCallingPolicy} to user {$User}"
+            Write-Verbose -Message "Assigning the Calling Policy {$TeamsCallParkPolicy} to user {$User}"
+            if ($TeamsCallParkPolicy -eq 'Global')
+            {
+                $TeamsCallParkPolicy = $null
+            }
             Grant-CsTeamsCallingPolicy -Identity $User -PolicyName $TeamsCallingPolicy | Out-Null
         }
-        if ($null -ne $TeamsCallParkPolicy)
+        if ($null -ne $TeamsCallParkPolicy -and $TeamsCallParkPolicy -ne $currentInstance.TeamsCallParkPolicy)
         {
             Write-Verbose -Message "Assigning the Call Park Policy {$TeamsCallParkPolicy} to user {$User}"
+            if ($TeamsCallParkPolicy -eq 'Global')
+            {
+                $TeamsCallParkPolicy = $null
+            }
             Grant-CsTeamsCallParkPolicy -Identity $User -PolicyName $TeamsCallParkPolicy | Out-Null
         }
-        if ($null -ne $TeamsChannelsPolicy)
+        if ($null -ne $TeamsChannelsPolicy -and $TeamsChannelsPolicy -ne $currentInstance.TeamsChannelsPolicy)
         {
             Write-Verbose -Message "Assigning the Channels Policy {$TeamsChannelsPolicy} to user {$User}"
+            if ($TeamsChannelsPolicy -eq 'Global')
+            {
+                $TeamsChannelsPolicy = $null
+            }
             Grant-CsTeamsChannelsPolicy -Identity $User -PolicyName $TeamsChannelsPolicy | Out-Null
         }
-        if ($null -ne $TeamsEmergencyCallingPolicy)
+        if ($null -ne $TeamsEmergencyCallingPolicy -and $TeamsEmergencyCallingPolicy -ne $currentInstance.TeamsEmergencyCallingPolicy)
         {
             Write-Verbose -Message "Assigning the Emergency Calling Policy {$TeamsEmergencyCallingPolicy} to user {$User}"
+            if ($TeamsEmergencyCallingPolicy -eq 'Global')
+            {
+                $TeamsEmergencyCallingPolicy = $null
+            }
             Grant-CsTeamsEmergencyCallingPolicy -Identity $User -PolicyName $TeamsEmergencyCallingPolicy | Out-Null
         }
-        if ($null -ne $TeamsEmergencyCallRoutingPolicy)
+        if ($null -ne $TeamsEmergencyCallRoutingPolicy -and $TeamsEmergencyCallRoutingPolicy -ne $currentInstance.TeamsEmergencyCallRoutingPolicy)
         {
             Write-Verbose -Message "Assigning the Emergency Call Routing Policy {$TeamsEmergencyCallRoutingPolicy} to user {$User}"
+            if ($TeamsEmergencyCallRoutingPolicy -eq 'Global')
+            {
+                $TeamsEmergencyCallRoutingPolicy = $null
+            }
             Grant-CsTeamsEmergencyCallRoutingPolicy -Identity $User -PolicyName $TeamsEmergencyCallRoutingPolicy | Out-Null
         }
-        if ($null -ne $TeamsEnhancedEncryptionPolicy)
+        if ($null -ne $TeamsEnhancedEncryptionPolicy -and $TeamsEnhancedEncryptionPolicy -ne $currentInstance.TeamsEnhancedEncryptionPolicy)
         {
             Write-Verbose -Message "Assigning the Enhanced Encryption Policy {$TeamsEnhancedEncryptionPolicy} to user {$User}"
+            if ($TeamsEnhancedEncryptionPolicy -eq 'Global')
+            {
+                $TeamsEnhancedEncryptionPolicy = $null
+            }
             Grant-CsTeamsEnhancedEncryptionPolicy -Identity $User -PolicyName $TeamsEnhancedEncryptionPolicy | Out-Null
         }
-        if ($null -ne $TeamsEventsPolicy)
+        if ($null -ne $TeamsEventsPolicy -and $TeamsEventsPolicy -ne $currentInstance.TeamsEventsPolicy)
         {
             Write-Verbose -Message "Assigning the Events Policy {$TeamsEventsPolicy} to user {$User}"
+            if ($TeamsEventsPolicy -eq 'Global')
+            {
+                $TeamsEventsPolicy = $null
+            }
             Grant-CsTeamsEventsPolicy -Identity $User -PolicyName $TeamsEventsPolicy | Out-Null
         }
-        if ($null -ne $TeamsMeetingBroadcastPolicy)
+        if ($null -ne $TeamsMeetingBroadcastPolicy -and $TeamsMeetingBroadcastPolicy -ne $currentInstance.TeamsMeetingBroadcastPolicy)
         {
             Write-Verbose -Message "Assigning the Meeting Broadcast Policy {$TeamsMeetingBroadcastPolicy} to user {$User}"
+            if ($TeamsMeetingBroadcastPolicy -eq 'Global')
+            {
+                $TeamsMeetingBroadcastPolicy = $null
+            }
             Grant-CsTeamsMeetingBroadcastPolicy -Identity $User -PolicyName $TeamsMeetingBroadcastPolicy | Out-Null
         }
-        if ($null -ne $TeamsMeetingPolicy)
+        if ($null -ne $TeamsMeetingPolicy -and $TeamsMeetingPolicy -ne $currentInstance.TeamsMeetingPolicy)
         {
             Write-Verbose -Message "Assigning the Meeting Policy {$TeamsMeetingPolicy} to user {$User}"
+            if ($TeamsMeetingPolicy -eq 'Global')
+            {
+                $TeamsMeetingPolicy = $null
+            }
             Grant-CsTeamsMeetingPolicy -Identity $User -PolicyName $TeamsMeetingPolicy | Out-Null
         }
-        if ($null -ne $TeamsMessagingPolicy)
+        if ($null -ne $TeamsMessagingPolicy -and $TeamsMessagingPolicy -ne $currentInstance.TeamsMessagingPolicy)
         {
             Write-Verbose -Message "Assigning the Messaging Policy {$TeamsMessagingPolicy} to user {$User}"
+            if ($TeamsMessagingPolicy -eq 'Global')
+            {
+                $TeamsMessagingPolicy = $null
+            }
             Grant-CsTeamsMessagingPolicy -Identity $User -PolicyName $TeamsMessagingPolicy | Out-Null
         }
-        if ($null -ne $TeamsMobilityPolicy)
+        if ($null -ne $TeamsMobilityPolicy -and $TeamsMobilityPolicy -ne $currentInstance.TeamsMobilityPolicy)
         {
             Write-Verbose -Message "Assigning the Mobility Policy {$TeamsMobilityPolicy} to user {$User}"
+            if ($TeamsMobilityPolicy -eq 'Global')
+            {
+                $TeamsMobilityPolicy = $null
+            }
             Grant-CsTeamsMobilityPolicy -Identity $User -PolicyName $TeamsMobilityPolicy | Out-Null
         }
-        if ($null -ne $TeamsUpdateManagementPolicy)
+        if ($null -ne $TeamsUpdateManagementPolicy -and $TeamsUpdateManagementPolicy -ne $currentInstance.TeamsUpdateManagementPolicy)
         {
             Write-Verbose -Message "Assigning the Update Management Policy {$TeamsUpdateManagementPolicy} to user {$User}"
+            if ($TeamsUpdateManagementPolicy -eq 'Global')
+            {
+                $TeamsUpdateManagementPolicy = $null
+            }
             Grant-CsTeamsUpdateManagementPolicy -Identity $User -PolicyName $TeamsUpdateManagementPolicy | Out-Null
         }
-        if ($null -ne $TeamsUpgradePolicy)
+        if ($null -ne $TeamsUpgradePolicy -and $TeamsUpgradePolicy -ne $currentInstance.TeamsUpgradePolicy)
         {
             Write-Verbose -Message "Assigning the Upgrade Policy {$TeamsUpgradePolicy} to user {$User}"
+            if ($TeamsUpgradePolicy -eq 'Global')
+            {
+                $TeamsUpgradePolicy = $null
+            }
             Grant-CsTeamsUpgradePolicy -Identity $User -PolicyName $TeamsUpgradePolicy | Out-Null
         }
-        if ($null -ne $TenantDialPlan)
+        if ($null -ne $TenantDialPlan -and $TenantDialPlan -ne $currentInstance.TenantDialPlan)
         {
             Write-Verbose -Message "Assigning the Tenant Dial Plan {$TenantDialPlan} to user {$User}"
+            if ($TenantDialPlan -eq 'Global')
+            {
+                $TenantDialPlan = $null
+            }
             Grant-CsTenantDialPlan -Identity $User -PolicyName $TenantDialPlan | Out-Null
         }
     }
