@@ -54,7 +54,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     URL              = 'https://contoso.sharepoint.com/sites/TestSite'
                     Identity         = 'TestSiteGroup'
-                    Owner            = 'admin@Office365DSC.onmicrosoft.com'
+                    Owner            = 'admin@Microsoft365DSC.onmicrosoft.com'
                     PermissionLevels = @('Edit', 'Read')
                     Ensure           = 'Present'
                     Credential       = $Credential
@@ -103,7 +103,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     URL              = 'https://contoso.sharepoint.com/sites/TestSite'
                     Identity         = 'TestSiteGroup'
-                    Owner            = 'admin@Office365DSC.onmicrosoft.com'
+                    Owner            = 'admin@Microsoft365DSC.onmicrosoft.com'
                     PermissionLevels = @('Edit', 'Read')
                     Ensure           = 'Present'
                     Credential       = $Credential
@@ -124,7 +124,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         URL   = 'https://contoso.sharepoint.com/sites/TestSite'
                         Title = 'TestSiteGroup'
                         Owner = @{
-                            LoginName = 'admin@Office365DSC.onmicrosoft.com'
+                            LoginName = 'admin@Microsoft365DSC.onmicrosoft.com'
                         }
                     }
                 }
@@ -163,7 +163,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     URL              = 'https://contoso.sharepoint.com/sites/TestSite'
                     Identity         = 'TestSiteGroup'
-                    Owner            = 'admin@Office365DSC.onmicrosoft.com'
+                    Owner            = 'admin@Microsoft365DSC.onmicrosoft.com'
                     PermissionLevels = @('Edit', 'Read')
                     Ensure           = 'Present'
                     Credential       = $Credential
@@ -178,7 +178,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         URL   = 'https://contoso.sharepoint.com/sites/TestSite'
                         Title = 'TestSiteGroup'
                         Owner = @{
-                            LoginName = 'admin@Office365DSC.onmicrosoft.com'
+                            LoginName = 'admin@Microsoft365DSC.onmicrosoft.com'
                         }
                     }
                 }
@@ -223,7 +223,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     URL              = 'https://contoso.sharepoint.com/sites/TestSite'
                     Identity         = 'TestSiteGroup'
-                    Owner            = 'admin@Office365DSC.onmicrosoft.com'
+                    Owner            = 'admin@Microsoft365DSC.onmicrosoft.com'
                     PermissionLevels = @('Edit', 'Read')
                     Ensure           = 'Absent'
                     Credential       = $Credential
@@ -237,7 +237,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return @{
                         URL        = 'https://contoso.sharepoint.com/sites/TestSite'
                         Title      = 'TestSiteGroup'
-                        OwnerLogin = 'admin@Office365DSC.onmicrosoft.com'
+                        OwnerLogin = 'admin@Microsoft365DSC.onmicrosoft.com'
                         Roles      = @('Edit', 'Read')
                     }
                 }
@@ -300,7 +300,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return @{
                         URL        = 'https://contoso.sharepoint.com/sites/TestSite'
                         Title      = 'TestSiteGroup'
-                        OwnerLogin = 'admin@Office365DSC.onmicrosoft.com'
+                        OwnerLogin = 'admin@Microsoft365DSC.onmicrosoft.com'
                         Roles      = @('Edit', 'Read')
                     }
                 }

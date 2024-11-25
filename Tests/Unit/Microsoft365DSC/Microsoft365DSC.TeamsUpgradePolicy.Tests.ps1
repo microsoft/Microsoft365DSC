@@ -49,7 +49,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     Identity               = 'Test Policy'
-                    Users                  = @('john.smith@contoso.onmicrosoft.com')
                     MigrateMeetingsToTeams = $false
                     Credential             = $Credential
                 }
@@ -64,46 +63,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name 'When the policy already exists and is NOT in the Desired State' -Fixture {
-            BeforeAll {
-                $testParams = @{
-                    Identity               = 'Test Policy'
-                    Users                  = @('john.smith@contoso.onmicrosoft.com')
-                    MigrateMeetingsToTeams = $false
-                    Credential             = $Credential
-                }
-
-                Mock -CommandName Get-CsTeamsUpgradePolicy -MockWith {
-                    return @{
-                        Identity       = 'Test Policy'
-                        Description    = 'This is a configuration drift'
-                        NotifySfBUsers = $false
-                    }
-                }
-
-                Mock -CommandName Get-CsOnlineUser -MockWith {
-                    return @{
-                        UserPrincipalName  = 'Bob.Houle@contoso.onmicrosoft.com'
-                        TeamsUpgradePolicy = 'Global'
-                    }
-                }
-            }
-
-            It 'Should return false from the Test method' {
-                Test-TargetResource @testParams | Should -Be $false
-            }
-
-            It 'Should update the policy from the Set method' {
-                Set-TargetResource @testParams
-                Should -Invoke -CommandName Grant-CsTeamsUpgradePolicy -Exactly 1
-            }
-        }
-
         Context -Name 'When the policy already exists and IS in the Desired State' -Fixture {
             BeforeAll {
                 $testParams = @{
                     Identity               = 'Islands'
-                    Users                  = @('john.smith@contoso.onmicrosoft.com')
                     MigrateMeetingsToTeams = $false
                     Credential             = $Credential
                 }
@@ -113,13 +76,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Identity       = 'Islands'
                         Description    = 'This is a test policy'
                         NotifySfBUsers = $false
-                    }
-                }
-
-                Mock -CommandName Get-CsOnlineUser -MockWith {
-                    return @{
-                        UserPrincipalName  = 'John.Smith@contoso.onmicrosoft.com'
-                        TeamsUpgradePolicy = 'Islands'
                     }
                 }
             }
@@ -142,13 +98,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Identity       = 'Islands'
                         Description    = 'Test Description'
                         NotifySfBUsers = $false
-                    }
-                }
-
-                Mock -CommandName Get-CsOnlineUser -MockWith {
-                    return @{
-                        UserPrincipalName  = 'John.Smith@contoso.onmicrosoft.com'
-                        TeamsUpgradePolicy = 'Islands'
                     }
                 }
             }

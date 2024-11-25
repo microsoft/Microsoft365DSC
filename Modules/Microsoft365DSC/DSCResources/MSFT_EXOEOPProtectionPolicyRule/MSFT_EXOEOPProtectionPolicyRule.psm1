@@ -71,7 +71,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $ApplicationSecret
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     New-M365DSCConnection -Workload 'ExchangeOnline' `
@@ -118,6 +122,7 @@ function Get-TargetResource
             TenantId                  = $TenantId
             CertificateThumbprint     = $CertificateThumbprint
             ApplicationSecret         = $ApplicationSecret
+            AccessTokens              = $AccessTokens
         }
         return [System.Collections.Hashtable] $results
     }
@@ -205,7 +210,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $ApplicationSecret
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     New-M365DSCConnection -Workload 'ExchangeOnline' `
@@ -344,7 +353,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $ApplicationSecret
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -435,7 +448,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
@@ -481,14 +498,14 @@ function Export-TargetResource
             }
             Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{
-                Identity = $config.Identity
-                Ensure = 'Present'
-                Credential = $Credential
-                ApplicationId = $ApplicationId
-                TenantId = $TenantId
+                Identity              = $config.Identity
+                Ensure                = 'Present'
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
-                ApplicationSecret = $ApplicationSecret
-
+                ApplicationSecret     = $ApplicationSecret
+                AccessTokens          = $AccessTokens
             }
 
             $Results = Get-TargetResource @Params

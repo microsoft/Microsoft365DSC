@@ -5,7 +5,7 @@
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
 | **Identity** | Key | String | Identity of the Teams Upgrade Policy. | |
-| **Users** | Write | StringArray[] | List of users that will be granted the Upgrade Policy to. Use value * to apply the policy globally. | |
+| **Users** | Write | StringArray[] | DEPRECATED. Use the TeamsUserPolicyAssignment resource instead. | |
 | **MigrateMeetingsToTeams** | Write | Boolean | Specifies whether to move existing Skype for Business meetings organized by the user to Teams. This parameter can only be true if the mode of the specified policy instance is either TeamsOnly or SfBWithTeamsCollabAndMeetings, and if the policy instance is being granted to a specific user. It not possible to trigger meeting migration when granting TeamsUpgradePolicy to the entire tenant. | |
 | **Credential** | Write | PSCredential | Credentials of the Teams Admin | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
@@ -68,7 +68,6 @@ Configuration Example
         TeamsUpgradePolicy 'ConfigureIslandsPolicy'
         {
             Identity               = 'Islands'
-            Users                  = @("John.Smith@contoso.com", "Nik.Charlebois@contoso.com")
             MigrateMeetingsToTeams = $true
             Credential             = $Credscredential
         }

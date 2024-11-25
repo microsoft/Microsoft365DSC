@@ -16,7 +16,6 @@ Configuration Example
         TeamsUpgradePolicy 'ConfigureIslandsPolicy'
         {
             Identity               = 'Islands'
-            Users                  = @("John.Smith@contoso.com", "Nik.Charlebois@contoso.com")
             MigrateMeetingsToTeams = $true
             Credential             = $Credscredential
         }
