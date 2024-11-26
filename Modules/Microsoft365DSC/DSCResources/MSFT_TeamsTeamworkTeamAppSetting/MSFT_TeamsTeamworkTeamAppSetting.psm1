@@ -402,23 +402,23 @@ function Export-TargetResource
     try
     {
         #region resource generator code
-        #[array]$getValue = Get-MgBetaTeamworkTeamAppSetting `
-        #    -ErrorAction Stop
+        [array]$getValue = Get-MgBetaTeamworkTeamAppSetting `
+            -ErrorAction Stop
         #endregion
 
-        #$i = 1
+        $i = 1
         $dscContent = ''
-        #if ($getValue.Length -eq 0)
-        #{
-        #    Write-Host $Global:M365DSCEmojiGreenCheckMark
-        #}
-        #else
+        if ($getValue.Length -eq 0)
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+        }
+        else
         {
             Write-Host "`r`n" -NoNewline
         }
-        #foreach ($config in $getValue)
-        #{
-            Write-Host "    |---[1/1]" -NoNewline
+        foreach ($config in $getValue)
+        {
+            Write-Host "    |---[$i/$($getvalue.Count)]" -NoNewline
             $params = @{
                 IsSingleInstance = 'Yes'
                 Ensure = 'Present'
@@ -442,9 +442,9 @@ function Export-TargetResource
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
-            #$i++
+            $i++
             Write-Host $Global:M365DSCEmojiGreenCheckMark
-        #}
+        }
         return $dscContent
     }
     catch
