@@ -181,6 +181,12 @@ function Get-TargetResource
             }
         }
 
+        $TagsValue = [Array] $place.Tags
+        if ($place.Tags -eq $null)
+        {
+            $TagsValue = @()
+        }
+
         $result = @{
             Identity               = $place.Identity
             AudioDeviceName        = $place.AudioDeviceName
@@ -203,7 +209,7 @@ function Get-TargetResource
             PostalCode             = $place.PostalCode
             State                  = $place.State
             Street                 = $place.Street
-            Tags                   = [Array] $place.Tags
+            Tags                   = $TagsValue
             VideoDeviceName        = $place.VideoDeviceName
             Credential             = $Credential
             Ensure                 = 'Present'

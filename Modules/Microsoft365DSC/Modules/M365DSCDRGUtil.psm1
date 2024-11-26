@@ -994,18 +994,10 @@ function ConvertTo-IntunePolicyAssignment
         }
         elseif ($assignment.dataType -like '*GroupAssignmentTarget')
         {
-            if ($assignment.groupId)
+            $group = $null
+            if (-not [System.String]::IsNullOrEmpty($assignment.groupId))
             {
-                try {
-                    $group = Get-MgGroup -GroupId ($assignment.groupId) -ErrorAction SilentlyContinue
-                }
-                catch {
-                    write-verbose "ConvertTo-IntunePolicyAssignment: Error in Get-MgGroup (GroupId '$($assignment.groupId)'): $($_.exception.message)"
-                }
-            }
-            else
-            {
-                $group = $null
+                $group = Get-MgGroup -GroupId ($assignment.groupId) -ErrorAction SilentlyContinue
             }
             if ($null -eq $group)
             {
