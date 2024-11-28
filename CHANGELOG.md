@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+* Intune
+  * IntuneDeviceManagementCompliancePartner
+    Initial release
+
 # 1.24.1127.1
 
 * AAD
@@ -129,8 +134,6 @@
   * Initial release.
 * SCPolicyConfig
   * Fixed an issue extracting empty groups properties.
-* TeamsMeetingPolicy
-  * FIXES #5442(https://github.com/microsoft/Microsoft365DSC/issues/5442)
 * TeamsUpdateManagementPolicy
   * Added conversion of the UpdateTimeOfDay parameter to the local culture format
     so that the comparison will work consistently.
