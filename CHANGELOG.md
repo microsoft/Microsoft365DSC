@@ -1,6 +1,9 @@
 # Change log for Microsoft365DSC
 
 # UNRELEASED
+* Intune
+  * IntuneDeviceManagementCompliancePartner
+    Initial release
 
 * All resources
   * Applying project default formatting on all files, to improve
