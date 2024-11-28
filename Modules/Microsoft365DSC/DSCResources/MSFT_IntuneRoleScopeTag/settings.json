@@ -1,41 +1,41 @@
 {
-    "resourceName": "IntuneMobileAppConfigurationPolicyIOS",
-    "description": "This resource configures an Intune Managed Device Mobile App Configuration Policy for iOS Device.",
+    "resourceName": "IntuneRoleScopeTag",
+    "description": "This resource configures an Intune Role Scope Tag.",
     "permissions": {
         "graph": {
             "delegated": {
                 "read": [
                     {
-                        "name": "Group.Read.All"
+                        "name": "DeviceManagementConfiguration.Read.All"
                     },
-{
-                        "name": "DeviceManagementApps.Read.All"
+                    {
+                        "name":  "Group.Read.All"
                     }
                 ],
                 "update": [
                     {
-                        "name": "Group.Read.All"
+                        "name": "DeviceManagementConfiguration.ReadWrite.All"
                     },
                     {
-                        "name": "DeviceManagementApps.ReadWrite.All"
+                        "name":  "Group.Read.All"
                     }
                 ]
             },
             "application": {
                 "read": [
                     {
-                        "name": "Group.Read.All"
+                        "name": "DeviceManagementConfiguration.Read.All"
                     },
                     {
-                        "name": "DeviceManagementApps.Read.All"
+                        "name":  "Group.Read.All"
                     }
                 ],
                 "update": [
                     {
-                        "name": "Group.Read.All"
+                        "name": "DeviceManagementConfiguration.ReadWrite.All"
                     },
                     {
-                        "name": "DeviceManagementApps.ReadWrite.All"
+                        "name":  "Group.Read.All"
                     }
                 ]
             }

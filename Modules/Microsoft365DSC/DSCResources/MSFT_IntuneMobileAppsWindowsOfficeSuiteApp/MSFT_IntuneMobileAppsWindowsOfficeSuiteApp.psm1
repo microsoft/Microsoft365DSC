@@ -173,6 +173,7 @@ function Get-TargetResource
             if (-not [System.String]::IsNullOrEmpty($DisplayName))
             {
                 $instance = Get-MgBetaDeviceAppManagementMobileApp `
+                    -All `
                     -Filter "(isof('microsoft.graph.officeSuiteApp') and displayName eq '$DisplayName')" `
                     -ErrorAction SilentlyContinue
             }
@@ -487,7 +488,7 @@ function Set-TargetResource
             }
 
             Invoke-MgGraphRequest -Uri "/beta/deviceAppManagement/mobileApps/$($app.Id)/categories/`$ref" -Method 'POST' -Body @{
-                '@odata.id' = "$($Global:MSCloudLoginAssistant.MicrosoftGraph.ResourceUrl)beta/deviceAppManagement/mobileAppCategories/$($currentCategory.Id)"
+                '@odata.id' = "$($Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl)beta/deviceAppManagement/mobileAppCategories/$($currentCategory.Id)"
             }
         }
 
@@ -544,7 +545,7 @@ function Set-TargetResource
                 }
 
                 Invoke-MgGraphRequest -Uri "/beta/deviceAppManagement/mobileApps/$($currentInstance.Id)/categories/`$ref" -Method 'POST' -Body @{
-                    '@odata.id' = "$($Global:MSCloudLoginAssistant.MicrosoftGraph.ResourceUrl)beta/deviceAppManagement/mobileAppCategories/$($currentCategory.Id)"
+                    '@odata.id' = "$($Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl)beta/deviceAppManagement/mobileAppCategories/$($currentCategory.Id)"
                 }
             }
             else

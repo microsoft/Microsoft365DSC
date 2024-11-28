@@ -269,7 +269,7 @@ function Set-TargetResource
         foreach ($provider in $IdentityProviders)
         {
             $params = @{
-                "@odata.id" = $Global:MSCloudLoginAssistant.MicrosoftGraph.ResourceUrl + "beta/identityProviders/$($provider)"
+                "@odata.id" = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/identityProviders/$($provider)"
             }
 
             Write-Verbose -Message "Adding the Identity Provider with Id {$provider} to the newly created Azure AD Identity B2X User Flow with Id {$($newObj.Id)}"
@@ -318,7 +318,7 @@ function Set-TargetResource
         {
             $getConnector = Get-MgBetaIdentityApiConnector -Filter "DisplayName eq '$($ApiConnectorConfiguration.postFederationSignupConnectorName)'"
             $params = @{
-                "@odata.id" = $Global:MSCloudLoginAssistant.MicrosoftGraph.ResourceUrl + "beta/identity/apiConnectors/$($getConnector.Id)"
+                "@odata.id" = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/identity/apiConnectors/$($getConnector.Id)"
             }
 
             Write-Verbose -Message "Updating the Post Federation Signup connector for Azure AD Identity B2X User Flow with Id {$($currentInstance.Id)}"
@@ -330,7 +330,7 @@ function Set-TargetResource
         {
             $getConnector = Get-MgBetaIdentityApiConnector -Filter "DisplayName eq '$($ApiConnectorConfiguration.postAttributeCollectionConnectorName)'"
             $params = @{
-                "@odata.id" = $Global:MSCloudLoginAssistant.MicrosoftGraph.ResourceUrl + "beta/identity/apiConnectors/$($getConnector.Id)"
+                "@odata.id" = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/identity/apiConnectors/$($getConnector.Id)"
             }
 
             Write-Verbose -Message "Updating the Post Attribute Collection connector for Azure AD Identity B2X User Flow with Id {$($currentInstance.Id)}"
@@ -344,7 +344,7 @@ function Set-TargetResource
         foreach ($provider in $providersToAdd)
         {
             $params = @{
-                "@odata.id" = $Global:MSCloudLoginAssistant.MicrosoftGraph.ResourceUrl + "beta/identityProviders/$($provider)"
+                "@odata.id" = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/identityProviders/$($provider)"
             }
 
             Write-Verbose -Message "Adding the Identity Provider with Id {$provider} to the Azure AD Identity B2X User Flow with Id {$($currentInstance.Id)}"

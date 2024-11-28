@@ -10,7 +10,7 @@ $minVersion = '5.5.0'
 
 $module = Get-Module -ListAvailable | Where-Object { $_.Name -eq $moduleName -and $_.Version -ge $minVersion }
 
-if ($module -ne $null)
+if ($null -ne $module)
 {
     Write-Output "Module $moduleName with version greater than or equal to $minVersion found."
 }

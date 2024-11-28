@@ -687,6 +687,16 @@ function Test-M365DSCParameterState
         $KeyList = $ValuesToCheck
     }
 
+    # Add default Ensure value if it is not present in the DesiredValues but present in the CurrentValues
+    if (-not $KeyList.Contains('Ensure') -and -not $KeyList.Contains('IsSingleInstance') -and $CurrentValues.ContainsKey('Ensure'))
+    {
+        $KeyList += 'Ensure'
+        if (-not $DesiredValues.ContainsKey('Ensure'))
+        {
+            $DesiredValues.Add('Ensure', 'Present')
+        }
+    }
+
     $KeyList | ForEach-Object -Process {
         if (($_ -ne 'Verbose') -and ($_ -ne 'Credential') `
                 -and ($_ -ne 'ApplicationId') -and ($_ -ne 'CertificateThumbprint') `
@@ -1544,7 +1554,7 @@ function Confirm-M365DSCDependencies
             {
                 $ErrorMessage += '    * ' + $invalidDependency.ModuleName + "`r`n"
             }
-            $ErrorMessage += 'Please run Update-M365DSCDependencies as Administrator.'
+            $ErrorMessage += 'Please run Update-M365DSCDependencies as Administrator. '
             $ErrorMessage += 'Please run Uninstall-M365DSCOutdatedDependencies.'
             $Script:M365DSCDependenciesValidated = $false
             Add-M365DSCEvent -Message $ErrorMessage -EntryType 'Error' `
@@ -3776,13 +3786,13 @@ function Get-M365DSCExportContentForResource
             Import-Module $Resource.Path -Force
             $moduleInfo = Get-Command -Module $ModuleFullName -ErrorAction SilentlyContinue
             $cmdInfo = $moduleInfo | Where-Object -FilterScript {$_.Name -eq 'Get-TargetResource'}
-            $Keys = $cmdInfo.Parameters.Keys
+            $Keys = $cmdInfo.Parameters.Values.Where({ $_.ParameterSets.Values.IsMandatory }).Name
         }
     }
     else
     {
         $cmdInfo = $moduleInfo | Where-Object -FilterScript {$_.Name -eq 'Get-TargetResource'}
-        $Keys = $cmdInfo.Parameters.Keys
+        $Keys = $cmdInfo.Parameters.Values.Where({ $_.ParameterSets.Values.IsMandatory }).Name
     }
 
     if ($Keys.Contains('IsSingleInstance'))
@@ -3829,19 +3839,20 @@ function Get-M365DSCExportContentForResource
     {
         $primaryKey = $Results.UserPrincipalName
     }
-    elseif ($Keys.Contains('User'))
+
+    if ([String]::IsNullOrEmpty($primaryKey) -and `
+        -not $Keys.Contains('IsSingleInstance'))
     {
-        $primaryKey = $Results.User
+        foreach ($Key in $Keys)
+        {
+            $primaryKey += $Results.$Key
+        }
     }
 
     $instanceName = $ResourceName
     if (-not [System.String]::IsNullOrEmpty($primaryKey))
     {
         $instanceName += "-$primaryKey"
-    }
-    elseif (-not $Keys.Contains('IsSingleInstance'))
-    {
-        $instanceName += "-" + (New-Guid).ToString()
     }
 
     if ($Results.ContainsKey('Workload'))

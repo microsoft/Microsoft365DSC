@@ -108,7 +108,7 @@ function Get-TargetResource
         #region resource generator code
         if ($null -eq $getValue)
         {
-            $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -Filter "DisplayName eq '$Displayname'" -ErrorAction SilentlyContinue | Where-Object `
+            $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -All -Filter "DisplayName eq '$Displayname'" -ErrorAction SilentlyContinue | Where-Object `
             -FilterScript { `
                 $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidWiFiConfiguration' `
             }
@@ -117,11 +117,11 @@ function Get-TargetResource
 
         if ($null -eq $getValue)
         {
-            Write-Verbose -Message "Nothing with id {$id} was found"
+            Write-Verbose -Message "No Intune Wifi Configuration Policy Android Device Administrator with id {$id} was found"
             return $nullResult
         }
 
-        Write-Verbose -Message "Found something with id {$id}"
+        Write-Verbose -Message "Found an Intune Wifi Configuration Policy Android Device Administrator with id {$id}"
         $results = @{
             #region resource generator code
             Id                             = $getValue.Id

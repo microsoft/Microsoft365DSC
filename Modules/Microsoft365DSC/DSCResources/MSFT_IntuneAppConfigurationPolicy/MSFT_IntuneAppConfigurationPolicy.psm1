@@ -93,7 +93,7 @@ function Get-TargetResource
 
             try
             {
-                $configPolicy = Get-MgBetaDeviceAppManagementTargetedManagedAppConfiguration -Filter "displayName eq '$DisplayName'" `
+                $configPolicy = Get-MgBetaDeviceAppManagementTargetedManagedAppConfiguration -All -Filter "displayName eq '$DisplayName'" `
                     -ErrorAction Stop
             }
             catch

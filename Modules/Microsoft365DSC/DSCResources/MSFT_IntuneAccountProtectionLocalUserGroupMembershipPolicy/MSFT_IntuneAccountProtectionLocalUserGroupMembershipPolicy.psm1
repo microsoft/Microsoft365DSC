@@ -90,7 +90,7 @@ function Get-TargetResource
             Write-Verbose -Message "No Account Protection Local User Group Membership Policy with identity {$Identity} was found"
             if (-not [String]::IsNullOrEmpty($DisplayName))
             {
-                $policy = Get-MgBetaDeviceManagementConfigurationPolicy -Filter "Name eq '$DisplayName'" -ErrorAction SilentlyContinue
+                $policy = Get-MgBetaDeviceManagementConfigurationPolicy -All -Filter "Name eq '$DisplayName'" -ErrorAction SilentlyContinue
 
                 if(([array]$devicePolicy).Count -gt 1)
                 {

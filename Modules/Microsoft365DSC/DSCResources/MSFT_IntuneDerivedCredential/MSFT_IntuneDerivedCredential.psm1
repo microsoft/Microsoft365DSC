@@ -105,6 +105,7 @@ function Get-TargetResource {
                 if (-Not [string]::IsNullOrEmpty($DisplayName))
                 {
                     $instance = Get-MgBetaDeviceManagementDerivedCredential `
+                        -All `
                         -Filter "DisplayName eq '$DisplayName'" `
                         -ErrorAction SilentlyContinue
 

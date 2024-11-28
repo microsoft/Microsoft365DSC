@@ -146,6 +146,7 @@ function Get-TargetResource
         {
             Write-Verbose -Message "Trying to retrieve profile by DisplayName"
             $androidDeviceOwnerEnrollmentProfile = Get-MgBetaDeviceManagementAndroidDeviceOwnerEnrollmentProfile `
+                -All `
                 -Filter "displayName eq '$DisplayName'" `
                 -ErrorAction SilentlyContinue
         }
@@ -346,7 +347,7 @@ function Set-TargetResource
     # UPDATE
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Updating AndroidDeviceOwnerEnrollmentProfile: $DisplayName"        
+        Write-Verbose -Message "Updating AndroidDeviceOwnerEnrollmentProfile: $DisplayName"
         Remove-MgBetaDeviceManagementAndroidDeviceOwnerEnrollmentProfile -AndroidDeviceOwnerEnrollmentProfileId $currentInstance.Id -Confirm:$false
         $response = New-MgBetaDeviceManagementAndroidDeviceOwnerEnrollmentProfile @setParameters
     }

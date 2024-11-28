@@ -92,7 +92,7 @@ function Get-TargetResource
         #region resource generator code
         if ($id -ne $null)
         {
-            $getValue = Get-MgbetaDeviceAppManagementPolicySet -PolicySetId $Id -ExpandProperty * -ErrorAction SilentlyContinue
+            $getValue = Get-MgBetaDeviceAppManagementPolicySet -PolicySetId $Id -ExpandProperty * -ErrorAction SilentlyContinue
         }
 
         if ($null -eq $getValue)
@@ -101,23 +101,24 @@ function Get-TargetResource
 
             if (-Not [string]::IsNullOrEmpty($DisplayName))
             {
-                [array]$getValue = Get-MgbetaDeviceAppManagementPolicySet `
-                -Filter "DisplayName eq '$DisplayName'"
+                [array]$getValue = Get-MgBetaDeviceAppManagementPolicySet `
+                    -All `
+                    -Filter "DisplayName eq '$DisplayName'"
 
-                if ($getValue -eq $null)
+                if ($null -eq $getValue)
                 {
                     Write-verbose -Message "Could not find an Intune Policy Sets with DisplayName {$DisplayName}"
                     return $nullResult
                 }
                 else
                 {
-                    if ($getValue.count -gt 1)
+                    if ($getValue.Count -gt 1)
                     {
-                        Write-verbose -Message "Multiple Intune Policy Sets with DisplayName {$DisplayName} - unable to continue"
+                        Write-Verbose -Message "Multiple Intune Policy Sets with DisplayName {$DisplayName} - unable to continue"
                         return $nullResult
                     }
                     else {
-                        $getValue = Get-MgbetaDeviceAppManagementPolicySet -PolicySetId $getValue.Id -ExpandProperty * -ErrorAction SilentlyContinue
+                        $getValue = Get-MgBetaDeviceAppManagementPolicySet -PolicySetId $getValue.Id -ExpandProperty * -ErrorAction SilentlyContinue
 
                         }
                 }
@@ -150,7 +151,7 @@ function Get-TargetResource
             #endregion
         }
 
-        if ($getValue.GuidedDeploymentTags -eq $null)
+        if ($null -eq $getValue.GuidedDeploymentTags)
         {
             $results.GuidedDeploymentTags = @()
         }
@@ -301,7 +302,7 @@ function Set-TargetResource
             }
         }
 
-        # set assignments and items to work with New-MgbetaDeviceAppManagementPolicySet command
+        # set assignments and items to work with New-MgBetaDeviceAppManagementPolicySet command
         $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
         $CreateParameters.Add("Assignments", $assignmentsHash)
 
@@ -317,7 +318,7 @@ function Set-TargetResource
         $CreateParameters.Add("Items", $itemsHash)
 
         write-verbose -Message ($CreateParameters | out-string)
-        $policy = New-MgbetaDeviceAppManagementPolicySet @CreateParameters
+        $policy = New-MgBetaDeviceAppManagementPolicySet @CreateParameters
 
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
@@ -343,8 +344,8 @@ function Set-TargetResource
         #region resource generator code
         $UpdateParameters.Add("PolicySetId", $currentInstance.Id)
 
-        Update-MgbetaDeviceAppManagementPolicySet  @UpdateParameters
-        
+        Update-MgBetaDeviceAppManagementPolicySet  @UpdateParameters
+
         $Url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/deviceAppManagement/policySets/$($currentInstance.Id)/update"
         if ($null -ne ($itemamendments = Get-ItemsAmendmentsObject -currentObjectItems $currentInstance.Items -targetObjectItems $items))
         {
@@ -359,7 +360,7 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Removing the Intune Policy Sets with Id {$($currentInstance.Id)}"
         #region resource generator code
-        Remove-MgbetaDeviceAppManagementPolicySet -PolicySetId $currentInstance.Id
+        Remove-MgBetaDeviceAppManagementPolicySet -PolicySetId $currentInstance.Id
         #endregion
     }
 }
@@ -554,7 +555,7 @@ function Export-TargetResource
     try
     {
         #region resource generator code
-        [array]$getValue = Get-MgbetaDeviceAppManagementPolicySet -Filter $Filter -All -ErrorAction Stop
+        [array]$getValue = Get-MgBetaDeviceAppManagementPolicySet -Filter $Filter -All -ErrorAction Stop
         #endregion
 
         $i = 1

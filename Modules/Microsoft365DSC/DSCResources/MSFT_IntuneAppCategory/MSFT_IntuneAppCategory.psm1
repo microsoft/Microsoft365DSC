@@ -87,6 +87,7 @@ function Get-TargetResource
                 if (-Not [string]::IsNullOrEmpty($DisplayName))
                 {
                     $instance = Get-MgBetaDeviceAppManagementMobileAppCategory `
+                        -All `
                         -Filter "DisplayName eq '$DisplayName'" `
                         -ErrorAction SilentlyContinue
                 }

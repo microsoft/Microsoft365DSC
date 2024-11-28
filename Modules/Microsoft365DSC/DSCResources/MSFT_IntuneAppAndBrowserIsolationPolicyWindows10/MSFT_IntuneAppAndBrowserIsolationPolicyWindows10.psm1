@@ -179,6 +179,7 @@ function Get-TargetResource
             if (-not [System.String]::IsNullOrEmpty($DisplayName))
             {
                 $getValue = Get-MgBetaDeviceManagementConfigurationPolicy `
+                    -All `
                     -Filter "Name eq '$DisplayName'" `
                     -ErrorAction SilentlyContinue
             }
@@ -199,7 +200,7 @@ function Get-TargetResource
             -ErrorAction Stop
 
         $policySettings = @{}
-        $policySettings = Export-IntuneSettingCatalogPolicySettings -Settings $settings -ReturnHashtable $policySettings 
+        $policySettings = Export-IntuneSettingCatalogPolicySettings -Settings $settings -ReturnHashtable $policySettings
 
         $results = @{
             #region resource generator code
