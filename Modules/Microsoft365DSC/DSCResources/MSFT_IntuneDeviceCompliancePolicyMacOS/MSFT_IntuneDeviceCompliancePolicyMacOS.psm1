@@ -159,6 +159,7 @@ function Get-TargetResource
     try
     {
         $devicePolicy = Get-MgBetaDeviceManagementDeviceCompliancePolicy `
+            -All `
             -ErrorAction Stop | Where-Object `
             -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.macOSCompliancePolicy' -and `
                 $_.displayName -eq $($DisplayName) }

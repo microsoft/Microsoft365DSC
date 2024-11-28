@@ -263,7 +263,7 @@ function Get-TargetResource
 
     try
     {
-        $policy = Get-MgBetaDeviceManagementDeviceConfiguration -Filter "displayName eq '$DisplayName'" `
+        $policy = Get-MgBetaDeviceManagementDeviceConfiguration -All -Filter "displayName eq '$DisplayName'" `
             -ErrorAction Stop | Where-Object -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidWorkProfileGeneralDeviceConfiguration' }
 
         if ($null -eq $policy)

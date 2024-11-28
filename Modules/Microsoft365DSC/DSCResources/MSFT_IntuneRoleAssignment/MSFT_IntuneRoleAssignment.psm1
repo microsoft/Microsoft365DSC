@@ -78,58 +78,51 @@ function Get-TargetResource
         $AccessTokens
     )
 
+    Write-Verbose -Message "Getting configuration of the Intune Role Assignment with Id {$Id} and DisplayName {$DisplayName}"
+
     try
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters
-    }
-    catch
-    {
-        Write-Verbose -Message ($_)
-    }
 
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
+        #Ensure the proper dependencies are installed in the current environment.
+        Confirm-M365DSCDependencies
 
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
+        #region Telemetry
+        $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+        $CommandName = $MyInvocation.MyCommand
+        $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+            -CommandName $CommandName `
+            -Parameters $PSBoundParameters
+        Add-M365DSCTelemetryEvent -Data $data
+        #endregion
 
-    $nullResult = $PSBoundParameters
-    $nullResult.Ensure = 'Absent'
-    try
-    {
+        $nullResult = $PSBoundParameters
+        $nullResult.Ensure = 'Absent'
+
         $getValue = $null
-        if ($Id -match '^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$')
+        $getValue = Get-MgBetaDeviceManagementRoleAssignment -DeviceAndAppManagementRoleAssignmentId $Id -ErrorAction SilentlyContinue
+        
+        if ($null -eq $getValue)
         {
-            $getValue = Get-MgBetaDeviceManagementRoleAssignment -DeviceAndAppManagementRoleAssignmentId $id -ErrorAction SilentlyContinue
-            if ($null -ne $getValue)
-            {
-                Write-Verbose -Message "Found something with id {$id}"
-            }
-        }
-        else
-        {
-            Write-Verbose -Message "Nothing with id {$id} was found"
-            $Filter = "displayName eq '$DisplayName'"
-            $getValue = Get-MgBetaDeviceManagementRoleAssignment -Filter $Filter -ErrorAction SilentlyContinue
-            if ($null -ne $getValue)
-            {
-                Write-Verbose -Message "Found something with displayname {$DisplayName}"
-            }
-            else
-            {
-                Write-Verbose -Message "Nothing with displayname {$DisplayName} was found"
-                return $nullResult
-            }
+            Write-Verbose -Message "Could not find an Intune Role Assignment with Id {$Id}"
+
+            $getValue = Get-MgBetaDeviceManagementRoleAssignment `
+                -All `
+                -Filter "displayName eq '$DisplayName'" `
+                -ErrorAction SilentlyContinue
         }
 
-        #Get Roledefinition first, loop through all roledefinitions and find the assignment match the id
+        if ($null -eq $getValue)
+        {
+            Write-Verbose -Message "Could not find an Intune Role Assignment with DisplayName {$DisplayName}"
+            return $nullResult
+        }
+
+        $Id = $getValue.Id
+        Write-Verbose -Message "An Intune Role Assignment with Id {$Id} and DisplayName {$DisplayName} was found"
+
+        #Get Roledefinition first, loop through all roledefinitions and find the assignment that matches the Id
         $tempRoleDefinitions = Get-MgDeviceManagementRoleDefinition
         foreach ($tempRoleDefinition in $tempRoleDefinitions)
         {
@@ -142,8 +135,6 @@ function Get-TargetResource
             }
         }
 
-        #$RoleDefinitionid = Get-MgDeviceManagementRoleAssignment -DeviceAndAppManagementRoleAssignmentId $getvalue.Id -ExpandProperty *
-
         $ResourceScopesDisplayNames = @()
         foreach ($ResourceScope in $getValue.ResourceScopes)
         {
@@ -155,8 +146,6 @@ function Get-TargetResource
         {
             $MembersDisplayNames += (Get-MgGroup -GroupId $tempMember).DisplayName
         }
-
-        Write-Verbose -Message "Found something with id {$id}"
 
         $scopeTypeValue = $null
         if (-not ([System.String]::IsNullOrEmpty($getValue.ScopeType)))
@@ -188,26 +177,12 @@ function Get-TargetResource
     }
     catch
     {
-        try
-        {
-            Write-Verbose -Message $_
-            $tenantIdValue = ''
-            if (-not [System.String]::IsNullOrEmpty($TenantId))
-            {
-                $tenantIdValue = $TenantId
-            }
-            elseif ($null -ne $Credential)
-            {
-                $tenantIdValue = $Credential.UserName.Split('@')[1]
-            }
-            Add-M365DSCEvent -Message $_ -EntryType 'Error' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $tenantIdValue
-        }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullResult
     }
 }
@@ -314,28 +289,20 @@ function Set-TargetResource
     #endregion
 
     $currentInstance = Get-TargetResource @PSBoundParameters
-
-    $PSBoundParameters.Remove('Ensure') | Out-Null
-    $PSBoundParameters.Remove('Credential') | Out-Null
-    $PSBoundParameters.Remove('ApplicationId') | Out-Null
-    $PSBoundParameters.Remove('ApplicationSecret') | Out-Null
-    $PSBoundParameters.Remove('TenantId') | Out-Null
-    $PSBoundParameters.Remove('CertificateThumbprint') | Out-Null
-    $PSBoundParameters.Remove('ManagedIdentity') | Out-Null
-    $PSBoundParameters.Remove('AccessTokens') | Out-Null
+    $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
     if (!($RoleDefinition -match '^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$'))
     {
         [string]$roleDefinition = $null
         $Filter = "displayName eq '$RoleDefinitionDisplayName'"
-        $RoleDefinitionId = Get-MgDeviceManagementRoleDefinition -Filter $Filter -ErrorAction SilentlyContinue
+        $RoleDefinitionId = Get-MgDeviceManagementRoleDefinition -All -Filter $Filter -ErrorAction SilentlyContinue
         if ($null -ne $RoleDefinitionId)
         {
             $roleDefinition = $RoleDefinitionId.Id
         }
         else
         {
-            Write-Verbose -Message "Nothing with displayname {$RoleDefinitionDisplayName} was found"
+            Write-Verbose -Message "No role definition with DisplayName {$RoleDefinitionDisplayName} was found"
         }
     }
 
@@ -353,7 +320,7 @@ function Set-TargetResource
         }
         else
         {
-            Write-Verbose -Message "Nothing with displayname {$MembersDisplayName} was found"
+            Write-Verbose -Message "No member of type group with DisplayName {$MembersDisplayName} was found"
         }
     }
 
@@ -371,7 +338,7 @@ function Set-TargetResource
         }
         else
         {
-            Write-Verbose -Message "Nothing with displayname {$ResourceScopesDisplayName} was found"
+            Write-Verbose -Message "No resource scope of type group with DisplayName {$ResourceScopesDisplayName} was found"
         }
     }
     if ($ScopeType -match 'AllDevices|AllLicensedUsers|AllDevicesAndLicensedUsers')
@@ -385,7 +352,7 @@ function Set-TargetResource
     }
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        Write-Verbose -Message "Creating {$DisplayName}"
+        Write-Verbose -Message "Creating an Intune Role Assignment with DisplayName {$DisplayName}"
 
         $CreateParameters = @{
             description                 = $Description
@@ -394,14 +361,13 @@ function Set-TargetResource
             scopeType                   = $ScopeType
             members                     = $Members
             '@odata.type'               = '#microsoft.graph.deviceAndAppManagementRoleAssignment'
-            'roleDefinition@odata.bind' = "$($Global:MSCloudLoginAssistant.MicrosoftGraph.ResourceUrl)beta/deviceManagement/roleDefinitions('$roleDefinition')"
+            'roleDefinition@odata.bind' = "$($Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl)beta/deviceManagement/roleDefinitions('$roleDefinition')"
         }
-        $policy = New-MgBetaDeviceManagementRoleAssignment -BodyParameter $CreateParameters
-
+        $null = New-MgBetaDeviceManagementRoleAssignment -BodyParameter $CreateParameters
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Updating {$DisplayName}"
+        Write-Verbose -Message "Updating the Intune Role Assignment with Id {$($currentInstance.Id)} and DisplayName {$DisplayName}"
 
         $UpdateParameters = @{
             description                 = $Description
@@ -410,16 +376,15 @@ function Set-TargetResource
             scopeType                   = $ScopeType
             members                     = $Members
             '@odata.type'               = '#microsoft.graph.deviceAndAppManagementRoleAssignment'
-            'roleDefinition@odata.bind' = "$($Global:MSCloudLoginAssistant.MicrosoftGraph.ResourceUrl)beta/deviceManagement/roleDefinitions('$roleDefinition')"
+            'roleDefinition@odata.bind' = "$($Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl)beta/deviceManagement/roleDefinitions('$roleDefinition')"
         }
 
         Update-MgBetaDeviceManagementRoleAssignment -BodyParameter $UpdateParameters `
             -DeviceAndAppManagementRoleAssignmentId $currentInstance.Id
-
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing {$DisplayName}"
+        Write-Verbose -Message "Removing the Intune Role Assignment with Id {$($currentInstance.Id)} and DisplayName {$DisplayName}"
         Remove-MgBetaDeviceManagementRoleAssignment -DeviceAndAppManagementRoleAssignmentId $currentInstance.Id
     }
 }
@@ -516,16 +481,16 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of {$id - $displayName}"
+    Write-Verbose -Message "Testing configuration of {$Id - $displayName}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
-    $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
+    $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
 
-    if (!($RoleDefinition -match '^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$'))
+    if (-not ($RoleDefinition -match '^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$'))
     {
         [string]$roleDefinition = $null
         $Filter = "displayName eq '$RoleDefinitionDisplayName'"
-        $RoleDefinitionId = Get-MgDeviceManagementRoleDefinition -Filter $Filter -ErrorAction SilentlyContinue
+        $RoleDefinitionId = Get-MgDeviceManagementRoleDefinition -All -Filter $Filter -ErrorAction SilentlyContinue
         if ($null -ne $RoleDefinitionId)
         {
             $roleDefinition = $RoleDefinitionId.Id
@@ -533,7 +498,7 @@ function Test-TargetResource
         }
         else
         {
-            Write-Verbose -Message "Nothing with displayname {$RoleDefinitionDisplayName} was found"
+            Write-Verbose -Message "No role definition with DisplayName {$RoleDefinitionDisplayName} was found"
         }
     }
 
@@ -550,7 +515,7 @@ function Test-TargetResource
         }
         else
         {
-            Write-Verbose -Message "Nothing with displayname {$RoleDefinitionDisplayName} was found"
+            Write-Verbose -Message "No member of type group with DisplayName {$MembersDisplayName} was found"
         }
     }
     $PSBoundParameters.Set_Item('Members', $Members)
@@ -568,7 +533,7 @@ function Test-TargetResource
         }
         else
         {
-            Write-Verbose -Message "Nothing with displayname {$RoleDefinitionDisplayName} was found"
+            Write-Verbose -Message "No resource scope of type group with DisplayName {$ResourceScopesDisplayName} was found"
         }
     }
     $PSBoundParameters.Set_Item('ResourceScopes', $ResourceScopes)
@@ -691,14 +656,14 @@ function Export-TargetResource
                 $Global:M365DSCExportResourceInstancesCount++
             }
 
-            $displayedKey = $config.id
+            $displayedKey = $config.Id
             if (-not [String]::IsNullOrEmpty($config.displayName))
             {
                 $displayedKey = $config.displayName
             }
             Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{
-                id                    = $config.id
+                Id                    = $config.Id
                 DisplayName           = $config.displayName
                 Ensure                = 'Present'
                 Credential            = $Credential
@@ -749,3 +714,5 @@ function Export-TargetResource
         return ''
     }
 }
+
+Export-ModuleMember -Function *-TargetResource

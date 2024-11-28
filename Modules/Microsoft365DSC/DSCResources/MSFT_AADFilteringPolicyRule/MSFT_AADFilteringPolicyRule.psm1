@@ -520,7 +520,7 @@ function Export-TargetResource
 
                 if ($Results.Destinations)
                 {
-                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Destinations' -IsCIMArray:$false
+                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Destinations' -IsCIMArray:$true
                 }
                 $dscContent += $currentDSCBlock
                 Save-M365DSCPartialExport -Content $currentDSCBlock `

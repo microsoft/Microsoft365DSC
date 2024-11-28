@@ -2834,28 +2834,6 @@
                     TenantId              = $TenantId;
                     CertificateThumbprint = $CertificateThumbprint;
                 }
-                IntuneMobileAppConfigurationPolicyIOS 'ConfigureIntuneMobileAppConfigurationPolicyIOS'
-                {
-                    Description           = "IntuneMobileAppConfigurationPolicyIOS Description";
-                    DisplayName           = "IntuneMobileAppConfigurationPolicyIOS DisplayName";
-                    Ensure                = "Present";
-                    settings              = @(
-                        MSFT_appConfigurationSettingItem{
-                            appConfigKey = 'ConfigKey1'
-                            appConfigKeyType = 'stringType'
-                            appConfigKeyValue = 'KeyValue1'
-                        }
-                        MSFT_appConfigurationSettingItem{
-                            appConfigKey = 'ConfigKey2'
-                            appConfigKeyType = 'stringType'
-                            appConfigKeyValue = 'keyValue2'
-                        }
-                    );
-                    targetedMobileApps    = @("06131066-8adf-42a9-86aa-e4b59e27da5d");
-                    ApplicationId         = $ApplicationId;
-                    TenantId              = $TenantId;
-                    CertificateThumbprint = $CertificateThumbprint;
-                }
                 IntuneMobileAppsMacOSLobApp 'IntuneMobileAppsMacOSLobApp-TeamsForBusinessInstaller'
                 {
                     Id                    = "8d027f94-0682-431e-97c1-827d1879fa79";
@@ -3005,6 +2983,15 @@
                     TenantId              = $TenantId;
                     CertificateThumbprint = $CertificateThumbprint;
                 }
+                IntuneRoleScopeTag 'Example'
+                {
+                    DisplayName           = "MyNewTag"
+                    Description           = "My Example Tag"
+                    Ensure                = "Present"
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
+                }
                 IntuneSecurityBaselineDefenderForEndpoint 'mySecurityBaselineDefenderForEndpoint'
                 {
                     DisplayName           = 'test'
@@ -3020,9 +3007,9 @@
                         DisableSafetyFilterOverrideForAppRepUnknown = '1'
                     }
                     Ensure                = 'Present'
-                    ApplicationId         = $ApplicationId;
-                    TenantId              = $TenantId;
-                    CertificateThumbprint = $CertificateThumbprint;
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 IntuneSecurityBaselineMicrosoft365AppsForEnterprise 'mySecurityBaselineMicrosoft365AppsForEnterprisePolicy'
                 {

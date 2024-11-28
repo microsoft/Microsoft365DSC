@@ -352,7 +352,7 @@ function Set-TargetResource
                     $userId = (Get-MgUser -UserId $member).Id
 
                     # There are no cmldet to remove members from group available at the time of writing this resource (March 8th 2022)
-                    $url = "$($Global:MSCloudLoginAssistant.MicrosoftGraph.ResourceUrl)v1.0/groups/$($ADGroup[0].Id)/members/$userId/`$ref"
+                    $url = "$($Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl)v1.0/groups/$($ADGroup[0].Id)/members/$userId/`$ref"
                     Invoke-MgGraphRequest -Method DELETE -Uri $url | Out-Null
                 }
             }
@@ -398,7 +398,7 @@ function Set-TargetResource
                     Write-Verbose -Message "Adding Owner {$owner}"
                     $userId = (Get-MgUser -UserId $owner).Id
                     $newGroupOwner = @{
-                        '@odata.id' = "$($Global:MSCloudLoginAssistant.MicrosoftGraph.ResourceUrl)v1.0/users/{$userId}"
+                        '@odata.id' = "$($Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl)v1.0/users/{$userId}"
                     }
 
                     New-MgGroupOwnerByRef -GroupId $ADGroup[0].Id -BodyParameter $newGroupOwner
@@ -410,7 +410,7 @@ function Set-TargetResource
                     $userId = (Get-MgUser -UserId $owner).Id
 
                     # There are no cmldet to remove members from group available at the time of writing this resource (March 8th 2022)
-                    $url = "$($Global:MSCloudLoginAssistant.MicrosoftGraph.ResourceUrl)v1.0/groups/$($ADGroup[0].Id)/owners/$userId/`$ref"
+                    $url = "$($Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl)v1.0/groups/$($ADGroup[0].Id)/owners/$userId/`$ref"
                     Invoke-MgGraphRequest -Method DELETE -Uri $url | Out-Null
                 }
             }

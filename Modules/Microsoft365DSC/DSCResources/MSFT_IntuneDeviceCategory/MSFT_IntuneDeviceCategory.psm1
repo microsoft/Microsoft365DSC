@@ -67,7 +67,7 @@ function Get-TargetResource
 
     try
     {
-        $category = Get-MgBetaDeviceManagementDeviceCategory -Filter "displayName eq '$DisplayName'"
+        $category = Get-MgBetaDeviceManagementDeviceCategory -Filter "displayName eq '$DisplayName'" -All
 
         if ($null -eq $category)
         {

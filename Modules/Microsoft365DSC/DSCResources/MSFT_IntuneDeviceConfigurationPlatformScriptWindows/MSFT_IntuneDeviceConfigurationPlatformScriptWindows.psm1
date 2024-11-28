@@ -112,6 +112,7 @@ function Get-TargetResource
             if (-Not [string]::IsNullOrEmpty($DisplayName))
             {
                 $getValue = Get-MgBetaDeviceManagementScript `
+                    -All `
                     -Filter "DisplayName eq '$DisplayName'" `
                     -ErrorAction SilentlyContinue
                 if ($null -ne $getValue)
@@ -159,7 +160,7 @@ function Get-TargetResource
             AccessTokens          = $AccessTokens
             #endregion
         }
-        
+
         $assignmentsValues = Get-MgBetaDeviceManagementScriptAssignment -DeviceManagementScriptId $Id
         $assignmentResult = @()
         if ($assignmentsValues.Count -gt 0)

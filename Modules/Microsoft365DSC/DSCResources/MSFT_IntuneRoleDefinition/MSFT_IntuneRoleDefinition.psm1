@@ -97,22 +97,22 @@ function Get-TargetResource
             $getValue = Get-MgBetaDeviceManagementRoleDefinition -RoleDefinitionId $id -ErrorAction SilentlyContinue
             if ($null -ne $getValue)
             {
-                Write-Verbose -Message "Found something with id {$id}"
+                Write-Verbose -Message "Found an Intune Role Definition with id {$id}"
             }
         }
 
         if ($null -eq $getValue)
         {
-            Write-Verbose -Message "Nothing with id {$id} was found"
+            Write-Verbose -Message "No Intune Role Definition with id {$id} was found"
             $Filter = "displayName eq '$DisplayName'"
-            $getValue = Get-MgBetaDeviceManagementRoleDefinition -Filter $Filter -ErrorAction SilentlyContinue
+            $getValue = Get-MgBetaDeviceManagementRoleDefinition -All -Filter $Filter -ErrorAction SilentlyContinue
             if ($null -ne $getValue)
             {
-                Write-Verbose -Message "Found something with displayname {$DisplayName}"
+                Write-Verbose -Message "Found an Intune Role Definition with displayname {$DisplayName}"
             }
             else
             {
-                Write-Verbose -Message "Nothing with displayname {$DisplayName} was found"
+                Write-Verbose -Message "No Intune Role Definition with displayname {$DisplayName} was found"
                 return $nullResult
             }
         }

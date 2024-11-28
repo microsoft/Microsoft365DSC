@@ -193,7 +193,7 @@ function Get-TargetResource
             Write-Verbose -Message "No Endpoint Protection Attack Surface Protection rules Policy with identity {$Identity} was found"
             if (-not [String]::IsNullOrEmpty($DisplayName))
             {
-                $policy = Get-MgBetaDeviceManagementIntent -Filter "DisplayName eq '$DisplayName'" -ErrorAction SilentlyContinue
+                $policy = Get-MgBetaDeviceManagementIntent -All -Filter "DisplayName eq '$DisplayName'" -ErrorAction SilentlyContinue
             }
 
             if(([array]$policy).count -gt 1)

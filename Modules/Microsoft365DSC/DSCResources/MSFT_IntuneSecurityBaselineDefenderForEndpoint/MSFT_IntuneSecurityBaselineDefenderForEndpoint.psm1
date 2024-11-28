@@ -12,7 +12,7 @@ function Get-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
-       
+
         [Parameter()]
         [System.String[]]
         $RoleScopeTagIds,
@@ -99,8 +99,9 @@ function Get-TargetResource
             if (-not [System.String]::IsNullOrEmpty($DisplayName))
             {
                 $getValue = Get-MgBetaDeviceManagementConfigurationPolicy `
+                    -All `
                     -Filter "Name eq '$DisplayName'" `
-                    -ErrorAction SilentlyContinue 
+                    -ErrorAction SilentlyContinue
             }
         }
         #endregion
@@ -524,7 +525,7 @@ function Get-TargetResource
         }
         $policySettings.Remove('UserSettings') | Out-Null
         #endregion
-      
+
         #endregion
 
         $results = @{
@@ -581,7 +582,7 @@ function Set-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
-       
+
         [Parameter()]
         [System.String[]]
         $RoleScopeTagIds,
@@ -738,7 +739,7 @@ function Test-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
-       
+
         [Parameter()]
         [System.String[]]
         $RoleScopeTagIds,

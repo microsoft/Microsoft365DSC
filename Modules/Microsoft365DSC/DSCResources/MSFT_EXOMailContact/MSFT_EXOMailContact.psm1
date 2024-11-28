@@ -268,6 +268,10 @@ function Get-TargetResource
                 {
                     $result."ExtensionCustomAttribute$i" = $contact."ExtensionCustomAttribute$i"
                 }
+                else
+                {
+                    $result."ExtensionCustomAttribute$i" = @()
+                }
             }
 
             Write-Verbose -Message "Found Mail Contact $($Name)"

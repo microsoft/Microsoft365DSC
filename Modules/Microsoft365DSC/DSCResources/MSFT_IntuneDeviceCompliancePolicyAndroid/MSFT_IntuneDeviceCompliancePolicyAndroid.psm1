@@ -185,7 +185,7 @@ function Get-TargetResource
     $nullResult.Ensure = 'Absent'
     try
     {
-        $devicePolicy = Get-MgBetaDeviceManagementDeviceCompliancePolicy `
+        $devicePolicy = Get-MgBetaDeviceManagementDeviceCompliancePolicy -All `
             -ErrorAction SilentlyContinue | Where-Object `
             -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidCompliancePolicy' -and `
                 $_.displayName -eq $($DisplayName) }

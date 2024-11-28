@@ -121,6 +121,7 @@ function Get-TargetResource
             if (-Not [string]::IsNullOrEmpty($DisplayName))
             {
                 $getValue = Get-MgBetaDeviceManagementWindowsAutopilotDeploymentProfile `
+                    -All `
                     -Filter "DisplayName eq '$DisplayName'" `
                     -ErrorAction SilentlyContinue `
                     | Where-Object -FilterScript {$null -ne $_.DisplayName}

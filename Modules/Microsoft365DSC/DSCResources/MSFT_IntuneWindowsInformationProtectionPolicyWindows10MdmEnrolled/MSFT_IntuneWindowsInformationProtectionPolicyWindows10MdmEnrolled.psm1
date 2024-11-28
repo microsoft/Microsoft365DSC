@@ -178,9 +178,10 @@ function Get-TargetResource
             if (-Not [string]::IsNullOrEmpty($DisplayName))
             {
                 $getValue = Get-MgBetaDeviceAppManagementMdmWindowsInformationProtectionPolicy `
+                    -All `
                     -Filter "DisplayName eq '$DisplayName'" `
                     -ErrorAction SilentlyContinue
-                if ($getValue.count -gt 1)
+                if ($getValue.Count -gt 1)
                 {
                     throw ("Error: Ensure the displayName {$displayName} is unique.")
                 }

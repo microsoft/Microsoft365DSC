@@ -17,10 +17,10 @@ jobs:
       - name: Install Modules
         shell: pwsh
         run: |
-          Install-Module ReverseDSC -Force -Scope AllUsers
-          Install-Module DSCParser -Force -Scope AllUsers
-          Install-Module PSDesiredStateConfiguration -Force -Scope AllUsers
-          Install-Module Pester -Force -SkipPublisherCheck -Scope AllUsers
+          Install-PSResource -Name ReverseDSC -Scope AllUsers -TrustRepository
+          Install-PSResource -Name DSCParser -Scope AllUsers -TrustRepository
+          Install-PSResource -Name PSDesiredStateConfiguration -Scope AllUsers -TrustRepository
+          Install-PSResource -Name Pester -Scope AllUsers -TrustRepository
           [System.Environment]::SetEnvironmentVariable('M365DSCTelemetryEnabled', $false, [System.EnvironmentVariableTarget]::Machine);
       - name: Run Quality Checks
         shell: pwsh

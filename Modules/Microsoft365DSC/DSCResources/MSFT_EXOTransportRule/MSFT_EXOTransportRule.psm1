@@ -967,6 +967,16 @@ function Get-TargetResource
                 TenantId                                     = $TenantId
                 AccessTokens                                 = $AccessTokens
             }
+            $inputParams = (Get-Command 'Get-TargetResource').Parameters
+            foreach ($key in $inputParams.Keys)
+            {
+                $propertyInfo = $inputParams.$key
+                $curVar = Get-Variable -Name $key -ErrorAction SilentlyContinue
+                if ($propertyInfo.ParameterType.Name -eq 'String[]' -and $curVar -ne $null -and $curVar.Value -eq $null)
+                {
+                    $result.$key = @()
+                }
+            }
 
             # Formats DateTime as String
             if ($null -ne $result.ActivationDate)
