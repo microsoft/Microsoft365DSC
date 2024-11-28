@@ -1,6 +1,9 @@
 # Change log for Microsoft365DSC
 
 # UNRELEASED
+* Intune
+  * IntuneDeviceManagementCompliancePartner
+    Initial release
 
 # 1.24.1127.1
 
