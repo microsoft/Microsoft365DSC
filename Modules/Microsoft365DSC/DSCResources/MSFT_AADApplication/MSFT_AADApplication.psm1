@@ -157,7 +157,7 @@ function Get-TargetResource
             {
                 if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
                 {
-                    $AADApp = $Script:exportedInstances | Where-Object -FilterScript {$_.Id -eq $AppId}
+                    $AADApp = $Script:exportedInstances | Where-Object -FilterScript { $_.Id -eq $AppId }
                 }
                 else
                 {
@@ -176,7 +176,7 @@ function Get-TargetResource
 
             if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
             {
-                $AADApp = $Script:exportedInstances | Where-Object -FilterScript {$_.DisplayName -eq $DisplayName}
+                $AADApp = $Script:exportedInstances | Where-Object -FilterScript { $_.DisplayName -eq $DisplayName }
             }
             else
             {
@@ -196,8 +196,8 @@ function Get-TargetResource
         {
             Write-Verbose -Message 'An instance of Azure AD App was retrieved.'
 
-            $AADBetaApp= Get-MgBetaApplication -Property "id,displayName,appId,authenticationBehaviors,additionalProperties" -ApplicationId $AADApp.Id -ErrorAction SilentlyContinue
-            $AADAppKeyCredentials = Get-MgBetaApplication -Property "keyCredentials" -ApplicationId $AADApp.Id -ErrorAction SilentlyContinue
+            $AADBetaApp = Get-MgBetaApplication -Property 'id,displayName,appId,authenticationBehaviors,additionalProperties' -ApplicationId $AADApp.Id -ErrorAction SilentlyContinue
+            $AADAppKeyCredentials = Get-MgBetaApplication -Property 'keyCredentials' -ApplicationId $AADApp.Id -ErrorAction SilentlyContinue
 
             $complexAuthenticationBehaviors = @{}
             if ($null -ne $AADBetaApp.authenticationBehaviors.blockAzureADGraphAccess)
@@ -212,7 +212,7 @@ function Get-TargetResource
             {
                 $complexAuthenticationBehaviors.Add('RequireClientServicePrincipal', $AADBetaApp.authenticationBehaviors.requireClientServicePrincipal)
             }
-            if ($complexAuthenticationBehaviors.values.Where({$null -ne $_}).Count -eq 0)
+            if ($complexAuthenticationBehaviors.values.Where({ $null -ne $_ }).Count -eq 0)
             {
                 $complexAuthenticationBehaviors = $null
             }
@@ -225,12 +225,12 @@ function Get-TargetResource
                 $myAccessToken.Add('Essential', $currentAccessToken.essential)
                 $myAccessToken.Add('Name', $currentAccessToken.name)
                 $myAccessToken.Add('Source', $currentAccessToken.source)
-                if ($myAccessToken.values.Where({$null -ne $_}).Count -gt 0)
+                if ($myAccessToken.values.Where({ $null -ne $_ }).Count -gt 0)
                 {
                     $complexAccessToken += $myAccessToken
                 }
             }
-            $complexOptionalClaims.Add('AccessToken',$complexAccessToken)
+            $complexOptionalClaims.Add('AccessToken', $complexAccessToken)
             $complexIdToken = @()
             foreach ($currentIdToken in $AADApp.optionalClaims.idToken)
             {
@@ -238,12 +238,12 @@ function Get-TargetResource
                 $myIdToken.Add('Essential', $currentIdToken.essential)
                 $myIdToken.Add('Name', $currentIdToken.name)
                 $myIdToken.Add('Source', $currentIdToken.source)
-                if ($myIdToken.values.Where({$null -ne $_}).Count -gt 0)
+                if ($myIdToken.values.Where({ $null -ne $_ }).Count -gt 0)
                 {
                     $complexIdToken += $myIdToken
                 }
             }
-            $complexOptionalClaims.Add('IdToken',$complexIdToken)
+            $complexOptionalClaims.Add('IdToken', $complexIdToken)
             $complexSaml2Token = @()
             foreach ($currentSaml2Token in $AADApp.optionalClaims.saml2Token)
             {
@@ -251,13 +251,13 @@ function Get-TargetResource
                 $mySaml2Token.Add('Essential', $currentSaml2Token.essential)
                 $mySaml2Token.Add('Name', $currentSaml2Token.name)
                 $mySaml2Token.Add('Source', $currentSaml2Token.source)
-                if ($mySaml2Token.values.Where({$null -ne $_}).Count -gt 0)
+                if ($mySaml2Token.values.Where({ $null -ne $_ }).Count -gt 0)
                 {
                     $complexSaml2Token += $mySaml2Token
                 }
             }
-            $complexOptionalClaims.Add('Saml2Token',$complexSaml2Token)
-            if ($complexOptionalClaims.values.Where({$null -ne $_}).Count -eq 0)
+            $complexOptionalClaims.Add('Saml2Token', $complexSaml2Token)
+            if ($complexOptionalClaims.values.Where({ $null -ne $_ }).Count -eq 0)
             {
                 $complexOptionalClaims = $null
             }
@@ -270,13 +270,13 @@ function Get-TargetResource
                 $myPreAuthorizedApplications = @{}
                 $myPreAuthorizedApplications.Add('AppId', $currentPreAuthorizedApplications.appId)
                 $myPreAuthorizedApplications.Add('PermissionIds', $currentPreAuthorizedApplications.permissionIds)
-                if ($myPreAuthorizedApplications.values.Where({$null -ne $_}).Count -gt 0)
+                if ($myPreAuthorizedApplications.values.Where({ $null -ne $_ }).Count -gt 0)
                 {
                     $complexPreAuthorizedApplications += $myPreAuthorizedApplications
                 }
             }
-            $complexApi.Add('PreAuthorizedApplications',$complexPreAuthorizedApplications)
-            if ($complexApi.values.Where({$null -ne $_}).Count -eq 0)
+            $complexApi.Add('PreAuthorizedApplications', $complexPreAuthorizedApplications)
+            if ($complexApi.values.Where({ $null -ne $_ }).Count -eq 0)
             {
                 $complexApi = $null
             }
@@ -285,7 +285,7 @@ function Get-TargetResource
             foreach ($currentkeyCredentials in $AADAppKeyCredentials.keyCredentials)
             {
                 $mykeyCredentials = @{}
-                if($null -ne $currentkeyCredentials.customKeyIdentifier)
+                if ($null -ne $currentkeyCredentials.customKeyIdentifier)
                 {
                     $mykeyCredentials.Add('CustomKeyIdentifier', [convert]::ToBase64String($currentkeyCredentials.customKeyIdentifier))
                 }
@@ -297,7 +297,7 @@ function Get-TargetResource
                 $mykeyCredentials.Add('KeyId', $currentkeyCredentials.keyId)
 
 
-                if($null -ne $currentkeyCredentials.Key)
+                if ($null -ne $currentkeyCredentials.Key)
                 {
                     $mykeyCredentials.Add('Key', [convert]::ToBase64String($currentkeyCredentials.key))
                 }
@@ -308,7 +308,7 @@ function Get-TargetResource
                 }
                 $mykeyCredentials.Add('Type', $currentkeyCredentials.type)
                 $mykeyCredentials.Add('Usage', $currentkeyCredentials.usage)
-                if ($mykeyCredentials.values.Where({$null -ne $_}).Count -gt 0)
+                if ($mykeyCredentials.values.Where({ $null -ne $_ }).Count -gt 0)
                 {
                     $complexKeyCredentials += $mykeyCredentials
                 }
@@ -329,7 +329,7 @@ function Get-TargetResource
                 {
                     $mypasswordCredentials.Add('StartDateTime', ([DateTimeOffset]$currentpasswordCredentials.startDateTime).ToString('o'))
                 }
-                if ($mypasswordCredentials.values.Where({$null -ne $_}).Count -gt 0)
+                if ($mypasswordCredentials.values.Where({ $null -ne $_ }).Count -gt 0)
                 {
                     $complexPasswordCredentials += $mypasswordCredentials
                 }
@@ -346,7 +346,7 @@ function Get-TargetResource
                 $myappRoles.Add('IsEnabled', $currentappRoles.isEnabled)
                 $myappRoles.Add('Origin', $currentappRoles.origin)
                 $myappRoles.Add('Value', $currentappRoles.value)
-                if ($myappRoles.values.Where({$null -ne $_}).Count -gt 0)
+                if ($myappRoles.values.Where({ $null -ne $_ }).Count -gt 0)
                 {
                     $complexAppRoles += $myappRoles
                 }
@@ -393,8 +393,8 @@ function Get-TargetResource
             {
                 $Uri = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/applications/$($AADBetaApp.Id)/onPremisesPublishing"
                 $oppInfo = Invoke-MgGraphRequest -Method GET `
-                                                 -Uri $Uri `
-                                                 -ErrorAction SilentlyContinue
+                    -Uri $Uri `
+                    -ErrorAction SilentlyContinue
             }
             catch
             {
@@ -451,7 +451,7 @@ function Get-TargetResource
                         kerberosServicePrincipalName       = $oppInfo.singleSignOnSettings.kerberosSignOnSettings.kerberosServicePrincipalName
                         kerberosSignOnMappingAttributeType = $oppInfo.singleSignOnSettings.kerberosSignOnSettings.kerberosSignOnMappingAttributeType
                     }
-                    singleSignOnMode = $oppInfo.singleSignOnSettings.singleSignOnMode
+                    singleSignOnMode       = $oppInfo.singleSignOnSettings.singleSignOnMode
                 }
                 $onPremisesPublishingValue.Add('singleSignOnSettings', $singleSignOnValues)
             }
@@ -722,7 +722,7 @@ function Set-TargetResource
     $currentParameters.Remove('PasswordCredentials') | Out-Null
     if ($PasswordCredentials)
     {
-        Write-Warning -Message "PasswordCredentials is a readonly property and cannot be configured."
+        Write-Warning -Message 'PasswordCredentials is a readonly property and cannot be configured.'
 
     }
 
@@ -825,13 +825,13 @@ function Set-TargetResource
     # Create from Template
     $createdFromTemplate = $false
     if ($Ensure -eq 'Present' -and $currentAADApp.Ensure -eq 'Absent' -and -not $skipToUpdate -and `
-        -not [System.String]::IsNullOrEmpty($ApplicationTemplateId) -and `
-        $ApplicationTemplateId -ne '8adf8e6e-67b2-4cf2-a259-e3dc5476c621')
+            -not [System.String]::IsNullOrEmpty($ApplicationTemplateId) -and `
+            $ApplicationTemplateId -ne '8adf8e6e-67b2-4cf2-a259-e3dc5476c621')
     {
         $skipToUpdate = $true
         Write-Verbose -Message "Creating application {$DisplayName} from Application Template {$ApplicationTemplateId}"
         $newApp = Invoke-MgBetaInstantiateApplicationTemplate -DisplayName $DisplayName `
-                                                              -ApplicationTemplateId $ApplicationTemplateId
+            -ApplicationTemplateId $ApplicationTemplateId
         $currentAADApp = @{
             AppId       = $newApp.Application.AppId
             Id          = $newApp.Application.AppId
@@ -999,7 +999,7 @@ function Set-TargetResource
                     if ($null -eq $scope)
                     {
                         $ObjectGuid = [System.Guid]::empty
-                        if ([System.Guid]::TryParse($permission.Name,[System.Management.Automation.PSReference]$ObjectGuid))
+                        if ([System.Guid]::TryParse($permission.Name, [System.Management.Automation.PSReference]$ObjectGuid))
                         {
                             $scopeId = $permission.Name
                         }
@@ -1022,7 +1022,7 @@ function Set-TargetResource
                     if ($null -eq $role)
                     {
                         $ObjectGuid = [System.Guid]::empty
-                        if ([System.Guid]::TryParse($permission.Name,[System.Management.Automation.PSReference]$ObjectGuid))
+                        if ([System.Guid]::TryParse($permission.Name, [System.Management.Automation.PSReference]$ObjectGuid))
                         {
                             $roleId = $permission.Name
                         }
@@ -1052,31 +1052,31 @@ function Set-TargetResource
             -RequiredResourceAccess $allRequiredAccess | Out-Null
     }
 
-    if($needToUpdateAuthenticationBehaviors -and $AuthenticationBehaviors)
+    if ($needToUpdateAuthenticationBehaviors -and $AuthenticationBehaviors)
     {
         Write-Verbose -Message "Updating for Azure AD Application {$($currentAADApp.DisplayName)} with AuthenticationBehaviors:`r`n$($AuthenticationBehaviors| Out-String)"
         Write-Verbose -Message "Current App Id: $($currentAADApp.AppId)"
 
         $IAuthenticationBehaviors = @{
-            blockAzureADGraphAccess = $AuthenticationBehaviors.blockAzureADGraphAccess
-            removeUnverifiedEmailClaim = $AuthenticationBehaviors.removeUnverifiedEmailClaim
+            blockAzureADGraphAccess       = $AuthenticationBehaviors.blockAzureADGraphAccess
+            removeUnverifiedEmailClaim    = $AuthenticationBehaviors.removeUnverifiedEmailClaim
             requireClientServicePrincipal = $AuthenticationBehaviors.requireClientServicePrincipal
         }
 
         Update-MgBetaApplication -ApplicationId $currentAADApp.Id -AuthenticationBehaviors $IAuthenticationBehaviors | Out-Null
     }
 
-    if($needToUpdateKeyCredentials -and $KeyCredentials)
+    if ($needToUpdateKeyCredentials -and $KeyCredentials)
     {
         Write-Verbose -Message "Updating for Azure AD Application {$($currentAADApp.DisplayName)} with KeyCredentials:`r`n$($KeyCredentials| Out-String)"
 
-        if((currentAADApp.KeyCredentials.Length -eq 0 -and $KeyCredentials.Length -eq 1) -or (currentAADApp.KeyCredentials.Length -eq 1 -and $KeyCredentials.Length -eq 0))
+        if ((currentAADApp.KeyCredentials.Length -eq 0 -and $KeyCredentials.Length -eq 1) -or (currentAADApp.KeyCredentials.Length -eq 1 -and $KeyCredentials.Length -eq 0))
         {
             Update-MgApplication -ApplicationId $currentAADApp.Id -KeyCredentials $KeyCredentials | Out-Null
         }
         else
         {
-            Write-Warning -Message "KeyCredentials cannot be updated for AAD Applications with more than one KeyCredentials due to technical limitation of Update-MgApplication Cmdlet. Learn more at: https://learn.microsoft.com/en-us/graph/api/application-addkey"
+            Write-Warning -Message 'KeyCredentials cannot be updated for AAD Applications with more than one KeyCredentials due to technical limitation of Update-MgApplication Cmdlet. Learn more at: https://learn.microsoft.com/en-us/graph/api/application-addkey'
         }
     }
 
@@ -1132,7 +1132,7 @@ function Set-TargetResource
                 kerberosServicePrincipalName       = $oppInfo.singleSignOnSettings.kerberosSignOnSettings.kerberosServicePrincipalName
                 kerberosSignOnMappingAttributeType = $oppInfo.singleSignOnSettings.kerberosSignOnSettings.kerberosSignOnMappingAttributeType
             }
-            singleSignOnMode = $oppInfo.singleSignOnSettings.singleSignOnMode
+            singleSignOnMode       = $oppInfo.singleSignOnSettings.singleSignOnMode
         }
         if ($null -eq $singleSignOnValues.kerberosSignOnSettings.kerberosServicePrincipalName)
         {
@@ -1145,8 +1145,8 @@ function Set-TargetResource
 
         $Uri = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/applications/$($currentAADApp.Id)/onPremisesPublishing"
         Invoke-MgGraphRequest -Method 'PATCH' `
-                              -Uri $Uri `
-                              -Body $onPremisesPayload
+            -Uri $Uri `
+            -Body $onPremisesPayload
     }
     #endregion
 }
@@ -1353,7 +1353,8 @@ function Test-TargetResource
                 Write-Verbose "TestResult returned False for $source"
                 $testTargetResource = $false
             }
-            else {
+            else
+            {
                 $ValuesToCheck.Remove($key) | Out-Null
             }
         }
@@ -1367,12 +1368,12 @@ function Test-TargetResource
     $ValuesToCheck.Remove('Permissions') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
-    -Source $($MyInvocation.MyCommand.Source) `
-    -DesiredValues $PSBoundParameters `
-    -ValuesToCheck $ValuesToCheck.Keys `
-    -IncludedDrifts $driftedParams
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck $ValuesToCheck.Keys `
+        -IncludedDrifts $driftedParams
 
-    if(-not $TestResult)
+    if (-not $TestResult)
     {
         $testTargetResource = $false
     }
@@ -1481,20 +1482,20 @@ function Export-TargetResource
                     {
                         $complexMapping = @(
                             @{
-                                Name = 'Api'
+                                Name            = 'Api'
                                 CimInstanceName = 'MicrosoftGraphApiApplication'
-                                IsRequired = $False
+                                IsRequired      = $False
                             }
                             @{
-                                Name = 'PreAuthorizedApplications'
+                                Name            = 'PreAuthorizedApplications'
                                 CimInstanceName = 'MicrosoftGraphPreAuthorizedApplication'
-                                IsRequired = $False
+                                IsRequired      = $False
                             }
                         )
                         $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
-                        -ComplexObject $Results.Api `
-                        -CIMInstanceName 'MicrosoftGraphapiApplication' `
-                        -ComplexTypeMapping $complexMapping
+                            -ComplexObject $Results.Api `
+                            -CIMInstanceName 'MicrosoftGraphapiApplication' `
+                            -ComplexTypeMapping $complexMapping
 
                         if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                         {
@@ -1509,8 +1510,8 @@ function Export-TargetResource
                     if ($null -ne $Results.AuthenticationBehaviors)
                     {
                         $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
-                        -ComplexObject $Results.AuthenticationBehaviors `
-                        -CIMInstanceName 'MicrosoftGraphauthenticationBehaviors'
+                            -ComplexObject $Results.AuthenticationBehaviors `
+                            -CIMInstanceName 'MicrosoftGraphauthenticationBehaviors'
                         if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                         {
                             $Results.AuthenticationBehaviors = $complexTypeStringResult
@@ -1525,24 +1526,24 @@ function Export-TargetResource
                     {
                         $complexMapping = @(
                             @{
-                                Name = 'singleSignOnSettings'
+                                Name            = 'singleSignOnSettings'
                                 CimInstanceName = 'AADApplicationOnPremisesPublishingSingleSignOnSetting'
-                                IsRequired = $False
+                                IsRequired      = $False
                             },
                             @{
-                                Name = 'onPremisesApplicationSegments'
+                                Name            = 'onPremisesApplicationSegments'
                                 CimInstanceName = 'AADApplicationOnPremisesPublishingSegment'
-                                IsRequired = $False
+                                IsRequired      = $False
                             },
                             @{
-                                Name = 'kerberosSignOnSettings'
+                                Name            = 'kerberosSignOnSettings'
                                 CimInstanceName = 'AADApplicationOnPremisesPublishingSingleSignOnSettingKerberos'
-                                IsRequired = $False
+                                IsRequired      = $False
                             },
                             @{
-                                Name = 'corsConfigurations'
+                                Name            = 'corsConfigurations'
                                 CimInstanceName = 'AADApplicationOnPremisesPublishingSegmentCORS'
-                                IsRequired = $False
+                                IsRequired      = $False
                             }
                         )
                         $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
@@ -1567,30 +1568,30 @@ function Export-TargetResource
                     {
                         $complexMapping = @(
                             @{
-                                Name = 'OptionalClaims'
+                                Name            = 'OptionalClaims'
                                 CimInstanceName = 'MicrosoftGraphOptionalClaims'
-                                IsRequired = $False
+                                IsRequired      = $False
                             }
                             @{
-                                Name = 'AccessToken'
+                                Name            = 'AccessToken'
                                 CimInstanceName = 'MicrosoftGraphOptionalClaim'
-                                IsRequired = $False
+                                IsRequired      = $False
                             }
                             @{
-                                Name = 'IdToken'
+                                Name            = 'IdToken'
                                 CimInstanceName = 'MicrosoftGraphOptionalClaim'
-                                IsRequired = $False
+                                IsRequired      = $False
                             }
                             @{
-                                Name = 'Saml2Token'
+                                Name            = 'Saml2Token'
                                 CimInstanceName = 'MicrosoftGraphOptionalClaim'
-                                IsRequired = $False
+                                IsRequired      = $False
                             }
                         )
                         $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
-                        -ComplexObject $Results.OptionalClaims `
-                        -CIMInstanceName 'MicrosoftGraphoptionalClaims' `
-                        -ComplexTypeMapping $complexMapping
+                            -ComplexObject $Results.OptionalClaims `
+                            -CIMInstanceName 'MicrosoftGraphoptionalClaims' `
+                            -ComplexTypeMapping $complexMapping
 
                         if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                         {
@@ -1606,8 +1607,8 @@ function Export-TargetResource
                     if ($null -ne $Results.KeyCredentials)
                     {
                         $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
-                        -ComplexObject $Results.KeyCredentials `
-                        -CIMInstanceName 'MicrosoftGraphkeyCredential'
+                            -ComplexObject $Results.KeyCredentials `
+                            -CIMInstanceName 'MicrosoftGraphkeyCredential'
                         if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                         {
                             $Results.KeyCredentials = $complexTypeStringResult
@@ -1621,8 +1622,8 @@ function Export-TargetResource
                     if ($null -ne $Results.PasswordCredentials)
                     {
                         $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
-                        -ComplexObject $Results.PasswordCredentials `
-                        -CIMInstanceName 'MicrosoftGraphpasswordCredential'
+                            -ComplexObject $Results.PasswordCredentials `
+                            -CIMInstanceName 'MicrosoftGraphpasswordCredential'
                         if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                         {
                             $Results.PasswordCredentials = $complexTypeStringResult
@@ -1636,8 +1637,8 @@ function Export-TargetResource
                     if ($null -ne $Results.AppRoles)
                     {
                         $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
-                        -ComplexObject $Results.AppRoles `
-                        -CIMInstanceName 'MicrosoftGraphappRole'
+                            -ComplexObject $Results.AppRoles `
+                            -CIMInstanceName 'MicrosoftGraphappRole'
                         if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                         {
                             $Results.AppRoles = $complexTypeStringResult
@@ -1656,7 +1657,7 @@ function Export-TargetResource
 
                     if ($Results.Api)
                     {
-                        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Api" -IsCIMArray:$False
+                        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Api' -IsCIMArray:$False
                     }
 
                     if ($null -ne $Results.Permissions)
@@ -1666,30 +1667,30 @@ function Export-TargetResource
                     }
                     if ($Results.OptionalClaims)
                     {
-                        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "OptionalClaims" -IsCIMArray:$False
+                        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'OptionalClaims' -IsCIMArray:$False
                     }
                     if ($Results.OnPremisesPublishing)
                     {
-                        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "OnPremisesPublishing" -IsCIMArray:$False
+                        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'OnPremisesPublishing' -IsCIMArray:$False
                     }
                     if ($Results.AuthenticationBehaviors)
                     {
-                        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "AuthenticationBehaviors" -IsCIMArray:$False
+                        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'AuthenticationBehaviors' -IsCIMArray:$False
                     }
 
                     if ($Results.KeyCredentials)
                     {
-                        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "KeyCredentials" -IsCIMArray:$True
+                        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'KeyCredentials' -IsCIMArray:$True
                     }
 
                     if ($Results.PasswordCredentials)
                     {
-                        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "PasswordCredentials" -IsCIMArray:$True
+                        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'PasswordCredentials' -IsCIMArray:$True
                     }
 
                     if ($Results.AppRoles)
                     {
-                        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "AppRoles" -IsCIMArray:$True
+                        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'AppRoles' -IsCIMArray:$True
                     }
 
                     $dscContent.Append($currentDSCBlock) | Out-Null
@@ -1701,7 +1702,7 @@ function Export-TargetResource
             }
             catch
             {
-                if ($_.Exception.Message -like "*Multiple AAD Apps with the Displayname*")
+                if ($_.Exception.Message -like '*Multiple AAD Apps with the Displayname*')
                 {
                     Write-Host "`r`n        $($Global:M365DSCEmojiYellowCircle)" -NoNewline
                     Write-Host " Multiple app instances wth name {$($AADApp.DisplayName)} were found. We will skip exporting these instances."
@@ -1754,7 +1755,7 @@ function Get-M365DSCAzureADAppPermissions
                 if ($null -eq $scopeInfo)
                 {
                     $ObjectGuid = [System.Guid]::empty
-                    if ([System.Guid]::TryParse($resourceAccess.Id,[System.Management.Automation.PSReference]$ObjectGuid))
+                    if ([System.Guid]::TryParse($resourceAccess.Id, [System.Management.Automation.PSReference]$ObjectGuid))
                     {
                         $scopeInfoValue = $resourceAccess.Id
                     }
@@ -1789,7 +1790,7 @@ function Get-M365DSCAzureADAppPermissions
                 if ($null -eq $role)
                 {
                     $ObjectGuid = [System.Guid]::empty
-                    if ([System.Guid]::TryParse($resourceAccess.Id,[System.Management.Automation.PSReference]$ObjectGuid))
+                    if ([System.Guid]::TryParse($resourceAccess.Id, [System.Management.Automation.PSReference]$ObjectGuid))
                     {
                         $roleValue = $resourceAccess.Id
                     }

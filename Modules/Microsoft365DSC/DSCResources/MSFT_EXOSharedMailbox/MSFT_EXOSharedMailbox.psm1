@@ -98,7 +98,7 @@ function Get-TargetResource
             {
                 if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
                 {
-                    $mailbox = $Script:exportedInstances | Where-Object -FilterScript {$_.Identity -eq $Identity}
+                    $mailbox = $Script:exportedInstances | Where-Object -FilterScript { $_.Identity -eq $Identity }
                 }
                 else
                 {
@@ -113,7 +113,7 @@ function Get-TargetResource
             {
                 if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
                 {
-                    $mailbox = $Script:exportedInstances | Where-Object -FilterScript {$_.DisplayName -eq $DisplayName}
+                    $mailbox = $Script:exportedInstances | Where-Object -FilterScript { $_.DisplayName -eq $DisplayName }
                 }
                 else
                 {

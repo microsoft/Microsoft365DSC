@@ -156,7 +156,7 @@ function Set-TargetResource
 
     $setParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
     $setParameters.Remove('IsSingleInstance') | Out-Null
-    Write-Verbose -Message "Updating Entitlement Management settings"
+    Write-Verbose -Message 'Updating Entitlement Management settings'
     Update-MgBetaEntitlementManagementSetting @setParameters | Out-Null
 }
 

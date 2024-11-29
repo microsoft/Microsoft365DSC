@@ -80,7 +80,7 @@ function Get-TargetResource
         $IdentityParts = $Identity.Split('\')
         if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
         {
-            $roleEntry = $Script:exportedInstances | Where-Object -FilterScript {$_.Identity -eq $IdentityParts[0] -and $_.Name -eq $IdentityParts[1]}
+            $roleEntry = $Script:exportedInstances | Where-Object -FilterScript { $_.Identity -eq $IdentityParts[0] -and $_.Name -eq $IdentityParts[1] }
         }
         else
         {
@@ -194,7 +194,7 @@ function Set-TargetResource
     $currentValues = Get-TargetResource @PSBoundParameters
     $paramDifference = Compare-Object -ReferenceObject $currentValues.Parameters -DifferenceObject $Parameters
 
-    $paramsToAdd = $paramDifference | Where-Object -FilterScript {$_.SideIndicator -eq '=>'}
+    $paramsToAdd = $paramDifference | Where-Object -FilterScript { $_.SideIndicator -eq '=>' }
     $paramsToAddEntries = @()
     foreach ($diff in $paramsToAdd)
     {
@@ -206,7 +206,7 @@ function Set-TargetResource
         Set-ManagementRoleEntry -Identity $Identity -AddParameter -Parameters $paramsToAddEntries
     }
 
-    $paramsToRemove = $paramDifference | Where-Object -FilterScript {$_.SideIndicator -eq '<='}
+    $paramsToRemove = $paramDifference | Where-Object -FilterScript { $_.SideIndicator -eq '<=' }
     $paramsToRemoveEntries = @()
     foreach ($diff in $paramsToRemove)
     {
@@ -378,10 +378,10 @@ function Export-TargetResource
                 $Global:M365DSCExportResourceInstancesCount++
             }
 
-            Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $($roleEntry.Identity + "\" + $roleEntry.Name)" -NoNewline
+            Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $($roleEntry.Identity + '\' + $roleEntry.Name)" -NoNewline
 
             $Params = @{
-                Identity              = $roleEntry.Identity + "\" + $roleEntry.Name
+                Identity              = $roleEntry.Identity + '\' + $roleEntry.Name
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId

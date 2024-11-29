@@ -9,13 +9,13 @@ function Get-TargetResource
         $Identity,
 
         [Parameter(Mandatory = $true)]
-        [ValidateSet("ChangeOwner", "ChangePermission", "DeleteItem", "ExternalAccount", "FullAccess", "ReadPermission")]
+        [ValidateSet('ChangeOwner', 'ChangePermission', 'DeleteItem', 'ExternalAccount', 'FullAccess', 'ReadPermission')]
         [System.String[]]
         $AccessRights,
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet("None", "All", "Children", "Descendents", "SelfAndChildren")]
+        [ValidateSet('None', 'All', 'Children', 'Descendents', 'SelfAndChildren')]
         $InheritanceType = 'All',
 
         [Parameter()]
@@ -105,7 +105,7 @@ function Get-TargetResource
 
         if ($permission.Length -gt 1)
         {
-            $permission = $permission | Where-Object -FilterScript {$_.User -eq $User -and (Compare-Object -ReferenceObject $_.AccessRights.Replace(' ','').Split(',') -DifferenceObject $AccessRights).Count -eq 0}
+            $permission = $permission | Where-Object -FilterScript { $_.User -eq $User -and (Compare-Object -ReferenceObject $_.AccessRights.Replace(' ', '').Split(',') -DifferenceObject $AccessRights).Count -eq 0 }
         }
 
         if ($permission.Length -gt 1)
@@ -120,21 +120,21 @@ function Get-TargetResource
         }
 
         $result = @{
-            Identity                 = $permission.Identity
-            AccessRights             = [Array]$permission.AccessRights.Replace(' ','').Split(',')
-            InheritanceType          = $permission.InheritanceType
-            Owner                    = $permission.Owner
-            User                     = $permission.User
-            Deny                     = [Boolean]$permission.Deny
-            Ensure                   = 'Present'
-            Credential               = $Credential
-            ApplicationId            = $ApplicationId
-            CertificateThumbprint    = $CertificateThumbprint
-            CertificatePath          = $CertificatePath
-            CertificatePassword      = $CertificatePassword
-            Managedidentity          = $ManagedIdentity.IsPresent
-            TenantId                 = $TenantId
-            AccessTokens             = $AccessTokens
+            Identity              = $permission.Identity
+            AccessRights          = [Array]$permission.AccessRights.Replace(' ', '').Split(',')
+            InheritanceType       = $permission.InheritanceType
+            Owner                 = $permission.Owner
+            User                  = $permission.User
+            Deny                  = [Boolean]$permission.Deny
+            Ensure                = 'Present'
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            CertificateThumbprint = $CertificateThumbprint
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
+            Managedidentity       = $ManagedIdentity.IsPresent
+            TenantId              = $TenantId
+            AccessTokens          = $AccessTokens
         }
 
         Write-Verbose -Message "Found permissions for mailbox {$($Identity)}"
@@ -162,13 +162,13 @@ function Set-TargetResource
         $Identity,
 
         [Parameter(Mandatory = $true)]
-        [ValidateSet("ChangeOwner", "ChangePermission", "DeleteItem", "ExternalAccount", "FullAccess", "ReadPermission")]
+        [ValidateSet('ChangeOwner', 'ChangePermission', 'DeleteItem', 'ExternalAccount', 'FullAccess', 'ReadPermission')]
         [System.String[]]
         $AccessRights,
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet("None", "All", "Children", "Descendents", "SelfAndChildren")]
+        [ValidateSet('None', 'All', 'Children', 'Descendents', 'SelfAndChildren')]
         $InheritanceType = 'All',
 
         [Parameter()]
@@ -273,13 +273,13 @@ function Test-TargetResource
         $Identity,
 
         [Parameter(Mandatory = $true)]
-        [ValidateSet("ChangeOwner", "ChangePermission", "DeleteItem", "ExternalAccount", "FullAccess", "ReadPermission")]
+        [ValidateSet('ChangeOwner', 'ChangePermission', 'DeleteItem', 'ExternalAccount', 'FullAccess', 'ReadPermission')]
         [System.String[]]
         $AccessRights,
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet("None", "All", "Children", "Descendents", "SelfAndChildren")]
+        [ValidateSet('None', 'All', 'Children', 'Descendents', 'SelfAndChildren')]
         $InheritanceType = 'All',
 
         [Parameter()]
@@ -448,7 +448,7 @@ function Export-TargetResource
                 Write-Host "        |---[$j/$($permissions.Count)] $($permission.Identity)" -NoNewline
                 $Params = @{
                     Identity              = $mailbox.UserPrincipalName
-                    AccessRights          = [Array]$permission.AccessRights.Replace(' ','').Replace('SendAs,','').Split(',') # ignore SendAs permissions since they are not supported by *-MailboxPermission cmdlets
+                    AccessRights          = [Array]$permission.AccessRights.Replace(' ', '').Replace('SendAs,', '').Split(',') # ignore SendAs permissions since they are not supported by *-MailboxPermission cmdlets
                     InheritanceType       = $permission.InheritanceType
                     User                  = $permission.User
                     Credential            = $Credential

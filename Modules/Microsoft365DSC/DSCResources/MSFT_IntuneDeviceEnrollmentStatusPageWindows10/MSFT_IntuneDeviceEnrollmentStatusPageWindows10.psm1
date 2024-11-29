@@ -142,7 +142,7 @@ function Get-TargetResource
         $getValue = $null
         #region resource generator code
         $getValue = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -DeviceEnrollmentConfigurationId $Id -ErrorAction SilentlyContinue `
-            | Where-Object -FilterScript {$null -ne $_.DisplayName}
+        | Where-Object -FilterScript { $null -ne $_.DisplayName }
 
         if ($null -eq $getValue)
         {
@@ -156,7 +156,7 @@ function Get-TargetResource
                     -ErrorAction SilentlyContinue | Where-Object `
                     -FilterScript { `
                         $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windows10EnrollmentCompletionPageConfiguration' `
-                } | Where-Object -FilterScript {$null -ne $_.DisplayName}
+                } | Where-Object -FilterScript { $null -ne $_.DisplayName }
             }
         }
         #endregion
@@ -166,7 +166,7 @@ function Get-TargetResource
             return $nullResult
         }
 
-        if($getValue -is [Array] -and $getValue.Length -gt 1)
+        if ($getValue -is [Array] -and $getValue.Length -gt 1)
         {
             Throw "The DisplayName {$DisplayName} returned multiple policies, make sure DisplayName is unique."
         }
@@ -208,8 +208,8 @@ function Get-TargetResource
         if ($assignmentsValues.Count -gt 0)
         {
             $assignmentResult += ConvertFrom-IntunePolicyAssignment `
-                                -IncludeDeviceFilter:$true `
-                                -Assignments ($assignmentsValues)
+                -IncludeDeviceFilter:$true `
+                -Assignments ($assignmentsValues)
         }
         $results.Add('Assignments', $assignmentResult)
 
@@ -406,11 +406,11 @@ function Set-TargetResource
         $policy = New-MgBetaDeviceManagementDeviceEnrollmentConfiguration -BodyParameter $CreateParameters
 
         $intuneAssignments = @()
-        if($null -ne $Assignments -and $Assignments.count -gt 0)
+        if ($null -ne $Assignments -and $Assignments.count -gt 0)
         {
             $intuneAssignments += ConvertTo-IntunePolicyAssignment -Assignments $Assignments
         }
-        $body = @{'enrollmentConfigurationAssignments' = $intuneAssignments} | ConvertTo-Json -Depth 100
+        $body = @{'enrollmentConfigurationAssignments' = $intuneAssignments } | ConvertTo-Json -Depth 100
         $Uri = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/deviceManagement/deviceEnrollmentConfigurations/$($policy.Id)/assign"
         Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $body -ErrorAction Stop
 
@@ -444,11 +444,11 @@ function Set-TargetResource
         if ($currentInstance.Id -notlike '*_DefaultWindows10EnrollmentCompletionPageConfiguration')
         {
             $intuneAssignments = @()
-            if($null -ne $Assignments -and $Assignments.count -gt 0)
+            if ($null -ne $Assignments -and $Assignments.count -gt 0)
             {
                 $intuneAssignments += ConvertTo-IntunePolicyAssignment -Assignments $Assignments
             }
-            $body = @{'enrollmentConfigurationAssignments' = $intuneAssignments} | ConvertTo-Json -Depth 100
+            $body = @{'enrollmentConfigurationAssignments' = $intuneAssignments } | ConvertTo-Json -Depth 100
             $Uri = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/deviceManagement/deviceEnrollmentConfigurations/$($currentInstance.Id)/assign"
             Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $body -ErrorAction Stop
 
@@ -793,7 +793,7 @@ function Export-TargetResource
     catch
     {
         if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
-        $_.Exception -like "*Request not applicable to target tenant*")
+                $_.Exception -like '*Request not applicable to target tenant*')
         {
             Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }

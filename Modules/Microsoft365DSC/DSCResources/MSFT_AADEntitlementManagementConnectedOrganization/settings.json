@@ -3,12 +3,12 @@
    "description": "This resource configures an Azure AD Entitlement Management Connected Organization.",
    "roles": {
       "read": [
-          "Security Reader"
+         "Security Reader"
       ],
       "update": [
-          "Identity Governance Administrator"
+         "Identity Governance Administrator"
       ]
-  },
+   },
    "permissions": {
       "graph": {
          "delegated": {

@@ -456,7 +456,7 @@ function Export-TargetResource
             }
 
             $IdentityValue = $recipientPermission.Identity
-            if ([System.Guid]::TryParse($IdentityValue,[System.Management.Automation.PSReference]$ObjectGuid))
+            if ([System.Guid]::TryParse($IdentityValue, [System.Management.Automation.PSReference]$ObjectGuid))
             {
                 $user = Get-User -Identity $IdentityValue
                 $IdentityValue = $user.UserPrincipalName

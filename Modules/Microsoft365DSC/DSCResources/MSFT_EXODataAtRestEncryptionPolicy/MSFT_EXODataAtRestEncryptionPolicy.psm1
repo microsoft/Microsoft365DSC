@@ -72,7 +72,7 @@ function Get-TargetResource
     {
         if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
         {
-            $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.Identity.Name -eq $Identity}
+            $instance = $Script:exportedInstances | Where-Object -FilterScript { $_.Identity.Name -eq $Identity }
         }
         else
         {
@@ -84,18 +84,18 @@ function Get-TargetResource
         }
 
         $results = @{
-            Identity                = $Identity
-            Description             = [System.String]$instance.Description
-            Enabled                 = [System.Boolean]$instance.Enabled
-            Name                    = [System.String]$instance.Name
-            AzureKeyIDs             = [System.String[]]$instance.AzureKeyIDs
-            Ensure                  = 'Present'
-            Credential              = $Credential
-            ApplicationId           = $ApplicationId
-            TenantId                = $TenantId
-            CertificateThumbprint   = $CertificateThumbprint
-            ManagedIdentity         = $ManagedIdentity.IsPresent
-            AccessTokens            = $AccessTokens
+            Identity              = $Identity
+            Description           = [System.String]$instance.Description
+            Enabled               = [System.Boolean]$instance.Enabled
+            Name                  = [System.String]$instance.Name
+            AzureKeyIDs           = [System.String[]]$instance.AzureKeyIDs
+            Ensure                = 'Present'
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
+            ManagedIdentity       = $ManagedIdentity.IsPresent
+            AccessTokens          = $AccessTokens
         }
         return [System.Collections.Hashtable] $results
     }
@@ -197,7 +197,7 @@ function Set-TargetResource
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Warning "Removal of M365DataAtRestEncryptionPolicy is not supported."
+        Write-Warning 'Removal of M365DataAtRestEncryptionPolicy is not supported.'
     }
 }
 

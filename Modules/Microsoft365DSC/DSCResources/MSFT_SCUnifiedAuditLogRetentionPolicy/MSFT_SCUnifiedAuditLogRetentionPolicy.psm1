@@ -21,7 +21,7 @@ function Get-TargetResource
         $RecordTypes,
 
         [Parameter()]
-        [ValidateSet("SevenDays", "OneMonth", "ThreeMonths", "SixMonths", "NineMonths", "TwelveMonths", "ThreeYears", "FiveYears", "SevenYears", "TenYears")]
+        [ValidateSet('SevenDays', 'OneMonth', 'ThreeMonths', 'SixMonths', 'NineMonths', 'TwelveMonths', 'ThreeYears', 'FiveYears', 'SevenYears', 'TenYears')]
         [System.String]
         $RetentionDuration,
 
@@ -147,7 +147,7 @@ function Set-TargetResource
         $RecordTypes,
 
         [Parameter(Mandatory = $true)]
-        [ValidateSet("SevenDays", "OneMonth", "ThreeMonths", "SixMonths", "NineMonths", "TwelveMonths", "ThreeYears", "FiveYears", "SevenYears", "TenYears")]
+        [ValidateSet('SevenDays', 'OneMonth', 'ThreeMonths', 'SixMonths', 'NineMonths', 'TwelveMonths', 'ThreeYears', 'FiveYears', 'SevenYears', 'TenYears')]
         [System.String]
         $RetentionDuration,
 
@@ -233,7 +233,7 @@ function Set-TargetResource
         $UpdateParameters = ([Hashtable]$BoundParameters).Clone()
         $UpdateParameters.Remove('Verbose') | Out-Null
         $UpdateParameters.Remove('Name') | Out-Null
-        $UpdateParameters.Add('Identity', $currentInstance.Identity)  | Out-Null
+        $UpdateParameters.Add('Identity', $currentInstance.Identity) | Out-Null
 
         $keys = $UpdateParameters.Keys
         foreach ($key in $keys)
@@ -282,7 +282,7 @@ function Test-TargetResource
         $RecordTypes,
 
         [Parameter(Mandatory = $true)]
-        [ValidateSet("SevenDays", "OneMonth", "ThreeMonths", "SixMonths", "NineMonths", "TwelveMonths", "ThreeYears", "FiveYears", "SevenYears", "TenYears")]
+        [ValidateSet('SevenDays', 'OneMonth', 'ThreeMonths', 'SixMonths', 'NineMonths', 'TwelveMonths', 'ThreeYears', 'FiveYears', 'SevenYears', 'TenYears')]
         [System.String]
         $RetentionDuration,
 
@@ -394,7 +394,7 @@ function Export-TargetResource
         $ManagedIdentity
     )
 
-   $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
         -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -437,19 +437,19 @@ function Export-TargetResource
             }
             Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{
-                Name = $config.Name
-                Priority = $config.Priority
-                RetentionDuration = $config.RetentionDuration
-                Ensure = 'Present'
-                Credential = $Credential
-                ApplicationId = $ApplicationId
-                TenantId = $TenantId
+                Name                  = $config.Name
+                Priority              = $config.Priority
+                RetentionDuration     = $config.RetentionDuration
+                Ensure                = 'Present'
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
-                ApplicationSecret = $ApplicationSecret
+                ApplicationSecret     = $ApplicationSecret
             }
 
             $Results = Get-TargetResource @Params
-            $Results.Remove("Identity") | Out-Null
+            $Results.Remove('Identity') | Out-Null
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
 

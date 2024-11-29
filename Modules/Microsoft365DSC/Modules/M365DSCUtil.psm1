@@ -628,6 +628,7 @@ function Test-M365DSCParameterState
         [System.Collections.Hashtable]
         $IncludedDrifts
     )
+
     $VerbosePreference = 'SilentlyContinue'
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -840,6 +841,14 @@ function Test-M365DSCParameterState
                             {
                                 if ([string]::IsNullOrEmpty($CurrentValues.$fieldName) `
                                         -and [string]::IsNullOrEmpty($DesiredValues.$fieldName))
+                                {
+                                }
+                                # Align line breaks
+                                elseif (-not [string]::IsNullOrEmpty($CurrentValues.$fieldName) `
+                                        -and -not [string]::IsNullOrEmpty($DesiredValues.$fieldName) `
+                                        -and [string]::Equals($CurrentValues.$fieldName.Replace("`r`n", "`n"), `
+                                        $DesiredValues.$fieldName.Replace("`r`n", "`n"), `
+                                        [System.StringComparison]::Ordinal))
                                 {
                                 }
                                 else

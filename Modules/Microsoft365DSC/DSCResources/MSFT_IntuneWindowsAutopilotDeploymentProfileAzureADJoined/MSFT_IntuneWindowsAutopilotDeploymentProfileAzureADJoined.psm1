@@ -111,8 +111,8 @@ function Get-TargetResource
 
         $getValue = $null
         #region resource generator code
-        $getValue = Get-MgBetaDeviceManagementWindowsAutopilotDeploymentProfile -WindowsAutopilotDeploymentProfileId $Id  -ErrorAction SilentlyContinue `
-            | Where-Object -FilterScript {$null -ne $_.DisplayName}
+        $getValue = Get-MgBetaDeviceManagementWindowsAutopilotDeploymentProfile -WindowsAutopilotDeploymentProfileId $Id -ErrorAction SilentlyContinue `
+        | Where-Object -FilterScript { $null -ne $_.DisplayName }
 
         if ($null -eq $getValue)
         {
@@ -124,7 +124,7 @@ function Get-TargetResource
                     -All `
                     -Filter "DisplayName eq '$DisplayName'" `
                     -ErrorAction SilentlyContinue `
-                    | Where-Object -FilterScript {$null -ne $_.DisplayName}
+                | Where-Object -FilterScript { $null -ne $_.DisplayName }
             }
         }
         #endregion
@@ -134,7 +134,7 @@ function Get-TargetResource
             return $nullResult
         }
 
-        if($getValue -is [Array])
+        if ($getValue -is [Array])
         {
             Throw "The DisplayName {$DisplayName} returned multiple policies, make sure DisplayName is unique."
         }
@@ -208,9 +208,9 @@ function Get-TargetResource
         }
 
         $rawAssignments = @()
-        $rawAssignments =  Get-MgBetaDeviceManagementWindowsAutopilotDeploymentProfileAssignment -WindowsAutopilotDeploymentProfileId $Id -All
+        $rawAssignments = Get-MgBetaDeviceManagementWindowsAutopilotDeploymentProfileAssignment -WindowsAutopilotDeploymentProfileId $Id -All
         $assignmentResult = @()
-        if($null -ne $rawAssignments -and $rawAssignments.count -gt 0)
+        if ($null -ne $rawAssignments -and $rawAssignments.count -gt 0)
         {
             $assignmentResult += ConvertFrom-IntunePolicyAssignment -Assignments $rawAssignments -IncludeDeviceFilter $false
         }
@@ -352,13 +352,13 @@ function Set-TargetResource
             }
         }
         #region resource generator code
-        $CreateParameters.Add("@odata.type", "#microsoft.graph.azureADWindowsAutopilotDeploymentProfile")
+        $CreateParameters.Add('@odata.type', '#microsoft.graph.azureADWindowsAutopilotDeploymentProfile')
         $policy = New-MgBetaDeviceManagementWindowsAutopilotDeploymentProfile -BodyParameter $CreateParameters
         #endregion
 
         #region new Intune assignment management
         $intuneAssignments = @()
-        if($null -ne $Assignments -and $Assignments.count -gt 0)
+        if ($null -ne $Assignments -and $Assignments.count -gt 0)
         {
             $intuneAssignments += ConvertTo-IntunePolicyAssignment -Assignments $Assignments
         }
@@ -389,7 +389,7 @@ function Set-TargetResource
             }
         }
         #region resource generator code
-        $UpdateParameters.Add("@odata.type", "#microsoft.graph.azureADWindowsAutopilotDeploymentProfile")
+        $UpdateParameters.Add('@odata.type', '#microsoft.graph.azureADWindowsAutopilotDeploymentProfile')
         Update-MgBetaDeviceManagementWindowsAutopilotDeploymentProfile  `
             -WindowsAutopilotDeploymentProfileId $currentInstance.Id `
             -BodyParameter $UpdateParameters
@@ -400,13 +400,13 @@ function Set-TargetResource
         $currentAssignments += Get-MgBetaDeviceManagementWindowsAutopilotDeploymentProfileAssignment -WindowsAutopilotDeploymentProfileId $currentInstance.id
 
         $intuneAssignments = @()
-        if($null -ne $Assignments -and $Assignments.count -gt 0)
+        if ($null -ne $Assignments -and $Assignments.count -gt 0)
         {
             $intuneAssignments += ConvertTo-IntunePolicyAssignment -Assignments $Assignments
         }
         foreach ($assignment in $intuneAssignments)
         {
-            if ( $null -eq ($currentAssignments | Where-Object { $_.Target.AdditionalProperties.groupId -eq $assignment.Target.groupId -and $_.Target.AdditionalProperties."@odata.type" -eq $assignment.Target.'@odata.type' }))
+            if ( $null -eq ($currentAssignments | Where-Object { $_.Target.AdditionalProperties.groupId -eq $assignment.Target.groupId -and $_.Target.AdditionalProperties.'@odata.type' -eq $assignment.Target.'@odata.type' }))
             {
                 New-MgBetaDeviceManagementWindowsAutopilotDeploymentProfileAssignment `
                     -WindowsAutopilotDeploymentProfileId $currentInstance.id `
@@ -414,10 +414,10 @@ function Set-TargetResource
             }
             else
             {
-                $currentAssignments = $currentAssignments | Where-Object { -not($_.Target.AdditionalProperties.groupId -eq $assignment.Target.groupId -and $_.Target.AdditionalProperties."@odata.type" -eq $assignment.Target.'@odata.type') }
+                $currentAssignments = $currentAssignments | Where-Object { -not($_.Target.AdditionalProperties.groupId -eq $assignment.Target.groupId -and $_.Target.AdditionalProperties.'@odata.type' -eq $assignment.Target.'@odata.type') }
             }
         }
-        if($currentAssignments.count -gt 0)
+        if ($currentAssignments.count -gt 0)
         {
             foreach ($assignment in $currentAssignments)
             {
@@ -572,7 +572,10 @@ function Test-TargetResource
                 -Source ($source) `
                 -Target ($target)
 
-                if (-Not $testResult) { break }
+            if (-Not $testResult)
+            {
+                break
+            }
 
             $ValuesToCheck.Remove($key) | Out-Null
         }
@@ -768,7 +771,7 @@ function Export-TargetResource
     catch
     {
         if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
-        $_.Exception -like "*Request not applicable to target tenant*")
+                $_.Exception -like '*Request not applicable to target tenant*')
         {
             Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }

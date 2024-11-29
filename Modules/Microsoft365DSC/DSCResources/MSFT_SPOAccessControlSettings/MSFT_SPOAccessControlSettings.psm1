@@ -451,7 +451,7 @@ function Test-TargetResource
             'ExternalServicesEnabled', `
             'EmailAttestationRequired', `
             'EmailAttestationReAuthDays',
-            'ConditionalAccessPolicy', `
+        'ConditionalAccessPolicy', `
             'EnableRestrictedAccessControl')
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"

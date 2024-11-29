@@ -177,25 +177,25 @@ function Get-TargetResource
         $DlpNetworkShareGroupsObject = ConvertFrom-Json $instance.DlpNetworkShareGroups
 
         # AdvancedClassificationEnabled
-        $AdvancedClassificationEnabledValue = [Boolean]($EndpointDlpGlobalSettingsValue | Where-Object {$_.Setting -eq 'AdvancedClassificationEnabled'}).Value
+        $AdvancedClassificationEnabledValue = [Boolean]($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'AdvancedClassificationEnabled' }).Value
 
         # BandwidthLimitEnabled
-        $BandwidthLimitEnabledValue = [Boolean]($EndpointDlpGlobalSettingsValue | Where-Object {$_.Setting -eq 'BandwidthLimitEnabledValue'}).Value
+        $BandwidthLimitEnabledValue = [Boolean]($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'BandwidthLimitEnabledValue' }).Value
 
         # DailyBandwidthLimitInMB
-        $DailyBandwidthLimitInMBValue = [UInt32]($EndpointDlpGlobalSettingsValue | Where-Object {$_.Setting -eq 'DailyBandwidthLimitInMB'}).Value
+        $DailyBandwidthLimitInMBValue = [UInt32]($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'DailyBandwidthLimitInMB' }).Value
 
         # PathExclusion
-        $PathExclusionValue = [Array]($EndpointDlpGlobalSettingsValue | Where-Object {$_.Setting -eq 'PathExclusion'}).Value
+        $PathExclusionValue = [Array]($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'PathExclusion' }).Value
 
         # MacPathExclusion
-        $MacPathExclusionValue = [Array]($EndpointDlpGlobalSettingsValue | Where-Object {$_.Setting -eq 'MacPathExclusion'}).Value
+        $MacPathExclusionValue = [Array]($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'MacPathExclusion' }).Value
 
         # MacDefaultPathExclusionsEnabled
-        $MacDefaultPathExclusionsEnabledValue = [Boolean]($EndpointDlpGlobalSettingsValue | Where-Object {$_.Setting -eq 'MacDefaultPathExclusionsEnabled'}).Value
+        $MacDefaultPathExclusionsEnabledValue = [Boolean]($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'MacDefaultPathExclusionsEnabled' }).Value
 
         #EvidenceStoreSettings
-        $entry = $EndpointDlpGlobalSettingsValue | Where-Object {$_.Setting -eq 'EvidenceStoreSettings'}
+        $entry = $EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'EvidenceStoreSettings' }
         if ($null -ne $entry)
         {
             $entry = ConvertFrom-Json $entry.Value
@@ -208,10 +208,10 @@ function Get-TargetResource
         }
 
         # NetworkPathEnforcementEnabled
-        $NetworkPathEnforcementEnabledValue = [Boolean]($EndpointDlpGlobalSettingsValue | Where-Object {$_.Setting -eq 'NetworkPathEnforcementEnabled'}).Value
+        $NetworkPathEnforcementEnabledValue = [Boolean]($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'NetworkPathEnforcementEnabled' }).Value
 
         # NetworkPathExclusion
-        $NetworkPathExclusionValue = ($EndpointDlpGlobalSettingsValue | Where-Object {$_.Setting -eq 'NetworkPathExclusion'}).Value
+        $NetworkPathExclusionValue = ($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'NetworkPathExclusion' }).Value
 
         # DlpAppGroups
         $DlpAppGroupsValue = @()
@@ -237,7 +237,7 @@ function Get-TargetResource
         }
 
         # UnallowedApp
-        $entries = [Array]($EndpointDlpGlobalSettingsValue | Where-Object {$_.Setting -eq 'UnallowedApp'})
+        $entries = [Array]($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'UnallowedApp' })
         $UnallowedAppValue = @()
         foreach ($entry in $entries)
         {
@@ -249,7 +249,7 @@ function Get-TargetResource
         }
 
         # UnallowedCloudSyncApp
-        $entries = [Array]($EndpointDlpGlobalSettingsValue | Where-Object {$_.Setting -eq 'UnallowedCloudSyncApp'})
+        $entries = [Array]($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'UnallowedCloudSyncApp' })
         $UnallowedCloudSyncAppValue = @()
         foreach ($entry in $entries)
         {
@@ -261,10 +261,10 @@ function Get-TargetResource
         }
 
         # IncludePredefinedUnallowedBluetoothApps
-        $IncludePredefinedUnallowedBluetoothAppsValue = [Boolean]($EndpointDlpGlobalSettingsValue | Where-Object {$_.Setting -eq 'IncludePredefinedUnallowedBluetoothApps'}).Value
+        $IncludePredefinedUnallowedBluetoothAppsValue = [Boolean]($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'IncludePredefinedUnallowedBluetoothApps' }).Value
 
         # UnallowedBluetoothApp
-        $entries = [Array]($EndpointDlpGlobalSettingsValue | Where-Object {$_.Setting -eq 'UnallowedBluetoothApp'})
+        $entries = [Array]($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'UnallowedBluetoothApp' })
         $UnallowedBluetoothAppValue = @()
         foreach ($entry in $entries)
         {
@@ -276,7 +276,7 @@ function Get-TargetResource
         }
 
         # UnallowedBrowser
-        $entries = [Array]($EndpointDlpGlobalSettingsValue | Where-Object {$_.Setting -eq 'UnallowedBrowser'})
+        $entries = [Array]($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'UnallowedBrowser' })
         $UnallowedBrowserValue = @()
         foreach ($entry in $entries)
         {
@@ -288,17 +288,17 @@ function Get-TargetResource
         }
 
         # CloudAppMode
-        $CloudAppModeValue = ($EndpointDlpGlobalSettingsValue | Where-Object {$_.Setting -eq 'CloudAppMode'}).Value
+        $CloudAppModeValue = ($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'CloudAppMode' }).Value
 
         # CloudAppRestrictionList
-        $CloudAppRestrictionListValue = [Array]($EndpointDlpGlobalSettingsValue | Where-Object {$_.Setting -eq 'CloudAppRestrictionList'}).Value
+        $CloudAppRestrictionListValue = [Array]($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'CloudAppRestrictionList' }).Value
 
         # SiteGroups
         $SiteGroupsValue = @()
         foreach ($siteGroup in $SiteGroupsObject)
         {
             $entry = @{
-                Id = $siteGroup.Id
+                Id   = $siteGroup.Id
                 Name = $siteGroup.Name
             }
 
@@ -317,11 +317,11 @@ function Get-TargetResource
         }
 
         # CustomBusinessJustificationNotification
-        $CustomBusinessJustificationNotificationValue = [Uint32]($EndpointDlpGlobalSettingsValue | Where-Object {$_.Setting -eq 'CustomBusinessJustificationNotification'}).Value
+        $CustomBusinessJustificationNotificationValue = [Uint32]($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'CustomBusinessJustificationNotification' }).Value
 
         if (-not [System.String]::IsNullOrEmpty($EndpointDlpGlobalSettingsValue.Setting))
         {
-            $entities = $EndpointDlpGlobalSettingsValue | Where-Object -FilterScript {$_.Setting -eq 'BusinessJustificationList'}
+            $entities = $EndpointDlpGlobalSettingsValue | Where-Object -FilterScript { $_.Setting -eq 'BusinessJustificationList' }
 
             # BusinessJustificationList
             if ($null -ne $entities)
@@ -340,13 +340,13 @@ function Get-TargetResource
             }
 
             # serverDlpEnabled
-            $serverDlpEnabledValue = [Boolean]($EndpointDlpGlobalSettingsValue | Where-Object {$_.Setting -eq 'serverDlpEnabled'}).Value
+            $serverDlpEnabledValue = [Boolean]($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'serverDlpEnabled' }).Value
 
             # AuditFileActivity
-            $AuditFileActivityValue = [Boolean]($EndpointDlpGlobalSettingsValue | Where-Object {$_.Setting -eq 'AuditFileActivity'}).Value
+            $AuditFileActivityValue = [Boolean]($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'AuditFileActivity' }).Value
 
             # VPNSettings
-            $entity = $EndpointDlpGlobalSettingsValue | Where-Object {$_.Setting -eq 'VPNSettings'}
+            $entity = $EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'VPNSettings' }
             if ($null -ne $entity)
             {
                 $entity = ConvertFrom-Json ($entity.value)
@@ -400,7 +400,7 @@ function Get-TargetResource
             foreach ($media in $group.removableMedia)
             {
                 $current = @{
-                    deviceId = $media.deviceId
+                    deviceId          = $media.deviceId
                     removableMediaVID = $media.removableMediaVID
                     name              = $media.name
                     alias             = $media.alias
@@ -429,9 +429,9 @@ function Get-TargetResource
         }
 
         $QuarantineParametersValue = @()
-        if ($null -ne ($EndpointDlpGlobalSettingsValue | Where-Object {$_.Setting -eq 'QuarantineParameters'}))
+        if ($null -ne ($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'QuarantineParameters' }))
         {
-            $quarantineInfo = [Array]($EndpointDlpGlobalSettingsValue | Where-Object {$_.Setting -eq 'QuarantineParameters'}).Value
+            $quarantineInfo = [Array]($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'QuarantineParameters' }).Value
             $quarantineInfo = ConvertFrom-Json $quarantineInfo[0]
             $QuarantineParametersValue = @{
                 EnableQuarantineForCloudSyncApps = $quarantineInfo.EnableQuarantineForCloudSyncApps
@@ -837,8 +837,8 @@ function Set-TargetResource
     foreach ($domain in  $CloudAppRestrictionList)
     {
         $EndpointDlpGlobalSettingsValue += @{
-            Setting    = 'CloudAppRestrictionList'
-            Value      = "$($domain.ToString())"
+            Setting = 'CloudAppRestrictionList'
+            Value   = "$($domain.ToString())"
         }
     }
 
@@ -881,7 +881,7 @@ function Set-TargetResource
     {
         $entry = @{
             Setting = 'VPNSettings'
-            Value = @{
+            Value   = @{
                 serverAddress = @()
             }
         }
@@ -974,7 +974,7 @@ function Set-TargetResource
     foreach ($group in $DLPRemovableMediaGroups)
     {
         $entry = @{
-            groupName = $group.groupName
+            groupName      = $group.groupName
             removableMedia = @(
             )
         }
@@ -1354,85 +1354,85 @@ function Export-TargetResource
         if ($null -ne $Results.QuarantineParameters)
         {
             $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                                                                -ParameterName 'QuarantineParameters' `
-                                                                -IsCIMArray:$true
+                -ParameterName 'QuarantineParameters' `
+                -IsCIMArray:$true
         }
 
         if ($null -ne $Results.BusinessJustificationList)
         {
             $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                                                                -ParameterName 'BusinessJustificationList' `
-                                                                -IsCIMArray:$true
+                -ParameterName 'BusinessJustificationList' `
+                -IsCIMArray:$true
         }
 
         if ($null -ne $Results.DLPAppGroups)
         {
             $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                                                                -ParameterName 'DLPAppGroups' `
-                                                                -IsCIMArray:$true
+                -ParameterName 'DLPAppGroups' `
+                -IsCIMArray:$true
         }
 
         if ($null -ne $Results.DLPNetworkShareGroups)
         {
             $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                                                                -ParameterName 'DLPNetworkShareGroups' `
-                                                                -IsCIMArray:$true
+                -ParameterName 'DLPNetworkShareGroups' `
+                -IsCIMArray:$true
         }
 
         if ($null -ne $Results.DLPPrinterGroups)
         {
             $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                                                                -ParameterName 'DLPPrinterGroups' `
-                                                                -IsCIMArray:$true
+                -ParameterName 'DLPPrinterGroups' `
+                -IsCIMArray:$true
         }
 
         if ($null -ne $Results.DLPRemovableMediaGroups)
         {
             $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                                                                -ParameterName 'DLPRemovableMediaGroups' `
-                                                                -IsCIMArray:$true
+                -ParameterName 'DLPRemovableMediaGroups' `
+                -IsCIMArray:$true
         }
 
         if ($null -ne $Results.SiteGroups)
         {
             $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                                                                -ParameterName 'SiteGroups' `
-                                                                -IsCIMArray:$true
+                -ParameterName 'SiteGroups' `
+                -IsCIMArray:$true
         }
 
         if ($null -ne $Results.UnallowedApp)
         {
             $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                                                                -ParameterName 'UnallowedApp' `
-                                                                -IsCIMArray:$true
+                -ParameterName 'UnallowedApp' `
+                -IsCIMArray:$true
         }
 
         if ($null -ne $Results.UnallowedCloudSyncApp)
         {
             $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                                                                -ParameterName 'UnallowedCloudSyncApp' `
-                                                                -IsCIMArray:$true
+                -ParameterName 'UnallowedCloudSyncApp' `
+                -IsCIMArray:$true
         }
 
         if ($null -ne $Results.UnallowedBluetoothApp)
         {
             $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                                                                -ParameterName 'UnallowedBluetoothApp' `
-                                                                -IsCIMArray:$true
+                -ParameterName 'UnallowedBluetoothApp' `
+                -IsCIMArray:$true
         }
 
         if ($null -ne $Results.UnallowedBrowser)
         {
             $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                                                                -ParameterName 'UnallowedBrowser' `
-                                                                -IsCIMArray:$true
+                -ParameterName 'UnallowedBrowser' `
+                -IsCIMArray:$true
         }
 
         if ($null -ne $Results.EvidenceStoreSettings)
         {
             $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                                                                -ParameterName 'EvidenceStoreSettings' `
-                                                                -IsCIMArray:$false
+                -ParameterName 'EvidenceStoreSettings' `
+                -IsCIMArray:$false
         }
 
         $dscContent += $currentDSCBlock
@@ -1467,14 +1467,14 @@ function ConvertTo-QuarantineParametersString
     )
 
     $content = [System.Text.StringBuilder]::new()
-    [void]$content.AppendLine("                MSFT_PolicyConfigQuarantineParameters")
-    [void]$content.AppendLine("                {")
+    [void]$content.AppendLine('                MSFT_PolicyConfigQuarantineParameters')
+    [void]$content.AppendLine('                {')
     [void]$content.AppendLine("                    EnableQuarantineForCloudSyncApps = `$$($ObjectHash.EnableQuarantineForCloudSyncApps)")
     [void]$content.AppendLine("                    QuarantinePath                   = '$($ObjectHash.QuarantinePath.ToString())'")
     [void]$content.AppendLine("                    MacQuarantinePath                = '$($ObjectHash.MacQuarantinePath)'")
     [void]$content.AppendLine("                    ShouldReplaceFile                = `$$($ObjectHash.ShouldReplaceFile.ToString())")
     [void]$content.AppendLine("                    FileReplacementText              = '$($ObjectHash.FileReplacementText)'")
-    [void]$content.AppendLine("                }")
+    [void]$content.AppendLine('                }')
     return $content.ToString()
 }
 
@@ -1493,12 +1493,12 @@ function ConvertTo-BusinessJustificationListString
     [void]$content.Append('@(')
     foreach ($instance in $ObjectHash)
     {
-        [void]$content.AppendLine("                MSFT_PolicyConfigBusinessJustificationList")
-        [void]$content.AppendLine("                {")
+        [void]$content.AppendLine('                MSFT_PolicyConfigBusinessJustificationList')
+        [void]$content.AppendLine('                {')
         [void]$content.AppendLine("                    Id                = '$($instance.Id)'")
         [void]$content.AppendLine("                    Enable            = `$$($instance.Enable)")
         [void]$content.AppendLine("                    justificationText = '$($instance.justificationText)'")
-        [void]$content.AppendLine("                }")
+        [void]$content.AppendLine('                }')
     }
     [void]$content.Append('                )')
     $result = $content.ToString()
@@ -1519,22 +1519,22 @@ function ConvertTo-DLPAppGroupsString
     [void]$content.Append('@(')
     foreach ($instance in $ObjectHash)
     {
-        [void]$content.AppendLine("                MSFT_PolicyConfigDLPAppGroups")
-        [void]$content.AppendLine("                {")
+        [void]$content.AppendLine('                MSFT_PolicyConfigDLPAppGroups')
+        [void]$content.AppendLine('                {')
         [void]$content.AppendLine("                    Name        = '$($instance.Name)'")
         [void]$content.AppendLine("                    Id          = '$($instance.Id)'")
         [void]$content.AppendLine("                    Description = '$($instance.Description)'")
-        [void]$content.AppendLine("                    Apps = @(")
+        [void]$content.AppendLine('                    Apps = @(')
         foreach ($app in $instance.Apps)
         {
-            [void]$content.AppendLine("                        MSFT_PolicyConfigDLPApp")
-            [void]$content.AppendLine("                        {")
+            [void]$content.AppendLine('                        MSFT_PolicyConfigDLPApp')
+            [void]$content.AppendLine('                        {')
             [void]$content.AppendLine("                            ExecutableName    = '$($app.ExecutableName)'")
             [void]$content.AppendLine("                            Name              = '$($app.Name)'")
             [void]$content.AppendLine("                            Quarantine        = `$$($app.Quarantine)")
-            [void]$content.AppendLine("                        }")
+            [void]$content.AppendLine('                        }')
         }
-        [void]$content.AppendLine("                )}")
+        [void]$content.AppendLine('                )}')
     }
     [void]$content.Append('                )')
     $result = $content.ToString()
@@ -1555,11 +1555,11 @@ function ConvertTo-DLPNetworkShareGroupsString
     [void]$content.Append('@(')
     foreach ($instance in $ObjectHash)
     {
-        [void]$content.AppendLine("                MSFT_PolicyConfigDLPNetworkShareGroups")
-        [void]$content.AppendLine("                {")
+        [void]$content.AppendLine('                MSFT_PolicyConfigDLPNetworkShareGroups')
+        [void]$content.AppendLine('                {')
         [void]$content.AppendLine("                    groupName    = '$($instance.groupName)'")
         [void]$content.AppendLine("                    groupId      = '$($instance.groupId)'")
-        [void]$content.Append("                    networkPaths = @(")
+        [void]$content.Append('                    networkPaths = @(')
         $countPath = 1
         foreach ($path in $instance.networkPaths)
         {
@@ -1571,7 +1571,7 @@ function ConvertTo-DLPNetworkShareGroupsString
             $countPath++
         }
         [void]$content.AppendLine(')')
-        [void]$content.AppendLine("                }")
+        [void]$content.AppendLine('                }')
     }
     [void]$content.Append('                )')
     $result = $content.ToString()
@@ -1588,22 +1588,22 @@ function ConvertTo-EvidenceStoreSettingsString
         $ObjectHash
     )
     $content = [System.Text.StringBuilder]::new()
-    [void]$content.AppendLine("                MSFT_PolicyConfigEvidenceStoreSettings")
-    [void]$content.AppendLine("                {")
+    [void]$content.AppendLine('                MSFT_PolicyConfigEvidenceStoreSettings')
+    [void]$content.AppendLine('                {')
     [void]$content.AppendLine("                    FileEvidenceIsEnabled = `$$($ObjectHash.FileEvidenceIsEnabled)")
     [void]$content.AppendLine("                    NumberOfDaysToRetain  = $($ObjectHash.NumberOfDaysToRetain)")
-    [void]$content.AppendLine("                    StorageAccounts       = @(")
+    [void]$content.AppendLine('                    StorageAccounts       = @(')
     foreach ($storageAccount in $ObjectHash.StorageAccounts)
     {
-        [void]$content.AppendLine("                        MSFT_PolicyConfigStorageAccount")
-        [void]$content.AppendLine("                        {")
+        [void]$content.AppendLine('                        MSFT_PolicyConfigStorageAccount')
+        [void]$content.AppendLine('                        {')
         [void]$content.AppendLine("                            Name    = '$($storageAccount.Name)'")
         [void]$content.AppendLine("                            BlobUri = '$($storageAccount.BlobUri)'")
-        [void]$content.AppendLine("                        }")
+        [void]$content.AppendLine('                        }')
     }
-    [void]$content.AppendLine("                    )")
+    [void]$content.AppendLine('                    )')
     [void]$content.AppendLine("                    Store                 = '$($ObjectHash.Store)'")
-    [void]$content.AppendLine("                }")
+    [void]$content.AppendLine('                }')
     return $content.ToString()
 }
 
@@ -1621,33 +1621,33 @@ function ConvertTo-DLPPrinterGroupsString
     [void]$content.Append('@(')
     foreach ($instance in $ObjectHash)
     {
-        [void]$content.AppendLine("                MSFT_PolicyConfigDLPPrinterGroups")
-        [void]$content.AppendLine("                {")
+        [void]$content.AppendLine('                MSFT_PolicyConfigDLPPrinterGroups')
+        [void]$content.AppendLine('                {')
         [void]$content.AppendLine("                    groupName    = '$($instance.groupName)'")
         [void]$content.AppendLine("                    groupId      = '$($instance.groupId)'")
-        [void]$content.AppendLine("                    printers = @(")
+        [void]$content.AppendLine('                    printers = @(')
         foreach ($printer in $instance.printers)
         {
-            [void]$content.AppendLine("                        MSFT_PolicyConfigPrinter")
-            [void]$content.AppendLine("                        {")
+            [void]$content.AppendLine('                        MSFT_PolicyConfigPrinter')
+            [void]$content.AppendLine('                        {')
             [void]$content.AppendLine("                            universalPrinter = `$$($printer.universalPrinter)")
             [void]$content.AppendLine("                            usbPrinter       = `$$($printer.usbPrinter)")
             [void]$content.AppendLine("                            usbPrinterId     = '$($printer.usbPrinterId)'")
             [void]$content.AppendLine("                            name             = '$($printer.name)'")
             [void]$content.AppendLine("                            alias            = '$($printer.alias)'")
             [void]$content.AppendLine("                            usbPrinterVID    = '$($printer.usbPrinterVID)'")
-            [void]$content.AppendLine("                            ipRange          = MSFT_PolicyConfigIPRange")
-            [void]$content.AppendLine("                                {")
+            [void]$content.AppendLine('                            ipRange          = MSFT_PolicyConfigIPRange')
+            [void]$content.AppendLine('                                {')
             [void]$content.AppendLine("                                    fromAddress = '$($printer.ipRange.fromAddress)'")
             [void]$content.AppendLine("                                    toAddress   = '$($printer.ipRange.toAddress)'")
-            [void]$content.AppendLine("                                }")
+            [void]$content.AppendLine('                                }')
             [void]$content.AppendLine("                            corporatePrinter = `$$($printer.corporatePrinter)")
             [void]$content.AppendLine("                            printToLocal     = `$$($printer.printToLocal)")
             [void]$content.AppendLine("                            printToFile      = `$$($printer.printToFile)")
-            [void]$content.AppendLine("                        }")
+            [void]$content.AppendLine('                        }')
         }
-        [void]$content.AppendLine("                    )")
-        [void]$content.AppendLine("                }")
+        [void]$content.AppendLine('                    )')
+        [void]$content.AppendLine('                }')
     }
     [void]$content.Append(')')
     $result = $content.ToString()
@@ -1668,14 +1668,14 @@ function ConvertTo-DLPRemovableMediaGroupsString
     [void]$content.Append('@(')
     foreach ($instance in $ObjectHash)
     {
-        [void]$content.AppendLine("                MSFT_PolicyConfigDLPRemovableMediaGroups")
-        [void]$content.AppendLine("                {")
+        [void]$content.AppendLine('                MSFT_PolicyConfigDLPRemovableMediaGroups')
+        [void]$content.AppendLine('                {')
         [void]$content.AppendLine("                    groupName = '$($instance.groupName)'")
-        [void]$content.AppendLine("                    removableMedias   = @(")
+        [void]$content.AppendLine('                    removableMedias   = @(')
         foreach ($media in $instance.removableMedia)
         {
-            [void]$content.AppendLine("                        MSFT_PolicyConfigRemovableMedia")
-            [void]$content.AppendLine("                        {")
+            [void]$content.AppendLine('                        MSFT_PolicyConfigRemovableMedia')
+            [void]$content.AppendLine('                        {')
             [void]$content.AppendLine("                            deviceId          = '$($media.deviceId)'")
             [void]$content.AppendLine("                            removableMediaVID = '$($media.removableMediaVID)'")
             [void]$content.AppendLine("                            name              = '$($media.name)'")
@@ -1684,10 +1684,10 @@ function ConvertTo-DLPRemovableMediaGroupsString
             [void]$content.AppendLine("                            instancePathId    = '$($media.instancePathId)'")
             [void]$content.AppendLine("                            serialNumberId    = '$($media.serialNumberId)'")
             [void]$content.AppendLine("                            hardwareId        = '$($media.hardwareId)'")
-            [void]$content.AppendLine("                        }")
+            [void]$content.AppendLine('                        }')
         }
-        [void]$content.AppendLine("                    )")
-        [void]$content.AppendLine(                "}")
+        [void]$content.AppendLine('                    )')
+        [void]$content.AppendLine(                '}')
     }
     [void]$content.Append('                )')
     $result = $content.ToString()
@@ -1707,23 +1707,23 @@ function ConvertTo-SiteGroupsString
     [void]$content.Append('@(')
     foreach ($instance in $ObjectHash)
     {
-        [void]$content.AppendLine("                MSFT_PolicyConfigDLPSiteGroups")
-        [void]$content.AppendLine("                {")
+        [void]$content.AppendLine('                MSFT_PolicyConfigDLPSiteGroups')
+        [void]$content.AppendLine('                {')
         [void]$content.AppendLine("                    Id        = '$($instance.Id)'")
         [void]$content.AppendLine("                    Name      = '$($instance.Name)'")
-        [void]$content.AppendLine("                    Addresses = @(")
+        [void]$content.AppendLine('                    Addresses = @(')
         foreach ($address in $instance.addresses)
         {
-            [void]$content.AppendLine("                        MSFT_PolicyConfigSiteGroupAddress")
-            [void]$content.AppendLine("                        {")
+            [void]$content.AppendLine('                        MSFT_PolicyConfigSiteGroupAddress')
+            [void]$content.AppendLine('                        {')
             [void]$content.AppendLine("                            MatchType    = '$($address.MatchType)'")
             [void]$content.AppendLine("                            Url          = '$($address.Url)'")
             [void]$content.AppendLine("                            AddressLower = '$($address.AddressLower)'")
             [void]$content.AppendLine("                            AddressUpper = '$($address.AddressUpper)'")
-            [void]$content.AppendLine("                        }")
+            [void]$content.AppendLine('                        }')
         }
-        [void]$content.AppendLine("                    )")
-        [void]$content.AppendLine("                }")
+        [void]$content.AppendLine('                    )')
+        [void]$content.AppendLine('                }')
     }
     [void]$content.Append('                )')
     $result = $content.ToString()
@@ -1744,11 +1744,11 @@ function ConvertTo-AppsString
     [void]$content.Append('@(')
     foreach ($instance in $ObjectHash)
     {
-        [void]$content.AppendLine("                MSFT_PolicyConfigApp")
-        [void]$content.AppendLine("                {")
+        [void]$content.AppendLine('                MSFT_PolicyConfigApp')
+        [void]$content.AppendLine('                {')
         [void]$content.AppendLine("                    Value        = '$($instance.Value)'")
         [void]$content.AppendLine("                    Executable   = '$($instance.Executable)'")
-        [void]$content.AppendLine("                }")
+        [void]$content.AppendLine('                }')
     }
     [void]$content.Append(')')
     $result = $content.ToString()

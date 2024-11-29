@@ -96,7 +96,7 @@ function Get-TargetResource
             {
                 if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
                 {
-                    $AADRoleDefinition = $Script:exportedInstances | Where-Object -FilterScript {$_.Id -eq $Id}
+                    $AADRoleDefinition = $Script:exportedInstances | Where-Object -FilterScript { $_.Id -eq $Id }
                 }
                 else
                 {
@@ -112,7 +112,7 @@ function Get-TargetResource
         {
             if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
             {
-                $AADRoleDefinition = $Script:exportedInstances | Where-Object -FilterScript {$_.DisplayName -eq $DisplayName}
+                $AADRoleDefinition = $Script:exportedInstances | Where-Object -FilterScript { $_.DisplayName -eq $DisplayName }
             }
             else
             {

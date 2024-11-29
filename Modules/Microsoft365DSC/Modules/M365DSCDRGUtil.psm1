@@ -607,7 +607,7 @@ function Compare-M365DSCComplexObject
     {
         if ($Source.Length -ne $Target.Length)
         {
-            Write-Verbose -Message "Configuration drift - The complex array have different number of items: Source {$($Source.Length)} Target {$($Target.Length)}"
+            Write-Verbose -Message "Configuration drift - The complex array have different number of items: Source {$($Source.Length)}, Target {$($Target.Length)}"
             return $false
         }
         if ($Source.Length -eq 0)
@@ -626,7 +626,9 @@ function Compare-M365DSCComplexObject
 
             if (-not $compareResult)
             {
-                Write-Verbose -Message "Configuration drift - Intune Policy Assignment: $key Source {$Source} Target {$Target}"
+                Write-Verbose -Message "Configuration drift - Intune Policy Assignment: $key"
+                Write-Verbose -Message "Source {$Source}"
+                Write-Verbose -Message "Target {$Target}"
                 return $false
             }
 
@@ -723,7 +725,9 @@ function Compare-M365DSCComplexObject
                 $targetValue = 'null'
             }
 
-            Write-Verbose -Message "Configuration drift - key: $key Source {$sourceValue} Target {$targetValue}"
+            Write-Verbose -Message "Configuration drift - key: $key"
+            Write-Verbose -Message "Source {$sourceValue}"
+            Write-Verbose -Message "Target {$targetValue}"
             return $false
         }
 
@@ -752,7 +756,9 @@ function Compare-M365DSCComplexObject
 
                 if (-not $compareResult)
                 {
-                    Write-Verbose -Message "Configuration drift - complex object key: $key Source {$sourceValue} Target {$targetValue}"
+                    Write-Verbose -Message "Configuration drift - complex object key: $key"
+                    Write-Verbose -Message "Source {$sourceValue}"
+                    Write-Verbose -Message "Target {$targetValue}"
                     return $false
                 }
             }
@@ -773,6 +779,26 @@ function Compare-M365DSCComplexObject
                         $compareResult = $null
                     }
                 }
+                elseif ($targetType -eq 'String')
+                {
+                    # Align line breaks
+                    if (-not [System.String]::IsNullOrEmpty($referenceObject))
+                    {
+                        $referenceObject = $referenceObject.Replace("`r`n", "`n")
+                    }
+
+                    if (-not [System.String]::IsNullOrEmpty($differenceObject))
+                    {
+                        $differenceObject = $differenceObject.Replace("`r`n", "`n")
+                    }
+
+                    $compareResult = $true
+                    $ordinalComparison = [System.String]::Equals($referenceObject, $differenceObject, [System.StringComparison]::Ordinal)
+                    if ($ordinalComparison)
+                    {
+                        $compareResult = $null
+                    }
+                }
                 else
                 {
                     $compareResult = Compare-Object `
@@ -782,7 +808,9 @@ function Compare-M365DSCComplexObject
 
                 if ($null -ne $compareResult)
                 {
-                    Write-Verbose -Message "Configuration drift - simple object key: $key Source {$sourceValue} Target {$targetValue}"
+                    Write-Verbose -Message "Configuration drift - simple object key: $key"
+                    Write-Verbose -Message "Source {$sourceValue}"
+                    Write-Verbose -Message "Target {$targetValue}"
                     return $false
                 }
             }
@@ -2338,7 +2366,15 @@ function Export-IntuneSettingCatalogPolicySettings
     {
         '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
         {
-            $settingValue = if ($IsRoot) { $SettingInstance.AdditionalProperties.simpleSettingValue.value } else { $SettingInstance.simpleSettingValue.value }
+            $simpleSetting = if ($IsRoot) { $SettingInstance.AdditionalProperties.simpleSettingValue } else { $SettingInstance.simpleSettingValue }
+            if ($simpleSetting.'@odata.type' -eq '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue')
+            {
+                $settingValue = [int]$simpleSetting.value
+            }
+            else
+            {
+                $settingValue = $simpleSetting.value
+            }
         }
         '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
         {
@@ -2428,16 +2464,30 @@ function Export-IntuneSettingCatalogPolicySettings
         '#microsoft.graph.deviceManagementConfigurationSimpleSettingCollectionInstance'
         {
             $values = @()
-            $childValues = if ($IsRoot) { $SettingInstance.AdditionalProperties.simpleSettingCollectionValue.value } else { $SettingInstance.simpleSettingCollectionValue.value }
+            $childValues = if ($IsRoot) { $SettingInstance.AdditionalProperties.simpleSettingCollectionValue } else { $SettingInstance.simpleSettingCollectionValue }
             foreach ($value in $childValues)
             {
-                $values += $value
+                if ($value.'@odata.type' -eq '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue')
+                {
+                    $values += [int]$value.value
+                }
+                else
+                {
+                    $values += $value.value
+                }
             }
             $settingValue = $values
         }
         Default
         {
-            $settingValue = $SettingInstance.value
+            if ($SettingInstance.'@odata.type' -eq '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue')
+            {
+                $settingValue += [int]$SettingInstance.value
+            }
+            else
+            {
+                $settingValue = $SettingInstance.value
+            }
         }
     }
 

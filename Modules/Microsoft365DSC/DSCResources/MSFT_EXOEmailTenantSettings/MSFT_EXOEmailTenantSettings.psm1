@@ -95,20 +95,20 @@ function Get-TargetResource
         $EmailTenantSettings = Get-EmailTenantSettings -ErrorAction Stop
 
         $result = @{
-            IsSingleInstance                           = 'Yes'
-            Identity                                   = $EmailTenantSettings.Identity
-            EnablePriorityAccountProtection            = $EmailTenantSettings.EnablePriorityAccountProtection
-            Name                                       = $EmailTenantSettings.Name
-            IsValid                                    = $EmailTenantSettings.IsValid
-            ObjectState                                = $EmailTenantSettings.ObjectState
-            Credential                                 = $Credential
-            ApplicationId                              = $ApplicationId
-            CertificateThumbprint                      = $CertificateThumbprint
-            CertificatePath                            = $CertificatePath
-            CertificatePassword                        = $CertificatePassword
-            Managedidentity                            = $ManagedIdentity.IsPresent
-            TenantId                                   = $TenantId
-            AccessTokens                               = $AccessTokens
+            IsSingleInstance                = 'Yes'
+            Identity                        = $EmailTenantSettings.Identity
+            EnablePriorityAccountProtection = $EmailTenantSettings.EnablePriorityAccountProtection
+            Name                            = $EmailTenantSettings.Name
+            IsValid                         = $EmailTenantSettings.IsValid
+            ObjectState                     = $EmailTenantSettings.ObjectState
+            Credential                      = $Credential
+            ApplicationId                   = $ApplicationId
+            CertificateThumbprint           = $CertificateThumbprint
+            CertificatePath                 = $CertificatePath
+            CertificatePassword             = $CertificatePassword
+            Managedidentity                 = $ManagedIdentity.IsPresent
+            TenantId                        = $TenantId
+            AccessTokens                    = $AccessTokens
         }
 
         Write-Verbose -Message 'Found Email Tenant Settings config '

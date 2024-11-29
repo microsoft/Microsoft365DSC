@@ -115,29 +115,29 @@ function Get-TargetResource
         {
             if (-not [System.String]::IsNullOrEmpty($Id))
             {
-                $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.properties.watchListId -eq $Id}
+                $instance = $Script:exportedInstances | Where-Object -FilterScript { $_.properties.watchListId -eq $Id }
             }
 
             if ($null -eq $instance)
             {
-                $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.name -eq $Name}
+                $instance = $Script:exportedInstances | Where-Object -FilterScript { $_.name -eq $Name }
             }
         }
         else
         {
             $watchLists = Get-M365DSCSentinelWatchlist -SubscriptionId $SubscriptionId `
-                                                       -ResourceGroupName $ResourceName `
-                                                       -WorkspaceName $workspaceName `
-                                                       -TenantId $TenantId
+                -ResourceGroupName $ResourceName `
+                -WorkspaceName $workspaceName `
+                -TenantId $TenantId
 
             if (-not [System.String]::IsNullOrEmpty($Id))
             {
-                $instance = $watchLists | Where-Object -FilterScript {$_.properties.watchListId -eq $Id}
+                $instance = $watchLists | Where-Object -FilterScript { $_.properties.watchListId -eq $Id }
             }
 
             if ($null -eq $instance)
             {
-                $instance = $watchLists | Where-Object -FilterScript {$_.name -eq $Name}
+                $instance = $watchLists | Where-Object -FilterScript { $_.name -eq $Name }
             }
         }
         if ($null -eq $instance)
@@ -291,7 +291,7 @@ function Set-TargetResource
     $body = @{
         properties = @{
             displayName         = $DisplayName
-            provider            = "Microsoft"
+            provider            = 'Microsoft'
             itemsSearchKey      = $ItemsSearchKey
             sourceType          = $SourceType
             description         = $Description
@@ -303,7 +303,7 @@ function Set-TargetResource
 
     if ($null -ne $RawContent)
     {
-        Write-Verbose -Message "Adding rawContent and contentType to the payload"
+        Write-Verbose -Message 'Adding rawContent and contentType to the payload'
         $body.properties.Add('rawContent', $RawContent)
         $body.properties.Add('contentType', 'text/csv')
     }
@@ -313,21 +313,21 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Configuring watchlist {$Name}"
         Set-M365DSCSentinelWatchlist -SubscriptionId $SubscriptionId `
-                                     -ResourceGroupName $ResourceGroupName `
-                                     -WorkspaceName $WorkspaceName `
-                                     -WatchListAlias $Alias `
-                                     -Body $body `
-                                     -TenantId $TenantId
+            -ResourceGroupName $ResourceGroupName `
+            -WorkspaceName $WorkspaceName `
+            -WatchListAlias $Alias `
+            -Body $body `
+            -TenantId $TenantId
     }
     # REMOVE
     elseif ($Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Removing watchlist {$Name}"
         Remove-M365DSCSentinelWatchlist -SubscriptionId $SubscriptionId `
-                                        -ResourceGroupName $ResourceGroupName `
-                                        -WorkspaceName $WorkspaceName `
-                                        -WatchListAlias $Alias `
-                                        -TenantId $TenantId
+            -ResourceGroupName $ResourceGroupName `
+            -WorkspaceName $WorkspaceName `
+            -WatchListAlias $Alias `
+            -TenantId $TenantId
     }
 }
 
@@ -520,14 +520,14 @@ function Export-TargetResource
         foreach ($workspace in $workspaces)
         {
             Write-Host "    |---[$i/$($workspaces.Length)] $($workspace.Name)" -NoNewline
-            $subscriptionId    = $workspace.ResourceId.Split('/')[2]
+            $subscriptionId = $workspace.ResourceId.Split('/')[2]
             $resourceGroupName = $workspace.ResourceGroupName
-            $workspaceName     = $workspace.Name
+            $workspaceName = $workspace.Name
 
             $currentWatchLists = Get-M365DSCSentinelWatchlist -SubscriptionId $subscriptionId `
-                                                              -ResourceGroupName $resourceGroupName `
-                                                              -WorkspaceName $workspaceName `
-                                                              -TenantId $TenantId
+                -ResourceGroupName $resourceGroupName `
+                -WorkspaceName $workspaceName `
+                -TenantId $TenantId
 
             $j = 1
             if ($currentWatchLists.Length -eq 0 )

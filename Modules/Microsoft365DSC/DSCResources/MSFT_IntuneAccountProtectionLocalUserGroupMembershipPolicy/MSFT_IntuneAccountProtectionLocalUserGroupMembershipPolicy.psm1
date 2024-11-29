@@ -92,7 +92,7 @@ function Get-TargetResource
             {
                 $policy = Get-MgBetaDeviceManagementConfigurationPolicy -All -Filter "Name eq '$DisplayName'" -ErrorAction SilentlyContinue
 
-                if(([array]$devicePolicy).Count -gt 1)
+                if (([array]$devicePolicy).Count -gt 1)
                 {
                     throw "A policy with a duplicated displayName {'$DisplayName'} was found - Ensure displayName is unique"
                 }
@@ -165,8 +165,8 @@ function Get-TargetResource
         if ($graphAssignments.count -gt 0)
         {
             $returnAssignments += ConvertFrom-IntunePolicyAssignment `
-                                -IncludeDeviceFilter:$true `
-                                -Assignments ($graphAssignments)
+                -IncludeDeviceFilter:$true `
+                -Assignments ($graphAssignments)
         }
         $returnHashtable.Add('Assignments', $returnAssignments)
 
@@ -175,7 +175,7 @@ function Get-TargetResource
     catch
     {
         if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
-            $_.Exception -like "*Unable to perform redirect as Location Header is not set in response*")
+                $_.Exception -like '*Unable to perform redirect as Location Header is not set in response*')
         {
             if (Assert-M365DSCIsNonInteractiveShell)
             {
@@ -301,8 +301,8 @@ function Set-TargetResource
         $createParameters.Add('platforms', $platforms)
         $createParameters.Add('technologies', $technologies)
         $createParameters.Add('templateReference', @{
-            templateId = $templateReferenceId
-        })
+                templateId = $templateReferenceId
+            })
         $policy = New-MgBetaDeviceManagementConfigurationPolicy -BodyParameter $createParameters
 
         #region Assignments
@@ -645,8 +645,8 @@ function Export-TargetResource
     catch
     {
         if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
-        $_.Exception -like "*Unable to perform redirect as Location Header is not set in response*" -or `
-        $_.Exception -like "*Request not applicable to target tenant*")
+                $_.Exception -like '*Unable to perform redirect as Location Header is not set in response*' -or `
+                $_.Exception -like '*Request not applicable to target tenant*')
         {
             Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }
@@ -678,14 +678,14 @@ function Get-M365DSCIntuneDeviceConfigurationSettings
 
     $settingDefinition = 'device_vendor_msft_policy_config_localusersandgroups_configure'
     $defaultValue = @{
-        '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSetting'
+        '@odata.type'     = '#microsoft.graph.deviceManagementConfigurationSetting'
         'settingInstance' = @{
-            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
-            'settingDefinitionId' = $settingDefinition
-            'groupSettingCollectionValue' = @()
+            '@odata.type'                      = '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
+            'settingDefinitionId'              = $settingDefinition
+            'groupSettingCollectionValue'      = @()
             'settingInstanceTemplateReference' = @{
                 'settingInstanceTemplateId' = 'de06bec1-4852-48a0-9799-cf7b85992d45'
-             }
+            }
         }
     }
     foreach ($groupConfiguration in $Properties.LocalUserGroupCollection)
@@ -698,38 +698,38 @@ function Get-M365DSCIntuneDeviceConfigurationSettings
         $groupDefaultValue = @{
             children = @(
                 @{
-                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
-                    'settingDefinitionId' = $settingDefinition + '_groupconfiguration_accessgroup'
-                    'groupSettingCollectionValue' = @(
+                    '@odata.type'                      = '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
+                    'settingDefinitionId'              = $settingDefinition + '_groupconfiguration_accessgroup'
+                    'groupSettingCollectionValue'      = @(
                         @{
                             'children' = @(
                                 @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                                    '@odata.type'         = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
                                     'settingDefinitionId' = $settingDefinition + '_groupconfiguration_accessgroup_userselectiontype'
-                                    'choiceSettingValue' = @{
+                                    'choiceSettingValue'  = @{
                                         '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingValue'
-                                        'value' = $settingDefinition + '_groupconfiguration_accessgroup_userselectiontype_' + $groupConfiguration.UserSelectionType
-                                        'children' = @(
+                                        'value'       = $settingDefinition + '_groupconfiguration_accessgroup_userselectiontype_' + $groupConfiguration.UserSelectionType
+                                        'children'    = @(
                                             @{
-                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingCollectionInstance'
-                                                'settingDefinitionId' = $settingDefinition + '_groupconfiguration_accessgroup_users'
+                                                '@odata.type'                  = '#microsoft.graph.deviceManagementConfigurationSimpleSettingCollectionInstance'
+                                                'settingDefinitionId'          = $settingDefinition + '_groupconfiguration_accessgroup_users'
                                                 'simpleSettingCollectionValue' = @()
                                             }
                                         )
                                     }
                                 },
                                 @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                                    '@odata.type'         = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
                                     'settingDefinitionId' = $settingDefinition + '_groupconfiguration_accessgroup_action'
-                                    'choiceSettingValue' = @{
+                                    'choiceSettingValue'  = @{
                                         '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingValue'
-                                        'value' = $settingDefinition + '_groupconfiguration_accessgroup_action_' + $groupConfiguration.Action
-                                        'children' = @()
+                                        'value'       = $settingDefinition + '_groupconfiguration_accessgroup_action_' + $groupConfiguration.Action
+                                        'children'    = @()
                                     }
                                 },
                                 @{
-                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingCollectionInstance'
-                                    'settingDefinitionId' = $settingDefinition + '_groupconfiguration_accessgroup_desc'
+                                    '@odata.type'                  = '#microsoft.graph.deviceManagementConfigurationChoiceSettingCollectionInstance'
+                                    'settingDefinitionId'          = $settingDefinition + '_groupconfiguration_accessgroup_desc'
                                     'choiceSettingCollectionValue' = @()
                                 }
                             )
@@ -746,7 +746,7 @@ function Get-M365DSCIntuneDeviceConfigurationSettings
         {
             $groupDefaultValue.children[0].groupSettingCollectionValue[0].children[0].choiceSettingValue.children[0].simpleSettingCollectionValue += @{
                 '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
-                'value' = $member
+                'value'       = $member
             }
         }
 
@@ -754,8 +754,8 @@ function Get-M365DSCIntuneDeviceConfigurationSettings
         {
             $groupDefaultValue.children[0].groupSettingCollectionValue[0].children[2].choiceSettingCollectionValue += @{
                 '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingValue'
-                'value' = $settingDefinition + '_groupconfiguration_accessgroup_desc_' + $localGroup
-                'children' = @()
+                'value'       = $settingDefinition + '_groupconfiguration_accessgroup_desc_' + $localGroup
+                'children'    = @()
             }
         }
 

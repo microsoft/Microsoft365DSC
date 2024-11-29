@@ -18,11 +18,9 @@
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
 | **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
-# EXORetentionPolicy  
-  
-## Description  
-  
-Use the New-RetentionPolicy cmdlet to create a retention policy and the Set-RetentionPolicy cmdlet to change the properties of an existing retention policy.  
+## Description
+
+Use the New-RetentionPolicy cmdlet to create a retention policy and the Set-RetentionPolicy cmdlet to change the properties of an existing retention policy.
 
 ## Permissions
 

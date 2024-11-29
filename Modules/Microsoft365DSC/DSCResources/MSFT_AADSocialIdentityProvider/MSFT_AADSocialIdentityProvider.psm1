@@ -17,7 +17,7 @@ function Get-TargetResource
         $DisplayName,
 
         [Parameter()]
-        [ValidateSet("AADSignup", "EmailOTP", "Microsoft", "MicrosoftAccount", "Google", "Amazon", "LinkedIn", "Facebook", "GitHub", "Twitter", "Weibo", "QQ", "WeChat")]
+        [ValidateSet('AADSignup', 'EmailOTP', 'Microsoft', 'MicrosoftAccount', 'Google', 'Amazon', 'LinkedIn', 'Facebook', 'GitHub', 'Twitter', 'Weibo', 'QQ', 'WeChat')]
         [System.String]
         $IdentityProviderType,
 
@@ -76,7 +76,7 @@ function Get-TargetResource
         $nullResult.Ensure = 'Absent'
 
         $getValue = Get-MgBetaIdentityProvider -Filter "Id eq '$ClientId'" `
-                        -ErrorAction SilentlyContinue | Where-Object -FilterScript {$_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.socialIdentityProvider'}
+            -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.socialIdentityProvider' }
 
         if ($null -eq $getValue)
         {
@@ -137,7 +137,7 @@ function Set-TargetResource
         $DisplayName,
 
         [Parameter()]
-        [ValidateSet("AADSignup", "EmailOTP", "Microsoft", "MicrosoftAccount", "Google", "Amazon", "LinkedIn", "Facebook", "GitHub", "Twitter", "Weibo", "QQ", "WeChat")]
+        [ValidateSet('AADSignup', 'EmailOTP', 'Microsoft', 'MicrosoftAccount', 'Google', 'Amazon', 'LinkedIn', 'Facebook', 'GitHub', 'Twitter', 'Weibo', 'QQ', 'WeChat')]
         [System.String]
         $IdentityProviderType,
 
@@ -191,20 +191,20 @@ function Set-TargetResource
     $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
     $AdditionalProperties = @{
-        '@odata.type'        = "microsoft.graph.socialIdentityProvider"
+        '@odata.type'        = 'microsoft.graph.socialIdentityProvider'
         identityProviderType = $IdentityProviderType
     }
-    $BoundParameters.Add("AdditionalProperties", $AdditionalProperties)
-    $BoundParameters.Remove("IdentityProviderType") | Out-Null
+    $BoundParameters.Add('AdditionalProperties', $AdditionalProperties)
+    $BoundParameters.Remove('IdentityProviderType') | Out-Null
     if ($ClientId)
     {
         $BoundParameters.AdditionalProperties.Add('ClientId', $ClientId)
-        $BoundParameters.Remove("ClientId") | Out-Null
+        $BoundParameters.Remove('ClientId') | Out-Null
     }
     if ($ClientSecret)
     {
         $BoundParameters.AdditionalProperties.Add('ClientSecret', $ClientSecret)
-        $BoundParameters.Remove("ClientSecret") | Out-Null
+        $BoundParameters.Remove('ClientSecret') | Out-Null
     }
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
@@ -244,7 +244,7 @@ function Test-TargetResource
         $DisplayName,
 
         [Parameter()]
-        [ValidateSet("AADSignup", "EmailOTP", "Microsoft", "MicrosoftAccount", "Google", "Amazon", "LinkedIn", "Facebook", "GitHub", "Twitter", "Weibo", "QQ", "WeChat")]
+        [ValidateSet('AADSignup', 'EmailOTP', 'Microsoft', 'MicrosoftAccount', 'Google', 'Amazon', 'LinkedIn', 'Facebook', 'GitHub', 'Twitter', 'Weibo', 'QQ', 'WeChat')]
         [System.String]
         $IdentityProviderType,
 
@@ -364,7 +364,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$getValue = Get-MgBetaIdentityProvider -All -ErrorAction Stop | Where-Object -FilterScript {$_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.socialIdentityProvider'}
+        [array]$getValue = Get-MgBetaIdentityProvider -All -ErrorAction Stop | Where-Object -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.socialIdentityProvider' }
 
         $i = 1
         $dscContent = ''

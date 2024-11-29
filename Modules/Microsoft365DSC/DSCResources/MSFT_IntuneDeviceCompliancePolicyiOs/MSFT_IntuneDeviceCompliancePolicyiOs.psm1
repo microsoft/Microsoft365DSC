@@ -154,7 +154,7 @@ function Get-TargetResource
             -ErrorAction SilentlyContinue | Where-Object `
             -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.iosCompliancePolicy' -and `
                 $_.displayName -eq $($DisplayName) }
-        if(([array]$devicePolicy).count -gt 1)
+        if (([array]$devicePolicy).count -gt 1)
         {
             throw "A policy with a duplicated displayName {'$DisplayName'} was found - Ensure displayName is unique"
         }
@@ -198,12 +198,12 @@ function Get-TargetResource
         }
 
         $returnAssignments = @()
-        $graphAssignments = Get-MgBetaDeviceManagementDeviceCompliancePolicyAssignment -DeviceCompliancePolicyId  $devicePolicy.Id
+        $graphAssignments = Get-MgBetaDeviceManagementDeviceCompliancePolicyAssignment -DeviceCompliancePolicyId $devicePolicy.Id
         if ($graphAssignments.count -gt 0)
         {
             $returnAssignments += ConvertFrom-IntunePolicyAssignment `
-                                -IncludeDeviceFilter:$true `
-                                -Assignments ($graphAssignments)
+                -IncludeDeviceFilter:$true `
+                -Assignments ($graphAssignments)
         }
         $results.Add('Assignments', $returnAssignments)
 
@@ -412,7 +412,7 @@ function Set-TargetResource
         $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
         if ($policy.id)
         {
-            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId  $policy.id `
+            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $policy.id `
                 -Targets $assignmentsHash `
                 -Repository 'deviceManagement/deviceCompliancePolicies'
         }
@@ -442,7 +442,7 @@ function Set-TargetResource
             -DeviceCompliancePolicyId $configDevicePolicy.Id
         #region Assignments
         $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
-        Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId  $configDevicePolicy.id `
+        Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $configDevicePolicy.id `
             -Targets $assignmentsHash `
             -Repository 'deviceManagement/deviceCompliancePolicies'
         #endregion
@@ -813,7 +813,7 @@ function Export-TargetResource
     catch
     {
         if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
-        $_.Exception -like "*Request not applicable to target tenant*")
+                $_.Exception -like '*Request not applicable to target tenant*')
         {
             Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }

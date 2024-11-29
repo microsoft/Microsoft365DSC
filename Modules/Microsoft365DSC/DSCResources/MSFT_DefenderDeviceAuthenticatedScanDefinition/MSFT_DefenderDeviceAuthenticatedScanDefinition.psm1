@@ -89,24 +89,24 @@ function Get-TargetResource
         {
             if (-not [System.String]::IsNullOrEmpty($Id))
             {
-                $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.id -eq $Id}
+                $instance = $Script:exportedInstances | Where-Object -FilterScript { $_.id -eq $Id }
             }
             if ($null -eq $instance)
             {
-                $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.scanName -eq $Name}
+                $instance = $Script:exportedInstances | Where-Object -FilterScript { $_.scanName -eq $Name }
             }
         }
         else
         {
             $instances = (Invoke-M365DSCDefenderREST -Uri 'https://api.securitycenter.microsoft.com/api/DeviceAuthenticatedScanDefinitions' `
-                                                     -Method GET).value
+                    -Method GET).value
             if (-not [System.String]::IsNullOrEmpty($Id))
             {
-                $instance = $instances | Where-Object -FilterScript {$_.id -eq $Id}
+                $instance = $instances | Where-Object -FilterScript { $_.id -eq $Id }
             }
             if ($null -eq $instance)
             {
-                $instance = $instances | Where-Object -FilterScript {$_.scanName -eq $Name}
+                $instance = $instances | Where-Object -FilterScript { $_.scanName -eq $Name }
             }
         }
         if ($null -eq $instance)
@@ -118,8 +118,8 @@ function Get-TargetResource
         if ($null -ne $instance.scannerAgent)
         {
             $ScannerAgentValue = @{
-                id = $instance.scannerAgent.id
-                machineId = $instance.scannerAgent.machineId
+                id          = $instance.scannerAgent.id
+                machineId   = $instance.scannerAgent.machineId
                 machineName = $instance.scannerAgent.machineName
             }
         }
@@ -146,8 +146,8 @@ function Get-TargetResource
         else
         {
             $ScanAuthenticationParamsValue = @{
-                "@odata.context"   = "#microsoft.windowsDefenderATP.api.SnmpAuthParams"
-                Type               = "NoAuthNoPriv"
+                '@odata.context' = '#microsoft.windowsDefenderATP.api.SnmpAuthParams'
+                Type             = 'NoAuthNoPriv'
             }
         }
 
@@ -265,61 +265,61 @@ function Set-TargetResource
     $currentInstance = Get-TargetResource @PSBoundParameters
 
     $instanceParams = @{
-        scanType        = $ScanType
-        scanName        = $Name
-        isActive        = $IsActive
-        target          = $Target
-        intervalInHours = $IntervalInHours
-        scannerAgent    = @{
+        scanType                 = $ScanType
+        scanName                 = $Name
+        isActive                 = $IsActive
+        target                   = $Target
+        intervalInHours          = $IntervalInHours
+        scannerAgent             = @{
             machineName = $ScannerAgent.machineName
             id          = $ScannerAgent.id
         }
-        targetType = 'Ip'
+        targetType               = 'Ip'
         scanAuthenticationParams = @{
-            "@odata.type"      = $ScanAuthenticationParams.DataType
-            type               = $ScanAuthenticationParams.Type
+            '@odata.type' = $ScanAuthenticationParams.DataType
+            type          = $ScanAuthenticationParams.Type
         }
     }
 
     if ($null -ne $ScanAuthenticationParams.KeyVaultUrl)
     {
-        $instanceParams.scanAuthenticationParams.Add("keyVaultUrl", $ScanAuthenticationParams.KeyVaultUrl)
+        $instanceParams.scanAuthenticationParams.Add('keyVaultUrl', $ScanAuthenticationParams.KeyVaultUrl)
     }
     if ($null -ne $ScanAuthenticationParams.KeyVaultSecretName)
     {
-        $instanceParams.scanAuthenticationParams.Add("keyVaultSecretName", $ScanAuthenticationParams.KeyVaultSecretName)
+        $instanceParams.scanAuthenticationParams.Add('keyVaultSecretName', $ScanAuthenticationParams.KeyVaultSecretName)
     }
     if ($null -ne $ScanAuthenticationParams.Domain)
     {
-        $instanceParams.scanAuthenticationParams.Add("domain", $ScanAuthenticationParams.Domain)
+        $instanceParams.scanAuthenticationParams.Add('domain', $ScanAuthenticationParams.Domain)
     }
     if ($null -ne $ScanAuthenticationParams.Username)
     {
-        $instanceParams.scanAuthenticationParams.Add("username", $ScanAuthenticationParams.Username)
+        $instanceParams.scanAuthenticationParams.Add('username', $ScanAuthenticationParams.Username)
     }
     if ($null -ne $ScanAuthenticationParams.IsGMSAUser)
     {
-        $instanceParams.scanAuthenticationParams.Add("isGMSAUser", $ScanAuthenticationParams.IsGMSAUser)
+        $instanceParams.scanAuthenticationParams.Add('isGMSAUser', $ScanAuthenticationParams.IsGMSAUser)
     }
     if ($null -ne $ScanAuthenticationParams.CommunityString)
     {
-        $instanceParams.scanAuthenticationParams.Add("communityString", $ScanAuthenticationParams.CommunityString)
+        $instanceParams.scanAuthenticationParams.Add('communityString', $ScanAuthenticationParams.CommunityString)
     }
     if ($null -ne $ScanAuthenticationParams.AuthProtocol)
     {
-        $instanceParams.scanAuthenticationParams.Add("authProtocol", $ScanAuthenticationParams.AuthProtocol)
+        $instanceParams.scanAuthenticationParams.Add('authProtocol', $ScanAuthenticationParams.AuthProtocol)
     }
     if ($null -ne $ScanAuthenticationParams.AuthPassword)
     {
-        $instanceParams.scanAuthenticationParams.Add("authPassword", $ScanAuthenticationParams.AuthPassword)
+        $instanceParams.scanAuthenticationParams.Add('authPassword', $ScanAuthenticationParams.AuthPassword)
     }
     if ($null -ne $ScanAuthenticationParams.PrivProtocol)
     {
-        $instanceParams.scanAuthenticationParams.Add("privProtocol", $ScanAuthenticationParams.PrivProtocol)
+        $instanceParams.scanAuthenticationParams.Add('privProtocol', $ScanAuthenticationParams.PrivProtocol)
     }
     if ($null -ne $ScanAuthenticationParams.PrivPassword)
     {
-        $instanceParams.scanAuthenticationParams.Add("privPassword", $ScanAuthenticationParams.PrivPassword)
+        $instanceParams.scanAuthenticationParams.Add('privPassword', $ScanAuthenticationParams.PrivPassword)
     }
 
     # CREATE
@@ -327,8 +327,8 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Creating new device authenticated scan definition {$Name} with payload:`r`n$(ConvertTo-Json $instanceParams -Depth 10)"
         $response = Invoke-M365DSCDefenderREST -Uri 'https://api.securitycenter.microsoft.com/api/DeviceAuthenticatedScanDefinitions' `
-                                               -Method POST `
-                                               -Body $instanceParams
+            -Method POST `
+            -Body $instanceParams
         Write-Verbose -Message "Response:`r`n$($response.Content)"
     }
     # UPDATE
@@ -336,8 +336,8 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Updating device authenticated scan definition {$Name} with payload:`r`n$(ConvertTo-Json $instanceParams -Depth 10)"
         $response = Invoke-M365DSCDefenderREST -Uri "https://api.securitycenter.microsoft.com/api/DeviceAuthenticatedScanDefinitions/$($currentInstance.Id)" `
-                                            -Method PATCH `
-                                            -Body $instanceParams
+            -Method PATCH `
+            -Body $instanceParams
         Write-Verbose -Message "Response:`r`n$($response.Content)"
     }
     # REMOVE
@@ -347,9 +347,9 @@ function Set-TargetResource
             ScanDefinitionIds = @($currentInstance.Id)
         }
         Write-Verbose -Message "Deleting device authenticated scan definition {$Name} with payload:`r`n$(ConvertTo-Json $instanceParams -Depth 10)"
-        $response = Invoke-M365DSCDefenderREST -Uri "https://api.securitycenter.microsoft.com/api/DeviceAuthenticatedScanDefinitions/BatchDelete" `
-                                            -Method POST `
-                                            -Body $instanceParams
+        $response = Invoke-M365DSCDefenderREST -Uri 'https://api.securitycenter.microsoft.com/api/DeviceAuthenticatedScanDefinitions/BatchDelete' `
+            -Method POST `
+            -Body $instanceParams
         Write-Verbose -Message "Response:`r`n$($response.Content)"
     }
 }
@@ -443,7 +443,7 @@ function Test-TargetResource
     $testResult = $true
 
     # Once set, these cannot be retrieved nor changed.
-    $ValuesToCheck.Remove("ScanAuthenticationParams") | Out-Null
+    $ValuesToCheck.Remove('ScanAuthenticationParams') | Out-Null
 
     #Compare Cim instances
     foreach ($key in $PSBoundParameters.Keys)
@@ -469,9 +469,9 @@ function Test-TargetResource
     if ($testResult)
     {
         $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
-        -Source $($MyInvocation.MyCommand.Source) `
-        -DesiredValues $PSBoundParameters `
-        -ValuesToCheck $ValuesToCheck.Keys
+            -Source $($MyInvocation.MyCommand.Source) `
+            -DesiredValues $PSBoundParameters `
+            -ValuesToCheck $ValuesToCheck.Keys
     }
 
     Write-Verbose -Message "Test-TargetResource returned $testResult"
@@ -533,7 +533,7 @@ function Export-TargetResource
     {
         $Script:ExportMode = $true
         [array] $Script:exportedInstances = (Invoke-M365DSCDefenderREST -Uri 'https://api.securitycenter.microsoft.com/api/DeviceAuthenticatedScanDefinitions' `
-                                                                       -Method GET).value
+                -Method GET).value
 
         $i = 1
         $dscContent = ''

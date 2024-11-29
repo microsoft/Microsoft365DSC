@@ -1,44 +1,44 @@
 {
-  "resourceName":"IntuneDeviceControlPolicyWindows10",
-  "description":"This resource configures an Intune Device Control Policy for Windows10.",
-  "permissions":{
-      "graph":{
-          "delegated":{
-              "read":[
-                  {
-                      "name": "Group.Read.All"
-                  },
-                  {
-                      "name":"DeviceManagementConfiguration.Read.All"
-                  }
-              ],
-              "update":[
-                  {
-                      "name": "Group.Read.All"
-                  },
-                  {
-                      "name":"DeviceManagementConfiguration.ReadWrite.All"
-                  }
-              ]
-          },
-          "application":{
-              "read":[
-                  {
-                      "name": "Group.Read.All"
-                  },
-                  {
-                      "name":"DeviceManagementConfiguration.Read.All"
-                  }
-              ],
-              "update":[
-                  {
-                      "name": "Group.Read.All"
-                  },
-                  {
-                      "name":"DeviceManagementConfiguration.ReadWrite.All"
-                  }
-              ]
-          }
-      }
-  }
+    "resourceName": "IntuneDeviceControlPolicyWindows10",
+    "description": "This resource configures an Intune Device Control Policy for Windows10.",
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [
+                    {
+                        "name": "Group.Read.All"
+                    },
+                    {
+                        "name": "DeviceManagementConfiguration.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Group.Read.All"
+                    },
+                    {
+                        "name": "DeviceManagementConfiguration.ReadWrite.All"
+                    }
+                ]
+            },
+            "application": {
+                "read": [
+                    {
+                        "name": "Group.Read.All"
+                    },
+                    {
+                        "name": "DeviceManagementConfiguration.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Group.Read.All"
+                    },
+                    {
+                        "name": "DeviceManagementConfiguration.ReadWrite.All"
+                    }
+                ]
+            }
+        }
+    }
 }

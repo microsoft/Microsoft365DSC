@@ -205,7 +205,7 @@ function Get-TargetResource
             -ErrorAction SilentlyContinue | Where-Object `
             -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windows10CompliancePolicy' -and `
                 $_.displayName -eq $($DisplayName) }
-        if(([array]$devicePolicy).count -gt 1)
+        if (([array]$devicePolicy).count -gt 1)
         {
             throw "A policy with a duplicated displayName {'$DisplayName'} was found - Ensure displayName is unique"
         }
@@ -231,7 +231,7 @@ function Get-TargetResource
             {
                 $myValidOperatingSystemBuildRanges.Add('Description', $currentValidOperatingSystemBuildRanges.description)
             }
-            if ($myValidOperatingSystemBuildRanges.values.Where({$null -ne $_}).Count -gt 0)
+            if ($myValidOperatingSystemBuildRanges.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexValidOperatingSystemBuildRanges += $myValidOperatingSystemBuildRanges
             }
@@ -284,12 +284,12 @@ function Get-TargetResource
         }
 
         $returnAssignments = @()
-        $graphAssignments = Get-MgBetaDeviceManagementDeviceCompliancePolicyAssignment -DeviceCompliancePolicyId  $devicePolicy.Id
+        $graphAssignments = Get-MgBetaDeviceManagementDeviceCompliancePolicyAssignment -DeviceCompliancePolicyId $devicePolicy.Id
         if ($graphAssignments.Count -gt 0)
         {
             $returnAssignments += ConvertFrom-IntunePolicyAssignment `
-                                -IncludeDeviceFilter:$true `
-                                -Assignments ($graphAssignments)
+                -IncludeDeviceFilter:$true `
+                -Assignments ($graphAssignments)
         }
         $results.Add('Assignments', $returnAssignments)
 
@@ -991,7 +991,7 @@ function Export-TargetResource
     catch
     {
         if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
-        $_.Exception -like "*Request not applicable to target tenant*")
+                $_.Exception -like '*Request not applicable to target tenant*')
         {
             Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }

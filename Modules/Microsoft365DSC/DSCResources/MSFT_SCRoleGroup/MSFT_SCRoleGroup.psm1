@@ -83,7 +83,7 @@ function Get-TargetResource
     {
         if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
         {
-            $RoleGroup = $Script:exportedInstances | Where-Object -FilterScript {$_.Name -eq $Name}
+            $RoleGroup = $Script:exportedInstances | Where-Object -FilterScript { $_.Name -eq $Name }
         }
         else
         {
@@ -102,7 +102,7 @@ function Get-TargetResource
                 Name                  = $RoleGroup.Name
                 DisplayName           = $RoleGroup.DisplayName
                 Description           = $RoleGroup.Description
-                Roles                 = $RoleGroup.Roles -replace "^.*\/(?=[^\/]*$)"
+                Roles                 = $RoleGroup.Roles -replace '^.*\/(?=[^\/]*$)'
                 Ensure                = 'Present'
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
@@ -221,7 +221,8 @@ function Set-TargetResource
     {
         $NewRoleGroupParams.Add('DisplayName', $Name)
     }
-    else {
+    else
+    {
         $NewRoleGroupParams.Add('DisplayName', $DisplayName)
     }
     # Remove Description Parameter if null or Empty as the creation fails with $null parameter
@@ -236,7 +237,7 @@ function Set-TargetResource
         # Create Role Group
         if ($Members.Length -gt 0)
         {
-            $NewRoleGroupParams.Add("Members", $Members)
+            $NewRoleGroupParams.Add('Members', $Members)
         }
         New-RoleGroup @NewRoleGroupParams
     }

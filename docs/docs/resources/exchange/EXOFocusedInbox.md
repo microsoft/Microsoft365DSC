@@ -16,8 +16,6 @@
 | **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
 
-# EXOFocusedInbox 
-
 ## Description
 Manage the Focused Inbox configuration for mailboxes in your organization.
 

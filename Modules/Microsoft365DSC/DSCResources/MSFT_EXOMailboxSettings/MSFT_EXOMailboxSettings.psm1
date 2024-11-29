@@ -103,7 +103,7 @@ function Get-TargetResource
     try
     {
         $mailboxSettings = Get-MailboxRegionalConfiguration -Identity $DisplayName -ErrorAction Stop
-        $mailboxInfo     = Get-Mailbox  -Identity $DisplayName -ErrorAction Stop
+        $mailboxInfo = Get-Mailbox -Identity $DisplayName -ErrorAction Stop
     }
     catch
     {
@@ -124,7 +124,7 @@ function Get-TargetResource
         AddressBookPolicy     = $mailboxInfo.AddressBookPolicy
         RoleAssignmentPolicy  = $mailboxInfo.RoleAssignmentPolicy
         SharingPolicy         = $mailboxInfo.SharingPolicy
-        Ensure                = "Present"
+        Ensure                = 'Present'
         Credential            = $Credential
         ApplicationId         = $ApplicationId
         CertificateThumbprint = $CertificateThumbprint
@@ -355,9 +355,9 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
-            -Source $($MyInvocation.MyCommand.Source) `
-            -DesiredValues $PSBoundParameters `
-            -ValuesToCheck $ValuesToCheck.Keys
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $testResult"
 
@@ -435,7 +435,7 @@ function Export-TargetResource
     {
         $DisplayNameValue = $mailbox.Name
 
-        if ([System.Guid]::TryParse($mailbox.Identity,[System.Management.Automation.PSReference]$ObjectGuid))
+        if ([System.Guid]::TryParse($mailbox.Identity, [System.Management.Automation.PSReference]$ObjectGuid))
         {
             try
             {

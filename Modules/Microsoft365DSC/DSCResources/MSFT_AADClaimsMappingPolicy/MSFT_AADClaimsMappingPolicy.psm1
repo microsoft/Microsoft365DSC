@@ -83,7 +83,7 @@ function Get-TargetResource
 
         $getValue = $null
         #region resource generator code
-        $getValue = Get-MgBetaPolicyClaimMappingPolicy -ClaimsMappingPolicyId $Id  -ErrorAction SilentlyContinue
+        $getValue = Get-MgBetaPolicyClaimMappingPolicy -ClaimsMappingPolicyId $Id -ErrorAction SilentlyContinue
 
         if ($null -eq $getValue)
         {
@@ -95,8 +95,8 @@ function Get-TargetResource
                     -Filter "DisplayName eq '$DisplayName'" `
                     -ErrorAction SilentlyContinue | Where-Object `
                     -FilterScript {
-                        $_.AdditionalProperties.'@odata.type' -eq "#microsoft.graph.ClaimsMappingPolicy"
-                    }
+                    $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.ClaimsMappingPolicy'
+                }
             }
         }
         #endregion
@@ -109,15 +109,15 @@ function Get-TargetResource
         Write-Verbose -Message "An Azure AD Claims Mapping Policy with Id {$Id} and DisplayName {$DisplayName} was found"
 
         $complexDefinition = @()
-        foreach($getDefinitionJson in $getValue.Definition)
+        foreach ($getDefinitionJson in $getValue.Definition)
         {
             $getDefinition = ($getDefinitionJson | ConvertFrom-Json)
             $ClaimsSchema = @()
             foreach ($claimschema in $getDefinition.ClaimsMappingPolicy.ClaimsSchema)
             {
                 $ClaimsSchema += @{
-                    Source = $claimschema.Source
-                    Id = $claimschema.Id
+                    Source        = $claimschema.Source
+                    Id            = $claimschema.Id
                     SamlClaimType = $claimschema.SamlClaimType
                 }
             }
@@ -129,8 +129,8 @@ function Get-TargetResource
                 foreach ($inputparam in $claimtransformation.InputParameters)
                 {
                     $inputparams += @{
-                        Value = $inputparam.Value
-                        Id = $inputparam.Id
+                        Value    = $inputparam.Value
+                        Id       = $inputparam.Id
                         DataType = $inputparam.DataType
                     }
                 }
@@ -139,23 +139,23 @@ function Get-TargetResource
                 foreach ($outclaim in $claimtransformation.OutputClaims)
                 {
                     $outputClaimsObj += @{
-                        ClaimTypeReferenceId = $outclaim.ClaimTypeReferenceId
+                        ClaimTypeReferenceId    = $outclaim.ClaimTypeReferenceId
                         TransformationClaimType = $outclaim.TransformationClaimType
                     }
                 }
                 $ClaimsTransformation += @{
-                    Id = $claimtransformation.Id
+                    Id                   = $claimtransformation.Id
                     TransformationMethod = $claimtransformation.TransformationMethod
-                    InputParameters = $inputparams
-                    OutputClaims = $outputClaimsObj
+                    InputParameters      = $inputparams
+                    OutputClaims         = $outputClaimsObj
                 }
             }
 
             $complexDefinition += @{
                 ClaimsMappingPolicy = @{
-                    Version = $getDefinition.ClaimsMappingPolicy.Version
+                    Version              = $getDefinition.ClaimsMappingPolicy.Version
                     IncludeBasicClaimSet = [bool]$getDefinition.ClaimsMappingPolicy.IncludeBasicClaimSet
-                    ClaimsSchema = $ClaimsSchema
+                    ClaimsSchema         = $ClaimsSchema
                     ClaimsTransformation = $ClaimsTransformation
                 }
             }
@@ -540,16 +540,16 @@ function Export-TargetResource
             }
             Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{
-                Id = $config.Id
-                DisplayName           =  $config.DisplayName
-                Ensure = 'Present'
-                Credential = $Credential
-                ApplicationId = $ApplicationId
-                TenantId = $TenantId
-                ApplicationSecret = $ApplicationSecret
+                Id                    = $config.Id
+                DisplayName           = $config.DisplayName
+                Ensure                = 'Present'
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
-                ManagedIdentity = $ManagedIdentity.IsPresent
-                AccessTokens = $AccessTokens
+                ManagedIdentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
             }
 
             $Results = Get-TargetResource @Params
@@ -560,29 +560,29 @@ function Export-TargetResource
             {
                 $complexMapping = @(
                     @{
-                        Name = 'ClaimsMappingPolicy'
+                        Name            = 'ClaimsMappingPolicy'
                         CimInstanceName = 'MSFT_AADClaimsMappingPolicyDefinitionMappingPolicy'
-                        IsRequired = $False
+                        IsRequired      = $False
                     },
                     @{
-                        Name = 'ClaimsSchema'
+                        Name            = 'ClaimsSchema'
                         CimInstanceName = 'AADClaimsMappingPolicyDefinitionMappingPolicyClaimsSchema'
-                        IsRequired = $False
+                        IsRequired      = $False
                     },
                     @{
-                        Name = 'ClaimsTransformation'
+                        Name            = 'ClaimsTransformation'
                         CimInstanceName = 'AADClaimsMappingPolicyDefinitionMappingPolicyClaimsTransformation'
-                        IsRequired = $False
+                        IsRequired      = $False
                     },
                     @{
-                        Name = 'InputParameters'
+                        Name            = 'InputParameters'
                         CimInstanceName = 'AADClaimsMappingPolicyDefinitionMappingPolicyClaimsTransformationInputParameter'
-                        IsRequired = $False
+                        IsRequired      = $False
                     },
                     @{
-                        Name = 'OutputClaims'
+                        Name            = 'OutputClaims'
                         CimInstanceName = 'AADClaimsMappingPolicyDefinitionMappingPolicyClaimsTransformationOutputClaims'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                 )
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `

@@ -138,13 +138,13 @@ function Get-TargetResource
     {
         if (-not [System.String]::IsNullOrEmpty($Id))
         {
-            Write-Verbose -Message "Trying to retrieve profile by Id"
+            Write-Verbose -Message 'Trying to retrieve profile by Id'
             $androidDeviceOwnerEnrollmentProfile = Get-MgBetaDeviceManagementAndroidDeviceOwnerEnrollmentProfile `
                 -AndroidDeviceOwnerEnrollmentProfileId $Id
         }
         if ($null -eq $androidDeviceOwnerEnrollmentProfile)
         {
-            Write-Verbose -Message "Trying to retrieve profile by DisplayName"
+            Write-Verbose -Message 'Trying to retrieve profile by DisplayName'
             $androidDeviceOwnerEnrollmentProfile = Get-MgBetaDeviceManagementAndroidDeviceOwnerEnrollmentProfile `
                 -All `
                 -Filter "displayName eq '$DisplayName'" `
@@ -498,12 +498,12 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
 
     $TestResult = Test-M365DSCParameterState `
-            -CurrentValues $CurrentValues `
-            -Source $($MyInvocation.MyCommand.Source) `
-            -DesiredValues $PSBoundParameters `
-            -ValuesToCheck $ValuesToCheck.Keys
+        -CurrentValues $CurrentValues `
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck $ValuesToCheck.Keys
 
-            Write-Verbose -Message "Test-TargetResource returned $TestResult"
+    Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
     return $TestResult
 }

@@ -250,33 +250,33 @@ function Get-TargetResource
     {
         $PPTenantSettings = Get-TenantSettings -ErrorAction Stop
         return @{
-            IsSingleInstance                               = 'Yes'
+            IsSingleInstance                                   = 'Yes'
 
             # search
-            DisableDocsSearch                              = $PPTenantSettings.powerPlatform.search.disableDocsSearch
-            DisableCommunitySearch                         = $PPTenantSettings.powerPlatform.search.disableCommunitySearch
-            DisableBingVideoSearch                         = $PPTenantSettings.powerPlatform.search.disableBingVideoSearch
+            DisableDocsSearch                                  = $PPTenantSettings.powerPlatform.search.disableDocsSearch
+            DisableCommunitySearch                             = $PPTenantSettings.powerPlatform.search.disableCommunitySearch
+            DisableBingVideoSearch                             = $PPTenantSettings.powerPlatform.search.disableBingVideoSearch
 
             #teamsIntegration
-            ShareWithColleaguesUserLimit                   = $PPTenantSettings.powerPlatform.teamsIntegration.shareWithColleaguesUserLimit
+            ShareWithColleaguesUserLimit                       = $PPTenantSettings.powerPlatform.teamsIntegration.shareWithColleaguesUserLimit
 
             #powerApps
-            DisableShareWithEveryone                       = $PPTenantSettings.powerPlatform.powerApps.disableShareWithEveryone
-            EnableGuestsToMake                             = $PPTenantSettings.powerPlatform.powerApps.enableGuestsToMake
-            DisableMakerMatch                              = $PPTenantSettings.powerPlatform.powerApps.disableMakerMatch
-            DisableUnusedLicenseAssignment                 = $PPTenantSettings.powerPlatform.powerApps.disableUnusedLicenseAssignment
-            DisableCreateFromImage                         = $PPTenantSettings.powerPlatform.powerApps.disableCreateFromImage
-            DisableCreateFromFigma                         = $PPTenantSettings.powerPlatform.powerApps.disableCreateFromFigma
-            EnableCanvasAppInsights                        = $PPTenantSettings.powerPlatform.powerApps.enableCanvasAppInsights
-            DisableConnectionSharingWithEveryone           = $PPTenantSettings.powerPlatform.powerApps.disableConnectionSharingWithEveryone
-            AllowNewOrgChannelDefault                      = $PPTenantSettings.powerPlatform.powerApps.allowNewOrgChannelDefault
-            DisableCopilot                                 = $PPTenantSettings.powerPlatform.powerApps.disableCopilot
+            DisableShareWithEveryone                           = $PPTenantSettings.powerPlatform.powerApps.disableShareWithEveryone
+            EnableGuestsToMake                                 = $PPTenantSettings.powerPlatform.powerApps.enableGuestsToMake
+            DisableMakerMatch                                  = $PPTenantSettings.powerPlatform.powerApps.disableMakerMatch
+            DisableUnusedLicenseAssignment                     = $PPTenantSettings.powerPlatform.powerApps.disableUnusedLicenseAssignment
+            DisableCreateFromImage                             = $PPTenantSettings.powerPlatform.powerApps.disableCreateFromImage
+            DisableCreateFromFigma                             = $PPTenantSettings.powerPlatform.powerApps.disableCreateFromFigma
+            EnableCanvasAppInsights                            = $PPTenantSettings.powerPlatform.powerApps.enableCanvasAppInsights
+            DisableConnectionSharingWithEveryone               = $PPTenantSettings.powerPlatform.powerApps.disableConnectionSharingWithEveryone
+            AllowNewOrgChannelDefault                          = $PPTenantSettings.powerPlatform.powerApps.allowNewOrgChannelDefault
+            DisableCopilot                                     = $PPTenantSettings.powerPlatform.powerApps.disableCopilot
 
             #powerAutomate
-            DisableCopilotWithBing                         = $PPTenantSettings.powerPlatform.powerAutomate.disableCopilotWithBing
+            DisableCopilotWithBing                             = $PPTenantSettings.powerPlatform.powerAutomate.disableCopilotWithBing
 
             #environments
-            DisablePreferredDataLocationForTeamsEnvironment = $PPTenantSettings.powerPlatform.environments.disablePreferredDataLocationForTeamsEnvironment
+            DisablePreferredDataLocationForTeamsEnvironment    = $PPTenantSettings.powerPlatform.environments.disablePreferredDataLocationForTeamsEnvironment
 
             #governance
             DisableAdminDigest                                 = $PPTenantSettings.powerPlatform.governance.disableAdminDigest
@@ -286,57 +286,57 @@ function Get-TargetResource
             EnvironmentRoutingAllMakers                        = $PPTenantSettings.powerPlatform.governance.environmentRoutingAllMakers
 
             #licensing
-            DisableBillingPolicyCreationByNonAdminUsers     = $PPTenantSettings.powerPlatform.licensing.disableBillingPolicyCreationByNonAdminUsers
-            EnableTenantCapacityReportForEnvironmentAdmins  = $PPTenantSettings.powerPlatform.licensing.enableTenantCapacityReportForEnvironmentAdmins
-            StorageCapacityConsumptionWarningThreshold      = $PPTenantSettings.powerPlatform.licensing.storageCapacityConsumptionWarningThreshold
-            EnableTenantLicensingReportForEnvironmentAdmins = $PPTenantSettings.powerPlatform.licensing.enableTenantLicensingReportForEnvironmentAdmins
-            DisableUseOfUnassignedAIBuilderCredits          = $PPTenantSettings.powerPlatform.licensing.disableUseOfUnassignedAIBuilderCredits
+            DisableBillingPolicyCreationByNonAdminUsers        = $PPTenantSettings.powerPlatform.licensing.disableBillingPolicyCreationByNonAdminUsers
+            EnableTenantCapacityReportForEnvironmentAdmins     = $PPTenantSettings.powerPlatform.licensing.enableTenantCapacityReportForEnvironmentAdmins
+            StorageCapacityConsumptionWarningThreshold         = $PPTenantSettings.powerPlatform.licensing.storageCapacityConsumptionWarningThreshold
+            EnableTenantLicensingReportForEnvironmentAdmins    = $PPTenantSettings.powerPlatform.licensing.enableTenantLicensingReportForEnvironmentAdmins
+            DisableUseOfUnassignedAIBuilderCredits             = $PPTenantSettings.powerPlatform.licensing.disableUseOfUnassignedAIBuilderCredits
 
             #powerPages
-            EnableGenerativeAIFeaturesForSiteUsers            = $PPTenantSettings.powerPlatform.powerPages.enableGenerativeAIFeaturesForSiteUsers
-            EnableExternalAuthenticationProvidersInPowerPages = $PPTenantSettings.powerPlatform.powerPages.enableExternalAuthenticationProvidersInPowerPages
+            EnableGenerativeAIFeaturesForSiteUsers             = $PPTenantSettings.powerPlatform.powerPages.enableGenerativeAIFeaturesForSiteUsers
+            EnableExternalAuthenticationProvidersInPowerPages  = $PPTenantSettings.powerPlatform.powerPages.enableExternalAuthenticationProvidersInPowerPages
 
             #champions
-            DisableChampionsInvitationReachout   = $PPTenantSettings.powerPlatform.champions.disableChampionsInvitationReachout
-            DisableSkillsMatchInvitationReachout = $PPTenantSettings.powerPlatform.champions.disableSkillsMatchInvitationReachout
+            DisableChampionsInvitationReachout                 = $PPTenantSettings.powerPlatform.champions.disableChampionsInvitationReachout
+            DisableSkillsMatchInvitationReachout               = $PPTenantSettings.powerPlatform.champions.disableSkillsMatchInvitationReachout
 
             #intelligence
-            DisableCopilotFeedback                         = $PPTenantSettings.powerPlatforms.intelligence.disableCopilotFeedback
-            EnableOpenAiBotPublishing                      = $PPTenantSettings.powerPlatforms.intelligence.enableOpenAiBotPublishing
-            DisableCopilotFeedbackMetadata                 = $PPTenantSettings.powerPlatforms.intelligence.disableCopilotFeedbackMetadata
-            DisableAiPrompts                               = $PPTenantSettings.powerPlatforms.intelligence.disableAiPrompts
+            DisableCopilotFeedback                             = $PPTenantSettings.powerPlatforms.intelligence.disableCopilotFeedback
+            EnableOpenAiBotPublishing                          = $PPTenantSettings.powerPlatforms.intelligence.enableOpenAiBotPublishing
+            DisableCopilotFeedbackMetadata                     = $PPTenantSettings.powerPlatforms.intelligence.disableCopilotFeedbackMetadata
+            DisableAiPrompts                                   = $PPTenantSettings.powerPlatforms.intelligence.disableAiPrompts
 
             #modelExperimentation
-            EnableModelDataSharing                         = $PPTenantSettings.powerPlatforms.modelExperimentation.enableModelDataSharing
-            DisableDataLogging                             = $PPTenantSettings.powerPlatforms.modelExperimentation.disableDataLogging
+            EnableModelDataSharing                             = $PPTenantSettings.powerPlatforms.modelExperimentation.enableModelDataSharing
+            DisableDataLogging                                 = $PPTenantSettings.powerPlatforms.modelExperimentation.disableDataLogging
 
             #catalogSettings
-            PowerCatalogAudienceSetting                    = $PPTenantSettings.powerPlatforms.catalogSettings.powerCatalogAudienceSetting
+            PowerCatalogAudienceSetting                        = $PPTenantSettings.powerPlatforms.catalogSettings.powerCatalogAudienceSetting
 
             #userManagementSettings
-            EnableDeleteDisabledUserinAllEnvironments      = $PPTenantSettings.powerPlatforms.userManagementSettings.enableDeleteDisabledUserinAllEnvironments
+            EnableDeleteDisabledUserinAllEnvironments          = $PPTenantSettings.powerPlatforms.userManagementSettings.enableDeleteDisabledUserinAllEnvironments
 
             #helpSupportSettings
-            DisableHelpSupportCopilot                      = $PPTenantSettings.powerPlatforms.helpSupportSettings.disableHelpSupportCopilot
-            UseSupportBingSearchByAllUsers                 = $PPTenantSettings.powerPlatforms.helpSupportSettings.useSupportBingSearchByAllUsers
+            DisableHelpSupportCopilot                          = $PPTenantSettings.powerPlatforms.helpSupportSettings.disableHelpSupportCopilot
+            UseSupportBingSearchByAllUsers                     = $PPTenantSettings.powerPlatforms.helpSupportSettings.useSupportBingSearchByAllUsers
 
             #Main
-            WalkMeOptOut                                   = $PPTenantSettings.walkMeOptOut
-            DisableNPSCommentsReachout                     = $PPTenantSettings.disableNPSCommentsReachout
-            DisableNewsletterSendout                       = $PPTenantSettings.disableNewsletterSendout
-            DisableEnvironmentCreationByNonAdminUsers      = $PPTenantSettings.disableEnvironmentCreationByNonAdminUsers
-            DisablePortalsCreationByNonAdminUsers          = $PPTenantSettings.disablePortalsCreationByNonAdminUsers
-            DisableSurveyFeedback                          = $PPTenantSettings.disableSurveyFeedback
-            DisableSurveyScreenshots                       = $PPTenantSettings.disableSurveyScreenshots
-            DisableTrialEnvironmentCreationByNonAdminUsers = $PPTenantSettings.disableTrialEnvironmentCreationByNonAdminUsers
-            DisableCapacityAllocationByEnvironmentAdmins   = $PPTenantSettings.disableCapacityAllocationByEnvironmentAdmins
-            DisableSupportTicketsVisibleByAllUsers         = $PPTenantSettings.disableSupportTicketsVisibleByAllUsers
+            WalkMeOptOut                                       = $PPTenantSettings.walkMeOptOut
+            DisableNPSCommentsReachout                         = $PPTenantSettings.disableNPSCommentsReachout
+            DisableNewsletterSendout                           = $PPTenantSettings.disableNewsletterSendout
+            DisableEnvironmentCreationByNonAdminUsers          = $PPTenantSettings.disableEnvironmentCreationByNonAdminUsers
+            DisablePortalsCreationByNonAdminUsers              = $PPTenantSettings.disablePortalsCreationByNonAdminUsers
+            DisableSurveyFeedback                              = $PPTenantSettings.disableSurveyFeedback
+            DisableSurveyScreenshots                           = $PPTenantSettings.disableSurveyScreenshots
+            DisableTrialEnvironmentCreationByNonAdminUsers     = $PPTenantSettings.disableTrialEnvironmentCreationByNonAdminUsers
+            DisableCapacityAllocationByEnvironmentAdmins       = $PPTenantSettings.disableCapacityAllocationByEnvironmentAdmins
+            DisableSupportTicketsVisibleByAllUsers             = $PPTenantSettings.disableSupportTicketsVisibleByAllUsers
 
-            Credential                                     = $Credential
-            ApplicationId                                  = $ApplicationId
-            TenantId                                       = $TenantId
-            CertificateThumbprint                          = $CertificateThumbprint
-            ApplicationSecret                              = $ApplicationSecret
+            Credential                                         = $Credential
+            ApplicationId                                      = $ApplicationId
+            TenantId                                           = $TenantId
+            CertificateThumbprint                              = $CertificateThumbprint
+            ApplicationSecret                                  = $ApplicationSecret
         }
     }
     catch
@@ -904,7 +904,7 @@ function Export-TargetResource
 
         if ($settings.StatusCode -eq 403)
         {
-            throw "Invalid permission for the application. If you are using a custom app registration to authenticate, make sure it is defined as a Power Platform admin management application. For additional information refer to https://learn.microsoft.com/en-us/power-platform/admin/powershell-create-service-principal#registering-an-admin-management-application"
+            throw 'Invalid permission for the application. If you are using a custom app registration to authenticate, make sure it is defined as a Power Platform admin management application. For additional information refer to https://learn.microsoft.com/en-us/power-platform/admin/powershell-create-service-principal#registering-an-admin-management-application'
         }
         $dscContent = ''
 
@@ -983,15 +983,15 @@ function Get-M365DSCPowerPlatformTenantSettings
         disableCapacityAllocationByEnvironmentAdmins   = $Parameters.DisableCapacityAllocationByEnvironmentAdmins
         disableSupportTicketsVisibleByAllUsers         = $Parameters.DisableSupportTicketsVisibleByAllUsers
         powerPlatform                                  = @{
-            search           = @{
+            search                 = @{
                 disableDocsSearch      = $Parameters.DisableDocsSearch
                 disableCommunitySearch = $Parameters.DisableCommunitySearch
                 disableBingVideoSearch = $Parameters.DisableBingVideoSearch
             }
-            teams = @{
+            teams                  = @{
                 shareWithColleaguesUserLimit = $Parameters.ShareWithColleaguesUserLimit
             }
-            powerApps        = @{
+            powerApps              = @{
                 disableShareWithEveryone             = $Parameters.DisableShareWithEveryone
                 enableGuestsToMake                   = $Parameters.EnableGuestsToMake
                 disableMakerMatch                    = $Parameters.DisableMakerMatch
@@ -1003,13 +1003,13 @@ function Get-M365DSCPowerPlatformTenantSettings
                 allowNewOrgChannelDefault            = $Parameters.AllowNewOrgChannelDefault
                 disableCopilot                       = $Parameters.DisableCopilot
             }
-            environments = @{
+            environments           = @{
                 disablePreferredDataLocationForTeamsEnvironment = $Parameters.DisablePreferredDataLocationForTeamsEnvironment
             }
-            powerAutomate = @{
+            powerAutomate          = @{
                 disableCopilotWithBing = $Parameters.DisableCopilotWithBing
             }
-            governance = @{
+            governance             = @{
                 disableAdminDigest                                 = $Parameters.DisableAdminDigest
                 disableDeveloperEnvironmentCreationByNonAdminUsers = $Parameters.DisableDeveloperEnvironmentCreationByNonAdminUsers
                 enableDefaultEnvironmentRouting                    = $Parameters.EnableDefaultEnvironmentRouting
@@ -1020,43 +1020,43 @@ function Get-M365DSCPowerPlatformTenantSettings
                 )
                 environmentRoutingAllMakers                        = $Parameters.EnvironmentRoutingAllMakers
             }
-            teamsIntegration = @{
+            teamsIntegration       = @{
                 shareWithColleaguesUserLimit = $Parameters.ShareWithColleaguesUserLimit
             }
-            licensing = @{
+            licensing              = @{
                 disableBillingPolicyCreationByNonAdminUsers     = $Parameters.DisableBillingPolicyCreationByNonAdminUsers
                 enableTenantCapacityReportForEnvironmentAdmins  = $Parameters.EnableTenantCapacityReportForEnvironmentAdmins
                 storageCapacityConsumptionWarningThreshold      = $Parameters.StorageCapacityConsumptionWarningThreshold
                 enableTenantLicensingReportForEnvironmentAdmins = $Parameters.EnableTenantLicensingReportForEnvironmentAdmins
                 disableUseOfUnassignedAIBuilderCredits          = $Parameters.DisableUseOfUnassignedAIBuilderCredits
             }
-            powerPages = @{
+            powerPages             = @{
                 enableGenerativeAIFeaturesForSiteUsers            = $Parameters.EnableGenerativeAIFeaturesForSiteUsers
                 enableExternalAuthenticationProvidersInPowerPages = $Parameters.EnableExternalAuthenticationProvidersInPowerPages
             }
-            champions = @{
+            champions              = @{
                 disableChampionsInvitationReachout   = $Parameters.DisableChampionsInvitationReachout
                 disableSkillsMatchInvitationReachout = $Parameters.DisableSkillsMatchInvitationReachout
             }
-            intelligence = @{
-                disableCopilotFeedback                         = $Parameters.disableCopilotFeedback
-                enableOpenAiBotPublishing                      = $Parameters.enableOpenAiBotPublishing
-                disableCopilotFeedbackMetadata                 = $Parameters.disableCopilotFeedbackMetadata
-                disableAiPrompts                               = $Parameters.disableAiPrompts
+            intelligence           = @{
+                disableCopilotFeedback         = $Parameters.disableCopilotFeedback
+                enableOpenAiBotPublishing      = $Parameters.enableOpenAiBotPublishing
+                disableCopilotFeedbackMetadata = $Parameters.disableCopilotFeedbackMetadata
+                disableAiPrompts               = $Parameters.disableAiPrompts
             }
-            modelExperimentation = @{
-                enableModelDataSharing                         = $Parameters.enableModelDataSharing
-                disableDataLogging                             = $Parameters.disableDataLogging
+            modelExperimentation   = @{
+                enableModelDataSharing = $Parameters.enableModelDataSharing
+                disableDataLogging     = $Parameters.disableDataLogging
             }
-            catalogSettings = @{
-                powerCatalogAudienceSetting                    = $Parameters.powerCatalogAudienceSetting
+            catalogSettings        = @{
+                powerCatalogAudienceSetting = $Parameters.powerCatalogAudienceSetting
             }
             userManagementSettings = @{
-                enableDeleteDisabledUserinAllEnvironments      = $Parameters.enableDeleteDisabledUserinAllEnvironments
+                enableDeleteDisabledUserinAllEnvironments = $Parameters.enableDeleteDisabledUserinAllEnvironments
             }
-            helpSupportSettings = @{
-                disableHelpSupportCopilot                      = $Parameters.disableHelpSupportCopilot
-                useSupportBingSearchByAllUsers                 = $Parameters.useSupportBingSearchByAllUsers
+            helpSupportSettings    = @{
+                disableHelpSupportCopilot      = $Parameters.disableHelpSupportCopilot
+                useSupportBingSearchByAllUsers = $Parameters.useSupportBingSearchByAllUsers
             }
         }
     }

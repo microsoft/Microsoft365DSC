@@ -340,8 +340,8 @@ function Get-TargetResource
         if ($null -eq $getValue)
         {
             $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -All -Filter "DisplayName eq '$Displayname'" -ErrorAction SilentlyContinue | Where-Object `
-            -FilterScript { `
-                $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.macOSGeneralDeviceConfiguration' `
+                -FilterScript { `
+                    $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.macOSGeneralDeviceConfiguration' `
             }
 
         }
@@ -440,8 +440,8 @@ function Get-TargetResource
         if ($assignmentsValues.Count -gt 0)
         {
             $assignmentResult += ConvertFrom-IntunePolicyAssignment `
-                                -IncludeDeviceFilter:$true `
-                                -Assignments ($assignmentsValues)
+                -IncludeDeviceFilter:$true `
+                -Assignments ($assignmentsValues)
         }
         $results.Add('Assignments', $assignmentResult)
 
@@ -810,7 +810,7 @@ function Set-TargetResource
         {
             $CreateParameters.add('AdditionalProperties', $AdditionalProperties)
         }#>
-        $CreateParameters.Add('@odata.type','#microsoft.graph.macOSGeneralDeviceConfiguration')
+        $CreateParameters.Add('@odata.type', '#microsoft.graph.macOSGeneralDeviceConfiguration')
 
         #region resource generator code
         $policy = New-MgBetaDeviceManagementDeviceConfiguration -BodyParameter $CreateParameters
@@ -818,7 +818,7 @@ function Set-TargetResource
 
         if ($policy.id)
         {
-            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId  $policy.id `
+            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $policy.id `
                 -Targets $assignmentsHash `
                 -Repository 'deviceManagement/deviceConfigurations'
         }
@@ -857,7 +857,7 @@ function Set-TargetResource
         {
             $UpdateParameters.add('AdditionalProperties', $AdditionalProperties)
         }#>
-        $UpdateParameters.add('@odata.type','#microsoft.graph.macOSGeneralDeviceConfiguration')
+        $UpdateParameters.add('@odata.type', '#microsoft.graph.macOSGeneralDeviceConfiguration')
         #$UpdateParameters.remove('emailInDomainSuffixes')
         #$UpdateParameters.remove('updateDelayPolicy')
 
@@ -1313,7 +1313,7 @@ function Export-TargetResource
         [array]$getValue = Get-MgBetaDeviceManagementDeviceConfiguration -Filter $Filter -All `
             -ErrorAction Stop | Where-Object `
             -FilterScript { `
-                $_.AdditionalProperties.'@odata.type' -like "#microsoft.graph.macOS*"  `
+                $_.AdditionalProperties.'@odata.type' -like '#microsoft.graph.macOS*'  `
         }
         #endregion
 
@@ -1436,7 +1436,7 @@ function Export-TargetResource
     catch
     {
         if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
-        $_.Exception -like "*Request not applicable to target tenant*")
+                $_.Exception -like '*Request not applicable to target tenant*')
         {
             Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }

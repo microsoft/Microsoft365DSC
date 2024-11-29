@@ -168,7 +168,7 @@ function Get-TargetResource
         }
         if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
         {
-            $AddressLists = $Script:exportedInstances | Where-Object -FilterScript {$_.Name -eq $Name}
+            $AddressLists = $Script:exportedInstances | Where-Object -FilterScript { $_.Name -eq $Name }
         }
         else
         {

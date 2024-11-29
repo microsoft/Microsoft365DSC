@@ -223,7 +223,7 @@ function Get-TargetResource
 
         $getValue = $null
         #region resource generator code
-        $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -DeviceConfigurationId $Id  -ErrorAction SilentlyContinue
+        $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -DeviceConfigurationId $Id -ErrorAction SilentlyContinue
 
         if ($null -eq $getValue)
         {
@@ -419,9 +419,9 @@ function Get-TargetResource
         }
 
         $rawAssignments = @()
-        $rawAssignments =  Get-MgBetaDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId $Id -All
+        $rawAssignments = Get-MgBetaDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId $Id -All
         $assignmentResult = @()
-        if($null -ne $rawAssignments -and $rawAssignments.count -gt 0)
+        if ($null -ne $rawAssignments -and $rawAssignments.count -gt 0)
         {
             $assignmentResult += ConvertFrom-IntunePolicyAssignment -Assignments $rawAssignments
         }
@@ -684,12 +684,12 @@ function Set-TargetResource
             }
         }
         #region resource generator code
-        $CreateParameters.Add("@odata.type", "#microsoft.graph.windowsUpdateForBusinessConfiguration")
+        $CreateParameters.Add('@odata.type', '#microsoft.graph.windowsUpdateForBusinessConfiguration')
         $policy = New-MgBetaDeviceManagementDeviceConfiguration -BodyParameter $CreateParameters
         #endregion
         #region new Intune assignment management
         $intuneAssignments = @()
-        if($null -ne $Assignments -and $Assignments.count -gt 0)
+        if ($null -ne $Assignments -and $Assignments.count -gt 0)
         {
             $intuneAssignments += ConvertTo-IntunePolicyAssignment -Assignments $Assignments
         }
@@ -720,7 +720,7 @@ function Set-TargetResource
             }
         }
         #region resource generator code
-        $UpdateParameters.Add("@odata.type", "#microsoft.graph.windowsUpdateForBusinessConfiguration")
+        $UpdateParameters.Add('@odata.type', '#microsoft.graph.windowsUpdateForBusinessConfiguration')
         Update-MgBetaDeviceManagementDeviceConfiguration  `
             -DeviceConfigurationId $currentInstance.id `
             -BodyParameter $UpdateParameters
@@ -730,13 +730,13 @@ function Set-TargetResource
         $currentAssignments += Get-MgBetaDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId $currentInstance.id
 
         $intuneAssignments = @()
-        if($null -ne $Assignments -and $Assignments.count -gt 0)
+        if ($null -ne $Assignments -and $Assignments.count -gt 0)
         {
             $intuneAssignments += ConvertTo-IntunePolicyAssignment -Assignments $Assignments
         }
         foreach ($assignment in $intuneAssignments)
         {
-            if ( $null -eq ($currentAssignments | Where-Object { $_.Target.AdditionalProperties.groupId -eq $assignment.Target.groupId -and $_.Target.AdditionalProperties."@odata.type" -eq $assignment.Target.'@odata.type' }))
+            if ( $null -eq ($currentAssignments | Where-Object { $_.Target.AdditionalProperties.groupId -eq $assignment.Target.groupId -and $_.Target.AdditionalProperties.'@odata.type' -eq $assignment.Target.'@odata.type' }))
             {
                 New-MgBetaDeviceManagementDeviceConfigurationAssignment `
                     -DeviceConfigurationId $currentInstance.id `
@@ -744,10 +744,10 @@ function Set-TargetResource
             }
             else
             {
-                $currentAssignments = $currentAssignments | Where-Object { -not($_.Target.AdditionalProperties.groupId -eq $assignment.Target.groupId -and $_.Target.AdditionalProperties."@odata.type" -eq $assignment.Target.'@odata.type') }
+                $currentAssignments = $currentAssignments | Where-Object { -not($_.Target.AdditionalProperties.groupId -eq $assignment.Target.groupId -and $_.Target.AdditionalProperties.'@odata.type' -eq $assignment.Target.'@odata.type') }
             }
         }
-        if($currentAssignments.count -gt 0)
+        if ($currentAssignments.count -gt 0)
         {
             foreach ($assignment in $currentAssignments)
             {
@@ -1004,7 +1004,10 @@ function Test-TargetResource
                 -Source ($source) `
                 -Target ($target)
 
-            if (-Not $testResult) { break }
+            if (-Not $testResult)
+            {
+                break
+            }
 
             $ValuesToCheck.Remove($key) | Out-Null
         }
@@ -1185,7 +1188,7 @@ function Export-TargetResource
     catch
     {
         if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
-        $_.Exception -like "*Request not applicable to target tenant*")
+                $_.Exception -like '*Request not applicable to target tenant*')
         {
             Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }

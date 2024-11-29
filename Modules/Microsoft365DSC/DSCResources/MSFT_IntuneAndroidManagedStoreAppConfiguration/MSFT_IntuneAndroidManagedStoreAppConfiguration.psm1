@@ -105,20 +105,23 @@
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
-    #endregion   
+    #endregion
 
     $nullResult = $PSBoundParameters
     $nullResult.Ensure = 'Absent'
     try
     {
-        if (-not [string]::IsNullOrWhiteSpace($id)){ $getValue = Get-MgBetaDeviceAppManagementMobileAppConfiguration -ManagedDeviceMobileAppConfigurationId $id -ErrorAction SilentlyContinue }
-        
+        if (-not [string]::IsNullOrWhiteSpace($id))
+        {
+            $getValue = Get-MgBetaDeviceAppManagementMobileAppConfiguration -ManagedDeviceMobileAppConfigurationId $id -ErrorAction SilentlyContinue
+        }
+
         #region resource generator code
         if ($null -eq $getValue)
         {
             $getValue = Get-MgBetaDeviceAppManagementMobileAppConfiguration -Filter "DisplayName eq '$Displayname'" -ErrorAction SilentlyContinue | Where-Object `
-            -FilterScript { `
-                $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidManagedStoreAppConfiguration' `
+                -FilterScript { `
+                    $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidManagedStoreAppConfiguration' `
             }
         }
         #endregion
@@ -138,8 +141,8 @@
             $mySettings = @{}
             $mySettings.Add('permission', $setting['permission'])
             $mySettings.Add('action', $setting['action'])
-            
-            if ($mySettings.values.Where({$null -ne $_}).count -gt 0)
+
+            if ($mySettings.values.Where({ $null -ne $_ }).count -gt 0)
             {
                 $complexPermissionActions += $mySettings
             }
@@ -147,34 +150,34 @@
 
         $results = @{
             #region resource generator code
-            Id                             = $getValue.Id
-            Description                    = $getValue.Description
-            DisplayName                    = $getValue.DisplayName       
-            targetedMobileApps             = $getValue.TargetedMobileApps
-            packageId                      = $getValue.AdditionalProperties.packageId
-            payloadJson                    = $getValue.AdditionalProperties.payloadJson
-            appSupportsOemConfig           = $getValue.AdditionalProperties.appSupportsOemConfig
-            profileApplicability           = $getValue.AdditionalProperties.profileApplicability
-            connectedAppsEnabled           = $getValue.AdditionalProperties.connectedAppsEnabled
-            permissionActions              = $complexPermissionActions           
-            Ensure                         = 'Present'
-            Credential                     = $Credential
-            ApplicationId                  = $ApplicationId
-            TenantId                       = $TenantId
-            ApplicationSecret              = $ApplicationSecret
-            CertificateThumbprint          = $CertificateThumbprint
-            Managedidentity                = $ManagedIdentity.IsPresent
-            AccessTokens                   = $AccessTokens
-            version                        = $getValue.AdditionalProperties.version
+            Id                    = $getValue.Id
+            Description           = $getValue.Description
+            DisplayName           = $getValue.DisplayName
+            targetedMobileApps    = $getValue.TargetedMobileApps
+            packageId             = $getValue.AdditionalProperties.packageId
+            payloadJson           = $getValue.AdditionalProperties.payloadJson
+            appSupportsOemConfig  = $getValue.AdditionalProperties.appSupportsOemConfig
+            profileApplicability  = $getValue.AdditionalProperties.profileApplicability
+            connectedAppsEnabled  = $getValue.AdditionalProperties.connectedAppsEnabled
+            permissionActions     = $complexPermissionActions
+            Ensure                = 'Present'
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            ApplicationSecret     = $ApplicationSecret
+            CertificateThumbprint = $CertificateThumbprint
+            Managedidentity       = $ManagedIdentity.IsPresent
+            AccessTokens          = $AccessTokens
+            version               = $getValue.AdditionalProperties.version
         }
-                                          
+
         $assignmentsValues = Get-MgBetaDeviceAppManagementMobileAppConfigurationAssignment -ManagedDeviceMobileAppConfigurationId $Results.Id
         $assignmentResult = @()
         if ($assignmentsValues.Count -gt 0)
         {
             $assignmentResult += ConvertFrom-IntunePolicyAssignment `
-                                -IncludeDeviceFilter:$true `
-                                -Assignments ($assignmentsValues)
+                -IncludeDeviceFilter:$true `
+                -Assignments ($assignmentsValues)
         }
         $results.Add('Assignments', $assignmentResult)
 
@@ -196,7 +199,7 @@ function Set-TargetResource
 {
     [CmdletBinding()]
     param
-     (
+    (
         #region resource generator code
         [Parameter()]
         [System.String]
@@ -340,7 +343,7 @@ function Set-TargetResource
         }
 
         $CreateParameters.add('AdditionalProperties', $AdditionalProperties)
-           
+
         #region resource generator code
         $policy = New-MgBetaDeviceAppManagementMobileAppConfiguration @CreateParameters
         $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
@@ -736,13 +739,13 @@ function Export-TargetResource
             $i++
             Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
-        
+
         return $dscContent
     }
     catch
     {
         if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
-        $_.Exception -like "*Request not applicable to target tenant*")
+                $_.Exception -like '*Request not applicable to target tenant*')
         {
             Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }

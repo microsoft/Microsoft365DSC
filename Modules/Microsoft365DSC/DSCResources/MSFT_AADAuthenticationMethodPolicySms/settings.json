@@ -1,6 +1,7 @@
 {
     "resourceName": "AADAuthenticationMethodPolicySms",
-    "description": "This resource configures an Azure AD Authentication Method Policy Sms.","roles": {
+    "description": "This resource configures an Azure AD Authentication Method Policy Sms.",
+    "roles": {
         "read": [
             "Security Reader"
         ],

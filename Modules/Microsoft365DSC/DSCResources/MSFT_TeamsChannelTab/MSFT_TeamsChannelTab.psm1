@@ -97,7 +97,7 @@ function Get-TargetResource
         DisplayName = $DisplayName
         TeamName    = $TeamName
         ChannelName = $ChannelName
-        Ensure      = "Absent"
+        Ensure      = 'Absent'
     }
 
     try
@@ -356,7 +356,7 @@ function Set-TargetResource
         $CurrentParameters.Remove('ChannelName') | Out-Null
         $CurrentParameters.Add('TeamsTabId', $tabInstance.Id)
         Write-Verbose -Message "Params: $($CurrentParameters | Out-String)"
-        Update-MgBetaTeamChannelTab  @CurrentParameters | Out-Null
+        Update-MgBetaTeamChannelTab @CurrentParameters | Out-Null
     }
     elseif ($Ensure -eq 'Present' -and ($tab.Ensure -eq 'Absent'))
     {

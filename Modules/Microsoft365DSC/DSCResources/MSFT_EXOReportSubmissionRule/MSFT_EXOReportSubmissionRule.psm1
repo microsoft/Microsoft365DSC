@@ -59,7 +59,7 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    Write-Verbose -Message "Getting configuration of ReportSubmissionRule"
+    Write-Verbose -Message 'Getting configuration of ReportSubmissionRule'
     if ($Global:CurrentModeIsExport)
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
@@ -94,28 +94,28 @@ function Get-TargetResource
 
         if ($null -eq $ReportSubmissionRule)
         {
-            Write-Verbose -Message "ReportSubmissionRule does not exist."
+            Write-Verbose -Message 'ReportSubmissionRule does not exist.'
             return $nullReturn
         }
         else
         {
             $result = @{
-                IsSingleInstance            = 'Yes'
-                Identity                    = $ReportSubmissionRule.Identity
-                Comments                    = $ReportSubmissionRule.Comments
-                SentTo                      = $ReportSubmissionRule.SentTo
-                Credential                  = $Credential
-                Ensure                      = 'Present'
-                ApplicationId               = $ApplicationId
-                CertificateThumbprint       = $CertificateThumbprint
-                CertificatePath             = $CertificatePath
-                CertificatePassword         = $CertificatePassword
-                Managedidentity             = $ManagedIdentity.IsPresent
-                TenantId                    = $TenantId
-                AccessTokens                = $AccessTokens
+                IsSingleInstance      = 'Yes'
+                Identity              = $ReportSubmissionRule.Identity
+                Comments              = $ReportSubmissionRule.Comments
+                SentTo                = $ReportSubmissionRule.SentTo
+                Credential            = $Credential
+                Ensure                = 'Present'
+                ApplicationId         = $ApplicationId
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
+                Managedidentity       = $ManagedIdentity.IsPresent
+                TenantId              = $TenantId
+                AccessTokens          = $AccessTokens
             }
 
-            Write-Verbose -Message "Found ReportSubmissionRule"
+            Write-Verbose -Message 'Found ReportSubmissionRule'
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
             return $result
         }
@@ -203,7 +203,7 @@ function Set-TargetResource
         -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-    Write-Verbose -Message "Setting configuration of ReportSubmissionRule"
+    Write-Verbose -Message 'Setting configuration of ReportSubmissionRule'
 
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
@@ -224,7 +224,7 @@ function Set-TargetResource
 
     if ($Ensure -eq 'Present' -and $currentReportSubmissionRule.Ensure -eq 'Absent')
     {
-        Write-Verbose -Message "Creating ReportSubmissionRule"
+        Write-Verbose -Message 'Creating ReportSubmissionRule'
 
         $ReportSubmissionRuleParams.Add('Name', $Identity) | Out-Null
         $ReportSubmissionRuleParams.Remove('Identity') | Out-Null
@@ -240,7 +240,7 @@ function Set-TargetResource
     }
     elseif ($Ensure -eq 'Absent' -and $currentReportSubmissionRule.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing ReportSubmissionRule"
+        Write-Verbose -Message 'Removing ReportSubmissionRule'
         Remove-ReportSubmissionRule -Identity $Identity -Confirm:$false
     }
 }
@@ -317,7 +317,7 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of ReportSubmissionRule"
+    Write-Verbose -Message 'Testing configuration of ReportSubmissionRule'
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
@@ -404,7 +404,7 @@ function Export-TargetResource
         }
         $dscContent = ''
 
-        Write-Host "    |---Export ReportSubmissionRule" -NoNewline
+        Write-Host '    |---Export ReportSubmissionRule' -NoNewline
 
         if ($null -ne $Global:M365DSCExportResourceInstancesCount)
         {

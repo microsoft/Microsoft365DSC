@@ -105,7 +105,7 @@ function Get-TargetResource
         Write-Verbose -Message "An Azure AD Authentication Method Policy Fido2 with Id {$Id} was found."
 
         #region resource generator code
-        Write-Verbose "Processing KeyRestrictions"
+        Write-Verbose 'Processing KeyRestrictions'
         $complexKeyRestrictions = @{}
         $complexKeyRestrictions.Add('AaGuids', $getValue.AdditionalProperties.keyRestrictions.aaGuids)
         if ($null -ne $getValue.AdditionalProperties.keyRestrictions.enforcementType)
@@ -118,7 +118,7 @@ function Get-TargetResource
             $complexKeyRestrictions = $null
         }
 
-        Write-Verbose "Processing ExcludeTargets"
+        Write-Verbose 'Processing ExcludeTargets'
         $complexExcludeTargets = @()
         foreach ($currentExcludeTargets in $getValue.excludeTargets)
         {
@@ -158,7 +158,7 @@ function Get-TargetResource
         }
         #endregion
 
-        Write-Verbose "Processing IncludeTargets"
+        Write-Verbose 'Processing IncludeTargets'
         $complexIncludeTargets = @()
         foreach ($currentIncludeTargets in $getValue.AdditionalProperties.includeTargets)
         {

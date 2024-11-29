@@ -79,7 +79,7 @@ function Get-TargetResource
         $getValue = $null
         #region resource generator code
         $getValue = Get-MgBetaPolicyHomeRealmDiscoveryPolicy `
-                    -Filter "DisplayName eq '$DisplayName'"
+            -Filter "DisplayName eq '$DisplayName'"
 
         #endregion
         if ($null -eq $getValue)
@@ -88,7 +88,8 @@ function Get-TargetResource
             return $nullResult
         }
         # if multiple objects with same name exist
-        if ($getValue -is [array]) {
+        if ($getValue -is [array])
+        {
             Write-Verbose -Message "Multiple Azure AD Home Realm Discovery Policy with DisplayName {$DisplayName} found. Skipping Operation."
             return $nullResult
         }
@@ -96,13 +97,14 @@ function Get-TargetResource
         Write-Verbose -Message "An Azure AD Home Realm Discovery Policy with DisplayName {$DisplayName} was found"
 
         $DefinitionArray = @()
-        foreach ($definitionValue in $getValue.definition) {
+        foreach ($definitionValue in $getValue.definition)
+        {
             $value = ConvertFrom-Json $definitionValue
             $DefinitionArray += @{
-                AccelerateToFederatedDomain = $value.HomeRealmDiscoveryPolicy.AccelerateToFederatedDomain
+                AccelerateToFederatedDomain  = $value.HomeRealmDiscoveryPolicy.AccelerateToFederatedDomain
                 AllowCloudPasswordValidation = $value.HomeRealmDiscoveryPolicy.AllowCloudPasswordValidation
-                PreferredDomain = $value.HomeRealmDiscoveryPolicy.PreferredDomain
-                AlternateIdLogin = @{
+                PreferredDomain              = $value.HomeRealmDiscoveryPolicy.PreferredDomain
+                AlternateIdLogin             = @{
                     Enabled = $value.HomeRealmDiscoveryPolicy.AlternateIdLogin.Enabled
                 }
             }
@@ -213,22 +215,27 @@ function Set-TargetResource
 
     # to get the id parameter
     $getValue = Get-MgBetaPolicyHomeRealmDiscoveryPolicy `
-                    -Filter "DisplayName eq '$DisplayName'"
+        -Filter "DisplayName eq '$DisplayName'"
 
     $newDefinitions = @()
-    foreach ($Def in $Definition) {
+    foreach ($Def in $Definition)
+    {
         $HomeRealmDiscoveryPolicy = @{}
-        if ($null -ne $Def.AccelerateToFederatedDomain){
+        if ($null -ne $Def.AccelerateToFederatedDomain)
+        {
             $HomeRealmDiscoveryPolicy.Add('AccelerateToFederatedDomain', $Def.AccelerateToFederatedDomain)
         }
-        if ($null -ne $Def.AllowCloudPasswordValidation){
+        if ($null -ne $Def.AllowCloudPasswordValidation)
+        {
             $HomeRealmDiscoveryPolicy.Add('AllowCloudPasswordValidation', $Def.AllowCloudPasswordValidation)
         }
-        if ($null -ne $Def.PreferredDomain){
+        if ($null -ne $Def.PreferredDomain)
+        {
             $HomeRealmDiscoveryPolicy.Add('PreferredDomain', $Def.PreferredDomain)
         }
-        if ($null -ne $Def.AlternateIdLogin.Enabled){
-            $HomeRealmDiscoveryPolicy.Add('AlternateIdLogin', @{Enabled = $Def.AlternateIdLogin.Enabled})
+        if ($null -ne $Def.AlternateIdLogin.Enabled)
+        {
+            $HomeRealmDiscoveryPolicy.Add('AlternateIdLogin', @{Enabled = $Def.AlternateIdLogin.Enabled })
         }
         $temp = @{
             HomeRealmDiscoveryPolicy = $HomeRealmDiscoveryPolicy
@@ -476,7 +483,7 @@ function Export-TargetResource
             }
             Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{
-                DisplayName           =  $config.DisplayName
+                DisplayName           = $config.DisplayName
                 Ensure                = 'Present'
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
@@ -547,14 +554,16 @@ function Get-M365DSCAADHomeRealDiscoveryPolicyDefinitionAsString
     {
         $StringContent.Append("`n                MSFT_AADHomeRealDiscoveryPolicyDefinition {`r`n") | Out-Null
         $StringContent.Append("                    PreferredDomain       = '" + $definition.PreferredDomain + "'`r`n") | Out-Null
-        if ($null -ne $definition.AccelerateToFederatedDomain) {
-            $StringContent.Append("                    AccelerateToFederatedDomain         = $" + $definition.AccelerateToFederatedDomain + "`r`n") | Out-Null
+        if ($null -ne $definition.AccelerateToFederatedDomain)
+        {
+            $StringContent.Append('                    AccelerateToFederatedDomain         = $' + $definition.AccelerateToFederatedDomain + "`r`n") | Out-Null
         }
-        if ($null -ne $definition.AllowCloudPasswordValidation) {
-            $StringContent.Append("                    AllowCloudPasswordValidation         = $" + $definition.AllowCloudPasswordValidation + "`r`n") | Out-Null
+        if ($null -ne $definition.AllowCloudPasswordValidation)
+        {
+            $StringContent.Append('                    AllowCloudPasswordValidation         = $' + $definition.AllowCloudPasswordValidation + "`r`n") | Out-Null
         }
         $StringContent.Append("                    AlternateIdLogin = MSFT_AADHomeRealDiscoveryPolicyDefinitionAlternateIdLogin {`r`n") | Out-Null
-        $StringContent.Append("                        Enabled = $" + $definition.AlternateIdLogin.Enabled + "`r`n") | Out-Null
+        $StringContent.Append('                        Enabled = $' + $definition.AlternateIdLogin.Enabled + "`r`n") | Out-Null
         $StringContent.Append("                    }`r`n") | Out-Null
         $StringContent.Append("                }`r`n") | Out-Null
     }

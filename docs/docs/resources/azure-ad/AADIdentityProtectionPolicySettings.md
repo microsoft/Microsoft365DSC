@@ -17,7 +17,7 @@
 
 ## Description
 
-Use this resource to monitor the identity protection policy settings in AAD. 
+Use this resource to monitor the identity protection policy settings in AAD.
 
 ## Permissions
 

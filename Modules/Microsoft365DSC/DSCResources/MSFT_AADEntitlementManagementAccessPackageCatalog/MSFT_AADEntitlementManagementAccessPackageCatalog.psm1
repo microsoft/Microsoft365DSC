@@ -450,7 +450,7 @@ function Export-TargetResource
     try
     {
         #region resource generator code
-        [array]$getValue = (Get-MgBetaEntitlementManagementAccessPackage -all -ErrorAction Stop)| Select-Object -Unique CatalogId |Select-Object -ExpandProperty CatalogId
+        [array]$getValue = (Get-MgBetaEntitlementManagementAccessPackage -All -ErrorAction Stop) | Select-Object -Unique CatalogId | Select-Object -ExpandProperty CatalogId
         #endregion
         $i = 1
         $dscContent = ''

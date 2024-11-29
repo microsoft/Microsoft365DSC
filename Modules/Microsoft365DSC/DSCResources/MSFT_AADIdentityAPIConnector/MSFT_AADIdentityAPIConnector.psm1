@@ -87,7 +87,7 @@ function Get-TargetResource
 
         $getValue = $null
         #region resource generator code
-        $getValue = Get-MgBetaIdentityAPIConnector -IdentityApiConnectorId $Id  -ErrorAction SilentlyContinue
+        $getValue = Get-MgBetaIdentityApiConnector -IdentityApiConnectorId $Id -ErrorAction SilentlyContinue
 
         if ($null -eq $getValue)
         {
@@ -95,9 +95,9 @@ function Get-TargetResource
 
             if (-not [System.String]::IsNullOrEmpty($DisplayName))
             {
-                $getValue = Get-MgBetaIdentityAPIConnector `
+                $getValue = Get-MgBetaIdentityApiConnector `
                     -Filter "DisplayName eq '$DisplayName'" `
-                    -ErrorAction SilentlyContinue 
+                    -ErrorAction SilentlyContinue
             }
         }
         #endregion
@@ -112,7 +112,8 @@ function Get-TargetResource
         #region resource generator code
         $complexAuthenticationConfiguration = @{}
 
-        if($null -ne $getValue.AuthenticationConfiguration.AdditionalProperties.password) {
+        if ($null -ne $getValue.AuthenticationConfiguration.AdditionalProperties.password)
+        {
             $securePassword = ConvertTo-SecureString $getValue.AuthenticationConfiguration.AdditionalProperties.password -AsPlainText -Force
 
             $Password = New-Object System.Management.Automation.PSCredential ('Password', $securePassword)
@@ -122,13 +123,13 @@ function Get-TargetResource
         $complexCertificates = @()
         foreach ($currentCertificate in $getValue.AuthenticationConfiguration.AdditionalProperties.certificateList)
         {
-            $myCertificate= @{}
-            $myCertificate.Add('Pkcs12Value', "Please insert a valid Pkcs12Value")
+            $myCertificate = @{}
+            $myCertificate.Add('Pkcs12Value', 'Please insert a valid Pkcs12Value')
             $myCertificate.Add('Thumbprint', $currentCertificate.thumbprint)
-            $myCertificate.Add('Password', "Please insert a valid Password for the certificate")
+            $myCertificate.Add('Password', 'Please insert a valid Password for the certificate')
             $myCertificate.Add('IsActive', $currentCertificate.isActive)
 
-            if ($myCertificate.values.Where({$null -ne $_}).Count -gt 0)
+            if ($myCertificate.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexCertificates += $myCertificate
             }
@@ -137,19 +138,19 @@ function Get-TargetResource
 
         $results = @{
             #region resource generator code
-            DisplayName                 = $getValue.DisplayName
-            TargetUrl                   = $getValue.TargetUrl
-            Id                          = $getValue.Id
-            Username                    = $getValue.AuthenticationConfiguration.AdditionalProperties.username
-            Password                    = $Password
-            Certificates                = $complexCertificates
-            Ensure                      = 'Present'
-            Credential                  = $Credential
-            ApplicationId               = $ApplicationId
-            TenantId                    = $TenantId
-            ApplicationSecret           = $ApplicationSecret
-            CertificateThumbprint       = $CertificateThumbprint
-            ManagedIdentity             = $ManagedIdentity.IsPresent
+            DisplayName           = $getValue.DisplayName
+            TargetUrl             = $getValue.TargetUrl
+            Id                    = $getValue.Id
+            Username              = $getValue.AuthenticationConfiguration.AdditionalProperties.username
+            Password              = $Password
+            Certificates          = $complexCertificates
+            Ensure                = 'Present'
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            ApplicationSecret     = $ApplicationSecret
+            CertificateThumbprint = $CertificateThumbprint
+            ManagedIdentity       = $ManagedIdentity.IsPresent
             #endregion
         }
 
@@ -252,11 +253,13 @@ function Set-TargetResource
     # If the certificates array is not empty, then we need to create a new instance of New-MgBetaAADIdentityAPIConnector
 
     $needToUpdateCertificates = $false
-    if($null -ne $Certificates -and $Certificates.Count -gt 0) {
+    if ($null -ne $Certificates -and $Certificates.Count -gt 0)
+    {
         $needToUpdateCertificates = $true
     }
 
-    if($needToUpdateCertificates -eq $false) {
+    if ($needToUpdateCertificates -eq $false)
+    {
         if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
         {
             Write-Verbose -Message "Creating an Azure AD Identity API Connector with DisplayName {$DisplayName}"
@@ -268,16 +271,17 @@ function Set-TargetResource
             $createParameters.Remove('Password') | Out-Null
             $createParameters.Remove('Pkcs12Value') | Out-Null
 
-            if($username -ne $null) {
-                $createParameters.Add("AuthenticationConfiguration", @{
-                    '@odata.type' = "microsoft.graph.basicAuthentication"
-                    "password" = $Password.GetNetworkCredential().Password
-                    "username" = $Username
-                })
+            if ($username -ne $null)
+            {
+                $createParameters.Add('AuthenticationConfiguration', @{
+                        '@odata.type' = 'microsoft.graph.basicAuthentication'
+                        'password'    = $Password.GetNetworkCredential().Password
+                        'username'    = $Username
+                    })
             }
 
-            $createParameters.Add("@odata.type", "#microsoft.graph.IdentityApiConnector")
-            $policy = New-MgBetaIdentityAPIConnector -BodyParameter $createParameters
+            $createParameters.Add('@odata.type', '#microsoft.graph.IdentityApiConnector')
+            $policy = New-MgBetaIdentityApiConnector -BodyParameter $createParameters
         }
         elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
         {
@@ -291,29 +295,31 @@ function Set-TargetResource
             $updateParameters.Remove('Password') | Out-Null
             $updateParameters.Remove('Pkcs12Value') | Out-Null
 
-            $updateParameters.Add("AuthenticationConfiguration", @{
-                '@odata.type' = "microsoft.graph.basicAuthentication"
-                "password" = $Password.GetNetworkCredential().Password
-                "username" = $Username
-            })
+            $updateParameters.Add('AuthenticationConfiguration', @{
+                    '@odata.type' = 'microsoft.graph.basicAuthentication'
+                    'password'    = $Password.GetNetworkCredential().Password
+                    'username'    = $Username
+                })
 
-            $UpdateParameters.Add("@odata.type", "#microsoft.graph.IdentityApiConnector")
-            Update-MgBetaIdentityAPIConnector `
-            -IdentityApiConnectorId $currentInstance.Id `
-            -BodyParameter $UpdateParameters
+            $UpdateParameters.Add('@odata.type', '#microsoft.graph.IdentityApiConnector')
+            Update-MgBetaIdentityApiConnector `
+                -IdentityApiConnectorId $currentInstance.Id `
+                -BodyParameter $UpdateParameters
         }
         elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
         {
             Write-Verbose -Message "Removing the Azure AD Identity API Connector with Id {$($currentInstance.Id)}"
-            Remove-MgBetaIdentityAPIConnector -IdentityApiConnectorId $currentInstance.Id
+            Remove-MgBetaIdentityApiConnector -IdentityApiConnectorId $currentInstance.Id
         }
     }
-    else {
+    else
+    {
 
         # Remove the existing instance if already present
-        if($currentInstance.Ensure -ne 'Absent') {
+        if ($currentInstance.Ensure -ne 'Absent')
+        {
             Write-Verbose -Message "Removing the Azure AD Identity API Connector with Id {$($currentInstance.Id)}"
-            Remove-MgBetaIdentityAPIConnector -IdentityApiConnectorId $currentInstance.Id
+            Remove-MgBetaIdentityApiConnector -IdentityApiConnectorId $currentInstance.Id
         }
 
         # Create a new instance with the certificates
@@ -335,40 +341,45 @@ function Set-TargetResource
             $myCertificate.Add('Pkcs12Value', ($currentCertificate.Pkcs12Value).Password)
             $myCertificate.Add('Password', ($currentCertificate.Password).Password)
 
-            if($currentCertificate.IsActive -eq $true) {
+            if ($currentCertificate.IsActive -eq $true)
+            {
                 $activeCertificates += $myCertificate
             }
-            else {
+            else
+            {
                 $inactiveCertificates += $myCertificate
             }
         }
 
         # Only one certificate can be active
-        if($activeCertificates.Count -ne 1) {
-            Write-Error "There should be one active certificate"
+        if ($activeCertificates.Count -ne 1)
+        {
+            Write-Error 'There should be one active certificate'
             throw
         }
-        
-        if($inactiveCertificates.Count -eq 0) {
-            $createParameters.Add("AuthenticationConfiguration", @{
-                '@odata.type' = "microsoft.graph.pkcs12Certificate"
-                "password" = $activeCertificates[0].Password
-                "pkcs12Value" = $activeCertificates[0].Pkcs12Value
-            })
+
+        if ($inactiveCertificates.Count -eq 0)
+        {
+            $createParameters.Add('AuthenticationConfiguration', @{
+                    '@odata.type' = 'microsoft.graph.pkcs12Certificate'
+                    'password'    = $activeCertificates[0].Password
+                    'pkcs12Value' = $activeCertificates[0].Pkcs12Value
+                })
             $activeCertificates = $activeCertificates[1..$activeCertificates.Count]
         }
-        else {
-            $createParameters.Add("AuthenticationConfiguration", @{
-                '@odata.type' = "microsoft.graph.pkcs12Certificate"
-                "password" = $inactiveCertificates[0].Password
-                "pkcs12Value" = $inactiveCertificates[0].Pkcs12Value
-            })
+        else
+        {
+            $createParameters.Add('AuthenticationConfiguration', @{
+                    '@odata.type' = 'microsoft.graph.pkcs12Certificate'
+                    'password'    = $inactiveCertificates[0].Password
+                    'pkcs12Value' = $inactiveCertificates[0].Pkcs12Value
+                })
             # remove the first element from the inactive certificates
             $inactiveCertificates = $inactiveCertificates[1..$inactiveCertificates.Count]
         }
 
-        $createParameters.Add("@odata.type", "#microsoft.graph.IdentityApiConnector")
-        $policy = New-MgBetaIdentityAPIConnector -BodyParameter $createParameters
+        $createParameters.Add('@odata.type', '#microsoft.graph.IdentityApiConnector')
+        $policy = New-MgBetaIdentityApiConnector -BodyParameter $createParameters
 
 
         # Upload the inactive certificates
@@ -376,7 +387,7 @@ function Set-TargetResource
         {
             $params = @{
                 pkcs12Value = $currentCertificate.Pkcs12Value
-                password = $currentCertificate.Password
+                password    = $currentCertificate.Password
             }
 
             Invoke-MgBetaUploadIdentityApiConnectorClientCertificate -IdentityApiConnectorId $policy.Id -BodyParameter $params
@@ -387,7 +398,7 @@ function Set-TargetResource
         {
             $params = @{
                 pkcs12Value = $currentCertificate.Pkcs12Value
-                password = $currentCertificate.Password
+                password    = $currentCertificate.Password
             }
 
             Invoke-MgBetaUploadIdentityApiConnectorClientCertificate -IdentityApiConnectorId $policy.Id -BodyParameter $params
@@ -494,7 +505,7 @@ function Test-TargetResource
         $target = $CurrentValues.$key
         if ($null -ne $source -and $source.GetType().Name -like '*CimInstance*')
         {
-            
+
             # create a list of thumbprints from the source list
             $sourceThumbprints = @()
             foreach ($item in $source)
@@ -528,7 +539,7 @@ function Test-TargetResource
             {
                 Write-Verbose -Message "Target Thumbprints: $(Convert-M365DscHashtableToString -Hashtable $item)"
             }
-            
+
             # check if the lists are identical
             $compareResult = $true
             if ($sourceThumbprints.Count -ne $targetThumbprints.Count)
@@ -548,7 +559,7 @@ function Test-TargetResource
                 }
             }
 
-            if($compareResult -eq $true)
+            if ($compareResult -eq $true)
             {
                 $ValuesToCheck.Remove($key) | Out-Null
             }
@@ -632,7 +643,7 @@ function Export-TargetResource
     try
     {
         #region resource generator code
-        [array]$getValue = Get-MgBetaIdentityAPIConnector `
+        [array]$getValue = Get-MgBetaIdentityApiConnector `
             -Filter $Filter `
             -All `
             -ErrorAction Stop
@@ -661,20 +672,20 @@ function Export-TargetResource
             }
             Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{
-                Id = $config.Id
-                DisplayName           =  $config.DisplayName
-                Ensure = 'Present'
-                Credential = $Credential
-                ApplicationId = $ApplicationId
-                TenantId = $TenantId
-                ApplicationSecret = $ApplicationSecret
+                Id                    = $config.Id
+                DisplayName           = $config.DisplayName
+                Ensure                = 'Present'
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
-                ManagedIdentity = $ManagedIdentity.IsPresent
-                AccessTokens = $AccessTokens
+                ManagedIdentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
             }
 
             $Results = Get-TargetResource @Params
-            $Results.Password = "Please insert a valid Password"
+            $Results.Password = 'Please insert a valid Password'
 
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
@@ -683,8 +694,8 @@ function Export-TargetResource
             if ($null -ne $Results.Certificates)
             {
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
-                -ComplexObject $Results.Certificates`
-                -CIMInstanceName 'AADIdentityAPIConnectionCertificate'
+                    -ComplexObject $Results.Certificates`
+                    -CIMInstanceName 'AADIdentityAPIConnectionCertificate'
                 if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.Certificates = $complexTypeStringResult
@@ -704,7 +715,7 @@ function Export-TargetResource
 
             if ($Results.Certificates)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Certificates" -IsCIMArray:$True
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Certificates' -IsCIMArray:$True
             }
 
             $dscContent += $currentDSCBlock

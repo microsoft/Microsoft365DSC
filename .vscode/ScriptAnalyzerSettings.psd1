@@ -1,8 +1,16 @@
 @{
-    Severity     = @('Error',
-        'Warning')
-    ExcludeRules = @('PSMissingModuleManifestField',
+    Severity = @(
+        'Error',
+        'Warning'
+    )
+    ExcludeRules = @(
+        'PSMissingModuleManifestField',
         'PSUseShouldProcessForStateChangingFunctions',
         'PSAvoidGlobalVars',
-        'PSAvoidUsingWriteHost')
+        'PSAvoidUsingWriteHost'
+    )
+    CustomRulePath = @(
+        '.vscode\CustomRules\UseCorrectMethodCasing.psm1'
+    )
+    IncludeDefaultRules = $true
 }

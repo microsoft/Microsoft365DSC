@@ -75,7 +75,7 @@ function Get-TargetResource
     {
         if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
         {
-            $ManagementScope = $Script:exportedInstances | Where-Object -FilterScript {$_.Identity -eq $Identity}
+            $ManagementScope = $Script:exportedInstances | Where-Object -FilterScript { $_.Identity -eq $Identity }
         }
         else
         {
@@ -87,18 +87,18 @@ function Get-TargetResource
         }
 
         $results = @{
-            Identity                    = $Identity
-            Name                        = $ManagementScope.Name
-            RecipientRestrictionFilter  = $ManagementScope.RecipientFilter
-            RecipientRoot               = $ManagementScope.RecipientRoot
-            Exclusive                   = $ManagementScope.Exclusive
-            Ensure                      = "Present"
-            Credential                  = $Credential
-            ApplicationId               = $ApplicationId
-            TenantId                    = $TenantId
-            CertificateThumbprint       = $CertificateThumbprint
-            ManagedIdentity             = $ManagedIdentity.IsPresent
-            AccessTokens                = $AccessTokens
+            Identity                   = $Identity
+            Name                       = $ManagementScope.Name
+            RecipientRestrictionFilter = $ManagementScope.RecipientFilter
+            RecipientRoot              = $ManagementScope.RecipientRoot
+            Exclusive                  = $ManagementScope.Exclusive
+            Ensure                     = 'Present'
+            Credential                 = $Credential
+            ApplicationId              = $ApplicationId
+            TenantId                   = $TenantId
+            CertificateThumbprint      = $CertificateThumbprint
+            ManagedIdentity            = $ManagedIdentity.IsPresent
+            AccessTokens               = $AccessTokens
         }
         return [System.Collections.Hashtable] $results
     }

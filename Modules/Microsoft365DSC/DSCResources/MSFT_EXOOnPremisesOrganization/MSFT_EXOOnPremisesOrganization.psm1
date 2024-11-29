@@ -246,24 +246,24 @@ function Set-TargetResource
         -InboundParameters $PSBoundParameters
 
     $NewOnPremisesOrganizationParams = @{
-        Name                     = $Identity
-        Comment                  = $Comment
-        HybridDomains            = $HybridDomains
-        InboundConnector         = $InboundConnector
-        OrganizationName         = $OrganizationName
-        OrganizationGuid         = $OrganizationGuid
-        OutboundConnector        = $OutboundConnector
-        Confirm                  = $false
+        Name              = $Identity
+        Comment           = $Comment
+        HybridDomains     = $HybridDomains
+        InboundConnector  = $InboundConnector
+        OrganizationName  = $OrganizationName
+        OrganizationGuid  = $OrganizationGuid
+        OutboundConnector = $OutboundConnector
+        Confirm           = $false
     }
 
     $SetOnPremisesOrganizationParams = @{
-        Identity                 = $Identity
-        Comment                  = $Comment
-        HybridDomains            = $HybridDomains
-        InboundConnector         = $InboundConnector
-        OrganizationName         = $OrganizationName
-        OutboundConnector        = $OutboundConnector
-        Confirm                  = $false
+        Identity          = $Identity
+        Comment           = $Comment
+        HybridDomains     = $HybridDomains
+        InboundConnector  = $InboundConnector
+        OrganizationName  = $OrganizationName
+        OutboundConnector = $OutboundConnector
+        Confirm           = $false
     }
 
     if (-not [System.String]::IsNullOrEmpty($OrganizationRelationship))

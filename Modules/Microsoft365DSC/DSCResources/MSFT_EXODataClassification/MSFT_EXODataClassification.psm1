@@ -98,7 +98,7 @@ function Get-TargetResource
     {
         if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
         {
-            $DataClassification = $Script:exportedInstances | Where-Object -FilterScript {$_.Identity -eq $Identity}
+            $DataClassification = $Script:exportedInstances | Where-Object -FilterScript { $_.Identity -eq $Identity }
         }
         else
         {
@@ -259,7 +259,7 @@ function Set-TargetResource
 
     if (('Present' -eq $Ensure ) -and ($null -eq $DataClassification))
     {
-        Write-Verbose -Message "Data Classification in Exchange Online are now deprecated in favor of Sensitive Information Types in Security and Compliance."
+        Write-Verbose -Message 'Data Classification in Exchange Online are now deprecated in favor of Sensitive Information Types in Security and Compliance.'
     }
     elseif (('Present' -eq $Ensure ) -and ($Null -ne $DataClassification))
     {

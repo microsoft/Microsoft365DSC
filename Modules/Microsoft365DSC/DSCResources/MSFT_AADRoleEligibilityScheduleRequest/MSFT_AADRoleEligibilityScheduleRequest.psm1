@@ -30,7 +30,7 @@
         $AppScopeId,
 
         [Parameter()]
-        [ValidateSet("adminAssign", "adminUpdate", "adminRemove", "selfActivate", "selfDeactivate", "adminExtend", "adminRenew", "selfExtend", "selfRenew", "unknownFutureValue")]
+        [ValidateSet('adminAssign', 'adminUpdate', 'adminRemove', 'selfActivate', 'selfDeactivate', 'adminExtend', 'adminRenew', 'selfExtend', 'selfRenew', 'unknownFutureValue')]
         [System.String]
         $Action,
 
@@ -107,7 +107,7 @@
         {
             if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
             {
-                    $request = $Script:exportedInstances | Where-Object -FilterScript {$_.Id -eq $Id}
+                $request = $Script:exportedInstances | Where-Object -FilterScript { $_.Id -eq $Id }
             }
             else
             {
@@ -117,7 +117,7 @@
             }
         }
 
-        Write-Verbose -Message "Getting Role Eligibility by PrincipalId and RoleDefinitionId"
+        Write-Verbose -Message 'Getting Role Eligibility by PrincipalId and RoleDefinitionId'
         $PrincipalValue = $null
         if ($PrincipalType -eq 'User')
         {
@@ -138,7 +138,7 @@
             $PrincipalValue = $PrincipalInstance.DisplayName
         }
 
-        Write-Verbose -Message "Found Principal"
+        Write-Verbose -Message 'Found Principal'
         $RoleDefinitionId = (Get-MgBetaRoleManagementDirectoryRoleDefinition -Filter "DisplayName eq '$RoleDefinition'").Id
         Write-Verbose -Message "Retrieved role definition {$RoleDefinition} with ID {$RoleDefinitionId}"
 
@@ -155,7 +155,7 @@
         }
 
         $schedules = Get-MgBetaRoleManagementDirectoryRoleEligibilitySchedule -Filter "PrincipalId eq '$($request.PrincipalId)'"
-        $schedule = $schedules | Where-Object -FilterScript {$_.RoleDefinitionId -eq $RoleDefinitionId}
+        $schedule = $schedules | Where-Object -FilterScript { $_.RoleDefinitionId -eq $RoleDefinitionId }
         if ($null -eq $schedule)
         {
             foreach ($instance in $schedules)
@@ -187,12 +187,12 @@
         if ($null -ne $schedule.ScheduleInfo.Expiration)
         {
             $expirationValue = @{
-                duration    = $schedule.ScheduleInfo.Expiration.Duration
-                type        = $schedule.ScheduleInfo.Expiration.Type
+                duration = $schedule.ScheduleInfo.Expiration.Duration
+                type     = $schedule.ScheduleInfo.Expiration.Type
             }
             if ($null -ne $schedule.ScheduleInfo.Expiration.EndDateTime)
             {
-                $expirationValue.Add('endDateTime', $schedule.ScheduleInfo.Expiration.EndDateTime.ToString("yyyy-MM-ddThh:mm:ssZ"))
+                $expirationValue.Add('endDateTime', $schedule.ScheduleInfo.Expiration.EndDateTime.ToString('yyyy-MM-ddThh:mm:ssZ'))
             }
             $ScheduleInfoValue.Add('expiration', $expirationValue)
         }
@@ -220,7 +220,7 @@
         }
         if ($null -ne $schedule.ScheduleInfo.StartDateTime)
         {
-            $ScheduleInfoValue.Add('StartDateTime', $schedule.ScheduleInfo.StartDateTime.ToString("yyyy-MM-ddThh:mm:ssZ"))
+            $ScheduleInfoValue.Add('StartDateTime', $schedule.ScheduleInfo.StartDateTime.ToString('yyyy-MM-ddThh:mm:ssZ'))
         }
 
         $ticketInfoValue = $null
@@ -299,7 +299,7 @@ function Set-TargetResource
         $AppScopeId,
 
         [Parameter()]
-        [ValidateSet("adminAssign", "adminUpdate", "adminRemove", "selfActivate", "selfDeactivate", "adminExtend", "adminRenew", "selfExtend", "selfRenew", "unknownFutureValue")]
+        [ValidateSet('adminAssign', 'adminUpdate', 'adminRemove', 'selfActivate', 'selfDeactivate', 'adminExtend', 'adminRenew', 'selfExtend', 'selfRenew', 'unknownFutureValue')]
         [System.String]
         $Action,
 
@@ -356,6 +356,7 @@ function Set-TargetResource
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters `
+
     }
     catch
     {
@@ -409,12 +410,12 @@ function Set-TargetResource
     {
         throw "Multiple Principal with ID {$PrincipalId} of type {$PrincipalType} were found. Cannot create schedule."
     }
-    $ParametersOps.Add("PrincipalId", $PrincipalIdValue[0])
-    $ParametersOps.Remove("Principal") | Out-Null
+    $ParametersOps.Add('PrincipalId', $PrincipalIdValue[0])
+    $ParametersOps.Remove('Principal') | Out-Null
 
     $RoleDefinitionIdValue = (Get-MgBetaRoleManagementDirectoryRoleDefinition -Filter "DisplayName eq '$RoleDefinition'").Id
-    $ParametersOps.Add("RoleDefinitionId", $RoleDefinitionIdValue)
-    $ParametersOps.Remove("RoleDefinition") | Out-Null
+    $ParametersOps.Add('RoleDefinitionId', $RoleDefinitionIdValue)
+    $ParametersOps.Remove('RoleDefinition') | Out-Null
 
     if ($null -ne $ScheduleInfo)
     {
@@ -422,7 +423,7 @@ function Set-TargetResource
 
         if ($ScheduleInfo.StartDateTime)
         {
-            $ScheduleInfoValue.Add("startDateTime", $ScheduleInfo.StartDateTime)
+            $ScheduleInfoValue.Add('startDateTime', $ScheduleInfo.StartDateTime)
         }
 
         if ($ScheduleInfo.Expiration)
@@ -435,7 +436,7 @@ function Set-TargetResource
             {
                 $expirationValue.Add('duration', $ScheduleInfo.Expiration.duration)
             }
-            $ScheduleInfoValue.Add("Expiration", $expirationValue)
+            $ScheduleInfoValue.Add('Expiration', $expirationValue)
         }
 
         if ($ScheduleInfo.Recurrence)
@@ -455,7 +456,7 @@ function Set-TargetResource
                     month          = $ScheduleInfo.Recurrence.Pattern.month
                     type           = $ScheduleInfo.Recurrence.Pattern.type
                 }
-                $recurrenceValue.Add("Pattern", $patternValue)
+                $recurrenceValue.Add('Pattern', $patternValue)
             }
             if ($ScheduleInfo.Recurrence.Range)
             {
@@ -467,35 +468,35 @@ function Set-TargetResource
                     startDate           = $ScheduleInfo.Recurrence.Range.startDate
                     type                = $ScheduleInfo.Recurrence.Range.type
                 }
-                $recurrenceValue.Add("Range", $rangeValue)
+                $recurrenceValue.Add('Range', $rangeValue)
             }
             if ($Found)
             {
-                $ScheduleInfoValue.Add("Recurrence", $recurrenceValue)
+                $ScheduleInfoValue.Add('Recurrence', $recurrenceValue)
             }
         }
         Write-Verbose -Message "ScheduleInfo: $(Convert-M365DscHashtableToString -Hashtable $ScheduleInfoValue)"
         $ParametersOps.ScheduleInfo = $ScheduleInfoValue
     }
-    $ParametersOps.Remove("PrincipalType") | Out-Null
+    $ParametersOps.Remove('PrincipalType') | Out-Null
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating a Role Assignment Schedule Request for principal {$Principal} and role {$RoleDefinition}"
-        $ParametersOps.Remove("Id") | Out-Null
+        $ParametersOps.Remove('Id') | Out-Null
         Write-Verbose -Message "Values: $(Convert-M365DscHashtableToString -Hashtable $ParametersOps)"
         New-MgBetaRoleManagementDirectoryRoleEligibilityScheduleRequest @ParametersOps
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating the Role Assignment Schedule Request for principal {$Principal} and role {$RoleDefinition}"
-        $ParametersOps.Remove("Id") | Out-Null
+        $ParametersOps.Remove('Id') | Out-Null
         $ParametersOps.Action = 'AdminUpdate'
         New-MgBetaRoleManagementDirectoryRoleEligibilityScheduleRequest @ParametersOps
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing the Role Assignment Schedule Request for principal {$Principal} and role {$RoleDefinition}"
-        $ParametersOps.Remove("Id") | Out-Null
+        $ParametersOps.Remove('Id') | Out-Null
         $ParametersOps.Action = 'AdminRemove'
         New-MgBetaRoleManagementDirectoryRoleEligibilityScheduleRequest @ParametersOps
     }
@@ -533,7 +534,7 @@ function Test-TargetResource
         $AppScopeId,
 
         [Parameter()]
-        [ValidateSet("adminAssign", "adminUpdate", "adminRemove", "selfActivate", "selfDeactivate", "adminExtend", "adminRenew", "selfExtend", "selfRenew", "unknownFutureValue")]
+        [ValidateSet('adminAssign', 'adminUpdate', 'adminRemove', 'selfActivate', 'selfDeactivate', 'adminExtend', 'adminRenew', 'selfExtend', 'selfRenew', 'unknownFutureValue')]
         [System.String]
         $Action,
 
@@ -603,15 +604,15 @@ function Test-TargetResource
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
-    $ValuesToCheck.Remove("Action") | Out-Null
-    if($null -ne $CurrentValues.ScheduleInfo -and $null -ne $ValuesToCheck.ScheduleInfo)
+    $ValuesToCheck.Remove('Action') | Out-Null
+    if ($null -ne $CurrentValues.ScheduleInfo -and $null -ne $ValuesToCheck.ScheduleInfo)
     {
         # Compare ScheduleInfo.Expiration
         if ($CurrentValues.ScheduleInfo.Expiration.duration -ne $ValuesToCheck.ScheduleInfo.Expiration.duration -or `
-            $CurrentValues.ScheduleInfo.Expiration.endDateTime -ne $ValuesToCheck.ScheduleInfo.Expiration.endDateTime -or `
-            $CurrentValues.ScheduleInfo.Expiration.type -ne $ValuesToCheck.ScheduleInfo.Expiration.type)
+                $CurrentValues.ScheduleInfo.Expiration.endDateTime -ne $ValuesToCheck.ScheduleInfo.Expiration.endDateTime -or `
+                $CurrentValues.ScheduleInfo.Expiration.type -ne $ValuesToCheck.ScheduleInfo.Expiration.type)
         {
-            Write-Verbose -Message "Discrepancy found in ScheduleInfo.Expiration"
+            Write-Verbose -Message 'Discrepancy found in ScheduleInfo.Expiration'
             Write-Verbose -Message "Current: $($CurrentValues.ScheduleInfo.Expiration | Out-String)"
             Write-Verbose -Message "Desired: $($ValuesToCheck.ScheduleInfo.Expiration | Out-String)"
             return $false
@@ -619,14 +620,14 @@ function Test-TargetResource
 
         # Compare ScheduleInfo.Recurrence.Pattern
         if ($CurrentValues.ScheduleInfo.Recurrence.Pattern.dayOfMonth -ne $ValuesToCheck.ScheduleInfo.Recurrence.Pattern.dayOfMonth -or `
-            $CurrentValues.ScheduleInfo.Recurrence.Pattern.daysOfWeek -ne $ValuesToCheck.ScheduleInfo.Recurrence.Pattern.daysOfWeek -or `
-            $CurrentValues.ScheduleInfo.Recurrence.Pattern.firstDayOfWeek -ne $ValuesToCheck.ScheduleInfo.Recurrence.Pattern.firstDayOfWeek -or `
-            $CurrentValues.ScheduleInfo.Recurrence.Pattern.index -ne $ValuesToCheck.ScheduleInfo.Recurrence.Pattern.index -or `
-            $CurrentValues.ScheduleInfo.Recurrence.Pattern.interval -ne $ValuesToCheck.ScheduleInfo.Recurrence.Pattern.interval -or `
-            $CurrentValues.ScheduleInfo.Recurrence.Pattern.month -ne $ValuesToCheck.ScheduleInfo.Recurrence.Pattern.month -or `
-            $CurrentValues.ScheduleInfo.Recurrence.Pattern.type -ne $ValuesToCheck.ScheduleInfo.Recurrence.Pattern.type)
+                $CurrentValues.ScheduleInfo.Recurrence.Pattern.daysOfWeek -ne $ValuesToCheck.ScheduleInfo.Recurrence.Pattern.daysOfWeek -or `
+                $CurrentValues.ScheduleInfo.Recurrence.Pattern.firstDayOfWeek -ne $ValuesToCheck.ScheduleInfo.Recurrence.Pattern.firstDayOfWeek -or `
+                $CurrentValues.ScheduleInfo.Recurrence.Pattern.index -ne $ValuesToCheck.ScheduleInfo.Recurrence.Pattern.index -or `
+                $CurrentValues.ScheduleInfo.Recurrence.Pattern.interval -ne $ValuesToCheck.ScheduleInfo.Recurrence.Pattern.interval -or `
+                $CurrentValues.ScheduleInfo.Recurrence.Pattern.month -ne $ValuesToCheck.ScheduleInfo.Recurrence.Pattern.month -or `
+                $CurrentValues.ScheduleInfo.Recurrence.Pattern.type -ne $ValuesToCheck.ScheduleInfo.Recurrence.Pattern.type)
         {
-            Write-Verbose -Message "Discrepancy found in ScheduleInfo.Recurrence.Pattern"
+            Write-Verbose -Message 'Discrepancy found in ScheduleInfo.Recurrence.Pattern'
             Write-Verbose -Message "Current: $($CurrentValues.ScheduleInfo.Recurrence.Pattern | Out-String)"
             Write-Verbose -Message "Desired: $($ValuesToCheck.ScheduleInfo.Recurrence.Pattern | Out-String)"
             return $false
@@ -634,12 +635,12 @@ function Test-TargetResource
 
         # Compare ScheduleInfo.Recurrence.Range
         if ($CurrentValues.ScheduleInfo.Recurrence.Range.endDate -ne $ValuesToCheck.ScheduleInfo.Recurrence.Range.endDate -or `
-            $CurrentValues.ScheduleInfo.Recurrence.Range.numberOfOccurrences -ne $ValuesToCheck.ScheduleInfo.Recurrence.Range.numberOfOccurrences -or `
-            $CurrentValues.ScheduleInfo.Recurrence.Range.recurrenceTimeZone -ne $ValuesToCheck.ScheduleInfo.Recurrence.Range.recurrenceTimeZone -or `
-            $CurrentValues.ScheduleInfo.Recurrence.Range.startDate -ne $ValuesToCheck.ScheduleInfo.Recurrence.Range.startDate -or `
-            $CurrentValues.ScheduleInfo.Recurrence.Range.type -ne $ValuesToCheck.ScheduleInfo.Recurrence.Range.type)
+                $CurrentValues.ScheduleInfo.Recurrence.Range.numberOfOccurrences -ne $ValuesToCheck.ScheduleInfo.Recurrence.Range.numberOfOccurrences -or `
+                $CurrentValues.ScheduleInfo.Recurrence.Range.recurrenceTimeZone -ne $ValuesToCheck.ScheduleInfo.Recurrence.Range.recurrenceTimeZone -or `
+                $CurrentValues.ScheduleInfo.Recurrence.Range.startDate -ne $ValuesToCheck.ScheduleInfo.Recurrence.Range.startDate -or `
+                $CurrentValues.ScheduleInfo.Recurrence.Range.type -ne $ValuesToCheck.ScheduleInfo.Recurrence.Range.type)
         {
-            Write-Verbose -Message "Discrepancy found in ScheduleInfo.Recurrence.Range"
+            Write-Verbose -Message 'Discrepancy found in ScheduleInfo.Recurrence.Range'
             Write-Verbose -Message "Current: $($CurrentValues.ScheduleInfo.Recurrence.Range | Out-String)"
             Write-Verbose -Message "Desired: $($ValuesToCheck.ScheduleInfo.Recurrence.Range | Out-String)"
             return $false
@@ -649,7 +650,7 @@ function Test-TargetResource
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
 
-    $ValuesToCheck.Remove("ScheduleInfo") | Out-Null
+    $ValuesToCheck.Remove('ScheduleInfo') | Out-Null
     $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
@@ -717,10 +718,10 @@ function Export-TargetResource
         $schedules = Get-MgBetaRoleManagementDirectoryRoleEligibilitySchedule -All -ErrorAction Stop
         [array] $Script:exportedInstances = @()
         [array] $allRequests = Get-MgBetaRoleManagementDirectoryRoleEligibilityScheduleRequest -All `
-                -Filter "Status ne 'Revoked'" -ErrorAction Stop
+            -Filter "Status ne 'Revoked'" -ErrorAction Stop
         foreach ($schedule in $schedules)
         {
-            [array] $Script:exportedInstances += $allRequests | Where-Object -FilterScript {$_.TargetScheduleId -eq $schedule.Id}
+            [array] $Script:exportedInstances += $allRequests | Where-Object -FilterScript { $_.TargetScheduleId -eq $schedule.Id }
         }
         #endregion
 
@@ -830,8 +831,8 @@ function Export-TargetResource
     }
     catch
     {
-        if ($_.ErrorDetails.Message -like "*The tenant needs an AAD Premium*" -or `
-            $_.ErrorDetails.MEssage -like "*[AadPremiumLicenseRequired]*")
+        if ($_.ErrorDetails.Message -like '*The tenant needs an AAD Premium*' -or `
+                $_.ErrorDetails.MEssage -like '*[AadPremiumLicenseRequired]*')
         {
             Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) Tenant does not meet license requirement to extract this component."
         }
@@ -862,7 +863,7 @@ function Get-M365DSCAzureADEligibilityRequestTicketInfoAsString
 
     if ($TicketInfo.TicketNumber -or $TicketInfo.TicketSystem)
     {
-        $StringContent  = "MSFT_AADRoleEligibilityScheduleRequestTicketInfo {`r`n"
+        $StringContent = "MSFT_AADRoleEligibilityScheduleRequestTicketInfo {`r`n"
         $StringContent += "                ticketNumber = '$($TicketInfo.TicketNumber)'`r`n"
         $StringContent += "                ticketSystem = '$($TicketInfo.TicketSystem)'`r`n"
         $StringContent += "             }`r`n"
@@ -885,7 +886,7 @@ function Get-M365DSCAzureADEligibilityRequestScheduleInfoAsString
     )
 
     $Found = $false
-    $StringContent  = "MSFT_AADRoleEligibilityScheduleRequestSchedule {`r`n"
+    $StringContent = "MSFT_AADRoleEligibilityScheduleRequestSchedule {`r`n"
     if ($ScheduleInfo.StartDateTime)
     {
         $StringContent += "                startDateTime             = '$($ScheduleInfo.StartDateTime)'`r`n"
@@ -903,26 +904,26 @@ function Get-M365DSCAzureADEligibilityRequestScheduleInfoAsString
         {
             $StringContent += "                        endDateTime = '$($ScheduleInfo.Expiration.EndDateTime.ToString())'`r`n"
         }
-        if($ScheduleInfo.Expiration.Type)
+        if ($ScheduleInfo.Expiration.Type)
         {
             $StringContent += "                        type        = '$($ScheduleInfo.Expiration.Type)'`r`n"
         }
         $StringContent += "                    }`r`n"
     }
-    if($ScheduleInfo.Recurrence.Pattern.DayOfMonth -or $ScheduleInfo.Recurrence.Pattern.DaysOfWeek -or `
-    $ScheduleInfo.Recurrence.Pattern.firstDayOfWeek -or $ScheduleInfo.Recurrence.Pattern.Index -or `
-    $ScheduleInfo.Recurrence.Pattern.Interval -or $ScheduleInfo.Recurrence.Pattern.Month -or `
-    $ScheduleInfo.Recurrence.Pattern.Type -or $ScheduleInfo.Recurrence.Range.EndDate -or $ScheduleInfo.Recurrence.Range.numberOfOccurrences -or `
-    $ScheduleInfo.Recurrence.Range.recurrenceTimeZone -or $ScheduleInfo.Recurrence.Range.startDate -or `
-    $ScheduleInfo.Recurrence.Range.type)
+    if ($ScheduleInfo.Recurrence.Pattern.DayOfMonth -or $ScheduleInfo.Recurrence.Pattern.DaysOfWeek -or `
+            $ScheduleInfo.Recurrence.Pattern.firstDayOfWeek -or $ScheduleInfo.Recurrence.Pattern.Index -or `
+            $ScheduleInfo.Recurrence.Pattern.Interval -or $ScheduleInfo.Recurrence.Pattern.Month -or `
+            $ScheduleInfo.Recurrence.Pattern.Type -or $ScheduleInfo.Recurrence.Range.EndDate -or $ScheduleInfo.Recurrence.Range.numberOfOccurrences -or `
+            $ScheduleInfo.Recurrence.Range.recurrenceTimeZone -or $ScheduleInfo.Recurrence.Range.startDate -or `
+            $ScheduleInfo.Recurrence.Range.type)
     {
         $StringContent += "                recurrence                = MSFT_AADRoleEligibilityScheduleRequestScheduleRecurrence`r`n"
         $StringContent += "                    {`r`n"
 
         if ($ScheduleInfo.Recurrence.Pattern.DayOfMonth -or $ScheduleInfo.Recurrence.Pattern.DaysOfWeek -or `
-            $ScheduleInfo.Recurrence.Pattern.firstDayOfWeek -or $ScheduleInfo.Recurrence.Pattern.Index -or `
-            $ScheduleInfo.Recurrence.Pattern.Interval -or $ScheduleInfo.Recurrence.Pattern.Month -or `
-            $ScheduleInfo.Recurrence.Pattern.Type)
+                $ScheduleInfo.Recurrence.Pattern.firstDayOfWeek -or $ScheduleInfo.Recurrence.Pattern.Index -or `
+                $ScheduleInfo.Recurrence.Pattern.Interval -or $ScheduleInfo.Recurrence.Pattern.Month -or `
+                $ScheduleInfo.Recurrence.Pattern.Type)
         {
             $Found = $true
             $StringContent += "                         pattern = MSFT_AADRoleEligibilityScheduleRequestScheduleRecurrencePattern`r`n"
@@ -958,8 +959,8 @@ function Get-M365DSCAzureADEligibilityRequestScheduleInfoAsString
             $StringContent += "                             }`r`n"
         }
         if ($ScheduleInfo.Recurrence.Range.EndDate -or $ScheduleInfo.Recurrence.Range.numberOfOccurrences -or `
-            $ScheduleInfo.Recurrence.Range.recurrenceTimeZone -or $ScheduleInfo.Recurrence.Range.startDate -or `
-            $ScheduleInfo.Recurrence.Range.type)
+                $ScheduleInfo.Recurrence.Range.recurrenceTimeZone -or $ScheduleInfo.Recurrence.Range.startDate -or `
+                $ScheduleInfo.Recurrence.Range.type)
         {
             $Found = $true
             $StringContent += "                         range = MSFT_AADRoleEligibilityScheduleRequestScheduleRange`r`n"

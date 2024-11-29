@@ -46,7 +46,7 @@ function Get-TargetResource
         $EventsToDeleteIDs,
 
         [Parameter()]
-        [ValidateSet('None', 'Known','All')]
+        [ValidateSet('None', 'Known', 'All')]
         [System.String]
         $ExternalAudience,
 
@@ -235,7 +235,7 @@ function Set-TargetResource
         $EventsToDeleteIDs,
 
         [Parameter()]
-        [ValidateSet('None', 'Known','All')]
+        [ValidateSet('None', 'Known', 'All')]
         [System.String]
         $ExternalAudience,
 
@@ -372,7 +372,7 @@ function Test-TargetResource
         $EventsToDeleteIDs,
 
         [Parameter()]
-        [ValidateSet('None', 'Known','All')]
+        [ValidateSet('None', 'Known', 'All')]
         [System.String]
         $ExternalAudience,
 

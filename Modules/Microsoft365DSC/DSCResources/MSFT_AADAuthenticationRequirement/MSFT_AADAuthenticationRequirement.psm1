@@ -161,13 +161,13 @@ function Set-TargetResource
     if ($PerUserMfaState -eq 'enabled' -and $currentInstance.PerUserMfaState -eq 'disabled')
     {
         $params = @{
-            "perUserMfaState" = "enabled"
+            'perUserMfaState' = 'enabled'
         }
     }
     elseif ($PerUserMfaState -eq 'disabled' -and $currentInstance.PerUserMfaState -eq 'enabled')
     {
         $params = @{
-            "perUserMfaState" = "disabled"
+            'perUserMfaState' = 'disabled'
         }
     }
 
@@ -310,7 +310,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$getValue = Get-MgUser -ErrorAction Stop | Where-Object -FilterScript {$null -ne $_.Id}
+        [array]$getValue = Get-MgUser -ErrorAction Stop | Where-Object -FilterScript { $null -ne $_.Id }
 
         $i = 1
         $dscContent = ''

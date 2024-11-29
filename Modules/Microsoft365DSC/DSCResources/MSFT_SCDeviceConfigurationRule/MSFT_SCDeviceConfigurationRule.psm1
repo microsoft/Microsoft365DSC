@@ -256,17 +256,17 @@ function Get-TargetResource
     $nullResult.Ensure = 'Absent'
     try
     {
-        $policyObj = Get-DeviceConfigurationPolicy | Where-Object -FilterScript {$_.Name -eq $Policy}
+        $policyObj = Get-DeviceConfigurationPolicy | Where-Object -FilterScript { $_.Name -eq $Policy }
         if ($null -ne $policyObj)
         {
             Write-Verbose -Message "Found policy object {$Policy}"
             if ($null -ne $Script:exportedInstances -and $Script:ExportMode -and $null)
             {
-                $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.Policy -eq $policyObj.ExchangeObjectId}
+                $instance = $Script:exportedInstances | Where-Object -FilterScript { $_.Policy -eq $policyObj.ExchangeObjectId }
             }
             else
             {
-                $instance = Get-DeviceConfigurationRule | Where-Object -FilterScript {$_.Policy -eq $policyObj.ExchangeObjectId}
+                $instance = Get-DeviceConfigurationRule | Where-Object -FilterScript { $_.Policy -eq $policyObj.ExchangeObjectId }
             }
         }
         if ($null -eq $instance)

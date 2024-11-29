@@ -195,7 +195,7 @@ function Set-TargetResource
         $allTemplates = Get-CsTeamTemplateList
         foreach ($hiddenTemplate in $HiddenTemplates)
         {
-            $template = $allTemplates | Where-Object -FilterScript {$_.Name -eq $hiddenTemplate}
+            $template = $allTemplates | Where-Object -FilterScript { $_.Name -eq $hiddenTemplate }
             $hideTemplatesValues += New-CsTeamsHiddenTemplate -Id $template.Id
         }
         $SetParameters.HiddenTemplates = $hideTemplatesValues

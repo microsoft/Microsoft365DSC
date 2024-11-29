@@ -86,7 +86,7 @@ function Get-TargetResource
 
         $getValue = $null
         #region resource generator code
-        $getValue = Get-MgBetaDeviceManagementWindowsQualityUpdateProfile -WindowsQualityUpdateProfileId $Id  -ErrorAction SilentlyContinue
+        $getValue = Get-MgBetaDeviceManagementWindowsQualityUpdateProfile -WindowsQualityUpdateProfileId $Id -ErrorAction SilentlyContinue
 
         if ($null -eq $getValue)
         {
@@ -97,8 +97,8 @@ function Get-TargetResource
                 $getValue = Get-MgBetaDeviceManagementWindowsQualityUpdateProfile `
                     -All `
                     -ErrorAction SilentlyContinue | Where-Object -FilterScript {
-                        $_.DisplayName -eq $DisplayName
-                    }
+                    $_.DisplayName -eq $DisplayName
+                }
             }
         }
         #endregion
@@ -114,7 +114,7 @@ function Get-TargetResource
         $complexExpeditedUpdateSettings = @{}
         $complexExpeditedUpdateSettings.Add('DaysUntilForcedReboot', $getValue.ExpeditedUpdateSettings.daysUntilForcedReboot)
         $complexExpeditedUpdateSettings.Add('QualityUpdateRelease', $getValue.ExpeditedUpdateSettings.qualityUpdateRelease)
-        if ($complexExpeditedUpdateSettings.values.Where({$null -ne $_}).Count -eq 0)
+        if ($complexExpeditedUpdateSettings.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexExpeditedUpdateSettings = $null
         }
@@ -122,18 +122,18 @@ function Get-TargetResource
 
         $results = @{
             #region resource generator code
-            Description                  = $getValue.Description
-            DisplayName                  = $getValue.DisplayName
-            ExpeditedUpdateSettings      = $complexExpeditedUpdateSettings
-            RoleScopeTagIds              = $getValue.RoleScopeTagIds
-            Id                           = $getValue.Id
-            Ensure                       = 'Present'
-            Credential                   = $Credential
-            ApplicationId                = $ApplicationId
-            TenantId                     = $TenantId
-            ApplicationSecret            = $ApplicationSecret
-            CertificateThumbprint        = $CertificateThumbprint
-            ManagedIdentity              = $ManagedIdentity.IsPresent
+            Description             = $getValue.Description
+            DisplayName             = $getValue.DisplayName
+            ExpeditedUpdateSettings = $complexExpeditedUpdateSettings
+            RoleScopeTagIds         = $getValue.RoleScopeTagIds
+            Id                      = $getValue.Id
+            Ensure                  = 'Present'
+            Credential              = $Credential
+            ApplicationId           = $ApplicationId
+            TenantId                = $TenantId
+            ApplicationSecret       = $ApplicationSecret
+            CertificateThumbprint   = $CertificateThumbprint
+            ManagedIdentity         = $ManagedIdentity.IsPresent
             #endregion
         }
 
@@ -238,7 +238,7 @@ function Set-TargetResource
 
     if ($ExpeditedUpdateSettings.DaysUntilForcedReboot -lt 0 -or $ExpeditedUpdateSettings.DaysUntilForcedReboot -gt 2)
     {
-        throw "DaysUntilForcedReboot must be between 0 and 2."
+        throw 'DaysUntilForcedReboot must be between 0 and 2.'
     }
 
     $currentInstance = Get-TargetResource @PSBoundParameters
@@ -248,7 +248,7 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating an Intune Windows Update For Business Quality Update Profile for Windows10 with DisplayName {$DisplayName}"
-        $BoundParameters.Remove("Assignments") | Out-Null
+        $BoundParameters.Remove('Assignments') | Out-Null
 
         $createParameters = ([Hashtable]$BoundParameters).clone()
         $createParameters = Rename-M365DSCCimInstanceParameter -Properties $createParameters
@@ -278,7 +278,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating the Intune Windows Update For Business Quality Update Profile for Windows10 with Id {$($currentInstance.Id)}"
-        $BoundParameters.Remove("Assignments") | Out-Null
+        $BoundParameters.Remove('Assignments') | Out-Null
 
         $updateParameters = ([Hashtable]$BoundParameters).clone()
         $updateParameters = Rename-M365DSCCimInstanceParameter -Properties $updateParameters
@@ -394,7 +394,7 @@ function Test-TargetResource
 
     if ($ExpeditedUpdateSettings.DaysUntilForcedReboot -lt 0 -or $ExpeditedUpdateSettings.DaysUntilForcedReboot -gt 2)
     {
-        throw "DaysUntilForcedReboot must be between 0 and 2."
+        throw 'DaysUntilForcedReboot must be between 0 and 2.'
     }
 
     Write-Verbose -Message "Testing configuration of the Intune Windows Update For Business Quality Update Profile for Windows10 with Id {$Id} and DisplayName {$DisplayName}"
@@ -509,7 +509,7 @@ function Export-TargetResource
         # [array]$getValue = Get-MgBetaDeviceManagementWindowsQualityUpdateProfile -Filter $Filter -All -ErrorAction Stop
         if (-not [string]::IsNullOrEmpty($Filter))
         {
-            Write-Warning -Message "Microsoft Graph filter is not supported on this resource. Only best-effort filtering using startswith, endswith and contains is supported."
+            Write-Warning -Message 'Microsoft Graph filter is not supported on this resource. Only best-effort filtering using startswith, endswith and contains is supported.'
             $complexFunctions = Get-ComplexFunctionsFromFilterQuery -FilterQuery $Filter
             $Filter = Remove-ComplexFunctionsFromFilterQuery -FilterQuery $Filter
         }
@@ -536,16 +536,16 @@ function Export-TargetResource
             }
             Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{
-                Id = $config.Id
-                DisplayName           =  $config.DisplayName
-                Ensure = 'Present'
-                Credential = $Credential
-                ApplicationId = $ApplicationId
-                TenantId = $TenantId
-                ApplicationSecret = $ApplicationSecret
+                Id                    = $config.Id
+                DisplayName           = $config.DisplayName
+                Ensure                = 'Present'
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
-                ManagedIdentity = $ManagedIdentity.IsPresent
-                AccessTokens = $AccessTokens
+                ManagedIdentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
             }
 
             $Results = Get-TargetResource @Params
@@ -586,12 +586,12 @@ function Export-TargetResource
                 -Credential $Credential
             if ($Results.ExpeditedUpdateSettings)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "ExpeditedUpdateSettings" -IsCIMArray:$False
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'ExpeditedUpdateSettings' -IsCIMArray:$False
             }
 
             if ($Results.Assignments)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Assignments" -IsCIMArray:$true
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Assignments' -IsCIMArray:$true
             }
 
             $dscContent += $currentDSCBlock

@@ -148,7 +148,7 @@ function Get-TargetResource
     {
         #Retrieve policy general settings
 
-        $policy = Get-MgBetaDeviceManagementIntent -DeviceManagementIntentId $Identity -ExpandProperty settings,assignments -ErrorAction SilentlyContinue
+        $policy = Get-MgBetaDeviceManagementIntent -DeviceManagementIntentId $Identity -ExpandProperty settings, assignments -ErrorAction SilentlyContinue
 
         if ($null -eq $policy)
         {
@@ -164,12 +164,12 @@ function Get-TargetResource
                 return $nullResult
             }
 
-            if(([array]$policy).count -gt 1)
+            if (([array]$policy).count -gt 1)
             {
                 throw "A policy with a duplicated displayName {'$DisplayName'} was found - Ensure displayName is unique"
             }
 
-            $policy = Get-MgBetaDeviceManagementIntent -DeviceManagementIntentId $policy.id -ExpandProperty settings,assignments -ErrorAction SilentlyContinue
+            $policy = Get-MgBetaDeviceManagementIntent -DeviceManagementIntentId $policy.id -ExpandProperty settings, assignments -ErrorAction SilentlyContinue
 
         }
 
@@ -184,7 +184,7 @@ function Get-TargetResource
 
         foreach ($setting in $settings)
         {
-            $settingName = $setting.definitionId.Split("_")[1]
+            $settingName = $setting.definitionId.Split('_')[1]
             $settingValue = $setting.ValueJson | ConvertFrom-Json
 
             if ($settingName -eq 'WindowsHelloForBusinessBlocked')
@@ -226,7 +226,7 @@ function Get-TargetResource
     catch
     {
         if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
-            $_.Exception -like "*Unable to perform redirect as Location Header is not set in response*")
+                $_.Exception -like '*Unable to perform redirect as Location Header is not set in response*')
         {
             if (Assert-M365DSCIsNonInteractiveShell)
             {
@@ -372,7 +372,7 @@ function Set-TargetResource
     )
 
     Write-Warning -Message "The resource 'IntuneAccountProtectionPolicy' is deprecated. It will be removed in a future release. Please use 'IntuneAccountProtectionPolicyWindows10' instead."
-    Write-Warning -Message "For more information, please visit https://learn.microsoft.com/en-us/mem/intune/fundamentals/whats-new#consolidation-of-intune-profiles-for-identity-protection-and-account-protection-"
+    Write-Warning -Message 'For more information, please visit https://learn.microsoft.com/en-us/mem/intune/fundamentals/whats-new#consolidation-of-intune-profiles-for-identity-protection-and-account-protection-'
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
@@ -424,7 +424,7 @@ function Set-TargetResource
         $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
         if ($policy.id)
         {
-            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId  $policy.id `
+            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $policy.id `
                 -Targets $assignmentsHash `
                 -Repository 'deviceManagement/intents'
         }
@@ -451,7 +451,7 @@ function Set-TargetResource
         #Update-MgBetaDeviceManagementIntent does not support updating the property settings
         #Update-MgBetaDeviceManagementIntentSetting only support updating a single setting at a time
         #Using Rest to reduce the number of calls
-        
+
         $Uri = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/deviceManagement/intents/$($currentPolicy.Identity)/updateSettings"
         $body = @{'settings' = $settings }
         Invoke-MgGraphRequest -Method POST -Uri $Uri -Body ($body | ConvertTo-Json -Depth 20) -ContentType 'application/json' 4> $null
@@ -459,7 +459,7 @@ function Set-TargetResource
         #region Assignments
         $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
 
-        Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId  $currentPolicy.Identity `
+        Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $currentPolicy.Identity `
             -Targets $assignmentsHash `
             -Repository 'deviceManagement/intents'
         #endregion
@@ -797,8 +797,8 @@ function Export-TargetResource
     catch
     {
         if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
-        $_.Exception -like "*Unable to perform redirect as Location Header is not set in response*" -or `
-        $_.Exception -like "*Request not applicable to target tenant*")
+                $_.Exception -like '*Unable to perform redirect as Location Header is not set in response*' -or `
+                $_.Exception -like '*Request not applicable to target tenant*')
         {
             Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }
@@ -843,7 +843,7 @@ function Get-M365DSCIntuneDeviceConfigurationSettings
         $result = @{}
         $settingType = $setting.AdditionalProperties.'@odata.type'
         $settingValue = $null
-        $currentValueKey = $Properties.keys | Where-Object -FilterScript { $_ -eq $setting.DefinitionId.Split("_")[1] }
+        $currentValueKey = $Properties.keys | Where-Object -FilterScript { $_ -eq $setting.DefinitionId.Split('_')[1] }
 
         if ($null -ne $currentValueKey)
         {

@@ -90,7 +90,7 @@ function Get-TargetResource
 
         $getValue = $null
         #region resource generator code
-        $getValue = Get-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Id  -ErrorAction SilentlyContinue
+        $getValue = Get-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Id -ErrorAction SilentlyContinue
 
         if ($null -eq $getValue)
         {
@@ -127,387 +127,514 @@ function Get-TargetResource
         $complexDeviceSettings = @{}
 
         # Add device settings with conditional checks
-        if ($null -ne $policySettings.DeviceSettings.deviceInstall_Classes_Deny) {
+        if ($null -ne $policySettings.DeviceSettings.deviceInstall_Classes_Deny)
+        {
             $complexDeviceSettings.Add('DeviceInstall_Classes_Deny', $policySettings.DeviceSettings.deviceInstall_Classes_Deny)
         }
-        if ($null -ne $policySettings.DeviceSettings.deviceInstall_Classes_Deny_List) {
+        if ($null -ne $policySettings.DeviceSettings.deviceInstall_Classes_Deny_List)
+        {
             $complexDeviceSettings.Add('DeviceInstall_Classes_Deny_List', $policySettings.DeviceSettings.deviceInstall_Classes_Deny_List)
         }
-        if ($null -ne $policySettings.DeviceSettings.deviceInstall_Classes_Deny_Retroactive) {
+        if ($null -ne $policySettings.DeviceSettings.deviceInstall_Classes_Deny_Retroactive)
+        {
             $complexDeviceSettings.Add('DeviceInstall_Classes_Deny_Retroactive', $policySettings.DeviceSettings.deviceInstall_Classes_Deny_Retroactive)
         }
-        if ($null -ne $policySettings.DeviceSettings.encryptionMethodWithXts_Name) {
+        if ($null -ne $policySettings.DeviceSettings.encryptionMethodWithXts_Name)
+        {
             $complexDeviceSettings.Add('EncryptionMethodWithXts_Name', $policySettings.DeviceSettings.encryptionMethodWithXts_Name)
         }
-        if ($null -ne $policySettings.DeviceSettings.encryptionMethodWithXtsOsDropDown_Name) {
+        if ($null -ne $policySettings.DeviceSettings.encryptionMethodWithXtsOsDropDown_Name)
+        {
             $complexDeviceSettings.Add('EncryptionMethodWithXtsOsDropDown_Name', $policySettings.DeviceSettings.encryptionMethodWithXtsOsDropDown_Name)
         }
-        if ($null -ne $policySettings.DeviceSettings.encryptionMethodWithXtsFdvDropDown_Name) {
+        if ($null -ne $policySettings.DeviceSettings.encryptionMethodWithXtsFdvDropDown_Name)
+        {
             $complexDeviceSettings.Add('EncryptionMethodWithXtsFdvDropDown_Name', $policySettings.DeviceSettings.encryptionMethodWithXtsFdvDropDown_Name)
         }
-        if ($null -ne $policySettings.DeviceSettings.encryptionMethodWithXtsRdvDropDown_Name) {
+        if ($null -ne $policySettings.DeviceSettings.encryptionMethodWithXtsRdvDropDown_Name)
+        {
             $complexDeviceSettings.Add('EncryptionMethodWithXtsRdvDropDown_Name', $policySettings.DeviceSettings.encryptionMethodWithXtsRdvDropDown_Name)
         }
-        if ($null -ne $policySettings.DeviceSettings.fDVRecoveryUsage_Name) {
+        if ($null -ne $policySettings.DeviceSettings.fDVRecoveryUsage_Name)
+        {
             $complexDeviceSettings.Add('FDVRecoveryUsage_Name', $policySettings.DeviceSettings.fDVRecoveryUsage_Name)
         }
-        if ($null -ne $policySettings.DeviceSettings.fDVActiveDirectoryBackup_Name) {
+        if ($null -ne $policySettings.DeviceSettings.fDVActiveDirectoryBackup_Name)
+        {
             $complexDeviceSettings.Add('FDVActiveDirectoryBackup_Name', $policySettings.DeviceSettings.fDVActiveDirectoryBackup_Name)
         }
-        if ($null -ne $policySettings.DeviceSettings.fDVHideRecoveryPage_Name) {
+        if ($null -ne $policySettings.DeviceSettings.fDVHideRecoveryPage_Name)
+        {
             $complexDeviceSettings.Add('FDVHideRecoveryPage_Name', $policySettings.DeviceSettings.fDVHideRecoveryPage_Name)
         }
-        if ($null -ne $policySettings.DeviceSettings.fDVRecoveryPasswordUsageDropDown_Name) {
+        if ($null -ne $policySettings.DeviceSettings.fDVRecoveryPasswordUsageDropDown_Name)
+        {
             $complexDeviceSettings.Add('FDVRecoveryPasswordUsageDropDown_Name', $policySettings.DeviceSettings.fDVRecoveryPasswordUsageDropDown_Name)
         }
-        if ($null -ne $policySettings.DeviceSettings.fDVRequireActiveDirectoryBackup_Name) {
+        if ($null -ne $policySettings.DeviceSettings.fDVRequireActiveDirectoryBackup_Name)
+        {
             $complexDeviceSettings.Add('FDVRequireActiveDirectoryBackup_Name', $policySettings.DeviceSettings.fDVRequireActiveDirectoryBackup_Name)
         }
-        if ($null -ne $policySettings.DeviceSettings.fDVAllowDRA_Name) {
+        if ($null -ne $policySettings.DeviceSettings.fDVAllowDRA_Name)
+        {
             $complexDeviceSettings.Add('FDVAllowDRA_Name', $policySettings.DeviceSettings.fDVAllowDRA_Name)
         }
-        if ($null -ne $policySettings.DeviceSettings.fDVActiveDirectoryBackupDropDown_Name) {
+        if ($null -ne $policySettings.DeviceSettings.fDVActiveDirectoryBackupDropDown_Name)
+        {
             $complexDeviceSettings.Add('FDVActiveDirectoryBackupDropDown_Name', $policySettings.DeviceSettings.fDVActiveDirectoryBackupDropDown_Name)
         }
-        if ($null -ne $policySettings.DeviceSettings.fDVRecoveryKeyUsageDropDown_Name) {
+        if ($null -ne $policySettings.DeviceSettings.fDVRecoveryKeyUsageDropDown_Name)
+        {
             $complexDeviceSettings.Add('FDVRecoveryKeyUsageDropDown_Name', $policySettings.DeviceSettings.fDVRecoveryKeyUsageDropDown_Name)
         }
-        if ($null -ne $policySettings.DeviceSettings.fDVDenyWriteAccess_Name) {
+        if ($null -ne $policySettings.DeviceSettings.fDVDenyWriteAccess_Name)
+        {
             $complexDeviceSettings.Add('FDVDenyWriteAccess_Name', $policySettings.DeviceSettings.fDVDenyWriteAccess_Name)
         }
-        if ($null -ne $policySettings.DeviceSettings.fDVEncryptionType_Name) {
+        if ($null -ne $policySettings.DeviceSettings.fDVEncryptionType_Name)
+        {
             $complexDeviceSettings.Add('FDVEncryptionType_Name', $policySettings.DeviceSettings.fDVEncryptionType_Name)
         }
-        if ($null -ne $policySettings.DeviceSettings.fDVEncryptionTypeDropDown_Name) {
+        if ($null -ne $policySettings.DeviceSettings.fDVEncryptionTypeDropDown_Name)
+        {
             $complexDeviceSettings.Add('FDVEncryptionTypeDropDown_Name', $policySettings.DeviceSettings.fDVEncryptionTypeDropDown_Name)
         }
-        if ($null -ne $policySettings.DeviceSettings.enablePreBootPinExceptionOnDECapableDevice_Name) {
+        if ($null -ne $policySettings.DeviceSettings.enablePreBootPinExceptionOnDECapableDevice_Name)
+        {
             $complexDeviceSettings.Add('EnablePreBootPinExceptionOnDECapableDevice_Name', $policySettings.DeviceSettings.enablePreBootPinExceptionOnDECapableDevice_Name)
         }
-        if ($null -ne $policySettings.DeviceSettings.enhancedPIN_Name) {
+        if ($null -ne $policySettings.DeviceSettings.enhancedPIN_Name)
+        {
             $complexDeviceSettings.Add('EnhancedPIN_Name', $policySettings.DeviceSettings.enhancedPIN_Name)
         }
-        if ($null -ne $policySettings.DeviceSettings.OSRecoveryUsage_Name) {
+        if ($null -ne $policySettings.DeviceSettings.OSRecoveryUsage_Name)
+        {
             $complexDeviceSettings.Add('OSRecoveryUsage_Name', $policySettings.DeviceSettings.OSRecoveryUsage_Name)
         }
-        if ($null -ne $policySettings.DeviceSettings.OSRequireActiveDirectoryBackup_Name) {
+        if ($null -ne $policySettings.DeviceSettings.OSRequireActiveDirectoryBackup_Name)
+        {
             $complexDeviceSettings.Add('OSRequireActiveDirectoryBackup_Name', $policySettings.DeviceSettings.OSRequireActiveDirectoryBackup_Name)
         }
-        if ($null -ne $policySettings.DeviceSettings.OSActiveDirectoryBackup_Name) {
+        if ($null -ne $policySettings.DeviceSettings.OSActiveDirectoryBackup_Name)
+        {
             $complexDeviceSettings.Add('OSActiveDirectoryBackup_Name', $policySettings.DeviceSettings.OSActiveDirectoryBackup_Name)
         }
-        if ($null -ne $policySettings.DeviceSettings.OSRecoveryPasswordUsageDropDown_Name) {
+        if ($null -ne $policySettings.DeviceSettings.OSRecoveryPasswordUsageDropDown_Name)
+        {
             $complexDeviceSettings.Add('OSRecoveryPasswordUsageDropDown_Name', $policySettings.DeviceSettings.OSRecoveryPasswordUsageDropDown_Name)
         }
-        if ($null -ne $policySettings.DeviceSettings.OSHideRecoveryPage_Name) {
+        if ($null -ne $policySettings.DeviceSettings.OSHideRecoveryPage_Name)
+        {
             $complexDeviceSettings.Add('OSHideRecoveryPage_Name', $policySettings.DeviceSettings.OSHideRecoveryPage_Name)
         }
-        if ($null -ne $policySettings.DeviceSettings.OSAllowDRA_Name) {
+        if ($null -ne $policySettings.DeviceSettings.OSAllowDRA_Name)
+        {
             $complexDeviceSettings.Add('OSAllowDRA_Name', $policySettings.DeviceSettings.OSAllowDRA_Name)
         }
-        if ($null -ne $policySettings.DeviceSettings.OSRecoveryKeyUsageDropDown_Name) {
+        if ($null -ne $policySettings.DeviceSettings.OSRecoveryKeyUsageDropDown_Name)
+        {
             $complexDeviceSettings.Add('OSRecoveryKeyUsageDropDown_Name', $policySettings.DeviceSettings.OSRecoveryKeyUsageDropDown_Name)
         }
-        if ($null -ne $policySettings.DeviceSettings.OSActiveDirectoryBackupDropDown_Name) {
+        if ($null -ne $policySettings.DeviceSettings.OSActiveDirectoryBackupDropDown_Name)
+        {
             $complexDeviceSettings.Add('OSActiveDirectoryBackupDropDown_Name', $policySettings.DeviceSettings.OSActiveDirectoryBackupDropDown_Name)
         }
-        if ($null -ne $policySettings.DeviceSettings.enablePrebootInputProtectorsOnSlates_Name) {
+        if ($null -ne $policySettings.DeviceSettings.enablePrebootInputProtectorsOnSlates_Name)
+        {
             $complexDeviceSettings.Add('EnablePrebootInputProtectorsOnSlates_Name', $policySettings.DeviceSettings.enablePrebootInputProtectorsOnSlates_Name)
         }
-        if ($null -ne $policySettings.DeviceSettings.OSEncryptionType_Name) {
+        if ($null -ne $policySettings.DeviceSettings.OSEncryptionType_Name)
+        {
             $complexDeviceSettings.Add('OSEncryptionType_Name', $policySettings.DeviceSettings.OSEncryptionType_Name)
         }
-        if ($null -ne $policySettings.DeviceSettings.OSEncryptionTypeDropDown_Name) {
+        if ($null -ne $policySettings.DeviceSettings.OSEncryptionTypeDropDown_Name)
+        {
             $complexDeviceSettings.Add('OSEncryptionTypeDropDown_Name', $policySettings.DeviceSettings.OSEncryptionTypeDropDown_Name)
         }
-        if ($null -ne $policySettings.DeviceSettings.configureAdvancedStartup_Name) {
+        if ($null -ne $policySettings.DeviceSettings.configureAdvancedStartup_Name)
+        {
             $complexDeviceSettings.Add('ConfigureAdvancedStartup_Name', $policySettings.DeviceSettings.configureAdvancedStartup_Name)
         }
-        if ($null -ne $policySettings.DeviceSettings.configureTPMStartupKeyUsageDropDown_Name) {
+        if ($null -ne $policySettings.DeviceSettings.configureTPMStartupKeyUsageDropDown_Name)
+        {
             $complexDeviceSettings.Add('ConfigureTPMStartupKeyUsageDropDown_Name', $policySettings.DeviceSettings.configureTPMStartupKeyUsageDropDown_Name)
         }
-        if ($null -ne $policySettings.DeviceSettings.configureTPMPINKeyUsageDropDown_Name) {
+        if ($null -ne $policySettings.DeviceSettings.configureTPMPINKeyUsageDropDown_Name)
+        {
             $complexDeviceSettings.Add('ConfigureTPMPINKeyUsageDropDown_Name', $policySettings.DeviceSettings.configureTPMPINKeyUsageDropDown_Name)
         }
-        if ($null -ne $policySettings.DeviceSettings.configureTPMUsageDropDown_Name) {
+        if ($null -ne $policySettings.DeviceSettings.configureTPMUsageDropDown_Name)
+        {
             $complexDeviceSettings.Add('ConfigureTPMUsageDropDown_Name', $policySettings.DeviceSettings.configureTPMUsageDropDown_Name)
         }
-        if ($null -ne $policySettings.DeviceSettings.configureNonTPMStartupKeyUsage_Name) {
+        if ($null -ne $policySettings.DeviceSettings.configureNonTPMStartupKeyUsage_Name)
+        {
             $complexDeviceSettings.Add('ConfigureNonTPMStartupKeyUsage_Name', $policySettings.DeviceSettings.configureNonTPMStartupKeyUsage_Name)
         }
-        if ($null -ne $policySettings.DeviceSettings.configurePINUsageDropDown_Name) {
+        if ($null -ne $policySettings.DeviceSettings.configurePINUsageDropDown_Name)
+        {
             $complexDeviceSettings.Add('ConfigurePINUsageDropDown_Name', $policySettings.DeviceSettings.configurePINUsageDropDown_Name)
         }
-        if ($null -ne $policySettings.DeviceSettings.RDVConfigureBDE) {
+        if ($null -ne $policySettings.DeviceSettings.RDVConfigureBDE)
+        {
             $complexDeviceSettings.Add('RDVConfigureBDE', $policySettings.DeviceSettings.RDVConfigureBDE)
         }
-        if ($null -ne $policySettings.DeviceSettings.RDVAllowBDE_Name) {
+        if ($null -ne $policySettings.DeviceSettings.RDVAllowBDE_Name)
+        {
             $complexDeviceSettings.Add('RDVAllowBDE_Name', $policySettings.DeviceSettings.RDVAllowBDE_Name)
         }
-        if ($null -ne $policySettings.DeviceSettings.RDVEncryptionType_Name) {
+        if ($null -ne $policySettings.DeviceSettings.RDVEncryptionType_Name)
+        {
             $complexDeviceSettings.Add('RDVEncryptionType_Name', $policySettings.DeviceSettings.RDVEncryptionType_Name)
         }
-        if ($null -ne $policySettings.DeviceSettings.RDVEncryptionTypeDropDown_Name) {
+        if ($null -ne $policySettings.DeviceSettings.RDVEncryptionTypeDropDown_Name)
+        {
             $complexDeviceSettings.Add('RDVEncryptionTypeDropDown_Name', $policySettings.DeviceSettings.RDVEncryptionTypeDropDown_Name)
         }
-        if ($null -ne $policySettings.DeviceSettings.RDVDisableBDE_Name) {
+        if ($null -ne $policySettings.DeviceSettings.RDVDisableBDE_Name)
+        {
             $complexDeviceSettings.Add('RDVDisableBDE_Name', $policySettings.DeviceSettings.RDVDisableBDE_Name)
         }
-        if ($null -ne $policySettings.DeviceSettings.RDVDenyWriteAccess_Name) {
+        if ($null -ne $policySettings.DeviceSettings.RDVDenyWriteAccess_Name)
+        {
             $complexDeviceSettings.Add('RDVDenyWriteAccess_Name', $policySettings.DeviceSettings.RDVDenyWriteAccess_Name)
         }
-        if ($null -ne $policySettings.DeviceSettings.RDVCrossOrg) {
+        if ($null -ne $policySettings.DeviceSettings.RDVCrossOrg)
+        {
             $complexDeviceSettings.Add('RDVCrossOrg', $policySettings.DeviceSettings.RDVCrossOrg)
         }
-        if ($null -ne $policySettings.DeviceSettings.EnableSmartScreen) {
+        if ($null -ne $policySettings.DeviceSettings.EnableSmartScreen)
+        {
             $complexDeviceSettings.Add('EnableSmartScreen', $policySettings.DeviceSettings.EnableSmartScreen)
         }
-        if ($null -ne $policySettings.DeviceSettings.EnableSmartScreenDropdown) {
+        if ($null -ne $policySettings.DeviceSettings.EnableSmartScreenDropdown)
+        {
             $complexDeviceSettings.Add('EnableSmartScreenDropdown', $policySettings.DeviceSettings.EnableSmartScreenDropdown)
         }
-        if ($null -ne $policySettings.DeviceSettings.DisableSafetyFilterOverrideForAppRepUnknown) {
+        if ($null -ne $policySettings.DeviceSettings.DisableSafetyFilterOverrideForAppRepUnknown)
+        {
             $complexDeviceSettings.Add('DisableSafetyFilterOverrideForAppRepUnknown', $policySettings.DeviceSettings.DisableSafetyFilterOverrideForAppRepUnknown)
         }
-        if ($null -ne $policySettings.DeviceSettings.Disable_Managing_Safety_Filter_IE9) {
+        if ($null -ne $policySettings.DeviceSettings.Disable_Managing_Safety_Filter_IE9)
+        {
             $complexDeviceSettings.Add('Disable_Managing_Safety_Filter_IE9', $policySettings.DeviceSettings.Disable_Managing_Safety_Filter_IE9)
         }
-        if ($null -ne $policySettings.DeviceSettings.IE9SafetyFilterOptions) {
+        if ($null -ne $policySettings.DeviceSettings.IE9SafetyFilterOptions)
+        {
             $complexDeviceSettings.Add('IE9SafetyFilterOptions', $policySettings.DeviceSettings.IE9SafetyFilterOptions)
         }
-        if ($null -ne $policySettings.DeviceSettings.AllowWarningForOtherDiskEncryption) {
+        if ($null -ne $policySettings.DeviceSettings.AllowWarningForOtherDiskEncryption)
+        {
             $complexDeviceSettings.Add('AllowWarningForOtherDiskEncryption', $policySettings.DeviceSettings.AllowWarningForOtherDiskEncryption)
         }
-        if ($null -ne $policySettings.DeviceSettings.AllowStandardUserEncryption) {
+        if ($null -ne $policySettings.DeviceSettings.AllowStandardUserEncryption)
+        {
             $complexDeviceSettings.Add('AllowStandardUserEncryption', $policySettings.DeviceSettings.AllowStandardUserEncryption)
         }
-        if ($null -ne $policySettings.DeviceSettings.ConfigureRecoveryPasswordRotation) {
+        if ($null -ne $policySettings.DeviceSettings.ConfigureRecoveryPasswordRotation)
+        {
             $complexDeviceSettings.Add('ConfigureRecoveryPasswordRotation', $policySettings.DeviceSettings.ConfigureRecoveryPasswordRotation)
         }
-        if ($null -ne $policySettings.DeviceSettings.RequireDeviceEncryption) {
+        if ($null -ne $policySettings.DeviceSettings.RequireDeviceEncryption)
+        {
             $complexDeviceSettings.Add('RequireDeviceEncryption', $policySettings.DeviceSettings.RequireDeviceEncryption)
         }
-        if ($null -ne $policySettings.DeviceSettings.AllowArchiveScanning) {
+        if ($null -ne $policySettings.DeviceSettings.AllowArchiveScanning)
+        {
             $complexDeviceSettings.Add('AllowArchiveScanning', $policySettings.DeviceSettings.AllowArchiveScanning)
         }
-        if ($null -ne $policySettings.DeviceSettings.AllowBehaviorMonitoring) {
+        if ($null -ne $policySettings.DeviceSettings.AllowBehaviorMonitoring)
+        {
             $complexDeviceSettings.Add('AllowBehaviorMonitoring', $policySettings.DeviceSettings.AllowBehaviorMonitoring)
         }
-        if ($null -ne $policySettings.DeviceSettings.AllowCloudProtection) {
+        if ($null -ne $policySettings.DeviceSettings.AllowCloudProtection)
+        {
             $complexDeviceSettings.Add('AllowCloudProtection', $policySettings.DeviceSettings.AllowCloudProtection)
         }
-        if ($null -ne $policySettings.DeviceSettings.AllowEmailScanning) {
+        if ($null -ne $policySettings.DeviceSettings.AllowEmailScanning)
+        {
             $complexDeviceSettings.Add('AllowEmailScanning', $policySettings.DeviceSettings.AllowEmailScanning)
         }
-        if ($null -ne $policySettings.DeviceSettings.AllowFullScanRemovableDriveScanning) {
+        if ($null -ne $policySettings.DeviceSettings.AllowFullScanRemovableDriveScanning)
+        {
             $complexDeviceSettings.Add('AllowFullScanRemovableDriveScanning', $policySettings.DeviceSettings.AllowFullScanRemovableDriveScanning)
         }
-        if ($null -ne $policySettings.DeviceSettings.AllowOnAccessProtection) {
+        if ($null -ne $policySettings.DeviceSettings.AllowOnAccessProtection)
+        {
             $complexDeviceSettings.Add('AllowOnAccessProtection', $policySettings.DeviceSettings.AllowOnAccessProtection)
         }
-        if ($null -ne $policySettings.DeviceSettings.AllowRealtimeMonitoring) {
+        if ($null -ne $policySettings.DeviceSettings.AllowRealtimeMonitoring)
+        {
             $complexDeviceSettings.Add('AllowRealtimeMonitoring', $policySettings.DeviceSettings.AllowRealtimeMonitoring)
         }
-        if ($null -ne $policySettings.DeviceSettings.AllowScanningNetworkFiles) {
+        if ($null -ne $policySettings.DeviceSettings.AllowScanningNetworkFiles)
+        {
             $complexDeviceSettings.Add('AllowScanningNetworkFiles', $policySettings.DeviceSettings.AllowScanningNetworkFiles)
         }
-        if ($null -ne $policySettings.DeviceSettings.AllowIOAVProtection) {
+        if ($null -ne $policySettings.DeviceSettings.AllowIOAVProtection)
+        {
             $complexDeviceSettings.Add('AllowIOAVProtection', $policySettings.DeviceSettings.AllowIOAVProtection)
         }
-        if ($null -ne $policySettings.DeviceSettings.AllowScriptScanning) {
+        if ($null -ne $policySettings.DeviceSettings.AllowScriptScanning)
+        {
             $complexDeviceSettings.Add('AllowScriptScanning', $policySettings.DeviceSettings.AllowScriptScanning)
         }
-        if ($null -ne $policySettings.DeviceSettings.AllowUserUIAccess) {
+        if ($null -ne $policySettings.DeviceSettings.AllowUserUIAccess)
+        {
             $complexDeviceSettings.Add('AllowUserUIAccess', $policySettings.DeviceSettings.AllowUserUIAccess)
         }
-        if ($null -ne $policySettings.DeviceSettings.BlockExecutionOfPotentiallyObfuscatedScripts) {
+        if ($null -ne $policySettings.DeviceSettings.BlockExecutionOfPotentiallyObfuscatedScripts)
+        {
             $complexDeviceSettings.Add('BlockExecutionOfPotentiallyObfuscatedScripts', $policySettings.DeviceSettings.BlockExecutionOfPotentiallyObfuscatedScripts)
         }
-        if ($null -ne $policySettings.DeviceSettings.BlockExecutionOfPotentiallyObfuscatedScripts_ASROnlyPerRuleExclusions) {
+        if ($null -ne $policySettings.DeviceSettings.BlockExecutionOfPotentiallyObfuscatedScripts_ASROnlyPerRuleExclusions)
+        {
             $complexDeviceSettings.Add('BlockExecutionOfPotentiallyObfuscatedScripts_ASROnlyPerRuleExclusions', $policySettings.DeviceSettings.BlockExecutionOfPotentiallyObfuscatedScripts_ASROnlyPerRuleExclusions)
         }
-        if ($null -ne $policySettings.DeviceSettings.BlockWin32APICallsFromOfficeMacros) {
+        if ($null -ne $policySettings.DeviceSettings.BlockWin32APICallsFromOfficeMacros)
+        {
             $complexDeviceSettings.Add('BlockWin32APICallsFromOfficeMacros', $policySettings.DeviceSettings.BlockWin32APICallsFromOfficeMacros)
         }
-        if ($null -ne $policySettings.DeviceSettings.BlockWin32APICallsFromOfficeMacros_ASROnlyPerRuleExclusions) {
+        if ($null -ne $policySettings.DeviceSettings.BlockWin32APICallsFromOfficeMacros_ASROnlyPerRuleExclusions)
+        {
             $complexDeviceSettings.Add('BlockWin32APICallsFromOfficeMacros_ASROnlyPerRuleExclusions', $policySettings.DeviceSettings.BlockWin32APICallsFromOfficeMacros_ASROnlyPerRuleExclusions)
         }
-        if ($null -ne $policySettings.DeviceSettings.BlockExecutableFilesRunningUnlessTheyMeetPrevalenceAgeTrustedListCriterion) {
+        if ($null -ne $policySettings.DeviceSettings.BlockExecutableFilesRunningUnlessTheyMeetPrevalenceAgeTrustedListCriterion)
+        {
             $complexDeviceSettings.Add('BlockExecutableFilesRunningUnlessTheyMeetPrevalenceAgeTrustedListCriterion', $policySettings.DeviceSettings.BlockExecutableFilesRunningUnlessTheyMeetPrevalenceAgeTrustedListCriterion)
         }
-        if ($null -ne $policySettings.DeviceSettings.BlockExecutableFilesRunningUnlessTheyMeetPrevalenceAgeTrustedListCriterion_ASROnlyPerRuleExclusions) {
+        if ($null -ne $policySettings.DeviceSettings.BlockExecutableFilesRunningUnlessTheyMeetPrevalenceAgeTrustedListCriterion_ASROnlyPerRuleExclusions)
+        {
             $complexDeviceSettings.Add('BlockExecutableFilesRunningUnlessTheyMeetPrevalenceAgeTrustedListCriterion_ASROnlyPerRuleExclusions', $policySettings.DeviceSettings.BlockExecutableFilesRunningUnlessTheyMeetPrevalenceAgeTrustedListCriterion_ASROnlyPerRuleExclusions)
         }
-        if ($null -ne $policySettings.DeviceSettings.BlockOfficeCommunicationAppFromCreatingChildProcesses) {
+        if ($null -ne $policySettings.DeviceSettings.BlockOfficeCommunicationAppFromCreatingChildProcesses)
+        {
             $complexDeviceSettings.Add('BlockOfficeCommunicationAppFromCreatingChildProcesses', $policySettings.DeviceSettings.BlockOfficeCommunicationAppFromCreatingChildProcesses)
         }
-        if ($null -ne $policySettings.DeviceSettings.BlockOfficeCommunicationAppFromCreatingChildProcesses_ASROnlyPerRuleExclusions) {
+        if ($null -ne $policySettings.DeviceSettings.BlockOfficeCommunicationAppFromCreatingChildProcesses_ASROnlyPerRuleExclusions)
+        {
             $complexDeviceSettings.Add('BlockOfficeCommunicationAppFromCreatingChildProcesses_ASROnlyPerRuleExclusions', $policySettings.DeviceSettings.BlockOfficeCommunicationAppFromCreatingChildProcesses_ASROnlyPerRuleExclusions)
         }
-        if ($null -ne $policySettings.DeviceSettings.BlockAllOfficeApplicationsFromCreatingChildProcesses) {
+        if ($null -ne $policySettings.DeviceSettings.BlockAllOfficeApplicationsFromCreatingChildProcesses)
+        {
             $complexDeviceSettings.Add('BlockAllOfficeApplicationsFromCreatingChildProcesses', $policySettings.DeviceSettings.BlockAllOfficeApplicationsFromCreatingChildProcesses)
         }
-        if ($null -ne $policySettings.DeviceSettings.BlockAllOfficeApplicationsFromCreatingChildProcesses_ASROnlyPerRuleExclusions) {
+        if ($null -ne $policySettings.DeviceSettings.BlockAllOfficeApplicationsFromCreatingChildProcesses_ASROnlyPerRuleExclusions)
+        {
             $complexDeviceSettings.Add('BlockAllOfficeApplicationsFromCreatingChildProcesses_ASROnlyPerRuleExclusions', $policySettings.DeviceSettings.BlockAllOfficeApplicationsFromCreatingChildProcesses_ASROnlyPerRuleExclusions)
         }
-        if ($null -ne $policySettings.DeviceSettings.BlockAdobeReaderFromCreatingChildProcesses) {
+        if ($null -ne $policySettings.DeviceSettings.BlockAdobeReaderFromCreatingChildProcesses)
+        {
             $complexDeviceSettings.Add('BlockAdobeReaderFromCreatingChildProcesses', $policySettings.DeviceSettings.BlockAdobeReaderFromCreatingChildProcesses)
         }
-        if ($null -ne $policySettings.DeviceSettings.BlockAdobeReaderFromCreatingChildProcesses_ASROnlyPerRuleExclusions) {
+        if ($null -ne $policySettings.DeviceSettings.BlockAdobeReaderFromCreatingChildProcesses_ASROnlyPerRuleExclusions)
+        {
             $complexDeviceSettings.Add('BlockAdobeReaderFromCreatingChildProcesses_ASROnlyPerRuleExclusions', $policySettings.DeviceSettings.BlockAdobeReaderFromCreatingChildProcesses_ASROnlyPerRuleExclusions)
         }
-        if ($null -ne $policySettings.DeviceSettings.BlockCredentialStealingFromWindowsLocalSecurityAuthoritySubsystem) {
+        if ($null -ne $policySettings.DeviceSettings.BlockCredentialStealingFromWindowsLocalSecurityAuthoritySubsystem)
+        {
             $complexDeviceSettings.Add('BlockCredentialStealingFromWindowsLocalSecurityAuthoritySubsystem', $policySettings.DeviceSettings.BlockCredentialStealingFromWindowsLocalSecurityAuthoritySubsystem)
         }
-        if ($null -ne $policySettings.DeviceSettings.BlockCredentialStealingFromWindowsLocalSecurityAuthoritySubsystem_ASROnlyPerRuleExclusions) {
+        if ($null -ne $policySettings.DeviceSettings.BlockCredentialStealingFromWindowsLocalSecurityAuthoritySubsystem_ASROnlyPerRuleExclusions)
+        {
             $complexDeviceSettings.Add('BlockCredentialStealingFromWindowsLocalSecurityAuthoritySubsystem_ASROnlyPerRuleExclusions', $policySettings.DeviceSettings.BlockCredentialStealingFromWindowsLocalSecurityAuthoritySubsystem_ASROnlyPerRuleExclusions)
         }
-        if ($null -ne $policySettings.DeviceSettings.BlockJavaScriptOrVBScriptFromLaunchingDownloadedExecutableContent) {
+        if ($null -ne $policySettings.DeviceSettings.BlockJavaScriptOrVBScriptFromLaunchingDownloadedExecutableContent)
+        {
             $complexDeviceSettings.Add('BlockJavaScriptOrVBScriptFromLaunchingDownloadedExecutableContent', $policySettings.DeviceSettings.BlockJavaScriptOrVBScriptFromLaunchingDownloadedExecutableContent)
         }
-        if ($null -ne $policySettings.DeviceSettings.BlockJavaScriptOrVBScriptFromLaunchingDownloadedExecutableContent_ASROnlyPerRuleExclusions) {
+        if ($null -ne $policySettings.DeviceSettings.BlockJavaScriptOrVBScriptFromLaunchingDownloadedExecutableContent_ASROnlyPerRuleExclusions)
+        {
             $complexDeviceSettings.Add('BlockJavaScriptOrVBScriptFromLaunchingDownloadedExecutableContent_ASROnlyPerRuleExclusions', $policySettings.DeviceSettings.BlockJavaScriptOrVBScriptFromLaunchingDownloadedExecutableContent_ASROnlyPerRuleExclusions)
         }
-        if ($null -ne $policySettings.DeviceSettings.BlockWebshellCreationForServers) {
+        if ($null -ne $policySettings.DeviceSettings.BlockWebshellCreationForServers)
+        {
             $complexDeviceSettings.Add('BlockWebshellCreationForServers', $policySettings.DeviceSettings.BlockWebshellCreationForServers)
         }
-        if ($null -ne $policySettings.DeviceSettings.BlockWebshellCreationForServers_ASROnlyPerRuleExclusions) {
+        if ($null -ne $policySettings.DeviceSettings.BlockWebshellCreationForServers_ASROnlyPerRuleExclusions)
+        {
             $complexDeviceSettings.Add('BlockWebshellCreationForServers_ASROnlyPerRuleExclusions', $policySettings.DeviceSettings.BlockWebshellCreationForServers_ASROnlyPerRuleExclusions)
         }
-        if ($null -ne $policySettings.DeviceSettings.BlockUntrustedUnsignedProcessesThatRunFromUSB) {
+        if ($null -ne $policySettings.DeviceSettings.BlockUntrustedUnsignedProcessesThatRunFromUSB)
+        {
             $complexDeviceSettings.Add('BlockUntrustedUnsignedProcessesThatRunFromUSB', $policySettings.DeviceSettings.BlockUntrustedUnsignedProcessesThatRunFromUSB)
         }
-        if ($null -ne $policySettings.DeviceSettings.BlockUntrustedUnsignedProcessesThatRunFromUSB_ASROnlyPerRuleExclusions) {
+        if ($null -ne $policySettings.DeviceSettings.BlockUntrustedUnsignedProcessesThatRunFromUSB_ASROnlyPerRuleExclusions)
+        {
             $complexDeviceSettings.Add('BlockUntrustedUnsignedProcessesThatRunFromUSB_ASROnlyPerRuleExclusions', $policySettings.DeviceSettings.BlockUntrustedUnsignedProcessesThatRunFromUSB_ASROnlyPerRuleExclusions)
         }
-        if ($null -ne $policySettings.DeviceSettings.BlockPersistenceThroughWMIEventSubscription) {
+        if ($null -ne $policySettings.DeviceSettings.BlockPersistenceThroughWMIEventSubscription)
+        {
             $complexDeviceSettings.Add('BlockPersistenceThroughWMIEventSubscription', $policySettings.DeviceSettings.BlockPersistenceThroughWMIEventSubscription)
         }
-        if ($null -ne $policySettings.DeviceSettings.BlockUseOfCopiedOrImpersonatedSystemTools) {
+        if ($null -ne $policySettings.DeviceSettings.BlockUseOfCopiedOrImpersonatedSystemTools)
+        {
             $complexDeviceSettings.Add('BlockUseOfCopiedOrImpersonatedSystemTools', $policySettings.DeviceSettings.BlockUseOfCopiedOrImpersonatedSystemTools)
         }
-        if ($null -ne $policySettings.DeviceSettings.BlockUseOfCopiedOrImpersonatedSystemTools_ASROnlyPerRuleExclusions) {
+        if ($null -ne $policySettings.DeviceSettings.BlockUseOfCopiedOrImpersonatedSystemTools_ASROnlyPerRuleExclusions)
+        {
             $complexDeviceSettings.Add('BlockUseOfCopiedOrImpersonatedSystemTools_ASROnlyPerRuleExclusions', $policySettings.DeviceSettings.BlockUseOfCopiedOrImpersonatedSystemTools_ASROnlyPerRuleExclusions)
         }
-        if ($null -ne $policySettings.DeviceSettings.BlockAbuseOfExploitedVulnerableSignedDrivers) {
+        if ($null -ne $policySettings.DeviceSettings.BlockAbuseOfExploitedVulnerableSignedDrivers)
+        {
             $complexDeviceSettings.Add('BlockAbuseOfExploitedVulnerableSignedDrivers', $policySettings.DeviceSettings.BlockAbuseOfExploitedVulnerableSignedDrivers)
         }
-        if ($null -ne $policySettings.DeviceSettings.BlockAbuseOfExploitedVulnerableSignedDrivers_ASROnlyPerRuleExclusions) {
+        if ($null -ne $policySettings.DeviceSettings.BlockAbuseOfExploitedVulnerableSignedDrivers_ASROnlyPerRuleExclusions)
+        {
             $complexDeviceSettings.Add('BlockAbuseOfExploitedVulnerableSignedDrivers_ASROnlyPerRuleExclusions', $policySettings.DeviceSettings.BlockAbuseOfExploitedVulnerableSignedDrivers_ASROnlyPerRuleExclusions)
         }
-        if ($null -ne $policySettings.DeviceSettings.BlockProcessCreationsFromPSExecAndWMICommands) {
+        if ($null -ne $policySettings.DeviceSettings.BlockProcessCreationsFromPSExecAndWMICommands)
+        {
             $complexDeviceSettings.Add('BlockProcessCreationsFromPSExecAndWMICommands', $policySettings.DeviceSettings.BlockProcessCreationsFromPSExecAndWMICommands)
         }
-        if ($null -ne $policySettings.DeviceSettings.BlockProcessCreationsFromPSExecAndWMICommands_ASROnlyPerRuleExclusions) {
+        if ($null -ne $policySettings.DeviceSettings.BlockProcessCreationsFromPSExecAndWMICommands_ASROnlyPerRuleExclusions)
+        {
             $complexDeviceSettings.Add('BlockProcessCreationsFromPSExecAndWMICommands_ASROnlyPerRuleExclusions', $policySettings.DeviceSettings.BlockProcessCreationsFromPSExecAndWMICommands_ASROnlyPerRuleExclusions)
         }
-        if ($null -ne $policySettings.DeviceSettings.BlockOfficeApplicationsFromCreatingExecutableContent) {
+        if ($null -ne $policySettings.DeviceSettings.BlockOfficeApplicationsFromCreatingExecutableContent)
+        {
             $complexDeviceSettings.Add('BlockOfficeApplicationsFromCreatingExecutableContent', $policySettings.DeviceSettings.BlockOfficeApplicationsFromCreatingExecutableContent)
         }
-        if ($null -ne $policySettings.DeviceSettings.BlockOfficeApplicationsFromCreatingExecutableContent_ASROnlyPerRuleExclusions) {
+        if ($null -ne $policySettings.DeviceSettings.BlockOfficeApplicationsFromCreatingExecutableContent_ASROnlyPerRuleExclusions)
+        {
             $complexDeviceSettings.Add('BlockOfficeApplicationsFromCreatingExecutableContent_ASROnlyPerRuleExclusions', $policySettings.DeviceSettings.BlockOfficeApplicationsFromCreatingExecutableContent_ASROnlyPerRuleExclusions)
         }
-        if ($null -ne $policySettings.DeviceSettings.BlockOfficeApplicationsFromInjectingCodeIntoOtherProcesses) {
+        if ($null -ne $policySettings.DeviceSettings.BlockOfficeApplicationsFromInjectingCodeIntoOtherProcesses)
+        {
             $complexDeviceSettings.Add('BlockOfficeApplicationsFromInjectingCodeIntoOtherProcesses', $policySettings.DeviceSettings.BlockOfficeApplicationsFromInjectingCodeIntoOtherProcesses)
         }
-        if ($null -ne $policySettings.DeviceSettings.BlockOfficeApplicationsFromInjectingCodeIntoOtherProcesses_ASROnlyPerRuleExclusions) {
+        if ($null -ne $policySettings.DeviceSettings.BlockOfficeApplicationsFromInjectingCodeIntoOtherProcesses_ASROnlyPerRuleExclusions)
+        {
             $complexDeviceSettings.Add('BlockOfficeApplicationsFromInjectingCodeIntoOtherProcesses_ASROnlyPerRuleExclusions', $policySettings.DeviceSettings.BlockOfficeApplicationsFromInjectingCodeIntoOtherProcesses_ASROnlyPerRuleExclusions)
         }
-        if ($null -ne $policySettings.DeviceSettings.BlockRebootingMachineInSafeMode) {
+        if ($null -ne $policySettings.DeviceSettings.BlockRebootingMachineInSafeMode)
+        {
             $complexDeviceSettings.Add('BlockRebootingMachineInSafeMode', $policySettings.DeviceSettings.BlockRebootingMachineInSafeMode)
         }
-        if ($null -ne $policySettings.DeviceSettings.BlockRebootingMachineInSafeMode_ASROnlyPerRuleExclusions) {
+        if ($null -ne $policySettings.DeviceSettings.BlockRebootingMachineInSafeMode_ASROnlyPerRuleExclusions)
+        {
             $complexDeviceSettings.Add('BlockRebootingMachineInSafeMode_ASROnlyPerRuleExclusions', $policySettings.DeviceSettings.BlockRebootingMachineInSafeMode_ASROnlyPerRuleExclusions)
         }
-        if ($null -ne $policySettings.DeviceSettings.UseAdvancedProtectionAgainstRansomware) {
+        if ($null -ne $policySettings.DeviceSettings.UseAdvancedProtectionAgainstRansomware)
+        {
             $complexDeviceSettings.Add('UseAdvancedProtectionAgainstRansomware', $policySettings.DeviceSettings.UseAdvancedProtectionAgainstRansomware)
         }
-        if ($null -ne $policySettings.DeviceSettings.UseAdvancedProtectionAgainstRansomware_ASROnlyPerRuleExclusions) {
+        if ($null -ne $policySettings.DeviceSettings.UseAdvancedProtectionAgainstRansomware_ASROnlyPerRuleExclusions)
+        {
             $complexDeviceSettings.Add('UseAdvancedProtectionAgainstRansomware_ASROnlyPerRuleExclusions', $policySettings.DeviceSettings.UseAdvancedProtectionAgainstRansomware_ASROnlyPerRuleExclusions)
         }
-        if ($null -ne $policySettings.DeviceSettings.BlockExecutableContentFromEmailClientAndWebmail) {
+        if ($null -ne $policySettings.DeviceSettings.BlockExecutableContentFromEmailClientAndWebmail)
+        {
             $complexDeviceSettings.Add('BlockExecutableContentFromEmailClientAndWebmail', $policySettings.DeviceSettings.BlockExecutableContentFromEmailClientAndWebmail)
         }
-        if ($null -ne $policySettings.DeviceSettings.BlockExecutableContentFromEmailClientAndWebmail_ASROnlyPerRuleExclusions) {
+        if ($null -ne $policySettings.DeviceSettings.BlockExecutableContentFromEmailClientAndWebmail_ASROnlyPerRuleExclusions)
+        {
             $complexDeviceSettings.Add('BlockExecutableContentFromEmailClientAndWebmail_ASROnlyPerRuleExclusions', $policySettings.DeviceSettings.BlockExecutableContentFromEmailClientAndWebmail_ASROnlyPerRuleExclusions)
         }
-        if ($null -ne $policySettings.DeviceSettings.CheckForSignaturesBeforeRunningScan) {
+        if ($null -ne $policySettings.DeviceSettings.CheckForSignaturesBeforeRunningScan)
+        {
             $complexDeviceSettings.Add('CheckForSignaturesBeforeRunningScan', $policySettings.DeviceSettings.CheckForSignaturesBeforeRunningScan)
         }
-        if ($null -ne $policySettings.DeviceSettings.CloudBlockLevel) {
+        if ($null -ne $policySettings.DeviceSettings.CloudBlockLevel)
+        {
             $complexDeviceSettings.Add('CloudBlockLevel', $policySettings.DeviceSettings.CloudBlockLevel)
         }
-        if ($null -ne $policySettings.DeviceSettings.CloudExtendedTimeout) {
+        if ($null -ne $policySettings.DeviceSettings.CloudExtendedTimeout)
+        {
             $complexDeviceSettings.Add('CloudExtendedTimeout', $policySettings.DeviceSettings.CloudExtendedTimeout)
         }
-        if ($null -ne $policySettings.DeviceSettings.DisableLocalAdminMerge) {
+        if ($null -ne $policySettings.DeviceSettings.DisableLocalAdminMerge)
+        {
             $complexDeviceSettings.Add('DisableLocalAdminMerge', $policySettings.DeviceSettings.DisableLocalAdminMerge)
         }
-        if ($null -ne $policySettings.DeviceSettings.EnableNetworkProtection) {
+        if ($null -ne $policySettings.DeviceSettings.EnableNetworkProtection)
+        {
             $complexDeviceSettings.Add('EnableNetworkProtection', $policySettings.DeviceSettings.EnableNetworkProtection)
         }
-        if ($null -ne $policySettings.DeviceSettings.HideExclusionsFromLocalAdmins) {
+        if ($null -ne $policySettings.DeviceSettings.HideExclusionsFromLocalAdmins)
+        {
             $complexDeviceSettings.Add('HideExclusionsFromLocalAdmins', $policySettings.DeviceSettings.HideExclusionsFromLocalAdmins)
         }
-        if ($null -ne $policySettings.DeviceSettings.HideExclusionsFromLocalUsers) {
+        if ($null -ne $policySettings.DeviceSettings.HideExclusionsFromLocalUsers)
+        {
             $complexDeviceSettings.Add('HideExclusionsFromLocalUsers', $policySettings.DeviceSettings.HideExclusionsFromLocalUsers)
         }
-        if ($null -ne $policySettings.DeviceSettings.OobeEnableRtpAndSigUpdate) {
+        if ($null -ne $policySettings.DeviceSettings.OobeEnableRtpAndSigUpdate)
+        {
             $complexDeviceSettings.Add('OobeEnableRtpAndSigUpdate', $policySettings.DeviceSettings.OobeEnableRtpAndSigUpdate)
         }
-        if ($null -ne $policySettings.DeviceSettings.PUAProtection) {
+        if ($null -ne $policySettings.DeviceSettings.PUAProtection)
+        {
             $complexDeviceSettings.Add('PUAProtection', $policySettings.DeviceSettings.PUAProtection)
         }
-        if ($null -ne $policySettings.DeviceSettings.RealTimeScanDirection) {
+        if ($null -ne $policySettings.DeviceSettings.RealTimeScanDirection)
+        {
             $complexDeviceSettings.Add('RealTimeScanDirection', $policySettings.DeviceSettings.RealTimeScanDirection)
         }
-        if ($null -ne $policySettings.DeviceSettings.ScanParameter) {
+        if ($null -ne $policySettings.DeviceSettings.ScanParameter)
+        {
             $complexDeviceSettings.Add('ScanParameter', $policySettings.DeviceSettings.ScanParameter)
         }
-        if ($null -ne $policySettings.DeviceSettings.ScheduleQuickScanTime) {
+        if ($null -ne $policySettings.DeviceSettings.ScheduleQuickScanTime)
+        {
             $complexDeviceSettings.Add('ScheduleQuickScanTime', $policySettings.DeviceSettings.ScheduleQuickScanTime)
         }
-        if ($null -ne $policySettings.DeviceSettings.ScheduleScanDay) {
+        if ($null -ne $policySettings.DeviceSettings.ScheduleScanDay)
+        {
             $complexDeviceSettings.Add('ScheduleScanDay', $policySettings.DeviceSettings.ScheduleScanDay)
         }
-        if ($null -ne $policySettings.DeviceSettings.ScheduleScanTime) {
+        if ($null -ne $policySettings.DeviceSettings.ScheduleScanTime)
+        {
             $complexDeviceSettings.Add('ScheduleScanTime', $policySettings.DeviceSettings.ScheduleScanTime)
         }
-        if ($null -ne $policySettings.DeviceSettings.SignatureUpdateInterval) {
+        if ($null -ne $policySettings.DeviceSettings.SignatureUpdateInterval)
+        {
             $complexDeviceSettings.Add('SignatureUpdateInterval', $policySettings.DeviceSettings.SignatureUpdateInterval)
         }
-        if ($null -ne $policySettings.DeviceSettings.SubmitSamplesConsent) {
+        if ($null -ne $policySettings.DeviceSettings.SubmitSamplesConsent)
+        {
             $complexDeviceSettings.Add('SubmitSamplesConsent', $policySettings.DeviceSettings.SubmitSamplesConsent)
         }
-        if ($null -ne $policySettings.DeviceSettings.LsaCfgFlags) {
+        if ($null -ne $policySettings.DeviceSettings.LsaCfgFlags)
+        {
             $complexDeviceSettings.Add('LsaCfgFlags', $policySettings.DeviceSettings.LsaCfgFlags)
         }
-        if ($null -ne $policySettings.DeviceSettings.DeviceEnumerationPolicy) {
+        if ($null -ne $policySettings.DeviceSettings.DeviceEnumerationPolicy)
+        {
             $complexDeviceSettings.Add('DeviceEnumerationPolicy', $policySettings.DeviceSettings.DeviceEnumerationPolicy)
         }
-        if ($null -ne $policySettings.DeviceSettings.SmartScreenEnabled) {
+        if ($null -ne $policySettings.DeviceSettings.SmartScreenEnabled)
+        {
             $complexDeviceSettings.Add('SmartScreenEnabled', $policySettings.DeviceSettings.SmartScreenEnabled)
         }
-        if ($null -ne $policySettings.DeviceSettings.SmartScreenPuaEnabled) {
+        if ($null -ne $policySettings.DeviceSettings.SmartScreenPuaEnabled)
+        {
             $complexDeviceSettings.Add('SmartScreenPuaEnabled', $policySettings.DeviceSettings.SmartScreenPuaEnabled)
         }
-        if ($null -ne $policySettings.DeviceSettings.SmartScreenDnsRequestsEnabled) {
+        if ($null -ne $policySettings.DeviceSettings.SmartScreenDnsRequestsEnabled)
+        {
             $complexDeviceSettings.Add('SmartScreenDnsRequestsEnabled', $policySettings.DeviceSettings.SmartScreenDnsRequestsEnabled)
         }
-        if ($null -ne $policySettings.DeviceSettings.NewSmartScreenLibraryEnabled) {
+        if ($null -ne $policySettings.DeviceSettings.NewSmartScreenLibraryEnabled)
+        {
             $complexDeviceSettings.Add('NewSmartScreenLibraryEnabled', $policySettings.DeviceSettings.NewSmartScreenLibraryEnabled)
         }
-        if ($null -ne $policySettings.DeviceSettings.SmartScreenForTrustedDownloadsEnabled) {
+        if ($null -ne $policySettings.DeviceSettings.SmartScreenForTrustedDownloadsEnabled)
+        {
             $complexDeviceSettings.Add('SmartScreenForTrustedDownloadsEnabled', $policySettings.DeviceSettings.SmartScreenForTrustedDownloadsEnabled)
         }
-        if ($null -ne $policySettings.DeviceSettings.PreventSmartScreenPromptOverride) {
+        if ($null -ne $policySettings.DeviceSettings.PreventSmartScreenPromptOverride)
+        {
             $complexDeviceSettings.Add('PreventSmartScreenPromptOverride', $policySettings.DeviceSettings.PreventSmartScreenPromptOverride)
         }
-        if ($null -ne $policySettings.DeviceSettings.PreventSmartScreenPromptOverrideForFiles) {
+        if ($null -ne $policySettings.DeviceSettings.PreventSmartScreenPromptOverrideForFiles)
+        {
             $complexDeviceSettings.Add('PreventSmartScreenPromptOverrideForFiles', $policySettings.DeviceSettings.PreventSmartScreenPromptOverrideForFiles)
         }
 
         # Check if $complexDeviceSettings is empty
-        if ($complexDeviceSettings.Values.Where({ $null -ne $_ }).Count -eq 0) {
+        if ($complexDeviceSettings.Values.Where({ $null -ne $_ }).Count -eq 0)
+        {
             $complexDeviceSettings = $null
         }
         $policySettings.Remove('DeviceSettings') | Out-Null
@@ -515,12 +642,14 @@ function Get-TargetResource
         $complexUserSettings = @{}
 
         # Add user settings with conditional checks
-        if ($null -ne $policySettings.UserSettings.DisableSafetyFilterOverrideForAppRepUnknown) {
+        if ($null -ne $policySettings.UserSettings.DisableSafetyFilterOverrideForAppRepUnknown)
+        {
             $complexUserSettings.Add('DisableSafetyFilterOverrideForAppRepUnknown', $policySettings.UserSettings.DisableSafetyFilterOverrideForAppRepUnknown)
         }
 
         # Check if $complexUserSettings is empty
-        if ($complexUserSettings.Values.Where({ $null -ne $_ }).Count -eq 0) {
+        if ($complexUserSettings.Values.Where({ $null -ne $_ }).Count -eq 0)
+        {
             $complexUserSettings = $null
         }
         $policySettings.Remove('UserSettings') | Out-Null
@@ -660,7 +789,7 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating an Intune Security Baseline Defender For Endpoint with Name {$DisplayName}"
-        $BoundParameters.Remove("Assignments") | Out-Null
+        $BoundParameters.Remove('Assignments') | Out-Null
 
         $settings = Get-IntuneSettingCatalogPolicySetting `
             -DSCParams ([System.Collections.Hashtable]$BoundParameters) `
@@ -692,7 +821,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating the Intune Security Baseline Defender For Endpoint with Id {$($currentInstance.Id)}"
-        $BoundParameters.Remove("Assignments") | Out-Null
+        $BoundParameters.Remove('Assignments') | Out-Null
 
         $settings = Get-IntuneSettingCatalogPolicySetting `
             -DSCParams ([System.Collections.Hashtable]$BoundParameters) `
@@ -928,14 +1057,14 @@ function Export-TargetResource
     try
     {
         #region resource generator code
-        $policyTemplateID = "49b8320f-e179-472e-8e2c-2fde00289ca2_1"
+        $policyTemplateID = '49b8320f-e179-472e-8e2c-2fde00289ca2_1'
         [array]$getValue = Get-MgBetaDeviceManagementConfigurationPolicy `
             -Filter $Filter `
             -All `
             -ErrorAction Stop | Where-Object `
             -FilterScript {
-                $_.TemplateReference.TemplateId -eq $policyTemplateID
-            }
+            $_.TemplateReference.TemplateId -eq $policyTemplateID
+        }
         #endregion
 
         $i = 1
@@ -961,16 +1090,16 @@ function Export-TargetResource
             }
             Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{
-                Id = $config.Id
-                DisplayName           =  $config.Name
-                Ensure = 'Present'
-                Credential = $Credential
-                ApplicationId = $ApplicationId
-                TenantId = $TenantId
-                ApplicationSecret = $ApplicationSecret
+                Id                    = $config.Id
+                DisplayName           = $config.Name
+                Ensure                = 'Present'
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
-                ManagedIdentity = $ManagedIdentity.IsPresent
-                AccessTokens = $AccessTokens
+                ManagedIdentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
             }
 
             $Results = Get-TargetResource @Params
@@ -1025,16 +1154,16 @@ function Export-TargetResource
                 -Credential $Credential
             if ($Results.DeviceSettings)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "DeviceSettings" -IsCIMArray:$False
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'DeviceSettings' -IsCIMArray:$False
             }
             if ($Results.UserSettings)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "UserSettings" -IsCIMArray:$False
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'UserSettings' -IsCIMArray:$False
             }
 
             if ($Results.Assignments)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Assignments" -IsCIMArray:$true
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Assignments' -IsCIMArray:$true
             }
 
             $dscContent += $currentDSCBlock

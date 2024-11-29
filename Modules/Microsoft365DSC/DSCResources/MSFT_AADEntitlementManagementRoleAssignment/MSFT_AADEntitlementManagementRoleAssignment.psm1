@@ -93,12 +93,12 @@ function Get-TargetResource
             $getValue = Get-MgBetaRoleManagementEntitlementManagementRoleAssignment -UnifiedRoleAssignmentId $Id
         }
 
-        $user = Get-mguser -UserId $Principal
+        $user = Get-MgUser -UserId $Principal
         $roleInfo = Get-MgBetaRoleManagementEntitlementManagementRoleDefinition -Filter "DisplayName eq '$RoleDefinition'"
 
         if ($null -eq $getValue)
         {
-            if(-not [System.String]::IsNullOrEmpty($Id))
+            if (-not [System.String]::IsNullOrEmpty($Id))
             {
                 Write-Verbose -Message "Nothing with id {$Id} was found"
             }
@@ -122,7 +122,7 @@ function Get-TargetResource
 
         if ($null -eq $getValue)
         {
-            Write-Verbose -Message "No existing assignments were found"
+            Write-Verbose -Message 'No existing assignments were found'
             return $nullResult
         }
 
@@ -268,7 +268,7 @@ function Set-TargetResource
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Entitlement Management Role Assignments cannot be updated."
+        Write-Verbose -Message 'Entitlement Management Role Assignments cannot be updated.'
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
@@ -350,7 +350,7 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of Assignment"
+    Write-Verbose -Message 'Testing configuration of Assignment'
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()

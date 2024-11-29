@@ -14,7 +14,7 @@
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Disable", "HandsfreeOnly", "Allow")]
+        [ValidateSet('Disable', 'HandsfreeOnly', 'Allow')]
         $AllowBluetooth,
 
         [Parameter()]
@@ -147,7 +147,7 @@
 
         [Parameter()]
         [System.String]
-        [ValidateSet("All", "TwoWeeks", "OneMonth", "ThreeMonths", "SixMonths")]
+        [ValidateSet('All', 'TwoWeeks', 'OneMonth', 'ThreeMonths', 'SixMonths')]
         $MaxCalendarAgeFilter,
 
         [Parameter()]
@@ -156,7 +156,7 @@
 
         [Parameter()]
         [System.String]
-        [ValidateSet("All", "OneDay", "ThreeDays", "OneWeek", "TwoWeeks", "OneMonth", "ThreeMonths", "SixMonths")]
+        [ValidateSet('All', 'OneDay', 'ThreeDays', 'OneWeek', 'TwoWeeks', 'OneMonth', 'ThreeMonths', 'SixMonths')]
         $MaxEmailAgeFilter,
 
         [Parameter()]
@@ -275,7 +275,7 @@
     {
         if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
         {
-            $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.Identity -eq $Identity}
+            $instance = $Script:exportedInstances | Where-Object -FilterScript { $_.Identity -eq $Identity }
         }
         else
         {
@@ -287,68 +287,68 @@
         }
 
         $results = @{
-            Ensure                = 'Present'
-            Name                  = [System.String]$instance.Name
-            AllowApplePushNotifications = [System.Boolean]$instance.AllowApplePushNotifications
-            AllowBluetooth        = [System.String]$instance.AllowBluetooth
-            AllowBrowser          = [System.Boolean]$instance.AllowBrowser
-            AllowCamera           = [System.Boolean]$instance.AllowCamera
-            AllowConsumerEmail    = [System.Boolean]$instance.AllowConsumerEmail
-            AllowDesktopSync      = [System.Boolean]$instance.AllowDesktopSync
-            AllowExternalDeviceManagement = [System.Boolean]$instance.AllowExternalDeviceManagement
-            AllowHTMLEmail        = [System.Boolean]$instance.AllowHTMLEmail
-            AllowInternetSharing  = [System.Boolean]$instance.AllowInternetSharing
-            AllowIrDA             = [System.Boolean]$instance.AllowIrDA
-            AllowMobileOTAUpdate  = [System.Boolean]$instance.AllowMobileOTAUpdate
-            AllowNonProvisionableDevices = [System.Boolean]$instance.AllowNonProvisionableDevices
-            AllowPOPIMAPEmail     = [System.Boolean]$instance.AllowPOPIMAPEmail
-            AllowRemoteDesktop    = [System.Boolean]$instance.AllowRemoteDesktop
-            AllowSimpleDevicePassword = [System.Boolean]$instance.AllowSimpleDevicePassword
+            Ensure                                   = 'Present'
+            Name                                     = [System.String]$instance.Name
+            AllowApplePushNotifications              = [System.Boolean]$instance.AllowApplePushNotifications
+            AllowBluetooth                           = [System.String]$instance.AllowBluetooth
+            AllowBrowser                             = [System.Boolean]$instance.AllowBrowser
+            AllowCamera                              = [System.Boolean]$instance.AllowCamera
+            AllowConsumerEmail                       = [System.Boolean]$instance.AllowConsumerEmail
+            AllowDesktopSync                         = [System.Boolean]$instance.AllowDesktopSync
+            AllowExternalDeviceManagement            = [System.Boolean]$instance.AllowExternalDeviceManagement
+            AllowHTMLEmail                           = [System.Boolean]$instance.AllowHTMLEmail
+            AllowInternetSharing                     = [System.Boolean]$instance.AllowInternetSharing
+            AllowIrDA                                = [System.Boolean]$instance.AllowIrDA
+            AllowMobileOTAUpdate                     = [System.Boolean]$instance.AllowMobileOTAUpdate
+            AllowNonProvisionableDevices             = [System.Boolean]$instance.AllowNonProvisionableDevices
+            AllowPOPIMAPEmail                        = [System.Boolean]$instance.AllowPOPIMAPEmail
+            AllowRemoteDesktop                       = [System.Boolean]$instance.AllowRemoteDesktop
+            AllowSimpleDevicePassword                = [System.Boolean]$instance.AllowSimpleDevicePassword
             AllowSMIMEEncryptionAlgorithmNegotiation = [System.String]$instance.AllowSMIMEEncryptionAlgorithmNegotiation
-            AllowSMIMESoftCerts   = [System.Boolean]$instance.AllowSMIMESoftCerts
-            AllowStorageCard      = [System.Boolean]$instance.AllowStorageCard
-            AllowTextMessaging    = [System.Boolean]$instance.AllowTextMessaging
-            AllowUnsignedApplications = [System.Boolean]$instance.AllowUnsignedApplications
-            AllowUnsignedInstallationPackages = [System.Boolean]$instance.AllowUnsignedInstallationPackages
-            AllowWiFi             = [System.Boolean]$instance.AllowWiFi
-            AlphanumericDevicePasswordRequired = [System.Boolean]$instance.AlphanumericDevicePasswordRequired
-            ApprovedApplicationList = [System.String[]]$instance.ApprovedApplicationList
-            AttachmentsEnabled    = [System.Boolean]$instance.AttachmentsEnabled
-            DeviceEncryptionEnabled = [System.Boolean]$instance.DeviceEncryptionEnabled
-            DevicePasswordEnabled = [System.Boolean]$instance.DevicePasswordEnabled
-            DevicePasswordExpiration = [System.String]$instance.DevicePasswordExpiration
-            DevicePasswordHistory = [System.Int32]$instance.DevicePasswordHistory
-            DevicePolicyRefreshInterval = [System.String]$instance.DevicePolicyRefreshInterval
-            IrmEnabled            = [System.Boolean]$instance.IrmEnabled
-            IsDefault             = [System.Boolean]$instance.IsDefault
-            IsDefaultPolicy       = [System.Boolean]$instance.IsDefaultPolicy
-            MaxAttachmentSize     = [System.String]$instance.MaxAttachmentSize
-            MaxCalendarAgeFilter  = [System.String]$instance.MaxCalendarAgeFilter
-            MaxDevicePasswordFailedAttempts = [System.String]$instance.MaxDevicePasswordFailedAttempts
-            MaxEmailAgeFilter     = [System.String]$instance.MaxEmailAgeFilter
-            MaxEmailBodyTruncationSize = [System.String]$instance.MaxEmailBodyTruncationSize
-            MaxEmailHTMLBodyTruncationSize = [System.String]$instance.MaxEmailHTMLBodyTruncationSize
-            MaxInactivityTimeDeviceLock = [System.String]$instance.MaxInactivityTimeDeviceLock
-            MinDevicePasswordComplexCharacters = [System.Int32]$instance.MinDevicePasswordComplexCharacters
-            MinDevicePasswordLength = [System.Int32]$instance.MinDevicePasswordLength
-            PasswordRecoveryEnabled = [System.Boolean]$instance.PasswordRecoveryEnabled
-            RequireDeviceEncryption = [System.Boolean]$instance.RequireDeviceEncryption
-            RequireEncryptedSMIMEMessages = [System.Boolean]$instance.RequireEncryptedSMIMEMessages
-            RequireEncryptionSMIMEAlgorithm = [System.String]$instance.RequireEncryptionSMIMEAlgorithm
-            RequireManualSyncWhenRoaming = [System.Boolean]$instance.RequireManualSyncWhenRoaming
-            RequireSignedSMIMEAlgorithm = [System.String]$instance.RequireSignedSMIMEAlgorithm
-            RequireSignedSMIMEMessages = [System.Boolean]$instance.RequireSignedSMIMEMessages
-            RequireStorageCardEncryption = [System.Boolean]$instance.RequireStorageCardEncryption
-            UnapprovedInROMApplicationList = [System.String[]]$instance.UnapprovedInROMApplicationList
-            UNCAccessEnabled      = [System.Boolean]$instance.UNCAccessEnabled
-            WSSAccessEnabled      = [System.Boolean]$instance.WSSAccessEnabled
-            Identity              = [System.String]$Identity
-            Credential            = $Credential
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            CertificateThumbprint = $CertificateThumbprint
-            ManagedIdentity       = $ManagedIdentity.IsPresent
-            AccessTokens          = $AccessTokens
+            AllowSMIMESoftCerts                      = [System.Boolean]$instance.AllowSMIMESoftCerts
+            AllowStorageCard                         = [System.Boolean]$instance.AllowStorageCard
+            AllowTextMessaging                       = [System.Boolean]$instance.AllowTextMessaging
+            AllowUnsignedApplications                = [System.Boolean]$instance.AllowUnsignedApplications
+            AllowUnsignedInstallationPackages        = [System.Boolean]$instance.AllowUnsignedInstallationPackages
+            AllowWiFi                                = [System.Boolean]$instance.AllowWiFi
+            AlphanumericDevicePasswordRequired       = [System.Boolean]$instance.AlphanumericDevicePasswordRequired
+            ApprovedApplicationList                  = [System.String[]]$instance.ApprovedApplicationList
+            AttachmentsEnabled                       = [System.Boolean]$instance.AttachmentsEnabled
+            DeviceEncryptionEnabled                  = [System.Boolean]$instance.DeviceEncryptionEnabled
+            DevicePasswordEnabled                    = [System.Boolean]$instance.DevicePasswordEnabled
+            DevicePasswordExpiration                 = [System.String]$instance.DevicePasswordExpiration
+            DevicePasswordHistory                    = [System.Int32]$instance.DevicePasswordHistory
+            DevicePolicyRefreshInterval              = [System.String]$instance.DevicePolicyRefreshInterval
+            IrmEnabled                               = [System.Boolean]$instance.IrmEnabled
+            IsDefault                                = [System.Boolean]$instance.IsDefault
+            IsDefaultPolicy                          = [System.Boolean]$instance.IsDefaultPolicy
+            MaxAttachmentSize                        = [System.String]$instance.MaxAttachmentSize
+            MaxCalendarAgeFilter                     = [System.String]$instance.MaxCalendarAgeFilter
+            MaxDevicePasswordFailedAttempts          = [System.String]$instance.MaxDevicePasswordFailedAttempts
+            MaxEmailAgeFilter                        = [System.String]$instance.MaxEmailAgeFilter
+            MaxEmailBodyTruncationSize               = [System.String]$instance.MaxEmailBodyTruncationSize
+            MaxEmailHTMLBodyTruncationSize           = [System.String]$instance.MaxEmailHTMLBodyTruncationSize
+            MaxInactivityTimeDeviceLock              = [System.String]$instance.MaxInactivityTimeDeviceLock
+            MinDevicePasswordComplexCharacters       = [System.Int32]$instance.MinDevicePasswordComplexCharacters
+            MinDevicePasswordLength                  = [System.Int32]$instance.MinDevicePasswordLength
+            PasswordRecoveryEnabled                  = [System.Boolean]$instance.PasswordRecoveryEnabled
+            RequireDeviceEncryption                  = [System.Boolean]$instance.RequireDeviceEncryption
+            RequireEncryptedSMIMEMessages            = [System.Boolean]$instance.RequireEncryptedSMIMEMessages
+            RequireEncryptionSMIMEAlgorithm          = [System.String]$instance.RequireEncryptionSMIMEAlgorithm
+            RequireManualSyncWhenRoaming             = [System.Boolean]$instance.RequireManualSyncWhenRoaming
+            RequireSignedSMIMEAlgorithm              = [System.String]$instance.RequireSignedSMIMEAlgorithm
+            RequireSignedSMIMEMessages               = [System.Boolean]$instance.RequireSignedSMIMEMessages
+            RequireStorageCardEncryption             = [System.Boolean]$instance.RequireStorageCardEncryption
+            UnapprovedInROMApplicationList           = [System.String[]]$instance.UnapprovedInROMApplicationList
+            UNCAccessEnabled                         = [System.Boolean]$instance.UNCAccessEnabled
+            WSSAccessEnabled                         = [System.Boolean]$instance.WSSAccessEnabled
+            Identity                                 = [System.String]$Identity
+            Credential                               = $Credential
+            ApplicationId                            = $ApplicationId
+            TenantId                                 = $TenantId
+            CertificateThumbprint                    = $CertificateThumbprint
+            ManagedIdentity                          = $ManagedIdentity.IsPresent
+            AccessTokens                             = $AccessTokens
         }
         return [System.Collections.Hashtable] $results
     }
@@ -379,7 +379,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Disable", "HandsfreeOnly", "Allow")]
+        [ValidateSet('Disable', 'HandsfreeOnly', 'Allow')]
         $AllowBluetooth,
 
         [Parameter()]
@@ -512,7 +512,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("All", "TwoWeeks", "OneMonth", "ThreeMonths", "SixMonths")]
+        [ValidateSet('All', 'TwoWeeks', 'OneMonth', 'ThreeMonths', 'SixMonths')]
         $MaxCalendarAgeFilter,
 
         [Parameter()]
@@ -521,7 +521,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("All", "OneDay", "ThreeDays", "OneWeek", "TwoWeeks", "OneMonth", "ThreeMonths", "SixMonths")]
+        [ValidateSet('All', 'OneDay', 'ThreeDays', 'OneWeek', 'TwoWeeks', 'OneMonth', 'ThreeMonths', 'SixMonths')]
         $MaxEmailAgeFilter,
 
         [Parameter()]
@@ -642,7 +642,7 @@ function Set-TargetResource
     # CREATE
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        $setParameters.Remove("Identity")
+        $setParameters.Remove('Identity')
         New-ActiveSyncMailboxPolicy @SetParameters
     }
     # UPDATE
@@ -662,7 +662,7 @@ function Test-TargetResource
     [CmdletBinding()]
     [OutputType([System.Boolean])]
     param
-    (        
+    (
         [Parameter()]
         [System.String]
         $Name,
@@ -673,7 +673,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("Disable", "HandsfreeOnly", "Allow")]
+        [ValidateSet('Disable', 'HandsfreeOnly', 'Allow')]
         $AllowBluetooth,
 
         [Parameter()]
@@ -806,7 +806,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("All", "TwoWeeks", "OneMonth", "ThreeMonths", "SixMonths")]
+        [ValidateSet('All', 'TwoWeeks', 'OneMonth', 'ThreeMonths', 'SixMonths')]
         $MaxCalendarAgeFilter,
 
         [Parameter()]
@@ -815,7 +815,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet("All", "OneDay", "ThreeDays", "OneWeek", "TwoWeeks", "OneMonth", "ThreeMonths", "SixMonths")]
+        [ValidateSet('All', 'OneDay', 'ThreeDays', 'OneWeek', 'TwoWeeks', 'OneMonth', 'ThreeMonths', 'SixMonths')]
         $MaxEmailAgeFilter,
 
         [Parameter()]
@@ -1014,13 +1014,13 @@ function Export-TargetResource
             $displayedKey = $config.Name
             Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -NoNewline
             $params = @{
-                Identity               = $config.Name
-                Credential             = $Credential
-                ApplicationId          = $ApplicationId
-                TenantId               = $TenantId
-                CertificateThumbprint  = $CertificateThumbprint
-                ManagedIdentity        = $ManagedIdentity.IsPresent
-                AccessTokens           = $AccessTokens
+                Identity              = $config.Name
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+                ManagedIdentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
             }
 
             $Results = Get-TargetResource @Params

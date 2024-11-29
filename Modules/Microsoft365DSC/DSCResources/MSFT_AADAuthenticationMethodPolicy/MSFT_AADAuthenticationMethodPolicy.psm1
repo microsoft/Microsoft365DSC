@@ -14,7 +14,7 @@ function Get-TargetResource
         $DisplayName,
 
         [Parameter()]
-        [ValidateSet('preMigration','migrationInProgress','migrationComplete','unknownFutureValue')]
+        [ValidateSet('preMigration', 'migrationInProgress', 'migrationComplete', 'unknownFutureValue')]
         [System.String]
         $PolicyMigrationState,
 
@@ -114,8 +114,8 @@ function Get-TargetResource
                     -ErrorAction SilentlyContinue | Where-Object `
                     -FilterScript { `
                         $_.DisplayName -eq "$($DisplayName)" `
-                        -and $_.AdditionalProperties.'@odata.type' -eq "#microsoft.graph.AuthenticationMethodsPolicy" `
-                    }
+                        -and $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.AuthenticationMethodsPolicy' `
+                }
             }
         }
         #endregion
@@ -139,12 +139,12 @@ function Get-TargetResource
             {
                 $myExcludeTargets.Add('TargetType', $currentExcludeTargets.targetType.toString())
             }
-            if ($myExcludeTargets.values.Where({$null -ne $_}).count -gt 0)
+            if ($myExcludeTargets.values.Where({ $null -ne $_ }).count -gt 0)
             {
                 $complexExcludeTargets += $myExcludeTargets
             }
         }
-        $complexAuthenticationMethodsRegistrationCampaign.Add('ExcludeTargets',$complexExcludeTargets)
+        $complexAuthenticationMethodsRegistrationCampaign.Add('ExcludeTargets', $complexExcludeTargets)
         $complexIncludeTargets = @()
         foreach ($currentIncludeTargets in $getValue.registrationEnforcement.authenticationMethodsRegistrationCampaign.includeTargets)
         {
@@ -155,23 +155,23 @@ function Get-TargetResource
             {
                 $myIncludeTargets.Add('TargetType', $currentIncludeTargets.targetType.toString())
             }
-            if ($myIncludeTargets.values.Where({$null -ne $_}).count -gt 0)
+            if ($myIncludeTargets.values.Where({ $null -ne $_ }).count -gt 0)
             {
                 $complexIncludeTargets += $myIncludeTargets
             }
         }
-        $complexAuthenticationMethodsRegistrationCampaign.Add('IncludeTargets',$complexIncludeTargets)
+        $complexAuthenticationMethodsRegistrationCampaign.Add('IncludeTargets', $complexIncludeTargets)
         $complexAuthenticationMethodsRegistrationCampaign.Add('SnoozeDurationInDays', $getValue.registrationEnforcement.authenticationMethodsRegistrationCampaign.snoozeDurationInDays)
         if ($null -ne $getValue.registrationEnforcement.authenticationMethodsRegistrationCampaign.state)
         {
             $complexAuthenticationMethodsRegistrationCampaign.Add('State', $getValue.registrationEnforcement.authenticationMethodsRegistrationCampaign.state.toString())
         }
-        if ($complexAuthenticationMethodsRegistrationCampaign.values.Where({$null -ne $_}).count -eq 0)
+        if ($complexAuthenticationMethodsRegistrationCampaign.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexAuthenticationMethodsRegistrationCampaign = $null
         }
-        $complexRegistrationEnforcement.Add('AuthenticationMethodsRegistrationCampaign',$complexAuthenticationMethodsRegistrationCampaign)
-        if ($complexRegistrationEnforcement.values.Where({$null -ne $_}).count -eq 0)
+        $complexRegistrationEnforcement.Add('AuthenticationMethodsRegistrationCampaign', $complexAuthenticationMethodsRegistrationCampaign)
+        if ($complexRegistrationEnforcement.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexRegistrationEnforcement = $null
         }
@@ -183,17 +183,17 @@ function Get-TargetResource
         {
             $newComplexIncludeTarget.Add('TargetType', $getValue.ReportSuspiciousActivitySettings.IncludeTarget.targetType.toString())
         }
-        $complexReportSuspiciousActivitySettings.Add('IncludeTarget',$newComplexIncludeTarget)
+        $complexReportSuspiciousActivitySettings.Add('IncludeTarget', $newComplexIncludeTarget)
 
         if ($null -ne $getValue.ReportSuspiciousActivitySettings.state)
         {
             $complexReportSuspiciousActivitySettings.Add('State', $getValue.ReportSuspiciousActivitySettings.state.toString())
         }
-        if($null -ne $getValue.ReportSuspiciousActivitySettings.VoiceReportingCode)
+        if ($null -ne $getValue.ReportSuspiciousActivitySettings.VoiceReportingCode)
         {
             $complexReportSuspiciousActivitySettings.Add('VoiceReportingCode', $getValue.ReportSuspiciousActivitySettings.VoiceReportingCode)
         }
-        if ($complexReportSuspiciousActivitySettings.values.Where({$null -ne $_}).count -eq 0)
+        if ($complexReportSuspiciousActivitySettings.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexReportSuspiciousActivitySettings = $null
         }
@@ -208,12 +208,12 @@ function Get-TargetResource
             {
                 $myExcludeTargets.Add('TargetType', $currentExcludeTargets.targetType.toString())
             }
-            if ($myExcludeTargets.values.Where({$null -ne $_}).count -gt 0)
+            if ($myExcludeTargets.values.Where({ $null -ne $_ }).count -gt 0)
             {
                 $complexExcludeTargets += $myExcludeTargets
             }
         }
-        $complexSystemCredentialPreferences.Add('ExcludeTargets',$complexExcludeTargets)
+        $complexSystemCredentialPreferences.Add('ExcludeTargets', $complexExcludeTargets)
         $complexIncludeTargets = @()
         foreach ($currentIncludeTargets in $getValue.SystemCredentialPreferences.includeTargets)
         {
@@ -223,17 +223,17 @@ function Get-TargetResource
             {
                 $myIncludeTargets.Add('TargetType', $currentIncludeTargets.targetType.toString())
             }
-            if ($myIncludeTargets.values.Where({$null -ne $_}).count -gt 0)
+            if ($myIncludeTargets.values.Where({ $null -ne $_ }).count -gt 0)
             {
                 $complexIncludeTargets += $myIncludeTargets
             }
         }
-        $complexSystemCredentialPreferences.Add('IncludeTargets',$complexIncludeTargets)
+        $complexSystemCredentialPreferences.Add('IncludeTargets', $complexIncludeTargets)
         if ($null -ne $getValue.SystemCredentialPreferences.state)
         {
             $complexSystemCredentialPreferences.Add('State', $getValue.SystemCredentialPreferences.state.toString())
         }
-        if ($complexSystemCredentialPreferences.values.Where({$null -ne $_}).count -eq 0)
+        if ($complexSystemCredentialPreferences.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexSystemCredentialPreferences = $null
         }
@@ -249,23 +249,23 @@ function Get-TargetResource
 
         $results = @{
             #region resource generator code
-            Description                 = $getValue.Description
-            DisplayName                 = $getValue.DisplayName
-            PolicyMigrationState        = $enumPolicyMigrationState
-            PolicyVersion               = $getValue.PolicyVersion
-            ReconfirmationInDays        = $getValue.ReconfirmationInDays
-            RegistrationEnforcement     = $complexRegistrationEnforcement
+            Description                      = $getValue.Description
+            DisplayName                      = $getValue.DisplayName
+            PolicyMigrationState             = $enumPolicyMigrationState
+            PolicyVersion                    = $getValue.PolicyVersion
+            ReconfirmationInDays             = $getValue.ReconfirmationInDays
+            RegistrationEnforcement          = $complexRegistrationEnforcement
             ReportSuspiciousActivitySettings = $complexReportSuspiciousActivitySettings
-            SystemCredentialPreferences = $complexSystemCredentialPreferences
-            Id                          = $getValue.Id
-            Ensure                      = 'Present'
-            Credential                  = $Credential
-            ApplicationId               = $ApplicationId
-            TenantId                    = $TenantId
-            ApplicationSecret           = $ApplicationSecret
-            CertificateThumbprint       = $CertificateThumbprint
-            Managedidentity             = $ManagedIdentity.IsPresent
-            AccessTokens                = $AccessTokens
+            SystemCredentialPreferences      = $complexSystemCredentialPreferences
+            Id                               = $getValue.Id
+            Ensure                           = 'Present'
+            Credential                       = $Credential
+            ApplicationId                    = $ApplicationId
+            TenantId                         = $TenantId
+            ApplicationSecret                = $ApplicationSecret
+            CertificateThumbprint            = $CertificateThumbprint
+            Managedidentity                  = $ManagedIdentity.IsPresent
+            AccessTokens                     = $AccessTokens
             #endregion
         }
 
@@ -298,7 +298,7 @@ function Set-TargetResource
         $DisplayName,
 
         [Parameter()]
-        [ValidateSet('preMigration','migrationInProgress','migrationComplete','unknownFutureValue')]
+        [ValidateSet('preMigration', 'migrationInProgress', 'migrationComplete', 'unknownFutureValue')]
         [System.String]
         $PolicyMigrationState,
 
@@ -379,7 +379,7 @@ function Set-TargetResource
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        Write-Verbose -Message "Azure AD Authentication Method Policy instance cannot be created"
+        Write-Verbose -Message 'Azure AD Authentication Method Policy instance cannot be created'
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
@@ -399,7 +399,7 @@ function Set-TargetResource
             }
         }
         #region resource generator code
-        $UpdateParameters.Add("@odata.type", "#microsoft.graph.AuthenticationMethodsPolicy")
+        $UpdateParameters.Add('@odata.type', '#microsoft.graph.AuthenticationMethodsPolicy')
         Write-Verbose -Message "Updating AuthenticationMethodPolicy with: `r`n$(Convert-M365DscHashtableToString -Hashtable $UpdateParameters)"
         Update-MgBetaPolicyAuthenticationMethodPolicy -BodyParameter $UpdateParameters
         #endregion
@@ -422,7 +422,7 @@ function Test-TargetResource
         $DisplayName,
 
         [Parameter()]
-        [ValidateSet('preMigration','migrationInProgress','migrationComplete','unknownFutureValue')]
+        [ValidateSet('preMigration', 'migrationInProgress', 'migrationComplete', 'unknownFutureValue')]
         [System.String]
         $PolicyMigrationState,
 
@@ -603,7 +603,7 @@ function Export-TargetResource
     {
         #region resource generator code
         [array]$getValue = Get-MgBetaPolicyAuthenticationMethodPolicy `
-            -ErrorAction Stop | Where-Object -FilterScript {$null -ne $_.DisplayName}
+            -ErrorAction Stop | Where-Object -FilterScript { $null -ne $_.DisplayName }
         #endregion
 
         $i = 1
@@ -631,7 +631,7 @@ function Export-TargetResource
                 Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
                 $params = @{
                     Id                    = $config.Id
-                    DisplayName           =  $config.DisplayName
+                    DisplayName           = $config.DisplayName
                     Ensure                = 'Present'
                     Credential            = $Credential
                     ApplicationId         = $ApplicationId
@@ -649,24 +649,24 @@ function Export-TargetResource
                 {
                     $complexMapping = @(
                         @{
-                            Name = 'RegistrationEnforcement'
+                            Name            = 'RegistrationEnforcement'
                             CimInstanceName = 'MicrosoftGraphRegistrationEnforcement'
-                            IsRequired = $False
+                            IsRequired      = $False
                         }
                         @{
-                            Name = 'AuthenticationMethodsRegistrationCampaign'
+                            Name            = 'AuthenticationMethodsRegistrationCampaign'
                             CimInstanceName = 'MicrosoftGraphAuthenticationMethodsRegistrationCampaign'
-                            IsRequired = $False
+                            IsRequired      = $False
                         }
                         @{
-                            Name = 'ExcludeTargets'
+                            Name            = 'ExcludeTargets'
                             CimInstanceName = 'MicrosoftGraphExcludeTarget'
-                            IsRequired = $False
+                            IsRequired      = $False
                         }
                         @{
-                            Name = 'IncludeTargets'
+                            Name            = 'IncludeTargets'
                             CimInstanceName = 'MicrosoftGraphAuthenticationMethodsRegistrationCampaignIncludeTarget'
-                            IsRequired = $False
+                            IsRequired      = $False
                         }
                     )
                     $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
@@ -688,14 +688,14 @@ function Export-TargetResource
                 {
                     $complexMapping = @(
                         @{
-                            Name = 'ReportSuspiciousActivitySettings'
+                            Name            = 'ReportSuspiciousActivitySettings'
                             CimInstanceName = 'MicrosoftGraphReportSuspiciousActivitySettings'
-                            IsRequired = $False
+                            IsRequired      = $False
                         }
                         @{
-                            Name = 'IncludeTarget'
+                            Name            = 'IncludeTarget'
                             CimInstanceName = 'AADAuthenticationMethodPolicyIncludeTarget'
-                            IsRequired = $False
+                            IsRequired      = $False
                         }
                     )
                     $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
@@ -718,19 +718,19 @@ function Export-TargetResource
                 {
                     $complexMapping = @(
                         @{
-                            Name = 'SystemCredentialPreferences'
+                            Name            = 'SystemCredentialPreferences'
                             CimInstanceName = 'MicrosoftGraphSystemCredentialPreferences'
-                            IsRequired = $False
+                            IsRequired      = $False
                         }
                         @{
-                            Name = 'ExcludeTargets'
+                            Name            = 'ExcludeTargets'
                             CimInstanceName = 'AADAuthenticationMethodPolicyExcludeTarget'
-                            IsRequired = $False
+                            IsRequired      = $False
                         }
                         @{
-                            Name = 'IncludeTargets'
+                            Name            = 'IncludeTargets'
                             CimInstanceName = 'AADAuthenticationMethodPolicyIncludeTarget'
-                            IsRequired = $False
+                            IsRequired      = $False
                         }
                     )
                     $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
@@ -755,16 +755,16 @@ function Export-TargetResource
                     -Credential $Credential
                 if ($Results.RegistrationEnforcement)
                 {
-                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "RegistrationEnforcement" -isCIMArray:$False
+                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'RegistrationEnforcement' -IsCIMArray:$False
                 }
                 if ($Results.SystemCredentialPreferences)
                 {
-                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "SystemCredentialPreferences" -isCIMArray:$False
+                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'SystemCredentialPreferences' -IsCIMArray:$False
                 }
 
                 if ($Results.ReportSuspiciousActivitySettings)
                 {
-                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "ReportSuspiciousActivitySettings" -isCIMArray:$False
+                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'ReportSuspiciousActivitySettings' -IsCIMArray:$False
                 }
                 $dscContent += $currentDSCBlock
                 Save-M365DSCPartialExport -Content $currentDSCBlock `

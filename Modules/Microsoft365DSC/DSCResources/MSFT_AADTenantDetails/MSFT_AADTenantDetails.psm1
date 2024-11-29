@@ -216,7 +216,7 @@ function Set-TargetResource
     $currentParameters.Add('OrganizationId', $(Get-MgBetaOrganization).Id)
     try
     {
-        Write-Verbose -Message "Calling Update-MGBetaOrganization with parameters:"
+        Write-Verbose -Message 'Calling Update-MGBetaOrganization with parameters:'
         Write-Verbose -Message "$(Convert-M365DscHashtableToString -Hashtable $currentParameters)"
         Update-MgBetaOrganization @currentParameters
     }

@@ -6,7 +6,7 @@ function Get-TargetResource
     (
         #region resource generator code
         [Parameter()]
-        [ValidateSet('user','machine')]
+        [ValidateSet('user', 'machine')]
         [System.String]
         $CertificateStore,
 
@@ -39,7 +39,7 @@ function Get-TargetResource
         $SubjectNameFormatString,
 
         [Parameter()]
-        [ValidateSet('days','months','years')]
+        [ValidateSet('days', 'months', 'years')]
         [System.String]
         $CertificateValidityPeriodScale,
 
@@ -48,7 +48,7 @@ function Get-TargetResource
         $CertificateValidityPeriodValue,
 
         [Parameter()]
-        [ValidateSet('useTpmKspOtherwiseUseSoftwareKsp','useTpmKspOtherwiseFail','usePassportForWorkKspOtherwiseFail','useSoftwareKsp')]
+        [ValidateSet('useTpmKspOtherwiseUseSoftwareKsp', 'useTpmKspOtherwiseFail', 'usePassportForWorkKspOtherwiseFail', 'useSoftwareKsp')]
         [System.String]
         $KeyStorageProvider,
 
@@ -57,12 +57,12 @@ function Get-TargetResource
         $RenewalThresholdPercentage,
 
         [Parameter()]
-        [ValidateSet('none','emailAddress','userPrincipalName','customAzureADAttribute','domainNameService','universalResourceIdentifier')]
+        [ValidateSet('none', 'emailAddress', 'userPrincipalName', 'customAzureADAttribute', 'domainNameService', 'universalResourceIdentifier')]
         [System.String]
         $SubjectAlternativeNameType,
 
         [Parameter()]
-        [ValidateSet('commonName','commonNameIncludingEmail','commonNameAsEmail','custom','commonNameAsIMEI','commonNameAsSerialNumber','commonNameAsAadDeviceId','commonNameAsIntuneDeviceId','commonNameAsDurableDeviceId')]
+        [ValidateSet('commonName', 'commonNameIncludingEmail', 'commonNameAsEmail', 'custom', 'commonNameAsIMEI', 'commonNameAsSerialNumber', 'commonNameAsAadDeviceId', 'commonNameAsIntuneDeviceId', 'commonNameAsDurableDeviceId')]
         [System.String]
         $SubjectNameFormat,
 
@@ -139,7 +139,7 @@ function Get-TargetResource
 
         $getValue = $null
         #region resource generator code
-        $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -DeviceConfigurationId $Id  -ErrorAction SilentlyContinue
+        $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -DeviceConfigurationId $Id -ErrorAction SilentlyContinue
 
         if ($null -eq $getValue)
         {
@@ -152,8 +152,8 @@ function Get-TargetResource
                     -Filter "DisplayName eq '$DisplayName'" `
                     -ErrorAction SilentlyContinue | Where-Object `
                     -FilterScript { `
-                        $_.AdditionalProperties.'@odata.type' -eq "#microsoft.graph.windows10PkcsCertificateProfile" `
-                    }
+                        $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windows10PkcsCertificateProfile' `
+                }
             }
         }
         #endregion
@@ -175,7 +175,7 @@ function Get-TargetResource
             {
                 $mycustomSubjectAlternativeNames.Add('SanType', $currentcustomSubjectAlternativeNames.sanType.toString())
             }
-            if ($mycustomSubjectAlternativeNames.values.Where({$null -ne $_}).count -gt 0)
+            if ($mycustomSubjectAlternativeNames.values.Where({ $null -ne $_ }).count -gt 0)
             {
                 $complexCustomSubjectAlternativeNames += $mycustomSubjectAlternativeNames
             }
@@ -187,7 +187,7 @@ function Get-TargetResource
             $myextendedKeyUsages = @{}
             $myextendedKeyUsages.Add('Name', $currentextendedKeyUsages.name)
             $myextendedKeyUsages.Add('ObjectIdentifier', $currentextendedKeyUsages.objectIdentifier)
-            if ($myextendedKeyUsages.values.Where({$null -ne $_}).count -gt 0)
+            if ($myextendedKeyUsages.values.Where({ $null -ne $_ }).count -gt 0)
             {
                 $complexExtendedKeyUsages += $myextendedKeyUsages
             }
@@ -261,8 +261,8 @@ function Get-TargetResource
         if ($assignmentsValues.Count -gt 0)
         {
             $assignmentResult += ConvertFrom-IntunePolicyAssignment `
-                                -IncludeDeviceFilter:$true `
-                                -Assignments ($assignmentsValues)
+                -IncludeDeviceFilter:$true `
+                -Assignments ($assignmentsValues)
         }
         $results.Add('Assignments', $assignmentResult)
 
@@ -287,7 +287,7 @@ function Set-TargetResource
     (
         #region resource generator code
         [Parameter()]
-        [ValidateSet('user','machine')]
+        [ValidateSet('user', 'machine')]
         [System.String]
         $CertificateStore,
 
@@ -320,7 +320,7 @@ function Set-TargetResource
         $SubjectNameFormatString,
 
         [Parameter()]
-        [ValidateSet('days','months','years')]
+        [ValidateSet('days', 'months', 'years')]
         [System.String]
         $CertificateValidityPeriodScale,
 
@@ -329,7 +329,7 @@ function Set-TargetResource
         $CertificateValidityPeriodValue,
 
         [Parameter()]
-        [ValidateSet('useTpmKspOtherwiseUseSoftwareKsp','useTpmKspOtherwiseFail','usePassportForWorkKspOtherwiseFail','useSoftwareKsp')]
+        [ValidateSet('useTpmKspOtherwiseUseSoftwareKsp', 'useTpmKspOtherwiseFail', 'usePassportForWorkKspOtherwiseFail', 'useSoftwareKsp')]
         [System.String]
         $KeyStorageProvider,
 
@@ -338,12 +338,12 @@ function Set-TargetResource
         $RenewalThresholdPercentage,
 
         [Parameter()]
-        [ValidateSet('none','emailAddress','userPrincipalName','customAzureADAttribute','domainNameService','universalResourceIdentifier')]
+        [ValidateSet('none', 'emailAddress', 'userPrincipalName', 'customAzureADAttribute', 'domainNameService', 'universalResourceIdentifier')]
         [System.String]
         $SubjectAlternativeNameType,
 
         [Parameter()]
-        [ValidateSet('commonName','commonNameIncludingEmail','commonNameAsEmail','custom','commonNameAsIMEI','commonNameAsSerialNumber','commonNameAsAadDeviceId','commonNameAsIntuneDeviceId','commonNameAsDurableDeviceId')]
+        [ValidateSet('commonName', 'commonNameIncludingEmail', 'commonNameAsEmail', 'custom', 'commonNameAsIMEI', 'commonNameAsSerialNumber', 'commonNameAsAadDeviceId', 'commonNameAsIntuneDeviceId', 'commonNameAsDurableDeviceId')]
         [System.String]
         $SubjectNameFormat,
 
@@ -416,7 +416,7 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating an Intune Device Configuration Pkcs Certificate Policy for Windows10 with DisplayName {$DisplayName}"
-        $BoundParameters.Remove("Assignments") | Out-Null
+        $BoundParameters.Remove('Assignments') | Out-Null
 
         $CreateParameters = ([Hashtable]$BoundParameters).clone()
         $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
@@ -431,13 +431,13 @@ function Set-TargetResource
             }
         }
         #region resource generator code
-        $CreateParameters.Add("@odata.type", "#microsoft.graph.windows10PkcsCertificateProfile")
+        $CreateParameters.Add('@odata.type', '#microsoft.graph.windows10PkcsCertificateProfile')
         $policy = New-MgBetaDeviceManagementDeviceConfiguration -BodyParameter $CreateParameters
         $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
 
         if ($policy.id)
         {
-            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId  $policy.id `
+            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $policy.id `
                 -Targets $assignmentsHash `
                 -Repository 'deviceManagement/deviceConfigurations'
         }
@@ -446,7 +446,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating the Intune Device Configuration Pkcs Certificate Policy for Windows10 with Id {$($currentInstance.Id)}"
-        $BoundParameters.Remove("Assignments") | Out-Null
+        $BoundParameters.Remove('Assignments') | Out-Null
 
         $UpdateParameters = ([Hashtable]$BoundParameters).clone()
         $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
@@ -462,7 +462,7 @@ function Set-TargetResource
             }
         }
         #region resource generator code
-        $UpdateParameters.Add("@odata.type", "#microsoft.graph.windows10PkcsCertificateProfile")
+        $UpdateParameters.Add('@odata.type', '#microsoft.graph.windows10PkcsCertificateProfile')
         Update-MgBetaDeviceManagementDeviceConfiguration  `
             -DeviceConfigurationId $currentInstance.Id `
             -BodyParameter $UpdateParameters
@@ -490,7 +490,7 @@ function Test-TargetResource
     (
         #region resource generator code
         [Parameter()]
-        [ValidateSet('user','machine')]
+        [ValidateSet('user', 'machine')]
         [System.String]
         $CertificateStore,
 
@@ -523,7 +523,7 @@ function Test-TargetResource
         $SubjectNameFormatString,
 
         [Parameter()]
-        [ValidateSet('days','months','years')]
+        [ValidateSet('days', 'months', 'years')]
         [System.String]
         $CertificateValidityPeriodScale,
 
@@ -532,7 +532,7 @@ function Test-TargetResource
         $CertificateValidityPeriodValue,
 
         [Parameter()]
-        [ValidateSet('useTpmKspOtherwiseUseSoftwareKsp','useTpmKspOtherwiseFail','usePassportForWorkKspOtherwiseFail','useSoftwareKsp')]
+        [ValidateSet('useTpmKspOtherwiseUseSoftwareKsp', 'useTpmKspOtherwiseFail', 'usePassportForWorkKspOtherwiseFail', 'useSoftwareKsp')]
         [System.String]
         $KeyStorageProvider,
 
@@ -541,12 +541,12 @@ function Test-TargetResource
         $RenewalThresholdPercentage,
 
         [Parameter()]
-        [ValidateSet('none','emailAddress','userPrincipalName','customAzureADAttribute','domainNameService','universalResourceIdentifier')]
+        [ValidateSet('none', 'emailAddress', 'userPrincipalName', 'customAzureADAttribute', 'domainNameService', 'universalResourceIdentifier')]
         [System.String]
         $SubjectAlternativeNameType,
 
         [Parameter()]
-        [ValidateSet('commonName','commonNameIncludingEmail','commonNameAsEmail','custom','commonNameAsIMEI','commonNameAsSerialNumber','commonNameAsAadDeviceId','commonNameAsIntuneDeviceId','commonNameAsDurableDeviceId')]
+        [ValidateSet('commonName', 'commonNameIncludingEmail', 'commonNameAsEmail', 'custom', 'commonNameAsIMEI', 'commonNameAsSerialNumber', 'commonNameAsAadDeviceId', 'commonNameAsIntuneDeviceId', 'commonNameAsDurableDeviceId')]
         [System.String]
         $SubjectNameFormat,
 
@@ -725,7 +725,7 @@ function Export-TargetResource
             -ErrorAction Stop | Where-Object `
             -FilterScript { `
                 $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windows10PkcsCertificateProfile' `
-            }
+        }
         #endregion
 
         $i = 1
@@ -752,16 +752,16 @@ function Export-TargetResource
             }
             Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{
-                Id = $config.Id
-                DisplayName           =  $config.DisplayName
-                Ensure = 'Present'
-                Credential = $Credential
-                ApplicationId = $ApplicationId
-                TenantId = $TenantId
-                ApplicationSecret = $ApplicationSecret
+                Id                    = $config.Id
+                DisplayName           = $config.DisplayName
+                Ensure                = 'Present'
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
-                Managedidentity = $ManagedIdentity.IsPresent
-                AccessTokens    = $AccessTokens
+                Managedidentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
             }
 
             $Results = Get-TargetResource @Params
@@ -814,15 +814,15 @@ function Export-TargetResource
                 -Credential $Credential
             if ($Results.CustomSubjectAlternativeNames)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "CustomSubjectAlternativeNames" -isCIMArray:$True
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'CustomSubjectAlternativeNames' -IsCIMArray:$True
             }
             if ($Results.ExtendedKeyUsages)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "ExtendedKeyUsages" -isCIMArray:$True
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'ExtendedKeyUsages' -IsCIMArray:$True
             }
             if ($Results.Assignments)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Assignments" -isCIMArray:$true
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Assignments' -IsCIMArray:$true
             }
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
@@ -835,7 +835,7 @@ function Export-TargetResource
     catch
     {
         if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
-        $_.Exception -like "*Request not applicable to target tenant*")
+                $_.Exception -like '*Request not applicable to target tenant*')
         {
             Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }

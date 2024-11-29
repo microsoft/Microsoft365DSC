@@ -166,8 +166,8 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Granting TeamsUpgradePolicy {$Identity} to all Users with MigrateMeetingsToTeams=$MigrateMeetingsToTeams"
         Grant-CsTeamsUpgradePolicy -PolicyName $Identity `
-                                   -MigrateMeetingsToTeams:$MigrateMeetingsToTeams `
-                                   -Global
+            -MigrateMeetingsToTeams:$MigrateMeetingsToTeams `
+            -Global
     }
     else
     {
@@ -175,8 +175,8 @@ function Set-TargetResource
         {
             Write-Verbose -Message "Granting TeamsUpgradePolicy {$Identity} to User {$user} with MigrateMeetingsToTeams=$MigrateMeetingsToTeams"
             Grant-CsTeamsUpgradePolicy -PolicyName $Identity `
-                                    -Identity $user `
-                                    -MigrateMeetingsToTeams:$MigrateMeetingsToTeams
+                -Identity $user `
+                -MigrateMeetingsToTeams:$MigrateMeetingsToTeams
         }
     }
 }
@@ -243,7 +243,7 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove("Users") | Out-Null
+    $ValuesToCheck.Remove('Users') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `

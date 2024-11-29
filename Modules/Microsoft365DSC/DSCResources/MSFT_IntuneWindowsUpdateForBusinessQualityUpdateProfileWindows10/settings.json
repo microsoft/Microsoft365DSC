@@ -1,41 +1,41 @@
 {
-    "resourceName":"IntuneWindowsUpdateForBusinessQualityUpdateProfileWindows10",
-    "description":"This resource configures an Intune Windows Update For Business Quality Update Profile for Windows10.",
-    "permissions":{
-        "graph":{
-            "delegated":{
-                "read":[
+    "resourceName": "IntuneWindowsUpdateForBusinessQualityUpdateProfileWindows10",
+    "description": "This resource configures an Intune Windows Update For Business Quality Update Profile for Windows10.",
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [
                     {
                         "name": "Group.Read.All"
                     },
                     {
-                        "name":"DeviceManagementConfiguration.Read.All"
+                        "name": "DeviceManagementConfiguration.Read.All"
                     }
                 ],
-                "update":[
+                "update": [
                     {
                         "name": "Group.Read.All"
                     },
                     {
-                        "name":"DeviceManagementConfiguration.ReadWrite.All"
+                        "name": "DeviceManagementConfiguration.ReadWrite.All"
                     }
                 ]
             },
-            "application":{
-                "read":[
+            "application": {
+                "read": [
                     {
                         "name": "Group.Read.All"
                     },
                     {
-                        "name":"DeviceManagementConfiguration.Read.All"
+                        "name": "DeviceManagementConfiguration.Read.All"
                     }
                 ],
-                "update":[
+                "update": [
                     {
                         "name": "Group.Read.All"
                     },
                     {
-                        "name":"DeviceManagementConfiguration.ReadWrite.All"
+                        "name": "DeviceManagementConfiguration.ReadWrite.All"
                     }
                 ]
             }

@@ -88,7 +88,7 @@ function Get-TargetResource
         #Retrieve policy general settings
         $policy = Get-MgBetaDeviceManagementIntent -All -Filter "displayName eq '$DisplayName'" -ErrorAction Stop | Where-Object -FilterScript { $_.TemplateId -eq '63be6324-e3c9-4c97-948a-e7f4b96f0f20' }
 
-        if(([array]$policy).count -gt 1)
+        if (([array]$policy).count -gt 1)
         {
             throw "A policy with a duplicated displayName {'$DisplayName'} was found - Ensure displayName is unique"
         }
@@ -248,7 +248,7 @@ function Set-TargetResource
         $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
         if ($policy.id)
         {
-            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId  $policy.id `
+            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $policy.id `
                 -Targets $assignmentsHash `
                 -Repository 'deviceManagement/intents'
         }
@@ -285,7 +285,7 @@ function Set-TargetResource
 
         #region Assignments
         $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
-        Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId  $appControlPolicy.id `
+        Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $appControlPolicy.id `
             -Targets $assignmentsHash `
             -Repository 'deviceManagement/intents'
         #endregion
@@ -555,8 +555,8 @@ function Export-TargetResource
     catch
     {
         if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
-            $_.Exception -like "*Unable to perform redirect as Location Header is not set in response*" -or `
-            $_.Exception -like "*Request not applicable to target tenant*")
+                $_.Exception -like '*Unable to perform redirect as Location Header is not set in response*' -or `
+                $_.Exception -like '*Request not applicable to target tenant*')
         {
             Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }

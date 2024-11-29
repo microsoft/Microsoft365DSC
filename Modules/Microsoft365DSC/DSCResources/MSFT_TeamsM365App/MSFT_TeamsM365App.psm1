@@ -74,7 +74,7 @@ function Get-TargetResource
     {
         if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
         {
-            $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.Id -eq $Id}
+            $instance = $Script:exportedInstances | Where-Object -FilterScript { $_.Id -eq $Id }
         }
         else
         {
@@ -234,20 +234,20 @@ function Set-TargetResource
         {
             Write-Verbose -Message "Removing Users Assignments for {$($usersToAdd)}"
             Update-M365TeamsApp -Id $Id `
-                                -IsBlocked $IsBlocked `
-                                -AppAssignmentType $AssignmentType `
-                                -OperationType 'Remove' `
-                                -Users $usersToRemove
+                -IsBlocked $IsBlocked `
+                -AppAssignmentType $AssignmentType `
+                -OperationType 'Remove' `
+                -Users $usersToRemove
         }
 
         if ($usersToAdd.Length -gt 0)
         {
             Write-Verbose -Message "Removing Users Assignments for {$($usersToAdd)}"
             Update-M365TeamsApp -Id $Id `
-                                -IsBlocked $IsBlocked `
-                                -AppAssignmentType $AssignmentType `
-                                -OperationType 'Add' `
-                                -Users $usersToAdd
+                -IsBlocked $IsBlocked `
+                -AppAssignmentType $AssignmentType `
+                -OperationType 'Add' `
+                -Users $usersToAdd
         }
         #endregion
 
@@ -273,20 +273,20 @@ function Set-TargetResource
         {
             Write-Verbose -Message "Removing Group Assignments for {$($groupsToRemove)}"
             Update-M365TeamsApp -Id $Id `
-                                -IsBlocked $IsBlocked `
-                                -AppAssignmentType $AssignmentType `
-                                -OperationType 'Remove' `
-                                -Groups $groupsToRemove
+                -IsBlocked $IsBlocked `
+                -AppAssignmentType $AssignmentType `
+                -OperationType 'Remove' `
+                -Groups $groupsToRemove
         }
 
         if ($groupsToAdd.Length -gt 0)
         {
             Write-Verbose -Message "Adding Group Assignments for {$($groupsToAdd)}"
             Update-M365TeamsApp -Id $Id `
-                                -IsBlocked $IsBlocked `
-                                -AppAssignmentType $AssignmentType `
-                                -OperationType 'Add' `
-                                -Groups $groupsToAdd
+                -IsBlocked $IsBlocked `
+                -AppAssignmentType $AssignmentType `
+                -OperationType 'Add' `
+                -Groups $groupsToAdd
         }
         #endregion
     }
@@ -294,8 +294,8 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Updating core settings for app {$Id}"
         Update-M365TeamsApp -Id $Id `
-                        -IsBlocked $IsBlocked `
-                        -AppAssignmentType $AssignmentType
+            -IsBlocked $IsBlocked `
+            -AppAssignmentType $AssignmentType
     }
 }
 

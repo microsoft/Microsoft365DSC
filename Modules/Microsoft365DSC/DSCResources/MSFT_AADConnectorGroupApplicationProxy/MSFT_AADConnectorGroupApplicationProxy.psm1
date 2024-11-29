@@ -9,7 +9,7 @@ function Get-TargetResource
         $Name,
 
         [Parameter()]
-        [ValidateSet('nam','eur','aus','asia','ind','unknownFutureValue')]
+        [ValidateSet('nam', 'eur', 'aus', 'asia', 'ind', 'unknownFutureValue')]
         [System.String]
         $Region,
 
@@ -77,7 +77,7 @@ function Get-TargetResource
         {
             if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
             {
-                $getValue = $Script:exportedInstances | Where-Object -FilterScript {$_.Id -eq $Id}
+                $getValue = $Script:exportedInstances | Where-Object -FilterScript { $_.Id -eq $Id }
             }
             else
             {
@@ -92,7 +92,7 @@ function Get-TargetResource
             {
                 if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
                 {
-                    $getValue = $Script:exportedInstances | Where-Object -FilterScript {$_.Name -eq $Name}
+                    $getValue = $Script:exportedInstances | Where-Object -FilterScript { $_.Name -eq $Name }
                 }
                 else
                 {
@@ -156,7 +156,7 @@ function Set-TargetResource
         $Name,
 
         [Parameter()]
-        [ValidateSet('nam','eur','aus','asia','ind','unknownFutureValue')]
+        [ValidateSet('nam', 'eur', 'aus', 'asia', 'ind', 'unknownFutureValue')]
         [System.String]
         $Region,
 
@@ -213,7 +213,7 @@ function Set-TargetResource
     $currentInstance = Get-TargetResource @PSBoundParameters
 
     $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
-    $OnPremisesPublishingProfileId = "applicationProxy"
+    $OnPremisesPublishingProfileId = 'applicationProxy'
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
@@ -265,7 +265,7 @@ function Test-TargetResource
         $Name,
 
         [Parameter()]
-        [ValidateSet('nam','eur','aus','asia','ind','unknownFutureValue')]
+        [ValidateSet('nam', 'eur', 'aus', 'asia', 'ind', 'unknownFutureValue')]
         [System.String]
         $Region,
 
@@ -428,8 +428,8 @@ function Export-TargetResource
 
             Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{
-                Id                    =  $config.Id
-                Name                  =  $config.Name
+                Id                    = $config.Id
+                Name                  = $config.Name
                 Ensure                = 'Present'
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId

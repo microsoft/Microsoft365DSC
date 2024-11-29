@@ -82,16 +82,16 @@ function Get-TargetResource
         $ArcConfigSettings = Get-ArcConfig -ErrorAction Stop
 
         $result = @{
-            IsSingleInstance                           = 'Yes'
-            ArcTrustedSealers                          = $ArcConfigSettings.ArcTrustedSealers
-            Credential                                 = $Credential
-            ApplicationId                              = $ApplicationId
-            CertificateThumbprint                      = $CertificateThumbprint
-            CertificatePath                            = $CertificatePath
-            CertificatePassword                        = $CertificatePassword
-            Managedidentity                            = $ManagedIdentity.IsPresent
-            TenantId                                   = $TenantId
-            AccessTokens                               = $AccessTokens
+            IsSingleInstance      = 'Yes'
+            ArcTrustedSealers     = $ArcConfigSettings.ArcTrustedSealers
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            CertificateThumbprint = $CertificateThumbprint
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
+            Managedidentity       = $ManagedIdentity.IsPresent
+            TenantId              = $TenantId
+            AccessTokens          = $AccessTokens
         }
 
         Write-Verbose -Message 'Found Arc config settings'
@@ -345,7 +345,7 @@ function Export-TargetResource
         $dscContent = ''
         Write-Host "`r`n" -NoNewline
 
-        Write-Host "    |---[1/1]" -NoNewline
+        Write-Host '    |---[1/1]' -NoNewline
 
         $Params = @{
             IsSingleInstance      = 'Yes'

@@ -564,7 +564,7 @@ function Test-TargetResource
         {
             $source = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
 
-            if ($key -eq "Assignments")
+            if ($key -eq 'Assignments')
             {
                 $testResult = Compare-M365DSCIntunePolicyAssignment `
                     -Source $source `
@@ -740,8 +740,8 @@ function Export-TargetResource
     catch
     {
         if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
-            $_.Exception -like "*Unable to perform redirect as Location Header is not set in response*" -or `
-            $_.Exception -like "*Request not applicable to target tenant*")
+                $_.Exception -like '*Unable to perform redirect as Location Header is not set in response*' -or `
+                $_.Exception -like '*Request not applicable to target tenant*')
         {
             Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }

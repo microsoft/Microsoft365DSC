@@ -26,8 +26,8 @@
                 "Security Reader"
             ],
             "requiredrolegroups": [
-               "Organization Management",
-               "Security Administrator"
+                "Organization Management",
+                "Security Administrator"
             ]
         }
     }

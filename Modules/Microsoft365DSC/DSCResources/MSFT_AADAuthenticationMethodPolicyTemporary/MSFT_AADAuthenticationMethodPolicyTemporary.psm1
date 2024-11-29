@@ -113,7 +113,7 @@ function Get-TargetResource
         Write-Verbose -Message "An Azure AD Authentication Method Policy Temporary with Id {$($currentExcludeTargets.id))} was found."
 
         #region resource generator code
-        Write-Verbose -Message "Processing ExcludeTargets"
+        Write-Verbose -Message 'Processing ExcludeTargets'
         $complexExcludeTargets = @()
         foreach ($currentExcludeTargets in $getValue.excludeTargets)
         {
@@ -154,7 +154,7 @@ function Get-TargetResource
         }
         #endregion
 
-        Write-Verbose -Message "Processing IncludeTargets"
+        Write-Verbose -Message 'Processing IncludeTargets'
         $complexincludeTargets = @()
         foreach ($currentincludeTargets in $getValue.AdditionalProperties.includeTargets)
         {

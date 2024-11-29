@@ -65,15 +65,15 @@ function Get-TargetResource
     $nullResult.Ensure = 'Absent'
     try
     {
-        $policy = Get-AdminDlpPolicy | Where-Object -FilterScript {$_.DisplayName -eq $PolicyName}
+        $policy = Get-AdminDlpPolicy | Where-Object -FilterScript { $_.DisplayName -eq $PolicyName }
 
         if ($null -eq $policy)
         {
             return $nullResult
         }
 
-        $rules = Get-PowerAppPolicyUrlPatterns -TenantID $PPTenantId `
-                                               -PolicyName $($policy.PolicyName)
+        $rules = Get-PowerAppPolicyUrlPatterns -TenantId $PPTenantId `
+            -PolicyName $($policy.PolicyName)
         $RulesValue = @()
         foreach ($rule in $rules.rules)
         {
@@ -85,16 +85,16 @@ function Get-TargetResource
         }
 
         $results = @{
-            PPTenantId                        = $PPTenantId
-            PolicyName                        = $PolicyName
-            RuleSet                           = $RulesValue
-            Ensure                            = 'Present'
-            Credential                        = $Credential
-            ApplicationId                     = $ApplicationId
-            TenantId                          = $TenantId
-            CertificateThumbprint             = $CertificateThumbprint
-            ManagedIdentity                   = $ManagedIdentity.IsPresent
-            AccessTokens                      = $AccessTokens
+            PPTenantId            = $PPTenantId
+            PolicyName            = $PolicyName
+            RuleSet               = $RulesValue
+            Ensure                = 'Present'
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
+            ManagedIdentity       = $ManagedIdentity.IsPresent
+            AccessTokens          = $AccessTokens
         }
         return [System.Collections.Hashtable] $results
     }
@@ -173,7 +173,7 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $policy = Get-AdminDlpPolicy | Where-Object -FilterScript {$_.DisplayName -eq $PolicyName}
+    $policy = Get-AdminDlpPolicy | Where-Object -FilterScript { $_.DisplayName -eq $PolicyName }
     $policyNameValue = $policy.PolicyName
 
     # CREATE
@@ -195,9 +195,9 @@ function Set-TargetResource
         Write-Verbose -Message "Setting new Url Patterns for Policy {$($PolicyNameValue)} with parameters:`r`n$payload"
 
         New-PowerAppPolicyUrlPatterns -TenantId $PPTenantId `
-                                      -PolicyName $policyNameValue `
-                                      -NewUrlPatterns $body `
-                                      -Verbose
+            -PolicyName $policyNameValue `
+            -NewUrlPatterns $body `
+            -Verbose
     }
     # REMOVE
     elseif ($Ensure -eq 'Absent')
@@ -380,14 +380,14 @@ function Export-TargetResource
             }
             Write-Host "    |---[$i/$($policies.Count)] $($policy.DisplayName)" -NoNewline
             $params = @{
-                PPTenantId                        = $tenantInfo.TenantId
-                PolicyName                        = $policy.DisplayName
-                Credential                        = $Credential
-                ApplicationId                     = $ApplicationId
-                TenantId                          = $TenantId
-                CertificateThumbprint             = $CertificateThumbprint
-                ManagedIdentity                   = $ManagedIdentity.IsPresent
-                AccessTokens                      = $AccessTokens
+                PPTenantId            = $tenantInfo.TenantId
+                PolicyName            = $policy.DisplayName
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+                ManagedIdentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
             }
 
             $Results = Get-TargetResource @Params

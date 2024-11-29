@@ -130,19 +130,19 @@ function Get-TargetResource
         {
             Write-Verbose -Message "Retrieving indicator by id {$Id}"
             $instance = Get-M365DSCSentinelThreatIntelligenceIndicator -SubscriptionId $SubscriptionId `
-                                                                       -ResourceGroupName $ResourceGroupName `
-                                                                       -WorkspaceName $WorkspaceName `
-                                                                       -TenantId $TenantId `
-                                                                       -Id $Id
+                -ResourceGroupName $ResourceGroupName `
+                -WorkspaceName $WorkspaceName `
+                -TenantId $TenantId `
+                -Id $Id
         }
         if ($null -eq $instance)
         {
             Write-Verbose -Message "Retrieving indicator by DisplayName {$DisplayName}"
             $instances = Get-M365DSCSentinelThreatIntelligenceIndicator -SubscriptionId $SubscriptionId `
-                                                                        -ResourceGroupName $ResourceGroupName `
-                                                                        -WorkspaceName $WorkspaceName `
-                                                                        -TenantId $TenantId
-            $instance = $instances | Where-Object -FilterScript {$_.properties.displayName -eq $DisplayName}
+                -ResourceGroupName $ResourceGroupName `
+                -WorkspaceName $WorkspaceName `
+                -TenantId $TenantId
+            $instance = $instances | Where-Object -FilterScript { $_.properties.displayName -eq $DisplayName }
         }
         if ($null -eq $instance)
         {
@@ -308,7 +308,7 @@ function Set-TargetResource
     $currentInstance = Get-TargetResource @PSBoundParameters
 
     $instanceParameters = @{
-        kind = 'indicator'
+        kind       = 'indicator'
         properties = @{
             confidence             = $Confidence
             description            = $Description
@@ -349,31 +349,31 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Creating a new indicator {$DisplayName}"
         New-M365DSCSentinelThreatIntelligenceIndicator -SubscriptionId $SubscriptionId `
-                                                       -ResourceGroupName $ResourceGroupName `
-                                                       -WorkspaceName $WorkspaceName `
-                                                       -TenantId $TenantId `
-                                                       -Body $instanceParameters
+            -ResourceGroupName $ResourceGroupName `
+            -WorkspaceName $WorkspaceName `
+            -TenantId $TenantId `
+            -Body $instanceParameters
     }
     # UPDATE
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating indicator {$DisplayName}"
         Set-M365DSCSentinelThreatIntelligenceIndicator -SubscriptionId $SubscriptionId `
-                                                       -ResourceGroupName $ResourceGroupName `
-                                                       -WorkspaceName $WorkspaceName `
-                                                       -TenantId $TenantId `
-                                                       -Body $instanceParameters `
-                                                       -Id $currentInstance.Id
+            -ResourceGroupName $ResourceGroupName `
+            -WorkspaceName $WorkspaceName `
+            -TenantId $TenantId `
+            -Body $instanceParameters `
+            -Id $currentInstance.Id
     }
     # REMOVE
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing indicator {$DisplayName}"
         Remove-M365DSCSentinelThreatIntelligenceIndicator -SubscriptionId $SubscriptionId `
-                                                          -ResourceGroupName $ResourceGroupName `
-                                                          -WorkspaceName $WorkspaceName `
-                                                          -TenantId $TenantId `
-                                                          -Id $currentInstance.Id
+            -ResourceGroupName $ResourceGroupName `
+            -WorkspaceName $WorkspaceName `
+            -TenantId $TenantId `
+            -Id $currentInstance.Id
     }
 }
 
@@ -587,14 +587,14 @@ function Export-TargetResource
             }
 
             Write-Host "    |---[$i/$($workspaces.Length)] $($workspace.Name)" -NoNewline
-            $subscriptionId    = $workspace.ResourceId.Split('/')[2]
+            $subscriptionId = $workspace.ResourceId.Split('/')[2]
             $resourceGroupName = $workspace.ResourceGroupName
-            $workspaceName     = $workspace.Name
+            $workspaceName = $workspace.Name
 
             $indicators = Get-M365DSCSentinelThreatIntelligenceIndicator -SubscriptionId $subscriptionId `
-                                                                         -ResourceGroupName $resourceGroupName `
-                                                                         -WorkspaceName $workspaceName `
-                                                                         -TenantId $TenantId
+                -ResourceGroupName $resourceGroupName `
+                -WorkspaceName $workspaceName `
+                -TenantId $TenantId
 
             $j = 1
             if ($currentWatchLists.Length -eq 0 )

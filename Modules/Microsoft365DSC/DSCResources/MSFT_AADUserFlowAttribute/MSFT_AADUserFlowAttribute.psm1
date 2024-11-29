@@ -105,18 +105,18 @@ function Get-TargetResource
     {
         Write-Verbose -Message "Found configuration of user flow attribute $($DisplayName)"
         $result = @{
-            Id                                                        = $UserFlowAttribute.Id
-            DisplayName                                               = $UserFlowAttribute.DisplayName
-            Description                                               = $UserFlowAttribute.Description
-            DataType                                                  = $UserFlowAttribute.DataType
-            Ensure                                                    = 'Present'
-            ApplicationId                                             = $ApplicationId
-            TenantId                                                  = $TenantId
-            CertificateThumbprint                                     = $CertificateThumbprint
-            ApplicationSecret                                         = $ApplicationSecret
-            Credential                                                = $Credential
-            ManagedIdentity                                           = $ManagedIdentity.IsPresent
-            AccessTokens                                              = $AccessTokens
+            Id                    = $UserFlowAttribute.Id
+            DisplayName           = $UserFlowAttribute.DisplayName
+            Description           = $UserFlowAttribute.Description
+            DataType              = $UserFlowAttribute.DataType
+            Ensure                = 'Present'
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
+            ApplicationSecret     = $ApplicationSecret
+            Credential            = $Credential
+            ManagedIdentity       = $ManagedIdentity.IsPresent
+            AccessTokens          = $AccessTokens
         }
         Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
         return $result

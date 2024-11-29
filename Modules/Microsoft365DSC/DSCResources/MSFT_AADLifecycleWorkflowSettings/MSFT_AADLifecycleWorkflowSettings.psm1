@@ -170,7 +170,7 @@ function Set-TargetResource
 
     $updateSettings = @{
         WorkflowScheduleIntervalInHours = $WorkflowScheduleIntervalInHours
-        EmailSettings = @{
+        EmailSettings                   = @{
             SenderDomain       = $SenderDomain
             UseCompanyBranding = $UseCompanyBranding
         }

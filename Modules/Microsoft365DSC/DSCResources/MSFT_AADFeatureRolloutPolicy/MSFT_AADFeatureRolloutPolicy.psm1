@@ -14,7 +14,7 @@ function Get-TargetResource
         $DisplayName,
 
         [Parameter()]
-        [ValidateSet('passthroughAuthentication','seamlessSso','passwordHashSync','emailAsAlternateId','unknownFutureValue','certificateBasedAuthentication')]
+        [ValidateSet('passthroughAuthentication', 'seamlessSso', 'passwordHashSync', 'emailAsAlternateId', 'unknownFutureValue', 'certificateBasedAuthentication')]
         [System.String]
         $Feature,
 
@@ -100,8 +100,8 @@ function Get-TargetResource
                     -Filter "DisplayName eq '$DisplayName'" `
                     -ErrorAction SilentlyContinue | Where-Object `
                     -FilterScript {
-                        $_.AdditionalProperties.'@odata.type' -eq "#microsoft.graph.FeatureRolloutPolicy"
-                    }
+                    $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.FeatureRolloutPolicy'
+                }
             }
         }
         #endregion
@@ -168,7 +168,7 @@ function Set-TargetResource
         $DisplayName,
 
         [Parameter()]
-        [ValidateSet('passthroughAuthentication','seamlessSso','passwordHashSync','emailAsAlternateId','unknownFutureValue','certificateBasedAuthentication')]
+        [ValidateSet('passthroughAuthentication', 'seamlessSso', 'passwordHashSync', 'emailAsAlternateId', 'unknownFutureValue', 'certificateBasedAuthentication')]
         [System.String]
         $Feature,
 
@@ -287,7 +287,7 @@ function Test-TargetResource
         $DisplayName,
 
         [Parameter()]
-        [ValidateSet('passthroughAuthentication','seamlessSso','passwordHashSync','emailAsAlternateId','unknownFutureValue','certificateBasedAuthentication')]
+        [ValidateSet('passthroughAuthentication', 'seamlessSso', 'passwordHashSync', 'emailAsAlternateId', 'unknownFutureValue', 'certificateBasedAuthentication')]
         [System.String]
         $Feature,
 
@@ -465,16 +465,16 @@ function Export-TargetResource
 
             Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{
-                Id = $config.Id
-                DisplayName           =  $config.DisplayName
-                Ensure = 'Present'
-                Credential = $Credential
-                ApplicationId = $ApplicationId
-                TenantId = $TenantId
-                ApplicationSecret = $ApplicationSecret
+                Id                    = $config.Id
+                DisplayName           = $config.DisplayName
+                Ensure                = 'Present'
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
-                ManagedIdentity = $ManagedIdentity.IsPresent
-                AccessTokens = $AccessTokens
+                ManagedIdentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
             }
 
             $Results = Get-TargetResource @Params

@@ -79,8 +79,8 @@ function Get-TargetResource
         $getValue = $null
 
         $getValue = Get-MgBetaIdentityConditionalAccessAuthenticationContextClassReference `
-                        -AuthenticationContextClassReferenceId $Id `
-                        -ErrorAction SilentlyContinue
+            -AuthenticationContextClassReferenceId $Id `
+            -ErrorAction SilentlyContinue
 
         if ($null -eq $getValue)
         {
@@ -370,7 +370,7 @@ function Export-TargetResource
                 $Global:M365DSCExportResourceInstancesCount++
             }
 
-            $displayedKey = $config.Id + " - " + $config.DisplayName
+            $displayedKey = $config.Id + ' - ' + $config.DisplayName
 
             Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{

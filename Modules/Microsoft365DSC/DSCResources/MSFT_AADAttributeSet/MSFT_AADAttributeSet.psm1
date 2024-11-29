@@ -13,7 +13,7 @@ function Get-TargetResource
         $Description,
 
         [Parameter()]
-        [ValidateRange(1,500)]
+        [ValidateRange(1, 500)]
         [System.Int32]
         $MaxAttributesPerSet = $null,
 
@@ -74,8 +74,8 @@ function Get-TargetResource
         $getValue = $null
 
         $getValue = Get-MgBetaDirectoryAttributeSet `
-                        -AttributeSetId $Id `
-                        -ErrorAction SilentlyContinue
+            -AttributeSetId $Id `
+            -ErrorAction SilentlyContinue
 
         if ($null -eq $getValue)
         {
@@ -126,7 +126,7 @@ function Set-TargetResource
         $Description,
 
         [Parameter()]
-        [ValidateRange(1,500)]
+        [ValidateRange(1, 500)]
         [System.Int32]
         $MaxAttributesPerSet = $null,
 
@@ -208,7 +208,7 @@ function Test-TargetResource
         $Description,
 
         [Parameter()]
-        [ValidateRange(1,500)]
+        [ValidateRange(1, 500)]
         [System.Int32]
         $MaxAttributesPerSet = $null,
 
@@ -381,7 +381,7 @@ function Export-TargetResource
     }
     catch
     {
-        if ($_.ErrorDetails.Message -like "*Insufficient privileges*")
+        if ($_.ErrorDetails.Message -like '*Insufficient privileges*')
         {
             Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) Insufficient permissions or license to export Attribute Sets."
         }
@@ -389,10 +389,10 @@ function Export-TargetResource
         {
             Write-Host $Global:M365DSCEmojiRedX
             New-M365DSCLogEntry -Message 'Error during Export:' `
-            -Exception $_ `
-            -Source $($MyInvocation.MyCommand.Source) `
-            -TenantId $TenantId `
-            -Credential $Credential
+                -Exception $_ `
+                -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $TenantId `
+                -Credential $Credential
         }
 
         return ''

@@ -93,7 +93,7 @@ function Get-TargetResource
 
         $getValue = $null
         #region resource generator code
-        $getValue = Get-MgBetaDeviceManagementWindowsFeatureUpdateProfile -WindowsFeatureUpdateProfileId $Id  -ErrorAction SilentlyContinue
+        $getValue = Get-MgBetaDeviceManagementWindowsFeatureUpdateProfile -WindowsFeatureUpdateProfileId $Id -ErrorAction SilentlyContinue
 
         if ($null -eq $getValue)
         {
@@ -105,8 +105,8 @@ function Get-TargetResource
                     -All `
                     -ErrorAction SilentlyContinue | Where-Object `
                     -FilterScript {
-                        $_.DisplayName -eq $DisplayName
-                    }
+                    $_.DisplayName -eq $DisplayName
+                }
             }
         }
         #endregion
@@ -160,8 +160,8 @@ function Get-TargetResource
         if ($assignmentsValues.Count -gt 0)
         {
             $assignmentResult += ConvertFrom-IntunePolicyAssignment `
-                                -IncludeDeviceFilter:$true `
-                                -Assignments ($assignmentsValues)
+                -IncludeDeviceFilter:$true `
+                -Assignments ($assignmentsValues)
         }
         $results.Add('Assignments', $assignmentResult)
 
@@ -296,8 +296,8 @@ function Set-TargetResource
     {
         $BoundParameters.RolloutSettings = @{
             OfferStartDateTimeInUTC = $null
-            OfferEndDateTimeInUTC = $null
-            OfferIntervalInDays = $null
+            OfferEndDateTimeInUTC   = $null
+            OfferIntervalInDays     = $null
         }
     }
 
@@ -607,7 +607,7 @@ function Test-TargetResource
             if (($offerStartDate -ne [datetime]::MinValue -and $offerStartDate -lt $currentTime) `
                     -and ($offerEndDate -ne [datetime]::MinValue -and $offerEndDate -lt $currentTime))
             {
-                Write-Verbose -Message "Start and end time are in the past, skip the configuration."
+                Write-Verbose -Message 'Start and end time are in the past, skip the configuration.'
                 Write-Verbose -Message "Test-TargetResource returned $true"
                 return $true
             }
@@ -641,8 +641,8 @@ function Test-TargetResource
         if ($testResult -and $offerEndDate -ne [datetime]::MinValue -and $currentOfferEndDate -ne [datetime]::MinValue)
         {
             if ($offerStartDate -ne $currentOfferStartDate `
-                -and $offerStartDate -gt $currentTime `
-                -and $offerStartDate -lt $currentTime.AddDays(2))
+                    -and $offerStartDate -gt $currentTime `
+                    -and $offerStartDate -lt $currentTime.AddDays(2))
             {
                 Write-Verbose -Message 'OfferStartDateTimeInUTC must be greater than the current time + 2 days to be changable if OfferEndDateTimeInUTC is specified, resetting testResult to true.'
                 $testResult = $true
@@ -743,7 +743,7 @@ function Export-TargetResource
         # [array]$getValue = Get-MgBetaDeviceManagementWindowsFeatureUpdateProfile -Filter $Filter -All -ErrorAction Stop
         if (-not [string]::IsNullOrEmpty($Filter))
         {
-            Write-Warning -Message "Microsoft Graph filter is not supported on this resource. Only best-effort filtering using startswith, endswith and contains is supported."
+            Write-Warning -Message 'Microsoft Graph filter is not supported on this resource. Only best-effort filtering using startswith, endswith and contains is supported.'
             $complexFunctions = Get-ComplexFunctionsFromFilterQuery -FilterQuery $Filter
             $Filter = Remove-ComplexFunctionsFromFilterQuery -FilterQuery $Filter
         }
@@ -844,7 +844,7 @@ function Export-TargetResource
     catch
     {
         if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
-        $_.Exception -like "*Request not applicable to target tenant*")
+                $_.Exception -like '*Request not applicable to target tenant*')
         {
             Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }

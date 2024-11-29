@@ -95,7 +95,7 @@ function Get-TargetResource
     {
         if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
         {
-            $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.Name -eq $Name}
+            $instance = $Script:exportedInstances | Where-Object -FilterScript { $_.Name -eq $Name }
         }
         else
         {
@@ -109,13 +109,13 @@ function Get-TargetResource
         $results = @{
             Name                  = $instance.Name
             Provider              = $instance.Provider
-            DestinationFolder     = $instance.MailboxOwnerId + ":\" + $instance.DestinationFolder
+            DestinationFolder     = $instance.MailboxOwnerId + ':\' + $instance.DestinationFolder
             Enabled               = [Boolean]$instance.Enabled
             KeepForDays           = $instance.KeepForDays
             KeepLatest            = $instance.KeepLatest
             Mailbox               = $instance.MailboxOwnerId
             SenderName            = $instance.Sender.Split('"')[1]
-            SourceFolder          = $instance.MailboxOwnerId + ":\" + $instance.SourceFolder
+            SourceFolder          = $instance.MailboxOwnerId + ':\' + $instance.SourceFolder
             SystemCategory        = $instance.SystemCategory
             Ensure                = 'Present'
             Credential            = $Credential
@@ -234,22 +234,22 @@ function Set-TargetResource
     # CREATE
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        Write-Verbose -Message "Creating new Sweep Rule."
+        Write-Verbose -Message 'Creating new Sweep Rule.'
         New-SweepRule @SetParameters
     }
     # UPDATE
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Updating existing Sweep Rule."
-        $instance = Get-SweepRule -Mailbox $Mailbox | Where-Object -FilterScript {$_.Name -eq $Name}
+        Write-Verbose -Message 'Updating existing Sweep Rule.'
+        $instance = Get-SweepRule -Mailbox $Mailbox | Where-Object -FilterScript { $_.Name -eq $Name }
         $SetParameters.Add('Identity', $instance.RuleId)
         Set-SweepRule @SetParameters
     }
     # REMOVE
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing existing Sweep Rule."
-        $instance = Get-SweepRule -Mailbox $Mailbox | Where-Object -FilterScript {$_.Name -eq $Name}
+        Write-Verbose -Message 'Removing existing Sweep Rule.'
+        $instance = Get-SweepRule -Mailbox $Mailbox | Where-Object -FilterScript { $_.Name -eq $Name }
         Remove-SweepRule -Identity $instance.RuleId -Mailbox $Mailbox
     }
 }

@@ -140,7 +140,7 @@ function Get-TargetResource
         # CustomDomainLists
         $DmnValues = @()
         if ($instance.ListType -eq 'CustomDomainLists' -or `
-            $instance.Name -eq 'IrmWhitelistDomains')
+                $instance.Name -eq 'IrmWhitelistDomains')
         {
             foreach ($entity in $instance.Entities)
             {
@@ -156,7 +156,7 @@ function Get-TargetResource
         # CustomFilePathRegexLists
         $FilePathValues = @()
         if ($instance.ListType -eq 'CustomFilePathRegexLists' -or `
-            $instance.Name -eq 'IrmCustomExWinFilePaths')
+                $instance.Name -eq 'IrmCustomExWinFilePaths')
         {
             foreach ($entity in $instance.Entities)
             {
@@ -179,7 +179,7 @@ function Get-TargetResource
         # CustomKeywordLists
         $KeywordValues = @()
         if ($instance.ListType -eq 'CustomKeywordLists' -or `
-            $instance.Name -eq 'IrmExcludedKeywords' -or $instance.Name -eq 'IrmNotExcludedKeywords')
+                $instance.Name -eq 'IrmExcludedKeywords' -or $instance.Name -eq 'IrmNotExcludedKeywords')
         {
             foreach ($entity in $instance.Entities)
             {
@@ -191,7 +191,7 @@ function Get-TargetResource
         # CustomSensitiveInformationTypeLists
         $SITValues = @()
         if ($instance.ListType -eq 'CustomSensitiveInformationTypeLists' -or `
-            $instance.Name -eq 'IrmCustomExSensitiveTypes')
+                $instance.Name -eq 'IrmCustomExSensitiveTypes')
         {
             foreach ($entity in $instance.Entities)
             {
@@ -204,7 +204,7 @@ function Get-TargetResource
         # CustomSiteLists
         $SiteValues = @()
         if ($instance.ListType -eq 'CustomSiteLists' -or `
-            $instance.Name -eq 'IrmExcludedSites')
+                $instance.Name -eq 'IrmExcludedSites')
         {
             foreach ($entity in $instance.Entities)
             {
@@ -349,7 +349,7 @@ function Get-TargetResource
             ExceptionKeyworkGroups                 = $exceptionKeywordGroupValue
             ExcludedClassifierGroups               = $excludedClassifierGroupValue
             ExcludedDomainGroups                   = $excludedDomainGroupValue
-            ExcludedFilePathGroups                  = $ExcludedFilePathGroupsValue
+            ExcludedFilePathGroups                 = $ExcludedFilePathGroupsValue
             ExcludedSiteGroups                     = $excludedSiteGroupValue
             ExcludedSensitiveInformationTypeGroups = $excludedSITGroupValue
             ExcludedFileTypeGroups                 = $excludedFileTypeGroupValue
@@ -513,10 +513,10 @@ function Set-TargetResource
             }
             Write-Verbose -Message "Creating new Domain Group {$Name} with values {$($value -join ',')}"
             New-InsiderRiskEntityList -Type 'CustomDomainLists' `
-                                      -Name $Name `
-                                      -DisplayName $DisplayName `
-                                      -Description $Description `
-                                      -Entities $value | Out-Null
+                -Name $Name `
+                -DisplayName $DisplayName `
+                -Description $Description `
+                -Entities $value | Out-Null
         }
         elseif ($ListType -eq 'CustomFilePathRegexLists')
         {
@@ -527,10 +527,10 @@ function Set-TargetResource
             }
             Write-Verbose -Message "Creating new FilePath Group {$Name} with values {$($value -join ',')}"
             New-InsiderRiskEntityList -Type 'CustomFilePathRegexLists' `
-                                      -Name $Name `
-                                      -DisplayName $DisplayName `
-                                      -Description $Description `
-                                      -Entities $value | Out-Null
+                -Name $Name `
+                -DisplayName $DisplayName `
+                -Description $Description `
+                -Entities $value | Out-Null
         }
         elseif ($ListType -eq 'CustomFileTypeLists')
         {
@@ -541,10 +541,10 @@ function Set-TargetResource
             }
             Write-Verbose -Message "Creating new FileType Group {$Name} with values {$($value -join ',')}"
             New-InsiderRiskEntityList -Type 'CustomFileTypeLists ' `
-                                      -Name $Name `
-                                      -DisplayName $DisplayName `
-                                      -Description $Description `
-                                      -Entities $value | Out-Null
+                -Name $Name `
+                -DisplayName $DisplayName `
+                -Description $Description `
+                -Entities $value | Out-Null
         }
         elseif ($ListType -eq 'CustomKeywordLists')
         {
@@ -555,10 +555,10 @@ function Set-TargetResource
             }
             Write-Verbose -Message "Creating new Keyword Group {$Name} with values {$($value -join ',')}"
             New-InsiderRiskEntityList -Type 'CustomKeywordLists' `
-                                      -Name $Name `
-                                      -DisplayName $DisplayName `
-                                      -Description $Description `
-                                      -Entities $value | Out-Null
+                -Name $Name `
+                -DisplayName $DisplayName `
+                -Description $Description `
+                -Entities $value | Out-Null
         }
         elseif ($ListType -eq 'CustomSensitiveInformationTypeLists')
         {
@@ -569,24 +569,24 @@ function Set-TargetResource
             }
             Write-Verbose -Message "Creating new SIT Group {$Name} with values {$($value -join ',')}"
             New-InsiderRiskEntityList -Type 'CustomSensitiveInformationTypeLists' `
-                                      -Name $Name `
-                                      -DisplayName $DisplayName `
-                                      -Description $Description `
-                                      -Entities $value | Out-Null
+                -Name $Name `
+                -DisplayName $DisplayName `
+                -Description $Description `
+                -Entities $value | Out-Null
         }
         elseif ($ListType -eq 'CustomSiteLists')
         {
             $value = @()
             foreach ($site in $Sites)
             {
-                $value += "{`"Url`":`"$($site.Url.ToString())`",`"Name`":`"$($site.Name.ToString())`",`"Guid`":`"$((New-GUID).ToString())`"}"
+                $value += "{`"Url`":`"$($site.Url.ToString())`",`"Name`":`"$($site.Name.ToString())`",`"Guid`":`"$((New-Guid).ToString())`"}"
             }
             Write-Verbose -Message "Creating new Site Group {$Name} with values {$($value)}"
             New-InsiderRiskEntityList -Type 'CustomSiteLists' `
-                                      -Name $Name `
-                                      -DisplayName $DisplayName `
-                                      -Description $Description `
-                                      -Entities $value | Out-Null
+                -Name $Name `
+                -DisplayName $DisplayName `
+                -Description $Description `
+                -Entities $value | Out-Null
         }
         elseif ($ListType -eq 'CustomMLClassifierTypeLists')
         {
@@ -597,10 +597,10 @@ function Set-TargetResource
             }
             Write-Verbose -Message "Creating new Trainable classifier Group {$Name} with values {$($value)}"
             New-InsiderRiskEntityList -Type 'CustomMLClassifierTypeLists' `
-                                      -Name $Name `
-                                      -DisplayName $DisplayName `
-                                      -Description $Description `
-                                      -Entities $value | Out-Null
+                -Name $Name `
+                -DisplayName $DisplayName `
+                -Description $Description `
+                -Entities $value | Out-Null
         }
         else
         {
@@ -620,12 +620,12 @@ function Set-TargetResource
             {
                 if ($diff.SideIndicator -eq '=>')
                 {
-                    $instance = $Domains | Where-Object -FilterScript {$_.Dmn -eq $diff.InputObject}
+                    $instance = $Domains | Where-Object -FilterScript { $_.Dmn -eq $diff.InputObject }
                     $entitiesToAdd += "{`"Dmn`":`"$($instance.Dmn)`",`"isMLSubDmn`":$($instance.isMLSubDmn.ToString().ToLower())}"
                 }
                 else
                 {
-                    $instance = $currentInstance.Domains | Where-Object -FilterScript {$_.Dmn -eq $diff.InputObject}
+                    $instance = $currentInstance.Domains | Where-Object -FilterScript { $_.Dmn -eq $diff.InputObject }
                     $entitiesToRemove += "{`"Dmn`":`"$($instance.Dmn)`",`"isMLSubDmn`":$($instance.isMLSubDmn.ToString().ToLower())}"
                 }
             }
@@ -635,10 +635,10 @@ function Set-TargetResource
             Write-Verbose -Message "Removing entities: $($entitiesToRemove -join ',')"
 
             Set-InsiderRiskEntityList -Identity $Name `
-                                      -DisplayName $DisplayName `
-                                      -Description $Description `
-                                      -AddEntities $entitiesToAdd `
-                                      -RemoveEntities $entitiesToRemove | Out-Null
+                -DisplayName $DisplayName `
+                -Description $Description `
+                -AddEntities $entitiesToAdd `
+                -RemoveEntities $entitiesToRemove | Out-Null
         }
         # Update File Path Group
         elseif ($ListType -eq 'CustomFilePathRegexLists' -or $Name -eq 'IrmCustomExWinFilePaths' -or `
@@ -664,10 +664,10 @@ function Set-TargetResource
             Write-Verbose -Message "Removing entities: $($entitiesToRemove -join ',')"
 
             Set-InsiderRiskEntityList -Identity $Name `
-                                      -DisplayName $DisplayName `
-                                      -Description $Description `
-                                      -AddEntities $entitiesToAdd `
-                                      -RemoveEntities $entitiesToRemove | Out-Null
+                -DisplayName $DisplayName `
+                -Description $Description `
+                -AddEntities $entitiesToAdd `
+                -RemoveEntities $entitiesToRemove | Out-Null
         }
         # Update File Type Group
         elseif ($ListType -eq 'CustomFileTypeLists')
@@ -692,10 +692,10 @@ function Set-TargetResource
             Write-Verbose -Message "Removing entities: $($entitiesToRemove -join ',')"
 
             Set-InsiderRiskEntityList -Identity $Name `
-                                      -DisplayName $DisplayName `
-                                      -Description $Description `
-                                      -AddEntities $entitiesToAdd `
-                                      -RemoveEntities $entitiesToRemove | Out-Null
+                -DisplayName $DisplayName `
+                -Description $Description `
+                -AddEntities $entitiesToAdd `
+                -RemoveEntities $entitiesToRemove | Out-Null
         }
         # Update Keywords Group
         elseif ($ListType -eq 'CustomKeywordLists' -or $Name -eq 'IrmExcludedKeywords' -or $Name -eq 'IrmNotExcludedKeywords')
@@ -720,10 +720,10 @@ function Set-TargetResource
             Write-Verbose -Message "Removing entities: $($entitiesToRemove -join ',')"
 
             Set-InsiderRiskEntityList -Identity $Name `
-                                      -DisplayName $DisplayName `
-                                      -Description $Description `
-                                      -AddEntities $entitiesToAdd `
-                                      -RemoveEntities $entitiesToRemove | Out-Null
+                -DisplayName $DisplayName `
+                -Description $Description `
+                -AddEntities $entitiesToAdd `
+                -RemoveEntities $entitiesToRemove | Out-Null
         }
         # Update SIT Group
         elseif ($ListType -eq 'CustomSensitiveInformationTypeLists' -or $Name -eq 'IrmCustomExSensitiveTypes ' -or `
@@ -749,15 +749,15 @@ function Set-TargetResource
             Write-Verbose -Message "Removing entities: $($entitiesToRemove -join ',')"
 
             Set-InsiderRiskEntityList -Identity $Name `
-                                      -DisplayName $DisplayName `
-                                      -Description $Description `
-                                      -AddEntities $entitiesToAdd `
-                                      -RemoveEntities $entitiesToRemove | Out-Null
+                -DisplayName $DisplayName `
+                -Description $Description `
+                -AddEntities $entitiesToAdd `
+                -RemoveEntities $entitiesToRemove | Out-Null
         }
         # Update Sites Group
         elseif ($ListType -eq 'CustomSiteLists' -or $Name -eq 'IrmExcludedSites')
         {
-            Write-Verbose -Message "Calculating the difference in the Site list."
+            Write-Verbose -Message 'Calculating the difference in the Site list.'
             $entitiesToAdd = @()
             $entitiesToRemove = @()
             $differences = Compare-Object -ReferenceObject $currentInstance.Sites.Url -DifferenceObject $Sites.Url
@@ -765,7 +765,7 @@ function Set-TargetResource
             {
                 if ($diff.SideIndicator -eq '=>')
                 {
-                    $entry = $Sites | Where-Object -FilterScript {$_.Url -eq $diff.InputObject}
+                    $entry = $Sites | Where-Object -FilterScript { $_.Url -eq $diff.InputObject }
                     $guid = $entry.Guid
                     if ([System.String]::IsNullOrEmpty($guid))
                     {
@@ -775,7 +775,7 @@ function Set-TargetResource
                 }
                 else
                 {
-                    $entry = $currentInstance.Sites | Where-Object -FilterScript {$_.Url -eq $diff.InputObject}
+                    $entry = $currentInstance.Sites | Where-Object -FilterScript { $_.Url -eq $diff.InputObject }
                     $entitiesToRemove += "{`"Url`":`"$($entry.Url)`",`"Name`":`"$($entry.Name)`",`"Guid`":`"$($entry.Guid)`"}"
                 }
             }
@@ -785,10 +785,10 @@ function Set-TargetResource
             Write-Verbose -Message "Removing entities: $($entitiesToRemove -join ',')"
 
             Set-InsiderRiskEntityList -Identity $Name `
-                                      -DisplayName $DisplayName `
-                                      -Description $Description `
-                                      -AddEntities $entitiesToAdd `
-                                      -RemoveEntities $entitiesToRemove | Out-Null
+                -DisplayName $DisplayName `
+                -Description $Description `
+                -AddEntities $entitiesToAdd `
+                -RemoveEntities $entitiesToRemove | Out-Null
         }
         # Update Trainable Classifiers Group
         elseif ($ListType -eq 'CustomMLClassifierTypeLists' -or $Name -eq 'IrmCustomExMLClassifiers' -or `
@@ -814,60 +814,60 @@ function Set-TargetResource
             Write-Verbose -Message "Removing entities: $($entitiesToRemove -join ',')"
 
             Set-InsiderRiskEntityList -Identity $Name `
-                                      -DisplayName $DisplayName `
-                                      -Description $Description `
-                                      -AddEntities $entitiesToAdd `
-                                      -RemoveEntities $entitiesToRemove | Out-Null
+                -DisplayName $DisplayName `
+                -Description $Description `
+                -AddEntities $entitiesToAdd `
+                -RemoveEntities $entitiesToRemove | Out-Null
         }
 
         <################## Group Exclusions #############>
         if ($null -ne $ExcludedDomainGroups -and $ExcludedDomainGroups.Length -gt 0)
         {
             Set-M365DSCSCInsiderRiskExclusionGroup -CurrentValues $currentInstance.ExcludedDomainGroups `
-                                                   -DesiredValues $ExcludedDomainGroups `
-                                                   -Name 'IrmXSGDomains'
+                -DesiredValues $ExcludedDomainGroups `
+                -Name 'IrmXSGDomains'
         }
         elseif ($null -ne $ExcludedFilePathGroups -and $ExcludedFilePathGroups.Length -gt 0)
         {
             Set-M365DSCSCInsiderRiskExclusionGroup -CurrentValues $currentInstance.ExcludedFilePathGroups `
-                                                   -DesiredValues $ExcludedFilePathGroups `
-                                                   -Name 'IrmXSGFilePaths'
+                -DesiredValues $ExcludedFilePathGroups `
+                -Name 'IrmXSGFilePaths'
         }
         elseif ($null -ne $ExcludedFileTypeGroups -and $ExcludedFileTypeGroups.Length -gt 0)
         {
             Set-M365DSCSCInsiderRiskExclusionGroup -CurrentValues $currentInstance.ExcludedFileTypeGroups `
-                                                   -DesiredValues $ExcludedFileTypeGroups `
-                                                   -Name 'IrmXSGFiletypes'
+                -DesiredValues $ExcludedFileTypeGroups `
+                -Name 'IrmXSGFiletypes'
         }
         elseif ($null -ne $ExceptionKeyworkGroups -and $ExceptionKeyworkGroups.Length -gt 0)
         {
             Set-M365DSCSCInsiderRiskExclusionGroup -CurrentValues $currentInstance.ExceptionKeyworkGroups `
-                                                   -DesiredValues $ExceptionKeyworkGroups `
-                                                   -Name 'IrmXSGExcludedKeywords '
+                -DesiredValues $ExceptionKeyworkGroups `
+                -Name 'IrmXSGExcludedKeywords '
         }
         elseif ($null -ne $ExcludedKeyworkGroups -and $ExcludedKeyworkGroups.Length -gt 0)
         {
             Set-M365DSCSCInsiderRiskExclusionGroup -CurrentValues $currentInstance.ExcludedKeyworkGroups `
-                                                   -DesiredValues $ExcludedKeyworkGroups `
-                                                   -Name 'IrmXSGExcludedKeywords '
+                -DesiredValues $ExcludedKeyworkGroups `
+                -Name 'IrmXSGExcludedKeywords '
         }
         elseif ($null -ne $ExcludedSensitiveInformationTypeGroups -and $ExcludedSensitiveInformationTypeGroups.Length -gt 0)
         {
             Set-M365DSCSCInsiderRiskExclusionGroup -CurrentValues $currentInstance.ExcludedSensitiveInformationTypeGroups `
-                                                   -DesiredValues $ExcludedSensitiveInformationTypeGroups `
-                                                   -Name 'IrmXSGSensitiveInfoTypes '
+                -DesiredValues $ExcludedSensitiveInformationTypeGroups `
+                -Name 'IrmXSGSensitiveInfoTypes '
         }
         elseif ($null -ne $ExcludedSiteGroups -and $ExcludedSiteGroups.Length -gt 0)
         {
             Set-M365DSCSCInsiderRiskExclusionGroup -CurrentValues $currentInstance.ExcludedSiteGroups `
-                                                   -DesiredValues $ExcludedSiteGroups `
-                                                   -Name 'IrmXSGSites '
+                -DesiredValues $ExcludedSiteGroups `
+                -Name 'IrmXSGSites '
         }
         elseif ($null -ne $ExcludedClassifierGroups -and $ExcludedClassifierGroups.Length -gt 0)
         {
             Set-M365DSCSCInsiderRiskExclusionGroup -CurrentValues $currentInstance.ExcludedClassifierGroups `
-                                                   -DesiredValues $ExcludedClassifierGroups `
-                                                   -Name 'IrmXSGMLClassifierTypes '
+                -DesiredValues $ExcludedClassifierGroups `
+                -Name 'IrmXSGMLClassifierTypes '
         }
     }
     # REMOVE
@@ -1073,8 +1073,8 @@ function Export-TargetResource
         $Script:ExportMode = $true
         [array] $Script:exportedInstances = @()
         $availableTypes = @('HveLists', 'DomainLists', 'CriticalAssetLists', 'WindowsFilePathRegexLists', 'SensitiveTypeLists', 'SiteLists', 'KeywordLists', `
-                            'CustomDomainLists', 'CustomSiteLists', 'CustomKeywordLists', 'CustomFileTypeLists', 'CustomFilePathRegexLists', `
-                            'CustomSensitiveInformationTypeLists', 'CustomMLClassifierTypeLists', 'GlobalExclusionSGMapping', 'DlpPolicyLists')
+                'CustomDomainLists', 'CustomSiteLists', 'CustomKeywordLists', 'CustomFileTypeLists', 'CustomFilePathRegexLists', `
+                'CustomSensitiveInformationTypeLists', 'CustomMLClassifierTypeLists', 'GlobalExclusionSGMapping', 'DlpPolicyLists')
 
         # Retrieve entries for each type
         foreach ($listType in $availableTypes)
@@ -1174,12 +1174,12 @@ function ConvertTo-M365DSCSCInsiderRiskDomainToString
     [CmdletBinding()]
     [OutputType([System.String])]
     param(
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [System.Object[]]
         $Domains
     )
 
-    $content = "@("
+    $content = '@('
     foreach ($domain in $Domains)
     {
         $content += "MSFT_SCInsiderRiskEntityListDomain`r`n"
@@ -1188,7 +1188,7 @@ function ConvertTo-M365DSCSCInsiderRiskDomainToString
         $content += "    isMLSubDmn = `$$($domain.isMLSubDmn)`r`n"
         $content += "}`r`n"
     }
-    $content += ")"
+    $content += ')'
     return $content
 }
 
@@ -1197,12 +1197,12 @@ function ConvertTo-M365DSCSCInsiderRiskSiteToString
     [CmdletBinding()]
     [OutputType([System.String])]
     param(
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [System.Object[]]
         $Sites
     )
 
-    $content = "@("
+    $content = '@('
     foreach ($site in $Sites)
     {
         $content += "MSFT_SCInsiderRiskEntityListSite`r`n"
@@ -1212,7 +1212,7 @@ function ConvertTo-M365DSCSCInsiderRiskSiteToString
         $content += "    Guid = '$($site.Guid)'`r`n"
         $content += "}`r`n"
     }
-    $content += ")"
+    $content += ')'
     return $content
 }
 
@@ -1253,8 +1253,8 @@ function Set-M365DSCSCInsiderRiskExclusionGroup
     Write-Verbose -Message "Removing entities: $($entitiesToRemove -join ',')"
 
     Set-InsiderRiskEntityList -Identity $Name `
-                              -AddEntities $entitiesToAdd `
-                              -RemoveEntities $entitiesToRemove | Out-Null
+        -AddEntities $entitiesToAdd `
+        -RemoveEntities $entitiesToRemove | Out-Null
 }
 
 Export-ModuleMember -Function *-TargetResource

@@ -62,7 +62,7 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    Write-Verbose -Message "Getting configuration of Mailtips"
+    Write-Verbose -Message 'Getting configuration of Mailtips'
     if ($Global:CurrentModeIsExport)
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
@@ -194,7 +194,7 @@ function Set-TargetResource
         $AccessTokens
     )
 
-    Write-Verbose -Message "Setting configuration of Mailtips"
+    Write-Verbose -Message 'Setting configuration of Mailtips'
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -322,7 +322,7 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of Mailtips"
+    Write-Verbose -Message 'Testing configuration of Mailtips'
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 

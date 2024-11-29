@@ -95,7 +95,7 @@ function Get-TargetResource
 
         if ($null -eq $ActiveSyncDeviceAccessRule)
         {
-            Write-Verbose -Message "Trying to retrieve instance by Identity"
+            Write-Verbose -Message 'Trying to retrieve instance by Identity'
             $ActiveSyncDeviceAccessRule = Get-ActiveSyncDeviceAccessRule -Identity $Identity -ErrorAction 'SilentlyContinue'
 
             if ($null -eq $ActiveSyncDeviceAccessRule)

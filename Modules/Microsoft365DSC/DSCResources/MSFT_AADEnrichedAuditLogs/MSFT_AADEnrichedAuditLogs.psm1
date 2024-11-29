@@ -161,18 +161,18 @@ function Set-TargetResource
     Write-Verbose -Message 'Updating Enriched Audit Logs settings'
 
     $values = @{
-        "@odata.type" = "#microsoft.graph.networkaccess.enrichedAuditLogs"
-        exchange = @{
-            "@odata.type" = "#microsoft.graph.networkaccess.enrichedAuditLogsSettings"
-            status = $ExchangeOnline
+        '@odata.type' = '#microsoft.graph.networkaccess.enrichedAuditLogs'
+        exchange      = @{
+            '@odata.type' = '#microsoft.graph.networkaccess.enrichedAuditLogsSettings'
+            status        = $ExchangeOnline
         }
-        sharepoint = @{
-            "@odata.type" = "#microsoft.graph.networkaccess.enrichedAuditLogsSettings"
-            status = $SharePoint
+        sharepoint    = @{
+            '@odata.type' = '#microsoft.graph.networkaccess.enrichedAuditLogsSettings'
+            status        = $SharePoint
         }
-        teams = @{
-            "@odata.type" = "#microsoft.graph.networkaccess.enrichedAuditLogsSettings"
-            status = $Teams
+        teams         = @{
+            '@odata.type' = '#microsoft.graph.networkaccess.enrichedAuditLogsSettings'
+            status        = $Teams
         }
     }
     $body = ConvertTo-Json $values -Depth 10 -Compress
@@ -328,7 +328,7 @@ function Export-TargetResource
             CertificateThumbprint = $CertificateThumbprint
             ManagedIdentity       = $ManagedIdentity.IsPresent
             AccessTokens          = $AccessTokens
-         }
+        }
 
         $Results = Get-TargetResource @Params
         $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `

@@ -22,7 +22,7 @@ function Get-TargetResource
         $BlockAccess,
 
         [Parameter()]
-        [ValidateSet('All', 'PerUser','None')]
+        [ValidateSet('All', 'PerUser', 'None')]
         [System.String]
         $BlockAccessScope,
 
@@ -142,7 +142,7 @@ function Get-TargetResource
         [System.Boolean]
         $DocumentIsPasswordProtected,
 
-       [Parameter()]
+        [Parameter()]
         [System.Boolean]
         $ExceptIfDocumentIsPasswordProtected,
 
@@ -397,13 +397,13 @@ function Get-TargetResource
                 $ExceptIfContentExtensionMatchesWords = $PolicyRule.ExceptIfContentExtensionMatchesWords.Replace(' ', '').Split(',')
             }
 
-            if($null -ne $PolicyRule.AdvancedRule -and $PolicyRule.AdvancedRule.Count -gt 0)
+            if ($null -ne $PolicyRule.AdvancedRule -and $PolicyRule.AdvancedRule.Count -gt 0)
             {
                 $ruleobject = $PolicyRule.AdvancedRule | ConvertFrom-Json
-                $index = $ruleobject.Condition.SubConditions.ConditionName.IndexOf("ContentContainsSensitiveInformation")
+                $index = $ruleobject.Condition.SubConditions.ConditionName.IndexOf('ContentContainsSensitiveInformation')
                 if ($index -ne -1)
                 {
-                    if($null -eq $ruleobject.Condition.SubConditions[$index].value.groups)
+                    if ($null -eq $ruleobject.Condition.SubConditions[$index].value.groups)
                     {
                         $ruleobject.Condition.SubConditions[$index].Value = $ruleobject.Condition.SubConditions[$index].Value | Select-Object * -ExcludeProperty Id
                     }
@@ -414,14 +414,14 @@ function Get-TargetResource
                 }
 
                 $newAdvancedRule = $ruleobject | ConvertTo-Json -Depth 32 | Format-Json
-                $newAdvancedRule = $newAdvancedRule | ConvertTo-Json -compress
+                $newAdvancedRule = $newAdvancedRule | ConvertTo-Json -Compress
             }
             else
             {
                 $newAdvancedRule = $null
             }
 
-            $fancyDoubleQuotes = "[\u201C\u201D]"
+            $fancyDoubleQuotes = '[\u201C\u201D]'
             $result = @{
                 Ensure                                       = 'Present'
                 Name                                         = $PolicyRule.Name
@@ -550,7 +550,7 @@ function Set-TargetResource
         $BlockAccess,
 
         [Parameter()]
-        [ValidateSet('All', 'PerUser','None')]
+        [ValidateSet('All', 'PerUser', 'None')]
         [System.String]
         $BlockAccessScope,
 
@@ -670,7 +670,7 @@ function Set-TargetResource
         [System.Boolean]
         $DocumentIsPasswordProtected,
 
-       [Parameter()]
+        [Parameter()]
         [System.Boolean]
         $ExceptIfDocumentIsPasswordProtected,
 
@@ -907,7 +907,7 @@ function Set-TargetResource
         {
             $CreationParams.AdvancedRule = $CreationParams.AdvancedRule | ConvertFrom-Json
         }
-        elseif($null -ne $CreationParams.ContentContainsSensitiveInformation)
+        elseif ($null -ne $CreationParams.ContentContainsSensitiveInformation)
         {
             $CreationParams.Remove('AdvancedRule')
         }
@@ -926,8 +926,8 @@ function Set-TargetResource
         $CreationParams.Remove('AccessTokens') | Out-Null
 
         $NewruleParam = @{
-            Name = $CreationParams.Name
-            Policy = $CreationParams.Policy
+            Name         = $CreationParams.Name
+            Policy       = $CreationParams.Policy
             AdvancedRule = $CreationParams.AdvancedRule
         }
         Write-Verbose -Message "Calling New-DLPComplianceRule with Values: $(Convert-M365DscHashtableToString -Hashtable $CreationParams)"
@@ -976,7 +976,7 @@ function Set-TargetResource
         {
             $UpdateParams.AdvancedRule = $UpdateParams.AdvancedRule | ConvertFrom-Json
         }
-        elseif($null -ne $UpdateParams.ContentContainsSensitiveInformation)
+        elseif ($null -ne $UpdateParams.ContentContainsSensitiveInformation)
         {
             $UpdateParams.Remove('AdvancedRule')
         }
@@ -1031,7 +1031,7 @@ function Test-TargetResource
         $BlockAccess,
 
         [Parameter()]
-        [ValidateSet('All', 'PerUser','None')]
+        [ValidateSet('All', 'PerUser', 'None')]
         [System.String]
         $BlockAccessScope,
 
@@ -2077,15 +2077,18 @@ function Test-ContainsSensitiveInformationGroups
     }
 }
 
-function Format-Json([Parameter(Mandatory, ValueFromPipeline)][String] $json) {
-    $indent = 0;
-    ($json -Split "`n" | % {
-        if ($_ -match '[\}\]]\s*,?\s*$') {
+function Format-Json([Parameter(Mandatory, ValueFromPipeline)][String] $json)
+{
+    $indent = 0
+    ($json -Split "`n" | ForEach-Object {
+        if ($_ -match '[\}\]]\s*,?\s*$')
+        {
             # This line ends with ] or }, decrement the indentation level
             $indent--
         }
         $line = ('  ' * $indent) + $($_.TrimStart() -replace '":  (["{[])', '": $1' -replace ':  ', ': ')
-        if ($_ -match '[\{\[]\s*$') {
+        if ($_ -match '[\{\[]\s*$')
+        {
             # This line ends with [ or {, increment the indentation level
             $indent++
         }

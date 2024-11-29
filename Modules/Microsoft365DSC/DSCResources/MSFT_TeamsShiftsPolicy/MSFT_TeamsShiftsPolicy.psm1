@@ -225,7 +225,7 @@ function Set-TargetResource
 
     if ($PSBoundParameters.ContainsKey('EnableShiftPresence'))
     {
-        Write-Verbose -Message "The EnableShiftPresence parameter was used but is deprecated. It will be ignored."
+        Write-Verbose -Message 'The EnableShiftPresence parameter was used but is deprecated. It will be ignored.'
         $PSBoundParameters.Remove('EnableShiftPresence') | Out-Null
     }
 

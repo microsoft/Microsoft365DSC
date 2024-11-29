@@ -421,7 +421,7 @@ function Export-TargetResource
         Write-Host "`r`n" -NoNewline
         foreach ($team in $Teams)
         {
-            if($null -ne $team.GroupId)
+            if ($null -ne $team.GroupId)
             {
                 $channels = Get-TeamChannel -GroupId $team.GroupId
                 $i = 1

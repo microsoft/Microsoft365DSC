@@ -130,28 +130,28 @@ function Get-TargetResource
             $valueNewUnifiedGroupWritebackDefault = $Policy.Values | Where-Object -FilterScript { $_.Name -eq 'NewUnifiedGroupWritebackDefault' }
 
             $result = @{
-                IsSingleInstance                = 'Yes'
-                EnableGroupCreation             = [Boolean]::Parse($valueEnableGroupCreation.Value)
-                EnableMIPLabels                 = [Boolean]::Parse($valueEnableMIPLabels.Value)
-                AllowGuestsToBeGroupOwner       = [Boolean]::Parse($valueAllowGuestsToBeGroupOwner.Value)
-                AllowGuestsToAccessGroups       = [Boolean]::Parse($valueAllowGuestsToAccessGroups.Value)
-                GuestUsageGuidelinesUrl         = $valueGuestUsageGuidelinesUrl.Value
-                AllowToAddGuests                = [Boolean]::Parse($valueAllowToAddGuests.Value)
-                UsageGuidelinesUrl              = $valueUsageGuidelinesUrl.Value
-                Ensure                          = 'Present'
-                ApplicationId                   = $ApplicationId
-                TenantId                        = $TenantId
-                ApplicationSecret               = $ApplicationSecret
-                CertificateThumbprint           = $CertificateThumbprint
-                Credential                      = $Credential
-                Managedidentity                 = $ManagedIdentity.IsPresent
-                AccessTokens                    = $AccessTokens
+                IsSingleInstance          = 'Yes'
+                EnableGroupCreation       = [Boolean]::Parse($valueEnableGroupCreation.Value)
+                EnableMIPLabels           = [Boolean]::Parse($valueEnableMIPLabels.Value)
+                AllowGuestsToBeGroupOwner = [Boolean]::Parse($valueAllowGuestsToBeGroupOwner.Value)
+                AllowGuestsToAccessGroups = [Boolean]::Parse($valueAllowGuestsToAccessGroups.Value)
+                GuestUsageGuidelinesUrl   = $valueGuestUsageGuidelinesUrl.Value
+                AllowToAddGuests          = [Boolean]::Parse($valueAllowToAddGuests.Value)
+                UsageGuidelinesUrl        = $valueUsageGuidelinesUrl.Value
+                Ensure                    = 'Present'
+                ApplicationId             = $ApplicationId
+                TenantId                  = $TenantId
+                ApplicationSecret         = $ApplicationSecret
+                CertificateThumbprint     = $CertificateThumbprint
+                Credential                = $Credential
+                Managedidentity           = $ManagedIdentity.IsPresent
+                AccessTokens              = $AccessTokens
             }
             if (-not [System.String]::IsNullOrEmpty($valueNewUnifiedGroupWritebackDefault.Value))
             {
-            $result.Add('NewUnifiedGroupWritebackDefault', [Boolean]::Parse($valueNewUnifiedGroupWritebackDefault.Value))
+                $result.Add('NewUnifiedGroupWritebackDefault', [Boolean]::Parse($valueNewUnifiedGroupWritebackDefault.Value))
             }
-            
+
             if (-not [System.String]::IsNullOrEmpty($AllowedGroupName))
             {
                 $result.Add('GroupCreationAllowedGroupName', $AllowedGroupName)

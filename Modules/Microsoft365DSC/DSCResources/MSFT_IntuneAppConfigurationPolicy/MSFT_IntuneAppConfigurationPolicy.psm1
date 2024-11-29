@@ -79,11 +79,13 @@ function Get-TargetResource
     try
     {
 
-        try {
+        try
+        {
             $configPolicy = Get-MgBetaDeviceAppManagementTargetedManagedAppConfiguration -TargetedManagedAppConfigurationId $Id `
                 -ErrorAction Stop
         }
-        catch {
+        catch
+        {
             $configPolicy = $null
         }
 
@@ -106,7 +108,7 @@ function Get-TargetResource
                 Write-Verbose -Message "No App Configuration Policy with DisplayName {$DisplayName} was found"
                 return $nullResult
             }
-            if(([array]$configPolicy).count -gt 1)
+            if (([array]$configPolicy).count -gt 1)
             {
                 throw "A policy with a duplicated displayName {'$DisplayName'} was found - Ensure displayName is unique"
             }
@@ -133,8 +135,8 @@ function Get-TargetResource
         if ($graphAssignments.count -gt 0)
         {
             $returnAssignments += ConvertFrom-IntunePolicyAssignment `
-                                -IncludeDeviceFilter:$true `
-                                -Assignments ($graphAssignments)
+                -IncludeDeviceFilter:$true `
+                -Assignments ($graphAssignments)
         }
         $returnHashtable.Add('Assignments', $returnAssignments)
 
@@ -563,7 +565,7 @@ function Export-TargetResource
     catch
     {
         if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
-        $_.Exception -like "*Request not applicable to target tenant*")
+                $_.Exception -like '*Request not applicable to target tenant*')
         {
             Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }

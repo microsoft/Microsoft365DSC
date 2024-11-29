@@ -38,7 +38,7 @@ function Get-TargetResource
         $MiracastBlocked,
 
         [Parameter()]
-        [ValidateSet('userDefined','one','two','three','four','five','six','seven','eight','nine','ten','eleven','thirtySix','forty','fortyFour','fortyEight','oneHundredFortyNine','oneHundredFiftyThree','oneHundredFiftySeven','oneHundredSixtyOne','oneHundredSixtyFive')]
+        [ValidateSet('userDefined', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'thirtySix', 'forty', 'fortyFour', 'fortyEight', 'oneHundredFortyNine', 'oneHundredFiftyThree', 'oneHundredFiftySeven', 'oneHundredSixtyOne', 'oneHundredSixtyFive')]
         [System.String]
         $MiracastChannel,
 
@@ -83,7 +83,7 @@ function Get-TargetResource
         $WelcomeScreenBlockAutomaticWakeUp,
 
         [Parameter()]
-        [ValidateSet('userDefined','showOrganizerAndTimeOnly','showOrganizerAndTimeAndSubject')]
+        [ValidateSet('userDefined', 'showOrganizerAndTimeOnly', 'showOrganizerAndTimeAndSubject')]
         [System.String]
         $WelcomeScreenMeetingInformation,
 
@@ -164,7 +164,7 @@ function Get-TargetResource
 
         $getValue = $null
         #region resource generator code
-        $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -DeviceConfigurationId $Id  -ErrorAction SilentlyContinue
+        $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -DeviceConfigurationId $Id -ErrorAction SilentlyContinue
 
         if ($null -eq $getValue)
         {
@@ -177,8 +177,8 @@ function Get-TargetResource
                     -Filter "DisplayName eq '$DisplayName'" `
                     -ErrorAction SilentlyContinue | Where-Object `
                     -FilterScript { `
-                        $_.AdditionalProperties.'@odata.type' -eq "#microsoft.graph.windows10TeamGeneralConfiguration" `
-                    }
+                        $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windows10TeamGeneralConfiguration' `
+                }
             }
         }
         #endregion
@@ -254,8 +254,8 @@ function Get-TargetResource
         if ($assignmentsValues.Count -gt 0)
         {
             $assignmentResult += ConvertFrom-IntunePolicyAssignment `
-                                -IncludeDeviceFilter:$true `
-                                -Assignments ($assignmentsValues)
+                -IncludeDeviceFilter:$true `
+                -Assignments ($assignmentsValues)
         }
         $results.Add('Assignments', $assignmentResult)
 
@@ -312,7 +312,7 @@ function Set-TargetResource
         $MiracastBlocked,
 
         [Parameter()]
-        [ValidateSet('userDefined','one','two','three','four','five','six','seven','eight','nine','ten','eleven','thirtySix','forty','fortyFour','fortyEight','oneHundredFortyNine','oneHundredFiftyThree','oneHundredFiftySeven','oneHundredSixtyOne','oneHundredSixtyFive')]
+        [ValidateSet('userDefined', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'thirtySix', 'forty', 'fortyFour', 'fortyEight', 'oneHundredFortyNine', 'oneHundredFiftyThree', 'oneHundredFiftySeven', 'oneHundredSixtyOne', 'oneHundredSixtyFive')]
         [System.String]
         $MiracastChannel,
 
@@ -357,7 +357,7 @@ function Set-TargetResource
         $WelcomeScreenBlockAutomaticWakeUp,
 
         [Parameter()]
-        [ValidateSet('userDefined','showOrganizerAndTimeOnly','showOrganizerAndTimeAndSubject')]
+        [ValidateSet('userDefined', 'showOrganizerAndTimeOnly', 'showOrganizerAndTimeAndSubject')]
         [System.String]
         $WelcomeScreenMeetingInformation,
 
@@ -434,7 +434,7 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating an Intune Device Configuration Windows Team Policy for Windows10 with DisplayName {$DisplayName}"
-        $PSBoundParameters.Remove("Assignments") | Out-Null
+        $PSBoundParameters.Remove('Assignments') | Out-Null
 
         $CreateParameters = ([Hashtable]$PSBoundParameters).clone()
         $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
@@ -449,13 +449,13 @@ function Set-TargetResource
             }
         }
         #region resource generator code
-        $CreateParameters.Add("@odata.type", "#microsoft.graph.windows10TeamGeneralConfiguration")
+        $CreateParameters.Add('@odata.type', '#microsoft.graph.windows10TeamGeneralConfiguration')
         $policy = New-MgBetaDeviceManagementDeviceConfiguration -BodyParameter $CreateParameters
         $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
 
         if ($policy.id)
         {
-            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId  $policy.id `
+            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $policy.id `
                 -Targets $assignmentsHash `
                 -Repository 'deviceManagement/deviceConfigurations'
         }
@@ -464,7 +464,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating the Intune Device Configuration Windows Team Policy for Windows10 with Id {$($currentInstance.Id)}"
-        $PSBoundParameters.Remove("Assignments") | Out-Null
+        $PSBoundParameters.Remove('Assignments') | Out-Null
 
         $UpdateParameters = ([Hashtable]$PSBoundParameters).clone()
         $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
@@ -480,7 +480,7 @@ function Set-TargetResource
             }
         }
         #region resource generator code
-        $UpdateParameters.Add("@odata.type", "#microsoft.graph.windows10TeamGeneralConfiguration")
+        $UpdateParameters.Add('@odata.type', '#microsoft.graph.windows10TeamGeneralConfiguration')
         Update-MgBetaDeviceManagementDeviceConfiguration  `
             -DeviceConfigurationId $currentInstance.Id `
             -BodyParameter $UpdateParameters
@@ -540,7 +540,7 @@ function Test-TargetResource
         $MiracastBlocked,
 
         [Parameter()]
-        [ValidateSet('userDefined','one','two','three','four','five','six','seven','eight','nine','ten','eleven','thirtySix','forty','fortyFour','fortyEight','oneHundredFortyNine','oneHundredFiftyThree','oneHundredFiftySeven','oneHundredSixtyOne','oneHundredSixtyFive')]
+        [ValidateSet('userDefined', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'thirtySix', 'forty', 'fortyFour', 'fortyEight', 'oneHundredFortyNine', 'oneHundredFiftyThree', 'oneHundredFiftySeven', 'oneHundredSixtyOne', 'oneHundredSixtyFive')]
         [System.String]
         $MiracastChannel,
 
@@ -585,7 +585,7 @@ function Test-TargetResource
         $WelcomeScreenBlockAutomaticWakeUp,
 
         [Parameter()]
-        [ValidateSet('userDefined','showOrganizerAndTimeOnly','showOrganizerAndTimeAndSubject')]
+        [ValidateSet('userDefined', 'showOrganizerAndTimeOnly', 'showOrganizerAndTimeAndSubject')]
         [System.String]
         $WelcomeScreenMeetingInformation,
 
@@ -768,7 +768,7 @@ function Export-TargetResource
             -ErrorAction Stop | Where-Object `
             -FilterScript { `
                 $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windows10TeamGeneralConfiguration' `
-            }
+        }
         #endregion
 
         $i = 1
@@ -795,16 +795,16 @@ function Export-TargetResource
             }
             Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{
-                Id = $config.Id
-                DisplayName           =  $config.DisplayName
-                Ensure = 'Present'
-                Credential = $Credential
-                ApplicationId = $ApplicationId
-                TenantId = $TenantId
-                ApplicationSecret = $ApplicationSecret
+                Id                    = $config.Id
+                DisplayName           = $config.DisplayName
+                Ensure                = 'Present'
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
-                Managedidentity = $ManagedIdentity.IsPresent
-                AccessTokens    = $AccessTokens
+                Managedidentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
             }
 
             $Results = Get-TargetResource @Params
@@ -829,7 +829,7 @@ function Export-TargetResource
                 -Credential $Credential
             if ($Results.Assignments)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Assignments" -isCIMArray:$true
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Assignments' -IsCIMArray:$true
             }
 
             $dscContent += $currentDSCBlock
@@ -843,7 +843,7 @@ function Export-TargetResource
     catch
     {
         if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
-        $_.Exception -like "*Request not applicable to target tenant*")
+                $_.Exception -like '*Request not applicable to target tenant*')
         {
             Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }

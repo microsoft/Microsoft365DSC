@@ -10,12 +10,12 @@ function Get-TargetResource
         $AssociatedApps,
 
         [Parameter()]
-        [ValidateSet('certificate','usernameAndPassword','customEapXml','derivedCredential')]
+        [ValidateSet('certificate', 'usernameAndPassword', 'customEapXml', 'derivedCredential')]
         [System.String]
         $AuthenticationMethod,
 
         [Parameter()]
-        [ValidateSet('pulseSecure','f5EdgeClient','dellSonicWallMobileConnect','checkPointCapsuleVpn','automatic','ikEv2','l2tp','pptp','citrix','paloAltoGlobalProtect','ciscoAnyConnect','unknownFutureValue','microsoftTunnel')]
+        [ValidateSet('pulseSecure', 'f5EdgeClient', 'dellSonicWallMobileConnect', 'checkPointCapsuleVpn', 'automatic', 'ikEv2', 'l2tp', 'pptp', 'citrix', 'paloAltoGlobalProtect', 'ciscoAnyConnect', 'unknownFutureValue', 'microsoftTunnel')]
         [System.String]
         $ConnectionType,
 
@@ -68,7 +68,7 @@ function Get-TargetResource
         $OnlyAssociatedAppsCanUseConnection,
 
         [Parameter()]
-        [ValidateSet('user','device','autoPilotDevice')]
+        [ValidateSet('user', 'device', 'autoPilotDevice')]
         [System.String]
         $ProfileTarget,
 
@@ -189,7 +189,7 @@ function Get-TargetResource
 
         $getValue = $null
         #region resource generator code
-        $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -DeviceConfigurationId $Id  -ErrorAction SilentlyContinue
+        $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -DeviceConfigurationId $Id -ErrorAction SilentlyContinue
 
         if ($null -eq $getValue)
         {
@@ -202,8 +202,8 @@ function Get-TargetResource
                     -Filter "DisplayName eq '$DisplayName'" `
                     -ErrorAction SilentlyContinue | Where-Object `
                     -FilterScript { `
-                        $_.AdditionalProperties.'@odata.type' -eq "#microsoft.graph.windows10VpnConfiguration" `
-                    }
+                        $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windows10VpnConfiguration' `
+                }
             }
         }
         #endregion
@@ -225,7 +225,7 @@ function Get-TargetResource
                 $myassociatedApps.Add('AppType', $currentassociatedApps.appType.toString())
             }
             $myassociatedApps.Add('Identifier', $currentassociatedApps.identifier)
-            if ($myassociatedApps.values.Where({$null -ne $_}).count -gt 0)
+            if ($myassociatedApps.values.Where({ $null -ne $_ }).count -gt 0)
             {
                 $complexAssociatedApps += $myassociatedApps
             }
@@ -256,7 +256,7 @@ function Get-TargetResource
         {
             $complexCryptographySuite.Add('PfsGroup', $getValue.AdditionalProperties.cryptographySuite.pfsGroup.toString())
         }
-        if ($complexCryptographySuite.values.Where({$null -ne $_}).count -eq 0)
+        if ($complexCryptographySuite.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexCryptographySuite = $null
         }
@@ -270,7 +270,7 @@ function Get-TargetResource
             $mydnsRules.Add('Persistent', $currentdnsRules.persistent)
             $mydnsRules.Add('ProxyServerUri', $currentdnsRules.proxyServerUri)
             $mydnsRules.Add('Servers', $currentdnsRules.servers)
-            if ($mydnsRules.values.Where({$null -ne $_}).count -gt 0)
+            if ($mydnsRules.values.Where({ $null -ne $_ }).count -gt 0)
             {
                 $complexDnsRules += $mydnsRules
             }
@@ -286,7 +286,7 @@ function Get-TargetResource
         {
             $complexProxyServer.Add('odataType', $getValue.AdditionalProperties.proxyServer.'@odata.type'.toString())
         }
-        if ($complexProxyServer.values.Where({$null -ne $_}).count -eq 0)
+        if ($complexProxyServer.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexProxyServer = $null
         }
@@ -297,7 +297,7 @@ function Get-TargetResource
             $myroutes = @{}
             $myroutes.Add('DestinationPrefix', $currentroutes.destinationPrefix)
             $myroutes.Add('PrefixSize', $currentroutes.prefixSize)
-            if ($myroutes.values.Where({$null -ne $_}).count -gt 0)
+            if ($myroutes.values.Where({ $null -ne $_ }).count -gt 0)
             {
                 $complexRoutes += $myroutes
             }
@@ -306,7 +306,7 @@ function Get-TargetResource
         $complexSingleSignOnEku = @{}
         $complexSingleSignOnEku.Add('Name', $getValue.AdditionalProperties.singleSignOnEku.name)
         $complexSingleSignOnEku.Add('ObjectIdentifier', $getValue.AdditionalProperties.singleSignOnEku.objectIdentifier)
-        if ($complexSingleSignOnEku.values.Where({$null -ne $_}).count -eq 0)
+        if ($complexSingleSignOnEku.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexSingleSignOnEku = $null
         }
@@ -332,24 +332,24 @@ function Get-TargetResource
                 {
                     $myLocalAddressRanges.Add('odataType', $currentLocalAddressRanges.'@odata.type'.toString())
                 }
-                if ($myLocalAddressRanges.values.Where({$null -ne $_}).count -gt 0)
+                if ($myLocalAddressRanges.values.Where({ $null -ne $_ }).count -gt 0)
                 {
                     $complexLocalAddressRanges += $myLocalAddressRanges
                 }
             }
-            $mytrafficRules.Add('LocalAddressRanges',$complexLocalAddressRanges)
+            $mytrafficRules.Add('LocalAddressRanges', $complexLocalAddressRanges)
             $complexLocalPortRanges = @()
             foreach ($currentLocalPortRanges in $currenttrafficRules.localPortRanges)
             {
                 $myLocalPortRanges = @{}
                 $myLocalPortRanges.Add('LowerNumber', $currentLocalPortRanges.lowerNumber)
                 $myLocalPortRanges.Add('UpperNumber', $currentLocalPortRanges.upperNumber)
-                if ($myLocalPortRanges.values.Where({$null -ne $_}).count -gt 0)
+                if ($myLocalPortRanges.values.Where({ $null -ne $_ }).count -gt 0)
                 {
                     $complexLocalPortRanges += $myLocalPortRanges
                 }
             }
-            $mytrafficRules.Add('LocalPortRanges',$complexLocalPortRanges)
+            $mytrafficRules.Add('LocalPortRanges', $complexLocalPortRanges)
             $mytrafficRules.Add('Name', $currenttrafficRules.name)
             $mytrafficRules.Add('Protocols', $currenttrafficRules.protocols)
             $complexRemoteAddressRanges = @()
@@ -363,24 +363,24 @@ function Get-TargetResource
                 {
                     $myRemoteAddressRanges.Add('odataType', $currentRemoteAddressRanges.'@odata.type'.toString())
                 }
-                if ($myRemoteAddressRanges.values.Where({$null -ne $_}).count -gt 0)
+                if ($myRemoteAddressRanges.values.Where({ $null -ne $_ }).count -gt 0)
                 {
                     $complexRemoteAddressRanges += $myRemoteAddressRanges
                 }
             }
-            $mytrafficRules.Add('RemoteAddressRanges',$complexRemoteAddressRanges)
+            $mytrafficRules.Add('RemoteAddressRanges', $complexRemoteAddressRanges)
             $complexRemotePortRanges = @()
             foreach ($currentRemotePortRanges in $currenttrafficRules.remotePortRanges)
             {
                 $myRemotePortRanges = @{}
                 $myRemotePortRanges.Add('LowerNumber', $currentRemotePortRanges.lowerNumber)
                 $myRemotePortRanges.Add('UpperNumber', $currentRemotePortRanges.upperNumber)
-                if ($myRemotePortRanges.values.Where({$null -ne $_}).count -gt 0)
+                if ($myRemotePortRanges.values.Where({ $null -ne $_ }).count -gt 0)
                 {
                     $complexRemotePortRanges += $myRemotePortRanges
                 }
             }
-            $mytrafficRules.Add('RemotePortRanges',$complexRemotePortRanges)
+            $mytrafficRules.Add('RemotePortRanges', $complexRemotePortRanges)
             if ($null -ne $currenttrafficRules.routingPolicyType)
             {
                 $mytrafficRules.Add('RoutingPolicyType', $currenttrafficRules.routingPolicyType.toString())
@@ -389,7 +389,7 @@ function Get-TargetResource
             {
                 $mytrafficRules.Add('VpnTrafficDirection', $currenttrafficRules.vpnTrafficDirection.toString())
             }
-            if ($mytrafficRules.values.Where({$null -ne $_}).count -gt 0)
+            if ($mytrafficRules.values.Where({ $null -ne $_ }).count -gt 0)
             {
                 $complexTrafficRules += $mytrafficRules
             }
@@ -402,7 +402,7 @@ function Get-TargetResource
             $myservers.Add('Address', $currentservers.address)
             $myservers.Add('Description', $currentservers.description)
             $myservers.Add('IsDefaultServer', $currentservers.isDefaultServer)
-            if ($myservers.values.Where({$null -ne $_}).count -gt 0)
+            if ($myservers.values.Where({ $null -ne $_ }).count -gt 0)
             {
                 $complexServers += $myservers
             }
@@ -477,8 +477,8 @@ function Get-TargetResource
         if ($assignmentsValues.Count -gt 0)
         {
             $assignmentResult += ConvertFrom-IntunePolicyAssignment `
-                                -IncludeDeviceFilter:$true `
-                                -Assignments ($assignmentsValues)
+                -IncludeDeviceFilter:$true `
+                -Assignments ($assignmentsValues)
         }
         $results.Add('Assignments', $assignmentResult)
 
@@ -507,12 +507,12 @@ function Set-TargetResource
         $AssociatedApps,
 
         [Parameter()]
-        [ValidateSet('certificate','usernameAndPassword','customEapXml','derivedCredential')]
+        [ValidateSet('certificate', 'usernameAndPassword', 'customEapXml', 'derivedCredential')]
         [System.String]
         $AuthenticationMethod,
 
         [Parameter()]
-        [ValidateSet('pulseSecure','f5EdgeClient','dellSonicWallMobileConnect','checkPointCapsuleVpn','automatic','ikEv2','l2tp','pptp','citrix','paloAltoGlobalProtect','ciscoAnyConnect','unknownFutureValue','microsoftTunnel')]
+        [ValidateSet('pulseSecure', 'f5EdgeClient', 'dellSonicWallMobileConnect', 'checkPointCapsuleVpn', 'automatic', 'ikEv2', 'l2tp', 'pptp', 'citrix', 'paloAltoGlobalProtect', 'ciscoAnyConnect', 'unknownFutureValue', 'microsoftTunnel')]
         [System.String]
         $ConnectionType,
 
@@ -565,7 +565,7 @@ function Set-TargetResource
         $OnlyAssociatedAppsCanUseConnection,
 
         [Parameter()]
-        [ValidateSet('user','device','autoPilotDevice')]
+        [ValidateSet('user', 'device', 'autoPilotDevice')]
         [System.String]
         $ProfileTarget,
 
@@ -680,13 +680,13 @@ function Set-TargetResource
 
     $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
     $keyToRename = @{
-        'odataType' = '@odata.type'
+        'odataType'        = '@odata.type'
         'ServerCollection' = 'servers'
     }
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating an Intune Device Configuration Vpn Policy for Windows10 with DisplayName {$DisplayName}"
-        $BoundParameters.Remove("Assignments") | Out-Null
+        $BoundParameters.Remove('Assignments') | Out-Null
 
         $CreateParameters = ([Hashtable]$BoundParameters).clone()
         $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters -KeyMapping $keyToRename
@@ -701,13 +701,13 @@ function Set-TargetResource
             }
         }
         #region resource generator code
-        $CreateParameters.Add("@odata.type", "#microsoft.graph.windows10VpnConfiguration")
+        $CreateParameters.Add('@odata.type', '#microsoft.graph.windows10VpnConfiguration')
         $policy = New-MgBetaDeviceManagementDeviceConfiguration -BodyParameter $CreateParameters
         $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
 
         if ($policy.id)
         {
-            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId  $policy.id `
+            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $policy.id `
                 -Targets $assignmentsHash `
                 -Repository 'deviceManagement/deviceConfigurations'
         }
@@ -716,7 +716,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating the Intune Device Configuration Vpn Policy for Windows10 with Id {$($currentInstance.Id)}"
-        $BoundParameters.Remove("Assignments") | Out-Null
+        $BoundParameters.Remove('Assignments') | Out-Null
 
         $UpdateParameters = ([Hashtable]$BoundParameters).clone()
         $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters -KeyMapping $keyToRename
@@ -732,7 +732,7 @@ function Set-TargetResource
             }
         }
         #region resource generator code
-        $UpdateParameters.Add("@odata.type", "#microsoft.graph.windows10VpnConfiguration")
+        $UpdateParameters.Add('@odata.type', '#microsoft.graph.windows10VpnConfiguration')
         Update-MgBetaDeviceManagementDeviceConfiguration  `
             -DeviceConfigurationId $currentInstance.Id `
             -BodyParameter $UpdateParameters
@@ -764,12 +764,12 @@ function Test-TargetResource
         $AssociatedApps,
 
         [Parameter()]
-        [ValidateSet('certificate','usernameAndPassword','customEapXml','derivedCredential')]
+        [ValidateSet('certificate', 'usernameAndPassword', 'customEapXml', 'derivedCredential')]
         [System.String]
         $AuthenticationMethod,
 
         [Parameter()]
-        [ValidateSet('pulseSecure','f5EdgeClient','dellSonicWallMobileConnect','checkPointCapsuleVpn','automatic','ikEv2','l2tp','pptp','citrix','paloAltoGlobalProtect','ciscoAnyConnect','unknownFutureValue','microsoftTunnel')]
+        [ValidateSet('pulseSecure', 'f5EdgeClient', 'dellSonicWallMobileConnect', 'checkPointCapsuleVpn', 'automatic', 'ikEv2', 'l2tp', 'pptp', 'citrix', 'paloAltoGlobalProtect', 'ciscoAnyConnect', 'unknownFutureValue', 'microsoftTunnel')]
         [System.String]
         $ConnectionType,
 
@@ -822,7 +822,7 @@ function Test-TargetResource
         $OnlyAssociatedAppsCanUseConnection,
 
         [Parameter()]
-        [ValidateSet('user','device','autoPilotDevice')]
+        [ValidateSet('user', 'device', 'autoPilotDevice')]
         [System.String]
         $ProfileTarget,
 
@@ -1045,7 +1045,7 @@ function Export-TargetResource
             -ErrorAction Stop | Where-Object `
             -FilterScript { `
                 $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windows10VpnConfiguration' `
-            }
+        }
         #endregion
 
         $i = 1
@@ -1072,16 +1072,16 @@ function Export-TargetResource
             }
             Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{
-                Id = $config.Id
-                DisplayName           =  $config.DisplayName
-                Ensure = 'Present'
-                Credential = $Credential
-                ApplicationId = $ApplicationId
-                TenantId = $TenantId
-                ApplicationSecret = $ApplicationSecret
+                Id                    = $config.Id
+                DisplayName           = $config.DisplayName
+                Ensure                = 'Present'
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
-                Managedidentity = $ManagedIdentity.IsPresent
-                AccessTokens    = $AccessTokens
+                Managedidentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
             }
 
             $Results = Get-TargetResource @Params
@@ -1175,29 +1175,29 @@ function Export-TargetResource
             {
                 $complexMapping = @(
                     @{
-                        Name = 'TrafficRules'
+                        Name            = 'TrafficRules'
                         CimInstanceName = 'MicrosoftGraphVpnTrafficRule'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'LocalAddressRanges'
+                        Name            = 'LocalAddressRanges'
                         CimInstanceName = 'MicrosoftGraphIPv4Range'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'LocalPortRanges'
+                        Name            = 'LocalPortRanges'
                         CimInstanceName = 'MicrosoftGraphNumberRange'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'RemoteAddressRanges'
+                        Name            = 'RemoteAddressRanges'
                         CimInstanceName = 'MicrosoftGraphIPv4Range'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'RemotePortRanges'
+                        Name            = 'RemotePortRanges'
                         CimInstanceName = 'MicrosoftGraphNumberRange'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                 )
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
@@ -1247,39 +1247,39 @@ function Export-TargetResource
                 -Credential $Credential
             if ($Results.AssociatedApps)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "AssociatedApps" -isCIMArray:$True
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'AssociatedApps' -IsCIMArray:$True
             }
             if ($Results.CryptographySuite)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "CryptographySuite" -isCIMArray:$False
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'CryptographySuite' -IsCIMArray:$False
             }
             if ($Results.DnsRules)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "DnsRules" -isCIMArray:$True
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'DnsRules' -IsCIMArray:$True
             }
             if ($Results.ProxyServer)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "ProxyServer" -isCIMArray:$False
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'ProxyServer' -IsCIMArray:$False
             }
             if ($Results.Routes)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Routes" -isCIMArray:$True
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Routes' -IsCIMArray:$True
             }
             if ($Results.SingleSignOnEku)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "SingleSignOnEku" -isCIMArray:$False
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'SingleSignOnEku' -IsCIMArray:$False
             }
             if ($Results.TrafficRules)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "TrafficRules" -isCIMArray:$True
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'TrafficRules' -IsCIMArray:$True
             }
             if ($Results.ServerCollection)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "ServerCollection" -isCIMArray:$True
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'ServerCollection' -IsCIMArray:$True
             }
             if ($Results.Assignments)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Assignments" -isCIMArray:$true
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Assignments' -IsCIMArray:$true
             }
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
@@ -1292,7 +1292,7 @@ function Export-TargetResource
     catch
     {
         if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
-        $_.Exception -like "*Request not applicable to target tenant*")
+                $_.Exception -like '*Request not applicable to target tenant*')
         {
             Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }
@@ -1311,4 +1311,4 @@ function Export-TargetResource
     }
 }
 
-Export-ModuleMember -Function *-TargetResource,*
+Export-ModuleMember -Function *-TargetResource, *

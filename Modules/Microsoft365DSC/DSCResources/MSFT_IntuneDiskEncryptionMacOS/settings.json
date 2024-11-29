@@ -1,7 +1,7 @@
 {
-    "resourceName": "IntuneDiskEncryptionMacOS",
-    "description": "This resource configures an Intune Disk Encryption for macOS.",
-    "permissions": {
+  "resourceName": "IntuneDiskEncryptionMacOS",
+  "description": "This resource configures an Intune Disk Encryption for macOS.",
+  "permissions": {
     "graph": {
       "delegated": {
         "read": [

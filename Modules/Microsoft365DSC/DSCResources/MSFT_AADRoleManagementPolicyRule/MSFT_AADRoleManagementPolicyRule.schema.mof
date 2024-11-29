@@ -23,7 +23,7 @@ class MSFT_AADRoleManagementPolicyEnablementRule
 };
 
 [ClassVersion("1.0.0.0")]
-class MSFT_AADRoleManagementPolicySubjectSet 
+class MSFT_AADRoleManagementPolicySubjectSet
 {
     [Write, Description("The type of the subject set.")] String odataType;
 };

@@ -143,7 +143,7 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Updating the Cross Tenant Access Settings"
+    Write-Verbose -Message 'Updating the Cross Tenant Access Settings'
     Update-MgBetaNetworkAccessSettingCrossTenantAccess -NetworkPacketTaggingStatus $NetworkPacketTaggingStatus
 }
 

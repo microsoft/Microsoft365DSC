@@ -323,20 +323,24 @@ function Get-TargetResource
             [System.String[]]$AllowedSendersValues = $HostedContentFilterPolicy.AllowedSenders.Sender | Select-Object Address -ExpandProperty Address
             [System.String[]]$BlockedSendersValues = $HostedContentFilterPolicy.BlockedSenders.Sender | Select-Object Address -ExpandProperty Address
             # Check if the values are null and assign them an empty string array if they are
-            if ($null -eq $AllowedSendersValues) {
+            if ($null -eq $AllowedSendersValues)
+            {
                 $AllowedSendersValues = @()
             }
-            if ($null -eq $BlockedSendersValues) {
+            if ($null -eq $BlockedSendersValues)
+            {
                 $BlockedSendersValues = @()
             }
 
             [System.String[]]$AllowedSenderDomains = $HostedContentFilterPolicy.AllowedSenderDomains.Domain
             [System.String[]]$BlockedSenderDomains = $HostedContentFilterPolicy.BlockedSenderDomains.Domain
             # Check if the values are null and assign them an empty string array if they are
-            if ($null -eq $AllowedSenderDomains) {
+            if ($null -eq $AllowedSenderDomains)
+            {
                 $AllowedSenderDomains = @()
             }
-            if ($null -eq $BlockedSenderDomains) {
+            if ($null -eq $BlockedSenderDomains)
+            {
                 $BlockedSenderDomains = @()
             }
             $result = @{

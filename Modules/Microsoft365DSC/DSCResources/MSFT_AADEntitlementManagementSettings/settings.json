@@ -40,7 +40,7 @@
                         "name": "EntitlementManagement.ReadWrite.All"
                     },
                     {
-                        "name" : "RoleManagement.ReadWrite.Directory"
+                        "name": "RoleManagement.ReadWrite.Directory"
                     }
                 ]
             }

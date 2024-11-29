@@ -85,7 +85,7 @@ function Get-TargetResource
             {
                 $getValue = Get-MgBetaProgram `
                     -Filter "DisplayName eq '$DisplayName'" `
-                    -ErrorAction SilentlyContinue 
+                    -ErrorAction SilentlyContinue
 
                 if ($null -ne $getValue -and $getValue.Count -gt 1)
                 {
@@ -103,16 +103,16 @@ function Get-TargetResource
         Write-Verbose -Message "An Azure AD Identity Governance Program with Id {$Id} and DisplayName {$DisplayName} was found"
 
         $results = @{
-            Description             = $getValue.Description
-            DisplayName             = $getValue.DisplayName
-            Id                      = $getValue.Id
-            Ensure                  = 'Present'
-            Credential              = $Credential
-            ApplicationId           = $ApplicationId
-            TenantId                = $TenantId
-            ApplicationSecret       = $ApplicationSecret
-            CertificateThumbprint   = $CertificateThumbprint
-            ManagedIdentity         = $ManagedIdentity.IsPresent
+            Description           = $getValue.Description
+            DisplayName           = $getValue.DisplayName
+            Id                    = $getValue.Id
+            Ensure                = 'Present'
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            ApplicationSecret     = $ApplicationSecret
+            CertificateThumbprint = $CertificateThumbprint
+            ManagedIdentity       = $ManagedIdentity.IsPresent
         }
 
         return [System.Collections.Hashtable] $results
@@ -395,16 +395,16 @@ function Export-TargetResource
 
             Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{
-                Id = $config.Id
-                DisplayName           =  $config.DisplayName
-                Ensure = 'Present'
-                Credential = $Credential
-                ApplicationId = $ApplicationId
-                TenantId = $TenantId
-                ApplicationSecret = $ApplicationSecret
+                Id                    = $config.Id
+                DisplayName           = $config.DisplayName
+                Ensure                = 'Present'
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
-                ManagedIdentity = $ManagedIdentity.IsPresent
-                AccessTokens = $AccessTokens
+                ManagedIdentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
             }
 
             $Results = Get-TargetResource @Params

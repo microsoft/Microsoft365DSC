@@ -97,11 +97,11 @@ function Get-TargetResource
         {
             if (-not [System.String]::IsNullOrEmpty($Id))
             {
-                $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.Id -eq $Id}
+                $instance = $Script:exportedInstances | Where-Object -FilterScript { $_.Id -eq $Id }
             }
             if ($null -eq $instance)
             {
-                $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.Name -eq $Name}
+                $instance = $Script:exportedInstances | Where-Object -FilterScript { $_.Name -eq $Name }
             }
         }
         else
@@ -109,12 +109,12 @@ function Get-TargetResource
             if (-not [System.String]::IsNullOrEmpty($Id))
             {
                 $instance = Get-MgBetaDirectoryCustomSecurityAttributeDefinition -CustomSecurityAttributeDefinitionId $Id `
-                                                                                 -ErrorAction SilentlyContinue
+                    -ErrorAction SilentlyContinue
             }
             if ($null -eq $instance)
             {
                 $instance = Get-MgBetaDirectoryCustomSecurityAttributeDefinition -Filter "Name eq '$Name'" `
-                                                                                 -ErrorAction SilentlyContinue
+                    -ErrorAction SilentlyContinue
             }
         }
         if ($null -eq $instance)
@@ -271,7 +271,7 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Removing Atribute Definition {$Name}. Setting its status to 'Deprecated'"
         Update-MgBetaDirectoryCustomSecurityAttributeDefinition -CustomSecurityAttributeDefinitionId $currentInstance.Id `
-                                                                -Status 'Deprecated'
+            -Status 'Deprecated'
     }
 }
 

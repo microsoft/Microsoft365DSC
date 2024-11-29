@@ -255,7 +255,7 @@ function Test-TargetResource
         {
             switch -regex ($key)
             {
-                "^ExceptIf\w+$"
+                '^ExceptIf\w+$'
                 {
                     $CurrentValues[$key] = @()
                     break

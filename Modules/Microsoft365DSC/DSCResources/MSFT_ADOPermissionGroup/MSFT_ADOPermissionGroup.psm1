@@ -90,12 +90,12 @@ function Get-TargetResource
         {
             if (-not [System.String]::IsNullOrEmpty($Descriptor))
             {
-                $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.descriptor -eq $Descriptor}
+                $instance = $Script:exportedInstances | Where-Object -FilterScript { $_.descriptor -eq $Descriptor }
             }
 
             if ($null -eq $instance)
             {
-                $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.principalName -eq $PrincipalName}
+                $instance = $Script:exportedInstances | Where-Object -FilterScript { $_.principalName -eq $PrincipalName }
             }
         }
         else
@@ -104,11 +104,11 @@ function Get-TargetResource
             $allInstances = (Invoke-M365DSCAzureDevOPSWebRequest -Uri $uri).value
             if (-not [System.String]::IsNullOrEmpty($Descriptor))
             {
-                $instance = $allInstances | Where-Object -FilterScript {$_.descriptor -eq $Descriptor}
+                $instance = $allInstances | Where-Object -FilterScript { $_.descriptor -eq $Descriptor }
             }
             if ($null -eq $instance)
             {
-                $instance = $allInstances | Where-Object -FilterScript {$_.principalName -eq $PrincipalName}
+                $instance = $allInstances | Where-Object -FilterScript { $_.principalName -eq $PrincipalName }
             }
         }
         if ($null -eq $instance)
@@ -262,7 +262,7 @@ function Set-TargetResource
         elseif ($Level -eq 'Project')
         {
             $projectName = $PrincipalName.Split(']')[0]
-            $projectName = $projectName.Substring(1, $projectName.Length -1)
+            $projectName = $projectName.Substring(1, $projectName.Length - 1)
             $uri = "https://dev.azure.com/$($OrganizationName)/_apis/projects/$($ProjectName)?api-version=7.1"
             $response = Invoke-M365DSCAzureDevOPSWebRequest -Uri $uri
             $projectId = $response.id
@@ -276,13 +276,13 @@ function Set-TargetResource
             $newGroup = Invoke-M365DSCAzureDevOPSWebRequest -Uri $uri -Method POST -Body $body -ContentType 'application/json'
         }
 
-        Write-Host "NEWGROUP::: $($newGroup | fl * | Out-String)"
+        Write-Host "NEWGROUP::: $($newGroup | Format-List * | Out-String)"
         foreach ($member in $Members)
         {
             Write-Verbose -Message "Adding Member {$member} to group ${$PrincipalName}"
             Set-M365DSCADOPermissionGroupMember -OrganizationName $OrganizationName `
-                                                -GroupId $newGroup.originId `
-                                                -PrincipalName $member
+                -GroupId $newGroup.originId `
+                -PrincipalName $member
         }
     }
     # UPDATE
@@ -302,17 +302,17 @@ function Set-TargetResource
             {
                 Write-Verbose -Message "Adding Member {$($diff.InputObject)} to group ${$PrincipalName}"
                 Set-M365DSCADOPermissionGroupMember -OrganizationName $OrganizationName `
-                                                    -GroupId $currentInstance.Id `
-                                                    -PrincipalName $diff.InputObject `
-                                                    -Method 'PUT'
+                    -GroupId $currentInstance.Id `
+                    -PrincipalName $diff.InputObject `
+                    -Method 'PUT'
             }
             else
             {
                 Write-Verbose -Message "Removing Member {$($diff.InputObject)} to group ${$PrincipalName}"
                 Set-M365DSCADOPermissionGroupMember -OrganizationName $OrganizationName `
-                                                    -GroupId $currentInstance.Id `
-                                                    -PrincipalName $diff.InputObject `
-                                                    -Method 'DELETE'
+                    -GroupId $currentInstance.Id `
+                    -PrincipalName $diff.InputObject `
+                    -Method 'DELETE'
             }
         }
     }
@@ -527,7 +527,7 @@ function Export-TargetResource
                     AccessTokens          = $AccessTokens
                 }
 
-                if (-not $config.principalName.StartsWith("[TEAM FOUNDATION]"))
+                if (-not $config.principalName.StartsWith('[TEAM FOUNDATION]'))
                 {
                     $Results = Get-TargetResource @Params
                     $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
@@ -587,7 +587,7 @@ function Set-M365DSCADOPermissionGroupMember
         $uri = "https://vsaex.dev.azure.com/$($OrganizationName)/_apis/userentitlements?api-version=7.2-preview.4"
         $Script:allUsers = Invoke-M365DSCAzureDevOPSWebRequest -Uri $uri
     }
-    $user = $Script:allUsers.items | Where-Object -FilterScript {$_.user.principalName -eq $PrincipalName}
+    $user = $Script:allUsers.items | Where-Object -FilterScript { $_.user.principalName -eq $PrincipalName }
     $UserId = $user.id
     $uri = "https://vsaex.dev.azure.com/$($OrganizationName)/_apis/GroupEntitlements/$($GroupId)/members/$($UserId)?api-version=5.0-preview.1"
     Invoke-M365DSCAzureDevOPSWebRequest -Uri $uri -Method $Method | Out-Null

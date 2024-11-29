@@ -65,15 +65,15 @@ function Get-TargetResource
     $nullResult.Ensure = 'Absent'
     try
     {
-        $policy = Get-AdminDlpPolicy | Where-Object -FilterScript {$_.DisplayName -eq $PolicyName}
+        $policy = Get-AdminDlpPolicy | Where-Object -FilterScript { $_.DisplayName -eq $PolicyName }
 
         if ($null -eq $policy)
         {
             return $nullResult
         }
 
-        $ActionList = Get-PowerAppDlpPolicyConnectorConfigurations -TenantID $PPTenantId `
-                                                                   -PolicyName $($policy.PolicyName)
+        $ActionList = Get-PowerAppDlpPolicyConnectorConfigurations -TenantId $PPTenantId `
+            -PolicyName $($policy.PolicyName)
         $ActionsValue = @()
         foreach ($action in $ActionList.connectorActionConfigurations)
         {
@@ -95,16 +95,16 @@ function Get-TargetResource
         }
 
         $results = @{
-            PPTenantId                        = $PPTenantId
-            PolicyName                        = $PolicyName
-            ConnectorActionConfigurations     = $ActionsValue
-            Ensure                            = 'Present'
-            Credential                        = $Credential
-            ApplicationId                     = $ApplicationId
-            TenantId                          = $TenantId
-            CertificateThumbprint             = $CertificateThumbprint
-            ManagedIdentity                   = $ManagedIdentity.IsPresent
-            AccessTokens                      = $AccessTokens
+            PPTenantId                    = $PPTenantId
+            PolicyName                    = $PolicyName
+            ConnectorActionConfigurations = $ActionsValue
+            Ensure                        = 'Present'
+            Credential                    = $Credential
+            ApplicationId                 = $ApplicationId
+            TenantId                      = $TenantId
+            CertificateThumbprint         = $CertificateThumbprint
+            ManagedIdentity               = $ManagedIdentity.IsPresent
+            AccessTokens                  = $AccessTokens
         }
         return [System.Collections.Hashtable] $results
     }
@@ -183,7 +183,7 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $policy = Get-AdminDlpPolicy | Where-Object -FilterScript {$_.DisplayName -eq $PolicyName}
+    $policy = Get-AdminDlpPolicy | Where-Object -FilterScript { $_.DisplayName -eq $PolicyName }
     $policyNameValue = $policy.PolicyName
 
     # CREATE
@@ -215,9 +215,9 @@ function Set-TargetResource
         Write-Verbose -Message "Setting Connector Configuration for Policy {$($PolicyNameValue)} with parameters:`r`n$payload"
 
         New-PowerAppDlpPolicyConnectorConfigurations -TenantId $PPTenantId `
-                                                     -PolicyName $policyNameValue `
-                                                    -NewDlpPolicyConnectorConfigurations $body `
-                                                    -Verbose
+            -PolicyName $policyNameValue `
+            -NewDlpPolicyConnectorConfigurations $body `
+            -Verbose
     }
     # REMOVE
     elseif ($Ensure -eq 'Absent')
@@ -400,14 +400,14 @@ function Export-TargetResource
             }
             Write-Host "    |---[$i/$($policies.Count)] $($policy.DisplayName)" -NoNewline
             $params = @{
-                PPTenantId                        = $tenantInfo.TenantId
-                PolicyName                        = $policy.DisplayName
-                Credential                        = $Credential
-                ApplicationId                     = $ApplicationId
-                TenantId                          = $TenantId
-                CertificateThumbprint             = $CertificateThumbprint
-                ManagedIdentity                   = $ManagedIdentity.IsPresent
-                AccessTokens                      = $AccessTokens
+                PPTenantId            = $tenantInfo.TenantId
+                PolicyName            = $policy.DisplayName
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+                ManagedIdentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
             }
 
             $Results = Get-TargetResource @Params
@@ -418,9 +418,9 @@ function Export-TargetResource
             {
                 $complexMapping = @(
                     @{
-                        Name = 'actionRules'
+                        Name            = 'actionRules'
                         CimInstanceName = 'PPDLPPolicyConnectorConfigurationsActionRules'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                 )
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `

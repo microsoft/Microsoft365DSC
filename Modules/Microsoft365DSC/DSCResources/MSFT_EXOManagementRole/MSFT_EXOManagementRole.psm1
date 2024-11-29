@@ -87,7 +87,7 @@ function Get-TargetResource
     {
         if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
         {
-            $AllManagementRoles = $Script:exportedInstances | Where-Object -FilterScript {$_.Identity -eq $Name}
+            $AllManagementRoles = $Script:exportedInstances | Where-Object -FilterScript { $_.Identity -eq $Name }
         }
         else
         {

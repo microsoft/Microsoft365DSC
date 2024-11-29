@@ -9,17 +9,17 @@ function Get-TargetResource
         $Identity,
 
         [Parameter()]
-        [ValidateSet("AvailabilityOnly", "LimitedDetails", "FullDetails")]
+        [ValidateSet('AvailabilityOnly', 'LimitedDetails', 'FullDetails')]
         [System.String]
-        $DetailLevel = "AvailabilityOnly",
+        $DetailLevel = 'AvailabilityOnly',
 
         [Parameter()]
-        [ValidateSet("OneDay", "ThreeDays", "OneWeek", "OneMonth", "ThreeMonths", "SixMonths", "OneYear")]
+        [ValidateSet('OneDay', 'ThreeDays', 'OneWeek', 'OneMonth', 'ThreeMonths', 'SixMonths', 'OneYear')]
         [System.String]
-        $PublishDateRangeFrom = "ThreeMonths",
+        $PublishDateRangeFrom = 'ThreeMonths',
 
         [Parameter()]
-        [ValidateSet("OneDay", "ThreeDays", "OneWeek", "OneMonth", "ThreeMonths", "SixMonths", "OneYear")]
+        [ValidateSet('OneDay', 'ThreeDays', 'OneWeek', 'OneMonth', 'ThreeMonths', 'SixMonths', 'OneYear')]
         [System.String]
         $PublishDateRangeTo,
 
@@ -154,17 +154,17 @@ function Set-TargetResource
         $Identity,
 
         [Parameter()]
-        [ValidateSet("AvailabilityOnly", "LimitedDetails", "FullDetails")]
+        [ValidateSet('AvailabilityOnly', 'LimitedDetails', 'FullDetails')]
         [System.String]
-        $DetailLevel = "AvailabilityOnly",
+        $DetailLevel = 'AvailabilityOnly',
 
         [Parameter()]
-        [ValidateSet("OneDay", "ThreeDays", "OneWeek", "OneMonth", "ThreeMonths", "SixMonths", "OneYear")]
+        [ValidateSet('OneDay', 'ThreeDays', 'OneWeek', 'OneMonth', 'ThreeMonths', 'SixMonths', 'OneYear')]
         [System.String]
-        $PublishDateRangeFrom = "ThreeMonths",
+        $PublishDateRangeFrom = 'ThreeMonths',
 
         [Parameter()]
-        [ValidateSet("OneDay", "ThreeDays", "OneWeek", "OneMonth", "ThreeMonths", "SixMonths", "OneYear")]
+        [ValidateSet('OneDay', 'ThreeDays', 'OneWeek', 'OneMonth', 'ThreeMonths', 'SixMonths', 'OneYear')]
         [System.String]
         $PublishDateRangeTo,
 
@@ -238,15 +238,15 @@ function Set-TargetResource
         -InboundParameters $PSBoundParameters
 
     $UpdateParameters = ([Hashtable]$PSBoundParameters).Clone()
-    $UpdateParameters.Remove("Ensure") | Out-Null
-    $UpdateParameters.Remove("Credential") | Out-Null
-    $UpdateParameters.Remove("ApplicationId") | Out-Null
-    $UpdateParameters.Remove("TenantId") | Out-Null
-    $UpdateParameters.Remove("CertificateThumbprint") | Out-Null
-    $UpdateParameters.Remove("ApplicationSecret") | Out-Null
-    $UpdateParameters.Remove("CertificatePath") | Out-Null
-    $UpdateParameters.Remove("CertificatePassword") | Out-Null
-    $UpdateParameters.Remove("ManagedIdentity") | Out-Null
+    $UpdateParameters.Remove('Ensure') | Out-Null
+    $UpdateParameters.Remove('Credential') | Out-Null
+    $UpdateParameters.Remove('ApplicationId') | Out-Null
+    $UpdateParameters.Remove('TenantId') | Out-Null
+    $UpdateParameters.Remove('CertificateThumbprint') | Out-Null
+    $UpdateParameters.Remove('ApplicationSecret') | Out-Null
+    $UpdateParameters.Remove('CertificatePath') | Out-Null
+    $UpdateParameters.Remove('CertificatePassword') | Out-Null
+    $UpdateParameters.Remove('ManagedIdentity') | Out-Null
     $UpdateParameters.Remove('AccessTokens') | Out-Null
 
     # The SharedCalendarSyncStartDate needs to be used by itself in a subsequent call.
@@ -254,7 +254,7 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Updating the Mailbox Calendar Folder SharedCalendarSyncStartDate property for {$Identity}"
         Set-MailboxCalendarFolder -Identity $Identity -SharedCalendarSyncStartDate $SharedCalendarSyncStartDate
-        $UpdateParameters.Remove("SharedCalendarSyncStartDate") | Out-Null
+        $UpdateParameters.Remove('SharedCalendarSyncStartDate') | Out-Null
     }
     Write-Verbose -Message "Updating the Mailbox Calendar Folder for {$Identity}"
     Set-MailboxCalendarFolder @UpdateParameters
@@ -271,17 +271,17 @@ function Test-TargetResource
         $Identity,
 
         [Parameter()]
-        [ValidateSet("AvailabilityOnly", "LimitedDetails", "FullDetails")]
+        [ValidateSet('AvailabilityOnly', 'LimitedDetails', 'FullDetails')]
         [System.String]
-        $DetailLevel = "AvailabilityOnly",
+        $DetailLevel = 'AvailabilityOnly',
 
         [Parameter()]
-        [ValidateSet("OneDay", "ThreeDays", "OneWeek", "OneMonth", "ThreeMonths", "SixMonths", "OneYear")]
+        [ValidateSet('OneDay', 'ThreeDays', 'OneWeek', 'OneMonth', 'ThreeMonths', 'SixMonths', 'OneYear')]
         [System.String]
-        $PublishDateRangeFrom = "ThreeMonths",
+        $PublishDateRangeFrom = 'ThreeMonths',
 
         [Parameter()]
-        [ValidateSet("OneDay", "ThreeDays", "OneWeek", "OneMonth", "ThreeMonths", "SixMonths", "OneYear")]
+        [ValidateSet('OneDay', 'ThreeDays', 'OneWeek', 'OneMonth', 'ThreeMonths', 'SixMonths', 'OneYear')]
         [System.String]
         $PublishDateRangeTo,
 
@@ -443,7 +443,7 @@ function Export-TargetResource
             }
 
             # Name of calendar folder depends on the language of the mailbox
-            $calendarFolderName = (Get-MailboxFolderStatistics -Identity $($mailbox.UserPrincipalName) -FolderScope Calendar | Where-Object {$_.FolderType -eq 'Calendar'}).Name
+            $calendarFolderName = (Get-MailboxFolderStatistics -Identity $($mailbox.UserPrincipalName) -FolderScope Calendar | Where-Object { $_.FolderType -eq 'Calendar' }).Name
             $folderPath = $mailbox.UserPrincipalName + ':\' + $calendarFolderName
             Write-Host "    |---[$i/$($mailboxes.Count)] $($folderPath)" -NoNewline
             $Params = @{

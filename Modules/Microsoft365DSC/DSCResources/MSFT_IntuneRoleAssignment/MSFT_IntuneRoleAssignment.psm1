@@ -102,7 +102,7 @@ function Get-TargetResource
 
         $getValue = $null
         $getValue = Get-MgBetaDeviceManagementRoleAssignment -DeviceAndAppManagementRoleAssignmentId $Id -ErrorAction SilentlyContinue
-        
+
         if ($null -eq $getValue)
         {
             Write-Verbose -Message "Could not find an Intune Role Assignment with Id {$Id}"
@@ -696,7 +696,7 @@ function Export-TargetResource
     catch
     {
         if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
-        $_.Exception -like "*Request not applicable to target tenant*")
+                $_.Exception -like '*Request not applicable to target tenant*')
         {
             Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }
