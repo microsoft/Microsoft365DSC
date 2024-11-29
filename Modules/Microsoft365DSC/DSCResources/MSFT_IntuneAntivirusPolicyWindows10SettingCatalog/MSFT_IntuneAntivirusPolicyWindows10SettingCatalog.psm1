@@ -320,7 +320,7 @@ function Get-TargetResource
         $RandomizeScheduleTaskTimes,
 
         [Parameter()]
-        [ValidateRange(1,23)]
+        [ValidateRange(1, 23)]
         [System.Int32]
         $SchedulerRandomizationTime,
 
@@ -442,7 +442,7 @@ function Get-TargetResource
         $nullResult = $PSBoundParameters
         $nullResult.Ensure = 'Absent'
 
-        $templateReferences = "d948ff9b-99cb-4ee0-8012-1fbc09685377_1", "e3f74c5a-a6de-411d-aef6-eb15628f3a0a_1", "45fea5e9-280d-4da1-9792-fb5736da0ca9_1","804339ad-1553-4478-a742-138fb5807418_1"
+        $templateReferences = 'd948ff9b-99cb-4ee0-8012-1fbc09685377_1', 'e3f74c5a-a6de-411d-aef6-eb15628f3a0a_1', '45fea5e9-280d-4da1-9792-fb5736da0ca9_1', '804339ad-1553-4478-a742-138fb5807418_1'
 
         #Retrieve policy general settings
         $policy = Get-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Identity -ErrorAction SilentlyContinue
@@ -458,8 +458,8 @@ function Get-TargetResource
                     -Filter "Name eq '$DisplayName'" `
                     -ErrorAction SilentlyContinue | Where-Object `
                     -FilterScript {
-                        $_.TemplateReference.TemplateId -in $templateReferences
-                    }
+                    $_.TemplateReference.TemplateId -in $templateReferences
+                }
             }
         }
 
@@ -513,8 +513,8 @@ function Get-TargetResource
         if ($graphAssignments.Count -gt 0)
         {
             $returnAssignments += ConvertFrom-IntunePolicyAssignment `
-                                        -IncludeDeviceFilter:$true `
-                                        -Assignments ($graphAssignments)
+                -IncludeDeviceFilter:$true `
+                -Assignments ($graphAssignments)
         }
         $returnHashtable.Add('Assignments', $returnAssignments)
 
@@ -537,8 +537,8 @@ function Get-TargetResource
             -TenantId $TenantId `
             -Credential $Credential
 
-            $nullResult = Clear-M365DSCAuthenticationParameter -BoundParameters $nullResult
-            return $nullResult
+        $nullResult = Clear-M365DSCAuthenticationParameter -BoundParameters $nullResult
+        return $nullResult
     }
 }
 
@@ -863,7 +863,7 @@ function Set-TargetResource
         $RandomizeScheduleTaskTimes,
 
         [Parameter()]
-        [ValidateRange(1,23)]
+        [ValidateRange(1, 23)]
         [System.Int32]
         $SchedulerRandomizationTime,
 
@@ -1016,12 +1016,12 @@ function Set-TargetResource
             -TemplateId $templateReferenceId
 
         $createParameters = @{
-            Name                = $DisplayName
-            Description         = $Description
-            TemplateReference   = @{ templateId = $templateReferenceId }
-            Platforms           = $platforms
-            Technologies        = $technologies
-            Settings            = $settings
+            Name              = $DisplayName
+            Description       = $Description
+            TemplateReference = @{ templateId = $templateReferenceId }
+            Platforms         = $platforms
+            Technologies      = $technologies
+            Settings          = $settings
         }
 
         $policy = New-MgBetaDeviceManagementConfigurationPolicy -BodyParameter $createParameters
@@ -1389,7 +1389,7 @@ function Test-TargetResource
         $RandomizeScheduleTaskTimes,
 
         [Parameter()]
-        [ValidateRange(1,23)]
+        [ValidateRange(1, 23)]
         [System.Int32]
         $SchedulerRandomizationTime,
 
@@ -1629,12 +1629,12 @@ function Export-TargetResource
     try
     {
         $templateFamily = 'endpointSecurityAntivirus'
-        $templateReferences = "d948ff9b-99cb-4ee0-8012-1fbc09685377_1", "e3f74c5a-a6de-411d-aef6-eb15628f3a0a_1", "45fea5e9-280d-4da1-9792-fb5736da0ca9_1","804339ad-1553-4478-a742-138fb5807418_1"
+        $templateReferences = 'd948ff9b-99cb-4ee0-8012-1fbc09685377_1', 'e3f74c5a-a6de-411d-aef6-eb15628f3a0a_1', '45fea5e9-280d-4da1-9792-fb5736da0ca9_1', '804339ad-1553-4478-a742-138fb5807418_1'
         [array]$policies = Get-MgBetaDeviceManagementConfigurationPolicy -Filter $Filter -All:$true `
             -ErrorAction Stop | Where-Object -FilterScript {
-                $_.TemplateReference.TemplateFamily -eq $templateFamily -and
-                $_.TemplateReference.TemplateId -in $templateReferences
-            }
+            $_.TemplateReference.TemplateFamily -eq $templateFamily -and
+            $_.TemplateReference.TemplateId -in $templateReferences
+        }
 
         if ($policies.Length -eq 0)
         {
@@ -1698,7 +1698,7 @@ function Export-TargetResource
 
             if ($Results.Assignments)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Assignments" -IsCIMArray:$true
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Assignments' -IsCIMArray:$true
             }
 
             $dscContent += $currentDSCBlock
@@ -1713,7 +1713,7 @@ function Export-TargetResource
     catch
     {
         if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
-        $_.Exception -like "*Request not applicable to target tenant*")
+                $_.Exception -like '*Request not applicable to target tenant*')
         {
             Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }

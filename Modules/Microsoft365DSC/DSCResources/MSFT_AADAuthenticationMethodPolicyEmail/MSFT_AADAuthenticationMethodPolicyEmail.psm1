@@ -320,7 +320,7 @@ function Set-TargetResource
             }
             if ($key -eq 'IncludeTargets')
             {
-                Write-Verbose -Message "Processing IncludeTargets"
+                Write-Verbose -Message 'Processing IncludeTargets'
                 $i = 0
                 foreach ($entry in $UpdateParameters.$key)
                 {
@@ -334,7 +334,7 @@ function Set-TargetResource
             }
             if ($key -eq 'ExcludeTargets')
             {
-                Write-Verbose -Message "Processing ExcludeTargets"
+                Write-Verbose -Message 'Processing ExcludeTargets'
                 $i = 0
                 foreach ($entry in $UpdateParameters.$key)
                 {

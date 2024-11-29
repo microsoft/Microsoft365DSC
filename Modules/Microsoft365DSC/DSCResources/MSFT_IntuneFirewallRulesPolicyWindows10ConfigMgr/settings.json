@@ -1,44 +1,44 @@
 {
-  "resourceName":"IntuneFirewallRulesPolicyWindows10ConfigMgr",
-  "description":"This resource configures an Intune Firewall Rules Policy for Windows10 ConfigMgr.",
-  "permissions":{
-      "graph":{
-          "delegated":{
-              "update":[
-                  {
-                      "name":"DeviceManagementConfiguration.ReadWrite.All"
-                  },
-                  {
-                      "name":"Group.Read.All"
-                  }
-              ],
-              "read":[
-                  {
-                      "name":"DeviceManagementConfiguration.Read.All"
-                  },
-                  {
-                      "name":"Group.Read.All"
-                  }
-              ]
-          },
-          "application":{
-              "update":[
-                  {
-                      "name":"DeviceManagementConfiguration.ReadWrite.All"
-                  },
-                  {
-                      "name":"Group.Read.All"
-                  }
-              ],
-              "read":[
-                  {
-                      "name":"DeviceManagementConfiguration.Read.All"
-                  },
-                  {
-                      "name":"Group.Read.All"
-                  }
-              ]
-          }
-      }
-  }
+    "resourceName": "IntuneFirewallRulesPolicyWindows10ConfigMgr",
+    "description": "This resource configures an Intune Firewall Rules Policy for Windows10 ConfigMgr.",
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "update": [
+                    {
+                        "name": "DeviceManagementConfiguration.ReadWrite.All"
+                    },
+                    {
+                        "name": "Group.Read.All"
+                    }
+                ],
+                "read": [
+                    {
+                        "name": "DeviceManagementConfiguration.Read.All"
+                    },
+                    {
+                        "name": "Group.Read.All"
+                    }
+                ]
+            },
+            "application": {
+                "update": [
+                    {
+                        "name": "DeviceManagementConfiguration.ReadWrite.All"
+                    },
+                    {
+                        "name": "Group.Read.All"
+                    }
+                ],
+                "read": [
+                    {
+                        "name": "DeviceManagementConfiguration.Read.All"
+                    },
+                    {
+                        "name": "Group.Read.All"
+                    }
+                ]
+            }
+        }
+    }
 }

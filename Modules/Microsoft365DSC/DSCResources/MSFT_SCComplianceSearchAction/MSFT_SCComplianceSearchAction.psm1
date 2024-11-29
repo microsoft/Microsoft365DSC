@@ -339,7 +339,7 @@ function Set-TargetResource
             'Preview'
             {
                 $CreationParams.Add('Preview', $true)
-                $CreationParams.Remove("Scope") | Out-Null
+                $CreationParams.Remove('Scope') | Out-Null
                 $CreationParams.Add('Confirm', $false)
                 $CreationParams.Remove('EnableDedupe') | Out-Null
             }

@@ -77,11 +77,11 @@ function Get-TargetResource
         {
             if (-not [System.String]::IsNullOrEmpty($Identity))
             {
-                $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.Identity -eq $Identity}
+                $instance = $Script:exportedInstances | Where-Object -FilterScript { $_.Identity -eq $Identity }
             }
             if ($null -eq $instance)
             {
-                $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.SpoofedUser -eq $SpoofedUser}
+                $instance = $Script:exportedInstances | Where-Object -FilterScript { $_.SpoofedUser -eq $SpoofedUser }
             }
         }
         else
@@ -92,7 +92,7 @@ function Get-TargetResource
             }
             if ($null -eq $instance)
             {
-                $instance = Get-TenantAllowBlockListSpoofItems | Where-Object -FilterScript {$_.SpoofedUser -eq $SpoofedUser}
+                $instance = Get-TenantAllowBlockListSpoofItems | Where-Object -FilterScript { $_.SpoofedUser -eq $SpoofedUser }
             }
         }
         if ($null -eq $instance)
@@ -216,9 +216,9 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Updating blocked spoofed item {$SpoofedUser}"
         $instanceParams = @{
-            Action                = $Action
-            Ids                   = @($currentInstance.Identity)
-            Identity              = 'Default'
+            Action   = $Action
+            Ids      = @($currentInstance.Identity)
+            Identity = 'Default'
         }
         Set-TenantAllowBlockListSpoofItems @instanceParams
     }

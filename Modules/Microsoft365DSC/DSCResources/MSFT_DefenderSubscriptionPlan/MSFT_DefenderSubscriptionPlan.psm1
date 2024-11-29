@@ -83,11 +83,11 @@ function Get-TargetResource
         {
             if (-not [System.String]::IsNullOrEmpty($SubscriptionId))
             {
-                $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.SubscriptionId -eq $SubscriptionId -and $_.Name -eq $PlanName}
+                $instance = $Script:exportedInstances | Where-Object -FilterScript { $_.SubscriptionId -eq $SubscriptionId -and $_.Name -eq $PlanName }
             }
             elseif ($null -eq $instance -and -not [System.String]::IsNullOrEmpty($SubscriptionName))
             {
-                $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.SubscriptionName -eq $SubscriptionName -and $_.Name -eq $PlanName}
+                $instance = $Script:exportedInstances | Where-Object -FilterScript { $_.SubscriptionName -eq $SubscriptionName -and $_.Name -eq $PlanName }
             }
         }
         else
@@ -97,20 +97,20 @@ function Get-TargetResource
             {
                 $subscription = Get-AzSubscription -SubscriptionName $SubscriptionName
 
-                if($subscription -ne $null)
+                if ($subscription -ne $null)
                 {
                     $subscriptionId = $subscription.Id
                 }
             }
 
 
-            if($subscriptionId -ne $null)
+            if ($subscriptionId -ne $null)
             {
-                 Set-AzContext -Subscription $subscriptionId -ErrorAction Stop
-                 $instance = Get-AzSecurityPricing -Name $PlanName -ErrorAction Stop
-                 $azContext = Get-AzContext
-                 Add-Member -InputObject $instance -NotePropertyName "SubscriptionName" -NotePropertyValue $azContext.Subscription.Name
-                 Add-Member -InputObject $instance -NotePropertyName "SubscriptionId" -NotePropertyValue $azContext.Subscription.Id
+                Set-AzContext -Subscription $subscriptionId -ErrorAction Stop
+                $instance = Get-AzSecurityPricing -Name $PlanName -ErrorAction Stop
+                $azContext = Get-AzContext
+                Add-Member -InputObject $instance -NotePropertyName 'SubscriptionName' -NotePropertyValue $azContext.Subscription.Name
+                Add-Member -InputObject $instance -NotePropertyName 'SubscriptionId' -NotePropertyValue $azContext.Subscription.Id
             }
 
         }
@@ -234,7 +234,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
         Set-AzContext -Subscription $currentInstance.SubscriptionId -ErrorAction Stop
-        if($Extensions)
+        if ($Extensions)
         {
             Set-AzSecurityPricing -Name $PlanName -PricingTier $PricingTier -SubPlan $SubPlanName -Extension $Extensions -ErrorAction Stop
         }
@@ -457,17 +457,17 @@ function Get-SubscriptionsDefenderPlansFromArg
     try
     {
         $results = @()
-        $argQuery=@'
+        $argQuery = @'
 securityresources | where type == "microsoft.security/pricings" | project Id=id, PlanName=name, SubscriptionId=subscriptionId, SubPlan=tostring(properties.subPlan), PricingTier=tostring(properties.pricingTier), Extensions=tostring(properties.extensions)
 | join kind=inner (resourcecontainers | where type == "microsoft.resources/subscriptions" | project SubscriptionName = name, SubscriptionId = subscriptionId) on SubscriptionId | project-away SubscriptionId1
 '@
         $queryResult = Search-AzGraph -Query $argQuery -First 1000 -UseTenantScope -ErrorAction Stop
         $results += $queryResult.Data
 
-        while($queryResult.SkipToken -ne $null)
+        while ($queryResult.SkipToken -ne $null)
         {
-            $queryResult = Search-AzGraph -Query $argQuery -First 1000 -UseTenantScope -SkipToken $queryResult.SkipToken  -ErrorAction Stop
-            $results+=$queryResult.Data
+            $queryResult = Search-AzGraph -Query $argQuery -First 1000 -UseTenantScope -SkipToken $queryResult.SkipToken -ErrorAction Stop
+            $results += $queryResult.Data
         }
 
         return $results

@@ -160,7 +160,7 @@ function Set-TargetResource
     $SetParameters.Remove('TenantId') | Out-Null
     $SetParameters.Remove('CertificateThumbprint') | Out-Null
     $SetParameters.Remove('ManagedIdentity') | Out-Null
-    $SetParameters.Add("Identity", "Global")
+    $SetParameters.Add('Identity', 'Global')
     $SetParameters.Remove('AccessTokens') | Out-Null
 
     Write-Verbose -Message "Updating with Values: $(Convert-M365DscHashtableToString -Hashtable $SetParameters)"

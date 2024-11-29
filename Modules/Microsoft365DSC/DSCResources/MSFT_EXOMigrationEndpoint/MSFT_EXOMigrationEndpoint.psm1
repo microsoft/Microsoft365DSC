@@ -129,7 +129,7 @@ function Get-TargetResource
     {
         if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
         {
-            $migrationEndpoint = $Script:exportedInstances | Where-Object -FilterScript {$_.Identity -eq $Identity}
+            $migrationEndpoint = $Script:exportedInstances | Where-Object -FilterScript { $_.Identity -eq $Identity }
         }
         else
         {
@@ -141,31 +141,31 @@ function Get-TargetResource
         }
 
         $results = @{
-            Identity                       = $Identity
-            AcceptUntrustedCertificates    = $migrationEndpoint.AcceptUntrustedCertificates
-            AppID                          = $migrationEndpoint.AppID
-            AppSecretKeyVaultUrl           = $migrationEndpoint.AppSecretKeyVaultUrl
-            Authentication                 = $migrationEndpoint.Authentication
-            EndpointType                   = $migrationEndpoint.EndpointType
-            ExchangeServer                 = $migrationEndpoint.ExchangeServer
-            MailboxPermission              = $migrationEndpoint.MailboxPermission
-            MaxConcurrentIncrementalSyncs  = $migrationEndpoint.MaxConcurrentIncrementalSyncs
-            MaxConcurrentMigrations        = $migrationEndpoint.MaxConcurrentMigrations
-            NspiServer                     = $migrationEndpoint.NspiServer
-            Port                           = $migrationEndpoint.Port
-            RemoteServer                   = $migrationEndpoint.RemoteServer
-            RemoteTenant                   = $migrationEndpoint.RemoteTenant
-            RpcProxyServer                 = $migrationEndpoint.RpcProxyServer
-            Security                       = $migrationEndpoint.Security
-            SourceMailboxLegacyDN          = $migrationEndpoint.SourceMailboxLegacyDN
-            UseAutoDiscover                = $migrationEndpoint.UseAutoDiscover
-            Ensure                         = 'Present'
-            Credential                     = $Credential
-            ApplicationId                  = $ApplicationId
-            TenantId                       = $TenantId
-            CertificateThumbprint          = $CertificateThumbprint
-            ManagedIdentity                = $ManagedIdentity.IsPresent
-            AccessTokens                   = $AccessTokens
+            Identity                      = $Identity
+            AcceptUntrustedCertificates   = $migrationEndpoint.AcceptUntrustedCertificates
+            AppID                         = $migrationEndpoint.AppID
+            AppSecretKeyVaultUrl          = $migrationEndpoint.AppSecretKeyVaultUrl
+            Authentication                = $migrationEndpoint.Authentication
+            EndpointType                  = $migrationEndpoint.EndpointType
+            ExchangeServer                = $migrationEndpoint.ExchangeServer
+            MailboxPermission             = $migrationEndpoint.MailboxPermission
+            MaxConcurrentIncrementalSyncs = $migrationEndpoint.MaxConcurrentIncrementalSyncs
+            MaxConcurrentMigrations       = $migrationEndpoint.MaxConcurrentMigrations
+            NspiServer                    = $migrationEndpoint.NspiServer
+            Port                          = $migrationEndpoint.Port
+            RemoteServer                  = $migrationEndpoint.RemoteServer
+            RemoteTenant                  = $migrationEndpoint.RemoteTenant
+            RpcProxyServer                = $migrationEndpoint.RpcProxyServer
+            Security                      = $migrationEndpoint.Security
+            SourceMailboxLegacyDN         = $migrationEndpoint.SourceMailboxLegacyDN
+            UseAutoDiscover               = $migrationEndpoint.UseAutoDiscover
+            Ensure                        = 'Present'
+            Credential                    = $Credential
+            ApplicationId                 = $ApplicationId
+            TenantId                      = $TenantId
+            CertificateThumbprint         = $CertificateThumbprint
+            ManagedIdentity               = $ManagedIdentity.IsPresent
+            AccessTokens                  = $AccessTokens
         }
 
         return [System.Collections.Hashtable] $results
@@ -319,7 +319,7 @@ function Set-TargetResource
     $newParams.Add('Name', $Identity)
     $newParams.Add('Confirm', [Switch]$false)
 
-    if ($EndpointType -eq "IMAP")
+    if ($EndpointType -eq 'IMAP')
     {
         # Removing mailbox permission parameter as this is valid only for outlook anywhere migration
         $setParams.Remove('MailboxPermission')

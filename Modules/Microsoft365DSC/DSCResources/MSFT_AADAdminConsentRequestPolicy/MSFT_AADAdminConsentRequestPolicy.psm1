@@ -117,7 +117,7 @@ function Get-TargetResource
             }
             elseif ($reviewer.Query.Contains('directory/roleAssignments?$'))
             {
-                $roleId = $reviewer.Query.Replace("/beta/roleManagement/directory/roleAssignments?`$filter=roleDefinitionId eq ", "").Replace("'", '')
+                $roleId = $reviewer.Query.Replace("/beta/roleManagement/directory/roleAssignments?`$filter=roleDefinitionId eq ", '').Replace("'", '')
                 $roleInfo = Get-MgBetaRoleManagementDirectoryRoleDefinition -UnifiedRoleDefinitionId $roleId
                 $entry = @{
                     ReviewerType = 'Role'
@@ -274,8 +274,8 @@ function Set-TargetResource
     Write-Verbose -Message "Updating the Entra Id Admin Consent Request Policy with values: $updateJSON"
     $Uri = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + 'beta/policies/adminConsentRequestPolicy'
     Invoke-MgGraphRequest -Method 'PUT' `
-                          -Uri $Uri `
-                          -Body $updateJSON | Out-Null
+        -Uri $Uri `
+        -Body $updateJSON | Out-Null
 }
 
 function Test-TargetResource
@@ -358,7 +358,7 @@ function Test-TargetResource
     $testResult = $true
     foreach ($reviewer in $Reviewers)
     {
-        $currentEquivalent = $CurrentValues.Reviewers | Where-Object -FilterScript {$_.ReviewerId -eq $reviewer.ReviewerId -and $_.ReviewerType -eq $reviewer.ReviewerType}
+        $currentEquivalent = $CurrentValues.Reviewers | Where-Object -FilterScript { $_.ReviewerId -eq $reviewer.ReviewerId -and $_.ReviewerType -eq $reviewer.ReviewerType }
         if ($null -eq $currentEquivalent)
         {
             $testResult = $false
@@ -482,7 +482,7 @@ function Export-TargetResource
 
             if ($Results.Reviewers)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Reviewers" -IsCIMArray:$true
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Reviewers' -IsCIMArray:$true
             }
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `

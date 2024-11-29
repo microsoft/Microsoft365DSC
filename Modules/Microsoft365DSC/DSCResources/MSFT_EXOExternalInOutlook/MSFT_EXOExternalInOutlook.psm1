@@ -166,11 +166,11 @@ function Set-TargetResource
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        Write-Verbose -Message "The setting cannot be created, it can only be enabled or disabled."
+        Write-Verbose -Message 'The setting cannot be created, it can only be enabled or disabled.'
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Updating the settings for ExternalInOutlook."
+        Write-Verbose -Message 'Updating the settings for ExternalInOutlook.'
 
         $UpdateParameters = ([Hashtable]$BoundParameters).Clone()
         $UpdateParameters.Remove('Verbose') | Out-Null
@@ -190,7 +190,7 @@ function Set-TargetResource
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "The setting cannot be removed, it can only be enabled or disabled."
+        Write-Verbose -Message 'The setting cannot be removed, it can only be enabled or disabled.'
     }
 }
 
@@ -324,7 +324,7 @@ function Export-TargetResource
         $AccessTokens
     )
 
-   $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -362,14 +362,14 @@ function Export-TargetResource
 
             Write-Host "    |---[$i/$($getValue.Count)] $($config.Identity)" -NoNewline
             $params = @{
-                Identity                = $config.Identity
-                Ensure                  = 'Present'
-                Credential              = $Credential
-                ApplicationId           = $ApplicationId
-                TenantId                = $TenantId
-                CertificateThumbprint   = $CertificateThumbprint
-                ApplicationSecret       = $ApplicationSecret
-                AccessTokens            = $AccessTokens
+                Identity              = $config.Identity
+                Ensure                = 'Present'
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+                ApplicationSecret     = $ApplicationSecret
+                AccessTokens          = $AccessTokens
             }
 
             $Results = Get-TargetResource @Params

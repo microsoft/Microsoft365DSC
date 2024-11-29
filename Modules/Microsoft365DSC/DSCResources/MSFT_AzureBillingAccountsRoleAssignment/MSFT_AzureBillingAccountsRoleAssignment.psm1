@@ -77,21 +77,21 @@ function Get-TargetResource
     try
     {
         $accounts = Get-M365DSCAzureBillingAccount
-        $currentAccount = $accounts.value | Where-Object -FilterScript {$_.properties.displayName -eq $BillingAccount}
+        $currentAccount = $accounts.value | Where-Object -FilterScript { $_.properties.displayName -eq $BillingAccount }
 
         if ($null -ne $currentAccount)
         {
             $instances = Get-M365DSCAzureBillingAccountsRoleAssignment -BillingAccountId $currentAccount.Name -ErrorAction Stop
             $PrincipalIdValue = Get-M365DSCPrincipalIdFromName -PrincipalName $PrincipalName `
-                                                               -PrincipalType $PrincipalType
-            $instance = $instances.value | Where-Object -FilterScript {$_.properties.principalId -eq $PrincipalIdValue}
+                -PrincipalType $PrincipalType
+            $instance = $instances.value | Where-Object -FilterScript { $_.properties.principalId -eq $PrincipalIdValue }
 
             if ($null -ne $instance)
             {
                 $roleDefinitionId = $instance.properties.roleDefinitionId.Split('/')
-                $roleDefinitionId = $roleDefinitionId[$roleDefinitionId.Length -1]
+                $roleDefinitionId = $roleDefinitionId[$roleDefinitionId.Length - 1]
                 $RoleDefinitionValue = Get-M365DSCAzureBillingAccountsRoleDefinition -BillingAccountId $currentAccount.Name `
-                                                                                     -RoleDefinitionId $roleDefinitionId
+                    -RoleDefinitionId $roleDefinitionId
             }
         }
         if ($null -eq $instance)
@@ -199,11 +199,11 @@ function Set-TargetResource
 
     $currentInstance = Get-TargetResource @PSBoundParameters
     $billingAccounts = Get-M365DSCAzureBillingAccount
-    $account = $billingAccounts.value | Where-Object -FilterScript {$_.properties.displayName -eq $BillingAccount}
+    $account = $billingAccounts.value | Where-Object -FilterScript { $_.properties.displayName -eq $BillingAccount }
     $PrincipalIdValue = Get-M365DSCPrincipalIdFromName -PrincipalName $PrincipalName `
-                                                       -PrincipalType $PrincipalType
+        -PrincipalType $PrincipalType
     $RoleDefinitionValues = Get-M365DSCAzureBillingAccountsRoleDefinition -BillingAccountId $account.Name
-    $roleDefinitionInstance = $RoleDefinitionValues.value | Where-Object -FilterScript {$_.properties.roleName -eq $currentInstance.RoleDefinition}
+    $roleDefinitionInstance = $RoleDefinitionValues.value | Where-Object -FilterScript { $_.properties.roleName -eq $currentInstance.RoleDefinition }
     $instanceParams = @{
         principalId       = $PrincipalIdValue
         principalTenantId = $currentInstance.PrincipalTenantId
@@ -214,25 +214,25 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Adding new role assignment for user {$PrincipalName} for role {$RoleDefinition}"
         New-M365DSCAzureBillingAccountsRoleAssignment -BillingAccountId $account.Name `
-                                                      -Body $instanceParams
+            -Body $instanceParams
     }
     # UPDATE
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating role assignment for user {$PrincipalName} for role {$RoleDefinition}"
         New-M365DSCAzureBillingAccountsRoleAssignment -BillingAccountId $account.Name `
-                                                      -Body $instanceParams
+            -Body $instanceParams
     }
     # REMOVE
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
         $instances = Get-M365DSCAzureBillingAccountsRoleAssignment -BillingAccountId $account.Name -ErrorAction Stop
-        $instance = $instances.value | Where-Object -FilterScript {$_.properties.principalId -eq $PrincipalIdValue}
+        $instance = $instances.value | Where-Object -FilterScript { $_.properties.principalId -eq $PrincipalIdValue }
         $AssignmentId = $instance.Id.Split('/')
-        $AssignmentId = $AssignmentId[$roleDefinitionId.Length -1]
+        $AssignmentId = $AssignmentId[$roleDefinitionId.Length - 1]
         Write-Verbose -Message "Removing role assignment for user {$PrincipalName} for role {$RoleDefinition}"
         Remove-M365DSCAzureBillingAccountsRoleAssignment -BillingAccountId $account.Name `
-                                                         -AssignmentId $AssignmentId
+            -AssignmentId $AssignmentId
     }
 }
 
@@ -406,9 +406,9 @@ function Export-TargetResource
                 }
 
                 $PrincipalNameValue = Get-M365DSCPrincipalNameFromId -PrincipalId $assignment.properties.principalId `
-                                                                     -PrincipalType $assignment.properties.principalType
+                    -PrincipalType $assignment.properties.principalType
                 $roleDefinitionId = $assignment.properties.roleDefinitionId.Split('/')
-                $roleDefinitionId = $roleDefinitionId[$roleDefinitionId.Length -1]
+                $roleDefinitionId = $roleDefinitionId[$roleDefinitionId.Length - 1]
 
                 Write-Host "        |---[$j/$($assignments.value.Length)] $($assignment.properties.principalId)" -NoNewline
                 $params = @{
@@ -416,7 +416,7 @@ function Export-TargetResource
                     PrincipalName         = $PrincipalNameValue
                     PrincipalType         = $assignment.properties.principalType
                     PrincipalTenantId     = $assignment.properties.principalTenantId
-                    RoleDefinition        = "AnyRole"
+                    RoleDefinition        = 'AnyRole'
                     Credential            = $Credential
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId

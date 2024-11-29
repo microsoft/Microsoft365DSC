@@ -80,7 +80,8 @@ function Get-TargetResource
 
         $getValue = $null
         #region resource generator code
-        if (-not [System.String]::IsNullOrEmpty($Id)) {
+        if (-not [System.String]::IsNullOrEmpty($Id))
+        {
             $getValue = Get-MgBetaNetworkAccessConnectivityRemoteNetwork -RemoteNetworkId $Id -ErrorAction SilentlyContinue
         }
 
@@ -104,7 +105,8 @@ function Get-TargetResource
 
         #region resource generator code
         $forwardingProfilesList = @()
-        foreach ($forwardingProfile in $getValue.ForwardingProfiles) {
+        foreach ($forwardingProfile in $getValue.ForwardingProfiles)
+        {
             $forwardingProfilesList += $forwardingProfile.Name
         }
 
@@ -112,18 +114,18 @@ function Get-TargetResource
         #endregion
 
         $results = @{
-            Id                               = $getValue.Id
-            Name                             = $getValue.Name
-            Region                           = $getValue.Region
-            ForwardingProfiles               = [Array]$forwardingProfilesList
-            DeviceLinks                      = [Array]$complexDeviceLinks
-            Ensure                           = 'Present'
-            Credential                       = $Credential
-            ApplicationId                    = $ApplicationId
-            TenantId                         = $TenantId
-            ApplicationSecret                = $ApplicationSecret
-            CertificateThumbprint            = $CertificateThumbprint
-            ManagedIdentity                  = $ManagedIdentity.IsPresent
+            Id                    = $getValue.Id
+            Name                  = $getValue.Name
+            Region                = $getValue.Region
+            ForwardingProfiles    = [Array]$forwardingProfilesList
+            DeviceLinks           = [Array]$complexDeviceLinks
+            Ensure                = 'Present'
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            ApplicationSecret     = $ApplicationSecret
+            CertificateThumbprint = $CertificateThumbprint
+            ManagedIdentity       = $ManagedIdentity.IsPresent
         }
 
         return [System.Collections.Hashtable] $results
@@ -223,7 +225,8 @@ function Set-TargetResource
     #creating the forwarding policies list by getting the ids
     $allForwardingProfiles = Get-MgBetaNetworkAccessForwardingProfile
     $forwardingProfilesList = @()
-    foreach ($profileName in $BoundParameters.ForwardingProfiles) {
+    foreach ($profileName in $BoundParameters.ForwardingProfiles)
+    {
         $matchedProfile = $allForwardingProfiles | Where-Object { $_.Name -eq $profileName }
         $forwardingProfilesList += @{
             id = $matchedProfile.Id
@@ -234,9 +237,9 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Creating an Azure AD Remote Network with Name {$Name}"
         $params = @{
-            name = $BoundParameters.Name
-            region = $BoundParameters.Region
-            deviceLinks = [Array]$deviceLinksHashtable
+            name               = $BoundParameters.Name
+            region             = $BoundParameters.Region
+            deviceLinks        = [Array]$deviceLinksHashtable
             forwardingProfiles = [Array]$forwardingProfilesList
         }
 
@@ -248,27 +251,30 @@ function Set-TargetResource
         $currentRemoteNetwork = Get-MgBetaNetworkAccessConnectivityRemoteNetwork -RemoteNetworkId $currentInstance.Id
 
         #removing the old device links
-        foreach ($deviceLinkItem in $currentRemoteNetwork.DeviceLinks) {
+        foreach ($deviceLinkItem in $currentRemoteNetwork.DeviceLinks)
+        {
             Remove-MgBetaNetworkAccessConnectivityRemoteNetworkDeviceLink -RemoteNetworkId $currentInstance.Id -DeviceLinkId $deviceLinkItem.Id
         }
         # updating the list of device links
-        foreach ($deviceLinkItem in $deviceLinksHashtable) {
+        foreach ($deviceLinkItem in $deviceLinksHashtable)
+        {
             Write-Verbose "Device Link Hashtable: $deviceLinksItem"
             New-MgBetaNetworkAccessConnectivityRemoteNetworkDeviceLink -RemoteNetworkId $currentInstance.Id -BodyParameter $deviceLinkItem
         }
 
         # removing forwarding profiles
         $params = @{
-            "@context" = '#$delta'
-            value = @(@{})
+            '@context' = '#$delta'
+            value      = @(@{})
         }
         Invoke-MgGraphRequest -Uri "$($Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl)beta/networkAccess/connectivity/remoteNetworks/$($currentInstance.Id)/forwardingProfiles" -Method Patch -Body $params
 
         #adding forwarding profiles if required
-        if ($forwardingProfilesList.Count -gt 0) {
+        if ($forwardingProfilesList.Count -gt 0)
+        {
             $params = @{
-                "@context" = '#$delta'
-                value = $forwardingProfilesList
+                '@context' = '#$delta'
+                value      = $forwardingProfilesList
             }
             Invoke-MgGraphRequest -Uri "$($Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl)beta/networkAccess/connectivity/remoteNetworks/$($currentInstance.Id)/forwardingProfiles" -Method Patch -Body $params
         }
@@ -491,16 +497,16 @@ function Export-TargetResource
             }
             Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{
-                Id = $config.Id
-                Name           =  $config.Name
-                Ensure = 'Present'
-                Credential = $Credential
-                ApplicationId = $ApplicationId
-                TenantId = $TenantId
-                ApplicationSecret = $ApplicationSecret
+                Id                    = $config.Id
+                Name                  = $config.Name
+                Ensure                = 'Present'
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
-                ManagedIdentity = $ManagedIdentity.IsPresent
-                AccessTokens = $AccessTokens
+                ManagedIdentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
             }
 
             $Results = Get-TargetResource @Params
@@ -520,7 +526,7 @@ function Export-TargetResource
 
             if ($Results.DeviceLinks)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "DeviceLinks"
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'DeviceLinks'
             }
 
             $dscContent += $currentDSCBlock
@@ -545,7 +551,8 @@ function Export-TargetResource
     }
 }
 
-function Get-MicrosoftGraphRemoteNetworkDeviceLinksHashtable {
+function Get-MicrosoftGraphRemoteNetworkDeviceLinksHashtable
+{
     [CmdletBinding()]
     [OutputType([System.Collections.ArrayList])]
     param (
@@ -556,64 +563,139 @@ function Get-MicrosoftGraphRemoteNetworkDeviceLinksHashtable {
 
     $newDeviceLinks = @()
 
-    foreach ($deviceLink in $DeviceLinks) {
+    foreach ($deviceLink in $DeviceLinks)
+    {
         $newDeviceLink = @{}
 
         # Add main properties only if they are not null
-        if ($deviceLink.Name) { $newDeviceLink["Name"] = $deviceLink.Name }
-        if ($deviceLink.IpAddress) { $newDeviceLink["IPAddress"] = $deviceLink.IpAddress }
-        if ($deviceLink.BandwidthCapacityInMbps) { $newDeviceLink["BandwidthCapacityInMbps"] = $deviceLink.BandwidthCapacityInMbps }
-        if ($deviceLink.DeviceVendor) { $newDeviceLink["DeviceVendor"] = $deviceLink.DeviceVendor }
+        if ($deviceLink.Name)
+        {
+            $newDeviceLink['Name'] = $deviceLink.Name
+        }
+        if ($deviceLink.IpAddress)
+        {
+            $newDeviceLink['IPAddress'] = $deviceLink.IpAddress
+        }
+        if ($deviceLink.BandwidthCapacityInMbps)
+        {
+            $newDeviceLink['BandwidthCapacityInMbps'] = $deviceLink.BandwidthCapacityInMbps
+        }
+        if ($deviceLink.DeviceVendor)
+        {
+            $newDeviceLink['DeviceVendor'] = $deviceLink.DeviceVendor
+        }
 
         # BGP Configuration
-        if ($deviceLink.BgpConfiguration) {
+        if ($deviceLink.BgpConfiguration)
+        {
             $bgpConfig = @{}
-            if ($deviceLink.BgpConfiguration.Asn) { $bgpConfig["Asn"] = $deviceLink.BgpConfiguration.Asn }
-            if ($deviceLink.BgpConfiguration.LocalIPAddress) { $bgpConfig["LocalIPAddress"] = $deviceLink.BgpConfiguration.LocalIPAddress }
-            if ($deviceLink.BgpConfiguration.PeerIPAddress) { $bgpConfig["PeerIPAddress"] = $deviceLink.BgpConfiguration.PeerIPAddress }
+            if ($deviceLink.BgpConfiguration.Asn)
+            {
+                $bgpConfig['Asn'] = $deviceLink.BgpConfiguration.Asn
+            }
+            if ($deviceLink.BgpConfiguration.LocalIPAddress)
+            {
+                $bgpConfig['LocalIPAddress'] = $deviceLink.BgpConfiguration.LocalIPAddress
+            }
+            if ($deviceLink.BgpConfiguration.PeerIPAddress)
+            {
+                $bgpConfig['PeerIPAddress'] = $deviceLink.BgpConfiguration.PeerIPAddress
+            }
 
-            if ($bgpConfig.Count -gt 0) { $newDeviceLink["BgpConfiguration"] = $bgpConfig }
+            if ($bgpConfig.Count -gt 0)
+            {
+                $newDeviceLink['BgpConfiguration'] = $bgpConfig
+            }
         }
 
         # Redundancy Configuration
-        if ($deviceLink.RedundancyConfiguration) {
+        if ($deviceLink.RedundancyConfiguration)
+        {
             $redundancyConfig = @{}
-            if ($deviceLink.RedundancyConfiguration.RedundancyTier) { $redundancyConfig["RedundancyTier"] = $deviceLink.RedundancyConfiguration.RedundancyTier }
-            if ($deviceLink.RedundancyConfiguration.ZoneLocalIPAddress) { $redundancyConfig["ZoneLocalIPAddress"] = $deviceLink.RedundancyConfiguration.ZoneLocalIPAddress }
+            if ($deviceLink.RedundancyConfiguration.RedundancyTier)
+            {
+                $redundancyConfig['RedundancyTier'] = $deviceLink.RedundancyConfiguration.RedundancyTier
+            }
+            if ($deviceLink.RedundancyConfiguration.ZoneLocalIPAddress)
+            {
+                $redundancyConfig['ZoneLocalIPAddress'] = $deviceLink.RedundancyConfiguration.ZoneLocalIPAddress
+            }
 
-            if ($redundancyConfig.Count -gt 0) { $newDeviceLink["RedundancyConfiguration"] = $redundancyConfig }
+            if ($redundancyConfig.Count -gt 0)
+            {
+                $newDeviceLink['RedundancyConfiguration'] = $redundancyConfig
+            }
         }
 
         # Tunnel Configuration
-        if ($deviceLink.TunnelConfiguration) {
+        if ($deviceLink.TunnelConfiguration)
+        {
             $tunnelConfig = @{}
-            if ($deviceLink.TunnelConfiguration.PreSharedKey) { $tunnelConfig["PreSharedKey"] = $deviceLink.TunnelConfiguration.PreSharedKey }
-            if ($deviceLink.TunnelConfiguration.ZoneRedundancyPreSharedKey) { $tunnelConfig["ZoneRedundancyPreSharedKey"] = $deviceLink.TunnelConfiguration.ZoneRedundancyPreSharedKey }
-
-            # Additional Properties
-            if ($deviceLink.TunnelConfiguration.AdditionalProperties) {
-                if ($deviceLink.TunnelConfiguration.AdditionalProperties.saLifeTimeSeconds) { $tunnelConfig["SaLifeTimeSeconds"] = $deviceLink.TunnelConfiguration.AdditionalProperties.saLifeTimeSeconds }
-                if ($deviceLink.TunnelConfiguration.AdditionalProperties.ipSecEncryption) { $tunnelConfig["IPSecEncryption"] = $deviceLink.TunnelConfiguration.AdditionalProperties.ipSecEncryption }
-                if ($deviceLink.TunnelConfiguration.AdditionalProperties.ipSecIntegrity) { $tunnelConfig["IPSecIntegrity"] = $deviceLink.TunnelConfiguration.AdditionalProperties.ipSecIntegrity }
-                if ($deviceLink.TunnelConfiguration.AdditionalProperties.ikeEncryption) { $tunnelConfig["IKEEncryption"] = $deviceLink.TunnelConfiguration.AdditionalProperties.ikeEncryption }
-                if ($deviceLink.TunnelConfiguration.AdditionalProperties.ikeIntegrity) { $tunnelConfig["IKEIntegrity"] = $deviceLink.TunnelConfiguration.AdditionalProperties.ikeIntegrity }
-                if ($deviceLink.TunnelConfiguration.AdditionalProperties.dhGroup) { $tunnelConfig["DHGroup"] = $deviceLink.TunnelConfiguration.AdditionalProperties.dhGroup }
-                if ($deviceLink.TunnelConfiguration.AdditionalProperties.pfsGroup) { $tunnelConfig["PFSGroup"] = $deviceLink.TunnelConfiguration.AdditionalProperties.pfsGroup }
-                if ($deviceLink.TunnelConfiguration.AdditionalProperties["@odata.type"]) { $tunnelConfig["ODataType"] = $deviceLink.TunnelConfiguration.AdditionalProperties["@odata.type"] }
+            if ($deviceLink.TunnelConfiguration.PreSharedKey)
+            {
+                $tunnelConfig['PreSharedKey'] = $deviceLink.TunnelConfiguration.PreSharedKey
+            }
+            if ($deviceLink.TunnelConfiguration.ZoneRedundancyPreSharedKey)
+            {
+                $tunnelConfig['ZoneRedundancyPreSharedKey'] = $deviceLink.TunnelConfiguration.ZoneRedundancyPreSharedKey
             }
 
-            if ($tunnelConfig.Count -gt 0) { $newDeviceLink["TunnelConfiguration"] = $tunnelConfig }
+            # Additional Properties
+            if ($deviceLink.TunnelConfiguration.AdditionalProperties)
+            {
+                if ($deviceLink.TunnelConfiguration.AdditionalProperties.saLifeTimeSeconds)
+                {
+                    $tunnelConfig['SaLifeTimeSeconds'] = $deviceLink.TunnelConfiguration.AdditionalProperties.saLifeTimeSeconds
+                }
+                if ($deviceLink.TunnelConfiguration.AdditionalProperties.ipSecEncryption)
+                {
+                    $tunnelConfig['IPSecEncryption'] = $deviceLink.TunnelConfiguration.AdditionalProperties.ipSecEncryption
+                }
+                if ($deviceLink.TunnelConfiguration.AdditionalProperties.ipSecIntegrity)
+                {
+                    $tunnelConfig['IPSecIntegrity'] = $deviceLink.TunnelConfiguration.AdditionalProperties.ipSecIntegrity
+                }
+                if ($deviceLink.TunnelConfiguration.AdditionalProperties.ikeEncryption)
+                {
+                    $tunnelConfig['IKEEncryption'] = $deviceLink.TunnelConfiguration.AdditionalProperties.ikeEncryption
+                }
+                if ($deviceLink.TunnelConfiguration.AdditionalProperties.ikeIntegrity)
+                {
+                    $tunnelConfig['IKEIntegrity'] = $deviceLink.TunnelConfiguration.AdditionalProperties.ikeIntegrity
+                }
+                if ($deviceLink.TunnelConfiguration.AdditionalProperties.dhGroup)
+                {
+                    $tunnelConfig['DHGroup'] = $deviceLink.TunnelConfiguration.AdditionalProperties.dhGroup
+                }
+                if ($deviceLink.TunnelConfiguration.AdditionalProperties.pfsGroup)
+                {
+                    $tunnelConfig['PFSGroup'] = $deviceLink.TunnelConfiguration.AdditionalProperties.pfsGroup
+                }
+                if ($deviceLink.TunnelConfiguration.AdditionalProperties['@odata.type'])
+                {
+                    $tunnelConfig['ODataType'] = $deviceLink.TunnelConfiguration.AdditionalProperties['@odata.type']
+                }
+            }
+
+            if ($tunnelConfig.Count -gt 0)
+            {
+                $newDeviceLink['TunnelConfiguration'] = $tunnelConfig
+            }
         }
 
         # Add the device link to the collection if it has any properties
-        if ($newDeviceLink.Count -gt 0) { $newDeviceLinks += $newDeviceLink }
+        if ($newDeviceLink.Count -gt 0)
+        {
+            $newDeviceLinks += $newDeviceLink
+        }
     }
 
     return $newDeviceLinks
 }
 
 
-function Get-MicrosoftGraphRemoteNetworkDeviceLinksHashtableAsString {
+function Get-MicrosoftGraphRemoteNetworkDeviceLinksHashtableAsString
+{
     [CmdletBinding()]
     [OutputType([System.String])]
     param (
@@ -625,49 +707,119 @@ function Get-MicrosoftGraphRemoteNetworkDeviceLinksHashtableAsString {
     $StringContent = [System.Text.StringBuilder]::new()
     $StringContent.Append('@(') | Out-Null
 
-    foreach ($deviceLink in $DeviceLinks) {
+    foreach ($deviceLink in $DeviceLinks)
+    {
         $StringContent.Append("`n                MSFT_AADRemoteNetworkDeviceLink {`r`n") | Out-Null
 
         # Append main properties if not null
-        if ($deviceLink.Name) { $StringContent.Append("                    Name                    = '" + $deviceLink.Name + "'`r`n") | Out-Null }
-        if ($deviceLink.IPAddress) { $StringContent.Append("                    IPAddress               = '" + $deviceLink.IPAddress + "'`r`n") | Out-Null }
-        if ($deviceLink.BandwidthCapacityInMbps) { $StringContent.Append("                    BandwidthCapacityInMbps = '" + $deviceLink.BandwidthCapacityInMbps + "'`r`n") | Out-Null }
-        if ($deviceLink.DeviceVendor) { $StringContent.Append("                    DeviceVendor            = '" + $deviceLink.DeviceVendor + "'`r`n") | Out-Null }
+        if ($deviceLink.Name)
+        {
+            $StringContent.Append("                    Name                    = '" + $deviceLink.Name + "'`r`n") | Out-Null
+        }
+        if ($deviceLink.IPAddress)
+        {
+            $StringContent.Append("                    IPAddress               = '" + $deviceLink.IPAddress + "'`r`n") | Out-Null
+        }
+        if ($deviceLink.BandwidthCapacityInMbps)
+        {
+            $StringContent.Append("                    BandwidthCapacityInMbps = '" + $deviceLink.BandwidthCapacityInMbps + "'`r`n") | Out-Null
+        }
+        if ($deviceLink.DeviceVendor)
+        {
+            $StringContent.Append("                    DeviceVendor            = '" + $deviceLink.DeviceVendor + "'`r`n") | Out-Null
+        }
 
         # BGP Configuration
-        if ($deviceLink.BgpConfiguration) {
+        if ($deviceLink.BgpConfiguration)
+        {
             $bgpConfigAdded = $false
             $StringContent.Append("                    BgpConfiguration        = MSFT_AADRemoteNetworkDeviceLinkbgpConfiguration {`r`n") | Out-Null
-            if ($deviceLink.BgpConfiguration.Asn) { $StringContent.Append("                        Asn                 = " + $deviceLink.BgpConfiguration.Asn + "`r`n") | Out-Null; $bgpConfigAdded = $true }
-            if ($deviceLink.BgpConfiguration.LocalIPAddress) { $StringContent.Append("                        LocalIPAddress      = '" + $deviceLink.BgpConfiguration.LocalIPAddress + "'`r`n") | Out-Null; $bgpConfigAdded = $true }
-            if ($deviceLink.BgpConfiguration.PeerIPAddress) { $StringContent.Append("                        PeerIPAddress       = '" + $deviceLink.BgpConfiguration.PeerIPAddress + "'`r`n") | Out-Null; $bgpConfigAdded = $true }
-            if ($bgpConfigAdded) { $StringContent.Append("                    }`r`n") | Out-Null }
+            if ($deviceLink.BgpConfiguration.Asn)
+            {
+                $StringContent.Append('                        Asn                 = ' + $deviceLink.BgpConfiguration.Asn + "`r`n") | Out-Null; $bgpConfigAdded = $true
+            }
+            if ($deviceLink.BgpConfiguration.LocalIPAddress)
+            {
+                $StringContent.Append("                        LocalIPAddress      = '" + $deviceLink.BgpConfiguration.LocalIPAddress + "'`r`n") | Out-Null; $bgpConfigAdded = $true
+            }
+            if ($deviceLink.BgpConfiguration.PeerIPAddress)
+            {
+                $StringContent.Append("                        PeerIPAddress       = '" + $deviceLink.BgpConfiguration.PeerIPAddress + "'`r`n") | Out-Null; $bgpConfigAdded = $true
+            }
+            if ($bgpConfigAdded)
+            {
+                $StringContent.Append("                    }`r`n") | Out-Null
+            }
         }
 
         # Redundancy Configuration
-        if ($deviceLink.RedundancyConfiguration) {
+        if ($deviceLink.RedundancyConfiguration)
+        {
             $redundancyConfigAdded = $false
             $StringContent.Append("                    RedundancyConfiguration = MSFT_AADRemoteNetworkDeviceLinkRedundancyConfiguration {`r`n") | Out-Null
-            if ($deviceLink.RedundancyConfiguration.RedundancyTier) { $StringContent.Append("                        RedundancyTier      = '" + $deviceLink.RedundancyConfiguration.RedundancyTier + "'`r`n") | Out-Null; $redundancyConfigAdded = $true }
-            if ($deviceLink.RedundancyConfiguration.ZoneLocalIPAddress) { $StringContent.Append("                        ZoneLocalIPAddress  = '" + $deviceLink.RedundancyConfiguration.ZoneLocalIPAddress + "'`r`n") | Out-Null; $redundancyConfigAdded = $true }
-            if ($redundancyConfigAdded) { $StringContent.Append("                    }`r`n") | Out-Null }
+            if ($deviceLink.RedundancyConfiguration.RedundancyTier)
+            {
+                $StringContent.Append("                        RedundancyTier      = '" + $deviceLink.RedundancyConfiguration.RedundancyTier + "'`r`n") | Out-Null; $redundancyConfigAdded = $true
+            }
+            if ($deviceLink.RedundancyConfiguration.ZoneLocalIPAddress)
+            {
+                $StringContent.Append("                        ZoneLocalIPAddress  = '" + $deviceLink.RedundancyConfiguration.ZoneLocalIPAddress + "'`r`n") | Out-Null; $redundancyConfigAdded = $true
+            }
+            if ($redundancyConfigAdded)
+            {
+                $StringContent.Append("                    }`r`n") | Out-Null
+            }
         }
 
         # Tunnel Configuration
-        if ($deviceLink.TunnelConfiguration) {
+        if ($deviceLink.TunnelConfiguration)
+        {
             $tunnelConfigAdded = $false
             $StringContent.Append("                    TunnelConfiguration     = MSFT_AADRemoteNetworkDeviceLinkTunnelConfiguration {`r`n") | Out-Null
-            if ($deviceLink.TunnelConfiguration.PreSharedKey) { $StringContent.Append("                        PreSharedKey               = '" + $deviceLink.TunnelConfiguration.PreSharedKey + "'`r`n") | Out-Null; $tunnelConfigAdded = $true }
-            if ($deviceLink.TunnelConfiguration.ZoneRedundancyPreSharedKey) { $StringContent.Append("                        ZoneRedundancyPreSharedKey = '" + $deviceLink.TunnelConfiguration.ZoneRedundancyPreSharedKey + "'`r`n") | Out-Null; $tunnelConfigAdded = $true }
-            if ($deviceLink.TunnelConfiguration.SaLifeTimeSeconds) { $StringContent.Append("                        SaLifeTimeSeconds          = " + $deviceLink.TunnelConfiguration.SaLifeTimeSeconds + "`r`n") | Out-Null; $tunnelConfigAdded = $true }
-            if ($deviceLink.TunnelConfiguration.IpSecEncryption) { $StringContent.Append("                        IPSecEncryption            = '" + $deviceLink.TunnelConfiguration.IpSecEncryption + "'`r`n") | Out-Null; $tunnelConfigAdded = $true }
-            if ($deviceLink.TunnelConfiguration.IpSecIntegrity) { $StringContent.Append("                        IPSecIntegrity             = '" + $deviceLink.TunnelConfiguration.IpSecIntegrity + "'`r`n") | Out-Null; $tunnelConfigAdded = $true }
-            if ($deviceLink.TunnelConfiguration.IkeEncryption) { $StringContent.Append("                        IKEEncryption              = '" + $deviceLink.TunnelConfiguration.IkeEncryption + "'`r`n") | Out-Null; $tunnelConfigAdded = $true }
-            if ($deviceLink.TunnelConfiguration.IkeIntegrity) { $StringContent.Append("                        IKEIntegrity               = '" + $deviceLink.TunnelConfiguration.IkeIntegrity + "'`r`n") | Out-Null; $tunnelConfigAdded = $true }
-            if ($deviceLink.TunnelConfiguration.DhGroup) { $StringContent.Append("                        DHGroup                    = '" + $deviceLink.TunnelConfiguration.DhGroup + "'`r`n") | Out-Null; $tunnelConfigAdded = $true }
-            if ($deviceLink.TunnelConfiguration.PfsGroup) { $StringContent.Append("                        PFSGroup                   = '" + $deviceLink.TunnelConfiguration.PfsGroup + "'`r`n") | Out-Null; $tunnelConfigAdded = $true }
-            if ($deviceLink.TunnelConfiguration.ODataType) { $StringContent.Append("                        ODataType                  = '" + $deviceLink.TunnelConfiguration.ODataType + "'`r`n") | Out-Null; $tunnelConfigAdded = $true }
-            if ($tunnelConfigAdded) { $StringContent.Append("                    }`r`n") | Out-Null }
+            if ($deviceLink.TunnelConfiguration.PreSharedKey)
+            {
+                $StringContent.Append("                        PreSharedKey               = '" + $deviceLink.TunnelConfiguration.PreSharedKey + "'`r`n") | Out-Null; $tunnelConfigAdded = $true
+            }
+            if ($deviceLink.TunnelConfiguration.ZoneRedundancyPreSharedKey)
+            {
+                $StringContent.Append("                        ZoneRedundancyPreSharedKey = '" + $deviceLink.TunnelConfiguration.ZoneRedundancyPreSharedKey + "'`r`n") | Out-Null; $tunnelConfigAdded = $true
+            }
+            if ($deviceLink.TunnelConfiguration.SaLifeTimeSeconds)
+            {
+                $StringContent.Append('                        SaLifeTimeSeconds          = ' + $deviceLink.TunnelConfiguration.SaLifeTimeSeconds + "`r`n") | Out-Null; $tunnelConfigAdded = $true
+            }
+            if ($deviceLink.TunnelConfiguration.IpSecEncryption)
+            {
+                $StringContent.Append("                        IPSecEncryption            = '" + $deviceLink.TunnelConfiguration.IpSecEncryption + "'`r`n") | Out-Null; $tunnelConfigAdded = $true
+            }
+            if ($deviceLink.TunnelConfiguration.IpSecIntegrity)
+            {
+                $StringContent.Append("                        IPSecIntegrity             = '" + $deviceLink.TunnelConfiguration.IpSecIntegrity + "'`r`n") | Out-Null; $tunnelConfigAdded = $true
+            }
+            if ($deviceLink.TunnelConfiguration.IkeEncryption)
+            {
+                $StringContent.Append("                        IKEEncryption              = '" + $deviceLink.TunnelConfiguration.IkeEncryption + "'`r`n") | Out-Null; $tunnelConfigAdded = $true
+            }
+            if ($deviceLink.TunnelConfiguration.IkeIntegrity)
+            {
+                $StringContent.Append("                        IKEIntegrity               = '" + $deviceLink.TunnelConfiguration.IkeIntegrity + "'`r`n") | Out-Null; $tunnelConfigAdded = $true
+            }
+            if ($deviceLink.TunnelConfiguration.DhGroup)
+            {
+                $StringContent.Append("                        DHGroup                    = '" + $deviceLink.TunnelConfiguration.DhGroup + "'`r`n") | Out-Null; $tunnelConfigAdded = $true
+            }
+            if ($deviceLink.TunnelConfiguration.PfsGroup)
+            {
+                $StringContent.Append("                        PFSGroup                   = '" + $deviceLink.TunnelConfiguration.PfsGroup + "'`r`n") | Out-Null; $tunnelConfigAdded = $true
+            }
+            if ($deviceLink.TunnelConfiguration.ODataType)
+            {
+                $StringContent.Append("                        ODataType                  = '" + $deviceLink.TunnelConfiguration.ODataType + "'`r`n") | Out-Null; $tunnelConfigAdded = $true
+            }
+            if ($tunnelConfigAdded)
+            {
+                $StringContent.Append("                    }`r`n") | Out-Null
+            }
         }
 
         $StringContent.Append("                }`r`n") | Out-Null

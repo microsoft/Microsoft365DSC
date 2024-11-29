@@ -83,14 +83,14 @@ function Get-TargetResource
     {
         if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
         {
-            $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.name -eq $Name}
+            $instance = $Script:exportedInstances | Where-Object -FilterScript { $_.name -eq $Name }
         }
         else
         {
             $response = Invoke-AzRest -Uri 'https://management.azure.com/providers/microsoft.aadiam/diagnosticsettings?api-version=2017-04-01-preview' `
-                                      -Method Get
+                -Method Get
             $instances = (ConvertFrom-Json $response.Content).value
-            $instance = $instances | Where-Object -FilterScript {$_.name -eq $Name}
+            $instance = $instances | Where-Object -FilterScript { $_.name -eq $Name }
         }
         if ($null -eq $instance)
         {
@@ -215,9 +215,9 @@ function Set-TargetResource
     $currentInstance = Get-TargetResource @PSBoundParameters
 
     $instanceParams = @{
-        name = $Name
+        name       = $Name
         properties = @{
-            logs                        = @()
+            logs = @()
         }
     }
 
@@ -263,15 +263,15 @@ function Set-TargetResource
             Write-Verbose -Message "Updating diagnostic setting {$Name}"
         }
         $response = Invoke-AzRest -Uri "https://management.azure.com/providers/microsoft.aadiam/diagnosticsettings/$($Name)?api-version=2017-04-01-preview" `
-                                  -Method PUT `
-                                  -Payload $payload
+            -Method PUT `
+            -Payload $payload
     }
     # REMOVE
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing diagnostic setting {$Name}"
         $response = Invoke-AzRest -Uri "https://management.azure.com/providers/microsoft.aadiam/diagnosticsettings/$($Name)?api-version=2017-04-01-preview" `
-                                  -Method DELETE
+            -Method DELETE
     }
 }
 
@@ -447,7 +447,7 @@ function Export-TargetResource
     {
         $Script:ExportMode = $true
         $response = Invoke-AzRest -Uri 'https://management.azure.com/providers/microsoft.aadiam/diagnosticsettings?api-version=2017-04-01-preview' `
-                                  -Method Get
+            -Method Get
         [array] $Script:exportedInstances = (ConvertFrom-Json $response.Content).value
         $i = 1
         $dscContent = ''

@@ -107,7 +107,7 @@ function Get-TargetResource
     {
         if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
         {
-            $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.Identity -eq $Identity}
+            $instance = $Script:exportedInstances | Where-Object -FilterScript { $_.Identity -eq $Identity }
         }
         else
         {
@@ -119,26 +119,26 @@ function Get-TargetResource
         }
 
         $results = @{
-            Identity              = $instance.Identity
-            Ensure                = 'Present'
-            Comments              = $instance.Comments
-            Enabled               = $instance.State -eq 'Enabled'
+            Identity                  = $instance.Identity
+            Ensure                    = 'Present'
+            Comments                  = $instance.Comments
+            Enabled                   = $instance.State -eq 'Enabled'
             ExceptIfRecipientDomainIs = $instance.ExceptIfRecipientDomainIs
-            ExceptIfSentTo        = $instance.ExceptIfSentTo
-            ExceptIfSentToMemberOf = $instance.ExceptIfSentToMemberOf
-            Name                  = $instance.Name
-            Priority              = $instance.Priority
-            RecipientDomainIs     = $instance.RecipientDomainIs
-            SafeAttachmentPolicy  = $instance.SafeAttachmentPolicy
-            SafeLinksPolicy       = $instance.SafeLinksPolicy
-            SentTo                = $instance.SentTo
-            SentToMemberOf        = $instance.SentToMemberOf
-            Credential            = $Credential
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            CertificateThumbprint = $CertificateThumbprint
-            ManagedIdentity       = $ManagedIdentity.IsPresent
-            AccessTokens          = $AccessTokens
+            ExceptIfSentTo            = $instance.ExceptIfSentTo
+            ExceptIfSentToMemberOf    = $instance.ExceptIfSentToMemberOf
+            Name                      = $instance.Name
+            Priority                  = $instance.Priority
+            RecipientDomainIs         = $instance.RecipientDomainIs
+            SafeAttachmentPolicy      = $instance.SafeAttachmentPolicy
+            SafeLinksPolicy           = $instance.SafeLinksPolicy
+            SentTo                    = $instance.SentTo
+            SentToMemberOf            = $instance.SentToMemberOf
+            Credential                = $Credential
+            ApplicationId             = $ApplicationId
+            TenantId                  = $TenantId
+            CertificateThumbprint     = $CertificateThumbprint
+            ManagedIdentity           = $ManagedIdentity.IsPresent
+            AccessTokens              = $AccessTokens
         }
         return [System.Collections.Hashtable] $results
     }
@@ -269,11 +269,11 @@ function Set-TargetResource
     {
         if ($currentInstance.SafeAttachmentPolicy -ne $SetParameters.SafeAttachmentPolicy)
         {
-            throw "SafeAttachmentPolicy cannot be changed after creation"
+            throw 'SafeAttachmentPolicy cannot be changed after creation'
         }
         if ($currentInstance.SafeLinksPolicy -ne $SetParameters.SafeLinksPolicy)
         {
-            throw "SafeLinksPolicy cannot be changed after creation"
+            throw 'SafeLinksPolicy cannot be changed after creation'
         }
 
         # Enabled state can only be changed by the Enabled/Disable-ATPProtectionPolicyRule cmdlets
@@ -290,9 +290,9 @@ function Set-TargetResource
             }
         }
 
-        $SetParameters.Remove("SafeLinksPolicy") | Out-Null
-        $SetParameters.Remove("SafeAttachmentPolicy") | Out-Null
-        $SetParameters.Remove("Enabled") | Out-Null
+        $SetParameters.Remove('SafeLinksPolicy') | Out-Null
+        $SetParameters.Remove('SafeAttachmentPolicy') | Out-Null
+        $SetParameters.Remove('Enabled') | Out-Null
 
         Set-ATPProtectionPolicyRule @SetParameters
     }

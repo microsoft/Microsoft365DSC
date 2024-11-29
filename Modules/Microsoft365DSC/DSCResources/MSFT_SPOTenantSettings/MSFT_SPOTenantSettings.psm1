@@ -206,13 +206,13 @@ function Get-TargetResource
 
         # Additional Properties via REST
         $parametersToRetrieve = @('ExemptNativeUsersFromTenantLevelRestricedAccessControl',
-                                  'AllowSelectSGsInODBListInTenant',
-                                  'DenySelectSGsInODBListInTenant',
-                                  'DenySelectSecurityGroupsInSPSitesList',
-                                  'AllowSelectSecurityGroupsInSPSitesList')
+            'AllowSelectSGsInODBListInTenant',
+            'DenySelectSGsInODBListInTenant',
+            'DenySelectSecurityGroupsInSPSitesList',
+            'AllowSelectSecurityGroupsInSPSitesList')
 
         $response = Invoke-PnPSPRestMethod -Method Get `
-                       -Url "$($Global:MSCloudLoginConnectionProfile.PnP.AdminUrl)/_api/SPO.Tenant?`$select=$($parametersToRetrieve -join ',')"
+            -Url "$($Global:MSCloudLoginConnectionProfile.PnP.AdminUrl)/_api/SPO.Tenant?`$select=$($parametersToRetrieve -join ',')"
 
 
         return @{
@@ -505,46 +505,46 @@ function Set-TargetResource
         if ($null -ne $ExemptNativeUsersFromTenantLevelRestricedAccessControl)
         {
             $needToUpdate = $true
-            $paramsToUpdate.Add("ExemptNativeUsersFromTenantLevelRestricedAccessControl", $ExemptNativeUsersFromTenantLevelRestricedAccessControl)
+            $paramsToUpdate.Add('ExemptNativeUsersFromTenantLevelRestricedAccessControl', $ExemptNativeUsersFromTenantLevelRestricedAccessControl)
         }
 
         if ($null -ne $AllowSelectSGsInODBListInTenant)
         {
             $needToUpdate = $true
-            $paramsToUpdate.Add("AllowSelectSGsInODBListInTenant", $AllowSelectSGsInODBListInTenant)
+            $paramsToUpdate.Add('AllowSelectSGsInODBListInTenant', $AllowSelectSGsInODBListInTenant)
         }
 
         if ($null -ne $DenySelectSGsInODBListInTenant)
         {
             $needToUpdate = $true
-            $paramsToUpdate.Add("DenySelectSGsInODBListInTenant", $DenySelectSGsInODBListInTenant)
+            $paramsToUpdate.Add('DenySelectSGsInODBListInTenant', $DenySelectSGsInODBListInTenant)
         }
 
         if ($null -ne $DenySelectSecurityGroupsInSPSitesList)
         {
             $needToUpdate = $true
-            $paramsToUpdate.Add("DenySelectSecurityGroupsInSPSitesList", $DenySelectSecurityGroupsInSPSitesList)
+            $paramsToUpdate.Add('DenySelectSecurityGroupsInSPSitesList', $DenySelectSecurityGroupsInSPSitesList)
         }
 
         if ($null -ne $AllowSelectSecurityGroupsInSPSitesList)
         {
             $needToUpdate = $true
-            $paramsToUpdate.Add("AllowSelectSecurityGroupsInSPSitesList", $AllowSelectSecurityGroupsInSPSitesList)
+            $paramsToUpdate.Add('AllowSelectSecurityGroupsInSPSitesList', $AllowSelectSecurityGroupsInSPSitesList)
         }
 
         if ($needToUpdate)
         {
-            Write-Verbose -Message "Updating properties via REST PATCH call."
+            Write-Verbose -Message 'Updating properties via REST PATCH call.'
             Invoke-PnPSPRestMethod -Method PATCH `
-                        -Url "$($Global:MSCloudLoginConnectionProfile.PnP.AdminUrl)/_api/SPO.Tenant" `
-                        -Content $paramsToUpdate
+                -Url "$($Global:MSCloudLoginConnectionProfile.PnP.AdminUrl)/_api/SPO.Tenant" `
+                -Content $paramsToUpdate
         }
     }
     catch
     {
-        if ($_.Exception.Message.Contains("The requested operation is part of an experimental feature that is not supported in the current environment."))
+        if ($_.Exception.Message.Contains('The requested operation is part of an experimental feature that is not supported in the current environment.'))
         {
-            Write-Verbose -Message "Updating via REST: The associated feature is not available in the given tenant."
+            Write-Verbose -Message 'Updating via REST: The associated feature is not available in the given tenant.'
         }
         else
         {

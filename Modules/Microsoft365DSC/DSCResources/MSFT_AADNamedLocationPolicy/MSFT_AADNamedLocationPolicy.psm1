@@ -31,7 +31,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('clientIpAddress','authenticatorAppGps')]
+        [ValidateSet('clientIpAddress', 'authenticatorAppGps')]
         $CountryLookupMethod,
 
         [Parameter()]
@@ -199,7 +199,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('clientIpAddress','authenticatorAppGps')]
+        [ValidateSet('clientIpAddress', 'authenticatorAppGps')]
         $CountryLookupMethod = 'clientIpAddress',
 
         [Parameter()]
@@ -315,7 +315,7 @@ function Set-TargetResource
         Write-Verbose -Message "Creating New AAD Named Location {$Displayname)} with attributes: $VerboseAttributes"
         $JSONValue = ConvertTo-Json $desiredValues | Out-String
         Write-Verbose -Message "JSON: $JSONValue"
-        $APIUrl = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "v1.0/identity/conditionalAccess/namedLocations"
+        $APIUrl = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + 'v1.0/identity/conditionalAccess/namedLocations'
         Invoke-MgGraphRequest -Method POST `
             -Uri $APIUrl `
             -Body $JSONValue | Out-Null
@@ -376,7 +376,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('clientIpAddress','authenticatorAppGps')]
+        [ValidateSet('clientIpAddress', 'authenticatorAppGps')]
         $CountryLookupMethod,
 
         [Parameter()]

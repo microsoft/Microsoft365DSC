@@ -104,7 +104,7 @@ function Get-TargetResource
 
     $nullResult = $PSBoundParameters
     $nullResult.Ensure = 'Absent'
-    Write-Verbose -Message "Fetching result...."
+    Write-Verbose -Message 'Fetching result....'
     try
     {
         # check for export.
@@ -113,13 +113,13 @@ function Get-TargetResource
             # check with Id first
             if (-not [System.String]::IsNullOrEmpty($Id))
             {
-                $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.Id -eq $Id}
+                $instance = $Script:exportedInstances | Where-Object -FilterScript { $_.Id -eq $Id }
             }
 
             # check with display name next.
             if ($null -eq $instance)
             {
-                $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.DisplayName -eq $DisplayName}
+                $instance = $Script:exportedInstances | Where-Object -FilterScript { $_.DisplayName -eq $DisplayName }
             }
         }
         else
@@ -127,12 +127,12 @@ function Get-TargetResource
             if (-not [System.String]::IsNullOrEmpty($Id))
             {
                 $instance = Get-MgBetaIdentityCustomAuthenticationExtension -CustomAuthenticationExtensionId $Id `
-                                                                                 -ErrorAction SilentlyContinue
+                    -ErrorAction SilentlyContinue
             }
             if ($null -eq $instance)
             {
                 $instance = Get-MgBetaIdentityCustomAuthenticationExtension -Filter "DisplayName eq '$DisplayName'" `
-                                                                                 -ErrorAction SilentlyContinue
+                    -ErrorAction SilentlyContinue
             }
         }
         if ($null -eq $instance)
@@ -140,7 +140,7 @@ function Get-TargetResource
             return $nullResult
         }
 
-        Write-Verbose "Instance found for the resource. Calculating result...."
+        Write-Verbose 'Instance found for the resource. Calculating result....'
 
         $results = @{
             DisplayName = $instance.DisplayName
@@ -151,13 +151,13 @@ function Get-TargetResource
 
         if ($instance.AdditionalProperties -ne $null)
         {
-            $results.Add('CustomAuthenticationExtensionType', $instance.AdditionalProperties["@odata.type"])
+            $results.Add('CustomAuthenticationExtensionType', $instance.AdditionalProperties['@odata.type'])
         }
 
         if ($instance.AuthenticationConfiguration -ne $null)
         {
-            $results.Add('AuthenticationConfigurationType', $instance.AuthenticationConfiguration["@odata.type"])
-            $results.Add('AuthenticationConfigurationResourceId', $instance.AuthenticationConfiguration["resourceId"])
+            $results.Add('AuthenticationConfigurationType', $instance.AuthenticationConfiguration['@odata.type'])
+            $results.Add('AuthenticationConfigurationResourceId', $instance.AuthenticationConfiguration['resourceId'])
         }
 
         if ($instance.ClientConfiguration -ne $null)
@@ -169,25 +169,25 @@ function Get-TargetResource
         $endpointConfigurationInstance = @{}
         if ($instance.EndPointConfiguration -ne $null -and $instance.EndPointConfiguration.AdditionalProperties -ne $null)
         {
-            $endpointConfigurationInstance.Add("EndpointType", $instance.EndPointConfiguration.AdditionalProperties["@odata.type"])
+            $endpointConfigurationInstance.Add('EndpointType', $instance.EndPointConfiguration.AdditionalProperties['@odata.type'])
 
-            if ($endpointConfigurationInstance["EndpointType"] -eq '#microsoft.graph.httpRequestEndpoint')
+            if ($endpointConfigurationInstance['EndpointType'] -eq '#microsoft.graph.httpRequestEndpoint')
             {
-                $endpointConfigurationInstance.Add("TargetUrl", $instance.EndPointConfiguration.AdditionalProperties["targetUrl"])
+                $endpointConfigurationInstance.Add('TargetUrl', $instance.EndPointConfiguration.AdditionalProperties['targetUrl'])
             }
 
-            if ($endpointConfigurationInstance["EndpointType"] -eq '#microsoft.graph.logicAppTriggerEndpointConfiguration')
+            if ($endpointConfigurationInstance['EndpointType'] -eq '#microsoft.graph.logicAppTriggerEndpointConfiguration')
             {
-                $endpointConfigurationInstance.Add("SubscriptionId", $instance.EndPointConfiguration.AdditionalProperties["subscriptionId"])
-                $endpointConfigurationInstance.Add("ResourceGroupName", $instance.EndPointConfiguration.AdditionalProperties["resourceGroupName"])
-                $endpointConfigurationInstance.Add("LogicAppWorkflowName", $instance.EndPointConfiguration.AdditionalProperties["logicAppWorkflowName"])
+                $endpointConfigurationInstance.Add('SubscriptionId', $instance.EndPointConfiguration.AdditionalProperties['subscriptionId'])
+                $endpointConfigurationInstance.Add('ResourceGroupName', $instance.EndPointConfiguration.AdditionalProperties['resourceGroupName'])
+                $endpointConfigurationInstance.Add('LogicAppWorkflowName', $instance.EndPointConfiguration.AdditionalProperties['logicAppWorkflowName'])
             }
         }
 
         $ClaimsForTokenConfigurationInstance = @()
-        if ($instance.AdditionalProperties -ne $null -and $instance.AdditionalProperties["claimsForTokenConfiguration"] -ne $null)
+        if ($instance.AdditionalProperties -ne $null -and $instance.AdditionalProperties['claimsForTokenConfiguration'] -ne $null)
         {
-            foreach ($claim in $instance.AdditionalProperties["claimsForTokenConfiguration"])
+            foreach ($claim in $instance.AdditionalProperties['claimsForTokenConfiguration'])
             {
                 $c = @{
                     ClaimIdInApiResponse = $claim.claimIdInApiResponse
@@ -319,52 +319,52 @@ function Set-TargetResource
     $setParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
     $params = @{
-        "@odata.type" = $setParameters.CustomAuthenticationExtensionType
-        displayName = $setParameters.DisplayName
-        description = $setParameters.Description
-        endpointConfiguration = @{
-            "@odata.type" = $setParameters.EndPointConfiguration.EndpointType
+        '@odata.type'               = $setParameters.CustomAuthenticationExtensionType
+        displayName                 = $setParameters.DisplayName
+        description                 = $setParameters.Description
+        endpointConfiguration       = @{
+            '@odata.type' = $setParameters.EndPointConfiguration.EndpointType
         }
         authenticationConfiguration = @{
-            "@odata.type" = $setParameters.AuthenticationConfigurationType
-            resourceId = $setParameters.AuthenticationConfigurationResourceId
+            '@odata.type' = $setParameters.AuthenticationConfigurationType
+            resourceId    = $setParameters.AuthenticationConfigurationResourceId
         }
-        clientConfiguration = @{
-            timeoutInMilliseconds = $setParameters["ClientConfigurationTimeoutMilliseconds"]
-            maximumRetries = $setParameters["ClientConfigurationMaximumRetries"]
+        clientConfiguration         = @{
+            timeoutInMilliseconds = $setParameters['ClientConfigurationTimeoutMilliseconds']
+            maximumRetries        = $setParameters['ClientConfigurationMaximumRetries']
         }
     }
 
-    if ($params.endpointConfiguration["@odata.type"] -eq "#microsoft.graph.httpRequestEndpoint")
+    if ($params.endpointConfiguration['@odata.type'] -eq '#microsoft.graph.httpRequestEndpoint')
     {
         Write-Verbose -Message "{$setParameters.EndPointConfiguration.TargetUrl}"
-        $params.endpointConfiguration["targetUrl"] = $setParameters.EndPointConfiguration.TargetUrl
+        $params.endpointConfiguration['targetUrl'] = $setParameters.EndPointConfiguration.TargetUrl
     }
 
-    if ($params.endpointConfiguration["@odata.type"] -eq "#microsoft.graph.logicAppTriggerEndpointConfiguration")
+    if ($params.endpointConfiguration['@odata.type'] -eq '#microsoft.graph.logicAppTriggerEndpointConfiguration')
     {
-        $params.endpointConfiguration["subscriptionId"] = $setParameters.EndPointConfiguration["SubscriptionId"]
-        $params.endpointConfiguration["resourceGroupName"] = $setParameters.EndPointConfiguration["ResourceGroupName"]
-        $params.endpointConfiguration["logicAppWorkflowName"] = $setParameters.EndPointConfiguration["LogicAppWorkflowName"]
+        $params.endpointConfiguration['subscriptionId'] = $setParameters.EndPointConfiguration['SubscriptionId']
+        $params.endpointConfiguration['resourceGroupName'] = $setParameters.EndPointConfiguration['ResourceGroupName']
+        $params.endpointConfiguration['logicAppWorkflowName'] = $setParameters.EndPointConfiguration['LogicAppWorkflowName']
     }
 
     # CREATE
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        $params.Add("claimsForTokenConfiguration", @())
+        $params.Add('claimsForTokenConfiguration', @())
         foreach ($claim in $setParameters.claimsForTokenConfiguration)
         {
             $val = $claim.claimIdInApiResponse
             Write-Verbose -Message "{$val}"
             $c = @{
-                "claimIdInApiResponse" = $claim.claimIdInApiResponse
+                'claimIdInApiResponse' = $claim.claimIdInApiResponse
             }
 
             $params.claimsForTokenConfiguration += $c
         }
 
         $params.Remove('Id') | Out-Null
-        $type = $params["@odata.type"]
+        $type = $params['@odata.type']
         Write-Verbose -Message "Creating new Custom authentication extension with display name {$DisplayName} and type {$type}"
         New-MgBetaIdentityCustomAuthenticationExtension -BodyParameter $params
     }
@@ -376,16 +376,16 @@ function Set-TargetResource
         $params.Add('CustomAuthenticationExtensionId', $currentInstance.Id)
         $params.Remove('Id') | Out-Null
 
-        $params.Add("AdditionalProperties", @{})
-        $params["AdditionalProperties"].Add("ClaimsForTokenConfiguration", @())
+        $params.Add('AdditionalProperties', @{})
+        $params['AdditionalProperties'].Add('ClaimsForTokenConfiguration', @())
 
-        foreach ($claim in $setParameters["ClaimsForTokenConfiguration"])
+        foreach ($claim in $setParameters['ClaimsForTokenConfiguration'])
         {
             $c = @{
-                "claimIdInApiResponse" = $claim["ClaimIdInApiResponse"]
+                'claimIdInApiResponse' = $claim['ClaimIdInApiResponse']
             }
 
-            $params["AdditionalProperties"]["claimsForTokenConfiguration"] += $c
+            $params['AdditionalProperties']['claimsForTokenConfiguration'] += $c
         }
 
         Write-Verbose -Message "{$params['@odata.type']}"
@@ -519,7 +519,8 @@ function Test-TargetResource
                 Write-Verbose "TestResult returned False for $source"
                 $testTargetResource = $false
             }
-            else {
+            else
+            {
                 $ValuesToCheck.Remove($key) | Out-Null
             }
         }
@@ -627,12 +628,12 @@ function Export-TargetResource
             $Results = Get-TargetResource @Params
 
             $endpointConfigurationCimString = Get-M365DSCDRGComplexTypeToString `
-                        -ComplexObject $Results.EndpointConfiguration `
-                        -CIMInstanceName 'MSFT_AADCustomAuthenticationExtensionEndPointConfiguration'
+                -ComplexObject $Results.EndpointConfiguration `
+                -CIMInstanceName 'MSFT_AADCustomAuthenticationExtensionEndPointConfiguration'
 
             $ClaimsForTokenConfigurationCimString = Get-M365DSCDRGComplexTypeToString `
-                        -ComplexObject $Results.ClaimsForTokenConfiguration `
-                        -CIMInstanceName 'MSFT_AADCustomAuthenticationExtensionClaimForTokenConfiguration'
+                -ComplexObject $Results.ClaimsForTokenConfiguration `
+                -CIMInstanceName 'MSFT_AADCustomAuthenticationExtensionClaimForTokenConfiguration'
 
             $Results.EndPointConfiguration = $endpointConfigurationCimString
             $Results.ClaimsForTokenConfiguration = $ClaimsForTokenConfigurationCimString
@@ -648,12 +649,12 @@ function Export-TargetResource
 
             if ($Results.EndPointConfiguration -ne $null)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "EndPointConfiguration"
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'EndPointConfiguration'
             }
 
             if ($Results.ClaimsForTokenConfiguration -ne $null)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "ClaimsForTokenConfiguration" -IsCIMArray $true
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'ClaimsForTokenConfiguration' -IsCIMArray $true
             }
 
             $dscContent += $currentDSCBlock

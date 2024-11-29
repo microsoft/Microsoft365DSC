@@ -24,8 +24,9 @@ Configuration Example
     {
         EXODataEncryptionPolicy 'ConfigureDataEncryptionPolicy'
         {
-            Identity    = 'US Mailboxes'
-            Ensure      = "Absent"
+            Identity              = 'US Mailboxes'
+            Enabled               = $false #Drift
+            Ensure                = "Present"
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint

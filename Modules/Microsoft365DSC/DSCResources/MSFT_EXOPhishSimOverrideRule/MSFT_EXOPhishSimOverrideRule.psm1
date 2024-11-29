@@ -75,7 +75,7 @@ function Get-TargetResource
     {
         if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
         {
-            $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.Identity -eq $Identity}
+            $instance = $Script:exportedInstances | Where-Object -FilterScript { $_.Identity -eq $Identity }
         }
         else
         {
@@ -115,7 +115,8 @@ function Get-TargetResource
 }
 
 # Function to compare and modify properties
-function ModifyPropertiesForSetCmdlet {
+function ModifyPropertiesForSetCmdlet
+{
     param (
         [Hashtable]$setParameters,
         [Hashtable]$currentInstance,
@@ -131,10 +132,12 @@ function ModifyPropertiesForSetCmdlet {
     $removeArray = $currentArray | Where-Object { $_ -notin $setArray }
 
     # Modify $setParameters
-    if ($addArray.Count -gt 0) {
+    if ($addArray.Count -gt 0)
+    {
         $setParameters.Add("Add$propertyName", $addArray)
     }
-    if ($removeArray.Count -gt 0) {
+    if ($removeArray.Count -gt 0)
+    {
         $setParameters.Add("Remove$propertyName", $removeArray)
     }
 
@@ -217,8 +220,8 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         $ruleIdentity = $setParameters['Identity']
-        $setParameters.Add("Name", $ruleIdentity)
-        $setParameters.Remove("Identity")
+        $setParameters.Add('Name', $ruleIdentity)
+        $setParameters.Remove('Identity')
 
         New-EXOPhishSimOverrideRule @SetParameters
     }
@@ -226,8 +229,8 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
         # Modify Domains and SenderIpRanges parameters as Set cmdlet for this resource has different parameter names
-        ModifyPropertiesForSetCmdlet -setParameters $setParameters -currentInstance $currentInstance -propertyName "Domains"
-        ModifyPropertiesForSetCmdlet -setParameters $setParameters -currentInstance $currentInstance -propertyName "SenderIpRanges"
+        ModifyPropertiesForSetCmdlet -setParameters $setParameters -currentInstance $currentInstance -propertyName 'Domains'
+        ModifyPropertiesForSetCmdlet -setParameters $setParameters -currentInstance $currentInstance -propertyName 'SenderIpRanges'
 
         Set-EXOPhishSimOverrideRule @SetParameters
     }

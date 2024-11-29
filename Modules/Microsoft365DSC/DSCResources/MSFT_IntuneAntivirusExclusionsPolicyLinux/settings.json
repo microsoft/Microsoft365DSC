@@ -1,39 +1,38 @@
 {
-    "resourceName": "IntuneAntivirusExclusionsPolicyLinux",
-    "description": "This resource configures an Intune Antivirus Exclusions Policy Linux.",
-    "permissions":    {
-  "graph": {
-    "application": {
-      "update": [
-        {
-          "name": "Group.Read.All"
-        }
-      ],
-      "read": [
-        {
-          "name": "DeviceManagementConfiguration.Read.All"
-        },
-        {
-          "name": "Group.Read.All"
-        }
-      ]
-    },
-    "delegated": {
-      "update": [
-        {
-          "name": "Group.Read.All"
-        }
-      ],
-      "read": [
-        {
-          "name": "DeviceManagementConfiguration.Read.All"
-        },
-        {
-          "name": "Group.Read.All"
-        }
-      ]
+  "resourceName": "IntuneAntivirusExclusionsPolicyLinux",
+  "description": "This resource configures an Intune Antivirus Exclusions Policy Linux.",
+  "permissions": {
+    "graph": {
+      "application": {
+        "update": [
+          {
+            "name": "Group.Read.All"
+          }
+        ],
+        "read": [
+          {
+            "name": "DeviceManagementConfiguration.Read.All"
+          },
+          {
+            "name": "Group.Read.All"
+          }
+        ]
+      },
+      "delegated": {
+        "update": [
+          {
+            "name": "Group.Read.All"
+          }
+        ],
+        "read": [
+          {
+            "name": "DeviceManagementConfiguration.Read.All"
+          },
+          {
+            "name": "Group.Read.All"
+          }
+        ]
+      }
     }
   }
-}
-
 }

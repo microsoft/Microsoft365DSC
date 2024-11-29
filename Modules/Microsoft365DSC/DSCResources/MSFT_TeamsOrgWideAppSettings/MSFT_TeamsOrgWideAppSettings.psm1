@@ -50,7 +50,7 @@ function Get-TargetResource
     {
         $settings = Get-CsTeamsSettingsCustomApp -ErrorAction Stop
         return @{
-            IsSingleInstance      = 'Yes'
+            IsSingleInstance                   = 'Yes'
             IsSideloadedAppsInteractionEnabled = $settings.IsSideloadedAppsInteractionEnabled
             Credential                         = $Credential
             AccessTokens                       = $AccessTokens
@@ -59,7 +59,7 @@ function Get-TargetResource
     }
     catch
     {
-        if ($_.Exception.Message -like "*Resource not found.*")
+        if ($_.Exception.Message -like '*Resource not found.*')
         {
             Write-Warning -Message "The API doesn't exist for the selected environment."
         }
@@ -222,9 +222,9 @@ function Export-TargetResource
     {
         $dscContent = ''
         $params = @{
-            IsSingleInstance      = 'Yes'
-            Credential            = $Credential
-            AccessTokens          = $AccessTokens
+            IsSingleInstance = 'Yes'
+            Credential       = $Credential
+            AccessTokens     = $AccessTokens
         }
         $Results = Get-TargetResource @Params
 
@@ -236,7 +236,7 @@ function Export-TargetResource
             }
 
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                    -Results $Results
+                -Results $Results
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `

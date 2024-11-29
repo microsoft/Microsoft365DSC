@@ -844,8 +844,8 @@ function Get-TargetResource
         if (-not $getValue)
         {
             $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -All -Filter "DisplayName eq '$Displayname'" -ErrorAction SilentlyContinue | Where-Object `
-            -FilterScript { `
-                $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.iosGeneralDeviceConfiguration' `
+                -FilterScript { `
+                    $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.iosGeneralDeviceConfiguration' `
             }
         }
         #endregion
@@ -1050,31 +1050,31 @@ function Get-TargetResource
         $currentValueArray = $getValue.AdditionalProperties.appsSingleAppModeList
         if ($null -ne $currentValueArray -and $currentValueArray.count -gt 0)
         {
-            foreach($currentValue in $currentValueArray)
+            foreach ($currentValue in $currentValueArray)
             {
                 $currentHash = @{}
-                $currentHash.add('AppId',$currentValue.appid)
-                $currentHash.add('Publisher',$currentValue.publisher)
-                $currentHash.add('AppStoreUrl',$currentValue.appStoreUrl)
-                $currentHash.add('Name',$currentValue.name)
-                $currentHash.add('oDataType',$currentValue.'@odata.type')
+                $currentHash.add('AppId', $currentValue.appid)
+                $currentHash.add('Publisher', $currentValue.publisher)
+                $currentHash.add('AppStoreUrl', $currentValue.appStoreUrl)
+                $currentHash.add('Name', $currentValue.name)
+                $currentHash.add('oDataType', $currentValue.'@odata.type')
                 $complexAppsSingleAppModeList += $currentHash
             }
         }
         $results.Add('AppsSingleAppModeList', $complexAppsSingleAppModeList)
 
-        $complexAppsVisibilityList= @()
+        $complexAppsVisibilityList = @()
         $currentValueArray = $getValue.AdditionalProperties.appsVisibilityList
         if ($null -ne $currentValueArray -and $currentValueArray.count -gt 0)
         {
-            foreach($currentValue in $currentValueArray)
+            foreach ($currentValue in $currentValueArray)
             {
                 $currentHash = @{}
-                $currentHash.add('AppId',$currentValue.appid)
-                $currentHash.add('Publisher',$currentValue.publisher)
-                $currentHash.add('AppStoreUrl',$currentValue.appStoreUrl)
-                $currentHash.add('Name',$currentValue.name)
-                $currentHash.add('oDataType',$currentValue.'@odata.type')
+                $currentHash.add('AppId', $currentValue.appid)
+                $currentHash.add('Publisher', $currentValue.publisher)
+                $currentHash.add('AppStoreUrl', $currentValue.appStoreUrl)
+                $currentHash.add('Name', $currentValue.name)
+                $currentHash.add('oDataType', $currentValue.'@odata.type')
                 $complexAppsVisibilityList += $currentHash
             }
         }
@@ -1084,14 +1084,14 @@ function Get-TargetResource
         $currentValueArray = $getValue.AdditionalProperties.compliantAppsList
         if ($null -ne $currentValueArray -and $currentValueArray.count -gt 0)
         {
-            foreach($currentValue in $currentValueArray)
+            foreach ($currentValue in $currentValueArray)
             {
                 $currentHash = @{}
-                $currentHash.add('AppId',$currentValue.appid)
-                $currentHash.add('Publisher',$currentValue.publisher)
-                $currentHash.add('AppStoreUrl',$currentValue.appStoreUrl)
-                $currentHash.add('Name',$currentValue.name)
-                $currentHash.add('oDataType',$currentValue.'@odata.type')
+                $currentHash.add('AppId', $currentValue.appid)
+                $currentHash.add('Publisher', $currentValue.publisher)
+                $currentHash.add('AppStoreUrl', $currentValue.appStoreUrl)
+                $currentHash.add('Name', $currentValue.name)
+                $currentHash.add('oDataType', $currentValue.'@odata.type')
                 $complexCompliantAppsList += $currentHash
             }
         }
@@ -1110,12 +1110,12 @@ function Get-TargetResource
         )
         foreach ($country in $ratingCountries)
         {
-            $complexMediaContentRating= @{}
+            $complexMediaContentRating = @{}
             $currentValue = $getValue.AdditionalProperties."mediaContentRating$country"
             if ($null -ne $currentValue)
             {
-                $complexMediaContentRating.Add('MovieRating',$currentValue.movieRating.toString())
-                $complexMediaContentRating.Add('TvRating',$currentValue.tvRating.toString())
+                $complexMediaContentRating.Add('MovieRating', $currentValue.movieRating.toString())
+                $complexMediaContentRating.Add('TvRating', $currentValue.tvRating.toString())
             }
             $results.Add("MediaContentRating$country", $complexMediaContentRating)
         }
@@ -1132,27 +1132,27 @@ function Get-TargetResource
         $currentValueArray = $getValue.AdditionalProperties.networkUsageRules
         if ($null -ne $currentValueArray -and $currentValueArray.count -gt 0)
         {
-            foreach($currentValue in $currentValueArray)
+            foreach ($currentValue in $currentValueArray)
             {
                 $currentValueHash = @{}
-                $currentValueHash.Add('CellularDataBlocked',$currentValue.cellularDataBlocked)
-                $currentValueHash.Add('CellularDataBlockWhenRoaming',$currentValue.cellularDataBlockWhenRoaming)
+                $currentValueHash.Add('CellularDataBlocked', $currentValue.cellularDataBlocked)
+                $currentValueHash.Add('CellularDataBlockWhenRoaming', $currentValue.cellularDataBlockWhenRoaming)
                 $complexManagedApps = @()
                 $currentValueChildArray = $currentValue.managedApps
                 if ($null -ne $currentValueChildArray -and $currentValueChildArray.count -gt 0)
                 {
-                    foreach($currentChildValue in $currentValueChildArray)
+                    foreach ($currentChildValue in $currentValueChildArray)
                     {
                         $currentHash = @{}
-                        $currentHash.add('AppId',$currentValue.appid)
-                        $currentHash.add('Publisher',$currentValue.publisher)
-                        $currentHash.add('AppStoreUrl',$currentValue.appStoreUrl)
-                        $currentHash.add('Name',$currentValue.name)
-                        $currentHash.add('oDataType',$currentValue.'@odata.type')
+                        $currentHash.add('AppId', $currentValue.appid)
+                        $currentHash.add('Publisher', $currentValue.publisher)
+                        $currentHash.add('AppStoreUrl', $currentValue.appStoreUrl)
+                        $currentHash.add('Name', $currentValue.name)
+                        $currentHash.add('oDataType', $currentValue.'@odata.type')
                         $complexManagedApps += $currentHash
                     }
                 }
-                $currentValueHash.Add('ManagedApps',$complexManagedApps)
+                $currentValueHash.Add('ManagedApps', $complexManagedApps)
                 $complexNetworkUsageRules += $currentValueHash
             }
         }
@@ -1163,8 +1163,8 @@ function Get-TargetResource
         if ($assignmentsValues.Count -gt 0)
         {
             $assignmentResult += ConvertFrom-IntunePolicyAssignment `
-                                -IncludeDeviceFilter:$true `
-                                -Assignments ($assignmentsValues)
+                -IncludeDeviceFilter:$true `
+                -Assignments ($assignmentsValues)
         }
         $results.Add('Assignments', $assignmentResult)
 
@@ -2061,7 +2061,7 @@ function Set-TargetResource
 
         if ($policy.id)
         {
-            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId  $policy.id `
+            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $policy.id `
                 -Targets $assignmentsHash `
                 -Repository 'deviceManagement/deviceConfigurations'
         }
@@ -2960,7 +2960,7 @@ function Test-TargetResource
         {
             $testResult = Compare-M365DSCComplexObject `
                 -Source ($source) `
-                -Target ($target) -verbose
+                -Target ($target) -Verbose
 
             if (-Not $testResult)
             {
@@ -3365,7 +3365,7 @@ function Export-TargetResource
     catch
     {
         if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
-        $_.Exception -like "*Request not applicable to target tenant*")
+                $_.Exception -like '*Request not applicable to target tenant*')
         {
             Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }

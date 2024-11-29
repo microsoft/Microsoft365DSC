@@ -574,7 +574,7 @@ function Get-TargetResource
         }
         else
         {
-            $uri = $global:MsCloudLoginConnectionProfile.Fabric.HostUrl + "/v1/admin/tenantsettings"
+            $uri = $global:MsCloudLoginConnectionProfile.Fabric.HostUrl + '/v1/admin/tenantsettings'
             $instance = Invoke-M365DSCFabricWebRequest -Uri $uri -Method 'GET'
         }
         if ($null -eq $instance)
@@ -584,136 +584,136 @@ function Get-TargetResource
 
         $results = @{
             IsSingleInstance                                                      = 'Yes'
-            AADSSOForGateway                                                      = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'AADSSOForGateway'})
-            AdminApisIncludeDetailedMetadata                                      = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'AdminApisIncludeDetailedMetadata'})
-            AdminApisIncludeExpressions                                           = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'AdminApisIncludeExpressions'})
-            AdminCustomDisclaimer                                                 = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'AdminCustomDisclaimer'})
-            AISkillArtifactTenantSwitch                                           = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'AISkillArtifactTenantSwitch'})
-            AllowAccessOverPrivateLinks                                           = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'AllowAccessOverPrivateLinks'})
-            AllowCVAuthenticationTenant                                           = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'AllowCVAuthenticationTenant'})
-            AllowCVLocalStorageV2Tenant                                           = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'AllowCVLocalStorageV2Tenant'})
-            AllowCVToExportDataToFileTenant                                       = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'AllowCVToExportDataToFileTenant'})
-            AllowEndorsementMasterDataSwitch                                      = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'AllowEndorsementMasterDataSwitch'})
-            AllowExternalDataSharingReceiverSwitch                                = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'AllowExternalDataSharingReceiverSwitch'})
-            AllowExternalDataSharingSwitch                                        = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'AllowExternalDataSharingSwitch'})
-            AllowFreeTrial                                                        = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'AllowFreeTrial'})
-            AllowGuestLookup                                                      = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'AllowGuestLookup'})
-            AllowGuestUserToAccessSharedContent                                   = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'AllowGuestUserToAccessSharedContent'})
-            AllowPowerBIASDQOnTenant                                              = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'AllowPowerBIASDQOnTenant'})
-            AllowSendAOAIDataToOtherRegions                                       = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'AllowSendAOAIDataToOtherRegions'})
-            AllowSendNLToDaxDataToOtherRegions                                    = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'AllowSendNLToDaxDataToOtherRegions'})
-            AllowServicePrincipalsCreateAndUseProfiles                            = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'AllowServicePrincipalsCreateAndUseProfiles'})
-            AllowServicePrincipalsUseReadAdminAPIs                                = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'AllowServicePrincipalsUseReadAdminAPIs'})
-            AppPush                                                               = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'AppPush'})
-            ArtifactSearchTenant                                                  = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'ArtifactSearchTenant'})
-            ASCollectQueryTextTelemetryTenantSwitch                               = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'ASCollectQueryTextTelemetryTenantSwitch'})
-            ASShareableCloudConnectionBindingSecurityModeTenant                   = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'ASShareableCloudConnectionBindingSecurityModeTenant'})
-            ASWritethruContinuousExportTenantSwitch                               = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'ASWritethruContinuousExportTenantSwitch'})
-            ASWritethruTenantSwitch                                               = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'ASWritethruTenantSwitch'})
-            AutoInstallPowerBIAppInTeamsTenant                                    = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'AutoInstallPowerBIAppInTeamsTenant'})
-            AutomatedInsightsEntryPoints                                          = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'AutomatedInsightsEntryPoints'})
-            AutomatedInsightsTenant                                               = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'AutomatedInsightsTenant'})
-            AzureMap                                                              = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'AzureMap'})
-            BingMap                                                               = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'BingMap'})
-            BlockAccessFromPublicNetworks                                         = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'BlockAccessFromPublicNetworks'})
-            BlockAutoDiscoverAndPackageRefresh                                    = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'BlockAutoDiscoverAndPackageRefresh'})
-            BlockProtectedLabelSharingToEntireOrg                                 = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'BlockProtectedLabelSharingToEntireOrg'})
-            BlockResourceKeyAuthentication                                        = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'BlockResourceKeyAuthentication'})
-            CDSAManagement                                                        = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'CDSAManagement'})
-            CertifiedCustomVisualsTenant                                          = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'CertifiedCustomVisualsTenant'})
-            CertifyDatasets                                                       = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'CertifyDatasets'})
-            ConfigureFolderRetentionPeriod                                        = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'ConfigureFolderRetentionPeriod'})
-            CreateAppWorkspaces                                                   = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'CreateAppWorkspaces'})
-            CustomVisualsTenant                                                   = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'CustomVisualsTenant'})
-            DatamartTenant                                                        = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'DatamartTenant'})
-            DatasetExecuteQueries                                                 = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'DatasetExecuteQueries'})
-            DevelopServiceApps                                                    = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'DevelopServiceApps'})
-            DiscoverDatasetsConsumption                                           = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'DiscoverDatasetsConsumption'})
-            DiscoverDatasetsSettingsCertified                                     = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'DiscoverDatasetsSettingsCertified'})
-            DiscoverDatasetsSettingsPromoted                                      = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'DiscoverDatasetsSettingsPromoted'})
-            DremioSSO                                                             = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'DremioSSO'})
-            EimInformationProtectionDataSourceInheritanceSetting                  = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'EimInformationProtectionDataSourceInheritanceSetting'})
-            EimInformationProtectionDownstreamInheritanceSetting                  = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'EimInformationProtectionDownstreamInheritanceSetting'})
-            EimInformationProtectionEdit                                          = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'EimInformationProtectionEdit'})
-            EimInformationProtectionLessElevated                                  = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'EimInformationProtectionLessElevated'})
-            EimInformationProtectionWorkspaceAdminsOverrideAutomaticLabelsSetting = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'EimInformationProtectionWorkspaceAdminsOverrideAutomaticLabelsSetting'})
-            ElevatedGuestsTenant                                                  = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'ElevatedGuestsTenant'})
-            EmailSecurityGroupsOnOutage                                           = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'EmailSecurityGroupsOnOutage'})
-            EmailSubscriptionsToB2BUsers                                          = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'EmailSubscriptionsToB2BUsers'})
-            EmailSubscriptionsToExternalUsers                                     = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'EmailSubscriptionsToExternalUsers'})
-            EmailSubscriptionTenant                                               = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'EmailSubscriptionTenant'})
-            Embedding                                                             = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'Embedding'})
-            EnableAOAI                                                            = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'EnableAOAI'})
-            EnableDatasetInPlaceSharing                                           = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'EnableDatasetInPlaceSharing'})
-            EnableExcelYellowIntegration                                          = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'EnableExcelYellowIntegration'})
-            EnableFabricAirflow                                                   = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'EnableFabricAirflow'})
-            EnableNLToDax                                                         = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'EnableNLToDax'})
-            EnableReassignDataDomainSwitch                                        = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'EnableReassignDataDomainSwitch'})
-            EsriVisual                                                            = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'EsriVisual'})
-            ExpFlightingTenant                                                    = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'ExpFlightingTenant'})
-            ExportReport                                                          = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'ExportReport'})
-            ExportToCsv                                                           = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'ExportToCsv'})
-            ExportToExcelSetting                                                  = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'ExportToExcelSetting'})
-            ExportToImage                                                         = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'ExportToImage'})
-            ExportToMHTML                                                         = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'ExportToMHTML'})
-            ExportToPowerPoint                                                    = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'ExportToPowerPoint'})
-            ExportToWord                                                          = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'ExportToWord'})
-            ExportToXML                                                           = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'ExportToXML'})
-            ExportVisualImageTenant                                               = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'ExportVisualImageTenant'})
-            ExternalDatasetSharingTenant                                          = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'ExternalDatasetSharingTenant'})
-            ExternalSharingV2                                                     = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'ExternalSharingV2'})
-            FabricAddPartnerWorkload                                              = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'FabricAddPartnerWorkload'})
-            FabricFeedbackTenantSwitch                                            = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'FabricFeedbackTenantSwitch'})
-            FabricGAWorkloads                                                     = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'FabricGAWorkloads'})
-            FabricThirdPartyWorkloads                                             = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'FabricThirdPartyWorkloads'})
-            GitHubTenantSettings                                                  = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'GitHubTenantSettings'})
-            GitIntegrationCrossGeoTenantSwitch                                    = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'GitIntegrationCrossGeoTenantSwitch'})
-            GitIntegrationSensitivityLabelsTenantSwitch                           = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'GitIntegrationSensitivityLabelsTenantSwitch'})
-            GitIntegrationTenantSwitch                                            = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'GitIntegrationTenantSwitch'})
-            GoogleBigQuerySSO                                                     = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'GoogleBigQuerySSO'})
-            GraphQLTenant                                                         = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'GraphQLTenant'})
-            HealthcareSolutionsTenantSwitch                                       = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'HealthcareSolutionsTenantSwitch'})
-            InstallNonvalidatedTemplateApps                                       = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'InstallNonvalidatedTemplateApps'})
-            InstallServiceApps                                                    = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'InstallServiceApps'})
-            KustoDashboardTenantSwitch                                            = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'KustoDashboardTenantSwitch'})
-            LiveConnection                                                        = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'LiveConnection'})
-            LogAnalyticsAttachForWorkspaceAdmins                                  = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'LogAnalyticsAttachForWorkspaceAdmins'})
-            M365DataSharing                                                       = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'M365DataSharing'})
-            Mirroring                                                             = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'Mirroring'})
-            ODSPRefreshEnforcementTenantAllowAutomaticUpdate                      = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'ODSPRefreshEnforcementTenantAllowAutomaticUpdate'})
-            OneDriveSharePointAllowSharingTenantSetting                           = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'OneDriveSharePointAllowSharingTenantSetting'})
-            OneDriveSharePointViewerIntegrationTenantSettingV2                    = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'OneDriveSharePointViewerIntegrationTenantSettingV2'})
-            OneLakeFileExplorer                                                   = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'OneLakeFileExplorer'})
-            OneLakeForThirdParty                                                  = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'OneLakeForThirdParty'})
-            OnPremAnalyzeInExcel                                                  = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'OnPremAnalyzeInExcel'})
-            PowerBIGoalsTenant                                                    = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'PowerBIGoalsTenant'})
-            PowerPlatformSolutionsIntegrationTenant                               = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'PowerPlatformSolutionsIntegrationTenant'})
-            Printing                                                              = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'Printing'})
-            PromoteContent                                                        = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'PromoteContent'})
-            PublishContentPack                                                    = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'PublishContentPack'})
-            PublishToWeb                                                          = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'PublishToWeb'})
-            QnaFeedbackLoop                                                       = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'QnaFeedbackLoop'})
-            QnaLsdlSharing                                                        = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'QnaLsdlSharing'})
-            QueryScaleOutTenant                                                   = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'QueryScaleOutTenant'})
-            RedshiftSSO                                                           = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'RedshiftSSO'})
-            RestrictMyFolderCapacity                                              = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'RestrictMyFolderCapacity'})
-            RetailSolutionsTenantSwitch                                           = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'RetailSolutionsTenantSwitch'})
-            RScriptVisual                                                         = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'RScriptVisual'})
-            ServicePrincipalAccess                                                = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'ServicePrincipalAccess'})
-            ShareLinkToEntireOrg                                                  = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'ShareLinkToEntireOrg'})
-            ShareToTeamsTenant                                                    = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'ShareToTeamsTenant'})
-            SnowflakeSSO                                                          = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'SnowflakeSSO'})
-            StorytellingTenant                                                    = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'StorytellingTenant'})
-            SustainabilitySolutionsTenantSwitch                                   = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'SustainabilitySolutionsTenantSwitch'})
-            TemplatePublish                                                       = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'TemplatePublish'})
-            TenantSettingPublishGetHelpInfo                                       = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'TenantSettingPublishGetHelpInfo'})
-            TridentPrivatePreview                                                 = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'TridentPrivatePreview'})
-            UsageMetrics                                                          = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'UsageMetrics'})
-            UsageMetricsTrackUserLevelInfo                                        = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'UsageMetricsTrackUserLevelInfo'})
-            UseDatasetsAcrossWorkspaces                                           = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'UseDatasetsAcrossWorkspaces'})
-            VisualizeListInPowerBI                                                = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'VisualizeListInPowerBI'})
-            WebContentTilesTenant                                                 = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'WebContentTilesTenant'})
-            WebModelingTenantSwitch                                               = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript {$_.settingName -eq 'WebModelingTenantSwitch'})
+            AADSSOForGateway                                                      = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'AADSSOForGateway' })
+            AdminApisIncludeDetailedMetadata                                      = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'AdminApisIncludeDetailedMetadata' })
+            AdminApisIncludeExpressions                                           = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'AdminApisIncludeExpressions' })
+            AdminCustomDisclaimer                                                 = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'AdminCustomDisclaimer' })
+            AISkillArtifactTenantSwitch                                           = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'AISkillArtifactTenantSwitch' })
+            AllowAccessOverPrivateLinks                                           = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'AllowAccessOverPrivateLinks' })
+            AllowCVAuthenticationTenant                                           = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'AllowCVAuthenticationTenant' })
+            AllowCVLocalStorageV2Tenant                                           = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'AllowCVLocalStorageV2Tenant' })
+            AllowCVToExportDataToFileTenant                                       = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'AllowCVToExportDataToFileTenant' })
+            AllowEndorsementMasterDataSwitch                                      = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'AllowEndorsementMasterDataSwitch' })
+            AllowExternalDataSharingReceiverSwitch                                = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'AllowExternalDataSharingReceiverSwitch' })
+            AllowExternalDataSharingSwitch                                        = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'AllowExternalDataSharingSwitch' })
+            AllowFreeTrial                                                        = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'AllowFreeTrial' })
+            AllowGuestLookup                                                      = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'AllowGuestLookup' })
+            AllowGuestUserToAccessSharedContent                                   = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'AllowGuestUserToAccessSharedContent' })
+            AllowPowerBIASDQOnTenant                                              = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'AllowPowerBIASDQOnTenant' })
+            AllowSendAOAIDataToOtherRegions                                       = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'AllowSendAOAIDataToOtherRegions' })
+            AllowSendNLToDaxDataToOtherRegions                                    = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'AllowSendNLToDaxDataToOtherRegions' })
+            AllowServicePrincipalsCreateAndUseProfiles                            = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'AllowServicePrincipalsCreateAndUseProfiles' })
+            AllowServicePrincipalsUseReadAdminAPIs                                = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'AllowServicePrincipalsUseReadAdminAPIs' })
+            AppPush                                                               = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'AppPush' })
+            ArtifactSearchTenant                                                  = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'ArtifactSearchTenant' })
+            ASCollectQueryTextTelemetryTenantSwitch                               = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'ASCollectQueryTextTelemetryTenantSwitch' })
+            ASShareableCloudConnectionBindingSecurityModeTenant                   = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'ASShareableCloudConnectionBindingSecurityModeTenant' })
+            ASWritethruContinuousExportTenantSwitch                               = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'ASWritethruContinuousExportTenantSwitch' })
+            ASWritethruTenantSwitch                                               = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'ASWritethruTenantSwitch' })
+            AutoInstallPowerBIAppInTeamsTenant                                    = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'AutoInstallPowerBIAppInTeamsTenant' })
+            AutomatedInsightsEntryPoints                                          = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'AutomatedInsightsEntryPoints' })
+            AutomatedInsightsTenant                                               = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'AutomatedInsightsTenant' })
+            AzureMap                                                              = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'AzureMap' })
+            BingMap                                                               = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'BingMap' })
+            BlockAccessFromPublicNetworks                                         = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'BlockAccessFromPublicNetworks' })
+            BlockAutoDiscoverAndPackageRefresh                                    = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'BlockAutoDiscoverAndPackageRefresh' })
+            BlockProtectedLabelSharingToEntireOrg                                 = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'BlockProtectedLabelSharingToEntireOrg' })
+            BlockResourceKeyAuthentication                                        = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'BlockResourceKeyAuthentication' })
+            CDSAManagement                                                        = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'CDSAManagement' })
+            CertifiedCustomVisualsTenant                                          = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'CertifiedCustomVisualsTenant' })
+            CertifyDatasets                                                       = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'CertifyDatasets' })
+            ConfigureFolderRetentionPeriod                                        = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'ConfigureFolderRetentionPeriod' })
+            CreateAppWorkspaces                                                   = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'CreateAppWorkspaces' })
+            CustomVisualsTenant                                                   = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'CustomVisualsTenant' })
+            DatamartTenant                                                        = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'DatamartTenant' })
+            DatasetExecuteQueries                                                 = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'DatasetExecuteQueries' })
+            DevelopServiceApps                                                    = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'DevelopServiceApps' })
+            DiscoverDatasetsConsumption                                           = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'DiscoverDatasetsConsumption' })
+            DiscoverDatasetsSettingsCertified                                     = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'DiscoverDatasetsSettingsCertified' })
+            DiscoverDatasetsSettingsPromoted                                      = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'DiscoverDatasetsSettingsPromoted' })
+            DremioSSO                                                             = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'DremioSSO' })
+            EimInformationProtectionDataSourceInheritanceSetting                  = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'EimInformationProtectionDataSourceInheritanceSetting' })
+            EimInformationProtectionDownstreamInheritanceSetting                  = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'EimInformationProtectionDownstreamInheritanceSetting' })
+            EimInformationProtectionEdit                                          = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'EimInformationProtectionEdit' })
+            EimInformationProtectionLessElevated                                  = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'EimInformationProtectionLessElevated' })
+            EimInformationProtectionWorkspaceAdminsOverrideAutomaticLabelsSetting = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'EimInformationProtectionWorkspaceAdminsOverrideAutomaticLabelsSetting' })
+            ElevatedGuestsTenant                                                  = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'ElevatedGuestsTenant' })
+            EmailSecurityGroupsOnOutage                                           = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'EmailSecurityGroupsOnOutage' })
+            EmailSubscriptionsToB2BUsers                                          = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'EmailSubscriptionsToB2BUsers' })
+            EmailSubscriptionsToExternalUsers                                     = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'EmailSubscriptionsToExternalUsers' })
+            EmailSubscriptionTenant                                               = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'EmailSubscriptionTenant' })
+            Embedding                                                             = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'Embedding' })
+            EnableAOAI                                                            = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'EnableAOAI' })
+            EnableDatasetInPlaceSharing                                           = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'EnableDatasetInPlaceSharing' })
+            EnableExcelYellowIntegration                                          = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'EnableExcelYellowIntegration' })
+            EnableFabricAirflow                                                   = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'EnableFabricAirflow' })
+            EnableNLToDax                                                         = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'EnableNLToDax' })
+            EnableReassignDataDomainSwitch                                        = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'EnableReassignDataDomainSwitch' })
+            EsriVisual                                                            = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'EsriVisual' })
+            ExpFlightingTenant                                                    = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'ExpFlightingTenant' })
+            ExportReport                                                          = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'ExportReport' })
+            ExportToCsv                                                           = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'ExportToCsv' })
+            ExportToExcelSetting                                                  = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'ExportToExcelSetting' })
+            ExportToImage                                                         = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'ExportToImage' })
+            ExportToMHTML                                                         = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'ExportToMHTML' })
+            ExportToPowerPoint                                                    = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'ExportToPowerPoint' })
+            ExportToWord                                                          = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'ExportToWord' })
+            ExportToXML                                                           = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'ExportToXML' })
+            ExportVisualImageTenant                                               = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'ExportVisualImageTenant' })
+            ExternalDatasetSharingTenant                                          = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'ExternalDatasetSharingTenant' })
+            ExternalSharingV2                                                     = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'ExternalSharingV2' })
+            FabricAddPartnerWorkload                                              = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'FabricAddPartnerWorkload' })
+            FabricFeedbackTenantSwitch                                            = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'FabricFeedbackTenantSwitch' })
+            FabricGAWorkloads                                                     = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'FabricGAWorkloads' })
+            FabricThirdPartyWorkloads                                             = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'FabricThirdPartyWorkloads' })
+            GitHubTenantSettings                                                  = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'GitHubTenantSettings' })
+            GitIntegrationCrossGeoTenantSwitch                                    = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'GitIntegrationCrossGeoTenantSwitch' })
+            GitIntegrationSensitivityLabelsTenantSwitch                           = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'GitIntegrationSensitivityLabelsTenantSwitch' })
+            GitIntegrationTenantSwitch                                            = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'GitIntegrationTenantSwitch' })
+            GoogleBigQuerySSO                                                     = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'GoogleBigQuerySSO' })
+            GraphQLTenant                                                         = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'GraphQLTenant' })
+            HealthcareSolutionsTenantSwitch                                       = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'HealthcareSolutionsTenantSwitch' })
+            InstallNonvalidatedTemplateApps                                       = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'InstallNonvalidatedTemplateApps' })
+            InstallServiceApps                                                    = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'InstallServiceApps' })
+            KustoDashboardTenantSwitch                                            = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'KustoDashboardTenantSwitch' })
+            LiveConnection                                                        = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'LiveConnection' })
+            LogAnalyticsAttachForWorkspaceAdmins                                  = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'LogAnalyticsAttachForWorkspaceAdmins' })
+            M365DataSharing                                                       = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'M365DataSharing' })
+            Mirroring                                                             = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'Mirroring' })
+            ODSPRefreshEnforcementTenantAllowAutomaticUpdate                      = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'ODSPRefreshEnforcementTenantAllowAutomaticUpdate' })
+            OneDriveSharePointAllowSharingTenantSetting                           = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'OneDriveSharePointAllowSharingTenantSetting' })
+            OneDriveSharePointViewerIntegrationTenantSettingV2                    = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'OneDriveSharePointViewerIntegrationTenantSettingV2' })
+            OneLakeFileExplorer                                                   = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'OneLakeFileExplorer' })
+            OneLakeForThirdParty                                                  = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'OneLakeForThirdParty' })
+            OnPremAnalyzeInExcel                                                  = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'OnPremAnalyzeInExcel' })
+            PowerBIGoalsTenant                                                    = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'PowerBIGoalsTenant' })
+            PowerPlatformSolutionsIntegrationTenant                               = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'PowerPlatformSolutionsIntegrationTenant' })
+            Printing                                                              = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'Printing' })
+            PromoteContent                                                        = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'PromoteContent' })
+            PublishContentPack                                                    = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'PublishContentPack' })
+            PublishToWeb                                                          = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'PublishToWeb' })
+            QnaFeedbackLoop                                                       = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'QnaFeedbackLoop' })
+            QnaLsdlSharing                                                        = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'QnaLsdlSharing' })
+            QueryScaleOutTenant                                                   = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'QueryScaleOutTenant' })
+            RedshiftSSO                                                           = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'RedshiftSSO' })
+            RestrictMyFolderCapacity                                              = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'RestrictMyFolderCapacity' })
+            RetailSolutionsTenantSwitch                                           = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'RetailSolutionsTenantSwitch' })
+            RScriptVisual                                                         = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'RScriptVisual' })
+            ServicePrincipalAccess                                                = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'ServicePrincipalAccess' })
+            ShareLinkToEntireOrg                                                  = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'ShareLinkToEntireOrg' })
+            ShareToTeamsTenant                                                    = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'ShareToTeamsTenant' })
+            SnowflakeSSO                                                          = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'SnowflakeSSO' })
+            StorytellingTenant                                                    = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'StorytellingTenant' })
+            SustainabilitySolutionsTenantSwitch                                   = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'SustainabilitySolutionsTenantSwitch' })
+            TemplatePublish                                                       = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'TemplatePublish' })
+            TenantSettingPublishGetHelpInfo                                       = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'TenantSettingPublishGetHelpInfo' })
+            TridentPrivatePreview                                                 = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'TridentPrivatePreview' })
+            UsageMetrics                                                          = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'UsageMetrics' })
+            UsageMetricsTrackUserLevelInfo                                        = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'UsageMetricsTrackUserLevelInfo' })
+            UseDatasetsAcrossWorkspaces                                           = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'UseDatasetsAcrossWorkspaces' })
+            VisualizeListInPowerBI                                                = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'VisualizeListInPowerBI' })
+            WebContentTilesTenant                                                 = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'WebContentTilesTenant' })
+            WebModelingTenantSwitch                                               = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'WebModelingTenantSwitch' })
             ApplicationId                                                         = $ApplicationId
             TenantId                                                              = $TenantId
             CertificateThumbprint                                                 = $CertificateThumbprint
@@ -1285,7 +1285,7 @@ function Set-TargetResource
         $AccessTokens
     )
 
-    Write-Warning -Message "This resource is read-only and does not support changing the settings. It is used for monitoring purposes only."
+    Write-Warning -Message 'This resource is read-only and does not support changing the settings. It is used for monitoring purposes only.'
 }
 
 function Test-TargetResource
@@ -1941,7 +1941,7 @@ function Export-TargetResource
     try
     {
         $Script:ExportMode = $true
-        $uri = $global:MsCloudLoginConnectionProfile.Fabric.HostUrl + "/v1/admin/tenantsettings"
+        $uri = $global:MsCloudLoginConnectionProfile.Fabric.HostUrl + '/v1/admin/tenantsettings'
         [array] $Script:exportedInstances = Invoke-M365DSCFabricWebRequest -Uri $uri -Method 'GET'
 
         if ($null -ne $Global:M365DSCExportResourceInstancesCount)
@@ -1985,7 +1985,7 @@ function Export-TargetResource
                     $fixQuotes = $true
                 }
                 $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                    -ParameterName $key                
+                    -ParameterName $key
             }
         }
         if ($fixQuotes)
@@ -1995,7 +1995,7 @@ function Export-TargetResource
         $dscContent += $currentDSCBlock
         Save-M365DSCPartialExport -Content $currentDSCBlock `
             -FileName $Global:PartialExportFileName
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         return $dscContent
     }
     catch
@@ -2044,7 +2044,7 @@ function Get-M365DSCFabricTenantSettingAsString
     $StringContent += "                title                    = '" + $setting.title.Replace("'", "''") + "'`r`n"
     if (-not [System.String]::IsNullOrEmpty($setting.properties))
     {
-        $StringContent += "                properties               = @("
+        $StringContent += '                properties               = @('
         foreach ($property in $setting.properties)
         {
             $StringContent += "                    MSFT_FabricTenantSettingProperty{`r`n"
@@ -2053,7 +2053,7 @@ function Get-M365DSCFabricTenantSettingAsString
             $StringContent += "                        type  = '$($property.type)'`r`n"
             $StringContent += "                    }`r`n"
         }
-        $StringContent += ")"
+        $StringContent += ')'
     }
     if (-not [System.String]::IsNullOrEmpty($setting.excludedSecurityGroups))
     {
@@ -2086,9 +2086,9 @@ function Get-M365DSCFabricTenantSettingObject
     Write-Verbose -Message "Retrieving values for setting {$($Setting.settingName)}"
 
     $values = @{
-        settingName              = $Setting.settingName
-        enabled                  = [Boolean]$Setting.enabled
-        title                    = $Setting.title
+        settingName = $Setting.settingName
+        enabled     = [Boolean]$Setting.enabled
+        title       = $Setting.title
     }
     if (-not [System.String]::IsNullOrEmpty($Setting.canSpecifySecurityGroups))
     {

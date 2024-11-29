@@ -45,17 +45,17 @@ function Get-TargetResource
         $AllRequestOutOfPolicy,
 
         [Parameter()]
-        [ValidateSet("None", "AutoUpdate", "AutoAccept")]
+        [ValidateSet('None', 'AutoUpdate', 'AutoAccept')]
         [System.String]
         $AutomateProcessing,
 
         [Parameter()]
-        [ValidateSet("Standard", "Reserved")]
+        [ValidateSet('Standard', 'Reserved')]
         [System.String]
         $BookingType,
 
         [Parameter()]
-        [ValidateRange(0,1080)]
+        [ValidateRange(0, 1080)]
         [System.UInt32]
         $BookingWindowInDays = 180,
 
@@ -381,17 +381,17 @@ function Set-TargetResource
         $AllRequestOutOfPolicy,
 
         [Parameter()]
-        [ValidateSet("None", "AutoUpdate", "AutoAccept")]
+        [ValidateSet('None', 'AutoUpdate', 'AutoAccept')]
         [System.String]
         $AutomateProcessing,
 
         [Parameter()]
-        [ValidateSet("Standard", "Reserved")]
+        [ValidateSet('Standard', 'Reserved')]
         [System.String]
         $BookingType,
 
         [Parameter()]
-        [ValidateRange(0,1080)]
+        [ValidateRange(0, 1080)]
         [System.UInt32]
         $BookingWindowInDays = 180,
 
@@ -564,15 +564,15 @@ function Set-TargetResource
         -InboundParameters $PSBoundParameters
 
     $UpdateParameters = ([Hashtable]$PSBoundParameters).Clone()
-    $UpdateParameters.Remove("Ensure") | Out-Null
-    $UpdateParameters.Remove("Credential") | Out-Null
-    $UpdateParameters.Remove("ApplicationId") | Out-Null
-    $UpdateParameters.Remove("TenantId") | Out-Null
-    $UpdateParameters.Remove("CertificateThumbprint") | Out-Null
-    $UpdateParameters.Remove("ApplicationSecret") | Out-Null
-    $UpdateParameters.Remove("CertificatePath") | Out-Null
-    $UpdateParameters.Remove("CertificatePassword") | Out-Null
-    $UpdateParameters.Remove("ManagedIdentity") | Out-Null
+    $UpdateParameters.Remove('Ensure') | Out-Null
+    $UpdateParameters.Remove('Credential') | Out-Null
+    $UpdateParameters.Remove('ApplicationId') | Out-Null
+    $UpdateParameters.Remove('TenantId') | Out-Null
+    $UpdateParameters.Remove('CertificateThumbprint') | Out-Null
+    $UpdateParameters.Remove('ApplicationSecret') | Out-Null
+    $UpdateParameters.Remove('CertificatePath') | Out-Null
+    $UpdateParameters.Remove('CertificatePassword') | Out-Null
+    $UpdateParameters.Remove('ManagedIdentity') | Out-Null
     $UpdateParameters.Remove('AccessTokens') | Out-Null
 
     # Some parameters can only be applied to Resource Mailboxes
@@ -581,14 +581,14 @@ function Set-TargetResource
         $mailbox = Get-Mailbox $UpdateParameters.Identity
         if ($mailbox.RecipientTypeDetails -ne 'EquipmentMailbox' -and $mailbox.RecipientTypeDetails -ne 'RoomMailbox')
         {
-            Write-Verbose -Message "Removing the AddNewRequestsTentatively parameter because the mailbox is not a resource one."
-            $UpdateParameters.Remove("AddNewRequestsTentatively") | Out-Null
+            Write-Verbose -Message 'Removing the AddNewRequestsTentatively parameter because the mailbox is not a resource one.'
+            $UpdateParameters.Remove('AddNewRequestsTentatively') | Out-Null
 
-            Write-Verbose -Message "Removing the BookingType parameter because the mailbox is not a resource one."
-            $UpdateParameters.Remove("BookingType") | Out-Null
+            Write-Verbose -Message 'Removing the BookingType parameter because the mailbox is not a resource one.'
+            $UpdateParameters.Remove('BookingType') | Out-Null
 
-            Write-Verbose -Message "Removing the ProcessExternalMeetingMessages parameter because the mailbox is not a resource one."
-            $UpdateParameters.Remove("ProcessExternalMeetingMessages") | Out-Null
+            Write-Verbose -Message 'Removing the ProcessExternalMeetingMessages parameter because the mailbox is not a resource one.'
+            $UpdateParameters.Remove('ProcessExternalMeetingMessages') | Out-Null
         }
     }
 
@@ -642,17 +642,17 @@ function Test-TargetResource
         $AllRequestOutOfPolicy,
 
         [Parameter()]
-        [ValidateSet("None", "AutoUpdate", "AutoAccept")]
+        [ValidateSet('None', 'AutoUpdate', 'AutoAccept')]
         [System.String]
         $AutomateProcessing,
 
         [Parameter()]
-        [ValidateSet("Standard", "Reserved")]
+        [ValidateSet('Standard', 'Reserved')]
         [System.String]
         $BookingType,
 
         [Parameter()]
-        [ValidateRange(0,1080)]
+        [ValidateRange(0, 1080)]
         [System.UInt32]
         $BookingWindowInDays = 180,
 

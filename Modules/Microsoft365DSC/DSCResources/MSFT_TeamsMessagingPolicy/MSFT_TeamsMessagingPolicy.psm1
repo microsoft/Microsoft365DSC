@@ -179,7 +179,7 @@ function Get-TargetResource
                 $currentPolicy = $currentPolicy.Split(':')[1]
             }
             return @{
-                Identity                      = $currentPolicy
+                Identity                                     = $currentPolicy
                 AllowCommunicationComplianceEndUserReporting = $policy.AllowCommunicationComplianceEndUserReporting
                 AllowGiphy                                   = $policy.AllowGiphy
                 AllowFluidCollaborate                        = $policy.AllowFluidCollaborate

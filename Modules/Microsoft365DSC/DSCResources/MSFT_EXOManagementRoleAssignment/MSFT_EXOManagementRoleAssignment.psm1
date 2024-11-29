@@ -123,7 +123,7 @@ function Get-TargetResource
     {
         if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
         {
-            $roleAssignment = $Script:exportedInstances | Where-Object -FilterScript {$_.Identity -eq $Name}
+            $roleAssignment = $Script:exportedInstances | Where-Object -FilterScript { $_.Identity -eq $Name }
         }
         else
         {

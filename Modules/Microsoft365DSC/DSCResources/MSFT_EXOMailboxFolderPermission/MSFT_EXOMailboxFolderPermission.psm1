@@ -71,7 +71,7 @@ function Get-TargetResource
     {
         if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
         {
-            $instances = $Script:exportedInstances | Where-Object -FilterScript {$_.Identity -eq $Identity}
+            $instances = $Script:exportedInstances | Where-Object -FilterScript { $_.Identity -eq $Identity }
         }
         else
         {
@@ -84,26 +84,28 @@ function Get-TargetResource
 
         [Array]$permissionsObj = @()
 
-        foreach($mailboxfolderPermission in $instances){
+        foreach ($mailboxfolderPermission in $instances)
+        {
             $currentPermission = @{}
             $currentPermission.Add('User', $mailboxFolderPermission.User.ToString())
             $currentPermission.Add('AccessRights', $mailboxFolderPermission.AccessRights)
-            if($null -ne $mailboxFolderPermission.SharingPermissionFlags) {
+            if ($null -ne $mailboxFolderPermission.SharingPermissionFlags)
+            {
                 $currentPermission.Add('SharingPermissionFlags', $mailboxFolderPermission.SharingPermissionFlags)
             }
             $permissionsObj += $currentPermission
         }
 
         $results = @{
-            Identity                 = $Identity
-            UserPermissions          = [Array]$permissionsObj
-            Ensure                   = 'Present'
-            Credential               = $Credential
-            ApplicationId            = $ApplicationId
-            TenantId                 = $TenantId
-            CertificateThumbprint    = $CertificateThumbprint
-            ManagedIdentity          = $ManagedIdentity.IsPresent
-            AccessTokens             = $AccessTokens
+            Identity              = $Identity
+            UserPermissions       = [Array]$permissionsObj
+            Ensure                = 'Present'
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
+            ManagedIdentity       = $ManagedIdentity.IsPresent
+            AccessTokens          = $AccessTokens
         }
         return [System.Collections.Hashtable] $results
     }
@@ -198,28 +200,37 @@ function Set-TargetResource
 
     # Remove all the current existing pemrissions on this folder.
     # Skip removing the default and anonymous permissions, as can't be removed, and should just be directly updated.
-    foreach($currentUserPermission in $currentMailboxFolderPermissions) {
-        if($currentUserPermission.User.ToString().ToLower() -ne "default" -and $currentUserPermission.User.ToString().ToLower() -ne "anonymous"){
+    foreach ($currentUserPermission in $currentMailboxFolderPermissions)
+    {
+        if ($currentUserPermission.User.ToString().ToLower() -ne 'default' -and $currentUserPermission.User.ToString().ToLower() -ne 'anonymous')
+        {
             Remove-MailboxFolderPermission -Identity $Identity -User $currentUserPermission.User -Confirm:$false
         }
     }
 
     # Add the desired state permissions on the mailbox folder
     # For Default and anonymous users, as the permissions were not removed, we just need to call set.
-    foreach($userPermission in $UserPermissions) {
-        if($userPermission.User.ToString().ToLower() -eq "default" -or $userPermission.User.ToString().ToLower() -eq "anonymous"){
-            if ($userPermission.SharingPermissionFlags -eq ""){
+    foreach ($userPermission in $UserPermissions)
+    {
+        if ($userPermission.User.ToString().ToLower() -eq 'default' -or $userPermission.User.ToString().ToLower() -eq 'anonymous')
+        {
+            if ($userPermission.SharingPermissionFlags -eq '')
+            {
                 Set-MailboxFolderPermission -Identity $Identity -User $userPermission.User -AccessRights $userPermission.AccessRights
             }
-            else {
+            else
+            {
                 Set-MailboxFolderPermission -Identity $Identity -User $userPermission.User -AccessRights $userPermission.AccessRights -SharingPermissionFlags $userPermission.SharingPermissionFlags
             }
         }
-        else {
-            if ($userPermission.SharingPermissionFlags -eq ""){
+        else
+        {
+            if ($userPermission.SharingPermissionFlags -eq '')
+            {
                 Add-MailboxFolderPermission -Identity $Identity -User $userPermission.User -AccessRights $userPermission.AccessRights
             }
-            else {
+            else
+            {
                 Add-MailboxFolderPermission -Identity $Identity -User $userPermission.User -AccessRights $userPermission.AccessRights -SharingPermissionFlags $userPermission.SharingPermissionFlags
             }
         }
@@ -309,7 +320,8 @@ function Test-TargetResource
             {
                 $testTargetResource = $false
             }
-            else {
+            else
+            {
                 $ValuesToCheck.Remove($key) | Out-Null
             }
         }
@@ -319,12 +331,12 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
-    -Source $($MyInvocation.MyCommand.Source) `
-    -DesiredValues $PSBoundParameters `
-    -ValuesToCheck $ValuesToCheck.Keys `
-    -IncludedDrifts $driftedParams
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck $ValuesToCheck.Keys `
+        -IncludedDrifts $driftedParams
 
-    if(-not $TestResult)
+    if (-not $TestResult)
     {
         $testTargetResource = $false
     }
@@ -487,9 +499,10 @@ function Get-M365DSCEXOUserPermissionsList
         $StringContent += "MSFT_EXOMailboxFolderUserPermission {`r`n"
         $StringContent += "                User                   = '" + $permission.User + "'`r`n"
         $StringContent += "                AccessRights           = '" + $permission.AccessRights + "'`r`n"
-        if($null -ne $permission.SharingPermissionFlags){
-        #     $StringContent += "                SharingPermissionFlags = `$null" + "`r`n"
-        # } else {
+        if ($null -ne $permission.SharingPermissionFlags)
+        {
+            #     $StringContent += "                SharingPermissionFlags = `$null" + "`r`n"
+            # } else {
             $StringContent += "                SharingPermissionFlags = '" + $permission.SharingPermissionFlags + "'`r`n"
         }
         $StringContent += "            }`r`n"

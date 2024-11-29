@@ -298,7 +298,7 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Re-create Application Access Policy '$($currentApplicationAccessPolicyConfig.Identity)'"
         Remove-ApplicationAccessPolicy -Identity $currentApplicationAccessPolicyConfig.Identity -Confirm:$false
-        Write-Verbose -Message "Removing existing policy was successful"
+        Write-Verbose -Message 'Removing existing policy was successful'
         Write-Verbose -Message "Creating new instance with parameters: $(Convert-M365DscHashtableToString -Hashtable $NewApplicationAccessPolicyParams)"
         New-ApplicationAccessPolicy @NewApplicationAccessPolicyParams
     }

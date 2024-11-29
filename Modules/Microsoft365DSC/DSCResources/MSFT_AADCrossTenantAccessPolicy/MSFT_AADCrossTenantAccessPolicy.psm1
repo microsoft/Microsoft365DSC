@@ -177,25 +177,25 @@ function Set-TargetResource
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        Write-Verbose -Message "Azure AD Cross Tenant Access Policy instance cannot be created"
+        Write-Verbose -Message 'Azure AD Cross Tenant Access Policy instance cannot be created'
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Updating the Azure AD Cross Tenant Access Policy"
+        Write-Verbose -Message 'Updating the Azure AD Cross Tenant Access Policy'
         $UpdateParams = @{}
         if (-not [System.String]::IsNullOrEmpty($DisplayName))
         {
-            $UpdateParams.Add("DisplayName", $DisplayName)
+            $UpdateParams.Add('DisplayName', $DisplayName)
         }
         if ($null -ne $AllowedCloudEndpoints)
         {
-            $UpdateParams.Add("AllowedCloudEndpoints", $AllowedCloudEndpoints)
+            $UpdateParams.Add('AllowedCloudEndpoints', $AllowedCloudEndpoints)
         }
         Update-MgBetaPolicyCrossTenantAccessPolicy -BodyParameter $UpdateParams
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Azure AD Cross Tenant Access Policies cannot be removed."
+        Write-Verbose -Message 'Azure AD Cross Tenant Access Policies cannot be removed.'
     }
 }
 

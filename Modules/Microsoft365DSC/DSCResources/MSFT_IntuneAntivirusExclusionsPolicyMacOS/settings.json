@@ -1,45 +1,44 @@
 {
-    "resourceName": "IntuneAntivirusExclusionsPolicyMacOS",
-    "description": "This resource configures an Intune Antivirus Exclusions Policy for macOS.",
-    "permissions":    {
-  "graph": {
-    "delegated": {
-      "read": [
-        {
-          "name": "DeviceManagementConfiguration.Read.All"
-        },
-        {
-          "name": "Group.Read.All"
-        }
-      ],
-      "update": [
-        {
-          "name": "DeviceManagementConfiguration.ReadWrite.All"
-        },
-        {
-          "name": "Group.Read.All"
-        }
-      ]
-    },
-    "application": {
-      "read": [
-        {
-          "name": "DeviceManagementConfiguration.Read.All"
-        },
-        {
-          "name": "Group.Read.All"
-        }
-      ],
-      "update": [
-        {
-          "name": "DeviceManagementConfiguration.ReadWrite.All"
-        },
-        {
-          "name": "Group.Read.All"
-        }
-      ]
+  "resourceName": "IntuneAntivirusExclusionsPolicyMacOS",
+  "description": "This resource configures an Intune Antivirus Exclusions Policy for macOS.",
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "DeviceManagementConfiguration.Read.All"
+          },
+          {
+            "name": "Group.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "DeviceManagementConfiguration.ReadWrite.All"
+          },
+          {
+            "name": "Group.Read.All"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "DeviceManagementConfiguration.Read.All"
+          },
+          {
+            "name": "Group.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "DeviceManagementConfiguration.ReadWrite.All"
+          },
+          {
+            "name": "Group.Read.All"
+          }
+        ]
+      }
     }
   }
-}
-
 }

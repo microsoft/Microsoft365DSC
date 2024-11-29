@@ -2,4 +2,4 @@
 # AADIdentityGovernanceProgram
 ## Description
 
-Azure AD Identity Governance Program. 
+Azure AD Identity Governance Program.

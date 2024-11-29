@@ -65,23 +65,23 @@ function Get-TargetResource
     $nullResult.Ensure = 'Absent'
     try
     {
-        $instance = Get-FocusedInbox -Identity $Identity 
+        $instance = Get-FocusedInbox -Identity $Identity
         if ($null -eq $instance)
         {
             return $nullResult
         }
 
         $results = @{
-            Identity              = $Identity
-            FocusedInboxOn        = [Boolean]$instance.FocusedInboxOn
+            Identity                     = $Identity
+            FocusedInboxOn               = [Boolean]$instance.FocusedInboxOn
             FocusedInboxOnLastUpdateTime = [DateTime]$instance.FocusedInboxOnLastUpdateTime
-            Ensure                = 'Present'
-            Credential            = $Credential
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            CertificateThumbprint = $CertificateThumbprint
-            ManagedIdentity       = $ManagedIdentity.IsPresent
-            AccessTokens          = $AccessTokens
+            Ensure                       = 'Present'
+            Credential                   = $Credential
+            ApplicationId                = $ApplicationId
+            TenantId                     = $TenantId
+            CertificateThumbprint        = $CertificateThumbprint
+            ManagedIdentity              = $ManagedIdentity.IsPresent
+            AccessTokens                 = $AccessTokens
         }
         return [System.Collections.Hashtable] $results
     }
@@ -160,7 +160,7 @@ function Set-TargetResource
 
     $setParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
-    $SetParameters.Remove("FocusedInboxOnLastUpdateTime") | Out-Null
+    $SetParameters.Remove('FocusedInboxOnLastUpdateTime') | Out-Null
     Set-FocusedInbox @SetParameters
 }
 

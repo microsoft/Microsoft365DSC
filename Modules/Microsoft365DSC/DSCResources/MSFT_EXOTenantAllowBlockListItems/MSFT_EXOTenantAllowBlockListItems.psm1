@@ -266,7 +266,7 @@ function Set-TargetResource
 
         if ($currentInstance.SubmissionID -ne $SubmissionID)
         {
-            throw "SubmissionID can not be changed"
+            throw 'SubmissionID can not be changed'
         }
 
         $UpdateParameters = ([Hashtable]$BoundParameters).Clone()
@@ -448,7 +448,7 @@ function Export-TargetResource
         $ManagedIdentity
     )
 
-   $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -465,7 +465,7 @@ function Export-TargetResource
 
     try
     {
-        $ListTypes = ("FileHash", "Sender", "Url");
+        $ListTypes = ('FileHash', 'Sender', 'Url')
 
         [array]$getValues = @()
 
@@ -474,8 +474,8 @@ function Export-TargetResource
             $listValues = Get-TenantAllowBlockListItems -ListType $ListType -ErrorAction Stop
             $listValues | ForEach-Object {
                 $getValues += @{
-                    Action = $_.Action
-                    Value = $_.Value
+                    Action   = $_.Action
+                    Value    = $_.Value
                     ListType = $ListType
                 }
             }
@@ -505,15 +505,15 @@ function Export-TargetResource
             }
             Write-Host "    |---[$i/$($getValues.Count)] $displayedKey" -NoNewline
             $params = @{
-                Action = $config.Action
-                ListType = $config.ListType
-                Value = $config.Value
-                Ensure = 'Present'
-                Credential = $Credential
-                ApplicationId = $ApplicationId
-                TenantId = $TenantId
+                Action                = $config.Action
+                ListType              = $config.ListType
+                Value                 = $config.Value
+                Ensure                = 'Present'
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
-                ApplicationSecret = $ApplicationSecret
+                ApplicationSecret     = $ApplicationSecret
 
             }
 

@@ -88,7 +88,7 @@ function Get-TargetResource
 
         $getValue = $null
         #region resource generator code
-        $getValue = Get-MgBetaIdentityGovernanceAccessReviewDefinition -AccessReviewScheduleDefinitionId $Id  -ErrorAction SilentlyContinue
+        $getValue = Get-MgBetaIdentityGovernanceAccessReviewDefinition -AccessReviewScheduleDefinitionId $Id -ErrorAction SilentlyContinue
 
         if ($null -eq $getValue)
         {
@@ -100,8 +100,8 @@ function Get-TargetResource
                     -Filter "DisplayName eq '$DisplayName'" `
                     -ErrorAction SilentlyContinue | Where-Object `
                     -FilterScript {
-                        $_.AdditionalProperties.'@odata.type' -eq "#microsoft.graph.AccessReviewScheduleDefinition"
-                    }
+                    $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.AccessReviewScheduleDefinition'
+                }
             }
         }
         #endregion
@@ -130,12 +130,12 @@ function Get-TargetResource
             {
                 $myPrincipalScopes.Add('odataType', $currentPrincipalScopes.'@odata.type'.ToString())
             }
-            if ($myPrincipalScopes.values.Where({$null -ne $_}).Count -gt 0)
+            if ($myPrincipalScopes.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexPrincipalScopes += $myPrincipalScopes
             }
         }
-        $complexScope.Add('PrincipalScopes',$complexPrincipalScopes)
+        $complexScope.Add('PrincipalScopes', $complexPrincipalScopes)
         $complexResourceScopes = @()
         foreach ($currentResourceScopes in $getValue.Scope.AdditionalProperties.resourceScopes)
         {
@@ -147,19 +147,19 @@ function Get-TargetResource
             {
                 $myResourceScopes.Add('odataType', $currentResourceScopes.'@odata.type'.ToString())
             }
-            if ($myResourceScopes.values.Where({$null -ne $_}).Count -gt 0)
+            if ($myResourceScopes.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexResourceScopes += $myResourceScopes
             }
         }
-        $complexScope.Add('ResourceScopes',$complexResourceScopes)
+        $complexScope.Add('ResourceScopes', $complexResourceScopes)
 
 
         if ($null -ne $getValue.Scope.AdditionalProperties.'@odata.type')
         {
             $complexScope.Add('odataType', $getValue.Scope.AdditionalProperties.'@odata.type'.ToString())
         }
-        if ($complexScope.values.Where({$null -ne $_}).Count -eq 0)
+        if ($complexScope.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexScope = $null
         }
@@ -173,12 +173,12 @@ function Get-TargetResource
             {
                 $myApplyActions.Add('odataType', $currentApplyActions.AdditionalProperties.'@odata.type'.ToString())
             }
-            if ($myApplyActions.values.Where({$null -ne $_}).Count -gt 0)
+            if ($myApplyActions.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexApplyActions += $myApplyActions
             }
         }
-        $complexSettings.Add('ApplyActions',$complexApplyActions)
+        $complexSettings.Add('ApplyActions', $complexApplyActions)
         $complexSettings.Add('AutoApplyDecisionsEnabled', $getValue.Settings.autoApplyDecisionsEnabled)
         $complexSettings.Add('DecisionHistoriesForReviewersEnabled', $getValue.Settings.decisionHistoriesForReviewersEnabled)
         $complexSettings.Add('DefaultDecision', $getValue.Settings.defaultDecision)
@@ -199,12 +199,12 @@ function Get-TargetResource
             {
                 $myRecommendationInsightSettings.Add('odataType', $currentRecommendationInsightSettings.AdditionalProperties.'@odata.type'.ToString())
             }
-            if ($myRecommendationInsightSettings.values.Where({$null -ne $_}).Count -gt 0)
+            if ($myRecommendationInsightSettings.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexRecommendationInsightSettings += $myRecommendationInsightSettings
             }
         }
-        $complexSettings.Add('RecommendationInsightSettings',$complexRecommendationInsightSettings)
+        $complexSettings.Add('RecommendationInsightSettings', $complexRecommendationInsightSettings)
 
         if ($null -ne $getValue.Settings.recommendationLookBackDuration)
         {
@@ -220,8 +220,8 @@ function Get-TargetResource
         }
         if ($null -ne $getValue.settings.recurrence.pattern.firstDayOfWeek)
         {
-            $complexFirstDaysOfWeek = [String]::Join(", ", $getValue.settings.recurrence.pattern.firstDayOfWeek)
-            $complexPattern.Add('FirstDayOfWeek',$complexFirstDaysOfWeek)
+            $complexFirstDaysOfWeek = [String]::Join(', ', $getValue.settings.recurrence.pattern.firstDayOfWeek)
+            $complexPattern.Add('FirstDayOfWeek', $complexFirstDaysOfWeek)
         }
         if ($null -ne $getValue.settings.recurrence.pattern.index)
         {
@@ -233,11 +233,11 @@ function Get-TargetResource
         {
             $complexPattern.Add('Type', $getValue.settings.recurrence.pattern.type.ToString())
         }
-        if ($complexPattern.values.Where({$null -ne $_}).Count -eq 0)
+        if ($complexPattern.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexPattern = $null
         }
-        $complexRecurrence.Add('Pattern',$complexPattern)
+        $complexRecurrence.Add('Pattern', $complexPattern)
         $complexRange = @{}
         if ($null -ne $getValue.settings.recurrence.range.endDate)
         {
@@ -253,18 +253,18 @@ function Get-TargetResource
         {
             $complexRange.Add('Type', $getValue.settings.recurrence.range.type.ToString())
         }
-        if ($complexRange.values.Where({$null -ne $_}).Count -eq 0)
+        if ($complexRange.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexRange = $null
         }
-        $complexRecurrence.Add('Range',$complexRange)
-        if ($complexRecurrence.values.Where({$null -ne $_}).Count -eq 0)
+        $complexRecurrence.Add('Range', $complexRange)
+        if ($complexRecurrence.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexRecurrence = $null
         }
-        $complexSettings.Add('Recurrence',$complexRecurrence)
+        $complexSettings.Add('Recurrence', $complexRecurrence)
         $complexSettings.Add('ReminderNotificationsEnabled', $getValue.Settings.reminderNotificationsEnabled)
-        if ($complexSettings.values.Where({$null -ne $_}).Count -eq 0)
+        if ($complexSettings.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexSettings = $null
         }
@@ -294,16 +294,16 @@ function Get-TargetResource
                 {
                     $myRecommendationInsightSettings.Add('odataType', $currentRecommendationInsightSettings.'@odata.type'.ToString())
                 }
-                if ($myRecommendationInsightSettings.values.Where({$null -ne $_}).Count -gt 0)
+                if ($myRecommendationInsightSettings.values.Where({ $null -ne $_ }).Count -gt 0)
                 {
                     $complexRecommendationInsightSettings += $myRecommendationInsightSettings
                 }
             }
-            $myStageSettings.Add('RecommendationInsightSettings',$complexRecommendationInsightSettings)
+            $myStageSettings.Add('RecommendationInsightSettings', $complexRecommendationInsightSettings)
             $myStageSettings.Add('RecommendationLookBackDuration', $currentStageSettings.recommendationLookBackDuration)
             $myStageSettings.Add('RecommendationsEnabled', $currentStageSettings.recommendationsEnabled)
             $myStageSettings.Add('StageId', $currentStageSettings.stageId)
-            if ($myStageSettings.values.Where({$null -ne $_}).Count -gt 0)
+            if ($myStageSettings.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexStageSettings += $myStageSettings
             }
@@ -311,20 +311,20 @@ function Get-TargetResource
         #endregion
 
         $results = @{
-            DescriptionForAdmins             = $getValue.DescriptionForAdmins
-            DescriptionForReviewers          = $getValue.DescriptionForReviewers
-            DisplayName                      = $getValue.DisplayName
-            ScopeValue                       = $complexScope
-            SettingsValue                    = $complexSettings
-            StageSettings                    = $complexStageSettings
-            Id                               = $getValue.Id
-            Ensure                           = 'Present'
-            Credential                       = $Credential
-            ApplicationId                    = $ApplicationId
-            TenantId                         = $TenantId
-            ApplicationSecret                = $ApplicationSecret
-            CertificateThumbprint            = $CertificateThumbprint
-            ManagedIdentity                  = $ManagedIdentity.IsPresent
+            DescriptionForAdmins    = $getValue.DescriptionForAdmins
+            DescriptionForReviewers = $getValue.DescriptionForReviewers
+            DisplayName             = $getValue.DisplayName
+            ScopeValue              = $complexScope
+            SettingsValue           = $complexSettings
+            StageSettings           = $complexStageSettings
+            Id                      = $getValue.Id
+            Ensure                  = 'Present'
+            Credential              = $Credential
+            ApplicationId           = $ApplicationId
+            TenantId                = $TenantId
+            ApplicationSecret       = $ApplicationSecret
+            CertificateThumbprint   = $CertificateThumbprint
+            ManagedIdentity         = $ManagedIdentity.IsPresent
         }
 
         return [System.Collections.Hashtable] $results
@@ -424,11 +424,12 @@ function Set-TargetResource
 
     $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
-    if($StageSettings -ne $null)
+    if ($StageSettings -ne $null)
     {
-        Write-Verbose -Message "StageSettings cannot be updated after creation of access review definition."
+        Write-Verbose -Message 'StageSettings cannot be updated after creation of access review definition.'
 
-        if($currentInstance.Ensure -ne 'Absent') {
+        if ($currentInstance.Ensure -ne 'Absent')
+        {
             Write-Verbose -Message "Removing the Azure AD Access Review Definition with Id {$($currentInstance.Id)}"
             Remove-MgBetaIdentityGovernanceAccessReviewDefinition -AccessReviewScheduleDefinitionId $currentInstance.Id
         }
@@ -446,27 +447,31 @@ function Set-TargetResource
         $createParameters.Add('Settings', $createParameters.SettingsValue)
         $createParameters.Remove('SettingsValue') | Out-Null
 
-        foreach ($hashtable in $createParameters.StageSettings) {
+        foreach ($hashtable in $createParameters.StageSettings)
+        {
             $propertyToRemove = 'DependsOnValue'
             $newProperty = 'DependsOn'
-            if ($hashtable.ContainsKey($propertyToRemove)) {
+            if ($hashtable.ContainsKey($propertyToRemove))
+            {
                 $value = $hashtable[$propertyToRemove]
                 $hashtable[$newProperty] = $value
                 $hashtable.Remove($propertyToRemove)
             }
         }
 
-        foreach ($hashtable in $createParameters.StageSettings) {
+        foreach ($hashtable in $createParameters.StageSettings)
+        {
             $keys = (([Hashtable]$hashtable).Clone()).Keys
             foreach ($key in $keys)
             {
                 $value = $hashtable.$key
                 $hashtable.Remove($key)
-                $hashtable.Add($key.Substring(0,1).ToLower() + $key.Substring(1), $value)
+                $hashtable.Add($key.Substring(0, 1).ToLower() + $key.Substring(1), $value)
             }
         }
 
-        foreach ($hashtable in $createParameters.StageSettings) {
+        foreach ($hashtable in $createParameters.StageSettings)
+        {
             Write-Verbose -Message "Priting Values: $(Convert-M365DscHashtableToString -Hashtable $hashtable)"
         }
 
@@ -478,9 +483,9 @@ function Set-TargetResource
                 $createParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $createParameters.$key
             }
         }
-        $createParameters.Add("@odata.type", "#microsoft.graph.AccessReviewScheduleDefinition")
+        $createParameters.Add('@odata.type', '#microsoft.graph.AccessReviewScheduleDefinition')
         $policy = New-MgBetaIdentityGovernanceAccessReviewDefinition -BodyParameter $createParameters
-        return;
+        return
     }
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
@@ -499,27 +504,31 @@ function Set-TargetResource
         $createParameters.Add('Settings', $createParameters.SettingsValue)
         $createParameters.Remove('SettingsValue') | Out-Null
 
-        foreach ($hashtable in $createParameters.StageSettings) {
+        foreach ($hashtable in $createParameters.StageSettings)
+        {
             $propertyToRemove = 'DependsOnValue'
             $newProperty = 'DependsOn'
-            if ($hashtable.ContainsKey($propertyToRemove)) {
+            if ($hashtable.ContainsKey($propertyToRemove))
+            {
                 $value = $hashtable[$propertyToRemove]
                 $hashtable[$newProperty] = $value
                 $hashtable.Remove($propertyToRemove)
             }
         }
 
-        foreach ($hashtable in $createParameters.StageSettings) {
+        foreach ($hashtable in $createParameters.StageSettings)
+        {
             $keys = (([Hashtable]$hashtable).Clone()).Keys
             foreach ($key in $keys)
             {
                 $value = $hashtable.$key
                 $hashtable.Remove($key)
-                $hashtable.Add($key.Substring(0,1).ToLower() + $key.Substring(1), $value)
+                $hashtable.Add($key.Substring(0, 1).ToLower() + $key.Substring(1), $value)
             }
         }
 
-        foreach ($hashtable in $createParameters.StageSettings) {
+        foreach ($hashtable in $createParameters.StageSettings)
+        {
             Write-Verbose -Message "Priting Values: $(Convert-M365DscHashtableToString -Hashtable $hashtable)"
         }
 
@@ -532,7 +541,7 @@ function Set-TargetResource
             }
         }
         #region resource generator code
-        $createParameters.Add("@odata.type", "#microsoft.graph.AccessReviewScheduleDefinition")
+        $createParameters.Add('@odata.type', '#microsoft.graph.AccessReviewScheduleDefinition')
         $policy = New-MgBetaIdentityGovernanceAccessReviewDefinition -BodyParameter $createParameters
         #endregion
     }
@@ -562,7 +571,7 @@ function Set-TargetResource
         }
 
         #region resource generator code
-        $UpdateParameters.Add("@odata.type", "#microsoft.graph.AccessReviewScheduleDefinition")
+        $UpdateParameters.Add('@odata.type', '#microsoft.graph.AccessReviewScheduleDefinition')
         Set-MgBetaIdentityGovernanceAccessReviewDefinition `
             -AccessReviewScheduleDefinitionId $currentInstance.Id `
             -BodyParameter $UpdateParameters
@@ -794,16 +803,16 @@ function Export-TargetResource
             }
             Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{
-                Id = $config.Id
-                DisplayName           =  $config.DisplayName
-                Ensure = 'Present'
-                Credential = $Credential
-                ApplicationId = $ApplicationId
-                TenantId = $TenantId
-                ApplicationSecret = $ApplicationSecret
+                Id                    = $config.Id
+                DisplayName           = $config.DisplayName
+                Ensure                = 'Present'
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
-                ManagedIdentity = $ManagedIdentity.IsPresent
-                AccessTokens = $AccessTokens
+                ManagedIdentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
             }
 
             $Results = Get-TargetResource @Params
@@ -813,19 +822,19 @@ function Export-TargetResource
             {
                 $complexMapping = @(
                     @{
-                        Name = 'ScopeValue'
+                        Name            = 'ScopeValue'
                         CimInstanceName = 'MicrosoftGraphAccessReviewScope'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'PrincipalScopes'
+                        Name            = 'PrincipalScopes'
                         CimInstanceName = 'MicrosoftGraphAccessReviewScope'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'ResourceScopes'
+                        Name            = 'ResourceScopes'
                         CimInstanceName = 'MicrosoftGraphAccessReviewScope'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                 )
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
@@ -846,34 +855,34 @@ function Export-TargetResource
             {
                 $complexMapping = @(
                     @{
-                        Name = 'SettingsValue'
+                        Name            = 'SettingsValue'
                         CimInstanceName = 'MicrosoftGraphAccessReviewScheduleSettings'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'ApplyActions'
+                        Name            = 'ApplyActions'
                         CimInstanceName = 'MicrosoftGraphAccessReviewApplyAction'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'RecommendationInsightSettings'
+                        Name            = 'RecommendationInsightSettings'
                         CimInstanceName = 'MicrosoftGraphAccessReviewRecommendationInsightSetting'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'Recurrence'
+                        Name            = 'Recurrence'
                         CimInstanceName = 'MicrosoftGraphPatternedRecurrence'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'Pattern'
+                        Name            = 'Pattern'
                         CimInstanceName = 'MicrosoftGraphRecurrencePattern'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'Range'
+                        Name            = 'Range'
                         CimInstanceName = 'MicrosoftGraphRecurrenceRange'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                 )
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
@@ -894,34 +903,34 @@ function Export-TargetResource
             {
                 $complexMapping = @(
                     @{
-                        Name = 'StageSettings'
+                        Name            = 'StageSettings'
                         CimInstanceName = 'MicrosoftGraphAccessReviewStageSettings'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'PrincipalScopes'
+                        Name            = 'PrincipalScopes'
                         CimInstanceName = 'MicrosoftGraphAccessReviewScope'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'ResourceScopes'
+                        Name            = 'ResourceScopes'
                         CimInstanceName = 'MicrosoftGraphAccessReviewScope'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'RecommendationInsightSettings'
+                        Name            = 'RecommendationInsightSettings'
                         CimInstanceName = 'MicrosoftGraphAccessReviewRecommendationInsightSetting'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'PrincipalScopes'
+                        Name            = 'PrincipalScopes'
                         CimInstanceName = 'MicrosoftGraphAccessReviewScope'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'ResourceScopes'
+                        Name            = 'ResourceScopes'
                         CimInstanceName = 'MicrosoftGraphAccessReviewScope'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                 )
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
@@ -946,15 +955,15 @@ function Export-TargetResource
                 -Credential $Credential
             if ($Results.ScopeValue)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "ScopeValue" -IsCIMArray:$False
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'ScopeValue' -IsCIMArray:$False
             }
             if ($Results.SettingsValue)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "SettingsValue" -IsCIMArray:$False
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'SettingsValue' -IsCIMArray:$False
             }
             if ($Results.StageSettings)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "StageSettings" -IsCIMArray:$True
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'StageSettings' -IsCIMArray:$True
             }
 
             $dscContent += $currentDSCBlock

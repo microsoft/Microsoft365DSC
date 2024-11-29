@@ -92,27 +92,28 @@ function Get-TargetResource
         $allSettings = Get-MgBetaDeviceManagementAndroidManagedStoreAccountEnterpriseSetting
         $specificSetting = $allSettings | Where-Object { $_.id -eq $Id }
 
-        if (-not $specificSetting) {
+        if (-not $specificSetting)
+        {
             Write-Verbose "No Android Managed Store Account Enterprise Setting found with Id $Id."
             return $nullResult
         }
 
         $result = @{
-            Id                                        = $specificSetting.id
-            BindStatus                                = $specificSetting.bindStatus
+            Id                    = $specificSetting.id
+            BindStatus            = $specificSetting.bindStatus
             # OwnerUserPrincipalName                    = $specificSetting.ownerUserPrincipalName
             # OwnerOrganizationName                     = $specificSetting.ownerOrganizationName
             # EnrollmentTarget                          = $specificSetting.enrollmentTarget
             # DeviceOwnerManagementEnabled              = $specificSetting.deviceOwnerManagementEnabled
             # AndroidDeviceOwnerFullyManagedEnrollmentEnabled = $specificSetting.androidDeviceOwnerFullyManagedEnrollmentEnabled
-            Ensure                                    = 'Present'
-            Credential                                = $Credential
-            ApplicationId                             = $ApplicationId
-            TenantId                                  = $TenantId
-            CertificateThumbprint                     = $CertificateThumbprint
-            ApplicationSecret                         = $ApplicationSecret
-            ManagedIdentity                           = $ManagedIdentity.IsPresent
-            AccessTokens                              = $AccessTokens
+            Ensure                = 'Present'
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
+            ApplicationSecret     = $ApplicationSecret
+            ManagedIdentity       = $ManagedIdentity.IsPresent
+            AccessTokens          = $AccessTokens
         }
 
         return $result
@@ -224,10 +225,10 @@ function Set-TargetResource
         $dataSharingConsent = Get-MgBetaDeviceManagementDataSharingConsent -DataSharingConsentId 'androidManagedStore'
         if ($dataSharingConsent.granted -eq $false)
         {
-            Write-Verbose -Message "Consent not granted, requesting consent..."
-            $consentResult = Invoke-MgGraphRequest -Uri ($Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/deviceManagement/dataSharingConsents/androidManagedStore/consentToDataSharing") -Method 'POST' -Body @{
-                DataSharingConsentId = "androidManagedStore"
-            } -ContentType "application/json"
+            Write-Verbose -Message 'Consent not granted, requesting consent...'
+            $consentResult = Invoke-MgGraphRequest -Uri ($Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + 'beta/deviceManagement/dataSharingConsents/androidManagedStore/consentToDataSharing') -Method 'POST' -Body @{
+                DataSharingConsentId = 'androidManagedStore'
+            } -ContentType 'application/json'
         }
 
         # Request enrollment signup URL if necessary
@@ -242,13 +243,13 @@ function Set-TargetResource
         #         hostName = "intune.microsoft.com"
         #     } -ContentType "application/json"
 
-            # return $nullResult
+        # return $nullResult
         # }
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-            Write-Host "Remove the Intune Device Management Android Google Play Enrollment with Id {$($currentInstance.Id)}"
-        $unbindResult = Invoke-MgGraphRequest -Uri ($Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/deviceManagement/androidManagedStoreAccountEnterpriseSettings/unbind") -Method 'POST' -Body @{} -ContentType "application/json"
+        Write-Host "Remove the Intune Device Management Android Google Play Enrollment with Id {$($currentInstance.Id)}"
+        $unbindResult = Invoke-MgGraphRequest -Uri ($Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + 'beta/deviceManagement/androidManagedStoreAccountEnterpriseSettings/unbind') -Method 'POST' -Body @{} -ContentType 'application/json'
     }
 }
 

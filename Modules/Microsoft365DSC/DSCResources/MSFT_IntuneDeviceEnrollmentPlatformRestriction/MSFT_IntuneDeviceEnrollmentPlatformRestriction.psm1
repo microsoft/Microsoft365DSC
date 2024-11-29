@@ -117,7 +117,7 @@ function Get-TargetResource
     $keys = (([Hashtable]$PSBoundParameters).Clone()).Keys
     foreach ($key in $keys)
     {
-        if ($null -ne $PSBoundParameters.$key -and $PSBoundParameters.$key.getType().Name -like '*cimInstance*' -and $key -like "*Restriction")
+        if ($null -ne $PSBoundParameters.$key -and $PSBoundParameters.$key.getType().Name -like '*cimInstance*' -and $key -like '*Restriction')
         {
             if ($DeviceEnrollmentConfigurationType -eq 'singlePlatformRestriction' )
             {
@@ -129,10 +129,12 @@ function Get-TargetResource
 
     try
     {
-        try {
+        try
+        {
             $config = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -DeviceEnrollmentConfigurationId $Identity -ErrorAction Stop
         }
-        catch {
+        catch
+        {
             $config = $null
         }
 
@@ -141,9 +143,16 @@ function Get-TargetResource
             Write-Verbose -Message "Could not find an Intune Device Enrollment Platform Restriction with Id {$Identity}"
             $config = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -All -Filter "DisplayName eq '$DisplayName'" `
                 -ErrorAction SilentlyContinue | Where-Object -FilterScript {
-                    $_.AdditionalProperties.'@odata.type' -like "#microsoft.graph.deviceEnrollmentPlatformRestriction*Configuration" -and
-                    $(if ($null -ne $_.AdditionalProperties.platformType) { $_.AdditionalProperties.platformType -eq $PlatformType } else { $true })
-                }
+                $_.AdditionalProperties.'@odata.type' -like '#microsoft.graph.deviceEnrollmentPlatformRestriction*Configuration' -and
+                $(if ($null -ne $_.AdditionalProperties.platformType)
+                    {
+                        $_.AdditionalProperties.platformType -eq $PlatformType
+                    }
+                    else
+                    {
+                        $true
+                    })
+            }
 
             if ($null -eq $config)
             {
@@ -181,8 +190,8 @@ function Get-TargetResource
         if ($assignmentsValues.Count -gt 0)
         {
             $assignmentResult += ConvertFrom-IntunePolicyAssignment `
-                                -IncludeDeviceFilter:$true `
-                                -Assignments ($assignmentsValues)
+                -IncludeDeviceFilter:$true `
+                -Assignments ($assignmentsValues)
         }
         $results.Add('Assignments', $assignmentResult)
 
@@ -311,7 +320,8 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    if ($Ensure -eq 'Absent' -and $Identity -like '*_DefaultPlatformRestrictions') {
+    if ($Ensure -eq 'Absent' -and $Identity -like '*_DefaultPlatformRestrictions')
+    {
         throw 'Cannot delete the default platform restriction policy.'
     }
 
@@ -383,7 +393,7 @@ function Set-TargetResource
 
             if ($PriorityPresent -and $Priority -ne $policy.Priority)
             {
-                $Uri = "/beta/deviceManagement/deviceEnrollmentConfigurations/{0}/setPriority" -f $policy.Id
+                $Uri = '/beta/deviceManagement/deviceEnrollmentConfigurations/{0}/setPriority' -f $policy.Id
                 $Body = @{
                     priority = $Priority
                 }
@@ -448,7 +458,7 @@ function Set-TargetResource
 
             if ($PriorityPresent -and $Priority -ne $currentInstance.Priority)
             {
-                $Uri = "/beta/deviceManagement/deviceEnrollmentConfigurations/{0}/setPriority" -f $currentInstance.Identity
+                $Uri = '/beta/deviceManagement/deviceEnrollmentConfigurations/{0}/setPriority' -f $currentInstance.Identity
                 $Body = @{
                     priority = $Priority
                 }
@@ -623,7 +633,7 @@ function Test-TargetResource
     #Compare basic parameters
     if ($testResult)
     {
-        Write-Verbose -Message "Comparing the current values with the desired ones"
+        Write-Verbose -Message 'Comparing the current values with the desired ones'
         $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
             -Source $($MyInvocation.MyCommand.Source) `
             -DesiredValues $PSBoundParameters `
@@ -912,7 +922,7 @@ function Export-TargetResource
     catch
     {
         if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
-        $_.Exception -like "*Request not applicable to target tenant*")
+                $_.Exception -like '*Request not applicable to target tenant*')
         {
             Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }

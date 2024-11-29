@@ -104,7 +104,7 @@ function Get-TargetResource
                     Write-Verbose -Message "Could not find an Intune Device Configuration Administrative Template Policy for Windows10 with DisplayName {$DisplayName}"
                     return $nullResult
                 }
-                if(([array]$getValue).count -gt 1)
+                if (([array]$getValue).count -gt 1)
                 {
                     throw "A policy with a duplicated displayName {'$DisplayName'} was found - Ensure displayName is unique"
                 }
@@ -243,8 +243,8 @@ function Get-TargetResource
         if ($graphAssignments.count -gt 0)
         {
             $returnAssignments += ConvertFrom-IntunePolicyAssignment `
-                                -IncludeDeviceFilter:$true `
-                                -Assignments ($graphAssignments)
+                -IncludeDeviceFilter:$true `
+                -Assignments ($graphAssignments)
         }
         $results.Add('Assignments', $returnAssignments)
 
@@ -253,7 +253,7 @@ function Get-TargetResource
     catch
     {
         if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
-            $_.Exception -like "*Unable to perform redirect as Location Header is not set in response*")
+                $_.Exception -like '*Unable to perform redirect as Location Header is not set in response*')
         {
             if (Assert-M365DSCIsNonInteractiveShell)
             {
@@ -851,7 +851,7 @@ function Export-TargetResource
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
                 Managedidentity       = $ManagedIdentity.IsPresent
-                AccessTokens`         = $AccessTokens
+                AccessTokens          = $AccessTokens
             }
 
             $Results = Get-TargetResource @params
@@ -937,7 +937,7 @@ function Export-TargetResource
             $currentDSCBlock = $currentDSCBlock.replace( "    ,`r`n" , "    `r`n" )
             $currentDSCBlock = $currentDSCBlock.replace( "`r`n;`r`n" , "`r`n" )
             $currentDSCBlock = $currentDSCBlock.replace( "`r`n,`r`n" , "`r`n" )
-            $currentDSCBlock = $currentDSCBlock.Replace("}                    Enabled = `$","}`r`n                    Enabled = `$")
+            $currentDSCBlock = $currentDSCBlock.Replace("}                    Enabled = `$", "}`r`n                    Enabled = `$")
 
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
@@ -950,8 +950,8 @@ function Export-TargetResource
     catch
     {
         if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
-                $_.Exception -like "*Unable to perform redirect as Location Header is not set in response*" -or `
-                $_.Exception -like "*Request not applicable to target tenant*")
+                $_.Exception -like '*Unable to perform redirect as Location Header is not set in response*' -or `
+                $_.Exception -like '*Request not applicable to target tenant*')
         {
             Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }

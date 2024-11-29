@@ -222,14 +222,14 @@ function Set-TargetResource
     $currentInstance = Get-TargetResource @PSBoundParameters
 
     $OperationParams = ([Hashtable]$PSBoundParameters).Clone()
-    $OperationParams.Remove("Credential") | Out-Null
-    $OperationParams.Remove("ManagedIdentity") | Out-Null
-    $OperationParams.Remove("ApplicationId") | Out-Null
-    $OperationParams.Remove("TenantId") | Out-Null
-    $OperationParams.Remove("CertificateThumbprint") | Out-Null
-    $OperationParams.Remove("ApplicationSecret") | Out-Null
-    $OperationParams.Remove("Ensure") | Out-Null
-    $OperationParams.Remove("IsSingleInstance") | Out-Null
+    $OperationParams.Remove('Credential') | Out-Null
+    $OperationParams.Remove('ManagedIdentity') | Out-Null
+    $OperationParams.Remove('ApplicationId') | Out-Null
+    $OperationParams.Remove('TenantId') | Out-Null
+    $OperationParams.Remove('CertificateThumbprint') | Out-Null
+    $OperationParams.Remove('ApplicationSecret') | Out-Null
+    $OperationParams.Remove('Ensure') | Out-Null
+    $OperationParams.Remove('IsSingleInstance') | Out-Null
     $OperationParams.Remove('AccessTokens') | Out-Null
 
     if ($null -ne $OperationParams.B2BCollaborationInbound)
@@ -259,12 +259,12 @@ function Set-TargetResource
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Updating Cross Tenant Access Policy Configuration Default"
+        Write-Verbose -Message 'Updating Cross Tenant Access Policy Configuration Default'
         Update-MgBetaPolicyCrossTenantAccessPolicyDefault @OperationParams
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing Cross Tenant Access Policy Configuration Default is not supported"
+        Write-Verbose -Message 'Removing Cross Tenant Access Policy Configuration Default is not supported'
     }
 }
 
@@ -709,7 +709,7 @@ function Get-M365DSCAADCrossTenantAccessPolicyB2BSetting
     }
     #endregion
     $results = @{
-        Applications = $applications
+        Applications   = $applications
         UsersAndGroups = $usersAndGroups
     }
 
@@ -746,7 +746,7 @@ function Get-M365DSCAADCrossTenantAccessPolicyInboundTrustAsString
 
     $StringContent = $null
     if ($null -ne $Setting.IsCompliantDeviceAccepted -or $null -ne $Setting.IsHybridAzureADJoinedDeviceAccepted -or `
-        $null -ne $Setting.IsMfaAccepted)
+            $null -ne $Setting.IsMfaAccepted)
     {
         $StringContent = "MSFT_AADCrossTenantAccessPolicyInboundTrust {`r`n"
         if ($null -ne $Setting.IsCompliantDeviceAccepted)

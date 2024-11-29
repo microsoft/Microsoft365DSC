@@ -107,7 +107,7 @@ function Get-TargetResource
 
                 if ($null -eq $getValue)
                 {
-                    Write-verbose -Message "Could not find an Intune Policy Sets with DisplayName {$DisplayName}"
+                    Write-Verbose -Message "Could not find an Intune Policy Sets with DisplayName {$DisplayName}"
                     return $nullResult
                 }
                 else
@@ -117,10 +117,11 @@ function Get-TargetResource
                         Write-Verbose -Message "Multiple Intune Policy Sets with DisplayName {$DisplayName} - unable to continue"
                         return $nullResult
                     }
-                    else {
+                    else
+                    {
                         $getValue = Get-MgBetaDeviceAppManagementPolicySet -PolicySetId $getValue.Id -ExpandProperty * -ErrorAction SilentlyContinue
 
-                        }
+                    }
                 }
             }
         }
@@ -161,8 +162,8 @@ function Get-TargetResource
         if ($assignmentsValues.Count -gt 0)
         {
             $assignmentResult += ConvertFrom-IntunePolicyAssignment `
-                                -IncludeDeviceFilter:$true `
-                                -Assignments ($assignmentsValues)
+                -IncludeDeviceFilter:$true `
+                -Assignments ($assignmentsValues)
         }
         $results.Add('Assignments', $assignmentResult)
 
@@ -172,10 +173,10 @@ function Get-TargetResource
         foreach ($itemEntry in $itemsValues)
         {
             $itemValue = @{
-                dataType = $itemEntry.AdditionalProperties.'@odata.type'
-                payloadId = $itemEntry.PayloadId
-                itemType = $itemEntry.ItemType
-                displayName = $itemEntry.displayName
+                dataType             = $itemEntry.AdditionalProperties.'@odata.type'
+                payloadId            = $itemEntry.PayloadId
+                itemType             = $itemEntry.ItemType
+                displayName          = $itemEntry.displayName
                 guidedDeploymentTags = $itemEntry.GuidedDeploymentTags
             }
             $itemResult += $itemValue
@@ -285,8 +286,8 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Creating an Intune Policy Sets with DisplayName {$DisplayName}"
         # remove complex values
-        $BoundParameters.Remove("Assignments") | Out-Null
-        $BoundParameters.Remove("Items") | Out-Null
+        $BoundParameters.Remove('Assignments') | Out-Null
+        $BoundParameters.Remove('Items') | Out-Null
         # remove unused values
         $BoundParameters.Remove('Id') | Out-Null
 
@@ -304,20 +305,20 @@ function Set-TargetResource
 
         # set assignments and items to work with New-MgBetaDeviceAppManagementPolicySet command
         $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
-        $CreateParameters.Add("Assignments", $assignmentsHash)
+        $CreateParameters.Add('Assignments', $assignmentsHash)
 
         $itemsHash = @()
         foreach ($item in $items)
         {
             $itemsHash += @{
-                                PayloadId = $item.payloadId
-                                "@odata.type" = $item.dataType
-                                guidedDeploymentTags =$item.guidedDeploymentTags
-                            }
+                PayloadId            = $item.payloadId
+                '@odata.type'        = $item.dataType
+                guidedDeploymentTags = $item.guidedDeploymentTags
+            }
         }
-        $CreateParameters.Add("Items", $itemsHash)
+        $CreateParameters.Add('Items', $itemsHash)
 
-        write-verbose -Message ($CreateParameters | out-string)
+        Write-Verbose -Message ($CreateParameters | Out-String)
         $policy = New-MgBetaDeviceAppManagementPolicySet @CreateParameters
 
     }
@@ -325,8 +326,8 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Updating the Intune Policy Sets with Id {$($currentInstance.Id)}"
         # remove complex values
-        $BoundParameters.Remove("Assignments") | Out-Null
-        $BoundParameters.Remove("Items") | Out-Null
+        $BoundParameters.Remove('Assignments') | Out-Null
+        $BoundParameters.Remove('Items') | Out-Null
         # remove unused values
         $BoundParameters.Remove('Id') | Out-Null
 
@@ -342,9 +343,9 @@ function Set-TargetResource
             }
         }
         #region resource generator code
-        $UpdateParameters.Add("PolicySetId", $currentInstance.Id)
+        $UpdateParameters.Add('PolicySetId', $currentInstance.Id)
 
-        Update-MgBetaDeviceAppManagementPolicySet  @UpdateParameters
+        Update-MgBetaDeviceAppManagementPolicySet @UpdateParameters
 
         $Url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/deviceAppManagement/policySets/$($currentInstance.Id)/update"
         if ($null -ne ($itemamendments = Get-ItemsAmendmentsObject -currentObjectItems $currentInstance.Items -targetObjectItems $items))
@@ -582,16 +583,16 @@ function Export-TargetResource
             }
             Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{
-                Id = $config.Id
-                DisplayName           =  $config.DisplayName
-                Ensure = 'Present'
-                Credential = $Credential
-                ApplicationId = $ApplicationId
-                TenantId = $TenantId
-                ApplicationSecret = $ApplicationSecret
+                Id                    = $config.Id
+                DisplayName           = $config.DisplayName
+                Ensure                = 'Present'
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
-                Managedidentity = $ManagedIdentity.IsPresent
-                AccessTokens    = $AccessTokens
+                Managedidentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
             }
 
             $Results = Get-TargetResource @Params
@@ -628,11 +629,11 @@ function Export-TargetResource
                 -Credential $Credential
             if ($Results.Assignments)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Assignments" -isCIMArray:$true
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Assignments' -IsCIMArray:$true
             }
             if ($Results.Items)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Items" -isCIMArray:$true
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Items' -IsCIMArray:$true
             }
 
             $dscContent += $currentDSCBlock
@@ -645,9 +646,9 @@ function Export-TargetResource
     }
     catch
     {
-        if ($_.Exception -like "*401*" -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or
-            $_.Exception -like "* Unauthorized*" -or `
-            $_.Exception -like "*Request not applicable to target tenant*")
+        if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or
+            $_.Exception -like '* Unauthorized*' -or `
+                $_.Exception -like '*Request not applicable to target tenant*')
         {
             Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }
@@ -675,32 +676,32 @@ function Get-ItemsAmendmentsObject
 
     $nullreturn = $true
     $ItemsModificationTemplate = @{
-                                    deletedPolicySetItems = @()
-                                    updatedPolicySetItems = @()
-                                    addedPolicySetItems = @()
-                }
+        deletedPolicySetItems = @()
+        updatedPolicySetItems = @()
+        addedPolicySetItems   = @()
+    }
 
-    $currentObjectItems | foreach {
+    $currentObjectItems | ForEach-Object {
 
         if (!($targetObjectItems.Payloadid -contains $_.PayloadId))
         {
-            write-verbose -message ($_.DisplayName + ' NOT present in Config Document, Removing')
+            Write-Verbose -Message ($_.DisplayName + ' NOT present in Config Document, Removing')
             $ItemsModificationTemplate.deletedPolicySetItems += $_.Id
             $nullreturn = $false
         }
 
     }
 
-    $targetObjectItems | foreach {
+    $targetObjectItems | ForEach-Object {
 
         if (!($currentObjectItems.PayloadId -contains $_.PayloadId))
         {
-            write-verbose -message ($_.DisplayName + ' NOT already present in Policy Set, Adding')
+            Write-Verbose -Message ($_.DisplayName + ' NOT already present in Policy Set, Adding')
             $ItemsModificationTemplate.addedPolicySetItems += @{
-                                                                payloadId = $_.payloadId
-                                                                "@odata.type" = $_.dataType
-                                                                guidedDeploymentTags = $_.guidedDeploymentTags
-                                                               }
+                payloadId            = $_.payloadId
+                '@odata.type'        = $_.dataType
+                guidedDeploymentTags = $_.guidedDeploymentTags
+            }
             $nullreturn = $false
         }
 

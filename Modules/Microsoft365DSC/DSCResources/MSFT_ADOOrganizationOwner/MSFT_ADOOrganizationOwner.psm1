@@ -61,7 +61,7 @@ function Get-TargetResource
         $uri = "https://vsaex.dev.azure.com/$OrganizationName/_apis/userentitlements?api-version=7.2-preview.4"
         $allUsers = Invoke-M365DSCAzureDevOPSWebRequest -Uri $uri
 
-        $ownerInfo = $allUsers.Items | Where-Object -FilterScript {$_.id -eq $organizationInfo.owner}
+        $ownerInfo = $allUsers.Items | Where-Object -FilterScript { $_.id -eq $organizationInfo.owner }
 
         $results = @{
             OrganizationName      = $OrganizationName
@@ -140,17 +140,17 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Retrieving all users."
+    Write-Verbose -Message 'Retrieving all users.'
     $uri = "https://vsaex.dev.azure.com/$OrganizationName/_apis/userentitlements?api-version=7.2-preview.4"
     $allUsers = Invoke-M365DSCAzureDevOPSWebRequest -Uri $uri
 
-    $ownerInfo = $allUsers.items | Where-Object -FilterScript {$_.user.principalName -eq $Owner}
+    $ownerInfo = $allUsers.items | Where-Object -FilterScript { $_.user.principalName -eq $Owner }
 
     if ($null -ne $ownerInfo)
     {
         Write-Verbose -Message "Updating owner for organization {$OrganizationName} to {$($ownerInfo.id)}"
         $body = "[{`"from`":`"`",`"op`":2,`"path`":`"/Owner`",`"value`":`"$($ownerInfo.id)`"}]"
-        $uri ='https://vssps.dev.azure.com/O365DSC-Dev/_apis/Organization/Collections/Me?api-version=7.1-preview.1'
+        $uri = 'https://vssps.dev.azure.com/O365DSC-Dev/_apis/Organization/Collections/Me?api-version=7.1-preview.1'
         Invoke-M365DSCAzureDevOPSWebRequest -Uri $uri -Method PATCH -Body $body
     }
     else

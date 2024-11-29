@@ -87,7 +87,7 @@ function Get-TargetResource
     {
         if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
         {
-            $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.DisplayName -eq $DisplayName}
+            $instance = $Script:exportedInstances | Where-Object -FilterScript { $_.DisplayName -eq $DisplayName }
         }
         else
         {
@@ -99,27 +99,28 @@ function Get-TargetResource
         }
 
         $instance = Get-MgBetaIdentityGovernanceLifecycleWorkflow -WorkflowId $instance.Id
-        if($null -ne $instance) {
+        if ($null -ne $instance)
+        {
             $executionConditionsResults = Get-M365DSCIdentityGovernanceWorkflowExecutionConditions -WorkflowId $instance.Id
             $taskResults = Get-M365DSCIdentityGovernanceTasks -WorkflowId $instance.Id
         }
 
         $results = @{
-            DisplayName              = $DisplayName;
-            Description              = $instance.Description;
-            Category                 = $instance.Category;
-            IsEnabled                = $instance.IsEnabled;
-            IsSchedulingEnabled      = $instance.IsSchedulingEnabled;
-            Tasks                    = [Array]$taskResults
-            ExecutionConditions      = $executionConditionsResults
-            Ensure                   = 'Present'
-            Credential               = $Credential
-            ApplicationId            = $ApplicationId
-            TenantId                 = $TenantId
-            ApplicationSecret        = $ApplicationSecret
-            CertificateThumbprint    = $CertificateThumbprint
-            ManagedIdentity          = $ManagedIdentity.IsPresent
-            AccessTokens             = $AccessTokens
+            DisplayName           = $DisplayName
+            Description           = $instance.Description
+            Category              = $instance.Category
+            IsEnabled             = $instance.IsEnabled
+            IsSchedulingEnabled   = $instance.IsSchedulingEnabled
+            Tasks                 = [Array]$taskResults
+            ExecutionConditions   = $executionConditionsResults
+            Ensure                = 'Present'
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            ApplicationSecret     = $ApplicationSecret
+            CertificateThumbprint = $CertificateThumbprint
+            ManagedIdentity       = $ManagedIdentity.IsPresent
+            AccessTokens          = $AccessTokens
         }
         return [System.Collections.Hashtable] $results
     }
@@ -219,33 +220,38 @@ function Set-TargetResource
 
     $setParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
-    if ($null -ne $ExecutionConditions){
+    if ($null -ne $ExecutionConditions)
+    {
         $executionConditionsResult = @{
-            Scope = @{
-                Rule = $ExecutionConditions.ScopeValue.Rule
-                "@odata.type" = $ExecutionConditions.ScopeValue.ODataType
+            Scope         = @{
+                Rule          = $ExecutionConditions.ScopeValue.Rule
+                '@odata.type' = $ExecutionConditions.ScopeValue.ODataType
             }
-            Trigger = @{
-                OffsetInDays = $ExecutionConditions.TriggerValue.OffsetInDays
+            Trigger       = @{
+                OffsetInDays       = $ExecutionConditions.TriggerValue.OffsetInDays
                 TimeBasedAttribute = $ExecutionConditions.TriggerValue.TimeBasedAttribute
-                "@odata.type" = $ExecutionConditions.TriggerValue.ODataType
+                '@odata.type'      = $ExecutionConditions.TriggerValue.ODataType
             }
-            "@odata.type" = $ExecutionConditions.ODataType
+            '@odata.type' = $ExecutionConditions.ODataType
         }
 
         $setParameters.Remove('ExecutionConditions')
         $setParameters.Add('executionConditions', $executionConditionsResult)
     }
 
-    if ($null -ne $Tasks) {
+    if ($null -ne $Tasks)
+    {
         $taskList = @()
 
         # Loop through each task and create a hashtable
-        foreach ($task in $Tasks) {
+        foreach ($task in $Tasks)
+        {
             [Array]$argumentsArray = @()
 
-            if ($task.Arguments) {
-                foreach ($arg in $task.Arguments) {
+            if ($task.Arguments)
+            {
+                foreach ($arg in $task.Arguments)
+                {
                     # Create a hashtable for each argument
                     $argumentsArray += @{
                         Name  = $arg.Name.ToString()
@@ -263,7 +269,7 @@ function Set-TargetResource
                 TaskDefinitionId  = $task.TaskDefinitionId
 
                 # If Arguments exist, populate the hashtable
-                Arguments = [Array]$argumentsArray
+                Arguments         = [Array]$argumentsArray
             }
 
             # Add the task hashtable to the task list
@@ -403,7 +409,8 @@ function Test-TargetResource
             {
                 $testTargetResource = $false
             }
-            else {
+            else
+            {
                 $ValuesToCheck.Remove($key) | Out-Null
             }
         }
@@ -413,12 +420,12 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
-    -Source $($MyInvocation.MyCommand.Source) `
-    -DesiredValues $PSBoundParameters `
-    -ValuesToCheck $ValuesToCheck.Keys `
-    -IncludedDrifts $driftedParams
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck $ValuesToCheck.Keys `
+        -IncludedDrifts $driftedParams
 
-    if(-not $TestResult)
+    if (-not $TestResult)
     {
         $testTargetResource = $false
     }
@@ -577,17 +584,20 @@ function Get-M365DSCIdentityGovernanceTasks
     # Initialize an array to hold the hashtables
     $taskList = @()
 
-    if($null -eq $tasks)
+    if ($null -eq $tasks)
     {
         return $taskList
     }
 
     # Loop through each task and create a hashtable
-    foreach ($task in $tasks) {
+    foreach ($task in $tasks)
+    {
         [Array]$argumentsArray = @()
 
-        if ($task.Arguments) {
-            foreach ($arg in $task.Arguments) {
+        if ($task.Arguments)
+        {
+            foreach ($arg in $task.Arguments)
+            {
                 # Create a hashtable for each argument
                 $argumentsArray += @{
                     Name  = $arg.Name.ToString()
@@ -605,7 +615,7 @@ function Get-M365DSCIdentityGovernanceTasks
             TaskDefinitionId  = $task.TaskDefinitionId
 
             # If Arguments exist, populate the hashtable
-            Arguments = [Array]$argumentsArray
+            Arguments         = [Array]$argumentsArray
         }
 
         # Add the task hashtable to the task list
@@ -632,11 +642,11 @@ function Get-M365DSCIdentityGovernanceTasksAsString
     {
         $StringContent.Append("`n                MSFT_AADIdentityGovernanceTask {`r`n") | Out-Null
         $StringContent.Append("                    DisplayName       = '" + $task.DisplayName + "'`r`n") | Out-Null
-        $StringContent.Append("                    Description       = '" + $task.Description.replace("'","''") + "'`r`n") | Out-Null
+        $StringContent.Append("                    Description       = '" + $task.Description.replace("'", "''") + "'`r`n") | Out-Null
         $StringContent.Append("                    Category          = '" + $task.Category + "'`r`n") | Out-Null
-        $StringContent.Append("                    IsEnabled         = $" + $task.IsEnabled + "`r`n") | Out-Null
-        $StringContent.Append("                    ExecutionSequence = " + $task.ExecutionSequence + "`r`n") | Out-Null
-        $StringContent.Append("                    ContinueOnError   = $" + $task.ContinueOnError + "`r`n") | Out-Null
+        $StringContent.Append('                    IsEnabled         = $' + $task.IsEnabled + "`r`n") | Out-Null
+        $StringContent.Append('                    ExecutionSequence = ' + $task.ExecutionSequence + "`r`n") | Out-Null
+        $StringContent.Append('                    ContinueOnError   = $' + $task.ContinueOnError + "`r`n") | Out-Null
         $StringContent.Append("                    TaskDefinitionId   = '" + $task.TaskDefinitionId + "'`r`n") | Out-Null
 
         if ($task.Arguments.Length -gt 0)
@@ -675,26 +685,28 @@ function Get-M365DSCIdentityGovernanceWorkflowExecutionConditions
     $instance = Get-MgBetaIdentityGovernanceLifecycleWorkflow -WorkflowId $WorkflowId
     $executionConditionsResult = @{}
 
-    if($null -ne $instance -and $null -ne $instance.ExecutionConditions){
+    if ($null -ne $instance -and $null -ne $instance.ExecutionConditions)
+    {
         $executionConditions = $instance.ExecutionConditions.AdditionalProperties
         $executionConditionsResult = @{
-            ScopeValue = @{
-                Rule = $ExecutionConditions['scope']['rule']
+            ScopeValue   = @{
+                Rule      = $ExecutionConditions['scope']['rule']
                 OdataType = $ExecutionConditions['scope']['@odata.type']
             }
             TriggerValue = @{
-                OffsetInDays = $ExecutionConditions['trigger']['offsetInDays']
+                OffsetInDays       = $ExecutionConditions['trigger']['offsetInDays']
                 TimeBasedAttribute = $ExecutionConditions['trigger']['timeBasedAttribute']
-                ODataType = $ExecutionConditions['trigger']['@odata.type']
+                ODataType          = $ExecutionConditions['trigger']['@odata.type']
             }
-            OdataType = $ExecutionConditions['@odata.type']
+            OdataType    = $ExecutionConditions['@odata.type']
         }
     }
 
     return $executionConditionsResult
 }
 
-function Get-M365DSCIdentityGovernanceWorkflowExecutionConditionsAsString {
+function Get-M365DSCIdentityGovernanceWorkflowExecutionConditionsAsString
+{
     [CmdletBinding()]
     [OutputType([System.String])]
     param (
@@ -708,29 +720,32 @@ function Get-M365DSCIdentityGovernanceWorkflowExecutionConditionsAsString {
     $StringContent.Append("MSFT_IdentityGovernanceWorkflowExecutionConditions {`r`n") | Out-Null
 
     # Scope section
-    if ($null -ne $ExecutionConditions.ScopeValue) {
+    if ($null -ne $ExecutionConditions.ScopeValue)
+    {
         $StringContent.Append("                ScopeValue = MSFT_IdentityGovernanceScope {`r`n") | Out-Null
-        $StringContent.Append("                    Rule = '" + $ExecutionConditions.ScopeValue.Rule.replace("'","''") + "'`r`n") | Out-Null
+        $StringContent.Append("                    Rule = '" + $ExecutionConditions.ScopeValue.Rule.replace("'", "''") + "'`r`n") | Out-Null
         $StringContent.Append("                    ODataType = '" + $ExecutionConditions.ScopeValue.ODataType + "'`r`n") | Out-Null
         $StringContent.Append("                }`r`n") | Out-Null
     }
 
     # Trigger section
-    if ($null -ne $ExecutionConditions.TriggerValue) {
+    if ($null -ne $ExecutionConditions.TriggerValue)
+    {
         $StringContent.Append("                TriggerValue = MSFT_IdentityGovernanceTrigger {`r`n") | Out-Null
-        $StringContent.Append("                    OffsetInDays = " + $ExecutionConditions.TriggerValue.OffsetInDays + "`r`n") | Out-Null
+        $StringContent.Append('                    OffsetInDays = ' + $ExecutionConditions.TriggerValue.OffsetInDays + "`r`n") | Out-Null
         $StringContent.Append("                    TimeBasedAttribute = '" + $ExecutionConditions.TriggerValue.TimeBasedAttribute + "'`r`n") | Out-Null
         $StringContent.Append("                    ODataType = '" + $ExecutionConditions.TriggerValue.OdataType + "'`r`n") | Out-Null
         $StringContent.Append("                }`r`n") | Out-Null
     }
 
     # OdataType for executionConditions
-    if ($null -ne $ExecutionConditions.ODataType) {
+    if ($null -ne $ExecutionConditions.ODataType)
+    {
         $StringContent.Append("                ODataType = '" + $ExecutionConditions.ODataType + "'`r`n") | Out-Null
     }
 
     # End of execution conditions
-    $StringContent.Append("            }") | Out-Null
+    $StringContent.Append('            }') | Out-Null
 
     return $StringContent.ToString()
 }

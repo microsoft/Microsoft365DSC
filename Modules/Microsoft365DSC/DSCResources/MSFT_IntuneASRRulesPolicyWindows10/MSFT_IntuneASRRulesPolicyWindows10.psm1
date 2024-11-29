@@ -196,7 +196,7 @@ function Get-TargetResource
                 $policy = Get-MgBetaDeviceManagementIntent -All -Filter "DisplayName eq '$DisplayName'" -ErrorAction SilentlyContinue
             }
 
-            if(([array]$policy).count -gt 1)
+            if (([array]$policy).count -gt 1)
             {
                 throw "A policy with a duplicated displayName {'$DisplayName'} was found - Ensure displayName is unique"
             }
@@ -249,7 +249,7 @@ function Get-TargetResource
     catch
     {
         if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
-            $_.Exception -like "*Unable to perform redirect as Location Header is not set in response*")
+                $_.Exception -like '*Unable to perform redirect as Location Header is not set in response*')
         {
             if (Assert-M365DSCIsNonInteractiveShell)
             {
@@ -456,19 +456,19 @@ function Set-TargetResource
     $PSBoundParameters.Remove('AccessTokens') | Out-Null
 
     $IncorrectParameters = @{
-        BlockPersistenceThroughWmiType                  = @("userDefined", "warn")
-        OfficeAppsOtherProcessInjectionType             = "userDefined"
-        OfficeAppsLaunchChildProcessType                = "userDefined"
-        OfficeAppsExecutableContentCreationOrLaunchType = "userDefined"
-        OfficeMacroCodeAllowWin32ImportsType            = "userDefined"
-        OfficeCommunicationAppsLaunchChildProcess       = "disable"
-        ScriptObfuscatedMacroCodeType                   = "userDefined"
-        ScriptDownloadedPayloadExecutionType            = @("userDefined", "warn")
-        ProcessCreationType                             = "userDefined"
-        UntrustedUSBProcessType                         = "userDefined"
-        UntrustedExecutableType                         = "userDefined"
-        EmailContentExecutionType                       = "userDefined"
-        GuardMyFoldersType                              = "userDefined"
+        BlockPersistenceThroughWmiType                  = @('userDefined', 'warn')
+        OfficeAppsOtherProcessInjectionType             = 'userDefined'
+        OfficeAppsLaunchChildProcessType                = 'userDefined'
+        OfficeAppsExecutableContentCreationOrLaunchType = 'userDefined'
+        OfficeMacroCodeAllowWin32ImportsType            = 'userDefined'
+        OfficeCommunicationAppsLaunchChildProcess       = 'disable'
+        ScriptObfuscatedMacroCodeType                   = 'userDefined'
+        ScriptDownloadedPayloadExecutionType            = @('userDefined', 'warn')
+        ProcessCreationType                             = 'userDefined'
+        UntrustedUSBProcessType                         = 'userDefined'
+        UntrustedExecutableType                         = 'userDefined'
+        EmailContentExecutionType                       = 'userDefined'
+        GuardMyFoldersType                              = 'userDefined'
     }
 
     $ExceptionMessage = $null
@@ -487,7 +487,7 @@ function Set-TargetResource
 
     if (![string]::IsNullOrEmpty($ExceptionMessage))
     {
-        $ExceptionMessage += "Please update your configuration."
+        $ExceptionMessage += 'Please update your configuration.'
         Write-Verbose -Message $ExceptionMessage
 
         New-M365DSCLogEntry -Message $ExceptionMessage `
@@ -523,7 +523,7 @@ function Set-TargetResource
         $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
         if ($policy.id)
         {
-            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId  $policy.id `
+            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $policy.id `
                 -Targets $assignmentsHash `
                 -Repository 'deviceManagement/intents'
         }
@@ -557,7 +557,7 @@ function Set-TargetResource
 
         #region Assignments
         $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
-        Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId  $currentPolicy.Identity `
+        Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $currentPolicy.Identity `
             -Targets $assignmentsHash `
             -Repository 'deviceManagement/intents'
         #endregion
@@ -773,7 +773,7 @@ function Test-TargetResource
     if ($testResult)
     {
         $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
-           -Source $($MyInvocation.MyCommand.Source) `
+            -Source $($MyInvocation.MyCommand.Source) `
             -DesiredValues $PSBoundParameters `
             -ValuesToCheck $ValuesToCheck.Keys
     }
@@ -929,8 +929,8 @@ function Export-TargetResource
     catch
     {
         if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
-        $_.Exception -like "*Unable to perform redirect as Location Header is not set in response*" -or `
-        $_.Exception -like "*Request not applicable to target tenant*")
+                $_.Exception -like '*Unable to perform redirect as Location Header is not set in response*' -or `
+                $_.Exception -like '*Request not applicable to target tenant*')
         {
             Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }

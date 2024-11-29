@@ -651,8 +651,8 @@ function Get-TargetResource
         if (-not $getValue)
         {
             $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -All -Filter "DisplayName eq '$Displayname'" -ErrorAction SilentlyContinue | Where-Object `
-            -FilterScript { `
-                $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidDeviceOwnerGeneralDeviceConfiguration' `
+                -FilterScript { `
+                    $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidDeviceOwnerGeneralDeviceConfiguration' `
             }
         }
         #endregion
@@ -669,7 +669,7 @@ function Get-TargetResource
         $currentValueArray = $getValue.AdditionalProperties.azureAdSharedDeviceDataClearApps
         if ($null -ne $currentValueArray -and $currentValueArray.count -gt 0)
         {
-            foreach($currentValue in $currentValueArray)
+            foreach ($currentValue in $currentValueArray)
             {
                 $currentHash = @{
                     appId       = $currentValue.appId
@@ -691,10 +691,10 @@ function Get-TargetResource
             $currentValueArray = $currentValue.localizedMessages
             if ($null -ne $currentValueArray -and $currentValueArray.count -gt 0)
             {
-                foreach($currentChildValue in $currentValueArray)
+                foreach ($currentChildValue in $currentValueArray)
                 {
                     $currentHash = @{
-                        Name = $currentChildValue.name
+                        Name  = $currentChildValue.name
                         Value = $currentChildValue.value
                     }
                     $complexLocalizedMessages += $currentHash
@@ -712,10 +712,10 @@ function Get-TargetResource
             $currentValueArray = $currentValue.localizedMessages
             if ($null -ne $currentValueArray -and $currentValueArray.count -gt 0)
             {
-                foreach($currentChildValue in $currentValueArray)
+                foreach ($currentChildValue in $currentValueArray)
                 {
                     $currentHash = @{
-                        Name = $currentChildValue.name
+                        Name  = $currentChildValue.name
                         Value = $currentChildValue.value
                     }
                     $complexLocalizedMessages += $currentHash
@@ -739,7 +739,7 @@ function Get-TargetResource
         $currentValueArray = $getValue.AdditionalProperties.kioskModeApps
         if ($null -ne $currentValueArray -and $currentValueArray.count -gt 0)
         {
-            foreach($currentValue in $currentValueArray)
+            foreach ($currentValue in $currentValueArray)
             {
                 $currentHash = @{}
                 $currentHash.add('AppId', $currentValue.appid)
@@ -755,7 +755,7 @@ function Get-TargetResource
         $currentValueArray = $getValue.AdditionalProperties.personalProfilePersonalApplications
         if ($null -ne $currentValueArray -and $currentValueArray.count -gt 0)
         {
-            foreach($currentValue in $currentValueArray)
+            foreach ($currentValue in $currentValueArray)
             {
                 $currentHash = @{}
                 $currentHash.add('AppId', $currentValue.appid)
@@ -776,10 +776,10 @@ function Get-TargetResource
             $currentValueArray = $currentValue.localizedMessages
             if ($null -ne $currentValueArray -and $currentValueArray.count -gt 0)
             {
-                foreach($currentChildValue in $currentValueArray)
+                foreach ($currentChildValue in $currentValueArray)
                 {
                     $currentHash = @{
-                        Name = $currentChildValue.name
+                        Name  = $currentChildValue.name
                         Value = $currentChildValue.value
                     }
                     $complexLocalizedMessages += $currentHash
@@ -792,7 +792,7 @@ function Get-TargetResource
         $currentValueArray = $getValue.AdditionalProperties.systemUpdateFreezePeriods
         if ($null -ne $currentValueArray -and $currentValueArray.count -gt 0)
         {
-            foreach($currentValue in $currentValueArray)
+            foreach ($currentValue in $currentValueArray)
             {
                 $currentHash = @{}
                 $currentHash.Add('StartDay', $currentValue.startDay)
@@ -958,13 +958,13 @@ function Get-TargetResource
             AccessTokens                                             = $AccessTokens
         }
 
-        $assignmentsValues = Get-MgBetaDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId  $getValue.Id
+        $assignmentsValues = Get-MgBetaDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId $getValue.Id
         $assignmentResult = @()
         if ($assignmentsValues.Count -gt 0)
         {
             $assignmentResult += ConvertFrom-IntunePolicyAssignment `
-                                -IncludeDeviceFilter:$true `
-                                -Assignments ($assignmentsValues)
+                -IncludeDeviceFilter:$true `
+                -Assignments ($assignmentsValues)
         }
         $results.Add('Assignments', $assignmentResult)
 
@@ -972,7 +972,7 @@ function Get-TargetResource
     }
     catch
     {
-        write-verbose $_
+        Write-Verbose $_
         New-M365DSCLogEntry -Message 'Error retrieving data:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
@@ -1678,7 +1678,7 @@ function Set-TargetResource
 
         if ($policy.id)
         {
-            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId  $policy.id `
+            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $policy.id `
                 -Targets $assignmentsHash `
                 -Repository 'deviceManagement/deviceConfigurations'
         }
@@ -2394,7 +2394,7 @@ function Test-TargetResource
         {
             $testResult = Compare-M365DSCComplexObject `
                 -Source ($source) `
-                -Target ($target) -verbose
+                -Target ($target) -Verbose
 
             if (-Not $testResult)
             {
@@ -2859,7 +2859,7 @@ function Export-TargetResource
     catch
     {
         if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
-        $_.Exception -like "*Request not applicable to target tenant*")
+                $_.Exception -like '*Request not applicable to target tenant*')
         {
             Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }

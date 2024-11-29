@@ -12,10 +12,8 @@
     "permissions": {
         "graph": {
             "delegated": {
-                "read": [
-                ],
-                "update": [
-                ]
+                "read": [],
+                "update": []
             },
             "application": {
                 "read": [

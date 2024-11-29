@@ -84,11 +84,11 @@ function Get-TargetResource
         $WorkspaceNameValue = $WorkspaceName
         if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
         {
-            $entry = $Script:exportedInstances | Where-Object -FilterScript {$_.Name -eq $WorkspaceName}
+            $entry = $Script:exportedInstances | Where-Object -FilterScript { $_.Name -eq $WorkspaceName }
             $instance = Get-AzSentinelSetting -ResourceGroupName $entry.ResourceGroupName `
-                                              -WorkspaceName $entry.Name `
-                                              -SubscriptionId $SubscriptionId `
-                                              -ErrorAction SilentlyContinue
+                -WorkspaceName $entry.Name `
+                -SubscriptionId $SubscriptionId `
+                -ErrorAction SilentlyContinue
             $ResourceGroupNameValue = $entry.ResourceGroupName
             $WorkspaceNameValue = $entry.Name
         }
@@ -96,9 +96,9 @@ function Get-TargetResource
         {
             Write-Verbose -Message "Retrieving Sentinel Settings for {$WorkspaceName}"
             $instance = Get-AzSentinelSetting -ResourceGroupName $ResourceGroupName `
-                                              -WorkspaceName $WorkspaceName `
-                                              -ErrorAction SilentlyContinue `
-                                              -SubscriptionId $SubscriptionId
+                -WorkspaceName $WorkspaceName `
+                -ErrorAction SilentlyContinue `
+                -SubscriptionId $SubscriptionId
         }
         if ($null -eq $instance)
         {
@@ -106,35 +106,35 @@ function Get-TargetResource
         }
 
         Write-Verbose -Message "Found an instance of Sentinel Workspace {$Workspace}"
-        $Anomalies = $instance | Where-Object -FilterScript {$_.Name -eq 'Anomalies'}
+        $Anomalies = $instance | Where-Object -FilterScript { $_.Name -eq 'Anomalies' }
         $AnomaliesIsEnabledValue = $false
         if ($null -ne $Anomalies)
         {
-            Write-Verbose -Message "Anomalies instance found."
+            Write-Verbose -Message 'Anomalies instance found.'
             $AnomaliesIsEnabledValue = $Anomalies.IsEnabled
         }
 
-        $EntityAnalytics = $instance | Where-Object -FilterScript {$_.Name -eq 'EntityAnalytics'}
+        $EntityAnalytics = $instance | Where-Object -FilterScript { $_.Name -eq 'EntityAnalytics' }
         $EntityAnalyticsIsEnabledValue = $false
         if ($null -ne $EntityAnalytics)
         {
-            Write-Verbose -Message "EntityAnalytics instance found."
+            Write-Verbose -Message 'EntityAnalytics instance found.'
             $EntityAnalyticsIsEnabledValue = $EntityAnalytics.IsEnabled
         }
 
-        $EyesOn = $instance | Where-Object -FilterScript {$_.Name -eq 'EyesOn'}
+        $EyesOn = $instance | Where-Object -FilterScript { $_.Name -eq 'EyesOn' }
         $EyesOnIsEnabledValue = $false
         if ($null -ne $EyesOn)
         {
-            Write-Verbose -Message "EyesOn instance found."
+            Write-Verbose -Message 'EyesOn instance found.'
             $EyesOnIsEnabledValue = $EyesOn.IsEnabled
         }
 
-        $Ueba = $instance | Where-Object -FilterScript {$_.Name -eq 'Ueba'}
+        $Ueba = $instance | Where-Object -FilterScript { $_.Name -eq 'Ueba' }
         $UebaDataSourceValue = $null
         if ($null -ne $Ueba)
         {
-            Write-Verbose -Message "UEBA Data source instance found."
+            Write-Verbose -Message 'UEBA Data source instance found.'
             $UebaDataSourceValue = $Ueba.DataSource
         }
 
@@ -242,33 +242,33 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Updating Anomalies IsEnabled value to {$AnomaliesIsEnabled}"
         Update-AzSentinelSetting -ResourceGroupName $ResourceGroupName `
-                                    -WorkspaceName $WorkspaceName `
-                                     -SettingsName "Anomalies" `
-                                     -Enabled $AnomaliesIsEnabled | Out-Null
+            -WorkspaceName $WorkspaceName `
+            -SettingsName 'Anomalies' `
+            -Enabled $AnomaliesIsEnabled | Out-Null
     }
     if ($PSBoundParameters.ContainsKey('EntityAnalyticsIsEnabled'))
     {
         Write-Verbose -Message "Updating Entity Analytics IsEnabled value to {$EntityAnalyticsIsEnabled}"
         Update-AzSentinelSetting -ResourceGroupName $ResourceGroupName `
-                                     -WorkspaceName $WorkspaceName `
-                                     -SettingsName "EntityAnalytics" `
-                                     -Enabled $EntityAnalyticsIsEnabled | Out-Null
+            -WorkspaceName $WorkspaceName `
+            -SettingsName 'EntityAnalytics' `
+            -Enabled $EntityAnalyticsIsEnabled | Out-Null
     }
     if ($PSBoundParameters.ContainsKey('EyesOnIsEnabled'))
     {
         Write-Verbose -Message "Updating Eyes On IsEnabled value to {$EyesOnIsEnabled}"
         Update-AzSentinelSetting -ResourceGroupName $ResourceGroupName `
-                                     -WorkspaceName $WorkspaceName `
-                                     -SettingsName "EyesOn" `
-                                     -Enabled $EyesOnIsEnabled | Out-Null
+            -WorkspaceName $WorkspaceName `
+            -SettingsName 'EyesOn' `
+            -Enabled $EyesOnIsEnabled | Out-Null
     }
     if ($PSBoundParameters.ContainsKey('UebaDataSource'))
     {
         Write-Verbose -Message "Updating UEBA Data Source value to {$UebaDataSource}"
         Update-AzSentinelSetting -ResourceGroupName $ResourceGroupName `
-                                     -WorkspaceName $WorkspaceName `
-                                     -SettingsName "Ueba" `
-                                     -DataSource $UebaDataSource | Out-Null
+            -WorkspaceName $WorkspaceName `
+            -SettingsName 'Ueba' `
+            -DataSource $UebaDataSource | Out-Null
     }
 }
 
@@ -448,16 +448,16 @@ function Export-TargetResource
 
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                    -Results $Results
+                -Results $Results
 
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                    -ConnectionMode $ConnectionMode `
-                    -ModulePath $PSScriptRoot `
-                    -Results $Results `
-                    -Credential $Credential
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -Credential $Credential
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
-                    -FileName $Global:PartialExportFileName
+                -FileName $Global:PartialExportFileName
             $i++
             Write-Host $Global:M365DSCEmojiGreenCheckMark
         }

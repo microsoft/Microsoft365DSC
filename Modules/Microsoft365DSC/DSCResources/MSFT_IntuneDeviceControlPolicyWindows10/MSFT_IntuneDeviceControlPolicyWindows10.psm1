@@ -256,7 +256,7 @@ function Get-TargetResource
 
         $getValue = $null
         #region resource generator code
-        $getValue = Get-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Id  -ErrorAction SilentlyContinue
+        $getValue = Get-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Id -ErrorAction SilentlyContinue
 
         if ($null -eq $getValue)
         {
@@ -296,10 +296,10 @@ function Get-TargetResource
             foreach ($currentEntry in $currentPolicyRule.entry)
             {
                 $complexEntry += @{
-                    Type = $currentEntry.Type
-                    Options = $currentEntry.Options
-                    Sid = $currentEntry.Sid
-                    AccessMask = $currentEntry.AccessMask
+                    Type        = $currentEntry.Type
+                    Options     = $currentEntry.Options
+                    Sid         = $currentEntry.Sid
+                    AccessMask  = $currentEntry.AccessMask
                     ComputerSid = $currentEntry.ComputerSid
                 }
             }
@@ -610,7 +610,7 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating an Intune Device Control Policy for Windows10 with Name {$DisplayName}"
-        $BoundParameters.Remove("Assignments") | Out-Null
+        $BoundParameters.Remove('Assignments') | Out-Null
 
         $settings = Get-IntuneSettingCatalogPolicySetting `
             -DSCParams ([System.Collections.Hashtable]$BoundParameters) `
@@ -641,7 +641,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating the Intune Device Control Policy for Windows10 with Id {$($currentInstance.Id)}"
-        $BoundParameters.Remove("Assignments") | Out-Null
+        $BoundParameters.Remove('Assignments') | Out-Null
 
         $settings = Get-IntuneSettingCatalogPolicySetting `
             -DSCParams ([System.Collections.Hashtable]$BoundParameters) `
@@ -1042,14 +1042,14 @@ function Export-TargetResource
     try
     {
         #region resource generator code
-        $policyTemplateID = "0f2034c6-3cd6-4ee1-bd37-f3c0693e9548_1"
+        $policyTemplateID = '0f2034c6-3cd6-4ee1-bd37-f3c0693e9548_1'
         [array]$getValue = Get-MgBetaDeviceManagementConfigurationPolicy `
             -Filter $Filter `
             -All `
             -ErrorAction Stop | Where-Object `
             -FilterScript {
-                $_.TemplateReference.TemplateId -eq $policyTemplateID
-            }
+            $_.TemplateReference.TemplateId -eq $policyTemplateID
+        }
         #endregion
 
         $i = 1
@@ -1075,16 +1075,16 @@ function Export-TargetResource
             }
             Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{
-                Id = $config.Id
-                DisplayName = $config.Name
-                Ensure = 'Present'
-                Credential = $Credential
-                ApplicationId = $ApplicationId
-                TenantId = $TenantId
-                ApplicationSecret = $ApplicationSecret
+                Id                    = $config.Id
+                DisplayName           = $config.Name
+                Ensure                = 'Present'
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
-                ManagedIdentity = $ManagedIdentity.IsPresent
-                AccessTokens = $AccessTokens
+                ManagedIdentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
             }
 
             $Results = Get-TargetResource @Params
@@ -1094,14 +1094,14 @@ function Export-TargetResource
             {
                 $complexMapping = @(
                     @{
-                        Name = 'PolicyRule'
+                        Name            = 'PolicyRule'
                         CimInstanceName = 'MicrosoftGraphIntuneSettingsCatalogPolicyRule'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'Entry'
+                        Name            = 'Entry'
                         CimInstanceName = 'MicrosoftGraphIntuneSettingsCatalogPolicyRuleEntry'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                 )
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
@@ -1139,12 +1139,12 @@ function Export-TargetResource
                 -Credential $Credential
             if ($Results.PolicyRule)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "PolicyRule" -IsCIMArray:$True
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'PolicyRule' -IsCIMArray:$True
             }
 
             if ($Results.Assignments)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Assignments" -IsCIMArray:$true
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Assignments' -IsCIMArray:$true
             }
 
             $dscContent += $currentDSCBlock

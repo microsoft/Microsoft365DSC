@@ -82,7 +82,7 @@ function Get-TargetResource
     {
         if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
         {
-            $RoleGroup = $Script:exportedInstances | Where-Object -FilterScript {$_.Name -eq $Name}
+            $RoleGroup = $Script:exportedInstances | Where-Object -FilterScript { $_.Name -eq $Name }
         }
         else
         {
@@ -229,7 +229,7 @@ function Set-TargetResource
         # Create Role Group
         if ($Members.Length -gt 0)
         {
-            $NewRoleGroupParams.Add("Members", $Members)
+            $NewRoleGroupParams.Add('Members', $Members)
         }
         New-RoleGroup @NewRoleGroupParams
     }

@@ -58,7 +58,7 @@ function Get-TargetResource
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'AdminAPI' `
-    -InboundParameters $PSBoundParameters
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -67,8 +67,8 @@ function Get-TargetResource
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
     $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-    -CommandName $CommandName `
-    -Parameters $PSBoundParameters
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
@@ -82,7 +82,7 @@ function Get-TargetResource
         }
         else
         {
-            $uri = "https://verifiedid.did.msidentity.com/v1.0/verifiableCredentials/authorities"
+            $uri = 'https://verifiedid.did.msidentity.com/v1.0/verifiableCredentials/authorities'
             $response = Invoke-M365DSCVerifiedIdWebRequest -Uri $uri -Method 'GET'
             $instances = $response.value
         }
@@ -91,25 +91,25 @@ function Get-TargetResource
             return $nullResult
         }
 
-        $instance = Get-M365DSCVerifiedIdAuthorityObject -Authority ($instances | Where-Object -FilterScript {$_.didModel.linkedDomainUrls[0] -eq $LinkedDomainUrl})
+        $instance = Get-M365DSCVerifiedIdAuthorityObject -Authority ($instances | Where-Object -FilterScript { $_.didModel.linkedDomainUrls[0] -eq $LinkedDomainUrl })
         if ($null -eq $instance)
         {
             return $nullResult
         }
 
         $results = @{
-            Id                                                                    = $instance.Id
-            Name                                                                  = $instance.Name
-            LinkedDomainUrl                                                       = $instance.LinkedDomainUrl
-            DidMethod                                                             = $instance.DidMethod
-            KeyVaultMetadata                                                      = $instance.KeyVaultMetadata
-            Ensure                                                                = 'Present'
-            Credential                                                            = $Credential
-            ApplicationId                                                         = $ApplicationId
-            TenantId                                                              = $TenantId
-            CertificateThumbprint                                                 = $CertificateThumbprint
-            ApplicationSecret                                                     = $ApplicationSecret
-            AccessTokens                                                          = $AccessTokens
+            Id                    = $instance.Id
+            Name                  = $instance.Name
+            LinkedDomainUrl       = $instance.LinkedDomainUrl
+            DidMethod             = $instance.DidMethod
+            KeyVaultMetadata      = $instance.KeyVaultMetadata
+            Ensure                = 'Present'
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
+            ApplicationSecret     = $ApplicationSecret
+            AccessTokens          = $AccessTokens
         }
         return [System.Collections.Hashtable] $results
 
@@ -117,10 +117,10 @@ function Get-TargetResource
     catch
     {
         New-M365DSCLogEntry -Message 'Error retrieving data:' `
-        -Exception $_ `
-        -Source $($MyInvocation.MyCommand.Source) `
-        -TenantId $TenantId `
-        -Credential $Credential
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
 
         return $nullResult
     }
@@ -204,33 +204,33 @@ function Set-TargetResource
     Write-Verbose -Message "Retrieved current instance: $($currentInstance.Name) with Id $($currentInstance.Id)"
     $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
-    $uri = "https://verifiedid.did.msidentity.com/v1.0/verifiableCredentials/authorities/" + $currentInstance.Id
+    $uri = 'https://verifiedid.did.msidentity.com/v1.0/verifiableCredentials/authorities/' + $currentInstance.Id
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating an VerifiedId Authority with Name {$Name} and Id $($currentInstance.Id)"
 
         $body = @{
-            name = $Name
-            linkedDomainUrl = $LinkedDomainUrl
-            didMethod = $DidMethod
-            keyVaultMetadata     = @{
+            name             = $Name
+            linkedDomainUrl  = $LinkedDomainUrl
+            didMethod        = $DidMethod
+            keyVaultMetadata = @{
                 subscriptionId = $KeyVaultMetadata.SubscriptionId
-                resourceGroup = $KeyVaultMetadata.ResourceGroup
-                resourceName = $KeyVaultMetadata.ResourceName
-                resourceUrl = $KeyVaultMetadata.ResourceUrl
+                resourceGroup  = $KeyVaultMetadata.ResourceGroup
+                resourceName   = $KeyVaultMetadata.ResourceName
+                resourceUrl    = $KeyVaultMetadata.ResourceUrl
             }
         }
         Write-Verbose -Message "Creating VerifiedId Authority with body $($body | ConvertTo-Json -Depth 5)"
 
-        $uri = "https://verifiedid.did.msidentity.com/v1.0/verifiableCredentials/authorities" 
+        $uri = 'https://verifiedid.did.msidentity.com/v1.0/verifiableCredentials/authorities'
         Invoke-M365DSCVerifiedIdWebRequest -Uri $uri -Method 'POST' -Body $body
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating an VerifiedId Authority with Name {$Name} and Id $($currentInstance.Id)"
 
-        Write-Warning -Message "You can only update Name of the VerifiedId Authority, if you want to update other properties, please delete and recreate the VerifiedId Authority."
+        Write-Warning -Message 'You can only update Name of the VerifiedId Authority, if you want to update other properties, please delete and recreate the VerifiedId Authority.'
         $body = @{
             name = $Name
         }
@@ -240,7 +240,7 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Removing VerifiedId Authority with Name {$Name} and Id $($currentInstance.Id)"
 
-        $uri = "https://verifiedid.did.msidentity.com/beta/verifiableCredentials/authorities/" + $currentInstance.Id
+        $uri = 'https://verifiedid.did.msidentity.com/beta/verifiableCredentials/authorities/' + $currentInstance.Id
         Invoke-M365DSCVerifiedIdWebRequest -Uri $uri -Method 'DELETE'
     }
 }
@@ -340,7 +340,8 @@ function Test-TargetResource
                 Write-Verbose "TestResult returned False for $source"
                 $testTargetResource = $false
             }
-            else {
+            else
+            {
                 $ValuesToCheck.Remove($key) | Out-Null
             }
         }
@@ -350,12 +351,12 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
-    -Source $($MyInvocation.MyCommand.Source) `
-    -DesiredValues $PSBoundParameters `
-    -ValuesToCheck $ValuesToCheck.Keys `
-    -IncludedDrifts $driftedParams
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck $ValuesToCheck.Keys `
+        -IncludedDrifts $driftedParams
 
-    if(-not $TestResult)
+    if (-not $TestResult)
     {
         $testTargetResource = $false
     }
@@ -424,7 +425,7 @@ function Export-TargetResource
     try
     {
         $Script:ExportMode = $true
-        $uri = "https://verifiedid.did.msidentity.com/v1.0/verifiableCredentials/authorities"
+        $uri = 'https://verifiedid.did.msidentity.com/v1.0/verifiableCredentials/authorities'
         $response = Invoke-M365DSCVerifiedIdWebRequest -Uri $uri -Method 'GET'
         [array] $Script:exportedInstances = $response.value
 
@@ -450,21 +451,21 @@ function Export-TargetResource
             if ($Results.Ensure -eq 'Present')
             {
                 $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
+                    -Results $Results
 
                 if ($null -ne $Results.KeyVaultMetadata)
                 {
                     $complexMapping = @(
                         @{
-                            Name = 'KeyVaultMetadata'
+                            Name            = 'KeyVaultMetadata'
                             CimInstanceName = 'AADVerifiedIdAuthorityKeyVaultMetadata'
-                            IsRequired = $False
+                            IsRequired      = $False
                         }
                     )
                     $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
-                    -ComplexObject $Results.KeyVaultMetadata `
-                    -CIMInstanceName 'AADVerifiedIdAuthorityKeyVaultMetadata' `
-                    -ComplexTypeMapping $complexMapping
+                        -ComplexObject $Results.KeyVaultMetadata `
+                        -CIMInstanceName 'AADVerifiedIdAuthorityKeyVaultMetadata' `
+                        -ComplexTypeMapping $complexMapping
 
                     if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                     {
@@ -478,19 +479,19 @@ function Export-TargetResource
 
 
                 $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                -ConnectionMode $ConnectionMode `
-                -ModulePath $PSScriptRoot `
-                -Results $Results `
-                -Credential $Credential
+                    -ConnectionMode $ConnectionMode `
+                    -ModulePath $PSScriptRoot `
+                    -Results $Results `
+                    -Credential $Credential
 
                 if ($Results.KeyVaultMetadata)
                 {
-                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "KeyVaultMetadata" -IsCIMArray:$False
+                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'KeyVaultMetadata' -IsCIMArray:$False
                 }
 
                 $dscContent.Append($currentDSCBlock) | Out-Null
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
-                -FileName $Global:PartialExportFileName
+                    -FileName $Global:PartialExportFileName
                 Write-Host $Global:M365DSCEmojiGreenCheckMark
                 $i++
             }
@@ -527,20 +528,20 @@ function Get-M365DSCVerifiedIdAuthorityObject
     }
 
     Write-Verbose -Message "Retrieving values for authority {$($Authority.didModel.linkedDomainUrls[0])}"
-    $did = ($Authority.didModel.did -split ":")[1]
+    $did = ($Authority.didModel.did -split ':')[1]
     $values = @{
-        Id                 = $Authority.Id
-        Name               = $Authority.Name
-        LinkedDomainUrl    = $Authority.didModel.linkedDomainUrls[0]
-        DidMethod          = $did
+        Id              = $Authority.Id
+        Name            = $Authority.Name
+        LinkedDomainUrl = $Authority.didModel.linkedDomainUrls[0]
+        DidMethod       = $did
     }
     if ($null -ne $Authority.KeyVaultMetadata)
     {
         $KeyVaultMetadata = @{
             SubscriptionId = $Authority.KeyVaultMetadata.SubscriptionId
-            ResourceGroup = $Authority.KeyVaultMetadata.ResourceGroup
-            ResourceName = $Authority.KeyVaultMetadata.ResourceName
-            ResourceUrl = $Authority.KeyVaultMetadata.ResourceUrl
+            ResourceGroup  = $Authority.KeyVaultMetadata.ResourceGroup
+            ResourceName   = $Authority.KeyVaultMetadata.ResourceName
+            ResourceUrl    = $Authority.KeyVaultMetadata.ResourceUrl
         }
 
         $values.Add('KeyVaultMetadata', $KeyVaultMetadata)
@@ -567,20 +568,21 @@ function Invoke-M365DSCVerifiedIdWebRequest
     )
 
     $headers = @{
-        Authorization = $Global:MSCloudLoginConnectionProfile.AdminAPI.AccessToken
-        "Content-Type" = "application/json"
+        Authorization  = $Global:MSCloudLoginConnectionProfile.AdminAPI.AccessToken
+        'Content-Type' = 'application/json'
     }
 
-    if($Method -eq 'PATCH' -or $Method -eq 'POST')
+    if ($Method -eq 'PATCH' -or $Method -eq 'POST')
     {
-        $BodyJson = $body | ConvertTo-Json 
+        $BodyJson = $body | ConvertTo-Json
         $response = Invoke-WebRequest -Method $Method -Uri $Uri -Headers $headers -Body $BodyJson
     }
-    else {
-        $response = Invoke-WebRequest -Method $Method -Uri $Uri -Headers $headers 
+    else
+    {
+        $response = Invoke-WebRequest -Method $Method -Uri $Uri -Headers $headers
     }
 
-    if($Method -eq 'DELETE')
+    if ($Method -eq 'DELETE')
     {
         return $null
     }

@@ -78,12 +78,12 @@ function Get-TargetResource
             if (-not [System.String]::IsNullOrEmpty($Id))
             {
                 Write-Verbose -Message "Retrieving policy by id {$Id}"
-                $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.Id -eq $Id}
+                $instance = $Script:exportedInstances | Where-Object -FilterScript { $_.Id -eq $Id }
             }
             if ($null -eq $instance)
             {
                 Write-Verbose -Message "Retrieving policy by name {$Name}"
-                $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.Name -eq $Name}
+                $instance = $Script:exportedInstances | Where-Object -FilterScript { $_.Name -eq $Name }
             }
         }
         else
@@ -96,7 +96,7 @@ function Get-TargetResource
             if ($null -eq $instance)
             {
                 Write-Verbose -Message "Retrieving policy by name {$Name}"
-                $instance = Get-MgBetaNetworkAccessFilteringPolicy -All | Where-Object -FilterScript {$_.Name -eq $Name}
+                $instance = Get-MgBetaNetworkAccessFilteringPolicy -All | Where-Object -FilterScript { $_.Name -eq $Name }
             }
         }
         if ($null -eq $instance)
@@ -219,7 +219,7 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Updating filtering policy {$Name}"
         Update-MgBetaNetworkAccessFilteringPolicy -FilteringPolicyId $currentInstance.Id `
-                                                  -BodyParameter $instanceParams
+            -BodyParameter $instanceParams
     }
     # REMOVE
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')

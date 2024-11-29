@@ -177,18 +177,18 @@ function Get-TargetResource
         if (-not [System.String]::IsNullOrEmpty($Id))
         {
             $instance = Get-M365DSCSentinelAlertRule -SubscriptionId $SubscriptionId `
-                                                     -ResourceGroupName $ResourceGroupName `
-                                                     -WorkspaceName $WorkspaceName `
-                                                     -TenantId $TenantId `
-                                                     -Id $Id
+                -ResourceGroupName $ResourceGroupName `
+                -WorkspaceName $WorkspaceName `
+                -TenantId $TenantId `
+                -Id $Id
         }
         if ($null -eq $instance)
         {
             $instances = Get-M365DSCSentinelAlertRule -SubscriptionId $SubscriptionId `
-                                                     -ResourceGroupName $ResourceGroupName `
-                                                     -WorkspaceName $WorkspaceName `
-                                                     -TenantId $TenantId
-            $instance = $instances | Where-Object -FilterScript {$_.properties.displayName -eq $DisplayName}
+                -ResourceGroupName $ResourceGroupName `
+                -WorkspaceName $WorkspaceName `
+                -TenantId $TenantId
+            $instance = $instances | Where-Object -FilterScript { $_.properties.displayName -eq $DisplayName }
         }
         if ($null -eq $instance)
         {
@@ -209,7 +209,7 @@ function Get-TargetResource
         if ($null -ne $instance.properties.customDetails)
         {
             $detailAsHash = @{}
-            $instance.properties.customDetails.psobject.properties | foreach { $detailAsHash[$_.Name] = $_.Value }
+            $instance.properties.customDetails.psobject.properties | ForEach-Object { $detailAsHash[$_.Name] = $_.Value }
             foreach ($key in $detailAsHash.Keys)
             {
                 $CustomDetailsValue += @{
@@ -226,7 +226,7 @@ function Get-TargetResource
             foreach ($mapping in $instance.properties.entityMappings)
             {
                 $entity = @{
-                    entityType = $mapping.entityType
+                    entityType    = $mapping.entityType
                     fieldMappings = @()
                 }
 
@@ -266,7 +266,7 @@ function Get-TargetResource
         {
             $info = $instance.properties.incidentConfiguration
             $IncidentConfigurationValue = @{
-                createIncident = [Boolean]::Parse($info.createIncident.ToString())
+                createIncident        = [Boolean]::Parse($info.createIncident.ToString())
                 groupingConfiguration = @{
                     enabled              = $info.groupingConfiguration.enabled
                     reopenClosedIncident = $info.groupingConfiguration.reopenClosedIncident
@@ -280,42 +280,42 @@ function Get-TargetResource
         }
 
         $results = @{
-            ProductFilter              = $instance.properties.ProductFilter
-            Enabled                    = $instance.properties.Enabled
-            Severity                   = $instance.properties.Severity
-            Tactics                    = $instance.properties.Tactics
-            Techniques                 = $instance.properties.Techniques
-            SubTechniques              = $instance.properties.SubTechniques
-            Query                      = $instance.properties.Query
-            QueryFrequency             = $instance.properties.QueryFrequency
-            QueryPeriod                = $instance.properties.QueryPeriod
-            TriggerOperator            = $instance.properties.TriggerOperator
-            TriggerThreshold           = $instance.properties.TriggerThreshold
-            SuppressionDuration        = $instance.properties.SuppressionDuration
-            SuppressionEnabled          = $instance.properties.SuppressionEnabled
-            AlertRuleTemplateName      = $instance.properties.AlertRuleTemplateName
-            DisplayNamesExcludeFilter  = $instance.properties.DisplayNamesExcludeFilter
-            DisplayNamesFilter         = $instance.properties.DisplayNamesFilter
-            SeveritiesFilter           = $instance.properties.SeveritiesFilter
-            DisplayName                = $instance.properties.displayName
-            EventGroupingSettings      = $EventGroupingValueSettingsValue
-            CustomDetails              = $CustomDetailsValue
-            EntityMappings             = $EntityMappingsValue
-            AlertDetailsOverride       = $AlertDetailsOverrideValue
-            IncidentConfiguration      = $IncidentConfigurationValue
-            SubscriptionId             = $SubscriptionId
-            ResourceGroupName          = $ResourceGroupName
-            WorkspaceName              = $WorkspaceName
-            Id                         = $instance.name
-            Kind                       = $instance.kind
-            Description                = $instance.properties.description
-            Ensure                     = 'Present'
-            Credential                 = $Credential
-            ApplicationId              = $ApplicationId
-            TenantId                   = $TenantId
-            CertificateThumbprint      = $CertificateThumbprint
-            ManagedIdentity            = $ManagedIdentity.IsPresent
-            AccessTokens               = $AccessTokens
+            ProductFilter             = $instance.properties.ProductFilter
+            Enabled                   = $instance.properties.Enabled
+            Severity                  = $instance.properties.Severity
+            Tactics                   = $instance.properties.Tactics
+            Techniques                = $instance.properties.Techniques
+            SubTechniques             = $instance.properties.SubTechniques
+            Query                     = $instance.properties.Query
+            QueryFrequency            = $instance.properties.QueryFrequency
+            QueryPeriod               = $instance.properties.QueryPeriod
+            TriggerOperator           = $instance.properties.TriggerOperator
+            TriggerThreshold          = $instance.properties.TriggerThreshold
+            SuppressionDuration       = $instance.properties.SuppressionDuration
+            SuppressionEnabled        = $instance.properties.SuppressionEnabled
+            AlertRuleTemplateName     = $instance.properties.AlertRuleTemplateName
+            DisplayNamesExcludeFilter = $instance.properties.DisplayNamesExcludeFilter
+            DisplayNamesFilter        = $instance.properties.DisplayNamesFilter
+            SeveritiesFilter          = $instance.properties.SeveritiesFilter
+            DisplayName               = $instance.properties.displayName
+            EventGroupingSettings     = $EventGroupingValueSettingsValue
+            CustomDetails             = $CustomDetailsValue
+            EntityMappings            = $EntityMappingsValue
+            AlertDetailsOverride      = $AlertDetailsOverrideValue
+            IncidentConfiguration     = $IncidentConfigurationValue
+            SubscriptionId            = $SubscriptionId
+            ResourceGroupName         = $ResourceGroupName
+            WorkspaceName             = $WorkspaceName
+            Id                        = $instance.name
+            Kind                      = $instance.kind
+            Description               = $instance.properties.description
+            Ensure                    = 'Present'
+            Credential                = $Credential
+            ApplicationId             = $ApplicationId
+            TenantId                  = $TenantId
+            CertificateThumbprint     = $CertificateThumbprint
+            ManagedIdentity           = $ManagedIdentity.IsPresent
+            AccessTokens              = $AccessTokens
         }
         return [System.Collections.Hashtable] $results
     }
@@ -506,7 +506,7 @@ function Set-TargetResource
     if ($Kind -eq 'Fusion')
     {
         $instance = @{
-            kind = $Kind
+            kind       = $Kind
             properties = @{
                 alertRuleTemplateName = $AlertRuleTemplateName
                 enabled               = $Enabled
@@ -516,7 +516,7 @@ function Set-TargetResource
     elseif ($Kind -eq 'MicrosoftSecurityIncidentCreation')
     {
         $instance = @{
-            kind = $Kind
+            kind       = $Kind
             properties = @{
                 displayName               = $DisplayName
                 description               = $Description
@@ -531,30 +531,30 @@ function Set-TargetResource
     elseif ($Kind -eq 'Scheduled')
     {
         $instance = @{
-            kind = $Kind
+            kind       = $Kind
             properties = @{
-                displayName                = $DisplayName
-                enabled                    = $Enabled
-                description                = $Description
-                query                      = $Query
-                queryFrequency             = $QueryFrequency
-                queryPeriod                = $QueryPeriod
-                severity                   = $Severity
-                suppressionDuration        = $SuppressionDuration
-                suppressionEnabled         = $SuppressionEnabled
-                triggerOperator            = $TriggerOperator
-                triggerThreshold           = $TriggerThreshold
-                eventGroupingSettings      = @{
+                displayName               = $DisplayName
+                enabled                   = $Enabled
+                description               = $Description
+                query                     = $Query
+                queryFrequency            = $QueryFrequency
+                queryPeriod               = $QueryPeriod
+                severity                  = $Severity
+                suppressionDuration       = $SuppressionDuration
+                suppressionEnabled        = $SuppressionEnabled
+                triggerOperator           = $TriggerOperator
+                triggerThreshold          = $TriggerThreshold
+                eventGroupingSettings     = @{
                     aggregationKind = $EventGroupingSettings.aggregationKind
                 }
-                customDetails              = @{}
-                alertDetailsOverride       = @{
+                customDetails             = @{}
+                alertDetailsOverride      = @{
                     alertDisplayNameFormat = $AlertDetailsOverride.alertDisplayNameFormat
                     alertDescriptionFormat = $AlertDetailsOverride.alertDescriptionFormat
                     alertDynamicProperties = @()
                 }
-                entityMappings             = @()
-                incidentConfiguration      = @{
+                entityMappings            = @()
+                incidentConfiguration     = @{
                     createIncident        = $IncidentConfiguration.createIncident
                     groupingConfiguration = @{
                         enabled              = $IncidentConfiguration.groupingConfiguration.enabled
@@ -566,17 +566,17 @@ function Set-TargetResource
                         groupByCustomDetails = $IncidentConfiguration.groupingConfiguration.groupByCustomDetails
                     }
                 }
-                productFilter              = $ProductFilter
-                displayNamesExcludeFilter  = $DisplayNamesExcludeFilter
-                displayNamesFilter         = $DisplayNamesFilter
-                severitiesFilter           = $AlertSeverity
+                productFilter             = $ProductFilter
+                displayNamesExcludeFilter = $DisplayNamesExcludeFilter
+                displayNamesFilter        = $DisplayNamesFilter
+                severitiesFilter          = $AlertSeverity
             }
         }
 
         foreach ($entity in $EntityMappings)
         {
             $entry = @{
-                entityType = $entity.entityType
+                entityType    = $entity.entityType
                 fieldMappings = @()
             }
 
@@ -607,26 +607,26 @@ function Set-TargetResource
     elseif ($Kind -eq 'NRT')
     {
         $instance = @{
-            kind = $Kind
+            kind       = $Kind
             properties = @{
-                displayName                = $DisplayName
-                enabled                    = $Enabled
-                description                = $Description
-                query                      = $Query
-                severity                   = $Severity
-                suppressionDuration        = $SuppressionDuration
-                suppressionEnabled         = $SuppressionEnabled
-                eventGroupingSettings      = @{
+                displayName           = $DisplayName
+                enabled               = $Enabled
+                description           = $Description
+                query                 = $Query
+                severity              = $Severity
+                suppressionDuration   = $SuppressionDuration
+                suppressionEnabled    = $SuppressionEnabled
+                eventGroupingSettings = @{
                     aggregationKind = $EventGroupingSettings.aggregationKind
                 }
-                alertDetailsOverride       = @{
+                alertDetailsOverride  = @{
                     alertDisplayNameFormat = $AlertDetailsOverride.alertDisplayNameFormat
                     alertDescriptionFormat = $AlertDetailsOverride.alertDescriptionFormat
                     alertDynamicProperties = @()
                 }
-                entityMappings             = @()
-                customDetails              = @{}
-                incidentConfiguration      = @{
+                entityMappings        = @()
+                customDetails         = @{}
+                incidentConfiguration = @{
                     createIncident        = $IncidentConfiguration.createIncident
                     groupingConfiguration = @{
                         enabled              = $IncidentConfiguration.groupingConfiguration.enabled
@@ -638,9 +638,9 @@ function Set-TargetResource
                         groupByCustomDetails = $IncidentConfiguration.groupingConfiguration.groupByCustomDetails
                     }
                 }
-                techniques                 = $Techniques
-                subTechniques              = $SubTechniques
-                tactics                    = $Tactics
+                techniques            = $Techniques
+                subTechniques         = $SubTechniques
+                tactics               = $Tactics
             }
         }
 
@@ -653,7 +653,7 @@ function Set-TargetResource
             foreach ($entity in $EntityMappings)
             {
                 $entry = @{
-                    entityType = $entity.entityType
+                    entityType    = $entity.entityType
                     fieldMappings = @()
                 }
 
@@ -688,31 +688,31 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Creating new Alert Rule {$DisplayName}"
         New-M365DSCSentinelAlertRule -SubscriptionId $SubscriptionId `
-                                     -ResourceGroupName $ResourceGroupName `
-                                     -WorkspaceName $WorkspaceName `
-                                     -TenantId $TenantId `
-                                     -Body $instance
+            -ResourceGroupName $ResourceGroupName `
+            -WorkspaceName $WorkspaceName `
+            -TenantId $TenantId `
+            -Body $instance
     }
     # UPDATE
-    elseif($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
+    elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating Alert Rule {$DisplayName}"
         New-M365DSCSentinelAlertRule -SubscriptionId $SubscriptionId `
-                                     -ResourceGroupName $ResourceGroupName `
-                                     -WorkspaceName $WorkspaceName `
-                                     -TenantId $TenantId `
-                                     -Body $instance `
-                                     -Id $currentInstance.Id
+            -ResourceGroupName $ResourceGroupName `
+            -WorkspaceName $WorkspaceName `
+            -TenantId $TenantId `
+            -Body $instance `
+            -Id $currentInstance.Id
     }
     # REMOVE
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing Alert Rule {$DisplayName}"
         Remove-M365DSCSentinelAlertRule -SubscriptionId $SubscriptionId `
-                                        -ResourceGroupName $ResourceGroupName `
-                                        -WorkspaceName $WorkspaceName `
-                                        -TenantId $TenantId `
-                                        -Id $currentInstance.Id
+            -ResourceGroupName $ResourceGroupName `
+            -WorkspaceName $WorkspaceName `
+            -TenantId $TenantId `
+            -Id $currentInstance.Id
     }
 }
 
@@ -997,14 +997,14 @@ function Export-TargetResource
             }
 
             Write-Host "    |---[$i/$($workspaces.Length)] $($workspace.Name)" -NoNewline
-            $subscriptionId    = $workspace.ResourceId.Split('/')[2]
+            $subscriptionId = $workspace.ResourceId.Split('/')[2]
             $resourceGroupName = $workspace.ResourceGroupName
-            $workspaceName     = $workspace.Name
+            $workspaceName = $workspace.Name
 
             $rules = Get-M365DSCSentinelAlertRule -SubscriptionId $subscriptionId `
-                                                  -ResourceGroupName $resourceGroupName `
-                                                  -WorkspaceName $workspaceName `
-                                                  -TenantId $TenantId
+                -ResourceGroupName $resourceGroupName `
+                -WorkspaceName $workspaceName `
+                -TenantId $TenantId
 
             $j = 1
             if ($currentWatchLists.Length -eq 0 )
@@ -1320,7 +1320,7 @@ function New-M365DSCSentinelAlertRule
 
         if ($null -eq $Id)
         {
-            $uri += "providers/Microsoft.OperationalInsights/workspaces/$($WorkspaceName)/providers/Microsoft.SecurityInsights/alertrules/$((New-GUID).ToString())?api-version=2024-04-01-preview"
+            $uri += "providers/Microsoft.OperationalInsights/workspaces/$($WorkspaceName)/providers/Microsoft.SecurityInsights/alertrules/$((New-Guid).ToString())?api-version=2024-04-01-preview"
         }
         else
         {

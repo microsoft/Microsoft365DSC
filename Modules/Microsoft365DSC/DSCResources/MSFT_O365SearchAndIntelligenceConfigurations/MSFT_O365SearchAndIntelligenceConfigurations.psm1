@@ -83,7 +83,7 @@ function Get-TargetResource
         {
             if ($_.Exception.Message -eq "[BadRequest] : Resource not found for the segment 'peopleInsights'.")
             {
-                Write-Warning -Message "The peopleInsights segment is not available in the selected environment."
+                Write-Warning -Message 'The peopleInsights segment is not available in the selected environment.'
             }
         }
 
@@ -170,7 +170,7 @@ function Set-TargetResource
         OrganizationId          = $TenantId
         IsEnabledInOrganization = $ItemInsightsIsEnabledInOrganization
     }
-    if ($PSBoundParameters.ContainsKey("ItemInsightsDisabledForGroup"))
+    if ($PSBoundParameters.ContainsKey('ItemInsightsDisabledForGroup'))
     {
         $disabledForGroupValue = $null
         try
@@ -186,9 +186,9 @@ function Set-TargetResource
                 -TenantId $TenantId `
                 -Credential $Credential
         }
-        $ItemInsightsUpdateParams.Add("DisabledForGroup", $disabledForGroupValue)
+        $ItemInsightsUpdateParams.Add('DisabledForGroup', $disabledForGroupValue)
     }
-    Write-Verbose -Message "Updating settings for Item Insights"
+    Write-Verbose -Message 'Updating settings for Item Insights'
     Update-MgBetaOrganizationSettingItemInsight @ItemInsightsUpdateParams | Out-Null
     #endregion
 
@@ -197,7 +197,7 @@ function Set-TargetResource
         OrganizationId          = $TenantId
         IsEnabledInOrganization = $ItemInsightsIsEnabledInOrganization
     }
-    if ($PSBoundParameters.ContainsKey("PersonInsightsDisabledForGroup"))
+    if ($PSBoundParameters.ContainsKey('PersonInsightsDisabledForGroup'))
     {
         $disabledForGroupValue = $null
         try
@@ -213,10 +213,10 @@ function Set-TargetResource
                 -TenantId $TenantId `
                 -Credential $Credential
         }
-        $PersonInsightsUpdateParams.Add("DisabledForGroup", $disabledForGroupValue)
+        $PersonInsightsUpdateParams.Add('DisabledForGroup', $disabledForGroupValue)
     }
 
-    Write-Verbose -Message "Updating settings for Person Insights"
+    Write-Verbose -Message 'Updating settings for Person Insights'
     Update-MgBetaOrganizationSettingPersonInsight @PersonInsightsUpdateParams | Out-Null
     #endregion
 }
@@ -323,9 +323,9 @@ function Export-TargetResource
         }
 
         $Params = @{
-            IsSingleInstance      = 'Yes'
-            Credential            = $Credential
-            AccessTokens          = $AccessTokens
+            IsSingleInstance = 'Yes'
+            Credential       = $Credential
+            AccessTokens     = $AccessTokens
         }
 
         $Results = Get-TargetResource @Params

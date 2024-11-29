@@ -71,12 +71,12 @@ function Get-TargetResource
         {
             if (-not [System.String]::IsNullOrEmpty($Descriptor))
             {
-                $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.descriptor -eq $Descriptor}
+                $instance = $Script:exportedInstances | Where-Object -FilterScript { $_.descriptor -eq $Descriptor }
             }
 
             if ($null -eq $instance)
             {
-                $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.principalName -eq $PrincipalName}
+                $instance = $Script:exportedInstances | Where-Object -FilterScript { $_.principalName -eq $PrincipalName }
             }
         }
         else
@@ -85,11 +85,11 @@ function Get-TargetResource
             $allInstances = (Invoke-M365DSCAzureDevOPSWebRequest -Uri $uri).value
             if (-not [System.String]::IsNullOrEmpty($Descriptor))
             {
-                $instance = $allInstances | Where-Object -FilterScript {$_.descriptor -eq $Descriptor}
+                $instance = $allInstances | Where-Object -FilterScript { $_.descriptor -eq $Descriptor }
             }
             if ($null -eq $instance)
             {
-                $instance = $allInstances | Where-Object -FilterScript {$_.principalName -eq $PrincipalName}
+                $instance = $allInstances | Where-Object -FilterScript { $_.principalName -eq $PrincipalName }
             }
         }
         if ($null -eq $instance)
@@ -216,21 +216,21 @@ function Set-TargetResource
     {
         $allowPermissionValue = 0
         $denyPermissionValue = 0
-        $allowPermissionsEntries = $AllowPermissions | Where-Object -FilterScript {$_.NamespaceId -eq $namespace.namespaceId}
+        $allowPermissionsEntries = $AllowPermissions | Where-Object -FilterScript { $_.NamespaceId -eq $namespace.namespaceId }
         foreach ($entry in $allowPermissionsEntries)
         {
             $allowPermissionValue += [Uint32]::Parse($entry.Bit)
         }
 
-        $denyPermissionsEntries = $DenyPermissions | Where-Object -FilterScript {$_.NamespaceId -eq $namespace.namespaceId}
+        $denyPermissionsEntries = $DenyPermissions | Where-Object -FilterScript { $_.NamespaceId -eq $namespace.namespaceId }
         foreach ($entry in $denyPermissionsEntries)
         {
             $denyPermissionValue += [Uint32]::Parse($entry.Bit)
         }
 
         $updateParams = @{
-            merge = $false
-            token = $namespace.token
+            merge                = $false
+            token                = $namespace.token
             accessControlEntries = @(
                 @{
                     descriptor   = $descriptor
@@ -244,9 +244,9 @@ function Set-TargetResource
         $body = ConvertTo-Json $updateParams -Depth 10 -Compress
         Write-Verbose -Message "Updating with payload:`r`n$body"
         Invoke-M365DSCAzureDevOPSWebRequest -Method POST `
-                                            -Uri $uri `
-                                            -Body $body `
-                                            -ContentType 'application/json'
+            -Uri $uri `
+            -Body $body `
+            -ContentType 'application/json'
     }
 }
 
@@ -320,10 +320,10 @@ function Test-TargetResource
     $testResult = $true
     foreach ($permission in $AllowPermissions)
     {
-        $instance = $CurrentValues.AllowPermissions | Where-Object -FilterScript {$_.Token -eq $permission.Token -and `
-                                                                                  $_.DisplayName -eq $permission.DisplayName -and `
-                                                                                  $_.Bit -eq $permission.Bit -and `
-                                                                                  $_.NamespaceId -eq $permission.NamespaceId}
+        $instance = $CurrentValues.AllowPermissions | Where-Object -FilterScript { $_.Token -eq $permission.Token -and `
+                $_.DisplayName -eq $permission.DisplayName -and `
+                $_.Bit -eq $permission.Bit -and `
+                $_.NamespaceId -eq $permission.NamespaceId }
         if ($null -eq $instance)
         {
             $testResult = $false
@@ -333,10 +333,10 @@ function Test-TargetResource
 
     foreach ($permission in $DenyPermissions)
     {
-        $instance = $CurrentValues.DenyPermissions | Where-Object -FilterScript {$_.Token -eq $permission.Token -and `
-                                                                                 $_.DisplayName -eq $permission.DisplayName -and `
-                                                                                 $_.Bit -eq $permission.Bit -and `
-                                                                                 $_.NamespaceId -eq $permission.NamespaceId}
+        $instance = $CurrentValues.DenyPermissions | Where-Object -FilterScript { $_.Token -eq $permission.Token -and `
+                $_.DisplayName -eq $permission.DisplayName -and `
+                $_.Bit -eq $permission.Bit -and `
+                $_.NamespaceId -eq $permission.NamespaceId }
         if ($null -eq $instance)
         {
             $testResult = $false
@@ -466,7 +466,7 @@ function Export-TargetResource
                     AccessTokens          = $AccessTokens
                 }
 
-                if (-not $config.principalName.StartsWith("[TEAM FOUNDATION]"))
+                if (-not $config.principalName.StartsWith('[TEAM FOUNDATION]'))
                 {
                     $Results = Get-TargetResource @Params
                     $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
@@ -545,7 +545,7 @@ function Get-M365DSCADOGroupPermission
     {
         $uri = "https://vssps.dev.azure.com/$($OrganizationName)/_apis/graph/groups?api-version=7.1-preview.1"
         $groupInfo = Invoke-M365DSCAzureDevOPSWebRequest -Uri $uri
-        $mygroup = $groupInfo.value | Where-Object -FilterScript {$_.principalName -eq $GroupName}
+        $mygroup = $groupInfo.value | Where-Object -FilterScript { $_.principalName -eq $GroupName }
 
         $uri = "https://vssps.dev.azure.com/$($OrganizationName)/_apis/identities?subjectDescriptors=$($mygroup.descriptor)&api-version=7.2-preview.1"
         $info = Invoke-M365DSCAzureDevOPSWebRequest -Uri $uri
@@ -590,11 +590,11 @@ function Get-M365DSCADOGroupPermission
 
                                 $bitMaskPositionsFound += $value
                             }
-                        } while($position -ge 0 -and ($position+1) -le $allowBinary.Length)
+                        } while ($position -ge 0 -and ($position + 1) -le $allowBinary.Length)
 
                         foreach ($bitmask in $bitMaskPositionsFound)
                         {
-                            $associatedAction = $namespace.actions | Where-Object -FilterScript {[Convert]::ToString($_.bit,2) -eq $bitmask}
+                            $associatedAction = $namespace.actions | Where-Object -FilterScript { [Convert]::ToString($_.bit, 2) -eq $bitmask }
                             if (-not [System.String]::IsNullOrEmpty($associatedAction.displayName))
                             {
                                 $entry = @{
@@ -624,11 +624,11 @@ function Get-M365DSCADOGroupPermission
 
                                 $bitMaskPositionsFound += $value
                             }
-                        } while($position -ge 0 -and ($position+1) -le $denyBinary.Length)
+                        } while ($position -ge 0 -and ($position + 1) -le $denyBinary.Length)
 
                         foreach ($bitmask in $bitMaskPositionsFound)
                         {
-                            $associatedAction = $namespace.actions | Where-Object -FilterScript {[Convert]::ToString($_.bit,2) -eq $bitmask}
+                            $associatedAction = $namespace.actions | Where-Object -FilterScript { [Convert]::ToString($_.bit, 2) -eq $bitmask }
                             if (-not [System.String]::IsNullOrEmpty($associatedAction.displayName))
                             {
                                 $entry = @{

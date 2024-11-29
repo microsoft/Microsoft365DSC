@@ -57,7 +57,7 @@ function Get-TargetResource
         throw [System.ArgumentException]::new('DeviceInactivityBeforeRetirementInDays must be greater than 30 and less than 270 when Enabled is set to true.')
     }
 
-    Write-Verbose -Message "Checking for the Intune Device Cleanup Rule"
+    Write-Verbose -Message 'Checking for the Intune Device Cleanup Rule'
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
@@ -78,20 +78,20 @@ function Get-TargetResource
 
     try
     {
-        $url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/deviceManagement/managedDeviceCleanupSettings"
+        $url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + 'beta/deviceManagement/managedDeviceCleanupSettings'
         $cleanupRule = Invoke-MgGraphRequest -Method GET -Uri $url -ErrorAction Stop
 
         $return = @{
-            Enabled                                = $cleanupRule.deviceInactivityBeforeRetirementInDays -gt 0
-            IsSingleInstance                       = 'Yes'
-            Ensure                                 = 'Present'
-            Credential                             = $Credential
-            ApplicationId                          = $ApplicationId
-            TenantId                               = $TenantId
-            ApplicationSecret                      = $ApplicationSecret
-            CertificateThumbprint                  = $CertificateThumbprint
-            Managedidentity                        = $ManagedIdentity.IsPresent
-            AccessTokens                           = $AccessTokens
+            Enabled               = $cleanupRule.deviceInactivityBeforeRetirementInDays -gt 0
+            IsSingleInstance      = 'Yes'
+            Ensure                = 'Present'
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            ApplicationSecret     = $ApplicationSecret
+            CertificateThumbprint = $CertificateThumbprint
+            Managedidentity       = $ManagedIdentity.IsPresent
+            AccessTokens          = $AccessTokens
         }
 
         if ($return.Enabled)
@@ -171,7 +171,7 @@ function Set-TargetResource
         throw [System.ArgumentException]::new('DeviceInactivityBeforeRetirementInDays must be greater than 30 and less than 270 when Enabled is set to true.')
     }
 
-    Write-Verbose -Message "Updating Device Cleanup Rule"
+    Write-Verbose -Message 'Updating Device Cleanup Rule'
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
@@ -188,7 +188,7 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/deviceManagement/managedDeviceCleanupSettings"
+    $url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + 'beta/deviceManagement/managedDeviceCleanupSettings'
     $body = @{
         DeviceInactivityBeforeRetirementInDays = "$(if ($Enabled) { $DeviceInactivityBeforeRetirementInDays } else { 0 })"
     }
@@ -265,7 +265,7 @@ function Test-TargetResource
         -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-    Write-Verbose -Message "Testing configuration of Device Cleanup Rule"
+    Write-Verbose -Message 'Testing configuration of Device Cleanup Rule'
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
@@ -274,7 +274,8 @@ function Test-TargetResource
 
     $ValuesToCheck = $PSBoundParameters
 
-    if ($CurrentValues.Enabled -eq $false) {
+    if ($CurrentValues.Enabled -eq $false)
+    {
         $ValuesToCheck.Remove('DeviceInactivityBeforeRetirementInDays') | Out-Null
     }
 
@@ -339,7 +340,7 @@ function Export-TargetResource
 
     try
     {
-        $url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/deviceManagement/managedDeviceCleanupSettings"
+        $url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + 'beta/deviceManagement/managedDeviceCleanupSettings'
         [array]$cleanupRules = Invoke-MgGraphRequest -Method GET -Uri $url -ErrorAction Stop
         $i = 1
         $dscContent = ''
@@ -361,19 +362,20 @@ function Export-TargetResource
 
             Write-Host "    |---[$i/$($cleanupRules.Count)] Cleanup Rule" -NoNewline
             $params = @{
-                Enabled                                = $cleanupRule.deviceInactivityBeforeRetirementInDays -gt 0
-                Ensure                                 = 'Present'
-                IsSingleInstance                       = 'Yes'
-                Credential                             = $Credential
-                ApplicationId                          = $ApplicationId
-                ApplicationSecret                      = $ApplicationSecret
-                TenantId                               = $TenantId
-                CertificateThumbprint                  = $CertificateThumbprint
-                Managedidentity                        = $ManagedIdentity.IsPresent
-                AccessTokens                           = $AccessTokens
+                Enabled               = $cleanupRule.deviceInactivityBeforeRetirementInDays -gt 0
+                Ensure                = 'Present'
+                IsSingleInstance      = 'Yes'
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                ApplicationSecret     = $ApplicationSecret
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+                Managedidentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
             }
 
-            if ($params.Enabled) {
+            if ($params.Enabled)
+            {
                 $params.Add('DeviceInactivityBeforeRetirementInDays', $cleanupRule.deviceInactivityBeforeRetirementInDays)
             }
 
@@ -395,10 +397,10 @@ function Export-TargetResource
     }
     catch
     {
-        if ($_.Exception -like "*401*" -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or
-            $_.Exception -like "* Unauthorized*" -or `
-            $_.Exception -like "*Request not applicable to target tenant*" -or `
-            $_.Exception -like "*BadRequest*")
+        if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or
+            $_.Exception -like '* Unauthorized*' -or `
+                $_.Exception -like '*Request not applicable to target tenant*' -or `
+                $_.Exception -like '*BadRequest*')
         {
             Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }

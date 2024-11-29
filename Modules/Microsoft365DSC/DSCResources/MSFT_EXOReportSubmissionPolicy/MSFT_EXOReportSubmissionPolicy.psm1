@@ -143,7 +143,7 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    Write-Verbose -Message "Getting configuration of ReportSubmissionPolicy"
+    Write-Verbose -Message 'Getting configuration of ReportSubmissionPolicy'
     if ($Global:CurrentModeIsExport)
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
@@ -178,49 +178,49 @@ function Get-TargetResource
 
         if ($null -eq $ReportSubmissionPolicy)
         {
-            Write-Verbose -Message "ReportSubmissionPolicy does not exist."
+            Write-Verbose -Message 'ReportSubmissionPolicy does not exist.'
             return $nullReturn
         }
         else
         {
             $result = @{
-                IsSingleInstance                       = 'Yes'
-                DisableQuarantineReportingOption       = $ReportSubmissionPolicy.DisableQuarantineReportingOption
-                EnableCustomNotificationSender         = $ReportSubmissionPolicy.EnableCustomNotificationSender
-                EnableOrganizationBranding             = $ReportSubmissionPolicy.EnableOrganizationBranding
-                EnableReportToMicrosoft                = $ReportSubmissionPolicy.EnableReportToMicrosoft
-                EnableThirdPartyAddress                = $ReportSubmissionPolicy.EnableThirdPartyAddress
-                EnableUserEmailNotification            = $ReportSubmissionPolicy.EnableUserEmailNotification
-                JunkReviewResultMessage                = $ReportSubmissionPolicy.JunkReviewResultMessage
-                NotJunkReviewResultMessage             = $ReportSubmissionPolicy.NotJunkReviewResultMessage
-                NotificationFooterMessage              = $ReportSubmissionPolicy.NotificationFooterMessage
-                NotificationSenderAddress              = $ReportSubmissionPolicy.NotificationSenderAddress
-                PhishingReviewResultMessage            = $ReportSubmissionPolicy.PhishingReviewResultMessage
-                PostSubmitMessage                      = $ReportSubmissionPolicy.PostSubmitMessage
-                PostSubmitMessageEnabled               = $ReportSubmissionPolicy.PostSubmitMessageEnabled
-                PostSubmitMessageTitle                 = $ReportSubmissionPolicy.PostSubmitMessageTitle
-                PreSubmitMessage                       = $ReportSubmissionPolicy.PreSubmitMessage
-                PreSubmitMessageEnabled                = $ReportSubmissionPolicy.PreSubmitMessageEnabled
-                PreSubmitMessageTitle                  = $ReportSubmissionPolicy.PreSubmitMessageTitle
-                ReportJunkAddresses                    = $ReportSubmissionPolicy.ReportJunkAddresses
-                ReportJunkToCustomizedAddress          = $ReportSubmissionPolicy.ReportJunkToCustomizedAddress
-                ReportNotJunkAddresses                 = $ReportSubmissionPolicy.ReportNotJunkAddresses
-                ReportNotJunkToCustomizedAddress       = $ReportSubmissionPolicy.ReportNotJunkToCustomizedAddress
-                ReportPhishAddresses                   = $ReportSubmissionPolicy.ReportPhishAddresses
-                ReportPhishToCustomizedAddress         = $ReportSubmissionPolicy.ReportPhishToCustomizedAddress
-                ThirdPartyReportAddresses              = $ReportSubmissionPolicy.ThirdPartyReportAddresses
-                Credential                             = $Credential
-                Ensure                                 = 'Present'
-                ApplicationId                          = $ApplicationId
-                CertificateThumbprint                  = $CertificateThumbprint
-                CertificatePath                        = $CertificatePath
-                CertificatePassword                    = $CertificatePassword
-                Managedidentity                        = $ManagedIdentity.IsPresent
-                TenantId                               = $TenantId
-                AccessTokens                           = $AccessTokens
+                IsSingleInstance                 = 'Yes'
+                DisableQuarantineReportingOption = $ReportSubmissionPolicy.DisableQuarantineReportingOption
+                EnableCustomNotificationSender   = $ReportSubmissionPolicy.EnableCustomNotificationSender
+                EnableOrganizationBranding       = $ReportSubmissionPolicy.EnableOrganizationBranding
+                EnableReportToMicrosoft          = $ReportSubmissionPolicy.EnableReportToMicrosoft
+                EnableThirdPartyAddress          = $ReportSubmissionPolicy.EnableThirdPartyAddress
+                EnableUserEmailNotification      = $ReportSubmissionPolicy.EnableUserEmailNotification
+                JunkReviewResultMessage          = $ReportSubmissionPolicy.JunkReviewResultMessage
+                NotJunkReviewResultMessage       = $ReportSubmissionPolicy.NotJunkReviewResultMessage
+                NotificationFooterMessage        = $ReportSubmissionPolicy.NotificationFooterMessage
+                NotificationSenderAddress        = $ReportSubmissionPolicy.NotificationSenderAddress
+                PhishingReviewResultMessage      = $ReportSubmissionPolicy.PhishingReviewResultMessage
+                PostSubmitMessage                = $ReportSubmissionPolicy.PostSubmitMessage
+                PostSubmitMessageEnabled         = $ReportSubmissionPolicy.PostSubmitMessageEnabled
+                PostSubmitMessageTitle           = $ReportSubmissionPolicy.PostSubmitMessageTitle
+                PreSubmitMessage                 = $ReportSubmissionPolicy.PreSubmitMessage
+                PreSubmitMessageEnabled          = $ReportSubmissionPolicy.PreSubmitMessageEnabled
+                PreSubmitMessageTitle            = $ReportSubmissionPolicy.PreSubmitMessageTitle
+                ReportJunkAddresses              = $ReportSubmissionPolicy.ReportJunkAddresses
+                ReportJunkToCustomizedAddress    = $ReportSubmissionPolicy.ReportJunkToCustomizedAddress
+                ReportNotJunkAddresses           = $ReportSubmissionPolicy.ReportNotJunkAddresses
+                ReportNotJunkToCustomizedAddress = $ReportSubmissionPolicy.ReportNotJunkToCustomizedAddress
+                ReportPhishAddresses             = $ReportSubmissionPolicy.ReportPhishAddresses
+                ReportPhishToCustomizedAddress   = $ReportSubmissionPolicy.ReportPhishToCustomizedAddress
+                ThirdPartyReportAddresses        = $ReportSubmissionPolicy.ThirdPartyReportAddresses
+                Credential                       = $Credential
+                Ensure                           = 'Present'
+                ApplicationId                    = $ApplicationId
+                CertificateThumbprint            = $CertificateThumbprint
+                CertificatePath                  = $CertificatePath
+                CertificatePassword              = $CertificatePassword
+                Managedidentity                  = $ManagedIdentity.IsPresent
+                TenantId                         = $TenantId
+                AccessTokens                     = $AccessTokens
             }
 
-            Write-Verbose -Message "Found ReportSubmissionPolicy"
+            Write-Verbose -Message 'Found ReportSubmissionPolicy'
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
             return $result
         }
@@ -392,7 +392,7 @@ function Set-TargetResource
         -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-    Write-Verbose -Message "Setting configuration of ReportSubmissionPolicy"
+    Write-Verbose -Message 'Setting configuration of ReportSubmissionPolicy'
 
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
@@ -414,7 +414,7 @@ function Set-TargetResource
 
     if ($Ensure -eq 'Present' -and $currentReportSubmissionPolicy.Ensure -eq 'Absent')
     {
-        Write-Verbose -Message "Creating ReportSubmissionPolicy"
+        Write-Verbose -Message 'Creating ReportSubmissionPolicy'
 
         New-ReportSubmissionPolicy
         Set-ReportSubmissionPolicy @ReportSubmissionPolicyParams -Confirm:$false
@@ -426,8 +426,8 @@ function Set-TargetResource
     }
     elseif ($Ensure -eq 'Absent' -and $currentReportSubmissionPolicy.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing ReportSubmissionPolicy"
-        Remove-ReportSubmissionPolicy -Identity "DefaultReportSubmissionPolicy"
+        Write-Verbose -Message 'Removing ReportSubmissionPolicy'
+        Remove-ReportSubmissionPolicy -Identity 'DefaultReportSubmissionPolicy'
     }
 }
 
@@ -587,7 +587,7 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of ReportSubmissionPolicy"
+    Write-Verbose -Message 'Testing configuration of ReportSubmissionPolicy'
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
@@ -673,7 +673,7 @@ function Export-TargetResource
         }
         $dscContent = ''
 
-        Write-Host "    |---Export Default ReportSubmissionPolicy" -NoNewline
+        Write-Host '    |---Export Default ReportSubmissionPolicy' -NoNewline
 
         if ($null -ne $Global:M365DSCExportResourceInstancesCount)
         {

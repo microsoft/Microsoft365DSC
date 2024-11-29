@@ -343,7 +343,7 @@ function Export-TargetResource
         if ($Results -is [System.Collections.Hashtable] -and $Results.Count -gt 1)
         {
             Write-Host "`r`n" -NoNewline
-            Write-Host "    |---[1/1] External Identity Policy" -NoNewline
+            Write-Host '    |---[1/1] External Identity Policy' -NoNewline
             $results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $results
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `

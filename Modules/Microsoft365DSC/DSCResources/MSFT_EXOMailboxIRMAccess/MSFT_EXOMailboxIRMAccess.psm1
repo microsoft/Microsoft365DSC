@@ -68,7 +68,7 @@ function Get-TargetResource
     {
         if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
         {
-            $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.Identity -eq $Identity -and $_.User -eq $User}
+            $instance = $Script:exportedInstances | Where-Object -FilterScript { $_.Identity -eq $Identity -and $_.User -eq $User }
         }
         else
         {

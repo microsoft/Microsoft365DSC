@@ -81,7 +81,7 @@ function Get-TargetResource
         $instance = $null
         if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
         {
-            $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.Id -eq $Id}
+            $instance = $Script:exportedInstances | Where-Object -FilterScript { $_.Id -eq $Id }
         }
 
         if ($null -eq $instance)
@@ -91,34 +91,36 @@ function Get-TargetResource
 
             if ($null -eq $instance)
             {
-                Write-Verbose -Message "Apple push notification certificate."
+                Write-Verbose -Message 'Apple push notification certificate.'
                 return $nullResult
             }
         }
 
         $results = @{
-            Id                             = $instance.Id
-            AppleIdentifier                = $instance.AppleIdentifier
+            Id                    = $instance.Id
+            AppleIdentifier       = $instance.AppleIdentifier
 
-            Ensure                         = 'Present'
-            Credential                     = $Credential
-            ApplicationId                  = $ApplicationId
-            TenantId                       = $TenantId
-            CertificateThumbprint          = $CertificateThumbprint
-            ApplicationSecret              = $ApplicationSecret
-            ManagedIdentity                = $ManagedIdentity.IsPresent
-            AccessTokens                   = $AccessTokens
+            Ensure                = 'Present'
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
+            ApplicationSecret     = $ApplicationSecret
+            ManagedIdentity       = $ManagedIdentity.IsPresent
+            AccessTokens          = $AccessTokens
         }
 
-        if (-not [String]::IsNullOrEmpty($instance.Certificate)) {
+        if (-not [String]::IsNullOrEmpty($instance.Certificate))
+        {
             $results.Add('Certificate', $instance.Certificate)
         }
-        else {
-            $results.Add('Certificate', "")
+        else
+        {
+            $results.Add('Certificate', '')
         }
 
         # Get the value of Data sharing consent between Intune and Apple. The id is hardcoded to "appleMDMPushCertificate".
-        $consentInstance = Get-MgBetaDeviceManagementDataSharingConsent -DataSharingConsentId "appleMDMPushCertificate"
+        $consentInstance = Get-MgBetaDeviceManagementDataSharingConsent -DataSharingConsentId 'appleMDMPushCertificate'
         $results.Add('DataSharingConsetGranted', $consentInstance.Granted)
 
         return [System.Collections.Hashtable] $results
@@ -220,11 +222,13 @@ function Set-TargetResource
 
         # Post data sharing consent as granted between Intune and Apple. NOTE: It's a one-way operation. Once agreed, it can't be revoked.
         # so first check if it is $false, then make a post call to agree to the consent, this set the DataSharingConsetGranted to $true.
-        $consentInstance = Get-MgBetaDeviceManagementDataSharingConsent -DataSharingConsentId "appleMDMPushCertificate"
-        If($consentInstance.Granted -eq $False) {
-            Invoke-MgGraphRequest -Method POST -Uri ($Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/deviceManagement/dataSharingConsents/appleMDMPushCertificate/consentToDataSharing") -Headers @{ "Content-Type" = "application/json" }
+        $consentInstance = Get-MgBetaDeviceManagementDataSharingConsent -DataSharingConsentId 'appleMDMPushCertificate'
+        If ($consentInstance.Granted -eq $False)
+        {
+            Invoke-MgGraphRequest -Method POST -Uri ($Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + 'beta/deviceManagement/dataSharingConsents/appleMDMPushCertificate/consentToDataSharing') -Headers @{ 'Content-Type' = 'application/json' }
         }
-        else {
+        else
+        {
             Write-Host "Data sharing conset is already granted, so it can't be revoked."
         }
 
@@ -244,8 +248,8 @@ function Set-TargetResource
 
         # There is only PATCH request hence using Update cmdlet to remove the certificate by passing empty certificate as param.
         $params = @{
-            appleIdentifier = ""
-            certificate = ""
+            appleIdentifier = ''
+            certificate     = ''
         }
         Update-MgBetaDeviceManagementApplePushNotificationCertificate -BodyParameter $params
     }
@@ -424,22 +428,22 @@ function Export-TargetResource
             Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -NoNewline
 
             $Params = @{
-                Id                             = $config.Id
-                AppleIdentifier                = $config.AppleIdentifier
-                Certificate                    = $config.Certificate
+                Id                    = $config.Id
+                AppleIdentifier       = $config.AppleIdentifier
+                Certificate           = $config.Certificate
 
-                Ensure                         = 'Present'
-                Credential                     = $Credential
-                ApplicationId                  = $ApplicationId
-                TenantId                       = $TenantId
-                CertificateThumbprint          = $CertificateThumbprint
-                ApplicationSecret              = $ApplicationSecret
-                ManagedIdentity                = $ManagedIdentity.IsPresent
-                AccessTokens                   = $AccessTokens
+                Ensure                = 'Present'
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+                ApplicationSecret     = $ApplicationSecret
+                ManagedIdentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
             }
 
             # Get the value of Data sharing consent between Intune and Apple. The id is hardcoded to "appleMDMPushCertificate".
-            $consentInstance = Get-MgBetaDeviceManagementDataSharingConsent -DataSharingConsentId "appleMDMPushCertificate"
+            $consentInstance = Get-MgBetaDeviceManagementDataSharingConsent -DataSharingConsentId 'appleMDMPushCertificate'
             $Params.Add('DataSharingConsetGranted', $consentInstance.Granted)
 
             $Results = Get-TargetResource @Params

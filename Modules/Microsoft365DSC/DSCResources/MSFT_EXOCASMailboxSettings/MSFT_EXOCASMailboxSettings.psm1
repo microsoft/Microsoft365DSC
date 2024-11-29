@@ -216,7 +216,7 @@ function Get-TargetResource
     {
         if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
         {
-            $mailboxCasSettings = $Script:exportedInstances | Where-Object -FilterScript {$_.Identity -eq $Identity}
+            $mailboxCasSettings = $Script:exportedInstances | Where-Object -FilterScript { $_.Identity -eq $Identity }
         }
         else
         {

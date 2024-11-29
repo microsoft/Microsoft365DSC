@@ -1,45 +1,44 @@
 {
-    "resourceName": "IntuneAppAndBrowserIsolationPolicyWindows10",
-    "description": "This resource configures an Intune App And Browser Isolation Policy for Windows10.",
-    "permissions":    {
-  "graph": {
-    "application": {
-      "read": [
-        {
-          "name": "Group.Read.All"
-        },
-        {
-          "name": "DeviceManagementConfiguration.Read.All"
-        }
-      ],
-      "update": [
-        {
-          "name": "Group.Read.All"
-        },
-        {
-          "name": "DeviceManagementConfiguration.ReadWrite.All"
-        }
-      ]
-    },
-    "delegated": {
-      "read": [
-        {
-          "name": "Group.Read.All"
-        },
-        {
-          "name": "DeviceManagementConfiguration.Read.All"
-        }
-      ],
-      "update": [
-        {
-          "name": "Group.Read.All"
-        },
-        {
-          "name": "DeviceManagementConfiguration.ReadWrite.All"
-        }
-      ]
+  "resourceName": "IntuneAppAndBrowserIsolationPolicyWindows10",
+  "description": "This resource configures an Intune App And Browser Isolation Policy for Windows10.",
+  "permissions": {
+    "graph": {
+      "application": {
+        "read": [
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "DeviceManagementConfiguration.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "DeviceManagementConfiguration.ReadWrite.All"
+          }
+        ]
+      },
+      "delegated": {
+        "read": [
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "DeviceManagementConfiguration.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "DeviceManagementConfiguration.ReadWrite.All"
+          }
+        ]
+      }
     }
   }
-}
-
 }

@@ -88,8 +88,8 @@ function Get-TargetResource
 
         #Azure portal timeout
         $timeout = $getValue.Definition | ConvertFrom-Json
-        $AzurePortalTimeOut = ($timeout.ActivityBasedTimeoutPolicy.ApplicationPolicies | Where-Object{$_.ApplicationId -match "c44b4083-3bb0-49c1-b47d-974e53cbdf3c"}).WebSessionIdleTimeout
-        $DefaultTimeOut = ($timeout.ActivityBasedTimeoutPolicy.ApplicationPolicies | Where-Object{$_.ApplicationId -match "default"}).WebSessionIdleTimeout
+        $AzurePortalTimeOut = ($timeout.ActivityBasedTimeoutPolicy.ApplicationPolicies | Where-Object { $_.ApplicationId -match 'c44b4083-3bb0-49c1-b47d-974e53cbdf3c' }).WebSessionIdleTimeout
+        $DefaultTimeOut = ($timeout.ActivityBasedTimeoutPolicy.ApplicationPolicies | Where-Object { $_.ApplicationId -match 'default' }).WebSessionIdleTimeout
 
         $results = @{
             #region resource generator code
@@ -191,46 +191,47 @@ function Set-TargetResource
     $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
     $AzurePortalTimeOutexist = $false
     $DefaultTimeOutexistst = $false
-    if($BoundParameters.ContainsKey('AzurePortalTimeOut') `
+    if ($BoundParameters.ContainsKey('AzurePortalTimeOut') `
             -and $null -ne $BoundParameters.AzurePortalTimeOut `
             -and $BoundParameters.AzurePortalTimeOut -ne '' `
             -and $BoundParameters.AzurePortalTimeOut -ne $nullString)
-        {
-            $AzurePortalTimeOutexist = $true
-        }
-    if($BoundParameters.ContainsKey('DefaultTimeOut') `
+    {
+        $AzurePortalTimeOutexist = $true
+    }
+    if ($BoundParameters.ContainsKey('DefaultTimeOut') `
             -and $null -ne $BoundParameters.DefaultTimeOut `
             -and $BoundParameters.DefaultTimeOut -ne '' `
             -and $BoundParameters.DefaultTimeOut -ne $nullString)
-        {
-            $DefaultTimeOutexistst = $true
-        }
+    {
+        $DefaultTimeOutexistst = $true
+    }
     $ApplicationPolicies = @()
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating an Azure AD Activity Based Timeout Policy with DisplayName {$DisplayName}"
-        if($AzurePortalTimeOutexist)
+        if ($AzurePortalTimeOutexist)
         {
             $ApplicationPolicies += @{
-                    ApplicationId = "c44b4083-3bb0-49c1-b47d-974e53cbdf3c"
-                    WebSessionIdleTimeout = "$AzurePortalTimeOut"
-                }
+                ApplicationId         = 'c44b4083-3bb0-49c1-b47d-974e53cbdf3c'
+                WebSessionIdleTimeout = "$AzurePortalTimeOut"
+            }
         }
-        if($DefaultTimeOutexistst)
+        if ($DefaultTimeOutexistst)
         {
             $ApplicationPolicies += @{
-                ApplicationId = "default"
+                ApplicationId         = 'default'
                 WebSessionIdleTimeout = "$DefaultTimeOut"
             }
         }
-        if($null -eq $ApplicationPolicies)
+        if ($null -eq $ApplicationPolicies)
         {
-            throw "At least one of the parameters AzurePortalTimeOut or DefaultTimeOut must be specified"
+            throw 'At least one of the parameters AzurePortalTimeOut or DefaultTimeOut must be specified'
         }
-        elseif($AzurePortalTimeOutexist -or $DefaultTimeOutexistst) {
+        elseif ($AzurePortalTimeOutexist -or $DefaultTimeOutexistst)
+        {
             $policy = @{
                 ActivityBasedTimeoutPolicy = @{
-                    Version = 1
+                    Version             = 1
                     ApplicationPolicies = @(
                         $ApplicationPolicies
                     )
@@ -239,10 +240,10 @@ function Set-TargetResource
 
             $json = $policy | ConvertTo-Json -Depth 10 -Compress
             $params = @{
-                definition = @(
+                definition            = @(
                     "$json"
                 )
-                displayName = "displayName-value"
+                displayName           = 'displayName-value'
                 isOrganizationDefault = $true
             }
 
@@ -252,28 +253,29 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Creating an Azure AD Activity Based Timeout Policy with DisplayName {$DisplayName}"
-        if($AzurePortalTimeOutexist)
+        if ($AzurePortalTimeOutexist)
         {
             $ApplicationPolicies += @{
-                    ApplicationId = "c44b4083-3bb0-49c1-b47d-974e53cbdf3c"
-                    WebSessionIdleTimeout = "$AzurePortalTimeOut"
-                }
+                ApplicationId         = 'c44b4083-3bb0-49c1-b47d-974e53cbdf3c'
+                WebSessionIdleTimeout = "$AzurePortalTimeOut"
+            }
         }
-        if($DefaultTimeOutexistst)
+        if ($DefaultTimeOutexistst)
         {
             $ApplicationPolicies += @{
-                ApplicationId = "default"
+                ApplicationId         = 'default'
                 WebSessionIdleTimeout = "$DefaultTimeOut"
             }
         }
-        if($null -eq $ApplicationPolicies)
+        if ($null -eq $ApplicationPolicies)
         {
-            throw "At least one of the parameters AzurePortalTimeOut or DefaultTimeOut must be specified"
+            throw 'At least one of the parameters AzurePortalTimeOut or DefaultTimeOut must be specified'
         }
-        elseif($AzurePortalTimeOutexist -or $DefaultTimeOutexistst) {
+        elseif ($AzurePortalTimeOutexist -or $DefaultTimeOutexistst)
+        {
             $policy = @{
                 ActivityBasedTimeoutPolicy = @{
-                    Version = 1
+                    Version             = 1
                     ApplicationPolicies = @(
                         $ApplicationPolicies
                     )
@@ -282,10 +284,10 @@ function Set-TargetResource
 
             $json = $policy | ConvertTo-Json -Depth 10 -Compress
             $params = @{
-                definition = @(
+                definition            = @(
                     "$json"
                 )
-                displayName = "displayName-value"
+                displayName           = 'displayName-value'
                 isOrganizationDefault = $true
             }
 
@@ -501,14 +503,14 @@ function Export-TargetResource
             }
             Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{
-                DisplayName = $config.displayName
-                Ensure = 'Present'
-                Credential = $Credential
-                ApplicationId = $ApplicationId
-                TenantId = $TenantId
-                ApplicationSecret = $ApplicationSecret
+                DisplayName           = $config.displayName
+                Ensure                = 'Present'
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
-                Managedidentity = $ManagedIdentity.IsPresent
+                Managedidentity       = $ManagedIdentity.IsPresent
             }
 
             $Results = Get-TargetResource @Params

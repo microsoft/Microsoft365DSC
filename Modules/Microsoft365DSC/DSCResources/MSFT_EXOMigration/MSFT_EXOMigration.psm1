@@ -108,7 +108,7 @@ function Get-TargetResource
     {
         if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
         {
-            $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.Identity.Name -eq $Identity}
+            $instance = $Script:exportedInstances | Where-Object -FilterScript { $_.Identity.Name -eq $Identity }
         }
         else
         {
@@ -123,35 +123,35 @@ function Get-TargetResource
         $UserEmails = $Users | ForEach-Object { $_.Identity }
 
         $results = @{
-            Identity                = $Identity
-            NotificationEmails      = [System.String[]]$instance.NotificationEmails
-            AddUsers                = [System.Boolean]$instance.AddUsers
-            BadItemLimit            = [System.String]$instance.BadItemLimit
-            LargeItemLimit          = [System.String]$instance.LargeItemLimit
-            MoveOptions             = [System.String[]]$instance.MoveOptions
-            SkipMerging             = [System.String[]]$instance.SkipMerging
-            Update                  = [System.Boolean]$instance.Update
-            Ensure                  = 'Present'
-            Credential              = $Credential
-            ApplicationId           = $ApplicationId
-            TenantId                = $TenantId
-            CertificateThumbprint   = $CertificateThumbprint
-            ManagedIdentity         = $ManagedIdentity.IsPresent
-            AccessTokens            = $AccessTokens
-            Status                  = $instance.Status.Value
-            MigrationUsers          = $UserEmails
-            SourceEndpoint          = $instance.SourceEndpoint.Identity.Id
-            TargetDeliveryDomain    = $instance.TargetDeliveryDomain
+            Identity              = $Identity
+            NotificationEmails    = [System.String[]]$instance.NotificationEmails
+            AddUsers              = [System.Boolean]$instance.AddUsers
+            BadItemLimit          = [System.String]$instance.BadItemLimit
+            LargeItemLimit        = [System.String]$instance.LargeItemLimit
+            MoveOptions           = [System.String[]]$instance.MoveOptions
+            SkipMerging           = [System.String[]]$instance.SkipMerging
+            Update                = [System.Boolean]$instance.Update
+            Ensure                = 'Present'
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
+            ManagedIdentity       = $ManagedIdentity.IsPresent
+            AccessTokens          = $AccessTokens
+            Status                = $instance.Status.Value
+            MigrationUsers        = $UserEmails
+            SourceEndpoint        = $instance.SourceEndpoint.Identity.Id
+            TargetDeliveryDomain  = $instance.TargetDeliveryDomain
         }
 
         if ($instance.CompleteAfter -ne $null)
         {
-            $results.Add('CompleteAfter', $instance.CompleteAfter.ToString("MM/dd/yyyy hh:mm tt"))
+            $results.Add('CompleteAfter', $instance.CompleteAfter.ToString('MM/dd/yyyy hh:mm tt'))
         }
 
         if ($instance.StartAfter -ne $null)
         {
-            $results.Add('StartAfter', $instance.CompleteAfter.ToString("MM/dd/yyyy hh:mm tt"))
+            $results.Add('StartAfter', $instance.CompleteAfter.ToString('MM/dd/yyyy hh:mm tt'))
         }
 
         return [System.Collections.Hashtable] $results
@@ -284,15 +284,15 @@ function Set-TargetResource
         $csvBytes = [System.Text.Encoding]::UTF8.GetBytes($csvContent -join "`r`n")
 
         $BatchParams = @{
-            Name              = $Identity  # Use the existing Identity as the new batch name
-            CSVData           = $csvBytes  # Directly use the byte array
-            NotificationEmails = $NotificationEmails  # Use the same notification emails if provided
-            CompleteAfter     = $CompleteAfter
-            StartAfter        = $StartAfter
-            BadItemLimit      = [System.String]$BadItemLimit
-            LargeItemLimit    = $LargeItemLimit
-            SkipMerging       = $SkipMerging
-            SourceEndpoint    = $SourceEndpoint
+            Name                 = $Identity  # Use the existing Identity as the new batch name
+            CSVData              = $csvBytes  # Directly use the byte array
+            NotificationEmails   = $NotificationEmails  # Use the same notification emails if provided
+            CompleteAfter        = $CompleteAfter
+            StartAfter           = $StartAfter
+            BadItemLimit         = [System.String]$BadItemLimit
+            LargeItemLimit       = $LargeItemLimit
+            SkipMerging          = $SkipMerging
+            SourceEndpoint       = $SourceEndpoint
             TargetDeliveryDomain = $TargetDeliveryDomain
         }
 
@@ -334,22 +334,22 @@ function Set-TargetResource
         $csvFilePath = "$env:TEMP\MigrationUsers.csv"
 
         # Convert each item in the array to a custom object with an EmailAddress property
-        $csvContent = $MigrationUsers | ForEach-Object { [PSCustomObject]@{EmailAddress = $_} }
+        $csvContent = $MigrationUsers | ForEach-Object { [PSCustomObject]@{EmailAddress = $_ } }
 
         # Export to CSV with the header "EmailAddress"
         $csvContent | Export-Csv -Path $csvFilePath -NoTypeInformation -Force
 
         $BatchParams = @{
-            Identity          = $Identity  # Use the existing Identity as the new batch name
-            CSVData           = [System.IO.File]::ReadAllBytes($csvFilePath)  # Load the CSV as byte array
+            Identity           = $Identity  # Use the existing Identity as the new batch name
+            CSVData            = [System.IO.File]::ReadAllBytes($csvFilePath)  # Load the CSV as byte array
             NotificationEmails = $NotificationEmails  # Use the same notification emails if provided
-            CompleteAfter     = $CompleteAfter
-            StartAfter        = $StartAfter
-            BadItemLimit      = [System.String]$BadItemLimit
-            LargeItemLimit    = $LargeItemLimit
-            SkipMerging       = $SkipMerging
-            Update            = $Update
-            AddUsers          = $AddUsers
+            CompleteAfter      = $CompleteAfter
+            StartAfter         = $StartAfter
+            BadItemLimit       = [System.String]$BadItemLimit
+            LargeItemLimit     = $LargeItemLimit
+            SkipMerging        = $SkipMerging
+            Update             = $Update
+            AddUsers           = $AddUsers
         }
 
         Set-MigrationBatch @BatchParams

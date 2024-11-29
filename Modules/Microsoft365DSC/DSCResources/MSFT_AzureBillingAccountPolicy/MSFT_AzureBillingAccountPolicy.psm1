@@ -207,15 +207,15 @@ function Set-TargetResource
                 authenticationType         = $EnterpriseAgreementPolicies.authenticationType
                 departmentAdminViewCharges = $EnterpriseAgreementPolicies.departmentAdminViewCharges
             }
-            marketplacePurchases = $MarketplacePurchases
-            reservationPurchases = $ReservationPurchases
-            savingsPlanPurchases = $SavingsPlanPurchases
+            marketplacePurchases        = $MarketplacePurchases
+            reservationPurchases        = $ReservationPurchases
+            savingsPlanPurchases        = $SavingsPlanPurchases
         }
     }
     $payload = ConvertTo-Json $instanceParams -Depth 5 -Compress
     Write-Verbose -Message "Updating billing account policy for {$BillingAccount} with payload:`r`n$($payload)"
     $uri = "https://management.azure.com/providers/Microsoft.Billing/billingAccounts/$($BillingAccount)/policies/default?api-version=2024-04-01"
-    $response = Invoke-AzRest -Uri $uri -Method "PUT" -Payload $payload
+    $response = Invoke-AzRest -Uri $uri -Method 'PUT' -Payload $payload
     if (-not [System.String]::IsNullOrEmpty($response.Error))
     {
         throw "Error: $($response.Error)"

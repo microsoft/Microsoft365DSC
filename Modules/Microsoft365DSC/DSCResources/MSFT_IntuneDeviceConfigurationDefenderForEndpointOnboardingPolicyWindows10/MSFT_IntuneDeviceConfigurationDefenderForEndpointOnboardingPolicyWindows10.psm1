@@ -106,7 +106,7 @@ function Get-TargetResource
 
         $getValue = $null
         #region resource generator code
-        $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -DeviceConfigurationId $Id  -ErrorAction SilentlyContinue
+        $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -DeviceConfigurationId $Id -ErrorAction SilentlyContinue
 
         if ($null -eq $getValue)
         {
@@ -119,14 +119,14 @@ function Get-TargetResource
                     -Filter "DisplayName eq '$DisplayName'" `
                     -ErrorAction SilentlyContinue | Where-Object `
                     -FilterScript { `
-                        $_.AdditionalProperties.'@odata.type' -eq "#microsoft.graph.windowsDefenderAdvancedThreatProtectionConfiguration" `
-                    }
+                        $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windowsDefenderAdvancedThreatProtectionConfiguration' `
+                }
                 if ($null -eq $getValue)
                 {
                     Write-Verbose -Message "Could not find an Intune Device Configuration Defender For Endpoint Onboarding Policy for Windows10 with DisplayName {$DisplayName}"
                     return $nullResult
                 }
-                if(([array]$getValue).count -gt 1)
+                if (([array]$getValue).count -gt 1)
                 {
                     throw "A policy with a duplicated displayName {'$DisplayName'} was found - Ensure displayName is unique"
                 }
@@ -164,8 +164,8 @@ function Get-TargetResource
         if ($graphAssignments.count -gt 0)
         {
             $returnAssignments += ConvertFrom-IntunePolicyAssignment `
-                                -IncludeDeviceFilter:$true `
-                                -Assignments ($graphAssignments)
+                -IncludeDeviceFilter:$true `
+                -Assignments ($graphAssignments)
         }
         $results.Add('Assignments', $returnAssignments)
 
@@ -287,13 +287,13 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating an Intune Device Configuration Defender For Endpoint Onboarding Policy for Windows10 with DisplayName {$DisplayName}"
-        $BoundParameters.Remove("Assignments") | Out-Null
+        $BoundParameters.Remove('Assignments') | Out-Null
 
         $CreateParameters = ([Hashtable]$BoundParameters).clone()
         $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
 
         if ($AdvancedThreatProtectionAutoPopulateOnboardingBlob -and `
-            $PSBoundParameters.AdvancedThreatProtectionAutoPopulateOnboardingBlob)
+                $PSBoundParameters.AdvancedThreatProtectionAutoPopulateOnboardingBlob)
         {
             $CreateParameters.Remove('AdvancedThreatProtectionOnboardingBlob') | Out-Null
         }
@@ -309,13 +309,13 @@ function Set-TargetResource
             }
         }
         #region resource generator code
-        $CreateParameters.Add("@odata.type", "#microsoft.graph.windowsDefenderAdvancedThreatProtectionConfiguration")
+        $CreateParameters.Add('@odata.type', '#microsoft.graph.windowsDefenderAdvancedThreatProtectionConfiguration')
         $policy = New-MgBetaDeviceManagementDeviceConfiguration -BodyParameter $CreateParameters
         $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
 
         if ($policy.id)
         {
-            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId  $policy.id `
+            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $policy.id `
                 -Targets $assignmentsHash `
                 -Repository 'deviceManagement/deviceConfigurations'
         }
@@ -324,13 +324,13 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating the Intune Device Configuration Defender For Endpoint Onboarding Policy for Windows10 with Id {$($currentInstance.Id)}"
-        $BoundParameters.Remove("Assignments") | Out-Null
+        $BoundParameters.Remove('Assignments') | Out-Null
 
         $UpdateParameters = ([Hashtable]$BoundParameters).clone()
         $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
 
         if ($AdvancedThreatProtectionAutoPopulateOnboardingBlob -and `
-            $PSBoundParameters.AdvancedThreatProtectionAutoPopulateOnboardingBlob)
+                $PSBoundParameters.AdvancedThreatProtectionAutoPopulateOnboardingBlob)
         {
             $UpdateParameters.Remove('AdvancedThreatProtectionOnboardingBlob') | Out-Null
         }
@@ -346,7 +346,7 @@ function Set-TargetResource
             }
         }
         #region resource generator code
-        $UpdateParameters.Add("@odata.type", "#microsoft.graph.windowsDefenderAdvancedThreatProtectionConfiguration")
+        $UpdateParameters.Add('@odata.type', '#microsoft.graph.windowsDefenderAdvancedThreatProtectionConfiguration')
         Update-MgBetaDeviceManagementDeviceConfiguration  `
             -DeviceConfigurationId $currentInstance.Id `
             -BodyParameter $UpdateParameters
@@ -505,7 +505,7 @@ function Test-TargetResource
     $ValuesToCheck.remove('Id') | Out-Null
 
     if ($AdvancedThreatProtectionAutoPopulateOnboardingBlob -and `
-        $PSBoundParameters.AdvancedThreatProtectionAutoPopulateOnboardingBlob)
+            $PSBoundParameters.AdvancedThreatProtectionAutoPopulateOnboardingBlob)
     {
         $ValuesToCheck.Remove('AdvancedThreatProtectionOnboardingBlob') | Out-Null
     }
@@ -587,7 +587,7 @@ function Export-TargetResource
             -ErrorAction Stop | Where-Object `
             -FilterScript { `
                 $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windowsDefenderAdvancedThreatProtectionConfiguration' `
-            }
+        }
         #endregion
 
         $i = 1
@@ -615,7 +615,7 @@ function Export-TargetResource
             Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{
                 Id                    = $config.Id
-                DisplayName           =  $config.DisplayName
+                DisplayName           = $config.DisplayName
                 Ensure                = 'Present'
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
@@ -653,7 +653,7 @@ function Export-TargetResource
                 -Credential $Credential
             if ($Results.Assignments)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Assignments" -isCIMArray:$true
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Assignments' -IsCIMArray:$true
             }
 
             $dscContent += $currentDSCBlock
@@ -667,7 +667,7 @@ function Export-TargetResource
     catch
     {
         if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
-        $_.Exception -like "*Request not applicable to target tenant*")
+                $_.Exception -like '*Request not applicable to target tenant*')
         {
             Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }

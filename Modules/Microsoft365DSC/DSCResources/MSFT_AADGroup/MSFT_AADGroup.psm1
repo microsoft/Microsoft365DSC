@@ -209,7 +209,7 @@ function Get-TargetResource
                 {
                     $OwnersValues += $owner.AdditionalProperties.userPrincipalName
                 }
-                elseif($owner.AdditionalProperties.'@odata.type' -eq "#microsoft.graph.servicePrincipal")
+                elseif ($owner.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.servicePrincipal')
                 {
                     $OwnersValues += $owner.AdditionalProperties.displayName
                 }
@@ -224,7 +224,7 @@ function Get-TargetResource
                 $GroupAsMembersValues = @()
                 foreach ($member in $members)
                 {
-                    if ($member.AdditionalProperties.'@odata.type' -eq "#microsoft.graph.user")
+                    if ($member.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.user')
                     {
                         $MembersValues += $member.AdditionalProperties.userPrincipalName
                     }
@@ -232,7 +232,7 @@ function Get-TargetResource
                     {
                         $MembersValues += $member.AdditionalProperties.displayName
                     }
-                    elseif($member.AdditionalProperties.'@odata.type' -eq "#microsoft.graph.group")
+                    elseif ($member.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.group')
                     {
                         $GroupAsMembersValues += $member.AdditionalProperties.displayName
                     }
@@ -619,7 +619,7 @@ function Set-TargetResource
             {
                 try
                 {
-                    Write-Verbose -Message "Setting Group Licenses"
+                    Write-Verbose -Message 'Setting Group Licenses'
                     Set-MgGroupLicense -GroupId $currentGroup.Id `
                         -AddLicenses $licensesToAdd `
                         -RemoveLicenses $licensesToRemove `
@@ -655,7 +655,7 @@ function Set-TargetResource
     if ($Ensure -ne 'Absent')
     {
         #Owners
-        Write-Verbose -Message "Updating Owners"
+        Write-Verbose -Message 'Updating Owners'
         if ($PSBoundParameters.ContainsKey('Owners'))
         {
             $currentOwnersValue = @()
@@ -713,7 +713,7 @@ function Set-TargetResource
         }
 
         #Members
-        Write-Verbose -Message "Updating Members"
+        Write-Verbose -Message 'Updating Members'
         if ($MembershipRuleProcessingState -ne 'On' -and $PSBoundParameters.ContainsKey('Members'))
         {
             $currentMembersValue = @()
@@ -730,7 +730,7 @@ function Set-TargetResource
             {
                 $backCurrentMembers = @()
             }
-            Write-Verbose -Message "Comparing current members and desired list"
+            Write-Verbose -Message 'Comparing current members and desired list'
             $membersDiff = Compare-Object -ReferenceObject $backCurrentMembers -DifferenceObject $desiredMembersValue
             foreach ($diff in $membersDiff)
             {
@@ -771,7 +771,7 @@ function Set-TargetResource
         }
 
         #GroupAsMembers
-        Write-Verbose -Message "Updating GroupAsMembers"
+        Write-Verbose -Message 'Updating GroupAsMembers'
         if ($MembershipRuleProcessingState -ne 'On' -and $PSBoundParameters.ContainsKey('GroupAsMembers'))
         {
             $currentGroupAsMembersValue = @()
@@ -809,7 +809,7 @@ function Set-TargetResource
                     {
                         Write-Verbose -Message "Adding AAD group {$($groupAsMember.DisplayName)} as member of AAD group {$($currentGroup.DisplayName)}"
                         $groupAsMemberObject = @{
-                            "@odata.id"= $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "v1.0/directoryObjects/$($groupAsMember.Id)"
+                            '@odata.id' = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "v1.0/directoryObjects/$($groupAsMember.Id)"
                         }
                         New-MgBetaGroupMemberByRef -GroupId ($currentGroup.Id) -Body $groupAsMemberObject | Out-Null
                     }
@@ -823,7 +823,7 @@ function Set-TargetResource
         }
 
         #MemberOf
-        Write-Verbose -Message "Updating MemberOf"
+        Write-Verbose -Message 'Updating MemberOf'
         if ($PSBoundParameters.ContainsKey('MemberOf'))
         {
             $currentMemberOfValue = @()
@@ -1120,10 +1120,11 @@ function Test-TargetResource
                 foreach ($assignedLicense in $AssignedLicenses)
                 {
                     Write-Verbose "Compare DisabledPlans for SkuId $($assignedLicense.SkuId) in group {$DisplayName}"
-                    $currentLicense = $CurrentValues.AssignedLicenses | Where-Object -FilterScript {$_.SkuId -eq $assignedLicense.SkuId}
+                    $currentLicense = $CurrentValues.AssignedLicenses | Where-Object -FilterScript { $_.SkuId -eq $assignedLicense.SkuId }
                     if ($assignedLicense.DisabledPlans.Count -ne 0 -or $currentLicense.DisabledPlans.Count -ne 0)
                     {
-                        try {
+                        try
+                        {
                             $licensesDiff = Compare-Object -ReferenceObject $assignedLicense.DisabledPlans -DifferenceObject $currentLicense.DisabledPlans
                             if ($null -ne $licensesDiff)
                             {

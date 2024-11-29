@@ -174,19 +174,19 @@ function Get-M365DSCSCMapSecurityFilter
         $CertificatePassword
     )
     $result = @{
-        FilterName                  = $Filter.FilterName
-        Action                      = $Filter.Action
-        Users                       = $Filter.Users
-        Description                 = $Filter.Description
-        Filters                     = $Filter.Filters
-        Region                      = $Filter.Region
-        Credential                  = $Credential
-        ApplicationId               = $ApplicationId
-        TenantId                    = $TenantId
-        CertificateThumbprint       = $CertificateThumbprint
-        CertificatePath             = $CertificatePath
-        CertificatePassword         = $CertificatePassword
-        Ensure                      = 'Present'
+        FilterName            = $Filter.FilterName
+        Action                = $Filter.Action
+        Users                 = $Filter.Users
+        Description           = $Filter.Description
+        Filters               = $Filter.Filters
+        Region                = $Filter.Region
+        Credential            = $Credential
+        ApplicationId         = $ApplicationId
+        TenantId              = $TenantId
+        CertificateThumbprint = $CertificateThumbprint
+        CertificatePath       = $CertificatePath
+        CertificatePassword   = $CertificatePassword
+        Ensure                = 'Present'
     }
     return $result
 }

@@ -1,5 +1,5 @@
 [ClassVersion("1.0.0")]
-class MSFT_AADVerifiedIdAuthorityKeyVaultMetadata 
+class MSFT_AADVerifiedIdAuthorityKeyVaultMetadata
 {
     [Write, Description("Subscription ID of the Key Vault.")] String SubscriptionId;
     [Write, Description("Resource group of the Key Vault.")] String ResourceGroup;

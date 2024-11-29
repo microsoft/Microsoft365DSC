@@ -144,133 +144,133 @@ function Get-TargetResource
             return $null
         }
 
-        $CallingLineIdentityValue = ($assignment | Where-Object -FilterScript {$_.PolicyType -eq 'CallingLineIdentity'}).PolicyName
+        $CallingLineIdentityValue = ($assignment | Where-Object -FilterScript { $_.PolicyType -eq 'CallingLineIdentity' }).PolicyName
         if ([System.String]::IsNullOrEmpty($CallingLineIdentityValue))
         {
             $CallingLineIdentityValue = 'Global'
         }
 
-        $ExternalAccessPolicyValue = ($assignment | Where-Object -FilterScript {$_.PolicyType -eq 'ExternalAccessPolicy'}).PolicyName
+        $ExternalAccessPolicyValue = ($assignment | Where-Object -FilterScript { $_.PolicyType -eq 'ExternalAccessPolicy' }).PolicyName
         if ([System.String]::IsNullOrEmpty($ExternalAccessPolicyValue))
         {
             $ExternalAccessPolicyValue = 'Global'
         }
 
-        $OnlineVoicemailPolicyValue = ($assignment | Where-Object -FilterScript {$_.PolicyType -eq 'OnlineVoicemailPolicy'}).PolicyName
+        $OnlineVoicemailPolicyValue = ($assignment | Where-Object -FilterScript { $_.PolicyType -eq 'OnlineVoicemailPolicy' }).PolicyName
         if ([System.String]::IsNullOrEmpty($OnlineVoicemailPolicyValue))
         {
             $OnlineVoicemailPolicyValue = 'Global'
         }
 
-        $OnlineVoiceRoutingPolicyValue = ($assignment | Where-Object -FilterScript {$_.PolicyType -eq 'OnlineVoiceRoutingPolicy'}).PolicyName
+        $OnlineVoiceRoutingPolicyValue = ($assignment | Where-Object -FilterScript { $_.PolicyType -eq 'OnlineVoiceRoutingPolicy' }).PolicyName
         if ([System.String]::IsNullOrEmpty($OnlineVoiceRoutingPolicyValue))
         {
             $OnlineVoiceRoutingPolicyValue = 'Global'
         }
 
-        $TeamsAppPermissionPolicyValue = ($assignment | Where-Object -FilterScript {$_.PolicyType -eq 'TeamsAppPermissionPolicy'}).PolicyName
+        $TeamsAppPermissionPolicyValue = ($assignment | Where-Object -FilterScript { $_.PolicyType -eq 'TeamsAppPermissionPolicy' }).PolicyName
         if ([System.String]::IsNullOrEmpty($TeamsAppPermissionPolicyValue))
         {
             $TeamsAppPermissionPolicyValue = 'Global'
         }
 
-        $TeamsAppSetupPolicyValue = ($assignment | Where-Object -FilterScript {$_.PolicyType -eq 'TeamsAppSetupPolicy'}).PolicyName
+        $TeamsAppSetupPolicyValue = ($assignment | Where-Object -FilterScript { $_.PolicyType -eq 'TeamsAppSetupPolicy' }).PolicyName
         if ([System.String]::IsNullOrEmpty($TeamsAppSetupPolicyValue))
         {
             $TeamsAppSetupPolicyValue = 'Global'
         }
 
-        $TeamsAudioConferencingPolicyValue = ($assignment | Where-Object -FilterScript {$_.PolicyType -eq 'TeamsAudioConferencingPolicy'}).PolicyName
+        $TeamsAudioConferencingPolicyValue = ($assignment | Where-Object -FilterScript { $_.PolicyType -eq 'TeamsAudioConferencingPolicy' }).PolicyName
         if ([System.String]::IsNullOrEmpty($TeamsAudioConferencingPolicyValue))
         {
             $TeamsAudioConferencingPolicyValue = 'Global'
         }
 
-        $TeamsCallHoldPolicyValue = ($assignment | Where-Object -FilterScript {$_.PolicyType -eq 'TeamsCallHoldPolicy'}).PolicyName
+        $TeamsCallHoldPolicyValue = ($assignment | Where-Object -FilterScript { $_.PolicyType -eq 'TeamsCallHoldPolicy' }).PolicyName
         if ([System.String]::IsNullOrEmpty($TeamsCallHoldPolicyValue))
         {
             $TeamsCallHoldPolicyValue = 'Global'
         }
 
-        $TeamsCallingPolicyValue = ($assignment | Where-Object -FilterScript {$_.PolicyType -eq 'TeamsCallingPolicy'}).PolicyName
+        $TeamsCallingPolicyValue = ($assignment | Where-Object -FilterScript { $_.PolicyType -eq 'TeamsCallingPolicy' }).PolicyName
         if ([System.String]::IsNullOrEmpty($TeamsCallingPolicyValue))
         {
             $TeamsCallingPolicyValue = 'Global'
         }
 
-        $TeamsCallParkPolicyValue = ($assignment | Where-Object -FilterScript {$_.PolicyType -eq 'TeamsCallParkPolicy'}).PolicyName
+        $TeamsCallParkPolicyValue = ($assignment | Where-Object -FilterScript { $_.PolicyType -eq 'TeamsCallParkPolicy' }).PolicyName
         if ([System.String]::IsNullOrEmpty($TeamsCallParkPolicyValue))
         {
             $TeamsCallParkPolicyValue = 'Global'
         }
 
-        $TeamsChannelsPolicyValue = ($assignment | Where-Object -FilterScript {$_.PolicyType -eq 'TeamsChannelsPolicy'}).PolicyName
+        $TeamsChannelsPolicyValue = ($assignment | Where-Object -FilterScript { $_.PolicyType -eq 'TeamsChannelsPolicy' }).PolicyName
         if ([System.String]::IsNullOrEmpty($TeamsChannelsPolicyValue))
         {
             $TeamsChannelsPolicyValue = 'Global'
         }
 
-        $TeamsEmergencyCallingPolicyValue = ($assignment | Where-Object -FilterScript {$_.PolicyType -eq 'TeamsEmergencyCallingPolicy'}).PolicyName
+        $TeamsEmergencyCallingPolicyValue = ($assignment | Where-Object -FilterScript { $_.PolicyType -eq 'TeamsEmergencyCallingPolicy' }).PolicyName
         if ([System.String]::IsNullOrEmpty($TeamsEmergencyCallingPolicyValue))
         {
             $TeamsEmergencyCallingPolicyValue = 'Global'
         }
 
-        $TeamsEmergencyCallRoutingPolicyValue = ($assignment | Where-Object -FilterScript {$_.PolicyType -eq 'TeamsEmergencyCallRoutingPolicy'}).PolicyName
+        $TeamsEmergencyCallRoutingPolicyValue = ($assignment | Where-Object -FilterScript { $_.PolicyType -eq 'TeamsEmergencyCallRoutingPolicy' }).PolicyName
         if ([System.String]::IsNullOrEmpty($TeamsEmergencyCallRoutingPolicyValue))
         {
             $TeamsEmergencyCallRoutingPolicyValue = 'Global'
         }
 
-        $TeamsEnhancedEncryptionPolicyValue = ($assignment | Where-Object -FilterScript {$_.PolicyType -eq 'TeamsEnhancedEncryptionPolicy'}).PolicyName
+        $TeamsEnhancedEncryptionPolicyValue = ($assignment | Where-Object -FilterScript { $_.PolicyType -eq 'TeamsEnhancedEncryptionPolicy' }).PolicyName
         if ([System.String]::IsNullOrEmpty($TeamsEnhancedEncryptionPolicyValue))
         {
             $TeamsEnhancedEncryptionPolicyValue = 'Global'
         }
 
-        $TeamsEventsPolicyValue = ($assignment | Where-Object -FilterScript {$_.PolicyType -eq 'TeamsEventsPolicy'}).PolicyName
+        $TeamsEventsPolicyValue = ($assignment | Where-Object -FilterScript { $_.PolicyType -eq 'TeamsEventsPolicy' }).PolicyName
         if ([System.String]::IsNullOrEmpty($TeamsEventsPolicyValue))
         {
             $TeamsEventsPolicyValue = 'Global'
         }
 
-        $TeamsMeetingBroadcastPolicyValue = ($assignment | Where-Object -FilterScript {$_.PolicyType -eq 'TeamsMeetingBroadcastPolicy'}).PolicyName
+        $TeamsMeetingBroadcastPolicyValue = ($assignment | Where-Object -FilterScript { $_.PolicyType -eq 'TeamsMeetingBroadcastPolicy' }).PolicyName
         if ([System.String]::IsNullOrEmpty($TeamsMeetingBroadcastPolicyValue))
         {
             $TeamsMeetingBroadcastPolicyValue = 'Global'
         }
 
-        $TeamsMeetingPolicyValue = ($assignment | Where-Object -FilterScript {$_.PolicyType -eq 'TeamsMeetingPolicy'}).PolicyName
+        $TeamsMeetingPolicyValue = ($assignment | Where-Object -FilterScript { $_.PolicyType -eq 'TeamsMeetingPolicy' }).PolicyName
         if ([System.String]::IsNullOrEmpty($TeamsMeetingPolicyValue))
         {
             $TeamsMeetingPolicyValue = 'Global'
         }
 
-        $TeamsMessagingPolicyValue = ($assignment | Where-Object -FilterScript {$_.PolicyType -eq 'TeamsMessagingPolicy'}).PolicyName
+        $TeamsMessagingPolicyValue = ($assignment | Where-Object -FilterScript { $_.PolicyType -eq 'TeamsMessagingPolicy' }).PolicyName
         if ([System.String]::IsNullOrEmpty($TeamsMessagingPolicyValue))
         {
             $TeamsMessagingPolicyValue = 'Global'
         }
 
-        $TeamsMobilityPolicyValue = ($assignment | Where-Object -FilterScript {$_.PolicyType -eq 'TeamsMobilityPolicy'}).PolicyName
+        $TeamsMobilityPolicyValue = ($assignment | Where-Object -FilterScript { $_.PolicyType -eq 'TeamsMobilityPolicy' }).PolicyName
         if ([System.String]::IsNullOrEmpty($TeamsMobilityPolicyValue))
         {
             $TeamsMobilityPolicyValue = 'Global'
         }
 
-        $TeamsUpdateManagementPolicyValue = ($assignment | Where-Object -FilterScript {$_.PolicyType -eq 'TeamsUpdateManagementPolicy'}).PolicyName
+        $TeamsUpdateManagementPolicyValue = ($assignment | Where-Object -FilterScript { $_.PolicyType -eq 'TeamsUpdateManagementPolicy' }).PolicyName
         if ([System.String]::IsNullOrEmpty($TeamsUpdateManagementPolicyValue))
         {
             $TeamsUpdateManagementPolicyValue = 'Global'
         }
 
-        $TeamsUpgradePolicyValue = ($assignment | Where-Object -FilterScript {$_.PolicyType -eq 'TeamsUpgradePolicy'}).PolicyName
+        $TeamsUpgradePolicyValue = ($assignment | Where-Object -FilterScript { $_.PolicyType -eq 'TeamsUpgradePolicy' }).PolicyName
         if ([System.String]::IsNullOrEmpty($TeamsUpgradePolicyValue))
         {
             $TeamsUpgradePolicyValue = 'Global'
         }
 
-        $TenantDialPlanValue = ($assignment | Where-Object -FilterScript {$_.PolicyType -eq 'TenantDialPlan'}).PolicyName
+        $TenantDialPlanValue = ($assignment | Where-Object -FilterScript { $_.PolicyType -eq 'TenantDialPlan' }).PolicyName
         if ([System.String]::IsNullOrEmpty($TenantDialPlanValue))
         {
             $TenantDialPlanValue = 'Global'

@@ -67,7 +67,7 @@ function Get-TargetResource
     {
         if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
         {
-            $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.Identity -eq $Identity}
+            $instance = $Script:exportedInstances | Where-Object -FilterScript { $_.Identity -eq $Identity }
         }
         else
         {
@@ -171,14 +171,14 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         $ruleIdentity = $setParameters['Identity']
-        $setParameters.Add("Name", $ruleIdentity)
-        $setParameters.Remove("Identity")
+        $setParameters.Add('Name', $ruleIdentity)
+        $setParameters.Remove('Identity')
         New-EXOSecOpsOverrideRule @SetParameters
     }
     # UPDATE
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        $setParameters.Remove("Policy")
+        $setParameters.Remove('Policy')
         Set-EXOSecOpsOverrideRule @SetParameters
     }
     # REMOVE

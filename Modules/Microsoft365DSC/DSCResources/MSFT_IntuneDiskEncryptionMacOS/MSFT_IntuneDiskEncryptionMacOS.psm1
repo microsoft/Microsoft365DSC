@@ -131,7 +131,7 @@ function Get-TargetResource
                     -ErrorAction SilentlyContinue | Where-Object `
                     -FilterScript { `
                         $_.TemplateId -eq 'a239407c-698d-4ef8-b314-e3ae409204b8' `
-                    }
+                }
             }
         }
         #endregion
@@ -149,10 +149,10 @@ function Get-TargetResource
             -ErrorAction Stop
 
         $results = @{
-            Description                      = $getValue.Description
-            DisplayName                      = $getValue.DisplayName
-            RoleScopeTagIds                  = $getValue.RoleScopeTagIds
-            Id                               = $getValue.Id
+            Description     = $getValue.Description
+            DisplayName     = $getValue.DisplayName
+            RoleScopeTagIds = $getValue.RoleScopeTagIds
+            Id              = $getValue.Id
         }
 
         foreach ($setting in $settings)
@@ -177,8 +177,8 @@ function Get-TargetResource
         if ($assignmentsValues.Count -gt 0)
         {
             $assignmentResult += ConvertFrom-IntunePolicyAssignment `
-                                -IncludeDeviceFilter:$true `
-                                -Assignments ($assignmentsValues)
+                -IncludeDeviceFilter:$true `
+                -Assignments ($assignmentsValues)
         }
         $results.Add('Assignments', $assignmentResult)
 
@@ -347,7 +347,7 @@ function Set-TargetResource
 
         if ($policy.id)
         {
-            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId  $policy.id `
+            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $policy.id `
                 -Targets $assignmentsHash `
                 -Repository 'deviceManagement/intents'
         }
@@ -362,7 +362,7 @@ function Set-TargetResource
             throw 'AllowDeferralUntilSignOut must be $true'
         }
 
-        $BoundParameters.Remove("Assignments") | Out-Null
+        $BoundParameters.Remove('Assignments') | Out-Null
         $BoundParameters.Remove('Id') | Out-Null
         $BoundParameters.Remove('DisplayName') | Out-Null
         $BoundParameters.Remove('Description') | Out-Null
@@ -655,7 +655,7 @@ function Export-TargetResource
             -ErrorAction Stop | Where-Object `
             -FilterScript { `
                 $_.TemplateId -eq 'a239407c-698d-4ef8-b314-e3ae409204b8' `
-            }
+        }
         #endregion
 
         $i = 1
@@ -683,7 +683,7 @@ function Export-TargetResource
             Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{
                 Id                    = $config.Id
-                DisplayName           =  $config.DisplayName
+                DisplayName           = $config.DisplayName
                 Ensure                = 'Present'
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
@@ -716,7 +716,7 @@ function Export-TargetResource
                 -Credential $Credential
             if ($Results.Assignments)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Assignments" -isCIMArray:$true
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Assignments' -IsCIMArray:$true
             }
 
             $dscContent += $currentDSCBlock

@@ -85,12 +85,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
 
                 Mock -CommandName Get-PnPPropertyBag -MockWith {
-                    return @(
-                        @{
-                            Key   = 'MyKey'
-                            Value = 'MyValue'
-                        }
-                    )
+                    'MyValue'
                 }
             }
 

@@ -253,14 +253,14 @@ function Get-TargetResource
         {
             if ($null -ne $PrimarySmtpAddress)
             {
-                $distributionGroup = $Script:exportedInstances | Where-Object -FilterScript {$_.PrimarySmtpAddress -eq $PrimarySmtpAddress}
+                $distributionGroup = $Script:exportedInstances | Where-Object -FilterScript { $_.PrimarySmtpAddress -eq $PrimarySmtpAddress }
                 $distributionGroupMembers = Get-DistributionGroupMember -Identity $PrimarySmtpAddress `
                     -ErrorAction 'Stop' `
                     -ResultSize 'Unlimited'
             }
             else
             {
-                $distributionGroup = $Script:exportedInstances | Where-Object -FilterScript {$_.Identity -eq $Identity}
+                $distributionGroup = $Script:exportedInstances | Where-Object -FilterScript { $_.Identity -eq $Identity }
                 $distributionGroupMembers = Get-DistributionGroupMember -Identity $Identity `
                     -ErrorAction 'Stop' `
                     -ResultSize 'Unlimited'
@@ -338,58 +338,58 @@ function Get-TargetResource
                 }
             }
             $result = @{
-                Identity                                = $distributionGroup.Identity
-                Alias                                   = $distributionGroup.Alias
-                BccBlocked                              = $distributionGroup.BccBlocked
-                BypassNestedModerationEnabled           = $distributionGroup.BypassNestedModerationEnabled
-                Description                             = $descriptionValue
-                DisplayName                             = $distributionGroup.DisplayName
-                HiddenGroupMembershipEnabled            = $distributionGroup.HiddenGroupMembershipEnabled
-                ManagedBy                               = $ManagedByValue
-                MemberDepartRestriction                 = $distributionGroup.MemberDepartRestriction
-                MemberJoinRestriction                   = $distributionGroup.MemberJoinRestriction
-                Members                                 = $distributionGroupMembers.Name
-                ModeratedBy                             = $ModeratedByValue
-                ModerationEnabled                       = $distributionGroup.ModerationEnabled
-                Name                                    = $distributionGroup.Name
-                Notes                                   = $distributionGroup.Notes
-                OrganizationalUnit                      = $distributionGroup.OrganizationalUnit
-                PrimarySmtpAddress                      = $distributionGroup.PrimarySmtpAddress
-                RequireSenderAuthenticationEnabled      = $distributionGroup.RequireSenderAuthenticationEnabled
-                RoomList                                = $distributionGroup.RoomList
-                SendModerationNotifications             = $distributionGroup.SendModerationNotifications
-                AcceptMessagesOnlyFrom                  = [Array]$distributionGroup.AcceptMessagesOnlyFrom
-                AcceptMessagesOnlyFromDLMembers         = [Array]$distributionGroup.AcceptMessagesOnlyFromDLMembers
-                AcceptMessagesOnlyFromSendersOrMembers  = [Array]$distributionGroup.AcceptMessagesOnlyFromSendersOrMembers
-                CustomAttribute1                        = $distributionGroup.CustomAttribute1
-                CustomAttribute2                        = $distributionGroup.CustomAttribute2
-                CustomAttribute3                        = $distributionGroup.CustomAttribute3
-                CustomAttribute4                        = $distributionGroup.CustomAttribute4
-                CustomAttribute5                        = $distributionGroup.CustomAttribute5
-                CustomAttribute6                        = $distributionGroup.CustomAttribute6
-                CustomAttribute7                        = $distributionGroup.CustomAttribute7
-                CustomAttribute8                        = $distributionGroup.CustomAttribute8
-                CustomAttribute9                        = $distributionGroup.CustomAttribute9
-                CustomAttribute10                       = $distributionGroup.CustomAttribute10
-                CustomAttribute11                       = $distributionGroup.CustomAttribute11
-                CustomAttribute12                       = $distributionGroup.CustomAttribute12
-                CustomAttribute13                       = $distributionGroup.CustomAttribute13
-                CustomAttribute14                       = $distributionGroup.CustomAttribute14
-                CustomAttribute15                       = $distributionGroup.CustomAttribute15
-                EmailAddresses                          = [Array]$distributionGroup.EmailAddresses
-                GrantSendOnBehalfTo                     = [Array]$distributionGroup.GrantSendOnBehalfTo
-                HiddenFromAddressListsEnabled           = [Boolean]$distributionGroup.HiddenFromAddressListsEnabled
-                SendOofMessageToOriginatorEnabled       = [Boolean]$distributionGroup.SendOofMessageToOriginatorEnabled
-                Type                                    = $groupTypeValue
-                Ensure                                  = 'Present'
-                Credential                              = $Credential
-                ApplicationId                           = $ApplicationId
-                CertificateThumbprint                   = $CertificateThumbprint
-                CertificatePath                         = $CertificatePath
-                CertificatePassword                     = $CertificatePassword
-                Managedidentity                         = $ManagedIdentity.IsPresent
-                TenantId                                = $TenantId
-                AccessTokens                            = $AccessTokens
+                Identity                               = $distributionGroup.Identity
+                Alias                                  = $distributionGroup.Alias
+                BccBlocked                             = $distributionGroup.BccBlocked
+                BypassNestedModerationEnabled          = $distributionGroup.BypassNestedModerationEnabled
+                Description                            = $descriptionValue
+                DisplayName                            = $distributionGroup.DisplayName
+                HiddenGroupMembershipEnabled           = $distributionGroup.HiddenGroupMembershipEnabled
+                ManagedBy                              = $ManagedByValue
+                MemberDepartRestriction                = $distributionGroup.MemberDepartRestriction
+                MemberJoinRestriction                  = $distributionGroup.MemberJoinRestriction
+                Members                                = $distributionGroupMembers.Name
+                ModeratedBy                            = $ModeratedByValue
+                ModerationEnabled                      = $distributionGroup.ModerationEnabled
+                Name                                   = $distributionGroup.Name
+                Notes                                  = $distributionGroup.Notes
+                OrganizationalUnit                     = $distributionGroup.OrganizationalUnit
+                PrimarySmtpAddress                     = $distributionGroup.PrimarySmtpAddress
+                RequireSenderAuthenticationEnabled     = $distributionGroup.RequireSenderAuthenticationEnabled
+                RoomList                               = $distributionGroup.RoomList
+                SendModerationNotifications            = $distributionGroup.SendModerationNotifications
+                AcceptMessagesOnlyFrom                 = [Array]$distributionGroup.AcceptMessagesOnlyFrom
+                AcceptMessagesOnlyFromDLMembers        = [Array]$distributionGroup.AcceptMessagesOnlyFromDLMembers
+                AcceptMessagesOnlyFromSendersOrMembers = [Array]$distributionGroup.AcceptMessagesOnlyFromSendersOrMembers
+                CustomAttribute1                       = $distributionGroup.CustomAttribute1
+                CustomAttribute2                       = $distributionGroup.CustomAttribute2
+                CustomAttribute3                       = $distributionGroup.CustomAttribute3
+                CustomAttribute4                       = $distributionGroup.CustomAttribute4
+                CustomAttribute5                       = $distributionGroup.CustomAttribute5
+                CustomAttribute6                       = $distributionGroup.CustomAttribute6
+                CustomAttribute7                       = $distributionGroup.CustomAttribute7
+                CustomAttribute8                       = $distributionGroup.CustomAttribute8
+                CustomAttribute9                       = $distributionGroup.CustomAttribute9
+                CustomAttribute10                      = $distributionGroup.CustomAttribute10
+                CustomAttribute11                      = $distributionGroup.CustomAttribute11
+                CustomAttribute12                      = $distributionGroup.CustomAttribute12
+                CustomAttribute13                      = $distributionGroup.CustomAttribute13
+                CustomAttribute14                      = $distributionGroup.CustomAttribute14
+                CustomAttribute15                      = $distributionGroup.CustomAttribute15
+                EmailAddresses                         = [Array]$distributionGroup.EmailAddresses
+                GrantSendOnBehalfTo                    = [Array]$distributionGroup.GrantSendOnBehalfTo
+                HiddenFromAddressListsEnabled          = [Boolean]$distributionGroup.HiddenFromAddressListsEnabled
+                SendOofMessageToOriginatorEnabled      = [Boolean]$distributionGroup.SendOofMessageToOriginatorEnabled
+                Type                                   = $groupTypeValue
+                Ensure                                 = 'Present'
+                Credential                             = $Credential
+                ApplicationId                          = $ApplicationId
+                CertificateThumbprint                  = $CertificateThumbprint
+                CertificatePath                        = $CertificatePath
+                CertificatePassword                    = $CertificatePassword
+                Managedidentity                        = $ManagedIdentity.IsPresent
+                TenantId                               = $TenantId
+                AccessTokens                           = $AccessTokens
             }
 
             return $result

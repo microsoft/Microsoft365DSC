@@ -73,12 +73,12 @@ function Get-TargetResource
         {
             if (-not [System.String]::IsNullOrEmpty($Id))
             {
-                $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.Name -eq $Id}
+                $instance = $Script:exportedInstances | Where-Object -FilterScript { $_.Name -eq $Id }
             }
             elseif ($null -eq $instance -and -not [System.String]::IsNullOrEmpty($Name))
             {
-                $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.properties.displayName -eq $DisplayName -and `
-                                                                                    $_.properties.invoiceSectionId -eq $InvoiceSectionId}
+                $instance = $Script:exportedInstances | Where-Object -FilterScript { $_.properties.displayName -eq $DisplayName -and `
+                        $_.properties.invoiceSectionId -eq $InvoiceSectionId }
             }
         }
         else
@@ -94,7 +94,7 @@ function Get-TargetResource
                 $uri = "https://management.azure.com$($InvoiceSectionId)/billingSubscriptions?api-version=2024-04-01"
                 $response = Invoke-AzRest -Uri $uri -Method Get
                 $instances = (ConvertFrom-Json $response.Content).value
-                $instance = $instances | Where-Object -FilterScript {$_.properties.displayName -eq $DisplayName}
+                $instance = $instances | Where-Object -FilterScript { $_.properties.displayName -eq $DisplayName }
             }
         }
         if ($null -eq $instance)
@@ -198,12 +198,12 @@ function Set-TargetResource
     # CREATE
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        $uri = "https://management.azure.com/providers/Microsoft.Subscription/aliases/$((New-GUID).ToString())?api-version=2021-10-01"
+        $uri = "https://management.azure.com/providers/Microsoft.Subscription/aliases/$((New-Guid).ToString())?api-version=2021-10-01"
         $params = @{
             properties = @{
                 billingScope = $InvoiceSectionId
                 DisplayName  = $DisplayName
-                Workload     = "Production"
+                Workload     = 'Production'
             }
         }
         $payload = ConvertTo-Json $params -Depth 10 -Compress

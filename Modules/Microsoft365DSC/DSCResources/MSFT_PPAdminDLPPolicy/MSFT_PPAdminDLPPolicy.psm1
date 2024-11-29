@@ -72,12 +72,12 @@ function Get-TargetResource
         {
             if (-not [System.String]::IsNullOrEmpty($PolicyName))
             {
-                $instances = $Script:exportedInstances | Where-Object -FilterScript {$_.PolicyName -eq $PolicyName}
+                $instances = $Script:exportedInstances | Where-Object -FilterScript { $_.PolicyName -eq $PolicyName }
             }
 
             if ($null -eq $instance)
             {
-                $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.DisplayName -eq $DisplayName}
+                $instance = $Script:exportedInstances | Where-Object -FilterScript { $_.DisplayName -eq $DisplayName }
             }
         }
         else
@@ -89,7 +89,7 @@ function Get-TargetResource
 
             if ($null -eq $instance)
             {
-                $instance = Get-AdminDlpPolicy | Where-Object -FilterScript {$_.DisplayName -eq $DisplayName}
+                $instance = Get-AdminDlpPolicy | Where-Object -FilterScript { $_.DisplayName -eq $DisplayName }
             }
         }
         if ($null -eq $instance)
@@ -197,7 +197,7 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating new Data Policy {$DisplayName}"
-        $policy = New-AdminDLPPolicy -DisplayName $DisplayName
+        $policy = New-AdminDlpPolicy -DisplayName $DisplayName
         $policyName = $policy.PolicyName
     }
     if ($setParameters.ContainsKey('PolicyName'))
@@ -206,7 +206,7 @@ function Set-TargetResource
     }
     else
     {
-        $setParameters.Add("PolicyName", $policyName)
+        $setParameters.Add('PolicyName', $policyName)
     }
 
     # UPDATE
@@ -220,13 +220,13 @@ function Set-TargetResource
             $setParameters.Environments = ($setParameters.Environments -join ',')
         }
         Write-Verbose -Message "Updating Data Policy {$DisplayName} with values:`r`n$(Convert-M365DscHashtableToString -Hashtable $setParameters)"
-        Set-AdminDLPPolicy @setParameters
+        Set-AdminDlpPolicy @setParameters
     }
     # REMOVE
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing Data Policy {$DisplayName}"
-        Remove-AdminDLPPolicy -PolicyName $policyName
+        Remove-AdminDlpPolicy -PolicyName $policyName
     }
 }
 

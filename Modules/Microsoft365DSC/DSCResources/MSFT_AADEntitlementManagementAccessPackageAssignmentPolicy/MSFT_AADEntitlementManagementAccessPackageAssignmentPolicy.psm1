@@ -134,7 +134,7 @@ function Get-TargetResource
 
         #region Format AccessReviewSettings
         $formattedAccessReviewSettings = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $getValue.AccessReviewSettings -Verbose
-        if($null -ne $formattedAccessReviewSettings)
+        if ($null -ne $formattedAccessReviewSettings)
         {
             $formattedAccessReviewSettings.remove('additionalProperties') | Out-Null
         }
@@ -227,11 +227,11 @@ function Get-TargetResource
         {
             foreach ($setting in $formattedRequestorSettings.allowedRequestors)
             {
-                if (-not $setting.ContainsKey("odataType"))
+                if (-not $setting.ContainsKey('odataType'))
                 {
-                    $setting.add('odataType',$setting.AdditionalProperties."@odata.type")
+                    $setting.add('odataType', $setting.AdditionalProperties.'@odata.type')
                 }
-                if(-not [String]::isNullOrEmpty($setting.AdditionalProperties.id))
+                if (-not [String]::isNullOrEmpty($setting.AdditionalProperties.id))
                 {
                     $user = Get-MgUser -UserId $setting.AdditionalProperties.id -ErrorAction SilentlyContinue
                     if ($null -ne $user)
@@ -252,9 +252,9 @@ function Get-TargetResource
         $formattedQuestions = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $getValue.Questions
         foreach ($question in $formattedQuestions)
         {
-            if (-not $question.ContainsKey("odataType"))
+            if (-not $question.ContainsKey('odataType'))
             {
-                $question.add("odataType",$question.AdditionalProperties."@odata.type")
+                $question.add('odataType', $question.AdditionalProperties.'@odata.type')
             }
             if ($null -ne $question.Text)
             {
@@ -288,7 +288,7 @@ function Get-TargetResource
         {
             $customExt = @{
                 #Id              = $customExtensionHandler.Id #Read Only
-                Stage           = $customExtensionHandler.Stage
+                Stage             = $customExtensionHandler.Stage
                 CustomExtensionId = $customExtensionHandler.CustomExtension.Id
             }
             $formattedCustomExtensionHandlers += $customExt
@@ -540,9 +540,9 @@ function Set-TargetResource
             $formattedCustomExtensionHandlers = @()
             foreach ($customExtensionHandler in $CreateParameters.CustomExtensionHandlers)
             {
-                $extensionId= $customExtensionHandler.CustomExtensionId
+                $extensionId = $customExtensionHandler.CustomExtensionId
                 $formattedCustomExtensionHandlers += @{
-                    stage = $customExtensionHandler.Stage
+                    stage           = $customExtensionHandler.Stage
                     customExtension = @{
                         id = $extensionId
                     }
@@ -661,9 +661,9 @@ function Set-TargetResource
             $formattedCustomExtensionHandlers = @()
             foreach ($customExtensionHandler in $UpdateParameters.CustomExtensionHandlers)
             {
-                $extensionId= $customExtensionHandler.CustomExtensionId
+                $extensionId = $customExtensionHandler.CustomExtensionId
                 $formattedCustomExtensionHandlers += @{
-                    stage = $customExtensionHandler.Stage
+                    stage           = $customExtensionHandler.Stage
                     customExtension = @{
                         id = $extensionId
                     }
@@ -963,9 +963,9 @@ function Export-TargetResource
                     }
                 )
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
-                                                -ComplexObject $Results.AccessReviewSettings `
-                                                -CIMInstanceName MicrosoftGraphassignmentreviewsettings `
-                                                -ComplexTypeMapping $complexMapping
+                    -ComplexObject $Results.AccessReviewSettings `
+                    -CIMInstanceName MicrosoftGraphassignmentreviewsettings `
+                    -ComplexTypeMapping $complexMapping
                 if ($complexTypeStringResult)
                 {
                     $Results.AccessReviewSettings = $complexTypeStringResult

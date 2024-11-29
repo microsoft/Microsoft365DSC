@@ -78,7 +78,7 @@ function Get-TargetResource
 
         if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
         {
-            $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.AppId -eq $servicePrincipal.AppId}
+            $instance = $Script:exportedInstances | Where-Object -FilterScript { $_.AppId -eq $servicePrincipal.AppId }
         }
         else
         {
@@ -194,8 +194,8 @@ function Set-TargetResource
     # UPDATE
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        $setParameters.Remove("AppId")
-        $setParameters.Remove("ObjectId")
+        $setParameters.Remove('AppId')
+        $setParameters.Remove('ObjectId')
         Set-ServicePrincipal -DisplayName $DisplayName -Identity $servicePrincipal.Id
     }
     # REMOVE

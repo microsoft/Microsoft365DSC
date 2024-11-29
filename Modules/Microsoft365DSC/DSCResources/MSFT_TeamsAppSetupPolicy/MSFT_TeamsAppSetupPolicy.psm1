@@ -262,9 +262,9 @@ function Set-TargetResource
         $CreateParameters.Remove('Verbose') | Out-Null
         Write-Verbose -Message "Creating {$Identity} with Parameters:`r`n$(Convert-M365DscHashtableToString -Hashtable $CreateParameters)"
 
-        $CreateParameters.AppPresetList        = $appPresetValues
+        $CreateParameters.AppPresetList = $appPresetValues
         $CreateParameters.AppPresetMeetingList = $appPresetMeetingValues
-        $CreateParameters.PinnedAppBarApps     = $pinnedAppBarAppsValue
+        $CreateParameters.PinnedAppBarApps = $pinnedAppBarAppsValue
         $CreateParameters.PinnedMessageBarApps = $pinnedMessageBarAppsValue
 
         New-CsTeamsAppSetupPolicy @CreateParameters | Out-Null
@@ -275,9 +275,9 @@ function Set-TargetResource
         $UpdateParameters.Remove('Verbose') | Out-Null
         Write-Verbose -Message "Updating {$Identity}"
 
-        $UpdateParameters.AppPresetList        = $appPresetValues
+        $UpdateParameters.AppPresetList = $appPresetValues
         $UpdateParameters.AppPresetMeetingList = $appPresetMeetingValues
-        $UpdateParameters.PinnedAppBarApps     = $pinnedAppBarAppsValue
+        $UpdateParameters.PinnedAppBarApps = $pinnedAppBarAppsValue
         $UpdateParameters.PinnedMessageBarApps = $pinnedMessageBarAppsValue
 
         Set-CsTeamsAppSetupPolicy @UpdateParameters | Out-Null

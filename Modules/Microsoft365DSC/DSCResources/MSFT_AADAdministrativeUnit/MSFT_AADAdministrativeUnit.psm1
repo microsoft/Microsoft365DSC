@@ -92,8 +92,8 @@ function Get-TargetResource
         Write-Verbose -Message ($_)
     }
 
-        #Ensure the proper dependencies are installed in the current environment.
-        Confirm-M365DSCDependencies
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
@@ -114,7 +114,7 @@ function Get-TargetResource
         {
             if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
             {
-                $getValue = $Script:exportedInstances | Where-Object -FilterScript {$_.Id -eq $Id}
+                $getValue = $Script:exportedInstances | Where-Object -FilterScript { $_.Id -eq $Id }
             }
             else
             {
@@ -129,7 +129,7 @@ function Get-TargetResource
             {
                 if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
                 {
-                    $getValue = $Script:exportedInstances | Where-Object -FilterScript {$_.DisplayName -eq $DisplayName}
+                    $getValue = $Script:exportedInstances | Where-Object -FilterScript { $_.DisplayName -eq $DisplayName }
                 }
                 else
                 {
@@ -1020,17 +1020,17 @@ function Export-TargetResource
             ErrorAction = 'Stop'
         }
         $queryTypes = @{
-                        'eq' = @('description')
-                        'startsWith' = @('description')
-                        'eq null' = @(
-                            'description',
-                            'displayName'
-                            )
+            'eq'         = @('description')
+            'startsWith' = @('description')
+            'eq null'    = @(
+                'description',
+                'displayName'
+            )
         }
 
         #extract arguments from the query
         # Define the regex pattern to match all words in the query
-        $pattern = "([^\s,()]+)"
+        $pattern = '([^\s,()]+)'
         $query = $Filter
 
         # Match all words in the query
@@ -1038,16 +1038,18 @@ function Export-TargetResource
 
         # Extract the matched argument into an array
         $arguments = @()
-        foreach ($match in $matches) {
-        $arguments += $match.Value
+        foreach ($match in $matches)
+        {
+            $arguments += $match.Value
         }
 
         #extracting keys to check vs arguments in the filter
         $Keys = $queryTypes.Keys
 
         $matchedKey = $arguments | Where-Object { $_ -in $Keys }
-        $matchedProperty = $arguments | Where-Object { $_ -in $queryTypes[$matchedKey]}
-        if ($matchedProperty -and $matchedKey) {
+        $matchedProperty = $arguments | Where-Object { $_ -in $queryTypes[$matchedKey] }
+        if ($matchedProperty -and $matchedKey)
+        {
             $allConditionsMatched = $true
         }
 
@@ -1055,7 +1057,7 @@ function Export-TargetResource
         if ($allConditionsMatched -or $Filter -like '*endsWith*')
         {
             $ExportParameters.Add('CountVariable', 'count')
-            $ExportParameters.Add('headers', @{"ConsistencyLevel" = "Eventual"})
+            $ExportParameters.Add('headers', @{'ConsistencyLevel' = 'Eventual' })
         }
 
         [array] $Script:exportedInstances = Get-MgBetaDirectoryAdministrativeUnit @ExportParameters
@@ -1145,9 +1147,9 @@ function Export-TargetResource
             if ($null -ne $Results.Members)
             {
                 $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Members' -IsCIMArray $true
-                $currentDSCBlock = $currentDSCBlock.Replace("`",`"`r`n", "")
+                $currentDSCBlock = $currentDSCBlock.Replace("`",`"`r`n", '')
                 $currentDSCBlock = $currentDSCBlock.Replace(",`r`n", '').Replace("`");`r`n", ");`r`n")
-                $currentDSCBlock = $currentDSCBlock.Replace("Members              = @(`"", "Members              = @(")
+                $currentDSCBlock = $currentDSCBlock.Replace("Members              = @(`"", 'Members              = @(')
                 $currentDSCBlock = $currentDSCBlock.Replace("`$OrganizationName'", "' + `$OrganizationName")
             }
             $dscContent += $currentDSCBlock

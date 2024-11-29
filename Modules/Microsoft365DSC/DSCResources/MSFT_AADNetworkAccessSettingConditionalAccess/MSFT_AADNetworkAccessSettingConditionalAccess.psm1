@@ -59,17 +59,17 @@ function Get-TargetResource
     $nullResult = $PSBoundParameters
     try
     {
-        $instance = Get-MgBetaNetworkAccessSettingCOnditionalAccess
+        $instance = Get-MgBetaNetworkAccessSettingConditionalAccess
         $results = @{
-            IsSingleInstance           = 'Yes'
-            SignalingStatus            = $instance.SignalingStatus
-            Credential                 = $Credential
-            ApplicationId              = $ApplicationId
-            TenantId                   = $TenantId
-            ApplicationSecret          = $ApplicationSecret
-            CertificateThumbprint      = $CertificateThumbprint
-            ManagedIdentity            = $ManagedIdentity.IsPresent
-            AccessTokens               = $AccessTokens
+            IsSingleInstance      = 'Yes'
+            SignalingStatus       = $instance.SignalingStatus
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            ApplicationSecret     = $ApplicationSecret
+            CertificateThumbprint = $CertificateThumbprint
+            ManagedIdentity       = $ManagedIdentity.IsPresent
+            AccessTokens          = $AccessTokens
         }
         return [System.Collections.Hashtable] $results
     }
@@ -143,7 +143,7 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Updating the Conditional Access Settings"
+    Write-Verbose -Message 'Updating the Conditional Access Settings'
     Update-MgBetaNetworkAccessSettingConditionalAccess -SignalingStatus $SignalingStatus
 }
 

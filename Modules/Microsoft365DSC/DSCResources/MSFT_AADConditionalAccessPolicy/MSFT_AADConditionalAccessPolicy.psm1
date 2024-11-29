@@ -1436,7 +1436,8 @@ function Set-TargetResource
         Write-Verbose -Message 'Set-Targetresource: process includeServicePrincipals'
         if ($currentParameters.ContainsKey('IncludeServicePrincipals'))
         {
-            if (-not $conditions.ContainsKey('clientApplications')) {
+            if (-not $conditions.ContainsKey('clientApplications'))
+            {
                 $conditions.Add('clientApplications', @{})
             }
             $conditions.clientApplications.Add('includeServicePrincipals', $IncludeServicePrincipals)
@@ -1445,7 +1446,8 @@ function Set-TargetResource
         Write-Verbose -Message 'Set-Targetresource: process excludeServicePrincipals'
         if ($currentParameters.ContainsKey('ExcludeServicePrincipals'))
         {
-            if (-not $conditions.ContainsKey('clientApplications')) {
+            if (-not $conditions.ContainsKey('clientApplications'))
+            {
                 $conditions.Add('clientApplications', @{})
             }
             $conditions.clientApplications.Add('excludeServicePrincipals', $ExcludeServicePrincipals)
@@ -1455,18 +1457,21 @@ function Set-TargetResource
         if ($currentParameters.ContainsKey('ServicePrincipalFilterMode') -and $currentParameters.ContainsKey('ServicePrincipalFilterRule'))
         {
             #check if the custom attribute exist.
-            $customattribute = Invoke-MgGraphRequest -Method GET -Uri ($Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "v1.0/directory/customSecurityAttributeDefinitions")
-            $ServicePrincipalFilterRule -match "CustomSecurityAttribute.(?<attribute>.*) -.*"
+            $customattribute = Invoke-MgGraphRequest -Method GET -Uri ($Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + 'v1.0/directory/customSecurityAttributeDefinitions')
+            $ServicePrincipalFilterRule -match 'CustomSecurityAttribute.(?<attribute>.*) -.*'
             $attrinrule = $matches.attribute
-            if ($customattribute.value.id -contains $attrinrule){
-                if (-not $conditions.ContainsKey('clientApplications')) {
+            if ($customattribute.value.id -contains $attrinrule)
+            {
+                if (-not $conditions.ContainsKey('clientApplications'))
+                {
                     $conditions.Add('clientApplications', @{})
                 }
                 $conditions.clientApplications.Add('servicePrincipalFilter', @{})
                 $conditions.clientApplications.servicePrincipalFilter.Add('mode', $ServicePrincipalFilterMode)
                 $conditions.clientApplications.servicePrincipalFilter.Add('rule', $ServicePrincipalFilterRule)
             }
-            else{
+            else
+            {
                 $message = "Couldn't find the custom attribute $attrinrule in the tenant, couldn't add the filter to policy $DisplayName"
                 Write-Verbose -Message $message
                 New-M365DSCLogEntry -Message $message `
@@ -1634,7 +1639,7 @@ function Set-TargetResource
 
         if ([String]::IsNullOrEmpty($InsiderRiskLevels) -eq $false)
         {
-            $conditions.Add("insiderRiskLevels", $InsiderRiskLevels)
+            $conditions.Add('insiderRiskLevels', $InsiderRiskLevels)
         }
 
         Write-Verbose -Message 'Set-Targetresource: process risk levels and app types'
@@ -1836,7 +1841,7 @@ function Set-TargetResource
         {
             try
             {
-                $Uri = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/identity/conditionalAccess/policies"
+                $Uri = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + 'beta/identity/conditionalAccess/policies'
                 Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $NewParameters
             }
             catch
@@ -2164,7 +2169,7 @@ function Test-TargetResource
     else
     {
         Write-Verbose -Message "TransferMethods are not equal: [$TransferMethods] - [$($CurrentValues.TransferMethods)]"
-        $TestResult  = $false
+        $TestResult = $false
     }
 
     if ($TestResult)

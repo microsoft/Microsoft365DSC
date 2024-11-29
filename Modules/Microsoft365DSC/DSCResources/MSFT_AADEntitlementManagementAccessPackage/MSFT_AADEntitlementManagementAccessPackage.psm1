@@ -117,7 +117,7 @@ function Get-TargetResource
 
         if ($null -eq $getValue)
         {
-            if(-not [System.String]::IsNullOrEmpty($id))
+            if (-not [System.String]::IsNullOrEmpty($id))
             {
                 Write-Verbose -Message "Nothing with id {$id} was found"
             }

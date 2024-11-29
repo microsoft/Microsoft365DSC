@@ -126,7 +126,7 @@ function Get-TargetResource
             {
                 Write-Verbose -Message "Couldn't find rule by ID, trying by name."
                 $rules = Get-HostedContentFilterRule
-                $HostedContentFilterRule = $rules | Where-Object -FilterScript {$_.Name -eq $Identity -and $_.HostedContentFilterPolicy -eq $HostedContentFilterPolicy}
+                $HostedContentFilterRule = $rules | Where-Object -FilterScript { $_.Name -eq $Identity -and $_.HostedContentFilterPolicy -eq $HostedContentFilterPolicy }
             }
             catch
             {

@@ -1,4 +1,3 @@
-
 {
     "resourceName": "AADNetworkAccessForwardingProfile",
     "description": "This resource configures an Azure AD Network Access Forwarding Profile.",

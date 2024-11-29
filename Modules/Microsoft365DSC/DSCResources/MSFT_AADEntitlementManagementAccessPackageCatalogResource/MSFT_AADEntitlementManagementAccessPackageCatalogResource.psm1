@@ -128,14 +128,14 @@ function Get-TargetResource
             }
 
             $getValue = Get-MgBetaEntitlementManagementAccessPackageCatalogAccessPackageResource `
-                -AccessPackageCatalogId  $CatalogId `
+                -AccessPackageCatalogId $CatalogId `
                 -Filter "Id eq '$Id'" -ErrorAction SilentlyContinue
 
             if ($null -eq $getValue)
             {
                 Write-Verbose -Message "Retrieving Resource by Display Name {$DisplayName}"
                 $getValue = Get-MgBetaEntitlementManagementAccessPackageCatalogAccessPackageResource `
-                    -AccessPackageCatalogId  $CatalogId `
+                    -AccessPackageCatalogId $CatalogId `
                     -Filter "DisplayName eq '$DisplayName'" -ErrorAction SilentlyContinue
             }
         }
@@ -339,7 +339,7 @@ function Set-TargetResource
     $resource = ([Hashtable]$PSBoundParameters).clone()
     $ObjectGuid = [System.Guid]::empty
     if ($OriginSystem -eq 'AADGroup' -and `
-        -not [System.Guid]::TryParse($OriginId, [System.Management.Automation.PSReference]$ObjectGuid))
+            -not [System.Guid]::TryParse($OriginId, [System.Management.Automation.PSReference]$ObjectGuid))
     {
         Write-Verbose -Message "The Group reference was provided by name {$OriginId}. Retrieving associated id."
         $groupInfo = Get-MgGroup -Filter "DisplayName eq '$OriginId'"
@@ -353,7 +353,7 @@ function Set-TargetResource
         $ObjectGuid = [System.Guid]::empty
         if (-not [System.Guid]::TryParse($CatalogId, [System.Management.Automation.PSReference]$ObjectGuid))
         {
-            Write-Verbose -Message "Retrieving Catalog by Display Name"
+            Write-Verbose -Message 'Retrieving Catalog by Display Name'
             $catalogInstance = Get-MgBetaEntitlementManagementAccessPackageCatalog -Filter "DisplayName eq '$($CatalogId)'"
             if ($catalogInstance)
             {
@@ -406,7 +406,7 @@ function Set-TargetResource
         $ObjectGuid = [System.Guid]::empty
         if (-not [System.Guid]::TryParse($CatalogId, [System.Management.Automation.PSReference]$ObjectGuid))
         {
-            Write-Verbose -Message "Retrieving Catalog by Display Name"
+            Write-Verbose -Message 'Retrieving Catalog by Display Name'
             $catalogInstance = Get-MgBetaEntitlementManagementAccessPackageCatalog -Filter "DisplayName eq '$($CatalogId)'"
             if ($catalogInstance)
             {
@@ -725,7 +725,7 @@ function Export-TargetResource
 
             $catalogId = $catalog.id
 
-            [array]$resources = Get-MgBetaEntitlementManagementAccessPackageCatalogAccessPackageResource -AccessPackageCatalogId  $catalogId -ErrorAction Stop
+            [array]$resources = Get-MgBetaEntitlementManagementAccessPackageCatalogAccessPackageResource -AccessPackageCatalogId $catalogId -ErrorAction Stop
 
             $j = 1
 

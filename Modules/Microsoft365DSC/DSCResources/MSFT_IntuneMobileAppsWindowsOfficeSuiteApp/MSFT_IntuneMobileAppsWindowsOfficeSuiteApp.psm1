@@ -163,7 +163,7 @@ function Get-TargetResource
     try
     {
         $instance = Get-MgBetaDeviceAppManagementMobileApp -MobileAppId $Id `
-            -ExpandProperty "categories" `
+            -ExpandProperty 'categories' `
             -ErrorAction SilentlyContinue
 
         if ($null -eq $instance)
@@ -181,7 +181,7 @@ function Get-TargetResource
             if ($null -ne $instance)
             {
                 $instance = Get-MgBetaDeviceAppManagementMobileApp -MobileAppId $instance.Id `
-                    -ExpandProperty "categories" `
+                    -ExpandProperty 'categories' `
                     -ErrorAction SilentlyContinue
                 $Id = $instance.Id
             }
@@ -208,7 +208,7 @@ function Get-TargetResource
         $complexExcludedApps = @{}
         if ($null -ne $instance.AdditionalProperties.excludedApps)
         {
-            $instance.AdditionalProperties.excludedApps.GetEnumerator() | Foreach-Object {
+            $instance.AdditionalProperties.excludedApps.GetEnumerator() | ForEach-Object {
                 $complexExcludedApps.Add($_.Key, $_.Value)
             }
         }
@@ -221,37 +221,37 @@ function Get-TargetResource
         # }
 
         $results = @{
-            Id                              = $instance.Id
-            DisplayName                     = $instance.DisplayName
-            Description                     = $instance.Description
-            IsFeatured                      = $instance.IsFeatured
-            PrivacyInformationUrl           = $instance.PrivacyInformationUrl
-            InformationUrl                  = $instance.InformationUrl
-            Notes                           = $instance.Notes
-            RoleScopeTagIds                 = $instance.RoleScopeTagIds
-            AutoAcceptEula                  = $instance.AdditionalProperties.autoAcceptEula
-            ProductIds                      = $instance.AdditionalProperties.productIds
-            UseSharedComputerActivation     = $instance.AdditionalProperties.useSharedComputerActivation
-            UpdateChannel                   = $instance.AdditionalProperties.updateChannel
-            OfficeSuiteAppDefaultFileFormat = $instance.AdditionalProperties.officeSuiteAppDefaultFileFormat
-            OfficePlatformArchitecture      = $instance.AdditionalProperties.officePlatformArchitecture
-            LocalesToInstall                = $instance.AdditionalProperties.localesToInstall
-            InstallProgressDisplayLevel     = $instance.AdditionalProperties.installProgressDisplayLevel
+            Id                                   = $instance.Id
+            DisplayName                          = $instance.DisplayName
+            Description                          = $instance.Description
+            IsFeatured                           = $instance.IsFeatured
+            PrivacyInformationUrl                = $instance.PrivacyInformationUrl
+            InformationUrl                       = $instance.InformationUrl
+            Notes                                = $instance.Notes
+            RoleScopeTagIds                      = $instance.RoleScopeTagIds
+            AutoAcceptEula                       = $instance.AdditionalProperties.autoAcceptEula
+            ProductIds                           = $instance.AdditionalProperties.productIds
+            UseSharedComputerActivation          = $instance.AdditionalProperties.useSharedComputerActivation
+            UpdateChannel                        = $instance.AdditionalProperties.updateChannel
+            OfficeSuiteAppDefaultFileFormat      = $instance.AdditionalProperties.officeSuiteAppDefaultFileFormat
+            OfficePlatformArchitecture           = $instance.AdditionalProperties.officePlatformArchitecture
+            LocalesToInstall                     = $instance.AdditionalProperties.localesToInstall
+            InstallProgressDisplayLevel          = $instance.AdditionalProperties.installProgressDisplayLevel
             ShouldUninstallOlderVersionsOfOffice = $instance.AdditionalProperties.shouldUninstallOlderVersionsOfOffice
-            TargetVersion                   = $instance.AdditionalProperties.targetVersion
-            UpdateVersion                   = $instance.AdditionalProperties.updateVersion
-            OfficeConfigurationXml          = $instance.AdditionalProperties.officeConfigurationXml
+            TargetVersion                        = $instance.AdditionalProperties.targetVersion
+            UpdateVersion                        = $instance.AdditionalProperties.updateVersion
+            OfficeConfigurationXml               = $instance.AdditionalProperties.officeConfigurationXml
             # LargeIcon                       = $complexLargeIcon
-            ExcludedApps                    = $complexExcludedApps
-            Categories                      = $complexCategories
-            Ensure                          = 'Present'
-            Credential                      = $Credential
-            ApplicationId                   = $ApplicationId
-            TenantId                        = $TenantId
-            CertificateThumbprint           = $CertificateThumbprint
-            ApplicationSecret               = $ApplicationSecret
-            ManagedIdentity                 = $ManagedIdentity.IsPresent
-            AccessTokens                    = $AccessTokens
+            ExcludedApps                         = $complexExcludedApps
+            Categories                           = $complexCategories
+            Ensure                               = 'Present'
+            Credential                           = $Credential
+            ApplicationId                        = $ApplicationId
+            TenantId                             = $TenantId
+            CertificateThumbprint                = $CertificateThumbprint
+            ApplicationSecret                    = $ApplicationSecret
+            ManagedIdentity                      = $ManagedIdentity.IsPresent
+            AccessTokens                         = $AccessTokens
         }
 
         #Assignments
@@ -260,12 +260,14 @@ function Get-TargetResource
         if ($null -ne $appAssignments -and $appAssignments.count -gt 0)
         {
             $convertedAssignments = ConvertFrom-IntuneMobileAppAssignment `
-                                    -IncludeDeviceFilter:$true `
-                                    -Assignments ($appAssignments)
+                -IncludeDeviceFilter:$true `
+                -Assignments ($appAssignments)
 
             # Filter out 'source' from the assignment objects
-            foreach ($assignment in $convertedAssignments) {
-                if ($assignment.ContainsKey('source')) {
+            foreach ($assignment in $convertedAssignments)
+            {
+                if ($assignment.ContainsKey('source'))
+                {
                     $assignment.Remove('source')
                 }
             }
@@ -291,7 +293,7 @@ function Get-TargetResource
 function Set-TargetResource
 {
     [CmdletBinding()]
-     param
+    param
     (
         #region Intune resource parameters
 
@@ -522,8 +524,22 @@ function Set-TargetResource
         $UpdateParameters.Add('@odata.type', '#microsoft.graph.officeSuiteApp')
         Update-MgBetaDeviceAppManagementMobileApp -MobileAppId $currentInstance.Id -BodyParameter $UpdateParameters
 
-        [array]$referenceObject = if ($null -ne $currentInstance.Categories.DisplayName) { $currentInstance.Categories.DisplayName } else { ,@() }
-        [array]$differenceObject = if ($null -ne $Categories.DisplayName) { $Categories.DisplayName } else { ,@() }
+        [array]$referenceObject = if ($null -ne $currentInstance.Categories.DisplayName)
+        {
+            $currentInstance.Categories.DisplayName
+        }
+        else
+        {
+            , @()
+        }
+        [array]$differenceObject = if ($null -ne $Categories.DisplayName)
+        {
+            $Categories.DisplayName
+        }
+        else
+        {
+            , @()
+        }
         $delta = Compare-Object -ReferenceObject $referenceObject -DifferenceObject $differenceObject -PassThru
         foreach ($diff in $delta)
         {
@@ -571,7 +587,7 @@ function Test-TargetResource
 {
     [CmdletBinding()]
     [OutputType([System.Boolean])]
-     param
+    param
     (
         #region Intune resource parameters
 

@@ -18,7 +18,7 @@ function Get-TargetResource
         $DetectionScriptParameters,
 
         [Parameter()]
-        [ValidateSet('deviceHealthScript','managedInstallerScript')]
+        [ValidateSet('deviceHealthScript', 'managedInstallerScript')]
         [System.String]
         $DeviceHealthScriptType,
 
@@ -55,7 +55,7 @@ function Get-TargetResource
         $RunAs32Bit,
 
         [Parameter()]
-        [ValidateSet('system','user')]
+        [ValidateSet('system', 'user')]
         [System.String]
         $RunAsAccount,
 
@@ -137,8 +137,8 @@ function Get-TargetResource
                     -Filter "DisplayName eq '$DisplayName'" `
                     -ErrorAction SilentlyContinue | Where-Object `
                     -FilterScript { `
-                        $_.DeviceHealthScriptType -eq "deviceHealthScript" `
-                    }
+                        $_.DeviceHealthScriptType -eq 'deviceHealthScript' `
+                }
                 if ($null -ne $getValue)
                 {
                     $getValue = Get-MgBetaDeviceManagementDeviceHealthScript -DeviceHealthScriptId $getValue.Id
@@ -168,7 +168,7 @@ function Get-TargetResource
             {
                 $myDetectionScriptParameters.Add('odataType', $currentDetectionScriptParameters.'@odata.type'.toString())
             }
-            if ($myDetectionScriptParameters.values.Where({$null -ne $_}).count -gt 0)
+            if ($myDetectionScriptParameters.values.Where({ $null -ne $_ }).count -gt 0)
             {
                 $complexDetectionScriptParameters += $myDetectionScriptParameters
             }
@@ -187,7 +187,7 @@ function Get-TargetResource
             {
                 $myRemediationScriptParameters.Add('odataType', $currentRemediationScriptParameters.'@odata.type'.toString())
             }
-            if ($myRemediationScriptParameters.values.Where({$null -ne $_}).count -gt 0)
+            if ($myRemediationScriptParameters.values.Where({ $null -ne $_ }).count -gt 0)
             {
                 $complexRemediationScriptParameters += $myRemediationScriptParameters
             }
@@ -250,16 +250,16 @@ function Get-TargetResource
 
             $assignmentResult += @{
                 RunRemediationScript = $assignment.RunRemediationScript
-                RunSchedule = @{
+                RunSchedule          = @{
                     DataType = $assignment.RunSchedule.AdditionalProperties.'@odata.type'
-                    Date = $assignment.RunSchedule.AdditionalProperties.date
+                    Date     = $assignment.RunSchedule.AdditionalProperties.date
                     Interval = $assignment.RunSchedule.Interval
-                    Time = $time
-                    UseUtc = $assignment.RunSchedule.AdditionalProperties.useUtc
+                    Time     = $time
+                    UseUtc   = $assignment.RunSchedule.AdditionalProperties.useUtc
                 }
-                Assignment = (ConvertFrom-IntunePolicyAssignment `
-                    -IncludeDeviceFilter:$true `
-                    -Assignments $assignment) | Select-Object -First 1
+                Assignment           = (ConvertFrom-IntunePolicyAssignment `
+                        -IncludeDeviceFilter:$true `
+                        -Assignments $assignment) | Select-Object -First 1
             }
         }
         $results.Add('Assignments', $assignmentResult)
@@ -297,7 +297,7 @@ function Set-TargetResource
         $DetectionScriptParameters,
 
         [Parameter()]
-        [ValidateSet('deviceHealthScript','managedInstallerScript')]
+        [ValidateSet('deviceHealthScript', 'managedInstallerScript')]
         [System.String]
         $DeviceHealthScriptType,
 
@@ -334,7 +334,7 @@ function Set-TargetResource
         $RunAs32Bit,
 
         [Parameter()]
-        [ValidateSet('system','user')]
+        [ValidateSet('system', 'user')]
         [System.String]
         $RunAsAccount,
 
@@ -400,7 +400,7 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating an Intune Device Remediation with DisplayName {$DisplayName}"
-        $BoundParameters.Remove("Assignments") | Out-Null
+        $BoundParameters.Remove('Assignments') | Out-Null
 
         $CreateParameters = ([Hashtable]$BoundParameters).Clone()
         $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
@@ -423,7 +423,8 @@ function Set-TargetResource
         {
             $assignmentTarget = ConvertTo-IntunePolicyAssignment -Assignments $assignment.Assignment
             $runSchedule = $null
-            if ($null -ne $assignment.RunSchedule.DataType) {
+            if ($null -ne $assignment.RunSchedule.DataType)
+            {
                 $runSchedule = @{
                     '@odata.type' = $assignment.RunSchedule.DataType
                 }
@@ -446,8 +447,8 @@ function Set-TargetResource
             }
             $assignmentsHash += @{
                 runRemediationScript = $assignment.RunRemediationScript
-                runSchedule = $runSchedule
-                target = $assignmentTarget.target
+                runSchedule          = $runSchedule
+                target               = $assignmentTarget.target
             }
         }
 
@@ -464,7 +465,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating the Intune Device Remediation with Id {$($currentInstance.Id)}"
-        $BoundParameters.Remove("Assignments") | Out-Null
+        $BoundParameters.Remove('Assignments') | Out-Null
 
         $UpdateParameters = ([Hashtable]$BoundParameters).Clone()
         $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
@@ -477,10 +478,10 @@ function Set-TargetResource
         {
             Write-Warning -Message "The Intune Device Remediation with Id {$($currentInstance.Id)} is a global script and only few properties can be updated."
             $UpdateParameters = @{
-                Id = $currentInstance.Id
+                Id              = $currentInstance.Id
                 RoleScopeTagIds = $RoleScopeTagIds
-                RunAs32Bit = $RunAs32Bit
-                RunAsAccount = $RunAsAccount
+                RunAs32Bit      = $RunAs32Bit
+                RunAsAccount    = $RunAsAccount
             }
         }
 
@@ -502,7 +503,8 @@ function Set-TargetResource
         {
             $assignmentTarget = ConvertTo-IntunePolicyAssignment -Assignments $assignment.Assignment
             $runSchedule = $null
-            if ($null -ne $assignment.RunSchedule.DataType) {
+            if ($null -ne $assignment.RunSchedule.DataType)
+            {
                 $runSchedule = @{
                     '@odata.type' = $assignment.RunSchedule.DataType
                 }
@@ -525,8 +527,8 @@ function Set-TargetResource
             }
             $assignmentsHash += @{
                 runRemediationScript = $assignment.RunRemediationScript
-                runSchedule = $runSchedule
-                target = $assignmentTarget.target
+                runSchedule          = $runSchedule
+                target               = $assignmentTarget.target
             }
         }
         $uri = "/beta/deviceManagement/deviceHealthScripts/$($currentInstance.Id)/assign"
@@ -569,7 +571,7 @@ function Test-TargetResource
         $DetectionScriptParameters,
 
         [Parameter()]
-        [ValidateSet('deviceHealthScript','managedInstallerScript')]
+        [ValidateSet('deviceHealthScript', 'managedInstallerScript')]
         [System.String]
         $DeviceHealthScriptType,
 
@@ -606,7 +608,7 @@ function Test-TargetResource
         $RunAs32Bit,
 
         [Parameter()]
-        [ValidateSet('system','user')]
+        [ValidateSet('system', 'user')]
         [System.String]
         $RunAsAccount,
 
@@ -703,7 +705,7 @@ function Test-TargetResource
 
     if ($CurrentValues.IsGlobalScript)
     {
-        Write-Verbose -Message "Detected a global script, removing read-only properties from the comparison"
+        Write-Verbose -Message 'Detected a global script, removing read-only properties from the comparison'
         $ValuesToCheck.Remove('DetectionScriptContent') | Out-Null
         $ValuesToCheck.Remove('RemediationScriptContent') | Out-Null
         $ValuesToCheck.Remove('DetectionScriptParameters') | Out-Null
@@ -820,7 +822,7 @@ function Export-TargetResource
             Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{
                 Id                    = $config.Id
-                DisplayName           =  $config.DisplayName
+                DisplayName           = $config.DisplayName
                 Ensure                = 'Present'
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
@@ -866,14 +868,14 @@ function Export-TargetResource
             {
                 $complexMapping = @(
                     @{
-                        Name = 'RunSchedule'
+                        Name            = 'RunSchedule'
                         CimInstanceName = 'IntuneDeviceRemediationRunSchedule'
-                        IsRequired = $false
+                        IsRequired      = $false
                     }
                     @{
-                        Name = 'Assignment'
+                        Name            = 'Assignment'
                         CimInstanceName = 'DeviceManagementConfigurationPolicyAssignments'
-                        IsRequired = $true
+                        IsRequired      = $true
                     }
                 )
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
@@ -897,18 +899,18 @@ function Export-TargetResource
                 -Credential $Credential
             if ($Results.DetectionScriptParameters)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "DetectionScriptParameters" -isCIMArray:$True
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'DetectionScriptParameters' -IsCIMArray:$True
             }
             if ($Results.RemediationScriptParameters)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "RemediationScriptParameters" -isCIMArray:$True
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'RemediationScriptParameters' -IsCIMArray:$True
             }
             if ($Results.Assignments)
             {
-                $currentDSCBlock = (Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Assignments" -isCIMArray:$true).Replace("''", "'")
-                $currentDSCBlock = [Regex]::Replace($currentDSCBlock, "Assignment = '\r\n                ", "Assignment = ")
-                $currentDSCBlock = $currentDSCBlock.Replace("RunSchedule = '", "RunSchedule = ").Replace("}'", "}")
-                $currentDSCBlock = [Regex]::Replace($currentDSCBlock, "\r\n            '", "")
+                $currentDSCBlock = (Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Assignments' -IsCIMArray:$true).Replace("''", "'")
+                $currentDSCBlock = [Regex]::Replace($currentDSCBlock, "Assignment = '\r\n                ", 'Assignment = ')
+                $currentDSCBlock = $currentDSCBlock.Replace("RunSchedule = '", 'RunSchedule = ').Replace("}'", '}')
+                $currentDSCBlock = [Regex]::Replace($currentDSCBlock, "\r\n            '", '')
             }
 
             $dscContent += $currentDSCBlock

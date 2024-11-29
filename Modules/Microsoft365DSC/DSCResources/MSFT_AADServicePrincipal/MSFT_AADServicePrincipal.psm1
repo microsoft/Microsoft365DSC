@@ -156,7 +156,7 @@ function Get-TargetResource
             {
                 if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
                 {
-                    $AADServicePrincipal = $Script:exportedInstances | Where-Object -FilterScript {$_.Id -eq $Id}
+                    $AADServicePrincipal = $Script:exportedInstances | Where-Object -FilterScript { $_.Id -eq $Id }
                 }
                 else
                 {
@@ -175,7 +175,7 @@ function Get-TargetResource
         {
             if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
             {
-                $AADServicePrincipal = $Script:exportedInstances | Where-Object -FilterScript {$_.AppId -eq $AppId}
+                $AADServicePrincipal = $Script:exportedInstances | Where-Object -FilterScript { $_.AppId -eq $AppId }
             }
             else
             {
@@ -186,13 +186,13 @@ function Get-TargetResource
                     if ($appInstance)
                     {
                         $AADServicePrincipal = Get-MgServicePrincipal -Filter "AppID eq '$($appInstance.AppId)'" `
-                                                                    -Expand 'AppRoleAssignedTo'
+                            -Expand 'AppRoleAssignedTo'
                     }
                 }
                 else
                 {
                     $AADServicePrincipal = Get-MgServicePrincipal -Filter "AppID eq '$($AppId)'" `
-                                                                -Expand 'AppRoleAssignedTo'
+                        -Expand 'AppRoleAssignedTo'
                 }
             }
         }
@@ -239,7 +239,8 @@ function Get-TargetResource
             [Array]$complexDelegatedPermissionClassifications = @()
             $Uri = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "v1.0/servicePrincipals/$($AADServicePrincipal.Id)/delegatedPermissionClassifications"
             $permissionClassifications = Invoke-MgGraphRequest -Uri $Uri -Method Get
-            foreach ($permissionClassification in $permissionClassifications.Value){
+            foreach ($permissionClassification in $permissionClassifications.Value)
+            {
                 $hashtable = @{
                     classification = $permissionClassification.Classification
                     permissionName = $permissionClassification.permissionName
@@ -251,7 +252,7 @@ function Get-TargetResource
             foreach ($currentkeyCredentials in $AADServicePrincipal.keyCredentials)
             {
                 $mykeyCredentials = @{}
-                if($null -ne $currentkeyCredentials.customKeyIdentifier)
+                if ($null -ne $currentkeyCredentials.customKeyIdentifier)
                 {
                     $mykeyCredentials.Add('CustomKeyIdentifier', [convert]::ToBase64String($currentkeyCredentials.customKeyIdentifier))
                 }
@@ -263,7 +264,7 @@ function Get-TargetResource
                 $mykeyCredentials.Add('KeyId', $currentkeyCredentials.keyId)
 
 
-                if($null -ne $currentkeyCredentials.Key)
+                if ($null -ne $currentkeyCredentials.Key)
                 {
                     $mykeyCredentials.Add('Key', [convert]::ToBase64String($currentkeyCredentials.key))
                 }
@@ -274,7 +275,7 @@ function Get-TargetResource
                 }
                 $mykeyCredentials.Add('Type', $currentkeyCredentials.type)
                 $mykeyCredentials.Add('Usage', $currentkeyCredentials.usage)
-                if ($mykeyCredentials.values.Where({$null -ne $_}).Count -gt 0)
+                if ($mykeyCredentials.values.Where({ $null -ne $_ }).Count -gt 0)
                 {
                     $complexKeyCredentials += $mykeyCredentials
                 }
@@ -295,14 +296,15 @@ function Get-TargetResource
                 {
                     $mypasswordCredentials.Add('StartDateTime', ([DateTimeOffset]$currentpasswordCredentials.startDateTime).ToString('o'))
                 }
-                if ($mypasswordCredentials.values.Where({$null -ne $_}).Count -gt 0)
+                if ($mypasswordCredentials.values.Where({ $null -ne $_ }).Count -gt 0)
                 {
                     $complexPasswordCredentials += $mypasswordCredentials
                 }
             }
 
             $complexCustomSecurityAttributes = [Array](Get-CustomSecurityAttributes -ServicePrincipalId $AADServicePrincipal.Id)
-            if ($null -eq $complexCustomSecurityAttributes) {
+            if ($null -eq $complexCustomSecurityAttributes)
+            {
                 $complexCustomSecurityAttributes = @()
             }
 
@@ -517,9 +519,12 @@ function Set-TargetResource
     $currentParameters.Remove('Owners') | Out-Null
 
     # update the custom security attributes to be cmdlet comsumable
-    if ($null -ne $currentParameters.CustomSecurityAttributes -and $currentParameters.CustomSecurityAttributes -gt 0) {
+    if ($null -ne $currentParameters.CustomSecurityAttributes -and $currentParameters.CustomSecurityAttributes -gt 0)
+    {
         $currentParameters.CustomSecurityAttributes = Get-M365DSCAADServicePrincipalCustomSecurityAttributesAsCmdletHashtable -CustomSecurityAttributes $currentParameters.CustomSecurityAttributes
-    } else {
+    }
+    else
+    {
         $currentParameters.Remove('CustomSecurityAttributes')
     }
 
@@ -555,8 +560,10 @@ function Set-TargetResource
         }
 
         # Adding delegated permissions classifications
-        if($null -ne $DelegatedPermissionClassifications){
-            foreach ($permissionClassification in $DelegatedPermissionClassifications){
+        if ($null -ne $DelegatedPermissionClassifications)
+        {
+            foreach ($permissionClassification in $DelegatedPermissionClassifications)
+            {
                 $params = @{
                     classification = $permissionClassification.Classification
                     permissionName = $permissionClassification.permissionName
@@ -588,7 +595,8 @@ function Set-TargetResource
         }
 
         #removing the current custom security attributes
-        if ($currentAADServicePrincipal.CustomSecurityAttributes.Count -gt 0) {
+        if ($currentAADServicePrincipal.CustomSecurityAttributes.Count -gt 0)
+        {
             $currentAADServicePrincipal.CustomSecurityAttributes = Get-M365DSCAADServicePrincipalCustomSecurityAttributesAsCmdletHashtable -CustomSecurityAttributes $currentAADServicePrincipal.CustomSecurityAttributes -GetForDelete $true
             $CSAParams = @{
                 customSecurityAttributes = $currentAADServicePrincipal.CustomSecurityAttributes
@@ -600,7 +608,7 @@ function Set-TargetResource
 
         if ($IdentifierUris)
         {
-            Write-Verbose -Message "Updating the Application ID Uri on the application instance."
+            Write-Verbose -Message 'Updating the Application ID Uri on the application instance.'
             $appInstance = Get-MgApplication -Filter "AppId eq '$AppId'"
             Update-MgApplication -ApplicationId $appInstance.Id -IdentifierUris $IdentifierUris
         }
@@ -610,8 +618,8 @@ function Set-TargetResource
             [Array]$desiredPrincipals = $AppRoleAssignedTo.Identity
 
             [Array]$differences = Compare-Object -ReferenceObject $currentPrincipals -DifferenceObject $desiredPrincipals
-            [Array]$membersToAdd = $differences | Where-Object -FilterScript {$_.SideIndicator -eq '=>'}
-            [Array]$membersToRemove = $differences | Where-Object -FilterScript {$_.SideIndicator -eq '<='}
+            [Array]$membersToAdd = $differences | Where-Object -FilterScript { $_.SideIndicator -eq '=>' }
+            [Array]$membersToRemove = $differences | Where-Object -FilterScript { $_.SideIndicator -eq '<=' }
 
             if ($differences.Count -gt 0)
             {
@@ -627,7 +635,7 @@ function Set-TargetResource
                     }
                     foreach ($member in $membersToAdd)
                     {
-                        $assignment = $AppRoleAssignedToValues | Where-Object -FilterScript {$_.Identity -eq $member.InputObject}
+                        $assignment = $AppRoleAssignedToValues | Where-Object -FilterScript { $_.Identity -eq $member.InputObject }
                         if ($assignment.PrincipalType -eq 'User')
                         {
                             Write-Verbose -Message "Retrieving user {$($assignment.Identity)}"
@@ -644,7 +652,7 @@ function Set-TargetResource
                         $bodyParam = @{
                             principalId = $PrincipalIdValue
                             resourceId  = $currentAADServicePrincipal.ObjectID
-                            appRoleId   = "00000000-0000-0000-0000-000000000000"
+                            appRoleId   = '00000000-0000-0000-0000-000000000000'
                         }
                         Write-Verbose -Message "Adding member {$($member.InputObject.ToString())}"
                         New-MgServicePrincipalAppRoleAssignedTo -ServicePrincipalId $currentAADServicePrincipal.ObjectID `
@@ -664,7 +672,7 @@ function Set-TargetResource
                     }
                     foreach ($member in $membersToRemove)
                     {
-                        $assignment = $AppRoleAssignedToValues | Where-Object -FilterScript {$_.Identity -eq $member.InputObject}
+                        $assignment = $AppRoleAssignedToValues | Where-Object -FilterScript { $_.Identity -eq $member.InputObject }
                         if ($assignment.PrincipalType -eq 'User')
                         {
                             Write-Verbose -Message "Retrieving user {$($assignment.Identity)}"
@@ -680,7 +688,7 @@ function Set-TargetResource
                         Write-Verbose -Message "PrincipalID Value = '$PrincipalIdValue'"
                         Write-Verbose -Message "ServicePrincipalId = '$($currentAADServicePrincipal.ObjectID)'"
                         $allAssignments = Get-MgServicePrincipalAppRoleAssignedTo -ServicePrincipalId $currentAADServicePrincipal.ObjectID
-                        $assignmentToRemove = $allAssignments | Where-Object -FilterScript {$_.PrincipalId -eq $PrincipalIdValue}
+                        $assignmentToRemove = $allAssignments | Where-Object -FilterScript { $_.PrincipalId -eq $PrincipalIdValue }
                         Write-Verbose -Message "Removing member {$($member.InputObject.ToString())}"
                         Remove-MgServicePrincipalAppRoleAssignedTo -ServicePrincipalId $currentAADServicePrincipal.ObjectID `
                             -AppRoleAssignmentId $assignmentToRemove.Id | Out-Null
@@ -689,7 +697,7 @@ function Set-TargetResource
             }
         }
 
-        Write-Verbose -Message "Checking if owners need to be updated..."
+        Write-Verbose -Message 'Checking if owners need to be updated...'
 
         if ($null -ne $Owners)
         {
@@ -705,29 +713,31 @@ function Set-TargetResource
                 }
                 Write-Verbose -Message "Adding owner {$($userInfo.Id)}"
                 New-MgServicePrincipalOwnerByRef -ServicePrincipalId $currentAADServicePrincipal.ObjectId `
-                                                 -BodyParameter $body | Out-Null
+                    -BodyParameter $body | Out-Null
             }
             else
             {
                 Write-Verbose -Message "Removing owner {$($userInfo.Id)}"
                 Remove-MgServicePrincipalOwnerByRef -ServicePrincipalId $currentAADServicePrincipal.ObjectId `
-                                                    -DirectoryObjectId $userInfo.Id | Out-Null
+                    -DirectoryObjectId $userInfo.Id | Out-Null
             }
         }
 
-        Write-Verbose -Message "Checking if DelegatedPermissionClassifications need to be updated..."
+        Write-Verbose -Message 'Checking if DelegatedPermissionClassifications need to be updated...'
 
         if ($null -ne $DelegatedPermissionClassifications)
         {
             # removing old perm classifications
             $Uri = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "v1.0/servicePrincipals(appId='$($currentParameters.AppId)')/delegatedPermissionClassifications"
             $permissionClassificationList = Invoke-MgGraphRequest -Uri $Uri -Method Get
-            foreach($permissionClassification in $permissionClassificationList.Value){
+            foreach ($permissionClassification in $permissionClassificationList.Value)
+            {
                 Invoke-MgGraphRequest -Uri "$($Uri)/$($permissionClassification.Id)" -Method Delete
             }
 
             # adding new perm classifications
-            foreach ($permissionClassification in $DelegatedPermissionClassifications){
+            foreach ($permissionClassification in $DelegatedPermissionClassifications)
+            {
                 $params = @{
                     classification = $permissionClassification.Classification
                     permissionName = $permissionClassification.permissionName
@@ -910,7 +920,8 @@ function Test-TargetResource
             {
                 $testTargetResource = $false
             }
-            else {
+            else
+            {
                 $ValuesToCheck.Remove($key) | Out-Null
             }
         }
@@ -920,12 +931,12 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
-    -Source $($MyInvocation.MyCommand.Source) `
-    -DesiredValues $PSBoundParameters `
-    -ValuesToCheck $ValuesToCheck.Keys `
-    -IncludedDrifts $driftedParams
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck $ValuesToCheck.Keys `
+        -IncludedDrifts $driftedParams
 
-    if(-not $TestResult)
+    if (-not $TestResult)
     {
         $testTargetResource = $false
     }
@@ -996,9 +1007,9 @@ function Export-TargetResource
         Write-Host "`r`n" -NoNewline
         $Script:ExportMode = $true
         [array] $Script:exportedInstances = Get-MgServicePrincipal -All:$true `
-                                                                   -Filter $Filter `
-                                                                   -Expand 'AppRoleAssignedTo' `
-                                                                   -ErrorAction Stop
+            -Filter $Filter `
+            -Expand 'AppRoleAssignedTo' `
+            -ErrorAction Stop
         foreach ($AADServicePrincipal in $Script:exportedInstances)
         {
             if ($null -ne $Global:M365DSCExportResourceInstancesCount)
@@ -1034,8 +1045,8 @@ function Export-TargetResource
                 if ($null -ne $Results.KeyCredentials)
                 {
                     $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
-                    -ComplexObject $Results.KeyCredentials `
-                    -CIMInstanceName 'MicrosoftGraphkeyCredential'
+                        -ComplexObject $Results.KeyCredentials `
+                        -CIMInstanceName 'MicrosoftGraphkeyCredential'
                     if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                     {
                         $Results.KeyCredentials = $complexTypeStringResult
@@ -1048,8 +1059,8 @@ function Export-TargetResource
                 if ($null -ne $Results.PasswordCredentials)
                 {
                     $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
-                    -ComplexObject $Results.PasswordCredentials `
-                    -CIMInstanceName 'MicrosoftGraphpasswordCredential'
+                        -ComplexObject $Results.PasswordCredentials `
+                        -CIMInstanceName 'MicrosoftGraphpasswordCredential'
                     if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                     {
                         $Results.PasswordCredentials = $complexTypeStringResult
@@ -1081,13 +1092,13 @@ function Export-TargetResource
                 if ($null -ne $Results.KeyCredentials)
                 {
                     $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                        -ParameterName "KeyCredentials" -IsCIMArray:$True
+                        -ParameterName 'KeyCredentials' -IsCIMArray:$True
                 }
 
                 if ($null -ne $Results.PasswordCredentials)
                 {
                     $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                        -ParameterName "PasswordCredentials" -IsCIMArray:$True
+                        -ParameterName 'PasswordCredentials' -IsCIMArray:$True
                 }
 
                 if ($null -ne $Results.CustomSecurityAttributes)
@@ -1136,38 +1147,46 @@ function Get-M365DSCAADServicePrincipalCustomSecurityAttributesAsCmdletHashtable
 
     # logic to update the custom security attributes to be cmdlet comsumable
     $updatedCustomSecurityAttributes = @{}
-    foreach ($attributeSet in $CustomSecurityAttributes) {
+    foreach ($attributeSet in $CustomSecurityAttributes)
+    {
         $attributeSetKey = $attributeSet.AttributeSetName
 
         $valuesHashtable = @{}
         $valuesHashtable.Add('@odata.type', '#Microsoft.DirectoryServices.CustomSecurityAttributeValue')
-        foreach ($attribute in $attributeSet.AttributeValues) {
+        foreach ($attribute in $attributeSet.AttributeValues)
+        {
             $attributeKey = $attribute.AttributeName
             # supply attributeName = $null in the body, if you want to delete this attribute
-            if ($GetForDelete -eq $true) {
+            if ($GetForDelete -eq $true)
+            {
                 $valuesHashtable.Add($attributeKey, $null)
                 continue
             }
 
             $odataKey = $attributeKey + '@odata.type'
 
-            if ($null -ne $attribute.StringArrayValue) {
-                $valuesHashtable.Add($odataKey, "#Collection(String)")
+            if ($null -ne $attribute.StringArrayValue)
+            {
+                $valuesHashtable.Add($odataKey, '#Collection(String)')
                 $attributeValue = $attribute.StringArrayValue
             }
-            elseif ($null -ne $attribute.IntArrayValue) {
-                $valuesHashtable.Add($odataKey, "#Collection(Int32)")
+            elseif ($null -ne $attribute.IntArrayValue)
+            {
+                $valuesHashtable.Add($odataKey, '#Collection(Int32)')
                 $attributeValue = $attribute.IntArrayValue
             }
-            elseif ($null -ne $attribute.StringValue) {
-                $valuesHashtable.Add($odataKey, "#String")
+            elseif ($null -ne $attribute.StringValue)
+            {
+                $valuesHashtable.Add($odataKey, '#String')
                 $attributeValue = $attribute.StringValue
             }
-            elseif ($null -ne $attribute.IntValue) {
-                $valuesHashtable.Add($odataKey, "#Int32")
+            elseif ($null -ne $attribute.IntValue)
+            {
+                $valuesHashtable.Add($odataKey, '#Int32')
                 $attributeValue = $attribute.IntValue
             }
-            elseif ($null -ne $attribute.BoolValue) {
+            elseif ($null -ne $attribute.BoolValue)
+            {
                 $attributeValue = $attribute.BoolValue
             }
 
@@ -1179,36 +1198,43 @@ function Get-M365DSCAADServicePrincipalCustomSecurityAttributesAsCmdletHashtable
 }
 
 # Function to create MSFT_AttributeValue
-function Create-AttributeValue {
+function Create-AttributeValue
+{
     param (
         [string]$AttributeName,
         [object]$Value
     )
 
     $attributeValue = @{
-        AttributeName = $AttributeName
+        AttributeName    = $AttributeName
         StringArrayValue = $null
-        IntArrayValue = $null
-        StringValue = $null
-        IntValue = $null
-        BoolValue = $null
+        IntArrayValue    = $null
+        StringValue      = $null
+        IntValue         = $null
+        BoolValue        = $null
     }
 
     # Handle different types of values
-    if ($Value -is [string]) {
+    if ($Value -is [string])
+    {
         $attributeValue.StringValue = $Value
     }
-    elseif ($Value -is [System.Int32] -or $Value -is [System.Int64]) {
+    elseif ($Value -is [System.Int32] -or $Value -is [System.Int64])
+    {
         $attributeValue.IntValue = $Value
     }
-    elseif ($Value -is [bool]) {
+    elseif ($Value -is [bool])
+    {
         $attributeValue.BoolValue = $Value
     }
-    elseif ($Value -is [array]) {
-        if ($Value[0] -is [string]) {
+    elseif ($Value -is [array])
+    {
+        if ($Value[0] -is [string])
+        {
             $attributeValue.StringArrayValue = $Value
         }
-        elseif ($Value[0] -is [System.Int32] -or $Value[0] -is [System.Int64]) {
+        elseif ($Value[0] -is [System.Int32] -or $Value[0] -is [System.Int64])
+        {
             $attributeValue.IntArrayValue = $Value
         }
     }
@@ -1217,7 +1243,8 @@ function Create-AttributeValue {
 }
 
 
-function Get-CustomSecurityAttributes {
+function Get-CustomSecurityAttributes
+{
     [OutputType([System.Array])]
     param (
         [String]$ServicePrincipalId
@@ -1227,15 +1254,18 @@ function Get-CustomSecurityAttributes {
     $customSecurityAttributes = $customSecurityAttributes.customSecurityAttributes
     $newCustomSecurityAttributes = @()
 
-    foreach ($key in $customSecurityAttributes.Keys) {
+    foreach ($key in $customSecurityAttributes.Keys)
+    {
         $attributeSet = @{
             AttributeSetName = $key
             AttributeValues  = @()
         }
 
-        foreach ($attribute in $customSecurityAttributes[$key].Keys) {
+        foreach ($attribute in $customSecurityAttributes[$key].Keys)
+        {
             # Skip properties that end with '@odata.type'
-            if ($attribute -like "*@odata.type") {
+            if ($attribute -like '*@odata.type')
+            {
                 continue
             }
 
@@ -1276,23 +1306,28 @@ function Get-M365DSCAADServicePrincipalCustomSecurityAttributesAsString
             {
                 $StringContent += "                        MSFT_AADServicePrincipalAttributeValue {`r`n"
                 $StringContent += "                            AttributeName  = '" + $attributeValue.AttributeName + "'`r`n"
-                if ($null -ne $attributeValue.BoolValue){
-                    $StringContent += "                            BoolValue = $" + $attributeValue.BoolValue + "`r`n"
+                if ($null -ne $attributeValue.BoolValue)
+                {
+                    $StringContent += '                            BoolValue = $' + $attributeValue.BoolValue + "`r`n"
                 }
-                elseif ($null -ne $attributeValue.StringValue){
+                elseif ($null -ne $attributeValue.StringValue)
+                {
                     $StringContent += "                            StringValue = '" + $attributeValue.StringValue + "'`r`n"
                 }
-                elseif ($null -ne $attributeValue.IntValue){
-                    $StringContent += "                            IntValue = " + $attributeValue.IntValue + "`r`n"
+                elseif ($null -ne $attributeValue.IntValue)
+                {
+                    $StringContent += '                            IntValue = ' + $attributeValue.IntValue + "`r`n"
                 }
-                elseif ($null -ne $attributeValue.StringArrayValue){
-                    $StringContent += "                            StringArrayValue = @("
-                    $StringContent += ($attributeValue.StringArrayValue | ForEach-Object { "'$_'" }) -join ","
+                elseif ($null -ne $attributeValue.StringArrayValue)
+                {
+                    $StringContent += '                            StringArrayValue = @('
+                    $StringContent += ($attributeValue.StringArrayValue | ForEach-Object { "'$_'" }) -join ','
                     $StringContent += ")`r`n"
                 }
-                elseif ($null -ne $attributeValue.IntArrayValue){
-                    $StringContent += "                            IntArrayValue = @("
-                    $StringContent += $attributeValue.IntArrayValue -join ","
+                elseif ($null -ne $attributeValue.IntArrayValue)
+                {
+                    $StringContent += '                            IntArrayValue = @('
+                    $StringContent += $attributeValue.IntArrayValue -join ','
                     $StringContent += ")`r`n"
                 }
                 $StringContent += "                        }`r`n"

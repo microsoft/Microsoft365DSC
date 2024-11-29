@@ -9,7 +9,7 @@ function Get-TargetResource
         $Name,
 
         [Parameter()]
-        [ValidateRange(15,180)]
+        [ValidateRange(15, 180)]
         [System.UInt16]
         $AgentAlertTime,
 
@@ -34,7 +34,7 @@ function Get-TargetResource
         $MusicOnHoldAudioFileId,
 
         [Parameter()]
-        [ValidateSet("DisconnectWithBusy","Forward","Voicemail","SharedVoicemail")]
+        [ValidateSet('DisconnectWithBusy', 'Forward', 'Voicemail', 'SharedVoicemail')]
         [System.String]
         $OverflowAction,
 
@@ -43,12 +43,12 @@ function Get-TargetResource
         $OverflowActionTarget,
 
         [Parameter()]
-        [ValidateRange(0,200)]
+        [ValidateRange(0, 200)]
         [System.UInt16]
         $OverflowThreshold,
 
         [Parameter()]
-        [ValidateSet("Disconnect","Forward","Voicemail","SharedVoicemail")]
+        [ValidateSet('Disconnect', 'Forward', 'Voicemail', 'SharedVoicemail')]
         [System.String]
         $TimeoutAction,
 
@@ -57,12 +57,12 @@ function Get-TargetResource
         $TimeoutActionTarget,
 
         [Parameter()]
-        [ValidateRange(0,2700)]
+        [ValidateRange(0, 2700)]
         [System.UInt16]
         $TimeoutThreshold,
 
         [Parameter()]
-        [ValidateSet("Attendant","Serial","RoundRobin","LongestIdle")]
+        [ValidateSet('Attendant', 'Serial', 'RoundRobin', 'LongestIdle')]
         [System.String]
         $RoutingMethod,
 
@@ -257,12 +257,12 @@ function Get-TargetResource
         {
             Write-Host -Message "Getting Office 365 queue $Name"
             $queue = Get-CsCallQueue -NameFilter $Name `
-                -ErrorAction SilentlyContinue | Where-Object -FilterScript {$_.Name -eq $Name}
+                -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.Name -eq $Name }
         }
         else
         {
             Write-Host -Message "Retrieving queue $Name from the exported instances"
-            $queue = $Script:exportedInstances | Where-Object -FilterScript {$_.Name -eq $Name}
+            $queue = $Script:exportedInstances | Where-Object -FilterScript { $_.Name -eq $Name }
         }
 
 
@@ -353,7 +353,7 @@ function Set-TargetResource
         $Name,
 
         [Parameter()]
-        [ValidateRange(15,180)]
+        [ValidateRange(15, 180)]
         [System.UInt16]
         $AgentAlertTime,
 
@@ -378,7 +378,7 @@ function Set-TargetResource
         $MusicOnHoldAudioFileId,
 
         [Parameter()]
-        [ValidateSet("DisconnectWithBusy","Forward","Voicemail","SharedVoicemail")]
+        [ValidateSet('DisconnectWithBusy', 'Forward', 'Voicemail', 'SharedVoicemail')]
         [System.String]
         $OverflowAction,
 
@@ -387,12 +387,12 @@ function Set-TargetResource
         $OverflowActionTarget,
 
         [Parameter()]
-        [ValidateRange(0,200)]
+        [ValidateRange(0, 200)]
         [System.UInt16]
         $OverflowThreshold,
 
         [Parameter()]
-        [ValidateSet("Disconnect","Forward","Voicemail","SharedVoicemail")]
+        [ValidateSet('Disconnect', 'Forward', 'Voicemail', 'SharedVoicemail')]
         [System.String]
         $TimeoutAction,
 
@@ -401,12 +401,12 @@ function Set-TargetResource
         $TimeoutActionTarget,
 
         [Parameter()]
-        [ValidateRange(0,2700)]
+        [ValidateRange(0, 2700)]
         [System.UInt16]
         $TimeoutThreshold,
 
         [Parameter()]
-        [ValidateSet("Attendant","Serial","RoundRobin","LongestIdle")]
+        [ValidateSet('Attendant', 'Serial', 'RoundRobin', 'LongestIdle')]
         [System.String]
         $RoutingMethod,
 
@@ -635,7 +635,7 @@ function Test-TargetResource
         $Name,
 
         [Parameter()]
-        [ValidateRange(15,180)]
+        [ValidateRange(15, 180)]
         [System.UInt16]
         $AgentAlertTime,
 
@@ -660,7 +660,7 @@ function Test-TargetResource
         $MusicOnHoldAudioFileId,
 
         [Parameter()]
-        [ValidateSet("DisconnectWithBusy","Forward","Voicemail","SharedVoicemail")]
+        [ValidateSet('DisconnectWithBusy', 'Forward', 'Voicemail', 'SharedVoicemail')]
         [System.String]
         $OverflowAction,
 
@@ -669,12 +669,12 @@ function Test-TargetResource
         $OverflowActionTarget,
 
         [Parameter()]
-        [ValidateRange(0,200)]
+        [ValidateRange(0, 200)]
         [System.UInt16]
         $OverflowThreshold,
 
         [Parameter()]
-        [ValidateSet("Disconnect","Forward","Voicemail","SharedVoicemail")]
+        [ValidateSet('Disconnect', 'Forward', 'Voicemail', 'SharedVoicemail')]
         [System.String]
         $TimeoutAction,
 
@@ -683,12 +683,12 @@ function Test-TargetResource
         $TimeoutActionTarget,
 
         [Parameter()]
-        [ValidateRange(0,2700)]
+        [ValidateRange(0, 2700)]
         [System.UInt16]
         $TimeoutThreshold,
 
         [Parameter()]
-        [ValidateSet("Attendant","Serial","RoundRobin","LongestIdle")]
+        [ValidateSet('Attendant', 'Serial', 'RoundRobin', 'LongestIdle')]
         [System.String]
         $RoutingMethod,
 
@@ -940,7 +940,8 @@ function Export-TargetResource
         $Script:ExportMode = $true
         $Script:MaxSize = 1000
         [array] $Script:exportedInstances = Get-CsCallQueue -ErrorAction Stop -First $Script:MaxSize
-        if ($Script:exportedInstances.Count -eq $Script:MaxSize){
+        if ($Script:exportedInstances.Count -eq $Script:MaxSize)
+        {
             Write-Verbose -Message "WARNING: CsCallQueue isn't exporting all of them, you reach the max size."
         }
 

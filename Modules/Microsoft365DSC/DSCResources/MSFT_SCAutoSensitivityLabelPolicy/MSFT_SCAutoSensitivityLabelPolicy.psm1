@@ -388,12 +388,12 @@ function Set-TargetResource
     {
         if ($PSBoundParameters.ContainsKey('Mode') -eq $false)
         {
-            Write-Verbose "SharePoint or OneDrive location has been specified. Setting Mode to TestWithoutNotifications."
+            Write-Verbose 'SharePoint or OneDrive location has been specified. Setting Mode to TestWithoutNotifications.'
             $PSBoundParameters.Add('Mode', 'TestWithoutNotifications')
         }
         elseif ($PSBoundParameters.Mode -eq 'Enable')
         {
-            Write-Verbose "SharePoint or OneDrive location has been specified. Changing Mode to TestWithoutNotifications."
+            Write-Verbose 'SharePoint or OneDrive location has been specified. Changing Mode to TestWithoutNotifications.'
             $PSBoundParameters.Mode = 'TestWithoutNotifications'
         }
     }
@@ -873,7 +873,7 @@ function Export-TargetResource
     }
     catch
     {
-        if ($_.Exception.Message -like "*is not recognized as the name of a cmdlet*")
+        if ($_.Exception.Message -like '*is not recognized as the name of a cmdlet*')
         {
             Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for this feature."
         }

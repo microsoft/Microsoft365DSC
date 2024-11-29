@@ -281,7 +281,7 @@ function Get-TargetResource
     {
         if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
         {
-            [Array]$group = $Script:exportedInstances | Where-Object -FilterScript {$_.Id -eq $Id}
+            [Array]$group = $Script:exportedInstances | Where-Object -FilterScript { $_.Id -eq $Id }
         }
         else
         {

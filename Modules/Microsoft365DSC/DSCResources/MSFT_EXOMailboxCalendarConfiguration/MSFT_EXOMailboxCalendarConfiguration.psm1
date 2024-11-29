@@ -229,60 +229,60 @@ function Get-TargetResource
 
         if ($null -eq $config)
         {
-            return $nullResult 
+            return $nullResult
         }
 
         $results = @{
-            Ensure                              = 'Present'
-            Identity                            = $Identity
-            AgendaMailIntroductionEnabled       = $config.AgendaMailIntroductionEnabled
-            AutoDeclineWhenBusy                 = $config.AutoDeclineWhenBusy
-            CalendarFeedsPreferredLanguage      = $config.CalendarFeedsPreferredLanguage
-            CalendarFeedsPreferredRegion        = $config.CalendarFeedsPreferredRegion
-            CalendarFeedsRootPageId             = $config.CalendarFeedsRootPageId
-            ConversationalSchedulingEnabled     = $config.ConversationalSchedulingEnabled
-            CreateEventsFromEmailAsPrivate      = $config.CreateEventsFromEmailAsPrivate
-            DefaultMinutesToReduceLongEventsBy  = $config.DefaultMinutesToReduceLongEventsBy
-            DefaultMinutesToReduceShortEventsBy = $config.DefaultMinutesToReduceShortEventsBy
-            DefaultOnlineMeetingProvider        = $config.DefaultOnlineMeetingProvider
-            DefaultReminderTime                 = $config.DefaultReminderTime
-            DeleteMeetingRequestOnRespond       = $config.DeleteMeetingRequestOnRespond
-            DiningEventsFromEmailEnabled        = $config.DiningEventsFromEmailEnabled
-            EntertainmentEventsFromEmailEnabled = $config.EntertainmentEventsFromEmailEnabled
-            EventsFromEmailEnabled              = $config.EventsFromEmailEnabled
-            FirstWeekOfYear                     = $config.FirstWeekOfYear
-            FlightEventsFromEmailEnabled        = $config.FlightEventsFromEmailEnabled
-            HotelEventsFromEmailEnabled         = $config.HotelEventsFromEmailEnabled
-            InvoiceEventsFromEmailEnabled       = $config.InvoiceEventsFromEmailEnabled
-            LocationDetailsInFreeBusy           = $config.LocationDetailsInFreeBusy
-            MailboxLocation                     = $config.MailboxLocation
-            OnlineMeetingsByDefaultEnabled      = $config.OnlineMeetingsByDefaultEnabled
-            PackageDeliveryEventsFromEmailEnabled = $config.PackageDeliveryEventsFromEmailEnabled
-            PreserveDeclinedMeetings            = $config.PreserveDeclinedMeetings
-            RemindersEnabled                    = $config.RemindersEnabled
-            ReminderSoundEnabled                = $config.ReminderSoundEnabled
-            RentalCarEventsFromEmailEnabled     = $config.RentalCarEventsFromEmailEnabled
+            Ensure                                   = 'Present'
+            Identity                                 = $Identity
+            AgendaMailIntroductionEnabled            = $config.AgendaMailIntroductionEnabled
+            AutoDeclineWhenBusy                      = $config.AutoDeclineWhenBusy
+            CalendarFeedsPreferredLanguage           = $config.CalendarFeedsPreferredLanguage
+            CalendarFeedsPreferredRegion             = $config.CalendarFeedsPreferredRegion
+            CalendarFeedsRootPageId                  = $config.CalendarFeedsRootPageId
+            ConversationalSchedulingEnabled          = $config.ConversationalSchedulingEnabled
+            CreateEventsFromEmailAsPrivate           = $config.CreateEventsFromEmailAsPrivate
+            DefaultMinutesToReduceLongEventsBy       = $config.DefaultMinutesToReduceLongEventsBy
+            DefaultMinutesToReduceShortEventsBy      = $config.DefaultMinutesToReduceShortEventsBy
+            DefaultOnlineMeetingProvider             = $config.DefaultOnlineMeetingProvider
+            DefaultReminderTime                      = $config.DefaultReminderTime
+            DeleteMeetingRequestOnRespond            = $config.DeleteMeetingRequestOnRespond
+            DiningEventsFromEmailEnabled             = $config.DiningEventsFromEmailEnabled
+            EntertainmentEventsFromEmailEnabled      = $config.EntertainmentEventsFromEmailEnabled
+            EventsFromEmailEnabled                   = $config.EventsFromEmailEnabled
+            FirstWeekOfYear                          = $config.FirstWeekOfYear
+            FlightEventsFromEmailEnabled             = $config.FlightEventsFromEmailEnabled
+            HotelEventsFromEmailEnabled              = $config.HotelEventsFromEmailEnabled
+            InvoiceEventsFromEmailEnabled            = $config.InvoiceEventsFromEmailEnabled
+            LocationDetailsInFreeBusy                = $config.LocationDetailsInFreeBusy
+            MailboxLocation                          = $config.MailboxLocation
+            OnlineMeetingsByDefaultEnabled           = $config.OnlineMeetingsByDefaultEnabled
+            PackageDeliveryEventsFromEmailEnabled    = $config.PackageDeliveryEventsFromEmailEnabled
+            PreserveDeclinedMeetings                 = $config.PreserveDeclinedMeetings
+            RemindersEnabled                         = $config.RemindersEnabled
+            ReminderSoundEnabled                     = $config.ReminderSoundEnabled
+            RentalCarEventsFromEmailEnabled          = $config.RentalCarEventsFromEmailEnabled
             ServiceAppointmentEventsFromEmailEnabled = $config.ServiceAppointmentEventsFromEmailEnabled
-            ShortenEventScopeDefault            = $config.ShortenEventScopeDefault
-            ShowWeekNumbers                     = $config.ShowWeekNumbers
-            TimeIncrement                       = $config.TimeIncrement
-            UseBrightCalendarColorThemeInOwa    = $config.UseBrightCalendarColorThemeInOwa
-            WeatherEnabled                      = $config.WeatherEnabled
-            WeatherLocationBookmark             = $config.WeatherLocationBookmark
-            WeatherLocations                    = [Array]$config.WeatherLocations
-            WeatherUnit                         = $config.WeatherUnit
-            WeekStartDay                        = $config.WeekStartDay
-            WorkDays                            = $config.WorkDays
-            WorkingHoursEndTime                 = $config.WorkingHoursEndTime
-            WorkingHoursStartTime               = $config.WorkingHoursStartTime
-            WorkingHoursTimeZone                = $config.WorkingHoursTimeZone
-            WorkspaceUserEnabled                = $config.WorkspaceUserEnabled
-            Credential                          = $Credential
-            ApplicationId                       = $ApplicationId
-            TenantId                            = $TenantId
-            CertificateThumbprint               = $CertificateThumbprint
-            ManagedIdentity                     = $ManagedIdentity.IsPresent
-            AccessTokens                        = $AccessTokens
+            ShortenEventScopeDefault                 = $config.ShortenEventScopeDefault
+            ShowWeekNumbers                          = $config.ShowWeekNumbers
+            TimeIncrement                            = $config.TimeIncrement
+            UseBrightCalendarColorThemeInOwa         = $config.UseBrightCalendarColorThemeInOwa
+            WeatherEnabled                           = $config.WeatherEnabled
+            WeatherLocationBookmark                  = $config.WeatherLocationBookmark
+            WeatherLocations                         = [Array]$config.WeatherLocations
+            WeatherUnit                              = $config.WeatherUnit
+            WeekStartDay                             = $config.WeekStartDay
+            WorkDays                                 = $config.WorkDays
+            WorkingHoursEndTime                      = $config.WorkingHoursEndTime
+            WorkingHoursStartTime                    = $config.WorkingHoursStartTime
+            WorkingHoursTimeZone                     = $config.WorkingHoursTimeZone
+            WorkspaceUserEnabled                     = $config.WorkspaceUserEnabled
+            Credential                               = $Credential
+            ApplicationId                            = $ApplicationId
+            TenantId                                 = $TenantId
+            CertificateThumbprint                    = $CertificateThumbprint
+            ManagedIdentity                          = $ManagedIdentity.IsPresent
+            AccessTokens                             = $AccessTokens
         }
         return [System.Collections.Hashtable] $results
     }

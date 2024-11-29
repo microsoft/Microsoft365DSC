@@ -26,8 +26,8 @@
                 "Recipient Management"
             ],
             "requiredrolegroups": [
-               "Organization Management",
-               "Help Desk"
+                "Organization Management",
+                "Help Desk"
             ]
         }
     }

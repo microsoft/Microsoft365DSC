@@ -264,8 +264,9 @@ function Set-TargetResource
         $StopProcessingPolicy = $false
         if ($Redirect -eq $true)
         {
-            if ($ActionOnError -eq $true){
-                Write-Verbose -Message "The ActionOnError parameter is deprecated"
+            if ($ActionOnError -eq $true)
+            {
+                Write-Verbose -Message 'The ActionOnError parameter is deprecated'
                 $SafeAttachmentPolicyParams.Remove('ActionOnError') | Out-Null
             }
             $Message = 'Cannot proceed with processing of SafeAttachmentPolicy because Redirect is set to true '

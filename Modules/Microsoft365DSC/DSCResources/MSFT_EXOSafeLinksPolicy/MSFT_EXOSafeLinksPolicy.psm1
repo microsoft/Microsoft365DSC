@@ -150,31 +150,31 @@ function Get-TargetResource
         else
         {
             $result = @{
-                Identity                      = $SafeLinksPolicy.Identity
-                AdminDisplayName              = $SafeLinksPolicy.AdminDisplayName
-                AllowClickThrough             = $SafeLinksPolicy.AllowClickThrough
-                CustomNotificationText        = $SafeLinksPolicy.CustomNotificationText
-                DeliverMessageAfterScan       = $SafeLinksPolicy.DeliverMessageAfterScan
-                DoNotRewriteUrls              = $SafeLinksPolicy.DoNotRewriteUrls
-                EnableForInternalSenders      = $SafeLinksPolicy.EnableForInternalSenders
-                EnableOrganizationBranding    = $SafeLinksPolicy.EnableOrganizationBranding
-                EnableSafeLinksForTeams       = $SafeLinksPolicy.EnableSafeLinksForTeams
-                EnableSafeLinksForEmail       = $SafeLinksPolicy.EnableSafeLinksForEmail
-                EnableSafeLinksForOffice      = $SafeLinksPolicy.EnableSafeLinksForOffice
-                DisableUrlRewrite             = $SafeLinksPolicy.DisableUrlRewrite
-                ScanUrls                      = $SafeLinksPolicy.ScanUrls
-                TrackClicks                   = $SafeLinksPolicy.TrackClicks
+                Identity                   = $SafeLinksPolicy.Identity
+                AdminDisplayName           = $SafeLinksPolicy.AdminDisplayName
+                AllowClickThrough          = $SafeLinksPolicy.AllowClickThrough
+                CustomNotificationText     = $SafeLinksPolicy.CustomNotificationText
+                DeliverMessageAfterScan    = $SafeLinksPolicy.DeliverMessageAfterScan
+                DoNotRewriteUrls           = $SafeLinksPolicy.DoNotRewriteUrls
+                EnableForInternalSenders   = $SafeLinksPolicy.EnableForInternalSenders
+                EnableOrganizationBranding = $SafeLinksPolicy.EnableOrganizationBranding
+                EnableSafeLinksForTeams    = $SafeLinksPolicy.EnableSafeLinksForTeams
+                EnableSafeLinksForEmail    = $SafeLinksPolicy.EnableSafeLinksForEmail
+                EnableSafeLinksForOffice   = $SafeLinksPolicy.EnableSafeLinksForOffice
+                DisableUrlRewrite          = $SafeLinksPolicy.DisableUrlRewrite
+                ScanUrls                   = $SafeLinksPolicy.ScanUrls
+                TrackClicks                = $SafeLinksPolicy.TrackClicks
                 # The Get-SafeLinksPolicy no longer returns this property
                 # UseTranslatedNotificationText = $SafeLinksPolicy.UseTranslatedNotificationText
-                Ensure                        = 'Present'
-                Credential                    = $Credential
-                ApplicationId                 = $ApplicationId
-                CertificateThumbprint         = $CertificateThumbprint
-                CertificatePath               = $CertificatePath
-                CertificatePassword           = $CertificatePassword
-                Managedidentity               = $ManagedIdentity.IsPresent
-                TenantId                      = $TenantId
-                AccessTokens                  = $AccessTokens
+                Ensure                     = 'Present'
+                Credential                 = $Credential
+                ApplicationId              = $ApplicationId
+                CertificateThumbprint      = $CertificateThumbprint
+                CertificatePath            = $CertificatePath
+                CertificatePassword        = $CertificatePassword
+                Managedidentity            = $ManagedIdentity.IsPresent
+                TenantId                   = $TenantId
+                AccessTokens               = $AccessTokens
             }
 
             Write-Verbose -Message "Found SafeLinksPolicy $($Identity)"

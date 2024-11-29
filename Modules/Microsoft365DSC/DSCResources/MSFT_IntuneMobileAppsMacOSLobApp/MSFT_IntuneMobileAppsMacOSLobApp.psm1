@@ -146,7 +146,7 @@ function Get-TargetResource
     try
     {
         $instance = Get-MgBetaDeviceAppManagementMobileApp -MobileAppId $Id `
-            -ExpandProperty "categories" `
+            -ExpandProperty 'categories' `
             -ErrorAction SilentlyContinue
 
         if ($null -eq $instance)
@@ -164,7 +164,7 @@ function Get-TargetResource
             if ($null -ne $instance)
             {
                 $instance = Get-MgBetaDeviceAppManagementMobileApp -MobileAppId $instance.Id `
-                    -ExpandProperty "categories" `
+                    -ExpandProperty 'categories' `
                     -ErrorAction SilentlyContinue
                 $Id = $instance.Id
             }
@@ -208,7 +208,7 @@ function Get-TargetResource
         $complexMinimumSupportedOperatingSystem = @{}
         if ($null -ne $instance.AdditionalProperties.minimumSupportedOperatingSystem)
         {
-            $instance.AdditionalProperties.minimumSupportedOperatingSystem.GetEnumerator() | Foreach-Object {
+            $instance.AdditionalProperties.minimumSupportedOperatingSystem.GetEnumerator() | ForEach-Object {
                 if ($_.Value) # Values are either true or false. Only export the true value.
                 {
                     $complexMinimumSupportedOperatingSystem.Add($_.Key, $_.Value)
@@ -253,8 +253,8 @@ function Get-TargetResource
         if ($null -ne $appAssignments -and $appAssignments.count -gt 0)
         {
             $resultAssignments += ConvertFrom-IntuneMobileAppAssignment `
-                                -IncludeDeviceFilter:$true `
-                                -Assignments ($appAssignments)
+                -IncludeDeviceFilter:$true `
+                -Assignments ($appAssignments)
         }
         $results.Add('Assignments', $resultAssignments)
 
@@ -485,8 +485,22 @@ function Set-TargetResource
         $UpdateParameters.Add('@odata.type', '#microsoft.graph.macOSLobApp')
         Update-MgBetaDeviceAppManagementMobileApp -MobileAppId $currentInstance.Id -BodyParameter $UpdateParameters
 
-        [array]$referenceObject = if ($null -ne $currentInstance.Categories.DisplayName) { $currentInstance.Categories.DisplayName } else { ,@() }
-        [array]$differenceObject = if ($null -ne $Categories.DisplayName) { $Categories.DisplayName } else { ,@() }
+        [array]$referenceObject = if ($null -ne $currentInstance.Categories.DisplayName)
+        {
+            $currentInstance.Categories.DisplayName
+        }
+        else
+        {
+            , @()
+        }
+        [array]$differenceObject = if ($null -ne $Categories.DisplayName)
+        {
+            $Categories.DisplayName
+        }
+        else
+        {
+            , @()
+        }
         $delta = Compare-Object -ReferenceObject $referenceObject -DifferenceObject $differenceObject -PassThru
         foreach ($diff in $delta)
         {

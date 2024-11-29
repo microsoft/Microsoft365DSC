@@ -92,10 +92,10 @@ function Get-TargetResource
         Write-Verbose -Message "An Azure AD Identity B2 X User Flow with Id {$Id} was found"
 
         #region Get ApiConnectorConfiguration
-        $connectorConfiguration = Get-MgBetaIdentityB2XUserFlowApiConnectorConfiguration -B2xIdentityUserFlowId $Id -ExpandProperty "postFederationSignup,postAttributeCollection"
+        $connectorConfiguration = Get-MgBetaIdentityB2XUserFlowApiConnectorConfiguration -B2XIdentityUserFlowId $Id -ExpandProperty 'postFederationSignup,postAttributeCollection'
 
         $complexApiConnectorConfiguration = @{
-            postFederationSignupConnectorName = Get-ConnectorName($connectorConfiguration.PostFederationSignup.DisplayName)
+            postFederationSignupConnectorName    = Get-ConnectorName($connectorConfiguration.PostFederationSignup.DisplayName)
             postAttributeCollectionConnectorName = Get-ConnectorName($connectorConfiguration.PostAttributeCollection.DisplayName)
         }
         #endregion
@@ -116,16 +116,16 @@ function Get-TargetResource
             foreach ($getUserAttributeAssignmentAttributeValue in $getUserAttributeAssignment.UserAttributeValues)
             {
                 $getuserAttributeValues += @{
-                    Name = $getUserAttributeAssignmentAttributeValue.Name
-                    Value = $getUserAttributeAssignmentAttributeValue.Value
+                    Name      = $getUserAttributeAssignmentAttributeValue.Name
+                    Value     = $getUserAttributeAssignmentAttributeValue.Value
                     IsDefault = $getUserAttributeAssignmentAttributeValue.IsDefault
                 }
             }
             $complexUserAttributeAssignments += @{
-                Id = $getUserAttributeAssignment.Id
-                DisplayName = $getUserAttributeAssignment.DisplayName
-                IsOptional = $getUserAttributeAssignment.IsOptional
-                UserInputType = $getUserAttributeAssignment.UserInputType
+                Id                  = $getUserAttributeAssignment.Id
+                DisplayName         = $getUserAttributeAssignment.DisplayName
+                IsOptional          = $getUserAttributeAssignment.IsOptional
+                UserInputType       = $getUserAttributeAssignment.UserInputType
                 UserAttributeValues = $getuserAttributeValues
             }
         }
@@ -257,9 +257,9 @@ function Set-TargetResource
         #endregion
 
         $params = @{
-            id = $Id
-            userFlowType = "signUpOrSignIn"
-            userFlowTypeVersion = 1
+            id                        = $Id
+            userFlowType              = 'signUpOrSignIn'
+            userFlowTypeVersion       = 1
             apiConnectorConfiguration = $newApiConnectorConfiguration
         }
 
@@ -269,7 +269,7 @@ function Set-TargetResource
         foreach ($provider in $IdentityProviders)
         {
             $params = @{
-                "@odata.id" = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/identityProviders/$($provider)"
+                '@odata.id' = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/identityProviders/$($provider)"
             }
 
             Write-Verbose -Message "Adding the Identity Provider with Id {$provider} to the newly created Azure AD Identity B2X User Flow with Id {$($newObj.Id)}"
@@ -280,16 +280,16 @@ function Set-TargetResource
 
         #region Add UserAtrributeAssignments to the newly created object
         $currentAttributes = Get-MgBetaIdentityB2XUserFlowUserAttributeAssignment -B2XIdentityUserFlowId $newObj.Id | Select-Object -ExpandProperty Id
-        $attributesToAdd = $UserAttributeAssignments | Where-Object {$_.Id -notin $currentAttributes}
+        $attributesToAdd = $UserAttributeAssignments | Where-Object { $_.Id -notin $currentAttributes }
 
         foreach ($userAttributeAssignment in $attributesToAdd)
         {
             $params = @{
-                displayName = $userAttributeAssignment.DisplayName
-                isOptional = $userAttributeAssignment.IsOptional
-                userInputType = $userAttributeAssignment.UserInputType
+                displayName         = $userAttributeAssignment.DisplayName
+                isOptional          = $userAttributeAssignment.IsOptional
+                userInputType       = $userAttributeAssignment.UserInputType
                 userAttributeValues = @()
-                userAttribute = @{
+                userAttribute       = @{
                     id = $userAttributeAssignment.Id
                 }
             }
@@ -297,9 +297,9 @@ function Set-TargetResource
             foreach ($userAttributeValue in $userAttributeAssignment.UserAttributeValues)
             {
                 $params['userAttributeValues'] += @{
-                    "Name" = $userAttributeValue.Name
-                    "Value" = $userAttributeValue.Value
-                    "IsDefault" = $userAttributeValue.IsDefault
+                    'Name'      = $userAttributeValue.Name
+                    'Value'     = $userAttributeValue.Value
+                    'IsDefault' = $userAttributeValue.IsDefault
                 }
             }
 
@@ -318,33 +318,33 @@ function Set-TargetResource
         {
             $getConnector = Get-MgBetaIdentityApiConnector -Filter "DisplayName eq '$($ApiConnectorConfiguration.postFederationSignupConnectorName)'"
             $params = @{
-                "@odata.id" = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/identity/apiConnectors/$($getConnector.Id)"
+                '@odata.id' = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/identity/apiConnectors/$($getConnector.Id)"
             }
 
             Write-Verbose -Message "Updating the Post Federation Signup connector for Azure AD Identity B2X User Flow with Id {$($currentInstance.Id)}"
 
-            Set-MgBetaIdentityB2XUserFlowPostFederationSignupByRef -B2xIdentityUserFlowId $currentInstance.Id -BodyParameter $params
+            Set-MgBetaIdentityB2XUserFlowPostFederationSignupByRef -B2XIdentityUserFlowId $currentInstance.Id -BodyParameter $params
         }
 
         if (-not [string]::IsNullOrEmpty($ApiConnectorConfiguration.postAttributeCollectionConnectorName))
         {
             $getConnector = Get-MgBetaIdentityApiConnector -Filter "DisplayName eq '$($ApiConnectorConfiguration.postAttributeCollectionConnectorName)'"
             $params = @{
-                "@odata.id" = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/identity/apiConnectors/$($getConnector.Id)"
+                '@odata.id' = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/identity/apiConnectors/$($getConnector.Id)"
             }
 
             Write-Verbose -Message "Updating the Post Attribute Collection connector for Azure AD Identity B2X User Flow with Id {$($currentInstance.Id)}"
 
-            Set-MgBetaIdentityB2XUserFlowPostAttributeCollectionByRef -B2xIdentityUserFlowId $currentInstance.Id -BodyParameter $params
+            Set-MgBetaIdentityB2XUserFlowPostAttributeCollectionByRef -B2XIdentityUserFlowId $currentInstance.Id -BodyParameter $params
         }
         #endregion
 
         #region Add or Remove Identity Providers on the current instance
-        $providersToAdd = $IdentityProviders | Where-Object {$_ -notin $currentInstance.IdentityProviders}
+        $providersToAdd = $IdentityProviders | Where-Object { $_ -notin $currentInstance.IdentityProviders }
         foreach ($provider in $providersToAdd)
         {
             $params = @{
-                "@odata.id" = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/identityProviders/$($provider)"
+                '@odata.id' = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/identityProviders/$($provider)"
             }
 
             Write-Verbose -Message "Adding the Identity Provider with Id {$provider} to the Azure AD Identity B2X User Flow with Id {$($currentInstance.Id)}"
@@ -352,7 +352,7 @@ function Set-TargetResource
             New-MgBetaIdentityB2XUserFlowIdentityProviderByRef -B2XIdentityUserFlowId $currentInstance.Id -BodyParameter $params
         }
 
-        $providersToRemove = $currentInstance.IdentityProviders |  Where-Object {$_ -notin $IdentityProviders}
+        $providersToRemove = $currentInstance.IdentityProviders | Where-Object { $_ -notin $IdentityProviders }
         foreach ($provider in $providersToRemove)
         {
             Write-Verbose -Message "Removing the Identity Provider with Id {$provider} from the Azure AD Identity B2X User Flow with Id {$($currentInstance.Id)}"
@@ -362,7 +362,7 @@ function Set-TargetResource
         #endregion
 
         #region Add, remove or update User Attribute Assignments on the current instance
-        $attributesToRemove = $currentInstance.UserAttributeAssignments | Where-Object {$_.Id -notin $UserAttributeAssignments.Id}
+        $attributesToRemove = $currentInstance.UserAttributeAssignments | Where-Object { $_.Id -notin $UserAttributeAssignments.Id }
 
         #Remove
         foreach ($userAttributeAssignment in $attributesToRemove)
@@ -376,24 +376,24 @@ function Set-TargetResource
         foreach ($userAttributeAssignment in $UserAttributeAssignments)
         {
             $params = @{
-                displayName = $userAttributeAssignment.DisplayName
-                isOptional = $userAttributeAssignment.IsOptional
-                userInputType = $userAttributeAssignment.UserInputType
+                displayName         = $userAttributeAssignment.DisplayName
+                isOptional          = $userAttributeAssignment.IsOptional
+                userInputType       = $userAttributeAssignment.UserInputType
                 userAttributeValues = @()
             }
 
             foreach ($userAttributeValue in $userAttributeAssignment.UserAttributeValues)
             {
                 $params['userAttributeValues'] += @{
-                    "Name" = $userAttributeValue.Name
-                    "Value" = $userAttributeValue.Value
-                    "IsDefault" = $userAttributeValue.IsDefault
+                    'Name'      = $userAttributeValue.Name
+                    'Value'     = $userAttributeValue.Value
+                    'IsDefault' = $userAttributeValue.IsDefault
                 }
             }
 
             if ($userAttributeAssignment.Id -notin $currentInstance.UserAttributeAssignments.Id)
             {
-                $params["userAttribute"] = @{
+                $params['userAttribute'] = @{
                     id = $userAttributeAssignment.Id
                 }
 
@@ -405,7 +405,7 @@ function Set-TargetResource
             {
                 Write-Verbose -Message "Updating the User Attribute Assignment with Id {$($userAttributeAssignment.Id)} in the Azure AD Identity B2X User Flow with Id {$($currentInstance.Id)}"
 
-                Update-MgBetaIdentityB2XUserFlowUserAttributeAssignment -B2xIdentityUserFlowId $currentInstance.Id -IdentityUserFlowAttributeAssignmentId $userAttributeAssignment.Id -BodyParameter $params
+                Update-MgBetaIdentityB2XUserFlowUserAttributeAssignment -B2XIdentityUserFlowId $currentInstance.Id -IdentityUserFlowAttributeAssignmentId $userAttributeAssignment.Id -BodyParameter $params
             }
         }
         #endregion
@@ -619,15 +619,15 @@ function Export-TargetResource
             $displayedKey = $config.Id
             Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{
-                Id = $config.Id
-                Ensure = 'Present'
-                Credential = $Credential
-                ApplicationId = $ApplicationId
-                TenantId = $TenantId
-                ApplicationSecret = $ApplicationSecret
+                Id                    = $config.Id
+                Ensure                = 'Present'
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
-                ManagedIdentity = $ManagedIdentity.IsPresent
-                AccessTokens = $AccessTokens
+                ManagedIdentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
             }
 
             $Results = Get-TargetResource @Params
@@ -652,9 +652,9 @@ function Export-TargetResource
             {
                 $complexMapping = @(
                     @{
-                        Name = 'UserAttributeValues'
+                        Name            = 'UserAttributeValues'
                         CimInstanceName = 'MicrosoftGraphuserFlowUserAttributeAssignmentUserAttributeValues'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                 )
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
@@ -679,11 +679,11 @@ function Export-TargetResource
                 -Credential $Credential
             if ($Results.ApiConnectorConfiguration)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "ApiConnectorConfiguration" -IsCIMArray:$False
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'ApiConnectorConfiguration' -IsCIMArray:$False
             }
             if ($Results.UserAttributeAssignments)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "UserAttributeAssignments" -IsCIMArray:$True
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'UserAttributeAssignments' -IsCIMArray:$True
             }
 
             $dscContent += $currentDSCBlock
@@ -708,11 +708,15 @@ function Export-TargetResource
     }
 }
 
-function Get-ConnectorName($connectorName) {
-    if ($null -ne $connectorName) {
+function Get-ConnectorName($connectorName)
+{
+    if ($null -ne $connectorName)
+    {
         return $connectorName
-    } else {
-        return ""
+    }
+    else
+    {
+        return ''
     }
 }
 

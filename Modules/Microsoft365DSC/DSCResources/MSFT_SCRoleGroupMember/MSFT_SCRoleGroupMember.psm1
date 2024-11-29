@@ -83,7 +83,7 @@ function Get-TargetResource
     {
         if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
         {
-            $RoleGroup = $Script:exportedInstances | Where-Object -FilterScript {$_.Name -eq $Name}
+            $RoleGroup = $Script:exportedInstances | Where-Object -FilterScript { $_.Name -eq $Name }
         }
         else
         {
@@ -224,11 +224,11 @@ function Set-TargetResource
     # CASE: Role Group Membership should be removed
     elseif ($Ensure -eq 'Absent' -and $currentRoleGroupConfig.Ensure -eq 'Present')
     {
-         foreach ($member in $Members)
-         {
-             Write-Verbose -Message "Removing Member {$member} from Role Group {$Name}"
-             Remove-RoleGroupMember -Identity $Name -Member $member
-         }
+        foreach ($member in $Members)
+        {
+            Write-Verbose -Message "Removing Member {$member} from Role Group {$Name}"
+            Remove-RoleGroupMember -Identity $Name -Member $member
+        }
     }
 }
 

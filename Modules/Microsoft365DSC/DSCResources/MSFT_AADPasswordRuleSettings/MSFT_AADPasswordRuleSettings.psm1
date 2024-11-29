@@ -97,29 +97,29 @@ function Get-TargetResource
         else
         {
             Write-Verbose -Message 'Found existing AzureAD DirectorySetting for Password Rule Settings'
-            $valueBannedPasswordCheckOnPremisesMode   = $Policy.Values | Where-Object -FilterScript {$_.Name -eq 'BannedPasswordCheckOnPremisesMode'}
-            $valueEnableBannedPasswordCheckOnPremises = $Policy.Values | Where-Object -FilterScript {$_.Name -eq 'EnableBannedPasswordCheckOnPremises'}
-            $valueEnableBannedPasswordCheck           = $Policy.Values | Where-Object -FilterScript {$_.Name -eq 'EnableBannedPasswordCheck'}
-            $valueLockoutDurationInSeconds            = $Policy.Values | Where-Object -FilterScript {$_.Name -eq 'LockoutDurationInSeconds'}
-            $valueLockoutThreshold                    = $Policy.Values | Where-Object -FilterScript {$_.Name -eq 'LockoutThreshold'}
-            $valueBannedPasswordList                  = $Policy.Values | Where-Object -FilterScript {$_.Name -eq 'BannedPasswordList'}
+            $valueBannedPasswordCheckOnPremisesMode = $Policy.Values | Where-Object -FilterScript { $_.Name -eq 'BannedPasswordCheckOnPremisesMode' }
+            $valueEnableBannedPasswordCheckOnPremises = $Policy.Values | Where-Object -FilterScript { $_.Name -eq 'EnableBannedPasswordCheckOnPremises' }
+            $valueEnableBannedPasswordCheck = $Policy.Values | Where-Object -FilterScript { $_.Name -eq 'EnableBannedPasswordCheck' }
+            $valueLockoutDurationInSeconds = $Policy.Values | Where-Object -FilterScript { $_.Name -eq 'LockoutDurationInSeconds' }
+            $valueLockoutThreshold = $Policy.Values | Where-Object -FilterScript { $_.Name -eq 'LockoutThreshold' }
+            $valueBannedPasswordList = $Policy.Values | Where-Object -FilterScript { $_.Name -eq 'BannedPasswordList' }
 
             $result = @{
-                IsSingleInstance                = 'Yes'
+                IsSingleInstance                    = 'Yes'
                 BannedPasswordCheckOnPremisesMode   = $valueBannedPasswordCheckOnPremisesMode.Value
                 EnableBannedPasswordCheckOnPremises = [Boolean]::Parse($valueEnableBannedPasswordCheckOnPremises.Value)
                 EnableBannedPasswordCheck           = [Boolean]::Parse($valueEnableBannedPasswordCheck.Value)
                 LockoutDurationInSeconds            = $valueLockoutDurationInSeconds.Value
                 LockoutThreshold                    = $valueLockoutThreshold.Value
                 BannedPasswordList                  = $valueBannedPasswordList.Value -split "`t" # list is tab-delimited
-                Ensure                          = 'Present'
-                ApplicationId                   = $ApplicationId
-                TenantId                        = $TenantId
-                ApplicationSecret               = $ApplicationSecret
-                CertificateThumbprint           = $CertificateThumbprint
-                Credential                      = $Credential
-                Managedidentity                 = $ManagedIdentity.IsPresent
-                AccessTokens                    = $AccessTokens
+                Ensure                              = 'Present'
+                ApplicationId                       = $ApplicationId
+                TenantId                            = $TenantId
+                ApplicationSecret                   = $ApplicationSecret
+                CertificateThumbprint               = $CertificateThumbprint
+                Credential                          = $Credential
+                Managedidentity                     = $ManagedIdentity.IsPresent
+                AccessTokens                        = $AccessTokens
             }
 
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
@@ -241,32 +241,32 @@ function Set-TargetResource
         {
             if ($property.Name -eq 'LockoutThreshold')
             {
-                $entry = $Policy.Values | Where-Object -FilterScript {$_.Name -eq $property.Name}
+                $entry = $Policy.Values | Where-Object -FilterScript { $_.Name -eq $property.Name }
                 $entry.Value = $LockoutThreshold
             }
             elseif ($property.Name -eq 'LockoutDurationInSeconds')
             {
-                $entry = $Policy.Values | Where-Object -FilterScript {$_.Name -eq $property.Name}
+                $entry = $Policy.Values | Where-Object -FilterScript { $_.Name -eq $property.Name }
                 $entry.Value = $LockoutDurationInSeconds
             }
             elseif ($property.Value -eq 'EnableBannedPasswordCheck')
             {
-                $entry = $Policy.Values | Where-Object -FilterScript {$_.Name -eq $property.Name}
+                $entry = $Policy.Values | Where-Object -FilterScript { $_.Name -eq $property.Name }
                 $entry.Value = [System.Boolean]$EnableBannedPasswordCheck
             }
             elseif ($property.Value -eq 'BannedPasswordList')
             {
-                $entry = $Policy.Values | Where-Object -FilterScript {$_.Name -eq $property.Name}
+                $entry = $Policy.Values | Where-Object -FilterScript { $_.Name -eq $property.Name }
                 $entry.Value = $BannedPasswordList -join "`t"
             }
             elseif ($property.Value -eq 'EnableBannedPasswordCheckOnPremises')
             {
-                $entry = $Policy.Values | Where-Object -FilterScript {$_.Name -eq $property.Name}
+                $entry = $Policy.Values | Where-Object -FilterScript { $_.Name -eq $property.Name }
                 $entry.Value = [System.Boolean]$EnableBannedPasswordCheckOnPremises
             }
             elseif ($property.Value -eq 'BannedPasswordCheckOnPremisesMode')
             {
-                $entry = $Policy.Values | Where-Object -FilterScript {$_.Name -eq $property.Name}
+                $entry = $Policy.Values | Where-Object -FilterScript { $_.Name -eq $property.Name }
                 $entry.Value = $BannedPasswordCheckOnPremisesMode
             }
             $index++

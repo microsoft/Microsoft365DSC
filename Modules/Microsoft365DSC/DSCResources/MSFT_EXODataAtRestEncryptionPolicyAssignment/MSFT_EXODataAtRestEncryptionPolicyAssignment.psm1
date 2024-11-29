@@ -7,7 +7,7 @@
         [Parameter()]
         [System.String]
         $DataEncryptionPolicy,
-        
+
         [Parameter(Mandatory = $true)]
         [System.String]
         $IsSingleInstance,
@@ -59,14 +59,14 @@
         }
 
         $results = @{
-            DataEncryptionPolicy   = [System.String]$instance.Name
-            IsSingleInstance       = 'Yes'
-            Credential             = $Credential
-            ApplicationId          = $ApplicationId
-            TenantId               = $TenantId
-            CertificateThumbprint  = $CertificateThumbprint
-            ManagedIdentity        = $ManagedIdentity.IsPresent
-            AccessTokens           = $AccessTokens
+            DataEncryptionPolicy  = [System.String]$instance.Name
+            IsSingleInstance      = 'Yes'
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
+            ManagedIdentity       = $ManagedIdentity.IsPresent
+            AccessTokens          = $AccessTokens
         }
         return [System.Collections.Hashtable] $results
     }
@@ -90,7 +90,7 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $DataEncryptionPolicy,
-        
+
         [Parameter(Mandatory = $true)]
         [System.String]
         $IsSingleInstance,
@@ -148,7 +148,7 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $DataEncryptionPolicy,
-        
+
         [Parameter(Mandatory = $true)]
         [System.String]
         $IsSingleInstance,

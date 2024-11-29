@@ -797,7 +797,7 @@ function Get-M365DSCAADCrossTenantAccessPolicyAutomaticUserConsentSettingsAsStri
         {
             $StringContent += "                InboundAllowed           = `$" + $Setting.InboundAllowed.ToString() + "`r`n"
         }
-       if ($null -ne $Setting.OutboundAllowed)
+        if ($null -ne $Setting.OutboundAllowed)
         {
             $StringContent += "                OutboundAllowed          = `$" + $Setting.OutboundAllowed.ToString() + "`r`n"
         }

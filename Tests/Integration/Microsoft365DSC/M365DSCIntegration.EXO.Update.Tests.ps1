@@ -444,6 +444,15 @@
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                 }
+                EXODataEncryptionPolicy 'ConfigureDataEncryptionPolicy'
+                {
+                    Identity              = 'US Mailboxes'
+                    Enabled               = $false #Drift
+                    Ensure                = "Present"
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
+                }
                 EXODistributionGroup 'DemoDG'
                 {
                     Alias                              = "demodg";
