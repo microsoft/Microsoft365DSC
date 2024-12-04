@@ -10,6 +10,8 @@
     reading and troubleshooting.
 * AADAccessReviewDefinition
   * Added support for #microsoft.graph.accessReviewInactiveUsersQueryScope in odatatype.
+* AADActivityBasedTimeoutPolicy
+  * Added support for AccessTokens.
 * AADRoleManagementPolicyRule
   * Added the logic to handle filters in the Export logic flow.
 * EXOManagementRoleAssignment
@@ -23,10 +25,15 @@
   * Initial release
 * IntuneVPNConfigurationPolicyIOS
   * Initial release.
-* M365DSCDRGUtil
-  * Add separate check for strings with ordinal comparison and standardized line breaks.
-* M365DSCUtil
-  * Add separate check for strings with ordinal comparison and standardized line breaks.
+* M365DSCRuleEvaluation
+  * Only attempt to pass AccessTokens if specified.
+* SPORetentionLabelsSettings
+  * Initial release.
+* MISC
+  * M365DSCDRGUtil
+    * Add separate check for strings with ordinal comparison and standardized line breaks.
+  * M365DSCReport
+    * Add support for creating report in CSV-format
 
 # 1.24.1127.1
 
