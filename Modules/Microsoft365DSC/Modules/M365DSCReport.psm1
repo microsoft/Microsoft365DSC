@@ -640,7 +640,7 @@ function New-M365DSCConfigurationToCSV
             }
         }
     }
-    $csvOutput | Out-File -FilePath $OutputPath -Encoding utf8 -Force
+    $csvOutput | Export-Csv -Path $OutputPath -Encoding UTF8 -Delimiter ',' -NoTypeInformation
 }
 
 <#
