@@ -588,7 +588,7 @@ function New-M365DSCConfigurationToCSV
         $newRow = $modelRow.Clone()
         if ($row -gt 0)
         {
-            write-verbose "add separator-line in CSV-file between resources"
+            Write-Verbose -Message "add separator-line in CSV-file between resources"
             $newRow.'Component Name' = '======================'
             $csvOutput += [pscustomobject]$newRow
             $row++
@@ -623,7 +623,6 @@ function New-M365DSCConfigurationToCSV
                             $newRow.Value = $value
                         }
                     }
-
                 }
                 catch
                 {
@@ -645,7 +644,6 @@ function New-M365DSCConfigurationToCSV
                     $csvOutput[$beginRow].Value    = $CurrentPropertyValue
                     $newRow.Property = $OriginPropertyName
                     $newRow.Value    = $OriginPropertyValue
-
                 }
                 $csvOutput += [pscustomobject]$newRow
                 $row++

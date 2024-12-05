@@ -101,7 +101,7 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **address** | Write | String | The application name. | |
+| **name** | Write | String | The application name. | |
 | **publisher** | Write | String | The publisher of the application. | |
 | **appStoreUrl** | Write | String | The Store URL of the application. | |
 | **appId** | Write | String | The application or bundle identifier of the application. | |

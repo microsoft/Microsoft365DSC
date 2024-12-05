@@ -5,6 +5,8 @@
   * IntuneDeviceManagementCompliancePartner
     Initial release
 
+# 1.24.1204.1
+
 * All resources
   * Applying project default formatting on all files, to improve
     reading and troubleshooting.
@@ -12,10 +14,21 @@
   * Added support for #microsoft.graph.accessReviewInactiveUsersQueryScope in odatatype.
 * AADActivityBasedTimeoutPolicy
   * Added support for AccessTokens.
+* AADClaimsMappingPolicy
+  * Fixed policy retrieval
+    FIXES [#5505](https://github.com/microsoft/Microsoft365DSC/issues/5505)
+* AADIdentityAPIConnector
+  * Changed the export logic to export passwords as credential objects instead of string.
 * AADRoleManagementPolicyRule
   * Added the logic to handle filters in the Export logic flow.
+* EXOAuthenticationPolicyAssignment
+  * Added $confirm flag to the Set-TargetResource function for PowerShell 7 compatibility.
+* EXOClientAccessRule
+  * Added $confirm flag to the Set-TargetResource function for PowerShell 7 compatibility.
 * EXOManagementRoleAssignment
   * Changed logic to detect drift.
+* EXOServicePrincipal
+  * Removed ObjectID from the return of the Get-TargetResource method.
 * EXOTeamsProtectionPolicy
   * Initial release
     FIXES [#5296](https://github.com/microsoft/Microsoft365DSC/issues/5296)
@@ -34,6 +47,7 @@
     * Add separate check for strings with ordinal comparison and standardized line breaks.
   * M365DSCReport
     * Add support for creating report in CSV-format
+
 
 # 1.24.1127.1
 
@@ -70,6 +84,10 @@
 * IntuneRoleAssignment
   * Improve verbose output and fix copy-pasted variables.
 * IntuneRoleScopeTag
+  * Initial release.
+* IntuneTrustedRootCertificateAndroidDeviceOwner
+  * Initial release.
+* IntuneTrustedRootCertificateAndroidEnterprise
   * Initial release.
 * TeamsUserPolicyAssignment
   * Added support for the Global policies.

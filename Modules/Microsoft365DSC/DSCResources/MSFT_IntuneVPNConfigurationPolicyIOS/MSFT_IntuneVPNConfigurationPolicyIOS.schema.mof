@@ -38,7 +38,7 @@ class MSFT_MicrosoftvpnProxyServer
 [ClassVersion("1.0.0")]
 class MSFT_targetedMobileApps
 {
-    [Write, Description("The application name.")] String address;
+    [Write, Description("The application name.")] String name;
     [Write, Description("The publisher of the application.")] String publisher;
     [Write, Description("The Store URL of the application.")] String appStoreUrl;
     [Write, Description("The application or bundle identifier of the application.")] String appId;

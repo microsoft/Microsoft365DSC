@@ -3146,6 +3146,28 @@
                     TenantId              = $TenantId;
                     CertificateThumbprint = $CertificateThumbprint;
                 }
+                IntuneTrustedRootCertificateAndroidDeviceOwner 'ConfigureIntuneTrustedRootCertificateAndroidDeviceOwner'
+                {
+                    Description            = "IntuneTrustedRootCertificateAndroidDeviceOwner Description";
+                    DisplayName            = "IntuneTrustedRootCertificateAndroidDeviceOwner DisplayName";
+                    Ensure                 = "Present";
+                    certFileName           = "fakename.cer";
+                    trustedRootCertificate = "insertValidBase64StringHere";
+                    ApplicationId          = $ApplicationId;
+                    TenantId               = $TenantId;
+                    CertificateThumbprint  = $CertificateThumbprint;
+                }
+                IntuneTrustedRootCertificateAndroidEnterprise 'ConfigureIntuneTrustedRootCertificateAndroidEnterprise'
+                {
+                    Description            = "IntuneTrustedRootCertificateAndroidEnterprise Description";
+                    DisplayName            = "IntuneTrustedRootCertificateAndroidEnterprise DisplayName";
+                    Ensure                 = "Present";
+                    certFileName           = "fakename.cer";
+                    trustedRootCertificate = "insertValidBase64StringHere";
+                    ApplicationId          = $ApplicationId;
+                    TenantId               = $TenantId;
+                    CertificateThumbprint  = $CertificateThumbprint;
+                }
                 IntuneTrustedRootCertificateIOS 'ConfigureIntuneTrustedRootCertificateIOS'
                 {
                     Description            = "IntuneTrustedRootCertificateIOS Description";

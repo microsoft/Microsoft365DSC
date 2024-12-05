@@ -121,7 +121,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         (New-CimInstance `
                         -ClassName MSFT_targetedMobileApps `
                         -Property @{
-                            address                            = 'FakeStringValue'
+                            name                               = 'FakeStringValue'
                             publisher                          = 'FakeStringValue'
                             appStoreUrl                        = 'FakeStringValue'
                             appId                              = 'FakeStringValue'
@@ -219,7 +219,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         (New-CimInstance `
                         -ClassName MSFT_targetedMobileApps `
                         -Property @{
-                            address                          = 'FakeStringValue'
+                            name                             = 'FakeStringValue'
                             publisher                        = 'FakeStringValue'
                             appStoreUrl                      = 'FakeStringValue'
                             appId                            = 'FakeStringValue'
@@ -285,7 +285,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             )
                             targetedMobileApps                      = @(
                                 @{
-                                    address                         = 'FakeStringValue'
+                                    name                            = 'FakeStringValue'
                                     publisher                       = 'FakeStringValue'
                                     appStoreUrl                     = 'FakeStringValue'
                                     appId                           = 'FakeStringValue'
@@ -375,7 +375,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         (New-CimInstance `
                         -ClassName MSFT_targetedMobileApps `
                         -Property @{
-                            address                         = 'FakeStringValue'
+                            name                            = 'FakeStringValue'
                             publisher                       = 'FakeStringValue'
                             appStoreUrl                     = 'FakeStringValue'
                             appId                           = 'FakeStringValue'
@@ -442,7 +442,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             )
                             targetedMobileApps                    = @(
                                 @{
-                                    address                         = 'FakeStringValue'
+                                    name                            = 'FakeStringValue'
                                     publisher                       = 'FakeStringValue'
                                     appStoreUrl                     = 'FakeStringValue'
                                     appId                           = 'FakeStringValue'

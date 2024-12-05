@@ -281,7 +281,7 @@ function Get-TargetResource
         foreach ($value in $getValue.AdditionalProperties.targetedMobileApps)
         {
             $myTMAdata = @{}
-            $myTMAdata.Add('address', $value.address)
+            $myTMAdata.Add('name', $value.name)
             $myTMAdata.Add('publisher', $value.publisher)
             $myTMAdata.Add('appStoreUrl', $value.appStoreUrl)
             $myTMAdata.Add('appId', $value.appId)
