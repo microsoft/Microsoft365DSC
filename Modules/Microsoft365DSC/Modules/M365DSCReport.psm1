@@ -713,66 +713,66 @@ function New-M365DSCReportFromConfiguration
         return $paramDictionary
     }
 
-begin
-{
-    if ($PSBoundParameters.ContainsKey('Delimiter'))
+    begin
     {
-        $Delimiter = $PSBoundParameters.Delimiter
-    }
-}
-process # required with DynamicParam
-{
-
-    # Validate that the latest version of the module is installed.
-    Test-M365DSCModuleValidity
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add('Event', 'Report')
-    $data.Add('Type', $Type)
-    Add-M365DSCTelemetryEvent -Data $data -Type 'NewReport'
-    #endregion
-
-    [Array] $parsedContent = Initialize-M365DSCReporting -ConfigurationPath $ConfigurationPath
-
-    if ($null -ne $parsedContent)
-    {
-        switch ($Type)
+        if ($PSBoundParameters.ContainsKey('Delimiter'))
         {
-            'Excel'
-            {
-                New-M365DSCConfigurationToExcel -ParsedContent $parsedContent -OutputPath $OutputPath
-            }
-            'HTML'
-            {
-                $template = Get-Item $ConfigurationPath
-                $templateName = $Template.Name.Split('.')[0]
-                New-M365DSCConfigurationToHTML -ParsedContent $parsedContent -OutputPath $OutputPath -TemplateName $templateName
-            }
-            'JSON'
-            {
-                New-M365DSCConfigurationToJSON -ParsedContent $parsedContent -OutputPath $OutputPath
-            }
-            'Markdown'
-            {
-                $template = Get-Item $ConfigurationPath
-                $templateName = $Template.Name.Split('.')[0]
-                New-M365DSCConfigurationToMarkdown -ParsedContent $parsedContent -OutputPath $OutputPath -TemplateName $templateName
-            }
-            'CSV'
-            {
-                New-M365DSCConfigurationToCSV -ParsedContent $parsedContent -OutputPath $OutputPath -Delimiter $Delimiter
-            }
+            $Delimiter = $PSBoundParameters.Delimiter
         }
     }
-    else
+    process # required with DynamicParam
     {
-        Write-Warning -Message "Parsed content was null. No report was generated."
+    
+        # Validate that the latest version of the module is installed.
+        Test-M365DSCModuleValidity
+    
+        #Ensure the proper dependencies are installed in the current environment.
+        Confirm-M365DSCDependencies
+    
+        #region Telemetry
+        $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+        $data.Add('Event', 'Report')
+        $data.Add('Type', $Type)
+        Add-M365DSCTelemetryEvent -Data $data -Type 'NewReport'
+        #endregion
+    
+        [Array] $parsedContent = Initialize-M365DSCReporting -ConfigurationPath $ConfigurationPath
+    
+        if ($null -ne $parsedContent)
+        {
+            switch ($Type)
+            {
+                'Excel'
+                {
+                    New-M365DSCConfigurationToExcel -ParsedContent $parsedContent -OutputPath $OutputPath
+                }
+                'HTML'
+                {
+                    $template = Get-Item $ConfigurationPath
+                    $templateName = $Template.Name.Split('.')[0]
+                    New-M365DSCConfigurationToHTML -ParsedContent $parsedContent -OutputPath $OutputPath -TemplateName $templateName
+                }
+                'JSON'
+                {
+                    New-M365DSCConfigurationToJSON -ParsedContent $parsedContent -OutputPath $OutputPath
+                }
+                'Markdown'
+                {
+                    $template = Get-Item $ConfigurationPath
+                    $templateName = $Template.Name.Split('.')[0]
+                    New-M365DSCConfigurationToMarkdown -ParsedContent $parsedContent -OutputPath $OutputPath -TemplateName  $templateName
+                }
+                'CSV'
+                {
+                    New-M365DSCConfigurationToCSV -ParsedContent $parsedContent -OutputPath $OutputPath -Delimiter $Delimiter
+                }
+            }
+        }
+        else
+        {
+            Write-Warning -Message "Parsed content was null. No report was generated."
+        }
     }
-}
 }
 
 <#

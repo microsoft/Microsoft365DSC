@@ -492,12 +492,19 @@ function Get-TargetResource
 
         # Retrieve policy specific settings
         [array]$settings = Get-MgBetaDeviceManagementConfigurationPolicySetting `
+            -All `
             -DeviceManagementConfigurationPolicyId $Id `
             -ExpandProperty 'settingDefinitions' `
             -ErrorAction Stop
+        $policyTemplateId = $getValue.TemplateReference.TemplateId
+        [array]$settingDefinitions = Get-MgBetaDeviceManagementConfigurationPolicyTemplateSettingTemplate `
+            -DeviceManagementConfigurationPolicyTemplateId $policyTemplateId `
+            -ExpandProperty 'settingDefinitions' `
+            -All `
+            -ErrorAction Stop | Select-Object -ExpandProperty SettingDefinitions
 
         $policySettings = @{}
-        $policySettings = Export-IntuneSettingCatalogPolicySettings -Settings $settings -ReturnHashtable $policySettings
+        $policySettings = Export-IntuneSettingCatalogPolicySettings -Settings $settings -ReturnHashtable $policySettings -AllSettingDefinitions $settingDefinitions
 
         $results = @{
             #region resource generator code

@@ -5,6 +5,9 @@
   * IntuneDeviceManagementCompliancePartner
     Initial release
 
+* IntuneFirewallPolicyWindows10
+  * Fix export of properties that appear multiple times in subsections.
+
 # 1.24.1204.1
 
 * All resources
