@@ -102661,6 +102661,268 @@ function Update-MgBetaDeviceManagementApplePushNotificationCertificate
         $HttpPipelineAppend
     )
 }
+
+function Get-MgBetaDeviceManagementComplianceManagementPartner
+{
+    [Cmdletbinding()]
+    param(
+    	[Parameter()]
+    	[string]$ComplianceManagementPartnerId,
+
+    	[Parameter()]
+    	[object]$InputObject,
+
+    	[Parameter()]
+    	[string[]]$ExpandProperty,
+
+    	[Parameter()]
+    	[string[]]$Property,
+
+    	[Parameter()]
+    	[string]$Filter,
+
+    	[Parameter()]
+    	[string]$Search,
+
+    	[Parameter()]
+    	[int]$Skip,
+
+    	[Parameter()]
+    	[string[]]$Sort,
+
+    	[Parameter()]
+    	[int]$Top,
+
+    	[Parameter()]
+    	[string]$ResponseHeadersVariable,
+
+    	[Parameter()]
+    	[switch]$Break,
+
+    	[Parameter()]
+    	[System.Collections.IDictionary]$Headers,
+
+    	[Parameter()]
+    	[PSObject]$HttpPipelineAppend,
+
+    	[Parameter()]
+    	[PSObject]$HttpPipelinePrepend,
+
+    	[Parameter()]
+    	[uri]$Proxy,
+
+    	[Parameter()]
+    	[pscredential]$ProxyCredential,
+
+    	[Parameter()]
+    	[switch]$ProxyUseDefaultCredentials,
+
+    	[Parameter()]
+    	[int]$PageSize,
+
+    	[Parameter()]
+    	[switch]$All,
+
+    	[Parameter()]
+    	[string]$CountVariable
+    )
+}
+
+function New-MgBetaDeviceManagementComplianceManagementPartner
+{
+    [Cmdletbinding()]
+    param(
+		[Parameter()]
+		[object]$BodyParameter,
+
+		[Parameter()]
+		[string]$ResponseHeadersVariable,
+
+		[Parameter()]
+		[hashtable]$AdditionalProperties,
+
+		[Parameter()]
+		[object[]]$AndroidEnrollmentAssignments,
+
+		[Parameter()]
+		[switch]$AndroidOnboarded,
+
+		[Parameter()]
+		[string]$DisplayName,
+
+		[Parameter()]
+		[string]$Id,
+
+		[Parameter()]
+		[object[]]$IosEnrollmentAssignments,
+
+		[Parameter()]
+		[switch]$IosOnboarded,
+
+		[Parameter()]
+		[datetime]$LastHeartbeatDateTime,
+
+		[Parameter()]
+		[object[]]$MacOSEnrollmentAssignments,
+
+		[Parameter()]
+		[switch]$MacOSOnboarded,
+
+		[Parameter()]
+		[object]$PartnerState,
+
+		[Parameter()]
+		[switch]$Break,
+
+		[Parameter()]
+		[System.Collections.IDictionary]$Headers,
+
+		[Parameter()]
+		[PSObject]$HttpPipelineAppend,
+
+		[Parameter()]
+		[PSObject]$HttpPipelinePrepend,
+
+		[Parameter()]
+		[uri]$Proxy,
+
+		[Parameter()]
+		[pscredential]$ProxyCredential,
+
+		[Parameter()]
+		[switch]$ProxyUseDefaultCredentials,
+
+		[Parameter()]
+		[switch]$Confirm,
+
+		[Parameter()]
+		[switch]$WhatIf
+	)
+}
+function Update-MgBetaDeviceManagementComplianceManagementPartner
+{
+    [Cmdletbinding()]
+    param(
+        [Parameter()]
+        [string]$ComplianceManagementPartnerId,
+
+        [Parameter()]
+        [object]$InputObject,
+
+        [Parameter()]
+        [object]$BodyParameter,
+
+        [Parameter()]
+        [string]$ResponseHeadersVariable,
+
+        [Parameter()]
+        [hashtable]$AdditionalProperties,
+
+        [Parameter()]
+        [object[]]$AndroidEnrollmentAssignments,
+
+        [Parameter()]
+        [switch]$AndroidOnboarded,
+
+        [Parameter()]
+        [string]$DisplayName,
+
+        [Parameter()]
+        [string]$Id,
+
+        [Parameter()]
+        [object[]]$IosEnrollmentAssignments,
+
+        [Parameter()]
+        [switch]$IosOnboarded,
+
+        [Parameter()]
+        [datetime]$LastHeartbeatDateTime,
+
+        [Parameter()]
+        [object[]]$MacOSEnrollmentAssignments,
+
+        [Parameter()]
+        [switch]$MacOSOnboarded,
+
+        [Parameter()]
+        [object]$PartnerState,
+
+        [Parameter()]
+        [switch]$Break,
+
+        [Parameter()]
+        [System.Collections.IDictionary]$Headers,
+
+        [Parameter()]
+        [PSObject]$HttpPipelineAppend,
+
+        [Parameter()]
+        [PSObject]$HttpPipelinePrepend,
+
+        [Parameter()]
+        [uri]$Proxy,
+
+        [Parameter()]
+        [pscredential]$ProxyCredential,
+
+        [Parameter()]
+        [switch]$ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [switch]$WhatIf,
+
+        [Parameter()]
+        [switch]$Confirm
+    )
+}
+function Remove-MgBetaDeviceManagementComplianceManagementPartner
+{
+    [Cmdletbinding()]
+    param(
+		[Parameter()]
+		[string]$ComplianceManagementPartnerId,
+
+		[Parameter()]
+		[object]$InputObject,
+
+		[Parameter()]
+		[string]$IfMatch,
+
+		[Parameter()]
+		[string]$ResponseHeadersVariable,
+
+		[Parameter()]
+		[switch]$Break,
+
+		[Parameter()]
+		[System.Collections.IDictionary]$Headers,
+
+		[Parameter()]
+		[PSObject]$HttpPipelineAppend,
+
+		[Parameter()]
+		[PSObject]$HttpPipelinePrepend,
+
+		[Parameter()]
+		[switch]$PassThru,
+
+		[Parameter()]
+		[uri]$Proxy,
+
+		[Parameter()]
+		[pscredential]$ProxyCredential,
+
+		[Parameter()]
+		[switch]$ProxyUseDefaultCredentials,
+
+		[Parameter()]
+		[switch]$Confirm,
+
+		[Parameter()]
+		[switch]$WhatIf
+	)
+}
 #endregion
 #region Microsoft.Graph.Authentication
 function Update-MgBetaNetworkAccessFilteringPolicyRule
@@ -105148,19 +105410,15 @@ function Update-MgBetaDeviceManagementRoleScopeTagAssignment
 
 #endregion
 
-#region MgDeviceManagementDeviceConfigurationAssignment
-function Get-MgDeviceManagementDeviceConfigurationAssignment
+#region MgBetaDeviceManagementComplianceManagementPartner
+function Get-MgBetaDeviceManagementComplianceManagementPartner
 {
     [CmdletBinding()]
     param
     (
         [Parameter()]
         [System.String]
-        $DeviceConfigurationAssignmentId,
-
-        [Parameter()]
-        [System.String]
-        $DeviceConfigurationId,
+        $ComplianceManagementPartnerId,
 
         [Parameter()]
         [PSObject]
@@ -105240,19 +105498,11 @@ function Get-MgDeviceManagementDeviceConfigurationAssignment
     )
 }
 
-function New-MgDeviceManagementDeviceConfigurationAssignment
+function New-MgBetaDeviceManagementComplianceManagementPartner
 {
     [CmdletBinding()]
     param
     (
-        [Parameter()]
-        [System.String]
-        $DeviceConfigurationId,
-
-        [Parameter()]
-        [PSObject]
-        $InputObject,
-
         [Parameter()]
         [PSObject]
         $BodyParameter,
@@ -105266,12 +105516,44 @@ function New-MgDeviceManagementDeviceConfigurationAssignment
         $AdditionalProperties,
 
         [Parameter()]
+        [PSObject[]]
+        $AndroidEnrollmentAssignments,
+
+        [Parameter()]
+        [switch]
+        $AndroidOnboarded,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
         [System.String]
         $Id,
 
         [Parameter()]
-        [System.Collections.Hashtable]
-        $Target,
+        [PSObject[]]
+        $IosEnrollmentAssignments,
+
+        [Parameter()]
+        [switch]
+        $IosOnboarded,
+
+        [Parameter()]
+        [System.Datetime]
+        $LastHeartbeatDateTime,
+
+        [Parameter()]
+        [PSObject[]]
+        $MacOsEnrollmentAssignments,
+
+        [Parameter()]
+        [switch]
+        $MacOsOnboarded,
+
+        [Parameter()]
+        [System.string]
+        $PartnerState,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -105307,18 +105589,18 @@ function New-MgDeviceManagementDeviceConfigurationAssignment
     )
 }
 
-function Remove-MgDeviceManagementDeviceConfigurationAssignment
+function Remove-MgBetaDeviceManagementComplianceManagementPartner
 {
     [CmdletBinding()]
     param
     (
         [Parameter()]
         [System.String]
-        $DeviceConfigurationAssignmentId,
+        $ComplianceManagementPartnerId,
 
         [Parameter()]
         [System.String]
-        $DeviceConfigurationId,
+        $IfMatch,
 
         [Parameter()]
         [PSObject]
@@ -105366,19 +105648,11 @@ function Remove-MgDeviceManagementDeviceConfigurationAssignment
     )
 }
 
-function Update-MgDeviceManagementDeviceConfigurationAssignment
+function Update-MgBetaDeviceManagementComplianceManagementPartner
 {
     [CmdletBinding()]
     param
     (
-        [Parameter()]
-        [System.String]
-        $DeviceConfigurationAssignmentId,
-
-        [Parameter()]
-        [System.String]
-        $DeviceConfigurationId,
-
         [Parameter()]
         [PSObject]
         $InputObject,
@@ -105396,12 +105670,44 @@ function Update-MgDeviceManagementDeviceConfigurationAssignment
         $AdditionalProperties,
 
         [Parameter()]
+        [PSObject[]]
+        $AndroidEnrollmentAssignments,
+
+        [Parameter()]
+        [switch]
+        $AndroidOnboarded,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
         [System.String]
         $Id,
 
         [Parameter()]
-        [System.Collections.Hashtable]
-        $Target,
+        [PSObject[]]
+        $IosEnrollmentAssignments,
+
+        [Parameter()]
+        [switch]
+        $IosOnboarded,
+
+        [Parameter()]
+        [System.Datetime]
+        $LastHeartbeatDateTime,
+
+        [Parameter()]
+        [PSObject[]]
+        $MacOsEnrollmentAssignments,
+
+        [Parameter()]
+        [switch]
+        $MacOsOnboarded,
+
+        [Parameter()]
+        [System.string]
+        $PartnerState,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -105436,6 +105742,4 @@ function Update-MgDeviceManagementDeviceConfigurationAssignment
         $Confirm
     )
 }
-
 #endregion
-
