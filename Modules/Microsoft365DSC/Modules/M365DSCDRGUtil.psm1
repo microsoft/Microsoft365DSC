@@ -830,7 +830,11 @@ function Convert-M365DSCDRGComplexTypeToHashtable
 
         [Parameter()]
         [switch]
-        $SingleLevel
+        $SingleLevel,
+
+        [Parameter()]
+        [switch]
+        $ExcludeUnchangedProperties
     )
 
     if ($null -eq $ComplexObject)
@@ -853,6 +857,24 @@ function Convert-M365DSCDRGComplexTypeToHashtable
         #However, an array can be preserved on return by prepending it with the array construction operator (,)
         return , [hashtable[]]$results
     }
+
+    if ($SingleLevel)
+    {
+        $returnObject = @{}
+        $keys = $ComplexObject.CimInstanceProperties | Where-Object -FilterScript { $_.Name -ne 'PSComputerName' }
+        foreach ($key in $keys)
+        {
+            if ($ExcludeUnchangedProperties -and -not $key.IsValueModified)
+            {
+                continue
+            }
+            $propertyName = $key.Name[0].ToString().ToLower() + $key.Name.Substring(1, $key.Name.Length - 1)
+            $propertyValue = $ComplexObject.$($key.Name)
+            $returnObject.Add($propertyName, $propertyValue)
+        }
+        return [hashtable]$returnObject
+    }
+
     $hashComplexObject = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject
 
     if ($null -ne $hashComplexObject)
@@ -1673,8 +1695,8 @@ function Get-IntuneSettingCatalogPolicySetting
             $userSettingTemplates = $SettingTemplates | Where-object -FilterScript {
                 $_.SettingInstanceTemplate.SettingDefinitionId.StartsWith("user_")
             }
-            $deviceDscParams = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $DSCParams.DeviceSettings -SingleLevel
-            $userDscParams = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $DSCParams.UserSettings -SingleLevel
+            $deviceDscParams = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $DSCParams.DeviceSettings -SingleLevel -ExcludeUnchangedProperties
+            $userDscParams = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $DSCParams.UserSettings -SingleLevel -ExcludeUnchangedProperties
             $combinedSettingInstances = @()
             $combinedSettingInstances += Get-IntuneSettingCatalogPolicySetting -DSCParams $deviceDscParams -SettingTemplates $deviceSettingTemplates
             $combinedSettingInstances += Get-IntuneSettingCatalogPolicySetting -DSCParams $userDscParams -SettingTemplates $userSettingTemplates
@@ -1709,8 +1731,8 @@ function Get-IntuneSettingCatalogPolicySetting
         }
         $settingValueName = $settingType.Replace('#microsoft.graph.deviceManagementConfiguration', '').Replace('Instance', 'Value')
         $settingValueName = $settingValueName.Substring(0, 1).ToLower() + $settingValueName.Substring(1, $settingValueName.length - 1 )
-        $settingValueType = $settingInstanceTemplate.AdditionalProperties."$($settingValueName)Template".'@odata.type'
-        if ($null -ne $settingValueType)
+        [string]$settingValueType = $settingInstanceTemplate.AdditionalProperties."$($settingValueName)Template".'@odata.type'
+        if (-not [System.String]::IsNullOrEmpty($settingValueType))
         {
             $settingValueType = $settingValueType.Replace('ValueTemplate', 'Value')
         }
@@ -1855,7 +1877,7 @@ function Get-IntuneSettingCatalogPolicySettingInstanceValue
                 $DSCParams = @{
                     $cimDSCParamsName = if ($instanceCount -eq 1) { $newDSCParams.$cimDSCParamsName[0] } else { $newDSCParams.$cimDSCParamsName }
                 }
-                $AllSettingDefinitions = $groupSettingCollectionDefinitionChildren
+                $AllSettingDefinitions = $groupSettingCollectionDefinitionChildren + $SettingDefinition
             }
 
             for ($i = 0; $i -lt $instanceCount; $i++)

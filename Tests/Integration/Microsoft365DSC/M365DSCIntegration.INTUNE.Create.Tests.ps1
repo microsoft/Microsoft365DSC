@@ -2411,7 +2411,7 @@
                     TenantId              = $TenantId;
                     CertificateThumbprint = $CertificateThumbprint;
                 }
-                IntuneDeviceManagmentAndroidDeviceOwnerEnrollmentProfile 'IntuneDeviceManagmentAndroidDeviceOwnerEnrollmentProfile-MyTestEnrollmentProfile'
+                IntuneDeviceManagementAndroidDeviceOwnerEnrollmentProfile 'IntuneDeviceManagementAndroidDeviceOwnerEnrollmentProfile-MyTestEnrollmentProfile'
                 {
                     AccountId                 = "8d2ac1fd-0ac9-4047-af2f-f1e6323c9a34e";
                     ApplicationId             = $ApplicationId;
@@ -3178,6 +3178,77 @@
                     ApplicationId          = $ApplicationId;
                     TenantId               = $TenantId;
                     CertificateThumbprint  = $CertificateThumbprint;
+                }
+                IntuneVPNConfigurationPolicyAndroidDeviceOwner 'IntuneVPNConfigurationPolicyAndroidDeviceOwner-Example'
+                {
+                    ApplicationId                           = $ApplicationId;
+                    TenantId                                = $TenantId;
+                    CertificateThumbprint                   = $CertificateThumbprint;
+                    Assignments                             = @();
+                    alwaysOn                                = $False;
+                    authenticationMethod                    = "azureAD";
+                    connectionName                          = "IntuneVPNConfigurationPolicyAndroidDeviceOwner ConnectionName";
+                    connectionType                          = "microsoftProtect";
+                    Description                             = "IntuneVPNConfigurationPolicyAndroidDeviceOwner Description";
+                    DisplayName                             = "IntuneVPNConfigurationPolicyAndroidDeviceOwner DisplayName";
+                    Ensure                                  = "Present";
+                    Id                                      = "12345678-1234-abcd-1234-12345678ABCD";
+                    customData                              = @(
+                        MSFT_CustomData{
+                            key                             = 'fakeCustomData'
+                            value                           = '[{"key":"fakestring1","type":"int","value":"1"},{"type":"int","key":"fakestring2","value":"0"}]'
+                        }
+                    );
+                    customKeyValueData                      = @(
+                        MSFT_customKeyValueData{
+                            value                           = '[{"key":"fakestring1","type":"int","value":"1"},{"type":"int","key":"fakestring2","value":"0"}]'
+                            name                            = 'fakeCustomKeyValueData'
+                        }
+                    );
+                    microsoftTunnelSiteId                   = "12345678-1234-abcd-1234-12345678ABCD";
+                    proxyExclusionList                      = @();
+                    proxyServer                             = @(
+                        MSFT_MicrosoftvpnProxyServer{
+                            port                            = 8080
+                            automaticConfigurationScriptUrl = 'fakestringvalue'
+                            address                         = 'fake-proxy-adress.com'
+                        }
+                    );
+                    servers                                 = @(
+                        MSFT_MicrosoftGraphvpnServer{
+                            isDefaultServer                 = $True
+                            description                     = 'fakestringvalue'
+                            address                         = 'fake.server.com:8080'
+                        }
+                    );
+                    targetedMobileApps                      = @(
+                        MSFT_targetedMobileApps{
+                            name                            = 'fakestringvalue'
+                            publisher                       = 'Fake Corporation'
+                            appId                           = 'com.fake.emmx'
+                        }
+                    );
+                }
+                IntuneVPNConfigurationPolicyAndroidEnterprise 'IntuneVPNConfigurationPolicyAndroidEnterprise-Example'
+                {
+                    ApplicationId                      = $ApplicationId;
+                    TenantId                           = $TenantId;
+                    CertificateThumbprint              = $CertificateThumbprint;
+                    Assignments                        = @();
+                    authenticationMethod               = "usernameAndPassword";
+                    connectionName                     = "IntuneVPNConfigurationPolicyAndroidEnterprise ConnectionName";
+                    connectionType                     = "ciscoAnyConnect";
+                    Description                        = "IntuneVPNConfigurationPolicyAndroidEnterprise Description";
+                    DisplayName                        = "IntuneVPNConfigurationPolicyAndroidEnterprise DisplayName";
+                    Ensure                             = "Present";
+                    Id                                 = "12345678-1234-abcd-1234-12345678ABCD";
+                    servers                            = @(
+                        MSFT_MicrosoftGraphvpnServer{
+                            isDefaultServer            = $True
+                            description                = 'server'
+                            address                    = 'vpn.test.com'
+                        }
+                    );
                 }
                 IntuneVPNConfigurationPolicyIOS 'IntuneVPNConfigurationPolicyIOS-Example'
                 {

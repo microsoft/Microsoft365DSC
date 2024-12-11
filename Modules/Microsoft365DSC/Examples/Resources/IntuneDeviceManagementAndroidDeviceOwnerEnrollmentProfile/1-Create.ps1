@@ -22,7 +22,7 @@ Configuration Example
     Import-DscResource -ModuleName Microsoft365DSC
     node localhost
     {
-        IntuneDeviceManagmentAndroidDeviceOwnerEnrollmentProfile "IntuneDeviceManagmentAndroidDeviceOwnerEnrollmentProfile-MyTestEnrollmentProfile"
+        IntuneDeviceManagementAndroidDeviceOwnerEnrollmentProfile "IntuneDeviceManagementAndroidDeviceOwnerEnrollmentProfile-MyTestEnrollmentProfile"
         {
             AccountId                 = "8d2ac1fd-0ac9-4047-af2f-f1e6323c9a34e";
             ApplicationId             = $ApplicationId;

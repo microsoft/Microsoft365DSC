@@ -16,7 +16,7 @@
 | **EnrolledDeviceCount** | Write | UInt32 | Total number of Android devices that have enrolled using this enrollment profile. | |
 | **EnrollmentTokenUsageCount** | Write | UInt32 | Total number of AOSP devices that have enrolled using the current token. Valid values 0 to 20000 | |
 | **QrCodeContent** | Write | String | String used to generate a QR code for the token. | |
-| **QrCodeImage** | Write | String | String used to generate a QR code for the token. | |
+| **QrCodeImage** | Write | MSFT_IntuneDeviceManagementAndroidDeviceOwnerEnrollmentProfileQRImage | String used to generate a QR code for the token. | |
 | **RoleScopeTagIds** | Write | StringArray[] | List of Scope Tags for this Entity instance. | |
 | **ConfigureWifi** | Write | Boolean | Boolean that indicates that the Wi-Fi network should be configured during device provisioning. When set to TRUE, device provisioning will use Wi-Fi related properties to automatically connect to Wi-Fi networks. When set to FALSE or undefined, other Wi-Fi related properties will be ignored. Default value is TRUE. Returned by default. | |
 | **WifiSsid** | Write | String | String that contains the wi-fi login ssid | |
@@ -39,7 +39,7 @@
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
 | **type** | Write | String | Indicates the content mime type. | |
-| **value** | Write | String | The byte array that contains the actual content. | |
+| **value** | Write | UInt32Array[] | The byte array that contains the actual content. | |
 
 ## Description
 
@@ -97,7 +97,8 @@ Configuration Example
 
     Import-DscResource -ModuleName Microsoft365DSC
     node localhost
-    {"IntuneDeviceManagementAndroidDeviceOwnerEnrollmentProfile-MyTestEnrollmentProfile"
+    {
+        IntuneDeviceManagementAndroidDeviceOwnerEnrollmentProfile "IntuneDeviceManagementAndroidDeviceOwnerEnrollmentProfile-MyTestEnrollmentProfile"
         {
             AccountId                 = "8d2ac1fd-0ac9-4047-af2f-f1e6323c9a34e";
             ApplicationId             = $ApplicationId;
@@ -146,7 +147,7 @@ Configuration Example
     Import-DscResource -ModuleName Microsoft365DSC
     node localhost
     {
-        "IntuneDeviceManagementAndroidDeviceOwnerEnrollmentProfile-MyTestEnrollmentProfile"
+        IntuneDeviceManagementAndroidDeviceOwnerEnrollmentProfile "IntuneDeviceManagementAndroidDeviceOwnerEnrollmentProfile-MyTestEnrollmentProfile"
         {
             AccountId                 = "8d2ac1fd-0ac9-4047-af2f-f1e6323c9a34e";
             ApplicationId             = $ApplicationId;
@@ -194,7 +195,8 @@ Configuration Example
     )
     Import-DscResource -ModuleName Microsoft365DSC
     node localhost
-    {"IntuneDeviceManagementAndroidDeviceOwnerEnrollmentProfile-MyTestEnrollmentProfile"
+    {
+        IntuneDeviceManagementAndroidDeviceOwnerEnrollmentProfile "IntuneDeviceManagementAndroidDeviceOwnerEnrollmentProfile-MyTestEnrollmentProfile"
         {
             AccountId                 = "8d2ac1fd-0ac9-4047-af2f-f1e6323c9a34e";
             ApplicationId             = $ApplicationId;

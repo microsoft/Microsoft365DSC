@@ -1,12 +1,12 @@
 [ClassVersion("1.0.0.0")]
-class MSFT_IntuneDeviceManagmentAndroidDeviceOwnerEnrollmentProfileQRImage
+class MSFT_IntuneDeviceManagementAndroidDeviceOwnerEnrollmentProfileQRImage
 {
     [Write, Description("Indicates the content mime type.")] String type;
-    [Write, Description("The byte array that contains the actual content.")] String value;
+    [Write, Description("The byte array that contains the actual content.")] UInt32 value[];
 };
 
-[ClassVersion("1.0.0.0"), FriendlyName("IntuneDeviceManagmentAndroidDeviceOwnerEnrollmentProfile")]
-class MSFT_IntuneDeviceManagmentAndroidDeviceOwnerEnrollmentProfile : OMI_BaseResource
+[ClassVersion("1.0.0.0"), FriendlyName("IntuneDeviceManagementAndroidDeviceOwnerEnrollmentProfile")]
+class MSFT_IntuneDeviceManagementAndroidDeviceOwnerEnrollmentProfile : OMI_BaseResource
 {
     [Key, Description("Display name for the enrollment profile.")] String DisplayName;
     [Write, Description("Unique GUID for the enrollment profile. Read-Only.")] String Id;
@@ -21,7 +21,7 @@ class MSFT_IntuneDeviceManagmentAndroidDeviceOwnerEnrollmentProfile : OMI_BaseRe
     [Write, Description("Total number of Android devices that have enrolled using this enrollment profile.")] UInt32 EnrolledDeviceCount;
     [Write, Description("Total number of AOSP devices that have enrolled using the current token. Valid values 0 to 20000")] UInt32 EnrollmentTokenUsageCount;
     [Write, Description("String used to generate a QR code for the token.")] String QrCodeContent;
-    [Write, Description("String used to generate a QR code for the token.")] String QrCodeImage;
+    [Write, Description("String used to generate a QR code for the token."), EmbeddedInstance("MSFT_IntuneDeviceManagementAndroidDeviceOwnerEnrollmentProfileQRImage")] String QrCodeImage;
     [Write, Description("List of Scope Tags for this Entity instance.")] String RoleScopeTagIds[];
     [Write, Description("Boolean that indicates that the Wi-Fi network should be configured during device provisioning. When set to TRUE, device provisioning will use Wi-Fi related properties to automatically connect to Wi-Fi networks. When set to FALSE or undefined, other Wi-Fi related properties will be ignored. Default value is TRUE. Returned by default.")] Boolean ConfigureWifi;
     [Write, Description("String that contains the wi-fi login ssid")] String WifiSsid;

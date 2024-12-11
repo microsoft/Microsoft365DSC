@@ -21,7 +21,7 @@ Configuration Example
     Import-DscResource -ModuleName Microsoft365DSC
     node localhost
     {
-        IntuneDeviceManagmentAndroidDeviceOwnerEnrollmentProfile "IntuneDeviceManagmentAndroidDeviceOwnerEnrollmentProfile-MyTestEnrollmentProfile"
+        IntuneDeviceManagementAndroidDeviceOwnerEnrollmentProfile "IntuneDeviceManagementAndroidDeviceOwnerEnrollmentProfile-MyTestEnrollmentProfile"
         {
             AccountId                 = "8d2ac1fd-0ac9-4047-af2f-f1e6323c9a34e";
             ApplicationId             = $ApplicationId;
@@ -33,13 +33,13 @@ Configuration Example
             EnrollmentMode            = "corporateOwnedDedicatedDevice";
             EnrollmentTokenType       = "default";
             EnrollmentTokenUsageCount = 0;
-            Ensure                    = "Present";
+            Ensure                    = "Absent";
             IsTeamsDeviceProfile      = $False;
             RoleScopeTagIds           = @("0");
             TenantId                  = $TenantId;
             TokenCreationDateTime     = "10/26/2024 1:02:29 AM";
             TokenExpirationDateTime   = "10/31/2024 3:59:59 AM";
-            WifiHidden                = $True; #Drift
+            WifiHidden                = $False;
             WifiSecurityType          = "none";
         }
     }

@@ -1,4 +1,4 @@
-# IntuneDeviceManagmentAndroidDeviceOwnerEnrollmentProfile
+# IntuneDeviceManagementAndroidDeviceOwnerEnrollmentProfile
 
 ## Description
 

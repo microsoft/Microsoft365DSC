@@ -50,7 +50,7 @@ function Get-TargetResource
         $QrCodeContent,
 
         [Parameter()]
-        [System.String]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $QrCodeImage,
 
         [Parameter()]
@@ -149,12 +149,29 @@ function Get-TargetResource
                 -All `
                 -Filter "displayName eq '$DisplayName'" `
                 -ErrorAction SilentlyContinue
+
+            # Need to do another call by id to get QrCode info. Can't just expand the property.
+            if ($null -ne $androidDeviceOwnerEnrollmentProfile)
+            {
+                Write-Verbose -Message 'Found by DisplayName, now retrieving additional details by id.'
+                $androidDeviceOwnerEnrollmentProfile = Get-MgBetaDeviceManagementAndroidDeviceOwnerEnrollmentProfile `
+                    -AndroidDeviceOwnerEnrollmentProfileId $androidDeviceOwnerEnrollmentProfile.Id
+            }
         }
 
         if ($null -eq $androidDeviceOwnerEnrollmentProfile)
         {
             Write-Verbose -Message "No AndroidDeviceOwnerEnrollmentProfiles with {$Id} was found."
             return $nullResult
+        }
+
+        $QrCodeImageValue = $null
+        if ($null -ne $androidDeviceOwnerEnrollmentProfile.QrCodeImage.Type)
+        {
+            $QrCodeImageValue = @{
+                type  = $androidDeviceOwnerEnrollmentProfile.QrCodeImage.Type
+                value = [Array] ($androidDeviceOwnerEnrollmentProfile.QrCodeImage.Value -join ',')
+            }
         }
 
         $results = @{
@@ -169,7 +186,7 @@ function Get-TargetResource
             EnrollmentTokenUsageCount = $androidDeviceOwnerEnrollmentProfile.EnrollmentTokenUsageCount
             IsTeamsDeviceProfile      = $androidDeviceOwnerEnrollmentProfile.IsTeamsDeviceProfile
             QrCodeContent             = $androidDeviceOwnerEnrollmentProfile.QrCodeContent
-            QrCodeImage               = $androidDeviceOwnerEnrollmentProfile.QrCodeImage
+            QrCodeImage               = $QrCodeImageValue
             RoleScopeTagIds           = $androidDeviceOwnerEnrollmentProfile.RoleScopeTagIds
             TokenCreationDateTime     = $androidDeviceOwnerEnrollmentProfile.TokenCreationDateTime.ToString()
             TokenExpirationDateTime   = $androidDeviceOwnerEnrollmentProfile.TokenExpirationDateTime.ToString()
@@ -253,7 +270,7 @@ function Set-TargetResource
         $QrCodeContent,
 
         [Parameter()]
-        [System.String]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $QrCodeImage,
 
         [Parameter()]
@@ -334,6 +351,21 @@ function Set-TargetResource
     $currentInstance = Get-TargetResource @PSBoundParameters
     $setParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
+    if ($null -ne $QrCodeImage)
+    {
+        $QrCodeImageValue = @{
+            type = $QrCodeImage.type
+            value = [System.Byte[]] @()
+        }
+
+        foreach ($byteValue in $QrCodeImage.value)
+        {
+            $convertedValue = [System.Byte]([BitConverter]::GetBytes($byteValue))[0]
+            $QrCodeImageValue.value += $convertedValue
+        }
+        $setParameters.QrCodeImage = $QrCodeImageValue
+        $setParameters.QrCodeImage.value = [System.Byte[]]($setParameters.QrCodeImage.value)
+    }
     # CREATE
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
@@ -411,7 +443,7 @@ function Test-TargetResource
         $QrCodeContent,
 
         [Parameter()]
-        [System.String]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $QrCodeImage,
 
         [Parameter()]
@@ -491,19 +523,50 @@ function Test-TargetResource
 
     Write-Verbose -Message "Testing configuration of AndroidDeviceOwnerEnrollmentProfile: {$DisplayName}"
 
-    $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('WifiPassword') | Out-Null
     $CurrentValues = Get-TargetResource @PSBoundParameters
+    $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
+    $ValuesToCheck.Remove('WifiPassword') | Out-Null
+    $ValuesToCheck.Remove("QrCodeImage") | Out-Null
+    $ValuesToCheck.Remove("QrCodeContent") | Out-Null
+    $ValuesToCheck.Remove("TokenValue") | Out-Null
+    $ValuesToCheck.Remove("TokenCreationDateTime") | Out-Null
+    $ValuesToCheck.Remove("TokenExpirationDateTime") | Out-Null
+
+    #Compare Cim instances
+    Write-Verbose -Message "Evaluating CIM Instances"
+    $TestResult = $true
+    $RemainingValuesToCheck = $ValuesToCheck
+    foreach ($key in $ValuesToCheck.Keys)
+    {
+        $source = $ValuesToCheck.$key
+        $target = $CurrentValues.$key
+        if ($null -ne $source -and $source.GetType().Name -like '*CimInstance*')
+        {
+            $TestResult = Compare-M365DSCComplexObject `
+                -Source ($source) `
+                -Target ($target)
+
+            if (-not $testResult)
+            {
+                Write-Verbose -Message "Found drift in property {$key}"
+                break
+            }
+
+            $RemainingValuesToCheck.Remove($key) | Out-Null
+        }
+    }
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
-    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
+    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $RemainingValuesToCheck)"
+    if ($TestResult)
+    {
+        $TestResult = Test-M365DSCParameterState `
+            -CurrentValues $CurrentValues `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -DesiredValues $PSBoundParameters `
+            -ValuesToCheck $RemainingValuesToCheck.Keys
 
-    $TestResult = Test-M365DSCParameterState `
-        -CurrentValues $CurrentValues `
-        -Source $($MyInvocation.MyCommand.Source) `
-        -DesiredValues $PSBoundParameters `
-        -ValuesToCheck $ValuesToCheck.Keys
-
-    Write-Verbose -Message "Test-TargetResource returned $TestResult"
+        Write-Verbose -Message "Test-TargetResource returned $TestResult"
+    }
 
     return $TestResult
 }
@@ -598,12 +661,33 @@ function Export-TargetResource
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
 
+            if ($Results.QrCodeImage)
+            {
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.QrCodeImage `
+                                                                             -CIMInstanceName 'IntuneDeviceManagementAndroidDeviceOwnerEnrollmentProfileQRImage'
+                if ($complexTypeStringResult)
+                {
+                    $Results.QrCodeImage = $complexTypeStringResult
+                    $Results.QrCodeImage = $Results.QrCodeImage.ReplacE("@('", "@(").Replace("')", "`)")
+                }
+                else
+                {
+                    $Results.Remove('QrCodeImage') | Out-Null
+                }
+            }
 
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
+
+            if ($Results.QrCodeImage)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'QrCodeImage' -IsCIMArray:$false
+
+            }
+
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName

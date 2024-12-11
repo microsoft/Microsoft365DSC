@@ -15,6 +15,20 @@
                 "read": [],
                 "update": []
             }
+        },
+        "WindowsDefenderATP":{
+            "delegated": {
+                "read": [],
+                "update": []
+            },
+            "application": {
+                "read": [
+                    "Machine.Read.All"
+                ],
+                "update": [
+                    "Machine.ReadWrite.All"
+                ]
+            }
         }
     }
 }
