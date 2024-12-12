@@ -1273,3 +1273,20 @@ function Disable-EOPProtectionPolicyRule
         $Identity
     )
 }
+
+
+#region MSCloudLoginAssistant
+function Get-MSCloudLoginConnectionProfile{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter()]
+        [System.String]
+        $Workload
+    )
+}
+
+function Reset-MSCloudLoginConnectionProfileContext
+{
+}
+#endregion

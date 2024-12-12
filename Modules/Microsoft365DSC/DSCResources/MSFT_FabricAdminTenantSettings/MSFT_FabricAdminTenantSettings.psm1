@@ -574,7 +574,7 @@ function Get-TargetResource
         }
         else
         {
-            $uri = $global:MsCloudLoginConnectionProfile.Fabric.HostUrl + '/v1/admin/tenantsettings'
+            $uri = (Get-MSCloudLoginConnectionProfile -Workload Fabric).HostUrl + '/v1/admin/tenantsettings'
             $instance = Invoke-M365DSCFabricWebRequest -Uri $uri -Method 'GET'
         }
         if ($null -eq $instance)
@@ -1941,7 +1941,7 @@ function Export-TargetResource
     try
     {
         $Script:ExportMode = $true
-        $uri = $global:MsCloudLoginConnectionProfile.Fabric.HostUrl + '/v1/admin/tenantsettings'
+        $uri = (Get-MSCloudLoginConnectionProfile -Workload Fabric).HostUrl + '/v1/admin/tenantsettings'
         [array] $Script:exportedInstances = Invoke-M365DSCFabricWebRequest -Uri $uri -Method 'GET'
 
         if ($null -ne $Global:M365DSCExportResourceInstancesCount)

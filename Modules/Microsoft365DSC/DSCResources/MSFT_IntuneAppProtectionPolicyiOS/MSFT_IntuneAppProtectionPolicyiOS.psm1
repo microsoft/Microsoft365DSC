@@ -1336,7 +1336,7 @@ function Get-IntuneAppProtectionPolicyiOSAssignment
 
     try
     {
-        $Url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/deviceAppManagement/iosManagedAppProtections('$IosManagedAppProtectionId')/assignments"
+        $Url = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/deviceAppManagement/iosManagedAppProtections('$IosManagedAppProtectionId')/assignments"
         $response = Invoke-MgGraphRequest -Method Get `
             -Uri $Url
         return $response.value
@@ -1367,7 +1367,7 @@ function Update-IntuneAppProtectionPolicyiOSAssignment
     )
     try
     {
-        $Url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/deviceAppManagement/iosManagedAppProtections('$IosManagedAppProtectionId')/assign"
+        $Url = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/deviceAppManagement/iosManagedAppProtections('$IosManagedAppProtectionId')/assign"
         $body = ($Assignments | ConvertTo-Json -Depth 20 -Compress)
         Write-Verbose -Message "Group Assignment for iOS App Protection policy with JSON payload {$Url}: `r`n$body"
         Invoke-MgGraphRequest -Method POST `
@@ -1401,7 +1401,7 @@ function Update-IntuneAppProtectionPolicyiOSApp
 
     try
     {
-        $Url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/deviceAppManagement/iosManagedAppProtections('$IosManagedAppProtectionId')/targetApps"
+        $Url = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/deviceAppManagement/iosManagedAppProtections('$IosManagedAppProtectionId')/targetApps"
         # Write-Verbose -Message "Group Assignment for iOS App Protection policy with JSON payload: `r`n$JSONContent"
         Invoke-MgGraphRequest -Method POST `
             -Uri $Url `

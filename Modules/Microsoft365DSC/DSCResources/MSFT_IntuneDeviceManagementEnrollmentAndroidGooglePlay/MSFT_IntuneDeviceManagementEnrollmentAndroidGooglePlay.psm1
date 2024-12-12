@@ -226,7 +226,7 @@ function Set-TargetResource
         if ($dataSharingConsent.granted -eq $false)
         {
             Write-Verbose -Message 'Consent not granted, requesting consent...'
-            $consentResult = Invoke-MgGraphRequest -Uri ($Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + 'beta/deviceManagement/dataSharingConsents/androidManagedStore/consentToDataSharing') -Method 'POST' -Body @{
+            $consentResult = Invoke-MgGraphRequest -Uri ((Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + 'beta/deviceManagement/dataSharingConsents/androidManagedStore/consentToDataSharing') -Method 'POST' -Body @{
                 DataSharingConsentId = 'androidManagedStore'
             } -ContentType 'application/json'
         }
@@ -239,7 +239,7 @@ function Set-TargetResource
         #         hostName = "intune.microsoft.com"
         #     }
 
-        #     $signupUrl = Invoke-MgGraphRequest -Uri ($Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/deviceManagement/androidManagedStoreAccountEnterpriseSettings/requestSignupUrl") -Method 'POST' -Body @{
+        #     $signupUrl = Invoke-MgGraphRequest -Uri ((Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/deviceManagement/androidManagedStoreAccountEnterpriseSettings/requestSignupUrl") -Method 'POST' -Body @{
         #         hostName = "intune.microsoft.com"
         #     } -ContentType "application/json"
 
@@ -249,7 +249,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Host "Remove the Intune Device Management Android Google Play Enrollment with Id {$($currentInstance.Id)}"
-        $unbindResult = Invoke-MgGraphRequest -Uri ($Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + 'beta/deviceManagement/androidManagedStoreAccountEnterpriseSettings/unbind') -Method 'POST' -Body @{} -ContentType 'application/json'
+        $unbindResult = Invoke-MgGraphRequest -Uri ((Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + 'beta/deviceManagement/androidManagedStoreAccountEnterpriseSettings/unbind') -Method 'POST' -Body @{} -ContentType 'application/json'
     }
 }
 

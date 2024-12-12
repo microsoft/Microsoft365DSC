@@ -522,7 +522,7 @@ function Set-TargetResource
         }
 
         #region resource generator code
-        $CreateParameters.Add('rootCertificate@odata.bind', "$($Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl)beta/deviceManagement/deviceConfigurations('$RootCertificateId')")
+        $CreateParameters.Add('rootCertificate@odata.bind', "$((Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl)beta/deviceManagement/deviceConfigurations('$RootCertificateId')")
         $CreateParameters.Add('@odata.type', '#microsoft.graph.windows81SCEPCertificateProfile')
         $policy = New-MgBetaDeviceManagementDeviceConfiguration -BodyParameter $CreateParameters
         $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
@@ -1012,7 +1012,7 @@ function Get-DeviceConfigurationPolicyRootCertificate
         [System.String]
         $DeviceConfigurationPolicyId
     )
-    $Uri = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/deviceManagement/deviceConfigurations('$DeviceConfigurationPolicyId')/microsoft.graph.windows81SCEPCertificateProfile/rootCertificate"
+    $Uri = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/deviceManagement/deviceConfigurations('$DeviceConfigurationPolicyId')/microsoft.graph.windows81SCEPCertificateProfile/rootCertificate"
     $result = Invoke-MgGraphRequest -Method Get -Uri $Uri -ErrorAction Stop
 
     return $result
@@ -1032,9 +1032,9 @@ function Update-DeviceConfigurationPolicyRootCertificateId
         $RootCertificateId
     )
 
-    $Uri = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/deviceManagement/deviceConfigurations('$DeviceConfigurationPolicyId')/microsoft.graph.windows81SCEPCertificateProfile/rootCertificate/`$ref"
+    $Uri = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/deviceManagement/deviceConfigurations('$DeviceConfigurationPolicyId')/microsoft.graph.windows81SCEPCertificateProfile/rootCertificate/`$ref"
     $ref = @{
-        '@odata.id' = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/deviceManagement/deviceConfigurations('$RootCertificateId')"
+        '@odata.id' = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/deviceManagement/deviceConfigurations('$RootCertificateId')"
     }
 
     Invoke-MgGraphRequest -Method PUT -Uri $Uri -Body ($ref | ConvertTo-Json) -ErrorAction Stop

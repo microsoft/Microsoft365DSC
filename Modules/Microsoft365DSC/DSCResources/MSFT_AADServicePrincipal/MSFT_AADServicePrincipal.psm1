@@ -237,7 +237,7 @@ function Get-TargetResource
             }
 
             [Array]$complexDelegatedPermissionClassifications = @()
-            $Uri = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "v1.0/servicePrincipals/$($AADServicePrincipal.Id)/delegatedPermissionClassifications"
+            $Uri = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "v1.0/servicePrincipals/$($AADServicePrincipal.Id)/delegatedPermissionClassifications"
             $permissionClassifications = Invoke-MgGraphRequest -Uri $Uri -Method Get
             foreach ($permissionClassification in $permissionClassifications.Value)
             {
@@ -553,7 +553,7 @@ function Set-TargetResource
         {
             $userInfo = Get-MgUser -UserId $owner
             $body = @{
-                '@odata.id' = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "v1.0/directoryObjects/$($userInfo.Id)"
+                '@odata.id' = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "v1.0/directoryObjects/$($userInfo.Id)"
             }
             Write-Verbose -Message "Adding new owner {$owner}"
             $newOwner = New-MgServicePrincipalOwnerByRef -ServicePrincipalId $newSP.Id -BodyParameter $body
@@ -568,7 +568,7 @@ function Set-TargetResource
                     classification = $permissionClassification.Classification
                     permissionName = $permissionClassification.permissionName
                 }
-                $Uri = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "v1.0/servicePrincipals(appId='$($currentParameters.AppId)')/delegatedPermissionClassifications"
+                $Uri = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "v1.0/servicePrincipals(appId='$($currentParameters.AppId)')/delegatedPermissionClassifications"
                 Invoke-MgGraphRequest -Uri $Uri -Method Post -Body $params
             }
         }
@@ -601,7 +601,7 @@ function Set-TargetResource
             $CSAParams = @{
                 customSecurityAttributes = $currentAADServicePrincipal.CustomSecurityAttributes
             }
-            Invoke-MgGraphRequest -Uri ($Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/servicePrincipals(appId='$($currentParameters.AppId)')") -Method Patch -Body $CSAParams
+            Invoke-MgGraphRequest -Uri ((Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/servicePrincipals(appId='$($currentParameters.AppId)')") -Method Patch -Body $CSAParams
         }
 
         Update-MgServicePrincipal -ServicePrincipalId $currentAADServicePrincipal.ObjectID @currentParameters
@@ -709,7 +709,7 @@ function Set-TargetResource
             if ($diff.SideIndicator -eq '=>')
             {
                 $body = @{
-                    '@odata.id' = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "v1.0/directoryObjects/$($userInfo.Id)"
+                    '@odata.id' = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "v1.0/directoryObjects/$($userInfo.Id)"
                 }
                 Write-Verbose -Message "Adding owner {$($userInfo.Id)}"
                 New-MgServicePrincipalOwnerByRef -ServicePrincipalId $currentAADServicePrincipal.ObjectId `
@@ -728,7 +728,7 @@ function Set-TargetResource
         if ($null -ne $DelegatedPermissionClassifications)
         {
             # removing old perm classifications
-            $Uri = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "v1.0/servicePrincipals(appId='$($currentParameters.AppId)')/delegatedPermissionClassifications"
+            $Uri = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "v1.0/servicePrincipals(appId='$($currentParameters.AppId)')/delegatedPermissionClassifications"
             $permissionClassificationList = Invoke-MgGraphRequest -Uri $Uri -Method Get
             foreach ($permissionClassification in $permissionClassificationList.Value)
             {
@@ -1250,7 +1250,7 @@ function Get-CustomSecurityAttributes
         [String]$ServicePrincipalId
     )
 
-    $customSecurityAttributes = Invoke-MgGraphRequest -Uri ($Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/servicePrincipals/$($ServicePrincipalId)`?`$select=customSecurityAttributes") -Method Get
+    $customSecurityAttributes = Invoke-MgGraphRequest -Uri ((Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/servicePrincipals/$($ServicePrincipalId)`?`$select=customSecurityAttributes") -Method Get
     $customSecurityAttributes = $customSecurityAttributes.customSecurityAttributes
     $newCustomSecurityAttributes = @()
 

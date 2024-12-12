@@ -212,7 +212,7 @@ function Get-TargetResource
             'AllowSelectSecurityGroupsInSPSitesList')
 
         $response = Invoke-PnPSPRestMethod -Method Get `
-            -Url "$($Global:MSCloudLoginConnectionProfile.PnP.AdminUrl)/_api/SPO.Tenant?`$select=$($parametersToRetrieve -join ',')"
+            -Url "$((Get-MSCloudLoginConnectionProfile -Workload PnP).AdminUrl)/_api/SPO.Tenant?`$select=$($parametersToRetrieve -join ',')"
 
 
         return @{
@@ -536,7 +536,7 @@ function Set-TargetResource
         {
             Write-Verbose -Message 'Updating properties via REST PATCH call.'
             Invoke-PnPSPRestMethod -Method PATCH `
-                -Url "$($Global:MSCloudLoginConnectionProfile.PnP.AdminUrl)/_api/SPO.Tenant" `
+                -Url "$((Get-MSCloudLoginConnectionProfile -Workload PnP).AdminUrl)/_api/SPO.Tenant" `
                 -Content $paramsToUpdate
         }
     }

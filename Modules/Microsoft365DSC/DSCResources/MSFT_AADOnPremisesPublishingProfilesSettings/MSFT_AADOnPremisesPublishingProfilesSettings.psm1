@@ -59,7 +59,7 @@ function Get-TargetResource
     $nullResult = $PSBoundParameters
     try
     {
-        $uri = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/onPremisesPublishingProfiles('applicationProxy')"
+        $uri = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/onPremisesPublishingProfiles('applicationProxy')"
         $instance = Invoke-MgGraphRequest -Uri $uri -Method Get
         if ($null -eq $instance)
         {
@@ -151,7 +151,7 @@ function Set-TargetResource
         isEnabled = $IsEnabled
     }
     $body = ConvertTo-Json $settings
-    $uri = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/onPremisesPublishingProfiles('applicationProxy')"
+    $uri = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/onPremisesPublishingProfiles('applicationProxy')"
     Invoke-MgGraphRequest -Uri $uri -Method PATCH -Body $Body | Out-Null
 }
 

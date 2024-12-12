@@ -452,7 +452,7 @@ function Set-TargetResource
         #Update-MgBetaDeviceManagementIntentSetting only support updating a single setting at a time
         #Using Rest to reduce the number of calls
 
-        $Uri = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/deviceManagement/intents/$($currentPolicy.Identity)/updateSettings"
+        $Uri = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/deviceManagement/intents/$($currentPolicy.Identity)/updateSettings"
         $body = @{'settings' = $settings }
         Invoke-MgGraphRequest -Method POST -Uri $Uri -Body ($body | ConvertTo-Json -Depth 20) -ContentType 'application/json' 4> $null
 

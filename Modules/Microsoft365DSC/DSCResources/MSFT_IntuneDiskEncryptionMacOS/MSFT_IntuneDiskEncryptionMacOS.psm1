@@ -378,7 +378,7 @@ function Set-TargetResource
         Update-MgBetaDeviceManagementIntent -DeviceManagementIntentId $currentInstance.Id -BodyParameter $UpdateParameters
 
         #region resource generator code
-        $Uri = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/deviceManagement/intents/$($currentInstance.Id)/updateSettings"
+        $Uri = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/deviceManagement/intents/$($currentInstance.Id)/updateSettings"
         $body = @{'settings' = $settings }
         Invoke-MgGraphRequest -Method POST -Uri $Uri -Body ($body | ConvertTo-Json -Depth 20) -ContentType 'application/json' 4> $null
 

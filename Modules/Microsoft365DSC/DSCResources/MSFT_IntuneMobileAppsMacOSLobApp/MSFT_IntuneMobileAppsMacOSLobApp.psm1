@@ -451,8 +451,8 @@ function Set-TargetResource
                 throw "Mobile App Category with DisplayName $($category.DisplayName) not found."
             }
 
-            Invoke-MgGraphRequest -Uri "$($Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl)beta/deviceAppManagement/mobileApps/$($app.Id)/categories/`$ref" -Method 'POST' -Body @{
-                '@odata.id' = "$($Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl)beta/deviceAppManagement/mobileAppCategories/$($currentCategory.Id)"
+            Invoke-MgGraphRequest -Uri "$((Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl)beta/deviceAppManagement/mobileApps/$($app.Id)/categories/`$ref" -Method 'POST' -Body @{
+                '@odata.id' = "$((Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl)beta/deviceAppManagement/mobileAppCategories/$($currentCategory.Id)"
             }
         }
 
@@ -522,7 +522,7 @@ function Set-TargetResource
                 }
 
                 Invoke-MgGraphRequest -Uri "/beta/deviceAppManagement/mobileApps/$($currentInstance.Id)/categories/`$ref" -Method 'POST' -Body @{
-                    '@odata.id' = "$($Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl)beta/deviceAppManagement/mobileAppCategories/$($currentCategory.Id)"
+                    '@odata.id' = "$((Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl)beta/deviceAppManagement/mobileAppCategories/$($currentCategory.Id)"
                 }
             }
             else

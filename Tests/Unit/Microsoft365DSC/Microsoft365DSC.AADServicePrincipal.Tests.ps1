@@ -23,8 +23,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $secpasswd = ConvertTo-SecureString (New-Guid | Out-String) -AsPlainText -Force
             $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin@contoso.com', $secpasswd)
 
-
             Mock -CommandName Get-PSSession -MockWith {
+            }
+
+            Mock -CommandName Get-MSCloudLoginConnectionProfile -MockWith {
             }
 
             Mock -CommandName Remove-PSSession -MockWith {

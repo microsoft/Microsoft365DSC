@@ -28,6 +28,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Add-M365DSCTelemetryEvent -MockWith {
             }
 
+            Mock -CommandName Get-MSCloudLoginConnectionProfile -MockWith {
+            }
+
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
             }
 

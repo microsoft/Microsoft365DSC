@@ -162,11 +162,10 @@ function Get-TargetResource
 
     # Workaround for issue when if connected to S+C prior to calling cmdlet, an error about an invalid token is thrown.
     # If connected to S+C, then we need to re-initialize the connection to EXO.
-    if ($Global:MSCloudLoginConnectionProfile.SecurityComplianceCenter.Connected -and `
-            $Global:MSCloudLoginConnectionProfile.ExchangeOnline.Connected)
+    if ((Get-MSCloudLoginConnectionProfile -Workload SecurityComplianceCenter).Connected -and `
+            (Get-MSCloudLoginConnectionProfile -Workload ExchangeOnline).Connected)
     {
-        $Global:MSCloudLoginConnectionProfile.ExchangeOnline.Disconnect()
-        $Global:MSCloudLoginConnectionProfile.SecurityComplianceCenter.Connected = $false
+        Reset-MSCloudLoginConnectionProfileContext
     }
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
@@ -1139,10 +1138,10 @@ function Get-M365DSCO365OrgSettingsPlannerConfig
 
     try
     {
-        $Uri = $Global:MSCloudLoginConnectionProfile.Tasks.HostUrl + '/taskAPI/tenantAdminSettings/Settings'
+        $Uri = (Get-MSCloudLoginConnectionProfile -Workload Tasks).HostUrl + '/taskAPI/tenantAdminSettings/Settings'
         [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
         $results = Invoke-RestMethod -ContentType 'application/json;odata.metadata=full' `
-            -Headers @{'Accept' = 'application/json'; 'Authorization' = $Global:MSCloudLoginConnectionProfile.Tasks.AccessToken; 'Accept-Charset' = 'UTF-8'; 'OData-Version' = '4.0;NetFx'; 'OData-MaxVersion' = '4.0;NetFx' } `
+            -Headers @{'Accept' = 'application/json'; 'Authorization' = (Get-MSCloudLoginConnectionProfile -Workload Tasks).AccessToken; 'Accept-Charset' = 'UTF-8'; 'OData-Version' = '4.0;NetFx'; 'OData-MaxVersion' = '4.0;NetFx' } `
             -Method GET `
             $Uri -ErrorAction Stop
         return $results
@@ -1182,9 +1181,9 @@ function Set-M365DSCO365OrgSettingsPlannerConfig
     }
 
     $requestBody = $flags | ConvertTo-Json
-    $Uri = $Global:MSCloudLoginConnectionProfile.Tasks.HostUrl + '/taskAPI/tenantAdminSettings/Settings'
+    $Uri = (Get-MSCloudLoginConnectionProfile -Workload Tasks).HostUrl + '/taskAPI/tenantAdminSettings/Settings'
     $results = Invoke-RestMethod -ContentType 'application/json;odata.metadata=full' `
-        -Headers @{'Accept' = 'application/json'; 'Authorization' = $Global:MSCloudLoginConnectionProfile.Tasks.AccessToken; 'Accept-Charset' = 'UTF-8'; 'OData-Version' = '4.0;NetFx'; 'OData-MaxVersion' = '4.0;NetFx' } `
+        -Headers @{'Accept' = 'application/json'; 'Authorization' = (Get-MSCloudLoginConnectionProfile -Workload Tasks).AccessToken; 'Accept-Charset' = 'UTF-8'; 'OData-Version' = '4.0;NetFx'; 'OData-MaxVersion' = '4.0;NetFx' } `
         -Method PATCH `
         -Body $requestBody `
         $Uri
@@ -1203,7 +1202,7 @@ function Get-M365DSCOrgSettingsInstallationOptions
 
     try
     {
-        $url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + 'beta/admin/microsoft365Apps/installationOptions'
+        $url = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + 'beta/admin/microsoft365Apps/installationOptions'
         $results = Invoke-MgGraphRequest -Method GET -Uri $url
         return $results
     }
@@ -1231,7 +1230,7 @@ function Update-M365DSCOrgSettingsInstallationOptions
 
     try
     {
-        $url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + 'beta/admin/microsoft365Apps/installationOptions'
+        $url = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + 'beta/admin/microsoft365Apps/installationOptions'
         Invoke-MgGraphRequest -Method PATCH -Uri $url -Body $Options | Out-Null
     }
     catch
@@ -1258,7 +1257,7 @@ function Get-M365DSCOrgSettingsForms
 
     try
     {
-        $url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + 'beta/admin/forms/settings'
+        $url = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + 'beta/admin/forms/settings'
         $results = Invoke-MgGraphRequest -Method GET -Uri $url -ErrorAction Stop
         return $results
     }
@@ -1283,7 +1282,7 @@ function Update-M365DSCOrgSettingsForms
     try
     {
         Write-Verbose -Message 'Updating Forms Settings'
-        $url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + 'beta/admin/forms/settings'
+        $url = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + 'beta/admin/forms/settings'
         Invoke-MgGraphRequest -Method PATCH -Uri $url -Body $Options | Out-Null
     }
     catch
@@ -1305,7 +1304,7 @@ function Get-M365DSCOrgSettingsDynamicsCustomerVoice
 
     try
     {
-        $url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + 'beta/admin/dynamics/customerVoice'
+        $url = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + 'beta/admin/dynamics/customerVoice'
         $results = Invoke-MgGraphRequest -Method GET -Uri $url -ErrorAction Stop
         return $results
     }
@@ -1329,7 +1328,7 @@ function Update-M365DSCOrgSettingsDynamicsCustomerVoice
 
     try
     {
-        $url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + 'beta/admin/dynamics/customerVoice'
+        $url = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + 'beta/admin/dynamics/customerVoice'
         Invoke-MgGraphRequest -Method PATCH -Uri $url -Body $Options | Out-Null
     }
     catch
@@ -1351,7 +1350,7 @@ function Get-M365DSCOrgSettingsAppsAndServices
 
     try
     {
-        $url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + 'beta/admin/appsAndServices/settings'
+        $url = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + 'beta/admin/appsAndServices/settings'
         $results = Invoke-MgGraphRequest -Method GET -Uri $url -ErrorAction Stop
         return $results
     }
@@ -1375,7 +1374,7 @@ function Update-M365DSCOrgSettingsAppsAndServices
 
     try
     {
-        $url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + 'beta/admin/appsAndServices/settings'
+        $url = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + 'beta/admin/appsAndServices/settings'
         Invoke-MgGraphRequest -Method PATCH -Uri $url -Body $Options | Out-Null
     }
     catch
@@ -1396,7 +1395,7 @@ function Get-M365DSCOrgSettingsToDo
 
     try
     {
-        $url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + 'beta/admin/todo/settings'
+        $url = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + 'beta/admin/todo/settings'
         $results = Invoke-MgGraphRequest -Method GET -Uri $url -ErrorAction Stop
         return $results
     }
@@ -1420,7 +1419,7 @@ function Update-M365DSCOrgSettingsToDo
 
     try
     {
-        $url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + 'beta/admin/todo/settings'
+        $url = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + 'beta/admin/todo/settings'
         Invoke-MgGraphRequest -Method PATCH -Uri $url -Body $Options | Out-Null
     }
     catch
@@ -1443,7 +1442,7 @@ function Get-M365DSCOrgSettingsAdminCenterReport
 
     try
     {
-        $url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + 'beta/admin/reportSettings'
+        $url = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + 'beta/admin/reportSettings'
         $results = Invoke-MgGraphRequest -Method GET -Uri $url -ErrorAction Stop
         return $results
     }
@@ -1464,9 +1463,9 @@ function Update-M365DSCOrgSettingsAdminCenterReport
         $DisplayConcealedNames
     )
     $VerbosePreference = 'SilentlyContinue'
-    $url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + 'beta/admin/reportSettings'
+    $url = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + 'beta/admin/reportSettings'
     $body = @{
-        '@odata.context'      = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + 'beta/$metadata#admin/reportSettings/$entity'
+        '@odata.context'      = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + 'beta/$metadata#admin/reportSettings/$entity'
         displayConcealedNames = $DisplayConcealedNames
     }
     Invoke-MgGraphRequest -Method PATCH -Uri $url -Body $body | Out-Null
