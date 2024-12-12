@@ -118,7 +118,7 @@ function Add-M365DSCTelemetryEvent
                     }
                     $Script:M365DSCCurrentRoles = @()
 
-                    $uri = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + 'v1.0/me?$select=id'
+                    $uri = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + 'v1.0/me?$select=id'
                     $currentUser = Invoke-MgGraphRequest -Uri $uri -Method GET
                     $currentUserId = $currentUser.id
 

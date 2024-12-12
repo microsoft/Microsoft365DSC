@@ -411,7 +411,7 @@ function Set-TargetResource
             $intuneAssignments += ConvertTo-IntunePolicyAssignment -Assignments $Assignments
         }
         $body = @{'enrollmentConfigurationAssignments' = $intuneAssignments } | ConvertTo-Json -Depth 100
-        $Uri = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/deviceManagement/deviceEnrollmentConfigurations/$($policy.Id)/assign"
+        $Uri = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/deviceManagement/deviceEnrollmentConfigurations/$($policy.Id)/assign"
         Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $body -ErrorAction Stop
 
         Update-DeviceEnrollmentConfigurationPriority `
@@ -449,7 +449,7 @@ function Set-TargetResource
                 $intuneAssignments += ConvertTo-IntunePolicyAssignment -Assignments $Assignments
             }
             $body = @{'enrollmentConfigurationAssignments' = $intuneAssignments } | ConvertTo-Json -Depth 100
-            $Uri = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/deviceManagement/deviceEnrollmentConfigurations/$($currentInstance.Id)/assign"
+            $Uri = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/deviceManagement/deviceEnrollmentConfigurations/$($currentInstance.Id)/assign"
             Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $body -ErrorAction Stop
 
             if ($PSBoundParameters.ContainsKey('Priority') -and $Priority -ne $currentInstance.Priority)
@@ -827,7 +827,7 @@ function Update-DeviceEnrollmentConfigurationPriority
     )
     try
     {
-        $Uri = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/deviceManagement/deviceEnrollmentConfigurations/$DeviceEnrollmentConfigurationId/setpriority"
+        $Uri = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/deviceManagement/deviceEnrollmentConfigurations/$DeviceEnrollmentConfigurationId/setpriority"
         $body = @{'priority' = $Priority } | ConvertTo-Json -Depth 100
         #write-verbose -Message $body
         Invoke-MgGraphRequest `

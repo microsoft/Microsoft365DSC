@@ -221,7 +221,7 @@ function Set-TargetResource
             rules = $rulesParam
         }
 
-        Invoke-MgGraphRequest -Uri ($Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/networkAccess/forwardingPolicies/$($currentPolicy.ID)/updatePolicyRules") -Method Post -Body $updateParams
+        Invoke-MgGraphRequest -Uri ((Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/networkAccess/forwardingPolicies/$($currentPolicy.ID)/updatePolicyRules") -Method Post -Body $updateParams
     }
     else
     {

@@ -347,7 +347,7 @@ function Set-TargetResource
 
         Update-MgBetaDeviceAppManagementPolicySet @UpdateParameters
 
-        $Url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/deviceAppManagement/policySets/$($currentInstance.Id)/update"
+        $Url = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/deviceAppManagement/policySets/$($currentInstance.Id)/update"
         if ($null -ne ($itemamendments = Get-ItemsAmendmentsObject -currentObjectItems $currentInstance.Items -targetObjectItems $items))
         {
             Invoke-MgGraphRequest -Method POST -Uri $url -Body $itemamendments

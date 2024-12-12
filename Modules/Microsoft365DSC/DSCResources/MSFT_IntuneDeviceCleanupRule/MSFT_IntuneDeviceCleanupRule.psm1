@@ -78,7 +78,7 @@ function Get-TargetResource
 
     try
     {
-        $url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + 'beta/deviceManagement/managedDeviceCleanupSettings'
+        $url = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + 'beta/deviceManagement/managedDeviceCleanupSettings'
         $cleanupRule = Invoke-MgGraphRequest -Method GET -Uri $url -ErrorAction Stop
 
         $return = @{
@@ -188,7 +188,7 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + 'beta/deviceManagement/managedDeviceCleanupSettings'
+    $url = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + 'beta/deviceManagement/managedDeviceCleanupSettings'
     $body = @{
         DeviceInactivityBeforeRetirementInDays = "$(if ($Enabled) { $DeviceInactivityBeforeRetirementInDays } else { 0 })"
     }
@@ -340,7 +340,7 @@ function Export-TargetResource
 
     try
     {
-        $url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + 'beta/deviceManagement/managedDeviceCleanupSettings'
+        $url = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + 'beta/deviceManagement/managedDeviceCleanupSettings'
         [array]$cleanupRules = Invoke-MgGraphRequest -Method GET -Uri $url -ErrorAction Stop
         $i = 1
         $dscContent = ''

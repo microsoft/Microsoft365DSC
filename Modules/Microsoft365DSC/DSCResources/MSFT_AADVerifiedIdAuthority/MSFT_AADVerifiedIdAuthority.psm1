@@ -568,7 +568,7 @@ function Invoke-M365DSCVerifiedIdWebRequest
     )
 
     $headers = @{
-        Authorization  = $Global:MSCloudLoginConnectionProfile.AdminAPI.AccessToken
+        Authorization  = (Get-MSCloudLoginConnectionProfile -Workload AdminAPI).AccessToken
         'Content-Type' = 'application/json'
     }
 

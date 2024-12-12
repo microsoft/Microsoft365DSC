@@ -428,7 +428,7 @@ function Set-TargetResource
             }
         }
     }
-    $uri = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + 'beta/policies/deviceRegistrationPolicy'
+    $uri = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + 'beta/policies/deviceRegistrationPolicy'
     Write-Verbose -Message "Updating Device Registration Policy with payload:`r`n$(ConvertTo-Json $updateParameters -Depth 10)"
     Invoke-MgGraphRequest -Method PUT -Uri $uri -Body $updateParameters
 }

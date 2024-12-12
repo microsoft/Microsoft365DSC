@@ -27,6 +27,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             $Global:PartialExportFileName = 'c:\TestPath'
 
+            Mock -CommandName Get-MSCloudLoginConnectionProfile -MockWith {
+            }
 
             Mock -CommandName Save-M365DSCPartialExport -MockWith {
             }

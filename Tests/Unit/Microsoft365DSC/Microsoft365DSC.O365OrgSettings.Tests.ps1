@@ -28,6 +28,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
             }
 
+            Mock -CommandName Get-MSCloudLoginConnectionProfile -MockWith {
+            }
+
+            Mock -CommandName Reset-MSCloudLoginConnectionProfileContext -MockWith {
+            }
+
             Mock -CommandName New-M365DSCConnection -MockWith {
                 return 'Credentials'
             }

@@ -27,6 +27,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
             }
 
+            Mock -CommandName Get-MSCloudLoginConnectionProfile -MockWith {
+            }
+
             Mock -CommandName Get-PSSession -MockWith {
             }
 
@@ -75,7 +78,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Test-TargetResource @testParams | Should -Be $false
             }
             It 'Should Create the id from the Set method' {
-                Set-TargetResource @testParams 
+                Set-TargetResource @testParams
                 Should -Invoke -CommandName Invoke-M365DSCVerifiedIdWebRequest -Exactly 2
             }
         }

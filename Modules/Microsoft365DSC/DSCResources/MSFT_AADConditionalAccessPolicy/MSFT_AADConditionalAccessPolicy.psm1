@@ -1457,7 +1457,7 @@ function Set-TargetResource
         if ($currentParameters.ContainsKey('ServicePrincipalFilterMode') -and $currentParameters.ContainsKey('ServicePrincipalFilterRule'))
         {
             #check if the custom attribute exist.
-            $customattribute = Invoke-MgGraphRequest -Method GET -Uri ($Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + 'v1.0/directory/customSecurityAttributeDefinitions')
+            $customattribute = Invoke-MgGraphRequest -Method GET -Uri ((Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + 'v1.0/directory/customSecurityAttributeDefinitions')
             $ServicePrincipalFilterRule -match 'CustomSecurityAttribute.(?<attribute>.*) -.*'
             $attrinrule = $matches.attribute
             if ($customattribute.value.id -contains $attrinrule)
@@ -1817,7 +1817,7 @@ function Set-TargetResource
         {
             Write-Verbose -Message "Updating existing policy with values: $(Convert-M365DscHashtableToString -Hashtable $NewParameters)"
 
-            $Uri = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/identity/conditionalAccess/policies/$($currentPolicy.Id)"
+            $Uri = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/identity/conditionalAccess/policies/$($currentPolicy.Id)"
             Invoke-MgGraphRequest -Method PATCH -Uri $Uri -Body $NewParameters
         }
         catch
@@ -1841,7 +1841,7 @@ function Set-TargetResource
         {
             try
             {
-                $Uri = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + 'beta/identity/conditionalAccess/policies'
+                $Uri = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + 'beta/identity/conditionalAccess/policies'
                 Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $NewParameters
             }
             catch

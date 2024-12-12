@@ -28,6 +28,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
             }
 
+            Mock -CommandName Get-MSCloudLoginConnectionProfile -MockWith {
+            }
+
             Mock -CommandName New-M365DSCConnection -MockWith {
                 return 'Credentials'
             }
@@ -55,7 +58,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     @{
                         id = '3eacc231-d77b-4efb-bb5f-310f68bd6198'
                         DisplayName = 'MyExcludedGroup'
-                    },                    
+                    },
                     @{
                         id = '6ee86c9f-2b3c-471d-ad38-ff4673ed723e'
                         DisplayName = 'MyAssignedGroup'

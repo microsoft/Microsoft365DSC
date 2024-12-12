@@ -59,7 +59,7 @@ function Get-TargetResource
     $nullResult = $PSBoundParameters
     try
     {
-        $url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + 'beta/identityProtection/policy'
+        $url = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + 'beta/identityProtection/policy'
         $instance = Invoke-MgGraphRequest -Method Get -Uri $url
 
         if ($null -eq $instance)
@@ -153,7 +153,7 @@ function Set-TargetResource
 
     $updateJSON = ConvertTo-Json $updateParameters
     Write-Verbose -Message "Updating the AAD Identity Protection Policy settings with values: $updateJSON"
-    $url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + 'beta/identityProtection/policy'
+    $url = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + 'beta/identityProtection/policy'
 
     Invoke-MgGraphRequest -Method PATCH -Uri $url -Body $updateJSON
 }
@@ -283,7 +283,7 @@ function Export-TargetResource
     {
         $Script:ExportMode = $true
 
-        $url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + 'beta/identityProtection/policy'
+        $url = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + 'beta/identityProtection/policy'
         [array] $Script:exportedInstances = Invoke-MgGraphRequest -Method Get -Uri $url
 
         $i = 1

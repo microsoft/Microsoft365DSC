@@ -2,6 +2,11 @@
 
 # UNRELEASED
 
+# 1.24.1211.1
+
+* AADApplication
+  * Changed logic to remove all permissions when an empty array is specified.
+    FIXES [#5534](https://github.com/microsoft/Microsoft365DSC/issues/5534)
 * AADFeatureRolloutPolicy
   * Fixed policy retrieval
     FIXES [#5521](https://github.com/microsoft/Microsoft365DSC/issues/5521)
@@ -13,6 +18,10 @@
   * Improve settings catalog handling for nested objects.
 * M365DSCResourceGenerator
   * Fixes an issue with nested object creation.
+* MISC
+  * Migrate `MSCloudLoginAssistant` authentication context access to cmdlets.
+* DEPENDENCIES
+  * Updated MSCloudLoginAssistant to version 1.1.29.
 
 # 1.24.1204.1
 

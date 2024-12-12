@@ -62,7 +62,7 @@ function Get-TargetResource
         $nullResult = $PSBoundParameters
 
         $getValue = $null
-        $url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/users/$UserPrincipalName/authentication/requirements"
+        $url = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/users/$UserPrincipalName/authentication/requirements"
         $getValue = Invoke-MgGraphRequest -Method Get -Uri $url
 
         if ($null -eq $getValue)
@@ -155,7 +155,7 @@ function Set-TargetResource
     #endregion
 
     $currentInstance = Get-TargetResource @PSBoundParameters
-    $url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/users/$UserPrincipalName/authentication/requirements"
+    $url = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/users/$UserPrincipalName/authentication/requirements"
 
     $params = @{}
     if ($PerUserMfaState -eq 'enabled' -and $currentInstance.PerUserMfaState -eq 'disabled')

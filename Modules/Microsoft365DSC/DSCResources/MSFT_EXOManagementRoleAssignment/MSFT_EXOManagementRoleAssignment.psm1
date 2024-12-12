@@ -382,12 +382,12 @@ function Set-TargetResource
     } while (-not $testResults -and $retries -gt 0)
 
     # Need to force reconnect to Exchange for the new permissions to kick in.
-    if ($null -ne $Global:MSCloudLoginConnectionProfile.ExchangeOnline)
+    if ($null -ne (Get-MSCloudLoginConnectionProfile -Workload ExchangeOnline))
     {
         Write-Verbose -Message 'Waiting for 20 seconds for new permissions to be effective.'
         Start-Sleep 20
         Write-Verbose -Message 'Disconnecting from Exchange Online'
-        $Global:MSCloudLoginConnectionProfile.ExchangeOnline.Disconnect()
+        Reset-MSCloudLoginConnectionProfileContext
     }
 }
 

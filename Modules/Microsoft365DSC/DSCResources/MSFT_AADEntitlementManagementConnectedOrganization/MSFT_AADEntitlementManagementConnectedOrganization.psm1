@@ -436,7 +436,7 @@ function Set-TargetResource
         }
         Write-Verbose -Message "Create Parameters: $(Convert-M365DscHashtableToString -Hashtable $CreateParameters)"
         $TenantIdValue = $CreateParameters.IdentitySources.TenantId
-        $url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/tenantRelationships/microsoft.graph.findTenantInformationByTenantId(tenantId='$TenantIdValue')"
+        $url = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/tenantRelationships/microsoft.graph.findTenantInformationByTenantId(tenantId='$TenantIdValue')"
         $DomainName = (Invoke-MgGraphRequest -Method 'GET' -Uri $url).defaultDomainName
         $newConnectedOrganization = New-MgBetaEntitlementManagementConnectedOrganization -Description $CreateParameters.Description -DisplayName $CreateParameters.DisplayName -State $CreateParameters.State -DomainName $DomainName
 
@@ -446,7 +446,7 @@ function Set-TargetResource
             $directoryObjectType = $directoryObject.AdditionalProperties.'@odata.type'
             $directoryObjectType = ($directoryObject.AdditionalProperties.'@odata.type').split('.') | Select-Object -Last 1
             $directoryObjectRef = @{
-                '@odata.id' = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/$($directoryObjectType)s/$($sponsor)"
+                '@odata.id' = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/$($directoryObjectType)s/$($sponsor)"
             }
 
             New-MgBetaEntitlementManagementConnectedOrganizationExternalSponsorByRef `
@@ -459,7 +459,7 @@ function Set-TargetResource
             $directoryObject = Get-MgBetaDirectoryObject -DirectoryObjectId $sponsor
             $directoryObjectType = ($directoryObject.AdditionalProperties.'@odata.type').split('.') | Select-Object -Last 1
             $directoryObjectRef = @{
-                '@odata.id' = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/$($directoryObjectType)s/$($sponsor)"
+                '@odata.id' = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/$($directoryObjectType)s/$($sponsor)"
             }
 
             New-MgBetaEntitlementManagementConnectedOrganizationInternalSponsorByRef `
@@ -515,7 +515,7 @@ function Set-TargetResource
             $directoryObjectType = $directoryObject.AdditionalProperties.'@odata.type'
             $directoryObjectType = ($directoryObject.AdditionalProperties.'@odata.type').split('.') | Select-Object -Last 1
             $directoryObjectRef = @{
-                '@odata.id' = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/$($directoryObjectType)s/$($sponsor)"
+                '@odata.id' = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/$($directoryObjectType)s/$($sponsor)"
             }
 
             New-MgBetaEntitlementManagementConnectedOrganizationExternalSponsorByRef `
@@ -553,7 +553,7 @@ function Set-TargetResource
             $directoryObjectType = $directoryObject.AdditionalProperties.'@odata.type'
             $directoryObjectType = ($directoryObject.AdditionalProperties.'@odata.type').split('.') | Select-Object -Last 1
             $directoryObjectRef = @{
-                '@odata.id' = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/$($directoryObjectType)s/$($sponsor)"
+                '@odata.id' = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/$($directoryObjectType)s/$($sponsor)"
             }
 
             New-MgBetaEntitlementManagementConnectedOrganizationInternalSponsorByRef `

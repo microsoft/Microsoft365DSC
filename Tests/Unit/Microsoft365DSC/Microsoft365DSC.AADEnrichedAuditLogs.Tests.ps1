@@ -31,6 +31,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
             }
 
+            Mock -CommandName Get-MSCloudLoginConnectionProfile -MockWith {
+            }
+
             Mock -CommandName New-M365DSCConnection -MockWith {
                 return "Credentials"
             }
@@ -85,7 +88,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential            = $Credential;
                 }
             }
-            
+
             It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }

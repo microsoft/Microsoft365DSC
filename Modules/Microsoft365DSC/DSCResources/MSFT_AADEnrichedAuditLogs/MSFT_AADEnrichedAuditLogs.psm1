@@ -176,7 +176,7 @@ function Set-TargetResource
         }
     }
     $body = ConvertTo-Json $values -Depth 10 -Compress
-    Invoke-MgGraphRequest -Uri ($Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + 'beta/networkAccess/settings/enrichedAuditLogs') -Method PATCH -Body $body
+    Invoke-MgGraphRequest -Uri ((Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + 'beta/networkAccess/settings/enrichedAuditLogs') -Method PATCH -Body $body
 }
 
 function Test-TargetResource

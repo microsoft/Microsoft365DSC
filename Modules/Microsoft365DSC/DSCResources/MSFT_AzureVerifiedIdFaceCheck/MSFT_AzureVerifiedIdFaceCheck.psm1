@@ -342,7 +342,7 @@ function Export-TargetResource
     try
     {
         $headers = @{
-            Authorization = $Global:MSCloudLoginConnectionProfile.AdminAPI.AccessToken
+            Authorization = (Get-MSCloudLoginConnectionProfile -Workload AdminAPI).AccessToken
         }
         $uri = 'https://verifiedid.did.msidentity.com/v1.0/verifiableCredentials/authorities'
         $response = Invoke-WebRequest -Uri $uri -Method Get -Headers $headers

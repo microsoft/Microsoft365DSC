@@ -225,7 +225,7 @@ function Set-TargetResource
         $consentInstance = Get-MgBetaDeviceManagementDataSharingConsent -DataSharingConsentId 'appleMDMPushCertificate'
         If ($consentInstance.Granted -eq $False)
         {
-            Invoke-MgGraphRequest -Method POST -Uri ($Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + 'beta/deviceManagement/dataSharingConsents/appleMDMPushCertificate/consentToDataSharing') -Headers @{ 'Content-Type' = 'application/json' }
+            Invoke-MgGraphRequest -Method POST -Uri ((Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + 'beta/deviceManagement/dataSharingConsents/appleMDMPushCertificate/consentToDataSharing') -Headers @{ 'Content-Type' = 'application/json' }
         }
         else
         {

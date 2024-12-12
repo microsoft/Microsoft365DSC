@@ -272,7 +272,7 @@ function Set-TargetResource
 
     $updateJSON = ConvertTo-Json $updateParameters
     Write-Verbose -Message "Updating the Entra Id Admin Consent Request Policy with values: $updateJSON"
-    $Uri = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + 'beta/policies/adminConsentRequestPolicy'
+    $Uri = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + 'beta/policies/adminConsentRequestPolicy'
     Invoke-MgGraphRequest -Method 'PUT' `
         -Uri $Uri `
         -Body $updateJSON | Out-Null
