@@ -57,7 +57,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-MgServicePrincipal -MockWith {
                 $servicePrincipal = New-Object PSCustomObject
                 $servicePrincipal | Add-Member -MemberType NoteProperty -Name DisplayName -Value 'Microsoft Graph'
-                $servicePrincipal | Add-Member -MemberType NoteProperty -Name ObjectID -Value '12345-12345-12345-12345-12345'
+                $servicePrincipal | Add-Member -MemberType NoteProperty -Name ObjectID -Value '12345-12345-12345-12345-12345'                
+                $servicePrincipal | Add-Member -MemberType NoteProperty -Name AppRoles -Value @(@{Value = "User.Read.All";Id="123"})
                 return $servicePrincipal
             }
 

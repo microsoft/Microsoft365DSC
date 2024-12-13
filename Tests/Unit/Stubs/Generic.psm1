@@ -1274,6 +1274,25 @@ function Disable-EOPProtectionPolicyRule
     )
 }
 
+function Enable-SmtpDaneInbound
+{
+    [CmdletBinding()]
+    Param(
+        [Parameter()]
+        [System.String]
+        $DomainName
+    )
+}
+
+function Disable-SmtpDaneInbound
+{
+    [CmdletBinding()]
+    Param(
+        [Parameter()]
+        [System.String]
+        $DomainName
+    )
+}
 
 #region MSCloudLoginAssistant
 function Get-MSCloudLoginConnectionProfile{

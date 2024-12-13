@@ -17,7 +17,7 @@ function Invoke-M365DSCFabricWebRequest
     )
 
     $headers = @{
-        Authorization = (Get-MSCloudLoginConnectionProfile -Workload Fabric).AccessToken
+        Authorization = (Get-MSCloudLoginConnectionProfile -Workload 'Fabric').AccessToken
     }
 
     $response = Invoke-WebRequest -Method $Method -Uri $Uri -Headers $headers -Body $Body

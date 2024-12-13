@@ -148,10 +148,24 @@ function Get-TargetResource
             [Array] $requests = Get-MgBetaRoleManagementDirectoryRoleAssignmentScheduleRequest -Filter "PrincipalId eq '$($PrincipalInstance.Id)' and RoleDefinitionId eq '$($RoleDefinitionId)' and DirectoryScopeId eq '$($DirectoryScopeId)'"
             if ($requests.Length -eq 0)
             {
-                return $nullResult
+                Write-Verbose -Message "Trying to retrieve by reverse RoleId retrieval"
+                $partialRequests = Get-MgBetaRoleManagementDirectoryRoleAssignmentScheduleRequest -Filter "PrincipalId eq '$($PrincipalInstance.Id)' and DirectoryScopeId eq '$($DirectoryScopeId)'"
+                $reverseRoleId = $null
+                foreach ($partialRequest in $partialRequests)
+                {
+                    $roleEntry = Get-MgBetaRoleManagementDirectoryRoleDefinition -UnifiedRoleDefinitionId $partialRequest.RoleDefinitionId | Where-Object -FilterScript {$_.DisplayName -eq $RoleDefinition}
+                    if ($null -ne $roleEntry)
+                    {
+                        $request = $partialRequest
+                        $RoleDefinitionId = $partialRequest.RoleDefinitionId
+                        break
+                    }
+                }
             }
-
-            $request = $requests[0]
+            else
+            {
+                $request = $requests[0]
+            }
         }
 
         $schedules = Get-MgBetaRoleManagementDirectoryRoleAssignmentSchedule -Filter "PrincipalId eq '$($request.PrincipalId)'"

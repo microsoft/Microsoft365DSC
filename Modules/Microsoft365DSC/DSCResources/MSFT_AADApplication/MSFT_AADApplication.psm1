@@ -888,6 +888,8 @@ function Set-TargetResource
         }
 
         $currentParameters.Add('ApplicationId', $AppIdValue)
+        $currentParameters.Remove('AppRoles') | Out-Null
+
         Write-Verbose -Message "Updating existing AzureAD Application {$DisplayName} with values:`r`n$($currentParameters | Out-String)"
         Update-MgApplication @currentParameters
 
@@ -898,6 +900,62 @@ function Set-TargetResource
         $needToUpdatePermissions = $true
         $needToUpdateAuthenticationBehaviors = $true
         $needToUpdateKeyCredentials = $true
+
+        # Update AppRoles
+        if ($null -ne $AppRoles)
+        {
+            Write-Verbose -Message "AppRoles were specified."
+
+            # Find roles to Remove
+            $fixedRoles = @()
+            $rolesToRemove = @()
+            foreach ($currentRole in $currentAADApp.AppRoles)
+            {
+                $associatedDesiredRoleEntry = $AppRoles | Where-Object -FilterScript {$_.DisplayName -eq $currentRole.DisplayName}
+                if ($null -eq $associatedDesiredRoleEntry)
+                {
+                    Write-Verbose -Message "Could not find matching AppRole entry in Desired values for {$($currentRole.DisplayName)}. Will remove role."
+                    $fixedRole = $currentRole
+                    $fixedRole.IsEnabled = $false
+                    $fixedRoles += $fixedRole
+                    $rolesToRemove += $currentRole.DisplayName
+                }
+                else
+                {
+                    Write-Verbose -Message "Found matching AppRole entry in Desired values for {$($currentRole.DisplayName)}. Keeping same value as current, but setting to disable."
+                    $entry = @{
+                        AllowedMemberTypes = $currentRole.AllowedMemberTypes
+                        Id                 = $currentRole.Id
+                        IsEnabled          = $false
+                        Origin             = $currentRole.Origin
+                        Value              = $currentRole.Value
+                        DisplayName        = $currentRole.DisplayName
+                        Description        = $currentRole.Description
+                    }
+                    $fixedRoles += $entry
+                }
+            }
+
+            Write-Verbose -Message "Updating AppRoles with the disabled roles to remove: {$($rolesToRemove -join ',')}"
+            Update-MgApplication -ApplicationId $currentAADApp.ObjectId -AppRoles $fixedRoles
+
+            Write-Verbose -Message "Updating the app a second time, this time removing the app roles {$($rolesToRemove -join ',')} and updating the others."
+            $resultingAppRoles = @()
+            foreach ($currentAppRole in $AppRoles)
+            {
+                $entry = @{
+                    AllowedMemberTypes = $currentAppRole.AllowedMemberTypes
+                    Id                 = $currentAppRole.Id
+                    IsEnabled          = $currentAppRole.IsEnabled
+                    Origin             = $currentAppRole.Origin
+                    Value              = $currentAppRole.Value
+                    DisplayName        = $currentAppRole.DisplayName
+                    Description        = $currentAppRole.Description
+                }
+                $resultingAppRoles += $entry
+            }
+            Update-MgApplication -ApplicationId $currentAADApp.ObjectId -AppRoles $resultingAppRoles
+        }
     }
     # App exists but should not
     elseif ($Ensure -eq 'Absent' -and $currentAADApp.Ensure -eq 'Present')
@@ -1039,6 +1097,10 @@ function Set-TargetResource
                         {
                             $roleId = $role.Id
                         }
+                        if ([System.String]::IsNullOrEmpty($roleId))
+                        {
+                            throw "Could not find associated role {$($permission.Name)} for API {$($sourceAPI)}"
+                        }
                         $appPermission = @{
                             Id   = $roleId
                             Type = 'Role'
@@ -1054,6 +1116,7 @@ function Set-TargetResource
         }
 
         Write-Verbose -Message "Updating permissions for Azure AD Application {$($currentAADApp.DisplayName)} with RequiredResourceAccess:`r`n$($allRequiredAccess | Out-String)"
+        Write-Verbose -Message "ResourceAccess:`r`n$($allRequiredAccess.ResourceAccess | Out-String)"
         Write-Verbose -Message "Current App Id: $($currentAADApp.AppId)"
 
         # Even if the property is named ApplicationId, we need to pass in the ObjectId
@@ -1072,7 +1135,8 @@ function Set-TargetResource
             requireClientServicePrincipal = $AuthenticationBehaviors.requireClientServicePrincipal
         }
 
-        Update-MgBetaApplication -ApplicationId $currentAADApp.Id -AuthenticationBehaviors $IAuthenticationBehaviors | Out-Null
+        Update-MgBetaApplication -ApplicationId $currentAADApp.Id `
+                                 -AuthenticationBehaviors $IAuthenticationBehaviors | Out-Null
     }
 
     if ($needToUpdateKeyCredentials -and $KeyCredentials)

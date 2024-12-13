@@ -138,7 +138,7 @@
             $PrincipalValue = $PrincipalInstance.DisplayName
         }
 
-        Write-Verbose -Message 'Found Principal'
+        Write-Verbose -Message "Found Principal {$PrincipalValue}"
         $RoleDefinitionId = (Get-MgBetaRoleManagementDirectoryRoleDefinition -Filter "DisplayName eq '$RoleDefinition'").Id
         Write-Verbose -Message "Retrieved role definition {$RoleDefinition} with ID {$RoleDefinitionId}"
 
