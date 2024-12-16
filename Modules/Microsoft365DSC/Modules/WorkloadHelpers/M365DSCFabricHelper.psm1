@@ -20,7 +20,11 @@ function Invoke-M365DSCFabricWebRequest
         Authorization = (Get-MSCloudLoginConnectionProfile -Workload 'Fabric').AccessToken
     }
 
-    $response = Invoke-WebRequest -Method $Method -Uri $Uri -Headers $headers -Body $Body
+    $response = Invoke-WebRequest -Method $Method `
+                                  -Uri $Uri `
+                                  -Headers $headers `
+                                  -Body $Body `
+                                  -UseBasicParsing
     $result = ConvertFrom-Json $response.Content
     return $result
 }

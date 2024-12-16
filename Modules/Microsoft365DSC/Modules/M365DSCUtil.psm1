@@ -4207,13 +4207,20 @@ function Test-M365DSCObjectHasProperty
 
 <#
 .Description
-This function returns the used workloads for the specified DSC resources
+    This function returns the used workloads for the specified DSC resources
 
 .Parameter ResourceNames
-Specifies the resources for which the workloads should be determined.
+    Specifies the resources for which the workloads should be determined.
+    Either a single string, an array of strings or an object with 'Name' and 'AuthenticationMethod' can be provided.
 
 .Example
-Get-M365DSCWorkloadsListFromResourceNames -ResourceNames AADUSer
+    Get-M365DSCWorkloadsListFromResourceNames -ResourceNames AADUser
+
+.EXAMPLE
+    Get-M365DSCWorkloadsListFromResourceNames -ResourceNames @('AADUser', 'AADGroup')
+
+.EXAMPLE
+    Get-M365DSCWorkloadsListFromResourceNames -ResourceNames @{Name = 'AADUser'; AuthenticationMethod = 'Credentials'}
 
 .Functionality
 Public
@@ -4232,7 +4239,13 @@ function Get-M365DSCWorkloadsListFromResourceNames
     [Array] $workloads = @()
     foreach ($resource in $ResourceNames)
     {
-        switch ($resource.Name.Substring(0, 2).ToUpper())
+        $resourceName = $resource.Name
+        $authMethod = $resource.AuthenticationMethod
+        if ([System.String]::IsNullOrEmpty($resourceName))
+        {
+            $resourceName = $resource
+        }
+        switch ($resourceName.Substring(0, 2).ToUpper())
         {
             'AA'
             {
@@ -4240,7 +4253,7 @@ function Get-M365DSCWorkloadsListFromResourceNames
                 {
                     $workloads += @{
                         Name                 = 'MicrosoftGraph'
-                        AuthenticationMethod = $resource.AuthenticationMethod
+                        AuthenticationMethod = $authMethod
                     }
                 }
             }
@@ -4250,7 +4263,7 @@ function Get-M365DSCWorkloadsListFromResourceNames
                 {
                     $workloads += @{
                         Name                 = 'ExchangeOnline'
-                        AuthenticationMethod = $resource.AuthenticationMethod
+                        AuthenticationMethod = $authMethod
                     }
                 }
             }
@@ -4260,7 +4273,7 @@ function Get-M365DSCWorkloadsListFromResourceNames
                 {
                     $workloads += @{
                         Name                 = 'MicrosoftGraph'
-                        AuthenticationMethod = $resource.AuthenticationMethod
+                        AuthenticationMethod = $authMethod
                     }
                 }
             }
@@ -4270,14 +4283,14 @@ function Get-M365DSCWorkloadsListFromResourceNames
                 {
                     $workloads += @{
                         Name                 = 'MicrosoftGraph'
-                        AuthenticationMethod = $resource.AuthenticationMethod
+                        AuthenticationMethod = $authMethod
                     }
                 }
                 elseif (-not $workloads.Name -or -not $workloads.Name.Contains('ExchangeOnline'))
                 {
                     $workloads += @{
                         Name                 = 'ExchangeOnline'
-                        AuthenticationMethod = $resource.AuthenticationMethod
+                        AuthenticationMethod = $authMethod
                     }
                 }
             }
@@ -4287,7 +4300,7 @@ function Get-M365DSCWorkloadsListFromResourceNames
                 {
                     $workloads += @{
                         Name                 = 'PnP'
-                        AuthenticationMethod = $resource.AuthenticationMethod
+                        AuthenticationMethod = $authMethod
                     }
                 }
             }
@@ -4297,7 +4310,7 @@ function Get-M365DSCWorkloadsListFromResourceNames
                 {
                     $workloads += @{
                         Name                 = 'MicrosoftGraph'
-                        AuthenticationMethod = $resource.AuthenticationMethod
+                        AuthenticationMethod = $authMethod
                     }
                 }
             }
@@ -4307,7 +4320,7 @@ function Get-M365DSCWorkloadsListFromResourceNames
                 {
                     $workloads += @{
                         Name                 = 'PnP'
-                        AuthenticationMethod = $resource.AuthenticationMethod
+                        AuthenticationMethod = $authMethod
                     }
                 }
             }
@@ -4317,7 +4330,7 @@ function Get-M365DSCWorkloadsListFromResourceNames
                 {
                     $workloads += @{
                         Name                 = 'SecurityComplianceCenter'
-                        AuthenticationMethod = $resource.AuthenticationMethod
+                        AuthenticationMethod = $authMethod
                     }
                 }
             }
@@ -4327,7 +4340,7 @@ function Get-M365DSCWorkloadsListFromResourceNames
                 {
                     $workloads += @{
                         Name                 = 'MicrosoftTeams'
-                        AuthenticationMethod = $resource.AuthenticationMethod
+                        AuthenticationMethod = $authMethod
                     }
                 }
             }
