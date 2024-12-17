@@ -394,7 +394,7 @@ function Get-TargetResource
 
         if ($null -eq $policy)
         {
-            Write-Verbose -Message "Could not find Teams Meeting Policy ${$Identity}"
+            Write-Verbose -Message "Could not find Teams Meeting Policy {$Identity}"
             return $nullReturn
         }
         Write-Verbose -Message "Found Teams Meeting Policy {$Identity}"
