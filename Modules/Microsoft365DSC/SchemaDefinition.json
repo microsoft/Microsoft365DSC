@@ -910,11 +910,61 @@
                        ]
     },
     {
+        "ClassName":  "MSFT_MicrosoftGraphApiOauth2PermissionScopes",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "adminConsentDescription",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "adminConsentDisplayName",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "userConsentDescription",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "userConsentDisplayName",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "value",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "isEnabled",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "type",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "id",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
         "ClassName":  "MSFT_MicrosoftGraphApiApplication",
         "Parameters":  [
                            {
                                "CIMType":  "MSFT_MicrosoftGraphPreAuthorizedApplication[]",
                                "Name":  "PreAuthorizedApplications",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_MicrosoftGraphAPIOauth2PermissionScopes[]",
+                               "Name":  "Oauth2PermissionScopes",
                                "Option":  "Write"
                            }
                        ]
@@ -46661,6 +46711,2511 @@
                            {
                                "CIMType":  "String",
                                "Name":  "TyposquattingCheckerEnabled",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_DeviceManagementConfigurationPolicyAssignments[]",
+                               "Name":  "Assignments",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "string",
+                               "Name":  "Ensure",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "Credential",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ApplicationId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "TenantId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "ApplicationSecret",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "CertificateThumbprint",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "ManagedIdentity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_MicrosoftGraphIntuneSettingsCatalogpol_hardenedpaths",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "value",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "key",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_MicrosoftGraphIntuneSettingsCatalogDeviceSettings_IntuneSecurityBaselineWindows10",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "CPL_Personalization_NoLockScreenCamera",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "CPL_Personalization_NoLockScreenSlideshow",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Pol_SecGuide_0201_LATFP",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Pol_SecGuide_0002_SMBv1_ClientDriver",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Pol_SecGuide_SMB1ClientDriver",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Pol_SecGuide_0001_SMBv1_Server",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Pol_SecGuide_0102_SEHOP",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Pol_SecGuide_0202_WDigestAuthn",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Pol_MSS_DisableIPSourceRoutingIPv6",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "DisableIPSourceRoutingIPv6",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Pol_MSS_DisableIPSourceRouting",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "DisableIPSourceRouting",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Pol_MSS_EnableICMPRedirect",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Pol_MSS_NoNameReleaseOnDemand",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Turn_Off_Multicast",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "NC_ShowSharedAccessUI",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "hardeneduncpaths_Pol_HardenedPaths",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_MicrosoftGraphIntuneSettingsCatalogpol_hardenedpaths[]",
+                               "Name":  "pol_hardenedpaths",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "WCM_BlockNonDomain",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ConfigureRedirectionGuardPolicy",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "RedirectionGuardPolicy_Enum",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ConfigureRpcConnectionPolicy",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "RpcConnectionAuthentication_Enum",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "RpcConnectionProtocol_Enum",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ConfigureRpcListenerPolicy",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "RpcAuthenticationProtocol_Enum",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "RpcListenerProtocols_Enum",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ConfigureRpcTcpPort",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "SInt32",
+                               "Name":  "RpcTcpPort",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "RestrictDriverInstallationToAdministrators",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ConfigureCopyFilesPolicy",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "CopyFilesPolicy_Enum",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AllowEncryptionOracle",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AllowEncryptionOracleDrop",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AllowProtectedCreds",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "DeviceInstall_Classes_Deny",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "DeviceInstall_Classes_Deny_List",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "DeviceInstall_Classes_Deny_Retroactive",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "POL_DriverLoadPolicy_Name",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "SelectDriverLoadPolicy",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "CSE_Registry",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "CSE_NOBACKGROUND10",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "CSE_NOCHANGES10",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "DisableWebPnPDownload_2",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ShellPreventWPWDownload_2",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AllowCustomSSPsAPs",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AllowStandbyStatesDC_2",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AllowStandbyStatesAC_2",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "DCPromptForPasswordOnResume_2",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ACPromptForPasswordOnResume_2",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "RA_Solicit",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "RA_Solicit_ExpireUnits_List",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "SInt32",
+                               "Name":  "RA_Solicit_ExpireValue_Edt",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "RA_Solicit_Control_List",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "RA_Solicit_Mailto_List",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "RpcRestrictRemoteClients",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "RpcRestrictRemoteClientsList",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AppxRuntimeMicrosoftAccountsOptional",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "NoAutoplayfornonVolume",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "NoAutorun",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "NoAutorun_Dropdown",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Autorun",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Autorun_Box",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "FDVDenyWriteAccess_Name",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "RDVDenyWriteAccess_Name",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "RDVCrossOrg",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "EnumerateAdministrators",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Channel_LogMaxSize_1",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "SInt32",
+                               "Name":  "Channel_LogMaxSize_1_Channel_LogMaxSize",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Channel_LogMaxSize_2",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "SInt32",
+                               "Name":  "Channel_LogMaxSize_2_Channel_LogMaxSize",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Channel_LogMaxSize_4",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "SInt32",
+                               "Name":  "Channel_LogMaxSize_4_Channel_LogMaxSize",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "EnableSmartScreen",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "EnableSmartScreenDropdown",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "NoDataExecutionPrevention",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "NoHeapTerminationOnCorruption",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Advanced_InvalidSignatureBlock",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Advanced_CertificateRevocation",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Advanced_DownloadSignatures",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Advanced_DisableEPMCompat",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Advanced_SetWinInetProtocols",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Advanced_WinInetProtocolOptions",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Advanced_EnableEnhancedProtectedMode64Bit",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Advanced_EnableEnhancedProtectedMode",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "NoCertError",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyAccessDataSourcesAcrossDomains_1",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyAccessDataSourcesAcrossDomains_1_IZ_Partname1406",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyAllowPasteViaScript_1",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyAllowPasteViaScript_1_IZ_Partname1407",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyDropOrPasteFiles_1",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyDropOrPasteFiles_1_IZ_Partname1802",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_Policy_XAML_1",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_Policy_XAML_1_IZ_Partname2402",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyOnlyAllowApprovedDomainsToUseActiveXWithoutPrompt_Both_Internet",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyOnlyAllowApprovedDomainsToUseActiveXWithoutPrompt_Both_Internet_IZ_Partname120b",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyAllowTDCControl_Both_Internet",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyAllowTDCControl_Both_Internet_IZ_Partname120c",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyWindowsRestrictionsURLaction_1",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyWindowsRestrictionsURLaction_1_IZ_Partname2102",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_Policy_WebBrowserControl_1",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_Policy_WebBrowserControl_1_IZ_Partname1206",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_Policy_AllowScriptlets_1",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_Policy_AllowScriptlets_1_IZ_Partname1209",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_Policy_ScriptStatusBar_1",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_Policy_ScriptStatusBar_1_IZ_Partname2103",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyAllowVBScript_1",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyAllowVBScript_1_IZ_Partname140C",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyNotificationBarDownloadURLaction_1",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyNotificationBarDownloadURLaction_1_IZ_Partname2200",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyAntiMalwareCheckingOfActiveXControls_1",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyAntiMalwareCheckingOfActiveXControls_1_IZ_Partname270C",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyDownloadSignedActiveX_1",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyDownloadSignedActiveX_1_IZ_Partname1001",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyDownloadUnsignedActiveX_1",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyDownloadUnsignedActiveX_1_IZ_Partname1004",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyDragDropAcrossDomainsAcrossWindows_Both_Internet",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyDragDropAcrossDomainsAcrossWindows_Both_Internet_IZ_Partname2709",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyDragDropAcrossDomainsWithinWindow_Both_Internet",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyDragDropAcrossDomainsWithinWindow_Both_Internet_IZ_Partname2708",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_Policy_LocalPathForUpload_1",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_Policy_LocalPathForUpload_1_IZ_Partname160A",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyScriptActiveXNotMarkedSafe_1",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyScriptActiveXNotMarkedSafe_1_IZ_Partname1201",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyJavaPermissions_1",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyJavaPermissions_1_IZ_Partname1C00",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyLaunchAppsAndFilesInIFRAME_1",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyLaunchAppsAndFilesInIFRAME_1_IZ_Partname1804",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyLogon_1",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyLogon_1_IZ_Partname1A00",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyNavigateSubframesAcrossDomains_1",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyNavigateSubframesAcrossDomains_1_IZ_Partname1607",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyUnsignedFrameworkComponentsURLaction_1",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyUnsignedFrameworkComponentsURLaction_1_IZ_Partname2004",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicySignedFrameworkComponentsURLaction_1",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicySignedFrameworkComponentsURLaction_1_IZ_Partname2001",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_Policy_UnsafeFiles_1",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_Policy_UnsafeFiles_1_IZ_Partname1806",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyTurnOnXSSFilter_Both_Internet",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyTurnOnXSSFilter_Both_Internet_IZ_Partname1409",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_Policy_TurnOnProtectedMode_1",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_Policy_TurnOnProtectedMode_1_IZ_Partname2500",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_Policy_Phishing_1",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_Policy_Phishing_1_IZ_Partname2301",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyBlockPopupWindows_1",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyBlockPopupWindows_1_IZ_Partname1809",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyUserdataPersistence_1",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyUserdataPersistence_1_IZ_Partname1606",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyZoneElevationURLaction_1",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyZoneElevationURLaction_1_IZ_Partname2101",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_UNCAsIntranet",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyAntiMalwareCheckingOfActiveXControls_3",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyAntiMalwareCheckingOfActiveXControls_3_IZ_Partname270C",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyScriptActiveXNotMarkedSafe_3",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyScriptActiveXNotMarkedSafe_3_IZ_Partname1201",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyJavaPermissions_3",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyJavaPermissions_3_IZ_Partname1C00",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyAntiMalwareCheckingOfActiveXControls_9",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyAntiMalwareCheckingOfActiveXControls_9_IZ_Partname270C",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyJavaPermissions_9",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyJavaPermissions_9_IZ_Partname1C00",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_Policy_Phishing_2",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_Policy_Phishing_2_IZ_Partname2301",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyJavaPermissions_4",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyJavaPermissions_4_IZ_Partname1C00",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyJavaPermissions_10",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyJavaPermissions_10_IZ_Partname1C00",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyJavaPermissions_8",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyJavaPermissions_8_IZ_Partname1C00",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_Policy_Phishing_8",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_Policy_Phishing_8_IZ_Partname2301",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyJavaPermissions_6",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyJavaPermissions_6_IZ_Partname1C00",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyAccessDataSourcesAcrossDomains_7",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyAccessDataSourcesAcrossDomains_7_IZ_Partname1406",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyActiveScripting_7",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_Partname1400",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyBinaryBehaviors_7",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_Partname2000",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyAllowPasteViaScript_7",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyAllowPasteViaScript_7_IZ_Partname1407",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyDropOrPasteFiles_7",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyDropOrPasteFiles_7_IZ_Partname1802",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyFileDownload_7",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_Partname1803",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_Policy_XAML_7",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_Policy_XAML_7_IZ_Partname2402",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyAllowMETAREFRESH_7",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_Partname1608",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyOnlyAllowApprovedDomainsToUseActiveXWithoutPrompt_Both_Restricted",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyOnlyAllowApprovedDomainsToUseActiveXWithoutPrompt_Both_Restricted_IZ_Partname120b",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyAllowTDCControl_Both_Restricted",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyAllowTDCControl_Both_Restricted_IZ_Partname120c",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyWindowsRestrictionsURLaction_7",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyWindowsRestrictionsURLaction_7_IZ_Partname2102",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_Policy_WebBrowserControl_7",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_Policy_WebBrowserControl_7_IZ_Partname1206",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_Policy_AllowScriptlets_7",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_Policy_AllowScriptlets_7_IZ_Partname1209",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_Policy_ScriptStatusBar_7",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_Policy_ScriptStatusBar_7_IZ_Partname2103",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyAllowVBScript_7",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyAllowVBScript_7_IZ_Partname140C",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyNotificationBarDownloadURLaction_7",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyNotificationBarDownloadURLaction_7_IZ_Partname2200",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyAntiMalwareCheckingOfActiveXControls_7",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyAntiMalwareCheckingOfActiveXControls_7_IZ_Partname270C",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyDownloadSignedActiveX_7",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyDownloadSignedActiveX_7_IZ_Partname1001",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyDownloadUnsignedActiveX_7",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyDownloadUnsignedActiveX_7_IZ_Partname1004",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyDragDropAcrossDomainsAcrossWindows_Both_Restricted",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyDragDropAcrossDomainsAcrossWindows_Both_Restricted_IZ_Partname2709",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyDragDropAcrossDomainsWithinWindow_Both_Restricted",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyDragDropAcrossDomainsWithinWindow_Both_Restricted_IZ_Partname2708",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_Policy_LocalPathForUpload_7",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_Policy_LocalPathForUpload_7_IZ_Partname160A",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyScriptActiveXNotMarkedSafe_7",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyScriptActiveXNotMarkedSafe_7_IZ_Partname1201",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyJavaPermissions_7",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyJavaPermissions_7_IZ_Partname1C00",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyLaunchAppsAndFilesInIFRAME_7",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyLaunchAppsAndFilesInIFRAME_7_IZ_Partname1804",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyLogon_7",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyLogon_7_IZ_Partname1A00",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyNavigateSubframesAcrossDomains_7",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyNavigateSubframesAcrossDomains_7_IZ_Partname1607",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyUnsignedFrameworkComponentsURLaction_7",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyUnsignedFrameworkComponentsURLaction_7_IZ_Partname2004",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicySignedFrameworkComponentsURLaction_7",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicySignedFrameworkComponentsURLaction_7_IZ_Partname2001",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyRunActiveXControls_7",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_Partname1200",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyScriptActiveXMarkedSafe_7",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_Partname1405",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyScriptingOfJavaApplets_7",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_Partname1402",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_Policy_UnsafeFiles_7",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_Policy_UnsafeFiles_7_IZ_Partname1806",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyTurnOnXSSFilter_Both_Restricted",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyTurnOnXSSFilter_Both_Restricted_IZ_Partname1409",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_Policy_TurnOnProtectedMode_7",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_Policy_TurnOnProtectedMode_7_IZ_Partname2500",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_Policy_Phishing_7",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_Policy_Phishing_7_IZ_Partname2301",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyBlockPopupWindows_7",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyBlockPopupWindows_7_IZ_Partname1809",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyUserdataPersistence_7",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyUserdataPersistence_7_IZ_Partname1606",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyZoneElevationURLaction_7",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyZoneElevationURLaction_7_IZ_Partname2101",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyAntiMalwareCheckingOfActiveXControls_5",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyAntiMalwareCheckingOfActiveXControls_5_IZ_Partname270C",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyScriptActiveXNotMarkedSafe_5",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyScriptActiveXNotMarkedSafe_5_IZ_Partname1201",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyJavaPermissions_5",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyJavaPermissions_5_IZ_Partname1C00",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IZ_PolicyWarnCertMismatch",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "DisableSafetyFilterOverride",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "DisableSafetyFilterOverrideForAppRepUnknown",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Disable_Managing_Safety_Filter_IE9",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IE9SafetyFilterOptions",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "DisablePerUserActiveXInstall",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "VerMgmtDisableRunThisTime",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "VerMgmtDisable",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Advanced_EnableSSL3Fallback",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Advanced_EnableSSL3FallbackOptions",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IESF_PolicyExplorerProcesses_5",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IESF_PolicyExplorerProcesses_6",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IESF_PolicyExplorerProcesses_3",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IESF_PolicyExplorerProcesses_10",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IESF_PolicyExplorerProcesses_9",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IESF_PolicyExplorerProcesses_11",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IESF_PolicyExplorerProcesses_12",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "IESF_PolicyExplorerProcesses_8",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Security_zones_map_edit",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Security_options_edit",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Security_HKLM_only",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "OnlyUseAXISForActiveXInstall",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AddonManagement_RestrictCrashDetection",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Disable_Security_Settings_Check",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "DisableBlockAtFirstSeen",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "RealtimeProtection_DisableScanOnRealtimeEnable",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Scan_DisablePackedExeScanning",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "DisableRoutinelyTakingAction",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "TS_CLIENT_DISABLE_PASSWORD_SAVING_2",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "TS_CLIENT_DRIVE_M",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "TS_PASSWORD",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "TS_RPC_ENCRYPTION",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "TS_ENCRYPTION_POLICY",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "TS_ENCRYPTION_LEVEL",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Disable_Downloading_of_Enclosures",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "EnableMPRNotifications",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AutomaticRestartSignOn",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "EnableScriptBlockLogging",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "EnableScriptBlockInvocationLogging",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AllowBasic_2",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AllowUnencrypted_2",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "DisallowDigest",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AllowBasic_1",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AllowUnencrypted_1",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "DisableRunAs",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AccountLogon_AuditCredentialValidation",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AccountLogonLogoff_AuditAccountLockout",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AccountLogonLogoff_AuditGroupMembership",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AccountLogonLogoff_AuditLogon",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "PolicyChange_AuditAuthenticationPolicyChange",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "PolicyChange_AuditPolicyChange",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ObjectAccess_AuditFileShare",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AccountLogonLogoff_AuditOtherLogonLogoffEvents",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AccountManagement_AuditSecurityGroupManagement",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "System_AuditSecuritySystemExtension",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AccountLogonLogoff_AuditSpecialLogon",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AccountManagement_AuditUserAccountManagement",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "DetailedTracking_AuditPNPActivity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "DetailedTracking_AuditProcessCreation",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ObjectAccess_AuditDetailedFileShare",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ObjectAccess_AuditOtherObjectAccessEvents",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ObjectAccess_AuditRemovableStorage",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "PolicyChange_AuditMPSSVCRuleLevelPolicyChange",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "PolicyChange_AuditOtherPolicyChangeEvents",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "PrivilegeUse_AuditSensitivePrivilegeUse",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "System_AuditOtherSystemEvents",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "System_AuditSecurityStateChange",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "System_AuditSystemIntegrity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AllowPasswordManager",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AllowSmartScreen",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "PreventCertErrorOverrides",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Browser_PreventSmartScreenPromptOverride",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "PreventSmartScreenPromptOverrideForFiles",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AllowDirectMemoryAccess",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AllowArchiveScanning",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AllowBehaviorMonitoring",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AllowCloudProtection",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AllowFullScanRemovableDriveScanning",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AllowOnAccessProtection",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AllowRealtimeMonitoring",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AllowIOAVProtection",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AllowScriptScanning",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "BlockExecutionOfPotentiallyObfuscatedScripts",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "BlockExecutionOfPotentiallyObfuscatedScripts_ASROnlyPerRuleExclusions",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "BlockWin32APICallsFromOfficeMacros",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "BlockWin32APICallsFromOfficeMacros_ASROnlyPerRuleExclusions",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "BlockExecutableFilesRunningUnlessTheyMeetPrevalenceAgeTrustedListCriterion",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "BlockExecutableFilesRunningUnlessTheyMeetPrevalenceAgeTrustedListCriterion_ASROnlyPerRuleExclusions",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "BlockOfficeCommunicationAppFromCreatingChildProcesses",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "BlockOfficeCommunicationAppFromCreatingChildProcesses_ASROnlyPerRuleExclusions",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "BlockAllOfficeApplicationsFromCreatingChildProcesses",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "BlockAllOfficeApplicationsFromCreatingChildProcesses_ASROnlyPerRuleExclusions",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "BlockAdobeReaderFromCreatingChildProcesses",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "BlockAdobeReaderFromCreatingChildProcesses_ASROnlyPerRuleExclusions",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "BlockCredentialStealingFromWindowsLocalSecurityAuthoritySubsystem",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "BlockCredentialStealingFromWindowsLocalSecurityAuthoritySubsystem_ASROnlyPerRuleExclusions",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "BlockJavaScriptOrVBScriptFromLaunchingDownloadedExecutableContent",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "BlockJavaScriptOrVBScriptFromLaunchingDownloadedExecutableContent_ASROnlyPerRuleExclusions",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "BlockWebshellCreationForServers",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "BlockWebshellCreationForServers_ASROnlyPerRuleExclusions",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "BlockUntrustedUnsignedProcessesThatRunFromUSB",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "BlockUntrustedUnsignedProcessesThatRunFromUSB_ASROnlyPerRuleExclusions",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "BlockPersistenceThroughWMIEventSubscription",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "BlockUseOfCopiedOrImpersonatedSystemTools",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "BlockUseOfCopiedOrImpersonatedSystemTools_ASROnlyPerRuleExclusions",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "BlockAbuseOfExploitedVulnerableSignedDrivers",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "BlockAbuseOfExploitedVulnerableSignedDrivers_ASROnlyPerRuleExclusions",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "BlockProcessCreationsFromPSExecAndWMICommands",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "BlockProcessCreationsFromPSExecAndWMICommands_ASROnlyPerRuleExclusions",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "BlockOfficeApplicationsFromCreatingExecutableContent",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "BlockOfficeApplicationsFromCreatingExecutableContent_ASROnlyPerRuleExclusions",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "BlockOfficeApplicationsFromInjectingCodeIntoOtherProcesses",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "BlockOfficeApplicationsFromInjectingCodeIntoOtherProcesses_ASROnlyPerRuleExclusions",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "BlockRebootingMachineInSafeMode",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "BlockRebootingMachineInSafeMode_ASROnlyPerRuleExclusions",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "UseAdvancedProtectionAgainstRansomware",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "UseAdvancedProtectionAgainstRansomware_ASROnlyPerRuleExclusions",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "BlockExecutableContentFromEmailClientAndWebmail",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "BlockExecutableContentFromEmailClientAndWebmail_ASROnlyPerRuleExclusions",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "CloudBlockLevel",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "SInt32",
+                               "Name":  "CloudExtendedTimeout",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "DisableLocalAdminMerge",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "EnableFileHashComputation",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "EnableNetworkProtection",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "HideExclusionsFromLocalAdmins",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "PUAProtection",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "RealTimeScanDirection",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "SubmitSamplesConsent",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ConfigureSystemGuardLaunch",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "LsaCfgFlags",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "EnableVirtualizationBasedSecurity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "RequirePlatformSecurityFeatures",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "DevicePasswordEnabled",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "SInt32",
+                               "Name":  "DevicePasswordExpiration",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "SInt32",
+                               "Name":  "MinDevicePasswordLength",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AlphanumericDevicePasswordRequired",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "SInt32",
+                               "Name":  "MaxDevicePasswordFailedAttempts",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "MinDevicePasswordComplexCharacters",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "SInt32",
+                               "Name":  "MaxInactivityTimeDeviceLock",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "SInt32",
+                               "Name":  "DevicePasswordHistory",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AllowSimpleDevicePassword",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "DeviceEnumerationPolicy",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "EnableInsecureGuestLogons",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Accounts_LimitLocalAccountUseOfBlankPasswordsToConsoleLogonOnly",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "SInt32",
+                               "Name":  "InteractiveLogon_MachineInactivityLimit",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "InteractiveLogon_SmartCardRemovalBehavior",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "MicrosoftNetworkClient_DigitallySignCommunicationsAlways",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "MicrosoftNetworkClient_SendUnencryptedPasswordToThirdPartySMBServers",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "MicrosoftNetworkServer_DigitallySignCommunicationsAlways",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "NetworkAccess_DoNotAllowAnonymousEnumerationOfSAMAccounts",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "NetworkAccess_DoNotAllowAnonymousEnumerationOfSamAccountsAndShares",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "NetworkAccess_RestrictAnonymousAccessToNamedPipesAndShares",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "NetworkAccess_RestrictClientsAllowedToMakeRemoteCallsToSAM",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "NetworkSecurity_DoNotStoreLANManagerHashValueOnNextPasswordChange",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "NetworkSecurity_LANManagerAuthenticationLevel",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "NetworkSecurity_MinimumSessionSecurityForNTLMSSPBasedClients",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "NetworkSecurity_MinimumSessionSecurityForNTLMSSPBasedServers",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "UserAccountControl_BehaviorOfTheElevationPromptForAdministrators",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "UserAccountControl_BehaviorOfTheElevationPromptForStandardUsers",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "UserAccountControl_DetectApplicationInstallationsAndPromptForElevation",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "UserAccountControl_OnlyElevateUIAccessApplicationsThatAreInstalledInSecureLocations",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "UserAccountControl_RunAllAdministratorsInAdminApprovalMode",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "UserAccountControl_UseAdminApprovalMode",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "UserAccountControl_VirtualizeFileAndRegistryWriteFailuresToPerUserLocations",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ConfigureLsaProtectedProcess",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AllowGameDVR",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "MSIAllowUserControlOverInstall",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "MSIAlwaysInstallWithElevatedPrivileges",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "SmartScreenEnabled",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "MicrosoftEdge_SmartScreen_PreventSmartScreenPromptOverride",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "LetAppsActivateWithVoiceAboveLock",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AllowIndexingEncryptedStoresOrItems",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "EnableSmartScreenInShell",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "NotifyMalicious",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "NotifyPasswordReuse",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "NotifyUnsafeApp",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ServiceEnabled",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "PreventOverrideForFilesInShell",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ConfigureXboxAccessoryManagementServiceStartupMode",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ConfigureXboxLiveAuthManagerServiceStartupMode",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ConfigureXboxLiveGameSaveServiceStartupMode",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ConfigureXboxLiveNetworkingServiceStartupMode",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "EnableXboxGameSaveTask",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessFromNetwork",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AllowLocalLogOn",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "BackupFilesAndDirectories",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "CreateGlobalObjects",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "CreatePageFile",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "DebugPrograms",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "DenyAccessFromNetwork",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "DenyRemoteDesktopServicesLogOn",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "ImpersonateClient",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "LoadUnloadDeviceDrivers",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "ManageAuditingAndSecurityLog",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "ManageVolume",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "ModifyFirmwareEnvironment",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "ProfileSingleProcess",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "RemoteShutdown",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "RestoreFilesAndDirectories",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "TakeOwnership",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "HypervisorEnforcedCodeIntegrity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AllowAutoConnectToWiFiSenseHotspots",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AllowInternetSharing",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "FacialFeaturesUseEnhancedAntiSpoofing",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AllowWindowsInkWorkspace",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "BackupDirectory",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "SInt32",
+                               "Name":  "ADEncryptedPasswordHistorySize",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "SInt32",
+                               "Name":  "passwordagedays",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ADPasswordEncryptionEnabled",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "SInt32",
+                               "Name":  "passwordagedays_aad",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ADPasswordEncryptionPrincipal",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "PasswordExpirationProtectionEnabled",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_MicrosoftGraphIntuneSettingsCatalogUserSettings_IntuneSecurityBaselineWindows10",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "NoLockScreenToastNotification",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "RestrictFormSuggestPW",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ChkBox_PasswordAsk",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AllowWindowsSpotlight",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AllowWindowsTips",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AllowTailoredExperiencesWithDiagnosticData",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AllowWindowsSpotlightOnActionCenter",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AllowWindowsConsumerFeatures",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ConfigureWindowsSpotlightOnLockScreen",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AllowWindowsSpotlightWindowsWelcomeExperience",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AllowThirdPartySuggestionsInWindowsSpotlight",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_IntuneSecurityBaselineWindows10",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Description",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "DisplayName",
+                               "Option":  "Key"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "RoleScopeTagIds",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Id",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_MicrosoftGraphIntuneSettingsCatalogDeviceSettings_IntuneSecurityBaselineWindows10",
+                               "Name":  "DeviceSettings",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_MicrosoftGraphIntuneSettingsCatalogUserSettings_IntuneSecurityBaselineWindows10",
+                               "Name":  "UserSettings",
                                "Option":  "Write"
                            },
                            {

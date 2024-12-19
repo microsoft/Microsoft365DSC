@@ -1149,9 +1149,8 @@ function Export-TargetResource
                 $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Members' -IsCIMArray $true
                 $currentDSCBlock = $currentDSCBlock.Replace("`",`"`r`n", '')
                 $currentDSCBlock = $currentDSCBlock.Replace(",`r`n", '').Replace("`");`r`n", ");`r`n")
-                $currentDSCBlock = $currentDSCBlock.Replace("Members              = @(`"", 'Members              = @(')
-                $currentDSCBlock = $currentDSCBlock.Replace("`$OrganizationName'", "' + `$OrganizationName")
             }
+
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName

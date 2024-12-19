@@ -138,6 +138,21 @@
 | **AppId** | Write | String | The unique identifier for the client application. | |
 | **PermissionIds** | Write | StringArray[] | The unique identifier for the scopes the client application is granted. | |
 
+### MSFT_MicrosoftGraphApiOauth2PermissionScopes
+
+#### Parameters
+
+| Parameter | Attribute | DataType | Description | Allowed Values |
+| --- | --- | --- | --- | --- |
+| **adminConsentDescription** | Write | String | A description of the delegated permissions, intended to be read by an administrator granting the permission on behalf of all users. This text appears in tenant-wide admin consent experiences. | |
+| **adminConsentDisplayName** | Write | String | The permission's title, intended to be read by an administrator granting the permission on behalf of all users. | |
+| **userConsentDescription** | Write | String | A description of the delegated permissions, intended to be read by a user granting the permission on their own behalf. This text appears in consent experiences where the user is consenting only on behalf of themselves. | |
+| **userConsentDisplayName** | Write | String | A title for the permission, intended to be read by a user granting the permission on their own behalf. This text appears in consent experiences where the user is consenting only on behalf of themselves. | |
+| **value** | Write | String | Specifies the value to include in the scp (scope) claim in access tokens. Must not exceed 120 characters in length. | |
+| **isEnabled** | Write | Boolean | When you create or update a permission, this property must be set to true (which is the default). To delete a permission, this property must first be set to false. At that point, in a subsequent call, the permission may be removed. | |
+| **type** | Write | String | The possible values are: User and Admin. Specifies whether this delegated permission should be considered safe for non-admin users to consent to on behalf of themselves, or whether an administrator consent should always be required. | |
+| **id** | Write | String | Unique delegated permission identifier inside the collection of delegated permissions defined for a resource application. | |
+
 ### MSFT_MicrosoftGraphApiApplication
 
 #### Parameters
@@ -145,6 +160,7 @@
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
 | **PreAuthorizedApplications** | Write | MSFT_MicrosoftGraphPreAuthorizedApplication[] | Lists the client applications that are preauthorized with the specified delegated permissions to access this application's APIs. Users aren't required to consent to any preauthorized application (for the permissions specified). However, any other permissions not listed in preAuthorizedApplications (requested through incremental consent for example) will require user consent. | |
+| **Oauth2PermissionScopes** | Write | MSFT_MicrosoftGraphAPIOauth2PermissionScopes[] | List of associated API scopes. | |
 
 ### MSFT_MicrosoftGraphAuthenticationBehaviors
 

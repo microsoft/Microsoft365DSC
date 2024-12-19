@@ -31,6 +31,8 @@ For more information and more advanced topics, please make sure you review the f
 
 The first step in trying to deploy a DSC configuration is to compile the configuration file into a MOF file. Doing so simply involves executing the .ps1 file that contains your configuration. The process of compiling your configuration will also perform some level of validation on the configuration, such as ensuring that every component defined in the file has all of their mandatory parameters defined, and that there are no typos in components or property names. If the compilation process is successful, you should see a message indicating that the MOF file was created. By default, this file is created in the same path your configuration file is located, and will create a new subfolder based on the name of the configuration object defined within your file.
 
+**Attention: If your configuration contains empty arrays, then it must be compiled in Windows PowerShell (5.1). Otherwise, the affected properties might be omitted in the result file.**
+
 <figure markdown>
   ![Running a configuration compilation](../../Images/CompileConfiguration.png)
   <figcaption>Running a configuration compilation</figcaption>

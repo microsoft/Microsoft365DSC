@@ -387,7 +387,7 @@ function Set-TargetResource
         Write-Verbose -Message 'Waiting for 20 seconds for new permissions to be effective.'
         Start-Sleep 20
         Write-Verbose -Message 'Disconnecting from Exchange Online'
-        Reset-MSCloudLoginConnectionProfileContext
+        Reset-MSCloudLoginConnectionProfileContext -Workload ExchangeOnline
     }
 }
 

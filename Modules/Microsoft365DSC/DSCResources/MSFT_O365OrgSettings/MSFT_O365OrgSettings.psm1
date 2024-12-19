@@ -165,7 +165,7 @@ function Get-TargetResource
     if ((Get-MSCloudLoginConnectionProfile -Workload SecurityComplianceCenter).Connected -and `
             (Get-MSCloudLoginConnectionProfile -Workload ExchangeOnline).Connected)
     {
-        Reset-MSCloudLoginConnectionProfileContext
+        Reset-MSCloudLoginConnectionProfileContext -Workload ExchangeOnline
     }
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters

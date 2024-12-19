@@ -196,7 +196,7 @@ function Get-TargetResource
         $ContentSharingInExternalMeetings,
 
         [Parameter()]
-        [ValidateSet('Enabled', 'EnabledWithTranscript')]
+        [ValidateSet('Disabled', 'Enabled', 'EnabledWithTranscript', 'EnabledWithTranscriptDefaultOn')]
         [System.String]
         $Copilot,
 
@@ -690,7 +690,7 @@ function Set-TargetResource
         $ContentSharingInExternalMeetings,
 
         [Parameter()]
-        [ValidateSet('Enabled', 'EnabledWithTranscript')]
+        [ValidateSet('Disabled', 'Enabled', 'EnabledWithTranscript', 'EnabledWithTranscriptDefaultOn')]
         [System.String]
         $Copilot,
 
@@ -1138,7 +1138,7 @@ function Test-TargetResource
         $ContentSharingInExternalMeetings,
 
         [Parameter()]
-        [ValidateSet('Enabled', 'EnabledWithTranscript')]
+        [ValidateSet('Disabled', 'Enabled', 'EnabledWithTranscript', 'EnabledWithTranscriptDefaultOn')]
         [System.String]
         $Copilot,
 

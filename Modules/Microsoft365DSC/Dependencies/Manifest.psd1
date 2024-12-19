@@ -114,7 +114,7 @@
         },
         @{
             ModuleName      = 'Microsoft.PowerApps.Administration.PowerShell'
-            RequiredVersion = '2.0.200'
+            RequiredVersion = '2.0.202'
         },
         @{
             ModuleName      = 'MicrosoftTeams'
@@ -122,7 +122,7 @@
         },
         @{
             ModuleName      = "MSCloudLoginAssistant"
-            RequiredVersion = "1.1.29"
+            RequiredVersion = "1.1.31"
         },
         @{
             ModuleName      = 'PnP.PowerShell'

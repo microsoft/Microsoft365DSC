@@ -6,7 +6,7 @@ $Global:SessionSecurityCompliance = $null
 #region Extraction Modes
 $Global:DefaultComponents = @('SPOApp', 'SPOSiteDesign')
 
-$Global:FullComponents = @('AADGroup', 'AADServicePrincipal', 'ADOSecurityPolicy', 'AzureSubscription','FabricAdminTenantSettings', `
+$Global:FullComponents = @('AADRoleManagementPolicyRule', 'AADGroup', 'AADServicePrincipal', 'ADOSecurityPolicy', 'AzureSubscription','FabricAdminTenantSettings', `
         'DefenderSubscriptionPlan', 'EXOCalendarProcessing', 'EXODistributionGroup', 'EXOMailboxAutoReplyConfiguration', `
         'EXOMailboxPermission','EXOMailboxCalendarFolder','EXOMailboxSettings', 'EXOManagementRole', 'O365Group', 'AADUser', `
         'PlannerPlan', 'PlannerBucket', 'PlannerTask', 'PPPowerAppsEnvironment', 'PPTenantSettings', 'SentinelSetting', 'SentinelWatchlist', `
@@ -1437,7 +1437,7 @@ function Export-M365DSCConfiguration
     try
     {
         Disconnect-MgGraph -ErrorAction Stop | Out-Null
-        Reset-MSCloudLoginConnectionProfileContext
+        Reset-MSCloudLoginConnectionProfileContext -Workload 'MicrosoftGraph'
     }
     catch
     {

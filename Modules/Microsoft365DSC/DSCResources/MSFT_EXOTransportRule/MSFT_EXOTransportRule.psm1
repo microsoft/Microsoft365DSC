@@ -971,8 +971,8 @@ function Get-TargetResource
             foreach ($key in $inputParams.Keys)
             {
                 $propertyInfo = $inputParams.$key
-                $curVar = Get-Variable -Name $key -ErrorAction SilentlyContinue
-                if ($propertyInfo.ParameterType.Name -eq 'String[]' -and $curVar -ne $null -and $curVar.Value -eq $null)
+                $curVar = $TransportRule.$key
+                if ($propertyInfo.ParameterType.Name -eq 'String[]' -and $curVar -eq $null)
                 {
                     $result.$key = @()
                 }

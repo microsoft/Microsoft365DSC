@@ -173,9 +173,6 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $policy = Get-AdminDlpPolicy | Where-Object -FilterScript { $_.DisplayName -eq $PolicyName }
-    $policyNameValue = $policy.PolicyName
-
     # CREATE
     if ($Ensure -eq 'Present')
     {
@@ -192,10 +189,10 @@ function Set-TargetResource
             }
         }
         $payload = $(ConvertTo-Json $body -Depth 9 -Compress)
-        Write-Verbose -Message "Setting new Url Patterns for Policy {$($PolicyNameValue)} with parameters:`r`n$payload"
+        Write-Verbose -Message "Setting new Url Patterns for Policy {$($PolicyName)} with parameters:`r`n$payload"
 
         New-PowerAppPolicyUrlPatterns -TenantId $PPTenantId `
-            -PolicyName $policyNameValue `
+            -PolicyName $PolicyName `
             -NewUrlPatterns $body `
             -Verbose
     }
@@ -203,7 +200,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Removing Url Patterns for Policy {$($PolicyNameValue)}"
-        Remove-PowerAppPolicyUrlPatterns -TenantId $PPTenantId -PolicyName $policyNameValue
+        Remove-PowerAppPolicyUrlPatterns -TenantId $PPTenantId -PolicyName $PolicyName
     }
 }
 

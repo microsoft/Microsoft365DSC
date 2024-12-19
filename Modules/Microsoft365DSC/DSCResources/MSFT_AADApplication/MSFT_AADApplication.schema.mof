@@ -83,9 +83,25 @@ class MSFT_MicrosoftGraphPreAuthorizedApplication
 };
 
 [ClassVersion("1.0.0")]
+class MSFT_MicrosoftGraphApiOauth2PermissionScopes
+{
+    [Write, Description("A description of the delegated permissions, intended to be read by an administrator granting the permission on behalf of all users. This text appears in tenant-wide admin consent experiences.")] String adminConsentDescription;
+    [Write, Description("The permission's title, intended to be read by an administrator granting the permission on behalf of all users.")] String adminConsentDisplayName;
+    [Write, Description("A description of the delegated permissions, intended to be read by a user granting the permission on their own behalf. This text appears in consent experiences where the user is consenting only on behalf of themselves.")] String userConsentDescription;
+    [Write, Description("A title for the permission, intended to be read by a user granting the permission on their own behalf. This text appears in consent experiences where the user is consenting only on behalf of themselves.")] String userConsentDisplayName;
+    [Write, Description("Specifies the value to include in the scp (scope) claim in access tokens. Must not exceed 120 characters in length.")] String value;
+    [Write, Description("When you create or update a permission, this property must be set to true (which is the default). To delete a permission, this property must first be set to false. At that point, in a subsequent call, the permission may be removed.")] Boolean isEnabled;
+    [Write, Description("The possible values are: User and Admin. Specifies whether this delegated permission should be considered safe for non-admin users to consent to on behalf of themselves, or whether an administrator consent should always be required.")] String type;
+    [Write, Description("Unique delegated permission identifier inside the collection of delegated permissions defined for a resource application.")] String id;
+
+};
+
+[ClassVersion("1.0.0")]
 class MSFT_MicrosoftGraphApiApplication
 {
     [Write, Description("Lists the client applications that are preauthorized with the specified delegated permissions to access this application's APIs. Users aren't required to consent to any preauthorized application (for the permissions specified). However, any other permissions not listed in preAuthorizedApplications (requested through incremental consent for example) will require user consent."), EmbeddedInstance("MSFT_MicrosoftGraphPreAuthorizedApplication")] String PreAuthorizedApplications[];
+    [Write, Description("List of associated API scopes."), EmbeddedInstance("MSFT_MicrosoftGraphAPIOauth2PermissionScopes")] String Oauth2PermissionScopes[];
+
 };
 
 [ClassVersion("1.0.0")]

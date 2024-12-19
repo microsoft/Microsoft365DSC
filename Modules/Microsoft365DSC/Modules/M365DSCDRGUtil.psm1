@@ -2049,6 +2049,10 @@ function Get-IntuneSettingCatalogPolicySettingInstanceValue
                     {
                         $childSettingValue.Add('settingInstanceTemplateReference', @{'settingInstanceTemplateId' = $childSettingInstanceTemplate.settingInstanceTemplateId })
                     }
+                    if ($childSettingType -eq '#microsoft.graph.deviceManagementConfigurationSettingGroupCollectionInstance')
+                    {
+                        $childSettingType = '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
+                    }
                     $childSettingValue.Add('@odata.type', $childSettingType)
                     $choiceSettingValueChildren += $childSettingValue
                 }
