@@ -756,8 +756,15 @@ function Export-TargetResource
                 if ($null -eq $groupInfo)
                 {
                     $principalType = 'ServicePrincipal'
-                    $spnInfo = Get-MgServicePrincipal -ServicePrincipalId $request.PrincipalId
-                    $PrincipalValue = $spnInfo.DisplayName
+                    $spnInfo = Get-MgServicePrincipal -ServicePrincipalId $request.PrincipalId -ErrorAction SilentlyContinue
+                    if ($null -ne $spnInfo)
+                    {
+                        $PrincipalValue = $spnInfo.DisplayName
+                    }
+                    else
+                    {
+                        $PrincipalValue = $null
+                    }
                 }
                 else
                 {
@@ -769,61 +776,64 @@ function Export-TargetResource
                 $PrincipalValue = $userInfo.UserPrincipalName
             }
 
-            $RoleDefinitionId = Get-MgBetaRoleManagementDirectoryRoleDefinition -UnifiedRoleDefinitionId $request.RoleDefinitionId
-            $params = @{
-                Id                    = $request.Id
-                Principal             = $PrincipalValue
-                PrincipalType         = $principalType
-                DirectoryScopeId      = $request.DirectoryScopeId
-                RoleDefinition        = $RoleDefinitionId.DisplayName
-                Ensure                = 'Present'
-                Credential            = $Credential
-                ApplicationId         = $ApplicationId
-                TenantId              = $TenantId
-                ApplicationSecret     = $ApplicationSecret
-                CertificateThumbprint = $CertificateThumbprint
-                ManagedIdentity       = $ManagedIdentity.IsPresent
-                AccessTokens          = $AccessTokens
-            }
-
-            $Results = Get-TargetResource @Params
-
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
-            try
+            if ($null -ne $PrincipalValue)
             {
-                if ($null -ne $results.ScheduleInfo)
-                {
-                    $Results.ScheduleInfo = Get-M365DSCAzureADEligibilityRequestScheduleInfoAsString -ScheduleInfo $Results.ScheduleInfo
+                $RoleDefinitionId = Get-MgBetaRoleManagementDirectoryRoleDefinition -UnifiedRoleDefinitionId $request.RoleDefinitionId
+                $params = @{
+                    Id                    = $request.Id
+                    Principal             = $PrincipalValue
+                    PrincipalType         = $principalType
+                    DirectoryScopeId      = $request.DirectoryScopeId
+                    RoleDefinition        = $RoleDefinitionId.DisplayName
+                    Ensure                = 'Present'
+                    Credential            = $Credential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    ApplicationSecret     = $ApplicationSecret
+                    CertificateThumbprint = $CertificateThumbprint
+                    ManagedIdentity       = $ManagedIdentity.IsPresent
+                    AccessTokens          = $AccessTokens
                 }
-            }
-            catch
-            {
-                Write-Verbose -Message "Error converting Schedule: $_"
-            }
-            if ($Results.TicketInfo)
-            {
-                $Results.TicketInfo = Get-M365DSCAzureADEligibilityRequestTicketInfoAsString -TicketInfo $Results.TicketInfo
-            }
-            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                -ConnectionMode $ConnectionMode `
-                -ModulePath $PSScriptRoot `
-                -Results $Results `
-                -Credential $Credential
-            if ($null -ne $Results.ScheduleInfo)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                    -ParameterName 'ScheduleInfo'
-            }
-            if ($null -ne $Results.TicketInfo)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                    -ParameterName 'TicketInfo'
-            }
 
-            $dscContent += $currentDSCBlock
-            Save-M365DSCPartialExport -Content $currentDSCBlock `
-                -FileName $Global:PartialExportFileName
+                $Results = Get-TargetResource @Params
+
+                $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                    -Results $Results
+                try
+                {
+                    if ($null -ne $results.ScheduleInfo)
+                    {
+                        $Results.ScheduleInfo = Get-M365DSCAzureADEligibilityRequestScheduleInfoAsString -ScheduleInfo $Results.ScheduleInfo
+                    }
+                }
+                catch
+                {
+                    Write-Verbose -Message "Error converting Schedule: $_"
+                }
+                if ($Results.TicketInfo)
+                {
+                    $Results.TicketInfo = Get-M365DSCAzureADEligibilityRequestTicketInfoAsString -TicketInfo $Results.TicketInfo
+                }
+                $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                    -ConnectionMode $ConnectionMode `
+                    -ModulePath $PSScriptRoot `
+                    -Results $Results `
+                    -Credential $Credential
+                if ($null -ne $Results.ScheduleInfo)
+                {
+                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
+                        -ParameterName 'ScheduleInfo'
+                }
+                if ($null -ne $Results.TicketInfo)
+                {
+                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
+                        -ParameterName 'TicketInfo'
+                }
+
+                $dscContent += $currentDSCBlock
+                Save-M365DSCPartialExport -Content $currentDSCBlock `
+                    -FileName $Global:PartialExportFileName
+            }
             $i++
             Write-Host $Global:M365DSCEmojiGreenCheckMark
         }

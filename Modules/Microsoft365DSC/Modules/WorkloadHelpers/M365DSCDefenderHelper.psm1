@@ -24,7 +24,8 @@ function Invoke-M365DSCDefenderREST
     $response = Invoke-WebRequest -Method $Method `
                                   -Uri $Uri `
                                   -Headers $headers `
-                                  -Body $bodyJSON
+                                  -Body $bodyJSON `
+                                  -UseBasicParsing
     $result = ConvertFrom-Json $response.Content
     return $result
 }

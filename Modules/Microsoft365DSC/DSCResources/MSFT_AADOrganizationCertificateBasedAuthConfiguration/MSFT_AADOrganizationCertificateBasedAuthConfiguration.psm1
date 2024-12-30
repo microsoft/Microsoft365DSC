@@ -9,7 +9,7 @@ function Get-TargetResource
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $CertificateAuthorities,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $OrganizationId,
         #endregion
@@ -141,7 +141,7 @@ function Set-TargetResource
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $CertificateAuthorities,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $OrganizationId,
         #endregion
@@ -225,7 +225,13 @@ function Set-TargetResource
             certificateAuthorities = $createCertAuthorities
         }
 
-        $policy = Invoke-MgGraphRequest -Uri ((Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/organization/$OrganizationId/certificateBasedAuthConfiguration/") -Method POST -Body $params
+        $uri = ((Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + `
+                    "beta/organization/$OrganizationId/certificateBasedAuthConfiguration/")
+
+        Write-Verbose -Message "Creating with Parameters:`r`n$(ConvertTo-Json $params -Depth 10)"
+        Invoke-MgGraphRequest -Uri $uri `
+                              -Method 'POST' `
+                              -Body $params
     }
 }
 
@@ -240,7 +246,7 @@ function Test-TargetResource
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $CertificateAuthorities,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $OrganizationId,
         #endregion
@@ -417,6 +423,10 @@ function Export-TargetResource
         }
         foreach ($config in $getValue)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
             $displayedKey = "CertificateBasedAuthConfigurations for $($getValue.DisplayName)"
             Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{

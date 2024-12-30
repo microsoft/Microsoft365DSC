@@ -922,11 +922,11 @@ function Invoke-M365DSCVerifiedIdWebRequest
     if ($Method -eq 'PATCH' -or $Method -eq 'POST')
     {
         $BodyJson = $body | ConvertTo-Json -Depth 10
-        $response = Invoke-WebRequest -Method $Method -Uri $Uri -Headers $headers -Body $BodyJson
+        $response = Invoke-WebRequest -Method $Method -Uri $Uri -Headers $headers -Body $BodyJson -UseBasicParsing
     }
     else
     {
-        $response = Invoke-WebRequest -Method $Method -Uri $Uri -Headers $headers
+        $response = Invoke-WebRequest -Method $Method -Uri $Uri -Headers $headers -UseBasicParsing
     }
 
     if ($Method -eq 'DELETE')

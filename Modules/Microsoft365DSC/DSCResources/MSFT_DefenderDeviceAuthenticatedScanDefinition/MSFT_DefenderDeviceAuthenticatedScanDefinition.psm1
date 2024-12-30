@@ -146,8 +146,8 @@ function Get-TargetResource
         else
         {
             $ScanAuthenticationParamsValue = @{
-                '@odata.context' = '#microsoft.windowsDefenderATP.api.SnmpAuthParams'
-                Type             = 'NoAuthNoPriv'
+                DataType = '#microsoft.windowsDefenderATP.api.SnmpAuthParams'
+                Type     = 'NoAuthNoPriv'
             }
         }
 

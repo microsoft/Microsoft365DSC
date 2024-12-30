@@ -64,3 +64,28 @@ Optionally, for improved performance, you can increase the handles and threads p
 $quotaConfiguration.HandlesPerHost = 8192
 $quotaConfiguration.ThreadsPerHost = 512
 ```
+
+
+## Error "InvalidOperation: Cannot index into a null array" when creating a report from configuration
+
+### ISSUE
+
+When creating a report from either running `New-M365DSCDeltaReport` or `New-M365DSCReportFromConfiguration`, you might receive the following error and the generated report is empty:
+
+```powershell
+Cannot index into a null array.
+At C:\Program Files\WindowsPowerShell\Modules\DSCParser\2.0.0.5\Modules\DSCParser.psm1:**456** char:9
++         $resourceType         = $resource.CommandElements[0].Value
++         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : NullArray
+```
+
+### CAUSE
+
+This issue might occur if there are multiple versions of Microsoft365DSC present on the current machine and the configuration contains nested objects.
+The nested objects are resolved from their CIM definitions, and if multiple versions of Microsoft365DSC are present, multiple versions of these CIM definitions exist. 
+
+### RESOLUTION
+
+Update and install to the latest supported version of Microsoft365DSC using `Update-M365DSCModule`. This will uninstall all outdated versions and dependencies and update to the latest version available on the PowerShell Gallery. 

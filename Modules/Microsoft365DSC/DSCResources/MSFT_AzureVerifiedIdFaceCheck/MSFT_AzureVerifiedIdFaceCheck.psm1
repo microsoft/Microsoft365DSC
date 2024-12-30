@@ -345,7 +345,7 @@ function Export-TargetResource
             Authorization = (Get-MSCloudLoginConnectionProfile -Workload AdminAPI).AccessToken
         }
         $uri = 'https://verifiedid.did.msidentity.com/v1.0/verifiableCredentials/authorities'
-        $response = Invoke-WebRequest -Uri $uri -Method Get -Headers $headers
+        $response = Invoke-WebRequest -Uri $uri -Method Get -Headers $headers -UseBasicParsing
         $authorities = ConvertFrom-Json $response.Content
 
         $resourceGroups = Get-AzResourceGroup -ErrorAction Stop
