@@ -310,7 +310,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$getValue = Get-MgUser -ErrorAction Stop | Where-Object -FilterScript { $null -ne $_.Id }
+        [array]$getValue = Get-MgUser -ErrorAction Stop -All | Where-Object -FilterScript { $null -ne $_.Id }
 
         $i = 1
         $dscContent = ''

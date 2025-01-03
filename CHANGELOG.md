@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* AADAuthenticationRequirement
+  * Changed Export logic to extract instances from all users.
 * AADOrganizationCertificateBasedAuthConfiguration
   * Fixed the primary key of the resource.
     FIXES [#5523](https://github.com/microsoft/Microsoft365DSC/issues/5523)
