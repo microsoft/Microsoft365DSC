@@ -11,8 +11,8 @@ Currently, each Microsoft 365 workload can support a different combination of au
 
 **Important**: The recommendation is to use Service Principal whenever possible because:
 
-- Service principals offers the most granular levels of security and do not introduce the risk of having to send high privileged credentials across the wire to authenticate.
-- Since Desired State Configuration is an unattended process, the use of Multi Factor Authentication for user credentials  is not supported by Microsoft365DSC.
+- Service principals offer the most granular levels of security and do not introduce the risk of having to send high privileged credentials across the wire to authenticate.
+- Since Desired State Configuration is an unattended process, the use of Multi-Factor Authentication for user credentials is not supported by Microsoft365DSC.
   - ***Note:*** The only exception here is creating an Export of an existing tenant. Most often this is an interactive process where the ask for a second factor is possible.
 
 ## Authentication Methods
@@ -66,7 +66,7 @@ Most components of the Microsoft365DSC solution are using the Microsoft Graph Po
 
     This option is using an AzureAD app in the background to call the Graph API (named "Microsoft Graph PowerShell"). However the effective permissions will be the intersection of the delegated permissions **and** the user privileges. By default, the Graph app has no permissions meaning it can't access anything and therefore won't work. You have to grant these permissions to the app before using them. Consent for these permissions can be given <a href="https://docs.microsoft.com/en-us/graph/auth-v2-user" target="_blank">by the user himself</a> or by an admin for all users in the tenant.
 
-    For example: If your account only has permissions on three SharePoint sites, only these sites can be retrieved. Even when the AzureAD app has Sites.FullControll.All permissions granted.
+    For example: If your account only has permissions on three SharePoint sites, only these sites can be retrieved. Even when the AzureAD app has Sites.FullControl.All permissions granted.
 
     <figure markdown>
       ![Using the Graph API with Delegated Permissions and the default App Registration](/Images/PermissionsGraphDelegatedApp.png)
@@ -163,6 +163,8 @@ Use the "<a href="https://pnp.github.io/powershell/cmdlets/Register-PnPManagemen
 
 <a href="https://docs.microsoft.com/en-us/azure/active-directory/develop/quickstart-register-app" target="_blank">Create a new app registration</a> in Azure AD yourself and grant the correct permissions to this app. The documentation on this website for each of the SharePoint Online resources list the permissions needed for the resource.
 
+> Note: Make sure your app has the "Allow Public Client Flows" setting set to "Yes". This is required for SharePoint. More information can be found <a href="https://pnp.github.io/powershell/articles/authentication.html#silent-authentication-with-credentials-for-running-in-pipelines" target="_blank">here</a>
+
 As an alternative, you can use the "<a href="https://pnp.github.io/powershell/cmdlets/Register-PnPAzureADApp.html" target="_blank">Register-PnPAzureADApp</a>" cmdlet to have PnP PowerShell create the app registration for you and grant the correct permissions.
 
 ### Using Application Secret
@@ -205,7 +207,9 @@ Get-M365DSCCompiledPermissionList -ResourceNameList @('EXOAcceptedDomain')
 
 Then make sure your service account is a member of the specified Role Group or has been granted the required roles.
 
-**NOTE:** There are resources, like the <a href="../../../resources/exchange/EXOAddressList/" target="_blank">EXOAddressList</a> which roles by default are not granted to any of the default role groups. Make sure you grant these permissions correctly before using them.
+> **NOTE:** There are resources, like the <a href="../../../resources/exchange/EXOAddressList/" target="_blank">EXOAddressList</a> which roles by default are not granted to any of the default role groups. Make sure you grant these permissions correctly before using them.
+
+When using service principals to authenticate against Exchange, make sure your service principal is created using <a href="https://learn.microsoft.com/en-us/powershell/exchange/app-only-auth-powershell-v2?view=exchange-ps#select-and-assign-the-api-permissions-from-the-portal" target="_blank">these instructions</a>.
 
 ## Security and Compliance Center Permissions
 
@@ -241,7 +245,7 @@ Add-RoleGroupMember -Identity eDiscoveryManager -Member $SPN.ObjectId
 <li>
 <p><strong>Add the Service Principal as a case admin:</strong>
 
-<p>The Service Principal requires one last permission in order to be able to retrieve values from the Security and COmpliance center cmdlets. Run the following PowerShell command to add it as a case admin:</p>
+<p>The Service Principal requires one last permission in order to be able to retrieve values from the Security and Compliance center cmdlets. Run the following PowerShell command to add it as a case admin:</p>
 
 <a href="/Images/Add-eDiscoveryCaseAdmin.png"><img src="/Images/Add-eDiscoveryCaseAdmin.png" alt="Grant the eDiscovery Case Admin role to your service principal" /></a>
 
@@ -352,6 +356,10 @@ would be the best solution. The following parameters are required when using cer
 From the Export-M365DSCConfiguration GUI the following fields should be used:
 
 ![Export using Certificate Path](/Images/CertPath.png){ align=center width=500 }
+
+## Teams Permissions
+
+When using Service Principals to authenticate against Teams, you have to make sure the correct permissions are configured. Besides the permissions specified in the resource documentation, the service principal also needs to get added to the Teams Administrator role in Entra ID. For more information on App-Only authentication with Teams, check <a href="https://learn.microsoft.com/en-us/microsoftteams/teams-powershell-application-authentication" target="_blank">here</a>.
 
 ## Using Authentication in DSC configurations
 
