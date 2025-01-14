@@ -1,6 +1,6 @@
 {
     "resourceName": "EXOSmtpDaneInbound",
-    "description": "This resource configures an .",
+    "description": "This resource configures an Accepted Domain to use DANE for inbound mail.",
 	"roles": {
         "read": [
             "Security Reader"
