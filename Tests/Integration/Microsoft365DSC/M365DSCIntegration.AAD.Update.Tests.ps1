@@ -1116,6 +1116,20 @@
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                 }
+                AADGroupEligibilitySchedule 'Example'
+                {
+                    AccessId              = "member";
+                    Ensure                = "Present";
+                    GroupDisplayName      = "MyPIMGroup";
+                    MemberType            = "direct";
+                    PrincipalDisplayname  = "MyPrincipalGroup";
+                    PrincipalType         = "group";
+                    ScheduleInfo          = MSFT_MicrosoftGraphrequestSchedule{
+                        Expiration = MSFT_MicrosoftGraphExpirationPattern{
+                            Type = 'noExpiration'
+                        }
+                    };
+                }
                 AADGroupLifecyclePolicy 'GroupLifecyclePolicy'
                 {
                     IsSingleInstance            = "Yes"

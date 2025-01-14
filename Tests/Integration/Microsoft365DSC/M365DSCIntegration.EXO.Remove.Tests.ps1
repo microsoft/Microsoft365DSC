@@ -691,6 +691,14 @@
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                 }
+                EXOSmtpDaneInbound 'SmtpDaneInbound-mydomain.com'
+                {
+                    DomainName           = "mydomain.com"
+                    Ensure               = "Absent"
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
+                }
                 EXOSweepRule 'MyRule'
                 {
                     ApplicationId         = $ApplicationId;

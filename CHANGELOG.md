@@ -6,6 +6,8 @@
 
 * AADAuthenticationRequirement
   * Changed Export logic to extract instances from all users.
+* AADGroupEligibilitySchedule
+  * New resource for Privileged Identity Management (PIM) for Groups
 * AADOrganizationCertificateBasedAuthConfiguration
   * Fixed the primary key of the resource.
     FIXES [#5523](https://github.com/microsoft/Microsoft365DSC/issues/5523)

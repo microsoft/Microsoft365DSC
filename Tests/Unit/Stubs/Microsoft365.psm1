@@ -105699,15 +105699,16 @@ function Update-MgDeviceManagementDeviceConfigurationAssignment
 }
 
 #endregion
-#region MgBetaDeviceManagementComplianceManagementPartner
-function Get-MgBetaDeviceManagementComplianceManagementPartner
+
+#region MgIdentityGovernancePrivilegedAccessGroupEligibilitySchedule
+function Get-MgIdentityGovernancePrivilegedAccessGroupEligibilitySchedule
 {
     [CmdletBinding()]
     param
     (
         [Parameter()]
         [System.String]
-        $ComplianceManagementPartnerId,
+        $PrivilegedAccessGroupEligibilityScheduleId,
 
         [Parameter()]
         [PSObject]
@@ -105787,7 +105788,7 @@ function Get-MgBetaDeviceManagementComplianceManagementPartner
     )
 }
 
-function New-MgBetaDeviceManagementComplianceManagementPartner
+function New-MgBetaIdentityGovernancePrivilegedAccessGroupEligibilityScheduleRequest
 {
     [CmdletBinding()]
     param
@@ -105801,48 +105802,84 @@ function New-MgBetaDeviceManagementComplianceManagementPartner
         $ResponseHeadersVariable,
 
         [Parameter()]
+        [System.String]
+        $AccessId,
+
+        [Parameter()]
+        [System.String]
+        $Action,
+
+        [Parameter()]
         [System.Collections.Hashtable]
         $AdditionalProperties,
 
         [Parameter()]
-        [PSObject[]]
-        $AndroidEnrollmentAssignments,
+        [System.String]
+        $ApprovalId,
 
         [Parameter()]
-        [switch]
-        $AndroidOnboarded,
+        [System.DateTime]
+        $CompletedDateTime,
+
+        [Parameter()]
+        [PSObject]
+        $CreatedBy,
+
+        [Parameter()]
+        [System.DateTime]
+        $CreatedDateTime,
 
         [Parameter()]
         [System.String]
-        $DisplayName,
+        $CustomData,
+
+        [Parameter()]
+        [PSObject]
+        $Group,
+
+        [Parameter()]
+        [System.String]
+        $GroupId,
 
         [Parameter()]
         [System.String]
         $Id,
 
         [Parameter()]
-        [PSObject[]]
-        $IosEnrollmentAssignments,
+        [System.Management.Automation.SwitchParameter]
+        $IsValidationOnly,
 
         [Parameter()]
-        [switch]
-        $IosOnboarded,
+        [System.String]
+        $Justification,
 
         [Parameter()]
-        [System.Datetime]
-        $LastHeartbeatDateTime,
+        [PSObject]
+        $Principal,
 
         [Parameter()]
-        [PSObject[]]
-        $MacOsEnrollmentAssignments,
+        [System.String]
+        $PrincipalId,
 
         [Parameter()]
-        [switch]
-        $MacOsOnboarded,
+        [PSObject]
+        $ScheduleInfo,
 
         [Parameter()]
-        [System.string]
-        $PartnerState,
+        [System.String]
+        $Status,
+
+        [Parameter()]
+        [PSObject]
+        $TargetSchedule,
+
+        [Parameter()]
+        [System.String]
+        $TargetScheduleId,
+
+        [Parameter()]
+        [PSObject]
+        $TicketInfo,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -105878,22 +105915,50 @@ function New-MgBetaDeviceManagementComplianceManagementPartner
     )
 }
 
-function Remove-MgBetaDeviceManagementComplianceManagementPartner
+function Get-MgPolicyRoleManagementPolicyAssignment
 {
     [CmdletBinding()]
     param
     (
         [Parameter()]
         [System.String]
-        $ComplianceManagementPartnerId,
+        $PolicyAssignmentId,
 
         [Parameter()]
         [System.String]
-        $IfMatch,
+        $PolicyId,
 
         [Parameter()]
         [PSObject]
         $InputObject,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
 
         [Parameter()]
         [System.String]
@@ -105916,10 +105981,6 @@ function Remove-MgBetaDeviceManagementComplianceManagementPartner
         $HttpPipelinePrepend,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $PassThru,
-
-        [Parameter()]
         [System.Uri]
         $Proxy,
 
@@ -105932,16 +105993,28 @@ function Remove-MgBetaDeviceManagementComplianceManagementPartner
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $Confirm
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable
     )
 }
 
-function Update-MgBetaDeviceManagementComplianceManagementPartner
+function Update-MgPolicyRoleManagementPolicyRule
 {
     [CmdletBinding()]
     param
     (
+        [Parameter()]
+        [System.String]
+        $PolicyRuleId,
+
         [Parameter()]
         [PSObject]
         $InputObject,
@@ -105959,44 +106032,44 @@ function Update-MgBetaDeviceManagementComplianceManagementPartner
         $AdditionalProperties,
 
         [Parameter()]
-        [PSObject[]]
-        $AndroidEnrollmentAssignments,
-
-        [Parameter()]
-        [switch]
-        $AndroidOnboarded,
-
-        [Parameter()]
-        [System.String]
-        $DisplayName,
-
-        [Parameter()]
         [System.String]
         $Id,
 
         [Parameter()]
-        [PSObject[]]
-        $IosEnrollmentAssignments,
+        [System.String]
+        $Name,
 
         [Parameter()]
-        [switch]
-        $IosOnboarded,
+        [System.String]
+        $PolicyId,
 
         [Parameter()]
-        [System.Datetime]
-        $LastHeartbeatDateTime,
+        [System.String]
+        $PolicyRuleType,
 
         [Parameter()]
-        [PSObject[]]
-        $MacOsEnrollmentAssignments,
+        [System.String]
+        $PolicyType,
 
         [Parameter()]
-        [switch]
-        $MacOsOnboarded,
+        [System.String]
+        $Priority,
 
         [Parameter()]
-        [System.string]
-        $PartnerState,
+        [System.String]
+        $RuleType,
+
+        [Parameter()]
+        [System.String]
+        $Status,
+
+        [Parameter()]
+        [System.String]
+        $TargetType,
+
+        [Parameter()]
+        [System.String]
+        $TargetValue,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -106032,3 +106105,4 @@ function Update-MgBetaDeviceManagementComplianceManagementPartner
     )
 }
 #endregion
+
