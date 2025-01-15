@@ -51,6 +51,8 @@
 
 * AADAuthenticationRequirement
   * Changed Export logic to extract instances from all users.
+* AADConditionalAccessPolicy
+  * Add disableResilienceDefaults
 * AADOrganizationCertificateBasedAuthConfiguration
   * Fixed the primary key of the resource.
     FIXES [#5523](https://github.com/microsoft/Microsoft365DSC/issues/5523)
@@ -73,11 +75,11 @@
   * Fixes comparison issue for permissions.
 * EXOTransportRule
   * Fixes issue extracting arrays in Get-TargetResource.
-    * FIXES [#5575](https://github.com/microsoft/Microsoft365DSC/issues/5575)
+    FIXES [#5575](https://github.com/microsoft/Microsoft365DSC/issues/5575)
 * TeamsMeetingPolicy
   * Adds support for additional Copilot setting value.
-    * FIXES [#5573](https://github.com/microsoft/Microsoft365DSC/issues/5573)
-  * FIXES [#5550](https://github.com/microsoft/Microsoft365DSC/issues/5550)
+    FIXES [#5573](https://github.com/microsoft/Microsoft365DSC/issues/5573)
+    FIXES [#5550](https://github.com/microsoft/Microsoft365DSC/issues/5550)
 * MISC
   * Fixed the Fabric web request to use basic parsing.
   * Reset only necessary authentication context.

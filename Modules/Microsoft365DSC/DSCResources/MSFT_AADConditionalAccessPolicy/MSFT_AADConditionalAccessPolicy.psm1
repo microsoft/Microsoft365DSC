@@ -200,6 +200,10 @@ function Get-TargetResource
         $PersistentBrowserIsEnabled,
 
         [Parameter()]
+        [System.Boolean]
+        $DisableResilienceDefaultsIsEnabled,
+
+        [Parameter()]
         [System.String]
         $TermsOfUse,
 
@@ -706,6 +710,8 @@ function Get-TargetResource
         SignInFrequencyInterval                  = $SignInFrequencyIntervalValue
         #no translation needed
         PersistentBrowserIsEnabled               = $false -or $Policy.SessionControls.PersistentBrowser.IsEnabled
+        #no translation needed
+        DisableResilienceDefaultsIsEnabled       = $false -or $Policy.SessionControls.disableResilienceDefaults.IsEnabled
         #make false if undefined, true if true
         PersistentBrowserMode                    = [System.String]$Policy.SessionControls.PersistentBrowser.Mode
         #no translation needed
@@ -928,6 +934,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $PersistentBrowserIsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $DisableResilienceDefaultsIsEnabled,
 
         [Parameter()]
         [System.String]
@@ -1735,7 +1745,7 @@ function Set-TargetResource
             $NewParameters.Add('grantControls', $GrantControls)
         }
 
-        if ($ApplicationEnforcedRestrictionsIsEnabled -or $CloudAppSecurityIsEnabled -or $SignInFrequencyIsEnabled -or $PersistentBrowserIsEnabled)
+        if ($ApplicationEnforcedRestrictionsIsEnabled -or $CloudAppSecurityIsEnabled -or $SignInFrequencyIsEnabled -or $PersistentBrowserIsEnabled -or $DisableResilienceDefaultsIsEnabled)
         {
             Write-Verbose -Message 'Set-Targetresource: process session controls'
             $sessioncontrols = $null
@@ -1801,6 +1811,10 @@ function Set-TargetResource
                 #create and provision PersistentBrowser object if used
                 $sessioncontrols.persistentBrowser.isEnabled = $true
                 $sessioncontrols.persistentBrowser.mode = $PersistentBrowserMode
+            }
+            if ($DisableResilienceDefaultsIsEnabled)
+            {
+                $sessioncontrols.Add('disableResilienceDefaults', $true)
             }
             $NewParameters.Add('sessionControls', $sessioncontrols)
             #add SessionControls to the parameter list
@@ -2086,6 +2100,10 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $PersistentBrowserIsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $DisableResilienceDefaultsIsEnabled,
 
         [Parameter()]
         [System.String]

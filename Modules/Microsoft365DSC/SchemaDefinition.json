@@ -3523,6 +3523,11 @@
                                "Option":  "Write"
                            },
                            {
+                               "CIMType":  "Boolean",
+                               "Name":  "DisableResilienceDefaultsIsEnabled",
+                               "Option":  "Write"
+                           },
+                           {
                                "CIMType":  "String",
                                "Name":  "AuthenticationStrength",
                                "Option":  "Write"

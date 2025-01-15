@@ -83,6 +83,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     IncludeGuestOrExternalUserTypes      = @('b2bCollaborationGuest')
                     PersistentBrowserIsEnabled           = $True
                     PersistentBrowserMode                = 'Always'
+                    DisableResilienceDefaultsIsEnabled   = $True
                     SignInFrequencyIsEnabled             = $True
                     SignInFrequencyType                  = 'Days'
                     SignInFrequencyValue                 = 5
@@ -178,6 +179,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     IncludeGuestOrExternalUserTypes          = @('b2bCollaborationGuest')
                     PersistentBrowserIsEnabled               = $True
                     PersistentBrowserMode                    = 'Always'
+                    DisableResilienceDefaultsIsEnabled       = $True
                     SignInFrequencyIsEnabled                 = $True
                     SignInFrequencyType                      = 'Days'
                     SignInFrequencyValue                     = 5
@@ -253,6 +255,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             PersistentBrowser               = @{
                                 IsEnabled = $True
                                 Mode      = 'Always'
+                            }
+                            disableResilienceDefaults       = @{
+                                IsEnabled = $True
                             }
                         }
                     }
@@ -372,6 +377,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 IsEnabled = $True
                                 Mode      = 'Always'
                             }
+                            disableResilienceDefaults       = @{
+                                IsEnabled = $True
+                            }
                         }
                     }
                 }
@@ -450,6 +458,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     IncludeGuestOrExternalUserTypes          = @('b2bCollaborationGuest')
                     PersistentBrowserIsEnabled               = $True
                     PersistentBrowserMode                    = 'Always'
+                    DisableResilienceDefaultsIsEnabled       = $True
                     SignInFrequencyIsEnabled                 = $True
                     SignInFrequencyType                      = 'Days'
                     SignInFrequencyValue                     = 5
@@ -548,6 +557,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 IsEnabled = $True
                                 Mode      = 'Always'
                             }
+                            disableResilienceDefaults       = @{
+                                IsEnabled = $True
+                            }
                         }
                     }
                 }
@@ -615,6 +627,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     IncludeUsers                             = 'All'
                     PersistentBrowserIsEnabled               = $True
                     PersistentBrowserMode                    = 'Always'
+                    DisableResilienceDefaultsIsEnabled       = $True
                     SignInFrequencyIsEnabled                 = $True
                     SignInFrequencyType                      = 'Days'
                     SignInFrequencyValue                     = 5
@@ -690,6 +703,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             PersistentBrowser               = @{
                                 IsEnabled = $True
                                 Mode      = 'Always'
+                            }
+                            disableResilienceDefaults       = @{
+                                IsEnabled = $True
                             }
                         }
                     }
@@ -807,6 +823,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             PersistentBrowser               = @{
                                 IsEnabled = $True
                                 Mode      = 'Always'
+                            }
+                            disableResilienceDefaults       = @{
+                                IsEnabled = $True
                             }
                         }
                     }

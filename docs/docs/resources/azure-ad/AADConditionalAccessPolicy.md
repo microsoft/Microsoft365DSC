@@ -50,6 +50,7 @@
 | **SignInFrequencyInterval** | Write | String | Sign in frequency interval. Possible values are: timeBased, everyTime and unknownFutureValue. | `timeBased`, `everyTime`, `unknownFutureValue` |
 | **PersistentBrowserIsEnabled** | Write | Boolean | Specifies, whether Browser Persistence is controlled by the Policy. | |
 | **PersistentBrowserMode** | Write | String | Specifies, what Browser Persistence control is enforced by the Policy. | `Always`, `Never`, `` |
+| **DisableResilienceDefaultsIsEnabled** | Write | Boolean | Specifies, if DisableResilienceDefaults is enabled. | |
 | **AuthenticationStrength** | Write | String | Name of the associated authentication strength policy. | |
 | **TransferMethods** | Write | String | Names of the associated authentication flow transfer methods. Possible values are '', 'deviceCodeFlow', 'authenticationTransfer', or 'deviceCodeFlow,authenticationTransfer'. | |
 | **AuthenticationContexts** | Write | StringArray[] | Authentication context class references. | |
