@@ -3193,6 +3193,17 @@
                     TenantId               = $TenantId;
                     CertificateThumbprint  = $CertificateThumbprint;
                 }
+                IntuneTrustedRootCertificateAndroidWork 'ConfigureIntuneTrustedRootCertificateAndroidWork'
+                {
+                    Description            = "IntuneTrustedRootCertificateAndroidWork Description";
+                    DisplayName            = "IntuneTrustedRootCertificateAndroidWork DisplayName";
+                    Ensure                 = "Present";
+                    certFileName           = "fakename.cer";
+                    trustedRootCertificate = "insertValidBase64StringHere";
+                    ApplicationId          = $ApplicationId;
+                    TenantId               = $TenantId;
+                    CertificateThumbprint  = $CertificateThumbprint;
+                }
                 IntuneTrustedRootCertificateIOS 'ConfigureIntuneTrustedRootCertificateIOS'
                 {
                     Description            = "IntuneTrustedRootCertificateIOS Description";

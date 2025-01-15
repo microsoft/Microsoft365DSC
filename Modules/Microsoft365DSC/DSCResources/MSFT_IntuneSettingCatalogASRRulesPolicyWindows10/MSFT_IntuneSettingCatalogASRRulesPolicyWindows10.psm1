@@ -263,9 +263,12 @@ function Get-TargetResource
 
         $templateReferenceId = 'e8c053d6-9f95-42b1-a7f1-ebfd71c67a4b_1'
 
-        #Retrieve policy general settings
+        # Retrieve policy general settings
         $policy = $null
-        $policy = Get-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Identity -ErrorAction SilentlyContinue
+        if (-not [System.String]::IsNullOrEmpty($Identity))
+        {
+            $policy = Get-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Identity -ErrorAction SilentlyContinue
+        }
 
         if ($null -eq $policy)
         {
@@ -277,6 +280,11 @@ function Get-TargetResource
                     -All `
                     -Filter "Name eq '$DisplayName' and templateReference/TemplateId eq '$templateReferenceId'" `
                     -ErrorAction SilentlyContinue
+
+                if ($getValue.Length -gt 1)
+                {
+                    throw "Duplicate Endpoint Protection Attack Surface Reduction Rules Policy named $DisplayName exist in tenant"
+                }
             }
         }
 
@@ -328,6 +336,13 @@ function Get-TargetResource
             -TenantId $TenantId `
             -Credential $Credential
 
+        # Necessary to rethrow caught exception regarding duplicate policies
+        if ($_.Exception.Message -like "Duplicate*")
+        {
+            throw $_
+        }
+
+        $nullResult = Clear-M365DSCAuthenticationParameter -BoundParameters $nullResult
         return $nullResult
     }
 }
