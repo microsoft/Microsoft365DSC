@@ -72,31 +72,35 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    Write-Verbose -Message "Checking for the Intune Endpoint Protection Policy {$DisplayName}"
+    try
+    {
+        Write-Verbose -Message "Checking for the Intune Endpoint Protection Policy {$DisplayName}"
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters `
         -ErrorAction Stop
 
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
+        #Ensure the proper dependencies are installed in the current environment.
+        Confirm-M365DSCDependencies
 
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
+        #region Telemetry
+        $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+        $CommandName = $MyInvocation.MyCommand
+        $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+            -CommandName $CommandName `
+            -Parameters $PSBoundParameters
+        Add-M365DSCTelemetryEvent -Data $data
+        #endregion
 
-    $nullResult = $PSBoundParameters
-    $nullResult.Ensure = 'Absent'
+        $nullResult = $PSBoundParameters
+        $nullResult.Ensure = 'Absent'
 
-    try
-    {
-        #Retrieve policy general settings
-        $policy = Get-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Identity -ErrorAction SilentlyContinue
+        # Retrieve policy general settings
+        $policy = $null
+        if (-not [System.String]::IsNullOrEmpty($Identity))
+        {
+            $policy = Get-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Identity -ErrorAction SilentlyContinue
+        }
 
         if ($null -eq $policy)
         {
@@ -108,6 +112,11 @@ function Get-TargetResource
                     -All `
                     -Filter "Name eq '$DisplayName'" `
                     -ErrorAction SilentlyContinue
+
+                if ($policy.Length -gt 1)
+                {
+                    throw "Duplicate Intune Endpoint Detection And Response Policy for Windows10 named $DisplayName exist in tenant"
+                }
             }
         }
 
@@ -172,6 +181,13 @@ function Get-TargetResource
             -TenantId $TenantId `
             -Credential $Credential
 
+        # Necessary to rethrow caught exception regarding duplicate policies
+        if ($_.Exception.Message -like "Duplicate*")
+        {
+            throw $_
+        }
+
+        $nullResult = Clear-M365DSCAuthenticationParameter -BoundParameters $nullResult
         return $nullResult
     }
 }

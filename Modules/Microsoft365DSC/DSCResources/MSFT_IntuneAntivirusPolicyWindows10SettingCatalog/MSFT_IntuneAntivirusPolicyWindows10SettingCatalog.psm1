@@ -444,8 +444,12 @@ function Get-TargetResource
 
         $templateReferences = 'd948ff9b-99cb-4ee0-8012-1fbc09685377_1', 'e3f74c5a-a6de-411d-aef6-eb15628f3a0a_1', '45fea5e9-280d-4da1-9792-fb5736da0ca9_1', '804339ad-1553-4478-a742-138fb5807418_1'
 
-        #Retrieve policy general settings
-        $policy = Get-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Identity -ErrorAction SilentlyContinue
+        # Retrieve policy general settings
+        $policy = $null
+        if (-not [System.String]::IsNullOrEmpty($Identity))
+        {
+            $policy = Get-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Identity -ErrorAction SilentlyContinue
+        }
 
         if ($null -eq $policy)
         {
@@ -459,6 +463,11 @@ function Get-TargetResource
                     -ErrorAction SilentlyContinue | Where-Object `
                     -FilterScript {
                     $_.TemplateReference.TemplateId -in $templateReferences
+                    }
+
+                if ($policy.Length -gt 1)
+                {
+                    throw "Duplicate Intune Antivirus Policy for Windows10 Setting Catalog named $DisplayName exist in tenant"
                 }
             }
         }
@@ -536,6 +545,12 @@ function Get-TargetResource
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `
             -Credential $Credential
+
+        # Necessary to rethrow caught exception regarding duplicate policies
+        if ($_.Exception.Message -like "Duplicate*")
+        {
+            throw $_
+        }
 
         $nullResult = Clear-M365DSCAuthenticationParameter -BoundParameters $nullResult
         return $nullResult

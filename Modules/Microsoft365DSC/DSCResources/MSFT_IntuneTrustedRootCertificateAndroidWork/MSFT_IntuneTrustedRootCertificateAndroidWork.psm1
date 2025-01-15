@@ -7,28 +7,23 @@ function Get-TargetResource
         #region resource generator code
         [Parameter()]
         [System.String]
-        $Description,
+        $Id,
 
         [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
 
         [Parameter()]
-        [System.String[]]
-        $RoleScopeTagIds,
+        [System.String]
+        $Description,
 
         [Parameter()]
         [System.String]
-        $Id,
+        $certFileName,
 
         [Parameter()]
         [System.String]
-        $tags_item_value,
-
-        [Parameter()]
-        [ValidateSet('0')]
-        [System.String]
-        $tags_item_key,
+        $trustedRootCertificate,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
@@ -67,92 +62,85 @@ function Get-TargetResource
         [Parameter()]
         [System.String[]]
         $AccessTokens
+
     )
 
     try
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters
+    }
+    catch
+    {
+        Write-Verbose -Message 'Connection to the workload failed.'
+    }
 
-        #Ensure the proper dependencies are installed in the current environment.
-        Confirm-M365DSCDependencies
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
 
-        #region Telemetry
-        $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
-        $CommandName = $MyInvocation.MyCommand
-        $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-            -CommandName $CommandName `
-            -Parameters $PSBoundParameters
-        Add-M365DSCTelemetryEvent -Data $data
-        #endregion
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+    $CommandName = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion   
 
-        $nullResult = $PSBoundParameters
-        $nullResult.Ensure = 'Absent'
-
-        $getValue = $null
-        #region resource generator code
-        if (-not [System.String]::IsNullOrEmpty($Id))
-        {
-            $getValue = Get-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Id -ErrorAction SilentlyContinue
+    $nullResult = $PSBoundParameters
+    $nullResult.Ensure = 'Absent'
+    try
+    {
+        if (-not [string]::IsNullOrWhiteSpace($id))
+        { 
+            $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -DeviceConfigurationId $id -ErrorAction SilentlyContinue
         }
-
+        
+        #region resource generator code
         if ($null -eq $getValue)
         {
-            Write-Verbose -Message "Could not find an Intune Endpoint Detection And Response Policy Linux with Id {$Id}"
-
-            if (-not [System.String]::IsNullOrEmpty($DisplayName))
-            {
-                $getValue = Get-MgBetaDeviceManagementConfigurationPolicy `
-                    -All `
-                    -Filter "Name eq '$DisplayName'" `
-                    -ErrorAction SilentlyContinue
-
-                if ($getValue.Length -gt 1)
-                {
-                    throw "Duplicate Intune Endpoint Detection And Response Policy Linux named $DisplayName exist in tenant"
-                }
+            $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -All -Filter "DisplayName eq '$Displayname'" -ErrorAction SilentlyContinue | Where-Object `
+            -FilterScript { `
+                $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidWorkProfileTrustedRootCertificate' `
             }
         }
         #endregion
+
         if ($null -eq $getValue)
         {
-            Write-Verbose -Message "Could not find an Intune Endpoint Detection And Response Policy Linux with Name {$DisplayName}."
+            Write-Verbose -Message "No Intune Trusted Root Certificate Policy for Android Work with Id {$id} was found"
             return $nullResult
         }
+
         $Id = $getValue.Id
-        Write-Verbose -Message "An Intune Endpoint Detection And Response Policy Linux with Id {$Id} and Name {$DisplayName} was found"
 
-        # Retrieve policy specific settings
-        [array]$settings = Get-MgBetaDeviceManagementConfigurationPolicySetting `
-            -DeviceManagementConfigurationPolicyId $Id `
-            -ExpandProperty 'settingDefinitions' `
-            -ErrorAction Stop
-
-        $policySettings = @{}
-        $policySettings = Export-IntuneSettingCatalogPolicySettings -Settings $settings -ReturnHashtable $policySettings
+        Write-Verbose -Message "An Intune Trusted Root Certificate Policy for Android Work with id {$id} and DisplayName {$DisplayName} was found"
 
         $results = @{
             #region resource generator code
-            Description           = $getValue.Description
-            DisplayName           = $getValue.Name
-            RoleScopeTagIds       = $getValue.RoleScopeTagIds
-            Id                    = $getValue.Id
-            Ensure                = 'Present'
-            Credential            = $Credential
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            ApplicationSecret     = $ApplicationSecret
-            CertificateThumbprint = $CertificateThumbprint
-            ManagedIdentity       = $ManagedIdentity.IsPresent
-            #endregion
+            Id                             = $getValue.Id
+            Description                    = $getValue.Description
+            DisplayName                    = $getValue.DisplayName       
+            certFileName                   = $getValue.AdditionalProperties.certFileName
+            trustedRootCertificate         = $getValue.AdditionalProperties.trustedRootCertificate 
+            Ensure                         = 'Present'
+            Credential                     = $Credential
+            ApplicationId                  = $ApplicationId
+            TenantId                       = $TenantId
+            ApplicationSecret              = $ApplicationSecret
+            CertificateThumbprint          = $CertificateThumbprint
+            Managedidentity                = $ManagedIdentity.IsPresent
+            AccessTokens                   = $AccessTokens
+            version                        = $getValue.AdditionalProperties.version
         }
-        $results += $policySettings
-
-        $assignmentsValues = Get-MgBetaDeviceManagementConfigurationPolicyAssignment -DeviceManagementConfigurationPolicyId $Id
+                                          
+        $assignmentsValues = Get-MgBetaDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId $Results.Id
         $assignmentResult = @()
         if ($assignmentsValues.Count -gt 0)
         {
-            $assignmentResult += ConvertFrom-IntunePolicyAssignment -Assignments $assignmentsValues -IncludeDeviceFilter $true
+            $assignmentResult += ConvertFrom-IntunePolicyAssignment `
+                                -IncludeDeviceFilter:$true `
+                                -Assignments ($assignmentsValues)
         }
         $results.Add('Assignments', $assignmentResult)
 
@@ -166,13 +154,6 @@ function Get-TargetResource
             -TenantId $TenantId `
             -Credential $Credential
 
-        # Necessary to rethrow caught exception regarding duplicate policies
-        if ($_.Exception.Message -like "Duplicate*")
-        {
-            throw $_
-        }
-
-        $nullResult = Clear-M365DSCAuthenticationParameter -BoundParameters $nullResult
         return $nullResult
     }
 }
@@ -185,33 +166,29 @@ function Set-TargetResource
         #region resource generator code
         [Parameter()]
         [System.String]
-        $Description,
+        $Id,
 
         [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
 
         [Parameter()]
-        [System.String[]]
-        $RoleScopeTagIds,
+        [System.String]
+        $Description,
 
         [Parameter()]
         [System.String]
-        $Id,
+        $certFileName,
 
         [Parameter()]
         [System.String]
-        $tags_item_value,
-
-        [Parameter()]
-        [ValidateSet('0')]
-        [System.String]
-        $tags_item_key,
+        $trustedRootCertificate,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
         #endregion
+
         [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
@@ -244,7 +221,18 @@ function Set-TargetResource
         [Parameter()]
         [System.String[]]
         $AccessTokens
+
     )
+
+    try
+    {
+        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+            -InboundParameters $PSBoundParameters
+    }
+    catch
+    {
+        Write-Verbose -Message $_
+    }
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -259,75 +247,101 @@ function Set-TargetResource
     #endregion
 
     $currentInstance = Get-TargetResource @PSBoundParameters
-
     $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
-
-    $templateReferenceId = '3514388a-d4d1-4aa8-bd64-c317776008f5_1'
-    $platforms = 'linux'
-    $technologies = 'microsoftSense'
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        Write-Verbose -Message "Creating an Intune Endpoint Detection And Response Policy Linux with Name {$DisplayName}"
+        Write-Verbose -Message "Creating {$DisplayName}"
         $BoundParameters.Remove('Assignments') | Out-Null
+        $CreateParameters = ([Hashtable]$BoundParameters).clone()
+        $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
+        $AdditionalProperties = Get-M365DSCAdditionalProperties -Properties ($CreateParameters)
 
-        $settings = Get-IntuneSettingCatalogPolicySetting `
-            -DSCParams ([System.Collections.Hashtable]$BoundParameters) `
-            -TemplateId $templateReferenceId
-
-        $createParameters = @{
-            Name              = $DisplayName
-            Description       = $Description
-            TemplateReference = @{ templateId = $templateReferenceId }
-            Platforms         = $platforms
-            Technologies      = $technologies
-            Settings          = $settings
+        foreach ($key in $AdditionalProperties.keys)
+        {
+            if ($key -ne '@odata.type')
+            {
+                $keyName = $key.substring(0, 1).ToUpper() + $key.substring(1, $key.length - 1)
+                $CreateParameters.remove($keyName)
+            }
         }
 
-        #region resource generator code
-        $policy = New-MgBetaDeviceManagementConfigurationPolicy -BodyParameter $createParameters
+        if ($AdditionalProperties.ContainsKey('trustedRootCertificate')) {
+            $AdditionalProperties['trustedRootCertificate'] = [Convert]::FromBase64String($AdditionalProperties['trustedRootCertificate'])
+            Write-Verbose "trustedRootCertificate converted to bytes."
+        }
 
-        if ($policy.Id)
+        $CreateParameters.Remove('Id') | Out-Null
+
+        foreach ($key in ($CreateParameters.clone()).Keys)
         {
-            $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
-            Update-DeviceConfigurationPolicyAssignment `
-                -DeviceConfigurationPolicyId $policy.Id `
+            if ($CreateParameters[$key].getType().Fullname -like '*CimInstance*')
+            {
+                $CreateParameters[$key] = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters[$key]
+            }
+        }
+
+        $CreateParameters.add('AdditionalProperties', $AdditionalProperties)
+           
+        #region resource generator code
+        $policy = New-MgBetaDeviceManagementDeviceConfiguration @CreateParameters
+        $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
+
+        if ($policy.id)
+        {
+            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $policy.id `
                 -Targets $assignmentsHash `
-                -Repository 'deviceManagement/configurationPolicies'
+                -Repository 'deviceManagement/deviceConfigurations'
         }
         #endregion
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Updating the Intune Endpoint Detection And Response Policy Linux with Id {$($currentInstance.Id)}"
+        Write-Verbose -Message "Updating {$DisplayName}"
         $BoundParameters.Remove('Assignments') | Out-Null
+        $UpdateParameters = ([Hashtable]$BoundParameters).clone()
+        $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
+        $AdditionalProperties = Get-M365DSCAdditionalProperties -Properties ($UpdateParameters)
 
-        $settings = Get-IntuneSettingCatalogPolicySetting `
-            -DSCParams ([System.Collections.Hashtable]$BoundParameters) `
-            -TemplateId $templateReferenceId
+        foreach ($key in $AdditionalProperties.keys)
+        {
+            if ($key -ne '@odata.type')
+            {
+                $keyName = $key.substring(0, 1).ToUpper() + $key.substring(1, $key.length - 1)
+                $UpdateParameters.remove($keyName)
+            }
+        }
 
-        Update-IntuneDeviceConfigurationPolicy `
-            -DeviceConfigurationPolicyId $currentInstance.Id `
-            -Name $DisplayName `
-            -Description $Description `
-            -TemplateReferenceId $templateReferenceId `
-            -Platforms $platforms `
-            -Technologies $technologies `
-            -Settings $settings
+        if ($AdditionalProperties.ContainsKey('trustedRootCertificate')) {
+            $AdditionalProperties['trustedRootCertificate'] = [Convert]::FromBase64String($AdditionalProperties['trustedRootCertificate'])
+            Write-Verbose "trustedRootCertificate converted to bytes."
+        }
+
+        $UpdateParameters.Remove('Id') | Out-Null
+
+        foreach ($key in ($UpdateParameters.clone()).Keys)
+        {
+            if ($UpdateParameters[$key].getType().Fullname -like '*CimInstance*')
+            {
+                $UpdateParameters[$key] = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters[$key]
+            }
+        }
+        $UpdateParameters.add('AdditionalProperties', $AdditionalProperties)
 
         #region resource generator code
+        Update-MgBetaDeviceManagementDeviceConfiguration @UpdateParameters `
+            -DeviceConfigurationId $currentInstance.Id
         $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
-        Update-DeviceConfigurationPolicyAssignment `
-            -DeviceConfigurationPolicyId $currentInstance.Id `
+        Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $currentInstance.id `
             -Targets $assignmentsHash `
-            -Repository 'deviceManagement/configurationPolicies'
+            -Repository 'deviceManagement/deviceConfigurations'
         #endregion
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing the Intune Endpoint Detection And Response Policy Linux with Id {$($currentInstance.Id)}"
+        Write-Verbose -Message "Removing {$DisplayName}"
         #region resource generator code
-        Remove-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $currentInstance.Id
+        Remove-MgBetaDeviceManagementDeviceConfiguration -DeviceConfigurationId $currentInstance.Id
         #endregion
     }
 }
@@ -341,28 +355,23 @@ function Test-TargetResource
         #region resource generator code
         [Parameter()]
         [System.String]
-        $Description,
+        $Id,
 
         [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
 
         [Parameter()]
-        [System.String[]]
-        $RoleScopeTagIds,
+        [System.String]
+        $Description,
 
         [Parameter()]
         [System.String]
-        $Id,
+        $certFileName,
 
         [Parameter()]
         [System.String]
-        $tags_item_value,
-
-        [Parameter()]
-        [ValidateSet('0')]
-        [System.String]
-        $tags_item_key,
+        $trustedRootCertificate,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
@@ -401,6 +410,7 @@ function Test-TargetResource
         [Parameter()]
         [System.String[]]
         $AccessTokens
+
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -415,23 +425,10 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of the Intune Endpoint Detection And Response Policy Linux with Id {$Id} and Name {$DisplayName}"
+    Write-Verbose -Message "Testing configuration of {$id}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
-    [Hashtable]$ValuesToCheck = @{}
-    $MyInvocation.MyCommand.Parameters.GetEnumerator() | ForEach-Object {
-        if ($_.Key -notlike '*Variable' -or $_.Key -notin @('Verbose', 'Debug', 'ErrorAction', 'WarningAction', 'InformationAction'))
-        {
-            if ($null -ne $CurrentValues[$_.Key] -or $null -ne $PSBoundParameters[$_.Key])
-            {
-                $ValuesToCheck.Add($_.Key, $null)
-                if (-not $PSBoundParameters.ContainsKey($_.Key))
-                {
-                    $PSBoundParameters.Add($_.Key, $null)
-                }
-            }
-        }
-    }
+    $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
 
     if ($CurrentValues.Ensure -ne $Ensure)
     {
@@ -445,16 +442,13 @@ function Test-TargetResource
     {
         $source = $PSBoundParameters.$key
         $target = $CurrentValues.$key
-        if ($null -ne $source -and $source.GetType().Name -like '*CimInstance*')
+        if ($source.GetType().Name -like '*CimInstance*')
         {
             $testResult = Compare-M365DSCComplexObject `
                 -Source ($source) `
                 -Target ($target)
 
-            if (-not $testResult)
-            {
-                break
-            }
+            if (-not $testResult) { break }
 
             $ValuesToCheck.Remove($key) | Out-Null
         }
@@ -464,7 +458,17 @@ function Test-TargetResource
     $ValuesToCheck = Remove-M365DSCAuthenticationParameter -BoundParameters $ValuesToCheck
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
-    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
+    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
+
+    #Convert any DateTime to String
+    foreach ($key in $ValuesToCheck.Keys)
+    {
+        if (($null -ne $CurrentValues[$key]) `
+                -and ($CurrentValues[$key].getType().Name -eq 'DateTime'))
+        {
+            $CurrentValues[$key] = $CurrentValues[$key].toString()
+        }
+    }
 
     if ($testResult)
     {
@@ -535,14 +539,12 @@ function Export-TargetResource
 
     try
     {
+
         #region resource generator code
-        $policyTemplateID = '3514388a-d4d1-4aa8-bd64-c317776008f5_1'
-        [array]$getValue = Get-MgBetaDeviceManagementConfigurationPolicy `
-            -Filter $Filter `
-            -All `
+        [array]$getValue = Get-MgBetaDeviceManagementDeviceConfiguration -Filter $Filter -All `
             -ErrorAction Stop | Where-Object `
-            -FilterScript {
-            $_.TemplateReference.TemplateId -eq $policyTemplateID
+            -FilterScript { `
+                $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidWorkProfileTrustedRootCertificate'  `
         }
         #endregion
 
@@ -558,26 +560,22 @@ function Export-TargetResource
         }
         foreach ($config in $getValue)
         {
-            $displayedKey = $config.Id
-            if (-not [String]::IsNullOrEmpty($config.displayName))
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
             {
-                $displayedKey = $config.displayName
+                $Global:M365DSCExportResourceInstancesCount++
             }
-            elseif (-not [string]::IsNullOrEmpty($config.name))
-            {
-                $displayedKey = $config.name
-            }
-            Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
+
+            Write-Host "    |---[$i/$($getValue.Count)] $($config.DisplayName)" -NoNewline
             $params = @{
-                Id                    = $config.Id
-                DisplayName           = $config.Name
+                Id                    = $config.id
+                DisplayName           = $config.DisplayName
                 Ensure                = 'Present'
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
-                ManagedIdentity       = $ManagedIdentity.IsPresent
+                Managedidentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }
 
@@ -606,7 +604,12 @@ function Export-TargetResource
 
             if ($Results.Assignments)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Assignments' -IsCIMArray:$true
+                $isCIMArray = $false
+                if ($Results.Assignments.getType().Fullname -like '*[[\]]')
+                {
+                    $isCIMArray = $true
+                }
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Assignments' -IsCIMArray:$isCIMArray
             }
 
             $dscContent += $currentDSCBlock
@@ -615,20 +618,84 @@ function Export-TargetResource
             $i++
             Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
+        
         return $dscContent
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
+        $_.Exception -like "*Request not applicable to target tenant*")
+        {
+            Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
+        }
+        else
+        {
+            Write-Host $Global:M365DSCEmojiRedX
 
-        New-M365DSCLogEntry -Message 'Error during Export:' `
-            -Exception $_ `
-            -Source $($MyInvocation.MyCommand.Source) `
-            -TenantId $TenantId `
-            -Credential $Credential
+            New-M365DSCLogEntry -Message 'Error during Export:' `
+                -Exception $_ `
+                -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $TenantId `
+                -Credential $Credential
+        }
 
         return ''
     }
+}
+
+function Get-M365DSCAdditionalProperties
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = 'true')]
+        [System.Collections.Hashtable]
+        $Properties
+    )
+
+    $additionalProperties = @(
+        'certFileName'
+        'trustedRootCertificate'
+    )
+
+    $results = @{'@odata.type' = '#microsoft.graph.androidWorkProfileTrustedRootCertificate' }
+    $cloneProperties = $Properties.clone()
+    foreach ($property in $cloneProperties.Keys)
+    {
+        if ($property -in ($additionalProperties) )
+        {
+            $propertyName = $property[0].ToString().ToLower() + $property.Substring(1, $property.Length - 1)
+            if ($properties.$property -and $properties.$property.getType().FullName -like '*CIMInstance*')
+            {
+                if ($properties.$property.getType().FullName -like '*[[\]]')
+                {
+                    $array = @()
+                    foreach ($item in $properties.$property)
+                    {
+                        $array += Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $item
+                    }
+                    $propertyValue = $array
+                }
+                else
+                {
+                    $propertyValue = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $properties.$property
+                }
+
+            }
+            else
+            {
+                $propertyValue = $properties.$property
+            }
+
+            $results.Add($propertyName, $propertyValue)
+        }
+    }
+    if ($results.Count -eq 1)
+    {
+        return $null
+    }
+    return $results
 }
 
 Export-ModuleMember -Function *-TargetResource

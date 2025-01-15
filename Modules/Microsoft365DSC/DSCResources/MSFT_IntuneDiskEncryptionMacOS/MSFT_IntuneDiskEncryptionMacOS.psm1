@@ -117,7 +117,10 @@ function Get-TargetResource
 
         $getValue = $null
         #region resource generator code
-        $getValue = Get-MgBetaDeviceManagementIntent -DeviceManagementIntentId $Id -ErrorAction SilentlyContinue
+        if (-not [System.String]::IsNullOrEmpty($Id))
+        {
+            $getValue = Get-MgBetaDeviceManagementIntent -DeviceManagementIntentId $Id -ErrorAction SilentlyContinue
+        }
 
         if ($null -eq $getValue)
         {
@@ -131,6 +134,11 @@ function Get-TargetResource
                     -ErrorAction SilentlyContinue | Where-Object `
                     -FilterScript { `
                         $_.TemplateId -eq 'a239407c-698d-4ef8-b314-e3ae409204b8' `
+                }
+
+                if ($getValue.Length -gt 1)
+                {
+                    throw "Duplicate Intune Disk Encryption for macOS named $DisplayName exist in tenant"
                 }
             }
         }
@@ -192,6 +200,13 @@ function Get-TargetResource
             -TenantId $TenantId `
             -Credential $Credential
 
+        # Necessary to rethrow caught exception regarding duplicate policies
+        if ($_.Exception.Message -like "Duplicate*")
+        {
+            throw $_
+        }
+
+        $nullResult = Clear-M365DSCAuthenticationParameter -BoundParameters $nullResult
         return $nullResult
     }
 }

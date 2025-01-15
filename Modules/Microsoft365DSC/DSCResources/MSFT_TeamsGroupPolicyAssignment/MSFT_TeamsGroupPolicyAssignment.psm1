@@ -107,7 +107,8 @@ function Get-TargetResource
         }
 
         Write-Verbose -Message "Getting GroupPolicyAssignment with PolicyType {$PolicyType} for Group {$($Group.DisplayName)}"
-        $GroupPolicyAssignment = Get-CsGroupPolicyAssignment -GroupId $Group.Id -PolicyType $PolicyType -ErrorAction SilentlyContinue
+        $AllGroupPolicyAssignment = Get-CsGroupPolicyAssignment -ErrorAction SilentlyContinue
+        $GroupPolicyAssignment = $AllGroupPolicyAssignment | Where-Object{$_.GroupId -eq $Group.Id -and $_.PolicyType -eq $PolicyType}
         if ($null -eq $GroupPolicyAssignment)
         {
             Write-Verbose -Message "GroupPolicyAssignment not found for Group {$GroupDisplayName}"

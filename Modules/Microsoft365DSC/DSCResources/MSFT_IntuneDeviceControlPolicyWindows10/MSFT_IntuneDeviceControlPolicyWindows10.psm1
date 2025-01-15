@@ -256,7 +256,10 @@ function Get-TargetResource
 
         $getValue = $null
         #region resource generator code
-        $getValue = Get-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Id -ErrorAction SilentlyContinue
+        if (-not [System.String]::IsNullOrEmpty($Id))
+        {
+            $getValue = Get-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Id -ErrorAction SilentlyContinue
+        }
 
         if ($null -eq $getValue)
         {
@@ -268,6 +271,11 @@ function Get-TargetResource
                     -All `
                     -Filter "Name eq '$DisplayName'" `
                     -ErrorAction SilentlyContinue
+
+                if ($getValue.Length -gt 1)
+                {
+                    throw "Duplicate Intune Device Control Policy for Windows10 named $DisplayName exist in tenant"
+                }
             }
         }
         #endregion
@@ -349,6 +357,13 @@ function Get-TargetResource
             -TenantId $TenantId `
             -Credential $Credential
 
+        # Necessary to rethrow caught exception regarding duplicate policies
+        if ($_.Exception.Message -like "Duplicate*")
+        {
+            throw $_
+        }
+
+        $nullResult = Clear-M365DSCAuthenticationParameter -BoundParameters $nullResult
         return $nullResult
     }
 }

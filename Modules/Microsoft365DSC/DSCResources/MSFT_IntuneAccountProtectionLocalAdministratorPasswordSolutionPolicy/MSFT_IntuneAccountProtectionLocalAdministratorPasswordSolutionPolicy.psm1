@@ -136,7 +136,10 @@ function Get-TargetResource
 
         # Retrieve policy general settings
         $policy = $null
-        $policy = Get-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Identity -ErrorAction SilentlyContinue
+        if (-not [System.String]::IsNullOrEmpty($Identity))
+        {
+            $policy = Get-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Identity -ErrorAction SilentlyContinue
+        }
 
         if ($null -eq $policy)
         {
@@ -147,6 +150,11 @@ function Get-TargetResource
                 $policy = Get-MgBetaDeviceManagementConfigurationPolicy `
                     -Filter "Name eq '$DisplayName' and templateReference/TemplateId eq '$templateReferenceId'" `
                     -ErrorAction SilentlyContinue
+
+                if ($policy.Length -gt 1)
+                {
+                    throw "Duplicate Account Protection LAPS Policy named $DisplayName exist in tenant"
+                }
             }
         }
 
@@ -206,6 +214,12 @@ function Get-TargetResource
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `
             -Credential $Credential
+
+        # Necessary to rethrow caught exception regarding duplicate policies
+        if ($_.Exception.Message -like "Duplicate*")
+        {
+            throw $_
+        }
 
         $nullResult = Clear-M365DSCAuthenticationParameter -BoundParameters $nullResult
         return $nullResult
