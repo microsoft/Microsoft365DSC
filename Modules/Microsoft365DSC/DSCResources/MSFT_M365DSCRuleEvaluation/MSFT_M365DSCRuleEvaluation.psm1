@@ -14,6 +14,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
+        $RuleName,
+
+        [Parameter()]
+        [System.String]
         $AfterRuleCountQuery,
 
         [Parameter()]
@@ -59,6 +63,10 @@ function Set-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $RuleDefinition,
+
+        [Parameter()]
+        [System.String]
+        $RuleName,
 
         [Parameter()]
         [System.String]
@@ -108,6 +116,10 @@ function Test-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $RuleDefinition,
+
+        [Parameter()]
+        [System.String]
+        $RuleName,
 
         [Parameter()]
         [System.String]
@@ -223,6 +235,7 @@ function Test-TargetResource
 
         $message = [System.Text.StringBuilder]::New()
         [void]$message.AppendLine('<M365DSCRuleEvaluation>')
+        [void]$message.AppendLine("  <RuleName>$RuleName</RuleName>")
         [void]$message.AppendLine("  <ResourceName>$ResourceTypeName</ResourceName>")
         [void]$message.AppendLine("  <RuleDefinition>$RuleDefinition</RuleDefinition>")
 

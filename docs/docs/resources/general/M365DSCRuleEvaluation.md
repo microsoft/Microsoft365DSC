@@ -5,7 +5,8 @@
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
 | **ResourceTypeName** | Key | String | Name of the resource to monitor | |
-| **RuleDefinition** | Required | String | Specify the rules to monitor the resource for. | |
+| **RuleDefinition** | Key | String | Specify the rules to monitor the resource for. | |
+| **RuleName** | Write | String | Custom display name for the rule. This will show up in the logs on drift detection. | |
 | **AfterRuleCountQuery** | Write | String | Query to check how many instances exist, using PowerShell format | |
 | **Credential** | Write | PSCredential | Credentials of the Azure Active Directory Admin | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |

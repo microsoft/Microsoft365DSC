@@ -53291,7 +53291,12 @@
                            {
                                "CIMType":  "String",
                                "Name":  "RuleDefinition",
-                               "Option":  "Required"
+                               "Option":  "Key"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "RuleName",
+                               "Option":  "Write"
                            },
                            {
                                "CIMType":  "String",

@@ -143,10 +143,17 @@ function Get-TargetResource
         Write-Verbose 'Instance found for the resource. Calculating result....'
 
         $results = @{
-            DisplayName = $instance.DisplayName
-            Id          = $instance.Id
-            Description = $instance.Description
-            Ensure      = 'Present'
+            DisplayName           = $instance.DisplayName
+            Id                    = $instance.Id
+            Description           = $instance.Description
+            Ensure                = 'Present'            
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            ApplicationSecret     = $ApplicationSecret
+            CertificateThumbprint = $CertificateThumbprint
+            ManagedIdentity       = $ManagedIdentity.IsPresent
+            AccessTokens          = $AccessTokens
         }
 
         if ($instance.AdditionalProperties -ne $null)

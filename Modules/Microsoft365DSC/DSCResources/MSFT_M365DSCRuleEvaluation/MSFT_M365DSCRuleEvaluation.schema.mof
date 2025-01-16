@@ -2,7 +2,8 @@
 class MSFT_M365DSCRuleEvaluation : OMI_BaseResource
 {
     [Key, Description("Name of the resource to monitor")] String ResourceTypeName;
-    [Required, Description("Specify the rules to monitor the resource for.")] String RuleDefinition;
+    [Key, Description("Specify the rules to monitor the resource for.")] String RuleDefinition;
+    [Write, Description("Custom display name for the rule. This will show up in the logs on drift detection.")] String RuleName;
     [Write, Description("Query to check how many instances exist, using PowerShell format")] String AfterRuleCountQuery;
     [Write, Description("Credentials of the Azure Active Directory Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
