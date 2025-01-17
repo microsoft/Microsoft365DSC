@@ -24030,6 +24030,11 @@
                            },
                            {
                                "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "AllowGetOneLakeUDK",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
                                "Name":  "AllowFreeTrial",
                                "Option":  "Write"
                            },
@@ -24041,6 +24046,16 @@
                            {
                                "CIMType":  "MSFT_FabricTenantSetting",
                                "Name":  "AllowGuestUserToAccessSharedContent",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "AllowMountDfCreation",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "AllowOneLakeUDK",
                                "Option":  "Write"
                            },
                            {
@@ -24071,6 +24086,11 @@
                            {
                                "CIMType":  "MSFT_FabricTenantSetting",
                                "Name":  "AppPush",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_FabricTenantSetting",
+                               "Name":  "ArtifactOrgAppPreview",
                                "Option":  "Write"
                            },
                            {

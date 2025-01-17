@@ -108,14 +108,7 @@ function Add-M365DSCTelemetryEvent
             {
                 if ($null -eq $Script:M365DSCCurrentRoles -or $Script:M365DSCCurrentRoles.Length -eq 0)
                 {
-                    try
-                    {
-                        Connect-M365Tenant -Workload 'MicrosoftGraph' @Global:M365DSCTelemetryConnectionToGraphParams -ErrorAction SilentlyContinue
-                    }
-                    catch
-                    {
-                        Write-Verbose -Message $_
-                    }
+                    Connect-M365Tenant -Workload 'MicrosoftGraph' $Global:M365DSCTelemetryConnectionToGraphParams -ErrorAction SilentlyContinue
                     $Script:M365DSCCurrentRoles = @()
 
                     $uri = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + 'v1.0/me?$select=id'
@@ -151,7 +144,7 @@ function Add-M365DSCTelemetryEvent
                 {
                     try
                     {
-                        Connect-M365Tenant -Workload 'MicrosoftGraph' @Global:M365DSCTelemetryConnectionToGraphParams -ErrorAction Stop
+                        Connect-M365Tenant -Workload 'MicrosoftGraph' $Global:M365DSCTelemetryConnectionToGraphParams -ErrorAction Stop
                         $Script:M365DSCCurrentRoles = @()
 
                         $sp = Get-MgServicePrincipal -Filter "AppId eq '$($Global:M365DSCTelemetryConnectionToGraphParams.ApplicationId)'" `
@@ -372,54 +365,63 @@ function Add-M365DSCTelemetryEvent
             # LCM Metadata Information
             try
             {
-                if ($null -eq $Script:LCMInfo)
+                if ($null -eq $Script:M365DSCCurrentPrincipalIsAdmin)
                 {
-                    $Script:LCMInfo = Get-DscLocalConfigurationManager -ErrorAction Stop
+                    $currentPrincipal = New-Object System.Security.Principal.WindowsPrincipal([System.Security.Principal.WindowsIdentity]::GetCurrent())
+                    $Script:M365DSCCurrentPrincipalIsAdmin = $currentPrincipal.IsInRole([System.Security.Principal.WindowsBuiltInRole]::Administrator)
                 }
 
-                $certificateConfigured = $false
-                if (-not [System.String]::IsNullOrEmpty($LCMInfo.CertificateID))
+                if ($Script:M365DSCCurrentPrincipalIsAdmin)
                 {
-                    $certificateConfigured = $true
-                }
+                    if ($null -eq $Script:LCMInfo)
+                    {
+                        $Script:LCMInfo = Get-DscLocalConfigurationManager -ErrorAction Stop
+                    }
 
-                $partialConfiguration = $false
-                if (-not [System.String]::IsNullOrEmpty($Script:LCMInfo.PartialConfigurations))
-                {
-                    $partialConfiguration = $true
-                }
-                $Data.Add('LCMUsesPartialConfigurations', $partialConfiguration)
-                $Data.Add('LCMCertificateConfigured', $certificateConfigured)
-                $Data.Add('LCMConfigurationMode', $Script:LCMInfo.ConfigurationMode)
-                $Data.Add('LCMConfigurationModeFrequencyMins', $Script:LCMInfo.ConfigurationModeFrequencyMins)
-                $Data.Add('LCMRefreshMode', $Script:LCMInfo.RefreshMode)
-                $Data.Add('LCMState', $Script:LCMInfo.LCMState)
-                $Data.Add('LCMStateDetail', $Script:LCMInfo.LCMStateDetail)
+                    $certificateConfigured = $false
+                    if (-not [System.String]::IsNullOrEmpty($LCMInfo.CertificateID))
+                    {
+                        $certificateConfigured = $true
+                    }
 
-                if ([System.String]::IsNullOrEmpty($Type))
-                {
-                    if ($Global:M365DSCExportInProgress)
+                    $partialConfiguration = $false
+                    if (-not [System.String]::IsNullOrEmpty($Script:LCMInfo.PartialConfigurations))
                     {
-                        $Type = 'Export'
+                        $partialConfiguration = $true
                     }
-                    elseif ($Script:LCMInfo.LCMStateDetail -eq 'LCM is performing a consistency check.' -or `
-                            $Script:LCMInfo.LCMStateDetail -eq 'LCM exécute une vérification de cohérence.' -or `
-                            $Script:LCMInfo.LCMStateDetail -eq 'LCM führt gerade eine Konsistenzüberprüfung durch.')
+                    $Data.Add('LCMUsesPartialConfigurations', $partialConfiguration)
+                    $Data.Add('LCMCertificateConfigured', $certificateConfigured)
+                    $Data.Add('LCMConfigurationMode', $Script:LCMInfo.ConfigurationMode)
+                    $Data.Add('LCMConfigurationModeFrequencyMins', $Script:LCMInfo.ConfigurationModeFrequencyMins)
+                    $Data.Add('LCMRefreshMode', $Script:LCMInfo.RefreshMode)
+                    $Data.Add('LCMState', $Script:LCMInfo.LCMState)
+                    $Data.Add('LCMStateDetail', $Script:LCMInfo.LCMStateDetail)
+
+                    if ([System.String]::IsNullOrEmpty($Type))
                     {
-                        $Type = 'MonitoringScheduled'
-                    }
-                    elseif ($Script:LCMInfo.LCMStateDetail -eq 'LCM is testing node against the configuration.')
-                    {
-                        $Type = 'MonitoringManual'
-                    }
-                    elseif ($Script:LCMInfo.LCMStateDetail -eq 'LCM is applying a new configuration.' -or `
-                            $Script:LCMInfo.LCMStateDetail -eq 'LCM applique une nouvelle configuration.')
-                    {
-                        $Type = 'ApplyingConfiguration'
-                    }
-                    else
-                    {
-                        $Type = 'Undetermined'
+                        if ($Global:M365DSCExportInProgress)
+                        {
+                            $Type = 'Export'
+                        }
+                        elseif ($Script:LCMInfo.LCMStateDetail -eq 'LCM is performing a consistency check.' -or `
+                                $Script:LCMInfo.LCMStateDetail -eq 'LCM exécute une vérification de cohérence.' -or `
+                                $Script:LCMInfo.LCMStateDetail -eq 'LCM führt gerade eine Konsistenzüberprüfung durch.')
+                        {
+                            $Type = 'MonitoringScheduled'
+                        }
+                        elseif ($Script:LCMInfo.LCMStateDetail -eq 'LCM is testing node against the configuration.')
+                        {
+                            $Type = 'MonitoringManual'
+                        }
+                        elseif ($Script:LCMInfo.LCMStateDetail -eq 'LCM is applying a new configuration.' -or `
+                                $Script:LCMInfo.LCMStateDetail -eq 'LCM applique une nouvelle configuration.')
+                        {
+                            $Type = 'ApplyingConfiguration'
+                        }
+                        else
+                        {
+                            $Type = 'Undetermined'
+                        }
                     }
                 }
             }

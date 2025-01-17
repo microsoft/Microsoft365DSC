@@ -17,15 +17,19 @@
 | **AllowEndorsementMasterDataSwitch** | Write | MSFT_FabricTenantSetting | Endorse master data (preview) | |
 | **AllowExternalDataSharingReceiverSwitch** | Write | MSFT_FabricTenantSetting | Users can accept external data shares (preview) | |
 | **AllowExternalDataSharingSwitch** | Write | MSFT_FabricTenantSetting | External data sharing (preview) | |
+| **AllowGetOneLakeUDK** | Write | MSFT_FabricTenantSetting | Use short-lived user-delegated SAS tokens (preview). | |
 | **AllowFreeTrial** | Write | MSFT_FabricTenantSetting | Users can try Microsoft Fabric paid features | |
 | **AllowGuestLookup** | Write | MSFT_FabricTenantSetting | Users can see guest users in lists of suggested people | |
 | **AllowGuestUserToAccessSharedContent** | Write | MSFT_FabricTenantSetting | Guest users can access Microsoft Fabric | |
+| **AllowMountDfCreation** | Write | MSFT_FabricTenantSetting | Users can create and use ADF Mount items (preview). | |
+| **AllowOneLakeUDK** | Write | MSFT_FabricTenantSetting | Authenticate with OneLake user-delegated SAS tokens (preview). | |
 | **AllowPowerBIASDQOnTenant** | Write | MSFT_FabricTenantSetting | Allow DirectQuery connections to Power BI semantic models | |
 | **AllowSendAOAIDataToOtherRegions** | Write | MSFT_FabricTenantSetting | Data sent to Azure OpenAI can be processed outside your capacity's geographic region, compliance boundary, or national cloud instance | |
 | **AllowSendNLToDaxDataToOtherRegions** | Write | MSFT_FabricTenantSetting | Allow user data to leave their geography | |
 | **AllowServicePrincipalsCreateAndUseProfiles** | Write | MSFT_FabricTenantSetting | Allow service principals to create and use profiles | |
 | **AllowServicePrincipalsUseReadAdminAPIs** | Write | MSFT_FabricTenantSetting | Service principals can access read-only admin APIs | |
 | **AppPush** | Write | MSFT_FabricTenantSetting | Push apps to end users | |
+| **ArtifactOrgAppPreview** | Write | MSFT_FabricTenantSetting | Users can discover and create org apps (preview). | |
 | **ArtifactSearchTenant** | Write | MSFT_FabricTenantSetting | Use global search for Power BI | |
 | **ASCollectQueryTextTelemetryTenantSwitch** | Write | MSFT_FabricTenantSetting | Microsoft can store query text to aid in support investigations | |
 | **ASShareableCloudConnectionBindingSecurityModeTenant** | Write | MSFT_FabricTenantSetting | Enable granular access control for all data connections | |

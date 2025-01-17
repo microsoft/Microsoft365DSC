@@ -63,11 +63,23 @@ function Get-TargetResource
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance]
+        $AllowGetOneLakeUDK,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $AllowGuestLookup,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance]
         $AllowGuestUserToAccessSharedContent,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $AllowMountDfCreation,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $AllowOneLakeUDK,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance]
@@ -92,6 +104,10 @@ function Get-TargetResource
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance]
         $AppPush,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $ArtifactOrgAppPreview,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance]
@@ -597,14 +613,18 @@ function Get-TargetResource
             AllowExternalDataSharingReceiverSwitch                                = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'AllowExternalDataSharingReceiverSwitch' })
             AllowExternalDataSharingSwitch                                        = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'AllowExternalDataSharingSwitch' })
             AllowFreeTrial                                                        = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'AllowFreeTrial' })
+            AllowGetOneLakeUDK                                                    = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'AllowGetOneLakeUDK' })
             AllowGuestLookup                                                      = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'AllowGuestLookup' })
             AllowGuestUserToAccessSharedContent                                   = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'AllowGuestUserToAccessSharedContent' })
+            AllowMountDfCreation                                                  = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'AllowMountDfCreation' })
+            AllowOneLakeUDK                                                       = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'AllowOneLakeUDK' })
             AllowPowerBIASDQOnTenant                                              = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'AllowPowerBIASDQOnTenant' })
             AllowSendAOAIDataToOtherRegions                                       = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'AllowSendAOAIDataToOtherRegions' })
             AllowSendNLToDaxDataToOtherRegions                                    = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'AllowSendNLToDaxDataToOtherRegions' })
             AllowServicePrincipalsCreateAndUseProfiles                            = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'AllowServicePrincipalsCreateAndUseProfiles' })
             AllowServicePrincipalsUseReadAdminAPIs                                = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'AllowServicePrincipalsUseReadAdminAPIs' })
             AppPush                                                               = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'AppPush' })
+            ArtifactOrgAppPreview                                                 = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'ArtifactOrgAppPreview' })
             ArtifactSearchTenant                                                  = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'ArtifactSearchTenant' })
             ASCollectQueryTextTelemetryTenantSwitch                               = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'ASCollectQueryTextTelemetryTenantSwitch' })
             ASShareableCloudConnectionBindingSecurityModeTenant                   = Get-M365DSCFabricTenantSettingObject -Setting ($instance.tenantSettings | Where-Object -FilterScript { $_.settingName -eq 'ASShareableCloudConnectionBindingSecurityModeTenant' })
@@ -798,11 +818,23 @@ function Set-TargetResource
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance]
+        $AllowGetOneLakeUDK,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $AllowGuestLookup,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance]
         $AllowGuestUserToAccessSharedContent,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $AllowMountDfCreation,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $AllowOneLakeUDK,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance]
@@ -827,6 +859,10 @@ function Set-TargetResource
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance]
         $AppPush,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $ArtifactOrgAppPreview,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance]
@@ -1353,11 +1389,23 @@ function Test-TargetResource
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance]
+        $AllowGetOneLakeUDK,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $AllowGuestLookup,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance]
         $AllowGuestUserToAccessSharedContent,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $AllowMountDfCreation,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $AllowOneLakeUDK,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance]
@@ -1382,6 +1430,10 @@ function Test-TargetResource
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance]
         $AppPush,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $ArtifactOrgAppPreview,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance]
@@ -2104,7 +2156,7 @@ function Get-M365DSCFabricTenantSettingObject
     }
     if (-not [System.String]::IsNullOrEmpty($Setting.tenantSettingGroup))
     {
-        $values.Add('tenantSettingGroup', $Setting.tenantSettingGroup)
+        $values.Add('tenantSettingGroup',($Setting.tenantSettingGroup -creplace '\P{IsBasicLatin}'))
     }
     if ($null -ne $Setting.properties -and $Setting.properties.Length -gt 0)
     {

@@ -352,23 +352,23 @@ function Set-TargetResource
     }
 
     $azureADRegistrationAllowedToRegister = '#microsoft.graph.noDeviceRegistrationMembership'
-    if ($AzureAdJoinLocalAdminsRegisteringMode -eq 'All')
+    if ($AzureADAllowedToJoin -eq 'All')
     {
         $azureADRegistrationAllowedToRegister = '#microsoft.graph.allDeviceRegistrationMembership'
     }
-    elseif ($AzureAdJoinLocalAdminsRegisteringMode -eq 'Selected')
+    elseif ($AzureADAllowedToJoin -eq 'Selected')
     {
         $azureADRegistrationAllowedToRegister = '#microsoft.graph.enumeratedDeviceRegistrationMembership'
 
         $azureADRegistrationAllowedUsers = @()
-        foreach ($user in $AzureAdJoinLocalAdminsRegisteringUsers)
+        foreach ($user in $AzureADAllowedToJoinUsers)
         {
             $userInfo = Get-MgUser -UserId $user
             $azureADRegistrationAllowedUsers += $userInfo.Id
         }
 
         $azureADRegistrationAllowedGroups = @()
-        foreach ($group in $AzureAdJoinLocalAdminsRegisteringGroups)
+        foreach ($group in $AzureADAllowedToJoinGroups)
         {
             $groupInfo = Get-MgGroup -Filter "DisplayName eq '$group'"
             $azureADRegistrationAllowedGroups += $groupInfo.Id

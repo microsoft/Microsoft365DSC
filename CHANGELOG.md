@@ -1,5 +1,18 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* AADServicePrincipal
+  * FIXES [#5549](https://github.com/microsoft/Microsoft365DSC/issues/5549)
+* AADDeviceRegistrationPolicy
+  * Fixes an error when trying to disable AAD join.
+* FabricAdminTenantSettings
+  * Added support for the AllowGetOneLakeUDK, AllowMountDfCreation, AllowOneLakeUDK,
+    ArtifactOrgAppPreview properties.
+  * Fix values that have a zero length whitespace character.
+* M365DSCTelemetryEngine
+  * Report LCM details only if running as administrator.
+
 # 1.25.115.1
 
 * AADAuthenticationRequirement
