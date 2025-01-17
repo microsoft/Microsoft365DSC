@@ -263,56 +263,63 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    Write-Verbose -Message 'Getting configuration of AzureAD Conditional Access Policy'
-    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    if ($PSBoundParameters.ContainsKey('Id'))
+    if (-not $Script:exportedInstance)
     {
-        Write-Verbose -Message 'PolicyID was specified'
-        try
+        Write-Verbose -Message 'Getting configuration of AzureAD Conditional Access Policy'
+        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+            -InboundParameters $PSBoundParameters
+
+        #Ensure the proper dependencies are installed in the current environment.
+        Confirm-M365DSCDependencies
+
+        #region Telemetry
+        $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+        $CommandName = $MyInvocation.MyCommand
+        $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+            -CommandName $CommandName `
+            -Parameters $PSBoundParameters
+        Add-M365DSCTelemetryEvent -Data $data
+        #endregion
+
+        if ($PSBoundParameters.ContainsKey('Id'))
         {
-            $Policy = Get-MgBetaIdentityConditionalAccessPolicy -ConditionalAccessPolicyId $Id -ErrorAction Stop
+            Write-Verbose -Message 'PolicyID was specified'
+            try
+            {
+                $Policy = Get-MgBetaIdentityConditionalAccessPolicy -ConditionalAccessPolicyId $Id -ErrorAction Stop
+            }
+            catch
+            {
+                Write-Verbose -Message "Couldn't find existing policy by ID {$Id}"
+                $Policy = Get-MgBetaIdentityConditionalAccessPolicy -Filter "DisplayName eq '$DisplayName'"
+                if ($Policy.Length -gt 1)
+                {
+                    throw "Duplicate CA Policies named $DisplayName exist in tenant"
+                }
+            }
         }
-        catch
+        else
         {
-            Write-Verbose -Message "Couldn't find existing policy by ID {$Id}"
+            Write-Verbose -Message 'Id was NOT specified'
+            ## Can retreive multiple CA Policies since displayname is not unique
             $Policy = Get-MgBetaIdentityConditionalAccessPolicy -Filter "DisplayName eq '$DisplayName'"
             if ($Policy.Length -gt 1)
             {
                 throw "Duplicate CA Policies named $DisplayName exist in tenant"
             }
         }
+
+        if ([String]::IsNullOrEmpty($Policy.id))
+        {
+            Write-Verbose -Message "No existing Policy with name {$DisplayName} were found"
+            $currentValues = $PSBoundParameters
+            $currentValues.Ensure = 'Absent'
+            return $currentValues
+        }
     }
     else
     {
-        Write-Verbose -Message 'Id was NOT specified'
-        ## Can retreive multiple CA Policies since displayname is not unique
-        $Policy = Get-MgBetaIdentityConditionalAccessPolicy -Filter "DisplayName eq '$DisplayName'"
-        if ($Policy.Length -gt 1)
-        {
-            throw "Duplicate CA Policies named $DisplayName exist in tenant"
-        }
-    }
-
-    if ([String]::IsNullOrEmpty($Policy.id))
-    {
-        Write-Verbose -Message "No existing Policy with name {$DisplayName} were found"
-        $currentValues = $PSBoundParameters
-        $currentValues.Ensure = 'Absent'
-        return $currentValues
+        $Policy = $Script:exportedInstance
     }
 
     Write-Verbose -Message 'Get-TargetResource: Found existing Conditional Access policy'
@@ -711,7 +718,7 @@ function Get-TargetResource
         #no translation needed
         PersistentBrowserIsEnabled               = $false -or $Policy.SessionControls.PersistentBrowser.IsEnabled
         #no translation needed
-        DisableResilienceDefaultsIsEnabled       = $false -or $Policy.SessionControls.disableResilienceDefaults.IsEnabled
+        DisableResilienceDefaultsIsEnabled       = $false -or $Policy.SessionControls.disableResilienceDefaults
         #make false if undefined, true if true
         PersistentBrowserMode                    = [System.String]$Policy.SessionControls.PersistentBrowser.Mode
         #no translation needed
@@ -1745,7 +1752,7 @@ function Set-TargetResource
             $NewParameters.Add('grantControls', $GrantControls)
         }
 
-        if ($ApplicationEnforcedRestrictionsIsEnabled -or $CloudAppSecurityIsEnabled -or $SignInFrequencyIsEnabled -or $PersistentBrowserIsEnabled -or $DisableResilienceDefaultsIsEnabled)
+        if ($ApplicationEnforcedRestrictionsIsEnabled -or $CloudAppSecurityIsEnabled -or $SignInFrequencyIsEnabled -or $PersistentBrowserIsEnabled -or !([String]::IsNullOrEmpty($DisableResilienceDefaultsIsEnabled)))
         {
             Write-Verbose -Message 'Set-Targetresource: process session controls'
             $sessioncontrols = $null
@@ -1812,9 +1819,9 @@ function Set-TargetResource
                 $sessioncontrols.persistentBrowser.isEnabled = $true
                 $sessioncontrols.persistentBrowser.mode = $PersistentBrowserMode
             }
-            if ($DisableResilienceDefaultsIsEnabled)
+            if (!([String]::IsNullOrEmpty($DisableResilienceDefaultsIsEnabled)))
             {
-                $sessioncontrols.Add('disableResilienceDefaults', $true)
+                $sessioncontrols.Add('disableResilienceDefaults', $DisableResilienceDefaultsIsEnabled)
             }
             $NewParameters.Add('sessionControls', $sessioncontrols)
             #add SessionControls to the parameter list
@@ -2289,6 +2296,7 @@ function Export-TargetResource
                     Managedidentity       = $ManagedIdentity.IsPresent
                     AccessTokens          = $AccessTokens
                 }
+                $Script:exportedInstance = $Policy
                 $Results = Get-TargetResource @Params
 
                 if ([System.String]::IsNullOrEmpty($Results.DeviceFilterMode))

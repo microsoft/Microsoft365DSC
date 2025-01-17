@@ -709,6 +709,7 @@ function New-M365DSCReportFromConfiguration
             $delimiterParam = [System.Management.Automation.RuntimeDefinedParameter]::New("Delimiter", [System.String], $attributeCollection)
             $delimiterParam.Value = ';' # default value, comma makes a mess when importing a CSV-file in Excel
             $paramDictionary.Add("Delimiter", $delimiterParam)
+            $PSBoundParameters.Add("Delimiter", $delimiterParam.Value)
         }
         return $paramDictionary
     }
