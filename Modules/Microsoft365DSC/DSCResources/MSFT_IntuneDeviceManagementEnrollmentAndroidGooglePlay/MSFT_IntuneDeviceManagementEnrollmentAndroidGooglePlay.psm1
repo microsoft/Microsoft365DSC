@@ -70,32 +70,45 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters | Out-Null
+    Write-Verbose -Message "Getting configuration of the Intune Device Management Android Google Play Enrollment with Id {$Id} and DisplayName {$DisplayName}"
 
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullResult = $PSBoundParameters
-    $nullResult.Ensure = 'Absent'
     try
     {
-        $allSettings = Get-MgBetaDeviceManagementAndroidManagedStoreAccountEnterpriseSetting
-        $specificSetting = $allSettings | Where-Object { $_.id -eq $Id }
-
-        if (-not $specificSetting)
+        if (-not $Script:exportedInstance)
         {
-            Write-Verbose "No Android Managed Store Account Enterprise Setting found with Id $Id."
-            return $nullResult
+            New-M365DSCConnection -Workload 'MicrosoftGraph' `
+                -InboundParameters $PSBoundParameters | Out-Null
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullResult = $PSBoundParameters
+            $nullResult.Ensure = 'Absent'
+
+            if (-not [string]::IsNullOrEmpty($Id))
+            {
+                $allSettings = Get-MgBetaDeviceManagementAndroidManagedStoreAccountEnterpriseSetting
+                $specificSetting = $allSettings | Where-Object { $_.id -eq $Id }
+            }
+
+            if (-not $specificSetting)
+            {
+                Write-Verbose "No Android Managed Store Account Enterprise Setting found with Id $Id."
+                return $nullResult
+            }
+        }
+        else
+        {
+            $specificSetting = $Script:exportedInstance
         }
 
         $result = @{
@@ -445,12 +458,12 @@ function Export-TargetResource
     try
     {
         $Script:ExportMode = $true
-        [array] $Script:getInstances = Get-MgBetaDeviceManagementAndroidManagedStoreAccountEnterpriseSetting `
+        [array] $getValue = Get-MgBetaDeviceManagementAndroidManagedStoreAccountEnterpriseSetting `
             -ErrorAction Stop
 
         $i = 1
         $dscContent = ''
-        if ($Script:getInstances.Length -eq 0)
+        if ($getValue.Length -eq 0)
         {
             Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
@@ -459,7 +472,7 @@ function Export-TargetResource
             Write-Host "`r`n" -NoNewline
         }
 
-        foreach ($config in $Script:getInstances)
+        foreach ($config in $getValue)
         {
             if ($null -ne $Global:M365DSCExportResourceInstancesCount)
             {
@@ -467,7 +480,7 @@ function Export-TargetResource
             }
 
             $displayedKey = $config.Id
-            Write-Host "    |---[$i/$($Script:getInstances.Count)] $displayedKey" -NoNewline
+            Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
 
             $params = @{
                 Id                    = $config.Id
@@ -481,6 +494,7 @@ function Export-TargetResource
                 AccessTokens          = $AccessTokens
             }
 
+            $Script:exportedInstance = $config
             $Results = Get-TargetResource @params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results

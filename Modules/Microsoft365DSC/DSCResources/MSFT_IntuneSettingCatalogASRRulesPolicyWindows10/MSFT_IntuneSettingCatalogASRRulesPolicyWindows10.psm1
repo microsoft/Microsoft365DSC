@@ -238,60 +238,68 @@ function Get-TargetResource
         $AccessTokens
     )
 
+    
+    Write-Verbose -Message "Getting configuration of the Intune Endpoint Protection Attack Surface Protection rules Policy with Id {$Id} and DisplayName {$DisplayName}"
+
     try
     {
-        Write-Verbose -Message "Checking for the Intune Endpoint Protection Attack Surface Protection rules Policy {$DisplayName}"
-
-        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters `
-            -ErrorAction Stop
-
-        #Ensure the proper dependencies are installed in the current environment.
-        Confirm-M365DSCDependencies
-
-        #region Telemetry
-        $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-        $CommandName = $MyInvocation.MyCommand
-        $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-            -CommandName $CommandName `
-            -Parameters $PSBoundParameters
-        Add-M365DSCTelemetryEvent -Data $data
-        #endregion
-
-        $nullResult = $PSBoundParameters
-        $nullResult.Ensure = 'Absent'
-
-        $templateReferenceId = 'e8c053d6-9f95-42b1-a7f1-ebfd71c67a4b_1'
-
-        # Retrieve policy general settings
-        $policy = $null
-        if (-not [System.String]::IsNullOrEmpty($Identity))
+        if (-not $Script:exportedInstance)
         {
-            $policy = Get-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Identity -ErrorAction SilentlyContinue
-        }
+            $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+                -InboundParameters $PSBoundParameters `
+                -ErrorAction Stop
 
-        if ($null -eq $policy)
-        {
-            Write-Verbose -Message "No Endpoint Protection Attack Surface Reduction Rules Policy {$Identity} was found"
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
 
-            if (-not [System.String]::IsNullOrEmpty($DisplayName))
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullResult = $PSBoundParameters
+            $nullResult.Ensure = 'Absent'
+
+            $templateReferenceId = 'e8c053d6-9f95-42b1-a7f1-ebfd71c67a4b_1'
+
+            # Retrieve policy general settings
+            $policy = $null
+            if (-not [System.String]::IsNullOrEmpty($Identity))
             {
-                $policy = Get-MgBetaDeviceManagementConfigurationPolicy `
-                    -All `
-                    -Filter "Name eq '$DisplayName' and templateReference/TemplateId eq '$templateReferenceId'" `
-                    -ErrorAction SilentlyContinue
+                $policy = Get-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Identity -ErrorAction SilentlyContinue
+            }
 
-                if ($getValue.Length -gt 1)
+            if ($null -eq $policy)
+            {
+                Write-Verbose -Message "No Endpoint Protection Attack Surface Reduction Rules Policy {$Identity} was found"
+
+                if (-not [System.String]::IsNullOrEmpty($DisplayName))
                 {
-                    throw "Duplicate Endpoint Protection Attack Surface Reduction Rules Policy named $DisplayName exist in tenant"
+                    $policy = Get-MgBetaDeviceManagementConfigurationPolicy `
+                        -All `
+                        -Filter "Name eq '$DisplayName' and templateReference/TemplateId eq '$templateReferenceId'" `
+                        -ErrorAction SilentlyContinue
+
+                    if ($getValue.Length -gt 1)
+                    {
+                        throw "Duplicate Endpoint Protection Attack Surface Reduction Rules Policy named $DisplayName exist in tenant"
+                    }
                 }
             }
-        }
 
-        if ($null -eq $policy)
+            if ($null -eq $policy)
+            {
+                Write-Verbose -Message "No Endpoint Protection Attack Surface Reduction Rules Policy {$DisplayName} was found"
+                return $nullResult
+            }
+        }
+        else
         {
-            Write-Verbose -Message "No Endpoint Protection Attack Surface Reduction Rules Policy {$DisplayName} was found"
-            return $nullResult
+            $policy = $Script:exportedInstance
         }
         $Identity = $policy.Id
         Write-Verbose -Message "Found Endpoint Protection Attack Surface Reduction Rules Policy with Id {$Identity} and Name {$DisplayName)}."
@@ -1084,6 +1092,7 @@ function Export-TargetResource
                 AccessTokens          = $AccessTokens
             }
 
+            $Script:exportedInstance = $policy
             $Results = Get-TargetResource @params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results

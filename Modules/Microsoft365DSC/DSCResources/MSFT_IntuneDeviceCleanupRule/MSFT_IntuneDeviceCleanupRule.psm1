@@ -57,29 +57,37 @@ function Get-TargetResource
         throw [System.ArgumentException]::new('DeviceInactivityBeforeRetirementInDays must be greater than 30 and less than 270 when Enabled is set to true.')
     }
 
-    Write-Verbose -Message 'Checking for the Intune Device Cleanup Rule'
-    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullResult = $PSBoundParameters
-    $nullResult.Ensure = 'Absent'
+    Write-Verbose -Message 'Getting configuration of the Intune Device Cleanup Rule'
 
     try
     {
-        $url = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + 'beta/deviceManagement/managedDeviceCleanupSettings'
-        $cleanupRule = Invoke-MgGraphRequest -Method GET -Uri $url -ErrorAction Stop
+        if (-not $Script:exportedInstance)
+        {
+            $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+                -InboundParameters $PSBoundParameters
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullResult = $PSBoundParameters
+            $nullResult.Ensure = 'Absent'
+
+            $url = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + 'beta/deviceManagement/managedDeviceCleanupSettings'
+            $cleanupRule = Invoke-MgGraphRequest -Method GET -Uri $url -ErrorAction Stop
+        }
+        else
+        {
+            $cleanupRule = $Script:exportedInstance
+        }
 
         $return = @{
             Enabled               = $cleanupRule.deviceInactivityBeforeRetirementInDays -gt 0
@@ -379,6 +387,7 @@ function Export-TargetResource
                 $params.Add('DeviceInactivityBeforeRetirementInDays', $cleanupRule.deviceInactivityBeforeRetirementInDays)
             }
 
+            $Script:exportedInstance = $cleanupRule
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results

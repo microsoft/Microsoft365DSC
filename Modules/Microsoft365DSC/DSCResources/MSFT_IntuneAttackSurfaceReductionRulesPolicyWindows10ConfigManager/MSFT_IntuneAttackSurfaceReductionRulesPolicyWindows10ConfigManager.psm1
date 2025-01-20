@@ -156,50 +156,61 @@ function Get-TargetResource
         $AccessTokens
     )
 
+    Write-Verbose -Message "Getting configuration of the Intune Attack Surface Reduction Rules Policy for Windows10 Config Manager with Id {$Identity} and DisplayName {$DisplayName}"
+
     try
     {
-
-        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters `
-            -ErrorAction Stop
-
-        #Ensure the proper dependencies are installed in the current environment.
-        Confirm-M365DSCDependencies
-
-        #region Telemetry
-        $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-        $CommandName = $MyInvocation.MyCommand
-        $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-            -CommandName $CommandName `
-            -Parameters $PSBoundParameters
-        Add-M365DSCTelemetryEvent -Data $data
-        #endregion
-
-        $nullResult = $PSBoundParameters
-        $nullResult.Ensure = 'Absent'
-
-        $templateReferenceId = '5dd36540-eb22-4e7e-b19c-2a07772ba627_1'
-        # Retrieve policy general settings
-        $policy = $null
-        $policy = Get-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Identity -ErrorAction SilentlyContinue
-
-        if ($null -eq $policy)
+        if (-not $Script:exportedInstance)
         {
-            Write-Verbose -Message "No Intune Attack Surface Reduction Rules Policy for Windows10 Config Manager with Id {$Identity} was found"
+            $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+                -InboundParameters $PSBoundParameters `
+                -ErrorAction Stop
 
-            if (-not [System.String]::IsNullOrEmpty($DisplayName))
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullResult = $PSBoundParameters
+            $nullResult.Ensure = 'Absent'
+
+            $templateReferenceId = '5dd36540-eb22-4e7e-b19c-2a07772ba627_1'
+            # Retrieve policy general settings
+            $policy = $null
+            if (-not [System.String]::IsNullOrEmpty($Identity))
             {
-                $policy = Get-MgBetaDeviceManagementConfigurationPolicy `
-                    -All `
-                    -Filter "Name eq '$DisplayName' and templateReference/TemplateId eq '$templateReferenceId'" `
-                    -ErrorAction SilentlyContinue
+                $policy = Get-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Identity -ErrorAction SilentlyContinue
             }
 
             if ($null -eq $policy)
             {
-                Write-Verbose -Message "No Intune Attack Surface Reduction Rules Policy for Windows10 Config Manager with Name {$DisplayName} was found"
-                return $nullResult
+                Write-Verbose -Message "No Intune Attack Surface Reduction Rules Policy for Windows10 Config Manager with Id {$Identity} was found"
+
+                if (-not [System.String]::IsNullOrEmpty($DisplayName))
+                {
+                    $policy = Get-MgBetaDeviceManagementConfigurationPolicy `
+                        -All `
+                        -Filter "Name eq '$DisplayName' and templateReference/TemplateId eq '$templateReferenceId'" `
+                        -ErrorAction SilentlyContinue
+                }
+
+                if ($null -eq $policy)
+                {
+                    Write-Verbose -Message "No Intune Attack Surface Reduction Rules Policy for Windows10 Config Manager with Name {$DisplayName} was found"
+                    return $nullResult
+                }
             }
+        }
+        else
+        {
+            $policy = $Script:exportedInstance
         }
 
         $Identity = $policy.Id
@@ -820,6 +831,7 @@ function Export-TargetResource
                 AccessTokens          = $AccessTokens
             }
 
+            $Script:exportedInstance = $policy
             $Results = Get-TargetResource @params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results

@@ -334,7 +334,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         AdditionalProperties = @{
                             appSupportsOemConfig = $True
                             '@odata.type' = "#microsoft.graph.androidManagedStoreAppConfiguration"
-                            payloadJson = "{`"test`":`"value`"}"
+                            payloadJson = [System.Convert]::ToBase64String([System.Text.Encoding]::ASCII.GetBytes("{`"test`":`"value`"}"))
                             profileApplicability = "default"
                             permissionActions = @(
                                 @{

@@ -58,53 +58,63 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    Write-Verbose -Message "Checking for the Intune Account Protection Local User Group Membership Policy {$DisplayName}"
+    Write-Verbose -Message "Getting configuration of the Intune Account Protection Local User Group Membership Policy with Id {$Identity} and DisplayName {$DisplayName}"
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters `
-        -ErrorAction Stop
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullResult = $PSBoundParameters
-    $nullResult.Ensure = 'Absent'
-
-    try
+    try 
     {
-        #Retrieve policy general settings
-
-        $policy = Get-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Identity -ExpandProperty settings -ErrorAction SilentlyContinue
-
-        if ($null -eq $policy)
+        if (-not $Script:exportedInstance)
         {
-            Write-Verbose -Message "No Account Protection Local User Group Membership Policy with identity {$Identity} was found"
-            if (-not [String]::IsNullOrEmpty($DisplayName))
+            $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+                -InboundParameters $PSBoundParameters `
+                -ErrorAction Stop
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullResult = $PSBoundParameters
+            $nullResult.Ensure = 'Absent'
+
+            #Retrieve policy general settings
+            $policy = $null
+            if (-not [String]::IsNullOrEmpty($Identity))
             {
-                $policy = Get-MgBetaDeviceManagementConfigurationPolicy -All -Filter "Name eq '$DisplayName'" -ErrorAction SilentlyContinue
-
-                if (([array]$devicePolicy).Count -gt 1)
-                {
-                    throw "A policy with a duplicated displayName {'$DisplayName'} was found - Ensure displayName is unique"
-                }
-
-                if ($null -eq $policy)
-                {
-                    Write-Verbose -Message "No Account Protection Local User Group Membership Policy with displayName {$DisplayName} was found"
-                    return $nullResult
-                }
-
-                $policy = Get-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $policy.id -ExpandProperty settings -ErrorAction SilentlyContinue
+                $policy = Get-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Identity -ExpandProperty settings -ErrorAction SilentlyContinue
             }
+            
+            if ($null -eq $policy)
+            {
+                Write-Verbose -Message "No Account Protection Local User Group Membership Policy with identity {$Identity} was found"
+                if (-not [String]::IsNullOrEmpty($DisplayName))
+                {
+                    $policy = Get-MgBetaDeviceManagementConfigurationPolicy -All -Filter "Name eq '$DisplayName'" -ErrorAction SilentlyContinue
+
+                    if (([array]$devicePolicy).Count -gt 1)
+                    {
+                        throw "A policy with a duplicated displayName {'$DisplayName'} was found - Ensure displayName is unique"
+                    }
+
+                    if ($null -eq $policy)
+                    {
+                        Write-Verbose -Message "No Account Protection Local User Group Membership Policy with displayName {$DisplayName} was found"
+                        return $nullResult
+                    }
+
+                    $policy = Get-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $policy.id -ExpandProperty settings -ErrorAction SilentlyContinue
+                }
+            }
+        }
+        else
+        {
+            $policy = $Script:exportedInstance
         }
 
 
@@ -565,6 +575,7 @@ function Export-TargetResource
                 AccessTokens          = $AccessTokens
             }
 
+            $Script:exportedInstance = $policy
             $Results = Get-TargetResource @params
             if (-not (Test-M365DSCAuthenticationParameter -BoundParameters $Results))
             {

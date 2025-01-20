@@ -236,43 +236,50 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    Write-Verbose -Message "Checking for the Intune Device Configuration Policy {$DisplayName}"
-
-    $M365DSCConnectionSplat = @{
-        Workload          = 'MicrosoftGraph'
-        InboundParameters = $PSBoundParameters
-    }
-    $ConnectionMode = New-M365DSCConnection @M365DSCConnectionSplat
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
-    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add('Resource', $ResourceName)
-    $data.Add('Method', $MyInvocation.MyCommand)
-    $data.Add('Principal', $Credential.UserName)
-    $data.Add('TenantId', $TenantId)
-    $data.Add('ConnectionMode', $ConnectionMode)
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullResult = $PSBoundParameters
-    $nullResult.Ensure = 'Absent'
+    Write-Verbose -Message "Getting configuration of the Intune Device Configuration Policy Android for Work Profile {$DisplayName}"
 
     try
     {
-        $policy = Get-MgBetaDeviceManagementDeviceConfiguration -All -Filter "displayName eq '$DisplayName'" `
-            -ErrorAction Stop | Where-Object -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidWorkProfileGeneralDeviceConfiguration' }
-
-        if ($null -eq $policy)
+        if (-not $Script:exportedInstance)
         {
-            Write-Verbose -Message "No Device Configuration Policy {$DisplayName} was found"
-            return $nullResult
+            $M365DSCConnectionSplat = @{
+                Workload          = 'MicrosoftGraph'
+                InboundParameters = $PSBoundParameters
+            }
+            $ConnectionMode = New-M365DSCConnection @M365DSCConnectionSplat
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+            $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+            $data.Add('Resource', $ResourceName)
+            $data.Add('Method', $MyInvocation.MyCommand)
+            $data.Add('Principal', $Credential.UserName)
+            $data.Add('TenantId', $TenantId)
+            $data.Add('ConnectionMode', $ConnectionMode)
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullResult = $PSBoundParameters
+            $nullResult.Ensure = 'Absent'
+
+            $policy = Get-MgBetaDeviceManagementDeviceConfiguration -All -Filter "displayName eq '$DisplayName'" `
+                -ErrorAction Stop | Where-Object -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidWorkProfileGeneralDeviceConfiguration' }
+
+            if ($null -eq $policy)
+            {
+                Write-Verbose -Message "No Intune Device Configuration Policy Android for Work Profile with {$DisplayName} was found"
+                return $nullResult
+            }
+        }
+        else
+        {
+            $policy = $Script:exportedInstance
         }
 
-        Write-Verbose -Message "Found Device Configuration Policy {$DisplayName}"
+        Write-Verbose -Message "An Intune Device Configuration Policy Android for Work Profile with {$DisplayName} was found"
         $results = @{
             Description                                               = $policy.Description
             DisplayName                                               = $policy.DisplayName
@@ -1069,6 +1076,8 @@ function Export-TargetResource
                 Managedidentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }
+
+            $Script:exportedInstance = $policy
             $Results = Get-TargetResource @Params
 
             if ($Results.Assignments)

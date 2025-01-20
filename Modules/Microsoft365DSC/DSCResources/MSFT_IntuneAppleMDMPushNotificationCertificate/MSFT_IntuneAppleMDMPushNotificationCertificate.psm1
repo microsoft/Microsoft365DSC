@@ -58,42 +58,42 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters | Out-Null
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullResult = $PSBoundParameters
-    $nullResult.Ensure = 'Absent'
+    Write-Verbose -Message "Getting configuration of the Intune Apple Push Notification Certificate with Id {$Id}."
 
     try
     {
-        $instance = $null
-        if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
+        if (-not $Script:exportedInstance)
         {
-            $instance = $Script:exportedInstances | Where-Object -FilterScript { $_.Id -eq $Id }
-        }
+            New-M365DSCConnection -Workload 'MicrosoftGraph' `
+                -InboundParameters $PSBoundParameters | Out-Null
 
-        if ($null -eq $instance)
-        {
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullResult = $PSBoundParameters
+            $nullResult.Ensure = 'Absent'
+
             # There is only one Apple push notification certificate per tenant so no need to filter by Id
-            $instance = Get-MgBetaDeviceManagementApplePushNotificationCertificate -ErrorAction Stop
+            $instance = Get-MgBetaDeviceManagementApplePushNotificationCertificate -ErrorAction SilentlyContinue
 
             if ($null -eq $instance)
             {
-                Write-Verbose -Message 'Apple push notification certificate.'
+                Write-Verbose -Message "No Intune Apple MDM Push Notification Certificate with Id {$Id}."
                 return $nullResult
             }
+        }
+        else
+        {
+            $instance = $Script:exportedInstance
         }
 
         $results = @{
@@ -408,12 +408,11 @@ function Export-TargetResource
 
     try
     {
-        $Script:ExportMode = $true
-        [array] $Script:exportedInstances = Get-MgBetaDeviceManagementApplePushNotificationCertificate -ErrorAction Stop
+        [array] $getValue = Get-MgBetaDeviceManagementApplePushNotificationCertificate -ErrorAction Stop
 
         $i = 1
         $dscContent = ''
-        if ($Script:exportedInstances.Length -eq 0)
+        if ($getValue.Length -eq 0)
         {
             Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
@@ -422,10 +421,10 @@ function Export-TargetResource
             Write-Host "`r`n" -NoNewline
         }
 
-        foreach ($config in $Script:exportedInstances)
+        foreach ($config in $getValue)
         {
             $displayedKey = $config.Id
-            Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -NoNewline
+            Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
 
             $Params = @{
                 Id                    = $config.Id
@@ -446,6 +445,7 @@ function Export-TargetResource
             $consentInstance = Get-MgBetaDeviceManagementDataSharingConsent -DataSharingConsentId 'appleMDMPushCertificate'
             $Params.Add('DataSharingConsetGranted', $consentInstance.Granted)
 
+            $Script:exportedInstance = $config
             $Results = Get-TargetResource @Params
 
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `

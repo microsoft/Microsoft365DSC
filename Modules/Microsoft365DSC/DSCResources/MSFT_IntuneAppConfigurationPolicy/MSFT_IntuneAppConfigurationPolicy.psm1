@@ -58,60 +58,65 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    Write-Verbose -Message "Getting configuration of Intune App Configuration Policy with Id {$Id}"
-    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters
+    Write-Verbose -Message "Getting configuration of the Intune App Configuration Policy with Id {$Id} and DisplayName {$DisplayName}"
 
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullResult = ([Hashtable]$PSBoundParameters).clone()
-    $nullResult.Ensure = 'Absent'
     try
     {
+        if (-not $Script:exportedInstance)
+        {
+            $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+                -InboundParameters $PSBoundParameters
 
-        try
-        {
-            $configPolicy = Get-MgBetaDeviceAppManagementTargetedManagedAppConfiguration -TargetedManagedAppConfigurationId $Id `
-                -ErrorAction Stop
-        }
-        catch
-        {
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullResult = ([Hashtable]$PSBoundParameters).clone()
+            $nullResult.Ensure = 'Absent'
+
             $configPolicy = $null
-        }
-
-        if ($null -eq $configPolicy)
-        {
-            Write-Verbose -Message "Could not find an Intune App Configuration Policy with Id {$Id}, searching by DisplayName {$DisplayName}"
-
-            try
+            if (-not [string]::IsNullOrEmpty($Id))
             {
-                $configPolicy = Get-MgBetaDeviceAppManagementTargetedManagedAppConfiguration -All -Filter "displayName eq '$DisplayName'" `
+                $configPolicy = Get-MgBetaDeviceAppManagementTargetedManagedAppConfiguration -TargetedManagedAppConfigurationId $Id `
                     -ErrorAction Stop
-            }
-            catch
-            {
-                $configPolicy = $null
             }
 
             if ($null -eq $configPolicy)
             {
-                Write-Verbose -Message "No App Configuration Policy with DisplayName {$DisplayName} was found"
-                return $nullResult
+                Write-Verbose -Message "Could not find an Intune App Configuration Policy with Id {$Id}, searching by DisplayName {$DisplayName}"
+
+                try
+                {
+                    $configPolicy = Get-MgBetaDeviceAppManagementTargetedManagedAppConfiguration -All -Filter "displayName eq '$DisplayName'" `
+                        -ErrorAction Stop
+                }
+                catch
+                {
+                    $configPolicy = $null
+                }
+
+                if ($null -eq $configPolicy)
+                {
+                    Write-Verbose -Message "No App Configuration Policy with DisplayName {$DisplayName} was found"
+                    return $nullResult
+                }
+                if (([array]$configPolicy).count -gt 1)
+                {
+                    throw "A policy with a duplicated displayName {'$DisplayName'} was found - Ensure displayName is unique"
+                }
             }
-            if (([array]$configPolicy).count -gt 1)
-            {
-                throw "A policy with a duplicated displayName {'$DisplayName'} was found - Ensure displayName is unique"
-            }
+        }
+        else
+        {
+            $configPolicy = $Script:exportedInstance
         }
 
         Write-Verbose -Message "Found App Configuration Policy with Id {$($configPolicy.Id)} and DisplayName {$($configPolicy.DisplayName)}"
@@ -506,6 +511,8 @@ function Export-TargetResource
                 Managedidentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }
+
+            $Script:exportedInstance = $configPolicy
             $Results = Get-TargetResource @params
             if (-not (Test-M365DSCAuthenticationParameter -BoundParameters $Results))
             {

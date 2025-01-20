@@ -69,49 +69,61 @@ function Get-TargetResource
         $AccessTokens
     )
 
+    Write-Verbose -Message "Getting configuration of the Intune Windows Update For Business Driver Update Profile for Windows 10 with Id {$Id} and DisplayName {$DisplayName}"
+
     try
     {
-        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters
-
-        #Ensure the proper dependencies are installed in the current environment.
-        Confirm-M365DSCDependencies
-
-        #region Telemetry
-        $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
-        $CommandName = $MyInvocation.MyCommand
-        $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-            -CommandName $CommandName `
-            -Parameters $PSBoundParameters
-        Add-M365DSCTelemetryEvent -Data $data
-        #endregion
-
-        $nullResult = $PSBoundParameters
-        $nullResult.Ensure = 'Absent'
-
-        $getValue = $null
-        #region resource generator code
-        $uri = "/beta/deviceManagement/windowsDriverUpdateProfiles/$Id"
-        $getValue = (Invoke-MgGraphRequest -Method GET -Uri $uri -SkipHttpErrorCheck).value
-
-        if ($null -eq $getValue)
+        if (-not $Script:exportedInstance)
         {
-            Write-Verbose -Message "Could not find an Intune Windows Update For Business Driver Update Profile for Windows 10 with Id {$Id}"
+            $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+                -InboundParameters $PSBoundParameters
 
-            if (-Not [string]::IsNullOrEmpty($DisplayName))
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullResult = $PSBoundParameters
+            $nullResult.Ensure = 'Absent'
+
+            $getValue = $null
+            #region resource generator code
+            if (-not [string]::IsNullOrEmpty($Id))
             {
-                # Potentially add support for -All parameter (@odata.nextLink) if needed
-                $uri = '/beta/deviceManagement/windowsDriverUpdateProfiles'
-                $getValue = (Invoke-MgGraphRequest -Method GET -Uri $uri).value | Where-Object -FilterScript {
-                    $_.displayName -eq $DisplayName
+                $uri = "/beta/deviceManagement/windowsDriverUpdateProfiles/$Id"
+                $getValue = (Invoke-MgGraphRequest -Method GET -Uri $uri -SkipHttpErrorCheck).value
+            }
+
+            if ($null -eq $getValue)
+            {
+                Write-Verbose -Message "Could not find an Intune Windows Update For Business Driver Update Profile for Windows 10 with Id {$Id}"
+
+                if (-Not [string]::IsNullOrEmpty($DisplayName))
+                {
+                    # Potentially add support for -All parameter (@odata.nextLink) if needed
+                    $uri = '/beta/deviceManagement/windowsDriverUpdateProfiles'
+                    $getValue = (Invoke-MgGraphRequest -Method GET -Uri $uri).value | Where-Object -FilterScript {
+                        $_.displayName -eq $DisplayName
+                    }
                 }
             }
+            #endregion
+            if ($null -eq $getValue)
+            {
+                Write-Verbose -Message "Could not find an Intune Windows Update For Business Driver Update Profie for Windows 10 with DisplayName {$DisplayName}"
+                return $nullResult
+            }
         }
-        #endregion
-        if ($null -eq $getValue)
+        else
         {
-            Write-Verbose -Message "Could not find an Intune Windows Update For Business Driver Update Profie for Windows 10 with DisplayName {$DisplayName}"
-            return $nullResult
+            $getValue = $Script:exportedInstance
         }
         $Id = $getValue.Id
         Write-Verbose -Message "An Intune Windows Update For Business Driver Update Profile for Windows 10 with Id {$Id} and DisplayName {$DisplayName} was found."
@@ -140,6 +152,7 @@ function Get-TargetResource
             AccessTokens             = $AccessTokens
             #endregion
         }
+
         $uri = "/beta/deviceManagement/windowsDriverUpdateProfiles/$($Id)/assignments"
         $assignmentsValues = (Invoke-MgGraphRequest -Method GET -Uri $uri).value
         $assignmentResult = @()
@@ -553,6 +566,7 @@ function Export-TargetResource
                 AccessTokens          = $AccessTokens
             }
 
+            $Script:exportedInstance = $config
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results

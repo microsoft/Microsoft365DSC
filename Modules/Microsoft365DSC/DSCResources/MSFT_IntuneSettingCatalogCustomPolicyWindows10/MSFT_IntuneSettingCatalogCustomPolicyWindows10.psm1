@@ -74,6 +74,8 @@ function Get-TargetResource
         $AccessTokens
     )
 
+    Write-Verbose -Message "Getting configuration of the Intune Setting Catalog Custom Policy for Windows10 with Id {$Id} and Name {$Name}"
+
     try
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -95,14 +97,11 @@ function Get-TargetResource
         $nullResult.Ensure = 'Absent'
 
         #region resource generator code
-        try
+        if (-not [string]::IsNullOrEmpty($Id))
         {
-            $getValue = Get-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Id -ExpandProperty 'settings' -ErrorAction Stop
+            $getValue = Get-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Id -ExpandProperty 'settings' -ErrorAction SilentlyContinue
         }
-        catch
-        {
-            $getValue = $null
-        }
+
         if ($null -eq $getValue)
         {
             Write-Verbose -Message "Could not find an Intune Setting Catalog Custom Policy for Windows10 with Id {$Id}"

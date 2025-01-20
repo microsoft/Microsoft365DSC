@@ -141,6 +141,8 @@ function Get-TargetResource
         $AccessTokens
     )
 
+    Write-Verbose -Message "Getting configuration of the Intune Windows Information Protection Policy for Windows10 Mdm Enrolled with Id {$Id} and DisplayName {$DisplayName}"
+
     try
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -162,13 +164,9 @@ function Get-TargetResource
         $nullResult.Ensure = 'Absent'
 
         #region resource generator code
-        try
+        if (-not [string]::IsNullOrEmpty($Id))
         {
-            $getValue = Get-MgBetaDeviceAppManagementMdmWindowsInformationProtectionPolicy -MdmWindowsInformationProtectionPolicyId $Id -ExpandProperty assignments -ErrorAction Stop
-        }
-        catch
-        {
-            $getValue = $null
+            $getValue = Get-MgBetaDeviceAppManagementMdmWindowsInformationProtectionPolicy -MdmWindowsInformationProtectionPolicyId $Id -ExpandProperty assignments -ErrorAction SilentlyContinue
         }
 
         if ($null -eq $getValue)

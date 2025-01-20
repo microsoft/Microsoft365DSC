@@ -7,6 +7,30 @@
 | **DisplayName** | Key | String | Display name of the iOS App Protection Policy. | |
 | **Identity** | Write | String | Identity of the iOS App Protection Policy. | |
 | **Description** | Write | String | Description of the iOS App Protection Policy. | |
+| **AllowedDataIngestionLocations** | Write | StringArray[] | Data storage locations where a user may store managed data. Inherited from managedAppProtection. | |
+| **AllowWidgetContentSync** | Write | Boolean | Indicates if content sync for widgets is allowed for iOS on App Protection Policies. | |
+| **AppActionIfAccountIsClockedOut** | Write | String | Defines a managed app behavior, either block or warn, if the user is clocked out (non-working time). | `block`, `wipe`, `warn`, `blockWhenSettingIsSupported` |
+| **AppActionIfUnableToAuthenticateUser** | Write | String | If set, it will specify what action to take in the case where the user is unable to checkin because their authentication token is invalid. This happens when the user is deleted or disabled in AAD. . | `block`, `wipe`, `warn`, `blockWhenSettingIsSupported` |
+| **AppGroupType** | Write | String | Public Apps selection: group or individual Inherited from targetedManagedAppProtection. | `selectedPublicApps`, `allCoreMicrosoftApps`, `allMicrosoftApps`, `allApps` |
+| **BlockDataIngestionIntoOrganizationDocuments** | Write | Boolean | Indicates whether a user can bring data into org documents. | |
+| **CustomDialerAppProtocol** | Write | String | Protocol of a custom dialer app to click-to-open a phone number on iOS, for example, skype:. | |
+| **DeployedAppCount** | Write | UInt32 | Count of apps to which the current policy is deployed. | |
+| **DialerRestrictionLevel** | Write | String | The classes of dialer apps that are allowed to click-to-open a phone number. | `allApps`, `managedApps`, `customApp`, `blocked` |
+| **ExemptedUniversalLinks** | Write | StringArray[] | A list of custom urls that are allowed to invocate an unmanaged app. | |
+| **GracePeriodToBlockAppsDuringOffClockHours** | Write | String | A grace period before blocking app access during off clock hours. | |
+| **IsAssigned** | Write | Boolean | Indicates if the policy is deployed to any inclusion groups or not. | |
+| **managedUniversalLinks** | Write | StringArray[] | A list of custom urls that are allowed to invocate a managed app. | |
+| **MaximumAllowedDeviceThreatLevel** | Write | String | Maximum allowed device threat level, as reported by the MTD app Inherited from managedAppProtection. | `notConfigured`, `secured`, `low`, `medium`, `high` |
+| **MaximumRequiredOsVersion** | Write | String | Versions bigger than the specified version will block the managed app from accessing company data. Inherited from managedAppProtection. | |
+| **MaximumWarningOsVersion** | Write | String | Versions bigger than the specified version will block the managed app from accessing company data. Inherited from managedAppProtection. | |
+| **MaximumWipeOsVersion** | Write | String | Versions bigger than the specified version will block the managed app from accessing company data. Inherited from managedAppProtection. | |
+| **MessagingRedirectAppUrlScheme** | Write | String | When a specific app redirection is enforced by protectedMessagingRedirectAppType in an App Protection Policy, this value defines the app url redirect schemes which are allowed to be used. | |
+| **MinimumWarningSdkVersion** | Write | String | Versions less than the specified version will result in warning message on the managed app from accessing company data. | |
+| **MobileThreatDefensePartnerPriority** | Write | String | Indicates how to prioritize which Mobile Threat Defense (MTD) partner is enabled for a given platform, when more than one is enabled. An app can only be actively using a single Mobile Threat Defense partner. When NULL, Microsoft Defender will be given preference. Otherwise setting the value to defenderOverThirdPartyPartner or thirdPartyPartnerOverDefender will make explicit which partner to prioritize. | `defenderOverThirdPartyPartner`, `thirdPartyPartnerOverDefender`, `unknownFutureValue` |
+| **MobileThreatDefenseRemediationAction** | Write | String | Determines what action to take if the mobile threat defense threat threshold isn't met. Warn isn't a supported value for this property Inherited from managedAppProtection. | `block`, `wipe`, `warn`, `blockWhenSettingIsSupported` |
+| **PreviousPinBlockCount** | Write | UInt32 | Requires a pin to be unique from the number specified in this property. Inherited from managedAppProtection. | |
+| **ProtectedMessagingRedirectAppType** | Write | String | Defines how app messaging redirection is protected by an App Protection Policy. Default is anyApp. Inherited from managedAppProtection. | `anyApp`, `anyManagedApp`, `specificApps`, `blocked` |
+| **ThirdPartyKeyboardsBlocked** | Write | Boolean | Defines if third party keyboards are allowed while accessing a managed app. | |
 | **PeriodOfflineBeforeAccessCheck** | Write | String | The period after which access is checked when the device is not connected to the internet. | |
 | **PeriodOnlineBeforeAccessCheck** | Write | String | The period after which access is checked when the device is connected to the internet. | |
 | **AllowedInboundDataTransferSources** | Write | String | Sources from which data is allowed to be transferred. Possible values are: allApps, managedApps, none. | `allApps`, `managedApps`, `none` |

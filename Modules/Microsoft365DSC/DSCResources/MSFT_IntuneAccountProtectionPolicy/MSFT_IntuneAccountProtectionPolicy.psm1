@@ -123,58 +123,67 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    Write-Verbose -Message "Checking for the Intune Account Protection Policy {$DisplayName}"
-
-    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters `
-        -ErrorAction Stop
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullResult = $PSBoundParameters
-    $nullResult.Ensure = 'Absent'
+    Write-Verbose -Message "Getting configuration of the Intune Account Protection Policy with Id {$Identity} and DisplayName {$DisplayName}"
 
     try
     {
-        #Retrieve policy general settings
-
-        $policy = Get-MgBetaDeviceManagementIntent -DeviceManagementIntentId $Identity -ExpandProperty settings, assignments -ErrorAction SilentlyContinue
-
-        if ($null -eq $policy)
+        if (-not $Script:exportedInstance)
         {
-            Write-Verbose -Message "No Account Protection Policy with identity {$Identity} was found"
-            if (-not [String]::IsNullOrEmpty($DisplayName))
+            $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+                -InboundParameters $PSBoundParameters `
+                -ErrorAction Stop
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullResult = $PSBoundParameters
+            $nullResult.Ensure = 'Absent'
+
+            #Retrieve policy general settings
+            $policy = $null
+            if (-not [String]::IsNullOrEmpty($Identity))
             {
-                $policy = Get-MgBetaDeviceManagementIntent -Filter "DisplayName eq '$DisplayName'" -ErrorAction SilentlyContinue
+                $policy = Get-MgBetaDeviceManagementIntent -DeviceManagementIntentId $Identity -ExpandProperty settings, assignments -ErrorAction SilentlyContinue
             }
 
             if ($null -eq $policy)
             {
-                Write-Verbose -Message "No Account Protection Policy with displayName {$DisplayName} was found"
-                return $nullResult
+                Write-Verbose -Message "No Account Protection Policy with identity {$Identity} was found"
+                if (-not [String]::IsNullOrEmpty($DisplayName))
+                {
+                    $policy = Get-MgBetaDeviceManagementIntent -Filter "DisplayName eq '$DisplayName'" -ErrorAction SilentlyContinue
+                }
+
+                if ($null -eq $policy)
+                {
+                    Write-Verbose -Message "No Account Protection Policy with displayName {$DisplayName} was found"
+                    return $nullResult
+                }
+
+                if (([array]$policy).count -gt 1)
+                {
+                    throw "A policy with a duplicated displayName {'$DisplayName'} was found - Ensure displayName is unique"
+                }
+
+                $policy = Get-MgBetaDeviceManagementIntent -DeviceManagementIntentId $policy.id -ExpandProperty settings, assignments -ErrorAction SilentlyContinue
+
             }
-
-            if (([array]$policy).count -gt 1)
-            {
-                throw "A policy with a duplicated displayName {'$DisplayName'} was found - Ensure displayName is unique"
-            }
-
-            $policy = Get-MgBetaDeviceManagementIntent -DeviceManagementIntentId $policy.id -ExpandProperty settings, assignments -ErrorAction SilentlyContinue
-
+        }
+        else
+        {
+            $policy = $Script:exportedInstance
         }
 
-
-        $Identity = $policy.id
+        $Identity = $policy.Id
         [array]$settings = $policy.settings
 
         $returnHashtable = @{}
@@ -743,6 +752,7 @@ function Export-TargetResource
                 AccessTokens          = $AccessTokens
             }
 
+            $Script:exportedInstance = $policy
             $Results = Get-TargetResource @params
             if (-not (Test-M365DSCAuthenticationParameter -BoundParameters $Results))
             {

@@ -296,35 +296,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         }
                     }
                 }
-
-                Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicySetting -MockWith {
-                    return @{
-                        Id                   = 0
-                        SettingDefinitions   = $null
-                        SettingInstance      = @{
-                            SettingDefinitionId              = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules'
-                            SettingInstanceTemplateReference = @{
-                                SettingInstanceTemplateId = 'd770fcd1-62cd-4217-9b20-9ee2a12062ff'
-                            }
-                            AdditionalProperties             = @{
-                                '@odata.type'      = '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
-                                groupSettingCollectionValue = @(@{
-                                    children = @(
-                                        @{
-                                            "@odata.type" = "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance"
-                                            "settingDefinitionId" = "device_vendor_msft_policy_config_defender_attacksurfacereductionrules_useadvancedprotectionagainstransomware"
-                                            "choiceSettingValue" = @{
-                                                "@odata.type" = "#microsoft.graph.deviceManagementConfigurationChoiceSettingValue"
-                                                "value" = "device_vendor_msft_policy_config_defender_attacksurfacereductionrules_useadvancedprotectionagainstransomware_block"
-                                            }
-                                        }
-                                    )
-                                })
-                            }
-                        }
-                        AdditionalProperties = $null
-                    }
-                }
             }
 
             It 'Should Reverse Engineer resource from the Export method' {

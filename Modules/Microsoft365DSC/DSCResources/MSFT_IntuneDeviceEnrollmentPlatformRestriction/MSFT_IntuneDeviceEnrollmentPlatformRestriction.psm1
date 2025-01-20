@@ -94,71 +94,77 @@ function Get-TargetResource
         [System.String[]]
         $AccessTokens
     )
-    Write-Verbose -Message "Checking for the Intune Device Enrollment Restriction {$DisplayName}"
-    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters
 
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullResult = $PSBoundParameters
-    $nullResult.Ensure = 'Absent'
-
-    $PlatformType = ''
-    $keys = (([Hashtable]$PSBoundParameters).Clone()).Keys
-    foreach ($key in $keys)
-    {
-        if ($null -ne $PSBoundParameters.$key -and $PSBoundParameters.$key.getType().Name -like '*cimInstance*' -and $key -like '*Restriction')
-        {
-            if ($DeviceEnrollmentConfigurationType -eq 'singlePlatformRestriction' )
-            {
-                $PlatformType = $key.replace('Restriction', '')
-                break
-            }
-        }
-    }
+    Write-Verbose -Message "Getting configuration of the Intune Device Enrollment Restriction with Id {$Identity} and DisplayName {$DisplayName}"
 
     try
     {
-        try
+        if (-not $Script:exportedInstance)
         {
-            $config = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -DeviceEnrollmentConfigurationId $Identity -ErrorAction Stop
-        }
-        catch
-        {
-            $config = $null
-        }
+            $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+                -InboundParameters $PSBoundParameters
 
-        if ($null -eq $config)
-        {
-            Write-Verbose -Message "Could not find an Intune Device Enrollment Platform Restriction with Id {$Identity}"
-            $config = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -All -Filter "DisplayName eq '$DisplayName'" `
-                -ErrorAction SilentlyContinue | Where-Object -FilterScript {
-                $_.AdditionalProperties.'@odata.type' -like '#microsoft.graph.deviceEnrollmentPlatformRestriction*Configuration' -and
-                $(if ($null -ne $_.AdditionalProperties.platformType)
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullResult = $PSBoundParameters
+            $nullResult.Ensure = 'Absent'
+
+            $PlatformType = ''
+            $keys = (([Hashtable]$PSBoundParameters).Clone()).Keys
+            foreach ($key in $keys)
+            {
+                if ($null -ne $PSBoundParameters.$key -and $PSBoundParameters.$key.getType().Name -like '*cimInstance*' -and $key -like '*Restriction')
+                {
+                    if ($DeviceEnrollmentConfigurationType -eq 'singlePlatformRestriction' )
                     {
-                        $_.AdditionalProperties.platformType -eq $PlatformType
+                        $PlatformType = $key.replace('Restriction', '')
+                        break
                     }
-                    else
-                    {
-                        $true
-                    })
+                }
+            }
+        
+            $config = $null
+            if (-not [string]::IsNullOrEmpty($Identity))
+            {
+                $config = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -DeviceEnrollmentConfigurationId $Identity -ErrorAction Stop
             }
 
             if ($null -eq $config)
             {
-                Write-Verbose -Message "Could not find an Intune Device Enrollment Platform Restriction with DisplayName {$DisplayName}"
-                return $nullResult
+                Write-Verbose -Message "Could not find an Intune Device Enrollment Platform Restriction with Id {$Identity}"
+                $config = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -All -Filter "DisplayName eq '$DisplayName'" `
+                    -ErrorAction SilentlyContinue | Where-Object -FilterScript {
+                    $_.AdditionalProperties.'@odata.type' -like '#microsoft.graph.deviceEnrollmentPlatformRestriction*Configuration' -and
+                    $(if ($null -ne $_.AdditionalProperties.platformType)
+                        {
+                            $_.AdditionalProperties.platformType -eq $PlatformType
+                        }
+                        else
+                        {
+                            $true
+                        })
+                }
+
+                if ($null -eq $config)
+                {
+                    Write-Verbose -Message "Could not find an Intune Device Enrollment Platform Restriction with DisplayName {$DisplayName}"
+                    return $nullResult
+                }
             }
+        }
+        else
+        {
+            $config = $Script:exportedInstance
         }
 
         Write-Verbose -Message "Found Intune Device Enrollment Platform Restriction with Name {$($config.DisplayName)}"
@@ -733,6 +739,8 @@ function Export-TargetResource
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }
+
+            $Script:exportedInstance = $config
             $Results = Get-TargetResource @Params
 
             if ($null -ne $Results.Assignments)

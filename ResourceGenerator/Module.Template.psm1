@@ -41,7 +41,7 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    Write-Verbose -Message "Getting configuration of the <ResourceDescription> with <PrimaryKey> {$<PrimaryKey>} and <FilterKey> {$<FilterKey>}"
+    Write-Verbose -Message "Getting configuration for the <ResourceDescription> with <PrimaryKey> {$<PrimaryKey>} and <FilterKey> {$<FilterKey>}"
 
     try
     {
@@ -63,21 +63,33 @@ function Get-TargetResource
         $nullResult = $PSBoundParameters
         $nullResult.Ensure = 'Absent'
 
-        $getValue = $null<#ResourceGenerator
-        #region resource generator code
-        $getValue = <GetCmdLetName> <getKeyIdentifier> -ErrorAction SilentlyContinue
-
-        if ($null -eq $getValue)
+        $getValue = $null
+        if (-not $Script:exportedInstance)
         {
-            Write-Verbose -Message "Could not find an <ResourceDescription> with <PrimaryKey> {$<PrimaryKey>}"
-
-            if (-not [System.String]::IsNullOrEmpty($<FilterKey>))
+            <#ResourceGenerator
+            #region resource generator code
+            if (-not [System.String]::IsNullOrEmpty($<PrimaryKey>))
             {
-                $getValue = <GetCmdLetName> `
-<AlternativeFilter>
+                $getValue = <GetCmdLetName> <getKeyIdentifier> -ErrorAction SilentlyContinue
             }
+            
+            if ($null -eq $getValue)
+            {
+                Write-Verbose -Message "Could not find an <ResourceDescription> with <PrimaryKey> {$<PrimaryKey>}"
+
+                if (-not [System.String]::IsNullOrEmpty($<FilterKey>))
+                {
+                    $getValue = <GetCmdLetName> `
+    <AlternativeFilter>
+                }
+            }
+            #endregionResourceGenerator#>
         }
-        #endregionResourceGenerator#>
+        else
+        {
+            $getValue = $Script:exportedInstance
+        }
+
         if ($null -eq $getValue)
         {
             Write-Verbose -Message "Could not find an <ResourceDescription> with <FilterKey> {$<FilterKey>}."
@@ -391,6 +403,7 @@ function Export-TargetResource
                 AccessTokens = $AccessTokens
             }
 
+            $Script:exportedInstance = $config
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
