@@ -200,7 +200,7 @@ function Get-TargetResource
         }
         $results = @{
             IsSingleInstance                         = 'Yes'
-            SharingCapability                        = $SPOSharingSettings.SharingCapability
+            SharingCapability                        = $SPOSharingSettings.SharingCapability.ToString()
             ShowEveryoneClaim                        = $SPOSharingSettings.ShowEveryoneClaim
             ShowAllUsersClaim                        = $SPOSharingSettings.ShowAllUsersClaim
             ShowEveryoneExceptExternalUsersClaim     = $SPOSharingSettings.ShowEveryoneExceptExternalUsersClaim
@@ -213,12 +213,12 @@ function Get-TargetResource
             ExternalUserExpirationRequired           = $SPOSharingSettings.ExternalUserExpirationRequired
             SharingAllowedDomainList                 = $allowDomains
             SharingBlockedDomainList                 = $blockDomains
-            SharingDomainRestrictionMode             = $SPOSharingSettings.SharingDomainRestrictionMode
-            DefaultSharingLinkType                   = $SPOSharingSettings.DefaultSharingLinkType
+            SharingDomainRestrictionMode             = $SPOSharingSettings.SharingDomainRestrictionMode.ToString()
+            DefaultSharingLinkType                   = $SPOSharingSettings.DefaultSharingLinkType.ToString()
             PreventExternalUsersFromResharing        = $SPOSharingSettings.PreventExternalUsersFromResharing
             ShowPeoplePickerSuggestionsForGuestUsers = $SPOSharingSettings.ShowPeoplePickerSuggestionsForGuestUsers
-            FileAnonymousLinkType                    = $SPOSharingSettings.FileAnonymousLinkType
-            FolderAnonymousLinkType                  = $SPOSharingSettings.FolderAnonymousLinkType
+            FileAnonymousLinkType                    = $SPOSharingSettings.FileAnonymousLinkType.ToString()
+            FolderAnonymousLinkType                  = $SPOSharingSettings.FolderAnonymousLinkType.ToString()
             NotifyOwnersWhenItemsReshared            = $SPOSharingSettings.NotifyOwnersWhenItemsReshared
             DefaultLinkPermission                    = $DefaultLinkPermission
 

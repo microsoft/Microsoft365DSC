@@ -1042,7 +1042,6 @@ function Set-TargetResource
         Write-Verbose -Message 'Set-Targetresource: create Conditions object'
         $conditions = @{
             applications = @{}
-            users        = @{}
         }
         #create and provision Application Condition object
         Write-Verbose -Message 'Set-Targetresource: create Application Condition object'
@@ -1129,6 +1128,10 @@ function Set-TargetResource
         Write-Verbose -Message 'Set-Targetresource: process includeusers'
         if ($currentParameters.ContainsKey('IncludeUsers'))
         {
+            if (-not $conditions.ContainsKey('users'))
+            {
+                $conditions.Add('users', @{})
+            }
             $conditions.Users.Add('includeUsers', @())
             foreach ($includeuser in $IncludeUsers)
             {
@@ -1176,6 +1179,10 @@ function Set-TargetResource
         Write-Verbose -Message 'Set-Targetresource: process excludeusers'
         if ($currentParameters.ContainsKey('ExcludeUsers'))
         {
+            if (-not $conditions.ContainsKey('users'))
+            {
+                $conditions.Add('users', @{})
+            }
             $conditions.users.Add('excludeUsers', @())
             foreach ($excludeuser in $ExcludeUsers)
             {
@@ -1223,6 +1230,10 @@ function Set-TargetResource
         Write-Verbose -Message 'Set-Targetresource: process includegroups'
         if ($currentParameters.ContainsKey('IncludeGroups'))
         {
+            if (-not $conditions.ContainsKey('users'))
+            {
+                $conditions.Add('users', @{})
+            }
             $conditions.users.Add('includeGroups', @())
             foreach ($includegroup in $IncludeGroups)
             {
@@ -1273,6 +1284,10 @@ function Set-TargetResource
         Write-Verbose -Message 'Set-Targetresource: process excludegroups'
         if ($currentParameters.ContainsKey('ExcludeGroups'))
         {
+            if (-not $conditions.ContainsKey('users'))
+            {
+                $conditions.Add('users', @{})
+            }
             $conditions.users.Add('excludeGroups', @())
             foreach ($ExcludeGroup in $ExcludeGroups)
             {
@@ -1323,6 +1338,10 @@ function Set-TargetResource
         Write-Verbose -Message 'Set-Targetresource: process includeroles'
         if ($currentParameters.ContainsKey('IncludeRoles'))
         {
+            if (-not $conditions.ContainsKey('users'))
+            {
+                $conditions.Add('users', @{})
+            }
             $conditions.Users.Add('includeRoles', @())
             if ($IncludeRoles)
             {
@@ -1357,6 +1376,10 @@ function Set-TargetResource
         Write-Verbose -Message 'Set-Targetresource: process excluderoles'
         if ($currentParameters.ContainsKey('ExcludeRoles'))
         {
+            if (-not $conditions.ContainsKey('users'))
+            {
+                $conditions.Add('users', @{})
+            }
             $conditions.users.Add('excludeRoles', @())
             if ($ExcludeRoles)
             {
@@ -1391,6 +1414,10 @@ function Set-TargetResource
         Write-Verbose -Message 'Set-Targetresource: process includeGuestOrExternalUser'
         If ($currentParameters.ContainsKey('IncludeGuestOrExternalUserTypes'))
         {
+            if (-not $conditions.ContainsKey('users'))
+            {
+                $conditions.Add('users', @{})
+            }
             $includeGuestsOrExternalUsers = $null
             if ($IncludeGuestOrExternalUserTypes.Count -ne 0)
             {
@@ -1422,6 +1449,10 @@ function Set-TargetResource
         Write-Verbose -Message 'Set-Targetresource: process excludeGuestsOrExternalUsers'
         If ($currentParameters.ContainsKey('ExcludeGuestOrExternalUserTypes'))
         {
+            if (-not $conditions.ContainsKey('users'))
+            {
+                $conditions.Add('users', @{})
+            }
             $excludeGuestsOrExternalUsers = $null
             if ($ExcludeGuestOrExternalUserTypes.Count -ne 0)
             {
@@ -1858,7 +1889,7 @@ function Set-TargetResource
         Write-Verbose -Message 'Create Parameters:'
         Write-Verbose -Message (Convert-M365DscHashtableToString $NewParameters)
 
-        if ($newparameters.Conditions.applications.count -gt 0 -and $newparameters.Conditions.Users.count -gt 0 -and ($newparameters.GrantControls.count -gt 0 -or $newparameters.SessionControls.count -gt 0))
+        if ($newparameters.Conditions.applications.count -gt 0 -and ($newparameters.Conditions.Users.count -gt 0 -or $newparameters.Conditions.ClientApplications.count -gt 0) -and ($newparameters.GrantControls.count -gt 0 -or $newparameters.SessionControls.count -gt 0))
         {
             try
             {

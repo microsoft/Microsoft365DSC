@@ -88,8 +88,8 @@ function Get-TargetResource
         return @{
             IsSingleInstance      = 'Yes'
             Enabled               = $BrowserIdleSignout.Enabled
-            SignOutAfter          = $BrowserIdleSignout.SignOutAfter
-            WarnAfter             = $BrowserIdleSignout.WarnAfter
+            SignOutAfter          = $BrowserIdleSignout.SignOutAfter.ToString()
+            WarnAfter             = $BrowserIdleSignout.WarnAfter.ToString()
             Credential            = $Credential
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
