@@ -23739,7 +23739,7 @@
                                "Option":  "Write"
                            },
                            {
-                               "CIMType":  "String",
+                               "CIMType":  "String[]",
                                "Name":  "SenderInRecipientList",
                                "Option":  "Write"
                            },

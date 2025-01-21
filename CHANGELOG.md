@@ -8,11 +8,22 @@
   * Add DisableResilienceDefaults false szenario
 * AADDeviceRegistrationPolicy
   * Fixes an error when trying to disable AAD join.
+* AADGroupsNamingPolicy
+  * Use correct parameter `DesiredValues` given to `Test-M365DSCParameterState`,
+    contrary to `EXOTenantAllowBlockListItems` these resources are not affected
+    but we still should use the correct parameter
 * AADRoleSetting
   * Fixed issue where missing settings object for a role caused errors.
     FIXES [#5602](https://github.com/microsoft/Microsoft365DSC/issues/5602)
 * AADServicePrincipal
   * FIXES [#5549](https://github.com/microsoft/Microsoft365DSC/issues/5549)
+* EXOHostedContentFilterPolicy
+  * Use correct parameter `DesiredValues` given to `Test-M365DSCParameterState`,
+    contrary to `EXOTenantAllowBlockListItems` these resources are not affected
+    but we still should use the correct parameter
+* EXOTenantAllowBlockListItems
+  * Fixed `Test-TargetResource` by using the correct parameter `DesiredValues`
+    given to `Test-M365DSCParameterState`
 * EXOTransportRule
   * Fix type of `SenderInRecipientList` in schema
 * FabricAdminTenantSettings
@@ -21,6 +32,18 @@
   * Fix values that have a zero length whitespace character.
 * IntuneAppProtectionPolicyiOS
   * Fixes [#5589] https://github.com/microsoft/Microsoft365DSC/issues/5589
+* SCAutoSensitivityLabelPolicy
+  * Use correct parameter `DesiredValues` given to `Test-M365DSCParameterState`,
+    contrary to `EXOTenantAllowBlockListItems` these resources are not affected
+    but we still should use the correct parameter
+* SCLabelPolicy
+  * Use correct parameter `DesiredValues` given to `Test-M365DSCParameterState`,
+    contrary to `EXOTenantAllowBlockListItems` these resources are not affected
+    but we still should use the correct parameter
+* SCSecurityFilter
+  * Use correct parameter `DesiredValues` given to `Test-M365DSCParameterState`,
+    contrary to `EXOTenantAllowBlockListItems` these resources are not affected
+    but we still should use the correct parameter
 * SPOSPOBrowserIdleSignout
   * Corrected export types where the schema expected a String, but received a different type
     FIXES [#5648](https://github.com/microsoft/Microsoft365DSC/issues/5648)

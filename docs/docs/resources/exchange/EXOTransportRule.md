@@ -156,7 +156,7 @@
 | **SenderADAttributeMatchesPatterns** | Write | StringArray[] | The SenderADAttributeMatchesPatterns parameter specifies a condition that looks for text patterns in Active Directory attributes of message senders by using regular expressions. | |
 | **SenderAddressLocation** | Write | String | The SenderAddressLocation parameter specifies where to look for sender addresses in conditions and exceptions that examine sender email addresses. | `Header`, `Envelope`, `HeaderOrEnvelope` |
 | **SenderDomainIs** | Write | StringArray[] | The SenderDomainIs parameter specifies a condition that looks for senders with email address in the specified domains. | |
-| **SenderInRecipientList** | Write | String | This parameter is reserved for internal Microsoft use. | |
+| **SenderInRecipientList** | Write | StringArray[] | This parameter is reserved for internal Microsoft use. | |
 | **SenderIpRanges** | Write | StringArray[] | The SenderIpRanges parameter specifies a condition that looks for senders whose IP addresses matches the specified value, or fall within the specified ranges. | |
 | **SenderManagementRelationship** | Write | String | The SenderManagementRelationship parameter specifies a condition that looks for the relationship between the sender and recipients in messages. | `Manager`, `DirectReport` |
 | **SentTo** | Write | StringArray[] | The SentTo parameter specifies a condition that looks for recipients in messages. | |
