@@ -2140,7 +2140,7 @@ function Get-M365DSCFabricTenantSettingObject
     $values = @{
         settingName = $Setting.settingName
         enabled     = [Boolean]$Setting.enabled
-        title       = $Setting.title
+        title       = ($Setting.title -creplace '\P{IsBasicLatin}')
     }
     if (-not [System.String]::IsNullOrEmpty($Setting.canSpecifySecurityGroups))
     {

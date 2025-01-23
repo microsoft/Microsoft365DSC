@@ -17,11 +17,12 @@ Configuration Example
     {
         O365SearchAndIntelligenceConfigurations 'SearchAndIntelligenceConfigurations'
         {
-            Credential                            = $Credscredential;
-            IsSingleInstance                      = "Yes";
-            ItemInsightsIsEnabledInOrganization   = $False;
-            ItemInsightsDisabledForGroup          = "TestGroup"
-            PersonInsightsIsEnabledInOrganization = $True;
+            Credential                               = $Credscredential;
+            IsSingleInstance                         = "Yes";
+            ItemInsightsIsEnabledInOrganization      = $False;
+            MeetingInsightsIsEnabledInOrganization   = $True;
+            ItemInsightsDisabledForGroup             = "TestGroup"
+            PersonInsightsIsEnabledInOrganization    = $True;
         }
     }
 }

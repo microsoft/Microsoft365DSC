@@ -629,6 +629,21 @@ function Disable-AzSubscription
 #endregion
 
 # region ExchangeOnlineManagement
+
+function Get-MeetingInsightsSettings
+{
+    [CmdletBinding()]
+    param(
+    )
+}
+
+function Set-MeetingInsightsSettings
+{
+    [CmdletBinding()]
+    param(
+    )
+}
+
 function Get-EmailTenantSettings
 {
     [CmdletBinding()]

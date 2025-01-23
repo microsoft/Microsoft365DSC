@@ -53920,6 +53920,11 @@
                            },
                            {
                                "CIMType":  "Boolean",
+                               "Name":  "MeetingInsightsIsEnabledInOrganization",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
                                "Name":  "PersonInsightsIsEnabledInOrganization",
                                "Option":  "Write"
                            },
@@ -53931,6 +53936,31 @@
                            {
                                "CIMType":  "MSFT_Credential",
                                "Name":  "Credential",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ApplicationId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "TenantId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "CertificateThumbprint",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "CertificatePassword",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "CertificatePath",
                                "Option":  "Write"
                            },
                            {
