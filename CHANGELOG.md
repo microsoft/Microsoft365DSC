@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.25.122.1
 
 * AADConditionalAccessPolicy
   * Fixes CA policy deployment errors when deploying policies based for workload identities.
@@ -17,6 +17,10 @@
     FIXES [#5602](https://github.com/microsoft/Microsoft365DSC/issues/5602)
 * AADServicePrincipal
   * FIXES [#5549](https://github.com/microsoft/Microsoft365DSC/issues/5549)
+* EXOAvailabilityConfig
+  * Removed dependency on Microsoft Graph to retrieve user information.
+* EXODistributionGroup
+  * Removed dependency on Microsoft Graph to retrieve user information.
 * EXOHostedContentFilterPolicy
   * Use correct parameter `DesiredValues` given to `Test-M365DSCParameterState`,
     contrary to `EXOTenantAllowBlockListItems` these resources are not affected
@@ -53,6 +57,8 @@
 * M365DSCReport
   * Fix missing delimiter when called without the parameter.
     FIXES [#5634](https://github.com/microsoft/Microsoft365DSC/issues/5634)
+  * Add configuration validation to inform about comparisons against empty or invalid configurations.
+    FIXES [#5658](https://github.com/microsoft/Microsoft365DSC/issues/5658)
 * M365DSCTelemetryEngine
   * Report LCM details only if running as administrator.
 * M365DSCUtil

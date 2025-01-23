@@ -235,8 +235,7 @@ function Test-TargetResource
     Write-Verbose -Message "Testing configuration of the Azure AD Authentication Requirement for a user with UPN {$UserPrincipalName}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
-    $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
-
+    $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
     $testResult = $true
 
     $CurrentValues.remove('Id') | Out-Null

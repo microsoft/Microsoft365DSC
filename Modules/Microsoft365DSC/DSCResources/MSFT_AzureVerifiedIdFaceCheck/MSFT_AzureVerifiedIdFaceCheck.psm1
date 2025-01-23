@@ -362,6 +362,10 @@ function Export-TargetResource
         $j = 1
         foreach ($resourceGroup in $resourceGroups)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
             $displayedKey = $resourceGroup.ResourceGroupName
             Write-Host "    |---[$j/$($resourceGroups.Length)] $displayedKey" -NoNewline
 

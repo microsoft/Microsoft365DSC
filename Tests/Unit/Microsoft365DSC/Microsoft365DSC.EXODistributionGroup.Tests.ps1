@@ -123,7 +123,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
 
 
-                Mock -CommandName Get-MgUser -MockWith {
+                Mock -CommandName Get-User -MockWith {
                     return @{
                         UserPrincipalName = 'john.smith@contoso.com'
                     }
@@ -189,7 +189,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential                         = $Credential
                 }
 
-                Mock -CommandName Get-MgUser -MockWith {
+                Mock -CommandName Get-User -MockWith {
                     return @{
                         UserPrincipalName = 'john.smith@contoso.com'
                     }
@@ -250,7 +250,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential                         = $Credential
                 }
 
-                Mock -CommandName Get-MgUser -MockWith {
+                Mock -CommandName Get-User -MockWith {
                     return @{
                         UserPrincipalName = 'john.smith@contoso.com'
                     }
@@ -301,7 +301,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential
                 }
 
-                Mock -CommandName Get-MgUser -MockWith {
+                Mock -CommandName Get-User -MockWith {
                     return @{
                         UserPrincipalName = 'john.smith@contoso.com'
                     }

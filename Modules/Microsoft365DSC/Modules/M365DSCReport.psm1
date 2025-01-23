@@ -2073,8 +2073,12 @@ function Initialize-M365DSCReporting
         $parsedContent = ConvertTo-DSCObject -Content $fileContent
     }
 
-    return $parsedContent
+    if ($null -eq $parsedContent)
+    {
+        Write-Warning -Message "No configuration found in $ConfigurationPath. Either the configuration was empty or the file was not a valid DSC configuration."
+    }
 
+    return $parsedContent
 }
 
 Export-ModuleMember -Function @(

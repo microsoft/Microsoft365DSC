@@ -294,7 +294,7 @@ function Get-TargetResource
             {
                 try
                 {
-                    $user = Get-MgUser -UserId $user -ErrorAction Stop
+                    $user = Get-User -Identity $user -ErrorAction Stop
                     $ManagedByValue += $user.UserPrincipalName
                 }
                 catch
@@ -311,7 +311,7 @@ function Get-TargetResource
             {
                 try
                 {
-                    $user = Get-MgUser -UserId $user -ErrorAction Stop
+                    $user = Get-User -Identity $user -ErrorAction Stop
                     $ModeratedByValue += $user.UserPrincipalName
                 }
                 catch

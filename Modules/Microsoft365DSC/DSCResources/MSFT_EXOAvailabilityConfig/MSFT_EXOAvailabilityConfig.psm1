@@ -58,9 +58,6 @@ function Get-TargetResource
             -InboundParameters $PSBoundParameters
     }
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters
-
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
@@ -83,8 +80,8 @@ function Get-TargetResource
 
         if ($null -ne $AvailabilityConfigs -and $null -ne $AvailabilityConfigs.OrgWideAccount)
         {
-            $user = Get-MgUser -UserId $OrgWideAccount -ErrorAction Stop
-            $AvailabilityConfig = ($AvailabilityConfigs | Where-Object -FilterScript { $_.OrgWideAccount -IMatch $user.UserId })
+            $user = Get-User -Identity $OrgWideAccount -ErrorAction Stop
+            $AvailabilityConfig = ($AvailabilityConfigs | Where-Object -FilterScript { $_.OrgWideAccount -IMatch $user.Id })
         }
         if ($null -eq $AvailabilityConfig)
         {
