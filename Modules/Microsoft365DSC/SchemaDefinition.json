@@ -8520,21 +8520,6 @@
                        ]
     },
     {
-        "ClassName":  "MSFT_AADRoleEligibilityScheduleRequestTicketInfo",
-        "Parameters":  [
-                           {
-                               "CIMType":  "String",
-                               "Name":  "ticketNumber",
-                               "Option":  "Write"
-                           },
-                           {
-                               "CIMType":  "String",
-                               "Name":  "ticketSystem",
-                               "Option":  "Write"
-                           }
-                       ]
-    },
-    {
         "ClassName":  "MSFT_AADRoleEligibilityScheduleRequest",
         "Parameters":  [
                            {
@@ -8585,11 +8570,6 @@
                            {
                                "CIMType":  "MSFT_AADRoleEligibilityScheduleRequestSchedule",
                                "Name":  "ScheduleInfo",
-                               "Option":  "Write"
-                           },
-                           {
-                               "CIMType":  "MSFT_AADRoleEligibilityScheduleRequestTicketInfo",
-                               "Name":  "TicketInfo",
                                "Option":  "Write"
                            },
                            {

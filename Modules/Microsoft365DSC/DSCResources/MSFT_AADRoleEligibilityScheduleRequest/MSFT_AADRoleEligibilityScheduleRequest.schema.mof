@@ -43,13 +43,6 @@ class MSFT_AADRoleEligibilityScheduleRequestSchedule
     [Write, Description("When the eligible or active assignment becomes active.")] String startDateTime;
 };
 
-[ClassVersion("1.0.0")]
-class MSFT_AADRoleEligibilityScheduleRequestTicketInfo
-{
-    [Write, Description("The ticket number.")] String ticketNumber;
-    [Write, Description("The description of the ticket system.")] String ticketSystem;
-};
-
 [ClassVersion("1.0.0.0"), FriendlyName("AADRoleEligibilityScheduleRequest")]
 class MSFT_AADRoleEligibilityScheduleRequest : OMI_BaseResource
 {
@@ -63,7 +56,6 @@ class MSFT_AADRoleEligibilityScheduleRequest : OMI_BaseResource
     [Write, Description("Determines whether the call is a validation or an actual call. Only set this property if you want to check whether an activation is subject to additional rules like MFA before actually submitting the request.")] Boolean IsValidationOnly;
     [Write, Description("A message provided by users and administrators when create they create the unifiedRoleEligibilityScheduleRequest object. Optional when action is adminRemove. Whether this property is required or optional is also dependent on the settings for the Azure AD role.")] String Justification;
     [Write, Description("The period of the role eligibility. Optional when action is adminRemove. The period of eligibility is dependent on the settings of the Azure AD role."), EmbeddedInstance("MSFT_AADRoleEligibilityScheduleRequestSchedule")] String ScheduleInfo;
-    [Write, Description("Ticket details linked to the role eligibility request including details of the ticket number and ticket system."), EmbeddedInstance("MSFT_AADRoleEligibilityScheduleRequestTicketInfo")] String TicketInfo;
     [Write, Description("Present ensures the instance exists, absent ensures it is removed."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] string Ensure;
     [Write, Description("Credentials of the Intune Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;

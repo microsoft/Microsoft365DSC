@@ -174,13 +174,13 @@ function Get-TargetResource
                     throw "A policy with a duplicated displayName {'$DisplayName'} was found - Ensure displayName is unique"
                 }
 
-                $policy = Get-MgBetaDeviceManagementIntent -DeviceManagementIntentId $policy.id -ExpandProperty settings, assignments -ErrorAction SilentlyContinue
+                $policy = Get-MgBetaDeviceManagementIntent -DeviceManagementIntentId $policy.Id -ExpandProperty settings, assignments -ErrorAction SilentlyContinue
 
             }
         }
         else
         {
-            $policy = $Script:exportedInstance
+            $policy = Get-MgBetaDeviceManagementIntent -DeviceManagementIntentId $Script:exportedInstance.Id -ExpandProperty settings, assignments
         }
 
         $Identity = $policy.Id

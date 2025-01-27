@@ -136,7 +136,7 @@ function Get-TargetResource
             $config = $null
             if (-not [string]::IsNullOrEmpty($Identity))
             {
-                $config = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -DeviceEnrollmentConfigurationId $Identity -ErrorAction Stop
+                $config = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -DeviceEnrollmentConfigurationId $Identity -ErrorAction SilentlyContinue
             }
 
             if ($null -eq $config)

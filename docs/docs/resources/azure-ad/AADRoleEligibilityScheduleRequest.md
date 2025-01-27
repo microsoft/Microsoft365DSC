@@ -14,7 +14,6 @@
 | **IsValidationOnly** | Write | Boolean | Determines whether the call is a validation or an actual call. Only set this property if you want to check whether an activation is subject to additional rules like MFA before actually submitting the request. | |
 | **Justification** | Write | String | A message provided by users and administrators when create they create the unifiedRoleEligibilityScheduleRequest object. Optional when action is adminRemove. Whether this property is required or optional is also dependent on the settings for the Azure AD role. | |
 | **ScheduleInfo** | Write | MSFT_AADRoleEligibilityScheduleRequestSchedule | The period of the role eligibility. Optional when action is adminRemove. The period of eligibility is dependent on the settings of the Azure AD role. | |
-| **TicketInfo** | Write | MSFT_AADRoleEligibilityScheduleRequestTicketInfo | Ticket details linked to the role eligibility request including details of the ticket number and ticket system. | |
 | **Ensure** | Write | String | Present ensures the instance exists, absent ensures it is removed. | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials of the Intune Admin | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
@@ -78,15 +77,6 @@
 | **expiration** | Write | MSFT_AADRoleEligibilityScheduleRequestScheduleExpiration | When the eligible or active assignment expires. | |
 | **recurrence** | Write | MSFT_AADRoleEligibilityScheduleRequestScheduleRecurrence | The frequency of the eligible or active assignment. This property is currently unsupported in PIM. | |
 | **startDateTime** | Write | String | When the eligible or active assignment becomes active. | |
-
-### MSFT_AADRoleEligibilityScheduleRequestTicketInfo
-
-#### Parameters
-
-| Parameter | Attribute | DataType | Description | Allowed Values |
-| --- | --- | --- | --- | --- |
-| **ticketNumber** | Write | String | The ticket number. | |
-| **ticketSystem** | Write | String | The description of the ticket system. | |
 
 
 ## Description

@@ -662,6 +662,19 @@ function Test-M365DSCParameterState
     if ($null -ne $IncludedDrifts -and $IncludedDrifts.Keys.Count -gt 0)
     {
         $DriftedParameters = $IncludedDrifts
+        foreach ($existingDrift in $IncludedDrifts)
+        {
+            $propertyName = $existingDrift.Keys[0]
+            $value =  $existingDrift."$propertyName"
+            $start = $value.IndexOf('</CurrentValue>')
+            $currentValue = $value.Substring(0, $start).Replace('<CurrentValue>', '')            
+            $desiredValue = $value.Substring($start+15, ($value.Length)-($start+15)).Replace('<DesiredValue>', '').Replace('</DesiredValue>', '')
+            $DriftObject.DriftInfo.Add($propertyName, @{
+                PropertyName = $propertyName
+                CurrentValue = $currentValue
+                DesiredValue = $desiredValue
+            })
+        }
         $returnValue = $false
     }
 

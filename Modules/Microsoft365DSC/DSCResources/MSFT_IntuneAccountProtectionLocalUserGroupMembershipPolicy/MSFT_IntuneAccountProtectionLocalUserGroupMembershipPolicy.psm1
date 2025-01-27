@@ -108,13 +108,13 @@ function Get-TargetResource
                         return $nullResult
                     }
 
-                    $policy = Get-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $policy.id -ExpandProperty settings -ErrorAction SilentlyContinue
+                    $policy = Get-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $policy.Id -ExpandProperty settings -ErrorAction SilentlyContinue
                 }
             }
         }
         else
         {
-            $policy = $Script:exportedInstance
+            $policy = Get-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Script:exportedInstance.Id -ExpandProperty settings
         }
 
 
