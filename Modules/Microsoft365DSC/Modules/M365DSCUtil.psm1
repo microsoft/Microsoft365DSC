@@ -452,6 +452,10 @@ function Compare-PSCustomObjectArrays
     {
         $Properties = $DesiredEntry.PSObject.Properties
         $KeyProperty = $Properties.Name[0]
+        if ($Properties.Name.GetType().Name -eq 'string')
+        {
+            $KeyProperty = $Properties.Name
+        }
 
         $EquivalentEntryInCurrent = $CurrentValues | Where-Object -FilterScript { $_.$KeyProperty -eq $DesiredEntry.$KeyProperty }
         if ($null -eq $EquivalentEntryInCurrent)
@@ -526,7 +530,27 @@ function Compare-PSCustomObjectArrays
             {
                 $propertyName = $property.Name
 
-                if ((-not [System.String]::IsNullOrEmpty($fixedEntry.$PropertyName) -and -not [System.String]::IsNullOrEmpty($EquivalentEntryInDesired.$PropertyName)) -and `
+                $propertyType = $currentValues.$($Property.Name).GetType().Name
+                $isFound = $EquivalentEntryInDesired.$PropertyName -contains $fixedEntry.$PropertyName
+                if ($propertyType -eq 'Object[]')
+                {
+                    if (-not $isFound)
+                    {
+                        $drift = $true
+                        $result = @{
+                            Property     = $fixedEntry
+                            PropertyName = $PropertyName
+                            Desired      = $fixedEntry.$PropertyName
+                            Current      = $EquivalentEntryInDesired.$PropertyName
+                        }
+                        $DriftedProperties += $result
+                    }
+                    else
+                    {
+                        $drift = $false
+                    }
+                }
+                elseif ((-not [System.String]::IsNullOrEmpty($fixedEntry.$PropertyName) -and -not [System.String]::IsNullOrEmpty($EquivalentEntryInDesired.$PropertyName)) -and `
                     $fixedEntry.$PropertyName -ne $EquivalentEntryInDesired.$PropertyName)
                 {
                     $drift = $true

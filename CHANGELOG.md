@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* AADGroup
+  * Changed the logic to evaluate a drift in the assigned licenses.
+
 # 1.25.122.2
 
 * AADAdminConsentRequestPolicy
