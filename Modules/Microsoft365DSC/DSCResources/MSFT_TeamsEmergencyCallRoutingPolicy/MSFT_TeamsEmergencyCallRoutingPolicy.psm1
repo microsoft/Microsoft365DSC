@@ -320,13 +320,7 @@ function Test-TargetResource
     Write-Verbose -Message "Testing configuration of Team EmergencyCall Routing Policy {$Identity}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
-
     $DesiredValues = $PSBoundParameters
-    if ($null -ne $DesiredValues.EmergencyNumbers -and $DesiredValues.EmergencyNumbers.Count -gt 0)
-    {
-        $numbers = Convert-CIMToTeamsEmergencyNumbers -Numbers $DesiredValues.EmergencyNumbers
-        $DesiredValues['EmergencyNumbers'] = $numbers
-    }
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $DesiredValues)"
