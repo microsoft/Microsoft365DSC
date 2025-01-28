@@ -4,6 +4,9 @@
 
 * AADGroup
   * Changed the logic to evaluate a drift in the assigned licenses.
+* AADServicePrincipal
+  * Fixes a regression issue when trying to export instances, the authentication
+    parameters were no longer returned by the Get-TargetResource function.
 
 # 1.25.122.2
 

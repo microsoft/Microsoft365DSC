@@ -138,7 +138,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     AllowEnhancedEmergencyServices = $False
-                    Description                    = 'Drifted'; #drift
+                    Description                    = 'Drifted';
                     EmergencyNumbers               = (New-CimInstance -ClassName MSFT_TeamsEmergencyNumber -Property @{
                             EmergencyDialString = '123456'
                             EmergencyDialMask   = '123'
@@ -152,7 +152,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-CsTeamsEmergencyCallRoutingPolicy -MockWith {
                     return @{
                         AllowEnhancedEmergencyServices = $False
-                        Description                    = 'Drifted'; #drift
+                        Description                    = 'Drifted';
                         EmergencyNumbers               = @{
                             EmergencyDialString = '123456'
                             EmergencyDialMask   = '123'
