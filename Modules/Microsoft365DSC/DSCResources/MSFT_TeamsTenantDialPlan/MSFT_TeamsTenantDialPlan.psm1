@@ -527,9 +527,28 @@ function Export-TargetResource
             $results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
 
-            if ($results.NormalizationRules.Count -gt 0)
+            if ($null -ne $Results.NormalizationRules)
             {
-                $results.NormalizationRules = Get-M365DSCNormalizationRulesAsString $results.NormalizationRules
+                $complexMapping = @(
+                    @{
+                        Name            = 'NormalizationRules'
+                        CimInstanceName = 'TeamsVoiceNormalizationRule'
+                        IsRequired      = $False
+                    }
+                )
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                    -ComplexObject $Results.NormalizationRules `
+                    -CIMInstanceName 'TeamsVoiceNormalizationRule' `
+                    -ComplexTypeMapping $complexMapping
+
+                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                {
+                    $Results.NormalizationRules = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('NormalizationRules') | Out-Null
+                }
             }
 
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
@@ -537,8 +556,11 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
+            if ($Results.NormalizationRules)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'NormalizationRules' -IsCIMArray:$True
+            }
 
-            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'NormalizationRules'
             $dscContent += $currentDSCBlock
 
             Save-M365DSCPartialExport -Content $currentDSCBlock `

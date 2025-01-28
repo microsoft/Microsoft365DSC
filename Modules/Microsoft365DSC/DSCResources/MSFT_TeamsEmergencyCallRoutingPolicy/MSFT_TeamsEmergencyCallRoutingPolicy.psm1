@@ -417,7 +417,25 @@ function Export-TargetResource
 
             if ($null -ne $result.EmergencyNumbers)
             {
-                $result.EmergencyNumbers = ConvertTo-TeamsEmergencyNumbersString -Numbers $result.EmergencyNumbers
+                $complexMapping = @(
+                    @{
+                        Name            = 'EmergencyNumbers'
+                        CimInstanceName = 'TeamsEmergencyNumber'
+                        IsRequired      = $False
+                    }
+                )
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                    -ComplexObject $result.EmergencyNumbers `
+                    -CIMInstanceName 'TeamsEmergencyNumber' `
+                    -ComplexTypeMapping $complexMapping
+                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                {
+                    $result.EmergencyNumbers = $complexTypeStringResult
+                }
+                else
+                {
+                    $result.Remove('EmergencyNumbers') | Out-Null
+                }
             }
 
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
@@ -426,9 +444,9 @@ function Export-TargetResource
                 -Results $Result `
                 -Credential $Credential
 
-            if ($null -ne $result.EmergencyNumbers)
+            if ($Result.EmergencyNumbers)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'EmergencyNumbers'
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'EmergencyNumbers' -IsCIMArray:$True
             }
 
             $dscContent += $currentDSCBlock

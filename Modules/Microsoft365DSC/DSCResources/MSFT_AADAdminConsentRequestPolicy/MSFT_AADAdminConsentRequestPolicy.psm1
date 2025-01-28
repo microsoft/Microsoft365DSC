@@ -468,9 +468,28 @@ function Export-TargetResource
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
 
-            if ($Results.Reviewers.Count -gt 0)
+            if ($null -ne $Results.Reviewers)
             {
-                $Results.Reviewers = Get-M365DSCAzureADAAdminConsentPolicyReviewerAsString $Results.Reviewers
+                $complexMapping = @(
+                    @{
+                        Name            = 'Reviewers'
+                        CimInstanceName = 'AADAdminConsentRequestPolicyReviewer'
+                        IsRequired      = $False
+                    }
+                )
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                    -ComplexObject $Results.Reviewers `
+                    -CIMInstanceName 'AADAdminConsentRequestPolicyReviewer' `
+                    -ComplexTypeMapping $complexMapping
+
+                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                {
+                    $Results.Reviewers = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('Reviewers') | Out-Null
+                }
             }
 
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
@@ -478,10 +497,9 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
-
             if ($Results.Reviewers)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Reviewers' -IsCIMArray:$true
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Reviewers' -IsCIMArray:$True
             }
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `

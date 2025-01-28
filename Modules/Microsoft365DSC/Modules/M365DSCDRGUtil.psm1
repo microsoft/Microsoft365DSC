@@ -324,22 +324,36 @@ function Get-M365DSCDRGComplexTypeToString
     $indent = '    ' * $IndentLevel
     $keyNotNull = 0
 
+    $keys = $ComplexObject.Keys
     if ($ComplexObject.Keys.Count -eq 0)
     {
-        return $null
+        $properties = $ComplexObject | Get-Member -MemberType Properties
+        if ($null -eq $properties)
+        {
+            return $null
+        }
+        else
+        {
+            $keys = $properties.Name
+        }
     }
 
-    foreach ($key in $ComplexObject.Keys)
+    foreach ($key in $keys)
     {
         if ($null -ne $ComplexObject.$key)
         {
             $keyNotNull++
             if ($ComplexObject.$key.GetType().FullName -like 'Microsoft.Graph.PowerShell.Models.*' -or $key -in $ComplexTypeMapping.Name)
             {
-                $hashPropertyType = $ComplexObject[$key].GetType().Name.ToLower()
+                $itemValue = $ComplexObject[$key]
+                if ([System.String]::IsNullOrEmpty($itemValue))
+                {
+                    $itemValue = $ComplexObject.$key
+                }
+                $hashPropertyType = $itemValue.GetType().Name.ToLower()
 
                 $IsArray = $false
-                if ($ComplexObject[$key].GetType().FullName -like '*[[\]]')
+                if ($itemValue.GetType().FullName -like '*[[\]]')
                 {
                     $IsArray = $true
                 }
@@ -347,12 +361,12 @@ function Get-M365DSCDRGComplexTypeToString
                 if ($key -in $ComplexTypeMapping.Name)
                 {
                     $hashPropertyType = ([Array]($ComplexTypeMapping | Where-Object -FilterScript { $_.Name -eq $key }).CimInstanceName)[0]
-                    $hashProperty = $ComplexObject[$key]
+                    $hashProperty = $itemValue
                     #$currentProperty += "`r`n"
                 }
                 else
                 {
-                    $hashProperty = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject[$key]
+                    $hashProperty = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $itemValue
                 }
 
                 if (-not $IsArray)
@@ -372,7 +386,7 @@ function Get-M365DSCDRGComplexTypeToString
                 if ($IsArray)
                 {
                     $IndentLevel++
-                    for ($i = 0; $i -lt $ComplexObject[$key].Count; $i++)
+                    for ($i = 0; $i -lt $itemValue.Count; $i++)
                     {
                         $item = $ComplexObject.$key[$i]
                         if ($ComplexObject.$key.GetType().FullName -like 'Microsoft.Graph.PowerShell.Models.*')
@@ -426,11 +440,18 @@ function Get-M365DSCDRGComplexTypeToString
             else
             {
                 $currentValue = $ComplexObject[$key]
-                if ($currentValue.GetType().Name -eq 'String')
-                {
-                     $currentValue = $ComplexObject[$key].Replace("'", "''").Replace("�", "''")
+                if ([System.String]::IsNullOrEmpty($currentValue))
+                {                    
+                    $currentValue = $ComplexObject.$key
                 }
-                $currentProperty += Get-M365DSCDRGSimpleObjectTypeToString -Key $key -Value $currentValue -Space ($indent)
+                if (-not [System.String]::IsNullOrEmpty($currentValue) -and $currentValue.GetType().Name -ne 'Dictionary`2')
+                {
+                    if ($currentValue.GetType().Name -eq 'String')
+                    {
+                         $currentValue = $currentValue.Replace("'", "''").Replace("�", "''")
+                    }
+                    $currentProperty += Get-M365DSCDRGSimpleObjectTypeToString -Key $key -Value $currentValue -Space ($indent)
+                }
             }
         }
         else

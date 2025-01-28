@@ -447,6 +447,10 @@ function Export-TargetResource
         }
         foreach ($config in $getValue)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
             $displayedKey = $config.Id
             if (-not [string]::IsNullOrEmpty($config.name))
             {
@@ -469,9 +473,28 @@ function Export-TargetResource
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
 
-            if ($Results.Policies.Count -gt 0)
+            if ($null -ne $Results.Policies)
             {
-                $Results.Policies = Get-PoliciesAsString $Results.Policies
+                $complexMapping = @(
+                    @{
+                        Name            = 'Policies'
+                        CimInstanceName = 'MicrosoftGraphNetworkaccessPolicyLink'
+                        IsRequired      = $False
+                    }
+                )
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                    -ComplexObject $Results.Policies `
+                    -CIMInstanceName 'MicrosoftGraphNetworkaccessPolicyLink' `
+                    -ComplexTypeMapping $complexMapping
+
+                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                {
+                    $Results.Policies = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('Policies') | Out-Null
+                }
             }
 
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
@@ -483,7 +506,7 @@ function Export-TargetResource
             if ($null -ne $Results.Policies)
             {
                 $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                    -ParameterName 'Policies'
+                    -ParameterName 'Policies' -IsCIMArray:$true
             }
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `

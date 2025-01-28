@@ -526,12 +526,65 @@ function Export-TargetResource
 
             if ($null -ne $Results.Tasks)
             {
-                $Results.Tasks = Get-M365DSCIdentityGovernanceTasksAsString $Results.Tasks
+                $complexMapping = @(
+                    @{
+                        Name            = 'Tasks'
+                        CimInstanceName = 'AADIdentityGovernanceTask'
+                        IsRequired      = $False
+                    },
+                    @{
+                        Name            = 'Arguments'
+                        CimInstanceName = 'MSFT_AADIdentityGovernanceTaskArguments'
+                        IsRequired      = $False
+                    }
+                )
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                    -ComplexObject $Results.Tasks `
+                    -CIMInstanceName 'AADIdentityGovernanceTask' `
+                    -ComplexTypeMapping $complexMapping
+
+                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                {
+                    $Results.Tasks = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('Tasks') | Out-Null
+                }
             }
 
             if ($null -ne $Results.ExecutionConditions)
             {
-                $Results.ExecutionConditions = Get-M365DSCIdentityGovernanceWorkflowExecutionConditionsAsString $Results.ExecutionConditions
+                $complexMapping = @(
+                    @{
+                        Name            = 'ExecutionConditions'
+                        CimInstanceName = 'MSFT_IdentityGovernanceWorkflowExecutionConditions'
+                        IsRequired      = $False
+                    },
+                    @{
+                        Name            = 'ScopeValue'
+                        CimInstanceName = 'MSFT_IdentityGovernanceScope'
+                        IsRequired      = $False
+                    },
+                    @{
+                        Name            = 'TriggerValue'
+                        CimInstanceName = 'MSFT_IdentityGovernanceTrigger'
+                        IsRequired      = $False
+                    }
+                )
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                    -ComplexObject $Results.ExecutionConditions `
+                    -CIMInstanceName 'MSFT_IdentityGovernanceWorkflowExecutionConditions' `
+                    -ComplexTypeMapping $complexMapping
+
+                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                {
+                    $Results.ExecutionConditions = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('ExecutionConditions') | Out-Null
+                }
             }
 
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
@@ -542,9 +595,12 @@ function Export-TargetResource
             if ($null -ne $Results.Tasks)
             {
                 $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                    -ParameterName 'Tasks'
+                    -ParameterName 'Tasks' -IsCIMArray:$true
+            }
+            if ($null -ne $Results.ExecutionConditions)
+            {
                 $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                    -ParameterName 'ExecutionConditions'
+                    -ParameterName 'ExecutionConditions' -IsCIMArray:$true
             }
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `

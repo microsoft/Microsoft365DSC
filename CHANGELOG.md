@@ -1,9 +1,30 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.25.122.2
 
+* AADAdminConsentRequestPolicy
+  * Refactored the export to use a common CIMInstance function.
+* AADCrossTenantAccessPolicyConfigurationDefault
+  * Refactored the export to use a common CIMInstance function.
+* AADCrossTenantAccessPolicyConfigurationPartner
+  * Refactored the export to use a common CIMInstance function.
+* AADGroup
+  * Refactored the export to use a common CIMInstance function.
+* AADHomeRealmDiscoveryPolicy
+  * Refactored the export to use a common CIMInstance function.
+* AADIdentityGovernanceLifecycleWorkflow
+  * Refactored the export to use a common CIMInstance function.
+* AADNetworkAccessForwardingPolicy
+  * Refactored the export to use a common CIMInstance function.
+* AADNetworkAccessForwardingProfile
+  * Refactored the export to use a common CIMInstance function.
+* AADRemoteNetwork
+  * Refactored the export to use a common CIMInstance function.
+* AADRoleAssignmentScheduleRequest
+  * Refactored the export to use a common CIMInstance function.
 * AADRoleEligibilityScheduleRequest
   * Fixed overall logic to prevent errors complaining about existing permissions.
+  * Refactored the export to use a common CIMInstance function.
 * FabricAdminTenantSettings
   * Fix titles that have a zero length whitespace character.
 * IntuneAppProtectionPolicyAndroid
@@ -27,6 +48,13 @@
 * O365SearchAndIntelligenceConfigurations
   * Added support for Meeting Insights settings.
   * Added support for Service Principal authentication.
+* SCInsiderRiskEntityList
+  * Fixed trailing whitespaces in the name of some properties when attempting
+    to set values.
+* TeamsEmergencyCallRoutingPolicy
+  * Refactored the export to use a common CIMInstance function.
+* TeamsTenantDialPlan
+  * Refactored the export to use a common CIMInstance function.
 
 # 1.25.122.1
 

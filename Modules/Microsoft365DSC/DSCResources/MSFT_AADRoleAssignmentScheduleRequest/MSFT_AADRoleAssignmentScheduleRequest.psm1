@@ -804,20 +804,71 @@ function Export-TargetResource
 
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
-            try
+            if ($null -ne $Results.ScheduleInfo)
             {
-                if ($null -ne $results.ScheduleInfo)
+                $complexMapping = @(
+                    @{
+                        Name            = 'ScheduleInfo'
+                        CimInstanceName = 'MSFT_AADRoleAssignmentScheduleRequestSchedule'
+                        IsRequired      = $False
+                    },
+                    @{
+                        Name            = 'expiration'
+                        CimInstanceName = 'MSFT_AADRoleAssignmentScheduleRequestScheduleExpiration'
+                        IsRequired      = $False
+                    },
+                    @{
+                        Name            = 'recurrence'
+                        CimInstanceName = 'MSFT_AADRoleAssignmentScheduleRequestScheduleRecurrence'
+                        IsRequired      = $False
+                    },
+                    @{
+                        Name            = 'pattern'
+                        CimInstanceName = 'MSFT_AADRoleAssignmentScheduleRequestScheduleRecurrencePattern'
+                        IsRequired      = $False
+                    },
+                    @{
+                        Name            = 'range'
+                        CimInstanceName = 'MSFT_AADRoleAssignmentScheduleRequestScheduleRecurrenceRange'
+                        IsRequired      = $False
+                    }
+                )
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                    -ComplexObject $Results.ScheduleInfo `
+                    -CIMInstanceName 'MSFT_AADRoleAssignmentScheduleRequestSchedule' `
+                    -ComplexTypeMapping $complexMapping
+
+                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
-                    $Results.ScheduleInfo = Get-M365DSCAzureADEligibilityRequestScheduleInfoAsString -ScheduleInfo $Results.ScheduleInfo
+                    $Results.ScheduleInfo = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('ScheduleInfo') | Out-Null
                 }
             }
-            catch
+            if ($null -ne $Results.TicketInfo)
             {
-                Write-Verbose -Message "Error converting Schedule: $_"
-            }
-            if ($Results.TicketInfo)
-            {
-                $Results.TicketInfo = Get-M365DSCAzureADEligibilityRequestTicketInfoAsString -TicketInfo $Results.TicketInfo
+                $complexMapping = @(
+                    @{
+                        Name            = 'TicketInfo'
+                        CimInstanceName = 'MSFT_AADRoleAssignmentScheduleRequestTicketInfo'
+                        IsRequired      = $False
+                    }
+                )
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                    -ComplexObject $Results.TicketInfo `
+                    -CIMInstanceName 'MSFT_AADRoleAssignmentScheduleRequestTicketInfo' `
+                    -ComplexTypeMapping $complexMapping
+
+                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                {
+                    $Results.TicketInfo = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('TicketInfo') | Out-Null
+                }
             }
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `

@@ -420,7 +420,26 @@ function Export-TargetResource
 
             if ($null -ne $Results.PolicyRules)
             {
-                $Results.PolicyRules = Get-MicrosoftGraphNetworkAccessForwardingPolicyRulesAsString -PolicyRules $Results.PolicyRules
+                $complexMapping = @(
+                    @{
+                        Name            = 'PolicyRules'
+                        CimInstanceName = 'MicrosoftGraphNetworkAccessForwardingPolicyRule'
+                        IsRequired      = $False
+                    }
+                )
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                    -ComplexObject $Results.PolicyRules `
+                    -CIMInstanceName 'MicrosoftGraphNetworkAccessForwardingPolicyRule' `
+                    -ComplexTypeMapping $complexMapping
+
+                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                {
+                    $Results.PolicyRules = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('PolicyRules') | Out-Null
+                }
             }
 
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
@@ -432,7 +451,7 @@ function Export-TargetResource
             if ($null -ne $Results.PolicyRules)
             {
                 $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                    -ParameterName 'PolicyRules'
+                    -ParameterName 'PolicyRules' -IsCIMArray:$true
             }
 
             $dscContent += $currentDSCBlock

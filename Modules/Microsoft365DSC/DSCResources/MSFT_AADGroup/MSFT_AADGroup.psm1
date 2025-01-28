@@ -1308,9 +1308,29 @@ function Export-TargetResource
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
-            if ($results.AssignedLicenses.Length -gt 0)
+
+            if ($null -ne $Results.AssignedLicenses)
             {
-                $Results.AssignedLicenses = Get-M365DSCAzureADGroupLicensesAsString $Results.AssignedLicenses
+                $complexMapping = @(
+                    @{
+                        Name            = 'AssignedLicenses'
+                        CimInstanceName = 'AADGroupLicense'
+                        IsRequired      = $False
+                    }
+                )
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                    -ComplexObject $Results.AssignedLicenses `
+                    -CIMInstanceName 'AADGroupLicense' `
+                    -ComplexTypeMapping $complexMapping
+
+                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                {
+                    $Results.AssignedLicenses = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('AssignedLicenses') | Out-Null
+                }
             }
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `

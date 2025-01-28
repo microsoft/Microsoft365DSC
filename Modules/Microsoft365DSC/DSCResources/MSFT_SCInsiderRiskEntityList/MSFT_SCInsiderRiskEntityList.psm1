@@ -843,31 +843,31 @@ function Set-TargetResource
         {
             Set-M365DSCSCInsiderRiskExclusionGroup -CurrentValues $currentInstance.ExceptionKeyworkGroups `
                 -DesiredValues $ExceptionKeyworkGroups `
-                -Name 'IrmXSGExcludedKeywords '
+                -Name 'IrmXSGExceptionKeywords'
         }
         elseif ($null -ne $ExcludedKeyworkGroups -and $ExcludedKeyworkGroups.Length -gt 0)
         {
             Set-M365DSCSCInsiderRiskExclusionGroup -CurrentValues $currentInstance.ExcludedKeyworkGroups `
                 -DesiredValues $ExcludedKeyworkGroups `
-                -Name 'IrmXSGExcludedKeywords '
+                -Name 'IrmXSGExcludedKeywords'
         }
         elseif ($null -ne $ExcludedSensitiveInformationTypeGroups -and $ExcludedSensitiveInformationTypeGroups.Length -gt 0)
         {
             Set-M365DSCSCInsiderRiskExclusionGroup -CurrentValues $currentInstance.ExcludedSensitiveInformationTypeGroups `
                 -DesiredValues $ExcludedSensitiveInformationTypeGroups `
-                -Name 'IrmXSGSensitiveInfoTypes '
+                -Name 'IrmXSGSensitiveInfoTypes'
         }
         elseif ($null -ne $ExcludedSiteGroups -and $ExcludedSiteGroups.Length -gt 0)
         {
             Set-M365DSCSCInsiderRiskExclusionGroup -CurrentValues $currentInstance.ExcludedSiteGroups `
                 -DesiredValues $ExcludedSiteGroups `
-                -Name 'IrmXSGSites '
+                -Name 'IrmXSGSites'
         }
         elseif ($null -ne $ExcludedClassifierGroups -and $ExcludedClassifierGroups.Length -gt 0)
         {
             Set-M365DSCSCInsiderRiskExclusionGroup -CurrentValues $currentInstance.ExcludedClassifierGroups `
                 -DesiredValues $ExcludedClassifierGroups `
-                -Name 'IrmXSGMLClassifierTypes '
+                -Name 'IrmXSGMLClassifierTypes'
         }
     }
     # REMOVE
