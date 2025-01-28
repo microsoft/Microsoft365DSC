@@ -317,12 +317,12 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Host -Message "Testing configuration of Team EmergencyCall Routing Policy {$Identity}"
+    Write-Verbose -Message "Testing configuration of Team EmergencyCall Routing Policy {$Identity}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
-    Write-Host -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
-    Write-Host -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
+    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `

@@ -531,9 +531,9 @@ function Compare-PSCustomObjectArrays
                 $propertyName = $property.Name
 
                 $propertyType = $currentValues.$($Property.Name).GetType().Name
-                $isFound = $EquivalentEntryInDesired.$PropertyName -contains $fixedEntry.$PropertyName
                 if ($propertyType -eq 'Object[]')
-                {
+                {                    
+                    $isFound = $EquivalentEntryInDesired.$PropertyName -contains $fixedEntry.$PropertyName
                     if (-not $isFound)
                     {
                         $drift = $true
