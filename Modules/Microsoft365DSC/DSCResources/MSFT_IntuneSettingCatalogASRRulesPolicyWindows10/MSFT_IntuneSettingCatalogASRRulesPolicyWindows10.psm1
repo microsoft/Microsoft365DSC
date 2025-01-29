@@ -238,7 +238,7 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    
+
     Write-Verbose -Message "Getting configuration of the Intune Endpoint Protection Attack Surface Protection rules Policy with Id {$Id} and DisplayName {$DisplayName}"
 
     try
@@ -948,12 +948,6 @@ function Test-TargetResource
                 }
             }
         }
-    }
-
-    if ($CurrentValues.Ensure -ne $Ensure)
-    {
-        Write-Verbose -Message "Test-TargetResource returned $false"
-        return $false
     }
     $testResult = $true
 

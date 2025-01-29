@@ -335,11 +335,7 @@ function Test-TargetResource
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
     $ValuesToCheck = Remove-M365DSCAuthenticationParameter -BoundParameters $ValuesToCheck
 
-    if ($CurrentValues.Ensure -ne $Ensure)
-    {
-        Write-Verbose -Message "Test-TargetResource returned $false"
-        return $false
-    }
+
     if ($CurrentValues.Ensure -eq 'Absent' -and $Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Test-TargetResource returned $true"

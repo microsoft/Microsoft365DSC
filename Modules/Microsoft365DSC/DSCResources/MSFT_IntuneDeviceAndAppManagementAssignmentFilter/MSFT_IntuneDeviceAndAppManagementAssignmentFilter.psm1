@@ -333,17 +333,6 @@ function Test-TargetResource
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
     $ValuesToCheck = Remove-M365DSCAuthenticationParameter -BoundParameters $ValuesToCheck
     $ValuesToCheck.Remove('Identity') | Out-Null
-
-    if ($CurrentValues.Ensure -ne $Ensure)
-    {
-        Write-Verbose -Message "Test-TargetResource returned $false"
-        return $false
-    }
-    if ($CurrentValues.Ensure -eq 'Absent' -and $Ensure -eq 'Absent')
-    {
-        Write-Verbose -Message "Test-TargetResource returned $true"
-        return $true
-    }
     $testResult = $true
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"

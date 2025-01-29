@@ -209,17 +209,16 @@ function Test-TargetResource
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
-    if ($CurrentValues.Ensure -ne $Ensure)
-    {
-        Write-Verbose -Message "Test-TargetResource returned $false"
-        return $false
-    }
 
     Write-Verbose -Message "Current Values: DomainName=$($currentValue.DomainName), Ensure=$($currentValues.Ensure)"
     Write-Verbose -Message "Target Values: DomainName=$DomainName, Ensure=$Ensure"
 
-    $testResult = $true
-
+    $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
+    $ValuesToCheck = Remove-M365DSCAuthenticationParameter -BoundParameters $ValuesToCheck
+    $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck $ValuesToCheck.Keys
     Write-Verbose -Message "Test-TargetResource returned $testResult"
 
     return $testResult

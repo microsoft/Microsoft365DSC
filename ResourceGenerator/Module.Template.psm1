@@ -72,7 +72,7 @@ function Get-TargetResource
             {
                 $getValue = <GetCmdLetName> <getKeyIdentifier> -ErrorAction SilentlyContinue
             }
-            
+
             if ($null -eq $getValue)
             {
                 Write-Verbose -Message "Could not find an <ResourceDescription> with <PrimaryKey> {$<PrimaryKey>}"
@@ -263,12 +263,6 @@ function Test-TargetResource
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 <#DefaultTestValuesToCheck#>
-
-    if ($CurrentValues.Ensure -ne $Ensure)
-    {
-        Write-Verbose -Message "Test-TargetResource returned $false"
-        return $false
-    }
     $testResult = $true
 
     #Compare Cim instances

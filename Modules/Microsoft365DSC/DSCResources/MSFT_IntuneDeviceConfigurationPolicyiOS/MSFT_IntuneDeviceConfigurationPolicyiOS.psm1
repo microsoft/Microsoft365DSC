@@ -833,7 +833,7 @@ function Get-TargetResource
 
             $nullResult = $PSBoundParameters
             $nullResult.Ensure = 'Absent'
-        
+
             $getValue = $null
             #region resource generator code
             if (-not [string]::IsNullOrEmpty($Id))
@@ -2948,12 +2948,6 @@ function Test-TargetResource
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
-
-    if ($CurrentValues.Ensure -ne $Ensure)
-    {
-        Write-Verbose -Message "Test-TargetResource returned $false"
-        return $false
-    }
     $testResult = $true
 
     #Compare Cim instances

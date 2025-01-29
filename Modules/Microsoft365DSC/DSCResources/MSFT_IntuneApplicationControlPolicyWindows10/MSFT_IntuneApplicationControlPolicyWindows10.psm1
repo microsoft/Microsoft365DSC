@@ -407,13 +407,8 @@ function Test-TargetResource
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
-    $ValuesToCheck = ([hashtable]$PSBoundParameters).clone()
-
+    $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
     $testResult = $true
-    if ($CurrentValues.Ensure -ne $Ensure)
-    {
-        $testResult = $false
-    }
     #region Assignments
     if ($TestResult)
     {

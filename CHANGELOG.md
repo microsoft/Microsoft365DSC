@@ -1,5 +1,15 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* AADGroup
+  * Changed the logic to evaluate a drift in the assigned licenses.
+* AADRoleEligibilityScheduleRequest
+  * Changed the mapping logic to find Id of a custom role.
+* AADServicePrincipal
+  * Fixes a regression issue when trying to export instances, the authentication
+    parameters were no longer returned by the Get-TargetResource function.
+
 # 1.25.122.2
 
 * AADAdminConsentRequestPolicy
@@ -10,6 +20,7 @@
   * Refactored the export to use a common CIMInstance function.
 * AADGroup
   * Refactored the export to use a common CIMInstance function.
+  * Added functionality to add & check on Devices in AAD groups.
 * AADHomeRealmDiscoveryPolicy
   * Refactored the export to use a common CIMInstance function.
 * AADIdentityGovernanceLifecycleWorkflow
@@ -122,6 +133,11 @@
     making the comparison otherwise it may fail as it did for a few resources
     FIXES [#5648](https://github.com/microsoft/Microsoft365DSC/issues/5648)
 * MISC
+  * Modified 100+ Test-TargetResource logic to prevent returning $false when
+    the Ensure parameter doesn't match the desired value. While this could introduce
+    a very small performance gain in some cases, it resulted in a lot of drifts being
+    detected without proper logging. All evaluation, including of the Ensure property,
+    is now being handled by the Test-M365DSCParameterState function.
   * Export Performance Improvements
     Implements the changes described in [#5615](https://github.com/microsoft/Microsoft365DSC/issues/5615)
     Improved resource caching behavior across Intune resources.

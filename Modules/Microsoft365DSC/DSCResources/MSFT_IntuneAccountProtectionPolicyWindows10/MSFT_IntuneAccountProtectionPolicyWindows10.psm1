@@ -127,7 +127,7 @@ function Get-TargetResource
         {
             $getValue = $Script:exportedInstance
         }
-        
+
         $Id = $getValue.Id
         Write-Verbose -Message "An Intune Account Protection Policy for Windows10 with Id {$Id} and Name {$DisplayName} was found"
 
@@ -551,12 +551,6 @@ function Test-TargetResource
                 }
             }
         }
-    }
-
-    if ($CurrentValues.Ensure -ne $Ensure)
-    {
-        Write-Verbose -Message "Test-TargetResource returned $false"
-        return $false
     }
     $testResult = $true
 

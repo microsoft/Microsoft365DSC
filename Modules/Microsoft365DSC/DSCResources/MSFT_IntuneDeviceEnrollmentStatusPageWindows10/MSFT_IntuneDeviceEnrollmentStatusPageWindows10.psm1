@@ -184,6 +184,14 @@ function Get-TargetResource
         $Id = $getValue.Id
         Write-Verbose -Message "An Intune Device Enrollment Configuration for Windows10 with Id {$Id} and DisplayName {$DisplayName} was found."
 
+        $SelectedMobileAppNamesValue = @()
+
+        foreach ($mobileApp in $getValue.AdditionalProperties.selectedMobileAppIds)
+        {
+            $mobileEntry = Get-MgBetaDeviceAppManagementMobileApp -MobileAppId $mobileApp
+            $SelectedMobileAppNamesValue += $mobileEntry.DisplayName
+        }
+
         $results = @{
             #region resource generator code
             AllowDeviceResetOnInstallFailure        = $getValue.AdditionalProperties.allowDeviceResetOnInstallFailure
@@ -195,7 +203,8 @@ function Get-TargetResource
             DisableUserStatusTrackingAfterFirstUser = $getValue.AdditionalProperties.disableUserStatusTrackingAfterFirstUser
             InstallProgressTimeoutInMinutes         = $getValue.AdditionalProperties.installProgressTimeoutInMinutes
             InstallQualityUpdates                   = $getValue.AdditionalProperties.installQualityUpdates
-            SelectedMobileAppNames                  = $getValue.AdditionalProperties.selectedMobileAppIds | ForEach-Object { (Get-MgBetaDeviceAppManagementMobileApp -MobileAppId $_).DisplayName }
+            SelectedMobileAppNames                  = $SelectedMobileAppNamesValue
+            SelectedMobileAppIds                    = $getValue.AdditionalProperties.selectedMobileAppIds
             ShowInstallationProgress                = $getValue.AdditionalProperties.showInstallationProgress
             TrackInstallProgressForAutopilotOnly    = $getValue.AdditionalProperties.trackInstallProgressForAutopilotOnly
             Priority                                = $getValue.Priority
@@ -620,12 +629,6 @@ function Test-TargetResource
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
     $ValuesToCheck = Remove-M365DSCAuthenticationParameter -BoundParameters $ValuesToCheck
     $ValuesToCheck.Remove('Id') | Out-Null
-
-    if ($CurrentValues.Ensure -ne $Ensure)
-    {
-        Write-Verbose -Message "Test-TargetResource returned $false"
-        return $false
-    }
     $testResult = $true
 
     #Compare Cim instances
@@ -633,7 +636,7 @@ function Test-TargetResource
     {
         $source = $PSBoundParameters.$key
         $target = $CurrentValues.$key
-        if ($source.getType().Name -like '*CimInstance*')
+        if (-not [System.String]::IsNullOrEmpty($source) -and $source.getType().Name -like '*CimInstance*')
         {
             $testResult = Compare-M365DSCComplexObject `
                 -Source ($source) `

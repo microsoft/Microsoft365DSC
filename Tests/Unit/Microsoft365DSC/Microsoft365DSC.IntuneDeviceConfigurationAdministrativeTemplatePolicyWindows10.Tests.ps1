@@ -61,6 +61,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
             Mock -CommandName Update-DeviceConfigurationGroupPolicyDefinitionValue -MockWith {
             }
+            
+            $Script:exportedInstances = $null
+            $Script:exportedInstance = $null
+            $Script:ExportMode = $false
         }
         # Test contexts
         Context -Name 'The IntuneDeviceConfigurationAdministrativeTemplatePolicyWindows10 should exist but it DOES NOT' -Fixture {
@@ -462,6 +466,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'ReverseDSC Tests' -Fixture {
             BeforeAll {
                 $Global:CurrentModeIsExport = $true
+                $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
                     Credential = $Credential
                 }

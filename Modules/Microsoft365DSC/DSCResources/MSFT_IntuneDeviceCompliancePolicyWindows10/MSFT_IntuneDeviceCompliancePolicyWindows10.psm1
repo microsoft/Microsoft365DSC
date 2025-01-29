@@ -203,7 +203,7 @@ function Get-TargetResource
 
             $nullResult = $PSBoundParameters
             $nullResult.Ensure = 'Absent'
-    
+
             $devicePolicy = Get-MgBetaDeviceManagementDeviceCompliancePolicy `
                 -All `
                 -ErrorAction SilentlyContinue | Where-Object `
@@ -795,13 +795,8 @@ function Test-TargetResource
         throw "An error occured in Get-TargetResource, the policy {$displayName} will not be processed. Refer to the event viewer logs for more information."
     }
 
-    $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
-
+    $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
     $testResult = $true
-    if ($CurrentValues.Ensure -ne $Ensure)
-    {
-        $testResult = $false
-    }
 
     #Compare Cim instances
     foreach ($key in $PSBoundParameters.Keys)

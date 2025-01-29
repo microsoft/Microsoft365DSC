@@ -547,12 +547,6 @@ function Test-TargetResource
         }
     }
     $PSBoundParameters.Set_Item('ResourceScopes', $ResourceScopes)
-
-    if ($CurrentValues.Ensure -ne $Ensure)
-    {
-        Write-Verbose -Message "Test-TargetResource returned $false"
-        return $false
-    }
     $testResult = $true
 
     $ValuesToCheck.Remove('Id') | Out-Null

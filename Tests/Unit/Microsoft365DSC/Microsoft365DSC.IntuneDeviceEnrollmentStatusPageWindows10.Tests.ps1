@@ -85,6 +85,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     InstallProgressTimeoutInMinutes         = 65
                     InstallQualityUpdates                   = $True
                     SelectedMobileAppIds                    = @()
+                    SelectedMobileAppNames                  = @()
                     TrackInstallProgressForAutopilotOnly    = $True
                     Ensure                                  = 'Present'
                     Credential                              = $Credential

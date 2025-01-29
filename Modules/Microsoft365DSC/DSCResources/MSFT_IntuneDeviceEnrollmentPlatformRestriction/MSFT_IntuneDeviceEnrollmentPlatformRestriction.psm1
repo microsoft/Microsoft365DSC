@@ -132,7 +132,7 @@ function Get-TargetResource
                     }
                 }
             }
-        
+
             $config = $null
             if (-not [string]::IsNullOrEmpty($Identity))
             {
@@ -590,12 +590,6 @@ function Test-TargetResource
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
-
-    if ($CurrentValues.Ensure -ne $Ensure)
-    {
-        Write-Verbose -Message "Test-TargetResource returned $false"
-        return $false
-    }
     $testResult = $true
 
     #Compare Cim instances
