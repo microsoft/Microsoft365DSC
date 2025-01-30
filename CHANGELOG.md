@@ -1,14 +1,29 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.25.129.2
+
+* M365DSCRuleEvaluation
+  * Only provide the ManagedIdentity parameter for resources which supports it.
+* SCDLPComplianceRule
+  * Added the comments property on creation.
+* SCPolicyConfig
+  * Changed parsing logic to account for $null or missing properties in the
+    API response.
+
+# 1.25.129.1
 
 * AADGroup
-  * Changed the logic to evaluate a drift in the assigned licenses.
+  * Added functionality to add & check on Devices in AAD groups.
 * AADRoleEligibilityScheduleRequest
   * Changed the mapping logic to find Id of a custom role.
 * AADServicePrincipal
   * Fixes a regression issue when trying to export instances, the authentication
     parameters were no longer returned by the Get-TargetResource function.
+* IntuneDeviceConfigurationPolicyiOS
+  * Fixes [#5594] https://github.com/microsoft/Microsoft365DSC/issues/5594
+* MISC
+  * AAD Workload
+    * Improved performance of various resources during export.
 
 # 1.25.122.2
 
@@ -20,7 +35,6 @@
   * Refactored the export to use a common CIMInstance function.
 * AADGroup
   * Refactored the export to use a common CIMInstance function.
-  * Added functionality to add & check on Devices in AAD groups.
 * AADHomeRealmDiscoveryPolicy
   * Refactored the export to use a common CIMInstance function.
 * AADIdentityGovernanceLifecycleWorkflow

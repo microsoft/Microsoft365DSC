@@ -177,10 +177,16 @@ function Get-TargetResource
         $DlpNetworkShareGroupsObject = ConvertFrom-Json $instance.DlpNetworkShareGroups
 
         # AdvancedClassificationEnabled
-        $AdvancedClassificationEnabledValue = [Boolean]($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'AdvancedClassificationEnabled' }).Value
+        $AdvancedClassificationEnabledValue = [Boolean]::Parse(($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'AdvancedClassificationEnabled' }).Value)
 
         # BandwidthLimitEnabled
-        $BandwidthLimitEnabledValue = [Boolean]($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'BandwidthLimitEnabledValue' }).Value
+        $toBeParsed = ($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'BandwidthLimitEnabled' }).Value
+        $parsedValue = $null
+        if ($null -ne $toBeParsed)
+        {
+            $parsedValue = [Boolean]::Parse($toBeParsed)
+        }
+        $BandwidthLimitEnabledValue = $parsedValue
 
         # DailyBandwidthLimitInMB
         $DailyBandwidthLimitInMBValue = [UInt32]($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'DailyBandwidthLimitInMB' }).Value
@@ -192,7 +198,7 @@ function Get-TargetResource
         $MacPathExclusionValue = [Array]($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'MacPathExclusion' }).Value
 
         # MacDefaultPathExclusionsEnabled
-        $MacDefaultPathExclusionsEnabledValue = [Boolean]($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'MacDefaultPathExclusionsEnabled' }).Value
+        $MacDefaultPathExclusionsEnabledValue = [Boolean]::Parse(($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'MacDefaultPathExclusionsEnabled' }).Value)
 
         #EvidenceStoreSettings
         $entry = $EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'EvidenceStoreSettings' }
@@ -208,7 +214,7 @@ function Get-TargetResource
         }
 
         # NetworkPathEnforcementEnabled
-        $NetworkPathEnforcementEnabledValue = [Boolean]($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'NetworkPathEnforcementEnabled' }).Value
+        $NetworkPathEnforcementEnabledValue = [Boolean]::Parse(($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'NetworkPathEnforcementEnabled' }).Value)
 
         # NetworkPathExclusion
         $NetworkPathExclusionValue = ($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'NetworkPathExclusion' }).Value
@@ -229,7 +235,7 @@ function Get-TargetResource
                 $app = @{
                     ExecutableName = $appEntry.ExecutableName
                     Name           = $appEntry.Name
-                    Quarantine     = [Boolean]$appEntry.Quarantine
+                    Quarantine     = [Boolean]::Parse($appEntry.Quarantine)
                 }
                 $entry.Apps += $app
             }
@@ -261,7 +267,13 @@ function Get-TargetResource
         }
 
         # IncludePredefinedUnallowedBluetoothApps
-        $IncludePredefinedUnallowedBluetoothAppsValue = [Boolean]($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'IncludePredefinedUnallowedBluetoothApps' }).Value
+        $toBeParsed = ($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'IncludePredefinedUnallowedBluetoothApps' }).Value
+        $parsedValue = $null
+        if ($null -ne $toBeParsed)
+        {
+            $parsedValue = [Boolean]::Parse($toBeParsed)
+        }
+        $IncludePredefinedUnallowedBluetoothAppsValue = $parsedValue
 
         # UnallowedBluetoothApp
         $entries = [Array]($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'UnallowedBluetoothApp' })
@@ -340,10 +352,10 @@ function Get-TargetResource
             }
 
             # serverDlpEnabled
-            $serverDlpEnabledValue = [Boolean]($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'serverDlpEnabled' }).Value
+            $serverDlpEnabledValue = [Boolean]::Parse(($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'serverDlpEnabled' }).Value)
 
             # AuditFileActivity
-            $AuditFileActivityValue = [Boolean]($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'AuditFileActivity' }).Value
+            $AuditFileActivityValue = [Boolean]::Parse(($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'AuditFileActivity' }).Value)
 
             # VPNSettings
             $entity = $EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'VPNSettings' }
@@ -842,7 +854,7 @@ function Set-TargetResource
         }
     }
 
-    if ($null -ne $CloudAppMode)
+    if (-not [System.String]::IsNullOrEmpty($CloudAppMode))
     {
         $EndpointDlpGlobalSettingsValue += @{
             Setting = 'CloudAppMode'
@@ -1006,8 +1018,12 @@ function Set-TargetResource
         DlpAppGroups              = $DLPAppGroupsValue
         DlpPrinterGroups          = ConvertTo-Json $DlpPrinterGroupsValue -Depth 10 -Compress
         DLPRemovableMediaGroups   = ConvertTo-Json $DLPRemovableMediaGroupsValue -Depth 10 -Compress
-        EnableSpoAipMigration     = $EnableSpoAipMigration
         EndpointDlpGlobalSettings = $EndpointDlpGlobalSettingsValue
+    }
+    $CurrentPolicyConfig = Get-TargetResource @PSBoundParameters
+    if ($EnableSpoAipMigration -ne $CurrentPolicyConfig.EnableSpoAipMigration)
+    {
+        $params.Add("EnableSpoAipMigration", $EnableSpoAipMigration)
     }
     Write-Verbose -Message "Updating policy config with values:`r`n$(Convert-M365DscHashtableToString -Hashtable $params)"
     Set-PolicyConfig @params
@@ -1185,6 +1201,7 @@ function Test-TargetResource
 
     #Compare Cim instances
     $testResult = $true
+    $testTargetResource = $true
     foreach ($key in $PSBoundParameters.Keys)
     {
         $source = $PSBoundParameters.$key
@@ -1197,6 +1214,7 @@ function Test-TargetResource
 
             if (-not $testResult)
             {
+                $testTargetResource = $false
                 break
             }
 
@@ -1209,9 +1227,12 @@ function Test-TargetResource
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck $ValuesToCheck.Keys
 
-    Write-Verbose -Message "Test-TargetResource returned $testResult"
-
-    return $testResult
+    if (-not $testResult)
+    {
+        $testTargetResource = $false
+    }
+    Write-Verbose -Message "Test-TargetResource returned $testTargetResource"
+    return $testTargetResource
 }
 
 function Export-TargetResource

@@ -173,7 +173,6 @@ function Test-TargetResource
             ApplicationId         = $PSBoundParameters.ApplicationId
             TenantId              = $PSBoundParameters.TenantId
             CertificateThumbprint = $PSBoundParameters.CertificateThumbprint
-            ManagedIdentity       = $PSBoundParameters.ManagedIdentity
         }
 
         if ($null -ne $PSBoundParameters.ApplicationSecret)
@@ -188,6 +187,20 @@ function Test-TargetResource
         Write-Verbose -Message "Importing module from Path {$($module)}"
         Import-Module $module -Force -Function 'Export-TargetResource' | Out-Null
         $cmdName = "MSFT_$ResourceTypeName\Export-TargetResource"
+
+        # Ensure the referenced resource supports ManagedIdentity before adding the parameter.
+        try
+        {
+            $exportFunctionInfo = (Get-Command -Module "MSFT_$ResourceTypeName") | Where-Object -FilterScript {$_.Name -eq 'Export-TargetResource'}
+            if ($exportFunctionInfo.Parameters.Name -Contains 'ManagedIdentity')
+            {
+                $params.Add('ManagedIdentity', $PSBoundParameters.ManagedIdentity)
+            }
+        }
+        catch
+        {
+            Write-Verbose $_
+        }
 
         [Array]$instances = &$cmdName @params
 

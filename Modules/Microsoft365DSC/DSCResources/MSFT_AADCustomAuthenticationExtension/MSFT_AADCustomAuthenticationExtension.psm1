@@ -87,43 +87,28 @@ function Get-TargetResource
         $Ensure = 'Present'
     )
 
-    New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters | Out-Null
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullResult = $PSBoundParameters
-    $nullResult.Ensure = 'Absent'
-    Write-Verbose -Message 'Fetching result....'
     try
     {
-        # check for export.
-        if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
+        if (-not $Script:exportedInstance)
         {
-            # check with Id first
-            if (-not [System.String]::IsNullOrEmpty($Id))
-            {
-                $instance = $Script:exportedInstances | Where-Object -FilterScript { $_.Id -eq $Id }
-            }
+            New-M365DSCConnection -Workload 'MicrosoftGraph' `
+                -InboundParameters $PSBoundParameters | Out-Null
 
-            # check with display name next.
-            if ($null -eq $instance)
-            {
-                $instance = $Script:exportedInstances | Where-Object -FilterScript { $_.DisplayName -eq $DisplayName }
-            }
-        }
-        else
-        {
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullResult = $PSBoundParameters
+            $nullResult.Ensure = 'Absent'
+            Write-Verbose -Message 'Fetching result....'
             if (-not [System.String]::IsNullOrEmpty($Id))
             {
                 $instance = Get-MgBetaIdentityCustomAuthenticationExtension -CustomAuthenticationExtensionId $Id `
@@ -134,10 +119,14 @@ function Get-TargetResource
                 $instance = Get-MgBetaIdentityCustomAuthenticationExtension -Filter "DisplayName eq '$DisplayName'" `
                     -ErrorAction SilentlyContinue
             }
+            if ($null -eq $instance)
+            {
+                return $nullResult
+            }
         }
-        if ($null -eq $instance)
+        else
         {
-            return $nullResult
+            $instance = $Script:exportedInstance
         }
 
         Write-Verbose 'Instance found for the resource. Calculating result....'
@@ -146,7 +135,7 @@ function Get-TargetResource
             DisplayName           = $instance.DisplayName
             Id                    = $instance.Id
             Description           = $instance.Description
-            Ensure                = 'Present'            
+            Ensure                = 'Present'
             Credential            = $Credential
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
@@ -598,7 +587,6 @@ function Export-TargetResource
 
     try
     {
-        $Script:ExportMode = $true
         [array] $Script:exportedInstances = Get-MgBetaIdentityCustomAuthenticationExtension -ErrorAction Stop
 
         $i = 1
@@ -632,6 +620,7 @@ function Export-TargetResource
                 AccessTokens          = $AccessTokens
             }
 
+            $Script:exportedInstance = $config
             $Results = Get-TargetResource @Params
 
             $endpointConfigurationCimString = Get-M365DSCDRGComplexTypeToString `

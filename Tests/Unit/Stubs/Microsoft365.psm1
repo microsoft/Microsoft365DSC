@@ -105785,7 +105785,7 @@ function Update-MgDeviceManagementDeviceConfigurationAssignment
 #endregion
 
 #region MgIdentityGovernancePrivilegedAccessGroupEligibilitySchedule
-function Get-MgIdentityGovernancePrivilegedAccessGroupEligibilitySchedule
+function Get-MgBetaIdentityGovernancePrivilegedAccessGroupEligibilitySchedule
 {
     [CmdletBinding()]
     param
@@ -105999,7 +105999,7 @@ function New-MgBetaIdentityGovernancePrivilegedAccessGroupEligibilityScheduleReq
     )
 }
 
-function Get-MgPolicyRoleManagementPolicyAssignment
+function Get-MgBetaPolicyRoleManagementPolicyAssignment
 {
     [CmdletBinding()]
     param
@@ -106090,104 +106090,6 @@ function Get-MgPolicyRoleManagementPolicyAssignment
     )
 }
 
-function Update-MgPolicyRoleManagementPolicyRule
-{
-    [CmdletBinding()]
-    param
-    (
-        [Parameter()]
-        [System.String]
-        $PolicyRuleId,
-
-        [Parameter()]
-        [PSObject]
-        $InputObject,
-
-        [Parameter()]
-        [PSObject]
-        $BodyParameter,
-
-        [Parameter()]
-        [System.String]
-        $ResponseHeadersVariable,
-
-        [Parameter()]
-        [System.Collections.Hashtable]
-        $AdditionalProperties,
-
-        [Parameter()]
-        [System.String]
-        $Id,
-
-        [Parameter()]
-        [System.String]
-        $Name,
-
-        [Parameter()]
-        [System.String]
-        $PolicyId,
-
-        [Parameter()]
-        [System.String]
-        $PolicyRuleType,
-
-        [Parameter()]
-        [System.String]
-        $PolicyType,
-
-        [Parameter()]
-        [System.String]
-        $Priority,
-
-        [Parameter()]
-        [System.String]
-        $RuleType,
-
-        [Parameter()]
-        [System.String]
-        $Status,
-
-        [Parameter()]
-        [System.String]
-        $TargetType,
-
-        [Parameter()]
-        [System.String]
-        $TargetValue,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break,
-
-        [Parameter()]
-        [System.Collections.IDictionary]
-        $Headers,
-
-        [Parameter()]
-        [PSObject[]]
-        $HttpPipelineAppend,
-
-        [Parameter()]
-        [PSObject[]]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm
-    )
-}
 #endregion
 
 #region Microsoft.Graph.Sites

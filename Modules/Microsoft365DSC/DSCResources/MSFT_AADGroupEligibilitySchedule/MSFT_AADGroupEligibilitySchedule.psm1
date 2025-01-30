@@ -107,7 +107,7 @@ function Get-TargetResource
             $GroupId = (Get-MgGroup -Filter $Filter).Id
         }
         if ($Id -notmatch '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}_member_[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$') {
-            $getId = Get-MgIdentityGovernancePrivilegedAccessGroupEligibilitySchedule `
+            $getId = Get-MgBetaIdentityGovernancePrivilegedAccessGroupEligibilitySchedule `
                 -Filter "Groupid eq '$GroupId'" `
                 -ErrorAction SilentlyContinue
                 $Id = $getId.Id
@@ -785,18 +785,23 @@ function Export-TargetResource
     {
 
         $groups = Get-MgGroup -Filter "MailEnabled eq false and NOT(groupTypes/any(x:x eq 'DynamicMembership'))" -Property "displayname,Id" -CountVariable CountVar  -ConsistencyLevel eventual -ErrorAction Stop
+        $j = 1
+        if ($groups.Length -eq 0)
+        {
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+        }
+        else
+        {
+            Write-Host "`r`n" -NoNewline
+        }
         foreach ($group in $groups)
         {
-            Write-Host "get group $($group.DisplayName)"
+            Write-Host "    |---[$j/$($groups.Count)] $($group.DisplayName)" -NoNewline
             #region resource generator code
-            $getValue = Get-MgIdentityGovernancePrivilegedAccessGroupEligibilitySchedule `
+            $getValue = Get-MgBetaIdentityGovernancePrivilegedAccessGroupEligibilitySchedule `
                 -Filter "groupId eq '$($group.Id)'" `
                 -All `
-                -ErrorAction Stop
-            if($null -eq $getValue)
-            {
-                continue
-            }
+                -ErrorAction SilentlyContinue
 
             $i = 1
             $dscContent = ''
@@ -810,7 +815,11 @@ function Export-TargetResource
             }
             foreach ($config in $getValue)
             {
-                Write-Host "    |---[$i/$($getValue.Count)] $($group.DisplayName)" -NoNewline
+                if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+                {
+                    $Global:M365DSCExportResourceInstancesCount++
+                }
+                Write-Host "        |---[$i/$($getValue.Count)] $($config.Id)" -NoNewline
                 $params = @{
                     Id                    = $config.Id
                     GroupDisplayName      = $group.DisplayName
@@ -887,8 +896,9 @@ function Export-TargetResource
                 $i++
                 Write-Host $Global:M365DSCEmojiGreenCheckMark
             }
-            return $dscContent
+            $j++
         }
+        return $dscContent
     }
     catch
     {

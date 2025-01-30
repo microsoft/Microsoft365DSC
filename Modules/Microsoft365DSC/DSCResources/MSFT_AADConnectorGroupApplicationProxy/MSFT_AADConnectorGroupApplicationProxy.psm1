@@ -53,58 +53,51 @@ function Get-TargetResource
 
     try
     {
-        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters
-
-        #Ensure the proper dependencies are installed in the current environment.
-        Confirm-M365DSCDependencies
-
-        #region Telemetry
-        $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
-        $CommandName = $MyInvocation.MyCommand
-        $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-            -CommandName $CommandName `
-            -Parameters $PSBoundParameters
-        Add-M365DSCTelemetryEvent -Data $data
-        #endregion
-
-        $nullResult = $PSBoundParameters
-        $nullResult.Ensure = 'Absent'
-
-        $getValue = $null
-        #region resource generator code
-        if (-not [string]::IsNullOrEmpty($Id))
+        if (-not $Script:exportedInstance)
         {
-            if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
-            {
-                $getValue = $Script:exportedInstances | Where-Object -FilterScript { $_.Id -eq $Id }
-            }
-            else
+            $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+                -InboundParameters $PSBoundParameters
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullResult = $PSBoundParameters
+            $nullResult.Ensure = 'Absent'
+
+            $getValue = $null
+            #region resource generator code
+            if (-not [string]::IsNullOrEmpty($Id))
             {
                 $getValue = Get-MgBetaOnPremisePublishingProfileConnectorGroup -ConnectorGroupId $Id -OnPremisesPublishingProfileId 'applicationProxy' -ErrorAction SilentlyContinue
             }
-        }
 
-        if ($null -eq $getValue -and -not [string]::IsNullOrEmpty($Id))
-        {
-            Write-Verbose -Message "Could not find an Azure AD Connector Group Application Proxy with Name {$Name}"
-            if (-Not [string]::IsNullOrEmpty($DisplayName))
+            if ($null -eq $getValue -and -not [string]::IsNullOrEmpty($Id))
             {
-                if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
-                {
-                    $getValue = $Script:exportedInstances | Where-Object -FilterScript { $_.Name -eq $Name }
-                }
-                else
+                Write-Verbose -Message "Could not find an Azure AD Connector Group Application Proxy with Name {$Name}"
+                if (-not [string]::IsNullOrEmpty($DisplayName))
                 {
                     $getValue = Get-MgBetaOnPremisePublishingProfileConnectorGroup -OnPremisesPublishingProfileId 'applicationProxy' -Filter "Name eq '$Name'" -ErrorAction Stop
                 }
             }
+            #endregion
+            if ($null -eq $getValue)
+            {
+                Write-Verbose -Message "Could not find an Azure AD Connector Group Application Proxy with Name {$Name}"
+                return $nullResult
+            }
         }
-        #endregion
-        if ($null -eq $getValue)
+        else
         {
-            Write-Verbose -Message "Could not find an Azure AD Connector Group Application Proxy with Name {$Name}"
-            return $nullResult
+            $getValue = $Script:exportedInstance
         }
 
         $Id = $getValue.Id
@@ -434,6 +427,7 @@ function Export-TargetResource
                 AccessTokens          = $AccessTokens
             }
 
+            $Script:exportedInstance = $config
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results

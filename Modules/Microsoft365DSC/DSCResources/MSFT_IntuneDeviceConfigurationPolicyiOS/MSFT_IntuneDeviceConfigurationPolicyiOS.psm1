@@ -1058,7 +1058,7 @@ function Get-TargetResource
             foreach ($currentValue in $currentValueArray)
             {
                 $currentHash = @{}
-                $currentHash.add('AppId', $currentValue.appid)
+                $currentHash.add('AppId', $currentValue.appId)
                 $currentHash.add('Publisher', $currentValue.publisher)
                 $currentHash.add('AppStoreUrl', $currentValue.appStoreUrl)
                 $currentHash.add('Name', $currentValue.name)
@@ -1075,7 +1075,7 @@ function Get-TargetResource
             foreach ($currentValue in $currentValueArray)
             {
                 $currentHash = @{}
-                $currentHash.add('AppId', $currentValue.appid)
+                $currentHash.add('AppId', $currentValue.appId)
                 $currentHash.add('Publisher', $currentValue.publisher)
                 $currentHash.add('AppStoreUrl', $currentValue.appStoreUrl)
                 $currentHash.add('Name', $currentValue.name)
@@ -1092,7 +1092,7 @@ function Get-TargetResource
             foreach ($currentValue in $currentValueArray)
             {
                 $currentHash = @{}
-                $currentHash.add('AppId', $currentValue.appid)
+                $currentHash.add('AppId', $currentValue.appId)
                 $currentHash.add('Publisher', $currentValue.publisher)
                 $currentHash.add('AppStoreUrl', $currentValue.appStoreUrl)
                 $currentHash.add('Name', $currentValue.name)
@@ -1149,7 +1149,7 @@ function Get-TargetResource
                     foreach ($currentChildValue in $currentValueChildArray)
                     {
                         $currentHash = @{}
-                        $currentHash.add('AppId', $currentValue.appid)
+                        $currentHash.add('AppId', $currentValue.appId)
                         $currentHash.add('Publisher', $currentValue.publisher)
                         $currentHash.add('AppStoreUrl', $currentValue.appStoreUrl)
                         $currentHash.add('Name', $currentValue.name)

@@ -923,13 +923,8 @@ function Set-TargetResource
         $CreationParams.Remove('ApplicationSecret') | Out-Null
         $CreationParams.Remove('AccessTokens') | Out-Null
 
-        $NewruleParam = @{
-            Name         = $CreationParams.Name
-            Policy       = $CreationParams.Policy
-            AdvancedRule = $CreationParams.AdvancedRule
-        }
         Write-Verbose -Message "Calling New-DLPComplianceRule with Values: $(Convert-M365DscHashtableToString -Hashtable $CreationParams)"
-        New-DLPComplianceRule @NewruleParam
+        New-DLPComplianceRule @CreationParams
     }
     elseif (('Present' -eq $Ensure) -and ('Present' -eq $CurrentRule.Ensure))
     {
@@ -1389,7 +1384,6 @@ function Test-TargetResource
     #endregion
     $ValuesToCheck.Remove('ContentContainsSensitiveInformation') | Out-Null
     $ValuesToCheck.Remove('ExceptIfContentContainsSensitiveInformation') | Out-Null
-
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `

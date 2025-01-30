@@ -43,7 +43,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return "Credentials"
             }
 
-            Mock  -CommandName Get-MgPolicyRoleManagementPolicyAssignment -MockWith {
+            Mock  -CommandName Get-MgBetaPolicyRoleManagementPolicyAssignment -MockWith {
                 return @(
                     @{
                         PolicyIdId = 'FakeId'
@@ -51,11 +51,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 )
             }
 
-            Mock -CommandName Get-MgPolicyRoleManagementPolicyRule -MockWith {
+            Mock -CommandName Get-MgBetaPolicyRoleManagementPolicyRule -MockWith {
                 return @()
             }
 
-            Mock -CommandName Update-MgPolicyRoleManagementPolicyRule -MockWith {
+            Mock -CommandName Update-MgBetaPolicyRoleManagementPolicyRule -MockWith {
                 return @()
             }
             # Mock Write-Host to hide output during the tests
@@ -83,7 +83,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential;
                 }
 
-                Mock -CommandName Get-MgIdentityGovernancePrivilegedAccessGroupEligibilitySchedule -MockWith {
+                Mock -CommandName Get-MgBetaIdentityGovernancePrivilegedAccessGroupEligibilitySchedule -MockWith {
                     return $null
                 }
 
@@ -120,7 +120,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential;
                 }
 
-                Mock -CommandName Get-MgIdentityGovernancePrivilegedAccessGroupEligibilitySchedule -MockWith {
+                Mock -CommandName Get-MgBetaIdentityGovernancePrivilegedAccessGroupEligibilitySchedule -MockWith {
                     return $null
                 }
 
@@ -182,7 +182,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential;
                 }
 
-                Mock -CommandName Get-MgIdentityGovernancePrivilegedAccessGroupEligibilitySchedule -MockWith {
+                Mock -CommandName Get-MgBetaIdentityGovernancePrivilegedAccessGroupEligibilitySchedule -MockWith {
                     return $null
                 }
 
@@ -211,7 +211,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return $null
                 }
 
-                Mock  -CommandName Get-MgPolicyRoleManagementPolicyAssignment -MockWith {
+                Mock  -CommandName Get-MgBetaPolicyRoleManagementPolicyAssignment -MockWith {
                     return @(
                         @{
                             PolicyId = 'FakeId'
@@ -219,7 +219,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     )
                 }
 
-                Mock -CommandName Get-MgPolicyRoleManagementPolicyRule -MockWith {
+                Mock -CommandName Get-MgBetaPolicyRoleManagementPolicyRule -MockWith {
                     return @{
                         AdditionalProperties = @{
                             isExpirationRequired = $true
@@ -227,7 +227,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Update-MgPolicyRoleManagementPolicyRule -MockWith {
+                Mock -CommandName Update-MgBetaPolicyRoleManagementPolicyRule -MockWith {
                     return @()
                 }
 
@@ -255,7 +255,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential;
                 }
 
-                Mock -CommandName Get-MgIdentityGovernancePrivilegedAccessGroupEligibilitySchedule -MockWith {
+                Mock -CommandName Get-MgBetaIdentityGovernancePrivilegedAccessGroupEligibilitySchedule -MockWith {
                     return $null
                 }
 
@@ -286,7 +286,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return $null
                 }
 
-                Mock  -CommandName Get-MgPolicyRoleManagementPolicyAssignment -MockWith {
+                Mock  -CommandName Get-MgBetaPolicyRoleManagementPolicyAssignment -MockWith {
                     return @(
                         @{
                             PolicyId = 'FakeId'
@@ -294,7 +294,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     )
                 }
 
-                Mock -CommandName Get-MgPolicyRoleManagementPolicyRule -MockWith {
+                Mock -CommandName Get-MgBetaPolicyRoleManagementPolicyRule -MockWith {
                     return @{
                         AdditionalProperties = @{
                             isExpirationRequired = $true
@@ -302,7 +302,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Update-MgPolicyRoleManagementPolicyRule -MockWith {
+                Mock -CommandName Update-MgBetaPolicyRoleManagementPolicyRule -MockWith {
                     return @()
                 }
             }
@@ -336,7 +336,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Get-MgIdentityGovernancePrivilegedAccessGroupEligibilitySchedule -MockWith {
+                Mock -CommandName Get-MgBetaIdentityGovernancePrivilegedAccessGroupEligibilitySchedule -MockWith {
                     return @{
                         Id             = 'FakeStringValue'
                     }
