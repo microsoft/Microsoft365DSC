@@ -5,6 +5,7 @@
 * DEPENDENCIES
   * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.205.
   * Updated MicrosoftTeams to version 6.8.0.
+  * Updated MSCloudLoginAssistant to version 1.1.35.
 
 # 1.25.129.2
 
