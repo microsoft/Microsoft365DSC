@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* DEPENDENCIES
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.205.
+  * Updated MicrosoftTeams to version 6.8.0.
+
 # 1.25.129.2
 
 * M365DSCRuleEvaluation
