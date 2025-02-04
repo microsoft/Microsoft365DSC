@@ -4,6 +4,7 @@
 
 * AADConditionalAccessPolicy
   * Changed the InsiderRiskTypes property to a string array.
+  * Fixes [#5365] https://github.com/microsoft/Microsoft365DSC/issues/5365
 * MISC
   * Changed the CIMInstance logic of various resources to us common logic.
 
