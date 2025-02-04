@@ -1782,6 +1782,15 @@ function Set-TargetResource
                 Write-Verbose -Message "Gettign Terms of Use {$TermsOfUse}"
                 $TermsOfUseObj = Get-MgBetaAgreement | Where-Object -FilterScript { $_.DisplayName -eq $TermsOfUse }
                 $GrantControls.Add('termsOfUse', $TermsOfUseObj.Id)
+
+                if ($null -ne $TermsOfUseObj) {
+
+                    $message = "Couldn't find Terms of Use {$TermsOfUse}"
+                    Write-Verbose -Message $message
+                    New-M365DSCLogEntry -Message $message `
+                        -Source $($MyInvocation.MyCommand.Source) `
+                        -TenantId $TenantId
+                }
             }
 
             #no translation or conversion needed
