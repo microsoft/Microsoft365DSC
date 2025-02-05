@@ -408,7 +408,14 @@ function Get-TargetResource
                 }
                 elseif ($null -ne $ruleObject.Condition.SubConditions[$index].Value.Groups.Sensitivetypes)
                 {
-                    $ruleobject.Condition.SubConditions[$index].Value.Groups.Sensitivetypes = @($ruleobject.Condition.SubConditions[$index].Value.Groups.Sensitivetypes | Select-Object * -ExcludeProperty Id)
+                    $sensitiveTypesValue = $ruleobject.Condition.SubConditions[$index].Value.Groups.Sensitivetypes
+                    foreach ($stype in $sensitiveTypesValue)
+                    {
+                        if ($null -ne $stype.Id)
+                        {
+                            $stype.Id = $null
+                        }
+                    }
                 }
             }
 
@@ -924,7 +931,7 @@ function Set-TargetResource
         $CreationParams.Remove('AccessTokens') | Out-Null
 
         Write-Verbose -Message "Calling New-DLPComplianceRule with Values: $(Convert-M365DscHashtableToString -Hashtable $CreationParams)"
-        New-DLPComplianceRule @CreationParams
+        New-DLPComplianceRule @CreationParams -Confirm:$false
     }
     elseif (('Present' -eq $Ensure) -and ('Present' -eq $CurrentRule.Ensure))
     {
@@ -991,7 +998,7 @@ function Set-TargetResource
         $UpdateParams.Remove('AccessTokens') | Out-Null
 
         Write-Verbose "Updating Rule with values: $(Convert-M365DscHashtableToString -Hashtable $UpdateParams)"
-        Set-DLPComplianceRule @UpdateParams
+        Set-DLPComplianceRule @UpdateParams -Confirm:$false
     }
     elseif (('Absent' -eq $Ensure) -and ('Present' -eq $CurrentRule.Ensure))
     {

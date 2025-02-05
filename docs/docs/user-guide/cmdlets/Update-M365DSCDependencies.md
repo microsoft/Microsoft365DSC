@@ -15,6 +15,7 @@ This function does not generate any output.
 | Force | False | SwitchParameter |  |  | Specifies that all dependencies should be forcefully imported again. |
 | ValidateOnly | False | SwitchParameter |  |  | Specifies that the function should only return the dependencies that are not installed. |
 | Scope | False | Object | AllUsers | CurrentUser, AllUsers | Specifies the scope of the update of the module. The default value is AllUsers(needs to run as elevated user). |
+| Proxy | False | String |  |  |  |
 
 ## Examples
 

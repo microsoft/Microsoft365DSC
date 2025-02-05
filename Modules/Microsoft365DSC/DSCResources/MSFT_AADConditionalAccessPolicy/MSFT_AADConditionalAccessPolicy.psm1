@@ -225,7 +225,7 @@ function Get-TargetResource
 
         [Parameter()]
         [ValidateSet('minor', 'moderate', 'elevated', 'unknownFutureValue')]
-        [System.String]
+        [System.String[]]
         $InsiderRiskLevels,
 
         #generic
@@ -649,6 +649,12 @@ function Get-TargetResource
         }
     }
 
+    $InsiderRiskLevelsValue = $null
+    if (-not [System.String]::IsNullOrEmpty($Policy.Conditions.InsiderRiskLevels))
+    {
+        $InsiderRiskLevelsValue = $Policy.Conditions.InsiderRiskLevels.Split(',')
+    }
+
     $result = @{
         DisplayName                              = $Policy.DisplayName
         Id                                       = $Policy.Id
@@ -727,7 +733,7 @@ function Get-TargetResource
         TransferMethods                          = [System.String]$Policy.Conditions.AuthenticationFlows.TransferMethods
         #Standard part
         TermsOfUse                               = $termOfUseName
-        InsiderRiskLevels                        = $Policy.Conditions.InsiderRiskLevels
+        InsiderRiskLevels                        = $InsiderRiskLevelsValue
         Ensure                                   = 'Present'
         Credential                               = $Credential
         ApplicationSecret                        = $ApplicationSecret
@@ -968,7 +974,7 @@ function Set-TargetResource
 
         [Parameter()]
         [ValidateSet('minor', 'moderate', 'elevated', 'unknownFutureValue')]
-        [System.String]
+        [System.String[]]
         $InsiderRiskLevels,
 
         #generic
@@ -1687,7 +1693,7 @@ function Set-TargetResource
 
         if ([String]::IsNullOrEmpty($InsiderRiskLevels) -eq $false)
         {
-            $conditions.Add('insiderRiskLevels', $InsiderRiskLevels)
+            $conditions.Add('insiderRiskLevels', $($InsiderRiskLevels -join ','))
         }
 
         Write-Verbose -Message 'Set-Targetresource: process risk levels and app types'
@@ -2165,7 +2171,7 @@ function Test-TargetResource
 
         [Parameter()]
         [ValidateSet('minor', 'moderate', 'elevated', 'unknownFutureValue')]
-        [System.String]
+        [System.String[]]
         $InsiderRiskLevels,
 
         #generic

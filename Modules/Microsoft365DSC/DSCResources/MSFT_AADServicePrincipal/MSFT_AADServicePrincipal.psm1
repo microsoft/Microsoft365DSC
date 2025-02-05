@@ -609,6 +609,15 @@ function Set-TargetResource
             [Array]$currentPrincipals = $currentAADServicePrincipal.AppRoleAssignedTo.Identity
             [Array]$desiredPrincipals = $AppRoleAssignedTo.Identity
 
+            if ($null -eq $currentPrincipals)
+            {
+                $currentPrincipals = @()
+            }
+            if ($null -eq $desiredPrincipals)
+            {
+                $desiredPrincipals = @()
+            }
+
             [Array]$differences = Compare-Object -ReferenceObject $currentPrincipals -DifferenceObject $desiredPrincipals
             [Array]$membersToAdd = $differences | Where-Object -FilterScript { $_.SideIndicator -eq '=>' }
             [Array]$membersToRemove = $differences | Where-Object -FilterScript { $_.SideIndicator -eq '<=' }

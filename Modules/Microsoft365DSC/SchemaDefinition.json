@@ -3543,7 +3543,7 @@
                                "Option":  "Write"
                            },
                            {
-                               "CIMType":  "String",
+                               "CIMType":  "String[]",
                                "Name":  "InsiderRiskLevels",
                                "Option":  "Write"
                            },
@@ -11141,6 +11141,61 @@
                            {
                                "CIMType":  "String",
                                "Name":  "VerifiedIdAuthorityLocation",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "string",
+                               "Name":  "Ensure",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "Credential",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ApplicationId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "TenantId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "CertificateThumbprint",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "ManagedIdentity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_CommerceSelfServicePurchase",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ProductId",
+                               "Option":  "Key"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ProductName",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "PolicyValue",
                                "Option":  "Write"
                            },
                            {

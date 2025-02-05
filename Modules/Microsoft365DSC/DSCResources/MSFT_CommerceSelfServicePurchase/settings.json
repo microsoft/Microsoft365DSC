@@ -1,0 +1,25 @@
+﻿{
+    "resourceName": "CommerceSelfServicePurchase",
+    "description": "Manages the Self Purchase policies in commerce.",
+    "roles": {},
+    "permissions": {
+        "aeb86249-8ea3-49e2-900b-54cc8e308f85": {
+            "delegated": {
+                "read": [],
+                "update": []
+            },
+            "application": {
+                "read": [
+                    {
+                        "name": "Policy.Read.AllowSelfServicePurchase"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Policy.ReadWrite.AllowSelfServicePurchase"
+                    }
+                ]
+            }
+        }
+    }
+}

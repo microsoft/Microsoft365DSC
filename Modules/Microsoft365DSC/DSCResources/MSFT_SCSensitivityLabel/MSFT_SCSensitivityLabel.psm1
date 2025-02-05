@@ -1598,17 +1598,96 @@ function Export-TargetResource
 
             if ($null -ne $Results.AdvancedSettings)
             {
-                $Results.AdvancedSettings = ConvertTo-AdvancedSettingsString -AdvancedSettings $Results.AdvancedSettings
+                $complexMapping = @(
+                    @{
+                        Name            = 'AdvancedSettings'
+                        CimInstanceName = 'MSFT_SCLabelSetting'
+                        IsRequired      = $False
+                    }
+                )
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                    -ComplexObject $Results.AdvancedSettings `
+                    -CIMInstanceName 'MSFT_SCLabelSetting' `
+                    -ComplexTypeMapping $complexMapping
+
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                {
+                    $Results.AdvancedSettings = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('AdvancedSettings') | Out-Null
+                }
             }
 
             if ($null -ne $Results.LocaleSettings)
             {
-                $Results.LocaleSettings = ConvertTo-LocaleSettingsString -LocaleSettings $Results.LocaleSettings
+                $complexMapping = @(
+                    @{
+                        Name            = 'LocaleSettings'
+                        CimInstanceName = 'MSFT_SCLabelLocaleSettings'
+                        IsRequired      = $False
+                    }
+                    @{
+                        Name            = 'LabelSettings'
+                        CimInstanceName = 'MSFT_SCLabelSetting'
+                        IsRequired      = $False
+                    }
+                )
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                    -ComplexObject $Results.LocaleSettings `
+                    -CIMInstanceName 'MSFT_SCLabelLocaleSettings' `
+                    -ComplexTypeMapping $complexMapping
+
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                {
+                    $Results.LocaleSettings = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('LocaleSettings') | Out-Null
+                }
             }
+
             if ($null -ne $Results.AutoLabelingSettings)
             {
-                $Results.AutoLabelingSettings = ConvertTo-AutoLabelingSettingsString -AutoLabelingSettings $Results.AutoLabelingSettings
+                $complexMapping = @(
+                    @{
+                        Name            = 'AutoLabelingSettings'
+                        CimInstanceName = 'MSFT_SCSLAutoLabelingSettings'
+                        IsRequired      = $False
+                    }
+                    @{
+                        Name            = 'Groups'
+                        CimInstanceName = 'MSFT_SCSLSensitiveInformationGroup'
+                        IsRequired      = $False
+                    }
+                    @{
+                        Name            = 'SensitiveInformationType'
+                        CimInstanceName = 'MSFT_SCSLSensitiveInformationType'
+                        IsRequired      = $False
+                    }
+                    @{
+                        Name            = 'TrainableClassifier'
+                        CimInstanceName = 'MSFT_SCSLTrainableClassifiers'
+                        IsRequired      = $False
+                    }
+                )
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                    -ComplexObject $Results.AutoLabelingSettings `
+                    -CIMInstanceName 'MSFT_SCSLAutoLabelingSettings' `
+                    -ComplexTypeMapping $complexMapping
+
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                {
+                    $Results.AutoLabelingSettings = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('AutoLabelingSettings') | Out-Null
+                }
             }
+
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
@@ -1616,17 +1695,24 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
+
             if ($null -ne $Results.AdvancedSettings)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'AdvancedSettings'
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
+                    -ParameterName 'AdvancedSettings' `
+                    -IsCIMArray:$True
             }
             if ($null -ne $Results.LocaleSettings)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'LocaleSettings'
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
+                    -ParameterName 'LocaleSettings' `
+                    -IsCIMArray:$True
             }
             if ($null -ne $Results.AutoLabelingSettings)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'AutoLabelingSettings'
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
+                    -ParameterName 'AutoLabelingSettings' `
+                    -IsCIMArray:$True
             }
 
             Write-Host $Global:M365DSCEmojiGreenCheckMark

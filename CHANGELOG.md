@@ -2,6 +2,27 @@
 
 # UNRELEASED
 
+* AADConditionalAccessPolicy
+  * Changed the InsiderRiskTypes property to a string array.
+* AADServicePrincipal
+  * Fixes comparison of assigned roles for null values.
+    FIXES [#5717](https://github.com/microsoft/Microsoft365DSC/issues/5717)
+* CommerceSelfServicePurchase
+  * Initial release.
+* MISC
+  * Changed the CIMInstance logic of various resources to us common logic.
+  * Added support for specifying a proxy in Update-M365DSCModule.
+* DEPENDENCIES
+  * Updated MSCloudLoginAssistant to version 1.1.36.
+
+# 1.25.129.3
+
+* EXOMigrationEndpoint
+  * Added support for EntpointType value of ExchangeRemoteMove.
+* M365DSCRuleEvaluation
+  * Changed logic to evaluate cases where the rule results in no results.
+* SPDLPComplianceRule
+  * Fix for the SensitiveInfoType ID cleaning logic in Get-TargetResource.
 * DEPENDENCIES
   * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.205.
   * Updated MicrosoftTeams to version 6.8.0.

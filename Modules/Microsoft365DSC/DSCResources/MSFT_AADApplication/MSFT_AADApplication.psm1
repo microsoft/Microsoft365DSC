@@ -1598,9 +1598,29 @@ function Export-TargetResource
                 {
                     $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                         -Results $Results
+
                     if ($Results.Permissions.Count -gt 0)
                     {
-                        $Results.Permissions = Get-M365DSCAzureADAppPermissionsAsString $Results.Permissions
+                        $complexMapping = @(
+                            @{
+                                Name            = 'Permissions'
+                                CimInstanceName = 'MSFT_AADApplicationPermission'
+                                IsRequired      = $False
+                            }
+                        )
+                        $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                            -ComplexObject $Results.Permissions `
+                            -CIMInstanceName 'MSFT_AADApplicationPermission' `
+                            -ComplexTypeMapping $complexMapping
+
+                        if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                        {
+                            $Results.Permissions = $complexTypeStringResult
+                        }
+                        else
+                        {
+                            $Results.Remove('Permissions') | Out-Null
+                        }
                     }
 
                     if ($null -ne $Results.Api)
@@ -1733,7 +1753,6 @@ function Export-TargetResource
                         }
                     }
 
-
                     if ($null -ne $Results.KeyCredentials)
                     {
                         $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
@@ -1793,16 +1812,20 @@ function Export-TargetResource
                     if ($null -ne $Results.Permissions)
                     {
                         $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                            -ParameterName 'Permissions'
+                            -ParameterName 'Permissions' `
+                            -IsCIMArray:$True
                     }
+
                     if ($Results.OptionalClaims)
                     {
                         $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'OptionalClaims' -IsCIMArray:$False
                     }
+
                     if ($Results.OnPremisesPublishing)
                     {
                         $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'OnPremisesPublishing' -IsCIMArray:$False
                     }
+
                     if ($Results.AuthenticationBehaviors)
                     {
                         $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'AuthenticationBehaviors' -IsCIMArray:$False

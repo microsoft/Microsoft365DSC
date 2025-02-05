@@ -3126,7 +3126,7 @@ function Export-TargetResource
                     $Results.Remove('CompliantAppsList') | Out-Null
                 }
             }
-            if ($Results.MediaContentRatingAustralia)
+            if ($Results.MediaContentRatingAustralia.Count -gt 0)
             {
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.MediaContentRatingAustralia -CIMInstanceName MicrosoftGraphmediacontentratingaustralia
                 if ($complexTypeStringResult)
@@ -3138,7 +3138,11 @@ function Export-TargetResource
                     $Results.Remove('MediaContentRatingAustralia') | Out-Null
                 }
             }
-            if ($Results.MediaContentRatingCanada)
+            else
+            {
+                $Results.Remove('MediaContentRatingAustralia') | Out-Null
+            }
+            if ($Results.MediaContentRatingCanada.Count -gt 0)
             {
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.MediaContentRatingCanada -CIMInstanceName MicrosoftGraphmediacontentratingcanada
                 if ($complexTypeStringResult)
@@ -3150,7 +3154,11 @@ function Export-TargetResource
                     $Results.Remove('MediaContentRatingCanada') | Out-Null
                 }
             }
-            if ($Results.MediaContentRatingFrance)
+            else
+            {
+                $Results.Remove('MediaContentRatingCanada') | Out-Null
+            }
+            if ($Results.MediaContentRatingFrance.Count -gt 0)
             {
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.MediaContentRatingFrance -CIMInstanceName MicrosoftGraphmediacontentratingfrance
                 if ($complexTypeStringResult)
@@ -3162,7 +3170,11 @@ function Export-TargetResource
                     $Results.Remove('MediaContentRatingFrance') | Out-Null
                 }
             }
-            if ($Results.MediaContentRatingGermany)
+            else
+            {
+                $Results.Remove('MediaContentRatingFrance') | Out-Null
+            }
+            if ($Results.MediaContentRatingGermany.Count -gt 0)
             {
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.MediaContentRatingGermany -CIMInstanceName MicrosoftGraphmediacontentratinggermany
                 if ($complexTypeStringResult)
@@ -3174,7 +3186,11 @@ function Export-TargetResource
                     $Results.Remove('MediaContentRatingGermany') | Out-Null
                 }
             }
-            if ($Results.MediaContentRatingIreland)
+            else
+            {
+                $Results.Remove('MediaContentRatingGermany') | Out-Null
+            }
+            if ($Results.MediaContentRatingIreland.Count -gt 0)
             {
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.MediaContentRatingIreland -CIMInstanceName MicrosoftGraphmediacontentratingireland
                 if ($complexTypeStringResult)
@@ -3186,7 +3202,11 @@ function Export-TargetResource
                     $Results.Remove('MediaContentRatingIreland') | Out-Null
                 }
             }
-            if ($Results.MediaContentRatingJapan)
+            else
+            {
+                $Results.Remove('MediaContentRatingIreland') | Out-Null
+            }
+            if ($Results.MediaContentRatingJapan.Count -gt 0)
             {
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.MediaContentRatingJapan -CIMInstanceName MicrosoftGraphmediacontentratingjapan
                 if ($complexTypeStringResult)
@@ -3198,7 +3218,11 @@ function Export-TargetResource
                     $Results.Remove('MediaContentRatingJapan') | Out-Null
                 }
             }
-            if ($Results.MediaContentRatingNewZealand)
+            else
+            {
+                $Results.Remove('MediaContentRatingJapan') | Out-Null
+            }
+            if ($Results.MediaContentRatingNewZealand.Count -gt 0)
             {
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.MediaContentRatingNewZealand -CIMInstanceName MicrosoftGraphmediacontentratingnewzealand
                 if ($complexTypeStringResult)
@@ -3210,7 +3234,11 @@ function Export-TargetResource
                     $Results.Remove('MediaContentRatingNewZealand') | Out-Null
                 }
             }
-            if ($Results.MediaContentRatingUnitedKingdom)
+            else
+            {
+                $Results.Remove('MediaContentRatingNewZealand') | Out-Null
+            }
+            if ($Results.MediaContentRatingUnitedKingdom.Count -gt 0)
             {
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.MediaContentRatingUnitedKingdom -CIMInstanceName MicrosoftGraphmediacontentratingunitedkingdom
                 if ($complexTypeStringResult)
@@ -3222,7 +3250,11 @@ function Export-TargetResource
                     $Results.Remove('MediaContentRatingUnitedKingdom') | Out-Null
                 }
             }
-            if ($Results.MediaContentRatingUnitedStates)
+            else
+            {
+                $Results.Remove('MediaContentRatingUnitedKingdom') | Out-Null
+            }
+            if ($Results.MediaContentRatingUnitedStates.Count -gt 0)
             {
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.MediaContentRatingUnitedStates -CIMInstanceName MicrosoftGraphmediacontentratingunitedstates
                 if ($complexTypeStringResult)
@@ -3233,6 +3265,10 @@ function Export-TargetResource
                 {
                     $Results.Remove('MediaContentRatingUnitedStates') | Out-Null
                 }
+            }
+            else
+            {
+                $Results.Remove('MediaContentRatingUnitedStates') | Out-Null
             }
             if ($Results.NetworkUsageRules)
             {

@@ -25,7 +25,7 @@ function Get-TargetResource
         $Authentication,
 
         [Parameter()]
-        [ValidateSet('IMAP')]
+        [ValidateSet('IMAP', 'ExchangeRemoteMove')]
         [System.String]
         $EndpointType,
 
@@ -208,7 +208,7 @@ function Set-TargetResource
         $Authentication,
 
         [Parameter()]
-        [ValidateSet('IMAP')]
+        [ValidateSet('IMAP', 'ExchangeRemoteMove')]
         [System.String]
         $EndpointType,
 
@@ -305,14 +305,14 @@ function Set-TargetResource
 
     $currentInstance = Get-TargetResource @PSBoundParameters
 
-    $setParams = [System.Collections.Hashtable]($PSBoundParameters)
+    $setParams = ([Hashtable]$PSBoundParameters).Clone()
     $setParams = Remove-M365DSCAuthenticationParameter -BoundParameters $setParams
     $setParams.Remove('RemoteTenant')
     $setParams.Remove('EndpointType')
     $setParams.Remove('UseAutoDiscover')
     $setParams.Add('Confirm', $false)
 
-    $newParams = [System.Collections.Hashtable]($PSBoundParameters)
+    $newParams = ([Hashtable]$PSBoundParameters).Clone()
     $newParams = Remove-M365DSCAuthenticationParameter -BoundParameters $newParams
     $newParams.Remove('EndpointType')
     $newParams.Remove('Identity')
@@ -332,22 +332,40 @@ function Set-TargetResource
 
         $newParams.Add('IMAP', [Switch]$true)
     }
+    elseif ($EndpointType -eq 'ExchangeRemoteMove')
+    {
+        # Removing mailbox permission parameter as this is valid only for outlook anywhere migration
+        $setParams.Remove('MailboxPermission') | Out-Null
+        $newParams.Remove('MailboxPermission') | Out-Null
+        $newParams.Remove("AcceptUntrustedCertificates") | Out-Null
+        $setParams.Remove("AcceptUntrustedCertificates") | Out-Null
+
+        # adding skip verification switch to skip verifying
+        # that the remote server is reachable when creating a migration endpoint.
+        $setParams.Add('SkipVerification', [Switch]$true)
+        $newParams.Add('SkipVerification', [Switch]$true)
+
+        $newParams.Add('ExchangeRemoteMove', [Switch]$true)
+    }
 
     # add the logic for other endpoint types ('Exchange Remote', 'Outlook Anywhere', 'Google Workspace')
 
     # CREATE
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
+        Write-Verbose -Message "Creating new migration endpoint with parameters:`r`n$(ConvertTo-Json $newParams -Depth 10)"
         New-MigrationEndpoint @newParams
     }
     # UPDATE
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
+        Write-Verbose -Message "Updating migration endpoint with parameters:`r`n$(ConvertTo-Json $setParams -Depth 10)"
         Set-MigrationEndpoint @setParams
     }
     # REMOVE
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
+        Write-Verbose -Message "Removing migration endpoint with id {$Identity}"
         Remove-MigrationEndpoint -Identity $Identity
     }
 }
@@ -379,7 +397,7 @@ function Test-TargetResource
         $Authentication,
 
         [Parameter()]
-        [ValidateSet('IMAP')]
+        [ValidateSet('IMAP', 'ExchangeRemoteMove')]
         [System.String]
         $EndpointType,
 

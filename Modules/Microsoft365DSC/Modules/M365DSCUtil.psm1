@@ -667,7 +667,7 @@ function Test-M365DSCParameterState
             $propertyName = $existingDrift.Keys[0]
             $value =  $existingDrift."$propertyName"
             $start = $value.IndexOf('</CurrentValue>')
-            $currentValue = $value.Substring(0, $start).Replace('<CurrentValue>', '')            
+            $currentValue = $value.Substring(0, $start).Replace('<CurrentValue>', '')
             $desiredValue = $value.Substring($start+15, ($value.Length)-($start+15)).Replace('<DesiredValue>', '').Replace('</DesiredValue>', '')
             $DriftObject.DriftInfo.Add($propertyName, @{
                 PropertyName = $propertyName
@@ -1881,7 +1881,7 @@ function New-M365DSCConnection
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateSet('AdminAPI', 'Azure', 'AzureDevOPS', 'DefenderForEndPoint', 'ExchangeOnline', 'Fabric', 'Intune', `
+        [ValidateSet('AdminAPI', 'Azure', 'AzureDevOPS', 'DefenderForEndPoint', 'ExchangeOnline', 'Fabric', 'Intune', 'Licensing', `
                 'SecurityComplianceCenter', 'PnP', 'PowerPlatforms', `
                 'MicrosoftTeams', 'MicrosoftGraph', 'SharePointOnlineREST', 'Tasks', 'AdminAPI')]
         [System.String]
@@ -3256,9 +3256,14 @@ function Update-M365DSCDependencies
         [Parameter()]
         [Switch]
         $ValidateOnly,
+
         [Parameter()]
         [ValidateSet("CurrentUser", "AllUsers")]
-        $Scope = "AllUsers"
+        $Scope = "AllUsers",
+
+        [Parameter()]
+        [System.String]
+        $Proxy
     )
 
     try
@@ -3272,6 +3277,12 @@ function Update-M365DSCDependencies
         $i = 1
 
         $returnValue = @()
+
+        $params = @{}
+        if (-not [System.String]::IsNullOrEmpty($Proxy))
+        {
+            $params.Add('Proxy', $Proxy)
+        }
 
         foreach ($dependency in $dependencies)
         {
@@ -3328,7 +3339,7 @@ function Update-M365DSCDependencies
                             Remove-Module 'Microsoft.Graph.Authentication' -Force -ErrorAction SilentlyContinue
                         }
                         Remove-Module $dependency.ModuleName -Force -ErrorAction SilentlyContinue
-                        Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -AllowClobber -Force -Scope "$Scope"
+                        Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -AllowClobber -Force -Scope "$Scope" @Params
                     }
                 }
 
@@ -4788,11 +4799,22 @@ function Update-M365DSCModule
     param(
         [Parameter()]
         [ValidateSet("CurrentUser", "AllUsers")]
-        $Scope = "AllUsers"
+        $Scope = "AllUsers",
+
+        [Parameter()]
+        [System.String]
+        $Proxy
     )
+
+    $params = @{}
+
+    if (-not [System.String]::IsNullOrEmpty($proxy))
+    {
+        $params.Add('Proxy', $Proxy)
+    }
     try
     {
-        Update-Module -Name 'Microsoft365DSC' -ErrorAction Stop
+        Update-Module -Name 'Microsoft365DSC' @Params -ErrorAction Stop
     }
     catch
     {
@@ -4821,7 +4843,7 @@ function Update-M365DSCModule
             -Source $($MyInvocation.MyCommand.Source)
         throw $_
     }
-    Update-M365DSCDependencies -Scope $Scope
+    Update-M365DSCDependencies -Scope $Scope -Proxy $Proxy
     Uninstall-M365DSCOutdatedDependencies
 }
 

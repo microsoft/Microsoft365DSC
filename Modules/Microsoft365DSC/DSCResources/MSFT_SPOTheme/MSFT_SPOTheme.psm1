@@ -432,7 +432,29 @@ function Export-TargetResource
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
-            $Results.Palette = ConvertTo-SPOThemePalettePropertyString $Results.Palette
+            if ($null -ne $Results.Palette)
+            {
+                $complexMapping = @(
+                    @{
+                        Name            = 'OptionalClaims'
+                        CimInstanceName = 'MSFT_SPOThemePaletteProperty'
+                        IsRequired      = $False
+                    }
+                )
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                    -ComplexObject $Results.Palette `
+                    -CIMInstanceName 'MSFT_SPOThemePaletteProperty' `
+                    -ComplexTypeMapping $complexMapping
+
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                {
+                    $Results.Palette = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('Palette') | Out-Null
+                }
+            }
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `

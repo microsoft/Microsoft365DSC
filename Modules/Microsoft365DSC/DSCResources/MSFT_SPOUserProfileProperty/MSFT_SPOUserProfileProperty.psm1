@@ -353,7 +353,30 @@ function Export-TargetResource
                         $Global:M365DSCExportResourceInstancesCount++
                     }
 
-                    $Results.Properties = ConvertTo-M365DSCSPOUserProfilePropertyInstanceString -Properties $Results.Properties
+                    if ($null -ne $Results.Properties)
+                    {
+                        $complexMapping = @(
+                            @{
+                                Name            = 'Properties'
+                                CimInstanceName = 'MSFT_SPOUserProfilePropertyInstance'
+                                IsRequired      = $False
+                            }
+                        )
+                        $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                            -ComplexObject $Results.Properties `
+                            -CIMInstanceName 'MSFT_SPOUserProfilePropertyInstance' `
+                            -ComplexTypeMapping $complexMapping
+
+                        if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                        {
+                            $Results.Properties = $complexTypeStringResult
+                        }
+                        else
+                        {
+                            $Results.Remove('Properties') | Out-Null
+                        }
+                    }
+
                     $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                         -Results $Results
                     $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
@@ -363,7 +386,9 @@ function Export-TargetResource
                         -Credential $Credential
                     if ($null -ne $Results.Properties)
                     {
-                        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Properties'
+                        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
+                            -ParameterName 'Properties' `
+                            -IsCIMArray:$True
                     }
                     $dscContent += $currentDSCBlock
                     Save-M365DSCPartialExport -Content $currentDSCBlock `

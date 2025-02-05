@@ -856,7 +856,26 @@ function Export-TargetResource
 
             if ($null -ne $Results.AdvancedSettings)
             {
-                $Results.AdvancedSettings = ConvertTo-AdvancedSettingsString -AdvancedSettings $Results.AdvancedSettings
+                $complexMapping = @(
+                    @{
+                        Name            = 'AdvancedSettings'
+                        CimInstanceName = 'MSFT_SCLabelSetting'
+                        IsRequired      = $False
+                    }
+                )
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                    -ComplexObject $Results.AdvancedSettings `
+                    -CIMInstanceName 'MSFT_SCLabelSetting' `
+                    -ComplexTypeMapping $complexMapping
+
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                {
+                    $Results.AdvancedSettings = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('AdvancedSettings') | Out-Null
+                }
             }
 
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
@@ -868,7 +887,9 @@ function Export-TargetResource
                 -Credential $Credential
             if ($null -ne $Results.AdvancedSettings)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'AdvancedSettings'
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
+                                        -ParameterName 'AdvancedSettings' `
+                                        -IsCIMArray:$True
             }
 
             Write-Host $Global:M365DSCEmojiGreenCheckMark

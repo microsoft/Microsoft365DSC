@@ -673,9 +673,28 @@ function Export-TargetResource
 
         if ($Results -is [System.Collections.Hashtable] -and $Results.Count -gt 1)
         {
-            if ($Results.Rules.Count -gt 0)
+            if ($null -ne $Results.Rules)
             {
-                $Results.Rules = Get-M365DSCTenantIsolationRule $Results.Rules
+                $complexMapping = @(
+                    @{
+                        Name            = 'Rules'
+                        CimInstanceName = 'MSFT_PPTenantRule'
+                        IsRequired      = $False
+                    }
+                )
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                    -ComplexObject $Results.Rules `
+                    -CIMInstanceName 'MSFT_PPTenantRule' `
+                    -ComplexTypeMapping $complexMapping
+
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                {
+                    $Results.Rules = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('Rules') | Out-Null
+                }
             }
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
@@ -688,7 +707,8 @@ function Export-TargetResource
             if ($null -ne $Results.Rules)
             {
                 $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                    -ParameterName 'Rules'
+                    -ParameterName 'Rules' `
+                    -IsCIMArray:$True
             }
             $dscContent += $currentDSCBlock
 

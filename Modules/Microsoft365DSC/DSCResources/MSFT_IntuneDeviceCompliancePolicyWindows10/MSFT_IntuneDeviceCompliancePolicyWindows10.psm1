@@ -954,10 +954,21 @@ function Export-TargetResource
                     $Results.Remove('ValidOperatingSystemBuildRanges') | Out-Null
                 }
             }
-            if ($Results.Assignments)
+            if ($null -ne $Results.Assignments)
             {
-                $complexTypeStringResult = Get-M365DSCAssignmentsAsString -Params $Results.Assignments
-                if ($complexTypeStringResult)
+                $complexMapping = @(
+                    @{
+                        Name            = 'Assignments'
+                        CimInstanceName = 'MSFT_DeviceManagementConfigurationPolicyAssignments'
+                            sRequired      = $False
+                    }
+                )
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                    -ComplexObject $Results.Assignments `
+                    -CIMInstanceName 'MSFT_DeviceManagementConfigurationPolicyAssignments' `
+                    -ComplexTypeMapping $complexMapping
+
+                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.Assignments = $complexTypeStringResult
                 }
@@ -971,10 +982,12 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
+
             if ($Results.ValidOperatingSystemBuildRanges)
             {
                 $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'ValidOperatingSystemBuildRanges'
             }
+
             if ($Results.Assignments)
             {
                 $isCIMArray = $false
@@ -982,7 +995,9 @@ function Export-TargetResource
                 {
                     $isCIMArray = $true
                 }
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Assignments' -IsCIMArray:$isCIMArray
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
+                    -ParameterName 'Assignments' `
+                    -IsCIMArray:$isCIMArray
             }
 
             $dscContent += $currentDSCBlock
