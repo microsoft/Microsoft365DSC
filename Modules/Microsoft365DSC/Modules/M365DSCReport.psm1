@@ -600,7 +600,7 @@ function New-M365DSCConfigurationToCSV
             if ($property -ne 'ResourceName' -and $property -ne 'Credential')
             {
                 $newRow.'Component Name' = $resource.ResourceName
-                $newRow.Property        = $property
+                $newRow.Property         = $property
                 try
                 {
                     if ([System.String]::IsNullOrEmpty($resource.$property))
@@ -612,15 +612,15 @@ function New-M365DSCConfigurationToCSV
                         if ($resource.$property.GetType().Name -eq 'Object[]')
                         {
                             $value = $resource.$property | Out-String
-                            $newRow.Value = $value
+                            $newRow.Value = $value.TrimEnd()
                         }
                         else
                         {
-                            $value = ($resource.$property).ToString().Replace('$', '')
+                            $value = ($resource.$property).ToString().Replace('$', '`$')
                             $value = $value.Replace('@', '')
                             $value = $value.Replace('(', '')
                             $value = $value.Replace(')', '')
-                            $newRow.Value = $value
+                            $newRow.Value = $value.TrimEnd()
                         }
                     }
                 }
