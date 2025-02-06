@@ -243,21 +243,16 @@ function Test-TargetResource
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
-    $testResult = $true
 
-    $CurrentValues.remove('Id') | Out-Null
     $ValuesToCheck.remove('Id') | Out-Null
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
 
-    if ($testResult)
-    {
-        $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
-            -Source $($MyInvocation.MyCommand.Source) `
-            -DesiredValues $PSBoundParameters `
-            -ValuesToCheck $ValuesToCheck.Keys
-    }
+    $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $testResult"
 

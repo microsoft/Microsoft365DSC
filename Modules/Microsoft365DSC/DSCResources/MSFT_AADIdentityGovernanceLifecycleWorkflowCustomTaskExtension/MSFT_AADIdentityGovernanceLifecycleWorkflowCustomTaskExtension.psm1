@@ -389,6 +389,7 @@ function Test-TargetResource
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
+    $testTargetResource = $true
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
@@ -405,23 +406,30 @@ function Test-TargetResource
 
             if (-not $testResult)
             {
-                break
+                Write-Verbose "TestResult returned False for $source"
+                $testTargetResource = $false
             }
-
-            $ValuesToCheck.Remove($key) | Out-Null
+            else
+            {
+                $ValuesToCheck.Remove($key) | Out-Null
+            }
         }
     }
-    if ($testResult)
+
+    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
+
+    $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck $ValuesToCheck.Keys
+
+    if (-not $TestResult)
     {
-        $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
-            -Source $($MyInvocation.MyCommand.Source) `
-            -DesiredValues $PSBoundParameters `
-            -ValuesToCheck $ValuesToCheck.Keys
+        $testTargetResource = $false
     }
-
-    Write-Verbose -Message "Test-TargetResource returned $testResult"
-
-    return $testResult
+    Write-Verbose -Message "Test-TargetResource returned $testTargetResource"
+    return $testTargetResource
 }
 
 function Export-TargetResource

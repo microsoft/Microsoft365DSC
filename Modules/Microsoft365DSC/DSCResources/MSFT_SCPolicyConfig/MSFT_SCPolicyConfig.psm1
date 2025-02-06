@@ -440,7 +440,7 @@ function Get-TargetResource
             $DlpNetworkShareGroupsValue += $entry
         }
 
-        $QuarantineParametersValue = @()
+        $QuarantineParametersValue = $null
         if ($null -ne ($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'QuarantineParameters' }))
         {
             $quarantineInfo = [Array]($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'QuarantineParameters' }).Value

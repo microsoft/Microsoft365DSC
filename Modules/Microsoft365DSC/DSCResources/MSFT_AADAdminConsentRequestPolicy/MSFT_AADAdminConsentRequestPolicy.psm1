@@ -358,32 +358,45 @@ function Test-TargetResource
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
+    $testTargetResource = $true
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
-    $testResult = $true
-    foreach ($reviewer in $Reviewers)
+    #Compare Cim instances
+    foreach ($key in $PSBoundParameters.Keys)
     {
-        $currentEquivalent = $CurrentValues.Reviewers | Where-Object -FilterScript { $_.ReviewerId -eq $reviewer.ReviewerId -and $_.ReviewerType -eq $reviewer.ReviewerType }
-        if ($null -eq $currentEquivalent)
-        {
-            $testResult = $false
-            Write-Verbose -Message "Couldn't find current reviewer {$($reviewer.ReviewerId)}"
-        }
+         $source = $PSBoundParameters.$key
+         $target = $CurrentValues.$key
+         if ($null -ne $source -and $source.GetType().Name -like '*CimInstance*')
+         {
+             $testResult = Compare-M365DSCComplexObject `
+                 -Source ($source) `
+                 -Target ($target)
+
+             if (-not $testResult)
+             {
+                 Write-Verbose "TestResult returned False for $source"
+                 $testTargetResource = $false
+             }
+             else
+             {
+                 $ValuesToCheck.Remove($key) | Out-Null
+             }
+         }
     }
 
-    if ($testResult)
+    $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck $ValuesToCheck.Keys
+
+    if (-not $TestResult)
     {
-        $ValuesToCheck.Remove('Reviewers') | Out-Null
-        $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
-            -Source $($MyInvocation.MyCommand.Source) `
-            -DesiredValues $PSBoundParameters `
-            -ValuesToCheck $ValuesToCheck.Keys
+        $testTargetResource = $false
     }
+    Write-Verbose -Message "Test-TargetResource returned $testTargetResource"
 
-    Write-Verbose -Message "Test-TargetResource returned $testResult"
-
-    return $testResult
+    return $testTargetResource
 }
 
 function Export-TargetResource

@@ -498,6 +498,7 @@ function Test-TargetResource
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
+    $testTargetResource = $true
 
     #Compare Cim instances
     foreach ($key in $PSBoundParameters.Keys)
@@ -530,9 +531,12 @@ function Test-TargetResource
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck $ValuesToCheck.Keys
 
-    Write-Verbose -Message "Test-TargetResource returned $testResult"
-
-    return $testResult
+    if (-not $TestResult)
+    {
+        $testTargetResource = $false
+    }
+    Write-Verbose -Message "Test-TargetResource returned $testTargetResource"
+    return $testTargetResource
 }
 
 function Export-TargetResource

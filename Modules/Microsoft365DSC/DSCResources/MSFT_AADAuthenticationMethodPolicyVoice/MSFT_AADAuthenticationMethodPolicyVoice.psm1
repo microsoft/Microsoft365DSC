@@ -441,6 +441,7 @@ function Test-TargetResource
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
     $testResult = $true
+    $testTargetResource = $true
 
     #Compare Cim instances
     foreach ($key in $PSBoundParameters.Keys)
@@ -457,7 +458,7 @@ function Test-TargetResource
 
             if (-Not $testResult)
             {
-                $testResult = $false
+                $testTargetResource = $false
                 break
             }
 
@@ -470,17 +471,17 @@ function Test-TargetResource
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
 
-    if ($testResult)
+    $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck $ValuesToCheck.Keys
+
+    if (-not $TestResult)
     {
-        $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
-            -Source $($MyInvocation.MyCommand.Source) `
-            -DesiredValues $PSBoundParameters `
-            -ValuesToCheck $ValuesToCheck.Keys
+        $testTargetResource = $false
     }
-
-    Write-Verbose -Message "Test-TargetResource returned $testResult"
-
-    return $testResult
+    Write-Verbose -Message "Test-TargetResource returned $testTargetResource"
+    return $testTargetResource
 }
 
 function Export-TargetResource

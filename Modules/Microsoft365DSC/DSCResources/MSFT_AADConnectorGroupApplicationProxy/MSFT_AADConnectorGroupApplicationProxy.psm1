@@ -83,7 +83,7 @@ function Get-TargetResource
             if ($null -eq $getValue -and -not [string]::IsNullOrEmpty($Id))
             {
                 Write-Verbose -Message "Could not find an Azure AD Connector Group Application Proxy with Name {$Name}"
-                if (-not [string]::IsNullOrEmpty($DisplayName))
+                if (-not [string]::IsNullOrEmpty($Name))
                 {
                     $getValue = Get-MgBetaOnPremisePublishingProfileConnectorGroup -OnPremisesPublishingProfileId 'applicationProxy' -Filter "Name eq '$Name'" -ErrorAction Stop
                 }
@@ -326,13 +326,10 @@ function Test-TargetResource
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
 
-    if ($testResult)
-    {
-        $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
-            -Source $($MyInvocation.MyCommand.Source) `
-            -DesiredValues $PSBoundParameters `
-            -ValuesToCheck $ValuesToCheck.Keys
-    }
+    $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $testResult"
 

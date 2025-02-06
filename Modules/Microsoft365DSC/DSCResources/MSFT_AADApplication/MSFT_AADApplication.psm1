@@ -455,11 +455,15 @@ function Get-TargetResource
 
             # singleSignOnSettings
             $singleSignOnValues = @{
-                kerberosSignOnSettings = @{
+                singleSignOnMode       = $oppInfo.singleSignOnSettings.singleSignOnMode
+            }
+            if ($oppInfo.singleSignOnMode.kerberosSignOnSettings)
+            {
+                $kerberosSignOnSettings = @{
                     kerberosServicePrincipalName       = $oppInfo.singleSignOnSettings.kerberosSignOnSettings.kerberosServicePrincipalName
                     kerberosSignOnMappingAttributeType = $oppInfo.singleSignOnSettings.kerberosSignOnSettings.kerberosSignOnMappingAttributeType
                 }
-                singleSignOnMode       = $oppInfo.singleSignOnSettings.singleSignOnMode
+                $singleSignOnValues.Add('kerberosSignOnSettings', $kerberosSignOnSettings)
             }
             $onPremisesPublishingValue.Add('singleSignOnSettings', $singleSignOnValues)
         }
@@ -1415,50 +1419,7 @@ function Test-TargetResource
     Write-Verbose -Message 'Testing configuration of AzureAD Application'
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
-
-    if ($CurrentValues.Permissions.Length -gt 0 -and $null -ne $CurrentValues.Permissions.Name -and `
-        $null -ne $Permissions)
-    {
-        $differenceObject = $Permissions.Name
-        if ($null -eq $differenceObject)
-        {
-            $differenceObject = @()
-        }
-        $permissionsDiff = Compare-Object -ReferenceObject ($CurrentValues.Permissions.Name) -DifferenceObject $differenceObject
-        $driftedParams = @{}
-        if ($null -ne $permissionsDiff)
-        {
-            Write-Verbose -Message "Permissions differ: $($permissionsDiff | Out-String)"
-            Write-Verbose -Message "Test-TargetResource returned $false"
-            $EventValue = "<CurrentValue>$($CurrentValues.Permissions.Name)</CurrentValue>"
-            $EventValue += "<DesiredValue>$($Permissions.Name)</DesiredValue>"
-            $driftedParams.Add('Permissions', $EventValue)
-        }
-        else
-        {
-            Write-Verbose -Message 'Permissions for Azure AD Application are the same'
-        }
-    }
-    else
-    {
-        $driftedParams = @{}
-        if ($Permissions.Length -gt 0)
-        {
-            Write-Verbose -Message 'No Permissions exist for the current Azure AD App, but permissions were specified for desired state'
-            Write-Verbose -Message "Test-TargetResource returned $false"
-
-            $EventValue = "<CurrentValue>`$null</CurrentValue>"
-            $EventValue += "<DesiredValue>$($Permissions.Name)</DesiredValue>"
-            $driftedParams.Add('Permissions', $EventValue)
-        }
-        else
-        {
-            Write-Verbose -Message 'No Permissions exist for the current Azure AD App and no permissions were specified'
-        }
-    }
-
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
-
     $testTargetResource = $true
 
     #Compare Cim instances
@@ -1466,7 +1427,7 @@ function Test-TargetResource
     {
         $source = $PSBoundParameters.$key
         $target = $CurrentValues.$key
-        if ($null -ne $source -and $source.GetType().Name -like '*CimInstance*' -and $source -notlike '*Permission*')
+        if ($null -ne $source -and $source.GetType().Name -like '*CimInstance*')
         {
             $testResult = Compare-M365DSCComplexObject `
                 -Source ($source) `
@@ -1489,7 +1450,6 @@ function Test-TargetResource
 
     $ValuesToCheck.Remove('ObjectId') | Out-Null
     $ValuesToCheck.Remove('AppId') | Out-Null
-    $ValuesToCheck.Remove('Permissions') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
