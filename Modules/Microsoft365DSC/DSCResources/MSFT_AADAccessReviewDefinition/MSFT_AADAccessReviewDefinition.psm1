@@ -677,7 +677,13 @@ function Test-TargetResource
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
-    $testResult = $true
+    $testTargetResource = $true
+
+    $Global:AllDrifts = @{
+        DriftInfo     = @()
+        CurrentValues = @{}
+        DesiredValues = @{}
+    }
 
     #Compare Cim instances
     foreach ($key in $PSBoundParameters.Keys)
@@ -688,11 +694,13 @@ function Test-TargetResource
         {
             $testResult = Compare-M365DSCComplexObject `
                 -Source ($source) `
-                -Target ($target)
+                -Target ($target) `
+                -PropertyName $key
 
             if (-not $testResult)
             {
-                break
+                Write-Verbose "TestResult returned False for $source"
+                $testTargetResource = $false
             }
 
             $ValuesToCheck.Remove($key) | Out-Null
@@ -700,22 +708,27 @@ function Test-TargetResource
     }
 
     $ValuesToCheck.Remove('Id') | Out-Null
-    $ValuesToCheck = Remove-M365DSCAuthenticationParameter -BoundParameters $ValuesToCheck
-
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
 
-    if ($testResult)
-    {
-        $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
+    $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
             -Source $($MyInvocation.MyCommand.Source) `
             -DesiredValues $PSBoundParameters `
             -ValuesToCheck $ValuesToCheck.Keys
-    }
 
     Write-Verbose -Message "Test-TargetResource returned $testResult"
-
-    return $testResult
+    if (-not $TestResult)
+    {
+        $testTargetResource = $false
+    }
+    
+    $TenantName = Get-M365DSCTenantNameFromParameterSet -ParameterSet $PSBoundParameters
+    Write-M365DSCDriftsToEventLog -Drifts $Global:AllDrifts `
+                                  -ResourceName $($MyInvocation.MyCommand.Source) `
+                                  -TenantName $TenantName `
+                                  -CurrentValues $CurrentValues `
+                                  -DesiredValues $PSBoundParameters
+    return $testTargetResource
 }
 
 function Export-TargetResource

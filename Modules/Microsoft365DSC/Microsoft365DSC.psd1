@@ -99,6 +99,7 @@
     'Export-M365DSCDiagnosticData',
     'Get-M365DSCNotificationEndPointRegistration',
     'Get-M365DSCEvaluationRulesForConfiguration',
+    'Get-M365DSCTenantNameFromParameterSet',
     'Import-M365DSCDependencies',
     'New-M365DSCDeltaReport',
     'New-M365DSCNotificationEndPointRegistration',

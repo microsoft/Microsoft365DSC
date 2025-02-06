@@ -561,7 +561,7 @@ function Compare-PSCustomObjectArrays
 This function retrieves the current tenant's name based on received authentication parameters.
 
 .Functionality
-Internal
+Public
 #>
 function Get-M365DSCTenantNameFromParameterSet
 {
@@ -1151,9 +1151,15 @@ function Test-M365DSCParameterState
         $EventMessage.Append("    </CurrentValues>`r`n") | Out-Null
         $EventMessage.Append('</M365DSCEvent>') | Out-Null
 
+        foreach ($key in $DriftObject.DriftInfo.Keys)
+        {
+            $Global:AllDrifts.DriftInfo += @{
+                PropertyName = $key
+                CurrentValue = $DriftObject.DriftInfo.$key.CurrentValue
+                DesiredValue = $DriftObject.DriftInfo.$key.DesiredValue
+            }
+        }
         $Global:CCMCurrentDriftInfo = $DriftObject
-        Add-M365DSCEvent -Message $EventMessage.ToString() -EventType 'Drift' -EntryType 'Warning' `
-            -EventID 1 -Source $Source
     }
     elseif ($includeNonDriftsInformation -eq $true)
     {
@@ -5254,6 +5260,7 @@ Export-ModuleMember -Function @(
     'Get-M365DSCExportContentForResource',
     'Get-M365DSCOrganization',
     'Get-M365DSCTenantDomain',
+    'Get-M365DSCTenantNameFromParameterSet',
     'Get-M365DSCWorkloadsListFromResourceNames',
     'Get-M365TenantName',
     'Get-SPOAdministrationUrl',
