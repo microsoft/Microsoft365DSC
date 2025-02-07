@@ -1188,6 +1188,123 @@ function Test-M365DSCParameterState
 
 <#
 .Description
+Centralized method to evaluate the result of the various Test-TargetResource functions
+#>
+function Test-M365DSCTargetResource
+{
+    [CmdletBinding()]
+    [OutputType([System.Boolean])]
+    param(
+        [Parameter()]
+        $DesiredValues,
+
+        [Parameter()]
+        [System.String]
+        $ResourceName
+    )
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
+    Write-Verbose -Message "Testing configuration of the Azure AD Access Review Definition with Id {$Id} and DisplayName {$DisplayName}"
+
+    $CurrentValues = Get-TargetResource @DesiredValues
+    $ValuesToCheck = ([Hashtable]$DesiredValues).clone()
+
+    # Retrieve the primary keys of the given resource and remove them from the list of values to check.
+    $currentPath = $PSScriptRoot
+    if ($null -eq $Global:M365DSCSchema)
+    {
+        $schemaPath = Join-Path -Path $currentPath -ChildPath '..\SchemaDefinition.json'
+        $schemaJSON = Get-Content $schemaPath -Raw
+        $Global:M365DSCSchema = ConvertFrom-Json $schemaJSON
+    }
+    $resourceDefinition = $Global:M365DSCSchema | Where-Object -FilterScript {$_.ClassName -eq "MSFT_$ResourceName"}
+    $resourceKeys = $resourceDefinition.Parameters | Where-Object -FilterScript {$_.Option -eq 'Key'}
+
+    foreach ($keyToRemove in $resourceKeys)
+    {
+        $ValuesToCheck.Remove($keyToRemove) | Out-Null
+    }
+
+    # Remove PSCredential object from the list of properties to be evaluated.
+    $credentialProperties = $resourceDefinition.Parameters | Where-Object -FilterScript {$_.CIMType -eq 'MSFT_Credential'}
+    foreach ($propToRemove in $credentialProperties)
+    {
+        $ValuesToCheck.Remove($propToRemove.Name) | Out-Null
+    }
+
+    $testTargetResource = $true
+
+    $Global:AllDrifts = @{
+        DriftInfo     = @()
+        CurrentValues = @{}
+        DesiredValues = @{}
+    }
+
+    #Compare Cim instances
+    foreach ($key in $DesiredValues.Keys)
+    {
+        $source = $DesiredValues.$key
+        $target = $CurrentValues.$key
+        if ($null -ne $source -and $source.GetType().Name -like '*CimInstance*')
+        {
+            $CIMProperty = $resourceDefinition.Parameters | Where-Object -FilterScript {$_.Name -eq $key}
+            $CIMName = $CIMProperty.CIMType.Replace('[]', '')
+            $CIMDefinition = $Global:M365DSCSchema | Where-Object -FilterScript {$_.ClassName -eq $CIMName}
+            $CIMPrimaryKeys = $CIMDefinition.Parameters | Where-Object -FilterScript {$_.Option -eq 'Required'}
+
+            $targetObjects = @()
+            foreach ($targetObject in $target)
+            {
+                foreach ($primaryKey in $CIMPrimaryKeys.Name)
+                {
+                    $targetObject.Remove($primaryKey) | Out-Null
+                }
+                $targetObjects += $targetObject
+            }
+            $testResult = Compare-M365DSCComplexObject `
+                -Source ($source) `
+                -Target ($targetObjects) `
+                -PropertyName $key
+
+            if (-not $testResult)
+            {
+                Write-Verbose "TestResult returned False for $source"
+                $testTargetResource = $false
+            }
+
+            $ValuesToCheck.Remove($key) | Out-Null
+        }
+    }
+
+    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
+
+    $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -DesiredValues $DesiredValues `
+            -ValuesToCheck $ValuesToCheck.Keys
+
+    Write-Verbose -Message "Test-TargetResource returned $testResult"
+    if (-not $TestResult)
+    {
+        $testTargetResource = $false
+    }
+
+    if (-not $testTargetResource)
+    {
+        $TenantName = Get-M365DSCTenantNameFromParameterSet -ParameterSet $DesiredValues
+        Write-M365DSCDriftsToEventLog -Drifts $Global:AllDrifts `
+                                      -ResourceName $ResourceName `
+                                      -TenantName $TenantName `
+                                      -CurrentValues $CurrentValues `
+                                      -DesiredValues $DesiredValues
+    }
+    return $testTargetResource
+}
+
+<#
+.Description
 This is the main Microsoft365DSC.Reverse function that extracts the DSC configuration from an existing Microsoft 365 Tenant.
 
 .Parameter LaunchWebUI
@@ -5284,6 +5401,7 @@ Export-ModuleMember -Function @(
     'Test-M365DSCDependenciesForNewVersions',
     'Test-M365DSCModuleValidity',
     'Test-M365DSCParameterState',
+    'Test-M365DSCTargetResource',
     'Uninstall-M365DSCOutdatedDependencies',
     'Update-M365DSCDependencies',
     'Update-M365DSCExportAuthenticationResults',

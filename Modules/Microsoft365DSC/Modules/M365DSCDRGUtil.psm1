@@ -604,7 +604,11 @@ function Compare-M365DSCComplexObject
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        $PropertyName
+        $PropertyName,
+
+        [Parameter()]
+        [System.String[]]
+        $PrimaryKeys
     )
     $returnValue = $true
     #Comparing full objects
@@ -645,7 +649,7 @@ function Compare-M365DSCComplexObject
                 CurrentValue = "Current value has {$($Source.Length)} items"
                 DesiredValue = "Desired value has {$($Target.Length)} items"
             }
-            return $false
+            $returnValue = $false
         }
         if ($Source.Length -eq 0)
         {
@@ -705,7 +709,7 @@ function Compare-M365DSCComplexObject
                     CurrentValue = $Target
                     DesiredValue = $Source
                 }
-                $returnValue = $false
+                return $false
             }
         }
 
@@ -737,7 +741,7 @@ function Compare-M365DSCComplexObject
                     CurrentValue = $Target
                     DesiredValue = $Source
                 }
-                $returnValue = $false
+                return $false
             }
         }
 
@@ -920,7 +924,7 @@ function Compare-M365DSCComplexObject
                             CurrentValue = $targetValue
                             DesiredValue = $SourceValue
                         }
-                        $returnValue = $false
+                        return $false
                     }
                 }
             }

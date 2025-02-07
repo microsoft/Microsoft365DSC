@@ -255,7 +255,7 @@
                            {
                                "CIMType":  "String",
                                "Name":  "StageId",
-                               "Option":  "Write"
+                               "Option":  "Required"
                            }
                        ]
     },

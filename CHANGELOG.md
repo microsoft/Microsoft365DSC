@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* MISC
+  * Improved logging of drifts across resources by including CIM Instances
+    hierarchy and by combining drifts per resources.
+
 # 1.25.205.1
 
 * AADApplication
