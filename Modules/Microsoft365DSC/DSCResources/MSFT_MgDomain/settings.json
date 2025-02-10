@@ -1,0 +1,30 @@
+﻿{
+    "resourceName": "MgDomain",
+    "description": "Adds a domain to the tenant. Important: You cannot use an associated domain with your Microsoft Entra tenant until ownership is verified.",
+    "roles": {
+        "read": [
+        ],
+        "update": [
+        ]
+    },
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [],
+                "update": []
+            },
+            "application": {
+                "read": [
+                    {
+                        "name": "Directory.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Domain.ReadWrite.All"
+                    }
+                ]
+            }
+        }
+    }
+}

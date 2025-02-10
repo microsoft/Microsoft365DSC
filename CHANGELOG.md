@@ -4,6 +4,8 @@
 
 * EXORetentionPolicyTag
   * Initial release.
+* MgDomain
+  * Initial Release
 
 # 1.25.205.1
 
