@@ -442,7 +442,7 @@ function Get-M365DSCDRGComplexTypeToString
             {
                 $currentValue = $ComplexObject[$key]
                 if ([System.String]::IsNullOrEmpty($currentValue))
-                {                    
+                {
                     $currentValue = $ComplexObject.$key
                 }
                 if (-not [System.String]::IsNullOrEmpty($currentValue) -and $currentValue.GetType().Name -ne 'Dictionary`2')
@@ -929,7 +929,7 @@ function Compare-M365DSCComplexObject
                 }
             }
         }
-    }    
+    }
     return $returnValue
 }
 
