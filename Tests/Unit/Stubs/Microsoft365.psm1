@@ -106259,3 +106259,180 @@ function Update-MgAdminSharepointSetting
 }
 
 #endregion
+
+function Get-RetentionPolicyTag
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $OptionalInMailbox,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IncludeSystemTags,
+
+        [Parameter()]
+        [System.Object]
+        $Mailbox,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object[]]
+        $Types
+    )
+}
+function New-RetentionPolicyTag
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $AgeLimitForRetention,
+
+        [Parameter()]
+        [System.String]
+        $MessageClass,
+
+        [Parameter()]
+        [System.Boolean]
+        $MustDisplayCommentEnabled,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsDefaultAutoGroupPolicyTag,
+
+        [Parameter()]
+        [System.Object]
+        $LocalizedRetentionPolicyTagName,
+
+        [Parameter()]
+        [System.Object]
+        $LocalizedComment,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsDefaultModeratedRecipientsPolicyTag,
+
+        [Parameter()]
+        [System.Object]
+        $RetentionAction,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.Guid]
+        $RetentionId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $RetentionEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $Type,
+
+        [Parameter()]
+        [System.Boolean]
+        $SystemTag
+    )
+}
+function Remove-RetentionPolicyTag
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
+function Set-RetentionPolicyTag
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $MessageClass,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $MustDisplayCommentEnabled,
+
+        [Parameter()]
+        [System.Object[]]
+        $OptionalInMailbox,
+
+        [Parameter()]
+        [System.Object]
+        $Mailbox,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Object]
+        $LocalizedRetentionPolicyTagName,
+
+        [Parameter()]
+        [System.Object]
+        $LegacyManagedFolder,
+
+        [Parameter()]
+        [System.Object]
+        $AgeLimitForRetention,
+
+        [Parameter()]
+        [System.Object]
+        $RetentionAction,
+
+        [Parameter()]
+        [System.Object]
+        $LocalizedComment,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.Guid]
+        $RetentionId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $RetentionEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $SystemTag,
+
+        [Parameter()]
+        [System.String]
+        $Name
+    )
+}

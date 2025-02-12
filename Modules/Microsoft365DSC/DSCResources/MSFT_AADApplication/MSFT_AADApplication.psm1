@@ -193,15 +193,15 @@ function Get-TargetResource
         $complexAuthenticationBehaviors = @{}
         if ($null -ne $AADBetaApp.authenticationBehaviors.blockAzureADGraphAccess)
         {
-            $complexAuthenticationBehaviors.Add('BlockAzureADGraphAccess', $AADBetaApp.authenticationBehaviors.blockAzureADGraphAccess)
+            $complexAuthenticationBehaviors.Add('BlockAzureADGraphAccess', $AADBetaApp.authenticationBehaviors.blockAzureADGraphAccess.ToString())
         }
         if ($null -ne $AADBetaApp.authenticationBehaviors.removeUnverifiedEmailClaim)
         {
-            $complexAuthenticationBehaviors.Add('RemoveUnverifiedEmailClaim', $AADBetaApp.authenticationBehaviors.removeUnverifiedEmailClaim)
+            $complexAuthenticationBehaviors.Add('RemoveUnverifiedEmailClaim', $AADBetaApp.authenticationBehaviors.removeUnverifiedEmailClaim.ToString())
         }
         if ($null -ne $AADBetaApp.authenticationBehaviors.requireClientServicePrincipal)
         {
-            $complexAuthenticationBehaviors.Add('RequireClientServicePrincipal', $AADBetaApp.authenticationBehaviors.requireClientServicePrincipal)
+            $complexAuthenticationBehaviors.Add('RequireClientServicePrincipal', $AADBetaApp.authenticationBehaviors.requireClientServicePrincipal.ToString())
         }
         if ($complexAuthenticationBehaviors.values.Where({ $null -ne $_ }).Count -eq 0)
         {
@@ -897,10 +897,6 @@ function Set-TargetResource
             $tries++
         } until ($null -eq $appEntity -or $tries -le 12)
     }
-    Write-Host "Ensure = $Ensure"
-    Write-Host "ApplicationTemplateId = $ApplicationTemplateId"
-    Write-Host "skipToUpdate = $skipToUpdate"
-    Write-Host "currentAADApp.Ensure = $($currentAADApp.Ensure))"
     if ($Ensure -eq 'Present' -and $currentAADApp.Ensure -eq 'Absent' -and -not $skipToUpdate)
     {
         $currentParameters.Remove('ObjectId') | Out-Null
@@ -1184,8 +1180,8 @@ function Set-TargetResource
             requireClientServicePrincipal = $AuthenticationBehaviors.requireClientServicePrincipal
         }
 
-        Update-MgBetaApplication -ApplicationId $currentAADApp.Id `
-                                 -AuthenticationBehaviors $IAuthenticationBehaviors | Out-Null
+        $uri = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/applications/$($currentAADApp.Id)/authenticationBehaviors"
+        Invoke-MgGraphRequest -Uri $uri -Method 'PATCH' -Body $IAuthenticationBehaviors
     }
 
     if ($needToUpdateKeyCredentials -and $KeyCredentials)

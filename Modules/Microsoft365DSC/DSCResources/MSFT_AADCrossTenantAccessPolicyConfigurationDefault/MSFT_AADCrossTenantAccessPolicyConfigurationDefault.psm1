@@ -507,7 +507,7 @@ function Export-TargetResource
         {
             $complexMapping = @(
                 @{
-                    Name            = 'B2BCollaborationInbound'
+                    Name            = 'B2BCollaborationOutbound'
                     CimInstanceName = 'AADCrossTenantAccessPolicyB2BSetting'
                     IsRequired      = $False
                 },
@@ -546,7 +546,7 @@ function Export-TargetResource
         {
             $complexMapping = @(
                 @{
-                    Name            = 'B2BCollaborationInbound'
+                    Name            = 'B2BDirectConnectInbound'
                     CimInstanceName = 'AADCrossTenantAccessPolicyB2BSetting'
                     IsRequired      = $False
                 },
@@ -585,7 +585,7 @@ function Export-TargetResource
         {
             $complexMapping = @(
                 @{
-                    Name            = 'B2BCollaborationInbound'
+                    Name            = 'B2BDirectConnectOutbound'
                     CimInstanceName = 'AADCrossTenantAccessPolicyB2BSetting'
                     IsRequired      = $False
                 },

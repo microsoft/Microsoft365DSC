@@ -206,6 +206,10 @@ function Get-TargetResource
         $DisableSurveyScreenshots,
 
         [Parameter()]
+        [System.Boolean]
+        $UseSupportBingSearchByAllUsers,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -227,7 +231,7 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message 'Checking the Power Platform Tenant Settings Configuration'
-    $ConnectionMode = New-M365DSCConnection -Workload 'PowerPlatforms' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'PowerPlatformREST' `
         -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -248,7 +252,9 @@ function Get-TargetResource
 
     try
     {
-        $PPTenantSettings = Get-TenantSettings -ErrorAction Stop
+        $uri = "https://" + (Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatformREST').BapEndpoint + `
+               "/providers/Microsoft.BusinessAppPlatform/listTenantSettings?api-version=2016-11-01"
+        $PPTenantSettings = Invoke-M365DSCPowerPlatformRESTWebRequest -Uri $uri -Method 'POST'
         return @{
             IsSingleInstance                                   = 'Yes'
 
@@ -301,24 +307,24 @@ function Get-TargetResource
             DisableSkillsMatchInvitationReachout               = $PPTenantSettings.powerPlatform.champions.disableSkillsMatchInvitationReachout
 
             #intelligence
-            DisableCopilotFeedback                             = $PPTenantSettings.powerPlatforms.intelligence.disableCopilotFeedback
-            EnableOpenAiBotPublishing                          = $PPTenantSettings.powerPlatforms.intelligence.enableOpenAiBotPublishing
-            DisableCopilotFeedbackMetadata                     = $PPTenantSettings.powerPlatforms.intelligence.disableCopilotFeedbackMetadata
-            DisableAiPrompts                                   = $PPTenantSettings.powerPlatforms.intelligence.disableAiPrompts
+            DisableCopilotFeedback                             = $PPTenantSettings.powerPlatform.intelligence.disableCopilotFeedback
+            EnableOpenAiBotPublishing                          = $PPTenantSettings.powerPlatform.intelligence.enableOpenAiBotPublishing
+            DisableCopilotFeedbackMetadata                     = $PPTenantSettings.powerPlatform.intelligence.disableCopilotFeedbackMetadata
+            DisableAiPrompts                                   = $PPTenantSettings.powerPlatform.intelligence.disableAiPrompts
 
             #modelExperimentation
-            EnableModelDataSharing                             = $PPTenantSettings.powerPlatforms.modelExperimentation.enableModelDataSharing
-            DisableDataLogging                                 = $PPTenantSettings.powerPlatforms.modelExperimentation.disableDataLogging
+            EnableModelDataSharing                             = $PPTenantSettings.powerPlatform.modelExperimentation.enableModelDataSharing
+            DisableDataLogging                                 = $PPTenantSettings.powerPlatform.modelExperimentation.disableDataLogging
 
             #catalogSettings
-            PowerCatalogAudienceSetting                        = $PPTenantSettings.powerPlatforms.catalogSettings.powerCatalogAudienceSetting
+            PowerCatalogAudienceSetting                        = $PPTenantSettings.powerPlatform.catalogSettings.powerCatalogAudienceSetting
 
             #userManagementSettings
-            EnableDeleteDisabledUserinAllEnvironments          = $PPTenantSettings.powerPlatforms.userManagementSettings.enableDeleteDisabledUserinAllEnvironments
+            EnableDeleteDisabledUserinAllEnvironments          = $PPTenantSettings.powerPlatform.userManagementSettings.enableDeleteDisabledUserinAllEnvironments
 
             #helpSupportSettings
-            DisableHelpSupportCopilot                          = $PPTenantSettings.powerPlatforms.helpSupportSettings.disableHelpSupportCopilot
-            UseSupportBingSearchByAllUsers                     = $PPTenantSettings.powerPlatforms.helpSupportSettings.useSupportBingSearchByAllUsers
+            DisableHelpSupportCopilot                          = $PPTenantSettings.powerPlatform.helpSupportSettings.disableHelpSupportCopilot
+            UseSupportBingSearchByAllUsers                     = $PPTenantSettings.powerPlatform.helpSupportSettings.useSupportBingSearchByAllUsers
 
             #Main
             WalkMeOptOut                                       = $PPTenantSettings.walkMeOptOut
@@ -558,6 +564,10 @@ function Set-TargetResource
         $DisableSurveyScreenshots,
 
         [Parameter()]
+        [System.Boolean]
+        $UseSupportBingSearchByAllUsers,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -597,7 +607,12 @@ function Set-TargetResource
 
     $SetParameters = $PSBoundParameters
     $RequestBody = Get-M365DSCPowerPlatformTenantSettings -Parameters $SetParameters
-    Set-TenantSettings -RequestBody $RequestBody | Out-Null
+    $jsonBody = ConvertTo-Json $RequestBody -Depth 20
+    Write-Verbose -Message $jsonBody
+
+    $uri = "https://" + (Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatformREST').BapEndpoint + `
+               "/providers/Microsoft.BusinessAppPlatform/scopes/admin/updateTenantSettings?api-version=2016-11-01"
+    Invoke-M365DSCPowerPlatformRESTWebRequest -Uri $uri -Method 'POST' -Body $RequestBody
 }
 
 function Test-TargetResource
@@ -808,6 +823,10 @@ function Test-TargetResource
         $DisableSurveyScreenshots,
 
         [Parameter()]
+        [System.Boolean]
+        $UseSupportBingSearchByAllUsers,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -883,7 +902,7 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $ApplicationSecret
     )
-    $ConnectionMode = New-M365DSCConnection -Workload 'PowerPlatforms' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'PowerPlatformREST' `
         -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -900,7 +919,9 @@ function Export-TargetResource
 
     try
     {
-        $settings = Get-TenantSettings -ErrorAction Stop
+        $uri = "https://" + (Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatformREST').BapEndpoint + `
+               "/providers/Microsoft.BusinessAppPlatform/listTenantSettings?api-version=2016-11-01"
+        $settings = Invoke-M365DSCPowerPlatformRESTWebRequest -Uri $uri -Method 'POST'
 
         if ($settings.StatusCode -eq 403)
         {
@@ -972,23 +993,40 @@ function Get-M365DSCPowerPlatformTenantSettings
     )
 
     $result = @{
-        walkMeOptOut                                   = $Parameters.WalkMeOptOut
-        disableNPSCommentsReachout                     = $Parameters.DisableNPSCommentsReachout
-        disableNewsletterSendout                       = $Parameters.DisableNewsletterSendout
-        disableEnvironmentCreationByNonAdminUsers      = $Parameters.DisableEnvironmentCreationByNonAdminUsers
-        disablePortalsCreationByNonAdminUsers          = $Parameters.DisablePortalsCreationByNonAdminUsers
-        disableSurveyFeedback                          = $Parameters.DisableSurveyFeedback
-        disableSurveyScreenshots                       = $Parameters.DisableSurveyScreenshots
-        disableTrialEnvironmentCreationByNonAdminUsers = $Parameters.DisableTrialEnvironmentCreationByNonAdminUsers
         disableCapacityAllocationByEnvironmentAdmins   = $Parameters.DisableCapacityAllocationByEnvironmentAdmins
         disableSupportTicketsVisibleByAllUsers         = $Parameters.DisableSupportTicketsVisibleByAllUsers
+        walkMeOptOut                                   = $Parameters.WalkMeOptOut
+        disableSurveyScreenshots                       = $Parameters.DisableSurveyScreenshots
+        disableEnvironmentCreationByNonAdminUsers      = $Parameters.DisableEnvironmentCreationByNonAdminUsers
+        disablePortalsCreationByNonAdminUsers          = $Parameters.DisablePortalsCreationByNonAdminUsers
+        disableNewsletterSendout                       = $Parameters.DisableNewsletterSendout
+        disableNPSCommentsReachout                     = $Parameters.DisableNPSCommentsReachout
+        disableSurveyFeedback                          = $Parameters.DisableSurveyFeedback
+        disableTrialEnvironmentCreationByNonAdminUsers = $Parameters.DisableTrialEnvironmentCreationByNonAdminUsers
         powerPlatform                                  = @{
-            search                 = @{
-                disableDocsSearch      = $Parameters.DisableDocsSearch
-                disableCommunitySearch = $Parameters.DisableCommunitySearch
-                disableBingVideoSearch = $Parameters.DisableBingVideoSearch
+            powerAutomate          = @{
+                disableCopilotWithBing = $Parameters.DisableCopilotWithBing
             }
-            teams                  = @{
+            catalogSettings        = @{
+                powerCatalogAudienceSetting = $Parameters.PowerCatalogAudienceSetting
+            }
+            governance             = @{
+                disableAdminDigest                                 = $Parameters.DisableAdminDigest
+                disableDeveloperEnvironmentCreationByNonAdminUsers = $Parameters.DisableDeveloperEnvironmentCreationByNonAdminUsers
+                enableDefaultEnvironmentRouting                    = $Parameters.EnableDefaultEnvironmentRouting
+                policy                                             = @{
+                    enableDesktopFlowDataPolicyManagement = [Boolean]::Parse($Parameters.EnableDesktopFlowDataPolicyManagement)
+                }
+                environmentRoutingAllMakers                        = $Parameters.EnvironmentRoutingAllMakers
+            }
+            environments           = @{
+                disablePreferredDataLocationForTeamsEnvironment = $Parameters.DisablePreferredDataLocationForTeamsEnvironment
+            }
+            helpSupportSettings    = @{
+                disableHelpSupportCopilot      = $Parameters.DisableHelpSupportCopilot
+                useSupportBingSearchByAllUsers = $Parameters.UseSupportBingSearchByAllUsers
+            }
+            teamsIntegration       = @{
                 shareWithColleaguesUserLimit = $Parameters.ShareWithColleaguesUserLimit
             }
             powerApps              = @{
@@ -1003,25 +1041,27 @@ function Get-M365DSCPowerPlatformTenantSettings
                 allowNewOrgChannelDefault            = $Parameters.AllowNewOrgChannelDefault
                 disableCopilot                       = $Parameters.DisableCopilot
             }
-            environments           = @{
-                disablePreferredDataLocationForTeamsEnvironment = $Parameters.DisablePreferredDataLocationForTeamsEnvironment
+            search                 = @{
+                disableDocsSearch      = $Parameters.DisableDocsSearch
+                disableCommunitySearch = $Parameters.DisableCommunitySearch
+                disableBingVideoSearch = $Parameters.DisableBingVideoSearch
             }
-            powerAutomate          = @{
-                disableCopilotWithBing = $Parameters.DisableCopilotWithBing
+            userManagementSettings = @{
+                enableDeleteDisabledUserinAllEnvironments = $Parameters.EnableDeleteDisabledUserinAllEnvironments
             }
-            governance             = @{
-                disableAdminDigest                                 = $Parameters.DisableAdminDigest
-                disableDeveloperEnvironmentCreationByNonAdminUsers = $Parameters.DisableDeveloperEnvironmentCreationByNonAdminUsers
-                enableDefaultEnvironmentRouting                    = $Parameters.EnableDefaultEnvironmentRouting
-                policy                                             = @(
-                    @{
-                        enableDesktopFlowDataPolicyManagement = $Parameters.EnableDesktopFlowDataPolicyManagement
-                    }
-                )
-                environmentRoutingAllMakers                        = $Parameters.EnvironmentRoutingAllMakers
+            powerPages             = @{
+                enableGenerativeAIFeaturesForSiteUsers            = $Parameters.EnableGenerativeAIFeaturesForSiteUsers
+                enableExternalAuthenticationProvidersInPowerPages = $Parameters.EnableExternalAuthenticationProvidersInPowerPages
             }
-            teamsIntegration       = @{
-                shareWithColleaguesUserLimit = $Parameters.ShareWithColleaguesUserLimit
+            modelExperimentation   = @{
+                enableModelDataSharing = $Parameters.EnableModelDataSharing
+                disableDataLogging     = $Parameters.DisableDataLogging
+            }
+            intelligence           = @{
+                disableCopilotFeedback         = $Parameters.DisableCopilotFeedback
+                enableOpenAiBotPublishing      = $Parameters.EnableOpenAiBotPublishing
+                disableCopilotFeedbackMetadata = $Parameters.DisableCopilotFeedbackMetadata
+                disableAiPrompts               = $Parameters.DisableAiPrompts
             }
             licensing              = @{
                 disableBillingPolicyCreationByNonAdminUsers     = $Parameters.DisableBillingPolicyCreationByNonAdminUsers
@@ -1030,38 +1070,44 @@ function Get-M365DSCPowerPlatformTenantSettings
                 enableTenantLicensingReportForEnvironmentAdmins = $Parameters.EnableTenantLicensingReportForEnvironmentAdmins
                 disableUseOfUnassignedAIBuilderCredits          = $Parameters.DisableUseOfUnassignedAIBuilderCredits
             }
-            powerPages             = @{
-                enableGenerativeAIFeaturesForSiteUsers            = $Parameters.EnableGenerativeAIFeaturesForSiteUsers
-                enableExternalAuthenticationProvidersInPowerPages = $Parameters.EnableExternalAuthenticationProvidersInPowerPages
-            }
             champions              = @{
                 disableChampionsInvitationReachout   = $Parameters.DisableChampionsInvitationReachout
                 disableSkillsMatchInvitationReachout = $Parameters.DisableSkillsMatchInvitationReachout
             }
-            intelligence           = @{
-                disableCopilotFeedback         = $Parameters.disableCopilotFeedback
-                enableOpenAiBotPublishing      = $Parameters.enableOpenAiBotPublishing
-                disableCopilotFeedbackMetadata = $Parameters.disableCopilotFeedbackMetadata
-                disableAiPrompts               = $Parameters.disableAiPrompts
-            }
-            modelExperimentation   = @{
-                enableModelDataSharing = $Parameters.enableModelDataSharing
-                disableDataLogging     = $Parameters.disableDataLogging
-            }
-            catalogSettings        = @{
-                powerCatalogAudienceSetting = $Parameters.powerCatalogAudienceSetting
-            }
-            userManagementSettings = @{
-                enableDeleteDisabledUserinAllEnvironments = $Parameters.enableDeleteDisabledUserinAllEnvironments
-            }
-            helpSupportSettings    = @{
-                disableHelpSupportCopilot      = $Parameters.disableHelpSupportCopilot
-                useSupportBingSearchByAllUsers = $Parameters.useSupportBingSearchByAllUsers
-            }
+            gccCommercialSettings  = @{}
         }
     }
 
     return $result
+}
+
+function Set-M365DSCPPTenantSettings
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $Body
+    )
+
+    $url = "$((Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatforms').ResourceUrl)/providers/Microsoft.BusinessAppPlatform/scopes/admin/updateTenantSettings?api-version=2016-11-01"
+
+}
+
+function Get-M365DSCPPTenantSettings
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $Body
+    )
+
+    $url = "$((Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatforms').ResourceUrl)/providers/Microsoft.BusinessAppPlatform/scopes/admin/getTenantSettings?api-version=2016-11-01"
+    $headers = @{
+        Authorization = (Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatforms').AccessToken
+    }
+    Invoke-WebRequest -Uri $url -Headers $headers -ContentType "application/json"
 }
 
 Export-ModuleMember -Function *-TargetResource

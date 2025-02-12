@@ -1,5 +1,26 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* AADApplication
+  * Changing the AuthenticationBehaviors parameters to string to allow
+    for null values.
+* AADCrossTenantAccessPolicyConfigurationDefault
+  * Fixes an issue with CIM class export.
+* AADCrossTenantAccessPolicyConfigurationPartner
+  * Fixes an issue with CIM class export.
+    FIXES [#5711](https://github.com/microsoft/Microsoft365DSC/issues/5711)
+* EXORetentionPolicyTag
+  * Initial release.
+* EXOSmtpDaneInbound
+  * Updated authentication properties to align with MOF definition.
+    FIXES [#5709](https://github.com/microsoft/Microsoft365DSC/issues/5709)
+* MISC
+  * PowerPlatform resource revamp to use direct REST API calls.
+* DEPENDENCIES
+  * Removed dependency on Microsoft.PowerApps.Administration.PowerShell.
+  * Updated MSCloudLoginAssistant to version 1.1.37.
+
 # 1.25.205.1
 
 * AADApplication

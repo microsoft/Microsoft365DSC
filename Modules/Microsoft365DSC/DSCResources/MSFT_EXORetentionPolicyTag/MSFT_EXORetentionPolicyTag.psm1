@@ -6,19 +6,35 @@ function Get-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $DisplayName,
+        $Identity,
 
         [Parameter()]
         [System.String]
-        $PolicyName,
-
-        [Parameter()]
-        [System.String[]]
-        $Environments,
+        $Comment,
 
         [Parameter()]
         [System.String]
-        $FilterType,
+        $AgeLimitForRetention,
+
+        [Parameter()]
+        [System.String]
+        $MessageClass,
+
+        [Parameter()]
+        [System.Boolean]
+        $MustDisplayCommentEnabled,
+
+        [Parameter()]
+        [System.String]
+        $RetentionAction,
+
+        [Parameter()]
+        [System.Boolean]
+        $RetentionEnabled,
+
+        [Parameter()]
+        [System.String]
+        $Type,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -49,7 +65,8 @@ function Get-TargetResource
         [System.String[]]
         $AccessTokens
     )
-    New-M365DSCConnection -Workload 'PowerPlatformREST' `
+
+    New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters | Out-Null
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -68,36 +85,36 @@ function Get-TargetResource
     $nullResult.Ensure = 'Absent'
     try
     {
-        $uri = "https://" + (Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatformREST').BapEndpoint + `
-               "/providers/Microsoft.BusinessAppPlatform/scopes/admin/apiPolicies?api-version=2016-11-01"
-
-        $policies = Invoke-M365DSCPowerPlatformRESTWebRequest -Uri $uri -Method 'GET'
-
-        $instance = $null
-        foreach ($policyInfo in $policies.value)
+        if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
         {
-            if ($policyInfo.properties.displayName -eq $DisplayName)
-            {
-                $instance = $policyInfo
-            }
+            $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.Identity -eq $Identity}
+        }
+        else
+        {
+            $instance = Get-RetentionPolicyTag -Identity $Identity -ErrorAction SilentlyContinue
         }
         if ($null -eq $instance)
         {
             return $nullResult
         }
 
+        Write-Verbose -Message "Found existing instace of retention policy tag {$Identity}"
         $results = @{
-            DisplayName           = $instance.properties.displayName
-            PolicyName            = $instance.PolicyName
-            Environments          = [array]$instance.properties.definition.constraints.environmentFilter1.parameters.environments.name
-            FilterType            = $instance.properties.definition.constraints.environmentFilter1.parameters.filterType
-            Ensure                = 'Present'
-            Credential            = $Credential
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            CertificateThumbprint = $CertificateThumbprint
-            ManagedIdentity       = $ManagedIdentity.IsPresent
-            AccessTokens          = $AccessTokens
+            Identity                  = $instance.Identity
+            Comment                   = $instance.Comment
+            AgeLimitForRetention      = $instance.AgeLimitForRetention
+            MessageClass              = $instance.MessageClass
+            MustDisplayCommentEnabled = $instance.MustDisplayCommentEnabled
+            RetentionAction           = $instance.RetentionAction
+            RetentionEnabled          = $instance.RetentionEnabled
+            Type                      = $instance.Type
+            Ensure                    = 'Present'
+            Credential                = $Credential
+            ApplicationId             = $ApplicationId
+            TenantId                  = $TenantId
+            CertificateThumbprint     = $CertificateThumbprint
+            ManagedIdentity           = $ManagedIdentity.IsPresent
+            AccessTokens              = $AccessTokens
         }
         return [System.Collections.Hashtable] $results
     }
@@ -121,19 +138,35 @@ function Set-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $DisplayName,
+        $Identity,
 
         [Parameter()]
         [System.String]
-        $PolicyName,
-
-        [Parameter()]
-        [System.String[]]
-        $Environments,
+        $Comment,
 
         [Parameter()]
         [System.String]
-        $FilterType,
+        $AgeLimitForRetention,
+
+        [Parameter()]
+        [System.String]
+        $MessageClass,
+
+        [Parameter()]
+        [System.Boolean]
+        $MustDisplayCommentEnabled,
+
+        [Parameter()]
+        [System.String]
+        $RetentionAction,
+
+        [Parameter()]
+        [System.Boolean]
+        $RetentionEnabled,
+
+        [Parameter()]
+        [System.String]
+        $Type,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -180,119 +213,26 @@ function Set-TargetResource
     $currentInstance = Get-TargetResource @PSBoundParameters
     $setParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
-    $schema = "https://schema.management.azure.com/providers/Microsoft.BusinessAppPlatform/schemas/2016-10-01-preview/apiPolicyDefinition.json#"
-    $constraints = @{}
-    if ($null -ne $Environments -and $Environments.Length -gt 0)
-    {
-        $environmentInfo = @()
-        foreach ($environment in $Environments)
-        {
-            $uri = "https://" + (Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatformREST').BapEndpoint + `
-                "/providers/Microsoft.BusinessAppPlatform/scopes/admin/environments/$($environment)?`$expand=permissions&api-version=2016-11-01"
-
-            Write-Verbose -Message "Creating new policy with body:`r`n$(ConvertTo-Json $newPolicy -Depth 20)"
-            $environmentInfo += Invoke-M365DSCPowerPlatformRESTWebRequest -Uri $uri -Method 'GET'
-        }
-
-        $constraints = @{
-            environmentFilter1 = @{
-                parameters = @{
-                    environments = $environmentInfo
-                    filterType = $FilterType
-                }
-                type = "environmentFilter"
-            }
-        }
-    }
-    $rules = @{
-        dataFlowRule = @{
-            actions = @{
-                blockAction = @{
-                    type = "Block"
-                }
-            }
-            parameters = @{
-                destinationApiGroup = "lbi"
-                sourceApiGroup = "hbi"
-            }
-            type = "DataFlowRestriction"
-        }
-    }
-    $CreatedTime = Get-Date -Format "o"
-    $policyObject = @{
-        id = ""
-        name = ""
-        type = $type
-        tags = @{}
-        properties = @{
-            createdTime = $CreatedTime
-            displayName = $DisplayName
-            definition = @{
-                "`$schema" = $schema
-                defaultApiGroup = "lbi"
-                constraints = $constraints
-                apiGroups = @{
-                    hbi = @{
-                        apis = $hbiApis
-                        description = "Business data only"
-                    }
-                    lbi = @{
-                        apis =  @()
-                        description = $lbiDescription
-                    }
-                }
-                rules = $rules
-            }
-        }
-    }
-
     # CREATE
-    $needToUpdateNewInstance = $false
-    $policyName = $currentInstance.PolicyName
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        Write-Verbose -Message "Creating new Data Policy {$DisplayName}"
-        $uri = "https://" + (Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatformREST').BapEndpoint + `
-               "/providers/Microsoft.BusinessAppPlatform/scopes/admin/apiPolicies?api-version=2016-11-01"
-
-
-        Write-Verbose -Message "Creating new policy with body:`r`n$(ConvertTo-Json $newPolicy -Depth 20)"
-        $policy = Invoke-M365DSCPowerPlatformRESTWebRequest -Uri $uri -Method 'POST' -Body $policyObject
-        $policyName = $policy.name
+        Write-Verbose -Message "Creating new retention policy tag {$Identity}"
+        $setParameters.Add('Name', $Identity)
+        $setParameters.Remove("Identity") | Out-Null
+        New-RetentionPolicyTag @SetParameters
     }
-    if ($setParameters.ContainsKey('PolicyName'))
-    {
-        $setParameters.PolicyName = $policyName
-    }
-    else
-    {
-        $setParameters.Add('PolicyName', $policyName)
-    }
-
     # UPDATE
-    if (($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present') -or $needToUpdateNewInstance)
+    elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Updating Data Policy {$DisplayName}"
-        $setParameters.Remove('DisplayName') | Out-Null
-
-        if ($null -ne $setParameters.Environments -and $setParameters.Environments.Count -gt 0)
-        {
-            $setParameters.Environments = ($setParameters.Environments -join ',')
-        }
-        Write-Verbose -Message "Updating Data Policy {$DisplayName} with values:`r`n$(Convert-M365DscHashtableToString -Hashtable $setParameters)"
-        $uri = "https://" + (Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatformREST').BapEndpoint + `
-               "/providers/Microsoft.BusinessAppPlatform/scopes/admin/apiPolicies/$($policyName)?api-version=2016-11-01"
-
-        $policy = Invoke-M365DSCPowerPlatformRESTWebRequest -Uri $uri -Method 'PUT' -Body $policyObject
+        Write-Verbose -Message "Updating retention policy tag {$Identity}"
+        $setParameters.Remove('Type') | Out-Null
+        Set-RetentionPolicyTag @SetParameters
     }
     # REMOVE
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing Data Policy {$DisplayName}"
-        $uri = "https://" + (Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatformREST').BapEndpoint + `
-               "/providers/Microsoft.BusinessAppPlatform/scopes/admin/apiPolicies/$($policyName)?api-version=2016-11-01"
-
-        $policy = Invoke-M365DSCPowerPlatformRESTWebRequest -Uri $uri -Method 'DELETE'
+        Write-Verbose -Message "Removing retention policy tag {$Identity}"
+        Remove-RetentionPolicyTag -Identity $Identity
     }
 }
 
@@ -304,19 +244,35 @@ function Test-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $DisplayName,
+        $Identity,
 
         [Parameter()]
         [System.String]
-        $PolicyName,
-
-        [Parameter()]
-        [System.String[]]
-        $Environments,
+        $Comment,
 
         [Parameter()]
         [System.String]
-        $FilterType,
+        $AgeLimitForRetention,
+
+        [Parameter()]
+        [System.String]
+        $MessageClass,
+
+        [Parameter()]
+        [System.Boolean]
+        $MustDisplayCommentEnabled,
+
+        [Parameter()]
+        [System.String]
+        $RetentionAction,
+
+        [Parameter()]
+        [System.Boolean]
+        $RetentionEnabled,
+
+        [Parameter()]
+        [System.String]
+        $Type,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -411,7 +367,7 @@ function Export-TargetResource
         $AccessTokens
     )
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'PowerPlatformREST' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -429,10 +385,7 @@ function Export-TargetResource
     try
     {
         $Script:ExportMode = $true
-        $uri = "https://" + (Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatformREST').BapEndpoint + `
-            "/providers/Microsoft.BusinessAppPlatform/scopes/admin/apiPolicies?api-version=2016-11-01"
-
-        [array] $Script:exportedInstances = Invoke-M365DSCPowerPlatformRESTWebRequest -Uri $uri -Method 'GET'
+        [array] $Script:exportedInstances = Get-RetentionPolicyTag -ErrorAction Stop
 
         $i = 1
         $dscContent = ''
@@ -444,18 +397,17 @@ function Export-TargetResource
         {
             Write-Host "`r`n" -NoNewline
         }
-        foreach ($config in $Script:exportedInstances.value)
+        foreach ($config in $Script:exportedInstances)
         {
             if ($null -ne $Global:M365DSCExportResourceInstancesCount)
             {
                 $Global:M365DSCExportResourceInstancesCount++
             }
 
-            $displayedKey = $config.properties.displayName
-            Write-Host "    |---[$i/$($Script:exportedInstances.value.Count)] $displayedKey" -NoNewline
+            $displayedKey = $config.Identity
+            Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -NoNewline
             $params = @{
-                DisplayName           = $config.properties.displayName
-                PolicyName            = $config.name
+                Identity              = $config.Identity
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId

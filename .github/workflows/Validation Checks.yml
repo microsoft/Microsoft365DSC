@@ -1,0 +1,34 @@
+name: Validation Checks
+on: [push, pull_request]
+
+jobs:
+  # This workflow contains a single job called "build"
+  UnitTests:
+    # The type of runner that the job will run on
+    runs-on: windows-latest
+
+    permissions: write-all
+
+    # Only when run from the main repo
+    if: github.repository == 'microsoft/Microsoft365DSC'
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Ensure No Hardcoded Graph Endpoints
+        shell: pwsh
+        run: |
+          $resources = Get-ChildItem './Modules/Microsoft365DSC/DSCResources/*.psm1' -Recurse
+
+          foreach ($resource in $resources)
+          {
+            $content = Get-Content $resource.FullName -Raw
+            $foundPosition = $content.IndexOf('https://graph.microsoft.com', 0)
+            if ($foundPosition -ge 0)
+            {
+              throw "Resource {$($Resource.Name)} contains hardcoded Graph references."
+            }
+          }

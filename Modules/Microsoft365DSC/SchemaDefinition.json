@@ -973,17 +973,17 @@
         "ClassName":  "MSFT_MicrosoftGraphAuthenticationBehaviors",
         "Parameters":  [
                            {
-                               "CIMType":  "Boolean",
+                               "CIMType":  "String",
                                "Name":  "BlockAzureADGraphAccess",
                                "Option":  "Write"
                            },
                            {
-                               "CIMType":  "Boolean",
+                               "CIMType":  "String",
                                "Name":  "RemoveUnverifiedEmailClaim",
                                "Option":  "Write"
                            },
                            {
-                               "CIMType":  "Boolean",
+                               "CIMType":  "String",
                                "Name":  "RequireClientServicePrincipal",
                                "Option":  "Write"
                            }
@@ -21615,6 +21615,86 @@
                            },
                            {
                                "CIMType":  "String",
+                               "Name":  "Ensure",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "Credential",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ApplicationId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "TenantId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "CertificateThumbprint",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "ManagedIdentity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_EXORetentionPolicyTag",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Identity",
+                               "Option":  "Key"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Comment",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AgeLimitForRetention",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "MessageClass",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "MustDisplayCommentEnabled",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "RetentionAction",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "RetentionEnabled",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Type",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "string",
                                "Name":  "Ensure",
                                "Option":  "Write"
                            },
@@ -54526,10 +54606,10 @@
                        ]
     },
     {
-        "ClassName":  "MSFT_PPPowerAPpPolicyUrlPatternsRule",
+        "ClassName":  "MSFT_PPPowerAppPolicyUrlPatternsRule",
         "Parameters":  [
                            {
-                               "CIMType":  "String",
+                               "CIMType":  "UInt32",
                                "Name":  "order",
                                "Option":  "Write"
                            },
@@ -54916,6 +54996,11 @@
                            {
                                "CIMType":  "boolean",
                                "Name":  "WalkMeOptOut",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "boolean",
+                               "Name":  "useSupportBingSearchByAllUsers",
                                "Option":  "Write"
                            },
                            {

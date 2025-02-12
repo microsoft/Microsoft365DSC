@@ -113,7 +113,7 @@ function Get-TargetResource
                 $Id = $getId.Id
         }
 
-        $uri = 'https://graph.microsoft.com/v1.0/identityGovernance/privilegedAccess/group/eligibilitySchedules/' + $Id
+        $uri = "$((Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl)v1.0/identityGovernance/privilegedAccess/group/eligibilitySchedules/" + $Id
         $getvalue = Invoke-GraphRequest -Uri $uri -Method Get -ErrorAction SilentlyContinue
 
         #endregion
