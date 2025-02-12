@@ -442,7 +442,7 @@ function Get-M365DSCDRGComplexTypeToString
             {
                 $currentValue = $ComplexObject[$key]
                 if ([System.String]::IsNullOrEmpty($currentValue))
-                {                    
+                {
                     $currentValue = $ComplexObject.$key
                 }
                 if (-not [System.String]::IsNullOrEmpty($currentValue) -and $currentValue.GetType().Name -ne 'Dictionary`2')
@@ -601,7 +601,6 @@ function Compare-M365DSCComplexObject
         [Parameter()]
         $Target
     )
-
     #Comparing full objects
     if ($null -eq $Source -and $null -eq $Target)
     {
@@ -837,6 +836,7 @@ function Compare-M365DSCComplexObject
                     }
                     elseif ($targetType -eq 'String')
                     {
+                        Write-Verbose -Message "Parameter {$($key)} is a String"
                         # Align line breaks
                         if (-not [System.String]::IsNullOrEmpty($referenceObject))
                         {

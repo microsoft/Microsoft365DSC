@@ -231,7 +231,7 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message 'Checking the Power Platform Tenant Settings Configuration'
-    $ConnectionMode = New-M365DSCConnection -Workload 'PowerPlatforms' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'PowerPlatformREST' `
         -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -252,7 +252,9 @@ function Get-TargetResource
 
     try
     {
-        $PPTenantSettings = Get-TenantSettings -ErrorAction Stop
+        $uri = "https://" + (Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatformREST').BapEndpoint + `
+               "/providers/Microsoft.BusinessAppPlatform/listTenantSettings?api-version=2016-11-01"
+        $PPTenantSettings = Invoke-M365DSCPowerPlatformRESTWebRequest -Uri $uri -Method 'POST'
         return @{
             IsSingleInstance                                   = 'Yes'
 
@@ -605,9 +607,12 @@ function Set-TargetResource
 
     $SetParameters = $PSBoundParameters
     $RequestBody = Get-M365DSCPowerPlatformTenantSettings -Parameters $SetParameters
-    Write-Verbose -Message (ConvertTo-Json $RequestBody -Depth 10)
+    $jsonBody = ConvertTo-Json $RequestBody -Depth 20
+    Write-Verbose -Message $jsonBody
 
-    Set-TenantSettings -RequestBody $RequestBody -Verbose | Out-Null
+    $uri = "https://" + (Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatformREST').BapEndpoint + `
+               "/providers/Microsoft.BusinessAppPlatform/scopes/admin/updateTenantSettings?api-version=2016-11-01"
+    Invoke-M365DSCPowerPlatformRESTWebRequest -Uri $uri -Method 'POST' -Body $RequestBody
 }
 
 function Test-TargetResource
@@ -897,7 +902,7 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $ApplicationSecret
     )
-    $ConnectionMode = New-M365DSCConnection -Workload 'PowerPlatforms' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'PowerPlatformREST' `
         -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -914,7 +919,9 @@ function Export-TargetResource
 
     try
     {
-        $settings = Get-TenantSettings -ErrorAction Stop
+        $uri = "https://" + (Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatformREST').BapEndpoint + `
+               "/providers/Microsoft.BusinessAppPlatform/listTenantSettings?api-version=2016-11-01"
+        $settings = Invoke-M365DSCPowerPlatformRESTWebRequest -Uri $uri -Method 'POST'
 
         if ($settings.StatusCode -eq 403)
         {
@@ -1072,6 +1079,35 @@ function Get-M365DSCPowerPlatformTenantSettings
     }
 
     return $result
+}
+
+function Set-M365DSCPPTenantSettings
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $Body
+    )
+
+    $url = "$((Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatforms').ResourceUrl)/providers/Microsoft.BusinessAppPlatform/scopes/admin/updateTenantSettings?api-version=2016-11-01"
+
+}
+
+function Get-M365DSCPPTenantSettings
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $Body
+    )
+
+    $url = "$((Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatforms').ResourceUrl)/providers/Microsoft.BusinessAppPlatform/scopes/admin/getTenantSettings?api-version=2016-11-01"
+    $headers = @{
+        Authorization = (Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatforms').AccessToken
+    }
+    Invoke-WebRequest -Uri $url -Headers $headers -ContentType "application/json"
 }
 
 Export-ModuleMember -Function *-TargetResource

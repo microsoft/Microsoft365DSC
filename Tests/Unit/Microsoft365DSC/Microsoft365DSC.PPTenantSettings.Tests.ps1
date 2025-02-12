@@ -60,7 +60,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential                                     = $Credential
                 }
 
-                Mock -CommandName Set-TenantSettings -MockWith {
+                Mock -CommandName Invoke-M365DSCPowerPlatformRESTWebRequest -MockWith {
                     return @{
                         TenantSettings = @{
                             WalkMeOptOut                                   = $testParams.WalkMeOptOut
@@ -72,43 +72,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             DisableTrialEnvironmentCreationByNonAdminUsers = $testParams.DisableTrialEnvironmentCreationByNonAdminUsers
                             DisableCapacityAllocationByEnvironmentAdmins   = $testParams.DisableCapacityAllocationByEnvironmentAdmins
                             DisableSupportTicketsVisibleByAllUsers         = $testParams.DisableSupportTicketsVisibleByAllUsers
+                            EnableDesktopFlowDataPolicyManagement          = $false
                             powerPlatform                                  = @(
-                                @{
-                                    search = @{
-                                        DisableDocsSearch      = $testParams.DisableDocsSearch
-                                        DisableCommunitySearch = $testParams.DisableCommunitySearch
-                                        DisableBingVideoSearch = $testParams.DisableBingVideoSearch
-                                    }
-                                },
-                                @{
-                                    powerApps = @{
-                                        DisableShareWithEveryone = $testParams.DisableShareWithEveryone
-                                        EnableGuestsToMake       = $testParams.EnableGuestsToMake
-                                    }
-                                },
-                                @{
-                                    teamsIntegration = @{
-                                        ShareWithColleaguesUserLimit = $testParams.ShareWithColleaguesUserLimit
-                                    }
-                                }
-                            )
-                        }
-                    }
-
-                    Mock -CommandName Get-TenantSettings -MockWith {
-                        return @{
-                            TenantSettings = @{
-                                WalkMeOptOut                                   = $testParams.WalkMeOptOut
-                                DisableNPSCommentsReachout                     = $testParams.DisableNPSCommentsReachout
-                                DisableNewsletterSendout                       = $testParams.DisableNewsletterSendout
-                                DisableEnvironmentCreationByNonAdminUsers      = $testParams.DisableEnvironmentCreationByNonAdminUsers
-                                DisablePortalsCreationByNonAdminUsers          = $testParams.DisablePortalsCreationByNonAdminUsers
-                                DisableSurveyFeedback                          = $testParams.DisableSurveyFeedback
-                                DisableTrialEnvironmentCreationByNonAdminUsers = $testParams.DisableTrialEnvironmentCreationByNonAdminUsers
-                                DisableCapacityAllocationByEnvironmentAdmins   = $testParams.DisableCapacityAllocationByEnvironmentAdmins
-                                DisableSupportTicketsVisibleByAllUsers         = $testParams.DisableSupportTicketsVisibleByAllUsers
-                                EnableDesktopFlowDataPolicyManagement          = $false
-                                powerPlatform                                  = @(
                                     @{
                                         search = @{
                                             DisableDocsSearch      = $testParams.DisableDocsSearch
@@ -132,7 +97,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         }
                     }
                 }
-            }
+            
 
             It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
@@ -151,7 +116,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential
                 }
 
-                Mock -CommandName Get-TenantSettings -MockWith {
+                Mock -CommandName Invoke-M365DSCPowerPlatformRESTWebRequest -MockWith {
                     return @{
                         WalkMeOptOut                                   = $false
                         DisableNPSCommentsReachout                     = $false

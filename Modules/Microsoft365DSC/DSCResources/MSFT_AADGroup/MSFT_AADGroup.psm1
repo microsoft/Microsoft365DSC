@@ -1342,36 +1342,6 @@ function Get-M365DSCAzureADGroupLicenses
     return $returnValue
 }
 
-function Get-M365DSCAzureADGroupLicensesAsString
-{
-    [CmdletBinding()]
-    [OutputType([System.String])]
-    param(
-        [Parameter(Mandatory = $true)]
-        [System.Collections.ArrayList]
-        $AssignedLicenses
-    )
-
-    $StringContent = [System.Text.StringBuilder]::new()
-    $StringContent.Append('@(') | Out-Null
-    foreach ($assignedLicense in $AssignedLicenses)
-    {
-        $StringContent.Append("MSFT_AADGroupLicense { `r`n") | Out-Null
-        if ($assignedLicense.DisabledPlans.Length -gt 0)
-        {
-            $StringContent.Append("                DisabledPlans = @('" + ($assignedLicense.DisabledPlans -join "','") + "')`r`n") | Out-Null
-        }
-        else
-        {
-            $StringContent.Append("                DisabledPlans = @()`r`n") | Out-Null
-        }
-        $StringContent.Append("                SkuId         = '" + $assignedLicense.SkuId + "'`r`n") | Out-Null
-        $StringContent.Append("            }`r`n") | Out-Null
-    }
-    $StringContent.Append('            )') | Out-Null
-    return $StringContent.ToString()
-}
-
 function Get-M365DSCCombinedLicenses
 {
     [CmdletBinding()]

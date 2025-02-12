@@ -35,10 +35,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return "Credentials"
             }
 
-            Mock -CommandName New-AdminDlpPolicy -MockWith {}
-            Mock -CommandName Set-AdminDlpPolicy -MockWith {}
-            Mock -CommandName Remove-AdminDlpPolicy -MockWith {}
-
             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
             }
@@ -56,7 +52,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential            = $Credential;
                 }
 
-                Mock -CommandName Get-AdminDlpPolicy -MockWith {
+                Mock -CommandName Invoke-M365DSCPowerPlatformRESTWebRequest -MockWith {
                     return $null
                 }
             }
@@ -69,7 +65,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should create a new instance from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName New-AdminDLPPolicy -Exactly 1
+                Should -Invoke -CommandName Invoke-M365DSCPowerPlatformRESTWebRequest -Exactly 3
             }
         }
 
@@ -83,14 +79,28 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential            = $Credential;
                 }
 
-                Mock -CommandName Get-AdminDlpPolicy -MockWith {
+                Mock -CommandName Invoke-M365DSCPowerPlatformRESTWebRequest -MockWith {
                     return @{
-                        PolicyName  = "MyPolicy"
-                        DisplayName = "SuperTest"
-                        Environments = @(@{
-                            name = 'Default-xxxxx-xxxxx-xxxxx-xxxxx-xxxxx'
-                        })
-                        FilterType = 'include'
+                        value = @(
+                            @{
+                                PolicyName  = "MyPolicy"
+                                properties = @{
+                                    displayName = "SuperTest"
+                                    definition = @{
+                                        constraints = @{
+                                            environmentFilter1 = @{
+                                                parameters = @{
+                                                    environments = @{
+                                                        name = 'Default-xxxxx-xxxxx-xxxxx-xxxxx-xxxxx'
+                                                    }
+                                                    filterType = 'include'
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        )
                     }
                 }
             }
@@ -103,7 +113,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should remove the instance from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Remove-AdminDlpPolicy -Exactly 1
+                Should -Invoke -CommandName Invoke-M365DSCPowerPlatformRESTWebRequest -Exactly 3
             }
         }
 
@@ -117,14 +127,28 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential            = $Credential;
                 }
 
-                Mock -CommandName Get-AdminDlpPolicy -MockWith {
+                Mock -CommandName Invoke-M365DSCPowerPlatformRESTWebRequest -MockWith {
                     return @{
-                        PolicyName  = "MyPolicy"
-                        DisplayName = "SuperTest"
-                        Environments = @(@{
-                            name = 'Default-xxxxx-xxxxx-xxxxx-xxxxx-xxxxx'
-                        })
-                        FilterType = 'include'
+                        value = @(
+                            @{
+                                PolicyName  = "MyPolicy"
+                                properties = @{
+                                    displayName = "SuperTest"
+                                    definition = @{
+                                        constraints = @{
+                                            environmentFilter1 = @{
+                                                parameters = @{
+                                                    environments = @{
+                                                        name = 'Default-xxxxx-xxxxx-xxxxx-xxxxx-xxxxx'
+                                                    }
+                                                    filterType = 'include'
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        )
                     }
                 }
             }
@@ -144,14 +168,28 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential            = $Credential;
                 }
 
-                Mock -CommandName Get-AdminDlpPolicy -MockWith {
+                Mock -CommandName Invoke-M365DSCPowerPlatformRESTWebRequest -MockWith {
                     return @{
-                        PolicyName  = "MyPolicy"
-                        DisplayName = "SuperTest"
-                        Environments = @(@{
-                            name = 'Default-xxxxx-xxxxx-xxxxx-xxxxx-xxxxx'
-                        })
-                        FilterType = 'include'
+                        value = @(
+                            @{
+                                PolicyName  = "MyPolicy"
+                                properties = @{
+                                    displayName = "SuperTest"
+                                    definition = @{
+                                        constraints = @{
+                                            environmentFilter1 = @{
+                                                parameters = @{
+                                                    environments = @{
+                                                        name = 'Default-xxxxx-xxxxx-xxxxx-xxxxx-xxxxx'
+                                                    }
+                                                    filterType = 'include'
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        )
                     }
                 }
             }
@@ -166,7 +204,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should call the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Set-AdminDlpPolicy -Exactly 1
+                Should -Invoke -CommandName Invoke-M365DSCPowerPlatformRESTWebRequest -Exactly 3
             }
         }
 
@@ -178,10 +216,28 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential  = $Credential;
                 }
 
-                Mock -CommandName Get-AdminDlpPolicy -MockWith {
+                Mock -CommandName Invoke-M365DSCPowerPlatformRESTWebRequest -MockWith {
                     return @{
-                        PolicyName  = "MyPolicy"
-                        DisplayName = "SuperTest"
+                        value = @(
+                            @{
+                                PolicyName  = "MyPolicy"
+                                properties = @{
+                                    displayName = "SuperTest"
+                                    definition = @{
+                                        constraints = @{
+                                            environmentFilter1 = @{
+                                                parameters = @{
+                                                    environments = @{
+                                                        name = 'Default-xxxxx-xxxxx-xxxxx-xxxxx-xxxxx'
+                                                    }
+                                                    filterType = 'include'
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        )
                     }
                 }
             }

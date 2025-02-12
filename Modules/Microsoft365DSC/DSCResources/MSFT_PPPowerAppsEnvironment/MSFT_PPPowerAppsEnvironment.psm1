@@ -58,7 +58,7 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration for PowerApps Environment {$DisplayName}"
-    $ConnectionMode = New-M365DSCConnection -Workload 'PowerPlatforms' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'PowerPlatformREST' `
         -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -78,7 +78,18 @@ function Get-TargetResource
 
     try
     {
-        $environment = Get-AdminPowerAppEnvironment -ErrorAction Stop | Where-Object -FilterScript { $_.DisplayName -match $DisplayName }
+        $uri = "https://" + (Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatformREST').BapEndpoint + `
+               "/providers/Microsoft.BusinessAppPlatform/scopes/admin/environments?`$expand=permissions&api-version=2016-11-01"
+
+        $environments = (Invoke-M365DSCPowerPlatformRESTWebRequest -Uri $uri -Method 'GET').value
+        foreach ($environmentInfo in $environments)
+        {
+            if ($environmentInfo.properties.displayName -eq $DisplayName)
+            {
+                $environment = $environmentInfo
+                break
+            }
+        }
 
         if ($null -eq $environment)
         {
@@ -87,14 +98,14 @@ function Get-TargetResource
         }
 
         Write-Verbose -Message "Found PowerApps Environment {$DisplayName}"
-        $environmentType = $environment.EnvironmentType
+        $environmentType = $environment.properties.environmentType
         if ($environmentType -eq 'Notspecified')
         {
             $environmentType = 'Teams'
         }
         return @{
             DisplayName           = $DisplayName
-            Location              = $environment.Location
+            Location              = $environment.location
             EnvironmentSKU        = $environmentType
             Ensure                = 'Present'
             Credential            = $Credential
@@ -188,7 +199,7 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'PowerPlatforms' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'PowerPlatformREST' `
         -InboundParameters $PSBoundParameters
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
@@ -205,7 +216,18 @@ function Set-TargetResource
         Write-Verbose -Message "Creating new PowerApps environment {$DisplayName}"
         try
         {
-            New-AdminPowerAppEnvironment @CurrentParameters
+            $uri = "https://" + (Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatformREST').BapEndpoint + `
+               "/providers/Microsoft.BusinessAppPlatform/environments?api-version=2020-08-01&id=/providers/Microsoft.BusinessAppPlatform/scopes/admin/environments"
+
+            $newParameters = @{
+                location   = $Location
+                properties = @{
+                    displayName    = $DisplayName
+                    description    = ''
+                    environmentSku = $EnvironmentSku
+                }
+            }
+            Invoke-M365DSCPowerPlatformRESTWebRequest -Uri $uri -Method 'POST' -Body $newParameters
         }
         catch
         {
@@ -220,7 +242,10 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Absent' -and $CurrentValues.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing existing instance of PowerApps environment {$DisplayName}"
-        Remove-AdminPowerAppEnvironment -EnvironmentName -$DisplayName | Out-Null
+        $uri = "https://" + (Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatformREST').BapEndpoint + `
+               "/providers/Microsoft.BusinessAppPlatform/scopes/admin/environments/$($DisplayName)/validateDelete?api-version=2018-01-01"
+
+        Invoke-M365DSCPowerPlatformRESTWebRequest -Uri $uri -Method 'DELETE'
     }
 }
 
@@ -342,7 +367,7 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $ApplicationSecret
     )
-    $ConnectionMode = New-M365DSCConnection -Workload 'PowerPlatforms' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'PowerPlatformREST' `
         -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -359,7 +384,10 @@ function Export-TargetResource
 
     try
     {
-        [array]$environments = Get-AdminPowerAppEnvironment -ErrorAction Stop
+        $uri = "https://" + (Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatformREST').BapEndpoint + `
+               "/providers/Microsoft.BusinessAppPlatform/scopes/admin/environments?`$expand=permissions&api-version=2016-11-01"
+
+        [array]$environments = Invoke-M365DSCPowerPlatformRESTWebRequest -Uri $uri -Method 'GET'
         $dscContent = ''
         $i = 1
 
@@ -371,24 +399,24 @@ function Export-TargetResource
         {
             Write-Host "`r`n" -NoNewline
         }
-        foreach ($environment in $environments)
+        foreach ($environment in $environments.value)
         {
-            if ($environment.EnvironmentType -ne 'Default')
+            if ($environment.properties.environmentType -ne 'Default')
             {
                 if ($null -ne $Global:M365DSCExportResourceInstancesCount)
                 {
                     $Global:M365DSCExportResourceInstancesCount++
                 }
 
-                Write-Host "    |---[$i/$($environments.Count)] $($environment.DisplayName)" -NoNewline
-                $environmentType = $environment.EnvironmentType
+                Write-Host "    |---[$i/$($environments.Count)] $($environment.properties.displayName)" -NoNewline
+                $environmentType = $environment.properties.environmentType
                 if ($environmentType -eq 'Notspecified')
                 {
                     $environmentType = 'Teams'
                 }
                 $Params = @{
-                    DisplayName           = $environment.DisplayName
-                    Location              = $environment.Location
+                    DisplayName           = $environment.properties.displayName
+                    Location              = $environment.location
                     EnvironmentSku        = $environmentType
                     Credential            = $Credential
                     ApplicationId         = $ApplicationId

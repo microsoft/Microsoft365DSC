@@ -15,13 +15,13 @@
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
 | **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
-### MSFT_PPPowerAPpPolicyUrlPatternsRule
+### MSFT_PPPowerAppPolicyUrlPatternsRule
 
 #### Parameters
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **order** | Write | String | Rule priority order. | |
+| **order** | Write | UInt32 | Rule priority order. | |
 | **customConnectorRuleClassification** | Write | String | Rule classification. | |
 | **pattern** | Write | String | Rule pattern. | |
 

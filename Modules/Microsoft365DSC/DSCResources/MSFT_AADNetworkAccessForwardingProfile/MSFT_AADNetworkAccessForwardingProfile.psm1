@@ -531,27 +531,4 @@ function Export-TargetResource
     }
 }
 
-function Get-PoliciesAsString
-{
-    [CmdletBinding()]
-    [OutputType([System.String])]
-    param(
-        [Parameter(Mandatory = $true)]
-        [System.Collections.ArrayList]
-        $Policies
-    )
-
-    $StringContent = '@('
-    foreach ($policy in $Policies)
-    {
-        $StringContent += "MSFT_MicrosoftGraphNetworkaccessPolicyLink {`r`n"
-        $StringContent += "                State = '" + $policy.State + "'`r`n"
-        $StringContent += "                PolicyLinkId  = '" + $policy.PolicyLinkId + "'`r`n"
-        $StringContent += "                Name = '" + $policy.Name + "'`r`n"
-        $StringContent += "            }`r`n"
-    }
-    $StringContent += '            )'
-    return $StringContent
-}
-
 Export-ModuleMember -Function *-TargetResource

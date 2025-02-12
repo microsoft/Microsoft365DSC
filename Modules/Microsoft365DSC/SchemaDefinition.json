@@ -973,17 +973,17 @@
         "ClassName":  "MSFT_MicrosoftGraphAuthenticationBehaviors",
         "Parameters":  [
                            {
-                               "CIMType":  "Boolean",
+                               "CIMType":  "String",
                                "Name":  "BlockAzureADGraphAccess",
                                "Option":  "Write"
                            },
                            {
-                               "CIMType":  "Boolean",
+                               "CIMType":  "String",
                                "Name":  "RemoveUnverifiedEmailClaim",
                                "Option":  "Write"
                            },
                            {
-                               "CIMType":  "Boolean",
+                               "CIMType":  "String",
                                "Name":  "RequireClientServicePrincipal",
                                "Option":  "Write"
                            }
@@ -54606,10 +54606,10 @@
                        ]
     },
     {
-        "ClassName":  "MSFT_PPPowerAPpPolicyUrlPatternsRule",
+        "ClassName":  "MSFT_PPPowerAppPolicyUrlPatternsRule",
         "Parameters":  [
                            {
-                               "CIMType":  "String",
+                               "CIMType":  "UInt32",
                                "Name":  "order",
                                "Option":  "Write"
                            },
