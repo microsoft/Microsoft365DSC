@@ -343,7 +343,6 @@ function Export-TargetResource
             }
 
             $Results = Get-TargetResource @Params
-
             if ($Results -is [System.Collections.Hashtable] -and $Results.Count -gt 1)
             {
                 if ($Results.Properties)
@@ -353,18 +352,36 @@ function Export-TargetResource
                         $Global:M365DSCExportResourceInstancesCount++
                     }
 
-                    $Results.Properties = ConvertTo-M365DSCSPOUserProfilePropertyInstanceString -Properties $Results.Properties
-                    $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                        -Results $Results
+                    if ($null -ne $Results.Properties)
+                    {
+                        $complexMapping = @(
+                            @{
+                                Name            = 'Properties'
+                                CimInstanceName = 'MSFT_SPOUserProfilePropertyInstance'
+                                IsRequired      = $False
+                            }
+                        )
+                        $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                            -ComplexObject $Results.Properties `
+                            -CIMInstanceName 'MSFT_SPOUserProfilePropertyInstance' `
+                            -ComplexTypeMapping $complexMapping
+
+                        if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                        {
+                            $Results.Properties = $complexTypeStringResult
+                        }
+                        else
+                        {
+                            $Results.Remove('Properties') | Out-Null
+                        }
+                    }
+
                     $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                         -ConnectionMode $ConnectionMode `
                         -ModulePath $PSScriptRoot `
                         -Results $Results `
-                        -Credential $Credential
-                    if ($null -ne $Results.Properties)
-                    {
-                        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Properties'
-                    }
+                        -Credential $Credential `
+                        -NoEscape @('Properties')
                     $dscContent += $currentDSCBlock
                     Save-M365DSCPartialExport -Content $currentDSCBlock `
                         -FileName $Global:PartialExportFileName

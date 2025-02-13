@@ -357,8 +357,6 @@ function Export-TargetResource
                 }
 
                 $Result = $dscIRMAccess
-                $Result = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                    -Results $Result
                 $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                     -ConnectionMode $ConnectionMode `
                     -ModulePath $PSScriptRoot `

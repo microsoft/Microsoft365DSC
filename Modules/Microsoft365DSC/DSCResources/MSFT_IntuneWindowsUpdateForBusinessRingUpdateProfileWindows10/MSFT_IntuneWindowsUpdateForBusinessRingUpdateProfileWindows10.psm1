@@ -1138,8 +1138,6 @@ function Export-TargetResource
 
             $Script:exportedInstance = $config
             $Results = Get-TargetResource @Params
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
 
             if ($null -ne $Results.InstallationSchedule)
             {
@@ -1172,18 +1170,8 @@ function Export-TargetResource
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -Credential $Credential
-            if ($Results.InstallationSchedule)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'InstallationSchedule' -IsCIMArray:$False
-            }
-            if ($Results.Assignments)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Assignments' -IsCIMArray:$true
-            }
-            #removing trailing commas and semi colons between items of an array of cim instances added by Convert-DSCStringParamToVariable
-            $currentDSCBlock = $currentDSCBlock.replace( "    ,`r`n" , "    `r`n" )
-            $currentDSCBlock = $currentDSCBlock.replace( "`r`n;`r`n" , "`r`n" )
+                -Credential $Credential `
+                -NoEscape @('InstallationSchedule', 'Assignments')
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName

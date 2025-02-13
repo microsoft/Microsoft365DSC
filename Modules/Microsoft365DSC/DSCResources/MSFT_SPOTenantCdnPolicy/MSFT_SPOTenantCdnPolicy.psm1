@@ -385,11 +385,8 @@ function Export-TargetResource
 
         Write-Host "`r`n    |---[1/2] Public" -NoNewline
         $Results = Get-TargetResource @Params
-
         if ($Results -is [System.Collections.Hashtable] -and $Results.Count -gt 1)
         {
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
             $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
@@ -421,12 +418,10 @@ function Export-TargetResource
             Credential            = $Credential
         }
         Write-Host '    |---[2/2] Private' -NoNewline
-        $Results = Get-TargetResource @params
-
+        $Results = Get-TargetResource @Params
         if ($Results -is [System.Collections.Hashtable] -and $Results.Count -gt 1)
         {
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
+
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `

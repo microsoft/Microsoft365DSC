@@ -944,8 +944,6 @@ function Export-TargetResource
             }
 
             $Results = Get-TargetResource @Params
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
 
             if ($null -ne $Results.AccessReviewSettings)
             {
@@ -1083,29 +1081,8 @@ function Export-TargetResource
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -Credential $Credential
-
-            if ($null -ne $Results.AccessReviewSettings)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'AccessReviewSettings'
-                #$currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Reviewers'
-            }
-            if ($null -ne $Results.Questions )
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Questions' -IsCIMArray:$true
-            }
-            if ($null -ne $Results.RequestApprovalSettings)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'RequestApprovalSettings'
-            }
-            if ($null -ne $Results.RequestorSettings)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'RequestorSettings'
-            }
-            if ($null -ne $Results.CustomExtensionHandlers)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'CustomExtensionHandlers' -IsCIMArray:$true
-            }
+                -Credential $Credential `
+                -NoEscape @('AccessReviewSettings', 'Questions', 'RequestApprovalSettings', 'RequestorSettings', 'CustomExtensionHandlers')
 
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `

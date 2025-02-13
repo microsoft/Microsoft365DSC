@@ -389,6 +389,7 @@ function Test-TargetResource
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
+    $testTargetResource = $true
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
@@ -405,23 +406,30 @@ function Test-TargetResource
 
             if (-not $testResult)
             {
-                break
+                Write-Verbose "TestResult returned False for $source"
+                $testTargetResource = $false
             }
-
-            $ValuesToCheck.Remove($key) | Out-Null
+            else
+            {
+                $ValuesToCheck.Remove($key) | Out-Null
+            }
         }
     }
-    if ($testResult)
+
+    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
+
+    $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck $ValuesToCheck.Keys
+
+    if (-not $TestResult)
     {
-        $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
-            -Source $($MyInvocation.MyCommand.Source) `
-            -DesiredValues $PSBoundParameters `
-            -ValuesToCheck $ValuesToCheck.Keys
+        $testTargetResource = $false
     }
-
-    Write-Verbose -Message "Test-TargetResource returned $testResult"
-
-    return $testResult
+    Write-Verbose -Message "Test-TargetResource returned $testTargetResource"
+    return $testTargetResource
 }
 
 function Export-TargetResource
@@ -511,9 +519,6 @@ function Export-TargetResource
             }
 
             $Results = Get-TargetResource @Params
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
-
             if ($null -ne $Results.EndpointConfiguration)
             {
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
@@ -563,20 +568,8 @@ function Export-TargetResource
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -Credential $Credential
-
-            if ($Results.EndpointConfiguration)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'EndpointConfiguration' -IsCIMArray:$False
-            }
-            if ($Results.ClientConfiguration)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'ClientConfiguration' -IsCIMArray:$False
-            }
-            if ($Results.CallbackConfiguration)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'CallbackConfiguration' -IsCIMArray:$False
-            }
+                -Credential $Credential `
+                -NoEscape @('EndpointConfiguration', 'ClientConfiguration', 'CallbackConfiguration')
 
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `

@@ -668,15 +668,12 @@ function Export-TargetResource
         }
 
         $Results = Get-TargetResource @Params
-
         if ([System.String]::IsNullOrEmpty($Results.GrooveBlockOption))
         {
             $Results.Remove('GrooveBlockOption') | Out-Null
         }
 
         $dscContent = ''
-        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-            -Results $Results
         $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
             -ConnectionMode $ConnectionMode `
             -ModulePath $PSScriptRoot `

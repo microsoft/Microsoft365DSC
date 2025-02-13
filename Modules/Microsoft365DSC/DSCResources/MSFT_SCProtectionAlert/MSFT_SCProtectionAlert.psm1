@@ -672,8 +672,6 @@ function Export-TargetResource
             Write-Host "    |---[$i/$($totalAlerts)] $($alert.Name)" -NoNewline
             $Script:exportedInstance = $alert
             $Results = Get-TargetResource @PSBoundParameters -Name $Alert.Name
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `

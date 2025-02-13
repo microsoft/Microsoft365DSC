@@ -374,16 +374,13 @@ function Export-TargetResource
                     AccessTokens          = $AccessTokens
                 }
 
-                $Results = Get-TargetResource @params
-
+                $Results = Get-TargetResource @Params
                 if ($Results -is [System.Collections.Hashtable] -and $Results.Count -gt 1)
                 {
                     if ([System.String]::IsNullOrEmpty($Results.AuditFlags))
                     {
                         $Results.AuditFlags = 'None'
                     }
-                    $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                        -Results $Results
                     $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                         -ConnectionMode $ConnectionMode `
                         -ModulePath $PSScriptRoot `

@@ -582,8 +582,6 @@ function Export-TargetResource
             }
 
             $Results = Get-TargetResource @Params
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
 
             if ($null -ne $Results.ComplianceRecordingApplications)
             {
@@ -613,14 +611,8 @@ function Export-TargetResource
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -Credential $Credential
-            if ($Results.ComplianceRecordingApplications)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'ComplianceRecordingApplications' -IsCIMArray:$True
-                $currentDSCBlock = $currentDSCBlock.Replace('ComplianceRecordingApplications         = @("', 'ComplianceRecordingApplications         = @(')
-                $currentDSCBlock = $currentDSCBlock.Replace("            `",`"`r`n", '')
-
-            }
+                -Credential $Credential `
+                -NoEscape @('ComplianceRecordingApplications')
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName

@@ -99,7 +99,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Get-PowerAppTenantIsolationPolicy -MockWith {
+                Mock -CommandName Invoke-M365DSCPowerPlatformRESTWebRequest -MockWith {
                     return @{
                         properties = @{
                             tenantId       = '12345678-1234-1234-1234-123456789012'
@@ -120,7 +120,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should enable the isolation settings and create a rule in Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName 'Set-PowerAppTenantIsolationPolicy' -Exactly 1
+                Should -Invoke -CommandName 'Invoke-M365DSCPowerPlatformRESTWebRequest' -Exactly 1
             }
         }
 
@@ -137,10 +137,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     )
                     Credential       = $Credscredential
                 }
-
-                Mock -CommandName Set-PowerAppTenantIsolationPolicy -MockWith {
-                }
-
+                
                 Mock -CommandName Invoke-WebRequest -MockWith {
                     if ($Uri -match 'https://login.windows.net/([A-Za-z0-9.]*)/.well-known/openid-configuration')
                     {
@@ -154,7 +151,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Get-PowerAppTenantIsolationPolicy -MockWith {
+                Mock -CommandName Invoke-M365DSCPowerPlatformRESTWebRequest -MockWith {
                     return @{
                         properties = @{
                             tenantId       = '12345678-1234-1234-1234-123456789012'
@@ -199,10 +196,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential       = $Credscredential
                 }
 
-                Mock -CommandName Set-PowerAppTenantIsolationPolicy -MockWith {
-                    $global:M365DSCTenantId = $TenantIsolationPolicy.properties.allowedTenants[0].tenantId
-                }
-
                 Mock -CommandName Invoke-WebRequest -MockWith {
                     if ($Uri -match 'https://login.windows.net/([A-Za-z0-9.]*)/.well-known/openid-configuration')
                     {
@@ -216,7 +209,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Get-PowerAppTenantIsolationPolicy -MockWith {
+                Mock -CommandName Invoke-M365DSCPowerPlatformRESTWebRequest -MockWith {
                     return @{
                         properties = @{
                             tenantId       = '12345678-1234-1234-1234-123456789012'
@@ -249,8 +242,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $global:M365DSCTenantId = ''
             It 'Should enable the isolation settings and create a rule in Set method' {
                 Set-TargetResource @testParams
-                $global:M365DSCTenantId | Should -Be (New-HashFromTenantName -TenantName 'contoso.onmicrosoft.com')
-                Should -Invoke -CommandName 'Set-PowerAppTenantIsolationPolicy' -Exactly 1
+                Should -Invoke -CommandName 'Invoke-M365DSCPowerPlatformRESTWebRequest' -Exactly 1
             }
         }
 
@@ -267,11 +259,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     )
                     Credential       = $Credscredential
                 }
-
-                Mock -CommandName Set-PowerAppTenantIsolationPolicy -MockWith {
-                    $global:M365DSCTenantIds = $TenantIsolationPolicy.properties.allowedTenants.tenantId
-                }
-
+                
                 Mock -CommandName Invoke-WebRequest -MockWith {
                     if ($Uri -match 'https://login.windows.net/([A-Za-z0-9.]*)/.well-known/openid-configuration')
                     {
@@ -285,7 +273,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Get-PowerAppTenantIsolationPolicy -MockWith {
+                Mock -CommandName Invoke-M365DSCPowerPlatformRESTWebRequest -MockWith {
                     return @{
                         properties = @{
                             tenantId       = '12345678-1234-1234-1234-123456789012'
@@ -318,8 +306,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $global:M365DSCTenantIds = ''
             It 'Should add a rule in Set method' {
                 Set-TargetResource @testParams
-                $global:M365DSCTenantIds.Count | Should -Be 2
-                Should -Invoke -CommandName 'Set-PowerAppTenantIsolationPolicy' -Exactly 1
+                Should -Invoke -CommandName 'Invoke-M365DSCPowerPlatformRESTWebRequest' -Exactly 1
             }
         }
 
@@ -337,10 +324,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential       = $Credscredential
                 }
 
-                Mock -CommandName Set-PowerAppTenantIsolationPolicy -MockWith {
-                    $global:M365DSCTenantIds = $TenantIsolationPolicy.properties.allowedTenants.tenantId
-                }
-
                 Mock -CommandName Invoke-WebRequest -MockWith {
                     if ($Uri -match 'https://login.windows.net/([A-Za-z0-9.]*)/.well-known/openid-configuration')
                     {
@@ -354,7 +337,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Get-PowerAppTenantIsolationPolicy -MockWith {
+                Mock -CommandName Invoke-M365DSCPowerPlatformRESTWebRequest -MockWith {
                     return @{
                         properties = @{
                             tenantId       = '12345678-1234-1234-1234-123456789012'
@@ -399,10 +382,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential       = $Credscredential
                 }
 
-                Mock -CommandName Set-PowerAppTenantIsolationPolicy -MockWith {
-                    $global:M365DSCTenantIds = $TenantIsolationPolicy.properties.allowedTenants.tenantId
-                }
-
                 Mock -CommandName Invoke-WebRequest -MockWith {
                     if ($Uri -match 'https://login.windows.net/([A-Za-z0-9.]*)/.well-known/openid-configuration')
                     {
@@ -416,7 +395,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Get-PowerAppTenantIsolationPolicy -MockWith {
+                Mock -CommandName Invoke-M365DSCPowerPlatformRESTWebRequest -MockWith {
                     return @{
                         properties = @{
                             tenantId       = '12345678-1234-1234-1234-123456789012'
@@ -458,7 +437,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It 'Should remove a rule in Set method' {
                 Set-TargetResource @testParams
                 $global:M365DSCTenantIds.Count | Should -Be 1
-                Should -Invoke -CommandName 'Set-PowerAppTenantIsolationPolicy' -Exactly 1
+                Should -Invoke -CommandName 'Invoke-M365DSCPowerPlatformRESTWebRequest' -Exactly 1
             }
         }
 
@@ -476,10 +455,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential       = $Credscredential
                 }
 
-                Mock -CommandName Set-PowerAppTenantIsolationPolicy -MockWith {
-                    $global:M365DSCTenantIds = $TenantIsolationPolicy.properties.allowedTenants.tenantId
-                }
-
                 Mock -CommandName Invoke-WebRequest -MockWith {
                     if ($Uri -match 'https://login.windows.net/([A-Za-z0-9.]*)/.well-known/openid-configuration')
                     {
@@ -493,7 +468,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Get-PowerAppTenantIsolationPolicy -MockWith {
+                Mock -CommandName Invoke-M365DSCPowerPlatformRESTWebRequest -MockWith {
                     return @{
                         properties = @{
                             tenantId       = '12345678-1234-1234-1234-123456789012'
@@ -545,7 +520,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Get-PowerAppTenantIsolationPolicy -MockWith {
+                Mock -CommandName Invoke-M365DSCPowerPlatformRESTWebRequest -MockWith {
                     return @{
                         properties = @{
                             tenantId       = '12345678-1234-1234-1234-123456789012'

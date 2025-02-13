@@ -405,8 +405,6 @@ function Export-TargetResource
 
             $Script:exportedInstance = $Case
             $Results = Get-TargetResource @PSBoundParameters -Name $Case.Name
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
             $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
@@ -423,8 +421,6 @@ function Export-TargetResource
         {
             Write-Host "    GDPR: [$i/$($Cases.Count)] $($Case.Name)" -NoNewline
             $Results = Get-TargetResource @PSBoundParameters -Name $Case.Name
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `

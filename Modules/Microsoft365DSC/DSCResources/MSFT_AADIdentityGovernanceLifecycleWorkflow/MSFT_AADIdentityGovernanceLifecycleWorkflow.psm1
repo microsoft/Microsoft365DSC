@@ -521,9 +521,6 @@ function Export-TargetResource
             }
 
             $Results = Get-TargetResource @Params
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
-
             if ($null -ne $Results.Tasks)
             {
                 $complexMapping = @(
@@ -591,17 +588,9 @@ function Export-TargetResource
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -Credential $Credential
-            if ($null -ne $Results.Tasks)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                    -ParameterName 'Tasks' -IsCIMArray:$true
-            }
-            if ($null -ne $Results.ExecutionConditions)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                    -ParameterName 'ExecutionConditions' -IsCIMArray:$true
-            }
+                -Credential $Credential `
+                -NoEscape @('Tasks', 'ExecutionConditions')
+
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
@@ -690,54 +679,6 @@ function Get-M365DSCIdentityGovernanceTasks
     return $taskList
 }
 
-function Get-M365DSCIdentityGovernanceTasksAsString
-{
-    [CmdletBinding()]
-    [OutputType([System.String])]
-    param(
-        [Parameter(Mandatory = $true)]
-        [System.Collections.ArrayList]
-        $Tasks
-    )
-
-    $StringContent = [System.Text.StringBuilder]::new()
-    $StringContent.Append('@(') | Out-Null
-
-    foreach ($task in $Tasks)
-    {
-        $StringContent.Append("`n                MSFT_AADIdentityGovernanceTask {`r`n") | Out-Null
-        $StringContent.Append("                    DisplayName       = '" + $task.DisplayName + "'`r`n") | Out-Null
-        $StringContent.Append("                    Description       = '" + $task.Description.replace("'", "''") + "'`r`n") | Out-Null
-        $StringContent.Append("                    Category          = '" + $task.Category + "'`r`n") | Out-Null
-        $StringContent.Append('                    IsEnabled         = $' + $task.IsEnabled + "`r`n") | Out-Null
-        $StringContent.Append('                    ExecutionSequence = ' + $task.ExecutionSequence + "`r`n") | Out-Null
-        $StringContent.Append('                    ContinueOnError   = $' + $task.ContinueOnError + "`r`n") | Out-Null
-        $StringContent.Append("                    TaskDefinitionId   = '" + $task.TaskDefinitionId + "'`r`n") | Out-Null
-
-        if ($task.Arguments.Length -gt 0)
-        {
-            $StringContent.Append("                    Arguments         = @(`r`n") | Out-Null
-            foreach ($argument in $task.Arguments)
-            {
-                $StringContent.Append("                        MSFT_AADIdentityGovernanceTaskArguments {`r`n") | Out-Null
-                $StringContent.Append("                            Name  = '" + $argument.Name + "'`r`n") | Out-Null
-                $StringContent.Append("                            Value = '" + $argument.Value + "'`r`n") | Out-Null
-                $StringContent.Append("                        }`r`n") | Out-Null
-            }
-            $StringContent.Append("                    )`r`n") | Out-Null
-        }
-        else
-        {
-            $StringContent.Append("                    Arguments         = @()`r`n") | Out-Null
-        }
-
-        $StringContent.Append("                }`r`n") | Out-Null
-    }
-
-    $StringContent.Append('            )') | Out-Null
-    return $StringContent.ToString()
-}
-
 function Get-M365DSCIdentityGovernanceWorkflowExecutionConditions
 {
     [CmdletBinding()]
@@ -768,51 +709,6 @@ function Get-M365DSCIdentityGovernanceWorkflowExecutionConditions
     }
 
     return $executionConditionsResult
-}
-
-function Get-M365DSCIdentityGovernanceWorkflowExecutionConditionsAsString
-{
-    [CmdletBinding()]
-    [OutputType([System.String])]
-    param (
-        [Parameter(Mandatory = $true)]
-        [hashtable] $ExecutionConditions
-    )
-
-    $StringContent = [System.Text.StringBuilder]::new()
-
-    # Start of execution conditions
-    $StringContent.Append("MSFT_IdentityGovernanceWorkflowExecutionConditions {`r`n") | Out-Null
-
-    # Scope section
-    if ($null -ne $ExecutionConditions.ScopeValue)
-    {
-        $StringContent.Append("                ScopeValue = MSFT_IdentityGovernanceScope {`r`n") | Out-Null
-        $StringContent.Append("                    Rule = '" + $ExecutionConditions.ScopeValue.Rule.replace("'", "''") + "'`r`n") | Out-Null
-        $StringContent.Append("                    ODataType = '" + $ExecutionConditions.ScopeValue.ODataType + "'`r`n") | Out-Null
-        $StringContent.Append("                }`r`n") | Out-Null
-    }
-
-    # Trigger section
-    if ($null -ne $ExecutionConditions.TriggerValue)
-    {
-        $StringContent.Append("                TriggerValue = MSFT_IdentityGovernanceTrigger {`r`n") | Out-Null
-        $StringContent.Append('                    OffsetInDays = ' + $ExecutionConditions.TriggerValue.OffsetInDays + "`r`n") | Out-Null
-        $StringContent.Append("                    TimeBasedAttribute = '" + $ExecutionConditions.TriggerValue.TimeBasedAttribute + "'`r`n") | Out-Null
-        $StringContent.Append("                    ODataType = '" + $ExecutionConditions.TriggerValue.OdataType + "'`r`n") | Out-Null
-        $StringContent.Append("                }`r`n") | Out-Null
-    }
-
-    # OdataType for executionConditions
-    if ($null -ne $ExecutionConditions.ODataType)
-    {
-        $StringContent.Append("                ODataType = '" + $ExecutionConditions.ODataType + "'`r`n") | Out-Null
-    }
-
-    # End of execution conditions
-    $StringContent.Append('            }') | Out-Null
-
-    return $StringContent.ToString()
 }
 
 Export-ModuleMember -Function *-TargetResource

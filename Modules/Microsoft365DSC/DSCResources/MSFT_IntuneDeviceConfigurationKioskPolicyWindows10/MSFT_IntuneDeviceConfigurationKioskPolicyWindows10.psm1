@@ -818,8 +818,6 @@ function Export-TargetResource
 
             $Script:exportedInstance = $config
             $Results = Get-TargetResource @Params
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
             if ($null -ne $Results.KioskProfiles)
             {
                 $complexMapping = @(
@@ -898,19 +896,8 @@ function Export-TargetResource
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -Credential $Credential
-            if ($Results.KioskProfiles)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'KioskProfiles' -IsCIMArray:$True
-            }
-            if ($Results.WindowsKioskForceUpdateSchedule)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'WindowsKioskForceUpdateSchedule' -IsCIMArray:$False
-            }
-            if ($Results.Assignments)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Assignments' -IsCIMArray:$true
-            }
+                -Credential $Credential `
+                -NoEscape @('KioskProfiles', 'WindowsKioskForceUpdateSchedule', 'Assignments')
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName

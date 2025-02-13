@@ -43,12 +43,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     TenantId = 'xxxxxxx'
                 }
             }
-            Mock -commandName Get-AdminDlpPolicy -MockWith {
-                return @{
-                    PolicyName = 'DSCPolicy'
-                    DisplayName = 'DSCPolicy'
-                }
-            }
 
             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
@@ -78,33 +72,71 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential          = $Credential;
                 }
 
-                Mock -CommandName Get-PowerAppPolicyUrlPatterns -MockWith {
-                    return @{
-                        rules = @(
-                            @{
-                                pattern = 'https://contoso.com'
-                                customConnectorRuleClassification = 'General'
-                                order = 1
-                            },
-                            @{
-                                pattern = 'https://fabrikam.com'
-                                customConnectorRuleClassification = 'General'
-                                order = 2
-                            }
-                        )
+                $Global:count = 1
+                Mock -CommandName Invoke-M365DSCPowerPlatformRESTWebRequest -MockWith {
+                    if ($Global:count -eq 1)
+                    {
+                        $Global:count++
+                        return @{
+                            value = @(
+                                @{
+                                    PolicyName  = "MyPolicy"
+                                    properties = @{
+                                        displayName = "DSCPolicy"
+                                        definition = @{
+                                            constraints = @{
+                                                environmentFilter1 = @{
+                                                    parameters = @{
+                                                        environments = @{
+                                                            name = 'Default-xxxxx-xxxxx-xxxxx-xxxxx-xxxxx'
+                                                        }
+                                                        filterType = 'include'
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            )
+                        }
+                    }
+                    elseif ($Global:count -eq 2)
+                    {
+                        $Global:count++
+                        return @{
+                            rules = @(
+                                @{
+                                    pattern = 'https://contoso.com'
+                                    customConnectorRuleClassification = 'General'
+                                    order = 1
+                                },
+                                @{
+                                    pattern = 'https://fabrikam.com'
+                                    customConnectorRuleClassification = 'General'
+                                    order = 2
+                                }
+                            )
+                        }
+                    }
+                    else
+                    {
+                        return
                     }
                 }
             }
             It 'Should return Values from the Get method' {
+                $Global:count = 1
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
             It 'Should return false from the Test method' {
+                $Global:count = 1
                 Test-TargetResource @testParams | Should -Be $false
             }
 
             It 'Should remove the instance from the Set method' {
+                $Global:count = 1
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Remove-PowerAppPolicyUrlPatterns -Exactly 1
+                Should -Invoke -CommandName Invoke-M365DSCPowerPlatformRESTWebRequest -Exactly 2
             }
         }
 
@@ -129,25 +161,61 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential          = $Credential;
                 }
 
-                Mock -CommandName Get-PowerAppPolicyUrlPatterns -MockWith {
-                    return @{
-                        rules = @(
-                            @{
-                                pattern = 'https://contoso.com'
-                                customConnectorRuleClassification = 'General'
-                                order = 1
-                            },
-                            @{
-                                pattern = 'https://fabrikam.com'
+                $Global:count = 1
+                Mock -CommandName Invoke-M365DSCPowerPlatformRESTWebRequest -MockWith {
+                    if ($Global:count -eq 1)
+                    {
+                        $Global:count++
+                        return @{
+                            value = @(
+                                @{
+                                    PolicyName  = "MyPolicy"
+                                    properties = @{
+                                        displayName = "DSCPolicy"
+                                        definition = @{
+                                            constraints = @{
+                                                environmentFilter1 = @{
+                                                    parameters = @{
+                                                        environments = @{
+                                                            name = 'Default-xxxxx-xxxxx-xxxxx-xxxxx-xxxxx'
+                                                        }
+                                                        filterType = 'include'
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            )
+                        }
+                    }
+                    elseif ($Global:count -eq 2)
+                    {
+                        $Global:count++
+                        return @{
+                            rules = @(
+                                @{
+                                    pattern = 'https://contoso.com'
+                                    customConnectorRuleClassification = 'General'
+                                    order = 1
+                                },
+                                @{
+                                    pattern = 'https://fabrikam.com'
                                 customConnectorRuleClassification = 'General'
                                 order = 2
-                            }
-                        )
+                                }
+                            )
+                        }
+                    }
+                    else
+                    {
+                        return
                     }
                 }
             }
 
             It 'Should return true from the Test method' {
+                $Global:count = 1
                 Test-TargetResource @testParams | Should -Be $true
             }
         }
@@ -173,35 +241,73 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential          = $Credential;
                 }
 
-                Mock -CommandName Get-PowerAppPolicyUrlPatterns -MockWith {
-                    return @{
-                        rules = @(
-                            @{
-                                pattern = 'https://contoso.com'
-                                customConnectorRuleClassification = 'General'
-                                order = 1
-                            },
-                            @{
-                                pattern = 'https://fabrikam.com'
+                $Global:count = 1
+                Mock -CommandName Invoke-M365DSCPowerPlatformRESTWebRequest -MockWith {
+                    if ($Global:count -eq 1)
+                    {
+                        $Global:count++
+                        return @{
+                            value = @(
+                                @{
+                                    PolicyName  = "MyPolicy"
+                                    properties = @{
+                                        displayName = "DSCPolicy"
+                                        definition = @{
+                                            constraints = @{
+                                                environmentFilter1 = @{
+                                                    parameters = @{
+                                                        environments = @{
+                                                            name = 'Default-xxxxx-xxxxx-xxxxx-xxxxx-xxxxx'
+                                                        }
+                                                        filterType = 'include'
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            )
+                        }
+                    }
+                    elseif ($Global:count -eq 2)
+                    {
+                        $Global:count++
+                        return @{
+                            rules = @(
+                                @{
+                                    pattern = 'https://contoso.com'
+                                    customConnectorRuleClassification = 'General'
+                                    order = 1
+                                },
+                                @{
+                                    pattern = 'https://fabrikam.com'
                                 customConnectorRuleClassification = 'General'
                                 order = 2
-                            }
-                        )
+                                }
+                            )
+                        }
+                    }
+                    else
+                    {
+                        return
                     }
                 }
             }
 
             It 'Should return Values from the Get method' {
+                $Global:count = 1
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
             It 'Should return false from the Test method' {
+                $Global:count = 1
                 Test-TargetResource @testParams | Should -Be $false
             }
 
             It 'Should call the Set method' {
+                $Global:count = 1
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName New-PowerAppPolicyUrlPatterns -Exactly 1
+                Should -Invoke -CommandName Invoke-M365DSCPowerPlatformRESTWebRequest -Exactly 2
             }
         }
 
@@ -213,24 +319,65 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential  = $Credential;
                 }
 
-                Mock -CommandName Get-PowerAppPolicyUrlPatterns -MockWith {
-                    return @{
-                        rules = @(
-                            @{
-                                pattern = 'https://contoso.com'
-                                customConnectorRuleClassification = 'General'
-                                order = 1
-                            },
-                            @{
-                                pattern = 'https://fabrikam.com'
+                $Global:count = 1
+                Mock -CommandName Invoke-M365DSCPowerPlatformRESTWebRequest -MockWith {
+                    if ($Global:count -eq 1 -or $Global:count -eq 2)
+                    {
+                        $Global:count++
+                        return @{
+                            value = @(
+                                @{
+                                    PolicyName  = "MyPolicy"
+                                    properties = @{
+                                        displayName = "DSCPolicy"
+                                        definition = @{
+                                            constraints = @{
+                                                environmentFilter1 = @{
+                                                    parameters = @{
+                                                        environments = @{
+                                                            name = 'Default-xxxxx-xxxxx-xxxxx-xxxxx-xxxxx'
+                                                        }
+                                                        filterType = 'include'
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            )
+                        }
+                    }
+                    elseif ($Global:count -eq 3)
+                    {
+                        $Global:count++
+                        return @{
+                            rules = @(
+                                @{
+                                    pattern = 'https://contoso.com'
+                                    customConnectorRuleClassification = 'General'
+                                    order = 1
+                                },
+                                @{
+                                    pattern = 'https://fabrikam.com'
                                 customConnectorRuleClassification = 'General'
                                 order = 2
-                            }
-                        )
+                                }
+                            )
+                        }
+                    }
+                    else
+                    {
+                        return
+                    }
+                }
+                Mock -CommandName Get-MgContext -MockWith {
+                    return @{
+                        tenantId = '1234'
                     }
                 }
             }
             It 'Should Reverse Engineer resource from the Export method' {
+                $Global:count = 1
                 $result = Export-TargetResource @testParams
                 $result | Should -Not -BeNullOrEmpty
             }

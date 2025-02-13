@@ -326,6 +326,13 @@ function Get-TargetResource
             KeyCredentials                     = $complexKeyCredentials
             PasswordCredentials                = $complexPasswordCredentials
             Ensure                             = 'Present'
+            Credential                         = $Credential
+            ApplicationId                      = $ApplicationId
+            ApplicationSecret                  = $ApplicationSecret
+            TenantId                           = $TenantId
+            CertificateThumbprint              = $CertificateThumbprint
+            Managedidentity                    = $ManagedIdentity.IsPresent
+            AccessTokens                       = $AccessTokens
         }
         Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
         return $result
@@ -601,6 +608,15 @@ function Set-TargetResource
         {
             [Array]$currentPrincipals = $currentAADServicePrincipal.AppRoleAssignedTo.Identity
             [Array]$desiredPrincipals = $AppRoleAssignedTo.Identity
+
+            if ($null -eq $currentPrincipals)
+            {
+                $currentPrincipals = @()
+            }
+            if ($null -eq $desiredPrincipals)
+            {
+                $desiredPrincipals = @()
+            }
 
             [Array]$differences = Compare-Object -ReferenceObject $currentPrincipals -DifferenceObject $desiredPrincipals
             [Array]$membersToAdd = $differences | Where-Object -FilterScript { $_.SideIndicator -eq '=>' }
@@ -1015,11 +1031,8 @@ function Export-TargetResource
             }
             $Script:exportedInstance = $AADServicePrincipal
             $Results = Get-TargetResource @Params
-
             if ($Results.Ensure -eq 'Present')
             {
-                $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                    -Results $Results
                 if ($Results.AppRoleAssignedTo.Count -gt 0)
                 {
                     $Results.AppRoleAssignedTo = Get-M365DSCAzureADServicePrincipalAssignmentAsString -Assignments $Results.AppRoleAssignedTo
@@ -1064,34 +1077,8 @@ function Export-TargetResource
                     -ConnectionMode $ConnectionMode `
                     -ModulePath $PSScriptRoot `
                     -Results $Results `
-                    -Credential $Credential
-                if ($null -ne $Results.AppRoleAssignedTo)
-                {
-                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                        -ParameterName 'AppRoleAssignedTo'
-                }
-                if ($null -ne $Results.DelegatedPermissionClassifications)
-                {
-                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                        -ParameterName 'DelegatedPermissionClassifications'
-                }
-                if ($null -ne $Results.KeyCredentials)
-                {
-                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                        -ParameterName 'KeyCredentials' -IsCIMArray:$True
-                }
-
-                if ($null -ne $Results.PasswordCredentials)
-                {
-                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                        -ParameterName 'PasswordCredentials' -IsCIMArray:$True
-                }
-
-                if ($null -ne $Results.CustomSecurityAttributes)
-                {
-                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                        -ParameterName 'CustomSecurityAttributes'
-                }
+                    -Credential $Credential `
+                    -NoEscape @('AppRoleAssignedTo', 'DelegatedPermissionClassifications', 'KeyCredentials', 'PasswordCredentials', 'CustomSecurityAttributes')
 
                 $dscContent += $currentDSCBlock
                 Save-M365DSCPartialExport -Content $currentDSCBlock `

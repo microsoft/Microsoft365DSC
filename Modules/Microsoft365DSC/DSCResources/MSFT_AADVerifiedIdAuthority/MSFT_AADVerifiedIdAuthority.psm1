@@ -450,8 +450,6 @@ function Export-TargetResource
             $Results = Get-TargetResource @Params
             if ($Results.Ensure -eq 'Present')
             {
-                $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                    -Results $Results
 
                 if ($null -ne $Results.KeyVaultMetadata)
                 {
@@ -477,17 +475,12 @@ function Export-TargetResource
                     }
                 }
 
-
                 $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                     -ConnectionMode $ConnectionMode `
                     -ModulePath $PSScriptRoot `
                     -Results $Results `
-                    -Credential $Credential
-
-                if ($Results.KeyVaultMetadata)
-                {
-                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'KeyVaultMetadata' -IsCIMArray:$False
-                }
+                    -Credential $Credential `
+                    -NoEscape @('KeyVaultMetadata')
 
                 $dscContent.Append($currentDSCBlock) | Out-Null
                 Save-M365DSCPartialExport -Content $currentDSCBlock `

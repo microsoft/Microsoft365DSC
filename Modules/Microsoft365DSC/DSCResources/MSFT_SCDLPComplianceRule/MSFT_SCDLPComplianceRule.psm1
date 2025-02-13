@@ -408,7 +408,14 @@ function Get-TargetResource
                 }
                 elseif ($null -ne $ruleObject.Condition.SubConditions[$index].Value.Groups.Sensitivetypes)
                 {
-                    $ruleobject.Condition.SubConditions[$index].Value.Groups.Sensitivetypes = @($ruleobject.Condition.SubConditions[$index].Value.Groups.Sensitivetypes | Select-Object * -ExcludeProperty Id)
+                    $sensitiveTypesValue = $ruleobject.Condition.SubConditions[$index].Value.Groups.Sensitivetypes
+                    foreach ($stype in $sensitiveTypesValue)
+                    {
+                        if ($null -ne $stype.Id)
+                        {
+                            $stype.Id = $null
+                        }
+                    }
                 }
             }
 
@@ -923,13 +930,8 @@ function Set-TargetResource
         $CreationParams.Remove('ApplicationSecret') | Out-Null
         $CreationParams.Remove('AccessTokens') | Out-Null
 
-        $NewruleParam = @{
-            Name         = $CreationParams.Name
-            Policy       = $CreationParams.Policy
-            AdvancedRule = $CreationParams.AdvancedRule
-        }
         Write-Verbose -Message "Calling New-DLPComplianceRule with Values: $(Convert-M365DscHashtableToString -Hashtable $CreationParams)"
-        New-DLPComplianceRule @NewruleParam
+        New-DLPComplianceRule @CreationParams -Confirm:$false
     }
     elseif (('Present' -eq $Ensure) -and ('Present' -eq $CurrentRule.Ensure))
     {
@@ -996,7 +998,7 @@ function Set-TargetResource
         $UpdateParams.Remove('AccessTokens') | Out-Null
 
         Write-Verbose "Updating Rule with values: $(Convert-M365DscHashtableToString -Hashtable $UpdateParams)"
-        Set-DLPComplianceRule @UpdateParams
+        Set-DLPComplianceRule @UpdateParams -Confirm:$false
     }
     elseif (('Absent' -eq $Ensure) -and ('Present' -eq $CurrentRule.Ensure))
     {
@@ -1390,7 +1392,6 @@ function Test-TargetResource
     $ValuesToCheck.Remove('ContentContainsSensitiveInformation') | Out-Null
     $ValuesToCheck.Remove('ExceptIfContentContainsSensitiveInformation') | Out-Null
 
-
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
@@ -1517,22 +1518,13 @@ function Export-TargetResource
                 }
             }
 
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -Credential $Credential
+                -Credential $Credential `
+                -NoEscape @('ContentContainsSensitiveInformation', 'ExceptIfContentContainsSensitiveInformation')
 
-            if ($null -ne $Results.ContentContainsSensitiveInformation )
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'ContentContainsSensitiveInformation' -IsCIMArray $IsSitCIMArray
-            }
-            if ($null -ne $Results.ExceptIfContentContainsSensitiveInformation )
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'ExceptIfContentContainsSensitiveInformation' -IsCIMArray $IsCIMArray
-            }
             $dscContent += $currentDSCBlock
 
             Save-M365DSCPartialExport -Content $currentDSCBlock `

@@ -173,7 +173,6 @@ function Test-TargetResource
             ApplicationId         = $PSBoundParameters.ApplicationId
             TenantId              = $PSBoundParameters.TenantId
             CertificateThumbprint = $PSBoundParameters.CertificateThumbprint
-            ManagedIdentity       = $PSBoundParameters.ManagedIdentity
         }
 
         if ($null -ne $PSBoundParameters.ApplicationSecret)
@@ -188,6 +187,20 @@ function Test-TargetResource
         Write-Verbose -Message "Importing module from Path {$($module)}"
         Import-Module $module -Force -Function 'Export-TargetResource' | Out-Null
         $cmdName = "MSFT_$ResourceTypeName\Export-TargetResource"
+
+        # Ensure the referenced resource supports ManagedIdentity before adding the parameter.
+        try
+        {
+            $exportFunctionInfo = (Get-Command -Module "MSFT_$ResourceTypeName") | Where-Object -FilterScript {$_.Name -eq 'Export-TargetResource'}
+            if ($exportFunctionInfo.Parameters.Name -Contains 'ManagedIdentity')
+            {
+                $params.Add('ManagedIdentity', $PSBoundParameters.ManagedIdentity)
+            }
+        }
+        catch
+        {
+            Write-Verbose $_
+        }
 
         [Array]$instances = &$cmdName @params
 
@@ -239,73 +252,22 @@ function Test-TargetResource
         [void]$message.AppendLine("  <ResourceName>$ResourceTypeName</ResourceName>")
         [void]$message.AppendLine("  <RuleDefinition>$RuleDefinition</RuleDefinition>")
 
-        if ($instances.Length -eq 0)
+        if (-not [System.String]::IsNullOrEmpty($AfterRuleCountQuery))
         {
-            [array]$invalidInstances = $DSCConvertedInstances.ResourceInstanceName
-            [void]$message.AppendLine('  <AfterRuleCount></AfterRuleCount>')
-            [void]$message.AppendLine('  <Match></Match>')
-        }
-        else
-        {
-            if (-not [System.String]::IsNullOrEmpty($AfterRuleCountQuery))
+            [void]$message.AppendLine('  <AfterRuleCount>')
+            [void]$message.AppendLine("    <Query>$AfterRuleCountQuery</Query>")
+
+            Write-Verbose -Message 'Checking the After Rule Count Query'
+            $afterRuleCountQueryString = "`$instances.Length $AfterRuleCountQuery"
+            $afterRuleCountQueryBlock = [Scriptblock]::Create($afterRuleCountQueryString)
+            $result = [Boolean](Invoke-Command -ScriptBlock $afterRuleCountQueryBlock)
+            [array]$validInstances = $instances.ResourceInstanceName
+            [array]$invalidInstances = $DSCConvertedInstances.ResourceInstanceName | Where-Object -FilterScript { $_ -notin $validInstances }
+
+            if (-not $result)
             {
-                [void]$message.AppendLine('  <AfterRuleCount>')
-                [void]$message.AppendLine("    <Query>$AfterRuleCountQuery</Query>")
-
-                Write-Verbose -Message 'Checking the After Rule Count Query'
-                $afterRuleCountQueryString = "`$instances.Length $AfterRuleCountQuery"
-                $afterRuleCountQueryBlock = [Scriptblock]::Create($afterRuleCountQueryString)
-                $result = [Boolean](Invoke-Command -ScriptBlock $afterRuleCountQueryBlock)
-                [array]$validInstances = $instances.ResourceInstanceName
-                [array]$invalidInstances = $DSCConvertedInstances.ResourceInstanceName | Where-Object -FilterScript { $_ -notin $validInstances }
-
-                if (-not $result)
-                {
-                    [void]$message.AppendLine('    <MetQuery>False</MetQuery>')
-                    [void]$message.AppendLine('  </AfterRuleCount>')
-                    if ($validInstances.Count -gt 0)
-                    {
-                        [void]$message.AppendLine('  <Match>')
-                        foreach ($validInstance in $validInstances)
-                        {
-                            [void]$message.AppendLine("    <ResourceInstanceName>[$ResourceTypeName]$validInstance</ResourceInstanceName>")
-                        }
-                        [void]$message.AppendLine('  </Match>')
-                    }
-                    else
-                    {
-                        [void]$message.AppendLine('  <Match></Match>')
-                    }
-                }
-                else
-                {
-                    [void]$message.AppendLine('    <MetQuery>True</MetQuery>')
-                    [void]$message.AppendLine('  </AfterRuleCount>')
-                    [void]$message.AppendLine('  <Match>')
-                    foreach ($validInstance in $validInstances)
-                    {
-                        [void]$message.AppendLine("    <ResourceInstanceName>[$ResourceTypeName]$validInstance</ResourceInstanceName>")
-                    }
-                    [void]$message.AppendLine('  </Match>')
-                }
-            }
-            else
-            {
-                [void]$message.AppendLine('  <AfterRuleCount></AfterRuleCount>')
-
-                $compareInstances = @()
-                $compareInstances += Compare-Object -ReferenceObject $DSCConvertedInstances.ResourceInstanceName -DifferenceObject $instances.ResourceInstanceName -IncludeEqual
-                if ($compareInstances.Count -gt 0)
-                {
-                    [array]$validInstances = $($compareInstances | Where-Object -FilterScript { $_.SideIndicator -eq '==' }).InputObject
-                    [array]$invalidInstances = $($compareInstances | Where-Object -FilterScript { $_.SideIndicator -eq '<=' }).InputObject
-                }
-                else
-                {
-                    [array]$validInstances = @()
-                    [array]$invalidInstances = [array]$DSCConvertedInstances.ResourceInstanceName
-                }
-
+                [void]$message.AppendLine('    <MetQuery>False</MetQuery>')
+                [void]$message.AppendLine('  </AfterRuleCount>')
                 if ($validInstances.Count -gt 0)
                 {
                     [void]$message.AppendLine('  <Match>')
@@ -319,6 +281,52 @@ function Test-TargetResource
                 {
                     [void]$message.AppendLine('  <Match></Match>')
                 }
+            }
+            else
+            {
+                [void]$message.AppendLine('    <MetQuery>True</MetQuery>')
+                [void]$message.AppendLine('  </AfterRuleCount>')
+                [void]$message.AppendLine('  <Match>')
+                foreach ($validInstance in $validInstances)
+                {
+                    [void]$message.AppendLine("    <ResourceInstanceName>[$ResourceTypeName]$validInstance</ResourceInstanceName>")
+                }
+                [void]$message.AppendLine('  </Match>')
+            }
+        }
+        else
+        {
+            [void]$message.AppendLine('  <AfterRuleCount></AfterRuleCount>')
+
+            $compareInstances = @()
+            if ($DSCConvertedInstances.Length -gt 0)
+            {
+                $compareInstances += Compare-Object -ReferenceObject $DSCConvertedInstances.ResourceInstanceName -DifferenceObject $instances.ResourceInstanceName -IncludeEqual
+            }
+
+            if ($compareInstances.Count -gt 0)
+            {
+                [array]$validInstances = $($compareInstances | Where-Object -FilterScript { $_.SideIndicator -eq '==' }).InputObject
+                [array]$invalidInstances = $($compareInstances | Where-Object -FilterScript { $_.SideIndicator -eq '<=' }).InputObject
+            }
+            else
+            {
+                [array]$validInstances = @()
+                [array]$invalidInstances = [array]$DSCConvertedInstances.ResourceInstanceName
+            }
+
+            if ($validInstances.Count -gt 0)
+            {
+                [void]$message.AppendLine('  <Match>')
+                foreach ($validInstance in $validInstances)
+                {
+                    [void]$message.AppendLine("    <ResourceInstanceName>[$ResourceTypeName]$validInstance</ResourceInstanceName>")
+                }
+                [void]$message.AppendLine('  </Match>')
+            }
+            else
+            {
+                [void]$message.AppendLine('  <Match></Match>')
             }
         }
 

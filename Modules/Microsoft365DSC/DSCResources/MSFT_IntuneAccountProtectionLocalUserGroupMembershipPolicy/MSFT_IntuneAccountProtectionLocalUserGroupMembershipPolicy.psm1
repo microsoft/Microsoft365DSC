@@ -605,37 +605,12 @@ function Export-TargetResource
                 }
             }
 
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
-
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -Credential $Credential
-
-
-            if ($Results.LocalUserGroupCollection)
-            {
-                $isCIMArray = $false
-                if ($Results.LocalUserGroupCollection.getType().Fullname -like '*[[\]]')
-                {
-                    $isCIMArray = $true
-                }
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'LocalUserGroupCollection' -IsCIMArray:$isCIMArray
-            }
-
-            if ($Results.Assignments)
-            {
-                $isCIMArray = $false
-                if ($Results.Assignments.getType().Fullname -like '*[[\]]')
-                {
-                    $isCIMArray = $true
-                }
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Assignments' -IsCIMArray:$isCIMArray
-            }
-
-            $currentDSCBlock = $currentDSCBlock.Replace("`r`n            `");", "`r`n            );")
+                -Credential $Credential `
+                -NoEscape @('LocalUserGroupCollection', 'Assignments')
 
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `

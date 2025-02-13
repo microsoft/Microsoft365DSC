@@ -421,7 +421,6 @@ function Export-TargetResource
             }
             $Script:exportedInstance = $AADPolicy
             $Results = Get-TargetResource @Params
-
             # Fix quotes inside the Definition's JSON;
             $NewDefinition = @()
             foreach ($item in $Results.Definition)
@@ -433,8 +432,6 @@ function Export-TargetResource
 
             if ($Results.Ensure -eq 'Present')
             {
-                $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                    -Results $Results
                 $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                     -ConnectionMode $ConnectionMode `
                     -ModulePath $PSScriptRoot `

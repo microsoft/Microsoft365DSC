@@ -309,9 +309,7 @@ function Export-TargetResource
             Managedidentity       = $ManagedIdentity.IsPresent
             AccessTokens          = $AccessTokens
         }
-        $Results = Get-TargetResource @params
-        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-            -Results $Results
+        $Results = Get-TargetResource @Params
 
         $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
             -ConnectionMode $ConnectionMode `

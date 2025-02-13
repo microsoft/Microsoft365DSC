@@ -497,8 +497,6 @@ function Export-TargetResource
                 }
 
                 $Results = Get-TargetResource @Params
-                $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                    -Results $Results
 
                 if ($Results.Notification)
                 {
@@ -528,26 +526,8 @@ function Export-TargetResource
                     -ConnectionMode $ConnectionMode `
                     -ModulePath $PSScriptRoot `
                     -Results $Results `
-                    -Credential $Credential
-
-                if ($Results.Notification)
-                {
-                    $isCIMArray = $false
-                    if ($Results.Notification.getType().Fullname -like '*[[\]]')
-                    {
-                        $isCIMArray = $true
-                    }
-                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Notification' -IsCIMArray:$isCIMArray
-                }
-                if ($Results.Schedule)
-                {
-                    $isCIMArray = $false
-                    if ($Results.Schedule.getType().Fullname -like '*[[\]]')
-                    {
-                        $isCIMArray = $true
-                    }
-                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Schedule' -IsCIMArray:$isCIMArray
-                }
+                    -Credential $Credential `
+                    -NoEscape @('Notification', 'Schedule')
                 $dscContent += $currentDSCBlock
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
                     -FileName $Global:PartialExportFileName

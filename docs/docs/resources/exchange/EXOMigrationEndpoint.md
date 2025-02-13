@@ -9,7 +9,7 @@
 | **AppID** | Write | String | The Application ID used for authentication. | |
 | **AppSecretKeyVaultUrl** | Write | String | The URL of the Key Vault that stores the application secret. | |
 | **Authentication** | Write | String | The authentication method for the migration endpoint. | |
-| **EndpointType** | Write | String | The type of migration endpoint. | `IMAP` |
+| **EndpointType** | Write | String | The type of migration endpoint. | `IMAP`, `ExchangeRemoteMove` |
 | **ExchangeServer** | Write | String | The Exchange Server address for the migration endpoint. | |
 | **MailboxPermission** | Write | String | The mailbox permission for the migration endpoint. | |
 | **MaxConcurrentIncrementalSyncs** | Write | String | The maximum number of concurrent incremental syncs. | |

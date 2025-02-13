@@ -40,6 +40,7 @@
 | **DisableHelpSupportCopilot** | Write | Boolean | TBD | |
 | **DisableSurveyScreenshots** | Write | Boolean | TBD | |
 | **WalkMeOptOut** | Write | Boolean | When set to true this will disable the Walk Me guidance. | |
+| **useSupportBingSearchByAllUsers** | Write | Boolean | TBD | |
 | **DisableNPSCommentsReachout** | Write | Boolean | When set to true this will disable the NPS Comments Reachout. | |
 | **DisableNewsletterSendout** | Write | Boolean | When set to true this will disable the monthly newsletters. | |
 | **DisableEnvironmentCreationByNonAdminUsers** | Write | Boolean | When set to true this will disable production environment creation by non-admin users. | |

@@ -519,8 +519,6 @@ function Export-TargetResource
 
                 $Results = Get-TargetResource @Params
 
-                $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                    -Results $Results
 
                 if ($null -ne $Results.expirationRule)
                 {
@@ -667,34 +665,9 @@ function Export-TargetResource
                     -ConnectionMode $ConnectionMode `
                     -ModulePath $PSScriptRoot `
                     -Results $Results `
-                    -Credential $Credential
+                    -Credential $Credential `
+                    -NoEscape @('expirationRule', 'notificationRule', 'enablementRule', 'approvalRule', 'authenticationContextRule')
 
-                if ($Results.expirationRule)
-                {
-                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'expirationRule' -IsCIMArray:$false
-                }
-
-
-                if ($Results.notificationRule)
-                {
-                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'notificationRule' -IsCIMArray:$false
-                }
-
-
-                if ($Results.enablementRule)
-                {
-                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'enablementRule' -IsCIMArray:$false
-                }
-
-                if ($Results.approvalRule)
-                {
-                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'approvalRule' -IsCIMArray:$false
-                }
-
-                if ($Results.authenticationContextRule)
-                {
-                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'authenticationContextRule' -IsCIMArray:$false
-                }
                 $dscContent.Append($currentDSCBlock) | Out-Null
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
                     -FileName $Global:PartialExportFileName

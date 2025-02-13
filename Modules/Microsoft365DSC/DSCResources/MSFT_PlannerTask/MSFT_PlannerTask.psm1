@@ -757,8 +757,7 @@ function Export-TargetResource
                         {
                             $result.Remove('AssignedUsers') | Out-Null
                         }
-                        $result = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                            -Results $Result
+
                         if ($result.Attachments.Length -gt 0)
                         {
                             $result.Attachments = Convert-M365DSCPlannerTaskAssignmentToCIMArray -Attachments $result.Attachments
@@ -788,18 +787,8 @@ function Export-TargetResource
                             -ConnectionMode $ConnectionMode `
                             -ModulePath $PSScriptRoot `
                             -Results $result `
-                            -Credential $Credential
-
-                        if ($result.Attachments.Length -gt 0)
-                        {
-                            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                                -ParameterName 'Attachments'
-                        }
-                        if ($result.Checklist.Length -gt 0)
-                        {
-                            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                                -ParameterName 'Checklist'
-                        }
+                            -Credential $Credential `
+                            -NoEscape @('Attachments', 'Checklist')
 
                         $dscContent += $currentDSCBlock
                         Save-M365DSCPartialExport -Content $currentDSCBlock `

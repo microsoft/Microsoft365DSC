@@ -565,8 +565,6 @@ function Export-TargetResource
             }
 
             $Results = Get-TargetResource @Params
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
 
             if ($Results.ScannerAgent)
             {
@@ -598,27 +596,8 @@ function Export-TargetResource
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -Credential $Credential
-
-            if ($Results.ScanAuthenticationParams)
-            {
-                $isCIMArray = $false
-                if ($Results.ScanAuthenticationParams.getType().Fullname -like '*[[\]]')
-                {
-                    $isCIMArray = $true
-                }
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'ScanAuthenticationParams' -IsCIMArray:$isCIMArray
-            }
-
-            if ($Results.ScannerAgent)
-            {
-                $isCIMArray = $false
-                if ($Results.ScannerAgent.getType().Fullname -like '*[[\]]')
-                {
-                    $isCIMArray = $true
-                }
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'ScannerAgent' -IsCIMArray:$isCIMArray
-            }
+                -Credential $Credential `
+                -NoEscape @('ScannerAgent', 'ScanAuthenticationParams')
 
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `

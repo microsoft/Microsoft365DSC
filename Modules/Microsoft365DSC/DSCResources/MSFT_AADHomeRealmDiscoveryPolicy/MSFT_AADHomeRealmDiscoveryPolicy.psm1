@@ -489,9 +489,6 @@ function Export-TargetResource
             }
 
             $Results = Get-TargetResource @Params
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
-
             if ($null -ne $Results.Definition)
             {
                 $complexMapping = @(
@@ -524,13 +521,8 @@ function Export-TargetResource
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -Credential $Credential
-
-            if ($null -ne $Results.Definition)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                    -ParameterName 'Definition'
-            }
+                -Credential $Credential `
+                -NoEscape @('Definition')
 
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
@@ -553,41 +545,5 @@ function Export-TargetResource
         return ''
     }
 }
-
-function Get-M365DSCAADHomeRealDiscoveryPolicyDefinitionAsString
-{
-    [CmdletBinding()]
-    [OutputType([System.String])]
-    param(
-        [Parameter(Mandatory = $true)]
-        [System.Collections.ArrayList]
-        $Definitions
-    )
-
-    $StringContent = [System.Text.StringBuilder]::new()
-    $StringContent.Append('@(') | Out-Null
-
-    foreach ($definition in $Definitions)
-    {
-        $StringContent.Append("`n                MSFT_AADHomeRealDiscoveryPolicyDefinition {`r`n") | Out-Null
-        $StringContent.Append("                    PreferredDomain       = '" + $definition.PreferredDomain + "'`r`n") | Out-Null
-        if ($null -ne $definition.AccelerateToFederatedDomain)
-        {
-            $StringContent.Append('                    AccelerateToFederatedDomain         = $' + $definition.AccelerateToFederatedDomain + "`r`n") | Out-Null
-        }
-        if ($null -ne $definition.AllowCloudPasswordValidation)
-        {
-            $StringContent.Append('                    AllowCloudPasswordValidation         = $' + $definition.AllowCloudPasswordValidation + "`r`n") | Out-Null
-        }
-        $StringContent.Append("                    AlternateIdLogin = MSFT_AADHomeRealDiscoveryPolicyDefinitionAlternateIdLogin {`r`n") | Out-Null
-        $StringContent.Append('                        Enabled = $' + $definition.AlternateIdLogin.Enabled + "`r`n") | Out-Null
-        $StringContent.Append("                    }`r`n") | Out-Null
-        $StringContent.Append("                }`r`n") | Out-Null
-    }
-
-    $StringContent.Append('            )') | Out-Null
-    return $StringContent.ToString()
-}
-
 
 Export-ModuleMember -Function *-TargetResource

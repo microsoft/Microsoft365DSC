@@ -1093,20 +1093,16 @@ function Export-TargetResource
 
                 $Script:exportedInstance = $user
                 $Results = Get-TargetResource @Params
-                $Results.Password = "New-Object System.Management.Automation.PSCredential('Password', (ConvertTo-SecureString ((New-Guid).ToString()) -AsPlainText -Force));"
+                $Results.Password = "New-Object System.Management.Automation.PSCredential('Password', (ConvertTo-SecureString ((New-Guid).ToString()) -AsPlainText -Force))"
                 if ($null -ne $Results.UserPrincipalName)
                 {
-                    $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                        -Results $Results
                     $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                         -ConnectionMode $ConnectionMode `
                         -ModulePath $PSScriptRoot `
                         -Results $Results `
                         -Credential $Credential
 
-                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Password'
                     $dscContent.Append($currentDSCBlock) | Out-Null
-
                     Save-M365DSCPartialExport -Content $currentDSCBlock `
                         -FileName $Global:PartialExportFileName
                 }

@@ -4783,8 +4783,6 @@ function Export-TargetResource
 
             $Script:exportedInstance = $config
             $Results = Get-TargetResource @Params
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
             if ($null -ne $Results.DefenderDetectedMalwareActions)
             {
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
@@ -4871,35 +4869,10 @@ function Export-TargetResource
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -Credential $Credential
-            if ($Results.DefenderDetectedMalwareActions)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'DefenderDetectedMalwareActions' -IsCIMArray:$False
-            }
-            if ($Results.EdgeHomeButtonConfiguration)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'EdgeHomeButtonConfiguration' -IsCIMArray:$False
-            }
-            if ($Results.EdgeSearchEngine)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'EdgeSearchEngine' -IsCIMArray:$False
-            }
-            if ($Results.NetworkProxyServer)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'NetworkProxyServer' -IsCIMArray:$False
-            }
-            if ($Results.Windows10AppsForceUpdateSchedule)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Windows10AppsForceUpdateSchedule' -IsCIMArray:$False
-            }
-            if ($Results.Assignments)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Assignments' -IsCIMArray:$true
-            }
-            #removing trailing commas and semi colons between items of an array of cim instances added by Convert-DSCStringParamToVariable
-            $currentDSCBlock = $currentDSCBlock.Replace("    ,`r`n" , "    `r`n" )
-            $currentDSCBlock = $currentDSCBlock.Replace("`r`n;`r`n" , "`r`n" )
-            $currentDSCBlock = $currentDSCBlock.Replace(",`r`n", '')
+                -Credential $Credential `
+                -NoEscape @('DefenderDetectedMalwareActions', 'EdgeHomeButtonConfiguration', 'EdgeSearchEngine',
+                    'NetworkProxyServer', 'Windows10AppsForceUpdateSchedule', 'Assignments')
+
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName

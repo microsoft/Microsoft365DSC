@@ -412,8 +412,6 @@ function Export-TargetResource
                 AccessTokens          = $AccessTokens
             }
             $result = Get-TargetResource @params
-            $result = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Result
 
             if ($null -ne $result.EmergencyNumbers)
             {
@@ -442,12 +440,8 @@ function Export-TargetResource
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Result `
-                -Credential $Credential
-
-            if ($Result.EmergencyNumbers)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'EmergencyNumbers' -IsCIMArray:$True
-            }
+                -Credential $Credential `
+                -NoEscape @('EmergencyNumbers')
 
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
@@ -498,36 +492,6 @@ function Get-TeamsEmergencyNumbers
     }
 
     return $result
-}
-
-function ConvertTo-TeamsEmergencyNumbersString
-{
-    [CmdletBinding()]
-    [OutputType([System.String])]
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [System.Object[]]
-        $Numbers
-    )
-
-    if ($null -eq $Numbers)
-    {
-        return $null
-    }
-
-    $StringContent = "@(`r`n"
-    foreach ($number in $numbers)
-    {
-        $StringContent += "                MSFT_TeamsEmergencyNumber`r`n"
-        $StringContent += "                {`r`n"
-        $StringContent += "                    EmergencyDialString = '$($number.EmergencyDialString)'`r`n"
-        $StringContent += "                    EmergencyDialMask   = '$($number.EmergencyDialMask)'`r`n"
-        $StringContent += "                    OnlinePSTNUsage     = '$($number.OnlinePSTNUsage)'`r`n"
-        $StringContent += "                }`r`n"
-    }
-    $StringContent += '            )'
-    return $StringContent
 }
 
 function Convert-CIMToTeamsEmergencyNumbers

@@ -84,28 +84,21 @@ function Get-TargetResource
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters
-    }
-    catch
-    {
-        Write-Verbose -Message ($_)
-    }
 
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
+        #Ensure the proper dependencies are installed in the current environment.
+        Confirm-M365DSCDependencies
 
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
+        #region Telemetry
+        $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+        $CommandName = $MyInvocation.MyCommand
+        $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+            -CommandName $CommandName `
+            -Parameters $PSBoundParameters
+        Add-M365DSCTelemetryEvent -Data $data
+        #endregion
 
-    $nullResult = $PSBoundParameters
-    $nullResult.Ensure = 'Absent'
-    try
-    {
+        $nullResult = $PSBoundParameters
+        $nullResult.Ensure = 'Absent'
         $getValue = $null
 
         if (-not [System.String]::IsNullOrEmpty($id))
@@ -959,7 +952,6 @@ function Export-TargetResource
             }
 
             $Results = Get-TargetResource @Params
-
             if ($null -ne $Results.AccessPackageResourceRoleScopes)
             {
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject ([Array]$Results.AccessPackageResourceRoleScopes) `
@@ -973,20 +965,12 @@ function Export-TargetResource
                 }
             }
 
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
-
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -Credential $Credential
-
-
-            if ($null -ne $Results.AccessPackageResourceRoleScopes)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'AccessPackageResourceRoleScopes' -IsCIMArray:$true
-            }
+                -Credential $Credential `
+                -NoEscape @('AccessPackageResourceRoleScopes')
 
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
@@ -995,9 +979,6 @@ function Export-TargetResource
             Write-Host $Global:M365DSCEmojiGreenCheckMark
             $i++
         }
-
-        #Removing extra coma between items in cim instance array created by Convert-DSCStringParamToVariable
-        $dscContent = $dscContent.replace("            ,`r`n", '')
 
         return $dscContent
     }
