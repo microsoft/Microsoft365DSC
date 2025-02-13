@@ -412,8 +412,6 @@ function Export-TargetResource
                 AccessTokens          = $AccessTokens
             }
             $result = Get-TargetResource @params
-            $result = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Result
 
             if ($null -ne $result.EmergencyNumbers)
             {
@@ -442,12 +440,8 @@ function Export-TargetResource
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Result `
-                -Credential $Credential
-
-            if ($Result.EmergencyNumbers)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'EmergencyNumbers' -IsCIMArray:$True
-            }
+                -Credential $Credential `
+                -NoEscape @('EmergencyNumbers')
 
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `

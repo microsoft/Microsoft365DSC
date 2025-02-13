@@ -853,8 +853,6 @@ function Export-TargetResource
                 Write-Verbose "An error occured in Get-TargetResource, the policy {$($params.displayName)} will not be processed"
                 throw "An error occured in Get-TargetResource, the policy {$($params.displayName)} will not be processed. Refer to the event viewer logs for more information."
             }
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
             if ( $null -ne $Results.BandwidthMode)
             {
                 $complexMapping = @(
@@ -932,26 +930,9 @@ function Export-TargetResource
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -Credential $Credential
-            if ($Results.BandwidthMode)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'BandwidthMode' -IsCIMArray:$False
-            }
-            if ($Results.GroupIdSource)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'GroupIdSource' -IsCIMArray:$False
-            }
-            if ($Results.MaximumCacheSize)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'MaximumCacheSize' -IsCIMArray:$False
-            }
-            if ($Results.Assignments)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Assignments' -IsCIMArray:$true
-            }
-            #removing trailing commas and semi colons between items of an array of cim instances added by Convert-DSCStringParamToVariable
-            $currentDSCBlock = $currentDSCBlock.replace( "    ,`r`n" , "    `r`n" )
-            $currentDSCBlock = $currentDSCBlock.replace( "`r`n;`r`n" , "`r`n" )
+                -Credential $Credential `
+                -NoEscape @('BandwidthMode', 'GroupIdSource', 'MaximumCacheSize', 'Assignments')
+
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName

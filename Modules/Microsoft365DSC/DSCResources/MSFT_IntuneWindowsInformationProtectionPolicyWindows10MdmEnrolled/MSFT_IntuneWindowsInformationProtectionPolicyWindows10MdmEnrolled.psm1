@@ -989,8 +989,6 @@ function Export-TargetResource
             }
 
             $Results = Get-TargetResource @Params
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
 
             if ( $null -ne $Results.DataRecoveryCertificate)
             {
@@ -1190,58 +1188,12 @@ function Export-TargetResource
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -Credential $Credential
-            if ($Results.DataRecoveryCertificate)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'DataRecoveryCertificate' -IsCIMArray:$False
-            }
-            if ($Results.EnterpriseInternalProxyServers)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'EnterpriseInternalProxyServers' -IsCIMArray:$True
-            }
-            if ($Results.EnterpriseIPRanges)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'EnterpriseIPRanges' -IsCIMArray:$True
-            }
-            if ($Results.EnterpriseNetworkDomainNames)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'EnterpriseNetworkDomainNames' -IsCIMArray:$True
-            }
-            if ($Results.EnterpriseProtectedDomainNames)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'EnterpriseProtectedDomainNames' -IsCIMArray:$True
-            }
-            if ($Results.EnterpriseProxiedDomains)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'EnterpriseProxiedDomains' -IsCIMArray:$True
-            }
-            if ($Results.EnterpriseProxyServers)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'EnterpriseProxyServers' -IsCIMArray:$True
-            }
-            if ($Results.ExemptApps)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'ExemptApps' -IsCIMArray:$True
-            }
-            if ($Results.NeutralDomainResources)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'NeutralDomainResources' -IsCIMArray:$True
-            }
-            if ($Results.ProtectedApps)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'ProtectedApps' -IsCIMArray:$True
-            }
-            if ($Results.SmbAutoEncryptedFileExtensions)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'SmbAutoEncryptedFileExtensions' -IsCIMArray:$True
-            }
-            if ($Results.Assignments)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Assignments' -IsCIMArray:$true
-            }
-            #removing trailing commas and semi colons between items of an array of cim instances added by Convert-DSCStringParamToVariable
-            $currentDSCBlock = $currentDSCBlock.replace( "    ,`r`n" , "    `r`n" )
-            $currentDSCBlock = $currentDSCBlock.replace( "`r`n;`r`n" , "`r`n" )
+                -Credential $Credential `
+                -NoEscape @('DataRecoveryCertificate', 'EnterpriseInternalProxyServers', 'EnterpriseIPRanges',
+                    'EnterpriseNetworkDomainNames', 'EnterpriseProtectedDomainNames', 'EnterpriseProxiedDomains',
+                    'EnterpriseProxyServers', 'ExemptApps', 'NeutralDomainResources', 'ProtectedApps',
+                    'SmbAutoEncryptedFileExtensions', 'Assignments')
+
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName

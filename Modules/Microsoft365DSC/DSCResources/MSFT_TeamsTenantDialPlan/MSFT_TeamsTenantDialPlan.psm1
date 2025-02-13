@@ -523,9 +523,7 @@ function Export-TargetResource
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }
-            $results = Get-TargetResource @params
-            $results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
+            $Results = Get-TargetResource @Params
 
             if ($null -ne $Results.NormalizationRules)
             {
@@ -555,14 +553,10 @@ function Export-TargetResource
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -Credential $Credential
-            if ($Results.NormalizationRules)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'NormalizationRules' -IsCIMArray:$True
-            }
+                -Credential $Credential `
+                -NoEscape @('NormalizationRules')
 
             $dscContent += $currentDSCBlock
-
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++

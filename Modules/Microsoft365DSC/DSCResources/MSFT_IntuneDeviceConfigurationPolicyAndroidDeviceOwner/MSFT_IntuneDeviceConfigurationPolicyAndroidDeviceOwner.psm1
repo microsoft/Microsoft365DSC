@@ -2522,8 +2522,6 @@ function Export-TargetResource
 
             $Script:exportedInstance = $config
             $Results = Get-TargetResource @Params
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
 
             if ($Results.AzureAdSharedDeviceDataClearApps)
             {
@@ -2742,110 +2740,10 @@ function Export-TargetResource
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -Credential $Credential
-            if ($Results.AzureAdSharedDeviceDataClearApps)
-            {
-                $isCIMArray = $false
-                if ($Results.AzureAdSharedDeviceDataClearApps.getType().Fullname -like '*[[\]]')
-                {
-                    $isCIMArray = $true
-                }
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'AzureAdSharedDeviceDataClearApps' -IsCIMArray:$isCIMArray
-            }
-            if ($Results.DetailedHelpText)
-            {
-                $isCIMArray = $false
-                if ($Results.DetailedHelpText.getType().Fullname -like '*[[\]]')
-                {
-                    $isCIMArray = $true
-                }
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'DetailedHelpText' -IsCIMArray:$isCIMArray
-            }
-            if ($Results.DeviceOwnerLockScreenMessage)
-            {
-                $isCIMArray = $false
-                if ($Results.DeviceOwnerLockScreenMessage.getType().Fullname -like '*[[\]]')
-                {
-                    $isCIMArray = $true
-                }
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'DeviceOwnerLockScreenMessage' -IsCIMArray:$isCIMArray
-            }
-            if ($Results.GlobalProxy)
-            {
-                $isCIMArray = $false
-                if ($Results.GlobalProxy.getType().Fullname -like '*[[\]]')
-                {
-                    $isCIMArray = $true
-                }
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'GlobalProxy' -IsCIMArray:$isCIMArray
-            }
-            if ($Results.KioskModeAppPositions)
-            {
-                $isCIMArray = $false
-                if ($Results.KioskModeAppPositions.getType().Fullname -like '*[[\]]')
-                {
-                    $isCIMArray = $true
-                }
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'KioskModeAppPositions' -IsCIMArray:$isCIMArray
-            }
-
-            if ($Results.KioskModeApps)
-            {
-                $isCIMArray = $false
-                if ($Results.KioskModeApps.getType().Fullname -like '*[[\]]')
-                {
-                    $isCIMArray = $true
-                }
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'KioskModeApps' -IsCIMArray:$isCIMArray
-            }
-
-            if ($Results.KioskModeManagedFolders)
-            {
-                $isCIMArray = $false
-                if ($Results.KioskModeManagedFolders.getType().Fullname -like '*[[\]]')
-                {
-                    $isCIMArray = $true
-                }
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'KioskModeManagedFolders' -IsCIMArray:$isCIMArray -Verbose
-            }
-
-            if ($Results.PersonalProfilePersonalApplications)
-            {
-                $isCIMArray = $false
-                if ($Results.PersonalProfilePersonalApplications.getType().Fullname -like '*[[\]]')
-                {
-                    $isCIMArray = $true
-                }
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'PersonalProfilePersonalApplications' -IsCIMArray:$isCIMArray
-            }
-            if ($Results.ShortHelpText)
-            {
-                $isCIMArray = $false
-                if ($Results.ShortHelpText.getType().Fullname -like '*[[\]]')
-                {
-                    $isCIMArray = $true
-                }
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'ShortHelpText' -IsCIMArray:$isCIMArray
-            }
-            if ($Results.SystemUpdateFreezePeriods)
-            {
-                $isCIMArray = $false
-                if ($Results.SystemUpdateFreezePeriods.getType().Fullname -like '*[[\]]')
-                {
-                    $isCIMArray = $true
-                }
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'SystemUpdateFreezePeriods' -IsCIMArray:$isCIMArray
-            }
-
-            if ($Results.Assignments)
-            {
-                $isCIMArray = $false
-                if ($Results.Assignments.getType().Fullname -like '*[[\]]')
-                {
-                    $isCIMArray = $true
-                }
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Assignments' -IsCIMArray:$isCIMArray
-            }
+                -Credential $Credential `
+                -NoEscape @('AzureAdSharedDeviceDataClearApps', 'DetailedHelpText', 'DeviceOwnerLockScreenMessage', 'GlobalProxy',
+                    'KioskModeAppPositions', 'KioskModeApps', 'KioskModeManagedFolders', 'PersonalProfilePersonalApplications',
+                    'ShortHelpText', 'SystemUpdateFreezePeriods', 'Assignments')
 
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `

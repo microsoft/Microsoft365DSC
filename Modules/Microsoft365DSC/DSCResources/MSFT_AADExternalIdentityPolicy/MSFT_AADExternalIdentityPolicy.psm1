@@ -344,8 +344,6 @@ function Export-TargetResource
         {
             Write-Host "`r`n" -NoNewline
             Write-Host '    |---[1/1] External Identity Policy' -NoNewline
-            $results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $results
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `

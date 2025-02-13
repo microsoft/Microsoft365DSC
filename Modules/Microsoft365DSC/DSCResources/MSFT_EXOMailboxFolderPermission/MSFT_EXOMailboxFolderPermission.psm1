@@ -442,8 +442,6 @@ function Export-TargetResource
             $MailboxFolderPermissions = Get-TargetResource @Params
 
             $Result = $MailboxFolderPermissions
-            $Result = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Result
             if ($Result.UserPermissions.Count -gt 0)
             {
                 $Result.UserPermissions = Get-M365DSCEXOUserPermissionsList $Result.UserPermissions
@@ -452,13 +450,8 @@ function Export-TargetResource
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Result `
-                -Credential $Credential
-
-            if ($null -ne $Result.UserPermissions)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                    -ParameterName 'UserPermissions'
-            }
+                -Credential $Credential `
+                -NoEscape @('UserPermissions')
 
             $dscContent += $currentDSCBlock
 

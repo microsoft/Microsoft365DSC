@@ -1688,32 +1688,12 @@ function Export-TargetResource
                 }
             }
 
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -Credential $Credential
-
-            if ($null -ne $Results.AdvancedSettings)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                    -ParameterName 'AdvancedSettings' `
-                    -IsCIMArray:$True
-            }
-            if ($null -ne $Results.LocaleSettings)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                    -ParameterName 'LocaleSettings' `
-                    -IsCIMArray:$True
-            }
-            if ($null -ne $Results.AutoLabelingSettings)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                    -ParameterName 'AutoLabelingSettings' `
-                    -IsCIMArray:$True
-            }
+                -Credential $Credential `
+                -NoEscape @('AdvancedSettings', 'LocaleSettings', 'AutoLabelingSettings')
 
             Write-Host $Global:M365DSCEmojiGreenCheckMark
             $dscContent += $currentDSCBlock

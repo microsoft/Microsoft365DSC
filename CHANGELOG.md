@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.25.212.1
 
 * AADApplication
   * Changing the AuthenticationBehaviors parameters to string to allow
@@ -10,6 +10,8 @@
 * AADCrossTenantAccessPolicyConfigurationPartner
   * Fixes an issue with CIM class export.
     FIXES [#5711](https://github.com/microsoft/Microsoft365DSC/issues/5711)
+* AADGroupEligibilitySchedule
+  * FIXES [#5741] Missing -All variable which prevented enumeration of more than 100 Groups
 * EXORetentionPolicyTag
   * Initial release.
 * EXOSmtpDaneInbound
@@ -17,9 +19,12 @@
     FIXES [#5709](https://github.com/microsoft/Microsoft365DSC/issues/5709)
 * MISC
   * PowerPlatform resource revamp to use direct REST API calls.
+  * Simplify export behavior for all resources and complex objects.
 * DEPENDENCIES
   * Removed dependency on Microsoft.PowerApps.Administration.PowerShell.
+  * Updated DSCParser to version 2.0.0.15.
   * Updated MSCloudLoginAssistant to version 1.1.37.
+  * Updated ReverseDSC to version 2.0.0.25.
 
 # 1.25.205.1
 

@@ -1035,8 +1035,6 @@ function Export-TargetResource
                 }
 
                 $Results = Get-TargetResource @Params
-                $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                    -Results $Results
 
                 if ( $null -ne $Results.EventGroupingSettings)
                 {
@@ -1182,28 +1180,8 @@ function Export-TargetResource
                     -ConnectionMode $ConnectionMode `
                     -ModulePath $PSScriptRoot `
                     -Results $Results `
-                    -Credential $Credential
-
-                if ($Results.EventGroupingSettings)
-                {
-                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'EventGroupingSettings' -IsCIMArray:$False
-                }
-                if ($Results.CustomDetails)
-                {
-                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'CustomDetails' -IsCIMArray:$False
-                }
-                if ($Results.EntityMappings)
-                {
-                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'EntityMappings' -IsCIMArray:$True
-                }
-                if ($Results.AlertDetailsOverride)
-                {
-                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'AlertDetailsOverride' -IsCIMArray:$True
-                }
-                if ($Results.IncidentConfiguration)
-                {
-                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'IncidentConfiguration' -IsCIMArray:$True
-                }
+                    -Credential $Credential `
+                    -NoEscape @('EventGroupingSettings', 'CustomDetails', 'EntityMappings', 'AlertDetailsOverride', 'IncidentConfiguration')
 
                 $dscContent += $currentDSCBlock
                 Save-M365DSCPartialExport -Content $currentDSCBlock `

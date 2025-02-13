@@ -626,7 +626,6 @@ function Export-TargetResource
 
             $Script:exportedInstance = $config
             $Results = Get-TargetResource @Params
-
             $endpointConfigurationCimString = Get-M365DSCDRGComplexTypeToString `
                 -ComplexObject $Results.EndpointConfiguration `
                 -CIMInstanceName 'MSFT_AADCustomAuthenticationExtensionEndPointConfiguration'
@@ -638,24 +637,12 @@ function Export-TargetResource
             $Results.EndPointConfiguration = $endpointConfigurationCimString
             $Results.ClaimsForTokenConfiguration = $ClaimsForTokenConfigurationCimString
 
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
-
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -Credential $Credential
-
-            if ($Results.EndPointConfiguration -ne $null)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'EndPointConfiguration'
-            }
-
-            if ($Results.ClaimsForTokenConfiguration -ne $null)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'ClaimsForTokenConfiguration' -IsCIMArray $true
-            }
+                -Credential $Credential `
+                -NoEscape @('EndPointConfiguration', 'ClaimsForTokenConfiguration')
 
             $dscContent += $currentDSCBlock
 

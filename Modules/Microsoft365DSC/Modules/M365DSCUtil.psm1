@@ -3595,6 +3595,7 @@ function Update-M365DSCExportAuthenticationResults
         $Results
     )
 
+    $noEscape = @()
     if ($Results.ContainsKey('ManagedIdentity') -and -not $Results.ManagedIdentity)
     {
         $Results.Remove('ManagedIdentity')
@@ -3664,6 +3665,7 @@ function Update-M365DSCExportAuthenticationResults
         if (-not [System.String]::IsNullOrEmpty($Results.ApplicationId))
         {
             $Results.ApplicationId = "`$ConfigurationData.NonNodeData.ApplicationId"
+            $noEscape += 'ApplicationId'
         }
         else
         {
@@ -3679,6 +3681,7 @@ function Update-M365DSCExportAuthenticationResults
         if (-not [System.String]::IsNullOrEmpty($Results.CertificateThumbprint))
         {
             $Results.CertificateThumbprint = "`$ConfigurationData.NonNodeData.CertificateThumbprint"
+            $noEscape += 'CertificateThumbprint'
         }
         else
         {
@@ -3694,6 +3697,7 @@ function Update-M365DSCExportAuthenticationResults
         if (-not [System.String]::IsNullOrEmpty($Results.CertificatePath))
         {
             $Results.CertificatePath = "`$ConfigurationData.NonNodeData.CertificatePath"
+            $noEscape += 'CertificatePath'
         }
         else
         {
@@ -3709,6 +3713,7 @@ function Update-M365DSCExportAuthenticationResults
         if (-not [System.String]::IsNullOrEmpty($Results.TenantId))
         {
             $Results.TenantId = "`$ConfigurationData.NonNodeData.TenantId"
+            $noEscape += 'TenantId'
         }
         else
         {
@@ -3724,6 +3729,7 @@ function Update-M365DSCExportAuthenticationResults
         if (-not [System.String]::IsNullOrEmpty($Results.ApplicationSecret))
         {
             $Results.ApplicationSecret = "New-Object System.Management.Automation.PSCredential ('ApplicationSecret', (ConvertTo-SecureString `$ConfigurationData.NonNodeData.ApplicationSecret -AsPlainText -Force))"
+            $noEscape += 'ApplicationSecret'
         }
         else
         {
@@ -3755,9 +3761,14 @@ function Update-M365DSCExportAuthenticationResults
         if ($null -ne $Results.AccessTokens)
         {
             $results.AccessTokens = "`$ConfigurationData.NonNodeData.AccessTokens"
+            $noEscape += 'AccessTokens'
         }
     }
-    return $Results
+    
+    return @{
+        Results = $Results
+        NoEscape = $noEscape
+    }
 }
 
 <#
@@ -3792,8 +3803,18 @@ function Get-M365DSCExportContentForResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String[]]
+        $NoEscape
     )
+
+    $withoutAuthentication = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+        -Results $Results
+    $Results = $withoutAuthentication.Results
+    $NoEscape += $withoutAuthentication.NoEscape
+    $NoEscape = $NoEscape | Select-Object -Unique
 
     $OrganizationName = ''
     if ($ConnectionMode -like 'ServicePrincipal*' -or `
@@ -3928,7 +3949,7 @@ function Get-M365DSCExportContentForResource
     $content = [System.Text.StringBuilder]::New()
     [void]$content.Append("        $ResourceName `"$instanceName`"`r`n")
     [void]$content.Append("        {`r`n")
-    $partialContent = Get-DSCBlock -Params $Results -ModulePath $ModulePath
+    $partialContent = Get-DSCBlock -Params $Results -ModulePath $ModulePath -NoEscape $NoEscape
     # Test for both Credentials and CredentialsWithApplicationId
     if ($ConnectionMode -match 'Credentials')
     {

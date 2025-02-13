@@ -519,9 +519,6 @@ function Export-TargetResource
             }
 
             $Results = Get-TargetResource @Params
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
-
             if ($null -ne $Results.EndpointConfiguration)
             {
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
@@ -571,20 +568,8 @@ function Export-TargetResource
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -Credential $Credential
-
-            if ($Results.EndpointConfiguration)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'EndpointConfiguration' -IsCIMArray:$False
-            }
-            if ($Results.ClientConfiguration)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'ClientConfiguration' -IsCIMArray:$False
-            }
-            if ($Results.CallbackConfiguration)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'CallbackConfiguration' -IsCIMArray:$False
-            }
+                -Credential $Credential `
+                -NoEscape @('EndpointConfiguration', 'ClientConfiguration', 'CallbackConfiguration')
 
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `

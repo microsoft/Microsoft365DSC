@@ -646,8 +646,6 @@ function Export-TargetResource
 
                 $Script:exportedInstance = $config
                 $Results = Get-TargetResource @Params
-                $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                    -Results $Results
                 if ($null -ne $Results.RegistrationEnforcement)
                 {
                     $complexMapping = @(
@@ -755,20 +753,9 @@ function Export-TargetResource
                     -ConnectionMode $ConnectionMode `
                     -ModulePath $PSScriptRoot `
                     -Results $Results `
-                    -Credential $Credential
-                if ($Results.RegistrationEnforcement)
-                {
-                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'RegistrationEnforcement' -IsCIMArray:$False
-                }
-                if ($Results.SystemCredentialPreferences)
-                {
-                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'SystemCredentialPreferences' -IsCIMArray:$False
-                }
+                    -Credential $Credential `
+                    -NoEscape @('RegistrationEnforcement', 'ReportSuspiciousActivitySettings', 'SystemCredentialPreferences')
 
-                if ($Results.ReportSuspiciousActivitySettings)
-                {
-                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'ReportSuspiciousActivitySettings' -IsCIMArray:$False
-                }
                 $dscContent += $currentDSCBlock
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
                     -FileName $Global:PartialExportFileName

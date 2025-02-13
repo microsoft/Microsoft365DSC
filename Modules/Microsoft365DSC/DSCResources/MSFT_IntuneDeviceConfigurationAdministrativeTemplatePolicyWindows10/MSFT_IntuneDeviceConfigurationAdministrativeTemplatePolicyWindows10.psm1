@@ -868,8 +868,6 @@ function Export-TargetResource
                 Write-Verbose "An error occured in Get-TargetResource, the policy {$($params.displayName)} will not be processed"
                 throw "An error occured in Get-TargetResource, the policy {$($params.displayName)} will not be processed. Refer to the event viewer logs for more information."
             }
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
 
             if ($Results.DefinitionValues)
             {
@@ -919,33 +917,8 @@ function Export-TargetResource
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -Credential $Credential
-            if ($Results.Assignments)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Assignments' -IsCIMArray:$true
-            }
-            if ($Results.DefinitionValues)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'DefinitionValues' -IsCIMArray:$true
-            }
-            if ($Results.DefinitionValues.Definition)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Definition'
-            }
-            if ($Results.DefinitionValues.PresentationValues)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'PresentationValues'
-            }
-            if ($Results.DefinitionValues.PresentationValues.KeyValuePairValues)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'KeyValuePairValues'
-            }
-
-            #removing trailing commas and semi colons between items of an array of cim instances added by Convert-DSCStringParamToVariable
-            $currentDSCBlock = $currentDSCBlock.replace( "    ,`r`n" , "    `r`n" )
-            $currentDSCBlock = $currentDSCBlock.replace( "`r`n;`r`n" , "`r`n" )
-            $currentDSCBlock = $currentDSCBlock.replace( "`r`n,`r`n" , "`r`n" )
-            $currentDSCBlock = $currentDSCBlock.Replace("}                    Enabled = `$", "}`r`n                    Enabled = `$")
+                -Credential $Credential `
+                -NoEscape @('Assignments', 'DefinitionValues', 'PresentationValues', 'KeyValuePairValues')
 
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `

@@ -952,7 +952,6 @@ function Export-TargetResource
             }
 
             $Results = Get-TargetResource @Params
-
             if ($null -ne $Results.AccessPackageResourceRoleScopes)
             {
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject ([Array]$Results.AccessPackageResourceRoleScopes) `
@@ -966,20 +965,12 @@ function Export-TargetResource
                 }
             }
 
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
-
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -Credential $Credential
-
-
-            if ($null -ne $Results.AccessPackageResourceRoleScopes)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'AccessPackageResourceRoleScopes' -IsCIMArray:$true
-            }
+                -Credential $Credential `
+                -NoEscape @('AccessPackageResourceRoleScopes')
 
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
@@ -988,9 +979,6 @@ function Export-TargetResource
             Write-Host $Global:M365DSCEmojiGreenCheckMark
             $i++
         }
-
-        #Removing extra coma between items in cim instance array created by Convert-DSCStringParamToVariable
-        $dscContent = $dscContent.replace("            ,`r`n", '')
 
         return $dscContent
     }

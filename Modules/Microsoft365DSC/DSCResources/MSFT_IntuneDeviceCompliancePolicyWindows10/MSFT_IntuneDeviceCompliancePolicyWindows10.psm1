@@ -937,8 +937,6 @@ function Export-TargetResource
                 throw "An error occured in Get-TargetResource, the policy {$($params.displayName)} will not be processed. Refer to the event viewer logs for more information."
             }
 
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
             if ($null -ne $Results.ValidOperatingSystemBuildRanges)
             {
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
@@ -981,24 +979,8 @@ function Export-TargetResource
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -Credential $Credential
-
-            if ($Results.ValidOperatingSystemBuildRanges)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'ValidOperatingSystemBuildRanges'
-            }
-
-            if ($Results.Assignments)
-            {
-                $isCIMArray = $false
-                if ($Results.Assignments.getType().Fullname -like '*[[\]]')
-                {
-                    $isCIMArray = $true
-                }
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                    -ParameterName 'Assignments' `
-                    -IsCIMArray:$isCIMArray
-            }
+                -Credential $Credential `
+                -NoEscape @('ValidOperatingSystemBuildRanges', 'Assignments')
 
             $dscContent += $currentDSCBlock
 

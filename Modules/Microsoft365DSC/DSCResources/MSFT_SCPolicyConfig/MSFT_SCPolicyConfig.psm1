@@ -1302,7 +1302,6 @@ function Export-TargetResource
             $Global:M365DSCExportResourceInstancesCount++
         }
         $Results = Get-TargetResource @Params
-
         if ($null -ne $Results.BusinessJustificationList)
         {
             $Results.BusinessJustificationList = ConvertTo-BusinessJustificationListString -ObjectHash $Results.BusinessJustificationList
@@ -1363,98 +1362,15 @@ function Export-TargetResource
             $Results.QuarantineParameters = ConvertTo-QuarantineParametersString -ObjectHash $Results.QuarantineParameters
         }
 
-        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-            -Results $Results
 
         $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
             -ConnectionMode $ConnectionMode `
             -ModulePath $PSScriptRoot `
             -Results $Results `
-            -Credential $Credential
-
-        if ($null -ne $Results.QuarantineParameters)
-        {
-            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                -ParameterName 'QuarantineParameters' `
-                -IsCIMArray:$true
-        }
-
-        if ($null -ne $Results.BusinessJustificationList)
-        {
-            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                -ParameterName 'BusinessJustificationList' `
-                -IsCIMArray:$true
-        }
-
-        if ($null -ne $Results.DLPAppGroups)
-        {
-            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                -ParameterName 'DLPAppGroups' `
-                -IsCIMArray:$true
-        }
-
-        if ($null -ne $Results.DLPNetworkShareGroups)
-        {
-            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                -ParameterName 'DLPNetworkShareGroups' `
-                -IsCIMArray:$true
-        }
-
-        if ($null -ne $Results.DLPPrinterGroups)
-        {
-            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                -ParameterName 'DLPPrinterGroups' `
-                -IsCIMArray:$true
-        }
-
-        if ($null -ne $Results.DLPRemovableMediaGroups)
-        {
-            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                -ParameterName 'DLPRemovableMediaGroups' `
-                -IsCIMArray:$true
-        }
-
-        if ($null -ne $Results.SiteGroups)
-        {
-            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                -ParameterName 'SiteGroups' `
-                -IsCIMArray:$true
-        }
-
-        if ($null -ne $Results.UnallowedApp)
-        {
-            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                -ParameterName 'UnallowedApp' `
-                -IsCIMArray:$true
-        }
-
-        if ($null -ne $Results.UnallowedCloudSyncApp)
-        {
-            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                -ParameterName 'UnallowedCloudSyncApp' `
-                -IsCIMArray:$true
-        }
-
-        if ($null -ne $Results.UnallowedBluetoothApp)
-        {
-            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                -ParameterName 'UnallowedBluetoothApp' `
-                -IsCIMArray:$true
-        }
-
-        if ($null -ne $Results.UnallowedBrowser)
-        {
-            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                -ParameterName 'UnallowedBrowser' `
-                -IsCIMArray:$true
-        }
-
-        if ($null -ne $Results.EvidenceStoreSettings)
-        {
-            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                -ParameterName 'EvidenceStoreSettings' `
-                -IsCIMArray:$false
-        }
+            -Credential $Credential `
+            -NoEscape @('QuarantineParameters', 'BusinessJustificationList', 'DLPAppGroups', 'DLPNetworkShareGroups',
+                'DLPPrinterGroups', 'DLPRemovableMediaGroups', 'SiteGroups', 'UnallowedApp', 'UnallowedCloudSyncApp',
+                'UnallowedBluetoothApp', 'UnallowedBrowser', 'EvidenceStoreSettings')
 
         $dscContent += $currentDSCBlock
         Save-M365DSCPartialExport -Content $currentDSCBlock `

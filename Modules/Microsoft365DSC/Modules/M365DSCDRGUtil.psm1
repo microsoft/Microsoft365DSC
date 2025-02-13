@@ -249,6 +249,7 @@ function Get-M365DSCDRGComplexTypeToHashtable
 function Get-M365DSCDRGComplexTypeToString
 {
     [CmdletBinding()]
+    [OutputType([System.String])]
     param(
         [Parameter()]
         $ComplexObject,
@@ -303,6 +304,12 @@ function Get-M365DSCDRGComplexTypeToString
             }
 
             $currentProperty += Get-M365DSCDRGComplexTypeToString -IsArray @splat
+        }
+
+        # Add an indented new line after the last item in the array
+        if ($currentProperty.Count -gt 0)
+        {
+            $currentProperty[-1] += "`r`n" + $indent
         }
 
         #PowerShell returns all non-captured stream output, not just the argument of the return statement.
@@ -424,7 +431,7 @@ function Get-M365DSCDRGComplexTypeToString
                     {
                         $nestedPropertyString = "`$null`r`n"
                     }
-                    $currentProperty += $nestedPropertyString
+                    $currentProperty += $nestedPropertyString + "`r`n"
                 }
                 if ($IsArray)
                 {
@@ -471,30 +478,36 @@ function Get-M365DSCDRGComplexTypeToString
             }
         }
     }
+
     $indent = ''
     $indent = '    ' * ($IndentLevel -1)
+
     if ($key -in $ComplexTypeMapping.Name)
     {
         $currentProperty += "`r`n"
     }
 
     $currentProperty += "$indent}"
+    <#
     if ($IsArray -or $IndentLevel -gt 4)
     {
         $currentProperty += "`r`n"
     }
+    #>
 
     #Indenting last parenthesis when the cim instance is an array
+    <#
     if ($IndentLevel -eq 5)
     {
         $indent = '    ' * ($IndentLevel -2)
         $currentProperty += $indent
     }
+    #>
 
     $emptyCIM = $currentProperty.Replace(' ', '').Replace("`r`n", '')
     if ($emptyCIM -eq "MSFT_$CIMInstanceName{}")
     {
-        $currentProperty = $null
+        $currentProperty = [string]::Empty
     }
 
     if ($null -ne $currentProperty)
@@ -504,6 +517,7 @@ function Get-M365DSCDRGComplexTypeToString
         $currentProperty = [regex]::Replace($currentProperty, $fancySingleQuotes, "''")
         $currentProperty = [regex]::Replace($currentProperty, $fancyDoubleQuotes, '"')
     }
+
     return $currentProperty
 }
 
@@ -537,11 +551,12 @@ function Get-M365DSCDRGSimpleObjectTypeToString
             {
                 $key = 'odataType'
             }
-            $returnValue = $Space + $Key + " = '" + $Value + "'`r`n"
+            $Value = $Value.Replace('`', '``').Replace('$', '`$').Replace('"', '`"')
+            $returnValue = $Space + $Key + ' = "' + $Value + """`r`n"
         }
         '*.DateTime'
         {
-            $returnValue = $Space + $Key + " = '" + $Value + "'`r`n"
+            $returnValue = $Space + $Key + ' = "' + $Value + """`r`n"
         }
         '*[[\]]'
         {
@@ -560,11 +575,12 @@ function Get-M365DSCDRGSimpleObjectTypeToString
                 {
                     '*.String'
                     {
-                        $returnValue += "$whitespace'$item'$newline"
+                        $item = $item.Replace('`', '``').Replace('$', '`$').Replace('"', '`"')
+                        $returnValue += "$whitespace""$item""$newline"
                     }
                     '*.DateTime'
                     {
-                        $returnValue += "$whitespace'$item'$newline"
+                        $returnValue += "$whitespace""$item""$newline"
                     }
                     Default
                     {
@@ -572,7 +588,8 @@ function Get-M365DSCDRGSimpleObjectTypeToString
                     }
                 }
             }
-            if ($Value.count -gt 1)
+
+            if ($Value.Count -gt 1)
             {
                 $returnValue += "$Space)`r`n"
             }
@@ -587,6 +604,7 @@ function Get-M365DSCDRGSimpleObjectTypeToString
             $returnValue = $Space + $Key + ' = ' + $Value + "`r`n"
         }
     }
+
     return $returnValue
 }
 
@@ -835,7 +853,6 @@ function Compare-M365DSCComplexObject
                     }
                     elseif ($targetType -eq 'String')
                     {
-                        Write-Verbose -Message "Parameter {$($key)} is a String"
                         # Align line breaks
                         if (-not [System.String]::IsNullOrEmpty($referenceObject))
                         {
