@@ -1,5 +1,100 @@
 # Change log for Microsoft365DSC
 
+# 1.25.212.2
+
+* MISC
+  * Fixing connection errors in Power Platforms resources.
+
+# 1.25.212.1
+
+* AADApplication
+  * Changing the AuthenticationBehaviors parameters to string to allow
+    for null values.
+* AADCrossTenantAccessPolicyConfigurationDefault
+  * Fixes an issue with CIM class export.
+* AADCrossTenantAccessPolicyConfigurationPartner
+  * Fixes an issue with CIM class export.
+    FIXES [#5711](https://github.com/microsoft/Microsoft365DSC/issues/5711)
+* AADGroupEligibilitySchedule
+  * FIXES [#5741] Missing -All variable which prevented enumeration of more than 100 Groups
+* EXORetentionPolicyTag
+  * Initial release.
+* EXOSmtpDaneInbound
+  * Updated authentication properties to align with MOF definition.
+    FIXES [#5709](https://github.com/microsoft/Microsoft365DSC/issues/5709)
+* MISC
+  * PowerPlatform resource revamp to use direct REST API calls.
+  * Simplify export behavior for all resources and complex objects.
+* DEPENDENCIES
+  * Removed dependency on Microsoft.PowerApps.Administration.PowerShell.
+  * Updated DSCParser to version 2.0.0.15.
+  * Updated MSCloudLoginAssistant to version 1.1.37.
+  * Updated ReverseDSC to version 2.0.0.25.
+
+# 1.25.205.1
+
+* AADApplication
+  * Refactored logic for CIM Instance evaluation in Test-TargetResource.
+* AADConditionalAccessPolicy
+  * Changed the InsiderRiskTypes property to a string array.
+* AADConnectorGroupApplicationProxy
+  * Fixes an issue where the Get-TargetResource was not able to retrieve
+    instances by names.
+  * Refactored logic for CIM Instance evaluation in Test-TargetResource.
+* AADServicePrincipal
+  * Fixes comparison of assigned roles for null values.
+    FIXES [#5717](https://github.com/microsoft/Microsoft365DSC/issues/5717)
+* CommerceSelfServicePurchase
+  * Initial release.
+* SCPolicyConfig
+  * Fixes and issue where Get-TargetResource was returning an empty array
+    instead of a null value when no values were defined.
+* SCRoleGroupMember
+  * Error handling if the Members parameter is omitted.
+* MISC
+  * Changed the CIMInstance logic of various resources to us common logic.
+  * Added support for specifying a proxy in Update-M365DSCModule.
+* DEPENDENCIES
+  * Updated MSCloudLoginAssistant to version 1.1.36.
+
+# 1.25.129.3
+
+* EXOMigrationEndpoint
+  * Added support for EntpointType value of ExchangeRemoteMove.
+* M365DSCRuleEvaluation
+  * Changed logic to evaluate cases where the rule results in no results.
+* SPDLPComplianceRule
+  * Fix for the SensitiveInfoType ID cleaning logic in Get-TargetResource.
+* DEPENDENCIES
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.205.
+  * Updated MicrosoftTeams to version 6.8.0.
+  * Updated MSCloudLoginAssistant to version 1.1.35.
+
+# 1.25.129.2
+
+* M365DSCRuleEvaluation
+  * Only provide the ManagedIdentity parameter for resources which supports it.
+* SCDLPComplianceRule
+  * Added the comments property on creation.
+* SCPolicyConfig
+  * Changed parsing logic to account for $null or missing properties in the
+    API response.
+
+# 1.25.129.1
+
+* AADGroup
+  * Added functionality to add & check on Devices in AAD groups.
+* AADRoleEligibilityScheduleRequest
+  * Changed the mapping logic to find Id of a custom role.
+* AADServicePrincipal
+  * Fixes a regression issue when trying to export instances, the authentication
+    parameters were no longer returned by the Get-TargetResource function.
+* IntuneDeviceConfigurationPolicyiOS
+  * Fixes [#5594] https://github.com/microsoft/Microsoft365DSC/issues/5594
+* MISC
+  * AAD Workload
+    * Improved performance of various resources during export.
+
 # 1.25.122.2
 
 * AADAdminConsentRequestPolicy
@@ -10,7 +105,6 @@
   * Refactored the export to use a common CIMInstance function.
 * AADGroup
   * Refactored the export to use a common CIMInstance function.
-  * Added functionality to add & check on Devices in AAD groups.
 * AADHomeRealmDiscoveryPolicy
   * Refactored the export to use a common CIMInstance function.
 * AADIdentityGovernanceLifecycleWorkflow
