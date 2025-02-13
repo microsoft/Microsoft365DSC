@@ -1,5 +1,12 @@
 # Change log for Microsoft365DSC
 
+## Unreleased
+
+* MSFT_IntuneDeviceCompliancePolicyAndroidWorkProfile
+  * Fixed DSC issue [#5592](https://github.com/microsoft/Microsoft365DSC/issues/5592)
+* MSFT_IntuneDeviceCompliancePolicyAndroidDeviceOwner
+  * Fixed DSC issue [#5593](https://github.com/microsoft/Microsoft365DSC/issues/5593)
+
 # 1.25.212.2
 
 * MISC
