@@ -578,6 +578,8 @@ function Export-TargetResource
 
             $Script:exportedInstance = $config
             $Results = Get-TargetResource @Params
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
             if ($null -ne $Results.FirewallRuleName)
             {
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
@@ -610,8 +612,16 @@ function Export-TargetResource
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -Credential $Credential `
-                -NoEscape @('FirewallRuleName', 'Assignments')
+                -Credential $Credential
+            if ($Results.FirewallRuleName)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'FirewallRuleName' -IsCIMArray:$True
+            }
+
+            if ($Results.Assignments)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Assignments' -IsCIMArray:$true
+            }
 
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `

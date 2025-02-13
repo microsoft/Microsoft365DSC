@@ -65,7 +65,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
             }
-            $Script:exportedInstance =$null
+            $Script:exportedInstances =$null
             $Script:ExportMode = $false
         }
         # Test contexts
@@ -157,7 +157,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         IsEnabled             = $true
                         NotifyReviewers       = $False;
                         RemindersEnabled      = $True;
-                        RequestDurationInDays = 29; #drift
+                        RequestDurationInDays = 30;
                         Reviewers             =                 @(
                             @{
                                 Query = "/v1.0/users/e362df2b-8f61-4e5a-9e5e-c6069f3ed2ee"

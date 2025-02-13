@@ -489,7 +489,9 @@ function Export-TargetResource
             }
 
             $Script:exportedInstance = $config
-            $Results = Get-TargetResource @Params
+            $Results = Get-TargetResource @params
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
 
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `

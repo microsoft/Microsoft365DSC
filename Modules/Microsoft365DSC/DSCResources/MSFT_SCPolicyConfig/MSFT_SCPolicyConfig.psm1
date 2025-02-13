@@ -177,16 +177,10 @@ function Get-TargetResource
         $DlpNetworkShareGroupsObject = ConvertFrom-Json $instance.DlpNetworkShareGroups
 
         # AdvancedClassificationEnabled
-        $AdvancedClassificationEnabledValue = [Boolean]::Parse(($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'AdvancedClassificationEnabled' }).Value)
+        $AdvancedClassificationEnabledValue = [Boolean]($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'AdvancedClassificationEnabled' }).Value
 
         # BandwidthLimitEnabled
-        $toBeParsed = ($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'BandwidthLimitEnabled' }).Value
-        $parsedValue = $null
-        if ($null -ne $toBeParsed)
-        {
-            $parsedValue = [Boolean]::Parse($toBeParsed)
-        }
-        $BandwidthLimitEnabledValue = $parsedValue
+        $BandwidthLimitEnabledValue = [Boolean]($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'BandwidthLimitEnabledValue' }).Value
 
         # DailyBandwidthLimitInMB
         $DailyBandwidthLimitInMBValue = [UInt32]($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'DailyBandwidthLimitInMB' }).Value
@@ -198,7 +192,7 @@ function Get-TargetResource
         $MacPathExclusionValue = [Array]($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'MacPathExclusion' }).Value
 
         # MacDefaultPathExclusionsEnabled
-        $MacDefaultPathExclusionsEnabledValue = [Boolean]::Parse(($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'MacDefaultPathExclusionsEnabled' }).Value)
+        $MacDefaultPathExclusionsEnabledValue = [Boolean]($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'MacDefaultPathExclusionsEnabled' }).Value
 
         #EvidenceStoreSettings
         $entry = $EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'EvidenceStoreSettings' }
@@ -214,7 +208,7 @@ function Get-TargetResource
         }
 
         # NetworkPathEnforcementEnabled
-        $NetworkPathEnforcementEnabledValue = [Boolean]::Parse(($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'NetworkPathEnforcementEnabled' }).Value)
+        $NetworkPathEnforcementEnabledValue = [Boolean]($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'NetworkPathEnforcementEnabled' }).Value
 
         # NetworkPathExclusion
         $NetworkPathExclusionValue = ($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'NetworkPathExclusion' }).Value
@@ -235,7 +229,7 @@ function Get-TargetResource
                 $app = @{
                     ExecutableName = $appEntry.ExecutableName
                     Name           = $appEntry.Name
-                    Quarantine     = [Boolean]::Parse($appEntry.Quarantine)
+                    Quarantine     = [Boolean]$appEntry.Quarantine
                 }
                 $entry.Apps += $app
             }
@@ -267,13 +261,7 @@ function Get-TargetResource
         }
 
         # IncludePredefinedUnallowedBluetoothApps
-        $toBeParsed = ($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'IncludePredefinedUnallowedBluetoothApps' }).Value
-        $parsedValue = $null
-        if ($null -ne $toBeParsed)
-        {
-            $parsedValue = [Boolean]::Parse($toBeParsed)
-        }
-        $IncludePredefinedUnallowedBluetoothAppsValue = $parsedValue
+        $IncludePredefinedUnallowedBluetoothAppsValue = [Boolean]($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'IncludePredefinedUnallowedBluetoothApps' }).Value
 
         # UnallowedBluetoothApp
         $entries = [Array]($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'UnallowedBluetoothApp' })
@@ -352,10 +340,10 @@ function Get-TargetResource
             }
 
             # serverDlpEnabled
-            $serverDlpEnabledValue = [Boolean]::Parse(($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'serverDlpEnabled' }).Value)
+            $serverDlpEnabledValue = [Boolean]($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'serverDlpEnabled' }).Value
 
             # AuditFileActivity
-            $AuditFileActivityValue = [Boolean]::Parse(($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'AuditFileActivity' }).Value)
+            $AuditFileActivityValue = [Boolean]($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'AuditFileActivity' }).Value
 
             # VPNSettings
             $entity = $EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'VPNSettings' }
@@ -440,7 +428,7 @@ function Get-TargetResource
             $DlpNetworkShareGroupsValue += $entry
         }
 
-        $QuarantineParametersValue = $null
+        $QuarantineParametersValue = @()
         if ($null -ne ($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'QuarantineParameters' }))
         {
             $quarantineInfo = [Array]($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'QuarantineParameters' }).Value
@@ -854,7 +842,7 @@ function Set-TargetResource
         }
     }
 
-    if (-not [System.String]::IsNullOrEmpty($CloudAppMode))
+    if ($null -ne $CloudAppMode)
     {
         $EndpointDlpGlobalSettingsValue += @{
             Setting = 'CloudAppMode'
@@ -1018,12 +1006,8 @@ function Set-TargetResource
         DlpAppGroups              = $DLPAppGroupsValue
         DlpPrinterGroups          = ConvertTo-Json $DlpPrinterGroupsValue -Depth 10 -Compress
         DLPRemovableMediaGroups   = ConvertTo-Json $DLPRemovableMediaGroupsValue -Depth 10 -Compress
+        EnableSpoAipMigration     = $EnableSpoAipMigration
         EndpointDlpGlobalSettings = $EndpointDlpGlobalSettingsValue
-    }
-    $CurrentPolicyConfig = Get-TargetResource @PSBoundParameters
-    if ($EnableSpoAipMigration -ne $CurrentPolicyConfig.EnableSpoAipMigration)
-    {
-        $params.Add("EnableSpoAipMigration", $EnableSpoAipMigration)
     }
     Write-Verbose -Message "Updating policy config with values:`r`n$(Convert-M365DscHashtableToString -Hashtable $params)"
     Set-PolicyConfig @params
@@ -1201,7 +1185,6 @@ function Test-TargetResource
 
     #Compare Cim instances
     $testResult = $true
-    $testTargetResource = $true
     foreach ($key in $PSBoundParameters.Keys)
     {
         $source = $PSBoundParameters.$key
@@ -1214,7 +1197,6 @@ function Test-TargetResource
 
             if (-not $testResult)
             {
-                $testTargetResource = $false
                 break
             }
 
@@ -1227,12 +1209,9 @@ function Test-TargetResource
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck $ValuesToCheck.Keys
 
-    if (-not $testResult)
-    {
-        $testTargetResource = $false
-    }
-    Write-Verbose -Message "Test-TargetResource returned $testTargetResource"
-    return $testTargetResource
+    Write-Verbose -Message "Test-TargetResource returned $testResult"
+
+    return $testResult
 }
 
 function Export-TargetResource
@@ -1302,6 +1281,7 @@ function Export-TargetResource
             $Global:M365DSCExportResourceInstancesCount++
         }
         $Results = Get-TargetResource @Params
+
         if ($null -ne $Results.BusinessJustificationList)
         {
             $Results.BusinessJustificationList = ConvertTo-BusinessJustificationListString -ObjectHash $Results.BusinessJustificationList
@@ -1362,15 +1342,98 @@ function Export-TargetResource
             $Results.QuarantineParameters = ConvertTo-QuarantineParametersString -ObjectHash $Results.QuarantineParameters
         }
 
+        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+            -Results $Results
 
         $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
             -ConnectionMode $ConnectionMode `
             -ModulePath $PSScriptRoot `
             -Results $Results `
-            -Credential $Credential `
-            -NoEscape @('QuarantineParameters', 'BusinessJustificationList', 'DLPAppGroups', 'DLPNetworkShareGroups',
-                'DLPPrinterGroups', 'DLPRemovableMediaGroups', 'SiteGroups', 'UnallowedApp', 'UnallowedCloudSyncApp',
-                'UnallowedBluetoothApp', 'UnallowedBrowser', 'EvidenceStoreSettings')
+            -Credential $Credential
+
+        if ($null -ne $Results.QuarantineParameters)
+        {
+            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
+                -ParameterName 'QuarantineParameters' `
+                -IsCIMArray:$true
+        }
+
+        if ($null -ne $Results.BusinessJustificationList)
+        {
+            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
+                -ParameterName 'BusinessJustificationList' `
+                -IsCIMArray:$true
+        }
+
+        if ($null -ne $Results.DLPAppGroups)
+        {
+            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
+                -ParameterName 'DLPAppGroups' `
+                -IsCIMArray:$true
+        }
+
+        if ($null -ne $Results.DLPNetworkShareGroups)
+        {
+            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
+                -ParameterName 'DLPNetworkShareGroups' `
+                -IsCIMArray:$true
+        }
+
+        if ($null -ne $Results.DLPPrinterGroups)
+        {
+            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
+                -ParameterName 'DLPPrinterGroups' `
+                -IsCIMArray:$true
+        }
+
+        if ($null -ne $Results.DLPRemovableMediaGroups)
+        {
+            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
+                -ParameterName 'DLPRemovableMediaGroups' `
+                -IsCIMArray:$true
+        }
+
+        if ($null -ne $Results.SiteGroups)
+        {
+            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
+                -ParameterName 'SiteGroups' `
+                -IsCIMArray:$true
+        }
+
+        if ($null -ne $Results.UnallowedApp)
+        {
+            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
+                -ParameterName 'UnallowedApp' `
+                -IsCIMArray:$true
+        }
+
+        if ($null -ne $Results.UnallowedCloudSyncApp)
+        {
+            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
+                -ParameterName 'UnallowedCloudSyncApp' `
+                -IsCIMArray:$true
+        }
+
+        if ($null -ne $Results.UnallowedBluetoothApp)
+        {
+            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
+                -ParameterName 'UnallowedBluetoothApp' `
+                -IsCIMArray:$true
+        }
+
+        if ($null -ne $Results.UnallowedBrowser)
+        {
+            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
+                -ParameterName 'UnallowedBrowser' `
+                -IsCIMArray:$true
+        }
+
+        if ($null -ne $Results.EvidenceStoreSettings)
+        {
+            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
+                -ParameterName 'EvidenceStoreSettings' `
+                -IsCIMArray:$false
+        }
 
         $dscContent += $currentDSCBlock
         Save-M365DSCPartialExport -Content $currentDSCBlock `

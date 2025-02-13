@@ -2010,6 +2010,8 @@ function Export-TargetResource
         }
 
         $Results = Get-TargetResource @Params
+        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+            -Results $Results
 
         $newResults = ([Hashtable]$Results).Clone()
         foreach ($key in $Results.Keys)

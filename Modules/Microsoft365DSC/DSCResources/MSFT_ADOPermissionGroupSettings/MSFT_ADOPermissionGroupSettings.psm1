@@ -469,6 +469,8 @@ function Export-TargetResource
                 if (-not $config.principalName.StartsWith('[TEAM FOUNDATION]'))
                 {
                     $Results = Get-TargetResource @Params
+                    $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                        -Results $Results
                     if ($results.AllowPermissions.Length -gt 0)
                     {
                         $Results.AllowPermissions = Get-M365DSCADOPermissionsAsString $Results.AllowPermissions
@@ -483,8 +485,18 @@ function Export-TargetResource
                         -ConnectionMode $ConnectionMode `
                         -ModulePath $PSScriptRoot `
                         -Results $Results `
-                        -Credential $Credential `
-                        -NoEscape @('AllowPermissions', 'DenyPermissions')
+                        -Credential $Credential
+
+                    if ($null -ne $Results.AllowPermissions)
+                    {
+                        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
+                            -ParameterName 'AllowPermissions'
+                    }
+                    if ($null -ne $Results.DenyPermissions)
+                    {
+                        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
+                            -ParameterName 'DenyPermissions'
+                    }
 
                     $dscContent += $currentDSCBlock
                     Save-M365DSCPartialExport -Content $currentDSCBlock `

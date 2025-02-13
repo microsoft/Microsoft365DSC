@@ -495,8 +495,11 @@ function Export-TargetResource
                 }
 
                 $Results = Get-TargetResource @Params
+
                 if ($Results.Ensure -eq 'Present')
                 {
+                    $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                        -Results $Results
 
                     if ($null -ne $Results.displays)
                     {
@@ -617,8 +620,17 @@ function Export-TargetResource
                         -ConnectionMode $ConnectionMode `
                         -ModulePath $PSScriptRoot `
                         -Results $Results `
-                        -Credential $Credential `
-                        -NoEscape @('displays', 'rules')
+                        -Credential $Credential
+
+                    if ($Results.displays)
+                    {
+                        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'displays' -IsCIMArray:$true
+                    }
+
+                    if ($Results.rules)
+                    {
+                        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'rules' -IsCIMArray:$false
+                    }
 
                     $dscContent.Append($currentDSCBlock) | Out-Null
                     Save-M365DSCPartialExport -Content $currentDSCBlock `

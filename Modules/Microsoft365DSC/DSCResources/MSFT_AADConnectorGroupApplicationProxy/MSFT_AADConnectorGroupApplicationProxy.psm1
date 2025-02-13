@@ -53,51 +53,58 @@ function Get-TargetResource
 
     try
     {
-        if (-not $Script:exportedInstance)
+        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+            -InboundParameters $PSBoundParameters
+
+        #Ensure the proper dependencies are installed in the current environment.
+        Confirm-M365DSCDependencies
+
+        #region Telemetry
+        $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+        $CommandName = $MyInvocation.MyCommand
+        $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+            -CommandName $CommandName `
+            -Parameters $PSBoundParameters
+        Add-M365DSCTelemetryEvent -Data $data
+        #endregion
+
+        $nullResult = $PSBoundParameters
+        $nullResult.Ensure = 'Absent'
+
+        $getValue = $null
+        #region resource generator code
+        if (-not [string]::IsNullOrEmpty($Id))
         {
-            $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-                -InboundParameters $PSBoundParameters
-
-            #Ensure the proper dependencies are installed in the current environment.
-            Confirm-M365DSCDependencies
-
-            #region Telemetry
-            $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
-            $CommandName = $MyInvocation.MyCommand
-            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-                -CommandName $CommandName `
-                -Parameters $PSBoundParameters
-            Add-M365DSCTelemetryEvent -Data $data
-            #endregion
-
-            $nullResult = $PSBoundParameters
-            $nullResult.Ensure = 'Absent'
-
-            $getValue = $null
-            #region resource generator code
-            if (-not [string]::IsNullOrEmpty($Id))
+            if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
+            {
+                $getValue = $Script:exportedInstances | Where-Object -FilterScript { $_.Id -eq $Id }
+            }
+            else
             {
                 $getValue = Get-MgBetaOnPremisePublishingProfileConnectorGroup -ConnectorGroupId $Id -OnPremisesPublishingProfileId 'applicationProxy' -ErrorAction SilentlyContinue
             }
+        }
 
-            if ($null -eq $getValue -and -not [string]::IsNullOrEmpty($Id))
+        if ($null -eq $getValue -and -not [string]::IsNullOrEmpty($Id))
+        {
+            Write-Verbose -Message "Could not find an Azure AD Connector Group Application Proxy with Name {$Name}"
+            if (-Not [string]::IsNullOrEmpty($DisplayName))
             {
-                Write-Verbose -Message "Could not find an Azure AD Connector Group Application Proxy with Name {$Name}"
-                if (-not [string]::IsNullOrEmpty($Name))
+                if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
+                {
+                    $getValue = $Script:exportedInstances | Where-Object -FilterScript { $_.Name -eq $Name }
+                }
+                else
                 {
                     $getValue = Get-MgBetaOnPremisePublishingProfileConnectorGroup -OnPremisesPublishingProfileId 'applicationProxy' -Filter "Name eq '$Name'" -ErrorAction Stop
                 }
             }
-            #endregion
-            if ($null -eq $getValue)
-            {
-                Write-Verbose -Message "Could not find an Azure AD Connector Group Application Proxy with Name {$Name}"
-                return $nullResult
-            }
         }
-        else
+        #endregion
+        if ($null -eq $getValue)
         {
-            $getValue = $Script:exportedInstance
+            Write-Verbose -Message "Could not find an Azure AD Connector Group Application Proxy with Name {$Name}"
+            return $nullResult
         }
 
         $Id = $getValue.Id
@@ -326,10 +333,13 @@ function Test-TargetResource
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
 
-    $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
-        -Source $($MyInvocation.MyCommand.Source) `
-        -DesiredValues $PSBoundParameters `
-        -ValuesToCheck $ValuesToCheck.Keys
+    if ($testResult)
+    {
+        $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -DesiredValues $PSBoundParameters `
+            -ValuesToCheck $ValuesToCheck.Keys
+    }
 
     Write-Verbose -Message "Test-TargetResource returned $testResult"
 
@@ -424,8 +434,10 @@ function Export-TargetResource
                 AccessTokens          = $AccessTokens
             }
 
-            $Script:exportedInstance = $config
             $Results = Get-TargetResource @Params
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
+
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `

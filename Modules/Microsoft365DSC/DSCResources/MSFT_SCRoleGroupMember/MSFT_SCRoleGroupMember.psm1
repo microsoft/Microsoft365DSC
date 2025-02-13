@@ -90,21 +90,12 @@ function Get-TargetResource
         }
 
         # Get RoleGroup Members if RoleGroup exists.
-        $roleGroupMembers = Get-RoleGroupMember -Identity $Name | Select-Object Name
-
-        if ($roleGroupMembers.Length -eq 0)
-        {
-            $roleGroupMembersValue = @()
-        }
-        else
-        {
-            $roleGroupMembersValue = $roleGroupMembers.Name
-        }
+        $roleGroupMember = Get-RoleGroupMember -Identity $Name | Select-Object Name
 
         $result = @{
             Name                  = $RoleGroup.Name
             Description           = $RoleGroup.Description
-            Members               = $roleGroupMembersValue
+            Members               = $roleGroupMember.Name
             Ensure                = 'Present'
             Credential            = $Credential
             ApplicationId         = $ApplicationId
@@ -202,23 +193,10 @@ function Set-TargetResource
         -InboundParameters $PSBoundParameters
 
     # CASE: Role Group has different member values than the desired ones
-    $MembersValue = $Members
-    if ([System.String]::IsNullOrEmpty($Members))
-    {
-        $MembersValue = @()
-    }
-
-    $currentMembersValue = $currentRoleGroupConfig.Members
-    if ([System.String]::IsNullOrEmpty($currentRoleGroupConfig.Members))
-    {
-        $currentMembersValue = @()
-    }
-
-    $differences = Compare-Object -ReferenceObject $currentMembersValue -DifferenceObject $MembersValue
-
-    if ($Ensure -eq 'Present' -and $currentRoleGroupConfig.Ensure -eq 'Present' -and $null -ne $differences)
+    if ($Ensure -eq 'Present' -and $currentRoleGroupConfig.Ensure -eq 'Present' -and $null -ne (Compare-Object -ReferenceObject $($currentRoleGroupConfig.Members) -DifferenceObject $Members))
     {
         Write-Verbose -Message "Role Group '$($Name)' exists, but members need updating."
+        $differences = Compare-Object -ReferenceObject $($currentRoleGroupConfig.Members) -DifferenceObject $Members
         foreach ($difference in $differences)
         {
             if ($difference.SideIndicator -eq '=>')
@@ -316,7 +294,6 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('Description') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -416,6 +393,8 @@ function Export-TargetResource
             }
             $Script:exportedInstance = $RoleGroup
             $Results = Get-TargetResource @Params
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `

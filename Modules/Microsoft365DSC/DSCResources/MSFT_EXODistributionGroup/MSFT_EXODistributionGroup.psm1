@@ -1060,6 +1060,7 @@ function Export-TargetResource
             }
             $Script:exportedInstance = $distributionGroup
             $Results = Get-TargetResource @Params
+
             if ($Results.AcceptMessagesOnlyFromSendersOrMembers.Length -eq 0)
             {
                 $Results.Remove('AcceptMessagesOnlyFromSendersOrMembers') | Out-Null
@@ -1075,6 +1076,8 @@ function Export-TargetResource
                 $Results.Remove('AcceptMessagesOnlyFromDLMembers') | Out-Null
             }
 
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `

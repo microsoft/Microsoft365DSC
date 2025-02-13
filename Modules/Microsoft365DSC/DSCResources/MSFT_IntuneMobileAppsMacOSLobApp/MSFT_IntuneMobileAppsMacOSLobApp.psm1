@@ -831,7 +831,9 @@ function Export-TargetResource
             }
 
             $Script:exportedInstance = $config
-            $Results = Get-TargetResource @Params
+            $Results = Get-TargetResource @params
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
 
             #region complex types
             if ($null -ne $Results.Categories)
@@ -922,8 +924,34 @@ function Export-TargetResource
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -Credential $Credential `
-                -NoEscape @('Categories', 'ChildApps', 'LargeIcon', 'MinimumSupportedOperatingSystem', 'Assignments')
+                -Credential $Credential
+
+            #region complex types
+            if ($null -ne $Results.Categories)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Categories' -IsCIMArray:$true
+            }
+
+            if ($null -ne $Results.ChildApps)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'ChildApps' -IsCIMArray:$true
+            }
+
+            if ($null -ne $Results.LargeIcon)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'LargeIcon' -IsCIMArray:$false
+            }
+
+            if ($null -ne $Results.MinimumSupportedOperatingSystem)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'MinimumSupportedOperatingSystem' -IsCIMArray:$false
+            }
+
+            if ($null -ne $Results.Assignments)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Assignments' -IsCIMArray:$true
+            }
+            #endregion complex types
 
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `

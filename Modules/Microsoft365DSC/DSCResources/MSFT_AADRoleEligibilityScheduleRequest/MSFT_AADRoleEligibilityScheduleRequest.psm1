@@ -99,16 +99,17 @@
     $nullResult.Ensure = 'Absent'
     try
     {
+        $request = $null
         if (-not [System.String]::IsNullOrEmpty($Id))
         {
             if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
             {
-                $schedule = $Script:exportedInstances | Where-Object -FilterScript { $_.Id -eq $Id }
+                $request = $Script:exportedInstances | Where-Object -FilterScript { $_.Id -eq $Id }
             }
             else
             {
                 Write-Verbose -Message "Getting Role Eligibility by Id {$Id}"
-                $schedule = Get-MgBetaRoleManagementDirectoryRoleEligibilitySchedule -UnifiedRoleEligibilityScheduleId $Id `
+                $request = Get-MgBetaRoleManagementDirectoryRoleEligibilitySchedule -UnifiedRoleEligibilityScheduleId $Id `
                     -ErrorAction SilentlyContinue
             }
         }
@@ -138,46 +139,20 @@
         $RoleDefinitionId = (Get-MgBetaRoleManagementDirectoryRoleDefinition -Filter "DisplayName eq '$RoleDefinition'").Id
         Write-Verbose -Message "Retrieved role definition {$RoleDefinition} with ID {$RoleDefinitionId}"
 
-        if ($null -eq $schedule)
+        if ($null -eq $request)
         {
             Write-Verbose -Message "Retrieving the request by PrincipalId {$($PrincipalInstance.Id)}, RoleDefinitionId {$($RoleDefinitionId)} and DirectoryScopeId {$($DirectoryScopeId)}"
             [Array] $requests = Get-MgBetaRoleManagementDirectoryRoleEligibilitySchedule -Filter "PrincipalId eq '$($PrincipalInstance.Id)' and RoleDefinitionId eq '$($RoleDefinitionId)' and DirectoryScopeId eq '$($DirectoryScopeId)'"
             if ($requests.Length -eq 0)
             {
-                # We need to make sure we're not ending up here because the role is a custom role (which has a different id).
-                # We start by retrieving all schedules for the given principal.
-                [Array] $schedulesForPrincipal = Get-MgBetaRoleManagementDirectoryRoleEligibilitySchedule -Filter "PrincipalId eq '$($PrincipalInstance.Id)' and DirectoryScopeId eq '$($DirectoryScopeId)'"
-                
-                # Loop through the role associated with each schedule to check and see if we have a match on the name.
-                $schedule = $null
-                foreach ($foundSchedule in $schedulesForPrincipal)
-                {
-                    $scheduleRoleId = $foundSchedule.RoleDefinitionId
-                    $roleEntry = Get-MgBetaRoleManagementDirectoryRoleDefinition -UnifiedRoleDefinitionId $scheduleRoleId
-                    if ($roleEntry.DisplayName -eq $RoleDefinition)
-                    {
-                        $RoleDefinitionId = $roleEntry.Id
-                        $schedule = $foundSchedule
-                        break
-                    }
-                }
+                return $nullResult
+            }
 
-                if ($null -eq $schedule)
-                {
-                    return $nullResult
-                }
-            }
-            else
-            {
-                $schedule = $requests[0]
-            }
+            $request = $requests[0]
         }
 
-        if ($null -eq $schedule)
-        {
-            $schedules = Get-MgBetaRoleManagementDirectoryRoleEligibilitySchedule -Filter "PrincipalId eq '$($request.PrincipalId)'"
-            $schedule = $schedules | Where-Object -FilterScript { $_.RoleDefinitionId -eq $RoleDefinitionId }
-        }
+        $schedules = Get-MgBetaRoleManagementDirectoryRoleEligibilitySchedule -Filter "PrincipalId eq '$($request.PrincipalId)'"
+        $schedule = $schedules | Where-Object -FilterScript { $_.RoleDefinitionId -eq $RoleDefinitionId }
         if ($null -eq $schedule)
         {
             foreach ($instance in $schedules)
@@ -191,11 +166,15 @@
             }
         }
 
-        if ($null -eq $schedule)
+        if ($null -eq $schedule -or $null -eq $request)
         {
             if ($null -eq $schedule)
             {
                 Write-Verbose -Message "Could not retrieve the schedule for {$($request.PrincipalId)} & RoleDefinitionId {$RoleDefinitionId}"
+            }
+            if ($null -eq $request)
+            {
+                Write-Verbose -Message "Could not request the schedule for {$RoleDefinition}"
             }
             return $nullResult
         }
@@ -245,12 +224,12 @@
             Principal             = $PrincipalValue
             PrincipalType         = $PrincipalType
             RoleDefinition        = $RoleDefinition
-            DirectoryScopeId      = $schedule.DirectoryScopeId
-            AppScopeId            = $schedule.AppScopeId
-            Action                = $schedule.Action
-            Id                    = $schedule.Id
-            Justification         = $schedule.Justification
-            IsValidationOnly      = $schedule.IsValidationOnly
+            DirectoryScopeId      = $request.DirectoryScopeId
+            AppScopeId            = $request.AppScopeId
+            Action                = $request.Action
+            Id                    = $request.Id
+            Justification         = $request.Justification
+            IsValidationOnly      = $request.IsValidationOnly
             ScheduleInfo          = $ScheduleInfoValue
             Ensure                = 'Present'
             Credential            = $Credential
@@ -620,10 +599,7 @@ function Test-TargetResource
             return $false
         }
     }
-    $ValuesToCheck.Remove('ScheduleInfo') | Out-Null    
-    $ValuesToCheck.Remove('Action') | Out-Null
-    $ValuesToCheck.Remove('IsValidationOnly') | Out-Null
-    $ValuesToCheck.Remove('Justification') | Out-Null
+    $ValuesToCheck.Remove('ScheduleInfo') | Out-Null
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
@@ -765,6 +741,8 @@ function Export-TargetResource
             }
 
             $Results = Get-TargetResource @Params
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
 
             if ($Results.ScheduleInfo)
             {
@@ -806,8 +784,17 @@ function Export-TargetResource
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -Credential $Credential `
-                -NoEscape @('ScheduleInfo')
+                -Credential $Credential
+            if ($Results.ScheduleInfo)
+            {
+                $isCIMArray = $false
+                if ($Results.ScheduleInfo.getType().Fullname -like '*[[\]]')
+                {
+                    $isCIMArray = $true
+                }
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
+                        -ParameterName 'ScheduleInfo' -IsCIMArray:$isCIMArray
+            }
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName

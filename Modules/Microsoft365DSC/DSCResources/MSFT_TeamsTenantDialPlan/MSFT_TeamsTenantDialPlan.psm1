@@ -523,7 +523,9 @@ function Export-TargetResource
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }
-            $Results = Get-TargetResource @Params
+            $results = Get-TargetResource @params
+            $results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
 
             if ($null -ne $Results.NormalizationRules)
             {
@@ -553,10 +555,14 @@ function Export-TargetResource
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -Credential $Credential `
-                -NoEscape @('NormalizationRules')
+                -Credential $Credential
+            if ($Results.NormalizationRules)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'NormalizationRules' -IsCIMArray:$True
+            }
 
             $dscContent += $currentDSCBlock
+
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
@@ -679,6 +685,53 @@ function Get-M365DSCNormalizationRules
     }
 
     return $result
+}
+
+function Get-M365DSCNormalizationRulesAsString
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.Object[]]
+        $Params
+    )
+
+    if ($null -eq $params)
+    {
+        return $null
+    }
+    $currentProperty = "@(`r`n"
+
+    foreach ($rule in $params)
+    {
+        $currentProperty += "                MSFT_TeamsVoiceNormalizationRule{`r`n"
+        foreach ($key in $rule.Keys)
+        {
+            if ($key -eq 'Priority')
+            {
+                $currentProperty += '                    ' + $key + ' = ' + $rule[$key] + "`r`n"
+            }
+            elseif ($key -eq 'IsInternalExtension')
+            {
+                $currentProperty += '                    ' + $key + " = `$" + $rule[$key] + "`r`n"
+            }
+            else
+            {
+                $value = $rule[$key]
+                if (-not [System.String]::IsNullOrEmpty($value))
+                {
+                    $value = $value.Replace("'", "''")
+                }
+                $currentProperty += '                    ' + $key + " = '" + $value + "'`r`n"
+            }
+        }
+        $currentProperty += "                }`r`n"
+    }
+    $currentProperty += '            )'
+
+    return $currentProperty
 }
 
 Export-ModuleMember -Function *-TargetResource

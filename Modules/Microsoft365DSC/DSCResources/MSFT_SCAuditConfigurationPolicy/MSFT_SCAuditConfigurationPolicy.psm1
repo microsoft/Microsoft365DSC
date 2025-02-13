@@ -365,6 +365,8 @@ function Export-TargetResource
 
             $Script:exportedInstance = $policy
             $Results = Get-TargetResource @PSBoundParameters -Workload $policy.Workload
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `

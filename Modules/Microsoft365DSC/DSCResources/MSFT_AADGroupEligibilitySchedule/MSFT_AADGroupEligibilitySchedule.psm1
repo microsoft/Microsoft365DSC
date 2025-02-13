@@ -107,13 +107,13 @@ function Get-TargetResource
             $GroupId = (Get-MgGroup -Filter $Filter).Id
         }
         if ($Id -notmatch '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}_member_[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$') {
-            $getId = Get-MgBetaIdentityGovernancePrivilegedAccessGroupEligibilitySchedule `
+            $getId = Get-MgIdentityGovernancePrivilegedAccessGroupEligibilitySchedule `
                 -Filter "Groupid eq '$GroupId'" `
                 -ErrorAction SilentlyContinue
                 $Id = $getId.Id
         }
 
-        $uri = "$((Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl)v1.0/identityGovernance/privilegedAccess/group/eligibilitySchedules/" + $Id
+        $uri = 'https://graph.microsoft.com/v1.0/identityGovernance/privilegedAccess/group/eligibilitySchedules/' + $Id
         $getvalue = Invoke-GraphRequest -Uri $uri -Method Get -ErrorAction SilentlyContinue
 
         #endregion
@@ -784,24 +784,19 @@ function Export-TargetResource
     try
     {
 
-        $groups = Get-MgGroup -Filter "MailEnabled eq false and NOT(groupTypes/any(x:x eq 'DynamicMembership'))" -Property "displayname,Id" -CountVariable CountVar -All -ConsistencyLevel eventual -ErrorAction Stop
-        $j = 1
-        if ($groups.Length -eq 0)
-        {
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
-        }
-        else
-        {
-            Write-Host "`r`n" -NoNewline
-        }
+        $groups = Get-MgGroup -Filter "MailEnabled eq false and NOT(groupTypes/any(x:x eq 'DynamicMembership'))" -Property "displayname,Id" -CountVariable CountVar  -ConsistencyLevel eventual -ErrorAction Stop
         foreach ($group in $groups)
         {
-            Write-Host "    |---[$j/$($groups.Count)] $($group.DisplayName)" -NoNewline
+            Write-Host "get group $($group.DisplayName)"
             #region resource generator code
-            $getValue = Get-MgBetaIdentityGovernancePrivilegedAccessGroupEligibilitySchedule `
+            $getValue = Get-MgIdentityGovernancePrivilegedAccessGroupEligibilitySchedule `
                 -Filter "groupId eq '$($group.Id)'" `
                 -All `
-                -ErrorAction SilentlyContinue
+                -ErrorAction Stop
+            if($null -eq $getValue)
+            {
+                continue
+            }
 
             $i = 1
             $dscContent = ''
@@ -815,11 +810,7 @@ function Export-TargetResource
             }
             foreach ($config in $getValue)
             {
-                if ($null -ne $Global:M365DSCExportResourceInstancesCount)
-                {
-                    $Global:M365DSCExportResourceInstancesCount++
-                }
-                Write-Host "        |---[$i/$($getValue.Count)] $($config.Id)" -NoNewline
+                Write-Host "    |---[$i/$($getValue.Count)] $($group.DisplayName)" -NoNewline
                 $params = @{
                     Id                    = $config.Id
                     GroupDisplayName      = $group.DisplayName
@@ -834,7 +825,8 @@ function Export-TargetResource
                 }
 
                 $Results = Get-TargetResource @Params
-
+                $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                    -Results $Results
                 if ($null -ne $Results.ScheduleInfo)
                 {
                     $complexMapping = @(
@@ -883,8 +875,11 @@ function Export-TargetResource
                     -ConnectionMode $ConnectionMode `
                     -ModulePath $PSScriptRoot `
                     -Results $Results `
-                    -Credential $Credential `
-                    -NoEscape @('ScheduleInfo')
+                    -Credential $Credential
+                if ($Results.ScheduleInfo)
+                {
+                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "ScheduleInfo" -IsCIMArray:$False
+                }
 
                 $dscContent += $currentDSCBlock
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
@@ -892,9 +887,8 @@ function Export-TargetResource
                 $i++
                 Write-Host $Global:M365DSCEmojiGreenCheckMark
             }
-            $j++
+            return $dscContent
         }
-        return $dscContent
     }
     catch
     {

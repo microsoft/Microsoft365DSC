@@ -921,6 +921,8 @@ function Export-TargetResource
 
             $Script:exportedInstance = $config
             $Results = Get-TargetResource @Params
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
             if ($null -ne $Results.CustomSubjectAlternativeNames)
             {
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
@@ -965,9 +967,19 @@ function Export-TargetResource
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -Credential $Credential `
-                -NoEscape @('CustomSubjectAlternativeNames', 'ExtendedKeyUsages', 'Assignments')
-
+                -Credential $Credential
+            if ($Results.CustomSubjectAlternativeNames)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'CustomSubjectAlternativeNames' -IsCIMArray:$True
+            }
+            if ($Results.ExtendedKeyUsages)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'ExtendedKeyUsages' -IsCIMArray:$True
+            }
+            if ($Results.Assignments)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Assignments' -IsCIMArray:$true
+            }
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName

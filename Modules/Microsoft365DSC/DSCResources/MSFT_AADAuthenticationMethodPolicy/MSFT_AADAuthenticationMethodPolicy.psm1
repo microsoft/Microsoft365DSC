@@ -508,7 +508,6 @@ function Test-TargetResource
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
     $testResult = $true
-    $testTargetResource = $true
 
     #Compare Cim instances
     foreach ($key in $PSBoundParameters.Keys)
@@ -519,7 +518,7 @@ function Test-TargetResource
         {
             $source = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
 
-            $testTargetResource = Compare-M365DSCComplexObject `
+            $testResult = Compare-M365DSCComplexObject `
                 -Source ($source) `
                 -Target ($target)
 
@@ -538,17 +537,17 @@ function Test-TargetResource
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
 
-    $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
-        -Source $($MyInvocation.MyCommand.Source) `
-        -DesiredValues $PSBoundParameters `
-        -ValuesToCheck $ValuesToCheck.Keys
-
-    if (-not $TestResult)
+    if ($testResult)
     {
-        $testTargetResource = $false
+        $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -DesiredValues $PSBoundParameters `
+            -ValuesToCheck $ValuesToCheck.Keys
     }
-    Write-Verbose -Message "Test-TargetResource returned $testTargetResource"
-    return $testTargetResource
+
+    Write-Verbose -Message "Test-TargetResource returned $testResult"
+
+    return $testResult
 }
 
 function Export-TargetResource
@@ -646,6 +645,8 @@ function Export-TargetResource
 
                 $Script:exportedInstance = $config
                 $Results = Get-TargetResource @Params
+                $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                    -Results $Results
                 if ($null -ne $Results.RegistrationEnforcement)
                 {
                     $complexMapping = @(
@@ -753,9 +754,20 @@ function Export-TargetResource
                     -ConnectionMode $ConnectionMode `
                     -ModulePath $PSScriptRoot `
                     -Results $Results `
-                    -Credential $Credential `
-                    -NoEscape @('RegistrationEnforcement', 'ReportSuspiciousActivitySettings', 'SystemCredentialPreferences')
+                    -Credential $Credential
+                if ($Results.RegistrationEnforcement)
+                {
+                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'RegistrationEnforcement' -IsCIMArray:$False
+                }
+                if ($Results.SystemCredentialPreferences)
+                {
+                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'SystemCredentialPreferences' -IsCIMArray:$False
+                }
 
+                if ($Results.ReportSuspiciousActivitySettings)
+                {
+                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'ReportSuspiciousActivitySettings' -IsCIMArray:$False
+                }
                 $dscContent += $currentDSCBlock
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
                     -FileName $Global:PartialExportFileName

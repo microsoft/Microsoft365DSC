@@ -1113,6 +1113,7 @@ function Export-TargetResource
             }
 
             $Results = Get-TargetResource @Params
+
             if ($null -ne $Results.Domains -and $Results.Domains.Length -gt 0 -and `
                 ($Results.ListType -eq 'CustomDomainLists' -or $Results.ListType -eq 'DomainLists'))
             {
@@ -1125,13 +1126,26 @@ function Export-TargetResource
                 $Results.Sites = ConvertTo-M365DSCSCInsiderRiskSiteToString -Sites $Results.Sites
             }
 
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
 
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -Credential $Credential `
-                -NoEscape @('Domains', 'Sites')
+                -Credential $Credential
+
+            if ($null -ne $Results.Domains -and `
+                ($Results.ListType -eq 'CustomDomainLists' -or $Results.ListType -eq 'DomainLists'))
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Domains' -IsCIMArray $true
+            }
+
+            if ($null -ne $Results.Sites -and `
+                ($Results.ListType -eq 'CustomSiteLists' -or $Results.ListType -eq 'SiteLists'))
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Sites' -IsCIMArray $true
+            }
 
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `

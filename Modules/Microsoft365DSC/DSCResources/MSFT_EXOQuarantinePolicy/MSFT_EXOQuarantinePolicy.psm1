@@ -663,6 +663,7 @@ function Export-TargetResource
             }
 
             $Results = Get-TargetResource @Params
+
             $keysToRemove = @()
             foreach ($key in $Results.Keys)
             {
@@ -675,6 +676,8 @@ function Export-TargetResource
             {
                 $Results.Remove($key) | Out-Null
             }
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `

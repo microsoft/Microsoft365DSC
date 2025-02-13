@@ -65,29 +65,15 @@ function Get-TargetResource
     $nullResult.Ensure = 'Absent'
     try
     {
-        $uri = "https://" + (Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatformREST').BapEndpoint + `
-               "/providers/Microsoft.BusinessAppPlatform/scopes/admin/apiPolicies?api-version=2016-11-01"
-
-        $policies = Invoke-M365DSCPowerPlatformRESTWebRequest -Uri $uri -Method 'GET'
-
-        $policy = $null
-        foreach ($policyInfo in $policies.value)
-        {
-            if ($policyInfo.properties.displayName -eq $PolicyName)
-            {
-                $policy = $policyInfo
-            }
-        }
+        $policy = Get-AdminDlpPolicy | Where-Object -FilterScript { $_.DisplayName -eq $PolicyName }
 
         if ($null -eq $policy)
         {
             return $nullResult
         }
 
-        $uri = "https://" + (Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatformREST').BapEndpoint + `
-               "/providers/PowerPlatform.Governance/v1/tenants/$($PPTenantId)/policies/$($policy.Name)/policyconnectorconfigurations"
-
-        $ActionList = Invoke-M365DSCPowerPlatformRESTWebRequest -Uri $uri -Method 'GET'
+        $ActionList = Get-PowerAppDlpPolicyConnectorConfigurations -TenantId $PPTenantId `
+            -PolicyName $($policy.PolicyName)
         $ActionsValue = @()
         foreach ($action in $ActionList.connectorActionConfigurations)
         {
@@ -182,7 +168,7 @@ function Set-TargetResource
         $AccessTokens
     )
 
-    New-M365DSCConnection -Workload 'PowerPlatformREST' `
+    New-M365DSCConnection -Workload 'PowerPlatforms' `
         -InboundParameters $PSBoundParameters | Out-Null
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -197,19 +183,9 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $uri = "https://" + (Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatformREST').BapEndpoint + `
-        "/providers/Microsoft.BusinessAppPlatform/scopes/admin/apiPolicies?api-version=2016-11-01"
+    $policy = Get-AdminDlpPolicy | Where-Object -FilterScript { $_.DisplayName -eq $PolicyName }
+    $policyNameValue = $policy.PolicyName
 
-    $policies = Invoke-M365DSCPowerPlatformRESTWebRequest -Uri $uri -Method 'GET'
-
-    $policy = $null
-    foreach ($policyInfo in $policies.value)
-    {
-        if ($policyInfo.properties.displayName -eq $PolicyName)
-        {
-            $policy = $policyInfo
-        }
-    }
     # CREATE
     if ($Ensure -eq 'Present')
     {
@@ -238,19 +214,16 @@ function Set-TargetResource
         $payload = $(ConvertTo-Json $body -Depth 9 -Compress)
         Write-Verbose -Message "Setting Connector Configuration for Policy {$($PolicyNameValue)} with parameters:`r`n$payload"
 
-        $uri = "https://" + (Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatformREST').BapEndpoint + `
-               "/providers/PowerPlatform.Governance/v1/tenants/$($PPTenantId)/policies/$($policy.Name)/policyconnectorconfigurations"
-
-        Invoke-M365DSCPowerPlatformRESTWebRequest -Uri $uri -Method 'POST' -Body $body
+        New-PowerAppDlpPolicyConnectorConfigurations -TenantId $PPTenantId `
+            -PolicyName $policyNameValue `
+            -NewDlpPolicyConnectorConfigurations $body `
+            -Verbose
     }
     # REMOVE
     elseif ($Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Removing Connector Configuration for Policy {$($PolicyNameValue)}"
-        $uri = "https://" + (Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatformREST').BapEndpoint + `
-               "/providers/PowerPlatform.Governance/v1/tenants/$($PPTenantId)/policies/$($policy.Name)/policyconnectorconfigurations"
-
-        Invoke-M365DSCPowerPlatformRESTWebRequest -Uri $uri -Method 'DELETE'
+        Remove-PowerAppDlpPolicyConnectorConfigurations -TenantId $PPTenantId -PolicyName $policyNameValue
     }
 }
 
@@ -388,7 +361,7 @@ function Export-TargetResource
         $AccessTokens
     )
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'PowerPlatformREST' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'PowerPlatforms' `
         -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -406,14 +379,8 @@ function Export-TargetResource
     try
     {
         $Script:ExportMode = $true
-
-        $uri = "https://" + (Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatformREST').BapEndpoint + `
-               "/providers/Microsoft.BusinessAppPlatform/scopes/admin/apiPolicies?api-version=2016-11-01"
-
-        [array]$policies = Invoke-M365DSCPowerPlatformRESTWebRequest -Uri $uri -Method 'GET'
-        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters
-        $tenantinfo = (Get-MgContext)
+        $tenantInfo = Get-TenantDetailsFromGraph
+        [array] $policies = Get-AdminDlpPolicy -ErrorAction Stop
 
         $dscContent = ''
         if ($policies.Length -eq 0)
@@ -425,16 +392,16 @@ function Export-TargetResource
             Write-Host "`r`n" -NoNewline
         }
         $i = 1
-        foreach ($policy in $policies.value)
+        foreach ($policy in $policies)
         {
             if ($null -ne $Global:M365DSCExportResourceInstancesCount)
             {
                 $Global:M365DSCExportResourceInstancesCount++
             }
-            Write-Host "    |---[$i/$($policies.value.Count)] $($policy.properties.DisplayName)" -NoNewline
+            Write-Host "    |---[$i/$($policies.Count)] $($policy.DisplayName)" -NoNewline
             $params = @{
                 PPTenantId            = $tenantInfo.TenantId
-                PolicyName            = $policy.properties.displayName
+                PolicyName            = $policy.DisplayName
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
@@ -444,6 +411,8 @@ function Export-TargetResource
             }
 
             $Results = Get-TargetResource @Params
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
 
             if ($null -ne $Results.ConnectorActionConfigurations)
             {
@@ -471,8 +440,11 @@ function Export-TargetResource
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -Credential $Credential `
-                -NoEscape @('ConnectorActionConfigurations')
+                -Credential $Credential
+            if ($Results.ConnectorActionConfigurations)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'ConnectorActionConfigurations' -IsCIMArray:$true
+            }
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName

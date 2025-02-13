@@ -756,6 +756,7 @@ function Export-TargetResource
                 }
 
                 $Results = Get-TargetResource @Params
+
                 if ($null -ne $Results.Attributes)
                 {
                     $complexMapping = @(
@@ -800,12 +801,19 @@ function Export-TargetResource
                     }
                 }
 
+                $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                    -Results $Results
+
                 $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                     -ConnectionMode $ConnectionMode `
                     -ModulePath $PSScriptRoot `
                     -Results $Results `
-                    -Credential $Credential `
-                    -NoEscape @('Attributes')
+                    -Credential $Credential
+
+                if ($null -ne $Results.Attributes)
+                {
+                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Attributes' -IsCIMArray:$true
+                }
                 $dscContent += $currentDSCBlock
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
                     -FileName $Global:PartialExportFileName

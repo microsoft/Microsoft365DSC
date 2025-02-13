@@ -63,51 +63,44 @@ function Get-TargetResource
 
     try
     {
-        if (-not $Script:exportedInstance)
+        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+            -InboundParameters $PSBoundParameters
+
+        #Ensure the proper dependencies are installed in the current environment.
+        Confirm-M365DSCDependencies
+
+        #region Telemetry
+        $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+        $CommandName = $MyInvocation.MyCommand
+        $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+            -CommandName $CommandName `
+            -Parameters $PSBoundParameters
+        Add-M365DSCTelemetryEvent -Data $data
+        #endregion
+
+        $nullResult = $PSBoundParameters
+        $nullResult.Ensure = 'Absent'
+
+        $getValue = $null
+        #region resource generator code
+        $getValue = Get-MgBetaPolicyClaimMappingPolicy -ClaimsMappingPolicyId $Id -ErrorAction SilentlyContinue
+
+        if ($null -eq $getValue)
         {
-            $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-                -InboundParameters $PSBoundParameters
+            Write-Verbose -Message "Could not find an Azure AD Claims Mapping Policy with Id {$Id}"
 
-            #Ensure the proper dependencies are installed in the current environment.
-            Confirm-M365DSCDependencies
-
-            #region Telemetry
-            $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
-            $CommandName = $MyInvocation.MyCommand
-            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-                -CommandName $CommandName `
-                -Parameters $PSBoundParameters
-            Add-M365DSCTelemetryEvent -Data $data
-            #endregion
-
-            $nullResult = $PSBoundParameters
-            $nullResult.Ensure = 'Absent'
-
-            $getValue = $null
-            #region resource generator code
-            $getValue = Get-MgBetaPolicyClaimMappingPolicy -ClaimsMappingPolicyId $Id -ErrorAction SilentlyContinue
-
-            if ($null -eq $getValue)
+            if (-not [System.String]::IsNullOrEmpty($DisplayName))
             {
-                Write-Verbose -Message "Could not find an Azure AD Claims Mapping Policy with Id {$Id}"
-
-                if (-not [System.String]::IsNullOrEmpty($DisplayName))
-                {
-                    $getValue = Get-MgBetaPolicyClaimMappingPolicy `
-                        -Filter "DisplayName eq '$DisplayName'" `
-                        -ErrorAction SilentlyContinue
-                }
-            }
-            #endregion
-            if ($null -eq $getValue)
-            {
-                Write-Verbose -Message "Could not find an Azure AD Claims Mapping Policy with DisplayName {$DisplayName}."
-                return $nullResult
+                $getValue = Get-MgBetaPolicyClaimMappingPolicy `
+                    -Filter "DisplayName eq '$DisplayName'" `
+                    -ErrorAction SilentlyContinue
             }
         }
-        else
+        #endregion
+        if ($null -eq $getValue)
         {
-            $getValue = $Script:exportedInstance
+            Write-Verbose -Message "Could not find an Azure AD Claims Mapping Policy with DisplayName {$DisplayName}."
+            return $nullResult
         }
         $Id = $getValue.Id
         Write-Verbose -Message "An Azure AD Claims Mapping Policy with Id {$Id} and DisplayName {$DisplayName} was found"
@@ -416,7 +409,6 @@ function Test-TargetResource
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
     $testResult = $true
-    $testTargetResource = $true
 
     #Compare Cim instances
     foreach ($key in $PSBoundParameters.Keys)
@@ -431,7 +423,6 @@ function Test-TargetResource
 
             if (-not $testResult)
             {
-                $testTargetResource = $false
                 break
             }
 
@@ -445,17 +436,17 @@ function Test-TargetResource
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
 
-    $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
-        -Source $($MyInvocation.MyCommand.Source) `
-        -DesiredValues $PSBoundParameters `
-        -ValuesToCheck $ValuesToCheck.Keys
-
-    if (-not $TestResult)
+    if ($testResult)
     {
-        $testTargetResource = $false
+        $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -DesiredValues $PSBoundParameters `
+            -ValuesToCheck $ValuesToCheck.Keys
     }
-    Write-Verbose -Message "Test-TargetResource returned $testTargetResource"
-    return $testTargetResource
+
+    Write-Verbose -Message "Test-TargetResource returned $testResult"
+
+    return $testResult
 }
 
 function Export-TargetResource
@@ -552,8 +543,10 @@ function Export-TargetResource
                 AccessTokens          = $AccessTokens
             }
 
-            $Script:exportedInstance = $config
             $Results = Get-TargetResource @Params
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
+
             if ($null -ne $Results.Definition)
             {
                 $complexMapping = @(
@@ -602,8 +595,12 @@ function Export-TargetResource
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -Credential $Credential `
-                -NoEscape @('Definition')
+                -Credential $Credential
+
+            if ($Results.Definition)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Definition' -IsCIMArray:$True
+            }
 
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `

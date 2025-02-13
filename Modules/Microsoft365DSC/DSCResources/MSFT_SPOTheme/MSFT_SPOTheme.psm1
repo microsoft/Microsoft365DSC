@@ -430,35 +430,19 @@ function Export-TargetResource
                 AccessTokens          = $AccessTokens
             }
             $Results = Get-TargetResource @Params
-            if ($null -ne $Results.Palette)
-            {
-                $complexMapping = @(
-                    @{
-                        Name            = 'OptionalClaims'
-                        CimInstanceName = 'MSFT_SPOThemePaletteProperty'
-                        IsRequired      = $False
-                    }
-                )
-                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
-                    -ComplexObject $Results.Palette `
-                    -CIMInstanceName 'MSFT_SPOThemePaletteProperty' `
-                    -ComplexTypeMapping $complexMapping
-
-                if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
-                {
-                    $Results.Palette = $complexTypeStringResult
-                }
-                else
-                {
-                    $Results.Remove('Palette') | Out-Null
-                }
-            }
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
+            $Results.Palette = ConvertTo-SPOThemePalettePropertyString $Results.Palette
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -Credential $Credential `
-                -NoEscape @('Palette')
+                -Credential $Credential
+            if ($null -ne $Results.Palette)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
+                    -ParameterName 'Palette'
+            }
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName

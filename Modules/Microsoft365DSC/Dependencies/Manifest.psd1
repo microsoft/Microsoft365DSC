@@ -18,7 +18,7 @@
         },
         @{
             ModuleName      = 'DSCParser'
-            RequiredVersion = '2.0.0.15'
+            RequiredVersion = '2.0.0.14'
         },
         @{
             ModuleName      = 'ExchangeOnlineManagement'
@@ -113,12 +113,16 @@
             RequiredVersion = '2.25.0'
         },
         @{
+            ModuleName      = 'Microsoft.PowerApps.Administration.PowerShell'
+            RequiredVersion = '2.0.203'
+        },
+        @{
             ModuleName      = 'MicrosoftTeams'
-            RequiredVersion = '6.8.0'
+            RequiredVersion = '6.7.0'
         },
         @{
             ModuleName      = "MSCloudLoginAssistant"
-            RequiredVersion = "1.1.37"
+            RequiredVersion = "1.1.34"
         },
         @{
             ModuleName      = 'PnP.PowerShell'
@@ -134,7 +138,7 @@
         },
         @{
             ModuleName      = 'ReverseDSC'
-            RequiredVersion = '2.0.0.25'
+            RequiredVersion = '2.0.0.22'
         }
     )
 }

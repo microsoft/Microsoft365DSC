@@ -1290,6 +1290,8 @@ function Export-TargetResource
 
             $Script:exportedInstance = $config
             $Results = Get-TargetResource @Params
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
 
             if ($Results.AppsHideList)
             {
@@ -1369,8 +1371,63 @@ function Export-TargetResource
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -Credential $Credential `
-                -NoEscape @('AppsHideList', 'AppsInstallAllowList', 'AppsLaunchBlockList', 'CompliantAppsList', 'KioskModeApps', 'Assignments')
+                -Credential $Credential
+
+            if ($Results.AppsHideList)
+            {
+                $isCIMArray = $false
+                if ($Results.AppsHideList.getType().Fullname -like '*[[\]]')
+                {
+                    $isCIMArray = $true
+                }
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'AppsHideList' -IsCIMArray:$isCIMArray
+            }
+            if ($Results.AppsInstallAllowList)
+            {
+                $isCIMArray = $false
+                if ($Results.AppsInstallAllowList.getType().Fullname -like '*[[\]]')
+                {
+                    $isCIMArray = $true
+                }
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'AppsInstallAllowList' -IsCIMArray:$isCIMArray
+            }
+            if ($Results.AppsLaunchBlockList)
+            {
+                $isCIMArray = $false
+                if ($Results.AppsLaunchBlockList.getType().Fullname -like '*[[\]]')
+                {
+                    $isCIMArray = $true
+                }
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'AppsLaunchBlockList' -IsCIMArray:$isCIMArray
+            }
+            if ($Results.CompliantAppsList)
+            {
+                $isCIMArray = $false
+                if ($Results.CompliantAppsList.getType().Fullname -like '*[[\]]')
+                {
+                    $isCIMArray = $true
+                }
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'CompliantAppsList' -IsCIMArray:$isCIMArray
+            }
+            if ($Results.KioskModeApps)
+            {
+                $isCIMArray = $false
+                if ($Results.KioskModeApps.getType().Fullname -like '*[[\]]')
+                {
+                    $isCIMArray = $true
+                }
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'KioskModeApps' -IsCIMArray:$isCIMArray
+            }
+
+            if ($Results.Assignments)
+            {
+                $isCIMArray = $false
+                if ($Results.Assignments.getType().Fullname -like '*[[\]]')
+                {
+                    $isCIMArray = $true
+                }
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Assignments' -IsCIMArray:$isCIMArray
+            }
 
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `

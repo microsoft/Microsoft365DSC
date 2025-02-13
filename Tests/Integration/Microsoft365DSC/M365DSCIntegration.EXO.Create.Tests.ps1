@@ -985,20 +985,6 @@
                     TenantId                    = $TenantId;
                     CertificateThumbprint       = $CertificateThumbprint;
                 }
-                EXORetentionPolicyTag 'RetentionPolicyTag'
-                {
-                    ApplicationId             = $ApplicationId;
-                    CertificateThumbprint     = $CertificateThumbprint;
-                    Comment                   = "This is my tag";
-                    Ensure                    = "Present";
-                    Identity                  = "MyTag";
-                    MessageClass              = "*";
-                    MustDisplayCommentEnabled = $False;
-                    RetentionAction           = "MoveToArchive";
-                    RetentionEnabled          = $False;
-                    TenantId                  = $TenantId;
-                    Type                      = "Personal";
-                }
                 EXORoleAssignmentPolicy 'ConfigureRoleAssignmentPolicy'
                 {
                     Name                 = "Integration Policy"

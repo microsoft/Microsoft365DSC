@@ -354,7 +354,8 @@ function Export-TargetResource
         }
         Add-ConfigurationDataEntry -Node 'NonNodeData' -Key 'SdnApiToken' -Value '**********'`
             -Description 'API Token for the Teams SDN Provider for Meeting Broadcast'
-        $Results = Get-TargetResource @Params
+        $Results = Get-TargetResource @params
+
         if ($Results -is [System.Collections.Hashtable] -and $Results.Count -gt 1)
         {
             if ($null -ne $Global:M365DSCExportResourceInstancesCount)
@@ -362,14 +363,20 @@ function Export-TargetResource
                 $Global:M365DSCExportResourceInstancesCount++
             }
 
+            $results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
             $results.SdnApiToken = '$ConfigurationData.Settings.SdnApiToken'
 
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -Credential $Credential `
-                -NoEscape @('SdnApiToken')
+                -Credential $Credential
+
+            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
+                -ParameterName 'SdnApiToken'
 
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `

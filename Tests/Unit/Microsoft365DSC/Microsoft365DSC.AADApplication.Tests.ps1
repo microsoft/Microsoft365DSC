@@ -44,10 +44,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-MgApplication -MockWith {
             }
 
-            Mock -CommandName Get-MgBetaDirectoryDeletedItemAsApplication -MockWith {
-            }
-
-            Mock -CommandName Invoke-MgGraphRequest -MockWith {
+            Mock -CommandName MgBetaDirectoryDeletedItemAsApplication -MockWith {
             }
 
             Mock -CommandName New-MgApplication -MockWith {
@@ -75,7 +72,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
             }
-            $Script:exportedInstance =$null
+            $Script:exportedInstances =$null
             $Script:ExportMode = $false
         }
 
@@ -244,9 +241,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         )
                     } -ClientOnly
                     AuthenticationBehaviors   = New-CimInstance -ClassName MSFT_MicrosoftGraphAuthenticationBehaviors -Property @{
-                             blockAzureADGraphAccess       = 'false'
-                             removeUnverifiedEmailClaim    = 'true'
-                             requireClientServicePrincipal = 'false'
+                             blockAzureADGraphAccess       = $false
+                             removeUnverifiedEmailClaim    = $true
+                             requireClientServicePrincipal = $false
                      } -ClientOnly
                     Api = New-CimInstance -ClassName MSFT_MicrosoftGraphapiApplication -Property @{
                         PreAuthorizedApplications = [CimInstance[]]@(
@@ -344,9 +341,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     $AADApp | Add-Member -MemberType NoteProperty -Name Oauth2RequirePostResponse -Value $false
                     $AADApp | Add-Member -MemberType NoteProperty -Name PublicClient -Value $false
                     $AADApp | Add-Member -MemberType NoteProperty -Name AuthenticationBehaviors -Value @{
-                         blockAzureADGraphAccess       = 'false'
-                         removeUnverifiedEmailClaim    = 'true'
-                         requireClientServicePrincipal = 'false'
+                         blockAzureADGraphAccess       = $false
+                         removeUnverifiedEmailClaim    = $true
+                         requireClientServicePrincipal = $false
                     }
                     return $AADApp
                 }
@@ -425,9 +422,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     PublicClient              = $false
                     ReplyURLs                 = 'https://app.contoso.com'
                     AuthenticationBehaviors   = New-CimInstance -ClassName MSFT_MicrosoftGraphAuthenticationBehaviors -Property @{
-                            blockAzureADGraphAccess       = 'false'
-                            removeUnverifiedEmailClaim    = 'true'
-                            requireClientServicePrincipal = 'false'
+                            blockAzureADGraphAccess       = $false
+                            removeUnverifiedEmailClaim    = $true
+                            requireClientServicePrincipal = $false
                     } -ClientOnly
                     Ensure                  = 'Present'
                     Credential              = $Credential
@@ -455,7 +452,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should call the new method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName 'Invoke-MgGraphRequest' -Exactly 2
+                Should -Invoke -CommandName 'Update-MgBetaApplication' -Exactly 1
             }
 
         }

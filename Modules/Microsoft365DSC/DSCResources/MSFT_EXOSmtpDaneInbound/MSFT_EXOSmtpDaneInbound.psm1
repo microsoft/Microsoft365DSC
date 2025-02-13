@@ -30,20 +30,8 @@ function Get-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
-        [System.String]
-        $CertificatePath,
-
-        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword,
-
-        [Parameter()]
-        [Switch]
-        $ManagedIdentity,
-
-        [Parameter()]
-        [System.String[]]
-        $AccessTokens
+        $ApplicationSecret
     )
 
     New-M365DSCConnection -Workload 'ExchangeOnline' `
@@ -77,12 +65,9 @@ function Get-TargetResource
             Ensure                = 'Present'
             Credential            = $Credential
             ApplicationId         = $ApplicationId
-            CertificateThumbprint = $CertificateThumbprint
-            CertificatePath       = $CertificatePath
-            CertificatePassword   = $CertificatePassword
-            Managedidentity       = $ManagedIdentity.IsPresent
             TenantId              = $TenantId
-            AccessTokens          = $AccessTokens
+            CertificateThumbprint = $CertificateThumbprint
+            ApplicationSecret     = $ApplicationSecret
         }
         return [System.Collections.Hashtable] $results
     }
@@ -129,20 +114,8 @@ function Set-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
-        [System.String]
-        $CertificatePath,
-
-        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword,
-
-        [Parameter()]
-        [Switch]
-        $ManagedIdentity,
-
-        [Parameter()]
-        [System.String[]]
-        $AccessTokens
+        $ApplicationSecret
     )
 
     New-M365DSCConnection -Workload 'ExchangeOnline' `
@@ -216,20 +189,8 @@ function Test-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
-        [System.String]
-        $CertificatePath,
-
-        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword,
-
-        [Parameter()]
-        [Switch]
-        $ManagedIdentity,
-
-        [Parameter()]
-        [System.String[]]
-        $AccessTokens
+        $ApplicationSecret
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -282,24 +243,16 @@ function Export-TargetResource
         $TenantId,
 
         [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
         [System.String]
         $CertificateThumbprint,
 
         [Parameter()]
-        [System.String]
-        $CertificatePath,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $CertificatePassword,
-
-        [Parameter()]
         [Switch]
-        $ManagedIdentity,
-
-        [Parameter()]
-        [System.String[]]
-        $AccessTokens
+        $ManagedIdentity
     )
 
    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
@@ -345,19 +298,19 @@ function Export-TargetResource
             }
             Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{
-                DomainName            = $config.DomainName
-                Ensure                = 'Present'
-                Credential            = $Credential
-                ApplicationId         = $ApplicationId
+                DomainName = $config.DomainName
+                Ensure = 'Present'
+                Credential = $Credential
+                ApplicationId = $ApplicationId
+                TenantId = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
-                CertificatePath       = $CertificatePath
-                CertificatePassword   = $CertificatePassword
-                Managedidentity       = $ManagedIdentity.IsPresent
-                TenantId              = $TenantId
-                AccessTokens          = $AccessTokens
+                ApplicationSecret = $ApplicationSecret
+
             }
 
             $Results = Get-TargetResource @Params
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
 
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `

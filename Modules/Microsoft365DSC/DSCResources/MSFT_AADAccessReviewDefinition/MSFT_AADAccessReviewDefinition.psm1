@@ -68,54 +68,47 @@ function Get-TargetResource
 
     try
     {
-        if (-not $Script:exportedInstance)
+        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+            -InboundParameters $PSBoundParameters
+
+        #Ensure the proper dependencies are installed in the current environment.
+        Confirm-M365DSCDependencies
+
+        #region Telemetry
+        $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+        $CommandName = $MyInvocation.MyCommand
+        $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+            -CommandName $CommandName `
+            -Parameters $PSBoundParameters
+        Add-M365DSCTelemetryEvent -Data $data
+        #endregion
+
+        $nullResult = $PSBoundParameters
+        $nullResult.Ensure = 'Absent'
+
+        $getValue = $null
+        #region resource generator code
+        $getValue = Get-MgBetaIdentityGovernanceAccessReviewDefinition -AccessReviewScheduleDefinitionId $Id -ErrorAction SilentlyContinue
+
+        if ($null -eq $getValue)
         {
-            $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-                -InboundParameters $PSBoundParameters
+            Write-Verbose -Message "Could not find an Azure AD Access Review Definition with Id {$Id}"
 
-            #Ensure the proper dependencies are installed in the current environment.
-            Confirm-M365DSCDependencies
-
-            #region Telemetry
-            $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
-            $CommandName = $MyInvocation.MyCommand
-            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-                -CommandName $CommandName `
-                -Parameters $PSBoundParameters
-            Add-M365DSCTelemetryEvent -Data $data
-            #endregion
-
-            $nullResult = $PSBoundParameters
-            $nullResult.Ensure = 'Absent'
-
-            $getValue = $null
-            #region resource generator code
-            $getValue = Get-MgBetaIdentityGovernanceAccessReviewDefinition -AccessReviewScheduleDefinitionId $Id -ErrorAction SilentlyContinue
-
-            if ($null -eq $getValue)
+            if (-not [System.String]::IsNullOrEmpty($DisplayName))
             {
-                Write-Verbose -Message "Could not find an Azure AD Access Review Definition with Id {$Id}"
-
-                if (-not [System.String]::IsNullOrEmpty($DisplayName))
-                {
-                    $getValue = Get-MgBetaIdentityGovernanceAccessReviewDefinition `
-                        -Filter "DisplayName eq '$DisplayName'" `
-                        -ErrorAction SilentlyContinue | Where-Object `
-                        -FilterScript {
-                        $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.AccessReviewScheduleDefinition'
-                    }
+                $getValue = Get-MgBetaIdentityGovernanceAccessReviewDefinition `
+                    -Filter "DisplayName eq '$DisplayName'" `
+                    -ErrorAction SilentlyContinue | Where-Object `
+                    -FilterScript {
+                    $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.AccessReviewScheduleDefinition'
                 }
             }
-            #endregion
-            if ($null -eq $getValue)
-            {
-                Write-Verbose -Message "Could not find an Azure AD Access Review Definition with DisplayName {$DisplayName}."
-                return $nullResult
-            }
         }
-        else
+        #endregion
+        if ($null -eq $getValue)
         {
-            $getValue = $Script:exportedInstance
+            Write-Verbose -Message "Could not find an Azure AD Access Review Definition with DisplayName {$DisplayName}."
+            return $nullResult
         }
         $Id = $getValue.Id
         Write-Verbose -Message "An Azure AD Access Review Definition with Id {$Id} and DisplayName {$DisplayName} was found"
@@ -821,8 +814,9 @@ function Export-TargetResource
                 AccessTokens          = $AccessTokens
             }
 
-            $Script:exportedInstance = $config
             $Results = Get-TargetResource @Params
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
             if ($null -ne $Results.ScopeValue)
             {
                 $complexMapping = @(
@@ -957,8 +951,19 @@ function Export-TargetResource
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -Credential $Credential `
-                -NoEscape @('ScopeValue', 'SettingsValue', 'StageSettings')
+                -Credential $Credential
+            if ($Results.ScopeValue)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'ScopeValue' -IsCIMArray:$False
+            }
+            if ($Results.SettingsValue)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'SettingsValue' -IsCIMArray:$False
+            }
+            if ($Results.StageSettings)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'StageSettings' -IsCIMArray:$True
+            }
 
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `

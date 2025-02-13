@@ -580,6 +580,8 @@ function Export-TargetResource
             }
             $Script:exportedInstance = $action
             $Results = Get-TargetResource @PSBoundParameters @Params
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
@@ -623,7 +625,8 @@ function Export-TargetResource
                     $Params.Action = 'Retention'
                 }
                 $Results = Get-TargetResource @PSBoundParameters @Params
-
+                $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                    -Results $Results
                 $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                     -ConnectionMode $ConnectionMode `
                     -ModulePath $PSScriptRoot `

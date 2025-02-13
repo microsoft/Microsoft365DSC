@@ -380,6 +380,8 @@ function Export-TargetResource
 
             $Script:exportedInstance = $eventType
             $Results = Get-TargetResource @PSBoundParameters -Name $eventType.Name
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `

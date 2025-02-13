@@ -983,6 +983,7 @@ function Export-TargetResource
             {
                 $Script:exportedInstance = $site
                 $Results = Get-TargetResource @Params
+
                 if ([System.String]::IsNullOrEmpty($Results.SharingDomainRestrictionMode))
                 {
                     $Results.Remove('SharingDomainRestrictionMode') | Out-Null
@@ -1008,6 +1009,8 @@ function Export-TargetResource
                     $Results.Remove('HubUrl') | Out-Null
                 }
 
+                $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                    -Results $Results
 
                 $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                     -ConnectionMode $ConnectionMode `

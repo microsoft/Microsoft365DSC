@@ -624,6 +624,8 @@ function Export-TargetResource
             }
 
             $Results = Get-TargetResource @Params
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
             if ($null -ne $Results.ApiConnectorConfiguration)
             {
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
@@ -667,8 +669,15 @@ function Export-TargetResource
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -Credential $Credential `
-                -NoEscape @('ApiConnectorConfiguration', 'UserAttributeAssignments')
+                -Credential $Credential
+            if ($Results.ApiConnectorConfiguration)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'ApiConnectorConfiguration' -IsCIMArray:$False
+            }
+            if ($Results.UserAttributeAssignments)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'UserAttributeAssignments' -IsCIMArray:$True
+            }
 
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `

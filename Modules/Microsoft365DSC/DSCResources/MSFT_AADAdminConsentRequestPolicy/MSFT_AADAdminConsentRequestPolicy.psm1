@@ -57,35 +57,28 @@ function Get-TargetResource
         $AccessTokens
     )
 
+    New-M365DSCConnection -Workload 'MicrosoftGraph' `
+        -InboundParameters $PSBoundParameters | Out-Null
+
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+    $CommandName = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+
+    $nullResult = $PSBoundParameters
     try
     {
-        if (-not $Script:exportedInstance)
+        $instance = Get-MgBetaPolicyAdminConsentRequestPolicy -ErrorAction Stop
+        if ($null -eq $instance)
         {
-            New-M365DSCConnection -Workload 'MicrosoftGraph' `
-                -InboundParameters $PSBoundParameters | Out-Null
-
-            #Ensure the proper dependencies are installed in the current environment.
-            Confirm-M365DSCDependencies
-
-            #region Telemetry
-            $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
-            $CommandName = $MyInvocation.MyCommand
-            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-                -CommandName $CommandName `
-                -Parameters $PSBoundParameters
-            Add-M365DSCTelemetryEvent -Data $data
-            #endregion
-
-            $nullResult = $PSBoundParameters
-            $instance = Get-MgBetaPolicyAdminConsentRequestPolicy -ErrorAction SilentlyContinue
-            if ($null -eq $instance)
-            {
-                throw 'Could not retrieve the Admin Consent Request Policy'
-            }
-        }
-        else
-        {
-            $instance = $Script:exportedInstance
+            throw 'Could not retrieve the Admin Consent Request Policy'
         }
 
         $reviewersValue = @()
@@ -358,45 +351,32 @@ function Test-TargetResource
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
-    $testTargetResource = $true
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
-    #Compare Cim instances
-    foreach ($key in $PSBoundParameters.Keys)
+    $testResult = $true
+    foreach ($reviewer in $Reviewers)
     {
-         $source = $PSBoundParameters.$key
-         $target = $CurrentValues.$key
-         if ($null -ne $source -and $source.GetType().Name -like '*CimInstance*')
-         {
-             $testResult = Compare-M365DSCComplexObject `
-                 -Source ($source) `
-                 -Target ($target)
-
-             if (-not $testResult)
-             {
-                 Write-Verbose "TestResult returned False for $source"
-                 $testTargetResource = $false
-             }
-             else
-             {
-                 $ValuesToCheck.Remove($key) | Out-Null
-             }
-         }
+        $currentEquivalent = $CurrentValues.Reviewers | Where-Object -FilterScript { $_.ReviewerId -eq $reviewer.ReviewerId -and $_.ReviewerType -eq $reviewer.ReviewerType }
+        if ($null -eq $currentEquivalent)
+        {
+            $testResult = $false
+            Write-Verbose -Message "Couldn't find current reviewer {$($reviewer.ReviewerId)}"
+        }
     }
 
-    $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
-        -Source $($MyInvocation.MyCommand.Source) `
-        -DesiredValues $PSBoundParameters `
-        -ValuesToCheck $ValuesToCheck.Keys
-
-    if (-not $TestResult)
+    if ($testResult)
     {
-        $testTargetResource = $false
+        $ValuesToCheck.Remove('Reviewers') | Out-Null
+        $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -DesiredValues $PSBoundParameters `
+            -ValuesToCheck $ValuesToCheck.Keys
     }
-    Write-Verbose -Message "Test-TargetResource returned $testTargetResource"
 
-    return $testTargetResource
+    Write-Verbose -Message "Test-TargetResource returned $testResult"
+
+    return $testResult
 }
 
 function Export-TargetResource
@@ -451,6 +431,7 @@ function Export-TargetResource
 
     try
     {
+        $Script:ExportMode = $true
         [array] $Script:exportedInstances = Get-MgBetaPolicyAdminConsentRequestPolicy -ErrorAction Stop
 
         $i = 1
@@ -483,8 +464,10 @@ function Export-TargetResource
                 AccessTokens          = $AccessTokens
             }
 
-            $Script:exportedInstance = $config
             $Results = Get-TargetResource @Params
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
+
             if ($null -ne $Results.Reviewers)
             {
                 $complexMapping = @(
@@ -513,8 +496,11 @@ function Export-TargetResource
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -Credential $Credential `
-                -NoEscape @('Reviewers')
+                -Credential $Credential
+            if ($Results.Reviewers)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Reviewers' -IsCIMArray:$True
+            }
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName

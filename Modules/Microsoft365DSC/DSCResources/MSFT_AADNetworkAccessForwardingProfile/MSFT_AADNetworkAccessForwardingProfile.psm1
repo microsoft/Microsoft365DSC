@@ -470,6 +470,8 @@ function Export-TargetResource
             }
 
             $Results = Get-TargetResource @Params
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
 
             if ($null -ne $Results.Policies)
             {
@@ -499,9 +501,13 @@ function Export-TargetResource
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -Credential $Credential `
-                -NoEscape @('Policies')
+                -Credential $Credential
 
+            if ($null -ne $Results.Policies)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
+                    -ParameterName 'Policies' -IsCIMArray:$true
+            }
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
@@ -523,6 +529,29 @@ function Export-TargetResource
 
         return ''
     }
+}
+
+function Get-PoliciesAsString
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Collections.ArrayList]
+        $Policies
+    )
+
+    $StringContent = '@('
+    foreach ($policy in $Policies)
+    {
+        $StringContent += "MSFT_MicrosoftGraphNetworkaccessPolicyLink {`r`n"
+        $StringContent += "                State = '" + $policy.State + "'`r`n"
+        $StringContent += "                PolicyLinkId  = '" + $policy.PolicyLinkId + "'`r`n"
+        $StringContent += "                Name = '" + $policy.Name + "'`r`n"
+        $StringContent += "            }`r`n"
+    }
+    $StringContent += '            )'
+    return $StringContent
 }
 
 Export-ModuleMember -Function *-TargetResource
