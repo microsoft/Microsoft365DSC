@@ -252,8 +252,7 @@ function Get-TargetResource
         $psCustomObject = $devicePolicy.ScheduledActionsForRule | convertTo-JSON | ConvertFrom-JSON  
         $scheduledActionsForRuleHashTable = @{} 
         $psCustomObject.PsObject.Properties | ForEach-Object {     
-            $scheduledActionsForRuleHashTable[$_.Name] = $_.Value
-            
+            $scheduledActionsForRuleHashTable[$_.Name] = $_.Value        
         }         
         $hashtable = @{}
         $complexScheduledActionsForRule = @()        
