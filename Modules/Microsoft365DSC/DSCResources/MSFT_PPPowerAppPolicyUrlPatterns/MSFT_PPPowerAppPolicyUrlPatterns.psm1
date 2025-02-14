@@ -300,6 +300,7 @@ function Test-TargetResource
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
+    $testResult = $true
 
     #Compare Cim instances
     Write-Verbose -Message "Comparing CIMInstances"
@@ -399,10 +400,9 @@ function Export-TargetResource
                "/providers/Microsoft.BusinessAppPlatform/scopes/admin/apiPolicies?api-version=2016-11-01"
 
         [array]$policies = Invoke-M365DSCPowerPlatformRESTWebRequest -Uri $uri -Method 'GET'
-
-
+        $policies =  $policies.value | Where-Object -FilterScript {$_.type -eq 'Microsoft.BusinessAppPlatform/scopes/apiPolicies'}
         $dscContent = ''
-        if ($policies.value.Length -eq 0)
+        if ($policies.Length -eq 0)
         {
             Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
@@ -411,13 +411,13 @@ function Export-TargetResource
             Write-Host "`r`n" -NoNewline
         }
         $i = 1
-        foreach ($policy in $policies.value)
+        foreach ($policy in $policies)
         {
             if ($null -ne $Global:M365DSCExportResourceInstancesCount)
             {
                 $Global:M365DSCExportResourceInstancesCount++
             }
-            Write-Host "    |---[$i/$($policies.value.Count)] $($policy.properties.DisplayName)" -NoNewline
+            Write-Host "    |---[$i/$($policies.Count)] $($policy.properties.DisplayName)" -NoNewline
             $params = @{
                 PPTenantId            = $tenantInfo
                 PolicyName            = $policy.properties.DisplayName

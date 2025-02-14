@@ -521,7 +521,7 @@ function Test-TargetResource
 
                 $driftedRules.($existingRule.TenantName) = @{
                     CurrentValue = "Direction: $($existingRule.Direction)"
-                    DesiredValue = 'Should not exist'
+                    DesiredValue = "Direction: $($rule.Direction)"
                 }
                 $result = $false
             }

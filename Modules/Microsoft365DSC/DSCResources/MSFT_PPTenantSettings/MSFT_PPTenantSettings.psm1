@@ -602,7 +602,7 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'PowerPlatforms' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'PowerPlatformREST' `
         -InboundParameters $PSBoundParameters
 
     $SetParameters = $PSBoundParameters
@@ -1007,15 +1007,6 @@ function Get-M365DSCPowerPlatformTenantSettings
             catalogSettings        = @{
                 powerCatalogAudienceSetting = $Parameters.PowerCatalogAudienceSetting
             }
-            governance             = @{
-                disableAdminDigest                                 = $Parameters.DisableAdminDigest
-                disableDeveloperEnvironmentCreationByNonAdminUsers = $Parameters.DisableDeveloperEnvironmentCreationByNonAdminUsers
-                enableDefaultEnvironmentRouting                    = $Parameters.EnableDefaultEnvironmentRouting
-                policy                                             = @{
-                    enableDesktopFlowDataPolicyManagement = [Boolean]::Parse($Parameters.EnableDesktopFlowDataPolicyManagement)
-                }
-                environmentRoutingAllMakers                        = $Parameters.EnvironmentRoutingAllMakers
-            }
             environments           = @{
                 disablePreferredDataLocationForTeamsEnvironment = $Parameters.DisablePreferredDataLocationForTeamsEnvironment
             }
@@ -1075,6 +1066,29 @@ function Get-M365DSCPowerPlatformTenantSettings
         }
     }
 
+    $governance = @{
+        disableAdminDigest                                 = $Parameters.DisableAdminDigest
+        disableDeveloperEnvironmentCreationByNonAdminUsers = $Parameters.DisableDeveloperEnvironmentCreationByNonAdminUsers
+        enableDefaultEnvironmentRouting                    = $Parameters.EnableDefaultEnvironmentRouting
+        environmentRoutingAllMakers                        = $Parameters.EnvironmentRoutingAllMakers
+    }
+
+    if ($null -ne $EnableDesktopFlowDataPolicyManagement)
+    {
+        try
+        {
+            $policy = @{
+                enableDesktopFlowDataPolicyManagement = [Boolean]::Parse($Parameters.EnableDesktopFlowDataPolicyManagement)
+            }
+            $governance.Add('policy', $policy)
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
+    }
+    $result.powerplatform.Add('governance', $governance)
+
     return $result
 }
 
@@ -1087,7 +1101,7 @@ function Set-M365DSCPPTenantSettings
         $Body
     )
 
-    $url = "$((Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatforms').ResourceUrl)/providers/Microsoft.BusinessAppPlatform/scopes/admin/updateTenantSettings?api-version=2016-11-01"
+    $url = "$((Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatformREST').ResourceUrl)/providers/Microsoft.BusinessAppPlatform/scopes/admin/updateTenantSettings?api-version=2016-11-01"
 
 }
 
@@ -1100,9 +1114,9 @@ function Get-M365DSCPPTenantSettings
         $Body
     )
 
-    $url = "$((Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatforms').ResourceUrl)/providers/Microsoft.BusinessAppPlatform/scopes/admin/getTenantSettings?api-version=2016-11-01"
+    $url = "$((Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatformREST').ResourceUrl)/providers/Microsoft.BusinessAppPlatform/scopes/admin/getTenantSettings?api-version=2016-11-01"
     $headers = @{
-        Authorization = (Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatforms').AccessToken
+        Authorization = (Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatformREST').AccessToken
     }
     Invoke-WebRequest -Uri $url -Headers $headers -ContentType "application/json"
 }

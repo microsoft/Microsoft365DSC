@@ -88,7 +88,7 @@ function Get-TargetResource
 
         $results = @{
             DisplayName           = $instance.properties.displayName
-            PolicyName            = $instance.PolicyName
+            PolicyName            = $instance.name
             Environments          = [array]$instance.properties.definition.constraints.environmentFilter1.parameters.environments.name
             FilterType            = $instance.properties.definition.constraints.environmentFilter1.parameters.filterType
             Ensure                = 'Present'

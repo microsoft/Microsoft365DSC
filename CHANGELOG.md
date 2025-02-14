@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# 1.25.212.2
+
+* MISC
+  * Fixing connection errors in Power Platforms resources.
+
 # 1.25.212.1
 
 * AADApplication

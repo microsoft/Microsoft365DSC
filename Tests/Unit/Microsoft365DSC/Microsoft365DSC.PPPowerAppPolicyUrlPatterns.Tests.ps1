@@ -327,6 +327,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         return @{
                             value = @(
                                 @{
+                                    type = 'Microsoft.BusinessAppPlatform/scopes/apiPolicies'
                                     PolicyName  = "MyPolicy"
                                     properties = @{
                                         displayName = "DSCPolicy"
