@@ -103,11 +103,11 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - RoleEligibilitySchedule.Read.Directory
+    - RoleEligibilitySchedule.Read.Directory, Directory.Read.All
 
 - **Update**
 
-    - RoleEligibilitySchedule.ReadWrite.Directory
+    - RoleEligibilitySchedule.ReadWrite.Directory, Directory.Read.All
 
 ## Examples
 

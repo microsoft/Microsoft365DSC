@@ -1007,15 +1007,6 @@ function Get-M365DSCPowerPlatformTenantSettings
             catalogSettings        = @{
                 powerCatalogAudienceSetting = $Parameters.PowerCatalogAudienceSetting
             }
-            governance             = @{
-                disableAdminDigest                                 = $Parameters.DisableAdminDigest
-                disableDeveloperEnvironmentCreationByNonAdminUsers = $Parameters.DisableDeveloperEnvironmentCreationByNonAdminUsers
-                enableDefaultEnvironmentRouting                    = $Parameters.EnableDefaultEnvironmentRouting
-                policy                                             = @{
-                    enableDesktopFlowDataPolicyManagement = [Boolean]::Parse($Parameters.EnableDesktopFlowDataPolicyManagement)
-                }
-                environmentRoutingAllMakers                        = $Parameters.EnvironmentRoutingAllMakers
-            }
             environments           = @{
                 disablePreferredDataLocationForTeamsEnvironment = $Parameters.DisablePreferredDataLocationForTeamsEnvironment
             }
@@ -1074,6 +1065,29 @@ function Get-M365DSCPowerPlatformTenantSettings
             gccCommercialSettings  = @{}
         }
     }
+
+    $governance = @{
+        disableAdminDigest                                 = $Parameters.DisableAdminDigest
+        disableDeveloperEnvironmentCreationByNonAdminUsers = $Parameters.DisableDeveloperEnvironmentCreationByNonAdminUsers
+        enableDefaultEnvironmentRouting                    = $Parameters.EnableDefaultEnvironmentRouting
+        environmentRoutingAllMakers                        = $Parameters.EnvironmentRoutingAllMakers
+    }
+
+    if ($null -ne $EnableDesktopFlowDataPolicyManagement)
+    {
+        try
+        {
+            $policy = @{
+                enableDesktopFlowDataPolicyManagement = [Boolean]::Parse($Parameters.EnableDesktopFlowDataPolicyManagement)
+            }
+            $governance.Add('policy', $policy)
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
+    }
+    $result.powerplatform.Add('governance', $governance)
 
     return $result
 }

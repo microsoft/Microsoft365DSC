@@ -105524,7 +105524,7 @@ function Update-MgDeviceManagementDeviceConfigurationAssignment
 #endregion
 
 #region MgIdentityGovernancePrivilegedAccessGroupEligibilitySchedule
-function Get-MgIdentityGovernancePrivilegedAccessGroupEligibilitySchedule
+function Get-MgBetaIdentityGovernancePrivilegedAccessGroupEligibilitySchedule
 {
     [CmdletBinding()]
     param
@@ -105738,7 +105738,7 @@ function New-MgBetaIdentityGovernancePrivilegedAccessGroupEligibilityScheduleReq
     )
 }
 
-function Get-MgPolicyRoleManagementPolicyAssignment
+function Get-MgBetaPolicyRoleManagementPolicyAssignment
 {
     [CmdletBinding()]
     param
@@ -105829,104 +105829,6 @@ function Get-MgPolicyRoleManagementPolicyAssignment
     )
 }
 
-function Update-MgPolicyRoleManagementPolicyRule
-{
-    [CmdletBinding()]
-    param
-    (
-        [Parameter()]
-        [System.String]
-        $PolicyRuleId,
-
-        [Parameter()]
-        [PSObject]
-        $InputObject,
-
-        [Parameter()]
-        [PSObject]
-        $BodyParameter,
-
-        [Parameter()]
-        [System.String]
-        $ResponseHeadersVariable,
-
-        [Parameter()]
-        [System.Collections.Hashtable]
-        $AdditionalProperties,
-
-        [Parameter()]
-        [System.String]
-        $Id,
-
-        [Parameter()]
-        [System.String]
-        $Name,
-
-        [Parameter()]
-        [System.String]
-        $PolicyId,
-
-        [Parameter()]
-        [System.String]
-        $PolicyRuleType,
-
-        [Parameter()]
-        [System.String]
-        $PolicyType,
-
-        [Parameter()]
-        [System.String]
-        $Priority,
-
-        [Parameter()]
-        [System.String]
-        $RuleType,
-
-        [Parameter()]
-        [System.String]
-        $Status,
-
-        [Parameter()]
-        [System.String]
-        $TargetType,
-
-        [Parameter()]
-        [System.String]
-        $TargetValue,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break,
-
-        [Parameter()]
-        [System.Collections.IDictionary]
-        $Headers,
-
-        [Parameter()]
-        [PSObject[]]
-        $HttpPipelineAppend,
-
-        [Parameter()]
-        [PSObject[]]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm
-    )
-}
 #endregion
 
 #region Microsoft.Graph.Sites
@@ -106096,3 +105998,218 @@ function Update-MgAdminSharepointSetting
 }
 
 #endregion
+
+function Get-RetentionPolicyTag
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $OptionalInMailbox,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IncludeSystemTags,
+
+        [Parameter()]
+        [System.Object]
+        $Mailbox,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object[]]
+        $Types
+    )
+}
+function New-RetentionPolicyTag
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $AgeLimitForRetention,
+
+        [Parameter()]
+        [System.String]
+        $MessageClass,
+
+        [Parameter()]
+        [System.Boolean]
+        $MustDisplayCommentEnabled,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsDefaultAutoGroupPolicyTag,
+
+        [Parameter()]
+        [System.Object]
+        $LocalizedRetentionPolicyTagName,
+
+        [Parameter()]
+        [System.Object]
+        $LocalizedComment,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsDefaultModeratedRecipientsPolicyTag,
+
+        [Parameter()]
+        [System.Object]
+        $RetentionAction,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.Guid]
+        $RetentionId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $RetentionEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $Type,
+
+        [Parameter()]
+        [System.Boolean]
+        $SystemTag
+    )
+}
+function Remove-RetentionPolicyTag
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
+function Set-RetentionPolicyTag
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $MessageClass,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $MustDisplayCommentEnabled,
+
+        [Parameter()]
+        [System.Object[]]
+        $OptionalInMailbox,
+
+        [Parameter()]
+        [System.Object]
+        $Mailbox,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Object]
+        $LocalizedRetentionPolicyTagName,
+
+        [Parameter()]
+        [System.Object]
+        $LegacyManagedFolder,
+
+        [Parameter()]
+        [System.Object]
+        $AgeLimitForRetention,
+
+        [Parameter()]
+        [System.Object]
+        $RetentionAction,
+
+        [Parameter()]
+        [System.Object]
+        $LocalizedComment,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.Guid]
+        $RetentionId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $RetentionEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $SystemTag,
+
+        [Parameter()]
+        [System.String]
+        $Name
+    )
+}
+
+function Get-MgBetaDirectoryObjectById
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [PSObject]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Collections.IDictionary]
+        $Headers,
+
+        [Parameter()]
+        [System.String[]]
+        $Ids,
+
+        [Parameter()]
+        [System.String]
+        $ResponseHeadersVariable,
+
+        [Parameter()]
+        [System.String[]]
+        $Types,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $WhatIf
+    )
+}

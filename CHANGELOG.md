@@ -1,5 +1,17 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* AADRoleEligibilityScheduleRequest
+  * Reduce call count when reconciling object type
+    FIXES [#5621](https://github.com/microsoft/Microsoft365DSC/issues/5621)
+* M365DSCUtil
+  * Add M365DSC prefix to `Remove-EmptyValue`.
+    FIXES [#3861](https://github.com/microsoft/Microsoft365DSC/issues/3861)
+* TeamsAppPermissionPolicy
+  * Updated correct Typecasting for AppPresetMeeting and PinnedMessagebarApps before adding them to the policy
+    FIXES [[#5752](https://github.com/microsoft/Microsoft365DSC/issues/5752)
+
 # 1.25.212.2
 
 * MISC
@@ -22,6 +34,7 @@
 * EXOSmtpDaneInbound
   * Updated authentication properties to align with MOF definition.
     FIXES [#5709](https://github.com/microsoft/Microsoft365DSC/issues/5709)
+
 * MISC
   * PowerPlatform resource revamp to use direct REST API calls.
   * Simplify export behavior for all resources and complex objects.
