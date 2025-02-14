@@ -230,7 +230,7 @@ function Set-TargetResource
     {
         foreach ($appInstance in $AppPresetMeetingList)
         {
-            $appPresetMeetingValues += [Microsoft.Teams.Policy.Administration.Cmdlets.Core.AppPreset]::New($appInstance)
+            $appPresetMeetingValues += [Microsoft.Teams.Policy.Administration.Cmdlets.Core.AppPresetMeeting]::New($appInstance)
         }
     }
 
@@ -251,7 +251,7 @@ function Set-TargetResource
         $i = 1
         foreach ($appInstance in $PinnedMessageBarApps)
         {
-            $pinnedMessageBarAppsValue += [Microsoft.Teams.Policy.Administration.Cmdlets.Core.PinnedApp]::New($appInstance, $i)
+            $pinnedMessageBarAppsValue += [Microsoft.Teams.Policy.Administration.Cmdlets.Core.PinnedMessageBarApp]::New($appInstance, $i)
             $i++
         }
     }

@@ -3516,13 +3516,13 @@ This function removes all empty values from a dictionary object
 .Functionality
 Internal
 #>
-function Remove-EmptyValue
+function Remove-M365DSCEmptyValue
 {
-    [alias('Remove-EmptyValues')]
+    [Alias('Remove-M365DSCEmptyValues')]
     [CmdletBinding()]
     param
     (
-        [alias('Splat', 'IDictionary')][Parameter(Mandatory)][System.Collections.IDictionary] $Hashtable,
+        [Alias('Splat', 'IDictionary')][Parameter(Mandatory)][System.Collections.IDictionary] $Hashtable,
         [string[]] $ExcludeParameter,
         [switch] $Recursive,
         [int] $Rerun
@@ -3542,7 +3542,7 @@ function Remove-EmptyValue
                     }
                     else
                     {
-                        Remove-EmptyValue -Hashtable $Hashtable[$Key] -Recursive:$Recursive
+                        Remove-M365DSCEmptyValue -Hashtable $Hashtable[$Key] -Recursive:$Recursive
                     }
                 }
                 else
@@ -3566,7 +3566,7 @@ function Remove-EmptyValue
     {
         for ($i = 0; $i -lt $Rerun; $i++)
         {
-            Remove-EmptyValue -Hashtable $Hashtable -Recursive:$Recursive
+            Remove-M365DSCEmptyValue -Hashtable $Hashtable -Recursive:$Recursive
         }
     }
 }
@@ -3764,7 +3764,7 @@ function Update-M365DSCExportAuthenticationResults
             $noEscape += 'AccessTokens'
         }
     }
-    
+
     return @{
         Results = $Results
         NoEscape = $noEscape
@@ -5288,7 +5288,7 @@ Export-ModuleMember -Function @(
     'New-M365DSCCmdletDocumentation',
     'New-M365DSCConnection',
     'New-M365DSCMissingResourcesExample',
-    'Remove-EmptyValue',
+    'Remove-M365DSCEmptyValue',
     'Remove-M365DSCAuthenticationParameter',
     'Remove-NullEntriesFromHashtable',
     'Set-EXOSafeAttachmentRule',
