@@ -2,6 +2,10 @@
 
 # 1.25.212.2
 
+* IntuneDeviceConfigurationCustomPolicyWindows10
+  * Fixes read permissions in settings.json
+    FIXES [#5776](https://github.com/microsoft/Microsoft365DSC/issues/5776)
+
 * MISC
   * Fixing connection errors in Power Platforms resources.
 
