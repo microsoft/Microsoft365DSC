@@ -478,10 +478,6 @@ function Test-TargetResource
         [System.String[]]
         $AccessTokens
     )
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
     $CommandName = $MyInvocation.MyCommand
@@ -491,88 +487,9 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of {$Id - $displayName}"
-
-    $CurrentValues = Get-TargetResource @PSBoundParameters
-    $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
-
-    if (-not ($RoleDefinition -match '^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$'))
-    {
-        [string]$roleDefinition = $null
-        $Filter = "displayName eq '$RoleDefinitionDisplayName'"
-        $RoleDefinitionId = Get-MgDeviceManagementRoleDefinition -All -Filter $Filter -ErrorAction SilentlyContinue
-        if ($null -ne $RoleDefinitionId)
-        {
-            $roleDefinition = $RoleDefinitionId.Id
-            $PSBoundParameters.Set_Item('RoleDefinition', $roleDefinition)
-        }
-        else
-        {
-            Write-Verbose -Message "No role definition with DisplayName {$RoleDefinitionDisplayName} was found"
-        }
-    }
-
-    foreach ($MembersDisplayName in $membersDisplayNames)
-    {
-        $Filter = "displayName eq '$MembersDisplayName'"
-        $newMemeber = Get-MgGroup -Filter $Filter -ErrorAction SilentlyContinue
-        if ($null -ne $newMemeber)
-        {
-            if ($Members -notcontains $newMemeber.Id)
-            {
-                $Members += $newMemeber.Id
-            }
-        }
-        else
-        {
-            Write-Verbose -Message "No member of type group with DisplayName {$MembersDisplayName} was found"
-        }
-    }
-    $PSBoundParameters.Set_Item('Members', $Members)
-
-    foreach ($ResourceScopesDisplayName in $resourceScopesDisplayNames)
-    {
-        $Filter = "displayName eq '$ResourceScopesDisplayName'"
-        $newResourceScope = Get-MgGroup -Filter $Filter -ErrorAction SilentlyContinue
-        if ($null -ne $newResourceScope)
-        {
-            if ($ResourceScopes -notcontains $newResourceScope.Id)
-            {
-                $ResourceScopes += $newResourceScope.Id
-            }
-        }
-        else
-        {
-            Write-Verbose -Message "No resource scope of type group with DisplayName {$ResourceScopesDisplayName} was found"
-        }
-    }
-    $PSBoundParameters.Set_Item('ResourceScopes', $ResourceScopes)
-    $testResult = $true
-
-    $ValuesToCheck.Remove('Id') | Out-Null
-    $ValuesToCheck.Remove('ResourceScopesDisplayNames') | Out-Null
-    $ValuesToCheck.Remove('membersDisplayNames') | Out-Null
-
-    foreach ($key in $ValuesToCheck.Keys)
-    {
-        if (($null -ne $CurrentValues[$key]) `
-                -and ($CurrentValues[$key].getType().Name -eq 'DateTime'))
-        {
-            $CurrentValues[$key] = $CurrentValues[$key].toString()
-        }
-    }
-
-    if ($testResult)
-    {
-        $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
-            -Source $($MyInvocation.MyCommand.Source) `
-            -DesiredValues $PSBoundParameters `
-            -ValuesToCheck $ValuesToCheck.Keys
-    }
-
-    Write-Verbose -Message "Test-TargetResource returned $testResult"
-
-    return $testResult
+    $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
+                                         -ResourceName $ResourceName
+    return $result
 }
 
 function Export-TargetResource
@@ -719,3 +636,4 @@ function Export-TargetResource
 }
 
 Export-ModuleMember -Function *-TargetResource
+

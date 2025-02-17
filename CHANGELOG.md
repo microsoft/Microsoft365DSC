@@ -25,6 +25,8 @@
     FIXES [#5781](https://github.com/microsoft/Microsoft365DSC/issues/5781)
 * DEPENDENCIES
   * Updated ReverseDSC to version 2.0.0.27
+* MISC
+  * Streamlining the Test-TargetResource of all resources.
 
 # 1.25.212.2
 

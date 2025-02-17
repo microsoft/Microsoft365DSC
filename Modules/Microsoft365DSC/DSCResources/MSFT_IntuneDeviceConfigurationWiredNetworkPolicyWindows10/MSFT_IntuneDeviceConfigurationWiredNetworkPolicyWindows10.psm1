@@ -964,10 +964,6 @@ function Test-TargetResource
         [System.String[]]
         $AccessTokens
     )
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
     $CommandName = $MyInvocation.MyCommand
@@ -977,52 +973,9 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of the Intune Device Configuration Wired Network Policy for Windows10 with Id {$Id} and DisplayName {$DisplayName}"
-
-    $CurrentValues = Get-TargetResource @PSBoundParameters
-    $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
-    $testResult = $true
-
-    $testResult = Compare-M365DSCIntunePolicyAssignment -Source $CurrentValues.Assignments -Target $Assignments
-
-    $ValuesToCheck.remove('Id') | Out-Null
-    $ValuesToCheck.Remove('Assignments') | Out-Null
-
-    if ($null -ne $ValuesToCheck.RootCertificatesForServerValidationDisplayNames)
-    {
-        $ValuesToCheck.Remove('RootCertificatesForServerValidationIds')
-    }
-    if ($null -ne $ValuesToCheck.IdentityCertificateForClientAuthenticationDisplayName)
-    {
-        $ValuesToCheck.Remove('IdentityCertificateForClientAuthenticationId')
-    }
-    if ($null -ne $ValuesToCheck.SecondaryIdentityCertificateForClientAuthenticationDisplayName)
-    {
-        $ValuesToCheck.Remove('SecondaryIdentityCertificateForClientAuthenticationId')
-    }
-    if ($null -ne $ValuesToCheck.RootCertificateForClientValidationDisplayName)
-    {
-        $ValuesToCheck.Remove('RootCertificateForClientValidationId')
-    }
-    if ($null -ne $ValuesToCheck.SecondaryRootCertificateForClientValidationDisplayName)
-    {
-        $ValuesToCheck.Remove('SecondaryRootCertificateForClientValidationId')
-    }
-
-    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
-    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
-
-    if ($testResult)
-    {
-        $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
-            -Source $($MyInvocation.MyCommand.Source) `
-            -DesiredValues $PSBoundParameters `
-            -ValuesToCheck $ValuesToCheck.Keys
-    }
-
-    Write-Verbose -Message "Test-TargetResource returned $testResult"
-
-    return $testResult
+    $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
+                                         -ResourceName $ResourceName
+    return $result
 }
 
 function Export-TargetResource
@@ -1329,3 +1282,4 @@ function Get-IntuneDeviceConfigurationCertificateId
 }
 
 Export-ModuleMember -Function *-TargetResource
+

@@ -612,11 +612,8 @@ function Test-TargetResource
         [Switch]
         $ManagedIdentity
     )
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
     $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
@@ -624,38 +621,9 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of Planner Task {$Title}"
-
-    $CurrentValues = Get-TargetResource @PSBoundParameters
-    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
-
-    $ValuesToCheck = $PSBoundParameters
-
-    # If the Task is currently assigned to a bucket and the Bucket property is null,
-    # assume that we are trying to remove the given task from the bucket and therefore
-    # treat this as a drift.
-    if ([System.String]::IsNullOrEmpty($Bucket) -and `
-            -not [System.String]::IsNullOrEmpty($CurrentValues.Bucket))
-    {
-        $TestResult = $false
-    }
-    else
-    {
-        $ValuesToCheck.Remove('Checklist') | Out-Null
-        if (-not (Test-M365DSCPlannerTaskCheckListValues -CurrentValues $CurrentValues `
-                    -DesiredValues $ValuesToCheck))
-        {
-            return $false
-        }
-        $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
-            -Source $($MyInvocation.MyCommand.Source) `
-            -DesiredValues $PSBoundParameters `
-            -ValuesToCheck $ValuesToCheck.Keys
-    }
-
-    Write-Verbose -Message "Test-TargetResource returned $TestResult"
-
-    return $TestResult
+    $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
+                                         -ResourceName $ResourceName
+    return $result
 }
 
 function Export-TargetResource
@@ -1022,3 +990,4 @@ function GetTaskColorNameByCategory
 }
 
 Export-ModuleMember -Function *-TargetResource
+

@@ -962,135 +962,18 @@ function Test-TargetResource
         [System.String[]]
         $AccessTokens
     )
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
     $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-    Write-Verbose -Message "Testing configuration of Android App Protection Policy {$DisplayName}"
 
-    $CurrentValues = Get-TargetResource @PSBoundParameters
-    if (-not (Test-M365DSCAuthenticationParameter -BoundParameters $CurrentValues))
-    {
-        Write-Verbose "An error occured in Get-TargetResource, the policy {$displayName} will not be processed"
-        throw "An error occured in Get-TargetResource, the policy {$displayName} will not be processed. Refer to the event viewer logs for more information."
-    }
-
-    if ($CurrentValues.Ensure -eq 'ERROR')
-    {
-        Throw 'Error when searching for current policy details - Please check verbose output for further detail'
-    }
-
-    if ($Ensure -eq 'Absent')
-    {
-        if ($currentvalues.Ensure -eq 'Present')
-        {
-            Write-Verbose -Message "Existing Policy {$DisplayName} will be removed"
-            return $False
-        }
-        else
-        {
-            Write-Verbose -Message "Policy {$DisplayName} already removed"
-            return $True
-        }
-    }
-
-    if (($CurrentValues.Ensure -eq 'Absent') -and ($Ensure -eq 'Present'))
-    {
-        Write-Verbose -Message "Policy {$DisplayName} Not Present on tenant - New Policy will be created"
-        return $false
-    }
-
-    $targetvalues = @{}
-
-    $Allparams = get-InputParameters
-
-    ($Allparams.keys | Where-Object { $allparams.$_.Type -eq 'Credential' }) | ForEach-Object {
-        $CurrentValues.Remove($_) | Out-Null
-    }
-
-    # loop through regular parameters
-    foreach ($param in ($Allparams.keys | Where-Object { $allparams.$_.Type -eq 'Parameter' }) )
-    {
-        if ($PSBoundParameters.keys -contains $param )
-        {
-            switch ($Allparams.$param.ExportFileType)
-            {
-                'Duration'
-                {
-                    $targetvalues.add($param, (set-TimeSpan -duration $PSBoundParameters.$param))
-                }
-
-                default
-                {
-                    $targetvalues.add($param, $psboundparameters.$param)
-                }
-            }
-        }
-        else
-        {
-            Write-Verbose -Message ('Unspecified Parameter in Config: ' + $param + '  Current Value Will be retained: ' + $CurrentValues.$param)
-        }
-    }
-    Write-Verbose -Message 'Starting Assignments Check'
-    # handle complex parameters - manually for now
-    if ($PSBoundParameters.keys -contains 'Assignments' )
-    {
-        $assignmentsValue = @()
-        foreach ($assignment in $Assignments)
-        {
-            $groupInfo = Get-MgGroup -GroupId $assignment -ErrorAction SilentlyContinue
-            if ($null -ne $groupInfo)
-            {
-                $assignmentsValue += $groupInfo.DisplayName
-            }
-            else
-            {
-                $assignmentsValue += $assignment
-            }
-        }
-        $targetvalues.add('Assignments', $assignmentsValue)
-    }
-
-    Write-Verbose -Message 'Starting Exluded Groups Check'
-    if ($PSBoundParameters.keys -contains 'ExcludedGroups' )
-    {
-        $targetvalues.add('ExcludedGroups', $psboundparameters.ExcludedGroups)
-    }
-
-    # set the apps values
-    Write-Verbose -Message "AppGroupType: $AppGroupType"
-    Write-Verbose -Message "apps: $apps"
-    $AppsHash = set-AppsHash -AppGroupType $AppGroupType -apps $apps
-    $targetvalues.add('Apps', $AppsHash.Apps)
-    $targetvalues.add('AppGroupType', $AppsHash.AppGroupType)
-    # wipe out the current apps value if AppGroupType is anything but selectedpublicapps to match the appshash values
-    if ($CurrentValues.AppGroupType -ne 'selectedPublicApps')
-    {
-        $CurrentValues.Apps = @()
-    }
-
-    # remove thre ID from the values to check as it may not match
-    $targetvalues.remove('ID') | Out-Null
-
-    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
-    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $targetvalues)"
-
-    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
-        -Source $($MyInvocation.MyCommand.Source) `
-        -DesiredValues $targetvalues `
-        -ValuesToCheck $targetvalues.Keys
-    #-verbose
-
-    Write-Verbose -Message "Test-TargetResource returned $TestResult"
-
-    return $TestResult
+    $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
+                                         -ResourceName $ResourceName
+    return $result
 }
 
 function Export-TargetResource
@@ -1455,3 +1338,4 @@ function Get-InputParameters
 }
 
 Export-ModuleMember -Function *-TargetResource
+

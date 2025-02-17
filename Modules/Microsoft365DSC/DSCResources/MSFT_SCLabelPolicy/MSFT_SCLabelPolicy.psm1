@@ -649,11 +649,8 @@ function Test-TargetResource
         [System.String[]]
         $AccessTokens
     )
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
     $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
@@ -661,121 +658,9 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of Sensitivity label for $Name"
-    $CurrentValues = Get-TargetResource @PSBoundParameters
-
-    $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('AddLabels') | Out-Null
-    $ValuesToCheck.Remove('AddExchangeLocation') | Out-Null
-    $ValuesToCheck.Remove('AddExchangeLocationException') | Out-Null
-    $ValuesToCheck.Remove('AddModernGroupLocation') | Out-Null
-    $ValuesToCheck.Remove('AddModernGroupLocationException') | Out-Null
-    $ValuesToCheck.Remove('RemoveLabels') | Out-Null
-    $ValuesToCheck.Remove('RemoveExchangeLocation') | Out-Null
-    $ValuesToCheck.Remove('RemoveExchangeLocationException') | Out-Null
-    $ValuesToCheck.Remove('RemoveModernGroupLocation') | Out-Null
-    $ValuesToCheck.Remove('RemoveModernGroupLocationException') | Out-Null
-
-    if ($null -ne $AdvancedSettings)
-    {
-        $TestAdvancedSettings = Test-AdvancedSettings -DesiredProperty $AdvancedSettings -CurrentProperty $CurrentValues.AdvancedSettings
-        if ($false -eq $TestAdvancedSettings)
-        {
-            return $false
-        }
-    }
-
-    if ($null -ne $RemoveModernGroupLocation -or $null -ne $AddModernGroupLocation -or $null -ne $ModernGroupLocation)
-    {
-        $configData = New-PolicyData -configData $ModernGroupLocation -currentData $CurrentValues.ModernGroupLocation `
-            -removedData $RemoveModernGroupLocation -additionalData $AddModernGroupLocation
-        if ($null -ne $configData)
-        {
-            $ValuesToCheck['ModernGroupLocation'] = $configData
-        }
-        if ($null -eq $configData -and $null -ne $CurrentValues.ModernGroupLocation `
-                -and $null -ne $RemoveModernGroupLocation)
-        {
-            return $false
-        }
-    }
-
-    if ($null -ne $RemoveModernGroupLocationException -or $null -ne $AddModernGroupLocationException `
-            -or $null -ne $ModernGroupLocationException)
-    {
-        $configData = New-PolicyData -configData $ModernGroupLocationException -currentData $CurrentValues.ModernGroupLocationException `
-            -removedData $RemoveModernGroupLocationException -additionalData $AddModernGroupLocationException
-
-        if ($null -ne $configData)
-        {
-            $ValuesToCheck['ModernGroupLocationException'] = $configData
-        }
-        if ($null -eq $configData -and $null -ne $CurrentValues.ModernGroupLocationException `
-                -and $null -ne $RemoveModernGroupLocationException)
-        {
-            return $false
-        }
-    }
-
-    if ($null -ne $RemoveExchangeLocation -or $null -ne $AddExchangeLocation -or $null -ne $ExchangeLocation)
-    {
-        $configData = New-PolicyData -configData $ExchangeLocation -currentData $CurrentValues.ExchangeLocation `
-            -removedData $RemoveExchangeLocation -additionalData $AddExchangeLocation
-        if ($null -ne $configData)
-        {
-            $ValuesToCheck['ExchangeLocation'] = $configData
-        }
-        if ($null -eq $configData -and $null -ne $CurrentValues.ExchangeLocation `
-                -and $null -ne $RemoveExchangeLocation)
-        {
-            return $false
-        }
-    }
-
-    if ($null -ne $RemoveExchangeLocationException -or $null -ne $AddExchangeLocationException -or $null -ne $ExchangeLocationException)
-    {
-        $configData = New-PolicyData -configData $ExchangeLocationException -currentData $CurrentValues.ExchangeLocationException `
-            -removedData $RemoveExchangeLocationException -additionalData $AddExchangeLocationException
-
-        if ($null -ne $configData)
-        {
-            $ValuesToCheck['ExchangeLocationException'] = $configData
-        }
-
-        if ($null -eq $configData -and $null -ne $CurrentValues.ExchangeLocationException `
-                -and $null -ne $RemoveExchangeLocationException)
-        {
-            return $false
-        }
-    }
-
-    if ($null -ne $RemoveLabels -or $null -ne $AddLabels -or $null -ne $Labels)
-    {
-        $configData = New-PolicyData -configData $Labels -currentData $CurrentValues.Labels `
-            -removedData $RemoveLabels -additionalData $AddLabels
-
-        if ($null -ne $configData)
-        {
-            $ValuesToCheck['Labels'] = $configData
-        }
-
-        if ($null -eq $configData -and $null -ne $CurrentValues.Labels `
-                -and $null -ne $RemoveLabels)
-        {
-            return $false
-        }
-    }
-
-    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
-    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
-
-    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
-        -Source $($MyInvocation.MyCommand.Source) `
-        -DesiredValues $PSBoundParameters `
-        -ValuesToCheck $ValuesToCheck.Keys
-
-    Write-Verbose -Message "Test-TargetResource returned $TestResult"
-    return $TestResult
+    $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
+                                         -ResourceName $ResourceName
+    return $result
 }
 
 function Export-TargetResource
@@ -1137,3 +1022,4 @@ function New-PolicyData
 }
 
 Export-ModuleMember -Function *-TargetResource
+

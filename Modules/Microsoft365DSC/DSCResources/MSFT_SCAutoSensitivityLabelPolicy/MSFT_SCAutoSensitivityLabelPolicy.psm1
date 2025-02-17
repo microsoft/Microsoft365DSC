@@ -651,9 +651,8 @@ function Test-TargetResource
         [System.String[]]
         $AccessTokens
     )
-
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
     $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
@@ -661,123 +660,9 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of Sensitivity label for $Name"
-    $CurrentValues = Get-TargetResource @PSBoundParameters
-
-    $ValuesToCheck = $PSBoundParameters
-
-    if ($null -ne $RemoveExchangeLocation -or $null -ne $AddExchangeLocation -or $null -ne $ExchangeLocation)
-    {
-        $configData = New-PolicyData -configData $ExchangeLocation -currentData $CurrentValues.ExchangeLocation `
-            -removedData $RemoveExchangeLocation -additionalData $AddExchangeLocation
-        if ($null -ne $configData)
-        {
-            $ValuesToCheck['ExchangeLocation'] = $configData
-        }
-        if ($null -eq $configData -and $null -ne $CurrentValues.ExchangeLocation `
-                -and $null -ne $RemoveExchangeLocation)
-        {
-            #last entry removed so trigger drift
-            return $false
-        }
-    }
-
-    if ($null -ne $RemoveExchangeLocationException -or $null -ne $AddExchangeLocationException -or $null -ne $ExchangeLocationException)
-    {
-        $configData = New-PolicyData -configData $ExchangeLocationException -currentData $CurrentValues.ExchangeLocationException `
-            -removedData $RemoveExchangeLocationException -additionalData $AddExchangeLocationException
-
-        if ($null -ne $configData)
-        {
-            $ValuesToCheck['ExchangeLocationException'] = $configData
-        }
-
-        if ($null -eq $configData -and $null -ne $CurrentValues.ExchangeLocationException `
-                -and $null -ne $RemoveExchangeLocationException)
-        {
-            #last entry removed so trigger drift
-            return $false
-        }
-    }
-
-    if ($null -ne $RemoveSharePointLocation -or $null -ne $AddSharePointLocation -or $null -ne $SharePointLocation)
-    {
-        $configData = New-PolicyData -configData $SharePointLocation -currentData $CurrentValues.SharePointLocation `
-            -removedData $RemoveSharePointLocation -additionalData $AddSharePointLocation
-        if ($null -ne $configData)
-        {
-            $ValuesToCheck['SharePointLocation'] = $configData
-        }
-        if ($null -eq $configData -and $null -ne $CurrentValues.SharePointLocation `
-                -and $null -ne $SharePointLocation)
-        {
-            #last entry removed so trigger drift
-            return $false
-        }
-    }
-
-    if ($null -ne $RemoveSharePointLocationException -or $null -ne $AddSharePointLocationException -or $null -ne $SharePointLocationException)
-    {
-        $configData = New-PolicyData -configData $SharePointLocationException -currentData $CurrentValues.SharePointLocationException `
-            -removedData $RemoveSharePointLocationException -additionalData $AddSharePointLocationException
-
-        if ($null -ne $configData)
-        {
-            $ValuesToCheck['SharePointLocationException'] = $configData
-        }
-
-        if ($null -eq $configData -and $null -ne $CurrentValues.SharePointLocationException `
-                -and $null -ne $RemoveSharePointLocationException)
-        {
-            #last entry removed so trigger drift
-            return $false
-        }
-    }
-
-    if ($null -ne $RemoveOneDriveLocation -or $null -ne $AddOneDriveLocation -or $null -ne $OneDriveLocation)
-    {
-        $configData = New-PolicyData -configData $OneDriveLocation -currentData $CurrentValues.OneDriveLocation `
-            -removedData $RemoveOneDriveLocation -additionalData $AddOneDriveLocation
-        if ($null -ne $configData)
-        {
-            $ValuesToCheck['OneDriveLocation'] = $configData
-        }
-        if ($null -eq $configData -and $null -ne $CurrentValues.OneDriveLocation `
-                -and $null -ne $OneDriveLocation)
-        {
-            #last entry removed so trigger drift
-            return $false
-        }
-    }
-
-    if ($null -ne $RemoveOneDriveLocationException -or $null -ne $AddOneDriveLocationException -or $null -ne $OneDriveLocationException)
-    {
-        $configData = New-PolicyData -configData $OneDriveLocationException -currentData $CurrentValues.OneDriveLocationException `
-            -removedData $RemoveOneDriveLocationException -additionalData $AddOneDriveLocationException
-
-        if ($null -ne $configData)
-        {
-            $ValuesToCheck['OneDriveLocationException'] = $configData
-        }
-
-        if ($null -eq $configData -and $null -ne $CurrentValues.OneDriveLocationException `
-                -and $null -ne $RemoveOneDriveLocationException)
-        {
-            #last entry removed so trigger drift
-            return $false
-        }
-    }
-
-    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
-    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
-
-    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
-        -Source $($MyInvocation.MyCommand.Source) `
-        -DesiredValues $PSBoundParameters `
-        -ValuesToCheck $ValuesToCheck.Keys
-
-    Write-Verbose -Message "Test-TargetResource returned $TestResult"
-    return $TestResult
+    $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
+                                         -ResourceName $ResourceName
+    return $result
 }
 
 function Export-TargetResource
@@ -941,3 +826,4 @@ function New-PolicyData
 }
 
 Export-ModuleMember -Function *-TargetResource
+

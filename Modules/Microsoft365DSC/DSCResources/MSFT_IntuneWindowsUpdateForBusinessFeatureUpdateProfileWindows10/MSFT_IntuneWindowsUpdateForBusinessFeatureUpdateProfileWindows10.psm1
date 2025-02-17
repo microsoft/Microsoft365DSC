@@ -546,10 +546,6 @@ function Test-TargetResource
         [System.String[]]
         $AccessTokens
     )
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
     $CommandName = $MyInvocation.MyCommand
@@ -559,139 +555,9 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of the Intune Windows Update For Business Feature Update Profile for Windows10 with Id {$Id} and DisplayName {$DisplayName}"
-
-    $CurrentValues = Get-TargetResource @PSBoundParameters
-    $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
-    $testResult = $true
-
-    # Cannot be changed after creation
-    $ValuesToCheck.Remove('InstallLatestWindows10OnWindows11IneligibleDevice') | Out-Null
-
-    #Compare Cim instances
-    foreach ($key in $PSBoundParameters.Keys)
-    {
-        if ($key -eq 'RolloutSettings')
-        {
-            continue
-        }
-
-        $source = $PSBoundParameters.$key
-        $target = $CurrentValues.$key
-        if ($null -ne $source -and $source.GetType().Name -like '*CimInstance*')
-        {
-            $testResult = Compare-M365DSCComplexObject `
-                -Source ($source) `
-                -Target ($target)
-
-            if (-not $testResult)
-            {
-                break
-            }
-
-            $ValuesToCheck.Remove($key) | Out-Null
-        }
-    }
-
-    if (-not $testResult)
-    {
-        Write-Verbose -Message "Test-TargetResource returned $false"
-        return $false
-    }
-
-    if (($null -eq $RolloutSettings -and $null -ne $CurrentValues.RolloutSettings) -or `
-        ($null -ne $RolloutSettings -and $null -eq $CurrentValues.RolloutSettings))
-    {
-        Write-Verbose -Message 'RolloutSettings is null in either the desired configuration or the current configuration.'
-        Write-Verbose -Message "Test-TargetResource returned $false"
-        return $false
-    }
-
-    $currentTime = Get-Date
-    [datetime]$offerStartDate = [datetime]::MinValue
-    [datetime]$offerEndDate = [datetime]::MinValue
-    [datetime]::TryParse($RolloutSettings.OfferStartDateTimeInUTC, [ref]$offerStartDate) | Out-Null
-    [datetime]::TryParse($RolloutSettings.OfferEndDateTimeInUTC, [ref]$offerEndDate) | Out-Null
-    if ($CurrentValues.Ensure -ne $Ensure)
-    {
-        if ($Ensure -eq 'Present')
-        {
-            if (($offerStartDate -ne [datetime]::MinValue -and $offerStartDate -lt $currentTime) `
-                    -and ($offerEndDate -ne [datetime]::MinValue -and $offerEndDate -lt $currentTime))
-            {
-                Write-Verbose -Message 'Start and end time are in the past, skip the configuration.'
-                Write-Verbose -Message "Test-TargetResource returned $true"
-                return $true
-            }
-        }
-
-        Write-Verbose -Message "Test-TargetResource returned $false"
-        return $false
-    }
-
-    [datetime]$currentOfferStartDate = [datetime]::MinValue
-    [datetime]$currentOfferEndDate = [datetime]::MinValue
-    [datetime]::TryParse($CurrentValues.RolloutSettings.OfferStartDateTimeInUTC, [ref]$currentOfferStartDate) | Out-Null
-    [datetime]::TryParse($CurrentValues.RolloutSettings.OfferEndDateTimeInUTC, [ref]$currentOfferEndDate) | Out-Null
-    if (($offerEndDate -eq [datetime]::MinValue -and $currentOfferEndDate -ne [datetime]::MinValue) -or `
-        ($offerEndDate -ne [datetime]::MinValue -and $currentOfferEndDate -eq [datetime]::MinValue))
-    {
-        Write-Verbose -Message 'OfferEndDateTimeInUTC is null in either the desired configuration or the current configuration.'
-        Write-Verbose -Message "Test-TargetResource returned $false"
-        return $false
-    }
-
-    if ($offerStartDate -ne [datetime]::MinValue -and $currentOfferStartDate -ne [datetime]::MinValue)
-    {
-        if ($offerStartDate -ne $currentOfferStartDate `
-                -and $offerStartDate -gt $currentTime)
-        {
-            Write-Verbose -Message 'OfferStartDateTimeInUTC is different from current.'
-            $testResult = $false
-        }
-
-        if ($testResult -and $offerEndDate -ne [datetime]::MinValue -and $currentOfferEndDate -ne [datetime]::MinValue)
-        {
-            if ($offerStartDate -ne $currentOfferStartDate `
-                    -and $offerStartDate -gt $currentTime `
-                    -and $offerStartDate -lt $currentTime.AddDays(2))
-            {
-                Write-Verbose -Message 'OfferStartDateTimeInUTC must be greater than the current time + 2 days to be changable if OfferEndDateTimeInUTC is specified, resetting testResult to true.'
-                $testResult = $true
-            }
-
-            if ($offerEndDate -ne $currentOfferEndDate `
-                    -and $offerEndDate -gt $currentTime `
-                    -and $offerEndDate -gt $offerStartDate)
-            {
-                Write-Verbose -Message 'OfferEndDateTimeInUTC is different from current.'
-                $testResult = $false
-            }
-
-            if ($testResult -and $RolloutSettings.OfferIntervalInDays -ne $CurrentValues.RolloutSettings.OfferIntervalInDays)
-            {
-                Write-Verbose -Message 'OfferIntervalInDays is different from current.'
-                $testResult = $false
-            }
-        }
-    }
-    $ValuesToCheck.Remove('RolloutSettings') | Out-Null
-    $ValuesToCheck.Remove('Id') | Out-Null
-
-    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
-    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
-
-    if ($testResult)
-    {
-        $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
-            -Source $($MyInvocation.MyCommand.Source) `
-            -DesiredValues $PSBoundParameters `
-            -ValuesToCheck $ValuesToCheck.Keys
-    }
-
-    Write-Verbose -Message "Test-TargetResource returned $testResult"
-
-    return $testResult
+    $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
+                                         -ResourceName $ResourceName
+    return $result
 }
 
 function Export-TargetResource
@@ -865,3 +731,4 @@ function Export-TargetResource
 }
 
 Export-ModuleMember -Function *-TargetResource
+

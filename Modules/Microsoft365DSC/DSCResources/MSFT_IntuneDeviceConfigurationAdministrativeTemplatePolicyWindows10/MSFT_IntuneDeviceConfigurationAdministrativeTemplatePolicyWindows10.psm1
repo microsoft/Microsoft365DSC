@@ -671,9 +671,6 @@ function Test-TargetResource
         [System.String[]]
         $AccessTokens
     )
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
     $CommandName = $MyInvocation.MyCommand
@@ -683,86 +680,9 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of the Intune Device Configuration Administrative Template Policy for Windows10 with Id {$Id} and DisplayName {$DisplayName}"
-
-    $CurrentValues = Get-TargetResource @PSBoundParameters
-    if (-not (Test-M365DSCAuthenticationParameter -BoundParameters $CurrentValues))
-    {
-        Write-Verbose "An error occured in Get-TargetResource, the policy {$displayName} will not be processed"
-        throw "An error occured in Get-TargetResource, the policy {$displayName} will not be processed. Refer to the event viewer logs for more information."
-    }
-
-    $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
-    $testResult = $true
-
-    #Compare Cim instances
-    foreach ($key in $PSBoundParameters.Keys)
-    {
-        $source = $PSBoundParameters.$key
-        $target = $CurrentValues.$key
-        if ($source.getType().Name -like '*CimInstance*')
-        {
-            #Removing Key Definition because it is Read-Only and ID as random
-            if ($key -eq 'DefinitionValues')
-            {
-                $source = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
-                $target = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $target
-                foreach ($definitionValue in $source)
-                {
-                    $definitionValue.remove('Definition') | Out-Null
-                    $definitionValue.remove('Id') | Out-Null
-                    #Removing Key presentationDefinitionLabel because it is Read-Only and ID as random
-                    foreach ($presentationValue in $definitionValue.PresentationValues)
-                    {
-                        $presentationValue.remove('presentationDefinitionLabel') | Out-Null
-                        $presentationValue.remove('Id') | Out-Null
-                    }
-                }
-                foreach ($definitionValue in $target)
-                {
-                    $definitionValue.remove('Definition') | Out-Null
-                    $definitionValue.remove('Id') | Out-Null
-                    #Removing Key presentationDefinitionLabel because it is Read-Only and ID as random
-                    foreach ($presentationValue in $definitionValue.PresentationValues)
-                    {
-                        $presentationValue.remove('presentationDefinitionLabel') | Out-Null
-                        $presentationValue.remove('Id') | Out-Null
-                    }
-                }
-            }
-
-            $testResult = Compare-M365DSCComplexObject `
-                -Source ($source) `
-                -Target ($target)
-
-            if (-Not $testResult)
-            {
-                $testResult = $false
-                break
-            }
-
-            $ValuesToCheck.Remove($key) | Out-Null
-        }
-    }
-
-    $ValuesToCheck.Remove('Id') | Out-Null
-    $ValuesToCheck.Remove('Ensure') | Out-Null
-    $ValuesToCheck.Remove('PolicyConfigurationIngestionType') | Out-Null
-
-    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
-    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
-
-    if ($testResult)
-    {
-        $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
-            -Source $($MyInvocation.MyCommand.Source) `
-            -DesiredValues $PSBoundParameters `
-            -ValuesToCheck $ValuesToCheck.Keys
-    }
-
-    Write-Verbose -Message "Test-TargetResource returned $testResult"
-
-    return $testResult
+    $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
+                                         -ResourceName $ResourceName
+    return $result
 }
 
 function Export-TargetResource
@@ -1003,3 +923,4 @@ function Update-DeviceConfigurationGroupPolicyDefinitionValue
 }
 
 Export-ModuleMember -Function *-TargetResource
+

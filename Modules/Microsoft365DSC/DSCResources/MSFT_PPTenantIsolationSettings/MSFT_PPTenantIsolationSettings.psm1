@@ -456,14 +456,8 @@ function Test-TargetResource
         [System.Management.Automation.PSCredential]
         $ApplicationSecret
     )
-
-    Write-Verbose -Message 'Testing Power Platform Tenant Isolation Settings configuration'
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
     $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
@@ -471,149 +465,9 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $CurrentValues = Get-TargetResource @PSBoundParameters
-
-    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
-    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
-
-    $result = $true
-    $driftedRules = @{}
-    if ($PSBoundParameters.ContainsKey('Rules'))
-    {
-        Write-Verbose 'Processing parameter Rules'
-        foreach ($rule in $Rules)
-        {
-            Write-Verbose "Checking Rule for TenantName $($rule.TenantName). Rules"
-            $ruleTenantId = Get-M365TenantId -TenantName $rule.TenantName
-            Write-Verbose -Message "Found TenantName {$($rule.TenantName)}"
-
-            $existingRule = $CurrentValues.Rules | Where-Object -FilterScript { $_.TenantName -eq $ruleTenantId }
-            if ($null -eq $existingRule)
-            {
-                Write-Verbose "Rule for $($rule.TenantName) does not exist."
-                $driftedRules.($rule.TenantName) = @{
-                    CurrentValue = 'Rule does not exist'
-                    DesiredValue = "Direction: $($rule.Direction)"
-                }
-                $result = $false
-            }
-            else
-            {
-                Write-Verbose "Rule for $($rule.TenantName) exists. Checking specified direction."
-                if ($rule.Direction -ne $existingRule.Direction)
-                {
-                    Write-Verbose "Direction for rule incorrect: Current = $($existingRule.Direction) / Desired = $($rule.Direction)"
-                    $driftedRules.($rule.TenantName) = @{
-                        CurrentValue = "Direction: $($existingRule.Direction)"
-                        DesiredValue = "Direction: $($rule.Direction)"
-                    }
-                    $result = $false
-                }
-            }
-        }
-
-        foreach ($existingRule in $CurrentValues.Rules)
-        {
-            # Check if rules are not in the specified list
-            if ($null -eq ($Rules | Where-Object -FilterScript { (Get-M365TenantId -TenantName $_.TenantName) -eq $existingRule.TenantName }))
-            {
-                Write-Verbose "Rule for tenant id $($existingRule.TenantName) does not exist in the Desired State."
-
-                $driftedRules.($existingRule.TenantName) = @{
-                    CurrentValue = "Direction: $($existingRule.Direction)"
-                    DesiredValue = "Direction: $($rule.Direction)"
-                }
-                $result = $false
-            }
-        }
-    }
-
-    if ($PSBoundParameters.ContainsKey('RulesToInclude'))
-    {
-        Write-Verbose 'Processing parameter RulesToInclude'
-        $driftedRules = @{}
-        foreach ($rule in $RulesToInclude)
-        {
-            Write-Verbose "Checking Rule for TenantName $($rule.TenantName). RulesToInclude"
-            $ruleTenantId = Get-M365TenantId -TenantName $rule.TenantName
-            Write-Verbose -Message "Found TenantName {$($rule.TenantName)}"
-
-            $existingRule = $CurrentValues.Rules | Where-Object -FilterScript { $_.TenantName -eq $ruleTenantId }
-            if ($null -eq $existingRule)
-            {
-                Write-Verbose "Rule for $($rule.TenantName) does not exist."
-                $driftedRules.($rule.TenantName) = @{
-                    CurrentValue = 'Rule does not exist'
-                    DesiredValue = "Direction: $($rule.Direction)"
-                }
-                $result = $false
-            }
-            else
-            {
-                Write-Verbose "Rule for $($rule.TenantName) exists. Checking specified direction."
-                if ($rule.Direction -ne $existingRule.Direction)
-                {
-                    Write-Verbose "Direction for rule incorrect: Current = $($existingRule.Direction) / Desired = $($rule.Direction)"
-                    $driftedRules.($rule.TenantName) = @{
-                        CurrentValue = "Direction: $($existingRule.Direction)"
-                        DesiredValue = "Direction: $($rule.Direction)"
-                    }
-                    $result = $false
-                }
-            }
-        }
-    }
-
-    if ($PSBoundParameters.ContainsKey('RulesToExclude'))
-    {
-        Write-Verbose 'Processing parameter RulesToExclude'
-        $driftedRules = @{}
-        foreach ($rule in $RulesToExclude)
-        {
-            Write-Verbose "Checking Rule for TenantName $($rule.TenantName). RulesToExclude"
-            $ruleTenantId = Get-M365TenantId -TenantName $rule.TenantName
-            Write-Verbose -Message "Found TenantName {$($rule.TenantName)}"
-
-            $existingRule = $CurrentValues.Rules | Where-Object -FilterScript { $_.TenantName -eq $ruleTenantId }
-            if ($null -ne $existingRule)
-            {
-                Write-Verbose "Rule for $($rule.TenantName) exists."
-                $driftedRules.($rule.TenantName) = @{
-                    CurrentValue = "Direction: $($existingRule.Direction)"
-                    DesiredValue = 'Should not exist'
-                }
-                $result = $false
-            }
-        }
-    }
-
-    if ($result -eq $false)
-    {
-        $message = "Tenant Isolation Rules not in the Desired State:`n"
-        $message += "<Rules>`n"
-        foreach ($driftedRule in $driftedRules.GetEnumerator())
-        {
-            $message += "    <Rule>`n"
-            $message += "        <TenantName>$($driftedRule.Name)</TenantName>`n"
-            $message += "        <CurrentValue>$($driftedRule.Value.CurrentValue)</CurrentValue>`n"
-            $message += "        <DesiredValue>$($driftedRule.Value.DesiredValue)</DesiredValue>`n"
-            $message += "    </Rule>`n"
-        }
-        $message += '</Rules>'
-        Add-M365DSCEvent -Message $message -EntryType 'Error' `
-            -EventID 1 -Source $($MyInvocation.MyCommand.Source)
-        Write-Verbose -Message 'Test-TargetResource returned False'
-        return $false
-    }
-
-    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
-        -Source $($MyInvocation.MyCommand.Source) `
-        -DesiredValues $PSBoundParameters `
-        -ValuesToCheck @('Enabled')
-
-    Write-Verbose -Message "Test-TargetResource returned $TestResult"
-
-    return $TestResult
+    $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
+                                         -ResourceName $ResourceName
+    return $result
 }
 
 function Export-TargetResource
@@ -779,3 +633,4 @@ function Get-M365DSCTenantIsolationRule
 }
 
 Export-ModuleMember -Function *-TargetResource
+

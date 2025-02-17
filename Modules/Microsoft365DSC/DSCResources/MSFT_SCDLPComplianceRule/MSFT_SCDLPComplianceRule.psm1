@@ -1326,11 +1326,8 @@ function Test-TargetResource
         [System.String[]]
         $AccessTokens
     )
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
     $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
@@ -1338,68 +1335,9 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of DLPComplianceRule for $Name"
-
-    $CurrentValues = Get-TargetResource @PSBoundParameters
-
-    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
-
-    $ValuesToCheck = $PSBoundParameters
-
-    #region Test Sensitive Information Type
-    # For each Desired SIT check to see if there is an existing rule with the same name
-    if ($null -ne $ValuesToCheck['ContentContainsSensitiveInformation'])
-    {
-        if ($null -ne $ValuesToCheck['ContentContainsSensitiveInformation'].groups)
-        {
-            $contentSITS = Get-SCDLPSensitiveInformationGroups -SensitiveInformation $ValuesToCheck['ContentContainsSensitiveInformation']
-            $desiredState = Test-ContainsSensitiveInformationGroups -targetValues $contentSITS -sourceValue $CurrentValues.ContentContainsSensitiveInformation
-        }
-        else
-        {
-            $contentSITS = Get-SCDLPSensitiveInformation -SensitiveInformation $ValuesToCheck['ContentContainsSensitiveInformation']
-            $desiredState = Test-ContainsSensitiveInformation -targetValues $contentSITS -sourceValue $CurrentValues.ContentContainsSensitiveInformation
-        }
-    }
-
-    if ($desiredState -eq $false)
-    {
-        Write-Verbose -Message "Test-TargetResource returned $desiredState"
-        return $false
-    }
-
-    if ($null -ne $ValuesToCheck['ExceptIfContentContainsSensitiveInformation'])
-    {
-        if ($null -ne $ValuesToCheck['ExceptIfContentContainsSensitiveInformation'].groups)
-        {
-            $contentSITS = Get-SCDLPSensitiveInformationGroups -SensitiveInformation $ValuesToCheck['ExceptIfContentContainsSensitiveInformation']
-            $desiredState = Test-ContainsSensitiveInformationGroups -targetValues $contentSITS -sourceValue $CurrentValues.ExceptIfContentContainsSensitiveInformation
-        }
-        else
-        {
-            $contentSITS = Get-SCDLPSensitiveInformation -SensitiveInformation $ValuesToCheck['ExceptIfContentContainsSensitiveInformation']
-            $desiredState = Test-ContainsSensitiveInformation -targetValues $contentSITS -sourceValue $CurrentValues.ExceptIfContentContainsSensitiveInformation
-        }
-    }
-
-    if ($desiredState -eq $false)
-    {
-        Write-Verbose -Message "Test-TargetResource returned $desiredState"
-        return $false
-    }
-
-    #endregion
-    $ValuesToCheck.Remove('ContentContainsSensitiveInformation') | Out-Null
-    $ValuesToCheck.Remove('ExceptIfContentContainsSensitiveInformation') | Out-Null
-
-    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
-        -Source $($MyInvocation.MyCommand.Source) `
-        -DesiredValues $PSBoundParameters `
-        -ValuesToCheck $ValuesToCheck.Keys
-
-    Write-Verbose -Message "Test-TargetResource returned $TestResult"
-
-    return $TestResult
+    $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
+                                         -ResourceName $ResourceName
+    return $result
 }
 
 function Export-TargetResource
@@ -2088,3 +2026,4 @@ function Format-Json([Parameter(Mandatory, ValueFromPipeline)][String] $json)
 }
 
 Export-ModuleMember -Function *-TargetResource
+

@@ -325,36 +325,18 @@ function Test-TargetResource
         [System.String[]]
         $AccessTokens
     )
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    $param = $PSBoundParameters
-
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
     $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
-        -Parameters $param
+        -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of Office 365 Recipient permissions $DisplayName"
-
-    $currentValues = Get-TargetResource @param
-
-    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $currentValues)"
-    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $param)"
-
-    $testResult = Test-M365DSCParameterState -CurrentValues $currentValues `
-        -Source $($MyInvocation.MyCommand.Source) `
-        -DesiredValues $param `
-        -ValuesToCheck Ensure, Identity, Trustee, AccessRights
-
-    Write-Verbose -Message "Test-TargetResource returned $testResult"
-
-    return $testResult
+    $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
+                                         -ResourceName $ResourceName
+    return $result
 }
 
 function Export-TargetResource
@@ -517,3 +499,4 @@ function Export-TargetResource
 }
 
 Export-ModuleMember -Function *-TargetResource
+
