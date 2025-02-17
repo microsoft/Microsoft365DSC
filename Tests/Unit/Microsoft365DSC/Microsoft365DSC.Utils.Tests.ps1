@@ -21,7 +21,7 @@
             Test6 = 6
         }
 
-        Remove-EmptyValue -Splat $Splat
+        Remove-M365DSCEmptyValue -Splat $Splat
         { Test-FunctionHashtable @Splat } | Should -Not -Throw
     }
     It 'From OrderedDictionary' {
@@ -44,7 +44,7 @@
             Test5 = 0
             Test6 = 6
         }
-        Remove-EmptyValue -Splat $SplatDictionary
+        Remove-M365DSCEmptyValue -Splat $SplatDictionary
         { Test-FunctionOrderedDictionary @SplatDictionary } | Should -Not -Throw
     }
     It 'From OrderedDictionary but with ExcludedProperty' {
@@ -56,7 +56,7 @@
             Test5 = 0
             Test6 = 6
         }
-        Remove-EmptyValue -Splat $SplatDictionary -ExcludeParameter 'Test3'
+        Remove-M365DSCEmptyValue -Splat $SplatDictionary -ExcludeParameter 'Test3'
         $SplatDictionary['Test3'] | Should -Be ''
     }
     It 'From OrderedDictionary Recursive' {
@@ -69,10 +69,10 @@
             Test6 = 6
             Test7 = @{}
         }
-        Remove-EmptyValue -Splat $SplatDictionary
+        Remove-M365DSCEmptyValue -Splat $SplatDictionary
         $SplatDictionary.Keys | Should -Contain 'Test7'
 
-        Remove-EmptyValue -Splat $SplatDictionary -Recursive
+        Remove-M365DSCEmptyValue -Splat $SplatDictionary -Recursive
         $SplatDictionary.Keys | Should -Not -Contain 'Test7'
     }
     It 'From OrderedDictionary Recursive with ILIST check' {
@@ -91,11 +91,11 @@
         }
         $SplatDictionary.Test6.Add($DummyObject)
 
-        Remove-EmptyValue -Splat $SplatDictionary
+        Remove-M365DSCEmptyValue -Splat $SplatDictionary
         $SplatDictionary.Keys | Should -Contain 'Test6'
         $SplatDictionary.Keys | Should -Contain 'Test7'
 
-        Remove-EmptyValue -Splat $SplatDictionary -Recursive
+        Remove-M365DSCEmptyValue -Splat $SplatDictionary -Recursive
         $SplatDictionary.Keys | Should -Not -Contain 'Test7'
     }
     It 'From OrderedDictionary Recursive with ILIST check for Empty Arrays' {
@@ -117,14 +117,14 @@
         }
         $SplatDictionary.Test6.Add($DummyObject)
 
-        Remove-EmptyValue -Splat $SplatDictionary
+        Remove-M365DSCEmptyValue -Splat $SplatDictionary
         $SplatDictionary.Keys | Should -Contain 'Test6'
         $SplatDictionary.Keys | Should -Contain 'Test7'
         $SplatDictionary.Keys | Should -Not -Contain 'Test8'
         $SplatDictionary.Keys | Should -Not -Contain 'Test9'
         $SplatDictionary.Keys | Should -Contain 'Test10'
 
-        Remove-EmptyValue -Splat $SplatDictionary -Recursive
+        Remove-M365DSCEmptyValue -Splat $SplatDictionary -Recursive
         $SplatDictionary.Keys | Should -Not -Contain 'Test7'
     }
     It 'Testing edge cases' {
@@ -151,7 +151,7 @@
             Rotate6     = $null, ''
         }
 
-        Remove-EmptyValue -Hashtable $Splat
+        Remove-M365DSCEmptyValue -Hashtable $Splat
         $Splat.Keys | Should -Contain 'Rotate6'
         $Splat.Keys | Should -Not -Contain 'Rotate5'
         $Splat.Keys | Should -Contain 'Rotate4'
@@ -168,7 +168,7 @@
         $Splat.Margins.Keys | Should -Contain TestBool2
         $Splat.Margins.Keys | Should -Contain TestBoolArray
 
-        Remove-EmptyValue -Hashtable $Splat -Recursive
+        Remove-M365DSCEmptyValue -Hashtable $Splat -Recursive
         $Splat.Margins.Keys | Should -Not -Contain MarginRight2
     }
 }

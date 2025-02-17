@@ -70,7 +70,7 @@ class MSFT_SCSensitivityLabel : OMI_BaseResource
     [Write, Description("The ApplyWaterMarkingFontSize parameter specifies the font size (in points) of the watermark text.")] SInt32 ApplyWaterMarkingFontSize;
     [Write, Description("The ApplyWaterMarkingAlignment parameter specifies the watermark alignment."), ValueMap{"Horizontal","Diagonal"}, Values{"Horizontal","Diagonal"}] String ApplyWaterMarkingLayout;
     [Write, Description("The ApplyWaterMarkingText parameter specifies the watermark text. If the value contains spaces, enclose the value in quotation marks.")] String ApplyWaterMarkingText;
-    [Write, Description("The ContentType parameter specifies where the sensitivity label can be applied."), ValueMap{"File, Email","Site, UnifiedGroup","PurviewAssets","Teamwork","SchematizedData"}, Values{"File, Email","Site, UnifiedGroup","PurviewAssets","Teamwork","SchematizedData"}] String ContentType[];
+    [Write, Description("The ContentType parameter specifies where the sensitivity label can be applied."), ValueMap{"File", "Email","Site", "UnifiedGroup","PurviewAssets","Teamwork","SchematizedData"}, Values{"File", "Email","Site", "UnifiedGroup","PurviewAssets","Teamwork","SchematizedData"}] String ContentType[];
     [Write, Description("The EncryptionContentExpiredOnDateInDaysOrNever parameter specifies when the encrypted content expires. Valid values are integer or never.")] String EncryptionContentExpiredOnDateInDaysOrNever;
     [Write, Description("The EncryptionDoNotForward parameter specifies whether the Do Not Forward template is applied.")] Boolean EncryptionDoNotForward;
     [Write, Description("The EncryptionEncryptOnly parameter specifies whether the encrypt-only template is applied.")] Boolean EncryptionEncryptOnly;

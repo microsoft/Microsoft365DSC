@@ -3639,13 +3639,13 @@ This function removes all empty values from a dictionary object
 .Functionality
 Internal
 #>
-function Remove-EmptyValue
+function Remove-M365DSCEmptyValue
 {
-    [alias('Remove-EmptyValues')]
+    [Alias('Remove-M365DSCEmptyValues')]
     [CmdletBinding()]
     param
     (
-        [alias('Splat', 'IDictionary')][Parameter(Mandatory)][System.Collections.IDictionary] $Hashtable,
+        [Alias('Splat', 'IDictionary')][Parameter(Mandatory)][System.Collections.IDictionary] $Hashtable,
         [string[]] $ExcludeParameter,
         [switch] $Recursive,
         [int] $Rerun
@@ -3665,7 +3665,7 @@ function Remove-EmptyValue
                     }
                     else
                     {
-                        Remove-EmptyValue -Hashtable $Hashtable[$Key] -Recursive:$Recursive
+                        Remove-M365DSCEmptyValue -Hashtable $Hashtable[$Key] -Recursive:$Recursive
                     }
                 }
                 else
@@ -3689,7 +3689,7 @@ function Remove-EmptyValue
     {
         for ($i = 0; $i -lt $Rerun; $i++)
         {
-            Remove-EmptyValue -Hashtable $Hashtable -Recursive:$Recursive
+            Remove-M365DSCEmptyValue -Hashtable $Hashtable -Recursive:$Recursive
         }
     }
 }
@@ -3725,6 +3725,7 @@ function Update-M365DSCExportAuthenticationResults
     if ($ConnectionMode -eq 'Credentials')
     {
         $Results.Credential = Resolve-Credentials -UserName 'credential'
+        $noEscape += 'Credential'
         if ($Results.ContainsKey('ApplicationId'))
         {
             $Results.Remove('ApplicationId') | Out-Null
@@ -3753,6 +3754,7 @@ function Update-M365DSCExportAuthenticationResults
     elseif ($ConnectionMode -eq 'CredentialsWithTenantId')
     {
         $Results.Credential = Resolve-Credentials -UserName 'credential'
+        $noEscape += 'Credential'
         if ($Results.ContainsKey('ApplicationId'))
         {
             $Results.Remove('ApplicationId') | Out-Null
@@ -3783,6 +3785,7 @@ function Update-M365DSCExportAuthenticationResults
         elseif ($Results.ContainsKey('Credential') -and $ConnectionMode -eq 'CredentialsWithApplicationId')
         {
             $Results.Credential = Resolve-Credentials -UserName 'credential'
+            $noEscape += 'Credential'
         }
         if (-not [System.String]::IsNullOrEmpty($Results.ApplicationId))
         {
@@ -3880,7 +3883,11 @@ function Update-M365DSCExportAuthenticationResults
             $results.AccessTokens = "`$ConfigurationData.NonNodeData.AccessTokens"
         }
     }
-    return $Results
+
+    return @{
+        Results = $Results
+        NoEscape = $noEscape
+    }
 }
 
 <#
@@ -3915,8 +3922,29 @@ function Get-M365DSCExportContentForResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String[]]
+        $NoEscape,
+
+        [Parameter()]
+        [switch]
+        $SkipAuthenticationUpdate,
+
+        [Parameter()]
+        [switch]
+        $AllowVariablesInStrings
     )
+
+    if (-not $SkipAuthenticationUpdate)
+    {
+        $withoutAuthentication = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+            -Results $Results
+        $Results = $withoutAuthentication.Results
+        $NoEscape += $withoutAuthentication.NoEscape
+    }
+    $NoEscape = $NoEscape | Select-Object -Unique
 
     $OrganizationName = ''
     if ($ConnectionMode -like 'ServicePrincipal*' -or `
@@ -4051,56 +4079,7 @@ function Get-M365DSCExportContentForResource
     $content = [System.Text.StringBuilder]::New()
     [void]$content.Append("        $ResourceName `"$instanceName`"`r`n")
     [void]$content.Append("        {`r`n")
-    $partialContent = Get-DSCBlock -Params $Results -ModulePath $ModulePath
-    # Test for both Credentials and CredentialsWithApplicationId
-    if ($ConnectionMode -match 'Credentials')
-    {
-        $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent `
-            -ParameterName 'Credential'
-        if (![System.String]::IsNullOrEmpty($Results.ApplicationId))
-        {
-            $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent `
-                -ParameterName 'ApplicationId'
-        }
-    }
-    else
-    {
-        if (![System.String]::IsNullOrEmpty($Results.ApplicationId))
-        {
-            $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent `
-                -ParameterName 'ApplicationId'
-        }
-        if (![System.String]::IsNullOrEmpty($Results.TenantId))
-        {
-            $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent `
-                -ParameterName 'TenantId'
-        }
-        if (![System.String]::IsNullOrEmpty($Results.ApplicationSecret))
-        {
-            $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent `
-                -ParameterName 'ApplicationSecret'
-        }
-        if (![System.String]::IsNullOrEmpty($Results.CertificatePath))
-        {
-            $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent `
-                -ParameterName 'CertificatePath'
-        }
-        if (![System.String]::IsNullOrEmpty($Results.CertificateThumbprint))
-        {
-            $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent `
-                -ParameterName 'CertificateThumbprint'
-        }
-        if (![System.String]::IsNullOrEmpty($Results.CertificatePassword))
-        {
-            $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent `
-                -ParameterName 'CertificatePassword'
-        }
-        if (![System.String]::IsNullOrEmpty($Results.AccessTokens))
-        {
-            $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent `
-                -ParameterName 'AccessTokens'
-        }
-    }
+    $partialContent = Get-DSCBlock -Params $Results -ModulePath $ModulePath -NoEscape $NoEscape -AllowVariablesInStrings:$AllowVariablesInStrings
 
     if ($partialContent.ToLower().IndexOf($OrganizationName.ToLower()) -gt 0)
     {
@@ -5391,7 +5370,7 @@ Export-ModuleMember -Function @(
     'New-M365DSCCmdletDocumentation',
     'New-M365DSCConnection',
     'New-M365DSCMissingResourcesExample',
-    'Remove-EmptyValue',
+    'Remove-M365DSCEmptyValue',
     'Remove-M365DSCAuthenticationParameter',
     'Remove-NullEntriesFromHashtable',
     'Set-EXOSafeAttachmentRule',

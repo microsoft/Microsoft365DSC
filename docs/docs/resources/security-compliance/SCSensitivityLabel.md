@@ -30,7 +30,7 @@
 | **ApplyWaterMarkingFontSize** | Write | SInt32 | The ApplyWaterMarkingFontSize parameter specifies the font size (in points) of the watermark text. | |
 | **ApplyWaterMarkingLayout** | Write | String | The ApplyWaterMarkingAlignment parameter specifies the watermark alignment. | `Horizontal`, `Diagonal` |
 | **ApplyWaterMarkingText** | Write | String | The ApplyWaterMarkingText parameter specifies the watermark text. If the value contains spaces, enclose the value in quotation marks. | |
-| **ContentType** | Write | StringArray[] | The ContentType parameter specifies where the sensitivity label can be applied. | `File, Email`, `Site, UnifiedGroup`, `PurviewAssets`, `Teamwork`, `SchematizedData` |
+| **ContentType** | Write | StringArray[] | The ContentType parameter specifies where the sensitivity label can be applied. | `File`, `Email`, `Site`, `UnifiedGroup`, `PurviewAssets`, `Teamwork`, `SchematizedData` |
 | **EncryptionContentExpiredOnDateInDaysOrNever** | Write | String | The EncryptionContentExpiredOnDateInDaysOrNever parameter specifies when the encrypted content expires. Valid values are integer or never. | |
 | **EncryptionDoNotForward** | Write | Boolean | The EncryptionDoNotForward parameter specifies whether the Do Not Forward template is applied. | |
 | **EncryptionEncryptOnly** | Write | Boolean | The EncryptionEncryptOnly parameter specifies whether the encrypt-only template is applied. | |

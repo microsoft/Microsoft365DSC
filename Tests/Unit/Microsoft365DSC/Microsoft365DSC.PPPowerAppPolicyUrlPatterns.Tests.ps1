@@ -213,16 +213,47 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential  = $Credential;
                 }
 
-                Mock -CommandName Get-PowerAppPolicyUrlPatterns -MockWith {
-                    return @{
-                        rules = @(
-                            @{
-                                pattern = 'https://contoso.com'
-                                customConnectorRuleClassification = 'General'
-                                order = 1
-                            },
-                            @{
-                                pattern = 'https://fabrikam.com'
+                $Global:count = 1
+                Mock -CommandName Invoke-M365DSCPowerPlatformRESTWebRequest -MockWith {
+                    if ($Global:count -eq 1 -or $Global:count -eq 2)
+                    {
+                        $Global:count++
+                        return @{
+                            value = @(
+                                @{
+                                    type = 'Microsoft.BusinessAppPlatform/scopes/apiPolicies'
+                                    PolicyName  = "MyPolicy"
+                                    properties = @{
+                                        displayName = "DSCPolicy"
+                                        definition = @{
+                                            constraints = @{
+                                                environmentFilter1 = @{
+                                                    parameters = @{
+                                                        environments = @{
+                                                            name = 'Default-xxxxx-xxxxx-xxxxx-xxxxx-xxxxx'
+                                                        }
+                                                        filterType = 'include'
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            )
+                        }
+                    }
+                    elseif ($Global:count -eq 3)
+                    {
+                        $Global:count++
+                        return @{
+                            rules = @(
+                                @{
+                                    pattern = 'https://contoso.com'
+                                    customConnectorRuleClassification = 'General'
+                                    order = 1
+                                },
+                                @{
+                                    pattern = 'https://fabrikam.com'
                                 customConnectorRuleClassification = 'General'
                                 order = 2
                             }
