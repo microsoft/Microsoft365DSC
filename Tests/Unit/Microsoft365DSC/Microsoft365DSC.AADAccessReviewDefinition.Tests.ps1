@@ -14,13 +14,24 @@ Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
         -ChildPath '\UnitTestHelper.psm1' `
         -Resolve)
 
+$CurrentScriptPath = $PSCommandPath.Split('\')
+$CurrentScriptName = $CurrentScriptPath[$CurrentScriptPath.Length -1]
+$ResourceName      = $CurrentScriptName.Split('.')[1]
 $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "AADAccessReviewDefinition" -GenericStubModule $GenericStubPath
+    -DscResource $ResourceName -GenericStubModule $GenericStubPath
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
         BeforeAll {
-
+            $repoRoot = Join-Path -Path $PSScriptRoot -ChildPath "..\..\..\" -Resolve
+            $moduleRoot = Join-Path -Path $repoRoot -ChildPath "Modules\Microsoft365DSC"
+            $CurrentScriptPath = $PSCommandPath.Split('\')
+            $CurrentScriptName = $CurrentScriptPath[$CurrentScriptPath.Length -1]
+            $ResourceName      = $CurrentScriptName.Split('.')[1]
+            $modulePath = "DSCResources\MSFT_$ResourceName\MSFT_$ResourceName.psm1"
+            $moduleToLoad = Join-Path -Path $moduleRoot -ChildPath $modulePath
+            Write-Host $moduleToLoad
+            Import-Module $moduleToLoad -Force
             $secpasswd = ConvertTo-SecureString (New-Guid | Out-String) -AsPlainText -Force
             $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin@mydomain.com', $secpasswd)
 
@@ -40,6 +51,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Remove-MgBetaIdentityGovernanceAccessReviewDefinition -MockWith {
+            }
+
+            Mock -CommandName Connect-M365Tenant -MockWith {
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {

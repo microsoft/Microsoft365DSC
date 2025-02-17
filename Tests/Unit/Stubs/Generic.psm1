@@ -429,6 +429,40 @@ function Get-SPOAdministrationUrl
     )
 }
 
+function Connect-M365Tenant
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $Workload,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [pscredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [pscredential]
+        $ApplicationSecret
+    )
+}
+
 function New-M365DSCConnection
 {
     [CmdletBinding()]
