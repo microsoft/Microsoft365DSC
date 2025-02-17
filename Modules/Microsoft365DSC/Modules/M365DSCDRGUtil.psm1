@@ -601,31 +601,46 @@ function Compare-M365DSCComplexObject
     [CmdletBinding()]
     [OutputType([System.Boolean])]
     param(
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         $Source,
+
+        [Parameter(Mandatory = $true)]
+        $Target,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $PropertyName,
+
         [Parameter()]
-        $Target
+        [System.String[]]
+        $PrimaryKeys
     )
+    $returnValue = $true
     #Comparing full objects
     if ($null -eq $Source -and $null -eq $Target)
     {
         return $true
     }
 
-    $sourceValue = ''
-    $targetValue = ''
+    $sourceValue = 'Desired value is NOT null'
+    $targetValue = 'Current value is NOT null'
     if (($null -eq $Source) -xor ($null -eq $Target))
     {
         if ($null -eq $Source)
         {
-            $sourceValue = 'Source is null'
+            $sourceValue = 'Desired value is null'
         }
 
         if ($null -eq $Target)
         {
-            $targetValue = 'Target is null'
+            $targetValue = 'Current value is null'
         }
         Write-Verbose -Message "Configuration drift - Complex object: {$sourceValue$targetValue}"
+        $Global:AllDrifts.DriftInfo += @{
+            PropertyName = $PropertyName
+            CurrentValue = $targetValue
+            DesiredValue = $sourceValue
+        }
         return $false
     }
 
@@ -634,11 +649,16 @@ function Compare-M365DSCComplexObject
         if ($Source.Length -ne $Target.Length)
         {
             Write-Verbose -Message "Configuration drift - The complex array have different number of items: Source {$($Source.Length)}, Target {$($Target.Length)}"
-            return $false
+            $Global:AllDrifts.DriftInfo += @{
+                PropertyName = $PropertyName
+                CurrentValue = "Current value has {$($Source.Length)} items"
+                DesiredValue = "Desired value has {$($Target.Length)} items"
+            }
+            $returnValue = $false
         }
         if ($Source.Length -eq 0)
         {
-            return $true
+            $returnValue = $true
         }
 
         if ($Source[0].CimClass.CimClassName -eq 'MSFT_DeviceManagementConfigurationPolicyAssignments' -or
@@ -655,7 +675,13 @@ function Compare-M365DSCComplexObject
                 Write-Verbose -Message "Configuration drift - Intune Policy Assignment: $key"
                 Write-Verbose -Message "Source {$Source}"
                 Write-Verbose -Message "Target {$Target}"
-                return $false
+
+                $Global:AllDrifts.DriftInfo += @{
+                    PropertyName = ($PropertyName + "." + $key)
+                    CurrentValue = $Target
+                    DesiredValue = $Source
+                }
+                $returnValue = $false
             }
 
             return $true
@@ -670,7 +696,8 @@ function Compare-M365DSCComplexObject
                 {
                     $compareResult = Compare-M365DSCComplexObject `
                         -Source $item `
-                        -Target $targetItem
+                        -Target $targetItem `
+                        -PropertyName ($PropertyName + "." + $key)
 
                     if ($compareResult)
                     {
@@ -682,6 +709,11 @@ function Compare-M365DSCComplexObject
             if (-not $foundMatch)
             {
                 Write-Verbose -Message 'Configuration drift - The complex array items are not identical'
+                $Global:AllDrifts.DriftInfo += @{
+                    PropertyName = ($PropertyName + "." + $key)
+                    CurrentValue = $Target
+                    DesiredValue = $Source
+                }
                 return $false
             }
         }
@@ -696,7 +728,8 @@ function Compare-M365DSCComplexObject
                 {
                     $compareResult = Compare-M365DSCComplexObject `
                         -Source $item `
-                        -Target $targetItem
+                        -Target $targetItem `
+                        -PropertyName ($PropertyName + "." + $key)
 
                     if ($compareResult)
                     {
@@ -705,9 +738,14 @@ function Compare-M365DSCComplexObject
                 }
             }
 
-            if (-not $foundMatch)
+            if (-not $foundMatch -and $Target.GetType().Name -ne 'Hashtable' -and $Target.GetType().Name -ne 'Object[]')
             {
                 Write-Verbose -Message 'Configuration drift - The complex array items are not identical'
+                $Global:AllDrifts.DriftInfo += @{
+                    PropertyName = ($PropertyName + "." + $key)
+                    CurrentValue = $Target
+                    DesiredValue = $Source
+                }
                 return $false
             }
         }
@@ -787,7 +825,12 @@ function Compare-M365DSCComplexObject
                 Write-Verbose -Message "Configuration drift - key: $key"
                 Write-Verbose -Message "Source {$sourceValue}"
                 Write-Verbose -Message "Target {$targetValue}"
-                return $false
+                $Global:AllDrifts.DriftInfo += @{
+                    PropertyName = ($PropertyName + "." + $key)
+                    CurrentValue = $targetValue
+                    DesiredValue = $SourceValue
+                }
+                $returnValue = $false
             }
 
             #Both keys aren't null or empty
@@ -811,15 +854,21 @@ function Compare-M365DSCComplexObject
                         #Recursive call for complex object
                         $compareResult = Compare-M365DSCComplexObject `
                             -Source $Source.$key `
-                            -Target $Target.$key
+                            -Target $Target.$key `
+                            -PropertyName ($PropertyName + "." + $key)
                     }
 
-                    if (-not $compareResult)
+                    if (-not $compareResult -and $targetValue.GetType().Name -ne "Hashtable" -and $targetValue.GetType().Name -ne 'Object[]')
                     {
                         Write-Verbose -Message "Configuration drift - complex object key: $key"
                         Write-Verbose -Message "Source {$sourceValue}"
                         Write-Verbose -Message "Target {$targetValue}"
-                        return $false
+                        $Global:AllDrifts.DriftInfo += @{
+                            PropertyName = ($PropertyName + "." + $key)
+                            CurrentValue = $targetValue
+                            DesiredValue = $SourceValue
+                        }
+                        $returnValue = $false
                     }
                 }
                 else
@@ -875,13 +924,84 @@ function Compare-M365DSCComplexObject
                         Write-Verbose -Message "Configuration drift - simple object key: $key"
                         Write-Verbose -Message "Source {$sourceValue}"
                         Write-Verbose -Message "Target {$targetValue}"
+                        $Global:AllDrifts.DriftInfo += @{
+                            PropertyName = ($PropertyName + "." + $key)
+                            CurrentValue = $targetValue
+                            DesiredValue = $SourceValue
+                        }
                         return $false
                     }
                 }
             }
         }
     }
-    return $true
+    return $returnValue
+}
+
+function Write-M365DSCDriftsToEventLog
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $Drifts,
+
+        [Parameter()]
+        [System.String]
+        $ResourceName,
+
+        [Parameter()]
+        [System.String]
+        $TenantName,
+
+        [Parameter(Mandatory = $true)]
+        [HashTable]
+        $CurrentValues,
+
+        [Parameter(Mandatory = $true)]
+        [Object]
+        $DesiredValues
+    )
+
+    # If ExistingDrifts is null, then this is the main call and not a recursive one. Write to the Event log.
+    if ($null -ne $Drifts -and $Drifts.DriftInfo.Length -gt 0)
+    {
+        $EventMessage = [System.Text.StringBuilder]::New()
+        $EventMessage.Append("<M365DSCEvent>`r`n") | Out-Null
+        $EventMessage.Append("    <ConfigurationDrift Source=`"$ResourceName`" TenantId=`"$TenantName`">`r`n") | Out-Null
+        $EventMessage.Append("        <ParametersNotInDesiredState>`r`n") | Out-Null
+        foreach ($drift in $Drifts.DriftInfo)
+        {
+            $EventMessage.Append("            <Param Name=`"$($drift.PropertyName.Replace('..', '.'))`"><CurrentValue>$($drift.CurrentValue)</CurrentValue><DesiredValue>$($drift.DesiredValue)</DesiredValue></Param>`r`n") | Out-Null
+        }
+        $EventMessage.Append("        </ParametersNotInDesiredState>`r`n") | Out-Null
+        $EventMessage.Append("    </ConfigurationDrift>`r`n") | Out-Null
+        $EventMessage.Append("    <DesiredValues>`r`n") | Out-Null
+        foreach ($Key in $DesiredValues.Keys)
+        {
+            $Value = $DesiredValues.$Key
+            if ([System.String]::IsNullOrEmpty($Value))
+            {
+                $Value = "`$null"
+            }
+            $EventMessage.Append("        <Param Name =`"$($key)`">$Value</Param>`r`n") | Out-Null
+        }
+        $EventMessage.Append("    </DesiredValues>`r`n") | Out-Null
+        $EventMessage.Append("    <CurrentValues>`r`n") | Out-Null
+        foreach ($Key in $CurrentValues.Keys)
+        {
+            $Value = $CurrentValues.$Key
+            if ([System.String]::IsNullOrEmpty($Value))
+            {
+                $Value = "`$null"
+            }
+            $EventMessage.Append("        <Param Name =`"$key`">$Value</Param>`r`n") | Out-Null
+        }
+        $EventMessage.Append("    </CurrentValues>`r`n") | Out-Null
+        $EventMessage.Append('</M365DSCEvent>') | Out-Null
+        Add-M365DSCEvent -Message $EventMessage.ToString() -EventType 'Drift' -EntryType 'Warning' `
+            -EventID 1 -Source $ResourceName
+    }
 }
 
 function Convert-M365DSCDRGComplexTypeToHashtable
