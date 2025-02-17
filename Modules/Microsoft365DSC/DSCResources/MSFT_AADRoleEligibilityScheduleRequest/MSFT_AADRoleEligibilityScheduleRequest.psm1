@@ -715,33 +715,15 @@ function Export-TargetResource
             Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -NoNewline
             # Find the Principal Type
             $principalType = 'User'
-            $userInfo = Get-MgUser -UserId $config.PrincipalId -ErrorAction SilentlyContinue
-
-            if ($null -eq $userInfo)
+            $userInfo = Get-MgBetaDirectoryObjectById -Ids $config.PrincipalId -ErrorAction SilentlyContinue
+            $principalType = $userInfo.AdditionalProperties['@odata.type'].Split('.')[2]
+            $PrincipalValue = if ($principalType -eq 'user' )
             {
-                $principalType = 'Group'
-                $groupInfo = Get-MgGroup -GroupId $config.PrincipalId -ErrorAction SilentlyContinue
-                if ($null -eq $groupInfo)
-                {
-                    $principalType = 'ServicePrincipal'
-                    $spnInfo = Get-MgServicePrincipal -ServicePrincipalId $config.PrincipalId -ErrorAction SilentlyContinue
-                    if ($null -ne $spnInfo)
-                    {
-                        $PrincipalValue = $spnInfo.DisplayName
-                    }
-                    else
-                    {
-                        $PrincipalValue = $null
-                    }
-                }
-                else
-                {
-                    $PrincipalValue = $groupInfo.DisplayName
-                }
+                $userInfo.AdditionalProperties['userPrincipalName']
             }
             else
             {
-                $PrincipalValue = $userInfo.UserPrincipalName
+                $userInfo.AdditionalProperties['displayName']
             }
 
             if ($null -ne $PrincipalValue)

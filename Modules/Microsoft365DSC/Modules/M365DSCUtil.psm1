@@ -3960,6 +3960,7 @@ function Get-M365DSCExportContentForResource
             $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent `
                 -ParameterName 'ApplicationId'
         }
+        $partialContent = $partialContent.Replace('`$Credscredential;', '$Credscredential;')
     }
     else
     {

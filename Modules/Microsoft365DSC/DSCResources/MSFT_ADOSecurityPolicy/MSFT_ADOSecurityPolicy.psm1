@@ -91,27 +91,59 @@ function Get-TargetResource
 
         $uri = "https://dev.azure.com/$($OrganizationName)/_apis/OrganizationPolicy/Policies/Policy.DisallowOAuthAuthentication?defaultValue"
         $DisallowOAuthAuthenticationValue = (Invoke-M365DSCAzureDevOPSWebRequest -Uri $uri).Value
+        if ([System.String]::IsNullOrEmpty($DisallowOAuthAuthenticationValue))
+        {
+            $DisallowOAuthAuthenticationValue = $true
+        }
 
         $uri = "https://dev.azure.com/$($OrganizationName)/_apis/OrganizationPolicy/Policies/Policy.DisallowSecureShell?defaultValue"
         $DisallowSecureShellValue = (Invoke-M365DSCAzureDevOPSWebRequest -Uri $uri).Value
+        if ([System.String]::IsNullOrEmpty($DisallowSecureShellValue))
+        {
+            $DisallowSecureShellValue = $false
+        }
 
         $uri = "https://dev.azure.com/$($OrganizationName)/_apis/OrganizationPolicy/Policies/Policy.LogAuditEvents?defaultValue"
         $LogAuditEventsValue = (Invoke-M365DSCAzureDevOPSWebRequest -Uri $uri).Value
+        if ([System.String]::IsNullOrEmpty($LogAuditEventsValue))
+        {
+            $LogAuditEventsValue = $false
+        }
 
         $uri = "https://dev.azure.com/$($OrganizationName)/_apis/OrganizationPolicy/Policies/Policy.AllowAnonymousAccess?defaultValue"
         $AllowAnonymousAccessValue = (Invoke-M365DSCAzureDevOPSWebRequest -Uri $uri).Value
+        if ([System.String]::IsNullOrEmpty($AllowAnonymousAccessValue))
+        {
+            $AllowAnonymousAccessValue = $false
+        }
 
         $uri = "https://dev.azure.com/$($OrganizationName)/_apis/OrganizationPolicy/Policies/Policy.ArtifactsExternalPackageProtectionToken?defaultValue"
         $ArtifactsExternalPackageProtectionTokenValue = (Invoke-M365DSCAzureDevOPSWebRequest -Uri $uri).Value
+        if ([System.String]::IsNullOrEmpty($ArtifactsExternalPackageProtectionTokenValue))
+        {
+            $ArtifactsExternalPackageProtectionTokenValue = $true
+        }
 
         $uri = "https://dev.azure.com/$($OrganizationName)/_apis/OrganizationPolicy/Policies/Policy.EnforceAADConditionalAccess?defaultValue"
         $EnforceAADConditionalAccessValue = (Invoke-M365DSCAzureDevOPSWebRequest -Uri $uri).Value
+        if ([System.String]::IsNullOrEmpty($EnforceAADConditionalAccessValue))
+        {
+            $EnforceAADConditionalAccessValue = $false
+        }
 
         $uri = "https://dev.azure.com/$($OrganizationName)/_apis/OrganizationPolicy/Policies/Policy.AllowTeamAdminsInvitationsAccessToken?defaultValue"
         $AllowTeamAdminsInvitationsAccessTokenValue = (Invoke-M365DSCAzureDevOPSWebRequest -Uri $uri).Value
+        if ([System.String]::IsNullOrEmpty($AllowTeamAdminsInvitationsAccessTokenValue))
+        {
+            $AllowTeamAdminsInvitationsAccessTokenValue = $true
+        }
 
         $uri = "https://dev.azure.com/$($OrganizationName)/_apis/OrganizationPolicy/Policies/Policy.AllowRequestAccessToken?defaultValue"
         $AllowRequestAccessTokenValue = (Invoke-M365DSCAzureDevOPSWebRequest -Uri $uri).Value
+        if ([System.String]::IsNullOrEmpty($AllowRequestAccessTokenValue))
+        {
+            $AllowRequestAccessTokenValue = $true
+        }
 
         $results = @{
             OrganizationName                        = $OrganizationName

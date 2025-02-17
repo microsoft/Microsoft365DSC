@@ -46,6 +46,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
+            Mock -CommandName Get-MgBetaDirectoryObjectById -MockWith {
+                return @{
+                    Id = '123456'
+                    AdditionalProperties = @{
+                        '@odata.type' = '#microsoft.graph.user'
+                        userPrincipalName = 'John.Smith@contoso.com'
+                    }
+                }
+            }
+
             Mock -CommandName Get-MgBetaRoleManagementDirectoryRoleDefinition -MockWith {
                 return @{
                     DisplayName      = 'Teams Communications Administrator'
@@ -91,8 +101,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-MgBetaRoleManagementDirectoryRoleEligibilityScheduleRequest -MockWith {
                     return $null
                 }
-                
-                
+
                 Mock -CommandName Get-MgBetaRoleManagementDirectoryRoleEligibilitySchedule -MockWith {
                     return $null
                 }
@@ -172,7 +181,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Principal            = "John.Smith@contoso.com";
                     RoleDefinition       = "Teams Communications Administrator";
                     ScheduleInfo         = New-CimInstance -ClassName MSFT_AADRoleEligibilityScheduleRequestSchedule -Property @{
-
                             expiration = New-CimInstance -ClassName MSFT_AADRoleEligibilityScheduleRequestScheduleExpiration -Property @{
                                 type        = 'afterDateTime'
                             } -ClientOnly
@@ -300,6 +308,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
             }
+
             It 'Should Reverse Engineer resource from the Export method' {
                 $result = Export-TargetResource @testParams
                 $result | Should -Not -BeNullOrEmpty
