@@ -8,6 +8,8 @@
 * ADOSecurityPolicy
   * Fixes an issue where the resource threw an error trying to parse the default
     values.
+* IntuneDeviceFeaturesConfigurationPolicyIOS
+  * Initial release
 * M365DSCUtil
   * Add M365DSC prefix to `Remove-EmptyValue`.
   * Fixes an issue with `Credential` property being escaped and indentation.
