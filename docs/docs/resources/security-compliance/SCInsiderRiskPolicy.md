@@ -174,7 +174,7 @@
 | **ProfileInScopeTimeSpan** | Write | UInt32 | Official documentation to come. | |
 | **GPUUtilizationLimit** | Write | UInt32 | Official documentation to come. | |
 | **CPUUtilizationLimit** | Write | UInt32 | Official documentation to come. | |
-| **MDATPTriageStatus** | Write | String | Official documentation to come. | |
+| **MDATPTriageStatus** | Write | StringArray[] | Official documentation to come. | |
 | **Ensure** | Write | String | Present ensures the instance exists, absent ensures it is removed. | `Absent`, `Present` |
 | **Credential** | Write | PSCredential | Credentials of the workload's Admin | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |

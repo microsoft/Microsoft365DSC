@@ -7,6 +7,17 @@
 | **DisplayName** | Key | String | Display name of the AndroidWorkProfile device compliance policy. | |
 | **Description** | Write | String | Description of the AndroidWorkProfile device compliance policy. | |
 | **Assignments** | Write | MSFT_DeviceManagementConfigurationPolicyAssignments[] | Assignments of the Intune Policy. | |
+| **RequiredPasswordComplexity** | Write | String | The password complexity types that can be set on Android. One of: NONE, LOW, MEDIUM, HIGH. This is an API targeted to Android 11+. | `none`, `low`, `medium`, `high` |
+| **SecurityBlockDeviceAdministratorManagedDevices** | Write | Boolean | Setting securityBlockDeviceAdministratorManagedDevices to true enhances security by preventing devices managed through the legacy device administrator method from accessing corporate resources. | |
+| **RestrictedApps** | Write | StringArray[] | Specify applications that users are prohibited from installing or using on their devices. | |
+| **WorkProfilePasswordRequiredType** | Write | String | Specifies Android Work Profile password type. | `deviceDefault`, `lowSecurityBiometric`, `required`, `atLeastNumeric`, `numericComplex`, `atLeastAlphabetic`, `atLeastAlphanumeric`, `alphanumericWithSymbols` |
+| **WorkProfileRequiredPasswordComplexity** | Write | String | Specifies Android Work Profile password complexity. | `None`, `Low`, `Medium`, `High` |
+| **WorkProfileRequirePassword** | Write | Boolean | Specifies if Android Work Profile password is required. | |
+| **WorkProfilePreviousPasswordBlockCount** | Write | UInt32 | Specifies the number of previous passwords that cannot be reused in an Android Work Profile compliance policy. | |
+| **WorkProfileInactiveBeforeScreenLockInMinutes** | Write | UInt32 | Defines the duration of inactivity (in minutes) after which the screen is locked. | |
+| **WorkProfilePasswordMinimumLength** | Write | UInt32 | Specifies the minimum number of characters required in a password for an Android Work Profile. | |
+| **WorkProfilePasswordExpirationInDays** | Write | UInt32 | Specifies the number of days before a password expires for an Android Work Profile. | |
+| **ScheduledActionsForRule** | Write | MSFT_scheduledActionConfigurations[] | Specifies the non-compliance actions. | |
 | **PasswordRequired** | Write | Boolean | PasswordRequired of the AndroidWorkProfile device compliance policy. | |
 | **PasswordMinimumLength** | Write | UInt32 | PasswordMinimumLength of the AndroidWorkProfile device compliance policy. | |
 | **PasswordRequiredType** | Write | String | PasswordRequiredType of the AndroidWorkProfile device compliance policy. | `deviceDefault`, `alphabetic`, `alphanumeric`, `alphanumericWithSymbols`, `lowSecurityBiometric`, `numeric`, `numericComplex`, `any` |
@@ -53,6 +64,18 @@
 | **groupId** | Write | String | The group Id that is the target of the assignment. | |
 | **groupDisplayName** | Write | String | The group Display Name that is the target of the assignment. | |
 | **collectionId** | Write | String | The collection Id that is the target of the assignment.(ConfigMgr) | |
+
+### MSFT_scheduledActionConfigurations
+
+#### Parameters
+
+| Parameter | Attribute | DataType | Description | Allowed Values |
+| --- | --- | --- | --- | --- |
+| **id** | Write | String | The unique identifier of the action configuration. | |
+| **gracePeriodHours** | Write | UInt32 | Number of hours to wait till the action will be enforced. Valid values 0 to 8760. | |
+| **actionType** | Write | String | The action to take. | `notification`, `block`, `retire`, `remoteLock`, `pushNotification` |
+| **notificationTemplateId** | Write | String | The notification Message template to use. | |
+| **notificationMessageCCList** | Write | StringArray[] | A list of group IDs to specify who to CC this notification message to. | |
 
 ## Description
 

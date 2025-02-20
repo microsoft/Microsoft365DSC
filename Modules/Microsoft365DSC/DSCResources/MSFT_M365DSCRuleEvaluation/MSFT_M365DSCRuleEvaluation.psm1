@@ -21,6 +21,10 @@ function Get-TargetResource
         $AfterRuleCountQuery,
 
         [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -71,6 +75,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $AfterRuleCountQuery,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -124,6 +132,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $AfterRuleCountQuery,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -182,6 +194,10 @@ function Test-TargetResource
         if ($null -ne $PSBoundParameters.AccessTokens)
         {
             $params.Add('AccessTokens', $PSBoundParameters.AccessTokens)
+        }
+        if ($null -ne $PSBoundParameters.Filter)
+        {
+            $params.Add('Filter', $Filter)
         }
 
         Write-Verbose -Message "Importing module from Path {$($module)}"

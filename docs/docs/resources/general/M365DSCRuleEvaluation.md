@@ -8,6 +8,7 @@
 | **RuleDefinition** | Key | String | Specify the rules to monitor the resource for. | |
 | **RuleName** | Write | String | Custom display name for the rule. This will show up in the logs on drift detection. | |
 | **AfterRuleCountQuery** | Write | String | Query to check how many instances exist, using PowerShell format | |
+| **Filter** | Write | String | Specifies a filter for the current resource type to be evaluated. This reduces the overall set of instances the rule will be evaluated against. | |
 | **Credential** | Write | PSCredential | Credentials of the Azure Active Directory Admin | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
 | **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. | |

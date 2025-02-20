@@ -97,12 +97,24 @@ function Get-TargetResource
         }
 
         # Get RoleGroup Members DN if RoleGroup exists. This is required especially when adding Members like "Exchange Administrator" or "Global Administrator" that have different Names across Tenants
-        $roleGroupMember = Get-RoleGroupMember -Identity $Name | Select-Object DisplayName
+        $roleGroupMembers = Get-RoleGroupMember -Identity $Name | Select-Object DisplayName, RecipientTypeDetails, PrimarySmtpAddress
 
+        $roleGroupMembersValue = @()
+        foreach ($member in $roleGroupMembers)
+        {
+            if ($member.RecipientTypeDetails -eq 'UserMailbox' -and -not [System.String]::IsNullOrEmpty($member.PrimarySmtpAddress))
+            {
+                $roleGroupMembersValue += $member.PrimarySmtpAddress
+            }
+            else
+            {
+                $roleGroupMembersValue += $member.DisplayName
+            }
+        }
         $result = @{
             Name                  = $RoleGroup.Name
             Description           = $RoleGroup.Description
-            Members               = $roleGroupMember.DisplayName
+            Members               = $roleGroupMembersValue
             Roles                 = $RoleGroup.Roles
             Ensure                = 'Present'
             Credential            = $Credential

@@ -1425,14 +1425,21 @@ function Test-TargetResource
         $target = $CurrentValues.$key
         if ($null -ne $source -and $source.GetType().Name -like '*CimInstance*')
         {
-            $testResult = Compare-M365DSCComplexObject `
-                -Source ($source) `
-                -Target ($target)
-
-            if (-not $testResult)
+            if (-not ($source.GetType().Name -eq 'CimInstance[]' -and $source.Count -eq 0))
             {
-                Write-Verbose "TestResult returned False for $source"
-                $testTargetResource = $false
+                $testResult = Compare-M365DSCComplexObject `
+                    -Source ($source) `
+                    -Target ($target)
+
+                if (-not $testResult)
+                {
+                    Write-Verbose "TestResult returned False for $source"
+                    $testTargetResource = $false
+                }
+                else
+                {
+                    $ValuesToCheck.Remove($key) | Out-Null
+                }
             }
             else
             {

@@ -9,12 +9,33 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
     [Write, Description("The collection Id that is the target of the assignment.(ConfigMgr)")] String collectionId;
 };
 
+[ClassVersion("1.0.0.0")]
+class MSFT_scheduledActionConfigurations
+{
+    [Write, Description("The unique identifier of the action configuration.")] String id;
+    [Write, Description("Number of hours to wait till the action will be enforced. Valid values 0 to 8760.")] Uint32 gracePeriodHours;
+    [Write, Description("The action to take."), ValueMap{"notification", "block", "retire", "remoteLock", "pushNotification"}, Values{"notification", "block", "retire", "remoteLock", "pushNotification"}] String actionType;
+    [Write, Description("The notification Message template to use.")] String notificationTemplateId;
+    [Write, Description("A list of group IDs to specify who to CC this notification message to.")] String notificationMessageCCList[];
+};
+
 [ClassVersion("1.0.0.0"), FriendlyName("IntuneDeviceCompliancePolicyAndroidWorkProfile")]
 class MSFT_IntuneDeviceCompliancePolicyAndroidWorkProfile : OMI_BaseResource
 {
     [Key, Description("Display name of the AndroidWorkProfile device compliance policy.")] String DisplayName;
     [Write, Description("Description of the AndroidWorkProfile device compliance policy.")] String Description;
     [Write, Description("Assignments of the Intune Policy."), EmbeddedInstance("MSFT_DeviceManagementConfigurationPolicyAssignments")] String Assignments[];
+    [Write, Description("The password complexity types that can be set on Android. One of: NONE, LOW, MEDIUM, HIGH. This is an API targeted to Android 11+."), ValueMap{"none", "low", "medium", "high"}, Values{"none", "low", "medium", "high"}] String RequiredPasswordComplexity;
+    [Write, Description("Setting securityBlockDeviceAdministratorManagedDevices to true enhances security by preventing devices managed through the legacy device administrator method from accessing corporate resources.")] Boolean SecurityBlockDeviceAdministratorManagedDevices;
+    [Write, Description("Specify applications that users are prohibited from installing or using on their devices.")] String RestrictedApps[];
+    [Write, Description("Specifies Android Work Profile password type."), ValueMap{"deviceDefault", "lowSecurityBiometric", "required", "atLeastNumeric", "numericComplex", "atLeastAlphabetic", "atLeastAlphanumeric", "alphanumericWithSymbols"}, Values{"deviceDefault", "lowSecurityBiometric", "required", "atLeastNumeric", "numericComplex", "atLeastAlphabetic", "atLeastAlphanumeric", "alphanumericWithSymbols"}] String WorkProfilePasswordRequiredType;
+    [Write, Description("Specifies Android Work Profile password complexity."), ValueMap{"None", "Low", "Medium", "High"}, Values{"None", "Low", "Medium", "High"}] String WorkProfileRequiredPasswordComplexity;
+    [Write, Description("Specifies if Android Work Profile password is required.")] Boolean WorkProfileRequirePassword;
+    [Write, Description("Specifies the number of previous passwords that cannot be reused in an Android Work Profile compliance policy.")] Uint32 WorkProfilePreviousPasswordBlockCount;
+    [Write, Description("Defines the duration of inactivity (in minutes) after which the screen is locked.")] Uint32 WorkProfileInactiveBeforeScreenLockInMinutes;
+    [Write, Description("Specifies the minimum number of characters required in a password for an Android Work Profile.")] Uint32 WorkProfilePasswordMinimumLength;
+    [Write, Description("Specifies the number of days before a password expires for an Android Work Profile.")] Uint32 WorkProfilePasswordExpirationInDays;
+    [Write, Description("Specifies the non-compliance actions."), EmbeddedInstance("MSFT_scheduledActionConfigurations")] String ScheduledActionsForRule[];
     [Write, Description("PasswordRequired of the AndroidWorkProfile device compliance policy.")] Boolean PasswordRequired;
     [Write, Description("PasswordMinimumLength of the AndroidWorkProfile device compliance policy.")] Uint32 PasswordMinimumLength;
     [Write, Description("PasswordRequiredType of the AndroidWorkProfile device compliance policy."), ValueMap{"deviceDefault", "alphabetic", "alphanumeric", "alphanumericWithSymbols", "lowSecurityBiometric", "numeric", "numericComplex", "any"}, Values{"deviceDefault", "alphabetic", "alphanumeric", "alphanumericWithSymbols", "lowSecurityBiometric", "numeric", "numericComplex", "any"}] String PasswordRequiredType;

@@ -138,6 +138,10 @@ function Get-TargetResource
             $PrincipalValue = $PrincipalInstance.DisplayName
         }
 
+        if ([System.String]::IsNullOrEmpty($PrincipalValue)) {
+            return $nullResult
+        }
+
         Write-Verbose -Message 'Found Principal'
         $RoleDefinitionId = (Get-MgBetaRoleManagementDirectoryRoleDefinition -Filter "DisplayName eq '$RoleDefinition'").Id
         Write-Verbose -Message "Retrieved role definition {$RoleDefinition} with ID {$RoleDefinitionId}"

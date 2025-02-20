@@ -69,7 +69,6 @@ function Get-TargetResource
     #endregion
 
     $nullResult = $PSBoundParameters
-    $nullResult.Ensure = 'Absent'
     try
     {
         if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
@@ -112,7 +111,6 @@ function Get-TargetResource
             AssignmentType        = $instance.AvailableTo.AssignmentType
             Users                 = $usersValue
             Groups                = $groupsValue
-            Ensure                = 'Present'
             Credential            = $Credential
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
@@ -199,7 +197,6 @@ function Set-TargetResource
 
     $currentInstance = Get-TargetResource @PSBoundParameters
 
-    $PSBoundParameters.Remove('Ensure') | Out-Null
     $PSBoundParameters.Remove('Credential') | Out-Null
     $PSBoundParameters.Remove('ApplicationId') | Out-Null
     $PSBoundParameters.Remove('ApplicationSecret') | Out-Null

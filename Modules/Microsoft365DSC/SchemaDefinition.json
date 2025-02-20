@@ -28846,6 +28846,36 @@
                        ]
     },
     {
+        "ClassName":  "MSFT_scheduledActionConfigurations",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "id",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Uint32",
+                               "Name":  "gracePeriodHours",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "actionType",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "notificationTemplateId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "notificationMessageCCList",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
         "ClassName":  "MSFT_IntuneDeviceCompliancePolicyAndroidDeviceOwner",
         "Parameters":  [
                            {
@@ -28861,6 +28891,56 @@
                            {
                                "CIMType":  "MSFT_DeviceManagementConfigurationPolicyAssignments[]",
                                "Name":  "Assignments",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "MinAndroidSecurityPatchLevel",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Uint32",
+                               "Name":  "PasswordMinimumLetterCharacters",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Uint32",
+                               "Name":  "PasswordMinimumLowerCaseCharacters",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Uint32",
+                               "Name":  "PasswordMinimumNonLetterCharacters",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Uint32",
+                               "Name":  "PasswordMinimumNumericCharacters",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Uint32",
+                               "Name":  "PasswordMinimumSymbolCharacters",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Uint32",
+                               "Name":  "PasswordMinimumUpperCaseCharacters",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "RequireNoPendingSystemUpdates",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "SecurityRequiredAndroidSafetyNetEvaluationType",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_scheduledActionConfigurations[]",
+                               "Name":  "ScheduledActionsForRule",
                                "Option":  "Write"
                            },
                            {
@@ -29001,6 +29081,61 @@
                            {
                                "CIMType":  "MSFT_DeviceManagementConfigurationPolicyAssignments[]",
                                "Name":  "Assignments",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "RequiredPasswordComplexity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "SecurityBlockDeviceAdministratorManagedDevices",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "RestrictedApps",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "WorkProfilePasswordRequiredType",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "WorkProfileRequiredPasswordComplexity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "WorkProfileRequirePassword",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Uint32",
+                               "Name":  "WorkProfilePreviousPasswordBlockCount",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Uint32",
+                               "Name":  "WorkProfileInactiveBeforeScreenLockInMinutes",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Uint32",
+                               "Name":  "WorkProfilePasswordMinimumLength",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Uint32",
+                               "Name":  "WorkProfilePasswordExpirationInDays",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_scheduledActionConfigurations[]",
+                               "Name":  "ScheduledActionsForRule",
                                "Option":  "Write"
                            },
                            {
@@ -53559,6 +53694,11 @@
                                "Option":  "Write"
                            },
                            {
+                               "CIMType":  "String",
+                               "Name":  "Filter",
+                               "Option":  "Write"
+                           },
+                           {
                                "CIMType":  "MSFT_Credential",
                                "Name":  "Credential",
                                "Option":  "Write"
@@ -58819,7 +58959,7 @@
                                "Option":  "Write"
                            },
                            {
-                               "CIMType":  "String",
+                               "CIMType":  "String[]",
                                "Name":  "MDATPTriageStatus",
                                "Option":  "Write"
                            },

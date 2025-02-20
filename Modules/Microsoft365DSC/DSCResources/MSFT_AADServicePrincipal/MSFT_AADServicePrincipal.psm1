@@ -175,14 +175,12 @@ function Get-TargetResource
                     $appInstance = Get-MgApplication -Filter "DisplayName eq '$AppId'"
                     if ($appInstance)
                     {
-                        $AADServicePrincipal = Get-MgServicePrincipal -Filter "AppID eq '$($appInstance.AppId)'" `
-                            -Expand 'AppRoleAssignedTo'
+                        $AADServicePrincipal = Get-MgServicePrincipal -Filter "AppID eq '$($appInstance.AppId)'"
                     }
                 }
                 else
                 {
-                    $AADServicePrincipal = Get-MgServicePrincipal -Filter "AppID eq '$($AppId)'" `
-                        -Expand 'AppRoleAssignedTo'
+                    $AADServicePrincipal = Get-MgServicePrincipal -Filter "AppID eq '$($AppId)'"
                 }
             }
             if ($null -eq $AADServicePrincipal)
@@ -196,7 +194,8 @@ function Get-TargetResource
         }
 
         $AppRoleAssignedToValues = @()
-        foreach ($principal in $AADServicePrincipal.AppRoleAssignedTo)
+        $assignmentsValue = Get-MgServicePrincipalAppROleAssignedTo -ServicePrincipalId $AADServicePrincipal.Id -ErrorAction SilentlyContinue
+        foreach ($principal in $assignmentsValue)
         {
             $currentAssignment = @{
                 PrincipalType = $null
@@ -206,7 +205,7 @@ function Get-TargetResource
             {
                 $user = Get-MgUser -UserId $principal.PrincipalId
                 $currentAssignment.PrincipalType = 'User'
-                $currentAssignment.Identity = $user.UserPrincipalName.Split('@')[0]
+                $currentAssignment.Identity = $user.UserPrincipalName
                 $AppRoleAssignedToValues += $currentAssignment
             }
             elseif ($principal.PrincipalType -eq 'Group')
@@ -230,8 +229,17 @@ function Get-TargetResource
         }
 
         [Array]$complexDelegatedPermissionClassifications = @()
-        $Uri = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "v1.0/servicePrincipals/$($AADServicePrincipal.Id)/delegatedPermissionClassifications"
-        $permissionClassifications = Invoke-MgGraphRequest -Uri $Uri -Method Get
+        #Managed Identities in AzureGov return exception when pulling delegatedPermissionClassifications
+        try
+        {
+            $Uri = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "v1.0/servicePrincipals/$($AADServicePrincipal.Id)/delegatedPermissionClassifications"
+            $permissionClassifications = Invoke-MgGraphRequest -Uri $Uri -Method Get
+        }
+        catch
+        {
+            Write-Verbose -Message "Service Principal didn't return delegated permission classifications. Expected for Managedidentities."
+        }
+
         foreach ($permissionClassification in $permissionClassifications.Value)
         {
             $hashtable = @{

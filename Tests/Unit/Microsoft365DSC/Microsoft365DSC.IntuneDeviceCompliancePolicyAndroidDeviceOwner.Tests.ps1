@@ -60,6 +60,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     DisplayName                                        = 'Test Android Device Owner Device Compliance Policy'
                     Description                                        = 'Test Android Device Owner Device Compliance Policy Description'
+                    PasswordMinimumLetterCharacters                    = 1
+                    PasswordMinimumLowerCaseCharacters                 = 1
+                    PasswordMinimumNonLetterCharacters                 = 1
+                    PasswordMinimumNumericCharacters                   = 1
+                    PasswordMinimumSymbolCharacters                    = 1
+                    PasswordMinimumUpperCaseCharacters                 = 1
+                    RequireNoPendingSystemUpdates                      = $true
                     DeviceThreatProtectionEnabled                      = $True
                     DeviceThreatProtectionRequiredSecurityLevel        = 'Unavailable'
                     AdvancedThreatProtectionRequiredSecurityLevel      = 'Unavailable'
@@ -75,8 +82,41 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     PasswordPreviousPasswordCountToBlock               = 10
                     StorageRequireEncryption                           = $True
                     SecurityRequireIntuneAppIntegrity                  = $True
+                    MinAndroidSecurityPatchLevel                       = '2024-01-24'
+                    SecurityRequiredAndroidSafetyNetEvaluationType     = 'hardwareBacked'
                     Ensure                                             = 'Present'
-                    Credential                                         = $Credential
+                    Credential                                         = $Credential   
+                    ScheduledActionsForRule = [CimInstance[]]@(
+                                                (New-CimInstance `
+                                                -ClassName MSFT_scheduledActionConfigurations `
+                                                -Property @{
+                                                    actionType = 'block'
+                                                    gracePeriodHours = 0
+                                                    notificationTemplateId = '00000000-0000-0000-0000-000000000000'
+                                                } -ClientOnly)
+                                                (New-CimInstance `
+                                                -ClassName MSFT_scheduledActionConfigurations `
+                                                -Property @{
+                                                    actionType = 'pushNotification'
+                                                    gracePeriodHours = 0
+                                                    notificationTemplateId = '00000000-0000-0000-0000-000000000000'
+                                                } -ClientOnly)
+                                                (New-CimInstance `
+                                                -ClassName MSFT_scheduledActionConfigurations `
+                                                -Property @{
+                                                    actionType = 'remoteLock'
+                                                    gracePeriodHours = 0
+                                                    notificationTemplateId = '00000000-0000-0000-0000-000000000000'
+                                                } -ClientOnly)
+                                                (New-CimInstance `
+                                                -ClassName MSFT_scheduledActionConfigurations `
+                                                -Property @{
+                                                    actionType = 'Notification'
+                                                    gracePeriodHours = 0
+                                                    notificationTemplateId = '00000000-0000-0000-0000-000000000000'
+                                                    notificationMessageCCList = @('00000000-0000-0000-0000-000000000000','00000000-0000-0000-0000-000000000000')
+                                                } -ClientOnly)
+                        )                 
                 }
 
                 Mock -CommandName Get-MgBetaDeviceManagementDeviceCompliancePolicy -MockWith {
@@ -103,6 +143,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     DisplayName                                        = 'Test Android Device Owner Device Compliance Policy'
                     Description                                        = 'Test Android Device Owner Device Compliance Policy Description'
+                    PasswordMinimumLetterCharacters                    = 1
+                    PasswordMinimumLowerCaseCharacters                 = 1
+                    PasswordMinimumNonLetterCharacters                 = 1
+                    PasswordMinimumNumericCharacters                   = 1
+                    PasswordMinimumSymbolCharacters                    = 1
+                    PasswordMinimumUpperCaseCharacters                 = 1
+                    RequireNoPendingSystemUpdates                      = $true
                     DeviceThreatProtectionEnabled                      = $True
                     DeviceThreatProtectionRequiredSecurityLevel        = 'Unavailable'
                     AdvancedThreatProtectionRequiredSecurityLevel      = 'Unavailable'
@@ -118,17 +165,88 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     PasswordPreviousPasswordCountToBlock               = 10
                     StorageRequireEncryption                           = $True
                     SecurityRequireIntuneAppIntegrity                  = $True
+                    minAndroidSecurityPatchLevel                       = '2024-01-24'
+                    securityRequiredAndroidSafetyNetEvaluationType     = 'hardwareBacked'
                     Ensure                                             = 'Present'
-                    Credential                                         = $Credential
-                }
+                    Credential                                         = $Credential      
+                    ScheduledActionsForRule = [CimInstance[]]@(
+                                                (New-CimInstance `
+                                                -ClassName MSFT_scheduledActionConfigurations `
+                                                -Property @{
+                                                    actionType = 'block'
+                                                    gracePeriodHours = 0
+                                                    notificationTemplateId = '00000000-0000-0000-0000-000000000000'
+                                                } -ClientOnly)
+                                                (New-CimInstance `
+                                                -ClassName MSFT_scheduledActionConfigurations `
+                                                -Property @{
+                                                    actionType = 'pushNotification'
+                                                    gracePeriodHours = 0
+                                                    notificationTemplateId = '00000000-0000-0000-0000-000000000000'
+                                                } -ClientOnly)
+                                                (New-CimInstance `
+                                                -ClassName MSFT_scheduledActionConfigurations `
+                                                -Property @{
+                                                    actionType = 'remoteLock'
+                                                    gracePeriodHours = 0
+                                                    notificationTemplateId = '00000000-0000-0000-0000-000000000000'
+                                                } -ClientOnly)
+                                                (New-CimInstance `
+                                                -ClassName MSFT_scheduledActionConfigurations `
+                                                -Property @{
+                                                    actionType = 'Notification'
+                                                    gracePeriodHours = 0
+                                                    notificationTemplateId = '00000000-0000-0000-0000-000000000000'
+                                                    notificationMessageCCList = @('00000000-0000-0000-0000-000000000000','00000000-0000-0000-0000-000000000000')
+                                                } -ClientOnly)
+                        )                
+            }
 
-                Mock -CommandName Get-MgBetaDeviceManagementDeviceCompliancePolicy -MockWith {
-                    return @{
-                        DisplayName          = 'Test Android Device Owner Device Compliance Policy'
-                        Description          = 'Different Value'
-                        Id                   = '9c4e2ed7-706e-4874-a826-0c2778352d46'
+            Mock -CommandName Get-MgBetaDeviceManagementDeviceCompliancePolicy -MockWith {
+                return @{
+                    DisplayName          = 'Test Android Device Owner Device Compliance Policy'
+                    Description          = 'Different Value'
+                    Id                   = '9c4e2ed7-706e-4874-a826-0c2778352d46'
+                    ScheduledActionsForRule =@(
+                        @{
+                            ruleName = ''
+                            scheduledActionConfigurations = @(
+                                @{
+                                    actionType = 'block'
+                                    gracePeriodHours = 0
+                                    notificationTemplateId = '00000000-0000-0000-0000-000000000000'
+                                    notificationMessageCCList = @()
+                                },
+                                @{
+                                    actionType = 'pushNotification'
+                                    gracePeriodHours = 0
+                                    notificationTemplateId = '00000000-0000-0000-0000-000000000000'
+                                    notificationMessageCCList = @()
+                                },
+                                @{
+                                    actionType = 'remoteLock'
+                                    gracePeriodHours = 0
+                                    notificationTemplateId = '00000000-0000-0000-0000-000000000000'
+                                    notificationMessageCCList = @()
+                                },
+                                @{
+                                    actionType = 'Notification'
+                                    gracePeriodHours = 0
+                                    notificationTemplateId = '00000000-0000-0000-0000-000000000000'
+                                    notificationMessageCCList = @('00000000-0000-0000-0000-000000000000','00000000-0000-0000-0000-000000000000')
+                                }
+                            )
+                          }
+                        )
                         AdditionalProperties = @{
                             '@odata.type'                                      = '#microsoft.graph.androidDeviceOwnerCompliancePolicy'
+                            PasswordMinimumLetterCharacters                    = 1
+                            PasswordMinimumLowerCaseCharacters                 = 1
+                            PasswordMinimumNonLetterCharacters                 = 1
+                            PasswordMinimumNumericCharacters                   = 1
+                            PasswordMinimumSymbolCharacters                    = 1
+                            PasswordMinimumUpperCaseCharacters                 = 1
+                            RequireNoPendingSystemUpdates                      = $true
                             DeviceThreatProtectionEnabled                      = $True
                             DeviceThreatProtectionRequiredSecurityLevel        = 'Unavailable'
                             AdvancedThreatProtectionRequiredSecurityLevel      = 'Unavailable'
@@ -145,6 +263,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             StorageRequireEncryption                           = $True
                             SecurityRequireIntuneAppIntegrity                  = $True
                             RoleScopeTagIds                                    = '0'
+                            minAndroidSecurityPatchLevel                       = '2024-01-24'
+                            securityRequiredAndroidSafetyNetEvaluationType     = 'hardwareBacked'
                         }
                     }
                 }
@@ -169,6 +289,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     DisplayName                                        = 'Test Android Device Owner Device Compliance Policy'
                     Description                                        = 'Test Android Device Owner Device Compliance Policy Description'
+                    PasswordMinimumLetterCharacters                    = 1
+                    PasswordMinimumLowerCaseCharacters                 = 1
+                    PasswordMinimumNonLetterCharacters                 = 1
+                    PasswordMinimumNumericCharacters                   = 1
+                    PasswordMinimumSymbolCharacters                    = 1
+                    PasswordMinimumUpperCaseCharacters                 = 1
+                    RequireNoPendingSystemUpdates                      = $true
                     DeviceThreatProtectionEnabled                      = $True
                     DeviceThreatProtectionRequiredSecurityLevel        = 'Unavailable'
                     AdvancedThreatProtectionRequiredSecurityLevel      = 'Unavailable'
@@ -185,7 +312,40 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     StorageRequireEncryption                           = $True
                     SecurityRequireIntuneAppIntegrity                  = $True
                     Ensure                                             = 'Present'
+                    minAndroidSecurityPatchLevel                       = '2024-01-24'
+                    securityRequiredAndroidSafetyNetEvaluationType     = 'hardwareBacked'
                     Credential                                         = $Credential
+                    ScheduledActionsForRule = [CimInstance[]]@(
+                                                (New-CimInstance `
+                                                -ClassName MSFT_scheduledActionConfigurations `
+                                                -Property @{
+                                                    actionType = 'block'
+                                                    gracePeriodHours = 0
+                                                    notificationTemplateId = '00000000-0000-0000-0000-000000000000'
+                                                } -ClientOnly)
+                                                (New-CimInstance `
+                                                -ClassName MSFT_scheduledActionConfigurations `
+                                                -Property @{
+                                                    actionType = 'pushNotification'
+                                                    gracePeriodHours = 0
+                                                    notificationTemplateId = '00000000-0000-0000-0000-000000000000'
+                                                } -ClientOnly)
+                                                (New-CimInstance `
+                                                -ClassName MSFT_scheduledActionConfigurations `
+                                                -Property @{
+                                                    actionType = 'remoteLock'
+                                                    gracePeriodHours = 0
+                                                    notificationTemplateId = '00000000-0000-0000-0000-000000000000'
+                                                } -ClientOnly)
+                                                (New-CimInstance `
+                                                -ClassName MSFT_scheduledActionConfigurations `
+                                                -Property @{
+                                                    actionType = 'Notification'
+                                                    gracePeriodHours = 0
+                                                    notificationTemplateId = '00000000-0000-0000-0000-000000000000'
+                                                    notificationMessageCCList = @('00000000-0000-0000-0000-000000000000','00000000-0000-0000-0000-000000000000')
+                                                } -ClientOnly)
+                        ) 
                 }
 
                 Mock -CommandName Get-MgBetaDeviceManagementDeviceCompliancePolicy -MockWith {
@@ -193,8 +353,46 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         DisplayName          = 'Test Android Device Owner Device Compliance Policy'
                         Description          = 'Test Android Device Owner Device Compliance Policy Description'
                         Id                   = '9c4e2ed7-706e-4874-a826-0c2778352d46'
+                        ScheduledActionsForRule =@(
+                            @{
+                                ruleName = ''
+                                scheduledActionConfigurations = @(
+                                    @{
+                                        actionType = 'block'
+                                        gracePeriodHours = 0
+                                        notificationTemplateId = '00000000-0000-0000-0000-000000000000'
+                                        notificationMessageCCList = @()
+                                    },
+                                    @{
+                                        actionType = 'pushNotification'
+                                        gracePeriodHours = 0
+                                        notificationTemplateId = '00000000-0000-0000-0000-000000000000'
+                                        notificationMessageCCList = @()
+                                    },
+                                    @{
+                                        actionType = 'remoteLock'
+                                        gracePeriodHours = 0
+                                        notificationTemplateId = '00000000-0000-0000-0000-000000000000'
+                                        notificationMessageCCList = @()
+                                    },
+                                    @{
+                                        actionType = 'Notification'
+                                        gracePeriodHours = 0
+                                        notificationTemplateId = '00000000-0000-0000-0000-000000000000'
+                                        notificationMessageCCList = @('00000000-0000-0000-0000-000000000000','00000000-0000-0000-0000-000000000000')
+                                    }
+                                )
+                              }
+                            )
                         AdditionalProperties = @{
                             '@odata.type'                                      = '#microsoft.graph.androidDeviceOwnerCompliancePolicy'
+                            PasswordMinimumLetterCharacters                    = 1
+                            PasswordMinimumLowerCaseCharacters                 = 1
+                            PasswordMinimumNonLetterCharacters                 = 1
+                            PasswordMinimumNumericCharacters                   = 1
+                            PasswordMinimumSymbolCharacters                    = 1
+                            PasswordMinimumUpperCaseCharacters                 = 1
+                            RequireNoPendingSystemUpdates                      = $true
                             DeviceThreatProtectionEnabled                      = $True
                             DeviceThreatProtectionRequiredSecurityLevel        = 'Unavailable'
                             AdvancedThreatProtectionRequiredSecurityLevel      = 'Unavailable'
@@ -211,6 +409,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             StorageRequireEncryption                           = $True
                             SecurityRequireIntuneAppIntegrity                  = $True
                             RoleScopeTagIds                                    = '0'
+                            minAndroidSecurityPatchLevel                       = '2024-01-24'
+                            securityRequiredAndroidSafetyNetEvaluationType     = 'hardwareBacked'
                         }
                     }
                 }
@@ -234,8 +434,46 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         DisplayName          = 'Test Android Device Owner Device Compliance Policy'
                         Description          = 'Test Android Device Owner Device Compliance Policy Description'
                         Id                   = '9c4e2ed7-706e-4874-a826-0c2778352d46'
+                        ScheduledActionsForRule =@(
+                        @{
+                            ruleName = ''
+                            scheduledActionConfigurations = @(
+                                @{
+                                    actionType = 'block'
+                                    gracePeriodHours = 0
+                                    notificationTemplateId = '00000000-0000-0000-0000-000000000000'
+                                    notificationMessageCCList = @()
+                                },
+                                @{
+                                    actionType = 'pushNotification'
+                                    gracePeriodHours = 0
+                                    notificationTemplateId = '00000000-0000-0000-0000-000000000000'
+                                    notificationMessageCCList = @()
+                                },
+                                @{
+                                    actionType = 'remoteLock'
+                                    gracePeriodHours = 0
+                                    notificationTemplateId = '00000000-0000-0000-0000-000000000000'
+                                    notificationMessageCCList = @()
+                                },
+                                @{
+                                    actionType = 'Notification'
+                                    gracePeriodHours = 0
+                                    notificationTemplateId = '00000000-0000-0000-0000-000000000000'
+                                    notificationMessageCCList = @('00000000-0000-0000-0000-000000000000','00000000-0000-0000-0000-000000000000')
+                                }
+                            )
+                          }
+                        )
                         AdditionalProperties = @{
                             '@odata.type'                                      = '#microsoft.graph.androidDeviceOwnerCompliancePolicy'
+                            PasswordMinimumLetterCharacters                    = 1
+                            PasswordMinimumLowerCaseCharacters                 = 1
+                            PasswordMinimumNonLetterCharacters                 = 1
+                            PasswordMinimumNumericCharacters                   = 1
+                            PasswordMinimumSymbolCharacters                    = 1
+                            PasswordMinimumUpperCaseCharacters                 = 1
+                            RequireNoPendingSystemUpdates                      = $true
                             DeviceThreatProtectionEnabled                      = $True
                             DeviceThreatProtectionRequiredSecurityLevel        = 'Unavailable'
                             AdvancedThreatProtectionRequiredSecurityLevel      = 'Unavailable'
@@ -252,6 +490,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             StorageRequireEncryption                           = $True
                             SecurityRequireIntuneAppIntegrity                  = $True
                             RoleScopeTagIds                                    = '0'
+                            minAndroidSecurityPatchLevel                       = '2024-01-24'
+                            securityRequiredAndroidSafetyNetEvaluationType     = 'hardwareBacked'
                         }
                     }
                 }
@@ -284,8 +524,46 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         DisplayName          = 'Test Android Device Owner Device Compliance Policy'
                         Description          = 'Test Android Device Owner Device Compliance Policy Description'
                         Id                   = '9c4e2ed7-706e-4874-a826-0c2778352d46'
+                        ScheduledActionsForRule =@(
+                        @{
+                            ruleName = ''
+                            scheduledActionConfigurations = @(
+                                @{
+                                    actionType = 'block'
+                                    gracePeriodHours = 0
+                                    notificationTemplateId = '00000000-0000-0000-0000-000000000000'
+                                    notificationMessageCCList = @()
+                                },
+                                @{
+                                    actionType = 'pushNotification'
+                                    gracePeriodHours = 0
+                                    notificationTemplateId = '00000000-0000-0000-0000-000000000000'
+                                    notificationMessageCCList = @()
+                                },
+                                @{
+                                    actionType = 'remoteLock'
+                                    gracePeriodHours = 0
+                                    notificationTemplateId = '00000000-0000-0000-0000-000000000000'
+                                    notificationMessageCCList = @()
+                                },
+                                @{
+                                    actionType = 'Notification'
+                                    gracePeriodHours = 0
+                                    notificationTemplateId = '00000000-0000-0000-0000-000000000000'
+                                    notificationMessageCCList = @('00000000-0000-0000-0000-000000000000','00000000-0000-0000-0000-000000000000')
+                                }
+                            )
+                          }
+                        )
                         AdditionalProperties = @{
                             '@odata.type'                                      = '#microsoft.graph.androidDeviceOwnerCompliancePolicy'
+                            PasswordMinimumLetterCharacters                    = 1
+                            PasswordMinimumLowerCaseCharacters                 = 1
+                            PasswordMinimumNonLetterCharacters                 = 1
+                            PasswordMinimumNumericCharacters                   = 1
+                            PasswordMinimumSymbolCharacters                    = 1
+                            PasswordMinimumUpperCaseCharacters                 = 1
+                            RequireNoPendingSystemUpdates                      = $true
                             DeviceThreatProtectionEnabled                      = $True
                             DeviceThreatProtectionRequiredSecurityLevel        = 'Unavailable'
                             AdvancedThreatProtectionRequiredSecurityLevel      = 'Unavailable'
@@ -302,6 +580,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             StorageRequireEncryption                           = $True
                             SecurityRequireIntuneAppIntegrity                  = $True
                             RoleScopeTagIds                                    = '0'
+                            minAndroidSecurityPatchLevel                       = '2024-01-24'
+                            securityRequiredAndroidSafetyNetEvaluationType     = 'hardwareBacked'
                         }
                     }
                 }

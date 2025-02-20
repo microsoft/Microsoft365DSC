@@ -1,19 +1,72 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.25.219.1
 
+* AADAccessReviewPolicy
+  * Missing AccessReview permission for Application Read access
+    FIXES [#5796](https://github.com/microsoft/Microsoft365DSC/issues/5796)
+* AADApplication
+  * Test-TargetResource logic updated to skip evaluating CIMArrays that are empty
+    when passed as desired values.
+* AADDeviceRegistrationPolicy
+  * Fixed an issue where the AzureADJoinIsAdminConfigurable was not returned by the
+    Get-TargetResource function.
+  * Fix issue setting Selected Users and Groups for Entra Join.
+    FIXES [#5798](https://github.com/microsoft/Microsoft365DSC/issues/5798)
+* AADGroup
+  * Returns an empty array for roles and licenses from the Get-TargetResource
+    function instead of null when no instances are found.
 * AADRoleEligibilityScheduleRequest
   * Reduce call count when reconciling object type
     FIXES [#5621](https://github.com/microsoft/Microsoft365DSC/issues/5621)
+  * Add check if object lookup fails
+    FIXES [#5801](https://github.com/microsoft/Microsoft365DSC/issues/5801)
+* AADServicePrincipal
+  * Evaluating assigned users based on UPN and not just on DisplayName.
+  * FIXES [#5359](https://github.com/microsoft/Microsoft365DSC/issues/5359) AADServicePrincipal fails on Managed Identities when DelegatedPermissions returns 500 response
 * ADOSecurityPolicy
   * Fixes an issue where the resource threw an error trying to parse the default
     values.
+* EXODistributionGroup
+  * Changed logic to retrieve existing members by UserPrincipalName.
+* EXORoleGroup
+  * Evaluating assigned users based on UPN and not just on DisplayName if they
+    have an associated mailbox.
+* IntuneDeviceManagementEnrollmentAndroidGooglePlay
+  * Marked the Id property as mandatory in the resource.
+* M365DSCRuleEvaluation
+  * Added support for specifying a Filter property.
 * M365DSCUtil
   * Add M365DSC prefix to `Remove-EmptyValue`.
+  * Fixes an issue with `Credential` property being escaped and indentation.
+  * Adds the possibility to allow variables in strings and no authentication
+    results update during conversion to final export.
     FIXES [#3861](https://github.com/microsoft/Microsoft365DSC/issues/3861)
+* SCInsiderRiskPolicy
+  * Enforces the MDATPTriageStatus to be a string array.
+* SCSensitivityLabel
+  * Fixes invalid accepted content type values.
+* IntuneDeviceCompliancePolicyAndroidDeviceOwner
+  * Adds support for Scheduled Actions and other missing properties
+    FIXES [#5593] (https://github.com/microsoft/Microsoft365DSC/issues/5593)
+* IntuneDeviceCompliancePolicyAndroidWorkProfile
+  * Adds support for Scheduled Actions and other missing properties
+    FIXES [#5593] (https://github.com/microsoft/Microsoft365DSC/issues/5592)
 * TeamsAppPermissionPolicy
-  * Updated correct Typecasting for AppPresetMeeting and PinnedMessagebarApps before adding them to the policy
-    FIXES [[#5752](https://github.com/microsoft/Microsoft365DSC/issues/5752)
+  * Updated correct Typecasting for AppPresetMeeting and PinnedMessagebarApps
+    before adding them to the policy
+* TeamsAppSetupPolicy
+  * FIXES [[#5752](https://github.com/microsoft/Microsoft365DSC/issues/5752)
+* TeamsM365App
+  * Remove `Ensure` property from being exported.
+    FIXES [#5781](https://github.com/microsoft/Microsoft365DSC/issues/5781)
+* AADGroupEligibilitySchedule
+  * FIXES [#5792](https://github.com/microsoft/Microsoft365DSC/issues/5792) issue where complete DSC isn't exported after generated
+  * FIXES [#5793](https://github.com/microsoft/Microsoft365DSC/issues/5793) issue where PrincipalType isn't correctly captured in AzureGov
+* DEPENDENCIES
+  * Updated ExchangeOnlineManagement to version 3.7.1
+  * Updated Microsoft.Graph modules to version 2.26.0
+  * Updated ReverseDSC to version 2.0.0.27
 
 # 1.25.212.2
 
@@ -37,7 +90,6 @@
 * EXOSmtpDaneInbound
   * Updated authentication properties to align with MOF definition.
     FIXES [#5709](https://github.com/microsoft/Microsoft365DSC/issues/5709)
-
 * MISC
   * PowerPlatform resource revamp to use direct REST API calls.
   * Simplify export behavior for all resources and complex objects.

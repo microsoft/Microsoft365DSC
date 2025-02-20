@@ -807,6 +807,12 @@ function Get-TargetResource
                 $RaiseAuditAlertValue = [Boolean]::Parse($tenantSettings.FeatureSettings.RaiseAuditAlert)
             }
 
+            $MDATPTriageStatusValue = @()
+            if (-not [System.String]::IsNullOrEmpty($tenantSettings.IntelligentDetections.MDATPTriageStatus))
+            {
+                $MDATPTriageStatusValue = [Array]($tenantSettings.IntelligentDetections.MDATPTriageStatus.Replace('"', '').Replace('[', '').Replace(']', '').Split(','))
+            }
+
             $tenantSettingsHash = @{
                 Anonymization                                 = $AnonymizationValue
                 DLPUserRiskSync                               = $DLPUserRiskSyncValue
@@ -814,7 +820,7 @@ function Get-TargetResource
                 RaiseAuditAlert                               = $RaiseAuditAlertValue
                 FileVolCutoffLimits                           = $tenantSettings.IntelligentDetections.FileVolCutoffLimits
                 AlertVolume                                   = $tenantSettings.IntelligentDetections.AlertVolume
-                MDATPTriageStatus                             = $tenantSettings.IntelligentDetections.MDATPTriageStatus
+                MDATPTriageStatus                             = $MDATPTriageStatusValue
                 AnomalyDetections                             = ($tenantSettings.Indicators | Where-Object -FilterScript { $_.Name -eq 'AnomalyDetections' }).Enabled
                 CopyToPersonalCloud                           = ($tenantSettings.Indicators | Where-Object -FilterScript { $_.Name -eq 'CopyToPersonalCloud' }).Enabled
                 CopyToUSB                                     = ($tenantSettings.Indicators | Where-Object -FilterScript { $_.Name -eq 'CopyToUSB' }).Enabled
@@ -1843,8 +1849,18 @@ function Set-TargetResource
     }
 
     # Tenant Settings
+    $MDATPTriageStatusValue = "["
+    foreach ($status in $MDATPTriageStatus)
+    {
+        $MDATPTriageStatusValue += "\`"$($status)\`","
+    }
+    if ($MDATPTriageStatusValue.EndsWith(','))
+    {
+        $MDATPTriageStatusValue = $MDATPTriageStatusValue.Substring(0, $MDATPTriageStatusValue.Length -1)
+    }
+    $MDATPTriageStatusValue += "]"
     $featureSettingsValue = "{`"Anonymization`":$($Anonymization.ToString().ToLower()), `"DLPUserRiskSync`":$($DLPUserRiskSync.ToString().ToLower()), `"OptInIRMDataExport`":$($OptInIRMDataExport.ToString().ToLower()), `"RaiseAuditAlert`":$($RaiseAuditAlert.ToString().ToLower()), `"EnableTeam`":$($EnableTeam.ToString().ToLower())}"
-    $intelligentDetectionValue = "{`"FileVolCutoffLimits`":`"$($FileVolCutoffLimits)`", `"AlertVolume`":`"$($AlertVolume)`", `"MDATPTriageStatus`": `"$($MDATPTriageStatus)`"}"
+    $intelligentDetectionValue = "{`"FileVolCutoffLimits`":`"$($FileVolCutoffLimits)`", `"AlertVolume`":`"$($AlertVolume)`", `"MDATPTriageStatus`": `"$($MDATPTriageStatusValue)`"}"
 
 
     $tenantSettingsValue = "{`"Region`":`"WW`", `"FeatureSettings`":$($featureSettingsValue), " + `

@@ -131,6 +131,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
+                Mock -CommandName Get-MgBetaDirectoryObjectById -MockWith {
+                    return @{
+                        AdditionalProperties = @{
+                            '@odata.type' = '#microsoft.graph.group'
+                            displayName = 'FakeStringValue'
+                        }
+                    }
+                }
+
                 Mock -CommandName New-MgBetaIdentityGovernancePrivilegedAccessGroupEligibilityScheduleRequest -MockWith {
                     return $null
                 }
@@ -190,6 +199,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return @{
                         Id = 'FakeId'
                         DisplayName = 'FakeStringValue'
+                    }
+                }
+
+                Mock -CommandName Get-MgBetaDirectoryObjectById -MockWith {
+                    return @{
+                        AdditionalProperties = @{
+                            '@odata.type' = '#microsoft.graph.group'
+                            displayName = 'FakePrincipal'
+                        }
                     }
                 }
 
@@ -263,6 +281,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return @{
                         Id = 'FakeId'
                         DisplayName = 'FakeStringValue'
+                    }
+                }
+
+                Mock -CommandName Get-MgBetaDirectoryObjectById -MockWith {
+                    return @{
+                        AdditionalProperties = @{
+                            '@odata.type' = '#microsoft.graph.group'
+                            displayName = 'FakeStringValue'
+                        }
                     }
                 }
 

@@ -6,7 +6,7 @@ function Get-TargetResource
     (
         #region Intune resource parameters
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
 
@@ -70,7 +70,7 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    Write-Verbose -Message "Getting configuration of the Intune Device Management Android Google Play Enrollment with Id {$Id} and DisplayName {$DisplayName}"
+    Write-Verbose -Message "Getting configuration of the Intune Device Management Android Google Play Enrollment with Id {$Id}"
 
     try
     {
@@ -152,7 +152,7 @@ function Set-TargetResource
     (
         #region Intune resource parameters
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
 
@@ -274,7 +274,7 @@ function Test-TargetResource
     (
         #region Intune resource parameters
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
 
@@ -350,7 +350,7 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of the Intune Device Management Android Google Play Enrollment with Id {$Id} and DisplayName {$DisplayName}"
+    Write-Verbose -Message "Testing configuration of the Intune Device Management Android Google Play Enrollment with Id {$Id}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()

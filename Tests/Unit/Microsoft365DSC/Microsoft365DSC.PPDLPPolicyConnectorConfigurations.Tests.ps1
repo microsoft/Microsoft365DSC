@@ -259,7 +259,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             connectorActionConfigurations = @(
                                 @{
                                     connectorId = '/providers/Microsoft.PowerApps/apis/shared_aadinvitationmanager'
-                                    defaultConnectorActionRuleBehavior = 'Allow'
+                                    defaultConnectorActionRuleBehavior = 'Deny' #Drift
                                     actionRules = @(
                                         @{
                                             actionId = "CreateInvitation"

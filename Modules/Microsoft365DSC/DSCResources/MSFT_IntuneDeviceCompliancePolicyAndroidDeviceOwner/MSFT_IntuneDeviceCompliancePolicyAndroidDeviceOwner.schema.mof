@@ -9,12 +9,32 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
     [Write, Description("The collection Id that is the target of the assignment.(ConfigMgr)")] String collectionId;
 };
 
+[ClassVersion("1.0.0.0")]
+class MSFT_scheduledActionConfigurations
+{
+    [Write, Description("The unique identifier of the action configuration.")] String id;
+    [Write, Description("Number of hours to wait till the action will be enforced. Valid values 0 to 8760.")] Uint32 gracePeriodHours;
+    [Write, Description("The action to take."), ValueMap{"notification", "block", "retire", "remoteLock", "pushNotification"}, Values{"notification", "block", "retire", "remoteLock", "pushNotification"}] String actionType;
+    [Write, Description("The notification Message template to use.")] String notificationTemplateId;
+    [Write, Description("A list of group IDs to specify who to CC this notification message to.")] String notificationMessageCCList[];
+};
+
 [ClassVersion("1.0.0.0"), FriendlyName("IntuneDeviceCompliancePolicyAndroidDeviceOwner")]
 class MSFT_IntuneDeviceCompliancePolicyAndroidDeviceOwner : OMI_BaseResource
 {
     [Key, Description("Display name of the Android Device Owner device compliance policy.")] String DisplayName;
     [Write, Description("Description of the Android Device Owner device compliance policy.")] String Description;
     [Write, Description("Assignments of the Intune Policy."), EmbeddedInstance("MSFT_DeviceManagementConfigurationPolicyAssignments")] String Assignments[];
+    [Write, Description("Minimum Android security patch level.")] String MinAndroidSecurityPatchLevel;
+    [Write, Description("Indicates the minimum number of letter characters required for device password. Valid values 1 to 16.")] Uint32 PasswordMinimumLetterCharacters;
+    [Write, Description("Indicates the minimum number of lower case characters required for device password. Valid values 1 to 16.")] Uint32 PasswordMinimumLowerCaseCharacters;
+    [Write, Description("Indicates the minimum number of non-letter characters required for device password. Valid values 1 to 16.")] Uint32 PasswordMinimumNonLetterCharacters;
+    [Write, Description("Indicates the minimum number of numeric characters required for device password. Valid values 1 to 16.")] Uint32 PasswordMinimumNumericCharacters;
+    [Write, Description("Indicates the minimum number of symbol characters required for device password. Valid values 1 to 16.")] Uint32 PasswordMinimumSymbolCharacters;
+    [Write, Description("Indicates the minimum number of upper case letter characters required for device password. Valid values 1 to 16.")] Uint32 PasswordMinimumUpperCaseCharacters;
+    [Write, Description("Require device to have no pending Android system updates.")] Boolean RequireNoPendingSystemUpdates;
+    [Write, Description("Require a specific Play Integrity evaluation type for compliance. Possible values are: basic, hardwareBacked."), ValueMap{"basic","hardwareBacked"}, Values{"basic","hardwareBacked"}] String SecurityRequiredAndroidSafetyNetEvaluationType;
+    [Write, Description("Specifies the non-compliance actions."), EmbeddedInstance("MSFT_scheduledActionConfigurations")] String ScheduledActionsForRule[];
     [Write, Description("DeviceThreatProtectionEnabled of the Android Device Owner device compliance policy.")] Boolean DeviceThreatProtectionEnabled;
     [Write, Description("DeviceThreatProtectionRequiredSecurityLevel of the Android Device Owner device compliance policy.")] String DeviceThreatProtectionRequiredSecurityLevel;
     [Write, Description("AdvancedThreatProtectionRequiredSecurityLevel of the Android Device Owner device compliance policy.")] String AdvancedThreatProtectionRequiredSecurityLevel;
@@ -40,3 +60,4 @@ class MSFT_IntuneDeviceCompliancePolicyAndroidDeviceOwner : OMI_BaseResource
     [Write, Description("Managed ID being used for authentication.")] Boolean ManagedIdentity;
     [Write, Description("Access token used for authentication.")] String AccessTokens[];
 };
+

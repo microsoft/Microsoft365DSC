@@ -245,7 +245,7 @@ function Get-TargetResource
         }
 
         # AssignedToRole
-        $AssignedToRoleValues = $null
+        $AssignedToRoleValues = @()
         if ($Group.IsAssignableToRole -eq $true)
         {
             $AssignedToRoleValues = @()
@@ -258,7 +258,7 @@ function Get-TargetResource
         }
 
         # Licenses
-        $assignedLicensesValues = $null
+        $assignedLicensesValues = @()
         $uri = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "v1.0/groups/$($Group.Id)/assignedLicenses"
         $assignedLicensesRequest = Invoke-MgGraphRequest -Method 'GET' `
             -Uri $uri
