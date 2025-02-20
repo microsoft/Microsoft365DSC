@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* DEPENDENCIES
+  * Revert Microsoft.Graph modules version back to 2.25.0
+
 # 1.25.219.1
 
 * AADAccessReviewPolicy
