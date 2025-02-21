@@ -220,10 +220,7 @@ function Set-TargetResource
 
     # region Telemetry
     $CurrentValues = Get-TargetResource @PSBoundParameters
-    $CurrentParameters = $PSBoundParameters
-    $CurrentParameters.Remove('Ensure') | Out-Null
-    $CurrentParameters.Remove('Credential') | Out-Null
-    $CurrentParameters.Remove('ApplicationSecret') | Out-Null
+    $CurrentParameters = Remove-M365DSCAuthenticationParameter $PSBoundParameters
     # end region
 
     if ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Absent')
@@ -265,12 +262,12 @@ function Set-TargetResource
         try
         {
             # The Site Script exists and it shouldn't
-            [Array]$SiteScripts = Get-PnPSiteScript | Where-Object -FilterScript { $_.Title -eq $Title } -ErrorAction SilentlyContinue
+            [Array]$SiteScript = Get-PnPSiteScript | Where-Object -FilterScript { $_.Title -eq $Title } -ErrorAction SilentlyContinue
 
             ##### Check to see if more than one site script is returned
-            if ($SiteScripts.Length -gt 0)
+            if ($SiteScript.Count -gt 1)
             {
-                $SiteScript = Get-PnPSiteScript -Identity $SiteScripts[0].Id
+                $SiteScript = Get-PnPSiteScript -Identity $SiteScript[0].Id
             }
             ##### End of Check
         }
@@ -285,6 +282,16 @@ function Set-TargetResource
                 throw $Message
             }
         }
+        try {
+            Remove-PnPSiteScript -Identity $sitescript.Id -Force -ErrorAction Stop
+        }
+        catch {
+            New-M365DSCLogEntry -Message 'Error removing Site Script:' `
+                -Exception $_ `
+                -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $TenantId `
+                -Credential $Credential
+        }
     }
     if ($Ensure -ne 'Absent')
     {
@@ -296,12 +303,12 @@ function Set-TargetResource
             [Array]$SiteScripts = Get-PnPSiteScript | Where-Object -FilterScript { $_.Title -eq $Title } -ErrorAction SilentlyContinue
 
             ##### Check to see if more than one site script is returned
-            if ($SiteScripts.Length -gt 0)
+            if ($SiteScripts.Count -gt 0)
             {
                 #
                 #the only way to get the $content is to query the site again, but this time with the ID and not the Title like above
                 $UpdateParams = @{
-                    Id          = $SiteScripts[0].Id
+                    Identity    = $SiteScripts[0].Id
                     Title       = $Title
                     Content     = $Content
                     Description = $Description
@@ -317,7 +324,11 @@ function Set-TargetResource
         }
         catch
         {
-            Write-Warning -Message "Unable to update Site Script, {$Title}"
+            New-M365DSCLogEntry -Message 'Error updating Site Script:' `
+                -Exception $_ `
+                -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $TenantId `
+                -Credential $Credential
         }
     }
 }

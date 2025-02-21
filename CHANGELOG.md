@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# Unreleased
+
+* SPOSiteScript
+  * Fix error in Get-TargetResource when a site-script is identified by title only
+
 # 1.25.219.1
 
 * AADAccessReviewPolicy
