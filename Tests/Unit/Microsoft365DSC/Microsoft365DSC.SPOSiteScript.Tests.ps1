@@ -122,7 +122,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            It 'Should update the Theme from the Set method' {
+            It 'Should update the site script from the Set method' {
                 Set-TargetResource @testParams
             }
 
