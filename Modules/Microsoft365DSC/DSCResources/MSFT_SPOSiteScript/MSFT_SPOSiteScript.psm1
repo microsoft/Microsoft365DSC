@@ -89,20 +89,18 @@ function Get-TargetResource
         #
         if ([System.String]::IsNullOrEmpty($Identity))
         {
-            [Array]$SiteScripts = Get-PnPSiteScript -ErrorAction Stop | Where-Object -FilterScript { $_.Title -eq $Title }
-
-            $SiteScript = $null
-            ##### Check to see if more than one site script is returned
-            if ($SiteScripts.Length -gt -1)
-            {
-                $SiteScript = Get-PnPSiteScript -Identity $SiteScripts[0].Id -ErrorAction Stop
-            }
+            $SiteScript = Get-PnPSiteScript -ErrorAction Stop | Where-Object -FilterScript { $_.Title -eq $Title } | Select-Object -First 1
 
             # No script was returned
-            if ($null -eq $SiteScripts)
+            if ($null -eq $SiteScript)
             {
                 Write-Verbose -Message "No Site Script with the Title, {$Title}, was found."
                 return $nullReturn
+            }
+            else
+            {
+                # get site script *with* content
+                $SiteScript = Get-PnPSiteScript -Identity $SiteScript.Id
             }
         }
         else

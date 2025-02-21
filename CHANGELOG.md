@@ -64,8 +64,6 @@
   * FIXES [#5792](https://github.com/microsoft/Microsoft365DSC/issues/5792) issue where complete DSC isn't exported after generated
   * FIXES [#5793](https://github.com/microsoft/Microsoft365DSC/issues/5793) issue where PrincipalType isn't correctly captured in AzureGov
 * DEPENDENCIES
-  * Updated ExchangeOnlineManagement to version 3.7.1
-  * Updated Microsoft.Graph modules to version 2.26.0
   * Updated ReverseDSC to version 2.0.0.27
 
 # 1.25.212.2

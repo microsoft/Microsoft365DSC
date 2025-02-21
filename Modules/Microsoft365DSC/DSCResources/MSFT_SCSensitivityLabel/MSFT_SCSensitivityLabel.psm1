@@ -1703,6 +1703,8 @@ function Export-TargetResource
                 -Credential $Credential `
                 -NoEscape @('AdvancedSettings', 'LocaleSettings', 'AutoLabelingSettings')
 
+            $currentDSCBlock = $currentDSCBlock.Replace("''", "'")
+
             Write-Host $Global:M365DSCEmojiGreenCheckMark
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `

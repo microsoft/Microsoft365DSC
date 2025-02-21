@@ -11,7 +11,7 @@
   # RootModule = ''
 
   # Version number of this module.
-  ModuleVersion     = '1.25.219.1'
+  ModuleVersion     = '1.25.219.2'
 
   # Supported PSEditions
   # CompatiblePSEditions = @()
@@ -200,8 +200,6 @@
   * Remove `Ensure` property from being exported.
     FIXES [#5781](https://github.com/microsoft/Microsoft365DSC/issues/5781)
 * DEPENDENCIES
-  * Updated ExchangeOnlineManagement to version 3.7.1
-  * Updated Microsoft.Graph modules to version 2.26.0
   * Updated ReverseDSC to version 2.0.0.27'
 
       # Flag to indicate whether the module requires explicit user acceptance for install/update
