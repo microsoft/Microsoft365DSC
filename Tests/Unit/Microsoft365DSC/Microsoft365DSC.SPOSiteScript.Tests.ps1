@@ -55,6 +55,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
+            Mock -CommandName Set-PnPSiteScript -MockWith {
+            }
+
             Mock -CommandName Remove-PnPSiteScript -MockWith {
             }
 
@@ -229,7 +232,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Content     = $script
                     Description = "This is the description for the Site Script: 'Test Title'"
                     Credential  = $Credential
-                    Ensure      = 'Present'
+                    Ensure      = 'Absent'
                 }
 
                 Mock -CommandName Get-PnPSiteScript -MockWith {
@@ -240,10 +243,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Description = "This is the description for the Site Script: 'Test Title'"
                     }
                 }
+            }
 
-                Mock -CommandName Remove-PnPSiteScript -MockWith {
-                    return 'Site script has been successfully removed'
-                }
+            It 'Should return present from the Get method' {
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
+            }
+
+            It 'Should return false from the Test method' {
+                Test-TargetResource @testParams | Should -Be $false
             }
 
             It 'Should remove the site script successfully' {
