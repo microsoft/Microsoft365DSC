@@ -1,13 +1,5 @@
 # Change log for Microsoft365DSC
 
-<<<<<<< HEAD
-# Unreleased
-
-* SPOSiteScript
-  * Fix error in Get-TargetResource when a site-script is identified by title only
-
-# 1.25.219.1
-=======
 # UNRELEASED
 
 * AADAppplication
@@ -23,9 +15,11 @@
 * SCPolicyConfig
   * Handle default values in the Get-TargetResource function.
   * Added support for the FileCopiedToCloudFullUrlEnabled property.
+* SPOSiteScript
+  * Fix error in Get-TargetResource when a site-script is identified by title only
+    FIXES [#5821](https://github.com/microsoft/Microsoft365DSC/issues/5821)
 
-# 1.25.219.2
->>>>>>> Dev
+# 1.25.219.1
 
 * AADAccessReviewPolicy
   * Missing AccessReview permission for Application Read access
