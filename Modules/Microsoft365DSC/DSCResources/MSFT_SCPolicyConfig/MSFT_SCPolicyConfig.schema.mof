@@ -135,25 +135,26 @@ class MSFT_PolicyConfigQuarantineParameters
 class MSFT_SCPolicyConfig : OMI_BaseResource
 {
     [Key, Description("Accepted value is 'Yes'."), ValueMap{"Yes"}, Values{"Yes"}] String IsSingleInstance;
-    [Write, Description("TBD")] Boolean AdvancedClassificationEnabled;
-    [Write, Description("TBD")] Boolean AuditFileActivity;
-    [Write, Description("TBD")] Boolean BandwidthLimitEnabled;
+    [Write, Description("Default value is false.")] Boolean AdvancedClassificationEnabled;
+    [Write, Description("Default value is false.")] Boolean AuditFileActivity;
+    [Write, Description("Default value is true.")] Boolean BandwidthLimitEnabled;
     [Write, Description("TBD"), EmbeddedInstance("MSFT_PolicyConfigBusinessJustificationList")] String BusinessJustificationList[];
-    [Write, Description("TBD")] String CloudAppMode;
+    [Write, Description("Default value is Off.")] String CloudAppMode;
     [Write, Description("TBD")] String CloudAppRestrictionList[];
-    [Write, Description("TBD")] UInt32 CustomBusinessJustificationNotification;
-    [Write, Description("TBD")] UInt32 DailyBandwidthLimitInMB;
+    [Write, Description("Default value is 0.")] UInt32 CustomBusinessJustificationNotification;
+    [Write, Description("Default value is 1000")] UInt32 DailyBandwidthLimitInMB;
     [Write, Description("TBD"), EmbeddedInstance("MSFT_PolicyConfigDLPAppGroups")] String DLPAppGroups[];
     [Write, Description("TBD"), EmbeddedInstance("MSFT_PolicyConfigDLPNetworkShareGroups")] String DLPNetworkShareGroups[];
     [Write, Description("TBD"), EmbeddedInstance("MSFT_PolicyConfigDLPPrinterGroups")] String DLPPrinterGroups[];
     [Write, Description("TBD"), EmbeddedInstance("MSFT_PolicyConfigDLPRemovableMediaGroups")] String DLPRemovableMediaGroups[];
-    [Write, Description("TBD")] Boolean IncludePredefinedUnallowedBluetoothApps;
-    [Write, Description("TBD")] Boolean MacDefaultPathExclusionsEnabled;
+    [Write, Description("Default value is true.")] Boolean IncludePredefinedUnallowedBluetoothApps;
+    [Write, Description("Default value is true.")] Boolean MacDefaultPathExclusionsEnabled;
     [Write, Description("TBD")] String MacPathExclusion[];
-    [Write, Description("TBD")] Boolean NetworkPathEnforcementEnabled;
+    [Write, Description("Default value is false.")] Boolean NetworkPathEnforcementEnabled;
     [Write, Description("TBD")] String NetworkPathExclusion;
     [Write, Description("TBD")] String PathExclusion[];
-    [Write, Description("TBD")] Boolean serverDlpEnabled;
+    [Write, Description("Default value is false")] Boolean serverDlpEnabled;
+    [Write, Description("Default value is false")] Boolean FileCopiedToCloudFullUrlEnabled;
     [Write, Description("TBD"), EmbeddedInstance("MSFT_PolicyConfigEvidenceStoreSettings")] String EvidenceStoreSettings;
     [Write, Description("TBD"), EmbeddedInstance("MSFT_PolicyConfigDLPSiteGroups")] String SiteGroups[];
     [Write, Description("TBD"), EmbeddedInstance("MSFT_PolicyConfigApp")] String UnallowedApp[];
@@ -162,8 +163,8 @@ class MSFT_SCPolicyConfig : OMI_BaseResource
     [Write, Description("TBD"), EmbeddedInstance("MSFT_PolicyConfigApp")] String UnallowedBrowser[];
     [Write, Description("TBD"), EmbeddedInstance("MSFT_PolicyConfigQuarantineParameters")] String QuarantineParameters;
     [Write, Description("TBD")] String VPNSettings[];
-    [Write, Description("TBD")] Boolean EnableLabelCoauth;
-    [Write, Description("TBD")] Boolean EnableSpoAipMigration;
+    [Write, Description("The EnableLabelCoauth parameter enables or disables co-authoring support in Office desktop apps for the entire organization. Default value is false.")] Boolean EnableLabelCoauth;
+    [Write, Description("The EnableSpoAipMigration parameter enables or disables built-in labeling for supported Office files in SharePoint and OneDrive.")] Boolean EnableSpoAipMigration;
     [Write, Description("Credentials of the workload's Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
     [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;

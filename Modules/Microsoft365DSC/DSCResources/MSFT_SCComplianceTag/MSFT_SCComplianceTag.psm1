@@ -521,8 +521,8 @@ function Export-TargetResource
         $AccessTokens
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
-        -InboundParameters $PSBoundParameters `
-        -SkipModuleReload $true
+        -InboundParameters $PSBoundParameters
+
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 

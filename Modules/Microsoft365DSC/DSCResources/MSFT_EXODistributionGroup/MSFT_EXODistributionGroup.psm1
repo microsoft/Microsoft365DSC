@@ -708,7 +708,41 @@ function Set-TargetResource
         }
         $currentParameters.Remove('OrganizationalUnit') | Out-Null
         $currentParameters.Remove('Type') | Out-Null
-        $currentParameters.Remove('Members') | Out-Null
+
+        # Members
+        if ($null -ne $Members)
+        {
+            $membersDiff = Compare-Object -ReferenceObject $currentDistributionGroup.Members -DifferenceObject $Members
+            $membersToAdd = @()
+            $membersToRemove = @()
+            foreach ($difference in $membersDiff)
+            {
+                if ($difference.SideIndicator -eq '=>')
+                {
+                    $membersToAdd += $difference.InputObject
+                }
+                elseif ($difference.SideIndicator -eq '<=')
+                {
+                    $membersToRemove += $difference.InputObject
+                }
+            }
+
+            foreach ($member in $membersToAdd)
+            {
+                Write-Verbose -Message "Adding member {$member}"
+                Add-DistributionGroupMember -Identity $Identity -Member $member -BypassSecurityGroupManagerCheck
+            }
+            foreach ($member in $membersToRemove)
+            {
+                Write-Verbose -Message "Removing member {$member}"
+                Remove-DistributionGroupMember -Identity $Identity `
+                                            -Member $member `
+                                            -BypassSecurityGroupManagerCheck `
+                                            -Confirm:$false
+            }
+            $currentParameters.Remove('Members') | Out-Null
+        }
+
 
         if ($EmailAddresses.Length -gt 0)
         {

@@ -799,19 +799,21 @@ function Set-TargetResource
         $currentParameters.Add('Api', $apiValue)
     }
 
-    if ($ReplyUrls -or $LogoutURL -or $Homepage)
+    if ($PSBoundParameters.ContainsKey('ReplyUrls') -or `
+        $PSBoundParameters.ContainsKey('LogoutURL') -or `
+        $PSBoundParameters.ContainsKey('Homepage'))
     {
         $webValue = @{}
 
-        if ($ReplyUrls)
+        if ($PSBoundParameters.ContainsKey('ReplyUrls'))
         {
             $webValue.Add('RedirectUris', $currentParameters.ReplyURLs)
         }
-        if ($LogoutURL)
+        if ($PSBoundParameters.ContainsKey('LogoutURL'))
         {
             $webValue.Add('LogoutUrl', $currentParameters.LogoutURL)
         }
-        if ($Homepage)
+        if ($PSBoundParameters.ContainsKey('Homepage'))
         {
             $webValue.Add('HomePageUrl', $currentParameters.Homepage)
         }

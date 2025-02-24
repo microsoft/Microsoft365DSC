@@ -81,7 +81,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     CloudAppMode                            = "Block";
                     CloudAppRestrictionList                 = @("contoso.net","contoso.com");
                     CustomBusinessJustificationNotification = 3;
-                    DailyBandwidthLimitInMB                 = 0;
+                    DailyBandwidthLimitInMB                 = 1000;
                     DLPAppGroups                            = @(
                         (New-CiMInstance -ClassName MSFT_PolicyConfigDLPAppGroups -Property @{
                             Name        = 'Maracas'
@@ -253,7 +253,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     CloudAppMode                            = "Block";
                     CloudAppRestrictionList                 = @("contoso.net","contoso.com");
                     CustomBusinessJustificationNotification = 3;
-                    DailyBandwidthLimitInMB                 = 0;
+                    DailyBandwidthLimitInMB                 = 1000;
                     DLPAppGroups                            = @(
                         (New-CiMInstance -ClassName MSFT_PolicyConfigDLPAppGroups -Property @{
                             Name        = 'Maracas'

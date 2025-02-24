@@ -1110,8 +1110,7 @@ function Export-TargetResource
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
-        -InboundParameters $PSBoundParameters `
-        -SkipModuleReload $true
+        -InboundParameters $PSBoundParameters
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''

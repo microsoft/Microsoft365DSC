@@ -59619,6 +59619,11 @@
                                "Option":  "Write"
                            },
                            {
+                               "CIMType":  "Boolean",
+                               "Name":  "FileCopiedToCloudFullUrlEnabled",
+                               "Option":  "Write"
+                           },
+                           {
                                "CIMType":  "MSFT_PolicyConfigEvidenceStoreSettings",
                                "Name":  "EvidenceStoreSettings",
                                "Option":  "Write"

@@ -5,25 +5,26 @@
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
 | **IsSingleInstance** | Key | String | Accepted value is 'Yes'. | `Yes` |
-| **AdvancedClassificationEnabled** | Write | Boolean | TBD | |
-| **AuditFileActivity** | Write | Boolean | TBD | |
-| **BandwidthLimitEnabled** | Write | Boolean | TBD | |
+| **AdvancedClassificationEnabled** | Write | Boolean | Default value is false. | |
+| **AuditFileActivity** | Write | Boolean | Default value is false. | |
+| **BandwidthLimitEnabled** | Write | Boolean | Default value is true. | |
 | **BusinessJustificationList** | Write | MSFT_PolicyConfigBusinessJustificationList[] | TBD | |
-| **CloudAppMode** | Write | String | TBD | |
+| **CloudAppMode** | Write | String | Default value is Off. | |
 | **CloudAppRestrictionList** | Write | StringArray[] | TBD | |
-| **CustomBusinessJustificationNotification** | Write | UInt32 | TBD | |
-| **DailyBandwidthLimitInMB** | Write | UInt32 | TBD | |
+| **CustomBusinessJustificationNotification** | Write | UInt32 | Default value is 0. | |
+| **DailyBandwidthLimitInMB** | Write | UInt32 | Default value is 1000 | |
 | **DLPAppGroups** | Write | MSFT_PolicyConfigDLPAppGroups[] | TBD | |
 | **DLPNetworkShareGroups** | Write | MSFT_PolicyConfigDLPNetworkShareGroups[] | TBD | |
 | **DLPPrinterGroups** | Write | MSFT_PolicyConfigDLPPrinterGroups[] | TBD | |
 | **DLPRemovableMediaGroups** | Write | MSFT_PolicyConfigDLPRemovableMediaGroups[] | TBD | |
-| **IncludePredefinedUnallowedBluetoothApps** | Write | Boolean | TBD | |
-| **MacDefaultPathExclusionsEnabled** | Write | Boolean | TBD | |
+| **IncludePredefinedUnallowedBluetoothApps** | Write | Boolean | Default value is true. | |
+| **MacDefaultPathExclusionsEnabled** | Write | Boolean | Default value is true. | |
 | **MacPathExclusion** | Write | StringArray[] | TBD | |
-| **NetworkPathEnforcementEnabled** | Write | Boolean | TBD | |
+| **NetworkPathEnforcementEnabled** | Write | Boolean | Default value is false. | |
 | **NetworkPathExclusion** | Write | String | TBD | |
 | **PathExclusion** | Write | StringArray[] | TBD | |
-| **serverDlpEnabled** | Write | Boolean | TBD | |
+| **serverDlpEnabled** | Write | Boolean | Default value is false | |
+| **FileCopiedToCloudFullUrlEnabled** | Write | Boolean | Default value is false | |
 | **EvidenceStoreSettings** | Write | MSFT_PolicyConfigEvidenceStoreSettings | TBD | |
 | **SiteGroups** | Write | MSFT_PolicyConfigDLPSiteGroups[] | TBD | |
 | **UnallowedApp** | Write | MSFT_PolicyConfigApp[] | TBD | |
@@ -32,8 +33,8 @@
 | **UnallowedBrowser** | Write | MSFT_PolicyConfigApp[] | TBD | |
 | **QuarantineParameters** | Write | MSFT_PolicyConfigQuarantineParameters | TBD | |
 | **VPNSettings** | Write | StringArray[] | TBD | |
-| **EnableLabelCoauth** | Write | Boolean | TBD | |
-| **EnableSpoAipMigration** | Write | Boolean | TBD | |
+| **EnableLabelCoauth** | Write | Boolean | The EnableLabelCoauth parameter enables or disables co-authoring support in Office desktop apps for the entire organization. Default value is false. | |
+| **EnableSpoAipMigration** | Write | Boolean | The EnableSpoAipMigration parameter enables or disables built-in labeling for supported Office files in SharePoint and OneDrive. | |
 | **Credential** | Write | PSCredential | Credentials of the workload's Admin | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
 | **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. | |
