@@ -263,7 +263,7 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    if (-not $Script:exportedInstance)
+    if (-not $Script:exportedInstance -or $Script:exportedInstance.DisplayName -ne $DisplayName)
     {
         Write-Verbose -Message 'Getting configuration of AzureAD Conditional Access Policy'
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -319,6 +319,7 @@ function Get-TargetResource
     }
     else
     {
+        Write-Verbose -Message "Using cached policy {$($Script:exportedInstance.DisplayName)}"
         $Policy = $Script:exportedInstance
     }
 

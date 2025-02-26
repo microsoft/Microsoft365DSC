@@ -103,6 +103,9 @@ function Get-TargetResource
 
     try
     {
+        $IdentityParts = $Identity.Split(':')
+        $userInfo = Get-User -Identity $IdentityParts[0]
+        $IdentityValue = $userInfo.UserPrincipalName + ":" + $IdentityParts[1]
         $folder = Get-MailboxCalendarFolder -Identity $Identity -ErrorAction SilentlyContinue
 
         if ($null -eq $folder)
@@ -111,7 +114,7 @@ function Get-TargetResource
         }
 
         $result = @{
-            Identity                    = $folder.Identity
+            Identity                    = $IdentityValue
             DetailLevel                 = $folder.DetailLevel
             PublishDateRangeFrom        = $folder.PublishDateRangeFrom
             PublishDateRangeTo          = $folder.PublishDateRangeTo

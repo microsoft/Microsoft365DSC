@@ -106,16 +106,18 @@ function Get-TargetResource
             return $nullResult
         }
 
+        $userInfo = Get-User -Identity $instance.MailboxOwnerId
+
         $results = @{
             Name                  = $instance.Name
             Provider              = $instance.Provider
-            DestinationFolder     = $instance.MailboxOwnerId + ':\' + $instance.DestinationFolder
+            DestinationFolder     = $userInfo.UserPrincipalName + ':\' + $instance.DestinationFolder
             Enabled               = [Boolean]$instance.Enabled
             KeepForDays           = $instance.KeepForDays
             KeepLatest            = $instance.KeepLatest
-            Mailbox               = $instance.MailboxOwnerId
+            Mailbox               = $userInfo.UserPrincipalName
             SenderName            = $instance.Sender.Split('"')[1]
-            SourceFolder          = $instance.MailboxOwnerId + ':\' + $instance.SourceFolder
+            SourceFolder          = $userInfo.UserPrincipalName + ':\' + $instance.SourceFolder
             SystemCategory        = $instance.SystemCategory
             Ensure                = 'Present'
             Credential            = $Credential
@@ -243,6 +245,7 @@ function Set-TargetResource
         Write-Verbose -Message 'Updating existing Sweep Rule.'
         $instance = Get-SweepRule -Mailbox $Mailbox | Where-Object -FilterScript { $_.Name -eq $Name }
         $SetParameters.Add('Identity', $instance.RuleId)
+        Write-Verbose -Message "Parameters:`r`n$(ConvertTo-Json $SetParameters -Depth 10)"
         Set-SweepRule @SetParameters
     }
     # REMOVE

@@ -50,6 +50,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
+            Mock -CommandName Get-User -MockWith {
+                return @{
+                    UserPrincipalName = "Test2"
+                }
+            }
+
             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
             }
@@ -166,7 +172,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         }
 
         Context -Name "The instance exists and values are NOT in the desired state" -Fixture {
-            
+
                 BeforeAll {
                     $testParams = @{
                         DestinationFolder     = "Deleted Items";
@@ -194,7 +200,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         }
                     }
                 }
-            
+
 
             It 'Should return Values from the Get method' {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'

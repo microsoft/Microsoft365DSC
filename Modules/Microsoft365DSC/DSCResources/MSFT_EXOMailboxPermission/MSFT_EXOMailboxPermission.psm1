@@ -94,17 +94,9 @@ function Get-TargetResource
                 Ensure   = 'Absent'
             }
 
-            [Array]$permission = Get-MailboxPermission -Identity $Identity -ErrorAction Stop
+            [Array]$permissions = Get-MailboxPermission -Identity $Identity -ErrorAction Stop
 
-            if ($permission.Length -gt 1)
-            {
-                $permission = $permission | Where-Object -FilterScript { $_.User -eq $User -and (Compare-Object -ReferenceObject $_.AccessRights.Replace(' ', '').Split(',') -DifferenceObject $AccessRights).Count -eq 0 }
-            }
-
-            if ($permission.Length -gt 1)
-            {
-                $permission = $permission[0]
-            }
+            $permission = $permissions | Where-Object -FilterScript { $_.User -eq $User -and (Compare-Object -ReferenceObject $_.AccessRights.Replace(' ', '').Split(',') -DifferenceObject $AccessRights).Count -eq 0 }
 
             if ($null -eq $permission)
             {
@@ -117,8 +109,10 @@ function Get-TargetResource
             $permission = $Script:exportedInstance
         }
 
+        $userInfo = Get-User -Identity $permission.Identity
+
         $result = @{
-            Identity              = $permission.Identity
+            Identity              = $userInfo.UserPrincipalName
             AccessRights          = [Array]$permission.AccessRights.Replace(' ', '').Split(',')
             InheritanceType       = $permission.InheritanceType
             Owner                 = $permission.Owner

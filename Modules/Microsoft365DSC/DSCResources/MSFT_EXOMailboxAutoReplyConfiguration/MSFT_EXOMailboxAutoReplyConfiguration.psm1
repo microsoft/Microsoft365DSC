@@ -145,7 +145,7 @@ function Get-TargetResource
         {
             $ownerValue = Get-User -Identity $config.Identity
             $result = @{
-                Identity                         = $config.Identity
+                Identity                         = $ownerValue.UserPrincipalName
                 Owner                            = $ownerValue.UserPrincipalName
                 AutoDeclineFutureRequestsWhenOOF = [Boolean]$config.AutoDeclineFutureRequestsWhenOOF
                 AutoReplyState                   = $config.AutoReplyState

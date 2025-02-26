@@ -246,19 +246,11 @@ function Get-TargetResource
         }
         #endregion
 
-        #region resource generator code
-        $enumPolicyMigrationState = $null
-        if ($null -ne $getValue.PolicyMigrationState)
-        {
-            $enumPolicyMigrationState = $getValue.PolicyMigrationState.ToString()
-        }
-        #endregion
-
         $results = @{
             #region resource generator code
             Description                      = $getValue.Description
             DisplayName                      = $getValue.DisplayName
-            PolicyMigrationState             = $enumPolicyMigrationState
+            #PolicyMigrationState             = $enumPolicyMigrationState #DEPRECATED - Cannot be set
             PolicyVersion                    = $getValue.PolicyVersion
             ReconfirmationInDays             = $getValue.ReconfirmationInDays
             RegistrationEnforcement          = $complexRegistrationEnforcement
@@ -405,6 +397,13 @@ function Set-TargetResource
                 $UpdateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters.$key
             }
         }
+
+        if (-not [System.String]::IsNullOrEmpty($PolicyMigrationState))
+        {
+            Write-Verbose -Message "DEPRECATED - Property PolicyMigrationState cannot be set."
+            $UpdateParameters.Remove('PolicyMigrationState') | Out-Null
+        }
+
         #region resource generator code
         $UpdateParameters.Add('@odata.type', '#microsoft.graph.AuthenticationMethodsPolicy')
         Write-Verbose -Message "Updating AuthenticationMethodPolicy with: `r`n$(Convert-M365DscHashtableToString -Hashtable $UpdateParameters)"
@@ -534,6 +533,7 @@ function Test-TargetResource
     }
 
     $ValuesToCheck.remove('Id') | Out-Null
+    $ValuesToCheck.remove('PolicyMigrationState') | Out-Null
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"

@@ -380,6 +380,7 @@ function Test-TargetResource
 
         Write-Verbose -Message "Test-TargetResource returned $result"
 
+        $Script:exportedInstance = $null
         return $result
     }
 }

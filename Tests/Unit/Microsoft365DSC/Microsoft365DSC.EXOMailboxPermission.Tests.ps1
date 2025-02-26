@@ -37,10 +37,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-MailboxPermission -MockWith {
             }
 
+            Mock -CommandName Get-User -MockWith {
+                return @{
+                    UserPrincipalName = 'john.smith'
+                }
+            }
+
             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
             }
-            $Script:exportedInstances =$null
+            $Script:exportedInstance =$null
             $Script:ExportMode = $false
         }
 

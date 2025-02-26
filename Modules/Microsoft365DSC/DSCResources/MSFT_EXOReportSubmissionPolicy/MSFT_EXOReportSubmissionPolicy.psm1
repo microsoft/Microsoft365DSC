@@ -106,6 +106,14 @@ function Get-TargetResource
         $ThirdPartyReportAddresses = @(),
 
         [Parameter()]
+        [System.Boolean]
+        $ReportChatMessageEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $ReportChatMessageToCustomizedAddressEnabled,
+
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -209,6 +217,8 @@ function Get-TargetResource
                 ReportPhishAddresses             = $ReportSubmissionPolicy.ReportPhishAddresses
                 ReportPhishToCustomizedAddress   = $ReportSubmissionPolicy.ReportPhishToCustomizedAddress
                 ThirdPartyReportAddresses        = $ReportSubmissionPolicy.ThirdPartyReportAddresses
+                ReportChatMessageEnabled         = $ReportSubmissionPolicy.ReportChatMessageEnabled
+                ReportChatMessageToCustomizedAddressEnabled = $ReportSubmissionPolicy.ReportChatMessageToCustomizedAddressEnabled
                 Credential                       = $Credential
                 Ensure                           = 'Present'
                 ApplicationId                    = $ApplicationId
@@ -343,6 +353,14 @@ function Set-TargetResource
         [Parameter()]
         [System.String[]]
         $ThirdPartyReportAddresses = @(),
+
+        [Parameter()]
+        [System.Boolean]
+        $ReportChatMessageEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $ReportChatMessageToCustomizedAddressEnabled,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -537,6 +555,14 @@ function Test-TargetResource
         [Parameter()]
         [System.String[]]
         $ThirdPartyReportAddresses = @(),
+
+        [Parameter()]
+        [System.Boolean]
+        $ReportChatMessageEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $ReportChatMessageToCustomizedAddressEnabled,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]

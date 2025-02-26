@@ -675,6 +675,20 @@
                     TenantId              = $TenantId;
                     CertificateThumbprint = $CertificateThumbprint;
                 }
+                IntuneDeviceComplianceScriptWindows10 'Example'
+                {
+                    DisplayName            = "custom";
+                    Ensure                 = "Present";
+                    EnforceSignatureCheck  = $False;
+                    Id                     = "00000000-0000-0000-0000-000000000000";
+                    RunAs32Bit             = $True;
+                    RunAsAccount           = "system";
+                    DetectionScriptContent = "Write-Output `$true";
+                    Publisher              = "";
+                    ApplicationId          = $ApplicationId;
+                    TenantId               = $TenantId;
+                    CertificateThumbprint  = $CertificateThumbprint;
+                }
                 IntuneDeviceConfigurationAdministrativeTemplatePolicyWindows10 'Example'
                 {
                     Assignments                      = @(
