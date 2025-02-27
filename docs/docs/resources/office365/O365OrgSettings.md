@@ -25,6 +25,7 @@
 | **VivaInsightsOutlookAddInAndInlineSuggestions** | Write | Boolean | Specifies whether or not to allow users to have access to use the Viva Insights Outlook add-in and inline suggestions. | |
 | **VivaInsightsScheduleSendSuggestions** | Write | Boolean | Specifies whether or not to allow users to have access to use the Viva Insights schedule send suggestions feature. | |
 | **PlannerAllowCalendarSharing** | Write | Boolean | Allow Planner users to publish their plans and assigned tasks to Outlook or other calendars through iCalendar feeds. | |
+| **AllowPlannerCopilot** | Write | Boolean | Enables Copilot for Planner. | |
 | **ToDoIsExternalJoinEnabled** | Write | Boolean | To Do - Allow external users to join. | |
 | **ToDoIsExternalShareEnabled** | Write | Boolean | To Do - Allow sharing with external users. | |
 | **ToDoIsPushNotificationEnabled** | Write | Boolean | To Do - Allow your users to receive push notifications. | |
@@ -69,6 +70,30 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 - **Update**
 
     - Application.ReadWrite.All, ReportSettings.ReadWrite.All, OrgSettings-Microsoft365Install.ReadWrite.All, OrgSettings-Forms.ReadWrite.All, OrgSettings-Todo.ReadWrite.All, OrgSettings-AppsAndServices.ReadWrite.All, OrgSettings-DynamicsVoice.ReadWrite.All, Tasks.ReadWrite.All
+
+### ProjectWorkManagement
+
+To authenticate with the Microsoft ProjectWorkManagement API, this resource required the following permissions:
+
+#### Delegated permissions
+
+- **Read**
+
+    - None
+
+- **Update**
+
+    - None
+
+#### Application permissions
+
+- **Read**
+
+    - OrgSettings-Planner.Read.All
+
+- **Update**
+
+    - OrgSettings-Planner.ReadWrite.All
 
 ## Examples
 

@@ -11,9 +11,7 @@
 | **DisableCreateFromImage** | Write | Boolean | Allow people to use AI to generate an app based on an image. Default value is false. | |
 | **DisableConnectionSharingWithEveryone** | Write | Boolean | Gets or sets a value indicating whether non-admin users in the tenant can share connections with everyone. Default value is false. | |
 | **AllowNewOrgChannelDefault** | Write | Boolean | TBD | |
-| **DisableCopilot** | Write | Boolean | Disables cloud flows copilot in Power Automate.
-
-It doesn't control the ability to add AI-related connectors or actions in the flow designer. For example, the Skills connector or AI Builder creates text with a GPT action. Default value is false. | |
+| **DisableCopilot** | Write | Boolean | Disables cloud flows copilot in Power Automate. It doesn't control the ability to add AI-related connectors or actions in the flow designer. For example, the Skills connector or AI Builder creates text with a GPT action. Default value is false. | |
 | **DisableCopilotWithBing** | Write | Boolean | Disables the copilot-enhanced help feature within Power Automate to enhance answers on product documentation through Bing Search. Default value is false. | |
 | **DisableAdminDigest** | Write | Boolean | Disables the weekly admin digest email for Managed Environments. Default value is false. | |
 | **DisablePreferredDataLocationForTeamsEnvironment** | Write | Boolean | Ignore the Teams group-preferred data location when provisioning a Teams environment. Default value is false. | |

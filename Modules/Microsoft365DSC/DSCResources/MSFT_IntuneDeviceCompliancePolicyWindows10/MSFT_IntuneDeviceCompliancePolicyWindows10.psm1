@@ -135,7 +135,7 @@ function Get-TargetResource
         $TpmRequired,
 
         [Parameter()]
-        [System.String]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $DeviceCompliancePolicyScript,
 
         [Parameter()]
@@ -206,10 +206,9 @@ function Get-TargetResource
 
             $devicePolicy = Get-MgBetaDeviceManagementDeviceCompliancePolicy `
                 -All `
-                -ErrorAction SilentlyContinue | Where-Object `
-                -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windows10CompliancePolicy' -and `
-                    $_.displayName -eq $($DisplayName) }
-            if (([array]$devicePolicy).count -gt 1)
+                -Filter "displayName eq '$DisplayName' and isof('microsoft.graph.windows10CompliancePolicy')" `
+                -ErrorAction SilentlyContinue
+            if (([array]$devicePolicy).Count -gt 1)
             {
                 throw "A policy with a duplicated displayName {'$DisplayName'} was found - Ensure displayName is unique"
             }
@@ -246,6 +245,19 @@ function Get-TargetResource
             }
         }
 
+        $complexDeviceCompliancePolicyScript = @{}
+        if ($null -ne $devicePolicy.AdditionalProperties.deviceCompliancePolicyScript)
+        {
+            Write-Verbose -Message "Resolving Device Compliance Policy Script with Id {$($devicePolicy.AdditionalProperties.deviceCompliancePolicyScript.deviceComplianceScriptId)}"
+            $policyScript = Invoke-MgGraphRequest -Uri "/beta/deviceManagement/deviceComplianceScripts/$($devicePolicy.AdditionalProperties.deviceCompliancePolicyScript.deviceComplianceScriptId)" -Method GET
+            $complexDeviceCompliancePolicyScript.Add('DisplayName', $policyScript.displayName)
+            $complexDeviceCompliancePolicyScript.Add('RulesContent', [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($devicePolicy.AdditionalProperties.deviceCompliancePolicyScript.rulesContent)))
+        }
+        if ($complexDeviceCompliancePolicyScript.Keys.Count -eq 0)
+        {
+            $complexDeviceCompliancePolicyScript = $null
+        }
+
         Write-Verbose -Message "Found Windows 10 Device Compliance Policy with displayName {$DisplayName}"
         $results = @{
             DisplayName                                 = $devicePolicy.DisplayName
@@ -280,7 +292,7 @@ function Get-TargetResource
             DeviceThreatProtectionRequiredSecurityLevel = $devicePolicy.AdditionalProperties.deviceThreatProtectionRequiredSecurityLevel
             ConfigurationManagerComplianceRequired      = $devicePolicy.AdditionalProperties.configurationManagerComplianceRequired
             TpmRequired                                 = $devicePolicy.AdditionalProperties.tpmRequired
-            DeviceCompliancePolicyScript                = $devicePolicy.AdditionalProperties.deviceCompliancePolicyScript
+            DeviceCompliancePolicyScript                = $complexDeviceCompliancePolicyScript
             ValidOperatingSystemBuildRanges             = $complexValidOperatingSystemBuildRanges
             Ensure                                      = 'Present'
             Credential                                  = $Credential
@@ -453,7 +465,7 @@ function Set-TargetResource
         $TpmRequired,
 
         [Parameter()]
-        [System.String]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $DeviceCompliancePolicyScript,
 
         [Parameter()]
@@ -515,13 +527,7 @@ function Set-TargetResource
     #endregion
 
     $currentDeviceWindows10Policy = Get-TargetResource @PSBoundParameters
-
-    $PSBoundParameters.Remove('Ensure') | Out-Null
-    $PSBoundParameters.Remove('Credential') | Out-Null
-    $PSBoundParameters.Remove('ApplicationId') | Out-Null
-    $PSBoundParameters.Remove('TenantId') | Out-Null
-    $PSBoundParameters.Remove('ApplicationSecret') | Out-Null
-    $PSBoundParameters.Remove('AccessTokens') | Out-Null
+    $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
     $scheduledActionsForRule = @{
         '@odata.type'                 = '#microsoft.graph.deviceComplianceScheduledActionForRule'
@@ -534,14 +540,34 @@ function Set-TargetResource
         )
     }
 
+    if ($null -ne $BoundParameters.DeviceCompliancePolicyScript)
+    {
+        $script = $BoundParameters.DeviceCompliancePolicyScript
+        $scriptName = $script.Displayname
+        $scriptRulesContent = $script.RulesContent
+
+        $complianceScript = (Invoke-MgGraphRequest -Uri "/beta/deviceManagement/deviceComplianceScripts?`$filter=displayName eq '$scriptName'" -Method GET).value
+        if ($complianceScript.Count -eq 0)
+        {
+            throw "The referenced Intune Device Compliance Script with DisplayName {$scriptName} was not found"
+        }
+
+        $script = @{
+            deviceComplianceScriptId = $complianceScript.id
+            rulesContent             = [System.Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($scriptRulesContent))
+        }
+        $BoundParameters.Remove('DeviceCompliancePolicyScript') | Out-Null
+        $BoundParameters.Add('DeviceCompliancePolicyScript', $script)
+    }
+
     if ($Ensure -eq 'Present' -and $currentDeviceWindows10Policy.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating new Intune Device Compliance Windows 10 Policy {$DisplayName}"
-        $PSBoundParameters.Remove('DisplayName') | Out-Null
-        $PSBoundParameters.Remove('Description') | Out-Null
-        $PSBoundParameters.Remove('Assignments') | Out-Null
+        $BoundParameters.Remove('DisplayName') | Out-Null
+        $BoundParameters.Remove('Description') | Out-Null
+        $BoundParameters.Remove('Assignments') | Out-Null
 
-        $AdditionalProperties = Get-M365DSCIntuneDeviceCompliancePolicyWindows10AdditionalProperties -Properties ([System.Collections.Hashtable]$PSBoundParameters)
+        $AdditionalProperties = Get-M365DSCIntuneDeviceCompliancePolicyWindows10AdditionalProperties -Properties ([System.Collections.Hashtable]$BoundParameters)
         $policy = New-MgBetaDeviceManagementDeviceCompliancePolicy -DisplayName $DisplayName `
             -Description $Description `
             -AdditionalProperties $AdditionalProperties `
@@ -563,11 +589,11 @@ function Set-TargetResource
             -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windows10CompliancePolicy' -and `
                 $_.displayName -eq $($DisplayName) }
 
-        $PSBoundParameters.Remove('DisplayName') | Out-Null
-        $PSBoundParameters.Remove('Description') | Out-Null
-        $PSBoundParameters.Remove('Assignments') | Out-Null
+        $BoundParameters.Remove('DisplayName') | Out-Null
+        $BoundParameters.Remove('Description') | Out-Null
+        $BoundParameters.Remove('Assignments') | Out-Null
 
-        $AdditionalProperties = Get-M365DSCIntuneDeviceCompliancePolicyWindows10AdditionalProperties -Properties ([System.Collections.Hashtable]$PSBoundParameters)
+        $AdditionalProperties = Get-M365DSCIntuneDeviceCompliancePolicyWindows10AdditionalProperties -Properties ([System.Collections.Hashtable]$BoundParameters)
         Update-MgBetaDeviceManagementDeviceCompliancePolicy -AdditionalProperties $AdditionalProperties `
             -Description $Description `
             -DeviceCompliancePolicyId $configDevicePolicy.Id
@@ -729,7 +755,7 @@ function Test-TargetResource
         $TpmRequired,
 
         [Parameter()]
-        [System.String]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $DeviceCompliancePolicyScript,
 
         [Parameter()]
@@ -795,7 +821,7 @@ function Test-TargetResource
         throw "An error occured in Get-TargetResource, the policy {$displayName} will not be processed. Refer to the event viewer logs for more information."
     }
 
-    $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
+    $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
     $testResult = $true
 
     #Compare Cim instances
@@ -952,6 +978,20 @@ function Export-TargetResource
                     $Results.Remove('ValidOperatingSystemBuildRanges') | Out-Null
                 }
             }
+            if ($null -ne $Results.DeviceCompliancePolicyScript)
+            {
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                    -ComplexObject $Results.DeviceCompliancePolicyScript `
+                    -CIMInstanceName 'MicrosoftGraphDeviceCompliancePolicyScript'
+                if (-not [string]::IsNullOrWhiteSpace($complexTypeStringResult))
+                {
+                    $Results.DeviceCompliancePolicyScript = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('DeviceCompliancePolicyScript') | Out-Null
+                }
+            }
             if ($null -ne $Results.Assignments)
             {
                 $complexMapping = @(
@@ -980,7 +1020,7 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential `
-                -NoEscape @('ValidOperatingSystemBuildRanges', 'Assignments')
+                -NoEscape @('ValidOperatingSystemBuildRanges', 'DeviceCompliancePolicyScript', 'Assignments')
 
             $dscContent += $currentDSCBlock
 
@@ -1039,84 +1079,6 @@ function Get-M365DSCIntuneDeviceCompliancePolicyWindows10AdditionalProperties
     }
     Write-Verbose -Message ($results | Out-String)
     return $results
-}
-
-function Get-M365DSCAssignmentsAsString
-{
-    [CmdletBinding()]
-    [OutputType([System.String])]
-    param(
-        [Parameter()]
-        [System.Object[]]
-        $Params
-    )
-
-    if ($null -eq $params)
-    {
-        return $null
-    }
-    $currentProperty = "@(`r`n"
-    $space = '                '
-    $nbParam = 0
-    $hasValue = $false
-    foreach ($rule in $params)
-    {
-
-        $currentProperty += "$($space)MSFT_DeviceManagementConfigurationPolicyAssignments{`r`n"
-        foreach ($key in $rule.Keys)
-        {
-            $value = $rule[$key]
-            if (-not [System.String]::IsNullOrEmpty($value))
-            {
-                $currentProperty += '                    ' + $key + " = '" + $value + "'`r`n"
-                $hasValue = $true
-            }
-
-        }
-        $currentProperty += '                }'
-        if ($nbParam -lt ($params.Count - 1) )
-        {
-            $nbParam++
-            $currentProperty += "`r`n"
-        }
-
-    }
-    $currentProperty += ')'
-    if (-not $hasValue)
-    {
-        return '@()'
-    }
-    return $currentProperty
-}
-
-function Get-M365DSCAssignmentsAsHashtable
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance]
-        $CIMAssignment
-    )
-
-    if ($null -eq $CIMAssignment)
-    {
-        return $null
-    }
-    $CIMAssignmentAsHash = @{}
-    $keys = $CIMAssignment | Get-Member -MemberType Properties
-
-    foreach ($key in $keys)
-    {
-        if ($CIMAssignment.$($key.Name))
-        {
-            $CIMAssignmentAsHash.Add($key.Name, $CIMAssignment.$($key.Name))
-        }
-    }
-    if ($CIMAssignmentAsHash.Count -eq 0)
-    {
-        return $null
-    }
-    return $CIMAssignmentAsHash
 }
 
 Export-ModuleMember -Function *-TargetResource

@@ -2,6 +2,20 @@
     "resourceName": "O365OrgSettings",
     "description": "",
     "permissions": {
+        "ProjectWorkManagement": {
+            "application":{
+                "read": [
+                    {
+                        "name": "OrgSettings-Planner.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "OrgSettings-Planner.ReadWrite.All"
+                    }
+                ]
+            }
+        },
         "graph": {
             "delegated": {
                 "read": [

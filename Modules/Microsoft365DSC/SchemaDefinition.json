@@ -29681,6 +29681,21 @@
                        ]
     },
     {
+        "ClassName":  "MSFT_MicrosoftGraphDeviceCompliancePolicyScript",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "DisplayName",
+                               "Option":  "Key"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "RulesContent",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
         "ClassName":  "MSFT_IntuneDeviceCompliancePolicyWindows10",
         "Parameters":  [
                            {
@@ -29849,7 +29864,7 @@
                                "Option":  "Write"
                            },
                            {
-                               "CIMType":  "String",
+                               "CIMType":  "MSFT_MicrosoftGraphDeviceCompliancePolicyScript",
                                "Name":  "DeviceCompliancePolicyScript",
                                "Option":  "Write"
                            },
@@ -54185,6 +54200,11 @@
                            },
                            {
                                "CIMType":  "Boolean",
+                               "Name":  "AllowPlannerCopilot",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
                                "Name":  "ToDoIsExternalJoinEnabled",
                                "Option":  "Write"
                            },
@@ -63567,6 +63587,16 @@
                                "CIMType":  "String",
                                "Name":  "IsSingleInstance",
                                "Option":  "Key"
+                           },
+                           {
+                               "CIMType":  "boolean",
+                               "Name":  "EnableAzureADB2BIntegration",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "string",
+                               "Name":  "OneDriveSharingCapability",
+                               "Option":  "Write"
                            },
                            {
                                "CIMType":  "uint32",

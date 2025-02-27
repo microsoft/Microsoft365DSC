@@ -22,6 +22,7 @@ class MSFT_O365OrgSettings : OMI_BaseResource
     [Write, Description("Specifies whether or not to allow users to have access to use the Viva Insights Outlook add-in and inline suggestions.")] Boolean VivaInsightsOutlookAddInAndInlineSuggestions;
     [Write, Description("Specifies whether or not to allow users to have access to use the Viva Insights schedule send suggestions feature.")] Boolean VivaInsightsScheduleSendSuggestions;
     [Write, Description("Allow Planner users to publish their plans and assigned tasks to Outlook or other calendars through iCalendar feeds.")] Boolean PlannerAllowCalendarSharing;
+    [Write, Description("Enables Copilot for Planner.")] Boolean AllowPlannerCopilot;
     [Write, Description("To Do - Allow external users to join.")] Boolean ToDoIsExternalJoinEnabled;
     [Write, Description("To Do - Allow sharing with external users.")] Boolean ToDoIsExternalShareEnabled;
     [Write, Description("To Do - Allow your users to receive push notifications.")] Boolean ToDoIsPushNotificationEnabled;

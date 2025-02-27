@@ -10,6 +10,15 @@ function Get-TargetResource
         $IsSingleInstance,
 
         [Parameter()]
+        [System.Boolean]
+        $EnableAzureADB2BIntegration,
+
+        [Parameter()]
+        [ValidateSet('ExternalUserAndGuestSharing', 'Disabled', 'ExternalUserSharingOnly', 'ExistingExternalUserSharingOnly')]
+        [System.String]
+        $OneDriveSharingCapability,
+
+        [Parameter()]
         [System.UInt32]
         $MinCompatibilityLevel,
 
@@ -209,7 +218,9 @@ function Get-TargetResource
             'AllowSelectSGsInODBListInTenant',
             'DenySelectSGsInODBListInTenant',
             'DenySelectSecurityGroupsInSPSitesList',
-            'AllowSelectSecurityGroupsInSPSitesList')
+            'AllowSelectSecurityGroupsInSPSitesList',
+            'EnableAzureADB2BIntegration',
+            'OneDriveSharingCapability')
 
         $response = Invoke-PnPSPRestMethod -Method Get `
             -Url "$((Get-MSCloudLoginConnectionProfile -Workload PnP).AdminUrl)/_api/SPO.Tenant?`$select=$($parametersToRetrieve -join ',')"
@@ -222,6 +233,8 @@ function Get-TargetResource
             DenySelectSGsInODBListInTenant                         = $response.DenySelectSGsInODBListInTenant
             DenySelectSecurityGroupsInSPSitesList                  = $response.DenySelectSecurityGroupsInSPSitesList
             AllowSelectSecurityGroupsInSPSitesList                 = $response.AllowSelectSecurityGroupsInSPSitesList
+            EnableAzureADB2BIntegration                            = $response.EnableAzureADB2BIntegration
+            OneDriveSharingCapability                              = $response.OneDriveSharingCapability
             MinCompatibilityLevel                                  = $MinCompat
             MaxCompatibilityLevel                                  = $MaxCompat
             SearchResolveExactEmailOrUPN                           = $SPOTenantSettings.SearchResolveExactEmailOrUPN
@@ -282,6 +295,15 @@ function Set-TargetResource
         [ValidateSet('Yes')]
         [String]
         $IsSingleInstance,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableAzureADB2BIntegration,
+
+        [Parameter()]
+        [ValidateSet('ExternalUserAndGuestSharing', 'Disabled', 'ExternalUserSharingOnly', 'ExistingExternalUserSharingOnly')]
+        [System.String]
+        $OneDriveSharingCapability,
 
         [Parameter()]
         [System.UInt32]
@@ -476,6 +498,8 @@ function Set-TargetResource
     $CurrentParameters.Remove('DenySelectSGsInODBListInTenant') | Out-Null
     $CurrentParameters.Remove('DenySelectSecurityGroupsInSPSitesList') | Out-Null
     $CurrentParameters.Remove('AllowSelectSecurityGroupsInSPSitesList') | Out-Null
+    $CurrentParameters.Remove('EnableAzureADB2BIntegration') | Out-Null
+    $CurrentParameters.Remove('OneDriveSharingCapability') | Out-Null
 
     $CurrentParameters.Remove('TenantDefaultTimezone') | Out-Null # this one is updated separately using Graph
     if ($CurrentParameters.Keys.Contains('UserVoiceForFeedbackEnabled'))
@@ -532,6 +556,18 @@ function Set-TargetResource
             $paramsToUpdate.Add('AllowSelectSecurityGroupsInSPSitesList', $AllowSelectSecurityGroupsInSPSitesList)
         }
 
+        if ($null -ne $EnableAzureADB2BIntegration)
+        {
+            $needToUpdate = $true
+            $paramsToUpdate.Add('EnableAzureADB2BIntegration', $EnableAzureADB2BIntegration)
+        }
+
+        if ($null -ne $OneDriveSharingCapability)
+        {
+            $needToUpdate = $true
+            $paramsToUpdate.Add('OneDriveSharingCapability', $OneDriveSharingCapability)
+        }
+
         if ($needToUpdate)
         {
             Write-Verbose -Message 'Updating properties via REST PATCH call.'
@@ -563,6 +599,15 @@ function Test-TargetResource
         [ValidateSet('Yes')]
         [String]
         $IsSingleInstance,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableAzureADB2BIntegration,
+
+        [Parameter()]
+        [ValidateSet('ExternalUserAndGuestSharing', 'Disabled', 'ExternalUserSharingOnly', 'ExistingExternalUserSharingOnly')]
+        [System.String]
+        $OneDriveSharingCapability,
 
         [Parameter()]
         [System.UInt32]

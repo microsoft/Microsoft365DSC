@@ -71,6 +71,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $AllowPlannerCopilot,
+
+        [Parameter()]
+        [System.Boolean]
         $MicrosoftVivaBriefingEmail,
 
         [Parameter()]
@@ -221,6 +225,7 @@ function Get-TargetResource
         {
             $results += @{
                 PlannerAllowCalendarSharing = $PlannerSettings.allowCalendarSharing
+                AllowPlannerCopilot         = $PlannerSettings.allowPlannerCopilot
             }
         }
 
@@ -233,61 +238,6 @@ function Get-TargetResource
                 CortanaEnabled = $CortanaEnabledValue.AccountEnabled
             }
         }
-
-        # DEPRECATED - Microsoft Viva Briefing Email
-        <#
-        $vivaBriefingEmailValue = $false
-        try
-        {
-            $currentBriefingConfig = Get-DefaultTenantBriefingConfig -ErrorAction Stop -Verbose:$false
-            if ($currentBriefingConfig.IsEnabledByDefault -eq 'opt-in')
-            {
-                $vivaBriefingEmailValue = $true
-            }
-        }
-        catch
-        {
-            if ($_.Exception.Message -like "*Unexpected character encountered while parsing value*")
-            {
-                $vivaBriefingEmailValue = $true
-            }
-            elseif ($_.Exception.Message -like "*A task was canceled*")
-            {
-                $retries = 1
-                $errorContent = $null
-                while ($retries -le 5)
-                {
-                    try
-                    {
-                        Start-Sleep -Seconds 2
-                        $currentBriefingConfig = Get-DefaultTenantBriefingConfig -ErrorAction Stop -Verbose:$false
-                    }
-                    catch
-                    {
-                        $errorContent = $_
-                        $retries++
-                    }
-                }
-                if ($null -eq $currentBriefingConfig)
-                {
-                    throw $errorContent
-                }
-                else
-                {
-                    if ($currentBriefingConfig.IsEnabledByDefault -eq 'opt-in')
-                    {
-                        $vivaBriefingEmailValue = $true
-                    }
-                }
-            }
-            else
-            {
-                throw $_
-            }
-        }
-        $results += @{
-            MicrosoftVivaBriefingEmail = $vivaBriefingEmailValue
-        }#>
 
         # Viva Insights settings
         $currentVivaInsightsSettings = Get-DefaultTenantMyAnalyticsFeatureConfig -Verbose:$false
@@ -486,6 +436,10 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $AllowPlannerCopilot,
+
+        [Parameter()]
+        [System.Boolean]
         $MicrosoftVivaBriefingEmail,
 
         [Parameter()]
@@ -599,11 +553,14 @@ function Set-TargetResource
         Update-MgServicePrincipal -ServicePrincipalId $($M365WebEnableUsersToOpenFilesFrom3PStorageValue.Id) `
             -AccountEnabled:$M365WebEnableUsersToOpenFilesFrom3PStorage
     }
-    if ($PSBoundParameters.ContainsKey('PlannerAllowCalendarSharing') -and `
-        ($PlannerAllowCalendarSharing -ne $currentValues.PlannerAllowCalendarSharing))
+    if (($PSBoundParameters.ContainsKey('PlannerAllowCalendarSharing') -and `
+        ($PlannerAllowCalendarSharing -ne $currentValues.PlannerAllowCalendarSharing)) -or `
+        ($PSBoundParameters.ContainsKey('AllowPlannerCopilot') -and `
+        ($AllowPlannerCopilot -ne $currentValues.AllowPlannerCopilot)))
     {
         Write-Verbose -Message "Updating the Planner Allow Calendar Sharing setting to {$PlannerAllowCalendarSharing}"
-        Set-M365DSCO365OrgSettingsPlannerConfig -AllowCalendarSharing $PlannerAllowCalendarSharing
+        Set-M365DSCO365OrgSettingsPlannerConfig -AllowCalendarSharing $PlannerAllowCalendarSharing `
+                                                -AllowPlannerCopilot $AllowPlannerCopilot
     }
 
     if ($PSBoundParameters.ContainsKey('CortanaEnabled') -and `
@@ -918,6 +875,10 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $AllowPlannerCopilot,
+
+        [Parameter()]
+        [System.Boolean]
         $MicrosoftVivaBriefingEmail,
 
         [Parameter()]
@@ -1131,7 +1092,6 @@ function Get-M365DSCO365OrgSettingsPlannerConfig
 {
     [CmdletBinding()]
     param()
-    $VerbosePreference = 'SilentlyContinue'
 
     try
     {
@@ -1140,7 +1100,7 @@ function Get-M365DSCO365OrgSettingsPlannerConfig
         $results = Invoke-RestMethod -ContentType 'application/json;odata.metadata=full' `
             -Headers @{'Accept' = 'application/json'; 'Authorization' = (Get-MSCloudLoginConnectionProfile -Workload Tasks).AccessToken; 'Accept-Charset' = 'UTF-8'; 'OData-Version' = '4.0;NetFx'; 'OData-MaxVersion' = '4.0;NetFx' } `
             -Method GET `
-            $Uri -ErrorAction Stop
+            -Uri $Uri -ErrorAction Stop
         return $results
     }
     catch
@@ -1167,23 +1127,37 @@ function Set-M365DSCO365OrgSettingsPlannerConfig
 {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Boolean]
-        $AllowCalendarSharing
-    )
-    $VerbosePreference = 'SilentlyContinue'
+        $AllowCalendarSharing,
 
-    $flags = @{
-        allowCalendarSharing = $AllowCalendarSharing
+        [Parameter()]
+        [System.Boolean]
+        $AllowPlannerCopilot
+    )
+
+    $flags = @{}
+
+    if ($null -ne $AllowCalendarSharing)
+    {
+        $flags.Add('allowCalendarSharing', $AllowCalendarSharing)
+    }
+    if ($null -ne $AllowPlannerCopilot)
+    {
+        $flags.Add('allowPlannerCopilot', $AllowPlannerCopilot)
     }
 
-    $requestBody = $flags | ConvertTo-Json
-    $Uri = (Get-MSCloudLoginConnectionProfile -Workload Tasks).HostUrl + '/taskAPI/tenantAdminSettings/Settings'
-    $results = Invoke-RestMethod -ContentType 'application/json;odata.metadata=full' `
-        -Headers @{'Accept' = 'application/json'; 'Authorization' = (Get-MSCloudLoginConnectionProfile -Workload Tasks).AccessToken; 'Accept-Charset' = 'UTF-8'; 'OData-Version' = '4.0;NetFx'; 'OData-MaxVersion' = '4.0;NetFx' } `
-        -Method PATCH `
-        -Body $requestBody `
-        $Uri
+    if ($flags.Keys.Count -gt 0)
+    {
+        $requestBody = $flags | ConvertTo-Json
+        Write-Verbose -Message "Updating Planner settings with values:`r`n$($requestBody)"
+        $Uri = (Get-MSCloudLoginConnectionProfile -Workload Tasks).HostUrl + '/taskAPI/tenantAdminSettings/Settings'
+        $results = Invoke-RestMethod -ContentType 'application/json;odata.metadata=full' `
+            -Headers @{'Accept' = 'application/json'; 'Authorization' = (Get-MSCloudLoginConnectionProfile -Workload Tasks).AccessToken; 'Accept-Charset' = 'UTF-8'; 'OData-Version' = '4.0;NetFx'; 'OData-MaxVersion' = '4.0;NetFx' } `
+            -Method PATCH `
+            -Body $requestBody `
+            -Uri $Uri
+    }
 }
 
 function Get-M365DSCOrgSettingsInstallationOptions

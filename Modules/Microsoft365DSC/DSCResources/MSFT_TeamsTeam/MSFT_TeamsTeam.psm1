@@ -725,7 +725,7 @@ function Export-TargetResource
             $organization = $Credential.UserName.Split('@')[1]
         }
 
-        $teams = Get-Team
+        $teams = Get-Team | Sort-Object -Property GroupId
         $i = 1
         $dscContent = ''
         Write-Host "`r`n" -NoNewline

@@ -8,9 +8,7 @@ class MSFT_PPTenantSettings : OMI_BaseResource
     [Write, Description("Allow people to use AI to generate an app based on an image. Default value is false.")] Boolean DisableCreateFromImage;
     [Write, Description("Gets or sets a value indicating whether non-admin users in the tenant can share connections with everyone. Default value is false.")] Boolean DisableConnectionSharingWithEveryone;
     [Write, Description("TBD")] Boolean AllowNewOrgChannelDefault;
-    [Write, Description("Disables cloud flows copilot in Power Automate.
-
-It doesn't control the ability to add AI-related connectors or actions in the flow designer. For example, the Skills connector or AI Builder creates text with a GPT action. Default value is false.")] Boolean DisableCopilot;
+    [Write, Description("Disables cloud flows copilot in Power Automate. It doesn't control the ability to add AI-related connectors or actions in the flow designer. For example, the Skills connector or AI Builder creates text with a GPT action. Default value is false.")] Boolean DisableCopilot;
     [Write, Description("Disables the copilot-enhanced help feature within Power Automate to enhance answers on product documentation through Bing Search. Default value is false.")] Boolean DisableCopilotWithBing;
     [Write, Description("Disables the weekly admin digest email for Managed Environments. Default value is false.")] Boolean DisableAdminDigest;
     [Write, Description("Ignore the Teams group-preferred data location when provisioning a Teams environment. Default value is false.")] Boolean DisablePreferredDataLocationForTeamsEnvironment;

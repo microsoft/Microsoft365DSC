@@ -349,7 +349,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$instances = Get-Team
+        [array]$instances = Get-Team | Sort-Object -Property GroupId
         if ($instances.Length -eq 0)
         {
             Write-Host $Global:M365DSCEmojiGreenCheckMark
