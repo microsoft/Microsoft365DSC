@@ -122,7 +122,7 @@ function Get-TargetResource
             Description           = $AADRoleDefinition.Description
             ResourceScopes        = $AADRoleDefinition.ResourceScopes
             IsEnabled             = $AADRoleDefinition.IsEnabled
-            RolePermissions       = $AADRoleDefinition.RolePermissions.AllowedResourceActions
+            RolePermissions       = [Array]$AADRoleDefinition.RolePermissions.AllowedResourceActions
             TemplateId            = $AADRoleDefinition.TemplateId
             Version               = $AADRoleDefinition.Version
             Ensure                = 'Present'

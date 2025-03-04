@@ -1,10 +1,10 @@
 [ClassVersion("1.0.0")]
 class MSFT_AADRoleAssignmentScheduleRequestScheduleRecurrenceRange
 {
-    [Required, Description("The date to stop applying the recurrence pattern. Depending on the recurrence pattern of the event, the last occurrence of the meeting may not be this date.")] String endDate;
+    [Required, Description("The date to stop applying the recurrence pattern. Depending on the recurrence pattern of the event, the last occurrence of the meeting may not be this date.")] DATETIME endDate;
     [Write, Description("The number of times to repeat the event. Required and must be positive if type is numbered.")] UInt32 numberOfOccurrences;
     [Write, Description("Time zone for the startDate and endDate properties.")] String recurrenceTimeZone;
-    [Required, Description("The date to start applying the recurrence pattern. The first occurrence of the meeting may be this date or later, depending on the recurrence pattern of the event. Must be the same value as the start property of the recurring event.")] String startDate;
+    [Required, Description("The date to start applying the recurrence pattern. The first occurrence of the meeting may be this date or later, depending on the recurrence pattern of the event. Must be the same value as the start property of the recurring event.")] DATETIME startDate;
     [Required, Description("The recurrence range. The possible values are: endDate, noEnd, numbered."),ValueMap{"endDate","noEnd","numbered"}, Values{"endDate","noEnd","numbered"}] String type;
 };
 

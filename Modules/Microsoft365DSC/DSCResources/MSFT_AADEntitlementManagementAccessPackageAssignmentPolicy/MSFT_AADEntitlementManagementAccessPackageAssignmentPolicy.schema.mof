@@ -9,7 +9,7 @@ class MSFT_MicrosoftGraphassignmentreviewsettings
     [Write, Description("The interval for recurrence, such as monthly or quarterly.")] String RecurrenceType;
     [Write, Description("Who should be asked to do the review, either Self or Reviewers.")] String ReviewerType;
     [Write, Description("If the reviewerType is Reviewers, this collection specifies the users who will be reviewers, either by ID or as members of a group, using a collection of singleUser and groupMembers."), EmbeddedInstance("MSFT_MicrosoftGraphuserset")] String Reviewers[];
-    [Write, Description("When the first review should start.")] String StartDateTime;
+    [Write, Description("When the first review should start.")] DATETIME StartDateTime;
 };
 [ClassVersion("1.0.0")]
 class MSFT_MicrosoftGraphuserset

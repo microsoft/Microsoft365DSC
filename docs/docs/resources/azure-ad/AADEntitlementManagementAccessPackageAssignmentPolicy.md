@@ -39,7 +39,7 @@
 | **RecurrenceType** | Write | String | The interval for recurrence, such as monthly or quarterly. | |
 | **ReviewerType** | Write | String | Who should be asked to do the review, either Self or Reviewers. | |
 | **Reviewers** | Write | MSFT_MicrosoftGraphuserset[] | If the reviewerType is Reviewers, this collection specifies the users who will be reviewers, either by ID or as members of a group, using a collection of singleUser and groupMembers. | |
-| **StartDateTime** | Write | String | When the first review should start. | |
+| **StartDateTime** | Write | DateTime | When the first review should start. | |
 
 ### MSFT_MicrosoftGraphuserset
 

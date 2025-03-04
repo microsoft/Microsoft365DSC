@@ -448,6 +448,23 @@
                     );
                     State                = "enabled"; # Updated Property
                 }
+                AADAuthenticationMethodPolicyQRCodeImage 'AADAuthenticationMethodPolicyQRCodeImage-QRCodePin'
+                {
+                    ApplicationId                = $ApplicationId;
+                    CertificateThumbprint        = $CertificateThumbprint;
+                    Ensure                       = "Present";
+                    Id                           = "QRCodePin";
+                    IncludeTargets               = @(
+                        MSFT_AADAuthenticationMethodPolicyQRCodeImageIncludeTarget{
+                            Id = "all_users"
+                            TargetType = "group"
+                        }
+                    );
+                    PinLength                    = 9; # Drift
+                    StandardQRCodeLifetimeInDays = 365;
+                    State                        = "disabled";
+                    TenantId                     = $TenantId;
+                }
                 AADAuthenticationMethodPolicySms 'AADAuthenticationMethodPolicySms-Sms'
                 {
                     ApplicationId         = $ApplicationId

@@ -446,7 +446,7 @@ function Set-TargetResource
         }
         $PSBoundParameters.add('@odata.type', $policyType)
 
-        #Write-Verbose ($PSBoundParameters | ConvertTo-Json -Depth 20)
+        Write-Verbose "Updating with values:`r`n$($PSBoundParameters | ConvertTo-Json -Depth 20)"
 
         Update-MgBetaDeviceManagementDeviceEnrollmentConfiguration `
             -DeviceEnrollmentConfigurationId $currentInstance.Identity `

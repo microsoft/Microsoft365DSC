@@ -14,7 +14,7 @@ function Get-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('Production', 'Trial', 'Sandbox', 'SubscriptionBasedTrial', 'Teams', 'Developer')]
+        [ValidateSet('Production', 'Trial', 'Sandbox', 'SubscriptionBasedTrial', 'Teams', 'Developer', 'Basic', 'Standard')]
         $EnvironmentSKU,
 
         [Parameter()]
@@ -142,7 +142,7 @@ function Set-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('Production', 'Trial', 'Sandbox', 'SubscriptionBasedTrial', 'Teams', 'Developer')]
+        [ValidateSet('Production', 'Trial', 'Sandbox', 'SubscriptionBasedTrial', 'Teams', 'Developer', 'Basic', 'Standard')]
         $EnvironmentSKU,
 
         [Parameter()]
@@ -213,6 +213,12 @@ function Set-TargetResource
 
     if ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Absent')
     {
+        # DEPRECATED
+        if ($EnvironmentSKU -in @("Basic", "Standard"))
+        {
+            throw "EnvironmentSKU {$($EnvironmentSKU)} is a legacy type and cannot be used to create new environments."
+        }
+
         Write-Verbose -Message "Creating new PowerApps environment {$DisplayName}"
         try
         {
@@ -265,7 +271,7 @@ function Test-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('Production', 'Trial', 'Sandbox', 'SubscriptionBasedTrial', 'Teams', 'Developer')]
+        [ValidateSet('Production', 'Trial', 'Sandbox', 'SubscriptionBasedTrial', 'Teams', 'Developer', 'Basic', 'Standard')]
         $EnvironmentSKU,
 
         [Parameter()]

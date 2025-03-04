@@ -280,18 +280,7 @@ function Start-M365DSCConfigurationExtract
                 [PSCredential]$AppSecretAsPSCredential = New-Object System.Management.Automation.PSCredential ('ApplicationSecret', $secStringPassword)
             }
 
-            if ($TenantId -like "*.onmicrosoft.com")
-            {
-                $organization = $TenantId
-            }
-            else
-            {
-                $organization = Get-M365DSCTenantDomain -ApplicationId $ApplicationId `
-                    -TenantId $TenantId `
-                    -CertificateThumbprint $CertificateThumbprint `
-                    -ApplicationSecret $AppSecretAsPSCredential `
-                    -CertificatePath $CertificatePath
-            }
+            $organization = $TenantId
         }
         elseif ($AuthMethods -Contains 'Credentials' -or `
                 $AuthMethods -Contains 'CredentialsWithApplicationId')
@@ -584,6 +573,11 @@ function Start-M365DSCConfigurationExtract
 
             try
             {
+                $existingEndpoints = (Get-MSCloudLoginConnectionProfile -Workload $Workload.Name).Endpoints
+                if ($null -ne $existingEndpoints)
+                {
+                    $ConnectionParams.Add('Endpoints', $existingEndpoints)
+                }
                 Connect-M365Tenant @ConnectionParams | Out-Null
                 Write-Host $Global:M365DSCEmojiGreenCheckmark
             }

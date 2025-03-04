@@ -2295,6 +2295,106 @@
                        ]
     },
     {
+        "ClassName":  "MSFT_AADAuthenticationMethodPolicyQRCodeImageExcludeTarget",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Id",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "TargetType",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_AADAuthenticationMethodPolicyQRCodeImageIncludeTarget",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Id",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "TargetType",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_AADAuthenticationMethodPolicyQRCodeImage",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Id",
+                               "Option":  "Key"
+                           },
+                           {
+                               "CIMType":  "MSFT_AADAuthenticationMethodPolicyQRCodeImageExcludeTarget[]",
+                               "Name":  "ExcludeTargets",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_AADAuthenticationMethodPolicyQRCodeImageIncludeTarget[]",
+                               "Name":  "IncludeTargets",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "State",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "StandardQRCodeLifetimeInDays",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "PinLength",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "string",
+                               "Name":  "Ensure",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "Credential",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ApplicationId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "TenantId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "CertificateThumbprint",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "ManagedIdentity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
         "ClassName":  "MSFT_AADAuthenticationMethodPolicySmsExcludeTarget",
         "Parameters":  [
                            {
@@ -4583,7 +4683,7 @@
                                "Option":  "Write"
                            },
                            {
-                               "CIMType":  "String",
+                               "CIMType":  "DATETIME",
                                "Name":  "StartDateTime",
                                "Option":  "Write"
                            }
@@ -8073,7 +8173,7 @@
         "ClassName":  "MSFT_AADRoleAssignmentScheduleRequestScheduleRecurrenceRange",
         "Parameters":  [
                            {
-                               "CIMType":  "String",
+                               "CIMType":  "DATETIME",
                                "Name":  "endDate",
                                "Option":  "Required"
                            },
@@ -8088,7 +8188,7 @@
                                "Option":  "Write"
                            },
                            {
-                               "CIMType":  "String",
+                               "CIMType":  "DATETIME",
                                "Name":  "startDate",
                                "Option":  "Required"
                            },
