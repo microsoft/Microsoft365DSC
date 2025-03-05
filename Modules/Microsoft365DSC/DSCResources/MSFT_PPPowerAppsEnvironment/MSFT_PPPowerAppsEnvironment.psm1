@@ -14,7 +14,7 @@ function Get-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('Production', 'Trial', 'Sandbox', 'SubscriptionBasedTrial', 'Teams', 'Developer', 'Basic', 'Standard')]
+        [ValidateSet("Production","Standard","Trial","Sandbox","SubscriptionBasedTrial","Teams","Developer","Basic","Default")]
         $EnvironmentSKU,
 
         [Parameter()]
@@ -142,7 +142,7 @@ function Set-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('Production', 'Trial', 'Sandbox', 'SubscriptionBasedTrial', 'Teams', 'Developer', 'Basic', 'Standard')]
+        [ValidateSet("Production","Standard","Trial","Sandbox","SubscriptionBasedTrial","Teams","Developer","Basic","Default")]
         $EnvironmentSKU,
 
         [Parameter()]
@@ -271,7 +271,7 @@ function Test-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('Production', 'Trial', 'Sandbox', 'SubscriptionBasedTrial', 'Teams', 'Developer', 'Basic', 'Standard')]
+        [ValidateSet("Production","Standard","Trial","Sandbox","SubscriptionBasedTrial","Teams","Developer","Basic","Default")]
         $EnvironmentSKU,
 
         [Parameter()]

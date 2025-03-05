@@ -39,7 +39,7 @@
 | --- | --- | --- | --- | --- |
 | **Action** | Write | String | The action to use for adding / removing members. Note: add_replace is superseded by add_restrict | `add_update`, `remove_update`, `add_replace`, `add_restrict` |
 | **LocalGroups** | Write | StringArray[] | The local groups to add / remove the members to / from. List of the following values: `administrators`, `users`, `guests`, `powerusers`, `remotedesktopusers`, `remotemanagementusers` | |
-| **Members** | Write | StringArray[] | The members to add / remove to / from the group. For AzureAD Users, use the format `AzureAD\<UserPrincipalName>`. For groups, use the security identifier (SID). | |
+| **Members** | Write | StringArray[] | The members to add / remove to / from the group. For AzureAD Users, use the format `AzureAD\&lt;UserPrincipalName&gt;`. For groups, use the security identifier (SID). | |
 | **UserSelectionType** | Write | String | The type of the selection. Either users / groups from AzureAD, or by manual identifier. | `users`, `manual` |
 
 

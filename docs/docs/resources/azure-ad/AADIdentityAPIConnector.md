@@ -45,21 +45,21 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - None
+    - APIConnectors.Read.All
 
 - **Update**
 
-    - None
+    - APIConnectors.ReadWrite.All
 
 #### Application permissions
 
 - **Read**
 
-    - None
+    - APIConnectors.Read.All
 
 - **Update**
 
-    - None
+    - APIConnectors.ReadWrite.All
 
 ## Examples
 

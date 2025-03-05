@@ -456,11 +456,10 @@ function Set-TargetResource
 
         if ($policy.Id)
         {
-            $uri = "/beta/deviceManagement/deviceHealthScripts/$($policy.Id)/assign"
-            $body = @{
-                deviceHealthScriptAssignments = $assignmentsHash
-            } | ConvertTo-Json -Depth 20
-            Invoke-MgGraphRequest -Method POST -Uri $uri -Body $body -ErrorAction Stop 4> $null
+            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $policy.Id `
+                -Targets $assignmentsHash `
+                -Repository 'deviceManagement/deviceHealthScripts' `
+                -RootIdentifier 'deviceHealthScriptAssignments'
         }
         #endregion
     }
@@ -533,11 +532,10 @@ function Set-TargetResource
                 target               = $assignmentTarget.target
             }
         }
-        $uri = "/beta/deviceManagement/deviceHealthScripts/$($currentInstance.Id)/assign"
-        $body = @{
-            deviceHealthScriptAssignments = $assignmentsHash
-        } | ConvertTo-Json -Depth 20
-        Invoke-MgGraphRequest -Method POST -Uri $uri -Body $body -ErrorAction Stop 4> $null
+        Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $currentInstance.Id `
+            -Targets $assignmentsHash `
+            -Repository 'deviceManagement/deviceHealthScripts' `
+            -RootIdentifier 'deviceHealthScriptAssignments'
         #endregion
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')

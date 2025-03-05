@@ -90,7 +90,9 @@ function Get-DscResourceSchemaPropertyContent
 
         if (-not [System.String]::IsNullOrEmpty($currentProperty.Description))
         {
-            $propertyLine += ' ' + $currentProperty.Description
+            $description = $currentProperty.Description
+            $description = $description.Replace("<", "&lt;").Replace(">", "&gt;")
+            $propertyLine += ' ' + $description
         }
 
         $propertyLine += ' |'

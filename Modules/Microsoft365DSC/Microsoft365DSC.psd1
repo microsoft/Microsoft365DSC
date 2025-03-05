@@ -93,7 +93,8 @@
   #FunctionsToExport = @()
 
   # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
-  CmdletsToExport   = @('Assert-M365DSCBlueprint',
+  CmdletsToExport   = @(
+    'Assert-M365DSCBlueprint',
     'Compare-M365DSCConfigurations',
     'Confirm-M365DSCDependencies',
     'Export-M365DSCConfiguration',
@@ -107,7 +108,6 @@
     'New-M365DSCStubFiles',
     'Remove-M365DSCNotificationEndPointRegistration',
     'Set-M365DSCAgentCertificateConfiguration',
-    'Start-M365DSCConfiguration',
     'Test-M365DSCAgent',
     'Test-M365DSCDependenciesForNewVersions',
     'Test-M365DSCModuleValidity',

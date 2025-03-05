@@ -1420,6 +1420,12 @@ function Test-TargetResource
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
     $testTargetResource = $true
 
+    if ($CurrentValues.Ensure -eq 'Absent' -and $Ensure -eq 'Absent')
+    {
+        Write-Verbose -Message "Both the desired and current value for Ensure are set to Absent. Therefore ignoring the drift assessment."
+        return $true
+    }
+
     #Compare Cim instances
     foreach ($key in $PSBoundParameters.Keys)
     {

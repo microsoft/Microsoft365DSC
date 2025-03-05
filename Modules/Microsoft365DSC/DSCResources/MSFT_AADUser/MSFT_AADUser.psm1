@@ -175,7 +175,7 @@ function Get-TargetResource
             }
 
             Write-Verbose -Message "Getting Office 365 User $UserPrincipalName"
-            $propertiesToRetrieve = @('Id', 'UserPrincipalName', 'DisplayName', 'GivenName', 'Surname', 'UsageLocation', 'City', 'Country', 'Department', 'FacsimileTelephoneNumber', 'Mobile', 'OfficeLocation', 'TelephoneNumber', 'PostalCode', 'PreferredLanguage', 'State', 'StreetAddress', 'JobTitle', 'UserType', 'PasswordPolicies')
+            $propertiesToRetrieve = @('Id', 'UserPrincipalName', 'DisplayName', 'GivenName', 'Surname', 'UsageLocation', 'City', 'Country', 'Department', 'FaxNumber', 'MobilePhone', 'OfficeLocation', 'BusinessPhones', 'PostalCode', 'PreferredLanguage', 'State', 'StreetAddress', 'JobTitle', 'UserType', 'PasswordPolicies')
             $user = Get-MgUser -UserId $UserPrincipalName -Property $propertiesToRetrieve -ErrorAction SilentlyContinue
             if ($null -eq $user)
             {
@@ -234,12 +234,12 @@ function Get-TargetResource
             City                  = $user.City
             Country               = $user.Country
             Department            = $user.Department
-            Fax                   = $user.FacsimileTelephoneNumber
-            MobilePhone           = $user.Mobile
+            Fax                   = $user.FaxNumber
+            MobilePhone           = $user.MobilePhone
             Office                = $user.OfficeLocation
             PasswordNeverExpires  = $passwordNeverExpires
             PasswordPolicies      = $user.PasswordPolicies
-            PhoneNumber           = $user.TelephoneNumber
+            PhoneNumber           = $user.BusinessPhones | Select-Object -First 1
             PostalCode            = $user.PostalCode
             PreferredLanguage     = $user.PreferredLanguage
             State                 = $user.State
@@ -444,10 +444,10 @@ function Set-TargetResource
             Country                  = $Country
             Department               = $Department
             DisplayName              = $DisplayName
-            FacsimileTelephoneNumber = $Fax
+            FaxNumber                = $Fax
             GivenName                = $FirstName
             JobTitle                 = $Title
-            Mobile                   = $MobilePhone
+            MobilePhone              = $MobilePhone
             PasswordPolicies         = $PasswordPolicies
             OfficeLocation           = $Office
             PostalCode               = $PostalCode
@@ -455,7 +455,7 @@ function Set-TargetResource
             State                    = $State
             StreetAddress            = $StreetAddress
             Surname                  = $LastName
-            TelephoneNumber          = $PhoneNumber
+            BusinessPhones           = $PhoneNumber
             UsageLocation            = $UsageLocation
             UserPrincipalName        = $UserPrincipalName
             UserType                 = $UserType

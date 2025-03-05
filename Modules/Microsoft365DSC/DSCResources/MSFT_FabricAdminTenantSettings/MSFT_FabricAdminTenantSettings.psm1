@@ -2040,6 +2040,7 @@ function Export-TargetResource
         }
         if ($fixQuotes)
         {
+            $currentDSCBlock = $currentDSCBlock.Replace('`$', '$')
             $currentDSCBlock = $currentDSCBlock.Replace('`', '"')
         }
         $dscContent += $currentDSCBlock

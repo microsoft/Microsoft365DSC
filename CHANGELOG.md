@@ -2,24 +2,59 @@
 
 # UNRELEASED
 
+* AADApplication
+  * If both the current and desired values have the Ensure property set
+    to absent, ignoring the drift detection and return true from
+    the Test-TargetResource function.
 * AADAuthenticationMethodPolicyQRCodeImage
   * Initial release.
+* AADGroupSettings
+  * Filtered EnableMSStandardBlockedWords parameter from the policy results,
+    to prevent issues with this deprecated parameter
+* AADIdentityAPIConnector
+  * Added missing permissions.
+    FIXES [#5670](https://github.com/microsoft/Microsoft365DSC/issues/5670)
 * AADRoleEligibilityScheduleRequest
   * Updated startdatetime and enddatetime properties to be of type DATETIME.
+* AADUser
+  * Fixed an issue where the properties with numbers were not exported correctly.
+    FIXES [#4526](https://github.com/microsoft/Microsoft365DSC/issues/4526)
+* EXOTransportConfig
+  * Fixed an issue where `JournalingReportNdrTo` with the default value of `<>`
+    would throw an error during apply.  
+    FIXES [#5606](https://github.com/microsoft/Microsoft365DSC/issues/5606)
+* FabricAdminTenantSettings
+  * Fixed issue where the export would add double quotes in front of boolean
+    variables
 * IntuneDeviceEnrollmentPlatformRestriction
   * Added note that update is no longer possible.
     FIXES [#5127](https://github.com/microsoft/Microsoft365DSC/issues/5127)
-* O365SearchAndIntelligenceConfigurations
-  * Added note that only Credentials are supported for the resource.
+* IntuneDeviceRemediation
+  * Fixed issue when `Assignment` was set to a non-existent group in the tenant,
+    e.g. cloning a script from a source tenant and applying it to another target
+    tenant and the latter doesn't have the assignment group created yet, if this
+    was the case the deployment would fail
+    FIXES [#5856](https://github.com/microsoft/Microsoft365DSC/issues/5856)
 * PPEnvironmentAppsEnvironment
   * Added support for legacy Basic and Standard EnvironmentSKU.
+* SPOSite
+  * Fixed an issue where the exported properties were not defined.
+    FIXES [#4773](https://github.com/microsoft/Microsoft365DSC/issues/4773)
 * TeamsOrgWideAppSettings
   * Added note that only Credentials are supported for the resource.
     FIXES [#3394](https://github.com/microsoft/Microsoft365DSC/issues/3394)
+* M365DSCDocGenerator
+  * Fixed an issue where open/close tags in descriptions would be considered as HTML.
+    FIXES [#4955](https://github.com/microsoft/Microsoft365DSC/issues/4955)
+    FIXES [#5761](https://github.com/microsoft/Microsoft365DSC/issues/5761)
 * M365DSCDRGUtil
   * Fixes an issue with fancy double quotes being replaced that break the string.
     FIXES [#5775](https://github.com/microsoft/Microsoft365DSC/issues/5775)
     FIXES [#5623](https://github.com/microsoft/Microsoft365DSC/issues/5623)
+  * Escape strings in primary key of resource name for export content.
+    FIXES [#5865](https://github.com/microsoft/Microsoft365DSC/issues/5865)
+* DEPENDENCIES
+  * Updated MSCloudLoginAssistant to version 1.1.40.
 
 # 1.25.226.1
 

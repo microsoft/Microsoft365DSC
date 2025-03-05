@@ -398,7 +398,6 @@ function Set-TargetResource
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
-
     Write-Verbose -Message "Setting EXOTransportConfig with values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
     $SetValues = [System.Collections.Hashtable]($PSBoundParameters)
     $SetValues.Remove('IsSingleInstance') | Out-Null
@@ -410,6 +409,11 @@ function Set-TargetResource
     $SetValues.Remove('CertificatePassword') | Out-Null
     $SetValues.Remove('ManagedIdentity') | Out-Null
     $SetValues.Remove('AccessTokens') | Out-Null
+
+    if ($SetValues.JournalingReportNdrTo -eq '<>' -or [System.String]::IsNullOrEmpty($SetValues.JournalingReportNdrTo))
+    {
+        $SetValues.Remove('JournalingReportNdrTo') | Out-Null
+    }
 
     Set-TransportConfig @SetValues
 }

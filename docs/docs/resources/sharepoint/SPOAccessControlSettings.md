@@ -6,7 +6,7 @@
 | --- | --- | --- | --- | --- |
 | **IsSingleInstance** | Key | String | Specifies the resource is a single instance, the value must be 'Yes' | `Yes` |
 | **DisplayStartASiteOption** | Write | Boolean | Determines whether tenant users see the Start a Site menu option | |
-| **StartASiteFormUrl** | Write | String | Specifies URL of the form to load in the Start a Site dialog. The valid values are:<emptyString> (default) - Blank by default, this will also remove or clear any value that has been set.Full URL - Example: https://contoso.sharepoint.com/path/to/form | |
+| **StartASiteFormUrl** | Write | String | Specifies URL of the form to load in the Start a Site dialog. The valid values are:&lt;emptyString&gt; (default) - Blank by default, this will also remove or clear any value that has been set.Full URL - Example: https://contoso.sharepoint.com/path/to/form | |
 | **IPAddressEnforcement** | Write | Boolean | Allows access from network locations that are defined by an administrator. | |
 | **IPAddressAllowList** | Write | String | Configures multiple IP addresses or IP address ranges (IPv4 or IPv6). Use commas to separate multiple IP addresses or IP address ranges. | |
 | **IPAddressWACTokenLifetime** | Write | UInt32 | Office webapps TokenLifeTime in minutes | |

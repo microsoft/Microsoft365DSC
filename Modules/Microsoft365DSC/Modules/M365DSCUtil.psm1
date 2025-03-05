@@ -3940,6 +3940,14 @@ function Get-M365DSCExportContentForResource
     $instanceName = $ResourceName
     if (-not [System.String]::IsNullOrEmpty($primaryKey))
     {
+        if ($AllowVariablesInStrings)
+        {
+            $primaryKey = $primaryKey.Replace('`', '``').Replace('"', '`"')
+        }
+        else
+        {
+            $primaryKey = $primaryKey.Replace('`', '``').Replace('$', '`$').Replace('"', '`"')
+        }
         $instanceName += "-$primaryKey"
     }
 
@@ -3950,7 +3958,7 @@ function Get-M365DSCExportContentForResource
 
     # Check to see if a resource with this exact name was already exported, if so, append a number to the end.
     $i = 2
-    $tempName = $instanceName.Replace('"', '')
+    $tempName = $instanceName
     while ($null -ne $Global:M365DSCExportedResourceInstancesNames -and `
            $Global:M365DSCExportedResourceInstancesNames.Contains($tempName))
     {

@@ -1,23 +1,31 @@
 ﻿{
     "resourceName": "O365SearchAndIntelligenceConfigurations",
     "description": "This resource configures the Search And Intelligence configuration settings.",
+    "roles": {
+        "read": [
+            "Global Reader"
+        ],
+        "update": [
+            "Exchange Administrator"
+        ]
+    },
     "permissions": {
         "graph": {
             "delegated": {
+                "read": [],
+                "update": []
+            },
+            "application": {
                 "read": [
                     {
-                        "name": "User.Read.All"
+                        "name": "PeopleSettings.Read.All"
                     }
                 ],
                 "update": [
                     {
-                        "name": "User.ReadWrite"
+                        "name": "PeopleSettings.ReadWrite.All"
                     }
                 ]
-            },
-            "application": {
-                "read": [],
-                "update": []
             }
         }
     }

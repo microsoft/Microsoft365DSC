@@ -64,7 +64,7 @@
 | **DocumentsBlockManagedDocumentsInUnmanagedApps** | Write | Boolean | Indicates whether or not to block the user from viewing managed documents in unmanaged apps. | |
 | **DocumentsBlockUnmanagedDocumentsInManagedApps** | Write | Boolean | Indicates whether or not to block the user from viewing unmanaged documents in managed apps. | |
 | **EmailInDomainSuffixes** | Write | StringArray[] | Emails that the user sends or receives which don't match the domains you specify here will be marked as untrusted. | |
-| **EnterpriseAppBlockTrust** | Write | Boolean | Removes the Trust Enterprise Developer button in Settings->General->Profiles & Device Management. | |
+| **EnterpriseAppBlockTrust** | Write | Boolean | Removes the Trust Enterprise Developer button in Settings-&gt;General-&gt;Profiles & Device Management. | |
 | **EnterpriseAppBlockTrustModification** | Write | Boolean | Block the changing of enterprise app trust settings. | |
 | **EnterpriseBookBlockBackup** | Write | Boolean | Indicates whether or not to backup enterprise book. | |
 | **EnterpriseBookBlockMetadataSync** | Write | Boolean | Indicates whether or not to sync enterprise book metadata. | |
