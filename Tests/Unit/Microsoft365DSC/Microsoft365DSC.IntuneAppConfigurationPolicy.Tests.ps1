@@ -46,6 +46,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
             Mock -CommandName Update-DeviceConfigurationPolicyAssignment -MockWith {
             }
+            Mock -CommandName Get-MgBetaDeviceAppManagementTargetedManagedAppConfigurationApp -MockWith {
+            }
+
             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
             }
@@ -89,6 +92,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Description = 'Test Definition'
                     Ensure      = 'Present'
                     Credential  = $Credential
+                    RoleScopeTagIds             = @("0")
+                    TargetedAppManagementLevels = "unspecified"
+                    AppGroupType                = "selectedPublicApps"
+                    CustomSettings                              = [CimInstance[]]@(
+                        (New-CimInstance `
+                        -ClassName MSFT_IntuneAppConfigurationPolicyCustomSetting `
+                        -Property @{
+                            name                               = 'FakeStringValue'
+                            value                              = '1'
+                        } -ClientOnly)
+                    )  
                 }
 
                 Mock -CommandName Get-MgBetaDeviceAppManagementTargetedManagedAppConfiguration -MockWith {
@@ -96,6 +110,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         DisplayName = 'Test App Configuration Policy'
                         Description = 'Different Value'
                         Id          = 'A_19dbaff5-9aff-48b0-a60d-d0471ddaf141'
+                        RoleScopeTagIds             = @("0")
+                        TargetedAppManagementLevels = "unspecified"
+                        AppGroupType                = "selectedPublicApps"
+                        CustomSettings              = @(
+                                @{
+                                    name  = 'FakeStringValue'
+                                    value = '1'
+                                }
+                            ) 
                     }
                 }
             }
@@ -121,6 +144,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Description = 'Test Definition'
                     Ensure      = 'Present'
                     Credential  = $Credential
+                    RoleScopeTagIds             = @("0")
+                    TargetedAppManagementLevels = "unspecified"
+                    AppGroupType                = "selectedPublicApps"
+                     CustomSettings                              = [CimInstance[]]@(
+                        (New-CimInstance `
+                        -ClassName MSFT_IntuneAppConfigurationPolicyCustomSetting `
+                        -Property @{
+                            name  = 'FakeStringValue'
+                            value = '1'
+                        } -ClientOnly)
+                    )  
                 }
 
                 Mock -CommandName Get-MgBetaDeviceAppManagementTargetedManagedAppConfiguration -MockWith {
@@ -128,6 +162,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         DisplayName = 'Test App Configuration Policy Desire State'
                         Description = 'Test Definition'
                         Id          = 'A_19dbaff5-9aff-48b0-a60d-d0471ddaf141'
+                        RoleScopeTagIds             = @("0")
+                        TargetedAppManagementLevels = "unspecified"
+                        AppGroupType                = "selectedPublicApps"
+                          CustomSettings              = @(
+                                @{
+                                    name  = 'FakeStringValue'
+                                    value = '1'
+                                }
+                            )#>
                     }
                 }
                 Mock -CommandName Get-MgBetaDeviceAppManagementTargetedManagedAppConfigurationAssignment -MockWith {
@@ -148,6 +191,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Description = 'Test Definition'
                     Ensure      = 'Absent'
                     Credential  = $Credential
+                    RoleScopeTagIds             = @("0")
+                    TargetedAppManagementLevels = "unspecified"
+                    AppGroupType                = "selectedPublicApps"
+                     CustomSettings              = [CimInstance[]]@(
+                        (New-CimInstance `
+                        -ClassName MSFT_IntuneAppConfigurationPolicyCustomSetting `
+                        -Property @{
+                            name  = 'FakeStringValue'
+                            value = '1'
+                        } -ClientOnly)
+                    )  
                 }
 
                 Mock -CommandName Get-MgBetaDeviceAppManagementTargetedManagedAppConfiguration -MockWith {
@@ -155,6 +209,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         DisplayName = 'Test App Configuration Policy'
                         Description = 'Test Definition'
                         Id          = 'A_19dbaff5-9aff-48b0-a60d-d0471ddaf141'
+                        RoleScopeTagIds             = @("0")
+                        TargetedAppManagementLevels = "unspecified"
+                        AppGroupType                = "selectedPublicApps"
+                        Apps                        = @()
+                         CustomSettings              = @(
+                                @{
+                                    name  = 'FakeStringValue'
+                                    value = '1'
+                                }
+                            ) 
                     }
                 }
             }
@@ -186,6 +250,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         DisplayName = 'Test App Configuration Policy'
                         Description = 'Test Definition'
                         Id          = 'A_19dbaff5-9aff-48b0-a60d-d0471ddaf141'
+                        RoleScopeTagIds             = @("0")
+                        TargetedAppManagementLevels = "unspecified"
+                        AppGroupType                = "selectedPublicApps"
+                        CustomSettings              = @(
+                                @{
+                                    name  = 'FakeStringValue'
+                                    value = '1'
+                                }
+                            ) 
                     }
                 }
             }

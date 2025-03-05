@@ -201,14 +201,24 @@ function Get-TargetResource
         $valueToParse = ($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'DailyBandwidthLimitInMB' }).Value
         if (-not [System.String]::IsNullOrEmpty($valueToParse))
         {
-            $DailyBandwidthLimitInMBValue = [UInt32]$valueToParse
+            $DailyBandwidthLimitInMBValue = [UInt32]::Parse($valueToParse)
         }
 
         # PathExclusion
-        $PathExclusionValue = [Array]($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'PathExclusion' }).Value
+        $PathExclusionValue = @()
+        $valueToParse = ($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'PathExclusion' }).Value
+        if (-not [System.String]::IsNullOrEmpty($valueToParse))
+        {
+            $PathExclusionValue = [Array]($valueToParse)
+        }
 
         # MacPathExclusion
-        $MacPathExclusionValue = [Array]($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'MacPathExclusion' }).Value
+        $MacPathExclusionValue = @()
+        $valueToParse = ($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'MacPathExclusion' }).Value
+        if (-not [System.String]::IsNullOrEmpty($valueToParse))
+        {
+            $MacPathExclusionValue = [Array]($valueToParse)
+        }
 
         # MacDefaultPathExclusionsEnabled
         $MacDefaultPathExclusionsEnabledValue = $true # default value
@@ -325,7 +335,12 @@ function Get-TargetResource
         $CloudAppModeValue = ($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'CloudAppMode' }).Value
 
         # CloudAppRestrictionList
-        $CloudAppRestrictionListValue = [Array]($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'CloudAppRestrictionList' }).Value
+        $CloudAppRestrictionListValue = @()
+        $valueToParse = ($EndpointDlpGlobalSettingsValue | Where-Object { $_.Setting -eq 'CloudAppRestrictionList' }).Value
+        if (-not [System.String]::IsNullOrEmpty($valueToParse))
+        {
+            $CloudAppRestrictionListValue = [Array]($valueToParse)
+        }
 
         # SiteGroups
         $SiteGroupsValue = @()
@@ -396,6 +411,13 @@ function Get-TargetResource
                 $entity = ConvertFrom-Json ($entity.value)
                 $VPNSettingsValue = [Array]$entity.serverAddress
             }
+        }
+        else
+        {
+            $BusinessJustificationListValue = @()
+            $serverDlpEnabledValue = $false
+            $AuditFileActivityValue = $false
+            $VPNSettingsValue = @()
         }
 
         # DlpPrinterGroups
@@ -524,7 +546,7 @@ function Get-TargetResource
             SiteGroups                              = $SiteGroupsValue
             CustomBusinessJustificationNotification = $CustomBusinessJustificationNotificationValue
             BusinessJustificationList               = $BusinessJustificationListValue
-            serverDlpEnabled                        = $serverDlpEnabledValue
+            ServerDlpEnabled                        = $serverDlpEnabledValue
             AuditFileActivity                       = $AuditFileActivityValue
             DLPPrinterGroups                        = $DlpPrinterGroupsValue
             DLPRemovableMediaGroups                 = $DLPRemovableMediaGroupsValue
@@ -1358,7 +1380,7 @@ function Export-TargetResource
             $Global:M365DSCExportResourceInstancesCount++
         }
         $Results = Get-TargetResource @Params
-        if ($null -ne $Results.BusinessJustificationList)
+        if ($null -ne $Results.BusinessJustificationList -and $Results.BusinessJustificationList.Length -gt 0)
         {
             $Results.BusinessJustificationList = ConvertTo-BusinessJustificationListString -ObjectHash $Results.BusinessJustificationList
         }

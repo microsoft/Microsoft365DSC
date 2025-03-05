@@ -17,6 +17,25 @@ function Get-TargetResource
         $Description,
 
         [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('unspecified','unmanaged','mdm','androidEnterprise','androidEnterpriseDedicatedDevicesWithAzureAdSharedMode','androidOpenSourceProjectUserAssociated','androidOpenSourceProjectUserless','unknownFutureValue')]
+        $TargetedAppManagementLevels,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Apps,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet(
+        'selectedPublicApps','allCoreMicrosoftApps','allMicrosoftApps','allApps')]
+        $AppGroupType,
+
+        [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $CustomSettings,
 
@@ -85,7 +104,7 @@ function Get-TargetResource
             $configPolicy = $null
             if (-not [string]::IsNullOrEmpty($Id))
             {
-                $configPolicy = Get-MgBetaDeviceAppManagementTargetedManagedAppConfiguration -TargetedManagedAppConfigurationId $Id `
+                $configPolicy = Get-MgBetaDeviceAppManagementTargetedManagedAppConfiguration -TargetedManagedAppConfigurationId $Id -ExpandProperty 'Apps' `
                     -ErrorAction SilentlyContinue
             }
 
@@ -95,7 +114,7 @@ function Get-TargetResource
 
                 try
                 {
-                    $configPolicy = Get-MgBetaDeviceAppManagementTargetedManagedAppConfiguration -All -Filter "displayName eq '$DisplayName'" `
+                    $configPolicy = Get-MgBetaDeviceAppManagementTargetedManagedAppConfiguration -All -Filter "displayName eq '$DisplayName'" -ExpandProperty 'Apps' `
                         -ErrorAction Stop
                 }
                 catch
@@ -120,19 +139,59 @@ function Get-TargetResource
         }
 
         Write-Verbose -Message "Found App Configuration Policy with Id {$($configPolicy.Id)} and DisplayName {$($configPolicy.DisplayName)}"
+        #get the full app details and replace what was retrieved using Get-MgBetaDeviceAppManagementTargetedManagedAppConfiguration
+        if ($null -ne $configPolicy.Apps)
+        {
+            $AppConfiguration = Get-MgBetaDeviceAppManagementTargetedManagedAppConfigurationApp -TargetedManagedAppConfigurationId $configPolicy.Id
+            $complexAppsArray = @()
+            foreach($currentValue in $AppConfiguration){
+                if ($null -ne $currentValue)
+                {
+                    if ($null -ne $currentValue.mobileAppIdentifier.AdditionalProperties.bundleId)
+                    {
+                        $complexMobileAppIdentifier = @{
+                            bundleID = $currentValue.mobileAppIdentifier.AdditionalProperties.bundleId
+                        }
+                    }
+
+                    if ($null -ne $currentValue.mobileAppIdentifier.AdditionalProperties.packageId)
+                    {
+                        $complexMobileAppIdentifier = @{
+                            packageId = $currentValue.mobileAppIdentifier.AdditionalProperties.packageId
+                        }
+                    }
+
+                    if ($null -ne $currentValue.mobileAppIdentifier.AdditionalProperties.windowsAppId)
+                    {
+                        $complexMobileAppIdentifier = @{
+                            windowsAppId  = $currentValue.mobileAppIdentifier.AdditionalProperties.windowsAppId
+                        }
+                    }
+                    $complexAppsHash = @{}
+                    $complexAppsHash.Add('id', $currentValue.Id)
+                    $complexAppsHash.Add('mobileAppIdentifier', $complexMobileAppIdentifier)
+                    $complexAppsArray += $complexAppsHash
+                }
+            }
+        }
+
         $returnHashtable = @{
-            Id                    = $configPolicy.Id
-            DisplayName           = $configPolicy.DisplayName
-            Description           = $configPolicy.Description
-            CustomSettings        = $configPolicy.customSettings
-            Ensure                = 'Present'
-            Credential            = $Credential
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            ApplicationSecret     = $ApplicationSecret
-            CertificateThumbprint = $CertificateThumbprint
-            Managedidentity       = $ManagedIdentity.IsPresent
-            AccessTokens          = $AccessTokens
+            Id                          = $configPolicy.Id
+            DisplayName                 = $configPolicy.DisplayName
+            Description                 = $configPolicy.Description
+            CustomSettings              = $configPolicy.customSettings
+            Ensure                      = 'Present'
+            Credential                  = $Credential
+            ApplicationId               = $ApplicationId
+            TenantId                    = $TenantId
+            ApplicationSecret           = $ApplicationSecret
+            CertificateThumbprint       = $CertificateThumbprint
+            Managedidentity             = $ManagedIdentity.IsPresent
+            AccessTokens                = $AccessTokens
+            RoleScopeTagIds             = $configPolicy.RoleScopeTagIds
+            TargetedAppManagementLevels = [String]$configPolicy.TargetedAppManagementLevels
+            AppGroupType                = [String]$configPolicy.AppGroupType
+            Apps                        = $complexAppsArray
         }
 
         $returnAssignments = @()
@@ -176,6 +235,25 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $Description,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('unspecified','unmanaged','mdm','androidEnterprise','androidEnterpriseDedicatedDevicesWithAzureAdSharedMode','androidOpenSourceProjectUserAssociated','androidOpenSourceProjectUserless','unknownFutureValue')]
+        $TargetedAppManagementLevels,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Apps,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet(
+        'selectedPublicApps','allCoreMicrosoftApps','allMicrosoftApps','allApps')]
+        $AppGroupType,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
@@ -250,6 +328,46 @@ function Set-TargetResource
             [System.Object[]]$customSettingsValue = ConvertTo-M365DSCIntuneAppConfigurationPolicyCustomSettings -Settings $CustomSettings
             $creationParams.Add('customSettings', $customSettingsValue)
         }
+
+        if ($null -ne $Apps)
+        {
+            $appsArray = @()
+            foreach($app in $Apps){
+                if ($null -ne $app.mobileAppIdentifier.bundleID)
+                {
+                    $mobileAppIdentifierHashtable = @{
+                        '@odata.type' = "#microsoft.graph.iosMobileAppIdentifier"
+                        'bundleId' = $app.mobileAppIdentifier.bundleId
+                    }
+                }
+
+                if ($null -ne $app.mobileAppIdentifier.packageID)
+                {
+                    $mobileAppIdentifierHashtable = @{
+                        '@odata.type' = "#microsoft.graph.androidMobileAppIdentifier"
+                        'packageId' = $app.mobileAppIdentifier.packageId
+                    }
+                }
+
+                if ($null -ne $app.mobileAppIdentifier.windowsAppID)
+                {
+                    $mobileAppIdentifierHashtable = @{
+                        '@odata.type' = "#microsoft.graph.windowsAppIdentifier"
+                        'windowsAppId' = $app.mobileAppIdentifier.windowsAppId
+                    }
+                }
+
+                $appHashtable = @{
+                    'id' = $App.Id
+                    'mobileAppIdentifier' = $mobileAppIdentifierHashtable
+                }
+
+                $appsArray += $appHashtable
+
+            }
+            $creationParams.Add('apps', $appsArray)
+        }
+
         $policy = New-MgBetaDeviceAppManagementTargetedManagedAppConfiguration @creationParams
 
         #region Assignments
@@ -266,7 +384,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentconfigPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating Intune App Configuration Policy {$DisplayName}"
-
+        
         $updateParams = @{
             targetedManagedAppConfigurationId = $currentconfigPolicy.Id
             displayName                       = $DisplayName
@@ -277,6 +395,51 @@ function Set-TargetResource
             $customSettingsValue = ConvertTo-M365DSCIntuneAppConfigurationPolicyCustomSettings -Settings $CustomSettings
             $updateParams.Add('customSettings', $customSettingsValue)
         }
+
+        if ($null -ne $Apps)
+        {
+            $appsArray = @()
+            foreach ($app in $Apps)
+            {
+                if ($null -ne $app.mobileAppIdentifier.bundleID)
+                {
+                    $mobileAppIdentifierHashtable = @{
+                        '@odata.type' = "#microsoft.graph.iosMobileAppIdentifier"
+                        bundleId      = $app.mobileAppIdentifier.bundleID
+                    }
+                }
+
+                if ($null -ne $app.mobileAppIdentifier.packageID)
+                {
+                    $mobileAppIdentifierHashtable = @{
+                        '@odata.type' = "#microsoft.graph.androidMobileAppIdentifier"
+                        packageId     = $app.mobileAppIdentifier.packageId
+                    }
+                }
+
+                if ($null -ne $app.mobileAppIdentifier.windowsAppID)
+                {
+                    $mobileAppIdentifierHashtable = @{
+                        '@odata.type' = "#microsoft.graph.windowsAppIdentifier"
+                        windowsAppId  = $app.mobileAppIdentifier.windowsAppId
+                    }
+                }
+
+                $appsArray += @{
+                    'mobileAppIdentifier' = $mobileAppIdentifierHashtable
+                }
+            }
+
+            $appsBody = @{
+                appGroupType = $AppGroupType
+                apps = $appsArray
+            }
+            #apps handled separately as not supported by Update-MgBetaDeviceAppManagementTargetedManagedAppConfiguration
+            Write-Verbose -Message "Updating Apps for Intune App Configuration Policy {$DisplayName}"
+            $Uri = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/deviceAppManagement/targetedManagedAppConfigurations('$($currentconfigPolicy.Id)')/targetApps"
+            Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $($appsBody | ConvertTo-Json -Depth 10) -Verbose
+        }
+
         Update-MgBetaDeviceAppManagementTargetedManagedAppConfiguration @updateParams
 
         $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
@@ -308,6 +471,25 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $Description,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('unspecified','unmanaged','mdm','androidEnterprise','androidEnterpriseDedicatedDevicesWithAzureAdSharedMode','androidOpenSourceProjectUserAssociated','androidOpenSourceProjectUserless','unknownFutureValue')]
+        $TargetedAppManagementLevels,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Apps,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet(
+        'selectedPublicApps','allCoreMicrosoftApps','allMicrosoftApps','allApps')]
+        $AppGroupType,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
@@ -472,7 +654,7 @@ function Export-TargetResource
             $complexFunctions = Get-ComplexFunctionsFromFilterQuery -FilterQuery $Filter
             $Filter = Remove-ComplexFunctionsFromFilterQuery -FilterQuery $Filter
         }
-        [array]$configPolicies = Get-MgBetaDeviceAppManagementTargetedManagedAppConfiguration -All:$true -Filter $Filter -ErrorAction Stop
+        [array]$configPolicies = Get-MgBetaDeviceAppManagementTargetedManagedAppConfiguration -All:$true  -ExpandProperty 'Apps' -Filter $Filter -ErrorAction Stop
         $configPolicies = Find-GraphDataUsingComplexFunctions -ComplexFunctions $complexFunctions -Policies $configPolicies
 
         $i = 1
@@ -519,6 +701,34 @@ function Export-TargetResource
                 $Results.CustomSettings = Get-M365DSCIntuneAppConfigurationPolicyCustomSettingsAsString -Settings $Results.CustomSettings
             }
 
+            if ($Results.Apps)
+            {
+                $complexTypeMapping = @(
+                    @{
+                        Name            = 'Apps'
+                        CimInstanceName = 'managedMobileApp'
+                    }
+                    @{
+                        Name            = 'mobileAppIdentifier'
+                        CimInstanceName = 'AppIdentifier'
+                        isRequired      = $true
+                    }
+                )
+
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                    -ComplexObject $Results.Apps `
+                    -CIMInstanceName managedMobileApp `
+                    -ComplexTypeMapping $complexTypeMapping
+                if ($complexTypeStringResult)
+                {
+                    $Results.Apps = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('Apps') | Out-Null
+                }
+            }
+
             if ($Results.Assignments)
             {
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject ([Array]$Results.Assignments) -CIMInstanceName DeviceManagementConfigurationPolicyAssignments
@@ -539,7 +749,7 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential `
-                -NoEscape @('CustomSettings', 'Assignments')
+                -NoEscape @('CustomSettings', 'Assignments', 'Apps')
 
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `

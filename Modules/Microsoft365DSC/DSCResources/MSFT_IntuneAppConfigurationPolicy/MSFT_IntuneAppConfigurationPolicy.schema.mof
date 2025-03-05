@@ -15,6 +15,20 @@ class MSFT_IntuneAppConfigurationPolicyCustomSetting
     [Write, Description("Name of the custom setting.")] String name;
     [Write, Description("Value of the custom setting.")] String value;
 };
+[ClassVersion("1.0.0"), FriendlyName("MSFT_managedMobileApp")]
+class MSFT_managedMobileApp
+{
+    [Write, Description("Key of the entity.")] String id;
+    [Write, Description("The identifier for an app with it's operating system type."), EmbeddedInstance("MSFT_AppIdentifier")] String mobileAppIdentifier[];
+};
+
+[ClassVersion("1.0.0"), FriendlyName("MSFT_AppIdentifier")]
+class MSFT_AppIdentifier
+{
+    [Write, Description("AppId iOS.")] String bundleID;
+    [Write, Description("AppId Android.")] String packageID;
+    [Write, Description("AppId Windows.")] String windowsAppId;
+};
 
 [ClassVersion("1.0.0.0"), FriendlyName("IntuneAppConfigurationPolicy")]
 class MSFT_IntuneAppConfigurationPolicy : OMI_BaseResource
@@ -32,4 +46,8 @@ class MSFT_IntuneAppConfigurationPolicy : OMI_BaseResource
     [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
     [Write, Description("Managed ID being used for authentication.")] Boolean ManagedIdentity;
     [Write, Description("Access token used for authentication.")] String AccessTokens[];
+    [Write, Description("List of Scope Tags for this Entity instance.")] String roleScopeTagIds[];
+    [Write, Description("The intended app management levels for this policy."), ValueMap{"unspecified","unmanaged","mdm","androidEnterprise","androidEnterpriseDedicatedDevicesWithAzureAdSharedMode","androidOpenSourceProjectUserAssociated","androidOpenSourceProjectUserless","unknownFutureValue"}, Values{"unspecified","unmanaged","mdm","androidEnterprise","androidEnterpriseDedicatedDevicesWithAzureAdSharedMode","androidOpenSourceProjectUserAssociated","androidOpenSourceProjectUserless","unknownFutureValue"}] String targetedAppManagementLevels;
+    [Write, Description("Public Apps selection: group or individual."), ValueMap{"selectedPublicApps","allCoreMicrosoftApps","allMicrosoftApps","allApps"}, Values{"selectedPublicApps","allCoreMicrosoftApps","allMicrosoftApps","allApps"}] String appGroupType;
+    [Write, Description("List of apps to which the policy is deployed."), EmbeddedInstance("MSFT_managedMobileApp")] String Apps[];
 };

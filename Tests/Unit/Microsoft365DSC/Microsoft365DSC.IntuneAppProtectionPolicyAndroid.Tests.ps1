@@ -31,6 +31,43 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     [string]$description
                 )
                 return @{
+                    AllowedAndroidDeviceModels                        = @('Model1', 'Model2')
+                    AllowedOutboundClipboardSharingExceptionLength    = 4
+                    Alloweddataingestionlocations                     = @('OneDrive', 'SharePoint')
+                    AppActionIfAndroidDeviceManufacturerNotAllowed    = 'block'
+                    AppActionIfAndroidDeviceModelNotAllowed           = 'block'
+                    AppActionIfAndroidSafetyNetAppsVerificationFailed = 'warn'
+                    AppActionIfAndroidSafetyNetDeviceAttestationFailed = 'block'
+                    AppActionIfDeviceComplianceRequired               = 'block'
+                    AppActionIfDeviceLockNotSet                       = 'block'
+                    AppActionIfMaximumPinRetriesExceeded              = 'wipe'
+                    AppActionIfUnableToAuthenticateUser               = 'block'
+                    ApprovedKeyboards                                 = @('fake|string')
+                    BiometricAuthenticationBlocked                    = $True
+                    BlockAfterCompanyPortalUpdateDeferralInDays       = 7
+                    BlockDataIngestionIntoOrganizationDocuments       = $False
+                    ConnectToVpnOnLaunch                              = $True
+                    CustomDialerAppDisplayName                        = 'MyDialerApp'
+                    CustomDialerAppPackageId                          = 'com.example.dialer'
+                    DeviceLockRequired                                = $True
+                    DialerRestrictionLevel                            = 'managedApps'
+                    ExemptedAppPackages                               = @('fake|string')
+                    FingerprintAndBiometricEnabled                    = $True
+                    KeyboardsRestricted                               = $True
+                    MaximumAllowedDeviceThreatLevel                   = 'medium'
+                    MessagingRedirectAppDisplayName                   = 'MessageApp'
+                    MessagingRedirectAppPackageId                     = 'com.example.messageapp'
+                    MinimumWipePatchVersion                           = '2023-01-01'
+                    MobileThreatDefenseRemediationAction              = 'block'
+                    NotificationRestriction                           = 'block'
+                    PreviousPinBlockCount                             = 4
+                    ProtectedMessagingRedirectAppType                 = 'specificApps'
+                    RequiredAndroidSafetyNetAppsVerificationType      = 'enabled'
+                    RequiredAndroidSafetyNetDeviceAttestationType     = 'basicIntegrity'
+                    RequiredAndroidSafetyNetEvaluationType            = 'hardwareBacked'
+                    TargetedAppManagementLevels                       = 'mdm'
+                    WarnAfterCompanyPortalUpdateDeferralInDays        = 14
+                    WipeAfterCompanyPortalUpdateDeferralInDays        = 90
                     AllowedDataStorageLocations                     = @('sharePoint')
                     AllowedInboundDataTransferSources               = 'managedApps'
                     AllowedOutboundClipboardSharingLevel            = 'managedAppsWithPasteIn'
@@ -87,6 +124,53 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     [string]$description
                 )
                 return @{
+                    AllowedAndroidDeviceModels                        = @('Model1', 'Model2')
+                    AllowedOutboundClipboardSharingExceptionLength    = 4
+                    Alloweddataingestionlocations                     = @('OneDrive', 'SharePoint')
+                    AppActionIfAndroidDeviceManufacturerNotAllowed    = 'block'
+                    AppActionIfAndroidDeviceModelNotAllowed           = 'block'
+                    AppActionIfAndroidSafetyNetAppsVerificationFailed = 'warn'
+                    AppActionIfAndroidSafetyNetDeviceAttestationFailed = 'block'
+                    AppActionIfDeviceComplianceRequired               = 'block'
+                    AppActionIfDeviceLockNotSet                       = 'block'
+                    AppActionIfMaximumPinRetriesExceeded              = 'wipe'
+                    AppActionIfUnableToAuthenticateUser               = 'block'
+                    ApprovedKeyboards                                 = @(
+                            [pscustomobject]@{
+                            name  = 'fake'
+                            value = 'string'
+                            }
+                    )
+                    BiometricAuthenticationBlocked                    = $True
+                    BlockAfterCompanyPortalUpdateDeferralInDays       = 7
+                    BlockDataIngestionIntoOrganizationDocuments       = $False
+                    ConnectToVpnOnLaunch                              = $True
+                    CustomDialerAppDisplayName                        = 'MyDialerApp'
+                    CustomDialerAppPackageId                          = 'com.example.dialer'
+                    DeviceLockRequired                                = $True
+                    DialerRestrictionLevel                            = 'managedApps'
+                    ExemptedAppPackages                               = @(
+                            [pscustomobject]@{
+                            name  = 'fake'
+                            value = 'string'
+                            }
+                    )
+                    FingerprintAndBiometricEnabled                    = $True
+                    KeyboardsRestricted                               = $True
+                    MaximumAllowedDeviceThreatLevel                   = 'medium'
+                    MessagingRedirectAppDisplayName                   = 'MessageApp'
+                    MessagingRedirectAppPackageId                     = 'com.example.messageapp'
+                    MinimumWipePatchVersion                           = '2023-01-01'
+                    MobileThreatDefenseRemediationAction              = 'block'
+                    NotificationRestriction                           = 'block'
+                    PreviousPinBlockCount                             = 4
+                    ProtectedMessagingRedirectAppType                 = 'specificApps'
+                    RequiredAndroidSafetyNetAppsVerificationType      = 'enabled'
+                    RequiredAndroidSafetyNetDeviceAttestationType     = 'basicIntegrity'
+                    RequiredAndroidSafetyNetEvaluationType            = 'hardwareBacked'
+                    TargetedAppManagementLevels                       = 'mdm'
+                    WarnAfterCompanyPortalUpdateDeferralInDays        = 14
+                    WipeAfterCompanyPortalUpdateDeferralInDays        = 90
                     displayName                                     = 'DSC Policy'
                     id                                              = '12345-12345-12345-12345-12345'
                     '@odata.type'                                   = '#microsoft.graph.androidManagedAppProtection'

@@ -13,6 +13,171 @@ function Get-TargetResource
         $Description,
 
         [Parameter()]
+        [System.String[]]
+        $AllowedAndroidDeviceModels,
+
+        [Parameter()]
+        [System.Int32]
+        $AllowedOutboundClipboardSharingExceptionLength,
+
+        [Parameter()]
+        [System.Boolean]
+        $BiometricAuthenticationBlocked,
+
+        [Parameter()]
+        [System.Int32]
+        $BlockAfterCompanyPortalUpdateDeferralInDays,
+
+        [Parameter()]
+        [System.Boolean]
+        $BlockDataIngestionIntoOrganizationDocuments,
+
+        [Parameter()]
+        [System.Boolean]
+        $ConnectToVpnOnLaunch,
+
+        [Parameter()]
+        [System.String]
+        $CustomDialerAppDisplayName,
+
+        [Parameter()]
+        [System.String]
+        $CustomDialerAppPackageId,
+
+        [Parameter()]
+        [System.Boolean]
+        $DeviceLockRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $FingerprintAndBiometricEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $KeyboardsRestricted,
+
+        [Parameter()]
+        [System.String]
+        $MessagingRedirectAppDisplayName,
+
+        [Parameter()]
+        [System.String]
+        $MessagingRedirectAppPackageId,
+
+        [Parameter()]
+        [System.String]
+        $MinimumWipePatchVersion,
+
+        [Parameter()]
+        [System.Int32]
+        $PreviousPinBlockCount,
+
+        [Parameter()]
+        [System.Int32]
+        $WarnAfterCompanyPortalUpdateDeferralInDays,
+
+        [Parameter()]
+        [System.Int32]
+        $WipeAfterCompanyPortalUpdateDeferralInDays,
+
+        [Parameter()]
+        [System.String[]]
+        $Alloweddataingestionlocations,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("block", "wipe", "warn", "blockWhenSettingIsSupported")]
+        $AppActionIfAndroidDeviceManufacturerNotAllowed,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("block", "wipe", "warn", "blockWhenSettingIsSupported")]
+        $AppActionIfAndroidDeviceModelNotAllowed,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("block", "wipe", "warn", "blockWhenSettingIsSupported")]
+        $AppActionIfAndroidSafetyNetAppsVerificationFailed,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("block", "wipe", "warn", "blockWhenSettingIsSupported")]
+        $AppActionIfAndroidSafetyNetDeviceAttestationFailed,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("block", "wipe", "warn", "blockWhenSettingIsSupported")]
+        $AppActionIfDeviceComplianceRequired,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("block", "wipe", "warn", "blockWhenSettingIsSupported")]
+        $AppActionIfDeviceLockNotSet,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("block", "wipe", "warn", "blockWhenSettingIsSupported")]
+        $AppActionIfMaximumPinRetriesExceeded,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("block", "wipe", "warn", "blockWhenSettingIsSupported")]
+        $AppActionIfUnableToAuthenticateUser,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("block", "wipe", "warn", "blockWhenSettingIsSupported")]
+        $MobileThreatDefenseRemediationAction,
+
+        [Parameter()]
+        [ValidateSet("allApps", "managedApps", "customApp", "blocked")]
+        [System.String]
+        $DialerRestrictionLevel,
+
+        [Parameter()]
+        [ValidateSet("notConfigured", "secured", "low", "medium", "high")]
+        [System.String]
+        $MaximumAllowedDeviceThreatLevel,
+
+        [Parameter()]
+        [ValidateSet("allow", "blockOrganizationalData", "block")]
+        [System.String]
+        $NotificationRestriction,
+
+        [Parameter()]
+        [ValidateSet("anyApp", "anyManagedApp", "specificApps", "blocked")]
+        [System.String]
+        $ProtectedMessagingRedirectAppType,
+
+        [Parameter()]
+        [ValidateSet("none", "enabled")]
+        [System.String]
+        $RequiredAndroidSafetyNetAppsVerificationType,
+
+        [Parameter()]
+        [ValidateSet("none", "basicIntegrity", "basicIntegrityAndDeviceCertification")]
+        [System.String]
+        $RequiredAndroidSafetyNetDeviceAttestationType,
+
+        [Parameter()]
+        [ValidateSet("basic", "hardwareBacked")]
+        [System.String]
+        $RequiredAndroidSafetyNetEvaluationType,
+
+        [Parameter()]
+        [ValidateSet("unspecified", "unmanaged", "mdm", "androidEnterprise", "androidEnterpriseDedicatedDevicesWithAzureAdSharedMode", "androidOpenSourceProjectUserAssociated", "androidOpenSourceProjectUserless", "unknownFutureValue")]
+        [System.String]
+        $TargetedAppManagementLevels,
+
+        [Parameter()]
+        [System.String[]]
+        $ApprovedKeyboards,
+
+        [Parameter()]
+        [System.String[]]
+        $ExemptedAppPackages,
+
+        [Parameter()]
         [System.String]
         $PeriodOfflineBeforeAccessCheck,
 
@@ -329,41 +494,72 @@ function Get-TargetResource
             {
                 'String'
                 {
-                    $policy.add($param, $policyInfo.$param.tostring())
+                    if ($null -ne $policyInfo.$param)
+                    {
+                    $policy.Add($param, $policyInfo.$param.tostring())
+                    }
+
                 }
 
                 'Array'
                 {
-                    $tmparray = @()
-                    $policyInfo.$param | ForEach-Object { $tmparray += $_.tostring() }
-                    $policy.add($param, $tmparray)
+                    if ($null -ne $policyInfo.$param)
+                    {
+                        $tmparray = @()
+                        $policyInfo.$param | ForEach-Object { $tmparray += $_.tostring() }
+                        $policy.Add($param, $tmparray)
+                    }
                 }
 
                 DEFAULT
                 {
-                    $policy.add($param, $policyInfo.$param)
+                    if ($null -ne $policyInfo.$param)
+                    {
+                        $policy.Add($param, $policyInfo.$param)
+                    }
                 }
             }
         }
         # loop credential parameters and add them from input params
         foreach ($param in ($Allparams.keys | Where-Object { $allparams.$_.Type -eq 'Credential' }) )
         {
-            $policy.add($param, (Get-Variable -Name $param).value)
+            $policy.Add($param, (Get-Variable -Name $param).value)
         }
         # fix for managed identity credential value
-        $policy.add('ManagedIdentity', $ManagedIdentity.IsPresent)
+        $policy.Add('ManagedIdentity', $ManagedIdentity.IsPresent)
         # add complex parameters manually as they all have different requirements - potential to change in future
-        $policy.add('Ensure', 'Present')
-        $policy.add('Apps', $appsArray)
-        $policy.add('Assignments', $assignmentsArray)
-        $policy.add('ExcludedGroups', $exclusionArray)
-        $policy.add('AppGroupType', $policyInfo.AppGroupType.toString())
+        $policy.Add('Ensure', 'Present')
+        $policy.Add('Apps', $appsArray)
+        $policy.Add('Assignments', $assignmentsArray)
+        $policy.Add('ExcludedGroups', $exclusionArray)
+        $policy.Add('AppGroupType', $policyInfo.AppGroupType.toString())
         #managed browser settings - export as is, when re-applying function will correct
-        $policy.add('ManagedBrowser', $policyInfo.ManagedBrowser.toString())
-        $policy.add('ManagedBrowserToOpenLinksRequired', $policyInfo.ManagedBrowserToOpenLinksRequired)
-        $policy.add('CustomBrowserDisplayName', $policyInfo.CustomBrowserDisplayName)
-        $policy.add('CustomBrowserPackageId', $policyInfo.CustomBrowserPackageId)
-        $policy.add('AccessTokens', $AccessTokens)
+        $policy.Add('ManagedBrowser', $policyInfo.ManagedBrowser.toString())
+        $policy.Add('ManagedBrowserToOpenLinksRequired', $policyInfo.ManagedBrowserToOpenLinksRequired)
+        $policy.Add('CustomBrowserDisplayName', $policyInfo.CustomBrowserDisplayName)
+        $policy.Add('CustomBrowserPackageId', $policyInfo.CustomBrowserPackageId)
+        $policy.Add('AccessTokens', $AccessTokens)
+
+        #convert keyvaluepairs to array
+        $approvedKeyboardArray = @()
+        foreach ($keyboard in $policyInfo.approvedKeyboards)
+        {
+            $approvedKeyboardArray += $keyboard.Name + '|' + $keyboard.Value
+        }
+        if ($approvedKeyboardArray.Count -gt 0)
+        {
+            $policy.ApprovedKeyboards = $approvedKeyboardArray
+        }
+        
+        $exemptedAppPackagesArray = @()
+        foreach ($exemptedapppackage in $policyInfo.exemptedAppPackages)
+        {
+            $exemptedAppPackagesArray += $exemptedapppackage.Name + '|' + $exemptedapppackage.Value
+        }
+        if ($exemptedAppPackagesArray.Count -gt 0)
+        {
+            $policy.ExemptedAppPackages = $exemptedAppPackagesArray
+        }
 
         return $policy
     }
@@ -400,6 +596,171 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $Description,
+
+        [Parameter()]
+        [System.String[]]
+        $AllowedAndroidDeviceModels,
+
+        [Parameter()]
+        [System.Int32]
+        $AllowedOutboundClipboardSharingExceptionLength,
+
+        [Parameter()]
+        [System.Boolean]
+        $BiometricAuthenticationBlocked,
+
+        [Parameter()]
+        [System.Int32]
+        $BlockAfterCompanyPortalUpdateDeferralInDays,
+
+        [Parameter()]
+        [System.Boolean]
+        $BlockDataIngestionIntoOrganizationDocuments,
+
+        [Parameter()]
+        [System.Boolean]
+        $ConnectToVpnOnLaunch,
+
+        [Parameter()]
+        [System.String]
+        $CustomDialerAppDisplayName,
+
+        [Parameter()]
+        [System.String]
+        $CustomDialerAppPackageId,
+
+        [Parameter()]
+        [System.Boolean]
+        $DeviceLockRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $FingerprintAndBiometricEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $KeyboardsRestricted,
+
+        [Parameter()]
+        [System.String]
+        $MessagingRedirectAppDisplayName,
+
+        [Parameter()]
+        [System.String]
+        $MessagingRedirectAppPackageId,
+
+        [Parameter()]
+        [System.String]
+        $MinimumWipePatchVersion,
+
+        [Parameter()]
+        [System.Int32]
+        $PreviousPinBlockCount,
+
+        [Parameter()]
+        [System.Int32]
+        $WarnAfterCompanyPortalUpdateDeferralInDays,
+
+        [Parameter()]
+        [System.Int32]
+        $WipeAfterCompanyPortalUpdateDeferralInDays,
+
+        [Parameter()]
+        [System.String[]]
+        $Alloweddataingestionlocations,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("block", "wipe", "warn", "blockWhenSettingIsSupported")]
+        $AppActionIfAndroidDeviceManufacturerNotAllowed,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("block", "wipe", "warn", "blockWhenSettingIsSupported")]
+        $AppActionIfAndroidDeviceModelNotAllowed,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("block", "wipe", "warn", "blockWhenSettingIsSupported")]
+        $AppActionIfAndroidSafetyNetAppsVerificationFailed,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("block", "wipe", "warn", "blockWhenSettingIsSupported")]
+        $AppActionIfAndroidSafetyNetDeviceAttestationFailed,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("block", "wipe", "warn", "blockWhenSettingIsSupported")]
+        $AppActionIfDeviceComplianceRequired,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("block", "wipe", "warn", "blockWhenSettingIsSupported")]
+        $AppActionIfDeviceLockNotSet,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("block", "wipe", "warn", "blockWhenSettingIsSupported")]
+        $AppActionIfMaximumPinRetriesExceeded,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("block", "wipe", "warn", "blockWhenSettingIsSupported")]
+        $AppActionIfUnableToAuthenticateUser,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("block", "wipe", "warn", "blockWhenSettingIsSupported")]
+        $MobileThreatDefenseRemediationAction,
+
+        [Parameter()]
+        [ValidateSet("allApps", "managedApps", "customApp", "blocked")]
+        [System.String]
+        $DialerRestrictionLevel,
+
+        [Parameter()]
+        [ValidateSet("notConfigured", "secured", "low", "medium", "high")]
+        [System.String]
+        $MaximumAllowedDeviceThreatLevel,
+
+        [Parameter()]
+        [ValidateSet("allow", "blockOrganizationalData", "block")]
+        [System.String]
+        $NotificationRestriction,
+
+        [Parameter()]
+        [ValidateSet("anyApp", "anyManagedApp", "specificApps", "blocked")]
+        [System.String]
+        $ProtectedMessagingRedirectAppType,
+
+        [Parameter()]
+        [ValidateSet("none", "enabled")]
+        [System.String]
+        $RequiredAndroidSafetyNetAppsVerificationType,
+
+        [Parameter()]
+        [ValidateSet("none", "basicIntegrity", "basicIntegrityAndDeviceCertification")]
+        [System.String]
+        $RequiredAndroidSafetyNetDeviceAttestationType,
+
+        [Parameter()]
+        [ValidateSet("basic", "hardwareBacked")]
+        [System.String]
+        $RequiredAndroidSafetyNetEvaluationType,
+
+        [Parameter()]
+        [ValidateSet("unspecified", "unmanaged", "mdm", "androidEnterprise", "androidEnterpriseDedicatedDevicesWithAzureAdSharedMode", "androidOpenSourceProjectUserAssociated", "androidOpenSourceProjectUserless", "unknownFutureValue")]
+        [System.String]
+        $TargetedAppManagementLevels,
+
+        [Parameter()]
+        [System.String[]]
+        $ApprovedKeyboards,
+
+        [Parameter()]
+        [System.String[]]
+        $ExemptedAppPackages,
 
         [Parameter()]
         [System.String]
@@ -693,6 +1054,44 @@ function Set-TargetResource
         $configstring += ( 'ExcludedGroups' + ":`r`n" + ($PSBoundParameters.ExcludedGroups | Out-String) + "`r`n" )
 
     }
+        #rebuild array as a MicrosoftGraphKeyValuePair hash table for ApprovedKeyboards
+    if ($PSBoundParameters.keys -contains 'ApprovedKeyboards' )
+    {
+        $approvedKeyboardHastableArray = @()
+        $PSBoundParameters.ApprovedKeyboards | ForEach-Object {
+            if ($_ -ne $null)
+            {               
+                $tempArray = @()
+                $tempArray = $_ -split '[|]'
+                $tempHash = @{}
+                $tempHash.Add('name', $tempArray[0])
+                $tempHash.Add('value', $tempArray[1])
+                $approvedKeyboardHastableArray += $tempHash             
+            }
+        }
+        $configstring += ( 'ApprovedKeyboards' + ":`r`n" + ($PSBoundParameters.ApprovedKeyboards | Out-String) + "`r`n" )
+        $setParams.ApprovedKeyboards = $approvedKeyboardHastableArray
+    }
+
+    #rebuild array as a MicrosoftGraphKeyValuePair hash table for ExemptedAppPackages
+    if ($PSBoundParameters.keys -contains 'ExemptedAppPackages' )
+    {
+        $exemptedAppPackagesHastableArray = @()
+        $PSBoundParameters.ExemptedAppPackages | ForEach-Object {
+            if ($_ -ne $null)
+            {               
+                $tempArray = @()
+                $tempArray = $_ -split '[|]'
+                $tempHash = @{}
+                $tempHash.Add('name', $tempArray[0])
+                $tempHash.Add('value', $tempArray[1])
+                $exemptedAppPackagesHastableArray += $tempHash             
+            }
+        }
+        $configstring += ( 'ExemptedAppPackages' + ":`r`n" + ($PSBoundParameters.ExemptedAppPackages | Out-String) + "`r`n" )
+        $setParams.ExemptedAppPackages = $exemptedAppPackagesHastableArray
+    }
+
     # set the apps values
     $AppsHash = set-AppsHash -AppGroupType $AppGroupType -apps $apps
     $appshash.Apps | ForEach-Object {
@@ -758,6 +1157,171 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $Description,
+
+        [Parameter()]
+        [System.String[]]
+        $AllowedAndroidDeviceModels,
+
+        [Parameter()]
+        [System.Int32]
+        $AllowedOutboundClipboardSharingExceptionLength,
+
+        [Parameter()]
+        [System.Boolean]
+        $BiometricAuthenticationBlocked,
+
+        [Parameter()]
+        [System.Int32]
+        $BlockAfterCompanyPortalUpdateDeferralInDays,
+
+        [Parameter()]
+        [System.Boolean]
+        $BlockDataIngestionIntoOrganizationDocuments,
+
+        [Parameter()]
+        [System.Boolean]
+        $ConnectToVpnOnLaunch,
+
+        [Parameter()]
+        [System.String]
+        $CustomDialerAppDisplayName,
+
+        [Parameter()]
+        [System.String]
+        $CustomDialerAppPackageId,
+
+        [Parameter()]
+        [System.Boolean]
+        $DeviceLockRequired,
+
+        [Parameter()]
+        [System.Boolean]
+        $FingerprintAndBiometricEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $KeyboardsRestricted,
+
+        [Parameter()]
+        [System.String]
+        $MessagingRedirectAppDisplayName,
+
+        [Parameter()]
+        [System.String]
+        $MessagingRedirectAppPackageId,
+
+        [Parameter()]
+        [System.String]
+        $MinimumWipePatchVersion,
+
+        [Parameter()]
+        [System.Int32]
+        $PreviousPinBlockCount,
+
+        [Parameter()]
+        [System.Int32]
+        $WarnAfterCompanyPortalUpdateDeferralInDays,
+
+        [Parameter()]
+        [System.Int32]
+        $WipeAfterCompanyPortalUpdateDeferralInDays,
+
+        [Parameter()]
+        [System.String[]]
+        $Alloweddataingestionlocations,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("block", "wipe", "warn", "blockWhenSettingIsSupported")]
+        $AppActionIfAndroidDeviceManufacturerNotAllowed,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("block", "wipe", "warn", "blockWhenSettingIsSupported")]
+        $AppActionIfAndroidDeviceModelNotAllowed,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("block", "wipe", "warn", "blockWhenSettingIsSupported")]
+        $AppActionIfAndroidSafetyNetAppsVerificationFailed,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("block", "wipe", "warn", "blockWhenSettingIsSupported")]
+        $AppActionIfAndroidSafetyNetDeviceAttestationFailed,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("block", "wipe", "warn", "blockWhenSettingIsSupported")]
+        $AppActionIfDeviceComplianceRequired,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("block", "wipe", "warn", "blockWhenSettingIsSupported")]
+        $AppActionIfDeviceLockNotSet,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("block", "wipe", "warn", "blockWhenSettingIsSupported")]
+        $AppActionIfMaximumPinRetriesExceeded,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("block", "wipe", "warn", "blockWhenSettingIsSupported")]
+        $AppActionIfUnableToAuthenticateUser,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet("block", "wipe", "warn", "blockWhenSettingIsSupported")]
+        $MobileThreatDefenseRemediationAction,
+
+        [Parameter()]
+        [ValidateSet("allApps", "managedApps", "customApp", "blocked")]
+        [System.String]
+        $DialerRestrictionLevel,
+
+        [Parameter()]
+        [ValidateSet("notConfigured", "secured", "low", "medium", "high")]
+        [System.String]
+        $MaximumAllowedDeviceThreatLevel,
+
+        [Parameter()]
+        [ValidateSet("allow", "blockOrganizationalData", "block")]
+        [System.String]
+        $NotificationRestriction,
+
+        [Parameter()]
+        [ValidateSet("anyApp", "anyManagedApp", "specificApps", "blocked")]
+        [System.String]
+        $ProtectedMessagingRedirectAppType,
+
+        [Parameter()]
+        [ValidateSet("none", "enabled")]
+        [System.String]
+        $RequiredAndroidSafetyNetAppsVerificationType,
+
+        [Parameter()]
+        [ValidateSet("none", "basicIntegrity", "basicIntegrityAndDeviceCertification")]
+        [System.String]
+        $RequiredAndroidSafetyNetDeviceAttestationType,
+
+        [Parameter()]
+        [ValidateSet("basic", "hardwareBacked")]
+        [System.String]
+        $RequiredAndroidSafetyNetEvaluationType,
+
+        [Parameter()]
+        [ValidateSet("unspecified", "unmanaged", "mdm", "androidEnterprise", "androidEnterpriseDedicatedDevicesWithAzureAdSharedMode", "androidOpenSourceProjectUserAssociated", "androidOpenSourceProjectUserless", "unknownFutureValue")]
+        [System.String]
+        $TargetedAppManagementLevels,
+
+        [Parameter()]
+        [System.String[]]
+        $ApprovedKeyboards,
+
+        [Parameter()]
+        [System.String[]]
+        $ExemptedAppPackages,
 
         [Parameter()]
         [System.String]
@@ -1451,6 +2015,43 @@ function Get-InputParameters
         ScreenCaptureBlocked                            = @{Type = 'Parameter'        ; ExportFileType = 'NA'; }
         SimplePinBlocked                                = @{Type = 'Parameter'        ; ExportFileType = 'NA'; }
         TenantId                                        = @{Type = 'Credential'       ; ExportFileType = 'NA'; }
+        AllowedAndroidDeviceModels                         = @{Type = 'Parameter'; ExportFileType = 'Array'; }
+        AllowedOutboundClipboardSharingExceptionLength     = @{Type = 'Parameter'; ExportFileType = 'NA'; }
+        BiometricAuthenticationBlocked                     = @{Type = 'Parameter'; ExportFileType = 'NA'; }
+        BlockAfterCompanyPortalUpdateDeferralInDays        = @{Type = 'Parameter'; ExportFileType = 'NA'; }
+        BlockDataIngestionIntoOrganizationDocuments        = @{Type = 'Parameter'; ExportFileType = 'NA'; }
+        ConnectToVpnOnLaunch                               = @{Type = 'Parameter'; ExportFileType = 'NA'; }
+        CustomDialerAppDisplayName                         = @{Type = 'Parameter'; ExportFileType = 'String'; }
+        CustomDialerAppPackageId                           = @{Type = 'Parameter'; ExportFileType = 'String'; }
+        DeviceLockRequired                                 = @{Type = 'Parameter'; ExportFileType = 'NA'; }
+        FingerprintAndBiometricEnabled                     = @{Type = 'Parameter'; ExportFileType = 'NA'; }
+        KeyboardsRestricted                                = @{Type = 'Parameter'; ExportFileType = 'NA'; }
+        MessagingRedirectAppDisplayName                    = @{Type = 'Parameter'; ExportFileType = 'String'; }
+        MessagingRedirectAppPackageId                      = @{Type = 'Parameter'; ExportFileType = 'String'; }
+        MinimumWipePatchVersion                            = @{Type = 'Parameter'; ExportFileType = 'NA'; }
+        PreviousPinBlockCount                              = @{Type = 'Parameter'; ExportFileType = 'NA'; }
+        WarnAfterCompanyPortalUpdateDeferralInDays         = @{Type = 'Parameter'; ExportFileType = 'NA'; }
+        WipeAfterCompanyPortalUpdateDeferralInDays         = @{Type = 'Parameter'; ExportFileType = 'NA'; }
+        Alloweddataingestionlocations                      = @{Type = 'Parameter'; ExportFileType = 'Array'; }
+        AppActionIfAndroidDeviceManufacturerNotAllowed     = @{Type = 'Parameter'; ExportFileType = 'String'; }
+        AppActionIfAndroidDeviceModelNotAllowed            = @{Type = 'Parameter'; ExportFileType = 'String'; }
+        AppActionIfAndroidSafetyNetAppsVerificationFailed  = @{Type = 'Parameter'; ExportFileType = 'String'; }
+        AppActionIfAndroidSafetyNetDeviceAttestationFailed = @{Type = 'Parameter'; ExportFileType = 'String'; }
+        AppActionIfDeviceComplianceRequired                = @{Type = 'Parameter'; ExportFileType = 'String'; }
+        AppActionIfDeviceLockNotSet                        = @{Type = 'Parameter'; ExportFileType = 'String'; }
+        AppActionIfMaximumPinRetriesExceeded               = @{Type = 'Parameter'; ExportFileType = 'String'; }
+        AppActionIfUnableToAuthenticateUser                = @{Type = 'Parameter'; ExportFileType = 'String'; }
+        MobileThreatDefenseRemediationAction               = @{Type = 'Parameter'; ExportFileType = 'String'; }
+        DialerRestrictionLevel                             = @{Type = 'Parameter'; ExportFileType = 'String'; }
+        MaximumAllowedDeviceThreatLevel                    = @{Type = 'Parameter'; ExportFileType = 'String'; }
+        NotificationRestriction                            = @{Type = 'Parameter'; ExportFileType = 'String'; }
+        ProtectedMessagingRedirectAppType                  = @{Type = 'Parameter'; ExportFileType = 'String'; }
+        RequiredAndroidSafetyNetAppsVerificationType       = @{Type = 'Parameter'; ExportFileType = 'String'; }
+        RequiredAndroidSafetyNetDeviceAttestationType      = @{Type = 'Parameter'; ExportFileType = 'String'; }
+        RequiredAndroidSafetyNetEvaluationType             = @{Type = 'Parameter'; ExportFileType = 'String'; }
+        TargetedAppManagementLevels                        = @{Type = 'Parameter'; ExportFileType = 'String'; }
+        ApprovedKeyboards                                  = @{Type = 'Parameter'; ExportFileType = 'ComplexParameter'; }
+        ExemptedAppPackages                                = @{Type = 'Parameter'; ExportFileType = 'ComplexParameter'; }
     }
 }
 
