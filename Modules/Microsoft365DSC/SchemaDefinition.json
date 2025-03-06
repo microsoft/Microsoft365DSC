@@ -60900,6 +60900,11 @@
                            },
                            {
                                "CIMType":  "Boolean",
+                               "Name":  "IRASettingsEnabled",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
                                "Name":  "Anonymization",
                                "Option":  "Write"
                            },
@@ -60916,6 +60921,11 @@
                            {
                                "CIMType":  "Boolean",
                                "Name":  "RaiseAuditAlert",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "InlineAlertPolicyCustomization",
                                "Option":  "Write"
                            },
                            {

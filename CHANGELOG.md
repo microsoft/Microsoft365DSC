@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.25.305.1
 
 * AADApplication
   * If both the current and desired values have the Ensure property set
@@ -21,7 +21,7 @@
     FIXES [#4526](https://github.com/microsoft/Microsoft365DSC/issues/4526)
 * EXOTransportConfig
   * Fixed an issue where `JournalingReportNdrTo` with the default value of `<>`
-    would throw an error during apply.  
+    would throw an error during apply.
     FIXES [#5606](https://github.com/microsoft/Microsoft365DSC/issues/5606)
 * FabricAdminTenantSettings
   * Fixed issue where the export would add double quotes in front of boolean
@@ -64,7 +64,7 @@
   * Escape strings in primary key of resource name for export content.
     FIXES [#5865](https://github.com/microsoft/Microsoft365DSC/issues/5865)
 * DEPENDENCIES
-  * Updated MSCloudLoginAssistant to version 1.1.40.
+  * Updated MSCloudLoginAssistant to version 1.1.41.
 
 # 1.25.226.1
 
