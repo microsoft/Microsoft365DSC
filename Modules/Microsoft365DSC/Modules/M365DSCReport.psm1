@@ -616,7 +616,7 @@ function New-M365DSCConfigurationToCSV
                         }
                         else
                         {
-                            $value = ($resource.$property).ToString().Replace('$', '`$')
+                            $value = ($resource.$property).ToString() # .Replace('$', '')
                             $value = $value.Replace('@', '')
                             $value = $value.Replace('(', '')
                             $value = $value.Replace(')', '')
