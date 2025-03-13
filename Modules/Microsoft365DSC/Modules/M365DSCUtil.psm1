@@ -3058,7 +3058,7 @@ function Assert-M365DSCBlueprint
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::New()
     $data.Add('Event', 'AssertBlueprint')
     $data.Add('BluePrint', $BluePrintUrl)
     Add-M365DSCTelemetryEvent -Data $data

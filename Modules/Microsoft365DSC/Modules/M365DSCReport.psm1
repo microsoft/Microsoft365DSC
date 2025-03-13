@@ -699,7 +699,7 @@ function New-M365DSCReportFromConfiguration
     )
     DynamicParam # parameter 'Delimiter' is only available when Type = 'CSV'
     {
-        $paramDictionary = [System.Management.Automation.RuntimeDefinedParameterDictionary]::new()
+        $paramDictionary = [System.Management.Automation.RuntimeDefinedParameterDictionary]::New()
         if ($Type -eq 'CSV')
         {
             $delimiterAttr = [System.Management.Automation.ParameterAttribute]::New()
