@@ -63,7 +63,7 @@ function Get-TargetResource
 
     try
     {
-        if (-not $Script:exportedInstance)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Url -ne $Url)
         {
             Write-Verbose -Message "Getting SPOSiteGroups for {$Url}"
 

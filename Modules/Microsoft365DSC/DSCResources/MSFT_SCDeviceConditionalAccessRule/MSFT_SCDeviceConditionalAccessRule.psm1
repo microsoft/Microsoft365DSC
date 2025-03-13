@@ -240,7 +240,7 @@ function Get-TargetResource
 
     try
     {
-        if (-not $Script:exportedInstance)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Name -ne $Name)
         {
             New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
                 -InboundParameters $PSBoundParameters | Out-Null

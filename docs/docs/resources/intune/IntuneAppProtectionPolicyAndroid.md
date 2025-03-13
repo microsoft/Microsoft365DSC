@@ -42,7 +42,7 @@
 | **RequiredAndroidSafetyNetEvaluationType** | Write | String | Defines the Android SafetyNet evaluation type requirement for a managed app to work. | `basic`, `hardwareBacked` |
 | **TargetedAppManagementLevels** | Write | String | The intended app management levels for this policy. Inherited from targetedManagedAppProtection. | `unspecified`, `unmanaged`, `mdm`, `androidEnterprise`, `androidEnterpriseDedicatedDevicesWithAzureAdSharedMode`, `androidOpenSourceProjectUserAssociated`, `androidOpenSourceProjectUserless`, `unknownFutureValue` |
 | **ApprovedKeyboards** | Write | StringArray[] | If Keyboard Restriction is enabled, only keyboards in this approved list will be allowed. A key should be Android package id for a keyboard and value should be a friendly name. | |
-| **Exemptedapppackages** | Write | StringArray[] | App packages in this list will be exempt from the policy and will be able to receive data from managed apps. | |
+| **ExemptedAppPackages** | Write | StringArray[] | App packages in this list will be exempt from the policy and will be able to receive data from managed apps. | |
 | **PeriodOfflineBeforeAccessCheck** | Write | String | The period after which access is checked when the device is not connected to the internet. | |
 | **PeriodOnlineBeforeAccessCheck** | Write | String | The period after which access is checked when the device is connected to the internet. | |
 | **AllowedInboundDataTransferSources** | Write | String | Sources from which data is allowed to be transferred. Possible values are: allApps, managedApps, none. | `allApps`, `managedApps`, `none` |

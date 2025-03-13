@@ -132,7 +132,7 @@ function Get-TargetResource
 
     try
     {
-        if (-not $Script:exportedInstance)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.AppId -ne $AppId)
         {
             Write-Verbose -Message 'Getting configuration of Azure AD ServicePrincipal'
             $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `

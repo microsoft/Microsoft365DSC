@@ -131,7 +131,7 @@ function Get-TargetResource
     )
     try
     {
-        if (-not $Script:exportedInstance)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.DisplayName -ne $DisplayName)
         {
             $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
                 -InboundParameters $PSBoundParameters
@@ -205,7 +205,7 @@ function Get-TargetResource
         }
         if ($complexAuthenticationBehaviors.values.Where({ $null -ne $_ }).Count -eq 0)
         {
-            $complexAuthenticationBehaviors = $null
+            $complexAuthenticationBehaviors = [Array]@()
         }
 
         $complexOptionalClaims = @{}
@@ -1626,7 +1626,7 @@ function Export-TargetResource
                         }
                     }
 
-                    if ($null -ne $Results.AuthenticationBehaviors)
+                    if ($null -ne $Results.AuthenticationBehaviors -and $Results.AuthenticationBehaviors.Length -gt 0)
                     {
                         $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                             -ComplexObject $Results.AuthenticationBehaviors `

@@ -27735,7 +27735,7 @@
                            },
                            {
                                "CIMType":  "String[]",
-                               "Name":  "Exemptedapppackages",
+                               "Name":  "ExemptedAppPackages",
                                "Option":  "Write"
                            },
                            {

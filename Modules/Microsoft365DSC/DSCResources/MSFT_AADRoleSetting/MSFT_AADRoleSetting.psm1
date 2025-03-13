@@ -210,7 +210,7 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    if (-not $Script:exportedInstance)
+    if (-not $Script:exportedInstance -or $Script:exportedInstance.DisplayName -ne $DisplayName)
     {
         Write-Verbose -Message "Getting configuration of Role: $DisplayName"
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `

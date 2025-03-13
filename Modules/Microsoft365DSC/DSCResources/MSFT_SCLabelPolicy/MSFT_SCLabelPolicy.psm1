@@ -112,7 +112,7 @@ function Get-TargetResource
 
     try
     {
-        if (-not $Script:exportedInstance)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Name -ne $Name)
         {
             Write-Verbose -Message "Getting configuration of Sensitivity Label Policy for $Name"
 
@@ -167,12 +167,42 @@ function Get-TargetResource
         }
         else
         {
+            Write-Verbose -Message "Retrieved policy from cache"
             $policy = $Script:exportedInstance
         }
 
         if ($null -ne $policy.Settings)
         {
+            Write-Verbose -Message "Converting Settings"
             $advancedSettingsValue = Convert-StringToAdvancedSettings -AdvancedSettings $policy.Settings
+        }
+
+        $ExchangeLocationValue = $null
+        if ($null -ne $policy.ExchangeLocation)
+        {
+            Write-Verbose -Message "Converting ExchangeLocation to an Array."
+            $ExchangeLocationValue = Convert-ArrayList -CurrentProperty $policy.ExchangeLocation
+        }
+
+        $ExchangeLocationExceptionValue = $null
+        if ($null -ne $policy.ExchangeLocationException)
+        {
+            Write-Verbose -Message "Converting ExchangeLocationException to an Array."
+            $ExchangeLocationExceptionValue = Convert-ArrayList -CurrentProperty $policy.ExchangeLocationException
+        }
+
+        $ModernGroupLocationValue = $null
+        if ($null -ne $policy.ModernGroupLocation)
+        {
+            Write-Verbose -Message "Converting ModernGroupLocation to an Array."
+            $ModernGroupLocationValue = Convert-ArrayList -CurrentProperty $policy.ModernGroupLocation
+        }
+
+        $ModernGroupLocationExceptionValue = $null
+        if ($null -ne $policy.ModernGroupLocationException)
+        {
+            Write-Verbose -Message "Converting ModernGroupLocationException to an Array."
+            $ModernGroupLocationExceptionValue = Convert-ArrayList -CurrentProperty $policy.ModernGroupLocationException
         }
 
         Write-Verbose "Found existing Sensitivity Label policy $($Name)"
@@ -188,10 +218,10 @@ function Get-TargetResource
             CertificatePassword          = $CertificatePassword
             Ensure                       = 'Present'
             Labels                       = $policy.Labels
-            ExchangeLocation             = Convert-ArrayList -CurrentProperty $policy.ExchangeLocation
-            ExchangeLocationException    = Convert-ArrayList -CurrentProperty $policy.ExchangeLocationException
-            ModernGroupLocation          = Convert-ArrayList -CurrentProperty $policy.ModernGroupLocation
-            ModernGroupLocationException = Convert-ArrayList -CurrentProperty $policy.ModernGroupLocationException
+            ExchangeLocation             = $ExchangeLocationValue
+            ExchangeLocationException    = $ExchangeLocationExceptionValue
+            ModernGroupLocation          = $ModernGroupLocationValue
+            ModernGroupLocationException = $ModernGroupLocationExceptionValue
             AccessTokens                 = $AccessTokens
         }
 
@@ -683,6 +713,7 @@ function Test-TargetResource
         {
             return $false
         }
+        $ValuesToCheck.Remove('AdvancedSettings') | Out-Null
     }
 
     if ($null -ne $RemoveModernGroupLocation -or $null -ne $AddModernGroupLocation -or $null -ne $ModernGroupLocation)
@@ -698,6 +729,9 @@ function Test-TargetResource
         {
             return $false
         }
+        $ValuesToCheck.Remove('RemoveModernGroupLocation') | Out-Null
+        $ValuesToCheck.Remove('AddModernGroupLocation') | Out-Null
+        $ValuesToCheck.Remove('ModernGroupLocation') | Out-Null
     }
 
     if ($null -ne $RemoveModernGroupLocationException -or $null -ne $AddModernGroupLocationException `
@@ -715,6 +749,9 @@ function Test-TargetResource
         {
             return $false
         }
+        $ValuesToCheck.Remove('RemoveModernGroupLocationException') | Out-Null
+        $ValuesToCheck.Remove('AddModernGroupLocationException') | Out-Null
+        $ValuesToCheck.Remove('ModernGroupLocationException') | Out-Null
     }
 
     if ($null -ne $RemoveExchangeLocation -or $null -ne $AddExchangeLocation -or $null -ne $ExchangeLocation)
@@ -730,6 +767,9 @@ function Test-TargetResource
         {
             return $false
         }
+        $ValuesToCheck.Remove('RemoveExchangeLocation') | Out-Null
+        $ValuesToCheck.Remove('AddExchangeLocation') | Out-Null
+        $ValuesToCheck.Remove('ExchangeLocation') | Out-Null
     }
 
     if ($null -ne $RemoveExchangeLocationException -or $null -ne $AddExchangeLocationException -or $null -ne $ExchangeLocationException)
@@ -747,6 +787,9 @@ function Test-TargetResource
         {
             return $false
         }
+        $ValuesToCheck.Remove('RemoveExchangeLocationException') | Out-Null
+        $ValuesToCheck.Remove('AddExchangeLocationException') | Out-Null
+        $ValuesToCheck.Remove('ExchangeLocationException') | Out-Null
     }
 
     if ($null -ne $RemoveLabels -or $null -ne $AddLabels -or $null -ne $Labels)
@@ -764,6 +807,9 @@ function Test-TargetResource
         {
             return $false
         }
+        $ValuesToCheck.Remove('RemoveLabels') | Out-Null
+        $ValuesToCheck.Remove('AddLabels') | Out-Null
+        $ValuesToCheck.Remove('Labels') | Out-Null
     }
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
@@ -920,6 +966,7 @@ function Convert-StringToAdvancedSettings
     $settings = @()
     foreach ($setting in $AdvancedSettings)
     {
+        Write-Verbose -Message "SETTING: $setting"
         $settingString = $setting.Replace('[', '').Replace(']', '')
         $settingKey = $settingString.Split(',')[0]
 
@@ -1016,7 +1063,6 @@ function Test-AdvancedSettings
         [Parameter (Mandatory = $true)]
         $CurrentProperty
     )
-
     $foundSettings = $true
     foreach ($desiredSetting in $DesiredProperty)
     {
@@ -1024,7 +1070,7 @@ function Test-AdvancedSettings
         if ($null -ne $foundKey)
         {
             $checkValue = $desiredSetting.Value
-            if ($checkValue.Count -eq 1)
+            if ($checkValue.GetType().BaseType -eq 'array' -or $checkValue.GetType().Name -contains 'string[]')
             {
                 $checkValue = $desiredSetting.Value[0]
             }
@@ -1036,7 +1082,7 @@ function Test-AdvancedSettings
         }
     }
 
-    Write-Verbose -Message "Test AdvancedSettings  returns $foundSettings"
+    Write-Verbose -Message "Test AdvancedSettings returned {$foundSettings}"
     return $foundSettings
 }
 

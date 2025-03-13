@@ -78,7 +78,7 @@ function Get-TargetResource
     )
     try
     {
-         if (-not $Script:exportedInstance)
+         if (-not $Script:exportedInstance -or $Script:exportedInstance.Action -ne $Action)
          {
             Write-Verbose -Message "Getting configuration of SCComplianceSearchAction for $SearchName - $Action"
             $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `

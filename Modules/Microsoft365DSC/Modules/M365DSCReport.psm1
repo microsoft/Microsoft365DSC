@@ -463,7 +463,14 @@ function New-M365DSCConfigurationToExcel
         $OutputPath
     )
 
-    $excel = New-Object -ComObject excel.application
+    try
+    {
+        $excel = New-Object -ComObject excel.application
+    }
+    catch [System.Runtime.InteropServices.COMException]
+    {
+        throw 'Excel is not installed on this machine. Please install Excel to use this feature.'
+    }
     $excel.visible = $True
     $workbook = $excel.Workbooks.Add()
     $report = $workbook.Worksheets.Item(1)

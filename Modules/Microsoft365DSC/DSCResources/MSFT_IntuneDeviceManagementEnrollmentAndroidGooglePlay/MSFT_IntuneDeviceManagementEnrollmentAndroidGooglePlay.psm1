@@ -4,8 +4,6 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        #region Intune resource parameters
-
         [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
@@ -14,27 +12,25 @@ function Get-TargetResource
         [System.String]
         $BindStatus,
 
-        # [Parameter()]
-        # [System.String]
-        # $OwnerUserPrincipalName,
+        [Parameter()]
+        [System.String]
+        $OwnerUserPrincipalName,
 
-        # [Parameter()]
-        # [System.String]
-        # $OwnerOrganizationName,
+        [Parameter()]
+        [System.String]
+        $OwnerOrganizationName,
 
-        # [Parameter()]
-        # [System.String]
-        # $EnrollmentTarget,
+        [Parameter()]
+        [System.String]
+        $EnrollmentTarget,
 
-        # [Parameter()]
-        # [System.Boolean]
-        # $DeviceOwnerManagementEnabled,
+        [Parameter()]
+        [System.Boolean]
+        $DeviceOwnerManagementEnabled,
 
-        # [Parameter()]
-        # [System.Boolean]
-        # $AndroidDeviceOwnerFullyManagedEnrollmentEnabled,
-
-        #endregion
+        [Parameter()]
+        [System.Boolean]
+        $AndroidDeviceOwnerFullyManagedEnrollmentEnabled,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -74,7 +70,7 @@ function Get-TargetResource
 
     try
     {
-        if (-not $Script:exportedInstance)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Id -ne $Id)
         {
             New-M365DSCConnection -Workload 'MicrosoftGraph' `
                 -InboundParameters $PSBoundParameters | Out-Null
@@ -112,21 +108,21 @@ function Get-TargetResource
         }
 
         $result = @{
-            Id                    = $specificSetting.id
-            BindStatus            = $specificSetting.bindStatus
-            # OwnerUserPrincipalName                    = $specificSetting.ownerUserPrincipalName
-            # OwnerOrganizationName                     = $specificSetting.ownerOrganizationName
-            # EnrollmentTarget                          = $specificSetting.enrollmentTarget
-            # DeviceOwnerManagementEnabled              = $specificSetting.deviceOwnerManagementEnabled
-            # AndroidDeviceOwnerFullyManagedEnrollmentEnabled = $specificSetting.androidDeviceOwnerFullyManagedEnrollmentEnabled
-            Ensure                = 'Present'
-            Credential            = $Credential
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            CertificateThumbprint = $CertificateThumbprint
-            ApplicationSecret     = $ApplicationSecret
-            ManagedIdentity       = $ManagedIdentity.IsPresent
-            AccessTokens          = $AccessTokens
+            Id                                              = $specificSetting.id
+            BindStatus                                      = $specificSetting.bindStatus
+            OwnerUserPrincipalName                          = $specificSetting.ownerUserPrincipalName
+            OwnerOrganizationName                           = $specificSetting.ownerOrganizationName
+            EnrollmentTarget                                = $specificSetting.enrollmentTarget
+            DeviceOwnerManagementEnabled                    = $specificSetting.deviceOwnerManagementEnabled
+            AndroidDeviceOwnerFullyManagedEnrollmentEnabled = $specificSetting.androidDeviceOwnerFullyManagedEnrollmentEnabled
+            Ensure                                          = 'Present'
+            Credential                                      = $Credential
+            ApplicationId                                   = $ApplicationId
+            TenantId                                        = $TenantId
+            CertificateThumbprint                           = $CertificateThumbprint
+            ApplicationSecret                               = $ApplicationSecret
+            ManagedIdentity                                 = $ManagedIdentity.IsPresent
+            AccessTokens                                    = $AccessTokens
         }
 
         return $result
@@ -150,8 +146,6 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
-        #region Intune resource parameters
-
         [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
@@ -160,27 +154,25 @@ function Set-TargetResource
         [System.String]
         $BindStatus,
 
-        # [Parameter()]
-        # [System.String]
-        # $OwnerUserPrincipalName,
+        [Parameter()]
+        [System.String]
+        $OwnerUserPrincipalName,
 
-        # [Parameter()]
-        # [System.String]
-        # $OwnerOrganizationName,
+        [Parameter()]
+        [System.String]
+        $OwnerOrganizationName,
 
-        # [Parameter()]
-        # [System.String]
-        # $EnrollmentTarget,
+        [Parameter()]
+        [System.String]
+        $EnrollmentTarget,
 
-        # [Parameter()]
-        # [System.Boolean]
-        # $DeviceOwnerManagementEnabled,
+        [Parameter()]
+        [System.Boolean]
+        $DeviceOwnerManagementEnabled,
 
-        # [Parameter()]
-        # [System.Boolean]
-        # $AndroidDeviceOwnerFullyManagedEnrollmentEnabled,
-
-        #endregion
+        [Parameter()]
+        [System.Boolean]
+        $AndroidDeviceOwnerFullyManagedEnrollmentEnabled,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -217,7 +209,7 @@ function Set-TargetResource
     )
 
     #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
+    <#Confirm-M365DSCDependencies
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
@@ -230,6 +222,7 @@ function Set-TargetResource
 
     $currentInstance = Get-TargetResource @PSBoundParameters
     $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
@@ -244,26 +237,48 @@ function Set-TargetResource
             } -ContentType 'application/json'
         }
 
-        # Request enrollment signup URL if necessary
-        # TO DO: Once Android team has added adjusted code, uncomment the following code block
-        # if ($BindStatus -eq 'notBound') {
-        #     Write-Verbose -Message "Requesting signup URL for enrollment..."
-        #     $params = @{
-        #         hostName = "intune.microsoft.com"
-        #     }
+        if ($BindStatus -eq 'notBound')
+        {
+            Write-Verbose -Message "Requesting signup URL for enrollment..."
+            $signupUri = ((Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + `
+                            "beta/deviceManagement/androidManagedStoreAccountEnterpriseSettings/requestSignupUrl")
+            $body = @{
+                hostName = 'intune.microsoft.com'
+            }
+            Invoke-MgGraphRequest -Uri $signupUri `
+                                  -Method 'POST' `
+                                  -ContentType "application/json" `
+                                  -Body $body
+        }
+    }
+    elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
+    {
+        $uri = ((Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + 'beta/deviceManagement/androidManagedStoreAccountEnterpriseSettings')
+        $UpdateParameters = @{
+            '@odata.type' = '#microsoft.graph.androidManagedStoreAccountEnterpriseSettings'
+            androidDeviceOwnerFullyManagedEnrollmentEnabled = $AndroidDeviceOwnerFullyManagedEnrollmentEnabled;
+            bindStatus                                      = $BindStatus;
+            deviceOwnerManagementEnabled                    = $DeviceOwnerManagementEnabled;
+            enrollmentTarget                                = $EnrollmentTarget;
+            id                                              = $Id;
+            ownerOrganizationName                           = $OwnerOrganizationName;
+            ownerUserPrincipalName                          = $OwnerUserPrincipalName;
+        }
 
-        #     $signupUrl = Invoke-MgGraphRequest -Uri ((Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/deviceManagement/androidManagedStoreAccountEnterpriseSettings/requestSignupUrl") -Method 'POST' -Body @{
-        #         hostName = "intune.microsoft.com"
-        #     } -ContentType "application/json"
 
-        # return $nullResult
-        # }
+        Write-Verbose -Message "Updating Intune Device Management Android Google Play Enrollment with values:`r`n$(ConvertTo-Json $UpdateParameters -Depth 10)"
+        Invoke-MgGraphRequest -Uri $uri `
+                              -Method 'PATCH' `
+                              -Body $UpdateParameters `
+                              -ContentType 'application/json'
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Host "Remove the Intune Device Management Android Google Play Enrollment with Id {$($currentInstance.Id)}"
         $unbindResult = Invoke-MgGraphRequest -Uri ((Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + 'beta/deviceManagement/androidManagedStoreAccountEnterpriseSettings/unbind') -Method 'POST' -Body @{} -ContentType 'application/json'
-    }
+    }#>
+
+    Write-Verbose -Message "WARNING: This resource is currently read-only. This means you can use it to monitor for drifts, but it can't automate any configuration changes. The APIs associated with the binding process are owned by Google."
 }
 
 function Test-TargetResource
@@ -272,8 +287,6 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
-        #region Intune resource parameters
-
         [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
@@ -282,27 +295,25 @@ function Test-TargetResource
         [System.String]
         $BindStatus,
 
-        # [Parameter()]
-        # [System.String]
-        # $OwnerUserPrincipalName,
+        [Parameter()]
+        [System.String]
+        $OwnerUserPrincipalName,
 
-        # [Parameter()]
-        # [System.String]
-        # $OwnerOrganizationName,
+        [Parameter()]
+        [System.String]
+        $OwnerOrganizationName,
 
-        # [Parameter()]
-        # [System.String]
-        # $EnrollmentTarget,
+        [Parameter()]
+        [System.String]
+        $EnrollmentTarget,
 
-        # [Parameter()]
-        # [System.Boolean]
-        # $DeviceOwnerManagementEnabled,
+        [Parameter()]
+        [System.Boolean]
+        $DeviceOwnerManagementEnabled,
 
-        # [Parameter()]
-        # [System.Boolean]
-        # $AndroidDeviceOwnerFullyManagedEnrollmentEnabled,
-
-        #endregion
+        [Parameter()]
+        [System.Boolean]
+        $AndroidDeviceOwnerFullyManagedEnrollmentEnabled,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]

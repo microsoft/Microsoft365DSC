@@ -80,7 +80,7 @@ function Get-TargetResource
 
     try
     {
-        if (-not $Script:exportedInstance)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Id -ne $Id)
         {
             New-M365DSCConnection -Workload 'MicrosoftGraph' `
                 -InboundParameters $PSBoundParameters | Out-Null
@@ -245,7 +245,7 @@ function Set-TargetResource
     {
         $NeedAdditionalUpdate = $false
         $UpdatePasswordNotificationWindowInDays = $false
-        if (-not [System.String]::IsNullOrEmpty('PasswordNotificationWindowInDays'))
+        if (-not [System.String]::IsNullOrEmpty($PasswordNotificationWindowInDays))
         {
             $NeedAdditionalUpdate = $true
             $UpdatePasswordNotificationWindowInDays = $true

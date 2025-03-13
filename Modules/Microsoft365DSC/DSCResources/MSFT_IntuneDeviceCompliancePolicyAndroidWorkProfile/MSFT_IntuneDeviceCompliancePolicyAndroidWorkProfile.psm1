@@ -33,7 +33,7 @@ function Get-TargetResource
         [Parameter()]
         [System.String]
         [ValidateSet('None', 'Low', 'Medium', 'High')]
-        $WorkProfileRequiredPasswordComplexity, 
+        $WorkProfileRequiredPasswordComplexity,
 
         [Parameter()]
         [System.Boolean]
@@ -205,7 +205,7 @@ function Get-TargetResource
 
     try
     {
-        if (-not $Script:exportedInstance)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.DisplayName -ne $DisplayName)
         {
             $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
                 -InboundParameters $PSBoundParameters
@@ -249,13 +249,13 @@ function Get-TargetResource
         Write-Verbose -Message "Found Intune Android Work Profile Device Compliance Policy with displayName {$DisplayName}"
 
         #scheduledActionsForRule needs processing before we can interact with it
-        $psCustomObject = $devicePolicy.ScheduledActionsForRule | convertTo-JSON | ConvertFrom-JSON  
-        $scheduledActionsForRuleHashTable = @{} 
-        $psCustomObject.PsObject.Properties | ForEach-Object {     
-            $scheduledActionsForRuleHashTable[$_.Name] = $_.Value        
-        }         
+        $psCustomObject = $devicePolicy.ScheduledActionsForRule | convertTo-JSON | ConvertFrom-JSON
+        $scheduledActionsForRuleHashTable = @{}
+        $psCustomObject.PsObject.Properties | ForEach-Object {
+            $scheduledActionsForRuleHashTable[$_.Name] = $_.Value
+        }
         $hashtable = @{}
-        $complexScheduledActionsForRule = @()        
+        $complexScheduledActionsForRule = @()
         $scheduledActionsForRuleHashTable.ScheduledActionConfigurations.PsObject.Properties | ForEach-Object {
             if($_.Value -match "ActionType")
             {
@@ -265,8 +265,8 @@ function Get-TargetResource
                         $hashtable.Add('gracePeriodHours', $item.GracePeriodHours)
                         $hashtable.Add('notificationMessageCcList', ([Array]$item.NotificationMessageCcList -split " ") )
                         $hashtable.Add('notificationTemplateId', $item.NotificationTemplateId)
-                        $complexScheduledActionsForRule += $hashtable                    
-                 }               
+                        $complexScheduledActionsForRule += $hashtable
+                 }
             }
         }
 
@@ -378,7 +378,7 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         [ValidateSet('None', 'Low', 'Medium', 'High')]
-        $WorkProfileRequiredPasswordComplexity, 
+        $WorkProfileRequiredPasswordComplexity,
 
         [Parameter()]
         [System.Boolean]
@@ -567,16 +567,16 @@ function Set-TargetResource
 
     $PSBoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
-    #reconstruct scheduled action configurations for use with New/Update-MgBetaDeviceManagementDeviceCompliancePolicy  
+    #reconstruct scheduled action configurations for use with New/Update-MgBetaDeviceManagementDeviceCompliancePolicy
     $hashtable = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $PSBoundParameters.ScheduledActionsForRule
     $scheduledActionConfigurations = @()
     $scheduledActionConfigurations += $hashtable
-    $PSBoundParameters.Remove('ScheduledActionsForRule') | Out-Null  
+    $PSBoundParameters.Remove('ScheduledActionsForRule') | Out-Null
     $myScheduledActionsForRule = @{
         '@odata.type'                 = '#microsoft.graph.deviceComplianceScheduledActionForRule'
         ruleName                      = '' #this is always blank and can't be set in GUI
         scheduledActionConfigurations = $scheduledActionConfigurations
-    } 
+    }
 
     if ($Ensure -eq 'Present' -and $currentDeviceAndroidPolicy.Ensure -eq 'Absent')
     {
@@ -618,12 +618,12 @@ function Set-TargetResource
             -Description $Description `
             -DeviceCompliancePolicyId $configDeviceAndroidPolicy.Id
             #-ScheduledActionsForRule $myScheduledActionsForRule #This does not work even though it is a valid parameter
-       
-        #handle ScheduledActionsForRule separately with Invoke-MgGraph       
-        $Uri = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/deviceManagement/deviceCompliancePolicies/$($configDeviceAndroidPolicy.Id)/scheduleActionsForRules"        
+
+        #handle ScheduledActionsForRule separately with Invoke-MgGraph
+        $Uri = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/deviceManagement/deviceCompliancePolicies/$($configDeviceAndroidPolicy.Id)/scheduleActionsForRules"
         $mgGraphScheduledActionForRules = @{
             deviceComplianceScheduledActionForRules = @( $myScheduledActionsForRule )
-        }        
+        }
         Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $($mgGraphScheduledActionForRules | ConvertTo-Json -Depth 10) -Verbose
 
         #region Assignments
@@ -680,7 +680,7 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         [ValidateSet('None', 'Low', 'Medium', 'High')]
-        $WorkProfileRequiredPasswordComplexity, 
+        $WorkProfileRequiredPasswordComplexity,
 
         [Parameter()]
         [System.Boolean]

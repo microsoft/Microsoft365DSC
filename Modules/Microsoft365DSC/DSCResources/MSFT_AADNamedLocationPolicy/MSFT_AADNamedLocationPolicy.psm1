@@ -74,7 +74,7 @@ function Get-TargetResource
 
     try
     {
-        if (-not $Script:exportedInstance)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.DisplayName -ne $DisplayName)
         {
             Write-Verbose -Message 'Getting configuration of AAD Named Location'
 

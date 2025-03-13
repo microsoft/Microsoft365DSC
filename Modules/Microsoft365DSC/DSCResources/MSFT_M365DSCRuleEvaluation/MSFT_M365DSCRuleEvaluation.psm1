@@ -383,6 +383,7 @@ function Test-TargetResource
         $Script:exportedInstance = $null
         return $result
     }
+    $Script:exportedInstance = $null
 }
 
 function Export-TargetResource

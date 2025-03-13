@@ -84,12 +84,16 @@ function Get-TargetResource
 
     try
     {
-        Write-Verbose -Message "Getting the SPO Site Script: $Title"
+        Write-Verbose -Message "Getting the SPO Site Script with Identity {$Identity} and Title {$Title}"
 
-        #
-        if ([System.String]::IsNullOrEmpty($Identity))
+        if (-not [System.String]::IsNullOrEmpty($Identity))
         {
-            $SiteScript = Get-PnPSiteScript -ErrorAction Stop | Where-Object -FilterScript { $_.Title -eq $Title } | Select-Object -First 1
+            $SiteScript = Get-PnPSiteScript -Identity $Identity -ErrorAction SilentlyContinue
+        }
+
+        if ($null -eq $SiteScript)
+        {
+            $SiteScript = Get-PnPSiteScript -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.Title -eq $Title } | Select-Object -First 1
 
             # No script was returned
             if ($null -eq $SiteScript)
@@ -102,10 +106,6 @@ function Get-TargetResource
                 # get site script *with* content
                 $SiteScript = Get-PnPSiteScript -Identity $SiteScript.Id
             }
-        }
-        else
-        {
-            $SiteScript = Get-PnPSiteScript -Identity $Identity
         }
         ##### End of Check
 
@@ -414,12 +414,13 @@ function Test-TargetResource
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
-    $CurrentValues.Remove('Credential') | Out-Null
-    $keysToCheck = $CurrentValues.Keys
+    [hashtable]$valuesToCheck = Remove-M365DSCAuthenticationParameter $PSBoundParameters
+    $valuesToCheck.Remove('Identity') | Out-Null
+    $valuesToCheck.Add('Ensure', $Ensure)
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
-        -ValuesToCheck $keysToCheck
+        -ValuesToCheck $valuesToCheck.Keys -Verbose
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 

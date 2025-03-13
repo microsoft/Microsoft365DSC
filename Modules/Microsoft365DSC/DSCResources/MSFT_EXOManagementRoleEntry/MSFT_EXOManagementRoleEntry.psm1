@@ -52,7 +52,7 @@ function Get-TargetResource
 
     try
     {
-        if (-not $Script:exportedInstance)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Identity -ne $Identity)
         {
             Write-Verbose -Message "Getting Management Role Entry configuration for {$Identity}"
             $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `

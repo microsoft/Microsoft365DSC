@@ -190,7 +190,16 @@ function Add-M365DSCEvent
 
     try
     {
-        if ([System.Diagnostics.EventLog]::SourceExists($Source))
+        try
+        {
+            $sourceExists = [System.Diagnostics.EventLog]::SourceExists($Source)
+        }
+        catch [System.Security.SecurityException]
+        {
+            Write-Verbose -Message "[WARNING] Not all event logs could be searched. Source might exist in another event log."
+        }
+
+        if ($sourceExists)
         {
             $sourceLogName = [System.Diagnostics.EventLog]::LogNameFromSourceName($Source, '.')
             if ($LogName -ne $sourceLogName)
@@ -203,12 +212,19 @@ function Add-M365DSCEvent
         {
             if ([System.Diagnostics.EventLog]::Exists($LogName) -eq $false)
             {
-                #Create event log
+                # Create event log
                 $null = New-EventLog -LogName $LogName -Source $Source
             }
             else
             {
-                [System.Diagnostics.EventLog]::CreateEventSource($Source, $LogName)
+                try
+                {
+                    [System.Diagnostics.EventLog]::CreateEventSource($Source, $LogName)
+                }
+                catch [System.Security.SecurityException]
+                {
+                    Write-Verbose -Message "[WARNING] Not all event logs could be searched. Source might exist in another event log."
+                }
             }
         }
 

@@ -81,7 +81,7 @@ function Get-TargetResource
 
     try
     {
-        if (-not $Script:exportedInstance)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Identity -ne $Identity)
         {
             Write-Verbose -Message "Getting Message Classification Configuration for $($Identity)"
             $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `

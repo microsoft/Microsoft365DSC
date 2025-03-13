@@ -30,7 +30,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             # Hide Write-Host output during the tests
             Mock -CommandName Write-Host -MockWith {}
 
-            $Script:exportedInstances = $null
+            $Script:exportedInstance = $null
             $Script:ExportMode = $false
         }
 
@@ -38,15 +38,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "1. The instance should exist but it DOES NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Id                                          = "androidManagedStoreAccountEnterpriseSettings"
-                    BindStatus                                   = "notBound"
-                    # OwnerUserPrincipalName                       = "testuser@domain.com"
-                    # OwnerOrganizationName                        = "Test Organization"
-                    # EnrollmentTarget                             = "targetedAsEnrollmentRestrictions"
-                    # DeviceOwnerManagementEnabled                 = $False
-                    # AndroidDeviceOwnerFullyManagedEnrollmentEnabled = $False
-                    Ensure                                       = 'Present'
-                    Credential                                   = $Credential;
+                    Id                                              = "androidManagedStoreAccountEnterpriseSettings"
+                    BindStatus                                      = "notBound"
+                    OwnerUserPrincipalName                          = "testuser@domain.com"
+                    OwnerOrganizationName                           = "Test Organization"
+                    EnrollmentTarget                                = "targetedAsEnrollmentRestrictions"
+                    DeviceOwnerManagementEnabled                    = $False
+                    AndroidDeviceOwnerFullyManagedEnrollmentEnabled = $False
+                    Ensure                                          = 'Present'
+                    Credential                                      = $Credential;
                 }
 
                 Mock -CommandName Get-MgBetaDeviceManagementAndroidManagedStoreAccountEnterpriseSetting -MockWith { return $null }
@@ -83,7 +83,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             EnrollmentTarget                  = "targetedAsEnrollmentRestrictions"
                             DeviceOwnerManagementEnabled      = $true
                             AndroidDeviceOwnerFullyManagedEnrollmentEnabled = $false
-                            Ensure                            = 'Present'
                         }
                     )
                 }
@@ -120,7 +119,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Set-TargetResource @testParams
 
                 # Verify if unbind was called
-                Should -Invoke -CommandName Invoke-MgGraphRequest -Exactly 1
+                Should -Invoke -CommandName Invoke-MgGraphRequest -Exactly 0
             }
         }
 

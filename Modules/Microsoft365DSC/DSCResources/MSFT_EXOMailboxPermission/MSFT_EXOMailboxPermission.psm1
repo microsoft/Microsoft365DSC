@@ -70,7 +70,7 @@ function Get-TargetResource
 
     try
     {
-        if (-not $Script:exportedInstance)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Identity -ne $Identity)
         {
             Write-Verbose -Message "Getting permissions for Mailbox {$Identity}"
 

@@ -130,7 +130,7 @@ function Get-TargetResource
 
     try
     {
-        if (-not $Script:exportedInstance)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Name -ne $Name)
         {
             Write-Verbose -Message "Getting Global Address List configuration for $Name"
             $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `

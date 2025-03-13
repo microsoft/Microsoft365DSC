@@ -90,7 +90,7 @@ function Get-TargetResource
         $MaximumWipeOsVersion,
 
         [Parameter()]
-        [System.String]   
+        [System.String]
         $MessagingRedirectAppUrlScheme,
 
         [Parameter()]
@@ -360,7 +360,7 @@ function Get-TargetResource
 
     try
     {
-        if (-not $Script:exportedInstance)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.DisplayName -ne $DisplayName)
         {
             $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
                 -InboundParameters $PSBoundParameters
@@ -499,15 +499,15 @@ function Get-TargetResource
             ManagedUniversalLinks                          = $policy.managedUniversalLinks
             MaximumAllowedDeviceThreatLevel                = [string]$policy.maximumAllowedDeviceThreatLevel
             MaximumRequiredOsVersion                       = [string]$policy.maximumRequiredOsVersion
-            MaximumWarningOsVersion                        = [string]$policy.maximumWarningOsVersion     
+            MaximumWarningOsVersion                        = [string]$policy.maximumWarningOsVersion
             MaximumWipeOsVersion                           = [string]$policy.maximumWipeOsVersion
             MessagingRedirectAppUrlScheme                  = [string]$policy.messagingRedirectAppUrlScheme
             MinimumWarningSdkVersion                       = [string]$policy.minimumWarningSdkVersion
             MobileThreatDefensePartnerPriority             = [string]$policy.mobileThreatDefensePartnerPriority
             MobileThreatDefenseRemediationAction           = [string]$policy.mobileThreatDefenseRemediationAction
             PreviousPinBlockCount                          = $policy.previousPinBlockCount
-            ProtectedMessagingRedirectAppType              = [string]$policy.protectedMessagingRedirectAppType     
-            thirdPartyKeyboardsBlocked                     = $policy.thirdPartyKeyboardsBlocked          
+            ProtectedMessagingRedirectAppType              = [string]$policy.protectedMessagingRedirectAppType
+            thirdPartyKeyboardsBlocked                     = $policy.thirdPartyKeyboardsBlocked
             PeriodOfflineBeforeAccessCheck                 = $myPeriodOfflineBeforeAccessCheck
             PeriodOnlineBeforeAccessCheck                  = $myPeriodOnlineBeforeAccessCheck
             AllowedInboundDataTransferSources              = [String]$policy.AllowedInboundDataTransferSources
@@ -677,7 +677,7 @@ function Set-TargetResource
         $MaximumWipeOsVersion,
 
         [Parameter()]
-        [System.String]   
+        [System.String]
         $MessagingRedirectAppUrlScheme,
 
         [Parameter()]
@@ -1182,7 +1182,7 @@ function Test-TargetResource
         $MaximumWipeOsVersion,
 
         [Parameter()]
-        [System.String]   
+        [System.String]
         $MessagingRedirectAppUrlScheme,
 
         [Parameter()]

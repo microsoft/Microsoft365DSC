@@ -5,7 +5,6 @@ function Get-TargetResource
     param
     (
         #region Intune params
-
         [Parameter()]
         [System.String]
         $Id,
@@ -21,7 +20,6 @@ function Get-TargetResource
         [Parameter()]
         [System.Boolean]
         $DataSharingConsetGranted,
-
         #endregion Intune params
 
         [Parameter()]
@@ -62,7 +60,7 @@ function Get-TargetResource
 
     try
     {
-        if (-not $Script:exportedInstance)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.AppleIdentifier -ne $AppleIdentifier)
         {
             New-M365DSCConnection -Workload 'MicrosoftGraph' `
                 -InboundParameters $PSBoundParameters | Out-Null
@@ -99,7 +97,6 @@ function Get-TargetResource
         $results = @{
             Id                    = $instance.Id
             AppleIdentifier       = $instance.AppleIdentifier
-
             Ensure                = 'Present'
             Credential            = $Credential
             ApplicationId         = $ApplicationId
@@ -123,7 +120,7 @@ function Get-TargetResource
         $consentInstance = Get-MgBetaDeviceManagementDataSharingConsent -DataSharingConsentId 'appleMDMPushCertificate'
         $results.Add('DataSharingConsetGranted', $consentInstance.Granted)
 
-        return [System.Collections.Hashtable] $results
+        return [System.Collections.Hashtable]$results
     }
     catch
     {
@@ -144,7 +141,6 @@ function Set-TargetResource
     param
     (
         #region Intune params
-
         [Parameter()]
         [System.String]
         $Id,
@@ -160,7 +156,6 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $DataSharingConsetGranted,
-
         #endregion Intune params
 
         [Parameter()]
@@ -229,7 +224,7 @@ function Set-TargetResource
         }
         else
         {
-            Write-Host "Data sharing conset is already granted, so it can't be revoked."
+            Write-Host "Data sharing consent is already granted, so it can't be revoked."
         }
 
         # There is only PATCH request hence using Update cmdlet to post the certificate
@@ -262,7 +257,6 @@ function Test-TargetResource
     param
     (
         #region Intune params
-
         [Parameter()]
         [System.String]
         $Id,
@@ -278,7 +272,6 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $DataSharingConsetGranted,
-
         #endregion Intune params
 
         [Parameter()]
@@ -402,7 +395,7 @@ function Export-TargetResource
 
     try
     {
-        [array] $getValue = Get-MgBetaDeviceManagementApplePushNotificationCertificate -ErrorAction Stop
+        [array]$getValue = Get-MgBetaDeviceManagementApplePushNotificationCertificate -ErrorAction SilentlyContinue
 
         $i = 1
         $dscContent = ''
@@ -424,7 +417,6 @@ function Export-TargetResource
                 Id                    = $config.Id
                 AppleIdentifier       = $config.AppleIdentifier
                 Certificate           = $config.Certificate
-
                 Ensure                = 'Present'
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
@@ -441,7 +433,6 @@ function Export-TargetResource
 
             $Script:exportedInstance = $config
             $Results = Get-TargetResource @Params
-
 
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `

@@ -122,6 +122,7 @@ function Start-M365DSCConfigurationExtract
         if ($null -ne $Workloads)
         {
             Write-Verbose -Message 'Retrieving the resources to export by workloads'
+            $Workloads = $Workloads | Select-Object -Unique
             $Components = Get-M365DSCResourcesByWorkloads -Workloads $Workloads `
                 -Mode $Mode
         }
@@ -204,6 +205,7 @@ function Start-M365DSCConfigurationExtract
 
         # If some resources are not supported based on the Authentication parameters
         # received, write a warning.
+        $Components = $Components | Select-Object -Unique
         if ($Components.Length -eq 0)
         {
             Write-Verbose -Message 'Retrieving all resources'

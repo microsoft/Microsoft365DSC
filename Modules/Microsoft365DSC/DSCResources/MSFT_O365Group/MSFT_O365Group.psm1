@@ -60,7 +60,7 @@ function Get-TargetResource
 
     try
     {
-        if (-not $Script:exportedInstance)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.DisplayName -ne $DisplayName)
         {
             Write-Verbose -Message "Setting configuration of Office 365 Group $DisplayName"
             $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `

@@ -15,9 +15,6 @@
                         "name": "Group.Read.All"
                     },
                     {
-                        "name": "RoleManagement.Read.Directory"
-                    },
-                    {
                         "name": "RoleManagementPolicy.Read.Directory"
                     },
                     {
@@ -29,7 +26,7 @@
                         "name": "Group.Read.All"
                     },
                     {
-                        "name": "RoleManagementPolicy.Read.Directory"
+                        "name": "RoleManagement.ReadWrite.Directory"
                     },
                     {
                         "name": "User.Read.All"
@@ -45,9 +42,6 @@
                         "name": "RoleManagement.Read.Directory"
                     },
                     {
-                        "name": "RoleManagementPolicy.Read.Directory"
-                    },
-                    {
                         "name": "User.Read.All"
                     }
                 ],
@@ -56,7 +50,7 @@
                         "name": "Group.Read.All"
                     },
                     {
-                        "name": "RoleManagementPolicy.Read.Directory"
+                        "name": "RoleManagement.ReadWrite.Directory"
                     },
                     {
                         "name": "User.Read.All"

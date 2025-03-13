@@ -81,7 +81,7 @@ function Get-TargetResource
 
     try
     {
-        if (-not $Script:exportedInstance)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.DisplayName -ne $DisplayName)
         {
             $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
                 -InboundParameters $PSBoundParameters
@@ -384,7 +384,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentconfigPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating Intune App Configuration Policy {$DisplayName}"
-        
+
         $updateParams = @{
             targetedManagedAppConfigurationId = $currentconfigPolicy.Id
             displayName                       = $DisplayName

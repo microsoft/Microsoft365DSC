@@ -385,7 +385,7 @@ function Get-TargetResource
 
     try
     {
-        if (-not $Script:exportedInstance)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.DisplayName -ne $DisplayName)
         {
             $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
                 -InboundParameters $PSBoundParameters
@@ -431,7 +431,7 @@ function Get-TargetResource
             }
 
             # handle multiple results - throw error - may be able to remediate to specify ID in configuration at later date
-            if ($policyInfo.gettype().isarray)
+            if ($policyInfo.GetType().IsArray)
             {
                 Write-Verbose -Message "Multiple Android Policies with name {$DisplayName} were found - Where No valid ID is specified Module will only function with unique names, please manually remediate"
                 $nullResult.Ensure = 'ERROR'
@@ -483,11 +483,11 @@ function Get-TargetResource
                 }
             }
         }
-        $Allparams = get-InputParameters
+        $Allparams = Get-InputParameters
         $policy = @{}
 
         #loop regular parameters and add from $polycyinfo
-        foreach ($param in ($Allparams.keys | Where-Object { $allparams.$_.Type -eq 'Parameter' }) )
+        foreach ($param in ($Allparams.Keys | Where-Object { $allparams.$_.Type -eq 'Parameter' }) )
         {
             # we need to process this because reverseDSC doesn't handle certain object types
             switch ($Allparams.$param.ExportFileType)
@@ -496,7 +496,7 @@ function Get-TargetResource
                 {
                     if ($null -ne $policyInfo.$param)
                     {
-                    $policy.Add($param, $policyInfo.$param.tostring())
+                    $policy.Add($param, $policyInfo.$param.ToString())
                     }
 
                 }
@@ -506,7 +506,7 @@ function Get-TargetResource
                     if ($null -ne $policyInfo.$param)
                     {
                         $tmparray = @()
-                        $policyInfo.$param | ForEach-Object { $tmparray += $_.tostring() }
+                        $policyInfo.$param | ForEach-Object { $tmparray += $_.ToString() }
                         $policy.Add($param, $tmparray)
                     }
                 }
@@ -521,7 +521,7 @@ function Get-TargetResource
             }
         }
         # loop credential parameters and add them from input params
-        foreach ($param in ($Allparams.keys | Where-Object { $allparams.$_.Type -eq 'Credential' }) )
+        foreach ($param in ($Allparams.Keys | Where-Object { $allparams.$_.Type -eq 'Credential' }) )
         {
             $policy.Add($param, (Get-Variable -Name $param).value)
         }
@@ -532,9 +532,9 @@ function Get-TargetResource
         $policy.Add('Apps', $appsArray)
         $policy.Add('Assignments', $assignmentsArray)
         $policy.Add('ExcludedGroups', $exclusionArray)
-        $policy.Add('AppGroupType', $policyInfo.AppGroupType.toString())
+        $policy.Add('AppGroupType', $policyInfo.AppGroupType.ToString())
         #managed browser settings - export as is, when re-applying function will correct
-        $policy.Add('ManagedBrowser', $policyInfo.ManagedBrowser.toString())
+        $policy.Add('ManagedBrowser', $policyInfo.ManagedBrowser.ToString())
         $policy.Add('ManagedBrowserToOpenLinksRequired', $policyInfo.ManagedBrowserToOpenLinksRequired)
         $policy.Add('CustomBrowserDisplayName', $policyInfo.CustomBrowserDisplayName)
         $policy.Add('CustomBrowserPackageId', $policyInfo.CustomBrowserPackageId)
@@ -546,20 +546,14 @@ function Get-TargetResource
         {
             $approvedKeyboardArray += $keyboard.Name + '|' + $keyboard.Value
         }
-        if ($approvedKeyboardArray.Count -gt 0)
-        {
-            $policy.ApprovedKeyboards = $approvedKeyboardArray
-        }
-        
+        $policy.ApprovedKeyboards = $approvedKeyboardArray
+
         $exemptedAppPackagesArray = @()
         foreach ($exemptedapppackage in $policyInfo.exemptedAppPackages)
         {
             $exemptedAppPackagesArray += $exemptedapppackage.Name + '|' + $exemptedapppackage.Value
         }
-        if ($exemptedAppPackagesArray.Count -gt 0)
-        {
-            $policy.ExemptedAppPackages = $exemptedAppPackagesArray
-        }
+        $policy.ExemptedAppPackages = $exemptedAppPackagesArray
 
         return $policy
     }
@@ -1002,7 +996,7 @@ function Set-TargetResource
 
     $configstring = "`r`nConfiguration To Be Applied:`r`n"
 
-    $Allparams = get-InputParameters
+    $Allparams = Get-InputParameters
 
     # loop through regular parameters
     foreach ($param in ($Allparams.keys | Where-Object { $allparams.$_.Type -eq 'Parameter' }) )
@@ -1013,13 +1007,13 @@ function Set-TargetResource
             {
                 'Duration'
                 {
-                    $setParams.add($param, (set-TimeSpan -duration $PSBoundParameters.$param))
-                    $configstring += ($param + ':' + ($setParams.$param.tostring()) + "`r`n")
+                    $setParams.Add($param, (Set-Timespan -duration $PSBoundParameters.$param))
+                    $configstring += ($param + ':' + ($setParams.$param.ToString()) + "`r`n")
                 }
 
                 default
                 {
-                    $setParams.add($param, $psboundparameters.$param)
+                    $setParams.Add($param, $psboundparameters.$param)
                     $configstring += ($param + ':' + $setParams.$param + "`r`n")
                 }
             }
@@ -1027,7 +1021,7 @@ function Set-TargetResource
     }
 
     # handle complex parameters - manually for now
-    if ($PSBoundParameters.keys -contains 'Assignments' )
+    if ($PSBoundParameters.Keys -contains 'Assignments' )
     {
         $PSBoundParameters.Assignments | ForEach-Object {
             if ($_ -ne $null)
@@ -1043,7 +1037,8 @@ function Set-TargetResource
         }
         $configstring += ( 'Assignments' + ":`r`n" + ($PSBoundParameters.Assignments | Out-String) + "`r`n" )
     }
-    if ($PSBoundParameters.keys -contains 'ExcludedGroups' )
+
+    if ($PSBoundParameters.Keys -contains 'ExcludedGroups' )
     {
         $PSBoundParameters.ExcludedGroups | ForEach-Object {
             if ($_ -ne $null)
@@ -1054,19 +1049,20 @@ function Set-TargetResource
         $configstring += ( 'ExcludedGroups' + ":`r`n" + ($PSBoundParameters.ExcludedGroups | Out-String) + "`r`n" )
 
     }
-        #rebuild array as a MicrosoftGraphKeyValuePair hash table for ApprovedKeyboards
+
+    #rebuild array as a MicrosoftGraphKeyValuePair hash table for ApprovedKeyboards
     if ($PSBoundParameters.keys -contains 'ApprovedKeyboards' )
     {
         $approvedKeyboardHastableArray = @()
         $PSBoundParameters.ApprovedKeyboards | ForEach-Object {
             if ($_ -ne $null)
-            {               
+            {
                 $tempArray = @()
                 $tempArray = $_ -split '[|]'
                 $tempHash = @{}
                 $tempHash.Add('name', $tempArray[0])
                 $tempHash.Add('value', $tempArray[1])
-                $approvedKeyboardHastableArray += $tempHash             
+                $approvedKeyboardHastableArray += $tempHash
             }
         }
         $configstring += ( 'ApprovedKeyboards' + ":`r`n" + ($PSBoundParameters.ApprovedKeyboards | Out-String) + "`r`n" )
@@ -1074,18 +1070,18 @@ function Set-TargetResource
     }
 
     #rebuild array as a MicrosoftGraphKeyValuePair hash table for ExemptedAppPackages
-    if ($PSBoundParameters.keys -contains 'ExemptedAppPackages' )
+    if ($PSBoundParameters.Keys -contains 'ExemptedAppPackages' )
     {
         $exemptedAppPackagesHastableArray = @()
         $PSBoundParameters.ExemptedAppPackages | ForEach-Object {
             if ($_ -ne $null)
-            {               
+            {
                 $tempArray = @()
                 $tempArray = $_ -split '[|]'
                 $tempHash = @{}
                 $tempHash.Add('name', $tempArray[0])
                 $tempHash.Add('value', $tempArray[1])
-                $exemptedAppPackagesHastableArray += $tempHash             
+                $exemptedAppPackagesHastableArray += $tempHash
             }
         }
         $configstring += ( 'ExemptedAppPackages' + ":`r`n" + ($PSBoundParameters.ExemptedAppPackages | Out-String) + "`r`n" )
@@ -1104,10 +1100,10 @@ function Set-TargetResource
     $configstring += ('Apps' + ":`r`n" + ($appshash.Apps | Out-String) + "`r`n" )
 
     # Set the managedbrowser values
-    $ManagedBrowserValuesHash = set-ManagedBrowserValues @PSBoundParameters
+    $ManagedBrowserValuesHash = Set-ManagedBrowserValues @PSBoundParameters
     foreach ($param in $ManagedBrowserValuesHash.keys)
     {
-        $setParams.add($param, $ManagedBrowserValuesHash.$param)
+        $setParams.Add($param, $ManagedBrowserValuesHash.$param)
         $configstring += ($param + ':' + $setParams.$param + "`r`n")
     }
 
@@ -1120,9 +1116,9 @@ function Set-TargetResource
         {
             Write-Verbose -Message 'ID in Configuration Document will be ignored, Policy will be created with a new ID'
         }
-        $setParams.add('Assignments', $assignmentsArray)
+        $setParams.Add('Assignments', $assignmentsArray)
         $newpolicy = New-MgBetaDeviceAppManagementAndroidManagedAppProtection @setParams
-        $setParams.add('AndroidManagedAppProtectionId', $newpolicy.Id)
+        $setParams.Add('AndroidManagedAppProtectionId', $newpolicy.Id)
 
     }
     elseif (($Ensure -eq 'Present') -and ($currentPolicy.Ensure -eq 'Present'))
@@ -1859,7 +1855,7 @@ function Set-Timespan
 
     try
     {
-        if ($duration.startswith('P'))
+        if ($duration.StartsWith('P'))
         {
             $timespan = [System.Xml.XmlConvert]::ToTimeSpan($duration)
         }
@@ -1872,6 +1868,7 @@ function Set-Timespan
     {
         throw 'Problem converting input to a timespan - If configuration document is using iso8601 string (e.g. PT15M) try using new-timespan (e.g. new-timespan -minutes 15)'
     }
+
     return $timespan
 }
 

@@ -136,7 +136,7 @@ function Get-TargetResource
     )
     try
     {
-        if (-not $Script:exportedInstance)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.UserPrincipalName -ne $UserPrincipalName)
         {
             Write-Verbose -Message "Getting configuration of Office 365 User $UserPrincipalName"
 

@@ -71,7 +71,7 @@ function Get-TargetResource
     )
     try
     {
-        if (-not $Script:exportedInstance)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.DisplayName -ne $DisplayName)
         {
             Write-Verbose -Message 'Getting configuration of Azure AD role definition'
             $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `

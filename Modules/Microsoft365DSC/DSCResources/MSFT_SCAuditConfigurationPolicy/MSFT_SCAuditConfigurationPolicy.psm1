@@ -45,7 +45,7 @@ function Get-TargetResource
 
     try
     {
-        if (-not $Script:exportedInstance)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Workload -ne $Workload)
         {
             Write-Verbose -Message "Getting configuration of SCAuditConfigurationPolicy for Workload {$Workload}"
             Write-Verbose -Message 'Connecting to Security and Compliance Center'

@@ -92,7 +92,7 @@ function Get-TargetResource
 
     try
     {
-        if (-not $Script:exportedInstance)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Name -ne $Name)
         {
             Write-Verbose -Message "Getting configuration of SCComplianceSearch for $Name"
             if ($Global:CurrentModeIsExport)
