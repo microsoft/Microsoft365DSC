@@ -86,6 +86,7 @@
     'Modules/WorkloadHelpers/M365DSCFabricHelper.psm1',
     'Modules/WorkloadHelpers/M365DSCLicensingHelper.psm1',
     'Modules/WorkloadHelpers/M365DSCPowerPlatformRESTHelper.psm1',
+    'Modules/WorkloadHelpers/M365DSCServicesHubHelper.psm1',
     'Modules/M365DSCConfigurationHelper.psm1'
   )
 

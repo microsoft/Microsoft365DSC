@@ -5,13 +5,13 @@
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
 | **IsSingleInstance** | Key | String | Accepted value is 'Yes'. | `Yes` |
-| **AdvancedClassificationEnabled** | Write | Boolean | Default value is false. | |
+| **AdvancedClassificationEnabled** | Write | Boolean | Default value is false. If set to false, then you cannot specify BandwidthLimitEnabled nor DailyBandwidthLimitInMb | |
 | **AuditFileActivity** | Write | Boolean | Default value is false. | |
 | **BandwidthLimitEnabled** | Write | Boolean | Default value is true. | |
 | **BusinessJustificationList** | Write | MSFT_PolicyConfigBusinessJustificationList[] | TBD | |
 | **CloudAppMode** | Write | String | Default value is Off. | |
 | **CloudAppRestrictionList** | Write | StringArray[] | TBD | |
-| **CustomBusinessJustificationNotification** | Write | UInt32 | Default value is 0. | |
+| **CustomBusinessJustificationNotification** | Write | UInt32 | Default value is 0. If set to 0, you cannot specify the BusinessJustificationList parameter as part of your configuration. | |
 | **DailyBandwidthLimitInMB** | Write | UInt32 | Default value is 1000 | |
 | **DLPAppGroups** | Write | MSFT_PolicyConfigDLPAppGroups[] | TBD | |
 | **DLPNetworkShareGroups** | Write | MSFT_PolicyConfigDLPNetworkShareGroups[] | TBD | |

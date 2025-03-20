@@ -83881,6 +83881,45 @@ function Set-TenantAllowBlockListItems
 
 #endregion
 #region MicrosoftTeams
+function New-CsOnlineApplicationInstance
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $UserPrincipalName,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId
+    )
+}
+function Get-CsOnlineApplicationInstance
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+function Set-CsOnlineApplicationInstance
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName
+    )
+}
 function Add-TeamUser
 {
     [CmdletBinding()]

@@ -1881,7 +1881,7 @@ function New-M365DSCConnection
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateSet('AdminAPI', 'Azure', 'AzureDevOPS', 'DefenderForEndPoint', 'ExchangeOnline', 'Fabric', 'Intune', 'Licensing', `
+        [ValidateSet('AdminAPI', 'Azure', 'AzureDevOPS', 'DefenderForEndPoint', 'EngageHub', 'ExchangeOnline', 'Fabric', 'Intune', 'Licensing', `
                 'SecurityComplianceCenter', 'PnP', 'PowerPlatforms', 'PowerPlatformREST', `
                 'MicrosoftTeams', 'MicrosoftGraph', 'SharePointOnlineREST', 'Tasks', 'AdminAPI')]
         [System.String]
@@ -2190,7 +2190,7 @@ function New-M365DSCConnection
             return 'CredentialsWithApplicationId'
         }
     }
-    # Case only the ServicePrincipal with Thumbprint parameters are specified
+    # Case only the ServicePrincipal with CertificatePath parameters are specified
     elseif ($null -eq $InboundParameters.Credential -and `
             -not [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId) -and `
             -not [System.String]::IsNullOrEmpty($InboundParameters.TenantId) -and `
@@ -2751,6 +2751,14 @@ function Install-M365DSCDevBranch
     )
 
     try {
+
+        $longPathsEnabled = (Get-ItemProperty 'HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem').LongPathsEnabled -eq 1
+        if (-not $longPathsEnabled)
+        {
+            $message = "Long paths are not enabled on this system. You may encounter issues with the installation of Microsoft365DSC because of long file names."
+            $message += "To enable long paths, set the registry LongPathsEnabled DWORD entry to 1 in HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\FileSystem."
+            Write-Warning -Message $message
+        }
 
         #region Download and Extract Dev branch's ZIP
         Write-Host 'Downloading the Zip package...' -NoNewline

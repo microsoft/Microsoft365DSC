@@ -537,12 +537,6 @@ function Set-TargetResource
         }
         # removing Delegated permission classifications from this new call, as adding below separately
         $currentParameters.Remove('DelegatedPermissionClassifications') | Out-Null
-        $ObjectGuid = [System.Guid]::empty
-        if (-not [System.Guid]::TryParse($AppId, [System.Management.Automation.PSReference]$ObjectGuid))
-        {
-            $appInstance = Get-MgApplication -Filter "DisplayName eq '$AppId'"
-            $currentParameters.AppId = $appInstance.AppId
-        }
 
         Write-Verbose -Message 'Creating new Service Principal'
         Write-Verbose -Message "With Values: $(Convert-M365DscHashtableToString -Hashtable $currentParameters)"
@@ -577,12 +571,6 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentAADServicePrincipal.Ensure -eq 'Present')
     {
         Write-Verbose -Message 'Updating existing Service Principal'
-        $ObjectGuid = [System.Guid]::empty
-        if (-not [System.Guid]::TryParse($AppId, [System.Management.Automation.PSReference]$ObjectGuid))
-        {
-            $appInstance = Get-MgApplication -Filter "DisplayName eq '$AppId'"
-            $currentParameters.AppId = $appInstance.AppId
-        }
         Write-Verbose -Message "CurrentParameters: $($currentParameters | Out-String)"
         Write-Verbose -Message "ServicePrincipalID: $($currentAADServicePrincipal.ObjectID)"
         $currentParameters.Remove('AppRoleAssignedTo') | Out-Null
@@ -1043,17 +1031,37 @@ function Export-TargetResource
             {
                 if ($Results.AppRoleAssignedTo.Count -gt 0)
                 {
-                    $Results.AppRoleAssignedTo = Get-M365DSCAzureADServicePrincipalAssignmentAsString -Assignments $Results.AppRoleAssignedTo
+                    $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                        -ComplexObject $Results.AppRoleAssignedTo `
+                        -CIMInstanceName 'AADServicePrincipalRoleAssignment'
+                    if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                    {
+                        $Results.AppRoleAssignedTo = $complexTypeStringResult
+                    }
+                    else
+                    {
+                        $Results.Remove('AppRoleAssignedTo') | Out-Null
+                    }
                 }
                 if ($Results.DelegatedPermissionClassifications.Count -gt 0)
                 {
-                    $Results.DelegatedPermissionClassifications = Get-M365DSCAzureADServicePrincipalDelegatedPermissionClassifications -PermissionClassifications $Results.DelegatedPermissionClassifications
+                    $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                        -ComplexObject $Results.DelegatedPermissionClassifications `
+                        -CIMInstanceName 'AADServicePrincipalDelegatedPermissionClassification' -IsArray:$true
+                    if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                    {
+                        $Results.DelegatedPermissionClassifications = $complexTypeStringResult
+                    }
+                    else
+                    {
+                        $Results.Remove('DelegatedPermissionClassifications') | Out-Null
+                    }
                 }
                 if ($null -ne $Results.KeyCredentials)
                 {
                     $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                         -ComplexObject $Results.KeyCredentials `
-                        -CIMInstanceName 'MicrosoftGraphkeyCredential'
+                        -CIMInstanceName 'MicrosoftGraphkeyCredential' -IsArray:$true
                     if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                     {
                         $Results.KeyCredentials = $complexTypeStringResult
@@ -1067,7 +1075,7 @@ function Export-TargetResource
                 {
                     $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                         -ComplexObject $Results.PasswordCredentials `
-                        -CIMInstanceName 'MicrosoftGraphpasswordCredential'
+                        -CIMInstanceName 'MicrosoftGraphpasswordCredential' -IsArray:$true
                     if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                     {
                         $Results.PasswordCredentials = $complexTypeStringResult
@@ -1079,7 +1087,31 @@ function Export-TargetResource
                 }
                 if ($Results.CustomSecurityAttributes.Count -gt 0)
                 {
-                    $Results.CustomSecurityAttributes = Get-M365DSCAADServicePrincipalCustomSecurityAttributesAsString -CustomSecurityAttributes $Results.CustomSecurityAttributes
+                    $complexMapping = @(
+                        @{
+                            Name            = 'CustomSecurityAttributes'
+                            CimInstanceName = 'AADServicePrincipalAttributeSet'
+                            IsRequired      = $False
+                        },
+                        @{
+                            Name            = 'AttributeValues'
+                            CimInstanceName = 'AADServicePrincipalAttributeValue'
+                            IsRequired      = $False
+                        }
+                    )
+                    $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                        -ComplexObject $Results.CustomSecurityAttributes `
+                        -CIMInstanceName 'AADServicePrincipalAttributeSet' `
+                        -ComplexTypeMapping $complexMapping `
+                        -IsArray:$true
+                    if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                    {
+                        $Results.CustomSecurityAttributes = $complexTypeStringResult
+                    }
+                    else
+                    {
+                        $Results.Remove('CustomSecurityAttributes') | Out-Null
+                    }
                 }
                 $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                     -ConnectionMode $ConnectionMode `

@@ -1,0 +1,32 @@
+﻿{
+    "resourceName": "SHSpaceGroup",
+    "description": "Represents a Services Hub space group.",
+    "roles": {
+        "read": [
+            "Role"
+        ],
+        "update": [
+            "Role"
+        ]
+    },
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [],
+                "update": []
+            },
+            "application": {
+                "read": [
+                    {
+                        "name": "Group.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Group.Read.All"
+                    }
+                ]
+            }
+        }
+    }
+}

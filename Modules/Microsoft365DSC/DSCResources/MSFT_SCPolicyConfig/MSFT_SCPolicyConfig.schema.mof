@@ -135,13 +135,13 @@ class MSFT_PolicyConfigQuarantineParameters
 class MSFT_SCPolicyConfig : OMI_BaseResource
 {
     [Key, Description("Accepted value is 'Yes'."), ValueMap{"Yes"}, Values{"Yes"}] String IsSingleInstance;
-    [Write, Description("Default value is false.")] Boolean AdvancedClassificationEnabled;
+    [Write, Description("Default value is false. If set to false, then you cannot specify BandwidthLimitEnabled nor DailyBandwidthLimitInMb")] Boolean AdvancedClassificationEnabled;
     [Write, Description("Default value is false.")] Boolean AuditFileActivity;
     [Write, Description("Default value is true.")] Boolean BandwidthLimitEnabled;
     [Write, Description("TBD"), EmbeddedInstance("MSFT_PolicyConfigBusinessJustificationList")] String BusinessJustificationList[];
     [Write, Description("Default value is Off.")] String CloudAppMode;
     [Write, Description("TBD")] String CloudAppRestrictionList[];
-    [Write, Description("Default value is 0.")] UInt32 CustomBusinessJustificationNotification;
+    [Write, Description("Default value is 0. If set to 0, you cannot specify the BusinessJustificationList parameter as part of your configuration.")] UInt32 CustomBusinessJustificationNotification;
     [Write, Description("Default value is 1000")] UInt32 DailyBandwidthLimitInMB;
     [Write, Description("TBD"), EmbeddedInstance("MSFT_PolicyConfigDLPAppGroups")] String DLPAppGroups[];
     [Write, Description("TBD"), EmbeddedInstance("MSFT_PolicyConfigDLPNetworkShareGroups")] String DLPNetworkShareGroups[];
