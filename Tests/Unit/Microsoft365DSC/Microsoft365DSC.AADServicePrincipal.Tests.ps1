@@ -47,7 +47,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-MgApplication -MockWith {
                 return @{
-                    AppId = "12345-12345-12345-12345-12345"
+                    AppId = "b4f08c68-7276-4cb8-b9ae-e75fca5ff834"
                     DisplayName = "App1"
                 }
             }
@@ -55,7 +55,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
             }
-            $Script:exportedInstances =$null
+            $Script:exportedInstance =$null
             $Script:ExportMode = $false
         }
 
@@ -259,6 +259,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-MgServicePrincipal -MockWith {
                     $AADSP = New-Object PSCustomObject
                     $AADSP | Add-Member -MemberType NoteProperty -Name AppId -Value 'b4f08c68-7276-4cb8-b9ae-e75fca5ff834'
+                    $AADSP | Add-Member -MemberType NoteProperty -Name AppDisplayName -Value 'App1'
                     $AADSP | Add-Member -MemberType NoteProperty -Name Id -Value '5dcb2237-c61b-4258-9c85-eae2aaeba9d6'
                     $AADSP | Add-Member -MemberType NoteProperty -Name DisplayName -Value 'App1'
                     $AADSP | Add-Member -MemberType NoteProperty -Name AlternativeNames -Value 'AlternativeName1', 'AlternativeName2'

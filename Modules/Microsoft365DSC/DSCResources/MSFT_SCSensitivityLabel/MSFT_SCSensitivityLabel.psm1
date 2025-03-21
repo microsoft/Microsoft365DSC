@@ -1203,6 +1203,12 @@ function Set-TargetResource
         $SetParams.Remove('ApplicationSecret') | Out-Null
         $SetParams.Remove('AccessTokens') | Out-Null
 
+        # Only update the priority if the value is different
+        if ($SetParams.Priority -eq $label.Priority)
+        {
+            $SetParams.Remove('Priority') | Out-Null
+        }
+
         try
         {
             Set-Label @SetParams -Identity $Name -ErrorAction Stop

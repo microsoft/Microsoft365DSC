@@ -310,7 +310,7 @@ function Get-TargetResource
         }
 
         $result = @{
-            AppId                              = $AADServicePrincipal.AppId
+            AppId                              = $AADServicePrincipal.AppDisplayName
             AppRoleAssignedTo                  = $AppRoleAssignedToValues
             ObjectID                           = $AADServicePrincipal.Id
             DisplayName                        = $AADServicePrincipal.DisplayName
@@ -528,6 +528,16 @@ function Set-TargetResource
         $currentParameters.Remove('CustomSecurityAttributes')
     }
 
+    # If the AppId was passed as a display name (not in GUID format), translate it to an ID.
+    $ObjectGuid = [System.Guid]::empty
+    if (-not [System.Guid]::TryParse($AppId, [System.Management.Automation.PSReference]$ObjectGuid))
+    {
+        Write-Verbose -Message "AppId was provided as a DisplayName. Translating it to an a GUID."
+        $appInstance = Get-MgApplication -Filter "DisplayName eq '$AppId'"
+        $currentParameters.AppId = $appInstance.AppId
+        Write-Verbose -Message "Translated to AppId {$($currentParameters.AppId)}"
+    }
+
     # ServicePrincipal should exist but it doesn't
     if ($Ensure -eq 'Present' -and $currentAADServicePrincipal.Ensure -eq 'Absent')
     {
@@ -573,6 +583,7 @@ function Set-TargetResource
         Write-Verbose -Message 'Updating existing Service Principal'
         Write-Verbose -Message "CurrentParameters: $($currentParameters | Out-String)"
         Write-Verbose -Message "ServicePrincipalID: $($currentAADServicePrincipal.ObjectID)"
+        $AppRoleAssignedToSpecified = $currentParameters.ContainsKey('AppRoleAssignedTo')
         $currentParameters.Remove('AppRoleAssignedTo') | Out-Null
         $currentParameters.Remove('DelegatedPermissionClassifications') | Out-Null
 
@@ -600,8 +611,9 @@ function Set-TargetResource
             $appInstance = Get-MgApplication -Filter "AppId eq '$AppId'"
             Update-MgApplication -ApplicationId $appInstance.Id -IdentifierUris $IdentifierUris
         }
-        if ($AppRoleAssignedTo)
+        if ($AppRoleAssignedToSpecified)
         {
+            Write-Verbose -Message "Need to update AppRoleAssignedTo value"
             [Array]$currentPrincipals = $currentAADServicePrincipal.AppRoleAssignedTo.Identity
             [Array]$desiredPrincipals = $AppRoleAssignedTo.Identity
 
@@ -924,12 +936,26 @@ function Test-TargetResource
         }
     }
 
+    # Evaluate AppId in GUID or DisplayName form.
+    $ObjectGuid = [System.Guid]::empty
+    if ([System.Guid]::TryParse($ValuesToCheck.AppId, [System.Management.Automation.PSReference]$ObjectGuid))
+    {
+        # AppId was provided as a GUID, but Get-TargetResource returns it as Display name.
+        # Evaluate the translation to display name
+        Write-Verbose -Message "AppId was provided as a GUID, translating into a DisplayName"
+        $appInstance = Get-MgApplication -ApplicationId $ValuesToCheck.AppId -ErrorAction SilentlyContinue
+        if ($null -ne $appInstance)
+        {
+            $ValuesToCheck.AppId = $appInstance.DisplayName
+        }
+    }
+
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
-        -DesiredValues $PSBoundParameters `
+        -DesiredValues $ValuesToCheck `
         -ValuesToCheck $ValuesToCheck.Keys `
         -IncludedDrifts $driftedParams
 

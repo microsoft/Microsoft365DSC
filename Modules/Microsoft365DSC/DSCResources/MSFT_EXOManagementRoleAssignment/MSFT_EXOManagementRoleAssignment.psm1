@@ -363,7 +363,7 @@ function Set-TargetResource
         $testResults = Test-TargetResource @PSBoundParameters
         if (-not $testResults)
         {
-            Write-Verbose -Message "Test-TargetResource returned $false. Waiting for a total of $(($count * 10).ToString()) out of 120)"
+            Write-Verbose -Message "Test-TargetResource returned $false. Waiting for a total of $(($count * 10).ToString()) out of 120"
             Start-Sleep -Seconds 10
         }
         $retries--
