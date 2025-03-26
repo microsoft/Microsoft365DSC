@@ -6,7 +6,6 @@ Desired State Configuration. The compiled configuration needs to be
 executed from an agent's Local Configuration Manager (LCM) (machine
 or container) which can communicate back remotely to Microsoft 365 via
 remote API calls (therefore requires internet connectivity)
-
 For information on how to get started, additional documentation or
 additional resources, please navigate to the official web site at
 [Microsoft365DSC.com](http://Microsoft365DSC.com) and check out the
@@ -20,7 +19,7 @@ official YouTube channel
 [![codecov](https://codecov.io/gh/Microsoft/Microsoft365DSC/branch/master/graph/badge.svg)](https://codecov.io/gh/Microsoft/Microsoft365DSC)
 
 This is the branch containing the latest release. No contributions should be made directly to this branch.
-
+added contribution.txt
 ### dev
 
 [![Code Coverage](https://github.com/microsoft/Microsoft365DSC/actions/workflows/CodeCoverage.yml/badge.svg)](https://github.com/microsoft/Microsoft365DSC/actions/workflows/CodeCoverage.yml)
@@ -41,8 +40,7 @@ This is the branch containing the latest release. No contributions should be mad
 
 [![Global - Integration - AAD](https://github.com/microsoft/Microsoft365DSC/actions/workflows/Global%20-%20Integration%20-%20AAD.yml/badge.svg)](https://github.com/microsoft/Microsoft365DSC/actions/workflows/Global%20-%20Integration%20-%20AAD.yml)
 
-[![Global - Integration - EXO](https://github.com/microsoft/Microsoft365DSC/actions/workflows/Global%20-%20Integration%20-%20EXO.yml/badge.svg)](https://github.com/microsoft/Microsoft365DSC/actions/workflows/Global%20-%20Integration%20-%20EXO.yml)
-
+[![Global - Integration - EXO](https://github.com/microsoft/Microsoft365DSC/actions/workflows/Global%20-%20Integration%20-%20EXO.yml/badge.svg)](https://github.com/microsoft/Microsoft365DSC/actions/workflows/Global%20-%20Integration%20-%20EXO.yml
 [![Global - Integration - INTUNE](https://github.com/microsoft/Microsoft365DSC/actions/workflows/Global%20-%20Integration%20-%20INTUNE.yml/badge.svg)](https://github.com/microsoft/Microsoft365DSC/actions/workflows/Global%20-%20Integration%20-%20INTUNE.yml)
 
 [![Unit Tests](https://github.com/microsoft/Microsoft365DSC/actions/workflows/Unit%20Tests.yml/badge.svg)](https://github.com/microsoft/Microsoft365DSC/actions/workflows/Unit%20Tests.yml)
@@ -56,6 +54,7 @@ and be released to [PowerShell Gallery](https://www.powershellgallery.com/).
 To acquire the latest
 bits of the module from a machine that has internet connectivity,
 run the following PowerShell lines:
+
 
 ```PowerShell
 Install-Module -Name Microsoft365DSC -Force
