@@ -18,9 +18,9 @@ official YouTube channel
 
 [![codecov](https://codecov.io/gh/Microsoft/Microsoft365DSC/branch/master/graph/badge.svg)](https://codecov.io/gh/Microsoft/Microsoft365DSC)
 
+
 This is the master (dev) branch containing the latest release. No contributions should be made directly to this branch.
-added contribution.txt
-### dev
+
 
 [![Code Coverage](https://github.com/microsoft/Microsoft365DSC/actions/workflows/CodeCoverage.yml/badge.svg)](https://github.com/microsoft/Microsoft365DSC/actions/workflows/CodeCoverage.yml)
 
@@ -63,7 +63,6 @@ Update-M365DSCModule
 ```
 
 ## Telemetry Disclaimer
-
 Microsoft365DSC captures Telemetry data about the names of the resources
 in which a configuration drift has been detected, along with the type
 of exceptions being thrown by errors in the various modules. While no
