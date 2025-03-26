@@ -18,7 +18,7 @@ official YouTube channel
 
 [![codecov](https://codecov.io/gh/Microsoft/Microsoft365DSC/branch/master/graph/badge.svg)](https://codecov.io/gh/Microsoft/Microsoft365DSC)
 
-This is the branch containing the latest release. No contributions should be made directly to this branch.
+This is the master (dev) branch containing the latest release. No contributions should be made directly to this branch.
 added contribution.txt
 ### dev
 
@@ -48,6 +48,7 @@ added contribution.txt
 Contributors are encouraged to propose their contributions as pull requests to this development branch.
 This branch will periodically be merged to the master branch,
 and be released to [PowerShell Gallery](https://www.powershellgallery.com/).
+
 
 ## How to Install
 
