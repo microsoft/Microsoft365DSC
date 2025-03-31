@@ -61,6 +61,10 @@ function Get-TargetResource
         $Office,
 
         [Parameter()]
+        [System.String[]]
+        $OtherMails,
+
+        [Parameter()]
         [System.Boolean]
         $PasswordNeverExpires = $false,
 
@@ -163,6 +167,7 @@ function Get-TargetResource
                 UsageLocation         = $null
                 LicenseAssignment     = $null
                 MemberOf              = $null
+                OtherMails            = $null
                 Password              = $null
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
@@ -175,7 +180,7 @@ function Get-TargetResource
             }
 
             Write-Verbose -Message "Getting Office 365 User $UserPrincipalName"
-            $propertiesToRetrieve = @('Id', 'UserPrincipalName', 'DisplayName', 'GivenName', 'Surname', 'UsageLocation', 'City', 'Country', 'Department', 'FaxNumber', 'MobilePhone', 'OfficeLocation', 'BusinessPhones', 'PostalCode', 'PreferredLanguage', 'State', 'StreetAddress', 'JobTitle', 'UserType', 'PasswordPolicies')
+            $propertiesToRetrieve = @('Id', 'UserPrincipalName', 'DisplayName', 'GivenName', 'Surname', 'UsageLocation', 'City', 'Country', 'Department', 'FaxNumber', 'MobilePhone', 'OfficeLocation', 'OtherMails', 'BusinessPhones', 'PostalCode', 'PreferredLanguage', 'State', 'StreetAddress', 'JobTitle', 'UserType', 'PasswordPolicies')
             $user = Get-MgUser -UserId $UserPrincipalName -Property $propertiesToRetrieve -ErrorAction SilentlyContinue
             if ($null -eq $user)
             {
@@ -237,6 +242,7 @@ function Get-TargetResource
             Fax                   = $user.FaxNumber
             MobilePhone           = $user.MobilePhone
             Office                = $user.OfficeLocation
+            OtherMails            = $user.OtherMails
             PasswordNeverExpires  = $passwordNeverExpires
             PasswordPolicies      = $user.PasswordPolicies
             PhoneNumber           = $user.BusinessPhones | Select-Object -First 1
@@ -329,6 +335,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $Office,
+
+        [Parameter()]
+        [System.String[]]
+        $OtherMails,
 
         [Parameter()]
         [System.Boolean]
@@ -450,6 +460,7 @@ function Set-TargetResource
             MobilePhone              = $MobilePhone
             PasswordPolicies         = $PasswordPolicies
             OfficeLocation           = $Office
+            OtherMails               = $OtherMails
             PostalCode               = $PostalCode
             PreferredLanguage        = $PreferredLanguage
             State                    = $State
@@ -463,7 +474,7 @@ function Set-TargetResource
         $CreationParams = Remove-NullEntriesFromHashtable -Hash $CreationParams
 
         #region Licenses
-        if ($LicenseAssignment -ne $null)
+        if ($null -ne $LicenseAssignment)
         {
             [Array] $currentLicenses = $user.LicenseAssignment
             if ($null -eq $currentLicenses)
@@ -764,6 +775,10 @@ function Test-TargetResource
         $Office,
 
         [Parameter()]
+        [System.String[]]
+        $OtherMails,
+
+        [Parameter()]
         [System.Boolean]
         $PasswordNeverExpires = $false,
 
@@ -927,7 +942,7 @@ function Export-TargetResource
     try
     {
         $Script:ExportMode = $true
-        $propertiesToRetrieve = @('Id', 'UserPrincipalName', 'DisplayName', 'GivenName', 'Surname', 'UsageLocation', 'City', 'Country', 'Department', 'FacsimileTelephoneNumber', 'Mobile', 'OfficeLocation', 'TelephoneNumber', 'PostalCode', 'PreferredLanguage', 'State', 'StreetAddress', 'JobTitle', 'UserType', 'PasswordPolicies')
+        $propertiesToRetrieve = @('Id', 'UserPrincipalName', 'DisplayName', 'GivenName', 'Surname', 'UsageLocation', 'City', 'Country', 'Department', 'FacsimileTelephoneNumber', 'Mobile', 'OfficeLocation', 'OtherMails', 'TelephoneNumber', 'PostalCode', 'PreferredLanguage', 'State', 'StreetAddress', 'JobTitle', 'UserType', 'PasswordPolicies')
         $ExportParameters = @{
             Filter      = $Filter
             All         = [switch]$true

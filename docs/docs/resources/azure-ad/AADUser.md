@@ -19,6 +19,7 @@
 | **MemberOf** | Write | StringArray[] | The Groups that the user is a direct member of | |
 | **MobilePhone** | Write | String | The Mobile Phone Number of the user | |
 | **Office** | Write | String | The Office Name of the user | |
+| **OtherMails** | Write | StringArray[] | The other mails assigned to the user | |
 | **PasswordNeverExpires** | Write | Boolean | Specifies whether the user password expires periodically. Default value is false | |
 | **PasswordPolicies** | Write | String | Specifies password policies for the user. | |
 | **PhoneNumber** | Write | String | The Phone Number of the user | |

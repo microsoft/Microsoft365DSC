@@ -2,9 +2,7 @@
 class MSFT_EXOArcConfig : OMI_BaseResource
 {
     [Key, Description("Only valid value is 'Yes'."), ValueMap{"Yes"}, Values{"Yes"}] String IsSingleInstance;
-    [Write, Description("Identity which indicates the organization.")] String Identity;
     [Write, Description("The domain names of the ARC sealers.")] String ArcTrustedSealers[];
-
     [Write, Description("Credentials of the workload's Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
     [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;

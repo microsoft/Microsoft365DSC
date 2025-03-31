@@ -442,11 +442,6 @@ function Test-TargetResource
         $target = $CurrentValues.$key
         if ($null -ne $source -and $source.GetType().Name -like '*CimInstance*')
         {
-            if ($source.UserSelectionType -eq 'add_replace')
-            {
-                Write-Warning -Message "The UserSelectionType 'add_replace' is not supported anymore. It will be converted to 'add_restrict'"
-                $source.UserSelectionType = 'add_restrict'
-            }
             $testResult = Compare-M365DSCComplexObject `
                 -Source ($source) `
                 -Target ($target)
@@ -670,11 +665,6 @@ function Get-M365DSCIntuneDeviceConfigurationSettings
     }
     foreach ($groupConfiguration in $Properties.LocalUserGroupCollection)
     {
-        if ($groupConfiguration.UserSelectionType -eq 'add_replace')
-        {
-            Write-Warning -Message "The UserSelectionType 'add_replace' is not supported anymore. It will be converted to 'add_restrict'"
-            $groupConfiguration.UserSelectionType = 'add_restrict'
-        }
         $groupDefaultValue = @{
             children = @(
                 @{

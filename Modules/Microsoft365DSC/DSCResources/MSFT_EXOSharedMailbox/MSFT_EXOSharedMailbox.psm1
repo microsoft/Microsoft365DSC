@@ -25,6 +25,10 @@ function Get-TargetResource
         $EmailAddresses,
 
         [Parameter()]
+        [System.Boolean]
+        $AuditEnabled,
+
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -137,6 +141,7 @@ function Get-TargetResource
             Identity              = $mailbox.Identity
             PrimarySMTPAddress    = $mailbox.PrimarySMTPAddress.ToString()
             Alias                 = $mailbox.Alias
+            AuditEnabled          = $mailbox.AuditEnabled
             EmailAddresses        = $CurrentEmailAddresses
             Ensure                = 'Present'
             Credential            = $Credential
@@ -188,6 +193,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String[]]
         $EmailAddresses = @(),
+
+        [Parameter()]
+        [System.Boolean]
+        $AuditEnabled,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -373,6 +382,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String[]]
         $EmailAddresses,
+
+        [Parameter()]
+        [System.Boolean]
+        $AuditEnabled,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]

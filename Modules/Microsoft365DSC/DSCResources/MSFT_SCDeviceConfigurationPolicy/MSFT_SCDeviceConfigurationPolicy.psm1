@@ -56,7 +56,7 @@ function Get-TargetResource
         {
             Write-Verbose -Message "Getting configuration of Device Configuration Policy for $Name"
 
-            $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+            $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
                 -InboundParameters $PSBoundParameters
 
             #Ensure the proper dependencies are installed in the current environment.
@@ -88,11 +88,17 @@ function Get-TargetResource
             $PolicyObject = $Script:exportedInstance
         }
 
+        $CommentValue = $PolicyObject.Comment
+        if ($CommentValue.Replace("`r", "").Replace("`n", "").Length -eq 0)
+        {
+            $CommentValue = ""
+        }
+
         Write-Verbose "Found existing Device Configuration Policy $($Name)"
         $result = @{
             Ensure                = 'Present'
             Name                  = $PolicyObject.Name
-            Comment               = $PolicyObject.Comment
+            Comment               = $CommentValue
             Enabled               = $PolicyObject.Enabled
             Credential            = $Credential
             ApplicationId         = $ApplicationId

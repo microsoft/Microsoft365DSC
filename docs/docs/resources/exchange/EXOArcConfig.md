@@ -5,7 +5,6 @@
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
 | **IsSingleInstance** | Key | String | Only valid value is 'Yes'. | `Yes` |
-| **Identity** | Write | String | Identity which indicates the organization. | |
 | **ArcTrustedSealers** | Write | StringArray[] | The domain names of the ARC sealers. | |
 | **Credential** | Write | PSCredential | Credentials of the workload's Admin | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |

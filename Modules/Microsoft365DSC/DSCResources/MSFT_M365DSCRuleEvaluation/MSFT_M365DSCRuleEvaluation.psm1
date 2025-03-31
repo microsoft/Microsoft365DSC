@@ -220,6 +220,9 @@ function Test-TargetResource
 
         [Array]$instances = &$cmdName @params
 
+        #Write-Verbose -Message "Unloading module {$module} from memory"
+        #Remove-Module $module -Force
+
         $DSCStringContent = @"
         # Generated with Microsoft365DSC version 1.23.906.1
         # For additional information on how to use Microsoft365DSC, please visit https://aka.ms/M365DSC

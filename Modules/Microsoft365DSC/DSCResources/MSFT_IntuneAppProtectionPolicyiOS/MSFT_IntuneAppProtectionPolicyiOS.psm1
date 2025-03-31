@@ -480,11 +480,17 @@ function Get-TargetResource
             $myGracePeriodToBlockAppsDuringOffClockHours = $policy.gracePeriodToBlockAppsDuringOffClockHours.toString()
         }
 
+        $AllowedDataIngestionLocationsValue = @()
+        if ($null -ne $policy.AllowedDataIngestionLocations)
+        {
+            $AllowedDataIngestionLocationsValue = [String[]]($policy.AllowedDataIngestionLocations)
+        }
+
         return @{
             Identity                                       = $policy.id
             DisplayName                                    = $policy.DisplayName
             Description                                    = $policy.Description
-            AllowedDataIngestionLocations                  = [String[]]$policy.AllowedDataIngestionLocations
+            AllowedDataIngestionLocations                  = $AllowedDataIngestionLocationsValue
             AllowWidgetContentSync                         = $policy.AllowWidgetContentSync
             AppActionIfAccountIsClockedOut                 = [string]$policy.appActionIfAccountIsClockedOut
             AppActionIfUnableToAuthenticateUser            = [string]$policy.appActionIfUnableToAuthenticateUser

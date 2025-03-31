@@ -26,6 +26,8 @@
 | **Owners** | Write | StringArray[] | UPN or ObjectID values of the app's owners. | |
 | **OnPremisesPublishing** | Write | MSFT_AADApplicationOnPremisesPublishing | Represents the set of properties required for configuring Application Proxy for this application. Configuring these properties allows you to publish your on-premises application for secure remote access. | |
 | **ApplicationTemplateId** | Write | String | Identifier of the associated Application Template. | |
+| **PublicClientRedirectUris** | Write | StringArray[] | List of public clients redirect URIs. | |
+| **Spa** | Write | MSFT_AADApplicationSpa | List of single page application settings. | |
 | **Ensure** | Write | String | Specify if the Azure AD App should exist or not. | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials for the Microsoft Graph delegated permissions. | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
@@ -212,6 +214,14 @@
 | **IsEnabled** | Write | Boolean | When creating or updating an app role, this must be set to true (which is the default). To delete a role, this must first be set to false.  At that point, in a subsequent call, this role may be removed. | |
 | **Origin** | Write | String | Specifies if the app role is defined on the application object or on the servicePrincipal entity. Must not be included in any POST or PATCH requests. Read-only. | |
 | **Value** | Write | String | Specifies the value to include in the roles claim in ID tokens and access tokens authenticating an assigned user or service principal. Must not exceed 120 characters in length. Allowed characters are : ! # $ % & ' ( ) * + , - . / :   =       + _    } , and characters in the ranges 0-9, A-Z and a-z. Any other character, including the space character, aren't allowed. May not begin with .. | |
+
+### MSFT_AADApplicationSPA
+
+#### Parameters
+
+| Parameter | Attribute | DataType | Description | Allowed Values |
+| --- | --- | --- | --- | --- |
+| **RedirectUris** | Write | StringArray[] | Single page application redirect URIs. | |
 
 ## Description
 

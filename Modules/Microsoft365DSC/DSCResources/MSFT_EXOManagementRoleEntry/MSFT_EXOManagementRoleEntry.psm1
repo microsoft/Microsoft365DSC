@@ -18,6 +18,11 @@ function Get-TargetResource
         $Type,
 
         [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -70,11 +75,14 @@ function Get-TargetResource
             Add-M365DSCTelemetryEvent -Data $data
             #endregion
 
-            $roleEntry = Get-ManagementRoleEntry -Identity $Identity -ResultSize 'Unlimited' -ErrorAction Stop
+            $roleEntry = Get-ManagementRoleEntry -Identity $Identity -ResultSize 'Unlimited' -ErrorAction SilentlyContinue
 
             if ($null -eq $roleEntry)
             {
-                throw "Management Role Entry {$Identity} does not exist."
+                Write-Verbose -Message "Management Role Entry {$Identity} does not exist."
+                $nullReturn = $PSBoundParameters
+                $nullReturn.Ensure = 'Absent'
+                return $nullReturn
             }
         }
         else
@@ -86,6 +94,7 @@ function Get-TargetResource
             Identity              = $Identity
             Parameters            = $roleEntry.Parameters
             Type                  = $roleEntry.Type
+            Ensure                = 'Present'
             Credential            = $Credential
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
@@ -128,6 +137,11 @@ function Set-TargetResource
         [ValidateSet('Cmdlet', 'Script', 'ApplicationPermission', 'WebService')]
         [System.String]
         $Type,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -180,30 +194,59 @@ function Set-TargetResource
         -InboundParameters $PSBoundParameters
 
     $currentValues = Get-TargetResource @PSBoundParameters
-    $paramDifference = Compare-Object -ReferenceObject $currentValues.Parameters -DifferenceObject $Parameters
 
-    $paramsToAdd = $paramDifference | Where-Object -FilterScript { $_.SideIndicator -eq '=>' }
-    $paramsToAddEntries = @()
-    foreach ($diff in $paramsToAdd)
+    if ($currentValues.Ensure -eq 'Absent' -and $Ensure -eq 'Present')
     {
-        $paramsToAddEntries += $diff.InputObject.ToString()
-    }
-    if ($paramsToAddEntries.Count -gt 0)
-    {
-        Write-Verbose -Message "Adding the following parameters to {$Identity}: $($paramsToAddEntries -join ',')"
-        Set-ManagementRoleEntry -Identity $Identity -AddParameter -Parameters $paramsToAddEntries
-    }
+        Write-Verbose -Message "Creating new Management Role Entry {$Identity}"
+        $params = @{
+            Identity = $Identity
+        }
 
-    $paramsToRemove = $paramDifference | Where-Object -FilterScript { $_.SideIndicator -eq '<=' }
-    $paramsToRemoveEntries = @()
-    foreach ($diff in $paramsToRemove)
-    {
-        $paramsToRemoveEntries += $diff.InputObject.ToString()
+        if ($null -ne $Parameters -and $Parameters.Length -gt 0)
+        {
+            $params.Add('Parameters', $Parameters)
+        }
+
+        if (-not [System.String]::IsNullOrEmpty($Type))
+        {
+            $params.Add('Type', $Type)
+        }
+
+        Add-ManagementRoleEntry @params
     }
-    if ($paramsToRemoveEntries.Count -gt 0)
+    elseif ($currentValues.Ensure -eq 'Present' -and $Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing the following parameters to {$Identity}: $($paramsToRemoveEntries -join ',')"
-        Set-ManagementRoleEntry -Identity $Identity -RemoveParameter -Parameters $paramsToRemoveEntries
+        Write-Verbose -Message "Updating Management Role Entry {$Identity}"
+        $paramDifference = Compare-Object -ReferenceObject $currentValues.Parameters -DifferenceObject $Parameters
+
+        $paramsToAdd = $paramDifference | Where-Object -FilterScript { $_.SideIndicator -eq '=>' }
+        $paramsToAddEntries = @()
+        foreach ($diff in $paramsToAdd)
+        {
+            $paramsToAddEntries += $diff.InputObject.ToString()
+        }
+        if ($paramsToAddEntries.Count -gt 0)
+        {
+            Write-Verbose -Message "Adding the following parameters to {$Identity}: $($paramsToAddEntries -join ',')"
+            Set-ManagementRoleEntry -Identity $Identity -AddParameter -Parameters $paramsToAddEntries
+        }
+
+        $paramsToRemove = $paramDifference | Where-Object -FilterScript { $_.SideIndicator -eq '<=' }
+        $paramsToRemoveEntries = @()
+        foreach ($diff in $paramsToRemove)
+        {
+            $paramsToRemoveEntries += $diff.InputObject.ToString()
+        }
+        if ($paramsToRemoveEntries.Count -gt 0)
+        {
+            Write-Verbose -Message "Removing the following parameters to {$Identity}: $($paramsToRemoveEntries -join ',')"
+            Set-ManagementRoleEntry -Identity $Identity -RemoveParameter -Parameters $paramsToRemoveEntries
+        }
+    }
+    elseif ($currentValues.Ensure -eq 'Present' -and $Ensure -eq 'Absent')
+    {
+        Write-Verbose -Message "Removing Management Role Entry {$Identity}"
+        Remove-ManagementRoleEntry -Identity $Identity -Confirm:$false
     }
 }
 
@@ -225,6 +268,11 @@ function Test-TargetResource
         [ValidateSet('Cmdlet', 'Script', 'ApplicationPermission', 'WebService')]
         [System.String]
         $Type,
+
+        [Parameter()]
+        [ValidateSet('Present', 'Absent')]
+        [System.String]
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]

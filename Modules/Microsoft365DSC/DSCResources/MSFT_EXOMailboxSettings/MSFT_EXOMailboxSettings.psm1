@@ -17,6 +17,10 @@ function Get-TargetResource
         $Locale,
 
         [Parameter()]
+        [System.Boolean]
+        $AuditEnabled,
+
+        [Parameter()]
         [System.String]
         $RetentionPolicy,
 
@@ -124,6 +128,7 @@ function Get-TargetResource
         AddressBookPolicy     = $mailboxInfo.AddressBookPolicy
         RoleAssignmentPolicy  = $mailboxInfo.RoleAssignmentPolicy
         SharingPolicy         = $mailboxInfo.SharingPolicy
+        AuditEnabled          = $mailboxInfo.AuditEnabled
         Ensure                = 'Present'
         Credential            = $Credential
         ApplicationId         = $ApplicationId
@@ -155,6 +160,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $Locale,
+
+        [Parameter()]
+        [System.Boolean]
+        $AuditEnabled,
 
         [Parameter()]
         [System.String]
@@ -278,6 +287,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $Locale,
+
+        [Parameter()]
+        [System.Boolean]
+        $AuditEnabled,
 
         [Parameter()]
         [System.String]

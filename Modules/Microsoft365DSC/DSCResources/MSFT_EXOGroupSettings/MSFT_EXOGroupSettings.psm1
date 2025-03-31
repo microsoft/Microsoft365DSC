@@ -114,23 +114,23 @@ function Get-TargetResource
         $EmailAddresses,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ExtensionCustomAttribute1,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ExtensionCustomAttribute2,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ExtensionCustomAttribute3,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ExtensionCustomAttribute4,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ExtensionCustomAttribute5,
 
         [Parameter()]
@@ -167,7 +167,7 @@ function Get-TargetResource
         $MailTip,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $MailTipTranslations,
 
         [Parameter()]
@@ -302,10 +302,71 @@ function Get-TargetResource
         return $nullReturn
     }
 
+
+    $ExtensionCustomAttribute1Value = $group.ExtensionCustomAttribute1
+    if ($null -eq $group.ExtensionCustomAttribute1)
+    {
+        $ExtensionCustomAttribute1Value = @()
+    }
+
+    $ExtensionCustomAttribute2Value = $group.ExtensionCustomAttribute2
+    if ($null -eq $group.ExtensionCustomAttribute2)
+    {
+        $ExtensionCustomAttribute2Value = @()
+    }
+
+    $ExtensionCustomAttribute3Value = $group.ExtensionCustomAttribute3
+    if ($null -eq $group.ExtensionCustomAttribute3)
+    {
+        $ExtensionCustomAttribute3Value = @()
+    }
+
+    $ExtensionCustomAttribute4Value = $group.ExtensionCustomAttribute4
+    if ($null -eq $group.ExtensionCustomAttribute4)
+    {
+        $ExtensionCustomAttribute4Value = @()
+    }
+
+    $ExtensionCustomAttribute5Value = $group.ExtensionCustomAttribute5
+    if ($null -eq $group.ExtensionCustomAttribute5)
+    {
+        $ExtensionCustomAttribute5Value = @()
+    }
+
+    $GrantSendOnBehalfToValue = $group.GrantSendOnBehalfTo
+    if ($null -eq $group.GrantSendOnBehalfTo)
+    {
+        $GrantSendOnBehalfToValue = @()
+    }
+
+    $ModeratedByValue = $group.ModeratedBy
+    if ($null -eq $group.ModeratedBy)
+    {
+        $ModeratedByValue = @()
+    }
+
+    $AcceptMessagesOnlyFromSendersOrMembersValue = $group.AcceptMessagesOnlyFromSendersOrMembers
+    if ($null -eq $group.AcceptMessagesOnlyFromSendersOrMembers)
+    {
+        $AcceptMessagesOnlyFromSendersOrMembersValue = @()
+    }
+
+    $MailTipTranslationsValue = $group.MailTipTranslations
+    if ($null -eq $group.MailTipTranslations)
+    {
+        $MailTipTranslationsValue = @()
+    }
+
+    $RejectMessagesFromSendersOrMembersValue = $group.RejectMessagesFromSendersOrMembers
+    if ($null -eq $group.RejectMessagesFromSendersOrMembers)
+    {
+        $RejectMessagesFromSendersOrMembersValue = @()
+    }
+
     $result = @{
         DisplayName                            = $DisplayName
         Id                                     = $group.Id
-        AcceptMessagesOnlyFromSendersOrMembers = $group.AcceptMessagesOnlyFromSendersOrMembers
+        AcceptMessagesOnlyFromSendersOrMembers = $AcceptMessagesOnlyFromSendersOrMembersValue
         AccessType                             = $group.AccessType
         AlwaysSubscribeMembersToCalendarEvents = $group.AlwaysSubscribeMembersToCalendarEvents
         AuditLogAgeLimit                       = $group.AuditLogAgeLimit
@@ -330,12 +391,12 @@ function Get-TargetResource
         CustomAttribute15                      = $group.CustomAttribute15
         DataEncryptionPolicy                   = $group.DataEncryptionPolicy
         EmailAddresses                         = $group.EmailAddresses
-        ExtensionCustomAttribute1              = $group.ExtensionCustomAttribute1
-        ExtensionCustomAttribute2              = $group.ExtensionCustomAttribute2
-        ExtensionCustomAttribute3              = $group.ExtensionCustomAttribute3
-        ExtensionCustomAttribute4              = $group.ExtensionCustomAttribute4
-        ExtensionCustomAttribute5              = $group.ExtensionCustomAttribute5
-        GrantSendOnBehalfTo                    = $group.GrantSendOnBehalfTo
+        ExtensionCustomAttribute1              = $ExtensionCustomAttribute1Value
+        ExtensionCustomAttribute2              = $ExtensionCustomAttribute2Value
+        ExtensionCustomAttribute3              = $ExtensionCustomAttribute3Value
+        ExtensionCustomAttribute4              = $ExtensionCustomAttribute4Value
+        ExtensionCustomAttribute5              = $ExtensionCustomAttribute5Value
+        GrantSendOnBehalfTo                    = $GrantSendOnBehalfToValue
         HiddenFromAddressListsEnabled          = $group.HiddenFromAddressListsEnabled
         HiddenFromExchangeClientsEnabled       = $group.HiddenFromExchangeClientsEnabled
         InformationBarrierMode                 = $group.InformationBarrierMode
@@ -343,14 +404,14 @@ function Get-TargetResource
         Language                               = $group.Language.Name
         MailboxRegion                          = $group.MailboxRegion
         MailTip                                = $group.MailTip
-        MailTipTranslations                    = $group.MailTipTranslations
+        MailTipTranslations                    = $MailTipTranslationsValue
         MaxReceiveSize                         = $group.MaxReceiveSize
         MaxSendSize                            = $group.MaxSendSize
-        ModeratedBy                            = $group.ModeratedBy
+        ModeratedBy                            = $ModeratedByValue
         ModerationEnabled                      = $group.ModerationEnabled
         Notes                                  = $group.Notes
         PrimarySmtpAddress                     = $group.PrimarySmtpAddress
-        RejectMessagesFromSendersOrMembers     = $group.RejectMessagesFromSendersOrMembers
+        RejectMessagesFromSendersOrMembers     = $RejectMessagesFromSendersOrMembersValue
         RequireSenderAuthenticationEnabled     = $group.RequireSenderAuthenticationEnabled
         SensitivityLabelId                     = $group.SensitivityLabelId
         SubscriptionEnabled                    = $group.SubscriptionEnabled
@@ -484,23 +545,23 @@ function Set-TargetResource
         $EmailAddresses,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ExtensionCustomAttribute1,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ExtensionCustomAttribute2,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ExtensionCustomAttribute3,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ExtensionCustomAttribute4,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ExtensionCustomAttribute5,
 
         [Parameter()]
@@ -537,7 +598,7 @@ function Set-TargetResource
         $MailTip,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $MailTipTranslations,
 
         [Parameter()]
@@ -769,23 +830,23 @@ function Test-TargetResource
         $EmailAddresses,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ExtensionCustomAttribute1,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ExtensionCustomAttribute2,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ExtensionCustomAttribute3,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ExtensionCustomAttribute4,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ExtensionCustomAttribute5,
 
         [Parameter()]
@@ -822,7 +883,7 @@ function Test-TargetResource
         $MailTip,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $MailTipTranslations,
 
         [Parameter()]

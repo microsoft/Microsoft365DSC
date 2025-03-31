@@ -280,7 +280,7 @@ function Get-TargetResource
                 MembershipRuleProcessingState = $Group.MembershipRuleProcessingState
                 SecurityEnabled               = $Group.SecurityEnabled
                 MailEnabled                   = $Group.MailEnabled
-                IsAssignableToRole            = $Group.IsAssignableToRole
+                IsAssignableToRole            = $false -or $Group.IsAssignableToRole
                 AssignedToRole                = $AssignedToRoleValues
                 MailNickname                  = $Group.MailNickname
                 Visibility                    = $Group.Visibility

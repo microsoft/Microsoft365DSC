@@ -943,7 +943,7 @@ function Test-TargetResource
         # AppId was provided as a GUID, but Get-TargetResource returns it as Display name.
         # Evaluate the translation to display name
         Write-Verbose -Message "AppId was provided as a GUID, translating into a DisplayName"
-        $appInstance = Get-MgApplication -ApplicationId $ValuesToCheck.AppId -ErrorAction SilentlyContinue
+        $appInstance = Get-MgApplication -Filter "AppId eq '$($ValuesToCheck.AppId)'" -ErrorAction SilentlyContinue
         if ($null -ne $appInstance)
         {
             $ValuesToCheck.AppId = $appInstance.DisplayName

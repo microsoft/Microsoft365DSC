@@ -10,10 +10,6 @@ function Get-TargetResource
         $IsSingleInstance,
 
         [Parameter()]
-        [System.String]
-        $Identity,
-
-        [Parameter()]
         [System.String[]]
         $ArcTrustedSealers,
 
@@ -89,7 +85,7 @@ function Get-TargetResource
             CertificateThumbprint = $CertificateThumbprint
             CertificatePath       = $CertificatePath
             CertificatePassword   = $CertificatePassword
-            Managedidentity       = $ManagedIdentity.IsPresent
+            ManagedIdentity       = $ManagedIdentity.IsPresent
             TenantId              = $TenantId
             AccessTokens          = $AccessTokens
         }
@@ -119,10 +115,6 @@ function Set-TargetResource
         [System.String]
         [ValidateSet('Yes')]
         $IsSingleInstance,
-
-        [Parameter()]
-        [System.String]
-        $Identity,
 
         [Parameter()]
         [System.String[]]
@@ -201,10 +193,6 @@ function Test-TargetResource
         $IsSingleInstance,
 
         [Parameter()]
-        [System.String]
-        $Identity,
-
-        [Parameter()]
         [System.String[]]
         $ArcTrustedSealers,
 
@@ -259,9 +247,6 @@ function Test-TargetResource
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
 
     $ValuesToCheck = Remove-M365DSCAuthenticationParameter -BoundParameters $ValuesToCheck
-    # Need to remove Identity as Get-ArcConfig doesn't return Identity
-    $ValuesToCheck.Remove('Identity') | Out-Null
-
     $PSBoundParameters.ArcTrustedSealers = $PSBoundParameters.ArcTrustedSealers -Join ','
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
@@ -354,7 +339,7 @@ function Export-TargetResource
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint
             CertificatePassword   = $CertificatePassword
-            Managedidentity       = $ManagedIdentity.IsPresent
+            ManagedIdentity       = $ManagedIdentity.IsPresent
             CertificatePath       = $CertificatePath
             AccessTokens          = $AccessTokens
         }

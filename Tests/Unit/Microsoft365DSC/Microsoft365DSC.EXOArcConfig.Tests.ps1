@@ -52,7 +52,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     IsSingleInstance                           = 'Yes'
                     ArcTrustedSealers                          = "cohovineyard.com,tailspintoys.com";
-                    Identity                                   = "Default";
                     Credential                                 = $Credential
                 }
 
@@ -79,7 +78,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     IsSingleInstance                           = 'Yes'
                     ArcTrustedSealers                          = "abc.com,cohovineyard.com,tailspintoys.com";
-                    Identity                                   = "Default";
                     Credential                                 = $Credential
                 }
 

@@ -16,6 +16,7 @@ class MSFT_AADUser : OMI_BaseResource
     [Write, Description("The Groups that the user is a direct member of")] String MemberOf[];
     [Write, Description("The Mobile Phone Number of the user")] String MobilePhone;
     [Write, Description("The Office Name of the user")] String Office;
+    [Write, Description("The other mails assigned to the user")] String OtherMails[];
     [Write, Description("Specifies whether the user password expires periodically. Default value is false")] Boolean PasswordNeverExpires;
     [Write, Description("Specifies password policies for the user.")] String PasswordPolicies;
     [Write, Description("The Phone Number of the user")] String PhoneNumber;

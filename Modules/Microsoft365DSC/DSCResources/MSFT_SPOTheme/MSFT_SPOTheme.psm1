@@ -101,7 +101,7 @@ function Get-TargetResource
             CertificatePassword   = $CertificatePassword
             CertificatePath       = $CertificatePath
             CertificateThumbprint = $CertificateThumbprint
-            Managedidentity       = $ManagedIdentity.IsPresent
+            ManagedIdentity       = $ManagedIdentity.IsPresent
             AccessTokens          = $AccessTokens
         }
     }
@@ -432,17 +432,16 @@ function Export-TargetResource
             $Results = Get-TargetResource @Params
             if ($null -ne $Results.Palette)
             {
-                $complexMapping = @(
-                    @{
-                        Name            = 'OptionalClaims'
-                        CimInstanceName = 'MSFT_SPOThemePaletteProperty'
-                        IsRequired      = $False
+                $formatted = $Results.Palette.GetEnumerator() | ForEach-Object {
+                    [ordered]@{
+                        Property = $_.Key
+                        Value    = $_.Value
                     }
-                )
+                }
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
-                    -ComplexObject $Results.Palette `
+                    -ComplexObject $formatted `
                     -CIMInstanceName 'MSFT_SPOThemePaletteProperty' `
-                    -ComplexTypeMapping $complexMapping
+                    -IsArray
 
                 if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
@@ -515,30 +514,6 @@ function Convert-NewThemePaletteToHashTable
     }
     return $results
 }
-
-function ConvertTo-SPOThemePalettePropertyString
-{
-    [CmdletBinding()]
-    [OutputType([System.String])]
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [System.Collections.Hashtable]
-        $Palette
-    )
-
-    $StringContent = '@('
-    foreach ($property in $Palette.Keys)
-    {
-        $StringContent += "            MSFT_SPOThemePaletteProperty`r`n            {`r`n"
-        $StringContent += "                Property = '$($property)'`r`n"
-        $StringContent += "                Value    = '$($Palette[$property])'`r`n"
-        $StringContent += "            }`r`n"
-    }
-    $StringCOntent += "            )`r`n"
-    return $StringContent
-}
-
 
 function Compare-SPOTheme
 {

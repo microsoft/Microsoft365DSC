@@ -84,8 +84,50 @@ At C:\Program Files\WindowsPowerShell\Modules\DSCParser\2.0.0.5\Modules\DSCParse
 ### CAUSE
 
 This issue might occur if there are multiple versions of Microsoft365DSC present on the current machine and the configuration contains nested objects.
-The nested objects are resolved from their CIM definitions, and if multiple versions of Microsoft365DSC are present, multiple versions of these CIM definitions exist. 
+The nested objects are resolved from their CIM definitions, and if multiple versions of Microsoft365DSC are present, multiple versions of these CIM definitions exist.
 
 ### RESOLUTION
 
-Update and install to the latest supported version of Microsoft365DSC using `Update-M365DSCModule`. This will uninstall all outdated versions and dependencies and update to the latest version available on the PowerShell Gallery. 
+Update and install to the latest supported version of Microsoft365DSC using `Update-M365DSCModule`. This will uninstall all outdated versions and dependencies and update to the latest version available on the PowerShell Gallery.
+
+
+## Error during configuration compilation or report generation
+
+### ISSUE
+
+When compiling configuration or creating a report from an existing configuration, Unicode characters might not be properly parsed, resulting in an error similar to the following.
+The example contains an "en-dash" character in the `DisplayName` property.
+
+```powershell
+New-M365DSCReportFromConfiguration -ConfigurationPath D:\testbed\M365TenantConfig.ps1 -Type HTML -OutputPath D:\testbed\report.html
+Error parsing configuration: At line:40 char:63
++             DisplayName                            = "Groupâ€“name";
++                                                               ~~~~~~
+Unexpected token 'name";
+            EmailAddresses                         = @("");
+            HiddenFromAddressListsEnabled          = $False;
+            HiddenFromExchangeClientsEnabled       = $False;
+            Id                                     = "Test";
+            InformationBarrierMode                 = "Open";
+            Language                               = "en-US";
+            MaxReceiveSize                         = "36' in expression or statement.
+At C:\Program Files\WindowsPowerShell\Modules\DSCParser\2.0.0.15\Modules\DSCParser.psm1:472 char:9
++         throw "$($errorPrefix)Error parsing configuration: $parseErro ...
++         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : OperationStopped: (Error parsing c...n or statement.:String) [], RuntimeException
+    + FullyQualifiedErrorId : Error parsing configuration: At line:40 char:63
++             DisplayName                            = "Groupâ€“name";
+```
+
+### RESOLUTION
+
+Microsoft365DSC will output a warning message if the current PowerShell session is not configured to use UTF-8 as its default encoding.
+Follow the suggestions presented in the warning message, restart the PowerShell session and try again.
+
+```powershell
+WARNING: The code page of the current session is not set to UTF-8. This may cause issues with Unicode characters.
+         To change the code page to UTF-8, you have the following options:
+         * Using the control panel: intl.cpl --> Administrative --> Change system locale --> Beta: Use Unicode UTF-8 for worldwide language support
+         * Using PowerShell: Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Nls\CodePage" -Name "ACP" -Value 65001
+         After that, you need to restart the PowerShell session.
+```
