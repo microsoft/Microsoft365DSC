@@ -130,54 +130,44 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    Write-Verbose -Message 'Getting configuration of Azure AD ServicePrincipal'
-    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = 'Absent'
     try
     {
-        try
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.AppId -ne $AppId)
         {
-            if (-not [System.String]::IsNullOrEmpty($ObjectID))
+            Write-Verbose -Message 'Getting configuration of Azure AD ServicePrincipal'
+            $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+                -InboundParameters $PSBoundParameters
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullReturn = $PSBoundParameters
+            $nullReturn.Ensure = 'Absent'
+
+            try
             {
-                if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
-                {
-                    $AADServicePrincipal = $Script:exportedInstances | Where-Object -FilterScript { $_.Id -eq $Id }
-                }
-                else
+                if (-not [System.String]::IsNullOrEmpty($ObjectID))
                 {
                     $AADServicePrincipal = Get-MgServicePrincipal -ServicePrincipalId $ObjectId `
                         -Expand 'AppRoleAssignedTo' `
                         -ErrorAction Stop
                 }
             }
-        }
-        catch
-        {
-            Write-Verbose -Message "Azure AD ServicePrincipal with ObjectID: $($ObjectID) could not be retrieved"
-        }
-
-        if ($null -eq $AADServicePrincipal)
-        {
-            if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
+            catch
             {
-                $AADServicePrincipal = $Script:exportedInstances | Where-Object -FilterScript { $_.AppId -eq $AppId }
+                Write-Verbose -Message "Azure AD ServicePrincipal with ObjectID: $($ObjectID) could not be retrieved"
             }
-            else
+
+            if ($null -eq $AADServicePrincipal)
             {
                 $ObjectGuid = [System.Guid]::empty
                 if (-not [System.Guid]::TryParse($AppId, [System.Management.Automation.PSReference]$ObjectGuid))
@@ -185,165 +175,175 @@ function Get-TargetResource
                     $appInstance = Get-MgApplication -Filter "DisplayName eq '$AppId'"
                     if ($appInstance)
                     {
-                        $AADServicePrincipal = Get-MgServicePrincipal -Filter "AppID eq '$($appInstance.AppId)'" `
-                            -Expand 'AppRoleAssignedTo'
+                        $AADServicePrincipal = Get-MgServicePrincipal -Filter "AppID eq '$($appInstance.AppId)'"
                     }
                 }
                 else
                 {
-                    $AADServicePrincipal = Get-MgServicePrincipal -Filter "AppID eq '$($AppId)'" `
-                        -Expand 'AppRoleAssignedTo'
+                    $AADServicePrincipal = Get-MgServicePrincipal -Filter "AppID eq '$($AppId)'"
                 }
             }
-        }
-        if ($null -eq $AADServicePrincipal)
-        {
-            return $nullReturn
+            if ($null -eq $AADServicePrincipal)
+            {
+                return $nullReturn
+            }
         }
         else
         {
-            $AppRoleAssignedToValues = @()
-            foreach ($principal in $AADServicePrincipal.AppRoleAssignedTo)
-            {
-                $currentAssignment = @{
-                    PrincipalType = $null
-                    Identity      = $null
-                }
-                if ($principal.PrincipalType -eq 'User')
-                {
-                    $user = Get-MgUser -UserId $principal.PrincipalId
-                    $currentAssignment.PrincipalType = 'User'
-                    $currentAssignment.Identity = $user.UserPrincipalName.Split('@')[0]
-                    $AppRoleAssignedToValues += $currentAssignment
-                }
-                elseif ($principal.PrincipalType -eq 'Group')
-                {
-                    $group = Get-MgGroup -GroupId $principal.PrincipalId
-                    $currentAssignment.PrincipalType = 'Group'
-                    $currentAssignment.Identity = $group.DisplayName
-                    $AppRoleAssignedToValues += $currentAssignment
-                }
-            }
+            $AADServicePrincipal = $Script:exportedInstance
+        }
 
-            $ownersValues = @()
-            $ownersInfo = Get-MgServicePrincipalOwner -ServicePrincipalId $AADServicePrincipal.Id -ErrorAction SilentlyContinue
-            foreach ($ownerInfo in $ownersInfo)
-            {
-                $info = Get-MgUser -UserId $ownerInfo.Id -ErrorAction SilentlyContinue
-                if ($null -ne $info)
-                {
-                    $ownersValues += $info.UserPrincipalName
-                }
+        $AppRoleAssignedToValues = @()
+        $assignmentsValue = Get-MgServicePrincipalAppROleAssignedTo -ServicePrincipalId $AADServicePrincipal.Id -ErrorAction SilentlyContinue
+        foreach ($principal in $assignmentsValue)
+        {
+            $currentAssignment = @{
+                PrincipalType = $null
+                Identity      = $null
             }
+            if ($principal.PrincipalType -eq 'User')
+            {
+                $user = Get-MgUser -UserId $principal.PrincipalId
+                $currentAssignment.PrincipalType = 'User'
+                $currentAssignment.Identity = $user.UserPrincipalName
+                $AppRoleAssignedToValues += $currentAssignment
+            }
+            elseif ($principal.PrincipalType -eq 'Group')
+            {
+                $group = Get-MgGroup -GroupId $principal.PrincipalId
+                $currentAssignment.PrincipalType = 'Group'
+                $currentAssignment.Identity = $group.DisplayName
+                $AppRoleAssignedToValues += $currentAssignment
+            }
+        }
 
-            [Array]$complexDelegatedPermissionClassifications = @()
+        $ownersValues = @()
+        $ownersInfo = Get-MgServicePrincipalOwner -ServicePrincipalId $AADServicePrincipal.Id -ErrorAction SilentlyContinue
+        foreach ($ownerInfo in $ownersInfo)
+        {
+            $info = Get-MgUser -UserId $ownerInfo.Id -ErrorAction SilentlyContinue
+            if ($null -ne $info)
+            {
+                $ownersValues += $info.UserPrincipalName
+            }
+        }
+
+        [Array]$complexDelegatedPermissionClassifications = @()
+        #Managed Identities in AzureGov return exception when pulling delegatedPermissionClassifications
+        try
+        {
             $Uri = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "v1.0/servicePrincipals/$($AADServicePrincipal.Id)/delegatedPermissionClassifications"
             $permissionClassifications = Invoke-MgGraphRequest -Uri $Uri -Method Get
-            foreach ($permissionClassification in $permissionClassifications.Value)
-            {
-                $hashtable = @{
-                    classification = $permissionClassification.Classification
-                    permissionName = $permissionClassification.permissionName
-                }
-                $complexDelegatedPermissionClassifications += $hashtable
-            }
-
-            $complexKeyCredentials = @()
-            foreach ($currentkeyCredentials in $AADServicePrincipal.keyCredentials)
-            {
-                $mykeyCredentials = @{}
-                if ($null -ne $currentkeyCredentials.customKeyIdentifier)
-                {
-                    $mykeyCredentials.Add('CustomKeyIdentifier', [convert]::ToBase64String($currentkeyCredentials.customKeyIdentifier))
-                }
-                $mykeyCredentials.Add('DisplayName', $currentkeyCredentials.displayName)
-                if ($null -ne $currentkeyCredentials.endDateTime)
-                {
-                    $mykeyCredentials.Add('EndDateTime', ([DateTimeOffset]$currentkeyCredentials.endDateTime).ToString('o'))
-                }
-                $mykeyCredentials.Add('KeyId', $currentkeyCredentials.keyId)
-
-
-                if ($null -ne $currentkeyCredentials.Key)
-                {
-                    $mykeyCredentials.Add('Key', [convert]::ToBase64String($currentkeyCredentials.key))
-                }
-
-                if ($null -ne $currentkeyCredentials.startDateTime)
-                {
-                    $mykeyCredentials.Add('StartDateTime', ([DateTimeOffset]$currentkeyCredentials.startDateTime).ToString('o'))
-                }
-                $mykeyCredentials.Add('Type', $currentkeyCredentials.type)
-                $mykeyCredentials.Add('Usage', $currentkeyCredentials.usage)
-                if ($mykeyCredentials.values.Where({ $null -ne $_ }).Count -gt 0)
-                {
-                    $complexKeyCredentials += $mykeyCredentials
-                }
-            }
-
-            $complexPasswordCredentials = @()
-            foreach ($currentpasswordCredentials in $AADServicePrincipal.passwordCredentials)
-            {
-                $mypasswordCredentials = @{}
-                $mypasswordCredentials.Add('DisplayName', $currentpasswordCredentials.displayName)
-                if ($null -ne $currentpasswordCredentials.endDateTime)
-                {
-                    $mypasswordCredentials.Add('EndDateTime', ([DateTimeOffset]$currentpasswordCredentials.endDateTime).ToString('o'))
-                }
-                $mypasswordCredentials.Add('Hint', $currentpasswordCredentials.hint)
-                $mypasswordCredentials.Add('KeyId', $currentpasswordCredentials.keyId)
-                if ($null -ne $currentpasswordCredentials.startDateTime)
-                {
-                    $mypasswordCredentials.Add('StartDateTime', ([DateTimeOffset]$currentpasswordCredentials.startDateTime).ToString('o'))
-                }
-                if ($mypasswordCredentials.values.Where({ $null -ne $_ }).Count -gt 0)
-                {
-                    $complexPasswordCredentials += $mypasswordCredentials
-                }
-            }
-
-            $complexCustomSecurityAttributes = [Array](Get-CustomSecurityAttributes -ServicePrincipalId $AADServicePrincipal.Id)
-            if ($null -eq $complexCustomSecurityAttributes)
-            {
-                $complexCustomSecurityAttributes = @()
-            }
-
-            $result = @{
-                AppId                              = $appInstance.DisplayName
-                AppRoleAssignedTo                  = $AppRoleAssignedToValues
-                ObjectID                           = $AADServicePrincipal.Id
-                DisplayName                        = $AADServicePrincipal.DisplayName
-                AlternativeNames                   = $AADServicePrincipal.AlternativeNames
-                AccountEnabled                     = [boolean]$AADServicePrincipal.AccountEnabled
-                AppRoleAssignmentRequired          = $AADServicePrincipal.AppRoleAssignmentRequired
-                CustomSecurityAttributes           = $complexCustomSecurityAttributes
-                DelegatedPermissionClassifications = [Array]$complexDelegatedPermissionClassifications
-                ErrorUrl                           = $AADServicePrincipal.ErrorUrl
-                Homepage                           = $AADServicePrincipal.Homepage
-                LogoutUrl                          = $AADServicePrincipal.LogoutUrl
-                Notes                              = $AADServicePrincipal.Notes
-                Owners                             = $ownersValues
-                PreferredSingleSignOnMode          = $AADServicePrincipal.PreferredSingleSignOnMode
-                PublisherName                      = $AADServicePrincipal.PublisherName
-                ReplyURLs                          = $AADServicePrincipal.ReplyURLs
-                SamlMetadataURL                    = $AADServicePrincipal.SamlMetadataURL
-                ServicePrincipalNames              = $AADServicePrincipal.ServicePrincipalNames
-                ServicePrincipalType               = $AADServicePrincipal.ServicePrincipalType
-                Tags                               = $AADServicePrincipal.Tags
-                KeyCredentials                     = $complexKeyCredentials
-                PasswordCredentials                = $complexPasswordCredentials
-                Ensure                             = 'Present'
-                Credential                         = $Credential
-                ApplicationId                      = $ApplicationId
-                ApplicationSecret                  = $ApplicationSecret
-                TenantId                           = $TenantId
-                CertificateThumbprint              = $CertificateThumbprint
-                Managedidentity                    = $ManagedIdentity.IsPresent
-                AccessTokens                       = $AccessTokens
-            }
-            Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
-            return $result
         }
+        catch
+        {
+            Write-Verbose -Message "Service Principal didn't return delegated permission classifications. Expected for Managedidentities."
+        }
+
+        foreach ($permissionClassification in $permissionClassifications.Value)
+        {
+            $hashtable = @{
+                classification = $permissionClassification.Classification
+                permissionName = $permissionClassification.permissionName
+            }
+            $complexDelegatedPermissionClassifications += $hashtable
+        }
+
+        $complexKeyCredentials = @()
+        foreach ($currentkeyCredentials in $AADServicePrincipal.keyCredentials)
+        {
+            $mykeyCredentials = @{}
+            if ($null -ne $currentkeyCredentials.customKeyIdentifier)
+            {
+                $mykeyCredentials.Add('CustomKeyIdentifier', [convert]::ToBase64String($currentkeyCredentials.customKeyIdentifier))
+            }
+            $mykeyCredentials.Add('DisplayName', $currentkeyCredentials.displayName)
+            if ($null -ne $currentkeyCredentials.endDateTime)
+            {
+                $mykeyCredentials.Add('EndDateTime', ([DateTimeOffset]$currentkeyCredentials.endDateTime).ToString('o'))
+            }
+            $mykeyCredentials.Add('KeyId', $currentkeyCredentials.keyId)
+
+
+            if ($null -ne $currentkeyCredentials.Key)
+            {
+                $mykeyCredentials.Add('Key', [convert]::ToBase64String($currentkeyCredentials.key))
+            }
+
+            if ($null -ne $currentkeyCredentials.startDateTime)
+            {
+                $mykeyCredentials.Add('StartDateTime', ([DateTimeOffset]$currentkeyCredentials.startDateTime).ToString('o'))
+            }
+            $mykeyCredentials.Add('Type', $currentkeyCredentials.type)
+            $mykeyCredentials.Add('Usage', $currentkeyCredentials.usage)
+            if ($mykeyCredentials.values.Where({ $null -ne $_ }).Count -gt 0)
+            {
+                $complexKeyCredentials += $mykeyCredentials
+            }
+        }
+
+        $complexPasswordCredentials = @()
+        foreach ($currentpasswordCredentials in $AADServicePrincipal.passwordCredentials)
+        {
+            $mypasswordCredentials = @{}
+            $mypasswordCredentials.Add('DisplayName', $currentpasswordCredentials.displayName)
+            if ($null -ne $currentpasswordCredentials.endDateTime)
+            {
+                $mypasswordCredentials.Add('EndDateTime', ([DateTimeOffset]$currentpasswordCredentials.endDateTime).ToString('o'))
+            }
+            $mypasswordCredentials.Add('Hint', $currentpasswordCredentials.hint)
+            $mypasswordCredentials.Add('KeyId', $currentpasswordCredentials.keyId)
+            if ($null -ne $currentpasswordCredentials.startDateTime)
+            {
+                $mypasswordCredentials.Add('StartDateTime', ([DateTimeOffset]$currentpasswordCredentials.startDateTime).ToString('o'))
+            }
+            if ($mypasswordCredentials.values.Where({ $null -ne $_ }).Count -gt 0)
+            {
+                $complexPasswordCredentials += $mypasswordCredentials
+            }
+        }
+
+        $complexCustomSecurityAttributes = [Array](Get-CustomSecurityAttributes -ServicePrincipalId $AADServicePrincipal.Id)
+        if ($null -eq $complexCustomSecurityAttributes)
+        {
+            $complexCustomSecurityAttributes = @()
+        }
+
+        $result = @{
+            AppId                              = $AADServicePrincipal.AppDisplayName
+            AppRoleAssignedTo                  = $AppRoleAssignedToValues
+            ObjectID                           = $AADServicePrincipal.Id
+            DisplayName                        = $AADServicePrincipal.DisplayName
+            AlternativeNames                   = $AADServicePrincipal.AlternativeNames
+            AccountEnabled                     = [boolean]$AADServicePrincipal.AccountEnabled
+            AppRoleAssignmentRequired          = $AADServicePrincipal.AppRoleAssignmentRequired
+            CustomSecurityAttributes           = $complexCustomSecurityAttributes
+            DelegatedPermissionClassifications = [Array]$complexDelegatedPermissionClassifications
+            ErrorUrl                           = $AADServicePrincipal.ErrorUrl
+            Homepage                           = $AADServicePrincipal.Homepage
+            LogoutUrl                          = $AADServicePrincipal.LogoutUrl
+            Notes                              = $AADServicePrincipal.Notes
+            Owners                             = $ownersValues
+            PreferredSingleSignOnMode          = $AADServicePrincipal.PreferredSingleSignOnMode
+            PublisherName                      = $AADServicePrincipal.PublisherName
+            ReplyURLs                          = $AADServicePrincipal.ReplyURLs
+            SamlMetadataURL                    = $AADServicePrincipal.SamlMetadataURL
+            ServicePrincipalNames              = $AADServicePrincipal.ServicePrincipalNames
+            ServicePrincipalType               = $AADServicePrincipal.ServicePrincipalType
+            Tags                               = $AADServicePrincipal.Tags
+            KeyCredentials                     = $complexKeyCredentials
+            PasswordCredentials                = $complexPasswordCredentials
+            Ensure                             = 'Present'
+            Credential                         = $Credential
+            ApplicationId                      = $ApplicationId
+            ApplicationSecret                  = $ApplicationSecret
+            TenantId                           = $TenantId
+            CertificateThumbprint              = $CertificateThumbprint
+            Managedidentity                    = $ManagedIdentity.IsPresent
+            AccessTokens                       = $AccessTokens
+        }
+        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
+        return $result
     }
     catch
     {
@@ -528,6 +528,16 @@ function Set-TargetResource
         $currentParameters.Remove('CustomSecurityAttributes')
     }
 
+    # If the AppId was passed as a display name (not in GUID format), translate it to an ID.
+    $ObjectGuid = [System.Guid]::empty
+    if (-not [System.Guid]::TryParse($AppId, [System.Management.Automation.PSReference]$ObjectGuid))
+    {
+        Write-Verbose -Message "AppId was provided as a DisplayName. Translating it to an a GUID."
+        $appInstance = Get-MgApplication -Filter "DisplayName eq '$AppId'"
+        $currentParameters.AppId = $appInstance.AppId
+        Write-Verbose -Message "Translated to AppId {$($currentParameters.AppId)}"
+    }
+
     # ServicePrincipal should exist but it doesn't
     if ($Ensure -eq 'Present' -and $currentAADServicePrincipal.Ensure -eq 'Absent')
     {
@@ -537,12 +547,6 @@ function Set-TargetResource
         }
         # removing Delegated permission classifications from this new call, as adding below separately
         $currentParameters.Remove('DelegatedPermissionClassifications') | Out-Null
-        $ObjectGuid = [System.Guid]::empty
-        if (-not [System.Guid]::TryParse($AppId, [System.Management.Automation.PSReference]$ObjectGuid))
-        {
-            $appInstance = Get-MgApplication -Filter "DisplayName eq '$AppId'"
-            $currentParameters.AppId = $appInstance.AppId
-        }
 
         Write-Verbose -Message 'Creating new Service Principal'
         Write-Verbose -Message "With Values: $(Convert-M365DscHashtableToString -Hashtable $currentParameters)"
@@ -577,14 +581,9 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentAADServicePrincipal.Ensure -eq 'Present')
     {
         Write-Verbose -Message 'Updating existing Service Principal'
-        $ObjectGuid = [System.Guid]::empty
-        if (-not [System.Guid]::TryParse($AppId, [System.Management.Automation.PSReference]$ObjectGuid))
-        {
-            $appInstance = Get-MgApplication -Filter "DisplayName eq '$AppId'"
-            $currentParameters.AppId = $appInstance.AppId
-        }
         Write-Verbose -Message "CurrentParameters: $($currentParameters | Out-String)"
         Write-Verbose -Message "ServicePrincipalID: $($currentAADServicePrincipal.ObjectID)"
+        $AppRoleAssignedToSpecified = $currentParameters.ContainsKey('AppRoleAssignedTo')
         $currentParameters.Remove('AppRoleAssignedTo') | Out-Null
         $currentParameters.Remove('DelegatedPermissionClassifications') | Out-Null
 
@@ -612,10 +611,20 @@ function Set-TargetResource
             $appInstance = Get-MgApplication -Filter "AppId eq '$AppId'"
             Update-MgApplication -ApplicationId $appInstance.Id -IdentifierUris $IdentifierUris
         }
-        if ($AppRoleAssignedTo)
+        if ($AppRoleAssignedToSpecified)
         {
+            Write-Verbose -Message "Need to update AppRoleAssignedTo value"
             [Array]$currentPrincipals = $currentAADServicePrincipal.AppRoleAssignedTo.Identity
             [Array]$desiredPrincipals = $AppRoleAssignedTo.Identity
+
+            if ($null -eq $currentPrincipals)
+            {
+                $currentPrincipals = @()
+            }
+            if ($null -eq $desiredPrincipals)
+            {
+                $desiredPrincipals = @()
+            }
 
             [Array]$differences = Compare-Object -ReferenceObject $currentPrincipals -DifferenceObject $desiredPrincipals
             [Array]$membersToAdd = $differences | Where-Object -FilterScript { $_.SideIndicator -eq '=>' }
@@ -927,12 +936,26 @@ function Test-TargetResource
         }
     }
 
+    # Evaluate AppId in GUID or DisplayName form.
+    $ObjectGuid = [System.Guid]::empty
+    if ([System.Guid]::TryParse($ValuesToCheck.AppId, [System.Management.Automation.PSReference]$ObjectGuid))
+    {
+        # AppId was provided as a GUID, but Get-TargetResource returns it as Display name.
+        # Evaluate the translation to display name
+        Write-Verbose -Message "AppId was provided as a GUID, translating into a DisplayName"
+        $appInstance = Get-MgApplication -Filter "AppId eq '$($ValuesToCheck.AppId)'" -ErrorAction SilentlyContinue
+        if ($null -ne $appInstance)
+        {
+            $ValuesToCheck.AppId = $appInstance.DisplayName
+        }
+    }
+
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
-        -DesiredValues $PSBoundParameters `
+        -DesiredValues $ValuesToCheck `
         -ValuesToCheck $ValuesToCheck.Keys `
         -IncludedDrifts $driftedParams
 
@@ -1004,7 +1027,7 @@ function Export-TargetResource
     try
     {
         $i = 1
-        Write-Host "`r`n" -NoNewline
+        Write-M365DSCHost -Message "`r`n" -DeferWrite
         $Script:ExportMode = $true
         [array] $Script:exportedInstances = Get-MgServicePrincipal -All:$true `
             -Filter $Filter `
@@ -1017,7 +1040,7 @@ function Export-TargetResource
                 $Global:M365DSCExportResourceInstancesCount++
             }
 
-            Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $($AADServicePrincipal.DisplayName)" -NoNewline
+            Write-M365DSCHost -Message "    |---[$i/$($Script:exportedInstances.Count)] $($AADServicePrincipal.DisplayName)" -DeferWrite
             $Params = @{
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
@@ -1028,25 +1051,43 @@ function Export-TargetResource
                 AppID                 = $AADServicePrincipal.AppId
                 AccessTokens          = $AccessTokens
             }
+            $Script:exportedInstance = $AADServicePrincipal
             $Results = Get-TargetResource @Params
-
             if ($Results.Ensure -eq 'Present')
             {
-                $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                    -Results $Results
                 if ($Results.AppRoleAssignedTo.Count -gt 0)
                 {
-                    $Results.AppRoleAssignedTo = Get-M365DSCAzureADServicePrincipalAssignmentAsString -Assignments $Results.AppRoleAssignedTo
+                    $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                        -ComplexObject $Results.AppRoleAssignedTo `
+                        -CIMInstanceName 'AADServicePrincipalRoleAssignment'
+                    if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                    {
+                        $Results.AppRoleAssignedTo = $complexTypeStringResult
+                    }
+                    else
+                    {
+                        $Results.Remove('AppRoleAssignedTo') | Out-Null
+                    }
                 }
                 if ($Results.DelegatedPermissionClassifications.Count -gt 0)
                 {
-                    $Results.DelegatedPermissionClassifications = Get-M365DSCAzureADServicePrincipalDelegatedPermissionClassifications -PermissionClassifications $Results.DelegatedPermissionClassifications
+                    $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                        -ComplexObject $Results.DelegatedPermissionClassifications `
+                        -CIMInstanceName 'AADServicePrincipalDelegatedPermissionClassification' -IsArray:$true
+                    if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                    {
+                        $Results.DelegatedPermissionClassifications = $complexTypeStringResult
+                    }
+                    else
+                    {
+                        $Results.Remove('DelegatedPermissionClassifications') | Out-Null
+                    }
                 }
                 if ($null -ne $Results.KeyCredentials)
                 {
                     $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                         -ComplexObject $Results.KeyCredentials `
-                        -CIMInstanceName 'MicrosoftGraphkeyCredential'
+                        -CIMInstanceName 'MicrosoftGraphkeyCredential' -IsArray:$true
                     if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                     {
                         $Results.KeyCredentials = $complexTypeStringResult
@@ -1060,7 +1101,7 @@ function Export-TargetResource
                 {
                     $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                         -ComplexObject $Results.PasswordCredentials `
-                        -CIMInstanceName 'MicrosoftGraphpasswordCredential'
+                        -CIMInstanceName 'MicrosoftGraphpasswordCredential' -IsArray:$true
                     if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                     {
                         $Results.PasswordCredentials = $complexTypeStringResult
@@ -1072,46 +1113,44 @@ function Export-TargetResource
                 }
                 if ($Results.CustomSecurityAttributes.Count -gt 0)
                 {
-                    $Results.CustomSecurityAttributes = Get-M365DSCAADServicePrincipalCustomSecurityAttributesAsString -CustomSecurityAttributes $Results.CustomSecurityAttributes
+                    $complexMapping = @(
+                        @{
+                            Name            = 'CustomSecurityAttributes'
+                            CimInstanceName = 'AADServicePrincipalAttributeSet'
+                            IsRequired      = $False
+                        },
+                        @{
+                            Name            = 'AttributeValues'
+                            CimInstanceName = 'AADServicePrincipalAttributeValue'
+                            IsRequired      = $False
+                        }
+                    )
+                    $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                        -ComplexObject $Results.CustomSecurityAttributes `
+                        -CIMInstanceName 'AADServicePrincipalAttributeSet' `
+                        -ComplexTypeMapping $complexMapping `
+                        -IsArray:$true
+                    if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                    {
+                        $Results.CustomSecurityAttributes = $complexTypeStringResult
+                    }
+                    else
+                    {
+                        $Results.Remove('CustomSecurityAttributes') | Out-Null
+                    }
                 }
                 $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                     -ConnectionMode $ConnectionMode `
                     -ModulePath $PSScriptRoot `
                     -Results $Results `
-                    -Credential $Credential
-                if ($null -ne $Results.AppRoleAssignedTo)
-                {
-                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                        -ParameterName 'AppRoleAssignedTo'
-                }
-                if ($null -ne $Results.DelegatedPermissionClassifications)
-                {
-                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                        -ParameterName 'DelegatedPermissionClassifications'
-                }
-                if ($null -ne $Results.KeyCredentials)
-                {
-                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                        -ParameterName 'KeyCredentials' -IsCIMArray:$True
-                }
-
-                if ($null -ne $Results.PasswordCredentials)
-                {
-                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                        -ParameterName 'PasswordCredentials' -IsCIMArray:$True
-                }
-
-                if ($null -ne $Results.CustomSecurityAttributes)
-                {
-                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                        -ParameterName 'CustomSecurityAttributes'
-                }
+                    -Credential $Credential `
+                    -NoEscape @('AppRoleAssignedTo', 'DelegatedPermissionClassifications', 'KeyCredentials', 'PasswordCredentials', 'CustomSecurityAttributes')
 
                 $dscContent += $currentDSCBlock
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
                     -FileName $Global:PartialExportFileName
 
-                Write-Host $Global:M365DSCEmojiGreenCheckMark
+                Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
                 $i++
             }
         }
@@ -1119,7 +1158,7 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `

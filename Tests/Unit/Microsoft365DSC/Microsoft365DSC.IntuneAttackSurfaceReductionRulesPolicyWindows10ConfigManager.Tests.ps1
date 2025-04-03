@@ -124,8 +124,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Update-DeviceConfigurationPolicyAssignment -MockWith {
             }
 
-            # Mock Write-Host to hide output during the tests
-            Mock -CommandName Write-Host -MockWith {
+            # Mock Write-M365DSCHost to hide output during the tests
+            Mock -CommandName Write-M365DSCHost -MockWith {
             }
             $Script:exportedInstances =$null
             $Script:ExportMode = $false
@@ -294,35 +294,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         TemplateReference = @{
                             TemplateId = '5dd36540-eb22-4e7e-b19c-2a07772ba627_1'
                         }
-                    }
-                }
-
-                Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicySetting -MockWith {
-                    return @{
-                        Id                   = 0
-                        SettingDefinitions   = $null
-                        SettingInstance      = @{
-                            SettingDefinitionId              = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules'
-                            SettingInstanceTemplateReference = @{
-                                SettingInstanceTemplateId = 'd770fcd1-62cd-4217-9b20-9ee2a12062ff'
-                            }
-                            AdditionalProperties             = @{
-                                '@odata.type'      = '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
-                                groupSettingCollectionValue = @(@{
-                                    children = @(
-                                        @{
-                                            "@odata.type" = "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance"
-                                            "settingDefinitionId" = "device_vendor_msft_policy_config_defender_attacksurfacereductionrules_useadvancedprotectionagainstransomware"
-                                            "choiceSettingValue" = @{
-                                                "@odata.type" = "#microsoft.graph.deviceManagementConfigurationChoiceSettingValue"
-                                                "value" = "device_vendor_msft_policy_config_defender_attacksurfacereductionrules_useadvancedprotectionagainstransomware_block"
-                                            }
-                                        }
-                                    )
-                                })
-                            }
-                        }
-                        AdditionalProperties = $null
                     }
                 }
             }

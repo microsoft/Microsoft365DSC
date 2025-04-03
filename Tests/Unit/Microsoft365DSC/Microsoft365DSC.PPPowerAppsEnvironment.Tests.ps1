@@ -31,20 +31,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return 'Credentials'
             }
 
-            Mock -CommandName Remove-AdminPowerAppEnvironment -MockWith {
-                return @{
-
-                }
-            }
-
-            Mock -CommandName New-AdminPowerAppEnvironment -MockWith {
-                return @{
-
-                }
-            }
-
-            # Mock Write-Host to hide output during the tests
-            Mock -CommandName Write-Host -MockWith {
+            # Mock Write-M365DSCHost to hide output during the tests
+            Mock -CommandName Write-M365DSCHost -MockWith {
             }
             $Script:exportedInstances =$null
             $Script:ExportMode = $false
@@ -64,7 +52,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure         = 'Present'
                 }
 
-                Mock -CommandName Get-AdminPowerAppEnvironment -MockWith {
+                Mock -CommandName Invoke-M365DSCPowerPlatformRESTWebRequest -MockWith {
                     return $null
                 }
             }
@@ -79,7 +67,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should create the environment in the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName New-AdminPowerAppEnvironment -Exactly 1
+                Should -Invoke -CommandName Invoke-M365DSCPowerPlatformRESTWebRequest -Exactly 2
             }
         }
 
@@ -89,15 +77,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName    = 'Test Environment'
                     Location       = 'canada'
                     EnvironmentSKU = 'production'
+                    EnvironmentType = 'production'
                     Credential     = $Credential
                     Ensure         = 'Present'
                 }
 
-                Mock -CommandName Get-AdminPowerAppEnvironment -MockWith {
+                Mock -CommandName Invoke-M365DSCPowerPlatformRESTWebRequest -MockWith {
                     return @{
-                        DisplayName     = 'Test Environment'
-                        Location        = 'canada'
-                        EnvironmentType = 'production'
+                        value = @{
+                            properties = @{
+                                displayName     = 'Test Environment'
+                                environmentType = 'production'
+                                environmentSKU  = 'production'
+                            }
+                            location        = 'canada'
+                        }
                     }
                 }
             }
@@ -121,11 +115,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure         = 'Absent'
                 }
 
-                Mock -CommandName Get-AdminPowerAppEnvironment -MockWith {
+                Mock -CommandName Invoke-M365DSCPowerPlatformRESTWebRequest -MockWith {
                     return @{
-                        DisplayName     = 'Test Environment'
-                        Location        = 'canada'
-                        EnvironmentType = 'production'
+                        value = @{
+                            properties = @{
+                                displayName     = 'Test Environment'
+                                environmentType = 'production'
+                                environmentSKU  = 'production'
+                            }
+                            location        = 'canada'
+                        }
                     }
                 }
             }
@@ -140,8 +139,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should delete the environment in the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Remove-AdminPowerAppEnvironment -Exactly 1
-                Should -Invoke -CommandName New-AdminPowerAppEnvironment -Exactly 0
+                Should -Invoke -CommandName Invoke-M365DSCPowerPlatformRESTWebRequest -Exactly 2
             }
         }
 
@@ -153,11 +151,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential
                 }
 
-                Mock -CommandName Get-AdminPowerAppEnvironment -MockWith {
+                Mock -CommandName Invoke-M365DSCPowerPlatformRESTWebRequest -MockWith {
                     return @{
-                        DisplayName     = 'Test Environment'
-                        Location        = 'canada'
-                        EnvironmentType = 'production'
+                        value = @{
+                            properties = @{
+                                displayName     = 'Test Environment'
+                                environmentType = 'production'
+                                environmentSKU  = 'production'
+                            }
+                            location        = 'canada'
+                        }
                     }
                 }
             }

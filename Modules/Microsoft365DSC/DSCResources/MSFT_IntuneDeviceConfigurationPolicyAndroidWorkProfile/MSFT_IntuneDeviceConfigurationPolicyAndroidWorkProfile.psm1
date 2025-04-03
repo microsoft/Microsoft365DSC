@@ -236,43 +236,50 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    Write-Verbose -Message "Checking for the Intune Device Configuration Policy {$DisplayName}"
-
-    $M365DSCConnectionSplat = @{
-        Workload          = 'MicrosoftGraph'
-        InboundParameters = $PSBoundParameters
-    }
-    $ConnectionMode = New-M365DSCConnection @M365DSCConnectionSplat
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
-    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add('Resource', $ResourceName)
-    $data.Add('Method', $MyInvocation.MyCommand)
-    $data.Add('Principal', $Credential.UserName)
-    $data.Add('TenantId', $TenantId)
-    $data.Add('ConnectionMode', $ConnectionMode)
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullResult = $PSBoundParameters
-    $nullResult.Ensure = 'Absent'
+    Write-Verbose -Message "Getting configuration of the Intune Device Configuration Policy Android for Work Profile {$DisplayName}"
 
     try
     {
-        $policy = Get-MgBetaDeviceManagementDeviceConfiguration -All -Filter "displayName eq '$DisplayName'" `
-            -ErrorAction Stop | Where-Object -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidWorkProfileGeneralDeviceConfiguration' }
-
-        if ($null -eq $policy)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.DisplayName -ne $DisplayName)
         {
-            Write-Verbose -Message "No Device Configuration Policy {$DisplayName} was found"
-            return $nullResult
+            $M365DSCConnectionSplat = @{
+                Workload          = 'MicrosoftGraph'
+                InboundParameters = $PSBoundParameters
+            }
+            $ConnectionMode = New-M365DSCConnection @M365DSCConnectionSplat
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+            $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+            $data.Add('Resource', $ResourceName)
+            $data.Add('Method', $MyInvocation.MyCommand)
+            $data.Add('Principal', $Credential.UserName)
+            $data.Add('TenantId', $TenantId)
+            $data.Add('ConnectionMode', $ConnectionMode)
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullResult = $PSBoundParameters
+            $nullResult.Ensure = 'Absent'
+
+            $policy = Get-MgBetaDeviceManagementDeviceConfiguration -All -Filter "displayName eq '$DisplayName'" `
+                -ErrorAction Stop | Where-Object -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidWorkProfileGeneralDeviceConfiguration' }
+
+            if ($null -eq $policy)
+            {
+                Write-Verbose -Message "No Intune Device Configuration Policy Android for Work Profile with {$DisplayName} was found"
+                return $nullResult
+            }
+        }
+        else
+        {
+            $policy = $Script:exportedInstance
         }
 
-        Write-Verbose -Message "Found Device Configuration Policy {$DisplayName}"
+        Write-Verbose -Message "An Intune Device Configuration Policy Android for Work Profile with {$DisplayName} was found"
         $results = @{
             Description                                               = $policy.Description
             DisplayName                                               = $policy.DisplayName
@@ -931,12 +938,6 @@ function Test-TargetResource
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
     $ValuesToCheck = Remove-M365DSCAuthenticationParameter -BoundParameters $ValuesToCheck
-
-    if ($CurrentValues.Ensure -ne $Ensure)
-    {
-        Write-Verbose -Message "Test-TargetResource returned $false"
-        return $false
-    }
     $testResult = $true
 
     #region Assignments
@@ -1044,11 +1045,11 @@ function Export-TargetResource
         $dscContent = ''
         if ($policies.Length -eq 0)
         {
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         else
         {
-            Write-Host "`r`n" -NoNewline
+            Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
         foreach ($policy in $policies)
         {
@@ -1057,7 +1058,7 @@ function Export-TargetResource
                 $Global:M365DSCExportResourceInstancesCount++
             }
 
-            Write-Host "    |---[$i/$($policies.Count)] $($policy.DisplayName)" -NoNewline
+            Write-M365DSCHost -Message "    |---[$i/$($policies.Count)] $($policy.DisplayName)" -DeferWrite
             $params = @{
                 DisplayName           = $policy.DisplayName
                 Ensure                = 'Present'
@@ -1069,8 +1070,9 @@ function Export-TargetResource
                 Managedidentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }
-            $Results = Get-TargetResource @Params
 
+            $Script:exportedInstance = $policy
+            $Results = Get-TargetResource @Params
             if ($Results.Assignments)
             {
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject ([Array]$Results.Assignments) -CIMInstanceName DeviceManagementConfigurationPolicyAssignments
@@ -1085,30 +1087,19 @@ function Export-TargetResource
                 }
             }
 
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
 
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -Credential $Credential
-
-            if ($Results.Assignments)
-            {
-                $isCIMArray = $false
-                if ($Results.Assignments.getType().Fullname -like '*[[\]]')
-                {
-                    $isCIMArray = $true
-                }
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Assignments' -IsCIMArray:$isCIMArray
-            }
+                -Credential $Credential `
+                -NoEscape @('Assignments')
 
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         return $dscContent
     }
@@ -1117,11 +1108,11 @@ function Export-TargetResource
         if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
                 $_.Exception -like '*Request not applicable to target tenant*')
         {
-            Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
+            Write-M365DSCHost -Message "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }
         else
         {
-            Write-Host $Global:M365DSCEmojiRedX
+            Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
             New-M365DSCLogEntry -Message 'Error during Export:' `
                 -Exception $_ `

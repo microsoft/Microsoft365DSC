@@ -629,6 +629,21 @@ function Disable-AzSubscription
 #endregion
 
 # region ExchangeOnlineManagement
+
+function Get-MeetingInsightsSettings
+{
+    [CmdletBinding()]
+    param(
+    )
+}
+
+function Set-MeetingInsightsSettings
+{
+    [CmdletBinding()]
+    param(
+    )
+}
+
 function Get-EmailTenantSettings
 {
     [CmdletBinding()]
@@ -24223,6 +24238,87 @@ function Get-MgBetaDeviceAppManagementTargetedManagedAppConfiguration
         $HttpPipelineAppend
     )
 }
+function Get-MgBetaDeviceAppManagementTargetedManagedAppConfigurationApp
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.String]
+        $TargetedManagedAppConfigurationId,
+
+        [Parameter()]
+        [System.String]
+        $ManagedMobileAppId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend
+    )
+}
 function Get-MgBetaDeviceAppManagementTargetedManagedAppConfigurationAssignment
 {
     [CmdletBinding()]
@@ -24369,6 +24465,19 @@ function New-MgBetaDeviceAppManagementAndroidManagedAppProtection
 {
     [CmdletBinding()]
     param(
+        [Parameter()]
+        [System.String]
+        $MessagingRedirectAppPackageId,
+
+        [Parameter()]
+        [System.String]
+        $MessagingRedirectAppDisplayName,
+
+        [Parameter()]
+        [ValidateSet("anyApp", "anyManagedApp", "specificApps", "blocked")]
+        [System.String]
+        $ProtectedMessagingRedirectAppType,
+
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
@@ -25843,6 +25952,19 @@ function Update-MgBetaDeviceAppManagementAndroidManagedAppProtection
 {
     [CmdletBinding()]
     param(
+        [Parameter()]
+        [System.String]
+        $MessagingRedirectAppPackageId,
+
+        [Parameter()]
+        [System.String]
+        $MessagingRedirectAppDisplayName,
+
+        [Parameter()]
+        [ValidateSet("anyApp", "anyManagedApp", "specificApps", "blocked")]
+        [System.String]
+        $ProtectedMessagingRedirectAppType,
+
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
@@ -28862,7 +28984,7 @@ function Get-MgBetaDirectory
         $Break
     )
 }
-function Get-MgBetaDirectoryAdministrativeUnit
+function Get-MgBetaAdministrativeUnit
 {
     [CmdletBinding()]
     param(
@@ -28939,7 +29061,7 @@ function Get-MgBetaDirectoryAdministrativeUnit
         $HttpPipelineAppend
     )
 }
-function Get-MgBetaDirectoryAdministrativeUnitMember
+function Get-MgBetaAdministrativeUnitMember
 {
     [CmdletBinding()]
     param(
@@ -29016,7 +29138,7 @@ function Get-MgBetaDirectoryAdministrativeUnitMember
         $HttpPipelineAppend
     )
 }
-function Get-MgBetaDirectoryAdministrativeUnitScopedRoleMember
+function Get-MgBetaAdministrativeUnitScopedRoleMember
 {
     [CmdletBinding()]
     param(
@@ -29814,7 +29936,7 @@ function New-MgBetaDevice
         $Kind
     )
 }
-function New-MgBetaDirectoryAdministrativeUnit
+function New-MgBetaAdministrativeUnit
 {
     [CmdletBinding()]
     param(
@@ -29891,7 +30013,7 @@ function New-MgBetaDirectoryAdministrativeUnit
         $HttpPipelineAppend
     )
 }
-function New-MgBetaDirectoryAdministrativeUnitMember
+function New-MgBetaAdministrativeUnitMember
 {
     [CmdletBinding()]
     param(
@@ -29948,7 +30070,7 @@ function New-MgBetaDirectoryAdministrativeUnitMember
         $Break
     )
 }
-function New-MgBetaDirectoryAdministrativeUnitMemberByRef
+function New-MgBetaAdministrativeUnitMemberByRef
 {
     [CmdletBinding()]
     param(
@@ -30005,7 +30127,7 @@ function New-MgBetaDirectoryAdministrativeUnitMemberByRef
         $Break
     )
 }
-function New-MgBetaDirectoryAdministrativeUnitScopedRoleMember
+function New-MgBetaAdministrativeUnitScopedRoleMember
 {
     [CmdletBinding()]
     param(
@@ -30302,7 +30424,7 @@ function Remove-MgBetaDevice
         $HttpPipelineAppend
     )
 }
-function Remove-MgBetaDirectoryAdministrativeUnit
+function Remove-MgBetaAdministrativeUnit
 {
     [CmdletBinding()]
     param(
@@ -30351,7 +30473,7 @@ function Remove-MgBetaDirectoryAdministrativeUnit
         $Break
     )
 }
-function Remove-MgBetaDirectoryAdministrativeUnitMemberDirectoryObjectByRef
+function Remove-MgBetaAdministrativeUnitMemberDirectoryObjectByRef
 {
     [CmdletBinding()]
     param(
@@ -30408,7 +30530,7 @@ function Remove-MgBetaDirectoryAdministrativeUnitMemberDirectoryObjectByRef
         $Break
     )
 }
-function Remove-MgBetaDirectoryAdministrativeUnitScopedRoleMember
+function Remove-MgBetaAdministrativeUnitScopedRoleMember
 {
     [CmdletBinding()]
     param(
@@ -30991,7 +31113,7 @@ function Update-MgBetaDirectory
         $HttpPipelineAppend
     )
 }
-function Update-MgBetaDirectoryAdministrativeUnit
+function Update-MgBetaAdministrativeUnit
 {
     [CmdletBinding()]
     param(
@@ -50200,6 +50322,75 @@ function Get-MgUserLicenseDetail
         $HttpPipelineAppend
     )
 }
+function Get-MgUserMemberOfAsGroup
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [String]
+        $UserId,
+
+        [Parameter()]
+        [String]
+        $DirectoryObjectId,
+
+        [Parameter()]
+        [Object]
+        $InputObject,
+
+        [Parameter()]
+        [String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [String[]]
+        $Property,
+
+        [Parameter()]
+        [String]
+        $Filter,
+
+        [Parameter()]
+        [String]
+        $Search,
+
+        [Parameter()]
+        [Int32]
+        $Skip,
+
+        [Parameter()]
+        [String[]]
+        $Sort,
+
+        [Parameter()]
+        [Int32]
+        $Top,
+
+        [Parameter()]
+        [String]
+        $ConsistencyLevel,
+
+        [Parameter()]
+        [String]
+        $ResponseHeadersVariable,
+
+        [Parameter()]
+        [hashtable]
+        $Headers,
+
+        [Parameter()]
+        [Int32]
+        $PageSize,
+
+        [Parameter()]
+        [switch]
+        $All,
+
+        [Parameter()]
+        [String]
+        $CountVariable
+    )
+}
 function New-MgUser
 {
     [CmdletBinding()]
@@ -57672,6 +57863,19 @@ function New-MgBetaDeviceAppManagementAndroidManagedAppProtection
     [CmdletBinding()]
     param(
         [Parameter()]
+        [System.String]
+        $MessagingRedirectAppPackageId,
+
+        [Parameter()]
+        [System.String]
+        $MessagingRedirectAppDisplayName,
+
+        [Parameter()]
+        [ValidateSet("anyApp", "anyManagedApp", "specificApps", "blocked")]
+        [System.String]
+        $ProtectedMessagingRedirectAppType,
+
+        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
 
@@ -59145,6 +59349,19 @@ function Update-MgBetaDeviceAppManagementAndroidManagedAppProtection
 {
     [CmdletBinding()]
     param(
+        [Parameter()]
+        [System.String]
+        $MessagingRedirectAppPackageId,
+
+        [Parameter()]
+        [System.String]
+        $MessagingRedirectAppDisplayName,
+
+        [Parameter()]
+        [ValidateSet("anyApp", "anyManagedApp", "specificApps", "blocked")]
+        [System.String]
+        $ProtectedMessagingRedirectAppType,
+
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
@@ -61640,7 +61857,7 @@ function Get-MgBetaDirectory
         $Break
     )
 }
-function Get-MgBetaDirectoryAdministrativeUnit
+function Get-MgBetaAdministrativeUnit
 {
     [CmdletBinding()]
     param(
@@ -61717,7 +61934,7 @@ function Get-MgBetaDirectoryAdministrativeUnit
         $HttpPipelineAppend
     )
 }
-function Get-MgBetaDirectoryAdministrativeUnitMember
+function Get-MgBetaAdministrativeUnitMember
 {
     [CmdletBinding()]
     param(
@@ -61794,7 +62011,7 @@ function Get-MgBetaDirectoryAdministrativeUnitMember
         $HttpPipelineAppend
     )
 }
-function Get-MgBetaDirectoryAdministrativeUnitScopedRoleMember
+function Get-MgBetaAdministrativeUnitScopedRoleMember
 {
     [CmdletBinding()]
     param(
@@ -62791,7 +63008,7 @@ function New-MgBetaDevice
         $Kind
     )
 }
-function New-MgBetaDirectoryAdministrativeUnit
+function New-MgBetaAdministrativeUnit
 {
     [CmdletBinding()]
     param(
@@ -62868,7 +63085,7 @@ function New-MgBetaDirectoryAdministrativeUnit
         $HttpPipelineAppend
     )
 }
-function New-MgBetaDirectoryAdministrativeUnitMember
+function New-MgBetaAdministrativeUnitMember
 {
     [CmdletBinding()]
     param(
@@ -62925,7 +63142,7 @@ function New-MgBetaDirectoryAdministrativeUnitMember
         $Break
     )
 }
-function New-MgBetaDirectoryAdministrativeUnitMemberByRef
+function New-MgBetaAdministrativeUnitMemberByRef
 {
     [CmdletBinding()]
     param(
@@ -62982,7 +63199,7 @@ function New-MgBetaDirectoryAdministrativeUnitMemberByRef
         $Break
     )
 }
-function New-MgBetaDirectoryAdministrativeUnitScopedRoleMember
+function New-MgBetaAdministrativeUnitScopedRoleMember
 {
     [CmdletBinding()]
     param(
@@ -63332,7 +63549,7 @@ function Remove-MgBetaDevice
         $HttpPipelineAppend
     )
 }
-function Remove-MgBetaDirectoryAdministrativeUnit
+function Remove-MgBetaAdministrativeUnit
 {
     [CmdletBinding()]
     param(
@@ -63381,7 +63598,7 @@ function Remove-MgBetaDirectoryAdministrativeUnit
         $Break
     )
 }
-function Remove-MgBetaDirectoryAdministrativeUnitMemberDirectoryObjectByRef
+function Remove-MgBetaAdministrativeUnitMemberDirectoryObjectByRef
 {
     [CmdletBinding()]
     param(
@@ -63458,7 +63675,7 @@ function Get-MgBetaDirectoryDeletedItemAsGroup
     )
 }
 
-function Remove-MgBetaDirectoryAdministrativeUnitScopedRoleMember
+function Remove-MgBetaAdministrativeUnitScopedRoleMember
 {
     [CmdletBinding()]
     param(
@@ -64090,7 +64307,7 @@ function Update-MgBetaDirectory
         $HttpPipelineAppend
     )
 }
-function Update-MgBetaDirectoryAdministrativeUnit
+function Update-MgBetaAdministrativeUnit
 {
     [CmdletBinding()]
     param(
@@ -82097,6 +82314,23 @@ function Remove-PnPSiteDesign
         $Force
     )
 }
+function Remove-PnpSiteScript
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PSObject]
+        $Identity,
+
+        [Parameter()]
+        [PSObject]
+        $Connection,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force
+    )
+}
 function Remove-PnPStorageEntity
 {
     [CmdletBinding()]
@@ -83647,6 +83881,45 @@ function Set-TenantAllowBlockListItems
 
 #endregion
 #region MicrosoftTeams
+function New-CsOnlineApplicationInstance
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $UserPrincipalName,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId
+    )
+}
+function Get-CsOnlineApplicationInstance
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+function Set-CsOnlineApplicationInstance
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName
+    )
+}
 function Add-TeamUser
 {
     [CmdletBinding()]
@@ -102923,6 +103196,268 @@ function Remove-MgBetaDeviceManagementComplianceManagementPartner
 		[switch]$WhatIf
 	)
 }
+
+function Get-MgBetaDeviceManagementComplianceManagementPartner
+{
+    [Cmdletbinding()]
+    param(
+    	[Parameter()]
+    	[string]$ComplianceManagementPartnerId,
+
+    	[Parameter()]
+    	[object]$InputObject,
+
+    	[Parameter()]
+    	[string[]]$ExpandProperty,
+
+    	[Parameter()]
+    	[string[]]$Property,
+
+    	[Parameter()]
+    	[string]$Filter,
+
+    	[Parameter()]
+    	[string]$Search,
+
+    	[Parameter()]
+    	[int]$Skip,
+
+    	[Parameter()]
+    	[string[]]$Sort,
+
+    	[Parameter()]
+    	[int]$Top,
+
+    	[Parameter()]
+    	[string]$ResponseHeadersVariable,
+
+    	[Parameter()]
+    	[switch]$Break,
+
+    	[Parameter()]
+    	[System.Collections.IDictionary]$Headers,
+
+    	[Parameter()]
+    	[PSObject]$HttpPipelineAppend,
+
+    	[Parameter()]
+    	[PSObject]$HttpPipelinePrepend,
+
+    	[Parameter()]
+    	[uri]$Proxy,
+
+    	[Parameter()]
+    	[pscredential]$ProxyCredential,
+
+    	[Parameter()]
+    	[switch]$ProxyUseDefaultCredentials,
+
+    	[Parameter()]
+    	[int]$PageSize,
+
+    	[Parameter()]
+    	[switch]$All,
+
+    	[Parameter()]
+    	[string]$CountVariable
+    )
+}
+
+function New-MgBetaDeviceManagementComplianceManagementPartner
+{
+    [Cmdletbinding()]
+    param(
+		[Parameter()]
+		[object]$BodyParameter,
+
+		[Parameter()]
+		[string]$ResponseHeadersVariable,
+
+		[Parameter()]
+		[hashtable]$AdditionalProperties,
+
+		[Parameter()]
+		[object[]]$AndroidEnrollmentAssignments,
+
+		[Parameter()]
+		[switch]$AndroidOnboarded,
+
+		[Parameter()]
+		[string]$DisplayName,
+
+		[Parameter()]
+		[string]$Id,
+
+		[Parameter()]
+		[object[]]$IosEnrollmentAssignments,
+
+		[Parameter()]
+		[switch]$IosOnboarded,
+
+		[Parameter()]
+		[datetime]$LastHeartbeatDateTime,
+
+		[Parameter()]
+		[object[]]$MacOSEnrollmentAssignments,
+
+		[Parameter()]
+		[switch]$MacOSOnboarded,
+
+		[Parameter()]
+		[object]$PartnerState,
+
+		[Parameter()]
+		[switch]$Break,
+
+		[Parameter()]
+		[System.Collections.IDictionary]$Headers,
+
+		[Parameter()]
+		[PSObject]$HttpPipelineAppend,
+
+		[Parameter()]
+		[PSObject]$HttpPipelinePrepend,
+
+		[Parameter()]
+		[uri]$Proxy,
+
+		[Parameter()]
+		[pscredential]$ProxyCredential,
+
+		[Parameter()]
+		[switch]$ProxyUseDefaultCredentials,
+
+		[Parameter()]
+		[switch]$Confirm,
+
+		[Parameter()]
+		[switch]$WhatIf
+	)
+}
+function Update-MgBetaDeviceManagementComplianceManagementPartner
+{
+    [Cmdletbinding()]
+    param(
+        [Parameter()]
+        [string]$ComplianceManagementPartnerId,
+
+        [Parameter()]
+        [object]$InputObject,
+
+        [Parameter()]
+        [object]$BodyParameter,
+
+        [Parameter()]
+        [string]$ResponseHeadersVariable,
+
+        [Parameter()]
+        [hashtable]$AdditionalProperties,
+
+        [Parameter()]
+        [object[]]$AndroidEnrollmentAssignments,
+
+        [Parameter()]
+        [switch]$AndroidOnboarded,
+
+        [Parameter()]
+        [string]$DisplayName,
+
+        [Parameter()]
+        [string]$Id,
+
+        [Parameter()]
+        [object[]]$IosEnrollmentAssignments,
+
+        [Parameter()]
+        [switch]$IosOnboarded,
+
+        [Parameter()]
+        [datetime]$LastHeartbeatDateTime,
+
+        [Parameter()]
+        [object[]]$MacOSEnrollmentAssignments,
+
+        [Parameter()]
+        [switch]$MacOSOnboarded,
+
+        [Parameter()]
+        [object]$PartnerState,
+
+        [Parameter()]
+        [switch]$Break,
+
+        [Parameter()]
+        [System.Collections.IDictionary]$Headers,
+
+        [Parameter()]
+        [PSObject]$HttpPipelineAppend,
+
+        [Parameter()]
+        [PSObject]$HttpPipelinePrepend,
+
+        [Parameter()]
+        [uri]$Proxy,
+
+        [Parameter()]
+        [pscredential]$ProxyCredential,
+
+        [Parameter()]
+        [switch]$ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [switch]$WhatIf,
+
+        [Parameter()]
+        [switch]$Confirm
+    )
+}
+function Remove-MgBetaDeviceManagementComplianceManagementPartner
+{
+    [Cmdletbinding()]
+    param(
+		[Parameter()]
+		[string]$ComplianceManagementPartnerId,
+
+		[Parameter()]
+		[object]$InputObject,
+
+		[Parameter()]
+		[string]$IfMatch,
+
+		[Parameter()]
+		[string]$ResponseHeadersVariable,
+
+		[Parameter()]
+		[switch]$Break,
+
+		[Parameter()]
+		[System.Collections.IDictionary]$Headers,
+
+		[Parameter()]
+		[PSObject]$HttpPipelineAppend,
+
+		[Parameter()]
+		[PSObject]$HttpPipelinePrepend,
+
+		[Parameter()]
+		[switch]$PassThru,
+
+		[Parameter()]
+		[uri]$Proxy,
+
+		[Parameter()]
+		[pscredential]$ProxyCredential,
+
+		[Parameter()]
+		[switch]$ProxyUseDefaultCredentials,
+
+		[Parameter()]
+		[switch]$Confirm,
+
+		[Parameter()]
+		[switch]$WhatIf
+	)
+}
 #endregion
 #region Microsoft.Graph.Authentication
 function Update-MgBetaNetworkAccessFilteringPolicyRule
@@ -105699,8 +106234,9 @@ function Update-MgDeviceManagementDeviceConfigurationAssignment
 }
 
 #endregion
-#region MgBetaDeviceManagementComplianceManagementPartner
-function Get-MgBetaDeviceManagementComplianceManagementPartner
+
+#region MgIdentityGovernancePrivilegedAccessGroupEligibilitySchedule
+function Get-MgBetaIdentityGovernancePrivilegedAccessGroupEligibilitySchedule
 {
     [CmdletBinding()]
     param
@@ -105878,7 +106414,7 @@ function New-MgBetaDeviceManagementComplianceManagementPartner
     )
 }
 
-function Remove-MgBetaDeviceManagementComplianceManagementPartner
+function Get-MgBetaPolicyRoleManagementPolicyAssignment
 {
     [CmdletBinding()]
     param
@@ -105937,98 +106473,387 @@ function Remove-MgBetaDeviceManagementComplianceManagementPartner
     )
 }
 
-function Update-MgBetaDeviceManagementComplianceManagementPartner
+#endregion
+
+#region Microsoft.Graph.Sites
+function Get-MgAdminSharepointSetting
 {
     [CmdletBinding()]
     param
     (
         [Parameter()]
-        [PSObject]
-        $InputObject,
+        [String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [String[]]
+        $Property,
+
+        [Parameter()]
+        [String]
+        $ResponseHeadersVariable,
+
+        [Parameter()]
+        [hashtable]
+        $Headers
+    )
+}
+function Update-MgAdminSharepointSetting
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter()]
+        [Object]
+        $BodyParameter,
+
+        [Parameter()]
+        [String]
+        $ResponseHeadersVariable,
+
+        [Parameter()]
+        [Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [String[]]
+        $AllowedDomainGuidsForSyncApp,
+
+        [Parameter()]
+        [String[]]
+        $AvailableManagedPathsForSiteCreation,
+
+        [Parameter()]
+        [Int32]
+        $DeletedUserPersonalSiteRetentionPeriodInDays,
+
+        [Parameter()]
+        [String[]]
+        $ExcludedFileExtensionsForSyncApp,
+
+        [Parameter()]
+        [String]
+        $Id,
+
+        [Parameter()]
+        [Object]
+        $IdleSessionSignOut,
+
+        [Parameter()]
+        [String]
+        $ImageTaggingOption,
+
+        [Parameter()]
+        [switch]
+        $IsCommentingOnSitePagesEnabled,
+
+        [Parameter()]
+        [switch]
+        $IsFileActivityNotificationEnabled,
+
+        [Parameter()]
+        [switch]
+        $IsLegacyAuthProtocolsEnabled,
+
+        [Parameter()]
+        [switch]
+        $IsLoopEnabled,
+
+        [Parameter()]
+        [switch]
+        $IsMacSyncAppEnabled,
+
+        [Parameter()]
+        [switch]
+        $IsRequireAcceptingUserToMatchInvitedUserEnabled,
+
+        [Parameter()]
+        [switch]
+        $IsResharingByExternalUsersEnabled,
+
+        [Parameter()]
+        [switch]
+        $IsSharePointMobileNotificationEnabled,
+
+        [Parameter()]
+        [switch]
+        $IsSharePointNewsfeedEnabled,
+
+        [Parameter()]
+        [switch]
+        $IsSiteCreationEnabled,
+
+        [Parameter()]
+        [switch]
+        $IsSiteCreationUiEnabled,
+
+        [Parameter()]
+        [switch]
+        $IsSitePagesCreationEnabled,
+
+        [Parameter()]
+        [switch]
+        $IsSitesStorageLimitAutomatic,
+
+        [Parameter()]
+        [switch]
+        $IsSyncButtonHiddenOnPersonalSite,
+
+        [Parameter()]
+        [switch]
+        $IsUnmanagedSyncAppForTenantRestricted,
+
+        [Parameter()]
+        [Int64]
+        $PersonalSiteDefaultStorageLimitInMb,
+
+        [Parameter()]
+        [String[]]
+        $SharingAllowedDomainList,
+
+        [Parameter()]
+        [String[]]
+        $SharingBlockedDomainList,
+
+        [Parameter()]
+        [String]
+        $SharingCapability,
+
+        [Parameter()]
+        [String]
+        $SharingDomainRestrictionMode,
+
+        [Parameter()]
+        [String]
+        $SiteCreationDefaultManagedPath,
+
+        [Parameter()]
+        [Int32]
+        $SiteCreationDefaultStorageLimitInMb,
+
+        [Parameter()]
+        [String]
+        $TenantDefaultTimezone,
+
+        [Parameter()]
+        [hashtable]
+        $Headers
+    )
+}
+
+#endregion
+
+function Get-RetentionPolicyTag
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $OptionalInMailbox,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IncludeSystemTags,
+
+        [Parameter()]
+        [System.Object]
+        $Mailbox,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object[]]
+        $Types
+    )
+}
+function New-RetentionPolicyTag
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $AgeLimitForRetention,
+
+        [Parameter()]
+        [System.String]
+        $MessageClass,
+
+        [Parameter()]
+        [System.Boolean]
+        $MustDisplayCommentEnabled,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsDefaultAutoGroupPolicyTag,
+
+        [Parameter()]
+        [System.Object]
+        $LocalizedRetentionPolicyTagName,
+
+        [Parameter()]
+        [System.Object]
+        $LocalizedComment,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsDefaultModeratedRecipientsPolicyTag,
+
+        [Parameter()]
+        [System.Object]
+        $RetentionAction,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.Guid]
+        $RetentionId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $RetentionEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $Type,
+
+        [Parameter()]
+        [System.Boolean]
+        $SystemTag
+    )
+}
+function Remove-RetentionPolicyTag
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
+function Set-RetentionPolicyTag
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $MessageClass,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $MustDisplayCommentEnabled,
+
+        [Parameter()]
+        [System.Object[]]
+        $OptionalInMailbox,
+
+        [Parameter()]
+        [System.Object]
+        $Mailbox,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Object]
+        $LocalizedRetentionPolicyTagName,
+
+        [Parameter()]
+        [System.Object]
+        $LegacyManagedFolder,
+
+        [Parameter()]
+        [System.Object]
+        $AgeLimitForRetention,
+
+        [Parameter()]
+        [System.Object]
+        $RetentionAction,
+
+        [Parameter()]
+        [System.Object]
+        $LocalizedComment,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.Guid]
+        $RetentionId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $RetentionEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $SystemTag,
+
+        [Parameter()]
+        [System.String]
+        $Name
+    )
+}
+
+function Get-MgBetaDirectoryObjectById
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
 
         [Parameter()]
         [PSObject]
         $BodyParameter,
 
         [Parameter()]
-        [System.String]
-        $ResponseHeadersVariable,
-
-        [Parameter()]
-        [System.Collections.Hashtable]
-        $AdditionalProperties,
-
-        [Parameter()]
-        [PSObject[]]
-        $AndroidEnrollmentAssignments,
-
-        [Parameter()]
-        [switch]
-        $AndroidOnboarded,
-
-        [Parameter()]
-        [System.String]
-        $DisplayName,
-
-        [Parameter()]
-        [System.String]
-        $Id,
-
-        [Parameter()]
-        [PSObject[]]
-        $IosEnrollmentAssignments,
-
-        [Parameter()]
-        [switch]
-        $IosOnboarded,
-
-        [Parameter()]
-        [System.Datetime]
-        $LastHeartbeatDateTime,
-
-        [Parameter()]
-        [PSObject[]]
-        $MacOsEnrollmentAssignments,
-
-        [Parameter()]
-        [switch]
-        $MacOsOnboarded,
-
-        [Parameter()]
-        [System.string]
-        $PartnerState,
-
-        [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $Break,
+        $Confirm,
 
         [Parameter()]
         [System.Collections.IDictionary]
         $Headers,
 
         [Parameter()]
-        [PSObject[]]
-        $HttpPipelineAppend,
+        [System.String[]]
+        $Ids,
 
         [Parameter()]
-        [PSObject[]]
-        $HttpPipelinePrepend,
+        [System.String]
+        $ResponseHeadersVariable,
 
         [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
+        [System.String[]]
+        $Types,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm
+        $WhatIf
     )
 }
-#endregion

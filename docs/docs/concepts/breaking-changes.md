@@ -4,7 +4,7 @@ Microsoft 365 is under constant development, which means that functionalities ar
 
 ## What are Breaking Changes?
 
-In the cases where a new resource is added, a resource gets a new optional parameter or a parameter that used to be mandatory becomes optional, existing configurations are not impacted. But when a resource or parameter is removed or an optional parameter becomes mandatory, existing configurations can stop functioning, because they are using these removed components. That is what is called a “Breaking Change”: A change that can break existing configurations and therefore impact the administration process of Microsoft 365.
+In the cases where a new resource is added, a resource gets a new optional parameter or a parameter that used to be mandatory becomes optional, existing configurations are not impacted. But when a resource or parameter is removed or an optional parameter becomes mandatory, existing configurations can stop functioning, because they are using these removed components. That is what is called a "Breaking Change": A change that can break existing configurations and therefore impact the administration process of Microsoft 365.
 
 ## Release process
 

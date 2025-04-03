@@ -398,7 +398,6 @@ function Set-TargetResource
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
-
     Write-Verbose -Message "Setting EXOTransportConfig with values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
     $SetValues = [System.Collections.Hashtable]($PSBoundParameters)
     $SetValues.Remove('IsSingleInstance') | Out-Null
@@ -410,6 +409,11 @@ function Set-TargetResource
     $SetValues.Remove('CertificatePassword') | Out-Null
     $SetValues.Remove('ManagedIdentity') | Out-Null
     $SetValues.Remove('AccessTokens') | Out-Null
+
+    if ($SetValues.JournalingReportNdrTo -eq '<>' -or [System.String]::IsNullOrEmpty($SetValues.JournalingReportNdrTo))
+    {
+        $SetValues.Remove('JournalingReportNdrTo') | Out-Null
+    }
 
     Set-TransportConfig @SetValues
 }
@@ -675,11 +679,8 @@ function Export-TargetResource
         }
 
         $Results = Get-TargetResource @Params
-
         if ($Results -is [System.Collections.Hashtable] -and $Results.Count -gt 1)
         {
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
@@ -689,18 +690,18 @@ function Export-TargetResource
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
 
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         else
         {
-            Write-Host $Global:M365DSCEmojiRedX
+            Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
         }
 
         return $dscContent
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `

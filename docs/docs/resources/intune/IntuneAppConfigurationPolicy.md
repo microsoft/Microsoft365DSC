@@ -17,6 +17,10 @@
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
 | **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
+| **roleScopeTagIds** | Write | StringArray[] | List of Scope Tags for this Entity instance. | |
+| **targetedAppManagementLevels** | Write | String | The intended app management levels for this policy. | `unspecified`, `unmanaged`, `mdm`, `androidEnterprise`, `androidEnterpriseDedicatedDevicesWithAzureAdSharedMode`, `androidOpenSourceProjectUserAssociated`, `androidOpenSourceProjectUserless`, `unknownFutureValue` |
+| **appGroupType** | Write | String | Public Apps selection: group or individual. | `selectedPublicApps`, `allCoreMicrosoftApps`, `allMicrosoftApps`, `allApps` |
+| **Apps** | Write | MSFT_managedMobileApp[] | List of apps to which the policy is deployed. | |
 
 ### MSFT_DeviceManagementConfigurationPolicyAssignments
 
@@ -39,6 +43,25 @@
 | --- | --- | --- | --- | --- |
 | **name** | Write | String | Name of the custom setting. | |
 | **value** | Write | String | Value of the custom setting. | |
+
+### MSFT_managedMobileApp
+
+#### Parameters
+
+| Parameter | Attribute | DataType | Description | Allowed Values |
+| --- | --- | --- | --- | --- |
+| **id** | Write | String | Key of the entity. | |
+| **mobileAppIdentifier** | Write | MSFT_AppIdentifier[] | The identifier for an app with it's operating system type. | |
+
+### MSFT_AppIdentifier
+
+#### Parameters
+
+| Parameter | Attribute | DataType | Description | Allowed Values |
+| --- | --- | --- | --- | --- |
+| **bundleID** | Write | String | AppId iOS. | |
+| **packageID** | Write | String | AppId Android. | |
+| **windowsAppId** | Write | String | AppId Windows. | |
 
 
 ## Description

@@ -94,71 +94,77 @@ function Get-TargetResource
         [System.String[]]
         $AccessTokens
     )
-    Write-Verbose -Message "Checking for the Intune Device Enrollment Restriction {$DisplayName}"
-    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters
 
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullResult = $PSBoundParameters
-    $nullResult.Ensure = 'Absent'
-
-    $PlatformType = ''
-    $keys = (([Hashtable]$PSBoundParameters).Clone()).Keys
-    foreach ($key in $keys)
-    {
-        if ($null -ne $PSBoundParameters.$key -and $PSBoundParameters.$key.getType().Name -like '*cimInstance*' -and $key -like '*Restriction')
-        {
-            if ($DeviceEnrollmentConfigurationType -eq 'singlePlatformRestriction' )
-            {
-                $PlatformType = $key.replace('Restriction', '')
-                break
-            }
-        }
-    }
+    Write-Verbose -Message "Getting configuration of the Intune Device Enrollment Restriction with Id {$Identity} and DisplayName {$DisplayName}"
 
     try
     {
-        try
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.DisplayName -ne $DisplayName)
         {
-            $config = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -DeviceEnrollmentConfigurationId $Identity -ErrorAction Stop
-        }
-        catch
-        {
-            $config = $null
-        }
+            $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+                -InboundParameters $PSBoundParameters
 
-        if ($null -eq $config)
-        {
-            Write-Verbose -Message "Could not find an Intune Device Enrollment Platform Restriction with Id {$Identity}"
-            $config = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -All -Filter "DisplayName eq '$DisplayName'" `
-                -ErrorAction SilentlyContinue | Where-Object -FilterScript {
-                $_.AdditionalProperties.'@odata.type' -like '#microsoft.graph.deviceEnrollmentPlatformRestriction*Configuration' -and
-                $(if ($null -ne $_.AdditionalProperties.platformType)
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullResult = $PSBoundParameters
+            $nullResult.Ensure = 'Absent'
+
+            $PlatformType = ''
+            $keys = (([Hashtable]$PSBoundParameters).Clone()).Keys
+            foreach ($key in $keys)
+            {
+                if ($null -ne $PSBoundParameters.$key -and $PSBoundParameters.$key.getType().Name -like '*cimInstance*' -and $key -like '*Restriction')
+                {
+                    if ($DeviceEnrollmentConfigurationType -eq 'singlePlatformRestriction' )
                     {
-                        $_.AdditionalProperties.platformType -eq $PlatformType
+                        $PlatformType = $key.replace('Restriction', '')
+                        break
                     }
-                    else
-                    {
-                        $true
-                    })
+                }
+            }
+
+            $config = $null
+            if (-not [string]::IsNullOrEmpty($Identity))
+            {
+                $config = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -DeviceEnrollmentConfigurationId $Identity -ErrorAction SilentlyContinue
             }
 
             if ($null -eq $config)
             {
-                Write-Verbose -Message "Could not find an Intune Device Enrollment Platform Restriction with DisplayName {$DisplayName}"
-                return $nullResult
+                Write-Verbose -Message "Could not find an Intune Device Enrollment Platform Restriction with Id {$Identity}"
+                $config = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -All -Filter "DisplayName eq '$DisplayName'" `
+                    -ErrorAction SilentlyContinue | Where-Object -FilterScript {
+                    $_.AdditionalProperties.'@odata.type' -like '#microsoft.graph.deviceEnrollmentPlatformRestriction*Configuration' -and
+                    $(if ($null -ne $_.AdditionalProperties.platformType)
+                        {
+                            $_.AdditionalProperties.platformType -eq $PlatformType
+                        }
+                        else
+                        {
+                            $true
+                        })
+                }
+
+                if ($null -eq $config)
+                {
+                    Write-Verbose -Message "Could not find an Intune Device Enrollment Platform Restriction with DisplayName {$DisplayName}"
+                    return $nullResult
+                }
             }
+        }
+        else
+        {
+            $config = $Script:exportedInstance
         }
 
         Write-Verbose -Message "Found Intune Device Enrollment Platform Restriction with Name {$($config.DisplayName)}"
@@ -440,7 +446,7 @@ function Set-TargetResource
         }
         $PSBoundParameters.add('@odata.type', $policyType)
 
-        #Write-Verbose ($PSBoundParameters | ConvertTo-Json -Depth 20)
+        Write-Verbose "Updating with values:`r`n$($PSBoundParameters | ConvertTo-Json -Depth 20)"
 
         Update-MgBetaDeviceManagementDeviceEnrollmentConfiguration `
             -DeviceEnrollmentConfigurationId $currentInstance.Identity `
@@ -584,12 +590,6 @@ function Test-TargetResource
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
-
-    if ($CurrentValues.Ensure -ne $Ensure)
-    {
-        Write-Verbose -Message "Test-TargetResource returned $false"
-        return $false
-    }
     $testResult = $true
 
     #Compare Cim instances
@@ -707,11 +707,11 @@ function Export-TargetResource
         $dscContent = ''
         if ($configs.Length -eq 0)
         {
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         else
         {
-            Write-Host "`r`n" -NoNewline
+            Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
         foreach ($config in $configs)
         {
@@ -720,7 +720,7 @@ function Export-TargetResource
                 $Global:M365DSCExportResourceInstancesCount++
             }
 
-            Write-Host "    |---[$i/$($configs.Count)] $($config.displayName)" -NoNewline
+            Write-M365DSCHost -Message "    |---[$i/$($configs.Count)] $($config.displayName)" -DeferWrite
             $params = @{
                 Identity              = $config.id
                 DisplayName           = $config.displayName
@@ -733,8 +733,9 @@ function Export-TargetResource
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }
-            $Results = Get-TargetResource @Params
 
+            $Script:exportedInstance = $config
+            $Results = Get-TargetResource @Params
             if ($null -ne $Results.Assignments)
             {
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject ([Array]$Results.Assignments) -CIMInstanceName DeviceManagementConfigurationPolicyAssignments
@@ -852,70 +853,20 @@ function Export-TargetResource
                 }
             }
 
-
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -Credential $Credential
-
-            if ($null -ne $Results.Assignments)
-            {
-                $isCIMArray = $false
-                if ($Results.Assignments.getType().Fullname -like '*[[\]]')
-                {
-                    $isCIMArray = $true
-                }
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Assignments' -IsCIMArray:$isCIMArray
-            }
-
-            if ($null -ne $Results.IosRestriction)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'IosRestriction'
-            }
-
-            if ($null -ne $Results.WindowsRestriction)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'WindowsRestriction'
-            }
-
-            if ($null -ne $Results.WindowsHomeSkuRestriction)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'WindowsHomeSkuRestriction'
-            }
-
-            if ($null -ne $Results.WindowsMobileRestriction)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'WindowsMobileRestriction'
-            }
-
-            if ($null -ne $Results.AndroidRestriction)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'AndroidRestriction'
-            }
-
-            if ($null -ne $Results.AndroidForWorkRestriction)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'AndroidForWorkRestriction'
-            }
-
-            if ($null -ne $Results.MacRestriction)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'MacRestriction'
-            }
-
-            if ($null -ne $Results.MacOSRestriction)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'MacOSRestriction'
-            }
+                -Credential $Credential `
+                -NoEscape @('Assignments', 'IosRestriction', 'WindowsRestriction', 'WindowsHomeSkuRestriction',
+                    'WindowsMobileRestriction', 'AndroidRestriction', 'AndroidForWorkRestriction',
+                    'MacRestriction','MacOSRestriction')
 
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         return $dscContent
     }
@@ -924,11 +875,11 @@ function Export-TargetResource
         if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
                 $_.Exception -like '*Request not applicable to target tenant*')
         {
-            Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
+            Write-M365DSCHost -Message "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }
         else
         {
-            Write-Host $Global:M365DSCEmojiRedX
+            Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
             New-M365DSCLogEntry -Message 'Error during Export:' `
                 -Exception $_ `

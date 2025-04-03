@@ -15,11 +15,17 @@
                 "read": [
                     {
                         "name": "RoleEligibilitySchedule.Read.Directory"
+                    },
+                    {
+                        "name": "Directory.Read.All"
                     }
                 ],
                 "update": [
                     {
                         "name": "RoleEligibilitySchedule.ReadWrite.Directory"
+                    },
+                    {
+                        "name": "Directory.Read.All"
                     }
                 ]
             }

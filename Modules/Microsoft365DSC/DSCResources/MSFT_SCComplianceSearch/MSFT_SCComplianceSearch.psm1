@@ -90,93 +90,98 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    Write-Verbose -Message "Getting configuration of SCComplianceSearch for $Name"
-    if ($Global:CurrentModeIsExport)
-    {
-        $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
-            -InboundParameters $PSBoundParameters `
-            -SkipModuleReload $true
-    }
-    else
-    {
-        $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
-            -InboundParameters $PSBoundParameters
-    }
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = 'Absent'
-
     try
     {
-        if ($null -eq $Case)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Name -ne $Name)
         {
-            $Search = Get-ComplianceSearch -Identity $Name -ErrorAction SilentlyContinue
+            Write-Verbose -Message "Getting configuration of SCComplianceSearch for $Name"
+            if ($Global:CurrentModeIsExport)
+            {
+                $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
+                    -InboundParameters $PSBoundParameters `
+                    -SkipModuleReload $true
+            }
+            else
+            {
+                $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
+                    -InboundParameters $PSBoundParameters
+            }
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullReturn = $PSBoundParameters
+            $nullReturn.Ensure = 'Absent'
+
+            if ($null -eq $Case)
+            {
+                $Search = Get-ComplianceSearch -Identity $Name -ErrorAction SilentlyContinue
+            }
+            else
+            {
+                $Search = Get-ComplianceSearch -Identity $Name -Case $Case -ErrorAction SilentlyContinue
+            }
+
+            if ($null -eq $Search)
+            {
+                Write-Verbose -Message "SCComplianceSearch $($Name) does not exist."
+                return $nullReturn
+            }
         }
         else
         {
-            $Search = Get-ComplianceSearch -Identity $Name -Case $Case -ErrorAction SilentlyContinue
+            $Search = $Script:exportedInstance
         }
 
-        if ($null -eq $Search)
+        Write-Verbose "Found existing SCComplianceSearch $($Name)"
+        $result = @{
+            Name                                  = $Name
+            Case                                  = $Case
+            AllowNotFoundExchangeLocationsEnabled = $Search.AllowNotFoundExchangeLocationsEnabled
+            ContentMatchQuery                     = $Search.ContentMatchQuery
+            Description                           = $Search.Description
+            ExchangeLocation                      = $Search.ExchangeLocation
+            ExchangeLocationExclusion             = $Search.ExchangeLocationExclusion
+            HoldNames                             = $Search.HoldNames
+            IncludeUserAppContent                 = $Search.IncludeUserAppContent
+            Language                              = $Search.Language.TwoLetterISOLanguageName
+            PublicFolderLocation                  = $Search.PublicFolderLocation
+            SharePointLocation                    = $Search.SharePointLocation
+            SharePointLocationExclusion           = $Search.SharePointLocationExclusion
+            Credential                            = $Credential
+            ApplicationId                         = $ApplicationId
+            TenantId                              = $TenantId
+            CertificateThumbprint                 = $CertificateThumbprint
+            CertificatePath                       = $CertificatePath
+            CertificatePassword                   = $CertificatePassword
+            Ensure                                = 'Present'
+            AccessTokens                          = $AccessTokens
+        }
+
+        $nullParams = @()
+        foreach ($parameter in $result.Keys)
         {
-            Write-Verbose -Message "SCComplianceSearch $($Name) does not exist."
-            return $nullReturn
+            if ($null -eq $result.$parameter)
+            {
+                $nullParams += $parameter
+            }
         }
-        else
+
+        foreach ($paramToRemove in $nullParams)
         {
-            Write-Verbose "Found existing SCComplianceSearch $($Name)"
-            $result = @{
-                Name                                  = $Name
-                Case                                  = $Case
-                AllowNotFoundExchangeLocationsEnabled = $Search.AllowNotFoundExchangeLocationsEnabled
-                ContentMatchQuery                     = $Search.ContentMatchQuery
-                Description                           = $Search.Description
-                ExchangeLocation                      = $Search.ExchangeLocation
-                ExchangeLocationExclusion             = $Search.ExchangeLocationExclusion
-                HoldNames                             = $Search.HoldNames
-                IncludeUserAppContent                 = $Search.IncludeUserAppContent
-                Language                              = $Search.Language.TwoLetterISOLanguageName
-                PublicFolderLocation                  = $Search.PublicFolderLocation
-                SharePointLocation                    = $Search.SharePointLocation
-                SharePointLocationExclusion           = $Search.SharePointLocationExclusion
-                Credential                            = $Credential
-                ApplicationId                         = $ApplicationId
-                TenantId                              = $TenantId
-                CertificateThumbprint                 = $CertificateThumbprint
-                CertificatePath                       = $CertificatePath
-                CertificatePassword                   = $CertificatePassword
-                Ensure                                = 'Present'
-                AccessTokens                          = $AccessTokens
-            }
-
-            $nullParams = @()
-            foreach ($parameter in $result.Keys)
-            {
-                if ($null -eq $result.$parameter)
-                {
-                    $nullParams += $parameter
-                }
-            }
-
-            foreach ($paramToRemove in $nullParams)
-            {
-                $result.Remove($paramToRemove)
-            }
-
-            Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
-            return $result
+            $result.Remove($paramToRemove)
         }
+
+        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
+        return $result
     }
     catch
     {
@@ -504,8 +509,7 @@ function Export-TargetResource
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
-        -InboundParameters $PSBoundParameters `
-        -SkipModuleReload $true
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -525,11 +529,11 @@ function Export-TargetResource
 
         if ($searches.Length -eq 0)
         {
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         else
         {
-            Write-Host "    `r`n* Searches not assigned to an eDiscovery Case"
+            Write-M365DSCHost -Message "    `r`n* Searches not assigned to an eDiscovery Case"
         }
         $i = 1
         $dscContent = ''
@@ -541,17 +545,16 @@ function Export-TargetResource
                 $Global:M365DSCExportResourceInstancesCount++
             }
 
-            Write-Host "        |---[$i/$($searches.Name.Count)] $($search.Name)" -NoNewline
+            Write-M365DSCHost -Message "        |---[$i/$($searches.Name.Count)] $($search.Name)" -DeferWrite
 
+            $Script:exportedInstance = $search
             $Results = Get-TargetResource @PSBoundParameters -Name $search.Name
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
             $dscContent += Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
             $i++
         }
 
@@ -562,7 +565,7 @@ function Export-TargetResource
         {
             $searches = Get-ComplianceSearch -Case $case.Name
 
-            Write-Host "    * [$j/$($cases.Length)] Searches assigned to case $($case.Name)"
+            Write-M365DSCHost -Message "    * [$j/$($cases.Length)] Searches assigned to case $($case.Name)"
             $i = 1
             foreach ($search in $searches)
             {
@@ -577,10 +580,9 @@ function Export-TargetResource
                     CertificatePassword   = $CertificatePassword
                     AccessTokens          = $AccessTokens
                 }
-                Write-Host "        |---[$i/$($searches.Name.Count)] $($search.Name)" -NoNewline
+                Write-M365DSCHost -Message "        |---[$i/$($searches.Name.Count)] $($search.Name)" -DeferWrite
                 $Results = Get-TargetResource @Params
-                $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                    -Results $Results
+
                 $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                     -ConnectionMode $ConnectionMode `
                     -ModulePath $PSScriptRoot `
@@ -590,7 +592,7 @@ function Export-TargetResource
 
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
                     -FileName $Global:PartialExportFileName
-                Write-Host $Global:M365DSCEmojiGreenCheckMark
+                Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
                 $i++
             }
             $j++
@@ -600,7 +602,7 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `

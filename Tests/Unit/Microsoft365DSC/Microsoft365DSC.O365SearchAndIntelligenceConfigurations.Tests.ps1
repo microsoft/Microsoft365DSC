@@ -32,8 +32,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return 'Credentials'
             }
 
-            # Mock Write-Host to hide output during the tests
-            Mock -CommandName Write-Host -MockWith {
+            # Mock Write-M365DSCHost to hide output during the tests
+            Mock -CommandName Write-M365DSCHost -MockWith {
             }
             $Script:exportedInstances =$null
             $Script:ExportMode = $false
@@ -50,17 +50,25 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName = "TestGroup"
                 }
             }
+
+            Mock -CommandName Get-MeetingInsightsSettings -MockWith {
+                return "Meeting Insights setting enabled: false"
+            }
+
+            Mock -CommandName Set-MeetingInsightsSettings -MockWith {
+            }
         }
 
         # Test contexts
         Context -Name 'When Org Settings are already in the Desired State' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    IsSingleInstance                      = 'Yes'
-                    ItemInsightsIsEnabledInOrganization   = $True;
-                    ItemInsightsDisabledForGroup          = "TestGroup"
-                    PersonInsightsIsEnabledInOrganization = $True;
-                    Credential                            = $Credential
+                    IsSingleInstance                       = 'Yes'
+                    ItemInsightsIsEnabledInOrganization    = $True;
+                    ItemInsightsDisabledForGroup           = "TestGroup"
+                    PersonInsightsIsEnabledInOrganization  = $True;
+                    MeetingInsightsIsEnabledInOrganization = $false;
+                    Credential                             = $Credential
                 }
 
                 Mock -CommandName Get-MgBetaOrganizationSettingItemInsight -MockWith {

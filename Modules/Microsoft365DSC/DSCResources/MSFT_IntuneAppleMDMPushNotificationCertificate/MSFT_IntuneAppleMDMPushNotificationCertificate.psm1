@@ -5,7 +5,6 @@ function Get-TargetResource
     param
     (
         #region Intune params
-
         [Parameter()]
         [System.String]
         $Id,
@@ -21,7 +20,6 @@ function Get-TargetResource
         [Parameter()]
         [System.Boolean]
         $DataSharingConsetGranted,
-
         #endregion Intune params
 
         [Parameter()]
@@ -58,48 +56,47 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters | Out-Null
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullResult = $PSBoundParameters
-    $nullResult.Ensure = 'Absent'
+    Write-Verbose -Message "Getting configuration of the Intune Apple Push Notification Certificate with Id {$Id}."
 
     try
     {
-        $instance = $null
-        if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.AppleIdentifier -ne $AppleIdentifier)
         {
-            $instance = $Script:exportedInstances | Where-Object -FilterScript { $_.Id -eq $Id }
-        }
+            New-M365DSCConnection -Workload 'MicrosoftGraph' `
+                -InboundParameters $PSBoundParameters | Out-Null
 
-        if ($null -eq $instance)
-        {
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullResult = $PSBoundParameters
+            $nullResult.Ensure = 'Absent'
+
             # There is only one Apple push notification certificate per tenant so no need to filter by Id
-            $instance = Get-MgBetaDeviceManagementApplePushNotificationCertificate -ErrorAction Stop
+            $instance = Get-MgBetaDeviceManagementApplePushNotificationCertificate -ErrorAction SilentlyContinue
 
             if ($null -eq $instance)
             {
-                Write-Verbose -Message 'Apple push notification certificate.'
+                Write-Verbose -Message "No Intune Apple MDM Push Notification Certificate with Id {$Id}."
                 return $nullResult
             }
+        }
+        else
+        {
+            $instance = $Script:exportedInstance
         }
 
         $results = @{
             Id                    = $instance.Id
             AppleIdentifier       = $instance.AppleIdentifier
-
             Ensure                = 'Present'
             Credential            = $Credential
             ApplicationId         = $ApplicationId
@@ -123,7 +120,7 @@ function Get-TargetResource
         $consentInstance = Get-MgBetaDeviceManagementDataSharingConsent -DataSharingConsentId 'appleMDMPushCertificate'
         $results.Add('DataSharingConsetGranted', $consentInstance.Granted)
 
-        return [System.Collections.Hashtable] $results
+        return [System.Collections.Hashtable]$results
     }
     catch
     {
@@ -144,7 +141,6 @@ function Set-TargetResource
     param
     (
         #region Intune params
-
         [Parameter()]
         [System.String]
         $Id,
@@ -160,7 +156,6 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $DataSharingConsetGranted,
-
         #endregion Intune params
 
         [Parameter()]
@@ -229,7 +224,7 @@ function Set-TargetResource
         }
         else
         {
-            Write-Host "Data sharing conset is already granted, so it can't be revoked."
+            Write-M365DSCHost -Message "Data sharing consent is already granted, so it can't be revoked."
         }
 
         # There is only PATCH request hence using Update cmdlet to post the certificate
@@ -262,7 +257,6 @@ function Test-TargetResource
     param
     (
         #region Intune params
-
         [Parameter()]
         [System.String]
         $Id,
@@ -278,7 +272,6 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $DataSharingConsetGranted,
-
         #endregion Intune params
 
         [Parameter()]
@@ -329,12 +322,6 @@ function Test-TargetResource
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
-
-    if ($CurrentValues.Ensure -ne $Ensure)
-    {
-        Write-Verbose -Message "Test-TargetResource returned $false"
-        return $false
-    }
     $testResult = $true
 
     $ValuesToCheck = Remove-M365DSCAuthenticationParameter -BoundParameters $ValuesToCheck
@@ -408,30 +395,28 @@ function Export-TargetResource
 
     try
     {
-        $Script:ExportMode = $true
-        [array] $Script:exportedInstances = Get-MgBetaDeviceManagementApplePushNotificationCertificate -ErrorAction Stop
+        [array]$getValue = Get-MgBetaDeviceManagementApplePushNotificationCertificate -ErrorAction SilentlyContinue
 
         $i = 1
         $dscContent = ''
-        if ($Script:exportedInstances.Length -eq 0)
+        if ($getValue.Length -eq 0)
         {
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         else
         {
-            Write-Host "`r`n" -NoNewline
+            Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
 
-        foreach ($config in $Script:exportedInstances)
+        foreach ($config in $getValue)
         {
             $displayedKey = $config.Id
-            Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -NoNewline
+            Write-M365DSCHost -Message "    |---[$i/$($getValue.Count)] $displayedKey" -DeferWrite
 
             $Params = @{
                 Id                    = $config.Id
                 AppleIdentifier       = $config.AppleIdentifier
                 Certificate           = $config.Certificate
-
                 Ensure                = 'Present'
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
@@ -446,10 +431,8 @@ function Export-TargetResource
             $consentInstance = Get-MgBetaDeviceManagementDataSharingConsent -DataSharingConsentId 'appleMDMPushCertificate'
             $Params.Add('DataSharingConsetGranted', $consentInstance.Granted)
 
+            $Script:exportedInstance = $config
             $Results = Get-TargetResource @Params
-
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
 
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
@@ -460,14 +443,14 @@ function Export-TargetResource
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
 
         return $dscContent
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `

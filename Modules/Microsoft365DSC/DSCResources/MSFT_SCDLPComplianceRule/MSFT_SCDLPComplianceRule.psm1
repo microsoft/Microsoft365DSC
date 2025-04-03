@@ -318,202 +318,207 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    Write-Verbose -Message "Getting configuration of DLPCompliancePolicy for $Name"
-    if ($Global:CurrentModeIsExport)
-    {
-        $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
-            -InboundParameters $PSBoundParameters `
-            -SkipModuleReload $true
-    }
-    else
-    {
-        $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
-            -InboundParameters $PSBoundParameters
-    }
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = 'Absent'
     try
     {
-        $PolicyRule = Get-DlpComplianceRule -Identity $Name -ErrorAction SilentlyContinue
-
-        if ($null -eq $PolicyRule)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Name -ne $Name)
         {
-            Write-Verbose -Message "DLPComplianceRule $($Name) does not exist."
-            return $nullReturn
+            Write-Verbose -Message "Getting configuration of DLPCompliancePolicy for $Name"
+
+            $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
+                -InboundParameters $PSBoundParameters
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullReturn = $PSBoundParameters
+            $nullReturn.Ensure = 'Absent'
+
+            $PolicyRule = Get-DlpComplianceRule -Identity $Name -ErrorAction SilentlyContinue
+
+            if ($null -eq $PolicyRule)
+            {
+                Write-Verbose -Message "DLPComplianceRule $($Name) does not exist."
+                return $nullReturn
+            }
         }
         else
         {
-            Write-Verbose "Found existing DLPComplianceRule $($Name)"
-
-            # Cmdlet returns a string, but in order to properly validate valid values, we need to convert
-            # to a String array
-            $ArrayIncidentReportContent = @()
-
-            if ($null -ne $PolicyRule.IncidentReportContent)
-            {
-                $ArrayIncidentReportContent = $PolicyRule.IncidentReportContent.Replace(' ', '').Split(',')
-            }
-
-            if ($null -ne $PolicyRule.NotifyAllowOverride)
-            {
-                $NotifyAllowOverrideValue = $PolicyRule.NotifyAllowOverride.Replace(' ', '').Split(',')
-            }
-
-            if ($null -ne $PolicyRule.AnyOfRecipientAddressContainsWords -and $PolicyRule.AnyOfRecipientAddressContainsWords.count -gt 0)
-            {
-                $AnyOfRecipientAddressContainsWords = $PolicyRule.AnyOfRecipientAddressContainsWords.Replace(' ', '').Split(',')
-            }
-
-            if ($null -ne $PolicyRule.ExceptIfAnyOfRecipientAddressContainsWords -and $PolicyRule.ExceptIfAnyOfRecipientAddressContainsWords.count -gt 0)
-            {
-                $ExceptIfAnyOfRecipientAddressContainsWords = $PolicyRule.ExceptIfAnyOfRecipientAddressContainsWords.Replace(' ', '').Split(',')
-            }
-
-            if ($null -ne $PolicyRule.AnyOfRecipientAddressMatchesPatterns -and $PolicyRule.AnyOfRecipientAddressMatchesPatterns -gt 0)
-            {
-                $AnyOfRecipientAddressMatchesPatterns = $PolicyRule.AnyOfRecipientAddressMatchesPatterns.Replace(' ', '').Split(',')
-            }
-
-            if ($null -ne $PolicyRule.ContentExtensionMatchesWords -and $PolicyRule.ContentExtensionMatchesWords.count -gt 0)
-            {
-                $ContentExtensionMatchesWords = $PolicyRule.ContentExtensionMatchesWords.Replace(' ', '').Split(',')
-            }
-
-            if ($null -ne $PolicyRule.ExceptIfContentExtensionMatchesWords -and $PolicyRule.ExceptIfContentExtensionMatchesWords.count -gt 0)
-            {
-                $ExceptIfContentExtensionMatchesWords = $PolicyRule.ExceptIfContentExtensionMatchesWords.Replace(' ', '').Split(',')
-            }
-
-            if ($null -ne $PolicyRule.AdvancedRule -and $PolicyRule.AdvancedRule.Count -gt 0)
-            {
-                $ruleobject = $PolicyRule.AdvancedRule | ConvertFrom-Json
-                $index = $ruleobject.Condition.SubConditions.ConditionName.IndexOf('ContentContainsSensitiveInformation')
-                if ($index -ne -1)
-                {
-                    if ($null -eq $ruleobject.Condition.SubConditions[$index].value.groups)
-                    {
-                        $ruleobject.Condition.SubConditions[$index].Value = $ruleobject.Condition.SubConditions[$index].Value | Select-Object * -ExcludeProperty Id
-                    }
-                    elseif ($null -ne $ruleObject.Condition.SubConditions[$index].Value.Groups.Sensitivetypes)
-                    {
-                        $ruleobject.Condition.SubConditions[$index].Value.Groups.Sensitivetypes = @($ruleobject.Condition.SubConditions[$index].Value.Groups.Sensitivetypes | Select-Object * -ExcludeProperty Id)
-                    }
-                }
-
-                $newAdvancedRule = $ruleobject | ConvertTo-Json -Depth 32 | Format-Json
-                $newAdvancedRule = $newAdvancedRule | ConvertTo-Json -Compress
-            }
-            else
-            {
-                $newAdvancedRule = $null
-            }
-
-            $fancyDoubleQuotes = '[\u201C\u201D]'
-            $result = @{
-                Ensure                                       = 'Present'
-                Name                                         = $PolicyRule.Name
-                Policy                                       = $PolicyRule.ParentPolicyName
-                AccessScope                                  = $PolicyRule.AccessScope
-                BlockAccess                                  = $PolicyRule.BlockAccess
-                BlockAccessScope                             = $PolicyRule.BlockAccessScope
-                Comment                                      = $PolicyRule.Comment
-                AdvancedRule                                 = $newAdvancedRule
-                ContentContainsSensitiveInformation          = $PolicyRule.ContentContainsSensitiveInformation
-                ExceptIfContentContainsSensitiveInformation  = $PolicyRule.ExceptIfContentContainsSensitiveInformation
-                ContentPropertyContainsWords                 = $PolicyRule.ContentPropertyContainsWords
-                Disabled                                     = $PolicyRule.Disabled
-                GenerateAlert                                = $PolicyRule.GenerateAlert
-                GenerateIncidentReport                       = $PolicyRule.GenerateIncidentReport
-                IncidentReportContent                        = $ArrayIncidentReportContent
-                NotifyAllowOverride                          = $NotifyAllowOverrideValue
-                NotifyEmailCustomText                        = [regex]::Replace($PolicyRule.NotifyEmailCustomText, $fancyDoubleQuotes, "`"")
-                NotifyPolicyTipCustomText                    = [regex]::Replace($PolicyRule.NotifyPolicyTipCustomText, $fancyDoubleQuotes, "`"")
-                NotifyUser                                   = $PolicyRule.NotifyUser
-                ReportSeverityLevel                          = $PolicyRule.ReportSeverityLevel
-                RuleErrorAction                              = $PolicyRule.RuleErrorAction
-                RemoveRMSTemplate                            = $PolicyRule.RemoveRMSTemplate
-                StopPolicyProcessing                         = $PolicyRule.StopPolicyProcessing
-                DocumentIsUnsupported                        = $PolicyRule.DocumentIsUnsupported
-                ExceptIfDocumentIsUnsupported                = $PolicyRule.ExceptIfDocumentIsUnsupported
-                HasSenderOverride                            = $PolicyRule.HasSenderOverride
-                ExceptIfHasSenderOverride                    = $PolicyRule.ExceptIfHasSenderOverride
-                ProcessingLimitExceeded                      = $PolicyRule.ProcessingLimitExceeded
-                ExceptIfProcessingLimitExceeded              = $PolicyRule.ExceptIfProcessingLimitExceeded
-                DocumentIsPasswordProtected                  = $PolicyRule.DocumentIsPasswordProtected
-                ExceptIfDocumentIsPasswordProtected          = $PolicyRule.ExceptIfDocumentIsPasswordProtected
-                MessageTypeMatches                           = $PolicyRule.MessageTypeMatches
-                ExceptIfMessageTypeMatches                   = $PolicyRule.ExceptIfMessageTypeMatches
-                FromScope                                    = $PolicyRule.FromScope
-                ExceptIfFromScope                            = $PolicyRule.ExceptIfFromScope
-                SubjectContainsWords                         = $PolicyRule.SubjectContainsWords
-                SubjectMatchesPatterns                       = $PolicyRule.SubjectMatchesPatterns
-                SubjectOrBodyContainsWords                   = $PolicyRule.SubjectOrBodyContainsWords
-                SubjectOrBodyMatchesPatterns                 = $PolicyRule.SubjectOrBodyMatchesPatterns
-                ContentCharacterSetContainsWords             = $PolicyRule.ContentCharacterSetContainsWords
-                DocumentNameMatchesPatterns                  = $PolicyRule.DocumentNameMatchesPatterns
-                DocumentNameMatchesWords                     = $PolicyRule.DocumentNameMatchesWords
-                ExceptIfAnyOfRecipientAddressMatchesPatterns = $PolicyRule.ExceptIfAnyOfRecipientAddressMatchesPatterns
-                ExceptIfContentCharacterSetContainsWords     = $PolicyRule.ExceptIfContentCharacterSetContainsWords
-                ExceptIfContentPropertyContainsWords         = $PolicyRule.ExceptIfContentPropertyContainsWords
-                ExceptIfDocumentNameMatchesPatterns          = $PolicyRule.ExceptIfDocumentNameMatchesPatterns
-                ExceptIfDocumentNameMatchesWords             = $PolicyRule.ExceptIfDocumentNameMatchesWords
-                RecipientDomainIs                            = $PolicyRule.RecipientDomainIs
-                ExceptIfRecipientDomainIs                    = $PolicyRule.ExceptIfRecipientDomainIs
-                ExceptIfSenderDomainIs                       = $PolicyRule.ExceptIfSenderDomainIs
-                ExceptIfSenderIPRanges                       = $PolicyRule.ExceptIfSenderIPRanges
-                ExceptIfSentTo                               = $PolicyRule.ExceptIfSentTo
-                ExceptIfSubjectContainsWords                 = $PolicyRule.ExceptIfSubjectContainsWords
-                ExceptIfSubjectMatchesPatterns               = $PolicyRule.ExceptIfSubjectMatchesPatterns
-                ExceptIfSubjectOrBodyContainsWords           = $PolicyRule.ExceptIfSubjectOrBodyContainsWords
-                ExceptIfSubjectOrBodyMatchesPatterns         = $PolicyRule.ExceptIfSubjectOrBodyMatchesPatterns
-                FromAddressMatchesPatterns                   = $PolicyRule.FromAddressMatchesPatterns
-                SentToMemberOf                               = $PolicyRule.FromAddressMatchesPatterns
-                DocumentContainsWords                        = $PolicyRule.DocumentContainsWords
-                ContentIsNotLabeled                          = $PolicyRule.ContentIsNotLabeled
-                SetHeader                                    = $PolicyRule.SetHeader
-                AnyOfRecipientAddressContainsWords           = $AnyOfRecipientAddressContainsWords
-                AnyOfRecipientAddressMatchesPatterns         = $AnyOfRecipientAddressMatchesPatterns
-                ContentExtensionMatchesWords                 = $ContentExtensionMatchesWords
-                ExceptIfContentExtensionMatchesWords         = $ExceptIfContentExtensionMatchesWords
-                Credential                                   = $Credential
-                ApplicationId                                = $ApplicationId
-                TenantId                                     = $TenantId
-                CertificateThumbprint                        = $CertificateThumbprint
-                CertificatePath                              = $CertificatePath
-                CertificatePassword                          = $CertificatePassword
-                AccessTokens                                 = $AccessTokens
-            }
-
-            $paramsToRemove = @()
-            foreach ($paramName in $result.Keys)
-            {
-                if ($null -eq $result[$paramName] -or '' -eq $result[$paramName] -or @() -eq $result[$paramName])
-                {
-                    $paramsToRemove += $paramName
-                }
-            }
-
-            foreach ($paramName in $paramsToRemove)
-            {
-                $result.Remove($paramName)
-            }
-
-            Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
-            return $result
+            $PolicyRule = $Script:exportedInstance
         }
+
+        Write-Verbose "Found existing DLPComplianceRule $($Name)"
+
+        # Cmdlet returns a string, but in order to properly validate valid values, we need to convert
+        # to a String array
+        $ArrayIncidentReportContent = @()
+
+        if ($null -ne $PolicyRule.IncidentReportContent)
+        {
+            $ArrayIncidentReportContent = $PolicyRule.IncidentReportContent.Replace(' ', '').Split(',')
+        }
+
+        if ($null -ne $PolicyRule.NotifyAllowOverride)
+        {
+            $NotifyAllowOverrideValue = $PolicyRule.NotifyAllowOverride.Replace(' ', '').Split(',')
+        }
+
+        if ($null -ne $PolicyRule.AnyOfRecipientAddressContainsWords -and $PolicyRule.AnyOfRecipientAddressContainsWords.count -gt 0)
+        {
+            $AnyOfRecipientAddressContainsWords = $PolicyRule.AnyOfRecipientAddressContainsWords.Replace(' ', '').Split(',')
+        }
+
+        if ($null -ne $PolicyRule.ExceptIfAnyOfRecipientAddressContainsWords -and $PolicyRule.ExceptIfAnyOfRecipientAddressContainsWords.count -gt 0)
+        {
+            $ExceptIfAnyOfRecipientAddressContainsWords = $PolicyRule.ExceptIfAnyOfRecipientAddressContainsWords.Replace(' ', '').Split(',')
+        }
+
+        if ($null -ne $PolicyRule.AnyOfRecipientAddressMatchesPatterns -and $PolicyRule.AnyOfRecipientAddressMatchesPatterns -gt 0)
+        {
+            $AnyOfRecipientAddressMatchesPatterns = $PolicyRule.AnyOfRecipientAddressMatchesPatterns.Replace(' ', '').Split(',')
+        }
+
+        if ($null -ne $PolicyRule.ContentExtensionMatchesWords -and $PolicyRule.ContentExtensionMatchesWords.count -gt 0)
+        {
+            $ContentExtensionMatchesWords = $PolicyRule.ContentExtensionMatchesWords.Replace(' ', '').Split(',')
+        }
+
+        if ($null -ne $PolicyRule.ExceptIfContentExtensionMatchesWords -and $PolicyRule.ExceptIfContentExtensionMatchesWords.count -gt 0)
+        {
+            $ExceptIfContentExtensionMatchesWords = $PolicyRule.ExceptIfContentExtensionMatchesWords.Replace(' ', '').Split(',')
+        }
+
+        if ($null -ne $PolicyRule.AdvancedRule -and $PolicyRule.AdvancedRule.Count -gt 0)
+        {
+            $ruleobject = $PolicyRule.AdvancedRule | ConvertFrom-Json
+            $index = $ruleobject.Condition.SubConditions.ConditionName.IndexOf('ContentContainsSensitiveInformation')
+            if ($index -ne -1)
+            {
+                if ($null -eq $ruleobject.Condition.SubConditions[$index].value.groups)
+                {
+                    $ruleobject.Condition.SubConditions[$index].Value = $ruleobject.Condition.SubConditions[$index].Value | Select-Object * -ExcludeProperty Id
+                }
+                elseif ($null -ne $ruleObject.Condition.SubConditions[$index].Value.Groups.Sensitivetypes)
+                {
+                    $sensitiveTypesValue = $ruleobject.Condition.SubConditions[$index].Value.Groups.Sensitivetypes
+                    foreach ($stype in $sensitiveTypesValue)
+                    {
+                        if ($null -ne $stype.Id)
+                        {
+                            $stype.Id = $null
+                        }
+                    }
+                }
+            }
+
+            $newAdvancedRule = $ruleobject | ConvertTo-Json -Depth 32 | Format-Json
+            $newAdvancedRule = $newAdvancedRule | ConvertTo-Json -Compress
+        }
+        else
+        {
+            $newAdvancedRule = $null
+        }
+
+        $fancyDoubleQuotes = '[\u201C\u201D]'
+        $result = @{
+            Ensure                                       = 'Present'
+            Name                                         = $PolicyRule.Name
+            Policy                                       = $PolicyRule.ParentPolicyName
+            AccessScope                                  = $PolicyRule.AccessScope
+            BlockAccess                                  = $PolicyRule.BlockAccess
+            BlockAccessScope                             = $PolicyRule.BlockAccessScope
+            Comment                                      = $PolicyRule.Comment
+            AdvancedRule                                 = $newAdvancedRule
+            ContentContainsSensitiveInformation          = $PolicyRule.ContentContainsSensitiveInformation
+            ExceptIfContentContainsSensitiveInformation  = $PolicyRule.ExceptIfContentContainsSensitiveInformation
+            ContentPropertyContainsWords                 = $PolicyRule.ContentPropertyContainsWords
+            Disabled                                     = $PolicyRule.Disabled
+            GenerateAlert                                = $PolicyRule.GenerateAlert
+            GenerateIncidentReport                       = $PolicyRule.GenerateIncidentReport
+            IncidentReportContent                        = $ArrayIncidentReportContent
+            NotifyAllowOverride                          = $NotifyAllowOverrideValue
+            NotifyEmailCustomText                        = [regex]::Replace($PolicyRule.NotifyEmailCustomText, $fancyDoubleQuotes, "`"")
+            NotifyPolicyTipCustomText                    = [regex]::Replace($PolicyRule.NotifyPolicyTipCustomText, $fancyDoubleQuotes, "`"")
+            NotifyUser                                   = $PolicyRule.NotifyUser
+            ReportSeverityLevel                          = $PolicyRule.ReportSeverityLevel
+            RuleErrorAction                              = $PolicyRule.RuleErrorAction
+            RemoveRMSTemplate                            = $PolicyRule.RemoveRMSTemplate
+            StopPolicyProcessing                         = $PolicyRule.StopPolicyProcessing
+            DocumentIsUnsupported                        = $PolicyRule.DocumentIsUnsupported
+            ExceptIfDocumentIsUnsupported                = $PolicyRule.ExceptIfDocumentIsUnsupported
+            HasSenderOverride                            = $PolicyRule.HasSenderOverride
+            ExceptIfHasSenderOverride                    = $PolicyRule.ExceptIfHasSenderOverride
+            ProcessingLimitExceeded                      = $PolicyRule.ProcessingLimitExceeded
+            ExceptIfProcessingLimitExceeded              = $PolicyRule.ExceptIfProcessingLimitExceeded
+            DocumentIsPasswordProtected                  = $PolicyRule.DocumentIsPasswordProtected
+            ExceptIfDocumentIsPasswordProtected          = $PolicyRule.ExceptIfDocumentIsPasswordProtected
+            MessageTypeMatches                           = $PolicyRule.MessageTypeMatches
+            ExceptIfMessageTypeMatches                   = $PolicyRule.ExceptIfMessageTypeMatches
+            FromScope                                    = $PolicyRule.FromScope
+            ExceptIfFromScope                            = $PolicyRule.ExceptIfFromScope
+            SubjectContainsWords                         = $PolicyRule.SubjectContainsWords
+            SubjectMatchesPatterns                       = $PolicyRule.SubjectMatchesPatterns
+            SubjectOrBodyContainsWords                   = $PolicyRule.SubjectOrBodyContainsWords
+            SubjectOrBodyMatchesPatterns                 = $PolicyRule.SubjectOrBodyMatchesPatterns
+            ContentCharacterSetContainsWords             = $PolicyRule.ContentCharacterSetContainsWords
+            DocumentNameMatchesPatterns                  = $PolicyRule.DocumentNameMatchesPatterns
+            DocumentNameMatchesWords                     = $PolicyRule.DocumentNameMatchesWords
+            ExceptIfAnyOfRecipientAddressMatchesPatterns = $PolicyRule.ExceptIfAnyOfRecipientAddressMatchesPatterns
+            ExceptIfContentCharacterSetContainsWords     = $PolicyRule.ExceptIfContentCharacterSetContainsWords
+            ExceptIfContentPropertyContainsWords         = $PolicyRule.ExceptIfContentPropertyContainsWords
+            ExceptIfDocumentNameMatchesPatterns          = $PolicyRule.ExceptIfDocumentNameMatchesPatterns
+            ExceptIfDocumentNameMatchesWords             = $PolicyRule.ExceptIfDocumentNameMatchesWords
+            RecipientDomainIs                            = $PolicyRule.RecipientDomainIs
+            ExceptIfRecipientDomainIs                    = $PolicyRule.ExceptIfRecipientDomainIs
+            ExceptIfSenderDomainIs                       = $PolicyRule.ExceptIfSenderDomainIs
+            ExceptIfSenderIPRanges                       = $PolicyRule.ExceptIfSenderIPRanges
+            ExceptIfSentTo                               = $PolicyRule.ExceptIfSentTo
+            ExceptIfSubjectContainsWords                 = $PolicyRule.ExceptIfSubjectContainsWords
+            ExceptIfSubjectMatchesPatterns               = $PolicyRule.ExceptIfSubjectMatchesPatterns
+            ExceptIfSubjectOrBodyContainsWords           = $PolicyRule.ExceptIfSubjectOrBodyContainsWords
+            ExceptIfSubjectOrBodyMatchesPatterns         = $PolicyRule.ExceptIfSubjectOrBodyMatchesPatterns
+            FromAddressMatchesPatterns                   = $PolicyRule.FromAddressMatchesPatterns
+            SentToMemberOf                               = $PolicyRule.FromAddressMatchesPatterns
+            DocumentContainsWords                        = $PolicyRule.DocumentContainsWords
+            ContentIsNotLabeled                          = $PolicyRule.ContentIsNotLabeled
+            SetHeader                                    = $PolicyRule.SetHeader
+            AnyOfRecipientAddressContainsWords           = $AnyOfRecipientAddressContainsWords
+            AnyOfRecipientAddressMatchesPatterns         = $AnyOfRecipientAddressMatchesPatterns
+            ContentExtensionMatchesWords                 = $ContentExtensionMatchesWords
+            ExceptIfContentExtensionMatchesWords         = $ExceptIfContentExtensionMatchesWords
+            Credential                                   = $Credential
+            ApplicationId                                = $ApplicationId
+            TenantId                                     = $TenantId
+            CertificateThumbprint                        = $CertificateThumbprint
+            CertificatePath                              = $CertificatePath
+            CertificatePassword                          = $CertificatePassword
+            AccessTokens                                 = $AccessTokens
+        }
+
+        $paramsToRemove = @()
+        foreach ($paramName in $result.Keys)
+        {
+            if ($null -eq $result[$paramName] -or '' -eq $result[$paramName] -or @() -eq $result[$paramName])
+            {
+                $paramsToRemove += $paramName
+            }
+        }
+
+        foreach ($paramName in $paramsToRemove)
+        {
+            $result.Remove($paramName)
+        }
+
+        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
+        return $result
     }
     catch
     {
@@ -925,13 +930,8 @@ function Set-TargetResource
         $CreationParams.Remove('ApplicationSecret') | Out-Null
         $CreationParams.Remove('AccessTokens') | Out-Null
 
-        $NewruleParam = @{
-            Name         = $CreationParams.Name
-            Policy       = $CreationParams.Policy
-            AdvancedRule = $CreationParams.AdvancedRule
-        }
         Write-Verbose -Message "Calling New-DLPComplianceRule with Values: $(Convert-M365DscHashtableToString -Hashtable $CreationParams)"
-        New-DLPComplianceRule @NewruleParam
+        New-DLPComplianceRule @CreationParams -Confirm:$false
     }
     elseif (('Present' -eq $Ensure) -and ('Present' -eq $CurrentRule.Ensure))
     {
@@ -998,7 +998,7 @@ function Set-TargetResource
         $UpdateParams.Remove('AccessTokens') | Out-Null
 
         Write-Verbose "Updating Rule with values: $(Convert-M365DscHashtableToString -Hashtable $UpdateParams)"
-        Set-DLPComplianceRule @UpdateParams
+        Set-DLPComplianceRule @UpdateParams -Confirm:$false
     }
     elseif (('Absent' -eq $Ensure) -and ('Present' -eq $CurrentRule.Ensure))
     {
@@ -1392,7 +1392,6 @@ function Test-TargetResource
     $ValuesToCheck.Remove('ContentContainsSensitiveInformation') | Out-Null
     $ValuesToCheck.Remove('ExceptIfContentContainsSensitiveInformation') | Out-Null
 
-
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
@@ -1439,8 +1438,7 @@ function Export-TargetResource
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
-        -InboundParameters $PSBoundParameters `
-        -SkipModuleReload $true
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -1462,11 +1460,11 @@ function Export-TargetResource
         $dscContent = ''
         if ($rules.Length -eq 0)
         {
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         else
         {
-            Write-Host "`r`n" -NoNewline
+            Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
         foreach ($rule in $rules)
         {
@@ -1475,8 +1473,9 @@ function Export-TargetResource
                 $Global:M365DSCExportResourceInstancesCount++
             }
 
-            Write-Host "    |---[$i/$($rules.Length)] $($rule.Name)" -NoNewline
+            Write-M365DSCHost -Message "    |---[$i/$($rules.Length)] $($rule.Name)" -DeferWrite
 
+            $Script:exportedInstance = $rule
             $Results = Get-TargetResource @PSBoundParameters `
                 -Name $rule.name `
                 -Policy $rule.ParentPolicyName
@@ -1518,27 +1517,18 @@ function Export-TargetResource
                 }
             }
 
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -Credential $Credential
+                -Credential $Credential `
+                -NoEscape @('ContentContainsSensitiveInformation', 'ExceptIfContentContainsSensitiveInformation')
 
-            if ($null -ne $Results.ContentContainsSensitiveInformation )
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'ContentContainsSensitiveInformation' -IsCIMArray $IsSitCIMArray
-            }
-            if ($null -ne $Results.ExceptIfContentContainsSensitiveInformation )
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'ExceptIfContentContainsSensitiveInformation' -IsCIMArray $IsCIMArray
-            }
             $dscContent += $currentDSCBlock
 
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
             $i++
         }
 
@@ -1546,7 +1536,7 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `

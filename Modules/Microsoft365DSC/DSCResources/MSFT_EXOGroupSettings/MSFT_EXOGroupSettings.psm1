@@ -114,23 +114,23 @@ function Get-TargetResource
         $EmailAddresses,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ExtensionCustomAttribute1,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ExtensionCustomAttribute2,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ExtensionCustomAttribute3,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ExtensionCustomAttribute4,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ExtensionCustomAttribute5,
 
         [Parameter()]
@@ -167,7 +167,7 @@ function Get-TargetResource
         $MailTip,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $MailTipTranslations,
 
         [Parameter()]
@@ -247,44 +247,31 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    Write-Verbose -Message "Getting configuration of Office 365 Group Settings for $DisplayName"
-
-    if ($Global:CurrentModeIsExport)
-    {
-        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters `
-            -SkipModuleReload $true
-    }
-    else
-    {
-        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters
-    }
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullReturn = @{
-        DisplayName = $DisplayName
-    }
-
     try
     {
-        if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.DisplayName -ne $DisplayName)
         {
-            [Array]$group = $Script:exportedInstances | Where-Object -FilterScript { $_.Id -eq $Id }
-        }
-        else
-        {
+            Write-Verbose -Message "Getting configuration of Office 365 Group Settings for $DisplayName"
+
+            $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+                -InboundParameters $PSBoundParameters
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullReturn = @{
+                DisplayName = $DisplayName
+            }
+
             Write-Verbose -Message "Retrieving group by id {$Id}"
             [Array]$group = Get-UnifiedGroup -Identity $Id -IncludeAllProperties -ErrorAction Stop
 
@@ -293,29 +280,93 @@ function Get-TargetResource
                 Write-Verbose -Message "Couldn't retrieve group by ID. Trying by DisplayName {$DisplayName}"
                 [Array]$group = Get-UnifiedGroup -Identity $DisplayName -IncludeAllProperties -ErrorAction Stop
             }
-        }
 
-        if ($group.Length -gt 1)
-        {
-            Write-Warning -Message "Multiple instances of a group named {$DisplayName} was discovered which could result in inconsistencies retrieving its values."
+            if ($group.Length -gt 1)
+            {
+                Write-Warning -Message "Multiple instances of a group named {$DisplayName} was discovered which could result in inconsistencies retrieving its values."
+            }
+            $group = $group[0]
+            if ($null -eq $group)
+            {
+                Write-Verbose -Message "The specified group {$DisplayName} doesn't already exist."
+                return $nullReturn
+            }
         }
-        $group = $group[0]
+        else
+        {
+            $group = $Script:exportedInstance
+        }
     }
     catch
     {
         return $nullReturn
     }
 
-    if ($null -eq $group)
+
+    $ExtensionCustomAttribute1Value = $group.ExtensionCustomAttribute1
+    if ($null -eq $group.ExtensionCustomAttribute1)
     {
-        Write-Verbose -Message "The specified group {$DisplayName} doesn't already exist."
-        return $nullReturn
+        $ExtensionCustomAttribute1Value = @()
+    }
+
+    $ExtensionCustomAttribute2Value = $group.ExtensionCustomAttribute2
+    if ($null -eq $group.ExtensionCustomAttribute2)
+    {
+        $ExtensionCustomAttribute2Value = @()
+    }
+
+    $ExtensionCustomAttribute3Value = $group.ExtensionCustomAttribute3
+    if ($null -eq $group.ExtensionCustomAttribute3)
+    {
+        $ExtensionCustomAttribute3Value = @()
+    }
+
+    $ExtensionCustomAttribute4Value = $group.ExtensionCustomAttribute4
+    if ($null -eq $group.ExtensionCustomAttribute4)
+    {
+        $ExtensionCustomAttribute4Value = @()
+    }
+
+    $ExtensionCustomAttribute5Value = $group.ExtensionCustomAttribute5
+    if ($null -eq $group.ExtensionCustomAttribute5)
+    {
+        $ExtensionCustomAttribute5Value = @()
+    }
+
+    $GrantSendOnBehalfToValue = $group.GrantSendOnBehalfTo
+    if ($null -eq $group.GrantSendOnBehalfTo)
+    {
+        $GrantSendOnBehalfToValue = @()
+    }
+
+    $ModeratedByValue = $group.ModeratedBy
+    if ($null -eq $group.ModeratedBy)
+    {
+        $ModeratedByValue = @()
+    }
+
+    $AcceptMessagesOnlyFromSendersOrMembersValue = $group.AcceptMessagesOnlyFromSendersOrMembers
+    if ($null -eq $group.AcceptMessagesOnlyFromSendersOrMembers)
+    {
+        $AcceptMessagesOnlyFromSendersOrMembersValue = @()
+    }
+
+    $MailTipTranslationsValue = $group.MailTipTranslations
+    if ($null -eq $group.MailTipTranslations)
+    {
+        $MailTipTranslationsValue = @()
+    }
+
+    $RejectMessagesFromSendersOrMembersValue = $group.RejectMessagesFromSendersOrMembers
+    if ($null -eq $group.RejectMessagesFromSendersOrMembers)
+    {
+        $RejectMessagesFromSendersOrMembersValue = @()
     }
 
     $result = @{
         DisplayName                            = $DisplayName
         Id                                     = $group.Id
-        AcceptMessagesOnlyFromSendersOrMembers = $group.AcceptMessagesOnlyFromSendersOrMembers
+        AcceptMessagesOnlyFromSendersOrMembers = $AcceptMessagesOnlyFromSendersOrMembersValue
         AccessType                             = $group.AccessType
         AlwaysSubscribeMembersToCalendarEvents = $group.AlwaysSubscribeMembersToCalendarEvents
         AuditLogAgeLimit                       = $group.AuditLogAgeLimit
@@ -340,12 +391,12 @@ function Get-TargetResource
         CustomAttribute15                      = $group.CustomAttribute15
         DataEncryptionPolicy                   = $group.DataEncryptionPolicy
         EmailAddresses                         = $group.EmailAddresses
-        ExtensionCustomAttribute1              = $group.ExtensionCustomAttribute1
-        ExtensionCustomAttribute2              = $group.ExtensionCustomAttribute2
-        ExtensionCustomAttribute3              = $group.ExtensionCustomAttribute3
-        ExtensionCustomAttribute4              = $group.ExtensionCustomAttribute4
-        ExtensionCustomAttribute5              = $group.ExtensionCustomAttribute5
-        GrantSendOnBehalfTo                    = $group.GrantSendOnBehalfTo
+        ExtensionCustomAttribute1              = $ExtensionCustomAttribute1Value
+        ExtensionCustomAttribute2              = $ExtensionCustomAttribute2Value
+        ExtensionCustomAttribute3              = $ExtensionCustomAttribute3Value
+        ExtensionCustomAttribute4              = $ExtensionCustomAttribute4Value
+        ExtensionCustomAttribute5              = $ExtensionCustomAttribute5Value
+        GrantSendOnBehalfTo                    = $GrantSendOnBehalfToValue
         HiddenFromAddressListsEnabled          = $group.HiddenFromAddressListsEnabled
         HiddenFromExchangeClientsEnabled       = $group.HiddenFromExchangeClientsEnabled
         InformationBarrierMode                 = $group.InformationBarrierMode
@@ -353,14 +404,14 @@ function Get-TargetResource
         Language                               = $group.Language.Name
         MailboxRegion                          = $group.MailboxRegion
         MailTip                                = $group.MailTip
-        MailTipTranslations                    = $group.MailTipTranslations
+        MailTipTranslations                    = $MailTipTranslationsValue
         MaxReceiveSize                         = $group.MaxReceiveSize
         MaxSendSize                            = $group.MaxSendSize
-        ModeratedBy                            = $group.ModeratedBy
+        ModeratedBy                            = $ModeratedByValue
         ModerationEnabled                      = $group.ModerationEnabled
         Notes                                  = $group.Notes
         PrimarySmtpAddress                     = $group.PrimarySmtpAddress
-        RejectMessagesFromSendersOrMembers     = $group.RejectMessagesFromSendersOrMembers
+        RejectMessagesFromSendersOrMembers     = $RejectMessagesFromSendersOrMembersValue
         RequireSenderAuthenticationEnabled     = $group.RequireSenderAuthenticationEnabled
         SensitivityLabelId                     = $group.SensitivityLabelId
         SubscriptionEnabled                    = $group.SubscriptionEnabled
@@ -494,23 +545,23 @@ function Set-TargetResource
         $EmailAddresses,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ExtensionCustomAttribute1,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ExtensionCustomAttribute2,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ExtensionCustomAttribute3,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ExtensionCustomAttribute4,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ExtensionCustomAttribute5,
 
         [Parameter()]
@@ -547,7 +598,7 @@ function Set-TargetResource
         $MailTip,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $MailTipTranslations,
 
         [Parameter()]
@@ -779,23 +830,23 @@ function Test-TargetResource
         $EmailAddresses,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ExtensionCustomAttribute1,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ExtensionCustomAttribute2,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ExtensionCustomAttribute3,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ExtensionCustomAttribute4,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $ExtensionCustomAttribute5,
 
         [Parameter()]
@@ -832,7 +883,7 @@ function Test-TargetResource
         $MailTip,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $MailTipTranslations,
 
         [Parameter()]
@@ -930,6 +981,7 @@ function Test-TargetResource
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
     $ValuesToCheck = $PSBoundParameters
+    $ValuesToCheck.Remove('Id') | Out-Null
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
@@ -1002,16 +1054,16 @@ function Export-TargetResource
         $i = 1
         if ($Script:exportedInstances.Length -eq 0)
         {
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         else
         {
-            Write-Host "`r`n"-NoNewline
+            Write-M365DSCHost -Message "`r`n"-DeferWrite
         }
         $dscContent = [System.Text.StringBuilder]::New()
         foreach ($group in $Script:exportedInstances)
         {
-            Write-Host "    |---[$i/$($Script:exportedInstances.Length)] $($group.DisplayName)" -NoNewline
+            Write-M365DSCHost -Message "    |---[$i/$($Script:exportedInstances.Length)] $($group.DisplayName)" -DeferWrite
             $groupName = $group.DisplayName
             if (-not [System.String]::IsNullOrEmpty($groupName))
             {
@@ -1032,12 +1084,10 @@ function Export-TargetResource
                     CertificatePath       = $CertificatePath
                     AccessTokens          = $AccessTokens
                 }
+                $Script:exportedInstance = $group
                 $Results = Get-TargetResource @Params
-
                 if ($Results -is [System.Collections.Hashtable] -and $Results.Count -gt 1)
                 {
-                    $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                        -Results $Results
                     $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                         -ConnectionMode $ConnectionMode `
                         -ModulePath $PSScriptRoot `
@@ -1047,11 +1097,11 @@ function Export-TargetResource
                     Save-M365DSCPartialExport -Content $currentDSCBlock `
                         -FileName $Global:PartialExportFileName
 
-                    Write-Host $Global:M365DSCEmojiGreenCheckMark
+                    Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
                 }
                 else
                 {
-                    Write-Host $Global:M365DSCEmojiRedX
+                    Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
                 }
             }
             $i++
@@ -1060,7 +1110,7 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `

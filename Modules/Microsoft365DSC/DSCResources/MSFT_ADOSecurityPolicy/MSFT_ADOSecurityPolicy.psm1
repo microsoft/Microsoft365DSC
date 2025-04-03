@@ -91,27 +91,59 @@ function Get-TargetResource
 
         $uri = "https://dev.azure.com/$($OrganizationName)/_apis/OrganizationPolicy/Policies/Policy.DisallowOAuthAuthentication?defaultValue"
         $DisallowOAuthAuthenticationValue = (Invoke-M365DSCAzureDevOPSWebRequest -Uri $uri).Value
+        if ([System.String]::IsNullOrEmpty($DisallowOAuthAuthenticationValue))
+        {
+            $DisallowOAuthAuthenticationValue = $true
+        }
 
         $uri = "https://dev.azure.com/$($OrganizationName)/_apis/OrganizationPolicy/Policies/Policy.DisallowSecureShell?defaultValue"
         $DisallowSecureShellValue = (Invoke-M365DSCAzureDevOPSWebRequest -Uri $uri).Value
+        if ([System.String]::IsNullOrEmpty($DisallowSecureShellValue))
+        {
+            $DisallowSecureShellValue = $false
+        }
 
         $uri = "https://dev.azure.com/$($OrganizationName)/_apis/OrganizationPolicy/Policies/Policy.LogAuditEvents?defaultValue"
         $LogAuditEventsValue = (Invoke-M365DSCAzureDevOPSWebRequest -Uri $uri).Value
+        if ([System.String]::IsNullOrEmpty($LogAuditEventsValue))
+        {
+            $LogAuditEventsValue = $false
+        }
 
         $uri = "https://dev.azure.com/$($OrganizationName)/_apis/OrganizationPolicy/Policies/Policy.AllowAnonymousAccess?defaultValue"
         $AllowAnonymousAccessValue = (Invoke-M365DSCAzureDevOPSWebRequest -Uri $uri).Value
+        if ([System.String]::IsNullOrEmpty($AllowAnonymousAccessValue))
+        {
+            $AllowAnonymousAccessValue = $false
+        }
 
         $uri = "https://dev.azure.com/$($OrganizationName)/_apis/OrganizationPolicy/Policies/Policy.ArtifactsExternalPackageProtectionToken?defaultValue"
         $ArtifactsExternalPackageProtectionTokenValue = (Invoke-M365DSCAzureDevOPSWebRequest -Uri $uri).Value
+        if ([System.String]::IsNullOrEmpty($ArtifactsExternalPackageProtectionTokenValue))
+        {
+            $ArtifactsExternalPackageProtectionTokenValue = $true
+        }
 
         $uri = "https://dev.azure.com/$($OrganizationName)/_apis/OrganizationPolicy/Policies/Policy.EnforceAADConditionalAccess?defaultValue"
         $EnforceAADConditionalAccessValue = (Invoke-M365DSCAzureDevOPSWebRequest -Uri $uri).Value
+        if ([System.String]::IsNullOrEmpty($EnforceAADConditionalAccessValue))
+        {
+            $EnforceAADConditionalAccessValue = $false
+        }
 
         $uri = "https://dev.azure.com/$($OrganizationName)/_apis/OrganizationPolicy/Policies/Policy.AllowTeamAdminsInvitationsAccessToken?defaultValue"
         $AllowTeamAdminsInvitationsAccessTokenValue = (Invoke-M365DSCAzureDevOPSWebRequest -Uri $uri).Value
+        if ([System.String]::IsNullOrEmpty($AllowTeamAdminsInvitationsAccessTokenValue))
+        {
+            $AllowTeamAdminsInvitationsAccessTokenValue = $true
+        }
 
         $uri = "https://dev.azure.com/$($OrganizationName)/_apis/OrganizationPolicy/Policies/Policy.AllowRequestAccessToken?defaultValue"
         $AllowRequestAccessTokenValue = (Invoke-M365DSCAzureDevOPSWebRequest -Uri $uri).Value
+        if ([System.String]::IsNullOrEmpty($AllowRequestAccessTokenValue))
+        {
+            $AllowRequestAccessTokenValue = $true
+        }
 
         $results = @{
             OrganizationName                        = $OrganizationName
@@ -474,11 +506,11 @@ function Export-TargetResource
         $dscContent = ''
         if ($accounts.Length -eq 0)
         {
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         else
         {
-            Write-Host "`r`n" -NoNewline
+            Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
         foreach ($account in $accounts.Value)
         {
@@ -489,7 +521,7 @@ function Export-TargetResource
             }
 
             $displayedKey = $organization
-            Write-Host "    |---[$i/$($accounts.Value.Count)] $displayedKey" -NoNewline
+            Write-M365DSCHost -Message "    |---[$i/$($accounts.Value.Count)] $displayedKey" -DeferWrite
             $params = @{
                 OrganizationName      = $organization
                 Credential            = $Credential
@@ -501,8 +533,6 @@ function Export-TargetResource
             }
 
             $Results = Get-TargetResource @Params
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
 
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
@@ -513,13 +543,13 @@ function Export-TargetResource
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         return $dscContent
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `

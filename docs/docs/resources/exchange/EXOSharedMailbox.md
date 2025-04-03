@@ -9,6 +9,7 @@
 | **PrimarySMTPAddress** | Write | String | The primary email address of the Shared Mailbox | |
 | **Alias** | Write | String | The alias of the Shared Mailbox | |
 | **EmailAddresses** | Write | StringArray[] | The EmailAddresses parameter specifies all the email addresses (proxy addresses) for the Shared Mailbox | |
+| **AuditEnabled** | Write | Boolean | The AuditEnabled parameter specifies whether to enable or disable mailbox audit logging for the mailbox. If auditing is enabled, actions specified in the AuditAdmin, AuditDelegate, and AuditOwner parameters are logged | |
 | **Ensure** | Write | String | Present ensures the group exists, absent ensures it is removed | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials of the Exchange Global Admin | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |

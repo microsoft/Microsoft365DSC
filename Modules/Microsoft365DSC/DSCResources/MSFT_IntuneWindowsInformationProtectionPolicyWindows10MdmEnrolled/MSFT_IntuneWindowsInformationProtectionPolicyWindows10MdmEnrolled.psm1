@@ -141,6 +141,8 @@ function Get-TargetResource
         $AccessTokens
     )
 
+    Write-Verbose -Message "Getting configuration of the Intune Windows Information Protection Policy for Windows10 Mdm Enrolled with Id {$Id} and DisplayName {$DisplayName}"
+
     try
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -162,13 +164,9 @@ function Get-TargetResource
         $nullResult.Ensure = 'Absent'
 
         #region resource generator code
-        try
+        if (-not [string]::IsNullOrEmpty($Id))
         {
-            $getValue = Get-MgBetaDeviceAppManagementMdmWindowsInformationProtectionPolicy -MdmWindowsInformationProtectionPolicyId $Id -ExpandProperty assignments -ErrorAction Stop
-        }
-        catch
-        {
-            $getValue = $null
+            $getValue = Get-MgBetaDeviceAppManagementMdmWindowsInformationProtectionPolicy -MdmWindowsInformationProtectionPolicyId $Id -ExpandProperty assignments -ErrorAction SilentlyContinue
         }
 
         if ($null -eq $getValue)
@@ -842,12 +840,6 @@ function Test-TargetResource
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
-
-    if ($CurrentValues.Ensure -ne $Ensure)
-    {
-        Write-Verbose -Message "Test-TargetResource returned $false"
-        return $false
-    }
     $testResult = $true
 
     #Compare Cim instances
@@ -964,11 +956,11 @@ function Export-TargetResource
         $dscContent = ''
         if ($getValue.Length -eq 0)
         {
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         else
         {
-            Write-Host "`r`n" -NoNewline
+            Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
         foreach ($config in $getValue)
         {
@@ -982,7 +974,7 @@ function Export-TargetResource
             {
                 $displayedKey = $config.displayName
             }
-            Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
+            Write-M365DSCHost -Message "    |---[$i/$($getValue.Count)] $displayedKey" -DeferWrite
             $params = @{
                 Id                    = $config.Id
                 DisplayName           = $config.DisplayName
@@ -997,8 +989,6 @@ function Export-TargetResource
             }
 
             $Results = Get-TargetResource @Params
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
 
             if ( $null -ne $Results.DataRecoveryCertificate)
             {
@@ -1198,63 +1188,17 @@ function Export-TargetResource
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -Credential $Credential
-            if ($Results.DataRecoveryCertificate)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'DataRecoveryCertificate' -IsCIMArray:$False
-            }
-            if ($Results.EnterpriseInternalProxyServers)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'EnterpriseInternalProxyServers' -IsCIMArray:$True
-            }
-            if ($Results.EnterpriseIPRanges)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'EnterpriseIPRanges' -IsCIMArray:$True
-            }
-            if ($Results.EnterpriseNetworkDomainNames)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'EnterpriseNetworkDomainNames' -IsCIMArray:$True
-            }
-            if ($Results.EnterpriseProtectedDomainNames)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'EnterpriseProtectedDomainNames' -IsCIMArray:$True
-            }
-            if ($Results.EnterpriseProxiedDomains)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'EnterpriseProxiedDomains' -IsCIMArray:$True
-            }
-            if ($Results.EnterpriseProxyServers)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'EnterpriseProxyServers' -IsCIMArray:$True
-            }
-            if ($Results.ExemptApps)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'ExemptApps' -IsCIMArray:$True
-            }
-            if ($Results.NeutralDomainResources)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'NeutralDomainResources' -IsCIMArray:$True
-            }
-            if ($Results.ProtectedApps)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'ProtectedApps' -IsCIMArray:$True
-            }
-            if ($Results.SmbAutoEncryptedFileExtensions)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'SmbAutoEncryptedFileExtensions' -IsCIMArray:$True
-            }
-            if ($Results.Assignments)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Assignments' -IsCIMArray:$true
-            }
-            #removing trailing commas and semi colons between items of an array of cim instances added by Convert-DSCStringParamToVariable
-            $currentDSCBlock = $currentDSCBlock.replace( "    ,`r`n" , "    `r`n" )
-            $currentDSCBlock = $currentDSCBlock.replace( "`r`n;`r`n" , "`r`n" )
+                -Credential $Credential `
+                -NoEscape @('DataRecoveryCertificate', 'EnterpriseInternalProxyServers', 'EnterpriseIPRanges',
+                    'EnterpriseNetworkDomainNames', 'EnterpriseProtectedDomainNames', 'EnterpriseProxiedDomains',
+                    'EnterpriseProxyServers', 'ExemptApps', 'NeutralDomainResources', 'ProtectedApps',
+                    'SmbAutoEncryptedFileExtensions', 'Assignments')
+
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         return $dscContent
     }
@@ -1263,11 +1207,11 @@ function Export-TargetResource
         if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
                 $_.Exception -like '*Request not applicable to target tenant*')
         {
-            Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
+            Write-M365DSCHost -Message "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }
         else
         {
-            Write-Host $Global:M365DSCEmojiRedX
+            Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
             New-M365DSCLogEntry -Message 'Error during Export:' `
                 -Exception $_ `

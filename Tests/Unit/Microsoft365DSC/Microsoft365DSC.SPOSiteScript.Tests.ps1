@@ -55,11 +55,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
+            Mock -CommandName Set-PnPSiteScript -MockWith {
+            }
+
+            Mock -CommandName Remove-PnPSiteScript -MockWith {
+            }
+
             Mock -CommandName Start-Sleep -MockWith {
             }
 
-            # Mock Write-Host to hide output during the tests
-            Mock -CommandName Write-Host -MockWith {
+            # Mock Write-M365DSCHost to hide output during the tests
+            Mock -CommandName Write-M365DSCHost -MockWith {
             }
             $Script:exportedInstances =$null
             $Script:ExportMode = $false
@@ -81,12 +87,22 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Add-PnPSiteScript -MockWith {
                     return @{
-                        Name = $null
+                        Id = '12345-67890-abcde-f0123'
                     }
                 }
 
-                Mock -CommandName Get-PnPSiteScript -MockWith {
+                # calls to Get-PnPSiteScript without proper Identity returns nothing
+                Mock -CommandName Get-PnPSiteScript -ParameterFilter {Identity -ne '12345-67890-abcde-f0123'} -MockWith {
                     return $null
+                }
+                # after Add-PnPSiteScript has been called, Get-PnPSiteScript should return the created site-script
+                Mock -CommandName Get-PnPSiteScript -ParameterFilter {Identity -eq '12345-67890-abcde-f0123'} -MockWith {
+                    return @{
+                        Id          = '12345-67890-abcde-f0123'
+                        Title       = 'Title One'
+                        Content     = $script
+                        Description = "This is the description for the Site Script: 'Test Title'"
+                    }
                 }
             }
 
@@ -100,6 +116,37 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Creates the site script in the Set method' {
                 Set-TargetResource @testParams
+                Should -Invoke -CommandName Add-PnPSiteScript -Exactly -Times 1
+            }
+        }
+
+        Context -Name 'The site script already exist and is in the desired state' -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    Identity    = '6c42cc50-7f90-45c2-9094-e8df5f9aa202'
+                    Title       = 'Title One'
+                    Content     = $script
+                    Description = "This is the description for the Site Script: 'Test Title'"
+                    Credential  = $Credential
+                    Ensure      = 'Present'
+                }
+
+                Mock -CommandName Get-PnPSiteScript -MockWith {
+                    return @{
+                        Id          = '6c42cc50-7f90-45c2-9094-e8df5f9aa202'
+                        Title       = 'Title One'
+                        Content     = $script
+                        Description = "This is the description for the Site Script: 'Test Title'"
+                    }
+                }
+            }
+
+            It 'Should return present from the Get method' {
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
+            }
+
+            It 'Should return true from the Test method' {
+                Test-TargetResource @testParams | Should -Be $true
             }
         }
 
@@ -116,22 +163,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-PnPSiteScript -MockWith {
                     return @{
-                        Title = 'Title One'
+                        Id          = '6c42cc50-7f90-45c2-9094-e8df5f9aa202'
+                        Title       = 'Title One'
+                        Description = "wrong description"
                     }
                 }
-
-                Mock -CommandName Get-PnPTenantTheme -MockWith {
-                    return @{
-                        Identity    = '6c42cc50-7f90-45c2-9094-e8df5f9aa202'
-                        Title       = 'Title Two'
-                        Content     = $script
-                        Description = "This is the description for the Site Script: 'Test Title'"
-                    }
-                }
-            }
-
-            It 'Should update the Theme from the Set method' {
-                Set-TargetResource @testParams
             }
 
             It 'Should return present from the Get method' {
@@ -141,12 +177,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
+
+            It 'Should update the site script from the Set method' {
+                Set-TargetResource @testParams
+                Should -Invoke -CommandName Set-PnPSiteScript -Exactly -Times 1
+            }
         }
 
-        Context -Name 'Testing theme removal' -Fixture {
+        Context -Name 'The site script identified by Title already exist but is not in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Identity    = '6c42cc50-7f90-45c2-9094-e8df5f9aa202'
                     Title       = 'Title One'
                     Content     = $script
                     Description = "This is the description for the Site Script: 'Test Title'"
@@ -154,22 +194,68 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure      = 'Present'
                 }
 
-                Mock -CommandName Get-PnPTenantTheme -MockWith {
+                Mock -CommandName Get-PnPSiteScript -MockWith {
+                    return @(
+                        @{
+                            Identity    = '6c42cc50-7f90-45c2-9094-e8df5f9aa202'
+                            Title       = 'Title One'
+                            Description = "This is the first sitescript with title 'Title One'"
+                        },
+                        @{
+                            Identity    = '01234567-890a-bcde-f094-e8df5f9aa202'
+                            Title       = 'Title One'
+                            Description = "This is another sitescript with the same title"
+                        }
+                    )
+                }
+            }
+
+            It 'Should return present from the Get method' {
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
+            }
+
+            It 'Should return false from the Test method' {
+                Test-TargetResource @testParams | Should -Be $false
+            }
+
+            It 'Should update the site script from the Set method' {
+                Set-TargetResource @testParams
+                Should -Invoke -CommandName Set-PnPSiteScript -Exactly -Times 1
+            }
+        }
+
+        Context -Name 'Testing site script removal' -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    Identity    = '6c42cc50-7f90-45c2-9094-e8df5f9aa202'
+                    Title       = 'Title One'
+                    Content     = $script
+                    Description = "This is the description for the Site Script: 'Test Title'"
+                    Credential  = $Credential
+                    Ensure      = 'Absent'
+                }
+
+                Mock -CommandName Get-PnPSiteScript -MockWith {
                     return @{
-                        Identity    = '6c42cc50-7f90-45c2-9094-e8df5f9aa202'
-                        Title       = 'Title Two'
+                        Id          = '6c42cc50-7f90-45c2-9094-e8df5f9aa202'
+                        Title       = 'Title One'
                         Content     = $script
                         Description = "This is the description for the Site Script: 'Test Title'"
                     }
                 }
-
-                Mock -CommandName Remove-PnPTenantTheme -MockWith {
-                    return 'Theme has been successfully removed'
-                }
             }
 
-            It 'Should remove the Theme successfully' {
+            It 'Should return present from the Get method' {
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
+            }
+
+            It 'Should return false from the Test method' {
+                Test-TargetResource @testParams | Should -Be $false
+            }
+
+            It 'Should remove the site script successfully' {
                 Set-TargetResource @testParams
+                Should -Invoke -CommandName Remove-PnPSiteScript -Exactly -Times 1
             }
         }
 
@@ -185,41 +271,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return @{
                         Id    = '11111'
                         Title = 'Test'
-                    }
-                }
-
-                Mock -CommandName Get-PnPTenantTheme -MockWith {
-                    return @{
-                        Name       = 'TestTheme'
-                        IsInverted = $false
-                        Palette    = @{
-                            'themePrimary'         = '#0078d4'
-                            'themeLighterAlt'      = '#eff6fc'
-                            'themeLighter'         = '#deecf9'
-                            'themeLight'           = '#c7e0f4'
-                            'themeTertiary'        = '#71afe5'
-                            'themeSecondary'       = '#2b88d8'
-                            'themeDarkAlt'         = '#106ebe'
-                            'themeDark'            = '#005a9e'
-                            'themeDarker'          = '#004578'
-                            'neutralLighterAlt'    = '#f8f8f8'
-                            'neutralLighter'       = '#f4f4f4'
-                            'neutralLight'         = '#eaeaea'
-                            'neutralQuaternaryAlt' = '#dadada'
-                            'neutralQuaternary'    = '#d0d0d0'
-                            'neutralTertiaryAlt'   = '#c8c8c8'
-                            'neutralTertiary'      = '#c2c2c2'
-                            'neutralSecondary'     = '#858585'
-                            'neutralPrimaryAlt'    = '#4b4b4b'
-                            'neutralPrimary'       = '#333'
-                            'neutralDark'          = '#272727'
-                            'black'                = '#1d1d1d'
-                            'white'                = '#fff'
-                            'bodyBackground'       = '#0078d4'
-                            'bodyText'             = '#fff'
-                        }
-                        Credential = $Credential
-                        Ensure     = 'Present'
                     }
                 }
             }

@@ -422,12 +422,12 @@ function Export-TargetResource
         $dscContent = ''
         if ($accounts.count -eq 0)
         {
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
             return ''
         }
         else
         {
-            Write-Host "`r`n" -NoNewline
+            Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
         foreach ($account in $accounts)
         {
@@ -440,11 +440,11 @@ function Export-TargetResource
             $dscContent = ''
             if ($Script:exportedInstances.Length -eq 0)
             {
-                Write-Host $Global:M365DSCEmojiGreenCheckMark
+                Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
             }
             else
             {
-                Write-Host "`r`n" -NoNewline
+                Write-M365DSCHost -Message "`r`n" -DeferWrite
             }
             foreach ($config in $Script:exportedInstances)
             {
@@ -453,7 +453,7 @@ function Export-TargetResource
                 {
                     $Global:M365DSCExportResourceInstancesCount++
                 }
-                Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -NoNewline
+                Write-M365DSCHost -Message "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -DeferWrite
                 $params = @{
                     OrganizationName      = $Organization
                     GroupName             = $config.principalName
@@ -469,8 +469,6 @@ function Export-TargetResource
                 if (-not $config.principalName.StartsWith('[TEAM FOUNDATION]'))
                 {
                     $Results = Get-TargetResource @Params
-                    $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                        -Results $Results
                     if ($results.AllowPermissions.Length -gt 0)
                     {
                         $Results.AllowPermissions = Get-M365DSCADOPermissionsAsString $Results.AllowPermissions
@@ -485,32 +483,22 @@ function Export-TargetResource
                         -ConnectionMode $ConnectionMode `
                         -ModulePath $PSScriptRoot `
                         -Results $Results `
-                        -Credential $Credential
-
-                    if ($null -ne $Results.AllowPermissions)
-                    {
-                        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                            -ParameterName 'AllowPermissions'
-                    }
-                    if ($null -ne $Results.DenyPermissions)
-                    {
-                        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                            -ParameterName 'DenyPermissions'
-                    }
+                        -Credential $Credential `
+                        -NoEscape @('AllowPermissions', 'DenyPermissions')
 
                     $dscContent += $currentDSCBlock
                     Save-M365DSCPartialExport -Content $currentDSCBlock `
                         -FileName $Global:PartialExportFileName
                 }
                 $i++
-                Write-Host $Global:M365DSCEmojiGreenCheckMark
+                Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
             }
         }
         return $dscContent
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `

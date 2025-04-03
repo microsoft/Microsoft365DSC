@@ -217,183 +217,179 @@ function Get-TargetResource
         [System.String[]]
         $AccessTokens
     )
-
-    Write-Verbose -Message "Getting configuration of Distribution Group for $Identity"
-
-    if ($Global:CurrentModeIsExport)
-    {
-        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters `
-            -SkipModuleReload $true
-    }
-    else
-    {
-        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters
-    }
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = 'Absent'
-
     try
     {
-        if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Name -ne $Name)
         {
-            if ($null -ne $PrimarySmtpAddress)
-            {
-                $distributionGroup = $Script:exportedInstances | Where-Object -FilterScript { $_.PrimarySmtpAddress -eq $PrimarySmtpAddress }
-                $distributionGroupMembers = Get-DistributionGroupMember -Identity $PrimarySmtpAddress `
-                    -ErrorAction 'Stop' `
-                    -ResultSize 'Unlimited'
-            }
-            else
-            {
-                $distributionGroup = $Script:exportedInstances | Where-Object -FilterScript { $_.Identity -eq $Identity }
-                $distributionGroupMembers = Get-DistributionGroupMember -Identity $Identity `
-                    -ErrorAction 'Stop' `
-                    -ResultSize 'Unlimited'
-            }
-        }
-        else
-        {
-            if ($null -ne $PrimarySmtpAddress)
+            Write-Verbose -Message "Getting configuration of Distribution Group for $Identity"
+
+            $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+                -InboundParameters $PSBoundParameters
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullReturn = $PSBoundParameters
+            $nullReturn.Ensure = 'Absent'
+
+            if (-not [System.String]::IsNullOrEmpty($PrimarySmtpAddress))
             {
                 $distributionGroup = Get-DistributionGroup -Identity $PrimarySmtpAddress -ErrorAction Stop
-                $distributionGroupMembers = Get-DistributionGroupMember -Identity $PrimarySmtpAddress `
-                    -ErrorAction 'Stop' `
-                    -ResultSize 'Unlimited'
             }
             else
             {
                 $distributionGroup = Get-DistributionGroup -Identity $Identity -ErrorAction Stop
-                $distributionGroupMembers = Get-DistributionGroupMember -Identity $Identity `
-                    -ErrorAction 'Stop' `
-                    -ResultSize 'Unlimited'
             }
-        }
 
-        if ($null -eq $distributionGroup)
-        {
-            Write-Verbose -Message "Distribution Group $($Identity) does not exist."
-            return $nullReturn
+            if ($null -eq $distributionGroup)
+            {
+                Write-Verbose -Message "Distribution Group $($Identity) does not exist."
+                return $nullReturn
+            }
         }
         else
         {
-            Write-Verbose -Message "Found existing Distribution Group {$Identity}."
-            $descriptionValue = $null
-            if ($distributionGroup.Description.Length -gt 0)
-            {
-                $descriptionValue = $distributionGroup.Description[0].Replace("`r", '').Replace("`n", '')
-            }
-
-            $groupTypeValue = 'Distribution'
-            if (([Array]$distributionGroup.GroupType.Replace(' ', '').Split(',')).Contains('SecurityEnabled'))
-            {
-                $groupTypeValue = 'Security'
-            }
-
-            $ManagedByValue = @()
-            if ($null -ne $distributionGroup.ManagedBy)
-            {
-                foreach ($user in $distributionGroup.ManagedBy)
-                {
-                    try
-                    {
-                        $user = Get-MgUser -UserId $user -ErrorAction Stop
-                        $ManagedByValue += $user.UserPrincipalName
-                    }
-                    catch
-                    {
-                        Write-Verbose -Message "Couldn't retrieve user {$user}"
-                    }
-                }
-            }
-
-            $ModeratedByValue = @()
-            if ($null -ne $distributionGroup.ModeratedBy)
-            {
-                foreach ($user in $distributionGroup.ModeratedBy)
-                {
-                    try
-                    {
-                        $user = Get-MgUser -UserId $user -ErrorAction Stop
-                        $ModeratedByValue += $user.UserPrincipalName
-                    }
-                    catch
-                    {
-                        Write-Verbose -Message "Couldn't retrieve moderating user {$user}"
-                    }
-                }
-            }
-            $result = @{
-                Identity                               = $distributionGroup.Identity
-                Alias                                  = $distributionGroup.Alias
-                BccBlocked                             = $distributionGroup.BccBlocked
-                BypassNestedModerationEnabled          = $distributionGroup.BypassNestedModerationEnabled
-                Description                            = $descriptionValue
-                DisplayName                            = $distributionGroup.DisplayName
-                HiddenGroupMembershipEnabled           = $distributionGroup.HiddenGroupMembershipEnabled
-                ManagedBy                              = $ManagedByValue
-                MemberDepartRestriction                = $distributionGroup.MemberDepartRestriction
-                MemberJoinRestriction                  = $distributionGroup.MemberJoinRestriction
-                Members                                = $distributionGroupMembers.Name
-                ModeratedBy                            = $ModeratedByValue
-                ModerationEnabled                      = $distributionGroup.ModerationEnabled
-                Name                                   = $distributionGroup.Name
-                Notes                                  = $distributionGroup.Notes
-                OrganizationalUnit                     = $distributionGroup.OrganizationalUnit
-                PrimarySmtpAddress                     = $distributionGroup.PrimarySmtpAddress
-                RequireSenderAuthenticationEnabled     = $distributionGroup.RequireSenderAuthenticationEnabled
-                RoomList                               = $distributionGroup.RoomList
-                SendModerationNotifications            = $distributionGroup.SendModerationNotifications
-                AcceptMessagesOnlyFrom                 = [Array]$distributionGroup.AcceptMessagesOnlyFrom
-                AcceptMessagesOnlyFromDLMembers        = [Array]$distributionGroup.AcceptMessagesOnlyFromDLMembers
-                AcceptMessagesOnlyFromSendersOrMembers = [Array]$distributionGroup.AcceptMessagesOnlyFromSendersOrMembers
-                CustomAttribute1                       = $distributionGroup.CustomAttribute1
-                CustomAttribute2                       = $distributionGroup.CustomAttribute2
-                CustomAttribute3                       = $distributionGroup.CustomAttribute3
-                CustomAttribute4                       = $distributionGroup.CustomAttribute4
-                CustomAttribute5                       = $distributionGroup.CustomAttribute5
-                CustomAttribute6                       = $distributionGroup.CustomAttribute6
-                CustomAttribute7                       = $distributionGroup.CustomAttribute7
-                CustomAttribute8                       = $distributionGroup.CustomAttribute8
-                CustomAttribute9                       = $distributionGroup.CustomAttribute9
-                CustomAttribute10                      = $distributionGroup.CustomAttribute10
-                CustomAttribute11                      = $distributionGroup.CustomAttribute11
-                CustomAttribute12                      = $distributionGroup.CustomAttribute12
-                CustomAttribute13                      = $distributionGroup.CustomAttribute13
-                CustomAttribute14                      = $distributionGroup.CustomAttribute14
-                CustomAttribute15                      = $distributionGroup.CustomAttribute15
-                EmailAddresses                         = [Array]$distributionGroup.EmailAddresses
-                GrantSendOnBehalfTo                    = [Array]$distributionGroup.GrantSendOnBehalfTo
-                HiddenFromAddressListsEnabled          = [Boolean]$distributionGroup.HiddenFromAddressListsEnabled
-                SendOofMessageToOriginatorEnabled      = [Boolean]$distributionGroup.SendOofMessageToOriginatorEnabled
-                Type                                   = $groupTypeValue
-                Ensure                                 = 'Present'
-                Credential                             = $Credential
-                ApplicationId                          = $ApplicationId
-                CertificateThumbprint                  = $CertificateThumbprint
-                CertificatePath                        = $CertificatePath
-                CertificatePassword                    = $CertificatePassword
-                Managedidentity                        = $ManagedIdentity.IsPresent
-                TenantId                               = $TenantId
-                AccessTokens                           = $AccessTokens
-            }
-
-            return $result
+            $distributionGroup = $Script:exportedInstance
         }
+
+        if (-not [System.String]::IsNullOrEmpty($PrimarySmtpAddress))
+        {
+            $distributionGroupMembers = Get-DistributionGroupMember -Identity $PrimarySmtpAddress `
+                -ErrorAction 'Stop' `
+                -ResultSize 'Unlimited'
+        }
+        else
+        {
+            $distributionGroupMembers = Get-DistributionGroupMember -Identity $Identity `
+                    -ErrorAction 'Stop' `
+                    -ResultSize 'Unlimited'
+        }
+
+        $distributionMembersValue = @()
+        foreach ($member in $distributionGroupMembers)
+        {
+            $user = Get-User -Identity $member.DisplayName -ErrorAction SilentlyContinue
+            if ($null -ne $user)
+            {
+                $distributionMembersValue += $user.UserPrincipalName
+            }
+            else
+            {
+                $distributionMembersValue += $member.DisplayName
+            }
+        }
+
+        Write-Verbose -Message "Found existing Distribution Group {$Identity}."
+        $descriptionValue = $null
+        if ($distributionGroup.Description.Length -gt 0)
+        {
+            $descriptionValue = $distributionGroup.Description[0].Replace("`r", '').Replace("`n", '')
+        }
+
+        $groupTypeValue = 'Distribution'
+        if (([Array]$distributionGroup.GroupType.Replace(' ', '').Split(',')).Contains('SecurityEnabled'))
+        {
+            $groupTypeValue = 'Security'
+        }
+
+        $ManagedByValue = @()
+        if ($null -ne $distributionGroup.ManagedBy)
+        {
+            foreach ($user in $distributionGroup.ManagedBy)
+            {
+                try
+                {
+                    $user = Get-User -Identity $user -ErrorAction Stop
+                    $ManagedByValue += $user.UserPrincipalName
+                }
+                catch
+                {
+                    Write-Verbose -Message "Couldn't retrieve user {$user}"
+                }
+            }
+        }
+
+        $ModeratedByValue = @()
+        if ($null -ne $distributionGroup.ModeratedBy)
+        {
+            foreach ($user in $distributionGroup.ModeratedBy)
+            {
+                try
+                {
+                    $user = Get-User -Identity $user -ErrorAction Stop
+                    $ModeratedByValue += $user.UserPrincipalName
+                }
+                catch
+                {
+                    Write-Verbose -Message "Couldn't retrieve moderating user {$user}"
+                }
+            }
+        }
+        $result = @{
+            Identity                               = $distributionGroup.Identity
+            Alias                                  = $distributionGroup.Alias
+            BccBlocked                             = $distributionGroup.BccBlocked
+            BypassNestedModerationEnabled          = $distributionGroup.BypassNestedModerationEnabled
+            Description                            = $descriptionValue
+            DisplayName                            = $distributionGroup.DisplayName
+            HiddenGroupMembershipEnabled           = $distributionGroup.HiddenGroupMembershipEnabled
+            ManagedBy                              = $ManagedByValue
+            MemberDepartRestriction                = $distributionGroup.MemberDepartRestriction
+            MemberJoinRestriction                  = $distributionGroup.MemberJoinRestriction
+            Members                                = $distributionMembersValue
+            ModeratedBy                            = $ModeratedByValue
+            ModerationEnabled                      = $distributionGroup.ModerationEnabled
+            Name                                   = $distributionGroup.Name
+            Notes                                  = $distributionGroup.Notes
+            OrganizationalUnit                     = $distributionGroup.OrganizationalUnit
+            PrimarySmtpAddress                     = $distributionGroup.PrimarySmtpAddress
+            RequireSenderAuthenticationEnabled     = $distributionGroup.RequireSenderAuthenticationEnabled
+            RoomList                               = $distributionGroup.RoomList
+            SendModerationNotifications            = $distributionGroup.SendModerationNotifications
+            AcceptMessagesOnlyFrom                 = [Array]$distributionGroup.AcceptMessagesOnlyFrom
+            AcceptMessagesOnlyFromDLMembers        = [Array]$distributionGroup.AcceptMessagesOnlyFromDLMembers
+            AcceptMessagesOnlyFromSendersOrMembers = [Array]$distributionGroup.AcceptMessagesOnlyFromSendersOrMembers
+            CustomAttribute1                       = $distributionGroup.CustomAttribute1
+            CustomAttribute2                       = $distributionGroup.CustomAttribute2
+            CustomAttribute3                       = $distributionGroup.CustomAttribute3
+            CustomAttribute4                       = $distributionGroup.CustomAttribute4
+            CustomAttribute5                       = $distributionGroup.CustomAttribute5
+            CustomAttribute6                       = $distributionGroup.CustomAttribute6
+            CustomAttribute7                       = $distributionGroup.CustomAttribute7
+            CustomAttribute8                       = $distributionGroup.CustomAttribute8
+            CustomAttribute9                       = $distributionGroup.CustomAttribute9
+            CustomAttribute10                      = $distributionGroup.CustomAttribute10
+            CustomAttribute11                      = $distributionGroup.CustomAttribute11
+            CustomAttribute12                      = $distributionGroup.CustomAttribute12
+            CustomAttribute13                      = $distributionGroup.CustomAttribute13
+            CustomAttribute14                      = $distributionGroup.CustomAttribute14
+            CustomAttribute15                      = $distributionGroup.CustomAttribute15
+            EmailAddresses                         = [Array]$distributionGroup.EmailAddresses
+            GrantSendOnBehalfTo                    = [Array]$distributionGroup.GrantSendOnBehalfTo
+            HiddenFromAddressListsEnabled          = [Boolean]$distributionGroup.HiddenFromAddressListsEnabled
+            SendOofMessageToOriginatorEnabled      = [Boolean]$distributionGroup.SendOofMessageToOriginatorEnabled
+            Type                                   = $groupTypeValue
+            Ensure                                 = 'Present'
+            Credential                             = $Credential
+            ApplicationId                          = $ApplicationId
+            CertificateThumbprint                  = $CertificateThumbprint
+            CertificatePath                        = $CertificatePath
+            CertificatePassword                    = $CertificatePassword
+            Managedidentity                        = $ManagedIdentity.IsPresent
+            TenantId                               = $TenantId
+            AccessTokens                           = $AccessTokens
+        }
+
+        return $result
     }
     catch
     {
@@ -712,7 +708,41 @@ function Set-TargetResource
         }
         $currentParameters.Remove('OrganizationalUnit') | Out-Null
         $currentParameters.Remove('Type') | Out-Null
-        $currentParameters.Remove('Members') | Out-Null
+
+        # Members
+        if ($null -ne $Members)
+        {
+            $membersDiff = Compare-Object -ReferenceObject $currentDistributionGroup.Members -DifferenceObject $Members
+            $membersToAdd = @()
+            $membersToRemove = @()
+            foreach ($difference in $membersDiff)
+            {
+                if ($difference.SideIndicator -eq '=>')
+                {
+                    $membersToAdd += $difference.InputObject
+                }
+                elseif ($difference.SideIndicator -eq '<=')
+                {
+                    $membersToRemove += $difference.InputObject
+                }
+            }
+
+            foreach ($member in $membersToAdd)
+            {
+                Write-Verbose -Message "Adding member {$member}"
+                Add-DistributionGroupMember -Identity $Identity -Member $member -BypassSecurityGroupManagerCheck
+            }
+            foreach ($member in $membersToRemove)
+            {
+                Write-Verbose -Message "Removing member {$member}"
+                Remove-DistributionGroupMember -Identity $Identity `
+                                            -Member $member `
+                                            -BypassSecurityGroupManagerCheck `
+                                            -Confirm:$false
+            }
+            $currentParameters.Remove('Members') | Out-Null
+        }
+
 
         if ($EmailAddresses.Length -gt 0)
         {
@@ -1047,11 +1077,11 @@ function Export-TargetResource
         [array] $Script:exportedInstances = Get-DistributionGroup -ResultSize 'Unlimited' -ErrorAction Stop
         if ($Script:exportedInstances.Length -eq 0)
         {
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         else
         {
-            Write-Host "`r`n" -NoNewline
+            Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
         $i = 1
 
@@ -1062,7 +1092,7 @@ function Export-TargetResource
                 $Global:M365DSCExportResourceInstancesCount++
             }
 
-            Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $($distributionGroup.Identity)" -NoNewline
+            Write-M365DSCHost -Message "    |---[$i/$($Script:exportedInstances.Count)] $($distributionGroup.Identity)" -DeferWrite
             $params = @{
                 Identity              = $distributionGroup.Identity
                 PrimarySmtpAddress    = $distributionGroup.PrimarySmtpAddress
@@ -1076,8 +1106,8 @@ function Export-TargetResource
                 CertificatePath       = $CertificatePath
                 AccessTokens          = $AccessTokens
             }
+            $Script:exportedInstance = $distributionGroup
             $Results = Get-TargetResource @Params
-
             if ($Results.AcceptMessagesOnlyFromSendersOrMembers.Length -eq 0)
             {
                 $Results.Remove('AcceptMessagesOnlyFromSendersOrMembers') | Out-Null
@@ -1093,8 +1123,6 @@ function Export-TargetResource
                 $Results.Remove('AcceptMessagesOnlyFromDLMembers') | Out-Null
             }
 
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
@@ -1104,14 +1132,14 @@ function Export-TargetResource
 
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
             $i ++
         }
         return $dscContent.ToString()
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `

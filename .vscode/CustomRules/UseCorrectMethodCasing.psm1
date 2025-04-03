@@ -1,4 +1,4 @@
-﻿<#
+<#
 .SYNOPSIS
     Use correct method casing in the method name.
 .DESCRIPTION
@@ -25,10 +25,10 @@ function Use-CorrectMethodCasing {
         try
         {
             [System.Management.Automation.Language.InvokeMemberExpressionAst[]]$memberAst = $ScriptBlockAst.FindAll({$Args[0].GetType().Name -eq 'InvokeMemberExpressionAst'}, $true)
-            
+
             foreach ($member in $memberAst)
             {
-                if ($member.Member.Value -cmatch '^[a-z]') {
+                if ($member.Member.Value -cmatch '^[a-z]' -and $member.Member.Value -cne 'new') {
                     [int]$startLineNumber =  $member.Extent.StartLineNumber
                     [int]$endLineNumber = $member.Extent.EndLineNumber
                     [int]$startColumnNumber = $member.Extent.StartColumnNumber
@@ -46,7 +46,7 @@ function Use-CorrectMethodCasing {
                     $correctionExtent = New-Object @objParams
                     $suggestedCorrections = New-Object System.Collections.ObjectModel.Collection[$($objParams.TypeName)]
                     $suggestedCorrections.Add($correctionExtent) | Out-Null
-                    
+
                     $results += [Microsoft.Windows.PowerShell.ScriptAnalyzer.Generic.DiagnosticRecord]@{
                         Message = 'Use correct method casing in the method name.'
                         Extent = $member.Extent

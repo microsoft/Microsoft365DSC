@@ -72,58 +72,65 @@ function Get-TargetResource
         $AccessTokens
     )
 
+    Write-Verbose -Message "Getting configuration of the Intune Endpoint Protection And Response Policy for Windows10 with Id {$Identity} and Name {$DisplayName}"
+
     try
     {
-        Write-Verbose -Message "Checking for the Intune Endpoint Protection Policy {$DisplayName}"
-
-        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters `
-        -ErrorAction Stop
-
-        #Ensure the proper dependencies are installed in the current environment.
-        Confirm-M365DSCDependencies
-
-        #region Telemetry
-        $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-        $CommandName = $MyInvocation.MyCommand
-        $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-            -CommandName $CommandName `
-            -Parameters $PSBoundParameters
-        Add-M365DSCTelemetryEvent -Data $data
-        #endregion
-
-        $nullResult = $PSBoundParameters
-        $nullResult.Ensure = 'Absent'
-
-        # Retrieve policy general settings
-        $policy = $null
-        if (-not [System.String]::IsNullOrEmpty($Identity))
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.DisplayName -ne $DisplayName)
         {
-            $policy = Get-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Identity -ErrorAction SilentlyContinue
-        }
+            $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+            -InboundParameters $PSBoundParameters `
+            -ErrorAction Stop
 
-        if ($null -eq $policy)
-        {
-            Write-Verbose -Message "Could not find an Intune Endpoint Detection And Response Policy for Windows10 with Id {$Identity}"
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
 
-            if (-not [System.String]::IsNullOrEmpty($DisplayName))
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullResult = $PSBoundParameters
+            $nullResult.Ensure = 'Absent'
+
+            # Retrieve policy general settings
+            $policy = $null
+            if (-not [System.String]::IsNullOrEmpty($Identity))
             {
-                $policy = Get-MgBetaDeviceManagementConfigurationPolicy `
-                    -All `
-                    -Filter "Name eq '$DisplayName'" `
-                    -ErrorAction SilentlyContinue
+                $policy = Get-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Identity -ErrorAction SilentlyContinue
+            }
 
-                if ($policy.Length -gt 1)
+            if ($null -eq $policy)
+            {
+                Write-Verbose -Message "Could not find an Intune Endpoint Detection And Response Policy for Windows10 with Id {$Identity}"
+
+                if (-not [System.String]::IsNullOrEmpty($DisplayName))
                 {
-                    throw "Duplicate Intune Endpoint Detection And Response Policy for Windows10 named $DisplayName exist in tenant"
+                    $policy = Get-MgBetaDeviceManagementConfigurationPolicy `
+                        -All `
+                        -Filter "Name eq '$DisplayName'" `
+                        -ErrorAction SilentlyContinue
+
+                    if ($policy.Length -gt 1)
+                    {
+                        throw "Duplicate Intune Endpoint Detection And Response Policy for Windows10 named $DisplayName exist in tenant"
+                    }
                 }
             }
-        }
 
-        if ($null -eq $policy)
+            if ($null -eq $policy)
+            {
+                Write-Verbose -Message "Could not find an Intune Endpoint Detection And Response Policy for Windows10 with Name {$DisplayName}."
+                return $nullResult
+            }
+        }
+        else
         {
-            Write-Verbose -Message "Could not find an Intune Endpoint Detection And Response Policy for Windows10 with Name {$DisplayName}."
-            return $nullResult
+            $policy = $Script:exportedInstance
         }
         $Identity = $policy.Id
         Write-Verbose -Message "An Intune Endpoint Detection And Response Policy for Windows10 with Id {$Identity} and Name {$DisplayName} was found"
@@ -478,12 +485,6 @@ function Test-TargetResource
             }
         }
     }
-
-    if ($CurrentValues.Ensure -ne $Ensure)
-    {
-        Write-Verbose -Message "Test-TargetResource returned $false"
-        return $false
-    }
     $testResult = $true
 
     #Compare Cim instances
@@ -596,11 +597,11 @@ function Export-TargetResource
 
         if ($policies.Length -eq 0)
         {
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         else
         {
-            Write-Host "`r`n" -NoNewline
+            Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
         foreach ($policy in $policies)
         {
@@ -609,7 +610,7 @@ function Export-TargetResource
                 $Global:M365DSCExportResourceInstancesCount++
             }
 
-            Write-Host "    |---[$i/$($policies.Count)] $($policy.Name)" -NoNewline
+            Write-M365DSCHost -Message "    |---[$i/$($policies.Count)] $($policy.Name)" -DeferWrite
 
             $params = @{
                 Identity              = $policy.id
@@ -624,9 +625,8 @@ function Export-TargetResource
                 AccessTokens          = $AccessTokens
             }
 
-            $Results = Get-TargetResource @params
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
+            $Script:exportedInstance = $policy
+            $Results = Get-TargetResource @Params
 
             if ($Results.Assignments)
             {
@@ -645,18 +645,14 @@ function Export-TargetResource
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -Credential $Credential
-
-            if ($Results.Assignments)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Assignments' -IsCIMArray:$true
-            }
+                -Credential $Credential `
+                -NoEscape @('Assignments')
 
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         return $dscContent
     }
@@ -666,11 +662,11 @@ function Export-TargetResource
                 $_.Exception -like '*Unable to perform redirect as Location Header is not set in response*' -or `
                 $_.Exception -like '*Request not applicable to target tenant*')
         {
-            Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
+            Write-M365DSCHost -Message "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }
         else
         {
-            Write-Host $Global:M365DSCEmojiRedX
+            Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
             New-M365DSCLogEntry -Message 'Error during Export:' `
                 -Exception $_ `

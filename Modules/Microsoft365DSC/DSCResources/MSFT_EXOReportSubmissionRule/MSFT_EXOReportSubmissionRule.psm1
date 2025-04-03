@@ -395,16 +395,16 @@ function Export-TargetResource
         $ReportSubmissionRule = Get-ReportSubmissionRule -ErrorAction Stop
         if ($ReportSubmissionRule.Length -eq 0)
         {
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
-            return
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
+            return ''
         }
         else
         {
-            Write-Host "`r`n" -NoNewline
+            Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
         $dscContent = ''
 
-        Write-Host '    |---Export ReportSubmissionRule' -NoNewline
+        Write-M365DSCHost -Message '    |---Export ReportSubmissionRule' -DeferWrite
 
         if ($null -ne $Global:M365DSCExportResourceInstancesCount)
         {
@@ -425,7 +425,6 @@ function Export-TargetResource
         }
 
         $Results = Get-TargetResource @Params
-
         $keysToRemove = @()
         foreach ($key in $Results.Keys)
         {
@@ -438,8 +437,6 @@ function Export-TargetResource
         {
             $Results.Remove($key) | Out-Null
         }
-        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-            -Results $Results
         $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
             -ConnectionMode $ConnectionMode `
             -ModulePath $PSScriptRoot `
@@ -448,13 +445,13 @@ function Export-TargetResource
         $dscContent += $currentDSCBlock
         Save-M365DSCPartialExport -Content $currentDSCBlock `
             -FileName $Global:PartialExportFileName
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
+        Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
 
         return $dscContent
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `

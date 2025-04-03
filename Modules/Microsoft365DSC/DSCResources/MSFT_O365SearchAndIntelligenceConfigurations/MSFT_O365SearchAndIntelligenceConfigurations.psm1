@@ -19,6 +19,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $MeetingInsightsIsEnabledInOrganization,
+
+        [Parameter()]
+        [System.Boolean]
         $PersonInsightsIsEnabledInOrganization,
 
         [Parameter()]
@@ -30,9 +34,32 @@ function Get-TargetResource
         $Credential,
 
         [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [System.String[]]
         $AccessTokens
     )
+
+    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+        -InboundParameters $PSBoundParameters
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
@@ -87,14 +114,21 @@ function Get-TargetResource
             }
         }
 
+        $MeetingInsightsResponse = Get-MeetingInsightsSettings
+        $MeetingInsightsValue    = [Boolean]::Parse($MeetingInsightsResponse.Split(':')[1].Trim())
+
         return @{
-            IsSingleInstance                      = 'Yes'
-            ItemInsightsIsEnabledInOrganization   = $ItemInsights.IsEnabledInOrganization
-            ItemInsightsDisabledForGroup          = $itemInsightsDisabledForGroupValue
-            PersonInsightsIsEnabledInOrganization = $PersonInsights.IsEnabledInOrganization
-            PersonInsightsDisabledForGroup        = $PersonInsightsDisabledForGroupValue
-            Credential                            = $Credential
-            AccessTokens                          = $AccessTokens
+            IsSingleInstance                       = 'Yes'
+            ItemInsightsIsEnabledInOrganization    = $ItemInsights.IsEnabledInOrganization
+            ItemInsightsDisabledForGroup           = $itemInsightsDisabledForGroupValue
+            MeetingInsightsIsEnabledInOrganization = $MeetingInsightsValue
+            PersonInsightsIsEnabledInOrganization  = $PersonInsights.IsEnabledInOrganization
+            PersonInsightsDisabledForGroup         = $PersonInsightsDisabledForGroupValue
+            Credential                             = $Credential
+            ApplicationId                          = $ApplicationId
+            TenantId                               = $TenantId
+            CertificateThumbprint                  = $CertificateThumbprint
+            AccessTokens                           = $AccessTokens
         }
     }
     catch
@@ -129,6 +163,10 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $MeetingInsightsIsEnabledInOrganization,
+
+        [Parameter()]
+        [System.Boolean]
         $PersonInsightsIsEnabledInOrganization,
 
         [Parameter()]
@@ -138,6 +176,26 @@ function Set-TargetResource
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [System.String[]]
@@ -219,6 +277,11 @@ function Set-TargetResource
     Write-Verbose -Message 'Updating settings for Person Insights'
     Update-MgBetaOrganizationSettingPersonInsight @PersonInsightsUpdateParams | Out-Null
     #endregion
+
+    if ($null -ne $MeetingInsightsIsEnabledInOrganization)
+    {
+        Set-MeetingInsightsSettings -Enabled $MeetingInsightsIsEnabledInOrganization | Out-Null
+    }
 }
 
 function Test-TargetResource
@@ -242,6 +305,10 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $MeetingInsightsIsEnabledInOrganization,
+
+        [Parameter()]
+        [System.Boolean]
         $PersonInsightsIsEnabledInOrganization,
 
         [Parameter()]
@@ -251,6 +318,26 @@ function Test-TargetResource
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
 
         [Parameter()]
         [System.String[]]
@@ -297,6 +384,26 @@ function Export-TargetResource
         $Credential,
 
         [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [System.String[]]
         $AccessTokens
     )
@@ -323,18 +430,18 @@ function Export-TargetResource
         }
 
         $Params = @{
-            IsSingleInstance = 'Yes'
-            Credential       = $Credential
-            AccessTokens     = $AccessTokens
+            IsSingleInstance      = 'Yes'
+            Credential            = $Credential
+            AccessTokens          = $AccessTokens
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
         }
 
         $Results = Get-TargetResource @Params
-
         $dscContent = ''
         if ($Results -is [System.Collections.Hashtable] -and $Results.Count -gt 1)
         {
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
@@ -345,13 +452,13 @@ function Export-TargetResource
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
         }
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
+        Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
 
         return $dscContent
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
         $TenantId = $Credential.UserName.Split('@')[1]
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `

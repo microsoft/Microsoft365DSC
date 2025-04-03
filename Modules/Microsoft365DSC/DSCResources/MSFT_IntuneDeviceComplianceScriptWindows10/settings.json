@@ -1,0 +1,16 @@
+{
+  "resourceName": "IntuneDeviceComplianceScriptWindows10",
+  "description": "This resource configures an Intune Device Compliance Script for Windows10.",
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [],
+        "update": []
+      },
+      "application": {
+        "read": [],
+        "update": []
+      }
+    }
+  }
+}

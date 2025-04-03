@@ -106,16 +106,18 @@ function Get-TargetResource
             return $nullResult
         }
 
+        $userInfo = Get-User -Identity $instance.MailboxOwnerId
+
         $results = @{
             Name                  = $instance.Name
             Provider              = $instance.Provider
-            DestinationFolder     = $instance.MailboxOwnerId + ':\' + $instance.DestinationFolder
+            DestinationFolder     = $userInfo.UserPrincipalName + ':\' + $instance.DestinationFolder
             Enabled               = [Boolean]$instance.Enabled
             KeepForDays           = $instance.KeepForDays
             KeepLatest            = $instance.KeepLatest
-            Mailbox               = $instance.MailboxOwnerId
+            Mailbox               = $userInfo.UserPrincipalName
             SenderName            = $instance.Sender.Split('"')[1]
-            SourceFolder          = $instance.MailboxOwnerId + ':\' + $instance.SourceFolder
+            SourceFolder          = $userInfo.UserPrincipalName + ':\' + $instance.SourceFolder
             SystemCategory        = $instance.SystemCategory
             Ensure                = 'Present'
             Credential            = $Credential
@@ -243,6 +245,7 @@ function Set-TargetResource
         Write-Verbose -Message 'Updating existing Sweep Rule.'
         $instance = Get-SweepRule -Mailbox $Mailbox | Where-Object -FilterScript { $_.Name -eq $Name }
         $SetParameters.Add('Identity', $instance.RuleId)
+        Write-Verbose -Message "Parameters:`r`n$(ConvertTo-Json $SetParameters -Depth 10)"
         Set-SweepRule @SetParameters
     }
     # REMOVE
@@ -416,27 +419,27 @@ function Export-TargetResource
         $j = 1
         if ($Script:mailboxes.Length -eq 0)
         {
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         else
         {
-            Write-Host "`r`n" -NoNewline
+            Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
         $dscContent = ''
         foreach ($mailbox in $mailboxes)
         {
-            Write-Host "    |---[$j/$($mailboxes.Count)] $($mailbox.Name)" -NoNewline
+            Write-M365DSCHost -Message  "    |---[$j/$($mailboxes.Count)] $($mailbox.Name)" -DeferWrite
             [Array] $currentInstances = Get-SweepRule -Mailbox $mailbox.Name -ErrorAction Stop
             $Script:exportedInstances += $currentInstances
 
             $i = 1
             if ($currentInstances.Length -eq 0)
             {
-                Write-Host $Global:M365DSCEmojiGreenCheckMark
+                Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
             }
             else
             {
-                Write-Host "`r`n" -NoNewline
+                Write-M365DSCHost -Message "`r`n" -DeferWrite
             }
             foreach ($config in $currentInstances)
             {
@@ -445,7 +448,7 @@ function Export-TargetResource
                     $Global:M365DSCExportResourceInstancesCount++
                 }
                 $displayedKey = $config.Name
-                Write-Host "        |---[$i/$($currentInstances.Count)] $displayedKey" -NoNewline
+                Write-M365DSCHost -Message "        |---[$i/$($currentInstances.Count)] $displayedKey" -DeferWrite
                 $params = @{
                     Name                  = $config.Name
                     Credential            = $Credential
@@ -457,8 +460,6 @@ function Export-TargetResource
                 }
 
                 $Results = Get-TargetResource @Params
-                $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                    -Results $Results
 
                 $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                     -ConnectionMode $ConnectionMode `
@@ -469,7 +470,7 @@ function Export-TargetResource
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
                     -FileName $Global:PartialExportFileName
                 $i++
-                Write-Host $Global:M365DSCEmojiGreenCheckMark
+                Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
             }
             $j++
         }
@@ -477,7 +478,7 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `

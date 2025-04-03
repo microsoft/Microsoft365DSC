@@ -113,32 +113,35 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters | Out-Null
+    Write-Verbose -Message "Getting configuration of the Intune Mobile Threat Defense Connector with Id {$Id}."
 
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullResult = $PSBoundParameters
-    $nullResult.Ensure = 'Absent'
     try
     {
-        if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Id -ne $Id)
         {
-            $instance = $Script:exportedInstances | Where-Object -FilterScript { $_.Id -eq $Id }
+            New-M365DSCConnection -Workload 'MicrosoftGraph' `
+                -InboundParameters $PSBoundParameters | Out-Null
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullResult = $PSBoundParameters
+            $nullResult.Ensure = 'Absent'
+
+            $instance = Get-MgBetaDeviceManagementMobileThreatDefenseConnector -MobileThreatDefenseConnectorId $Id -ErrorAction SilentlyContinue
         }
         else
         {
-            $instance = Get-MgBetaDeviceManagementMobileThreatDefenseConnector -MobileThreatDefenseConnectorId $Id -ErrorAction SilentlyContinue
+            $instance = $Script:exportedInstance
         }
 
         if ($null -eq $instance)
@@ -172,7 +175,6 @@ function Get-TargetResource
         $results = @{
             Id                                                  = $instance.Id
             DisplayName                                         = $DisplayName
-            ResponseHeadersVariable                             = $instance.ResponseHeadersVariable
             AllowPartnerToCollectIosApplicationMetadata         = $instance.AllowPartnerToCollectIosApplicationMetadata
             AllowPartnerToCollectIosPersonalApplicationMetadata = $instance.AllowPartnerToCollectIosPersonalApplicationMetadata
             AndroidDeviceBlockedOnMissingPartnerData            = $instance.AndroidDeviceBlockedOnMissingPartnerData
@@ -557,23 +559,23 @@ function Export-TargetResource
     try
     {
         $Script:ExportMode = $true
-        [array] $Script:exportedInstances = Get-MgBetaDeviceManagementMobileThreatDefenseConnector -ErrorAction Stop
+        [array] $getValue = Get-MgBetaDeviceManagementMobileThreatDefenseConnector -ErrorAction Stop
 
         $i = 1
         $dscContent = ''
-        if ($Script:exportedInstances.Length -eq 0)
+        if ($getValue.Length -eq 0)
         {
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         else
         {
-            Write-Host "`r`n" -NoNewline
+            Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
 
-        foreach ($config in $Script:exportedInstances)
+        foreach ($config in $getValue)
         {
             $displayedKey = $config.Id
-            Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -NoNewline
+            Write-M365DSCHost -Message "    |---[$i/$($getValue.Count)] $displayedKey" -DeferWrite
             $params = @{
                 Id                                                  = $config.Id
                 DisplayName                                         = $config.DisplayName
@@ -603,9 +605,8 @@ function Export-TargetResource
                 AccessTokens                                        = $AccessTokens
             }
 
+            $Script:exportedInstance = $config
             $Results = Get-TargetResource @Params
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
 
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
@@ -616,13 +617,13 @@ function Export-TargetResource
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         return $dscContent
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `
@@ -683,7 +684,7 @@ function Get-MobileThreatDefenseConnectorIdOrDisplayName
         $Id = $DisplayNameToIdMap[$DisplayName]
         if (-not $Id)
         {
-            Write-Host "Internal func: DisplayName '$DisplayName' not found."
+            Write-M365DSCHost -Message "Internal func: DisplayName '$DisplayName' not found."
             return
         }
     }

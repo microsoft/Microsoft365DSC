@@ -341,12 +341,6 @@ function Test-TargetResource
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
-
-    if ($CurrentValues.Ensure -ne $Ensure)
-    {
-        Write-Verbose -Message "Test-TargetResource returned $false"
-        return $false
-    }
     $testResult = $true
 
     $ValuesToCheck = Remove-M365DSCAuthenticationParameter -BoundParameters $ValuesToCheck
@@ -431,7 +425,7 @@ function Export-TargetResource
         [array]$policies = Get-CsTeamsUpdateManagementPolicy -ErrorAction Stop
         $i = 1
         $dscContent = ''
-        Write-Host "`r`n" -NoNewline
+        Write-M365DSCHost -Message "`r`n" -DeferWrite
         foreach ($policy in $policies)
         {
             if ($null -ne $Global:M365DSCExportResourceInstancesCount)
@@ -439,7 +433,7 @@ function Export-TargetResource
                 $Global:M365DSCExportResourceInstancesCount++
             }
 
-            Write-Host "    |---[$i/$($policies.Count)] $($policy.Identity.Replace('Tag:', ''))" -NoNewline
+            Write-M365DSCHost -Message "    |---[$i/$($policies.Count)] $($policy.Identity.Replace('Tag:', ''))" -DeferWrite
             $params = @{
                 Identity              = $policy.Identity.Replace('Tag:', '')
                 Credential            = $Credential
@@ -450,24 +444,22 @@ function Export-TargetResource
                 AccessTokens          = $AccessTokens
             }
             $result = Get-TargetResource @params
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $result
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
-                -Results $Results `
+                -Results $result `
                 -Credential $Credential
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         return $dscContent
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `

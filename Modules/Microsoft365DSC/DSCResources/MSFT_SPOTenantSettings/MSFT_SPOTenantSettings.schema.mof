@@ -2,6 +2,8 @@
 class MSFT_SPOTenantSettings : OMI_BaseResource
 {
     [Key, Description("Specifies the resource is a single instance, the value must be 'Yes'"),ValueMap{"Yes"},Values{"Yes"}] String IsSingleInstance;
+    [Write, Description("Enables OneDrive and SharePoint integration with Microsoft Entra B2B.")] boolean EnableAzureADB2BIntegration;
+    [Write, Description("Determines what level of sharing is available for OneDrive sites. It corresponds to the SharingCapabilities for OneDrive sites."), ValueMap{"ExternalUserAndGuestSharing", "Disabled", "ExternalUserSharingOnly", "ExistingExternalUserSharingOnly"}, Values{"ExternalUserAndGuestSharing", "Disabled", "ExternalUserSharingOnly", "ExistingExternalUserSharingOnly"}] string OneDriveSharingCapability;
     [Write, Description("Specifies the lower bound on the compatibility level for new sites.")] uint32 MinCompatibilityLevel;
     [Write, Description("Specifies the upper bound on the compatibility level for new sites.")] uint32 MaxCompatibilityLevel;
     [Write, Description("Removes the search capability from People Picker. Note, recently resolved names will still appear in the list until browser cache is cleared or expired.")] boolean SearchResolveExactEmailOrUPN;

@@ -61,6 +61,10 @@ function Get-TargetResource
         $Office,
 
         [Parameter()]
+        [System.String[]]
+        $OtherMails,
+
+        [Parameter()]
         [System.Boolean]
         $PasswordNeverExpires = $false,
 
@@ -134,48 +138,49 @@ function Get-TargetResource
         [System.String[]]
         $AccessTokens
     )
-    Write-Verbose -Message "Getting configuration of Office 365 User $UserPrincipalName"
-
-    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullReturn = @{
-        UserPrincipalName     = $null
-        DisplayName           = $null
-        FirstName             = $null
-        LastName              = $null
-        UsageLocation         = $null
-        LicenseAssignment     = $null
-        MemberOf              = $null
-        Password              = $null
-        Credential            = $Credential
-        ApplicationId         = $ApplicationId
-        TenantId              = $TenantId
-        CertificateThumbprint = $CertificateThumbprint
-        Managedidentity       = $ManagedIdentity.IsPresent
-        ApplicationSecret     = $ApplicationSecret
-        Ensure                = 'Absent'
-        AccessTokens          = $AccessTokens
-    }
-
     try
     {
-        if (-not $Script:ExportMode)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.UserPrincipalName -ne $UserPrincipalName)
         {
+            Write-Verbose -Message "Getting configuration of Office 365 User $UserPrincipalName"
+
+            $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+                -InboundParameters $PSBoundParameters
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullReturn = @{
+                UserPrincipalName     = $null
+                DisplayName           = $null
+                FirstName             = $null
+                LastName              = $null
+                UsageLocation         = $null
+                LicenseAssignment     = $null
+                MemberOf              = $null
+                OtherMails            = $null
+                Password              = $null
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+                Managedidentity       = $ManagedIdentity.IsPresent
+                ApplicationSecret     = $ApplicationSecret
+                Ensure                = 'Absent'
+                AccessTokens          = $AccessTokens
+            }
+
             Write-Verbose -Message "Getting Office 365 User $UserPrincipalName"
-            $propertiesToRetrieve = @('Id', 'UserPrincipalName', 'DisplayName', 'GivenName', 'Surname', 'UsageLocation', 'City', 'Country', 'Department', 'FacsimileTelephoneNumber', 'Mobile', 'OfficeLocation', 'TelephoneNumber', 'PostalCode', 'PreferredLanguage', 'State', 'StreetAddress', 'JobTitle', 'UserType', 'PasswordPolicies')
+            $propertiesToRetrieve = @('Id', 'UserPrincipalName', 'DisplayName', 'GivenName', 'Surname', 'UsageLocation', 'City', 'Country', 'Department', 'FaxNumber', 'MobilePhone', 'OfficeLocation', 'OtherMails', 'BusinessPhones', 'PostalCode', 'PreferredLanguage', 'State', 'StreetAddress', 'JobTitle', 'UserType', 'PasswordPolicies')
             $user = Get-MgUser -UserId $UserPrincipalName -Property $propertiesToRetrieve -ErrorAction SilentlyContinue
             if ($null -eq $user)
             {
@@ -186,7 +191,7 @@ function Get-TargetResource
         else
         {
             Write-Verbose -Message 'Retrieving user from the exported instances'
-            $user = $Script:M365DSCExportInstances | Where-Object -FilterScript { $_.UserPrincipalName -eq $UserPrincipalName }
+            $user = $Script:exportedInstance
         }
 
         Write-Verbose -Message "Found User $($UserPrincipalName)"
@@ -234,12 +239,13 @@ function Get-TargetResource
             City                  = $user.City
             Country               = $user.Country
             Department            = $user.Department
-            Fax                   = $user.FacsimileTelephoneNumber
-            MobilePhone           = $user.Mobile
+            Fax                   = $user.FaxNumber
+            MobilePhone           = $user.MobilePhone
             Office                = $user.OfficeLocation
+            OtherMails            = $user.OtherMails
             PasswordNeverExpires  = $passwordNeverExpires
             PasswordPolicies      = $user.PasswordPolicies
-            PhoneNumber           = $user.TelephoneNumber
+            PhoneNumber           = $user.BusinessPhones | Select-Object -First 1
             PostalCode            = $user.PostalCode
             PreferredLanguage     = $user.PreferredLanguage
             State                 = $user.State
@@ -329,6 +335,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $Office,
+
+        [Parameter()]
+        [System.String[]]
+        $OtherMails,
 
         [Parameter()]
         [System.Boolean]
@@ -444,18 +454,19 @@ function Set-TargetResource
             Country                  = $Country
             Department               = $Department
             DisplayName              = $DisplayName
-            FacsimileTelephoneNumber = $Fax
+            FaxNumber                = $Fax
             GivenName                = $FirstName
             JobTitle                 = $Title
-            Mobile                   = $MobilePhone
+            MobilePhone              = $MobilePhone
             PasswordPolicies         = $PasswordPolicies
             OfficeLocation           = $Office
+            OtherMails               = $OtherMails
             PostalCode               = $PostalCode
             PreferredLanguage        = $PreferredLanguage
             State                    = $State
             StreetAddress            = $StreetAddress
             Surname                  = $LastName
-            TelephoneNumber          = $PhoneNumber
+            BusinessPhones           = $PhoneNumber
             UsageLocation            = $UsageLocation
             UserPrincipalName        = $UserPrincipalName
             UserType                 = $UserType
@@ -463,7 +474,7 @@ function Set-TargetResource
         $CreationParams = Remove-NullEntriesFromHashtable -Hash $CreationParams
 
         #region Licenses
-        if ($LicenseAssignment -ne $null)
+        if ($null -ne $LicenseAssignment)
         {
             [Array] $currentLicenses = $user.LicenseAssignment
             if ($null -eq $currentLicenses)
@@ -764,6 +775,10 @@ function Test-TargetResource
         $Office,
 
         [Parameter()]
+        [System.String[]]
+        $OtherMails,
+
+        [Parameter()]
         [System.Boolean]
         $PasswordNeverExpires = $false,
 
@@ -927,7 +942,7 @@ function Export-TargetResource
     try
     {
         $Script:ExportMode = $true
-        $propertiesToRetrieve = @('Id', 'UserPrincipalName', 'DisplayName', 'GivenName', 'Surname', 'UsageLocation', 'City', 'Country', 'Department', 'FacsimileTelephoneNumber', 'Mobile', 'OfficeLocation', 'TelephoneNumber', 'PostalCode', 'PreferredLanguage', 'State', 'StreetAddress', 'JobTitle', 'UserType', 'PasswordPolicies')
+        $propertiesToRetrieve = @('Id', 'UserPrincipalName', 'DisplayName', 'GivenName', 'Surname', 'UsageLocation', 'City', 'Country', 'Department', 'FacsimileTelephoneNumber', 'Mobile', 'OfficeLocation', 'OtherMails', 'TelephoneNumber', 'PostalCode', 'PreferredLanguage', 'State', 'StreetAddress', 'JobTitle', 'UserType', 'PasswordPolicies')
         $ExportParameters = @{
             Filter      = $Filter
             All         = [switch]$true
@@ -1068,7 +1083,7 @@ function Export-TargetResource
 
         $dscContent = [System.Text.StringBuilder]::new()
         $i = 1
-        Write-Host "`r`n" -NoNewline
+        Write-M365DSCHost -Message "`r`n" -DeferWrite
         foreach ($user in $Script:M365DSCExportInstances)
         {
             if ($null -ne $Global:M365DSCExportResourceInstancesCount)
@@ -1076,7 +1091,7 @@ function Export-TargetResource
                 $Global:M365DSCExportResourceInstancesCount++
             }
 
-            Write-Host "    |---[$i/$($Script:M365DSCExportInstances.Length)] $($user.UserPrincipalName)" -NoNewline
+            Write-M365DSCHost -Message "    |---[$i/$($Script:M365DSCExportInstances.Length)] $($user.UserPrincipalName)" -DeferWrite
             $userUPN = $user.UserPrincipalName
             if (-not [System.String]::IsNullOrEmpty($userUPN))
             {
@@ -1091,33 +1106,30 @@ function Export-TargetResource
                     AccessTokens          = $AccessTokens
                 }
 
+                $Script:exportedInstance = $user
                 $Results = Get-TargetResource @Params
-                $Results.Password = "New-Object System.Management.Automation.PSCredential('Password', (ConvertTo-SecureString ((New-Guid).ToString()) -AsPlainText -Force));"
+                $Results.Password = "New-Object System.Management.Automation.PSCredential('Password', (ConvertTo-SecureString ((New-Guid).ToString()) -AsPlainText -Force))"
                 if ($null -ne $Results.UserPrincipalName)
                 {
-                    $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                        -Results $Results
                     $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                         -ConnectionMode $ConnectionMode `
                         -ModulePath $PSScriptRoot `
                         -Results $Results `
                         -Credential $Credential
 
-                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Password'
                     $dscContent.Append($currentDSCBlock) | Out-Null
-
                     Save-M365DSCPartialExport -Content $currentDSCBlock `
                         -FileName $Global:PartialExportFileName
                 }
             }
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
             $i++
         }
         return $dscContent.ToString()
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `

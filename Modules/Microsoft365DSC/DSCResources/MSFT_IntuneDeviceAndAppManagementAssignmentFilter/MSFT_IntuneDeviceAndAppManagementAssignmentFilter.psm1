@@ -59,52 +59,59 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    Write-Verbose -Message "Getting the Intune Device and App Management Assignment Filter {$DisplayName}"
-
-    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters `
-        -ErrorAction Stop
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullResult = @{
-        DisplayName = $DisplayName
-        Ensure      = 'Absent'
-    }
+    Write-Verbose -Message "Getting configuration of the Intune Device and App Management Assignment Filter with Id {$Identity} and DisplayName {$DisplayName}"
 
     try
     {
-        if (-not [System.String]::IsNullOrEmpty($Identity))
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.DisplayName -ne $DisplayName)
         {
-            Write-Verbose -Message "Checking if filter exists with identity {$Identity}."
-            $assignmentFilter = Get-MgBetaDeviceManagementAssignmentFilter -DeviceAndAppManagementAssignmentFilterId $Identity -ErrorAction 'SilentlyContinue'
+            $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+                -InboundParameters $PSBoundParameters `
+                -ErrorAction Stop
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullResult = @{
+                DisplayName = $DisplayName
+                Ensure      = 'Absent'
+            }
+
+            if (-not [System.String]::IsNullOrEmpty($Identity))
+            {
+                Write-Verbose -Message "Checking if filter exists with identity {$Identity}."
+                $assignmentFilter = Get-MgBetaDeviceManagementAssignmentFilter -DeviceAndAppManagementAssignmentFilterId $Identity -ErrorAction 'SilentlyContinue'
+            }
+
+            if ($null -eq $assignmentFilter)
+            {
+                Write-Verbose -Message "No assignment filter with Identity {$Identity} was found."
+
+                Write-Verbose -Message "Checking if filter exists with DisplayName {$DisplayName}."
+                [array]$assignmentFilter = Get-MgBetaDeviceManagementAssignmentFilter -All | Where-Object -FilterScript { $_.DisplayName -eq $DisplayName }
+                if ($assignmentFilter.Length -gt 2)
+                {
+                    Write-Error -Message "More than one Assignment Filter found with name {$DisplayName}"
+                }
+                elseif ($assignmentFilter.Length -eq 0)
+                {
+                    Write-Verbose -Message "No assignment filter with name {$DisplayName} was found."
+                    return $nullResult
+                }
+            }
         }
-
-        if ($null -eq $assignmentFilter)
+        else
         {
-            Write-Verbose -Message "No assignment filter with Identity {$Identity} was found."
-
-            Write-Verbose -Message "Checking if filter exists with DisplayName {$DisplayName}."
-            [array]$assignmentFilter = Get-MgBetaDeviceManagementAssignmentFilter -All | Where-Object -FilterScript { $_.DisplayName -eq $DisplayName }
-            if ($assignmentFilter.Length -gt 2)
-            {
-                Write-Error -Message "More than one Assignment Filter found with name {$DisplayName}"
-            }
-            elseif ($assignmentFilter.Length -eq 0)
-            {
-                Write-Verbose -Message "No assignment filter with name {$DisplayName} was found."
-                return $nullResult
-            }
+            $assignmentFilter = $Script:exportedInstance
         }
 
         Write-Verbose -Message "Found assignment filter {$($assignmentFilter.displayName)}"
@@ -326,17 +333,6 @@ function Test-TargetResource
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
     $ValuesToCheck = Remove-M365DSCAuthenticationParameter -BoundParameters $ValuesToCheck
     $ValuesToCheck.Remove('Identity') | Out-Null
-
-    if ($CurrentValues.Ensure -ne $Ensure)
-    {
-        Write-Verbose -Message "Test-TargetResource returned $false"
-        return $false
-    }
-    if ($CurrentValues.Ensure -eq 'Absent' -and $Ensure -eq 'Absent')
-    {
-        Write-Verbose -Message "Test-TargetResource returned $true"
-        return $true
-    }
     $testResult = $true
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
@@ -425,11 +421,11 @@ function Export-TargetResource
 
         if ($policies.Length -eq 0)
         {
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         else
         {
-            Write-Host "`r`n" -NoNewline
+            Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
 
         foreach ($assignmentFilter in $assignmentFilters)
@@ -439,7 +435,7 @@ function Export-TargetResource
                 $Global:M365DSCExportResourceInstancesCount++
             }
 
-            Write-Host "    |---[$i/$($assignmentFilters.Count)] $($assignmentFilter.displayName)" -NoNewline
+            Write-M365DSCHost -Message "    |---[$i/$($assignmentFilters.Count)] $($assignmentFilter.displayName)" -DeferWrite
 
             $params = @{
                 DisplayName           = $assignmentFilter.DisplayName
@@ -453,12 +449,10 @@ function Export-TargetResource
                 AccessTokens          = $AccessTokens
             }
 
-            $Results = Get-TargetResource @params
-
+            $Script:exportedInstance = $assignmentFilter
+            $Results = Get-TargetResource @Params
             if ($Results.Ensure -eq 'Present')
             {
-                $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                    -Results $Results
                 $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                     -ConnectionMode $ConnectionMode `
                     -ModulePath $PSScriptRoot `
@@ -468,7 +462,7 @@ function Export-TargetResource
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
                     -FileName $Global:PartialExportFileName
 
-                Write-Host $Global:M365DSCEmojiGreenCheckMark
+                Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
                 $i++
             }
         }
@@ -479,11 +473,11 @@ function Export-TargetResource
         if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
                 $_.Exception -like '*Request not applicable to target tenant*')
         {
-            Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
+            Write-M365DSCHost -Message "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }
         else
         {
-            Write-Host $Global:M365DSCEmojiRedX
+            Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
             New-M365DSCLogEntry -Message 'Error during Export:' `
                 -Exception $_ `

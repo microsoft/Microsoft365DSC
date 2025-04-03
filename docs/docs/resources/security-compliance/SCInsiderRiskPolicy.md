@@ -6,141 +6,143 @@
 | --- | --- | --- | --- | --- |
 | **Name** | Key | String | Name of the insider risk policy. | |
 | **InsiderRiskScenario** | Key | String | Name of the scenario supported by the policy. | |
-| **Anonymization** | Write | Boolean | Official documentation to come. | |
-| **DLPUserRiskSync** | Write | Boolean | Official documentation to come. | |
-| **OptInIRMDataExport** | Write | Boolean | Official documentation to come. | |
-| **RaiseAuditAlert** | Write | Boolean | Official documentation to come. | |
-| **FileVolCutoffLimits** | Write | String | Official documentation to come. | |
-| **AlertVolume** | Write | String | Official documentation to come. | |
-| **AnomalyDetections** | Write | Boolean | Official documentation to come. | |
+| **IRASettingsEnabled** | Write | Boolean | When turned on, we'll scan sources in your org (such as the Microsoft 365 audit log) to detect the same activities used by insider risk policies. Scans run daily and provide real-time insights that can help you set up and refine policies to ensure you're detecting the most relevant activities. | |
+| **Anonymization** | Write | Boolean | For users who perform activities matching your insider risk policies, decide whether to show their actual names or use pseudonymized versions to mask their identities. | |
+| **DLPUserRiskSync** | Write | Boolean | When turned on, admins with the correct permissions will be able to review user risk details from Insider Risk Management within other solutions such as Data Loss Prevention (DLP), Communication Compliance, and user entity pages in Microsoft Defender. | |
+| **OptInIRMDataExport** | Write | Boolean | When turned on, admins with the correct permissions will be able to review user risk details from Insider Risk Management within other solutions such as Data Loss Prevention (DLP), Communication Compliance, and user entity pages in Microsoft Defender. | |
+| **RaiseAuditAlert** | Write | Boolean | Insider risk management alert information is exportable to security information and event management (SIEM) services by using Office 365 Management Activity APIs. Turn this on to use these APIs to export insider risk alert details to other applications your organization might use to manage or aggregate insider risk data. | |
+| **InlineAlertPolicyCustomization** | Write | Boolean | Enable inline alert customization for all alert reviewers. | |
+| **FileVolCutoffLimits** | Write | String | Minimum number of daily events to boost score for unusual activity. | |
+| **AlertVolume** | Write | String | Alert volume. | |
+| **AnomalyDetections** | Write | Boolean | Risk score boosters indicator. | |
 | **CopyToPersonalCloud** | Write | Boolean | Official documentation to come. | |
-| **CopyToUSB** | Write | Boolean | Official documentation to come. | |
-| **CumulativeExfiltrationDetector** | Write | Boolean | Official documentation to come. | |
+| **CopyToUSB** | Write | Boolean | Device indicator. | |
+| **CumulativeExfiltrationDetector** | Write | Boolean | Cumulative exfiltration detection indicator. | |
 | **EmailExternal** | Write | Boolean | Official documentation to come. | |
-| **EmployeeAccessedEmployeePatientData** | Write | Boolean | Official documentation to come. | |
-| **EmployeeAccessedFamilyData** | Write | Boolean | Official documentation to come. | |
-| **EmployeeAccessedHighVolumePatientData** | Write | Boolean | Official documentation to come. | |
-| **EmployeeAccessedNeighbourData** | Write | Boolean | Official documentation to come. | |
-| **EmployeeAccessedRestrictedData** | Write | Boolean | Official documentation to come. | |
-| **EpoBrowseToChildAbuseSites** | Write | Boolean | Official documentation to come. | |
-| **EpoBrowseToCriminalActivitySites** | Write | Boolean | Official documentation to come. | |
-| **EpoBrowseToCultSites** | Write | Boolean | Official documentation to come. | |
-| **EpoBrowseToGamblingSites** | Write | Boolean | Official documentation to come. | |
-| **EpoBrowseToHackingSites** | Write | Boolean | Official documentation to come. | |
-| **EpoBrowseToHateIntoleranceSites** | Write | Boolean | Official documentation to come. | |
-| **EpoBrowseToIllegalSoftwareSites** | Write | Boolean | Official documentation to come. | |
-| **EpoBrowseToKeyloggerSites** | Write | Boolean | Official documentation to come. | |
-| **EpoBrowseToLlmSites** | Write | Boolean | Official documentation to come. | |
-| **EpoBrowseToMalwareSites** | Write | Boolean | Official documentation to come. | |
-| **EpoBrowseToPhishingSites** | Write | Boolean | Official documentation to come. | |
-| **EpoBrowseToPornographySites** | Write | Boolean | Official documentation to come. | |
-| **EpoBrowseToUnallowedDomain** | Write | Boolean | Official documentation to come. | |
-| **EpoBrowseToViolenceSites** | Write | Boolean | Official documentation to come. | |
-| **EpoCopyToClipboardFromSensitiveFile** | Write | Boolean | Official documentation to come. | |
-| **EpoCopyToNetworkShare** | Write | Boolean | Official documentation to come. | |
-| **EpoFileArchived** | Write | Boolean | Official documentation to come. | |
-| **EpoFileCopiedToRemoteDesktopSession** | Write | Boolean | Official documentation to come. | |
-| **EpoFileDeleted** | Write | Boolean | Official documentation to come. | |
-| **EpoFileDownloadedFromBlacklistedDomain** | Write | Boolean | Official documentation to come. | |
-| **EpoFileDownloadedFromEnterpriseDomain** | Write | Boolean | Official documentation to come. | |
-| **EpoFileRenamed** | Write | Boolean | Official documentation to come. | |
-| **EpoFileStagedToCentralLocation** | Write | Boolean | Official documentation to come. | |
-| **EpoHiddenFileCreated** | Write | Boolean | Official documentation to come. | |
-| **EpoRemovableMediaMount** | Write | Boolean | Official documentation to come. | |
-| **EpoSensitiveFileRead** | Write | Boolean | Official documentation to come. | |
-| **Mcas3rdPartyAppDownload** | Write | Boolean | Official documentation to come. | |
-| **Mcas3rdPartyAppFileDelete** | Write | Boolean | Official documentation to come. | |
-| **Mcas3rdPartyAppFileSharing** | Write | Boolean | Official documentation to come. | |
-| **McasActivityFromInfrequentCountry** | Write | Boolean | Official documentation to come. | |
-| **McasImpossibleTravel** | Write | Boolean | Official documentation to come. | |
-| **McasMultipleFailedLogins** | Write | Boolean | Official documentation to come. | |
-| **McasMultipleStorageDeletion** | Write | Boolean | Official documentation to come. | |
-| **McasMultipleVMCreation** | Write | Boolean | Official documentation to come. | |
-| **McasMultipleVMDeletion** | Write | Boolean | Official documentation to come. | |
-| **McasSuspiciousAdminActivities** | Write | Boolean | Official documentation to come. | |
-| **McasSuspiciousCloudCreation** | Write | Boolean | Official documentation to come. | |
-| **McasSuspiciousCloudTrailLoggingChange** | Write | Boolean | Official documentation to come. | |
-| **McasTerminatedEmployeeActivity** | Write | Boolean | Official documentation to come. | |
-| **OdbDownload** | Write | Boolean | Official documentation to come. | |
-| **OdbSyncDownload** | Write | Boolean | Official documentation to come. | |
-| **PeerCumulativeExfiltrationDetector** | Write | Boolean | Official documentation to come. | |
-| **PhysicalAccess** | Write | Boolean | Official documentation to come. | |
-| **PotentialHighImpactUser** | Write | Boolean | Official documentation to come. | |
+| **EmployeeAccessedEmployeePatientData** | Write | Boolean | Health record access indicator. | |
+| **EmployeeAccessedFamilyData** | Write | Boolean | Health record access indicator. | |
+| **EmployeeAccessedHighVolumePatientData** | Write | Boolean | Health record access indicator. | |
+| **EmployeeAccessedNeighbourData** | Write | Boolean | Health record access indicator. | |
+| **EmployeeAccessedRestrictedData** | Write | Boolean | Health record access indicator. | |
+| **EpoBrowseToChildAbuseSites** | Write | Boolean | Risky browsing indicator. | |
+| **EpoBrowseToCriminalActivitySites** | Write | Boolean | Risky browsing indicator. | |
+| **EpoBrowseToCultSites** | Write | Boolean | Risky browsing indicator. | |
+| **EpoBrowseToGamblingSites** | Write | Boolean | Risky browsing indicator. | |
+| **EpoBrowseToHackingSites** | Write | Boolean | Risky browsing indicator. | |
+| **EpoBrowseToHateIntoleranceSites** | Write | Boolean | Risky browsing indicator. | |
+| **EpoBrowseToIllegalSoftwareSites** | Write | Boolean | Risky browsing indicator. | |
+| **EpoBrowseToKeyloggerSites** | Write | Boolean | Risky browsing indicator. | |
+| **EpoBrowseToLlmSites** | Write | Boolean | Risky browsing indicator. | |
+| **EpoBrowseToMalwareSites** | Write | Boolean | Risky browsing indicator. | |
+| **EpoBrowseToPhishingSites** | Write | Boolean | Risky browsing indicator. | |
+| **EpoBrowseToPornographySites** | Write | Boolean | Risky browsing indicator. | |
+| **EpoBrowseToUnallowedDomain** | Write | Boolean | Risky browsing indicator. | |
+| **EpoBrowseToViolenceSites** | Write | Boolean | Risky browsing indicator. | |
+| **EpoCopyToClipboardFromSensitiveFile** | Write | Boolean | Device indicator. | |
+| **EpoCopyToNetworkShare** | Write | Boolean | Device indicator. | |
+| **EpoFileArchived** | Write | Boolean | Device indicator. | |
+| **EpoFileCopiedToRemoteDesktopSession** | Write | Boolean | Device indicator. | |
+| **EpoFileDeleted** | Write | Boolean | Device indicator. | |
+| **EpoFileDownloadedFromBlacklistedDomain** | Write | Boolean | Device indicator. | |
+| **EpoFileDownloadedFromEnterpriseDomain** | Write | Boolean | Device indicator. | |
+| **EpoFileRenamed** | Write | Boolean | Device indicator. | |
+| **EpoFileStagedToCentralLocation** | Write | Boolean | Device indicator. | |
+| **EpoHiddenFileCreated** | Write | Boolean | Device indicator. | |
+| **EpoRemovableMediaMount** | Write | Boolean | Device indicator. | |
+| **EpoSensitiveFileRead** | Write | Boolean | Device indicator. | |
+| **Mcas3rdPartyAppDownload** | Write | Boolean | Microsoft Defender for Cloud Apps indicator. | |
+| **Mcas3rdPartyAppFileDelete** | Write | Boolean | Microsoft Defender for Cloud Apps indicator. | |
+| **Mcas3rdPartyAppFileSharing** | Write | Boolean | Microsoft Defender for Cloud Apps indicator. | |
+| **McasActivityFromInfrequentCountry** | Write | Boolean | Microsoft Defender for Cloud Apps indicator. | |
+| **McasImpossibleTravel** | Write | Boolean | Microsoft Defender for Cloud Apps indicator. | |
+| **McasMultipleFailedLogins** | Write | Boolean | Microsoft Defender for Cloud Apps indicator. | |
+| **McasMultipleStorageDeletion** | Write | Boolean | Microsoft Defender for Cloud Apps indicator. | |
+| **McasMultipleVMCreation** | Write | Boolean | Microsoft Defender for Cloud Apps indicator. | |
+| **McasMultipleVMDeletion** | Write | Boolean | Microsoft Defender for Cloud Apps indicator. | |
+| **McasSuspiciousAdminActivities** | Write | Boolean | Microsoft Defender for Cloud Apps indicator. | |
+| **McasSuspiciousCloudCreation** | Write | Boolean | Microsoft Defender for Cloud Apps indicator. | |
+| **McasSuspiciousCloudTrailLoggingChange** | Write | Boolean | Microsoft Defender for Cloud Apps indicator. | |
+| **McasTerminatedEmployeeActivity** | Write | Boolean | Microsoft Defender for Cloud Apps indicator. | |
+| **OdbDownload** | Write | Boolean | Office Indicator. | |
+| **OdbSyncDownload** | Write | Boolean | Office Indicator. | |
+| **PeerCumulativeExfiltrationDetector** | Write | Boolean | Cumulative exfiltration detection indicator. | |
+| **PhysicalAccess** | Write | Boolean | Physical access indicator. | |
+| **PotentialHighImpactUser** | Write | Boolean | Risk score boosters indicator. | |
 | **Print** | Write | Boolean | Official documentation to come. | |
-| **PriorityUserGroupMember** | Write | Boolean | Official documentation to come. | |
-| **SecurityAlertDefenseEvasion** | Write | Boolean | Official documentation to come. | |
-| **SecurityAlertUnwantedSoftware** | Write | Boolean | Official documentation to come. | |
-| **SpoAccessRequest** | Write | Boolean | Official documentation to come. | |
-| **SpoApprovedAccess** | Write | Boolean | Official documentation to come. | |
-| **SpoDownload** | Write | Boolean | Official documentation to come. | |
-| **SpoDownloadV2** | Write | Boolean | Official documentation to come. | |
-| **SpoFileAccessed** | Write | Boolean | Official documentation to come. | |
-| **SpoFileDeleted** | Write | Boolean | Official documentation to come. | |
-| **SpoFileDeletedFromFirstStageRecycleBin** | Write | Boolean | Official documentation to come. | |
-| **SpoFileDeletedFromSecondStageRecycleBin** | Write | Boolean | Official documentation to come. | |
-| **SpoFileLabelDowngraded** | Write | Boolean | Official documentation to come. | |
-| **SpoFileLabelRemoved** | Write | Boolean | Official documentation to come. | |
-| **SpoFileSharing** | Write | Boolean | Official documentation to come. | |
-| **SpoFolderDeleted** | Write | Boolean | Official documentation to come. | |
-| **SpoFolderDeletedFromFirstStageRecycleBin** | Write | Boolean | Official documentation to come. | |
-| **SpoFolderDeletedFromSecondStageRecycleBin** | Write | Boolean | Official documentation to come. | |
-| **SpoFolderSharing** | Write | Boolean | Official documentation to come. | |
-| **SpoSiteExternalUserAdded** | Write | Boolean | Official documentation to come. | |
-| **SpoSiteInternalUserAdded** | Write | Boolean | Official documentation to come. | |
-| **SpoSiteLabelRemoved** | Write | Boolean | Official documentation to come. | |
-| **SpoSiteSharing** | Write | Boolean | Official documentation to come. | |
-| **SpoSyncDownload** | Write | Boolean | Official documentation to come. | |
-| **TeamsChannelFileSharedExternal** | Write | Boolean | Official documentation to come. | |
-| **TeamsChannelMemberAddedExternal** | Write | Boolean | Official documentation to come. | |
-| **TeamsChatFileSharedExternal** | Write | Boolean | Official documentation to come. | |
-| **TeamsFileDownload** | Write | Boolean | Official documentation to come. | |
-| **TeamsFolderSharedExternal** | Write | Boolean | Official documentation to come. | |
-| **TeamsMemberAddedExternal** | Write | Boolean | Official documentation to come. | |
-| **TeamsSensitiveMessage** | Write | Boolean | Official documentation to come. | |
-| **UserHistory** | Write | Boolean | Official documentation to come. | |
-| **AWSS3BlockPublicAccessDisabled** | Write | Boolean | Official documentation to come. | |
-| **AWSS3BucketDeleted** | Write | Boolean | Official documentation to come. | |
-| **AWSS3PublicAccessEnabled** | Write | Boolean | Official documentation to come. | |
-| **AWSS3ServerLoggingDisabled** | Write | Boolean | Official documentation to come. | |
-| **AzureElevateAccessToAllSubscriptions** | Write | Boolean | Official documentation to come. | |
-| **AzureResourceThreatProtectionSettingsUpdated** | Write | Boolean | Official documentation to come. | |
-| **AzureSQLServerAuditingSettingsUpdated** | Write | Boolean | Official documentation to come. | |
-| **AzureSQLServerFirewallRuleDeleted** | Write | Boolean | Official documentation to come. | |
-| **AzureSQLServerFirewallRuleUpdated** | Write | Boolean | Official documentation to come. | |
-| **AzureStorageAccountOrContainerDeleted** | Write | Boolean | Official documentation to come. | |
-| **BoxContentAccess** | Write | Boolean | Official documentation to come. | |
-| **BoxContentDelete** | Write | Boolean | Official documentation to come. | |
-| **BoxContentDownload** | Write | Boolean | Official documentation to come. | |
-| **BoxContentExternallyShared** | Write | Boolean | Official documentation to come. | |
-| **CCFinancialRegulatoryRiskyTextSent** | Write | Boolean | Official documentation to come. | |
-| **CCInappropriateContentSent** | Write | Boolean | Official documentation to come. | |
-| **CCInappropriateImagesSent** | Write | Boolean | Official documentation to come. | |
-| **DropboxContentAccess** | Write | Boolean | Official documentation to come. | |
-| **DropboxContentDelete** | Write | Boolean | Official documentation to come. | |
-| **DropboxContentDownload** | Write | Boolean | Official documentation to come. | |
-| **DropboxContentExternallyShared** | Write | Boolean | Official documentation to come. | |
-| **GoogleDriveContentAccess** | Write | Boolean | Official documentation to come. | |
-| **GoogleDriveContentDelete** | Write | Boolean | Official documentation to come. | |
-| **GoogleDriveContentExternallyShared** | Write | Boolean | Official documentation to come. | |
-| **PowerBIDashboardsDeleted** | Write | Boolean | Official documentation to come. | |
-| **PowerBIReportsDeleted** | Write | Boolean | Official documentation to come. | |
-| **PowerBIReportsDownloaded** | Write | Boolean | Official documentation to come. | |
-| **PowerBIReportsExported** | Write | Boolean | Official documentation to come. | |
-| **PowerBIReportsViewed** | Write | Boolean | Official documentation to come. | |
-| **PowerBISemanticModelsDeleted** | Write | Boolean | Official documentation to come. | |
-| **PowerBISensitivityLabelDowngradedForArtifacts** | Write | Boolean | Official documentation to come. | |
-| **PowerBISensitivityLabelRemovedFromArtifacts** | Write | Boolean | Official documentation to come. | |
-| **HistoricTimeSpan** | Write | String | Official documentation to come. | |
-| **InScopeTimeSpan** | Write | String | Official documentation to come. | |
-| **EnableTeam** | Write | Boolean | Official documentation to come. | |
-| **AnalyticsNewInsightEnabled** | Write | Boolean | Official documentation to come. | |
-| **AnalyticsTurnedOffEnabled** | Write | Boolean | Official documentation to come. | |
-| **HighSeverityAlertsEnabled** | Write | Boolean | Official documentation to come. | |
-| **HighSeverityAlertsRoleGroups** | Write | StringArray[] | Official documentation to come. | |
-| **PoliciesHealthEnabled** | Write | Boolean | Official documentation to come. | |
-| **PoliciesHealthRoleGroups** | Write | StringArray[] | Official documentation to come. | |
-| **NotificationDetailsEnabled** | Write | Boolean | Official documentation to come. | |
-| **NotificationDetailsRoleGroups** | Write | StringArray[] | Official documentation to come. | |
+| **PriorityUserGroupMember** | Write | Boolean | Risk score boosters indicator. | |
+| **SecurityAlertDefenseEvasion** | Write | Boolean | Microsoft Defender for Endpoint indicator. | |
+| **SecurityAlertUnwantedSoftware** | Write | Boolean | Microsoft Defender for Endpoint indicator. | |
+| **SpoAccessRequest** | Write | Boolean | Office Indicator. | |
+| **SpoApprovedAccess** | Write | Boolean | Office Indicator. | |
+| **SpoDownload** | Write | Boolean | Office Indicator. | |
+| **SpoDownloadV2** | Write | Boolean | Office Indicator. | |
+| **SpoFileAccessed** | Write | Boolean | Office Indicator. | |
+| **SpoFileDeleted** | Write | Boolean | Office Indicator. | |
+| **SpoFileDeletedFromFirstStageRecycleBin** | Write | Boolean | Office Indicator. | |
+| **SpoFileDeletedFromSecondStageRecycleBin** | Write | Boolean | Office Indicator. | |
+| **SpoFileLabelDowngraded** | Write | Boolean | Office Indicator. | |
+| **SpoFileLabelRemoved** | Write | Boolean | Office Indicator. | |
+| **SpoFileSharing** | Write | Boolean | Office Indicator. | |
+| **SpoFolderDeleted** | Write | Boolean | Office Indicator. | |
+| **SpoFolderDeletedFromFirstStageRecycleBin** | Write | Boolean | Office Indicator. | |
+| **SpoFolderDeletedFromSecondStageRecycleBin** | Write | Boolean | Office Indicator. | |
+| **SpoFolderSharing** | Write | Boolean | Office Indicator. | |
+| **SpoSiteExternalUserAdded** | Write | Boolean | Office Indicator. | |
+| **SpoSiteInternalUserAdded** | Write | Boolean | Office Indicator. | |
+| **SpoSiteLabelRemoved** | Write | Boolean | Office Indicator. | |
+| **SpoSiteSharing** | Write | Boolean | Office Indicator. | |
+| **SpoSyncDownload** | Write | Boolean | Office Indicator. | |
+| **TeamsChannelFileSharedExternal** | Write | Boolean | Office Indicator. | |
+| **TeamsChannelMemberAddedExternal** | Write | Boolean | Office Indicator. | |
+| **TeamsChatFileSharedExternal** | Write | Boolean | Office Indicator. | |
+| **TeamsFileDownload** | Write | Boolean | Office Indicator. | |
+| **TeamsFolderSharedExternal** | Write | Boolean | Office Indicator. | |
+| **TeamsMemberAddedExternal** | Write | Boolean | Office Indicator. | |
+| **TeamsSensitiveMessage** | Write | Boolean | Office Indicator. | |
+| **UserHistory** | Write | Boolean | Risk score boosters indicator. | |
+| **AWSS3BlockPublicAccessDisabled** | Write | Boolean | AWS indicator. | |
+| **AWSS3BucketDeleted** | Write | Boolean | AWS indicator. | |
+| **AWSS3PublicAccessEnabled** | Write | Boolean | AWS indicator. | |
+| **AWSS3ServerLoggingDisabled** | Write | Boolean | AWS indicator. | |
+| **AzureElevateAccessToAllSubscriptions** | Write | Boolean | Azure indicator. | |
+| **AzureResourceThreatProtectionSettingsUpdated** | Write | Boolean | Azure indicator. | |
+| **AzureSQLServerAuditingSettingsUpdated** | Write | Boolean | Azure indicator. | |
+| **AzureSQLServerFirewallRuleDeleted** | Write | Boolean | Azure indicator. | |
+| **AzureSQLServerFirewallRuleUpdated** | Write | Boolean | Azure indicator. | |
+| **AzureStorageAccountOrContainerDeleted** | Write | Boolean | Azure indicator. | |
+| **BoxContentAccess** | Write | Boolean | Box indicator. | |
+| **BoxContentDelete** | Write | Boolean | Box indicator. | |
+| **BoxContentDownload** | Write | Boolean | Box indicator. | |
+| **BoxContentExternallyShared** | Write | Boolean | Box indicator. | |
+| **CCFinancialRegulatoryRiskyTextSent** | Write | Boolean | Detect messages matching specific trainable classifiers. | |
+| **CCInappropriateContentSent** | Write | Boolean | Detect messages matching specific trainable classifiers. | |
+| **CCInappropriateImagesSent** | Write | Boolean | Detect messages matching specific trainable classifiers. | |
+| **DropboxContentAccess** | Write | Boolean | Dropbox indicator. | |
+| **DropboxContentDelete** | Write | Boolean | Dropbox indicator. | |
+| **DropboxContentDownload** | Write | Boolean | Dropbox indicator. | |
+| **DropboxContentExternallyShared** | Write | Boolean | Dropbox indicator. | |
+| **GoogleDriveContentAccess** | Write | Boolean | Google Drive indicator. | |
+| **GoogleDriveContentDelete** | Write | Boolean | Google Drive indicator. | |
+| **GoogleDriveContentExternallyShared** | Write | Boolean | Google Drive indicator. | |
+| **PowerBIDashboardsDeleted** | Write | Boolean | Power BI indicator. | |
+| **PowerBIReportsDeleted** | Write | Boolean | Power BI indicator. | |
+| **PowerBIReportsDownloaded** | Write | Boolean | Power BI indicator. | |
+| **PowerBIReportsExported** | Write | Boolean | Power BI indicator. | |
+| **PowerBIReportsViewed** | Write | Boolean | Power BI indicator. | |
+| **PowerBISemanticModelsDeleted** | Write | Boolean | Power BI indicator. | |
+| **PowerBISensitivityLabelDowngradedForArtifacts** | Write | Boolean | Power BI indicator. | |
+| **PowerBISensitivityLabelRemovedFromArtifacts** | Write | Boolean | Power BI indicator. | |
+| **HistoricTimeSpan** | Write | String | Determines how far back a policy should go to detect user activity and is triggered when a user performs the first activity matching a policy. | |
+| **InScopeTimeSpan** | Write | String | Determines how long policies will actively detect activity for users and is triggered when a user performs the first activity matching a policy. | |
+| **EnableTeam** | Write | Boolean | Integrate Microsoft Teams capabilities with insider risk case management to enhance collaboration with stakeholders.  | |
+| **AnalyticsNewInsightEnabled** | Write | Boolean | Send a monthly email summarizing new analytics scan insights. | |
+| **AnalyticsTurnedOffEnabled** | Write | Boolean | Send an email when analytics is turned off for your organization. | |
+| **HighSeverityAlertsEnabled** | Write | Boolean | Send a daily email when new high severity alerts are generated. | |
+| **HighSeverityAlertsRoleGroups** | Write | StringArray[] | Specifies the groups of high severity alerts to include. Possible values are: InsiderRiskManagement, InsiderRiskManagementAnalysts, and InsiderRiskManagementInvestigators. | |
+| **PoliciesHealthEnabled** | Write | Boolean | Send a weekly email summarizing policies that have unresolved warnings. | |
+| **PoliciesHealthRoleGroups** | Write | StringArray[] | Specifies the groups to notify with weekly email. Possible values are: InsiderRiskManagement and InsiderRiskManagementAdmins. | |
+| **NotificationDetailsEnabled** | Write | Boolean | Send a notification email when the first alert is generated for a new policy. | |
+| **NotificationDetailsRoleGroups** | Write | StringArray[] | Specifies the groups to notify when the first alert is generated. Possible values are: InsiderRiskManagement, InsiderRiskManagementAnalysts, and InsiderRiskManagementInvestigators. | |
 | **ClipDeletionEnabled** | Write | Boolean | Official documentation to come. | |
 | **SessionRecordingEnabled** | Write | Boolean | Official documentation to come. | |
 | **RecordingTimeframePreEventInSec** | Write | String | Official documentation to come. | |
@@ -174,7 +176,7 @@
 | **ProfileInScopeTimeSpan** | Write | UInt32 | Official documentation to come. | |
 | **GPUUtilizationLimit** | Write | UInt32 | Official documentation to come. | |
 | **CPUUtilizationLimit** | Write | UInt32 | Official documentation to come. | |
-| **MDATPTriageStatus** | Write | String | Official documentation to come. | |
+| **MDATPTriageStatus** | Write | StringArray[] | Microsoft Defender for Endpoint alert statuses. | |
 | **Ensure** | Write | String | Present ensures the instance exists, absent ensures it is removed. | `Absent`, `Present` |
 | **Credential** | Write | PSCredential | Credentials of the workload's Admin | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |

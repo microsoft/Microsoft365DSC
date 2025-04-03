@@ -63,40 +63,59 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    Write-Verbose -Message "Checking for the Intune Endpoint Protection Application Control Policy {$DisplayName}"
-
-    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters -ErrorAction Stop
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullResult = $PSBoundParameters
-    $nullResult.Ensure = 'Absent'
+    Write-Verbose -Message "Getting configuration of the Intune Endpoint Protection Application Control Policy with Id {$Id} and DisplayName {$DisplayName}"
 
     try
     {
-        #Retrieve policy general settings
-        $policy = Get-MgBetaDeviceManagementIntent -All -Filter "displayName eq '$DisplayName'" -ErrorAction Stop | Where-Object -FilterScript { $_.TemplateId -eq '63be6324-e3c9-4c97-948a-e7f4b96f0f20' }
-
-        if (([array]$policy).count -gt 1)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.DisplayName -ne $DisplayName)
         {
-            throw "A policy with a duplicated displayName {'$DisplayName'} was found - Ensure displayName is unique"
+            $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+                -InboundParameters $PSBoundParameters -ErrorAction Stop
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullResult = $PSBoundParameters
+            $nullResult.Ensure = 'Absent'
+
+            $policy = $null
+            #Retrieve policy general settings
+            if (-not [System.String]::IsNullOrEmpty($Id))
+            {
+                $policy = Get-MgBetaDeviceManagementIntent -DeviceManagementIntentId $Id -ErrorAction SilentlyContinue
+            }
+
+            if ($null -eq $policy)
+            {
+                if (-not [System.String]::IsNullOrEmpty($DisplayName))
+                {
+                    $policy = Get-MgBetaDeviceManagementIntent -All -Filter "displayName eq '$DisplayName'" -ErrorAction Stop | Where-Object -FilterScript { $_.TemplateId -eq '63be6324-e3c9-4c97-948a-e7f4b96f0f20' }
+                }
+            }
+
+            if (([array]$policy).count -gt 1)
+            {
+                throw "A policy with a duplicated displayName {'$DisplayName'} was found - Ensure displayName is unique"
+            }
+
+            if ($null -eq $policy)
+            {
+                Write-Verbose -Message "No Endpoint Protection Application Control Policy {$DisplayName} was found"
+                return $nullResult
+            }
         }
-
-        if ($null -eq $policy)
+        else
         {
-            Write-Verbose -Message "No Endpoint Protection Application Control Policy {$DisplayName} was found"
-            return $nullResult
+            $policy = $Script:exportedInstance
         }
 
         #Retrieve policy specific settings
@@ -388,13 +407,8 @@ function Test-TargetResource
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
-    $ValuesToCheck = ([hashtable]$PSBoundParameters).clone()
-
+    $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
     $testResult = $true
-    if ($CurrentValues.Ensure -ne $Ensure)
-    {
-        $testResult = $false
-    }
     #region Assignments
     if ($TestResult)
     {
@@ -482,11 +496,11 @@ function Export-TargetResource
             -ErrorAction Stop | Where-Object -FilterScript { $_.TemplateId -eq $policyTemplateID }
         if ($policies.Length -eq 0)
         {
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         else
         {
-            Write-Host "`r`n" -NoNewline
+            Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
         foreach ($policy in $policies)
         {
@@ -495,7 +509,7 @@ function Export-TargetResource
                 $Global:M365DSCExportResourceInstancesCount++
             }
 
-            Write-Host "    |---[$i/$($policies.Count)] $($policy.DisplayName)" -NoNewline
+            Write-M365DSCHost -Message "    |---[$i/$($policies.Count)] $($policy.DisplayName)" -DeferWrite
 
             $params = @{
                 DisplayName           = $policy.DisplayName
@@ -509,6 +523,7 @@ function Export-TargetResource
                 AccessTokens          = $AccessTokens
             }
 
+            $Script:exportedInstance = $policy
             $Results = Get-TargetResource @params
             if (-not (Test-M365DSCAuthenticationParameter -BoundParameters $Results))
             {
@@ -530,24 +545,18 @@ function Export-TargetResource
                 }
             }
 
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -Credential $Credential
-
-            if ($Results.Assignments)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Assignments' -IsCIMArray:$true
-            }
+                -Credential $Credential `
+                -NoEscape @('Assignments')
 
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
 
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
             $i++
         }
         return $dscContent
@@ -558,11 +567,11 @@ function Export-TargetResource
                 $_.Exception -like '*Unable to perform redirect as Location Header is not set in response*' -or `
                 $_.Exception -like '*Request not applicable to target tenant*')
         {
-            Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
+            Write-M365DSCHost -Message "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }
         else
         {
-            Write-Host $Global:M365DSCEmojiRedX
+            Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
             New-M365DSCLogEntry -Message 'Error during Export:' `
                 -Exception $_ `

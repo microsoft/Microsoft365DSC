@@ -4,6 +4,7 @@ class MSFT_EXOManagementRoleEntry : OMI_BaseResource
     [Key, Description("The Identity parameter specifies the role entry that you want to modify.")] String Identity;
     [Write, Description("The Parameters parameter specifies the parameters to be added to or removed from the role entry.")] String Parameters[];
     [Write, Description("The Type parameter specifies the type of role entry to return."), ValueMap{"Cmdlet","Script","ApplicationPermission","WebService"}, Values{"Cmdlet","Script","ApplicationPermission","WebService"}] String Type;
+    [Write, Description("Specify if the Management Role entry should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
     [Write, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
     [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;

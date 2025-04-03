@@ -39,7 +39,7 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - Policy.Read.All
+    - Policy.Read.All, AccessReview.Read.All
 
 - **Update**
 

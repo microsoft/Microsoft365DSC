@@ -17,6 +17,13 @@ class MSFT_MicrosoftGraphOperatingSystemVersionRange
     [Write, Description("The highest inclusive version that this range contains.")] String HighestVersion;
 };
 
+[ClassVersion("1.0.0.0")]
+class MSFT_MicrosoftGraphDeviceCompliancePolicyScript
+{
+    [Key, Description("Device compliance script name.")] String DisplayName;
+    [Write, Description("Rules content of the custom settings.")] String RulesContent;
+};
+
 [ClassVersion("1.0.0.0"), FriendlyName("IntuneDeviceCompliancePolicyWindows10")]
 class MSFT_IntuneDeviceCompliancePolicyWindows10 : OMI_BaseResource
 {
@@ -53,7 +60,7 @@ class MSFT_IntuneDeviceCompliancePolicyWindows10 : OMI_BaseResource
     [Write, Description("DeviceThreatProtectionRequiredSecurityLevel of the Windows 10 device compliance policy."), ValueMap{"Unavailable","Secured","Low", "Medium","High","NotSet"}, Values{"Unavailable","Secured","Low", "Medium","High","NotSet"}] String DeviceThreatProtectionRequiredSecurityLevel;
     [Write, Description("ConfigurationManagerComplianceRequired of the Windows 10 device compliance policy.")] Boolean ConfigurationManagerComplianceRequired;
     [Write, Description("TpmRequired of the Windows 10 device compliance policy.")] Boolean TpmRequired;
-    [Write, Description("DeviceCompliancePolicyScript of the Windows 10 device compliance policy.")] String DeviceCompliancePolicyScript;
+    [Write, Description("DeviceCompliancePolicyScript of the Windows 10 device compliance policy."), EmbeddedInstance("MSFT_MicrosoftGraphDeviceCompliancePolicyScript")] String DeviceCompliancePolicyScript;
     [Write, Description("ValidOperatingSystemBuildRanges of the Windows 10 device compliance policy."), EmbeddedInstance("MSFT_MicrosoftGraphOperatingSystemVersionRange")] String ValidOperatingSystemBuildRanges[];
     [Write, Description("Present ensures the policy exists, absent ensures it is removed."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] string Ensure;
     [Write, Description("Credentials of the Intune Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;

@@ -68,59 +68,51 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    Write-Verbose -Message "Getting permissions for Mailbox {$Identity}"
-
-    if ($Global:CurrentModeIsExport)
-    {
-        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters `
-            -SkipModuleReload $true
-    }
-    else
-    {
-        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters
-    }
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullResult = @{
-        Identity = $Identity
-        Ensure   = 'Absent'
-    }
-
     try
     {
-        [Array]$permission = Get-MailboxPermission -Identity $Identity -ErrorAction Stop
-
-        if ($permission.Length -gt 1)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Identity -ne $Identity)
         {
-            $permission = $permission | Where-Object -FilterScript { $_.User -eq $User -and (Compare-Object -ReferenceObject $_.AccessRights.Replace(' ', '').Split(',') -DifferenceObject $AccessRights).Count -eq 0 }
+            Write-Verbose -Message "Getting permissions for Mailbox {$Identity}"
+
+            $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+                -InboundParameters $PSBoundParameters
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullResult = @{
+                Identity = $Identity
+                Ensure   = 'Absent'
+            }
+
+            [Array]$permissions = Get-MailboxPermission -Identity $Identity -ErrorAction Stop
+
+            $permission = $permissions | Where-Object -FilterScript { $_.User -eq $User -and (Compare-Object -ReferenceObject $_.AccessRights.Replace(' ', '').Split(',') -DifferenceObject $AccessRights).Count -eq 0 }
+
+            if ($null -eq $permission)
+            {
+                Write-Verbose -Message "Permission for mailbox {$($Identity)} do not exist."
+                return $nullResult
+            }
+        }
+        else
+        {
+            $permission = $Script:exportedInstance
         }
 
-        if ($permission.Length -gt 1)
-        {
-            $permission = $permission[0]
-        }
-
-        if ($null -eq $permission)
-        {
-            Write-Verbose -Message "Permission for mailbox {$($Identity)} do not exist."
-            return $nullResult
-        }
+        $userInfo = Get-User -Identity $permission.Identity
 
         $result = @{
-            Identity              = $permission.Identity
+            Identity              = $userInfo.UserPrincipalName
             AccessRights          = [Array]$permission.AccessRights.Replace(' ', '').Split(',')
             InheritanceType       = $permission.InheritanceType
             Owner                 = $permission.Owner
@@ -422,22 +414,22 @@ function Export-TargetResource
 
         if ($mailboxes.Length -eq 0)
         {
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         else
         {
-            Write-Host "`r`n" -NoNewline
+            Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
         $dscContent = ''
         $i = 1
         foreach ($mailbox in $mailboxes)
         {
-            Write-Host "    |---[$i/$($mailboxes.Count)] $($mailbox.UserPrincipalName)" -NoNewline
+            Write-M365DSCHost -Message "    |---[$i/$($mailboxes.Count)] $($mailbox.UserPrincipalName)" -DeferWrite
 
             [Array]$permissions = Get-MailboxPermission -Identity $mailbox.UserPrincipalName
 
             $j = 1
-            Write-Host "`r`n" -NoNewline
+            Write-M365DSCHost -Message "`r`n" -DeferWrite
             foreach ($permission in $permissions)
             {
                 if ($null -ne $Global:M365DSCExportResourceInstancesCount)
@@ -445,7 +437,7 @@ function Export-TargetResource
                     $Global:M365DSCExportResourceInstancesCount++
                 }
 
-                Write-Host "        |---[$j/$($permissions.Count)] $($permission.Identity)" -NoNewline
+                Write-M365DSCHost -Message "        |---[$j/$($permissions.Count)] $($permission.Identity)" -DeferWrite
                 $Params = @{
                     Identity              = $mailbox.UserPrincipalName
                     AccessRights          = [Array]$permission.AccessRights.Replace(' ', '').Replace('SendAs,', '').Split(',') # ignore SendAs permissions since they are not supported by *-MailboxPermission cmdlets
@@ -461,12 +453,10 @@ function Export-TargetResource
                     AccessTokens          = $AccessTokens
                 }
 
+                $Script:exportedInstance = $permission
                 $Results = Get-TargetResource @Params
-
                 if ($Results -is [System.Collections.Hashtable] -and $Results.Count -gt 1)
                 {
-                    $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                        -Results $Results
                     $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                         -ConnectionMode $ConnectionMode `
                         -ModulePath $PSScriptRoot `
@@ -477,11 +467,11 @@ function Export-TargetResource
                     Save-M365DSCPartialExport -Content $currentDSCBlock `
                         -FileName $Global:PartialExportFileName
 
-                    Write-Host $Global:M365DSCEmojiGreenCheckMark
+                    Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
                 }
                 else
                 {
-                    Write-Host $Global:M365DSCEmojiRedX
+                    Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
                 }
                 $j++
             }
@@ -492,7 +482,7 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `

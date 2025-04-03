@@ -210,47 +210,47 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    Write-Verbose -Message "Getting configuration of Role: $DisplayName"
-    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters
-
-    Write-Verbose -Message 'Getting configuration of Role'
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullReturn = $PSBoundParameters
-
-    $RoleDefintion = $null
-    if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
+    if (-not $Script:exportedInstance -or $Script:exportedInstance.DisplayName -ne $DisplayName)
     {
-        $RoleDefinition = $Script:exportedInstances | Where-Object -FilterScript { $_.Id -eq $Id }
-    }
-    elseif (-not [System.String]::IsNullOrEmpty($Id))
-    {
-        $RoleDefinition = Get-MgBetaRoleManagementDirectoryRoleDefinition -UnifiedRoleDefinitionId $Id `
-            -ErrorAction SilentlyContinue
-    }
+        Write-Verbose -Message "Getting configuration of Role: $DisplayName"
+        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+            -InboundParameters $PSBoundParameters
 
-    if ($null -eq $RoleDefinition -and -not [System.String]::IsNullOrEmpty($DisplayName))
-    {
-        if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
+        Write-Verbose -Message 'Getting configuration of Role'
+
+        #Ensure the proper dependencies are installed in the current environment.
+        Confirm-M365DSCDependencies
+
+        #region Telemetry
+        $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+        $CommandName = $MyInvocation.MyCommand
+        $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+            -CommandName $CommandName `
+            -Parameters $PSBoundParameters
+        Add-M365DSCTelemetryEvent -Data $data
+        #endregion
+
+        $RoleDefinition = $null
+        if (-not [System.String]::IsNullOrEmpty($Id))
         {
-            $RoleDefinition = $Script:exportedInstances | Where-Object -FilterScript { $_.DisplayName -eq $DisplayName }
+            $RoleDefinition = Get-MgBetaRoleManagementDirectoryRoleDefinition -UnifiedRoleDefinitionId $Id `
+                -ErrorAction SilentlyContinue
         }
-        else
+
+        if ($null -eq $RoleDefinition -and -not [System.String]::IsNullOrEmpty($DisplayName))
         {
             $RoleDefinition = Get-MgBetaRoleManagementDirectoryRoleDefinition -Filter "displayName eq '$DisplayName'"
         }
+    }
+    else
+    {
+        $RoleDefinition = $Script:exportedInstance
+    }
+
+    $nullReturn = $PSBoundParameters
+    if ($null -eq $RoleDefinition)
+    {
+        return $nullReturn
     }
 
     try
@@ -278,7 +278,7 @@ function Get-TargetResource
     }
 
     #get Policyrule
-    $role = Get-MgBetaPolicyRoleManagementPolicyRule -UnifiedRoleManagementPolicyId $Policy.Policyid
+    $role = Get-MgBetaPolicyRoleManagementPolicyRule -UnifiedRoleManagementPolicyId $Policy.Policyid -ErrorAction SilentlyContinue
 
     $DisplayName = $RoleDefinition.DisplayName
     $ActivationMaxDuration = ($role | Where-Object { $_.Id -eq 'Expiration_EndUser_Assignment' }).AdditionalProperties.maximumDuration
@@ -1461,7 +1461,7 @@ function Export-TargetResource
     {
         if ($_.ErrorDetails.Message -like '*The tenant needs to have Microsoft Entra*')
         {
-            Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) AAD Premium License is required to get the role."
+            Write-M365DSCHost -Message "`r`n    $($Global:M365DSCEmojiYellowCircle) AAD Premium License is required to get the role."
             return ''
         }
     }
@@ -1471,7 +1471,7 @@ function Export-TargetResource
         [array] $Script:exportedInstances = Get-MgBetaRoleManagementDirectoryRoleDefinition -Filter $Filter -Sort DisplayName -ErrorAction Stop
         $i = 1
         $dscContent = ''
-        Write-Host "`r`n" -NoNewline
+        Write-M365DSCHost -Message "`r`n" -DeferWrite
         foreach ($role in $Script:exportedInstances)
         {
             if ($null -ne $Global:M365DSCExportResourceInstancesCount)
@@ -1479,7 +1479,7 @@ function Export-TargetResource
                 $Global:M365DSCExportResourceInstancesCount++
             }
 
-            Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $($role.DisplayName)" -NoNewline
+            Write-M365DSCHost -Message "    |---[$i/$($Script:exportedInstances.Count)] $($role.DisplayName)" -DeferWrite
             $Params = @{
                 Id                    = $role.Id
                 DisplayName           = $role.DisplayName
@@ -1492,12 +1492,10 @@ function Export-TargetResource
                 AccessTokens          = $AccessTokens
             }
 
+            $Script:exportedInstance = $role
             $Results = Get-TargetResource @Params
-
             if ($Results.Ensure -eq 'Present')
             {
-                $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                    -Results $Results
                 $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                     -ConnectionMode $ConnectionMode `
                     -ModulePath $PSScriptRoot `
@@ -1507,7 +1505,7 @@ function Export-TargetResource
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
                     -FileName $Global:PartialExportFileName
             }
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
             $i++
         }
         return $dscContent
@@ -1515,7 +1513,7 @@ function Export-TargetResource
 
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `

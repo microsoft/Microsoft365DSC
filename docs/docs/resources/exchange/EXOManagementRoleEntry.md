@@ -7,6 +7,7 @@
 | **Identity** | Key | String | The Identity parameter specifies the role entry that you want to modify. | |
 | **Parameters** | Write | StringArray[] | The Parameters parameter specifies the parameters to be added to or removed from the role entry. | |
 | **Type** | Write | String | The Type parameter specifies the type of role entry to return. | `Cmdlet`, `Script`, `ApplicationPermission`, `WebService` |
+| **Ensure** | Write | String | Specify if the Management Role entry should exist or not. | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials of the Exchange Global Admin | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
 | **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. | |

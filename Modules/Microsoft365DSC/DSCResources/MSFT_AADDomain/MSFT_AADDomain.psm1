@@ -78,30 +78,38 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters | Out-Null
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullResult = $PSBoundParameters
-    $nullResult.Ensure = 'Absent'
     try
     {
-        $instance = Get-MgBetaDomain -DomainId $Id -ErrorAction SilentlyContinue
-
-        if ($null -eq $instance)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Id -ne $Id)
         {
-            return $nullResult
+            New-M365DSCConnection -Workload 'MicrosoftGraph' `
+                -InboundParameters $PSBoundParameters | Out-Null
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullResult = $PSBoundParameters
+            $nullResult.Ensure = 'Absent'
+
+            $instance = Get-MgBetaDomain -DomainId $Id -ErrorAction SilentlyContinue
+
+            if ($null -eq $instance)
+            {
+                return $nullResult
+            }
+        }
+        else
+        {
+            $instance = $Script:exportedInstance
         }
 
         $results = @{
@@ -237,7 +245,7 @@ function Set-TargetResource
     {
         $NeedAdditionalUpdate = $false
         $UpdatePasswordNotificationWindowInDays = $false
-        if (-not [System.String]::IsNullOrEmpty('PasswordNotificationWindowInDays'))
+        if (-not [System.String]::IsNullOrEmpty($PasswordNotificationWindowInDays))
         {
             $NeedAdditionalUpdate = $true
             $UpdatePasswordNotificationWindowInDays = $true
@@ -448,18 +456,17 @@ function Export-TargetResource
 
     try
     {
-        $Script:ExportMode = $true
         [array] $Script:exportedInstances = Get-MgBetaDomain -ErrorAction Stop
 
         $i = 1
         $dscContent = ''
         if ($Script:exportedInstances.Length -eq 0)
         {
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         else
         {
-            Write-Host "`r`n" -NoNewline
+            Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
         foreach ($config in $Script:exportedInstances)
         {
@@ -469,7 +476,7 @@ function Export-TargetResource
             }
 
             $displayedKey = $config.Id
-            Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -NoNewline
+            Write-M365DSCHost -Message "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -DeferWrite
             $params = @{
                 Id                    = $config.Id
                 Credential            = $Credential
@@ -481,9 +488,8 @@ function Export-TargetResource
                 AccessTokens          = $AccessTokens
             }
 
+            $Script:exportedInstance = $config
             $Results = Get-TargetResource @Params
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
 
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
@@ -494,13 +500,13 @@ function Export-TargetResource
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         return $dscContent
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `

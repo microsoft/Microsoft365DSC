@@ -200,7 +200,7 @@ function Get-TargetResource
         }
         $results = @{
             IsSingleInstance                         = 'Yes'
-            SharingCapability                        = $SPOSharingSettings.SharingCapability
+            SharingCapability                        = $SPOSharingSettings.SharingCapability.ToString()
             ShowEveryoneClaim                        = $SPOSharingSettings.ShowEveryoneClaim
             ShowAllUsersClaim                        = $SPOSharingSettings.ShowAllUsersClaim
             ShowEveryoneExceptExternalUsersClaim     = $SPOSharingSettings.ShowEveryoneExceptExternalUsersClaim
@@ -213,12 +213,12 @@ function Get-TargetResource
             ExternalUserExpirationRequired           = $SPOSharingSettings.ExternalUserExpirationRequired
             SharingAllowedDomainList                 = $allowDomains
             SharingBlockedDomainList                 = $blockDomains
-            SharingDomainRestrictionMode             = $SPOSharingSettings.SharingDomainRestrictionMode
-            DefaultSharingLinkType                   = $SPOSharingSettings.DefaultSharingLinkType
+            SharingDomainRestrictionMode             = $SPOSharingSettings.SharingDomainRestrictionMode.ToString()
+            DefaultSharingLinkType                   = $SPOSharingSettings.DefaultSharingLinkType.ToString()
             PreventExternalUsersFromResharing        = $SPOSharingSettings.PreventExternalUsersFromResharing
             ShowPeoplePickerSuggestionsForGuestUsers = $SPOSharingSettings.ShowPeoplePickerSuggestionsForGuestUsers
-            FileAnonymousLinkType                    = $SPOSharingSettings.FileAnonymousLinkType
-            FolderAnonymousLinkType                  = $SPOSharingSettings.FolderAnonymousLinkType
+            FileAnonymousLinkType                    = $SPOSharingSettings.FileAnonymousLinkType.ToString()
+            FolderAnonymousLinkType                  = $SPOSharingSettings.FolderAnonymousLinkType.ToString()
             NotifyOwnersWhenItemsReshared            = $SPOSharingSettings.NotifyOwnersWhenItemsReshared
             DefaultLinkPermission                    = $DefaultLinkPermission
 
@@ -865,8 +865,6 @@ function Export-TargetResource
         {
             $Results.Remove('RequireAnonymousLinksExpireInDays') | Out-Null
         }
-        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-            -Results $Results
         $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
             -ConnectionMode $ConnectionMode `
             -ModulePath $PSScriptRoot `
@@ -875,12 +873,12 @@ function Export-TargetResource
         $dscContent += $currentDSCBlock
         Save-M365DSCPartialExport -Content $currentDSCBlock `
             -FileName $Global:PartialExportFileName
-        Write-Host $Global:M365DSCEmojiGreenCheckmark
+        Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         return $dscContent
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `

@@ -123,58 +123,67 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    Write-Verbose -Message "Checking for the Intune Account Protection Policy {$DisplayName}"
-
-    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters `
-        -ErrorAction Stop
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullResult = $PSBoundParameters
-    $nullResult.Ensure = 'Absent'
+    Write-Verbose -Message "Getting configuration of the Intune Account Protection Policy with Id {$Identity} and DisplayName {$DisplayName}"
 
     try
     {
-        #Retrieve policy general settings
-
-        $policy = Get-MgBetaDeviceManagementIntent -DeviceManagementIntentId $Identity -ExpandProperty settings, assignments -ErrorAction SilentlyContinue
-
-        if ($null -eq $policy)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.DisplayName -ne $DisplayName)
         {
-            Write-Verbose -Message "No Account Protection Policy with identity {$Identity} was found"
-            if (-not [String]::IsNullOrEmpty($DisplayName))
+            $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+                -InboundParameters $PSBoundParameters `
+                -ErrorAction Stop
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullResult = $PSBoundParameters
+            $nullResult.Ensure = 'Absent'
+
+            #Retrieve policy general settings
+            $policy = $null
+            if (-not [String]::IsNullOrEmpty($Identity))
             {
-                $policy = Get-MgBetaDeviceManagementIntent -Filter "DisplayName eq '$DisplayName'" -ErrorAction SilentlyContinue
+                $policy = Get-MgBetaDeviceManagementIntent -DeviceManagementIntentId $Identity -ExpandProperty settings, assignments -ErrorAction SilentlyContinue
             }
 
             if ($null -eq $policy)
             {
-                Write-Verbose -Message "No Account Protection Policy with displayName {$DisplayName} was found"
-                return $nullResult
+                Write-Verbose -Message "No Account Protection Policy with identity {$Identity} was found"
+                if (-not [String]::IsNullOrEmpty($DisplayName))
+                {
+                    $policy = Get-MgBetaDeviceManagementIntent -Filter "DisplayName eq '$DisplayName'" -ErrorAction SilentlyContinue
+                }
+
+                if ($null -eq $policy)
+                {
+                    Write-Verbose -Message "No Account Protection Policy with displayName {$DisplayName} was found"
+                    return $nullResult
+                }
+
+                if (([array]$policy).count -gt 1)
+                {
+                    throw "A policy with a duplicated displayName {'$DisplayName'} was found - Ensure displayName is unique"
+                }
+
+                $policy = Get-MgBetaDeviceManagementIntent -DeviceManagementIntentId $policy.Id -ExpandProperty settings, assignments -ErrorAction SilentlyContinue
+
             }
-
-            if (([array]$policy).count -gt 1)
-            {
-                throw "A policy with a duplicated displayName {'$DisplayName'} was found - Ensure displayName is unique"
-            }
-
-            $policy = Get-MgBetaDeviceManagementIntent -DeviceManagementIntentId $policy.id -ExpandProperty settings, assignments -ErrorAction SilentlyContinue
-
+        }
+        else
+        {
+            $policy = Get-MgBetaDeviceManagementIntent -DeviceManagementIntentId $Script:exportedInstance.Id -ExpandProperty settings, assignments
         }
 
-
-        $Identity = $policy.id
+        $Identity = $policy.Id
         [array]$settings = $policy.settings
 
         $returnHashtable = @{}
@@ -230,7 +239,7 @@ function Get-TargetResource
         {
             if (Assert-M365DSCIsNonInteractiveShell)
             {
-                Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
+                Write-M365DSCHost -Message "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
             }
         }
         else
@@ -620,12 +629,7 @@ function Test-TargetResource
 
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
     $ValuesToCheck.Remove('Identity') | Out-Null
-
     $testResult = $true
-    if ($CurrentValues.Ensure -ne $Ensure)
-    {
-        $testResult = $false
-    }
 
     #region assignments
     if ($testResult)
@@ -715,11 +719,11 @@ function Export-TargetResource
 
         if ($policies.Length -eq 0)
         {
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         else
         {
-            Write-Host "`r`n" -NoNewline
+            Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
         foreach ($policy in $policies)
         {
@@ -728,7 +732,7 @@ function Export-TargetResource
                 $Global:M365DSCExportResourceInstancesCount++
             }
 
-            Write-Host "    |---[$i/$($policies.Count)] $($policy.DisplayName)" -NoNewline
+            Write-M365DSCHost -Message "    |---[$i/$($policies.Count)] $($policy.DisplayName)" -DeferWrite
 
             $params = @{
                 Identity              = $policy.Id
@@ -743,6 +747,7 @@ function Export-TargetResource
                 AccessTokens          = $AccessTokens
             }
 
+            $Script:exportedInstance = $policy
             $Results = Get-TargetResource @params
             if (-not (Test-M365DSCAuthenticationParameter -BoundParameters $Results))
             {
@@ -764,31 +769,19 @@ function Export-TargetResource
                 }
             }
 
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
 
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -Credential $Credential
-
-
-            if ($Results.Assignments)
-            {
-                $isCIMArray = $false
-                if ($Results.Assignments.getType().Fullname -like '*[[\]]')
-                {
-                    $isCIMArray = $true
-                }
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Assignments' -IsCIMArray:$isCIMArray
-            }
+                -Credential $Credential `
+                -NoEscape @('Assignments')
 
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
 
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
             $i++
 
         }
@@ -800,11 +793,11 @@ function Export-TargetResource
                 $_.Exception -like '*Unable to perform redirect as Location Header is not set in response*' -or `
                 $_.Exception -like '*Request not applicable to target tenant*')
         {
-            Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
+            Write-M365DSCHost -Message "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }
         else
         {
-            Write-Host $Global:M365DSCEmojiRedX
+            Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
             New-M365DSCLogEntry -Message 'Error during Export:' `
                 -Exception $_ `

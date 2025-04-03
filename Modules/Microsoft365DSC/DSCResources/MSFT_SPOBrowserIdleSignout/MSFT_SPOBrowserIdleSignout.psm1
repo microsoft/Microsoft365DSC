@@ -88,8 +88,8 @@ function Get-TargetResource
         return @{
             IsSingleInstance      = 'Yes'
             Enabled               = $BrowserIdleSignout.Enabled
-            SignOutAfter          = $BrowserIdleSignout.SignOutAfter
-            WarnAfter             = $BrowserIdleSignout.WarnAfter
+            SignOutAfter          = $BrowserIdleSignout.SignOutAfter.ToString()
+            WarnAfter             = $BrowserIdleSignout.WarnAfter.ToString()
             Credential            = $Credential
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
@@ -386,11 +386,8 @@ function Export-TargetResource
 
         $dscContent = ''
         $Results = Get-TargetResource @Params
-
         if ($Results -is [System.Collections.Hashtable] -and $Results.Count -gt 1)
         {
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
@@ -400,18 +397,18 @@ function Export-TargetResource
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
 
-            Write-Host $Global:M365DSCEmojiGreenCheckmark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         else
         {
-            Write-Host $Global:M365DSCEmojiRedX
+            Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
         }
 
         return $dscContent
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `

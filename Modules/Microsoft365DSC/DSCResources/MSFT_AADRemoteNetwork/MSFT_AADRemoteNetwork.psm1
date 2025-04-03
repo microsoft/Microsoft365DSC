@@ -364,12 +364,6 @@ function Test-TargetResource
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
-
-    if ($CurrentValues.Ensure -ne $Ensure)
-    {
-        Write-Verbose -Message "Test-TargetResource returned $false"
-        return $false
-    }
     $testResult = $true
 
     #Compare Cim instances
@@ -478,14 +472,18 @@ function Export-TargetResource
         $dscContent = ''
         if ($getValue.Length -eq 0)
         {
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         else
         {
-            Write-Host "`r`n" -NoNewline
+            Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
         foreach ($config in $getValue)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
             $displayedKey = $config.Id
             if (-not [String]::IsNullOrEmpty($config.Name))
             {
@@ -495,7 +493,7 @@ function Export-TargetResource
             {
                 $displayedKey = $config.name
             }
-            Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
+            Write-M365DSCHost -Message "    |---[$i/$($getValue.Count)] $displayedKey" -DeferWrite
             $params = @{
                 Id                    = $config.Id
                 Name                  = $config.Name
@@ -510,36 +508,64 @@ function Export-TargetResource
             }
 
             $Results = Get-TargetResource @Params
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
 
-            if ($null -ne $Results.DeviceLinks -and $Results.DeviceLinks.Count -gt 0)
+            if ($null -ne $Results.DeviceLinks)
             {
-                $Results.DeviceLinks = Get-MicrosoftGraphRemoteNetworkDeviceLinksHashtableAsString -DeviceLinks $Results.DeviceLinks
+                $complexMapping = @(
+                    @{
+                        Name            = 'DeviceLinks'
+                        CimInstanceName = 'AADRemoteNetworkDeviceLink'
+                        IsRequired      = $False
+                    },
+                    @{
+                        Name            = 'BgpConfiguration'
+                        CimInstanceName = 'AADRemoteNetworkDeviceLinkbgpConfiguration'
+                        IsRequired      = $False
+                    },
+                    @{
+                        Name            = 'RedundancyConfiguration'
+                        CimInstanceName = 'AADRemoteNetworkDeviceLinkRedundancyConfiguration'
+                        IsRequired      = $False
+                    },
+                    @{
+                        Name            = 'TunnelConfiguration'
+                        CimInstanceName = 'AADRemoteNetworkDeviceLinkTunnelConfiguration'
+                        IsRequired      = $False
+                    }
+                )
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                    -ComplexObject $Results.DeviceLinks `
+                    -CIMInstanceName 'AADRemoteNetworkDeviceLink' `
+                    -ComplexTypeMapping $complexMapping
+
+                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                {
+                    $Results.DeviceLinks = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('DeviceLinks') | Out-Null
+                }
             }
 
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -Credential $Credential
-
-            if ($Results.DeviceLinks)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'DeviceLinks'
-            }
+                -Credential $Credential `
+                -NoEscape @('DeviceLinks')
 
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         return $dscContent
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `
@@ -691,142 +717,6 @@ function Get-MicrosoftGraphRemoteNetworkDeviceLinksHashtable
     }
 
     return $newDeviceLinks
-}
-
-
-function Get-MicrosoftGraphRemoteNetworkDeviceLinksHashtableAsString
-{
-    [CmdletBinding()]
-    [OutputType([System.String])]
-    param (
-        [Parameter(Mandatory = $true)]
-        [System.Collections.ArrayList]
-        $DeviceLinks
-    )
-
-    $StringContent = [System.Text.StringBuilder]::new()
-    $StringContent.Append('@(') | Out-Null
-
-    foreach ($deviceLink in $DeviceLinks)
-    {
-        $StringContent.Append("`n                MSFT_AADRemoteNetworkDeviceLink {`r`n") | Out-Null
-
-        # Append main properties if not null
-        if ($deviceLink.Name)
-        {
-            $StringContent.Append("                    Name                    = '" + $deviceLink.Name + "'`r`n") | Out-Null
-        }
-        if ($deviceLink.IPAddress)
-        {
-            $StringContent.Append("                    IPAddress               = '" + $deviceLink.IPAddress + "'`r`n") | Out-Null
-        }
-        if ($deviceLink.BandwidthCapacityInMbps)
-        {
-            $StringContent.Append("                    BandwidthCapacityInMbps = '" + $deviceLink.BandwidthCapacityInMbps + "'`r`n") | Out-Null
-        }
-        if ($deviceLink.DeviceVendor)
-        {
-            $StringContent.Append("                    DeviceVendor            = '" + $deviceLink.DeviceVendor + "'`r`n") | Out-Null
-        }
-
-        # BGP Configuration
-        if ($deviceLink.BgpConfiguration)
-        {
-            $bgpConfigAdded = $false
-            $StringContent.Append("                    BgpConfiguration        = MSFT_AADRemoteNetworkDeviceLinkbgpConfiguration {`r`n") | Out-Null
-            if ($deviceLink.BgpConfiguration.Asn)
-            {
-                $StringContent.Append('                        Asn                 = ' + $deviceLink.BgpConfiguration.Asn + "`r`n") | Out-Null; $bgpConfigAdded = $true
-            }
-            if ($deviceLink.BgpConfiguration.LocalIPAddress)
-            {
-                $StringContent.Append("                        LocalIPAddress      = '" + $deviceLink.BgpConfiguration.LocalIPAddress + "'`r`n") | Out-Null; $bgpConfigAdded = $true
-            }
-            if ($deviceLink.BgpConfiguration.PeerIPAddress)
-            {
-                $StringContent.Append("                        PeerIPAddress       = '" + $deviceLink.BgpConfiguration.PeerIPAddress + "'`r`n") | Out-Null; $bgpConfigAdded = $true
-            }
-            if ($bgpConfigAdded)
-            {
-                $StringContent.Append("                    }`r`n") | Out-Null
-            }
-        }
-
-        # Redundancy Configuration
-        if ($deviceLink.RedundancyConfiguration)
-        {
-            $redundancyConfigAdded = $false
-            $StringContent.Append("                    RedundancyConfiguration = MSFT_AADRemoteNetworkDeviceLinkRedundancyConfiguration {`r`n") | Out-Null
-            if ($deviceLink.RedundancyConfiguration.RedundancyTier)
-            {
-                $StringContent.Append("                        RedundancyTier      = '" + $deviceLink.RedundancyConfiguration.RedundancyTier + "'`r`n") | Out-Null; $redundancyConfigAdded = $true
-            }
-            if ($deviceLink.RedundancyConfiguration.ZoneLocalIPAddress)
-            {
-                $StringContent.Append("                        ZoneLocalIPAddress  = '" + $deviceLink.RedundancyConfiguration.ZoneLocalIPAddress + "'`r`n") | Out-Null; $redundancyConfigAdded = $true
-            }
-            if ($redundancyConfigAdded)
-            {
-                $StringContent.Append("                    }`r`n") | Out-Null
-            }
-        }
-
-        # Tunnel Configuration
-        if ($deviceLink.TunnelConfiguration)
-        {
-            $tunnelConfigAdded = $false
-            $StringContent.Append("                    TunnelConfiguration     = MSFT_AADRemoteNetworkDeviceLinkTunnelConfiguration {`r`n") | Out-Null
-            if ($deviceLink.TunnelConfiguration.PreSharedKey)
-            {
-                $StringContent.Append("                        PreSharedKey               = '" + $deviceLink.TunnelConfiguration.PreSharedKey + "'`r`n") | Out-Null; $tunnelConfigAdded = $true
-            }
-            if ($deviceLink.TunnelConfiguration.ZoneRedundancyPreSharedKey)
-            {
-                $StringContent.Append("                        ZoneRedundancyPreSharedKey = '" + $deviceLink.TunnelConfiguration.ZoneRedundancyPreSharedKey + "'`r`n") | Out-Null; $tunnelConfigAdded = $true
-            }
-            if ($deviceLink.TunnelConfiguration.SaLifeTimeSeconds)
-            {
-                $StringContent.Append('                        SaLifeTimeSeconds          = ' + $deviceLink.TunnelConfiguration.SaLifeTimeSeconds + "`r`n") | Out-Null; $tunnelConfigAdded = $true
-            }
-            if ($deviceLink.TunnelConfiguration.IpSecEncryption)
-            {
-                $StringContent.Append("                        IPSecEncryption            = '" + $deviceLink.TunnelConfiguration.IpSecEncryption + "'`r`n") | Out-Null; $tunnelConfigAdded = $true
-            }
-            if ($deviceLink.TunnelConfiguration.IpSecIntegrity)
-            {
-                $StringContent.Append("                        IPSecIntegrity             = '" + $deviceLink.TunnelConfiguration.IpSecIntegrity + "'`r`n") | Out-Null; $tunnelConfigAdded = $true
-            }
-            if ($deviceLink.TunnelConfiguration.IkeEncryption)
-            {
-                $StringContent.Append("                        IKEEncryption              = '" + $deviceLink.TunnelConfiguration.IkeEncryption + "'`r`n") | Out-Null; $tunnelConfigAdded = $true
-            }
-            if ($deviceLink.TunnelConfiguration.IkeIntegrity)
-            {
-                $StringContent.Append("                        IKEIntegrity               = '" + $deviceLink.TunnelConfiguration.IkeIntegrity + "'`r`n") | Out-Null; $tunnelConfigAdded = $true
-            }
-            if ($deviceLink.TunnelConfiguration.DhGroup)
-            {
-                $StringContent.Append("                        DHGroup                    = '" + $deviceLink.TunnelConfiguration.DhGroup + "'`r`n") | Out-Null; $tunnelConfigAdded = $true
-            }
-            if ($deviceLink.TunnelConfiguration.PfsGroup)
-            {
-                $StringContent.Append("                        PFSGroup                   = '" + $deviceLink.TunnelConfiguration.PfsGroup + "'`r`n") | Out-Null; $tunnelConfigAdded = $true
-            }
-            if ($deviceLink.TunnelConfiguration.ODataType)
-            {
-                $StringContent.Append("                        ODataType                  = '" + $deviceLink.TunnelConfiguration.ODataType + "'`r`n") | Out-Null; $tunnelConfigAdded = $true
-            }
-            if ($tunnelConfigAdded)
-            {
-                $StringContent.Append("                    }`r`n") | Out-Null
-            }
-        }
-
-        $StringContent.Append("                }`r`n") | Out-Null
-    }
-
-    $StringContent.Append('            )') | Out-Null
-    return $StringContent.ToString()
 }
 
 Export-ModuleMember -Function *-TargetResource

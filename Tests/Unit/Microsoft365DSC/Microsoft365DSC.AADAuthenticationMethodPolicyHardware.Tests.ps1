@@ -37,10 +37,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return "Credentials"
             }
 
-            # Mock Write-Host to hide output during the tests
-            Mock -CommandName Write-Host -MockWith {
+            # Mock Write-M365DSCHost to hide output during the tests
+            Mock -CommandName Write-M365DSCHost -MockWith {
             }
-            $Script:exportedInstances =$null
+            $Script:exportedInstance =$null
             $Script:ExportMode = $false
         }
         # Test contexts
@@ -250,7 +250,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             }
                         )
                         Id = "HardwareOath"
-                        State = "enabled"
+                        State = "disabled" #drift
                     }
                 }
             }

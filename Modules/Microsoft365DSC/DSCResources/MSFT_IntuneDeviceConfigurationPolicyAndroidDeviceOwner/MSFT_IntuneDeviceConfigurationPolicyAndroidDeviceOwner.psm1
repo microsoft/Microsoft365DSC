@@ -615,52 +615,56 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    try
-    {
-        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters
-    }
-    catch
-    {
-        Write-Verbose -Message $_
-    }
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullResult = $PSBoundParameters
-    $nullResult.Ensure = 'Absent'
+    Write-Verbose -Message "Getting configuration of the Intune Device Configuration Policy Android Device Owner with Id {$Id} and DisplayName {$DisplayName}"
 
     try
     {
-        $getValue = $null
-
-        #region resource generator code
-        $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -DeviceConfigurationId $id -ErrorAction SilentlyContinue
-
-        if (-not $getValue)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.DisplayName -ne $DisplayName)
         {
-            $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -All -Filter "DisplayName eq '$Displayname'" -ErrorAction SilentlyContinue | Where-Object `
-                -FilterScript { `
-                    $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidDeviceOwnerGeneralDeviceConfiguration' `
+            $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+                -InboundParameters $PSBoundParameters
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullResult = $PSBoundParameters
+            $nullResult.Ensure = 'Absent'
+
+            $getValue = $null
+            #region resource generator code
+            if (-not [string]::IsNullOrEmpty($Id))
+            {
+                $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -DeviceConfigurationId $Id -ErrorAction SilentlyContinue
+            }
+
+            if (-not $getValue)
+            {
+                $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -All -Filter "DisplayName eq '$Displayname'" -ErrorAction SilentlyContinue | Where-Object `
+                    -FilterScript { `
+                        $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidDeviceOwnerGeneralDeviceConfiguration' `
+                }
+            }
+            #endregion
+
+            if ($null -eq $getValue)
+            {
+                Write-Verbose -Message "Nothing with id {$id} was found"
+                return $nullResult
             }
         }
-        #endregion
-
-        if ($null -eq $getValue)
+        else
         {
-            Write-Verbose -Message "Nothing with id {$id} was found"
-            return $nullResult
+            $getValue = $Script:exportedInstance
         }
 
         Write-Verbose -Message "Found something with id {$id}"
@@ -702,6 +706,10 @@ function Get-TargetResource
             }
             $complexDetailedHelpText.Add('LocalizedMessages', $complexLocalizedMessages)
         }
+        if ($complexDetailedHelpText.Values.Where({ $null -ne $_ }).Count -eq 0)
+        {
+            $complexDetailedHelpText = $null
+        }
 
         $complexDeviceOwnerLockScreenMessage = @{}
         $currentValue = $getValue.AdditionalProperties.deviceOwnerLockScreenMessage
@@ -723,6 +731,10 @@ function Get-TargetResource
             }
             $complexDeviceOwnerLockScreenMessage.Add('LocalizedMessages', $complexLocalizedMessages)
         }
+        if ($complexDeviceOwnerLockScreenMessage.Values.Where({ $null -ne $_ }).Count -eq 0)
+        {
+            $complexDeviceOwnerLockScreenMessage = $null
+        }
 
         $complexGlobalProxy = @{}
         $currentValue = $getValue.AdditionalProperties.globalProxy
@@ -734,6 +746,10 @@ function Get-TargetResource
             $complexGlobalProxy.Add('Port', $currentValue.port)
             $complexGlobalProxy.Add('oDataType', $currentValue.'@odata.type')
         }
+        if ($complexGlobalProxy.Values.Where({ $null -ne $_ }).Count -eq 0)
+        {
+            $complexGlobalProxy = $null
+        }
 
         $complexKioskModeApps = @()
         $currentValueArray = $getValue.AdditionalProperties.kioskModeApps
@@ -742,11 +758,11 @@ function Get-TargetResource
             foreach ($currentValue in $currentValueArray)
             {
                 $currentHash = @{}
-                $currentHash.add('AppId', $currentValue.appid)
-                $currentHash.add('Publisher', $currentValue.publisher)
-                $currentHash.add('AppStoreUrl', $currentValue.appStoreUrl)
-                $currentHash.add('Name', $currentValue.name)
-                $currentHash.add('oDataType', $currentValue.'@odata.type')
+                $currentHash.Add('AppId', $currentValue.appid)
+                $currentHash.Add('Publisher', $currentValue.publisher)
+                $currentHash.Add('AppStoreUrl', $currentValue.appStoreUrl)
+                $currentHash.Add('Name', $currentValue.name)
+                $currentHash.Add('oDataType', $currentValue.'@odata.type')
                 $complexKioskModeApps += $currentHash
             }
         }
@@ -758,11 +774,11 @@ function Get-TargetResource
             foreach ($currentValue in $currentValueArray)
             {
                 $currentHash = @{}
-                $currentHash.add('AppId', $currentValue.appid)
-                $currentHash.add('Publisher', $currentValue.publisher)
-                $currentHash.add('AppStoreUrl', $currentValue.appStoreUrl)
-                $currentHash.add('Name', $currentValue.name)
-                $currentHash.add('oDataType', $currentValue.'@odata.type')
+                $currentHash.Add('AppId', $currentValue.appid)
+                $currentHash.Add('Publisher', $currentValue.publisher)
+                $currentHash.Add('AppStoreUrl', $currentValue.appStoreUrl)
+                $currentHash.Add('Name', $currentValue.name)
+                $currentHash.Add('oDataType', $currentValue.'@odata.type')
                 $complexPersonalProfilePersonalApplications += $currentHash
             }
         }
@@ -787,6 +803,10 @@ function Get-TargetResource
             }
             $complexShortHelpText.Add('LocalizedMessages', $complexLocalizedMessages)
         }
+        if ($complexShortHelpText.Values.Where({ $null -ne $_ }).Count -eq 0)
+        {
+            $complexShortHelpText = $null
+        }
 
         $complexSystemUpdateFreezePeriods = @()
         $currentValueArray = $getValue.AdditionalProperties.systemUpdateFreezePeriods
@@ -807,13 +827,11 @@ function Get-TargetResource
             #region resource generator code
             Id                                                       = $getValue.Id
             Description                                              = $getValue.Description
-            #           DeviceManagementApplicabilityRuleDeviceMode              = $getValue.DeviceManagementApplicabilityRuleDeviceMode
-            #           DeviceManagementApplicabilityRuleOsEdition               = $getValue.DeviceManagementApplicabilityRuleOsEdition
-            #           DeviceManagementApplicabilityRuleOsVersion               = $getValue.DeviceManagementApplicabilityRuleOsVersion
+            #DeviceManagementApplicabilityRuleDeviceMode              = $getValue.DeviceManagementApplicabilityRuleDeviceMode
+            #DeviceManagementApplicabilityRuleOsEdition               = $getValue.DeviceManagementApplicabilityRuleOsEdition
+            #DeviceManagementApplicabilityRuleOsVersion               = $getValue.DeviceManagementApplicabilityRuleOsVersion
             DisplayName                                              = $getValue.DisplayName
-            #           RoleScopeTagIds                                          = $getValue.RoleScopeTagIds
-            #           SupportsScopeTags                                        = $getValue.SupportsScopeTags
-            #           Version                                                  = $getValue.Version
+            #RoleScopeTagIds                                          = $getValue.RoleScopeTagIds
             AccountsBlockModification                                = $getValue.AdditionalProperties.accountsBlockModification
             AppsAllowInstallFromUnknownSources                       = $getValue.AdditionalProperties.appsAllowInstallFromUnknownSources
             AppsAutoUpdatePolicy                                     = $getValue.AdditionalProperties.appsAutoUpdatePolicy
@@ -1636,13 +1654,13 @@ function Set-TargetResource
         Write-Verbose -Message "Creating {$DisplayName}"
         $PSBoundParameters.Remove('Assignments') | Out-Null
 
-        $CreateParameters = ([Hashtable]$PSBoundParameters).clone()
+        $CreateParameters = ([Hashtable]$PSBoundParameters).Clone()
         $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
 
         $CreateParameters.Remove('Id') | Out-Null
         $CreateParameters.Remove('Verbose') | Out-Null
 
-        foreach ($key in ($CreateParameters.clone()).Keys)
+        foreach ($key in ($CreateParameters.Clone()).Keys)
         {
             if ($key -eq 'DetailedHelpText' -or $key -eq 'DeviceOwnerLockScreenMessage' -or $key -eq 'ShortHelpText')
             {
@@ -1657,20 +1675,20 @@ function Set-TargetResource
                 }
             }
 
-            if ($CreateParameters[$key].getType().Fullname -like '*CimInstance*')
+            if ($CreateParameters[$key].GetType().Fullname -like '*CimInstance*')
             {
                 $CreateParameters[$key] = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters[$key]
             }
 
             if ($key -ne '@odata.type')
             {
-                $keyName = $key.substring(0, 1).ToLower() + $key.substring(1, $key.length - 1)
+                $keyName = $key.Substring(0, 1).ToLower() + $key.Substring(1, $key.length - 1)
                 $keyValue = $CreateParameters.$key
-                $CreateParameters.remove($key) | Out-Null
-                $CreateParameters.add($keyName, $keyValue) | Out-Null
+                $CreateParameters.Remove($key) | Out-Null
+                $CreateParameters.Add($keyName, $keyValue) | Out-Null
             }
         }
-        $CreateParameters.add('@odata.type', '#microsoft.graph.androidDeviceOwnerGeneralDeviceConfiguration')
+        $CreateParameters.Add('@odata.type', '#microsoft.graph.androidDeviceOwnerGeneralDeviceConfiguration')
 
         #region resource generator code
         $policy = New-MgBetaDeviceManagementDeviceConfiguration -BodyParameter $CreateParameters
@@ -1689,13 +1707,13 @@ function Set-TargetResource
         Write-Verbose -Message "Updating {$DisplayName}"
         $PSBoundParameters.Remove('Assignments') | Out-Null
 
-        $UpdateParameters = ([Hashtable]$PSBoundParameters).clone()
+        $UpdateParameters = ([Hashtable]$PSBoundParameters).Clone()
         $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
 
         $UpdateParameters.Remove('Id') | Out-Null
         $UpdateParameters.Remove('Verbose') | Out-Null
 
-        foreach ($key in (($UpdateParameters.clone()).Keys | Sort-Object))
+        foreach ($key in (($UpdateParameters.Clone()).Keys | Sort-Object))
         {
             if ($key -eq 'DetailedHelpText' -or $key -eq 'DeviceOwnerLockScreenMessage' -or $key -eq 'ShortHelpText')
             {
@@ -1710,20 +1728,20 @@ function Set-TargetResource
                 }
             }
 
-            if ($UpdateParameters.$key.getType().Fullname -like '*CimInstance*')
+            if ($UpdateParameters.$key.GetType().Fullname -like '*CimInstance*')
             {
                 $UpdateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters.$key
             }
 
             if ($key -ne '@odata.type')
             {
-                $keyName = $key.substring(0, 1).ToLower() + $key.substring(1, $key.length - 1)
+                $keyName = $key.Substring(0, 1).ToLower() + $key.Substring(1, $key.length - 1)
                 $keyValue = $UpdateParameters.$key
-                $UpdateParameters.remove($key)
-                $UpdateParameters.add($keyName, $keyValue)
+                $UpdateParameters.Remove($key)
+                $UpdateParameters.Add($keyName, $keyValue)
             }
         }
-        $UpdateParameters.add('@odata.type', '#microsoft.graph.androidDeviceOwnerGeneralDeviceConfiguration')
+        $UpdateParameters.Add('@odata.type', '#microsoft.graph.androidDeviceOwnerGeneralDeviceConfiguration')
 
         Update-MgBetaDeviceManagementDeviceConfiguration -BodyParameter $UpdateParameters `
             -DeviceConfigurationId $currentInstance.Id
@@ -2376,13 +2394,7 @@ function Test-TargetResource
     Write-Verbose -Message "Testing configuration of {$id}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
-    $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
-
-    if ($CurrentValues.Ensure -ne $Ensure)
-    {
-        Write-Verbose -Message "Test-TargetResource returned $false"
-        return $false
-    }
+    $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
     $testResult = $true
 
     #Compare Cim instances
@@ -2390,7 +2402,7 @@ function Test-TargetResource
     {
         $source = $PSBoundParameters.$key
         $target = $CurrentValues.$key
-        if ($source.getType().Name -like '*CimInstance*')
+        if ($source.GetType().Name -like '*CimInstance*')
         {
             $testResult = Compare-M365DSCComplexObject `
                 -Source ($source) `
@@ -2495,11 +2507,11 @@ function Export-TargetResource
         $dscContent = ''
         if ($getValue.Length -eq 0)
         {
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         else
         {
-            Write-Host "`r`n" -NoNewline
+            Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
         foreach ($config in $getValue)
         {
@@ -2508,7 +2520,7 @@ function Export-TargetResource
                 $Global:M365DSCExportResourceInstancesCount++
             }
 
-            Write-Host "    |---[$i/$($getValue.Count)] $($config.displayName)" -NoNewline
+            Write-M365DSCHost -Message "    |---[$i/$($getValue.Count)] $($config.displayName)" -DeferWrite
             $params = @{
                 Id                    = $config.id
                 DisplayName           = $config.DisplayName
@@ -2522,9 +2534,8 @@ function Export-TargetResource
                 AccessTokens          = $AccessTokens
             }
 
+            $Script:exportedInstance = $config
             $Results = Get-TargetResource @Params
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
 
             if ($Results.AzureAdSharedDeviceDataClearApps)
             {
@@ -2538,6 +2549,7 @@ function Export-TargetResource
                     $Results.Remove('AzureAdSharedDeviceDataClearApps') | Out-Null
                 }
             }
+
             if ($Results.DetailedHelpText)
             {
                 $complexTypeMapping = @(
@@ -2565,6 +2577,7 @@ function Export-TargetResource
                     $Results.Remove('DetailedHelpText') | Out-Null
                 }
             }
+
             if ($Results.DeviceOwnerLockScreenMessage)
             {
                 $complexTypeMapping = @(
@@ -2605,6 +2618,7 @@ function Export-TargetResource
                     $Results.Remove('GlobalProxy') | Out-Null
                 }
             }
+
             if ($Results.KioskModeAppPositions)
             {
                 $complexTypeMapping = @(
@@ -2631,6 +2645,7 @@ function Export-TargetResource
                     $Results.Remove('KioskModeAppPositions') | Out-Null
                 }
             }
+
             if ($Results.KioskModeApps)
             {
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.KioskModeApps -CIMInstanceName MicrosoftGraphapplistitem
@@ -2670,9 +2685,7 @@ function Export-TargetResource
                 {
                     $Results.Remove('KioskModeManagedFolders') | Out-Null
                 }
-
             }
-
 
             if ($Results.PersonalProfilePersonalApplications)
             {
@@ -2686,6 +2699,7 @@ function Export-TargetResource
                     $Results.Remove('PersonalProfilePersonalApplications') | Out-Null
                 }
             }
+
             if ($Results.ShortHelpText)
             {
                 $complexTypeMapping = @(
@@ -2713,6 +2727,7 @@ function Export-TargetResource
                     $Results.Remove('ShortHelpText') | Out-Null
                 }
             }
+
             if ($Results.SystemUpdateFreezePeriods)
             {
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.SystemUpdateFreezePeriods -CIMInstanceName MicrosoftGraphandroiddeviceownersystemupdatefreezeperiod
@@ -2743,116 +2758,16 @@ function Export-TargetResource
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -Credential $Credential
-            if ($Results.AzureAdSharedDeviceDataClearApps)
-            {
-                $isCIMArray = $false
-                if ($Results.AzureAdSharedDeviceDataClearApps.getType().Fullname -like '*[[\]]')
-                {
-                    $isCIMArray = $true
-                }
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'AzureAdSharedDeviceDataClearApps' -IsCIMArray:$isCIMArray
-            }
-            if ($Results.DetailedHelpText)
-            {
-                $isCIMArray = $false
-                if ($Results.DetailedHelpText.getType().Fullname -like '*[[\]]')
-                {
-                    $isCIMArray = $true
-                }
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'DetailedHelpText' -IsCIMArray:$isCIMArray
-            }
-            if ($Results.DeviceOwnerLockScreenMessage)
-            {
-                $isCIMArray = $false
-                if ($Results.DeviceOwnerLockScreenMessage.getType().Fullname -like '*[[\]]')
-                {
-                    $isCIMArray = $true
-                }
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'DeviceOwnerLockScreenMessage' -IsCIMArray:$isCIMArray
-            }
-            if ($Results.GlobalProxy)
-            {
-                $isCIMArray = $false
-                if ($Results.GlobalProxy.getType().Fullname -like '*[[\]]')
-                {
-                    $isCIMArray = $true
-                }
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'GlobalProxy' -IsCIMArray:$isCIMArray
-            }
-            if ($Results.KioskModeAppPositions)
-            {
-                $isCIMArray = $false
-                if ($Results.KioskModeAppPositions.getType().Fullname -like '*[[\]]')
-                {
-                    $isCIMArray = $true
-                }
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'KioskModeAppPositions' -IsCIMArray:$isCIMArray
-            }
-
-            if ($Results.KioskModeApps)
-            {
-                $isCIMArray = $false
-                if ($Results.KioskModeApps.getType().Fullname -like '*[[\]]')
-                {
-                    $isCIMArray = $true
-                }
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'KioskModeApps' -IsCIMArray:$isCIMArray
-            }
-
-            if ($Results.KioskModeManagedFolders)
-            {
-                $isCIMArray = $false
-                if ($Results.KioskModeManagedFolders.getType().Fullname -like '*[[\]]')
-                {
-                    $isCIMArray = $true
-                }
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'KioskModeManagedFolders' -IsCIMArray:$isCIMArray -Verbose
-            }
-
-            if ($Results.PersonalProfilePersonalApplications)
-            {
-                $isCIMArray = $false
-                if ($Results.PersonalProfilePersonalApplications.getType().Fullname -like '*[[\]]')
-                {
-                    $isCIMArray = $true
-                }
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'PersonalProfilePersonalApplications' -IsCIMArray:$isCIMArray
-            }
-            if ($Results.ShortHelpText)
-            {
-                $isCIMArray = $false
-                if ($Results.ShortHelpText.getType().Fullname -like '*[[\]]')
-                {
-                    $isCIMArray = $true
-                }
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'ShortHelpText' -IsCIMArray:$isCIMArray
-            }
-            if ($Results.SystemUpdateFreezePeriods)
-            {
-                $isCIMArray = $false
-                if ($Results.SystemUpdateFreezePeriods.getType().Fullname -like '*[[\]]')
-                {
-                    $isCIMArray = $true
-                }
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'SystemUpdateFreezePeriods' -IsCIMArray:$isCIMArray
-            }
-
-            if ($Results.Assignments)
-            {
-                $isCIMArray = $false
-                if ($Results.Assignments.getType().Fullname -like '*[[\]]')
-                {
-                    $isCIMArray = $true
-                }
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Assignments' -IsCIMArray:$isCIMArray
-            }
+                -Credential $Credential `
+                -NoEscape @('AzureAdSharedDeviceDataClearApps', 'DetailedHelpText', 'DeviceOwnerLockScreenMessage', 'GlobalProxy',
+                    'KioskModeAppPositions', 'KioskModeApps', 'KioskModeManagedFolders', 'PersonalProfilePersonalApplications',
+                    'ShortHelpText', 'SystemUpdateFreezePeriods', 'Assignments')
 
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         return $dscContent
     }
@@ -2861,11 +2776,11 @@ function Export-TargetResource
         if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
                 $_.Exception -like '*Request not applicable to target tenant*')
         {
-            Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
+            Write-M365DSCHost -Message "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }
         else
         {
-            Write-Host $Global:M365DSCEmojiRedX
+            Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
             New-M365DSCLogEntry -Message 'Error during Export:' `
                 -Exception $_ `

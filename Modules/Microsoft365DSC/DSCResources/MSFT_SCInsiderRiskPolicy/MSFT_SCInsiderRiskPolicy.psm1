@@ -14,6 +14,14 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $IRASettingsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $InlineAlertPolicyCustomization,
+
+        [Parameter()]
+        [System.Boolean]
         $Anonymization,
 
         [Parameter()]
@@ -807,6 +815,26 @@ function Get-TargetResource
                 $RaiseAuditAlertValue = [Boolean]::Parse($tenantSettings.FeatureSettings.RaiseAuditAlert)
             }
 
+            $MDATPTriageStatusValue = @()
+            if (-not [System.String]::IsNullOrEmpty($tenantSettings.IntelligentDetections.MDATPTriageStatus))
+            {
+                $MDATPTriageStatusValue = [Array]($tenantSettings.IntelligentDetections.MDATPTriageStatus.Replace('"', '').Replace('[', '').Replace(']', '').Split(','))
+            }
+
+            $IRASettingsEnabledValue = $false
+            if ($null -ne $tenantSettings.InterpretedSettings -and `
+                -not [System.String]::IsNullOrEmpty($tenantSettings.InterpretedSettings.IRASettings.Enabled))
+            {
+                $IRASettingsEnabledValue = [Boolean]::Parse($tenantSettings.InterpretedSettings.IRASettings.Enabled)
+            }
+
+            $InlineAlertPolicyCustomizationValue = $true
+            if ($null -ne $tenantSettings.FeatureSettings -and `
+                -not [System.String]::IsNullOrEmpty($tenantSettings.FeatureSettings.InlineAlertPolicyCustomization))
+            {
+                $InlineAlertPolicyCustomizationValue = [Boolean]::Parse($tenantSettings.FeatureSettings.InlineAlertPolicyCustomization)
+            }
+
             $tenantSettingsHash = @{
                 Anonymization                                 = $AnonymizationValue
                 DLPUserRiskSync                               = $DLPUserRiskSyncValue
@@ -814,7 +842,9 @@ function Get-TargetResource
                 RaiseAuditAlert                               = $RaiseAuditAlertValue
                 FileVolCutoffLimits                           = $tenantSettings.IntelligentDetections.FileVolCutoffLimits
                 AlertVolume                                   = $tenantSettings.IntelligentDetections.AlertVolume
-                MDATPTriageStatus                             = $tenantSettings.IntelligentDetections.MDATPTriageStatus
+                MDATPTriageStatus                             = $MDATPTriageStatusValue
+                IRASettingsEnabled                            = $IRASettingsEnabledValue
+                InlineAlertPolicyCustomization                = $InlineAlertPolicyCustomizationValue
                 AnomalyDetections                             = ($tenantSettings.Indicators | Where-Object -FilterScript { $_.Name -eq 'AnomalyDetections' }).Enabled
                 CopyToPersonalCloud                           = ($tenantSettings.Indicators | Where-Object -FilterScript { $_.Name -eq 'CopyToPersonalCloud' }).Enabled
                 CopyToUSB                                     = ($tenantSettings.Indicators | Where-Object -FilterScript { $_.Name -eq 'CopyToUSB' }).Enabled
@@ -935,43 +965,68 @@ function Get-TargetResource
                 PowerBISensitivityLabelRemovedFromArtifacts   = ($tenantSettings.ExtensibleIndicators | Where-Object -FilterScript { $_.Name -eq 'PowerBISensitivityLabelRemovedFromArtifacts' }).Enabled
                 HistoricTimeSpan                              = $tenantSettings.TimeSpan.HistoricTimeSpan
                 InScopeTimeSpan                               = $tenantSettings.TimeSpan.InScopeTimeSpan
-                EnableTeam                                    = [Boolean]($tenantSettings.FeatureSettings.EnableTeam)
+                EnableTeam                                    = [Boolean]::Parse($tenantSettings.FeatureSettings.EnableTeam)
             }
 
             $AnalyticsNewInsight = $tenantSettings.NotificationPreferences | Where-Object -FilterScript { $_.NotificationType -eq 'AnalyticsNewInsight' }
             if ($null -ne $AnalyticsNewInsight)
             {
-                $tenantSettingsHash.Add('AnalyticsNewInsightEnabled', [Boolean]$AnalyticsNewInsight.Enabled)
+                $tenantSettingsHash.Add('AnalyticsNewInsightEnabled', [Boolean]::Parse($AnalyticsNewInsight.Enabled))
+            }
+            else
+            {
+                # Defaults
+                $tenantSettingsHash.Add('AnalyticsNewInsightEnabled', $false)
             }
 
             $AnalyticsTurnedOff = $tenantSettings.NotificationPreferences | Where-Object -FilterScript { $_.NotificationType -eq 'AnalyticsTurnedOff' }
             if ($null -ne $AnalyticsTurnedOff)
             {
-                $tenantSettingsHash.Add('AnalyticsTurnedOffEnabled', [Boolean]$AnalyticsTurnedOff.Enabled)
+                $tenantSettingsHash.Add('AnalyticsTurnedOffEnabled', [Boolean]::Parse($AnalyticsTurnedOff.Enabled))
+            }
+            else
+            {
+                # Defaults
+                $tenantSettingsHash.Add('AnalyticsTurnedOffEnabled', $false)
             }
 
             $highSeverityAlerts = $tenantSettings.NotificationPreferences | Where-Object -FilterScript { $_.NotificationType -eq 'HighSeverityAlerts' }
             if ($null -ne $highSeverityAlerts)
             {
-                $tenantSettingsHash.Add('HighSeverityAlertsEnabled', [Boolean]$highSeverityAlerts.Enabled)
+                $tenantSettingsHash.Add('HighSeverityAlertsEnabled', [Boolean]::Parse($highSeverityAlerts.Enabled))
                 $tenantSettingsHash.Add('HighSeverityAlertsRoleGroups', [Array]$highSeverityAlerts.RoleGroups)
+            }
+            else
+            {
+                # Defaults
+                $tenantSettingsHash.Add('HighSeverityAlertsEnabled', $false)
+                $tenantSettingsHash.Add('HighSeverityAlertsRoleGroups', [Array]@())
             }
 
             $policiesHealth = $tenantSettings.NotificationPreferences | Where-Object -FilterScript { $_.NotificationType -eq 'PoliciesHealth' }
             if ($null -ne $policiesHealth)
             {
-                $tenantSettingsHash.Add('PoliciesHealthEnabled', [Boolean]$policiesHealth.Enabled)
+                $tenantSettingsHash.Add('PoliciesHealthEnabled', [Boolean]::Parse($policiesHealth.Enabled))
                 $tenantSettingsHash.Add('PoliciesHealthRoleGroups', [Array]$policiesHealth.RoleGroups)
+            }
+            else
+            {
+                # Defaults
+                $tenantSettingsHash.Add('PoliciesHealthEnabled', $false)
+                $tenantSettingsHash.Add('PoliciesHealthRoleGroups', [Array]@())
             }
 
             if ($null -ne $tenantSettings.FeatureSettings.NotificationDetails)
             {
                 $tenantSettingsHash.Add('NotificationDetailsEnabled', $true)
-                $tenantSettingsHash.Add('NotificationDetailsRoleGroups', [Array]$tenantSettings.FeatureSettings.NotificationDetails.RoleGroups)
+                $roleGroupsObject = ConvertFrom-Json ($tenantSettings.FeatureSettings.NotificationDetails)
+                $tenantSettingsHash.Add('NotificationDetailsRoleGroups', [Array]$roleGroupsObject.RoleGroups)
             }
             else
             {
+                # Defaults
                 $tenantSettingsHash.Add('NotificationDetailsEnabled', $false)
+                $tenantSettingsHash.Add('NotificationDetailsRoleGroups', @())
             }
 
             # Adaptive Protection
@@ -1032,7 +1087,6 @@ function Get-TargetResource
                 $tenantSettingsHash.Add('RetainSeverityAfterTriage', $tenantSettings.DynamicRiskPreventionSettings.RetainSeverityAfterTriage)
             }
             $tenantSettingsHash.Add('AdaptiveProtectionEnabled', $AdaptiveProtectionEnabledValue)
-
             $results += $tenantSettingsHash
         }
 
@@ -1063,6 +1117,14 @@ function Set-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $InsiderRiskScenario,
+
+        [Parameter()]
+        [System.Boolean]
+        $IRASettingsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $InlineAlertPolicyCustomization,
 
         [Parameter()]
         [System.Boolean]
@@ -1843,8 +1905,18 @@ function Set-TargetResource
     }
 
     # Tenant Settings
-    $featureSettingsValue = "{`"Anonymization`":$($Anonymization.ToString().ToLower()), `"DLPUserRiskSync`":$($DLPUserRiskSync.ToString().ToLower()), `"OptInIRMDataExport`":$($OptInIRMDataExport.ToString().ToLower()), `"RaiseAuditAlert`":$($RaiseAuditAlert.ToString().ToLower()), `"EnableTeam`":$($EnableTeam.ToString().ToLower())}"
-    $intelligentDetectionValue = "{`"FileVolCutoffLimits`":`"$($FileVolCutoffLimits)`", `"AlertVolume`":`"$($AlertVolume)`", `"MDATPTriageStatus`": `"$($MDATPTriageStatus)`"}"
+    $MDATPTriageStatusValue = "["
+    foreach ($status in $MDATPTriageStatus)
+    {
+        $MDATPTriageStatusValue += "\`"$($status)\`","
+    }
+    if ($MDATPTriageStatusValue.EndsWith(','))
+    {
+        $MDATPTriageStatusValue = $MDATPTriageStatusValue.Substring(0, $MDATPTriageStatusValue.Length -1)
+    }
+    $MDATPTriageStatusValue += "]"
+    $featureSettingsValue = "{`"Anonymization`":$($Anonymization.ToString().ToLower()), `"DLPUserRiskSync`":$($DLPUserRiskSync.ToString().ToLower()), `"OptInIRMDataExport`":$($OptInIRMDataExport.ToString().ToLower()), `"RaiseAuditAlert`":$($RaiseAuditAlert.ToString().ToLower()), `"EnableTeam`":$($EnableTeam.ToString().ToLower()), `"InlineAlertPolicyCustomization`":$($InlineAlertPolicyCustomization.ToString().ToLower())}"
+    $intelligentDetectionValue = "{`"FileVolCutoffLimits`":`"$($FileVolCutoffLimits)`", `"AlertVolume`":`"$($AlertVolume)`", `"MDATPTriageStatus`": `"$($MDATPTriageStatusValue)`"}"
 
 
     $tenantSettingsValue = "{`"Region`":`"WW`", `"FeatureSettings`":$($featureSettingsValue), " + `
@@ -1863,6 +1935,10 @@ function Set-TargetResource
         $dynamicRiskPreventionSettings += ", `"LowProfile`":{`"ProfileSourceType`":$($AdaptiveProtectionLowProfileSourceType), `"ConfirmedIssueSeverity`":$($AdaptiveProtectionLowProfileConfirmedIssueSeverity), `"GeneratedIssueSeverity`":$($AdaptiveProtectionLowProfileGeneratedIssueSeverity), `"InsightSeverity`": $($AdaptiveProtectionLowProfileInsightSeverity), `"InsightCount`": $($AdaptiveProtectionLowProfileInsightCount), `"InsightTypes`": [`"$($AdaptiveProtectionLowProfileInsightTypes -join '","')`"], `"ConfirmedIssue`": $($AdaptiveProtectionLowProfileConfirmedIssue.ToString().ToLower())}"
         $dynamicRiskPreventionSettings += '}]}'
         $tenantSettingsValue += ", `"DynamicRiskPreventionSettings`":$dynamicRiskPreventionSettings"
+    }
+    if ($null -ne $IRASettingsEnabled)
+    {
+        $tenantSettingsValue += ", `"InterpretedSettings`":{`"IRASettings`":{`"Enabled`":$($IRASettingsEnabled.ToString().ToLower())}}"
     }
 
     $tenantSettingsValue += '}'
@@ -1920,6 +1996,14 @@ function Test-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $InsiderRiskScenario,
+
+        [Parameter()]
+        [System.Boolean]
+        $IRASettingsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $InlineAlertPolicyCustomization,
 
         [Parameter()]
         [System.Boolean]
@@ -2714,11 +2798,11 @@ function Export-TargetResource
         $i = 1
         if ($Script:exportedInstances.Length -eq 0)
         {
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         else
         {
-            Write-Host "`r`n" -NoNewline
+            Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
         foreach ($config in $Script:exportedInstances)
         {
@@ -2727,7 +2811,7 @@ function Export-TargetResource
                 $Global:M365DSCExportResourceInstancesCount++
             }
             $displayedKey = $config.Name
-            Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -NoNewline
+            Write-M365DSCHost -Message "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -DeferWrite
             $params = @{
                 Name                  = $config.Name
                 InsiderRiskScenario   = $config.InsiderRiskScenario
@@ -2740,8 +2824,6 @@ function Export-TargetResource
             }
 
             $Results = Get-TargetResource @Params
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
 
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
@@ -2751,14 +2833,14 @@ function Export-TargetResource
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
             $i++
         }
         return $dscContent
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `

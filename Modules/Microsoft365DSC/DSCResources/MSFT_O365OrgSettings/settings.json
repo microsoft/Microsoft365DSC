@@ -1,7 +1,29 @@
 ﻿{
     "resourceName": "O365OrgSettings",
     "description": "",
+    "roles": {
+        "read": [
+            "Insights Administrator"
+        ],
+        "update": [
+            "Insights Administrator"
+        ]
+    },
     "permissions": {
+        "ProjectWorkManagement": {
+            "application":{
+                "read": [
+                    {
+                        "name": "OrgSettings-Planner.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "OrgSettings-Planner.ReadWrite.All"
+                    }
+                ]
+            }
+        },
         "graph": {
             "delegated": {
                 "read": [

@@ -90,7 +90,9 @@ function Get-DscResourceSchemaPropertyContent
 
         if (-not [System.String]::IsNullOrEmpty($currentProperty.Description))
         {
-            $propertyLine += ' ' + $currentProperty.Description
+            $description = $currentProperty.Description
+            $description = $description.Replace("<", "&lt;").Replace(">", "&gt;")
+            $propertyLine += ' ' + $description
         }
 
         $propertyLine += ' |'
@@ -291,11 +293,6 @@ function Get-MofSchemaObject
         [System.String]
         $FileName
     )
-
-    if ($IsMacOS)
-    {
-        throw 'NotImplemented: Currently there is an issue using the type [Microsoft.PowerShell.DesiredStateConfiguration.Internal.DscClassCache] on macOS. See issue https://github.com/PowerShell/PowerShell/issues/5970 and issue https://github.com/PowerShell/MMI/issues/33.'
-    }
 
     $temporaryPath = Get-TemporaryPath
 

@@ -17,6 +17,10 @@ function Get-TargetResource
         $Locale,
 
         [Parameter()]
+        [System.Boolean]
+        $AuditEnabled,
+
+        [Parameter()]
         [System.String]
         $RetentionPolicy,
 
@@ -124,6 +128,7 @@ function Get-TargetResource
         AddressBookPolicy     = $mailboxInfo.AddressBookPolicy
         RoleAssignmentPolicy  = $mailboxInfo.RoleAssignmentPolicy
         SharingPolicy         = $mailboxInfo.SharingPolicy
+        AuditEnabled          = $mailboxInfo.AuditEnabled
         Ensure                = 'Present'
         Credential            = $Credential
         ApplicationId         = $ApplicationId
@@ -155,6 +160,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $Locale,
+
+        [Parameter()]
+        [System.Boolean]
+        $AuditEnabled,
 
         [Parameter()]
         [System.String]
@@ -278,6 +287,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $Locale,
+
+        [Parameter()]
+        [System.Boolean]
+        $AuditEnabled,
 
         [Parameter()]
         [System.String]
@@ -423,11 +436,11 @@ function Export-TargetResource
     $i = 1
     if ($mailboxes.Length -eq 0)
     {
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
+        Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
     }
     else
     {
-        Write-Host "`r`n"-NoNewline
+        Write-M365DSCHost -Message "`r`n"-DeferWrite
     }
     $dscContent = ''
     $ObjectGuid = [System.Guid]::empty
@@ -447,7 +460,7 @@ function Export-TargetResource
                 Write-Verbose -Message "Could not retrieve user with id {$($mailbox.Identity)}"
             }
         }
-        Write-Host "    |---[$i/$($mailboxes.Length)] $($DisplayNameValue)" -NoNewline
+        Write-M365DSCHost -Message "    |---[$i/$($mailboxes.Length)] $($DisplayNameValue)" -DeferWrite
 
         if (-not [System.String]::IsNullOrEmpty($DisplayNameValue))
         {
@@ -468,11 +481,8 @@ function Export-TargetResource
                 AccessTokens          = $AccessTokens
             }
             $Results = Get-TargetResource @Params
-
             if ($Results -is [System.Collections.Hashtable] -and $Results.Count -gt 1)
             {
-                $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                    -Results $Results
                 $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                     -ConnectionMode $ConnectionMode `
                     -ModulePath $PSScriptRoot `
@@ -482,11 +492,11 @@ function Export-TargetResource
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
                     -FileName $Global:PartialExportFileName
 
-                Write-Host $Global:M365DSCEmojiGreenCheckMark
+                Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
             }
             else
             {
-                Write-Host $Global:M365DSCEmojiRedX
+                Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
             }
         }
 

@@ -18,6 +18,47 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
+        $MinAndroidSecurityPatchLevel,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordMinimumLetterCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordMinimumLowerCaseCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordMinimumNonLetterCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordMinimumNumericCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordMinimumSymbolCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordMinimumUpperCaseCharacters,
+
+        [Parameter()]
+        [System.Boolean]
+        $RequireNoPendingSystemUpdates,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('basic', 'hardwareBacked')]
+        $SecurityRequiredAndroidSafetyNetEvaluationType,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $ScheduledActionsForRule,
+
+        [Parameter()]
+        [System.String]
         [ValidateSet('unavailable', 'secured', 'low', 'medium', 'high', 'notSet')]
         $DeviceThreatProtectionRequiredSecurityLevel,
 
@@ -117,47 +158,92 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    Write-Verbose -Message "Checking for the Intune Android Work Profile Device Compliance Policy {$DisplayName}"
-    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters
+    Write-Verbose -Message "Getting configuration of the Intune Android Work Profile Device Compliance Policy {$DisplayName}"
 
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullResult = $PSBoundParameters
-    $nullResult.Ensure = 'Absent'
     try
     {
-        $devicePolicy = Get-MgBetaDeviceManagementDeviceCompliancePolicy `
-            -All `
-            -ErrorAction Stop | Where-Object `
-            -FilterScript {
-            $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidDeviceOwnerCompliancePolicy' -and `
-                $_.displayName -eq $($DisplayName)
-        }
-        if (([array]$devicePolicy).count -gt 1)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.DisplayName -ne $DisplayName)
         {
-            throw "A policy with a duplicated displayName {'$DisplayName'} was found - Ensure displayName is unique"
+            $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+                -InboundParameters $PSBoundParameters
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullResult = $PSBoundParameters
+            $nullResult.Ensure = 'Absent'
+
+            $devicePolicy = Get-MgBetaDeviceManagementDeviceCompliancePolicy `
+                -All `
+                -ExpandProperty 'scheduledActionsForRule($expand=scheduledActionConfigurations)' `
+                -ErrorAction Stop | Where-Object `
+                -FilterScript {
+                $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidDeviceOwnerCompliancePolicy' -and `
+                    $_.displayName -eq $($DisplayName)
+            }
+
+            if (([array]$devicePolicy).count -gt 1)
+            {
+                throw "A policy with a duplicated displayName {'$DisplayName'} was found - Ensure displayName is unique"
+            }
+            if ($null -eq $devicePolicy)
+            {
+                Write-Verbose -Message "No Intune Android Device Owner Device Compliance Policy with displayName {$DisplayName} was found"
+                return $nullResult
+            }
         }
-        if ($null -eq $devicePolicy)
+        else
         {
-            Write-Verbose -Message "No Intune Android Device Owner Device Compliance Policy with displayName {$DisplayName} was found"
-            return $nullResult
+            $devicePolicy = $Script:exportedInstance
         }
 
         Write-Verbose -Message "Found Intune Android Device Owner Device Compliance Policy with displayName {$DisplayName}"
+
+        #scheduledActionsForRule needs processing before we can interact with it
+        $psCustomObject = $devicePolicy.ScheduledActionsForRule | convertTo-JSON | ConvertFrom-JSON
+        $scheduledActionsForRuleHashTable = @{}
+        $psCustomObject.PsObject.Properties | ForEach-Object {
+            $scheduledActionsForRuleHashTable[$_.Name] = $_.Value
+
+        }
+        $hashtable = @{}
+        $complexScheduledActionsForRule = @()
+        $scheduledActionsForRuleHashTable.ScheduledActionConfigurations.PsObject.Properties | ForEach-Object {
+            if($_.Value -match "ActionType")
+            {
+                foreach($item in $_.Value){
+                        $hashtable = @{}
+                        $hashtable.Add('actionType', $item.ActionType)
+                        $hashtable.Add('gracePeriodHours', $item.GracePeriodHours)
+                        $hashtable.Add('notificationMessageCcList', ([Array]$item.NotificationMessageCcList -split " ") )
+                        $hashtable.Add('notificationTemplateId', $item.NotificationTemplateId)
+                        $complexScheduledActionsForRule += $hashtable
+                 }
+            }
+        }
+
         $results = @{
             DisplayName                                        = $devicePolicy.DisplayName
             Description                                        = $devicePolicy.Description
+            MinAndroidSecurityPatchLevel                       = $devicePolicy.AdditionalProperties.minAndroidSecurityPatchLevel
+            PasswordMinimumLetterCharacters                    = $devicePolicy.AdditionalProperties.passwordMinimumLetterCharacters
+            PasswordMinimumLowerCaseCharacters                 = $devicePolicy.AdditionalProperties.passwordMinimumLowerCaseCharacters
+            PasswordMinimumNonLetterCharacters                 = $devicePolicy.AdditionalProperties.passwordMinimumNonLetterCharacters
+            PasswordMinimumNumericCharacters                   = $devicePolicy.AdditionalProperties.passwordMinimumNumericCharacters
+            PasswordMinimumSymbolCharacters                    = $devicePolicy.AdditionalProperties.passwordMinimumSymbolCharacters
+            PasswordMinimumUpperCaseCharacters                 = $devicePolicy.AdditionalProperties.passwordMinimumUpperCaseCharacters
+            RequireNoPendingSystemUpdates                      = $devicePolicy.AdditionalProperties.requireNoPendingSystemUpdates
+            SecurityRequiredAndroidSafetyNetEvaluationType     = $devicePolicy.AdditionalProperties.securityRequiredAndroidSafetyNetEvaluationType
+            ScheduledActionsForRule                            = $complexScheduledActionsForRule
             DeviceThreatProtectionEnabled                      = $devicePolicy.AdditionalProperties.deviceThreatProtectionEnabled
             DeviceThreatProtectionRequiredSecurityLevel        = $devicePolicy.AdditionalProperties.deviceThreatProtectionRequiredSecurityLevel
             AdvancedThreatProtectionRequiredSecurityLevel      = $devicePolicy.AdditionalProperties.advancedThreatProtectionRequiredSecurityLevel
@@ -225,6 +311,47 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $DeviceThreatProtectionEnabled,
+
+        [Parameter()]
+        [System.String]
+        $MinAndroidSecurityPatchLevel,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordMinimumLetterCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordMinimumLowerCaseCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordMinimumNonLetterCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordMinimumNumericCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordMinimumSymbolCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordMinimumUpperCaseCharacters,
+
+        [Parameter()]
+        [System.Boolean]
+        $RequireNoPendingSystemUpdates,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('basic', 'hardwareBacked')]
+        $SecurityRequiredAndroidSafetyNetEvaluationType,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $ScheduledActionsForRule,
 
         [Parameter()]
         [System.String]
@@ -346,23 +473,21 @@ function Set-TargetResource
 
     $currentDeviceAndroidPolicy = Get-TargetResource @PSBoundParameters
 
-    $PSBoundParameters.Remove('Ensure') | Out-Null
-    $PSBoundParameters.Remove('Credential') | Out-Null
-    $PSBoundParameters.Remove('ApplicationId') | Out-Null
-    $PSBoundParameters.Remove('TenantId') | Out-Null
-    $PSBoundParameters.Remove('ApplicationSecret') | Out-Null
-    $PSBoundParameters.Remove('CertificateThumbprint') | Out-Null
-    $PSBoundParameters.Remove('ManagedIdentity') | Out-Null
-    $PSBoundParameters.Remove('AccessTokens') | Out-Null
+    $PSBoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
-    $scheduledActionsForRule = @{
-        ruleName                      = 'PasswordRequired'
-        scheduledActionConfigurations = @(
-            @{
-                '@odata.type' = '#microsoft.graph.deviceComplianceActionItem'
-                actionType    = 'block'
-            }
-        )
+
+    #$allTargetValues = Convert-M365DscHashtableToString -Hashtable $PSBoundParameters
+
+    #reconstruct scheduled action configurations for use with New/Update-MgBetaDeviceManagementDeviceCompliancePolicy
+    $hashtable = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $PSBoundParameters.ScheduledActionsForRule
+    $scheduledActionConfigurations = @()
+    $scheduledActionConfigurations += $hashtable
+    $PSBoundParameters.Remove('ScheduledActionsForRule') | Out-Null
+
+    $myScheduledActionsForRule = @{
+        '@odata.type'                 = '#microsoft.graph.deviceComplianceScheduledActionForRule'
+        ruleName                      = '' #this is always blank and can't be set in GUI
+        scheduledActionConfigurations = $scheduledActionConfigurations
     }
 
     if ($Ensure -eq 'Present' -and $currentDeviceAndroidPolicy.Ensure -eq 'Absent')
@@ -376,7 +501,7 @@ function Set-TargetResource
         $policy = New-MgBetaDeviceManagementDeviceCompliancePolicy -DisplayName $DisplayName `
             -Description $Description `
             -AdditionalProperties $AdditionalProperties `
-            -ScheduledActionsForRule $scheduledActionsForRule
+            -ScheduledActionsForRule $myScheduledActionsForRule
 
         #region Assignments
         $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
@@ -406,7 +531,15 @@ function Set-TargetResource
         $AdditionalProperties = Get-M365DSCIntuneDeviceCompliancePolicyAndroidDeviceOwnerAdditionalProperties -Properties ([System.Collections.Hashtable]$PSBoundParameters)
         Update-MgBetaDeviceManagementDeviceCompliancePolicy -AdditionalProperties $AdditionalProperties `
             -Description $Description `
-            -DeviceCompliancePolicyId $configDeviceAndroidPolicy.Id
+            -DeviceCompliancePolicyId $configDeviceAndroidPolicy.Id#`
+            #-ScheduledActionsForRule $myScheduledActionsForRule #This does not work even though it is a valid parameter
+
+        #handle ScheduledActionsForRule separately with Invoke-MgGraph
+        $Uri = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/deviceManagement/deviceCompliancePolicies/$($configDeviceAndroidPolicy.Id)/scheduleActionsForRules"
+        $mgGraphScheduledActionForRules = @{
+            deviceComplianceScheduledActionForRules = @( $myScheduledActionsForRule )
+        }
+        Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $($mgGraphScheduledActionForRules | ConvertTo-Json -Depth 10) -Verbose
 
         #region Assignments
         $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
@@ -446,6 +579,47 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $DeviceThreatProtectionEnabled,
+
+        [Parameter()]
+        [System.String]
+        $MinAndroidSecurityPatchLevel,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordMinimumLetterCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordMinimumLowerCaseCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordMinimumNonLetterCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordMinimumNumericCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordMinimumSymbolCharacters,
+
+        [Parameter()]
+        [System.Int32]
+        $PasswordMinimumUpperCaseCharacters,
+
+        [Parameter()]
+        [System.Boolean]
+        $RequireNoPendingSystemUpdates,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('basic', 'hardwareBacked')]
+        $SecurityRequiredAndroidSafetyNetEvaluationType,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $ScheduledActionsForRule,
 
         [Parameter()]
         [System.String]
@@ -560,45 +734,56 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of Intune Android Work Profile Device Compliance Policy {$DisplayName}"
+    Write-Verbose -Message "Testing configuration of {$Id}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
-    if (-not (Test-M365DSCAuthenticationParameter -BoundParameters $CurrentValues))
+    $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
+    $testResult = $true
+
+    #Compare Cim instances
+    foreach ($key in $PSBoundParameters.Keys)
     {
-        Write-Verbose "An error occured in Get-TargetResource, the policy {$displayName} will not be processed"
-        throw "An error occured in Get-TargetResource, the policy {$displayName} will not be processed. Refer to the event viewer logs for more information."
+        $source = $PSBoundParameters.$key
+        $target = $CurrentValues.$key
+        if ($source.GetType().Name -like '*CimInstance*')
+        {
+            $testResult = Compare-M365DSCComplexObject `
+                -Source ($source) `
+                -Target ($target)
+
+            if (-not $testResult) { break }
+
+            $ValuesToCheck.Remove($key) | Out-Null
+        }
     }
+
+    $ValuesToCheck.Remove('Id') | Out-Null
+    $ValuesToCheck = Remove-M365DSCAuthenticationParameter -BoundParameters $ValuesToCheck
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
-    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
+    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
 
-    $ValuesToCheck = $PSBoundParameters
-
-    $testResult = $true
-    if ($CurrentValues.Ensure -ne $Ensure)
+    #Convert any DateTime to String
+    foreach ($key in $ValuesToCheck.Keys)
     {
-        $testResult = $false
+        if (($null -ne $CurrentValues[$key]) `
+                -and ($CurrentValues[$key].getType().Name -eq 'DateTime'))
+        {
+            $CurrentValues[$key] = $CurrentValues[$key].toString()
+        }
     }
-    #region Assignments
-    if ($testResult)
-    {
-        $source = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $PSBoundParameters.Assignments
-        $target = $CurrentValues.Assignments
-        $testResult = Compare-M365DSCIntunePolicyAssignment -Source $source -Target $target
-        $ValuesToCheck.Remove('Assignments') | Out-Null
-    }
-    #endregion
 
     if ($testResult)
     {
-        $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
+        $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
             -Source $($MyInvocation.MyCommand.Source) `
             -DesiredValues $PSBoundParameters `
             -ValuesToCheck $ValuesToCheck.Keys
     }
-    Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
-    return $TestResult
+    Write-Verbose -Message "Test-TargetResource returned $testResult"
+
+    return $testResult
 }
 
 function Export-TargetResource
@@ -663,6 +848,7 @@ function Export-TargetResource
             $Filter = Remove-ComplexFunctionsFromFilterQuery -FilterQuery $Filter
         }
         [array]$configDeviceAndroidPolicies = Get-MgBetaDeviceManagementDeviceCompliancePolicy `
+            -ExpandProperty 'scheduledActionsForRule($expand=scheduledActionConfigurations)' `
             -ErrorAction Stop -All:$true -Filter $Filter | Where-Object `
             -FilterScript {
             $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidDeviceOwnerCompliancePolicy'
@@ -673,11 +859,11 @@ function Export-TargetResource
         $dscContent = ''
         if ($configDeviceAndroidPolicies.Length -eq 0)
         {
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         else
         {
-            Write-Host "`r`n" -NoNewline
+            Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
         foreach ($configDeviceAndroidPolicy in $configDeviceAndroidPolicies)
         {
@@ -686,7 +872,7 @@ function Export-TargetResource
                 $Global:M365DSCExportResourceInstancesCount++
             }
 
-            Write-Host "    |---[$i/$($configDeviceAndroidPolicies.Count)] $($configDeviceAndroidPolicy.displayName)" -NoNewline
+            Write-M365DSCHost -Message "    |---[$i/$($configDeviceAndroidPolicies.Count)] $($configDeviceAndroidPolicy.displayName)" -DeferWrite
             $params = @{
                 DisplayName           = $configDeviceAndroidPolicy.displayName
                 Ensure                = 'Present'
@@ -698,6 +884,8 @@ function Export-TargetResource
                 Managedidentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }
+
+            $Script:exportedInstance = $configDeviceAndroidPolicy
             $Results = Get-TargetResource @params
             if (-not (Test-M365DSCAuthenticationParameter -BoundParameters $Results))
             {
@@ -719,31 +907,34 @@ function Export-TargetResource
                 }
             }
 
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
+            if ($Results.ScheduledActionsForRule)
+            {
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                    -ComplexObject $Results.ScheduledActionsForRule `
+                    -CIMInstanceName MSFT_scheduledActionConfigurations
+                if ($complexTypeStringResult)
+                {
+                    $Results.ScheduledActionsForRule = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('ScheduledActionsForRule') | Out-Null
+                }
+            }
+
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -Credential $Credential
-
-
-            if ($Results.Assignments)
-            {
-                $isCIMArray = $false
-                if ($Results.Assignments.getType().Fullname -like '*[[\]]')
-                {
-                    $isCIMArray = $true
-                }
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Assignments' -IsCIMArray:$isCIMArray
-            }
+                -Credential $Credential `
+                -NoEscape @('Assignments', 'ScheduledActionsForRule')
 
             $dscContent += $currentDSCBlock
 
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         return $dscContent
     }
@@ -752,11 +943,11 @@ function Export-TargetResource
         if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
                 $_.Exception -like '*Request not applicable to target tenant*')
         {
-            Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
+            Write-M365DSCHost -Message "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }
         else
         {
-            Write-Host $Global:M365DSCEmojiRedX
+            Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
             New-M365DSCLogEntry -Message 'Error during Export:' `
                 -Exception $_ `

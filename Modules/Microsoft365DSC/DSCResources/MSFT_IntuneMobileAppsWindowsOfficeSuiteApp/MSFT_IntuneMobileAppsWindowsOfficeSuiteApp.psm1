@@ -143,25 +143,28 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters | Out-Null
+    Write-Verbose -Message "Getting configuration of the Intune Windows Office Suite App with Id {$Id} and DisplayName {$DisplayName}"
 
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullResult = $PSBoundParameters
-    $nullResult.Ensure = 'Absent'
     try
     {
+        New-M365DSCConnection -Workload 'MicrosoftGraph' `
+            -InboundParameters $PSBoundParameters | Out-Null
+
+        #Ensure the proper dependencies are installed in the current environment.
+        Confirm-M365DSCDependencies
+
+        #region Telemetry
+        $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+        $CommandName = $MyInvocation.MyCommand
+        $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+            -CommandName $CommandName `
+            -Parameters $PSBoundParameters
+        Add-M365DSCTelemetryEvent -Data $data
+        #endregion
+
+        $nullResult = $PSBoundParameters
+        $nullResult.Ensure = 'Absent'
+
         $instance = Get-MgBetaDeviceAppManagementMobileApp -MobileAppId $Id `
             -ExpandProperty 'categories' `
             -ErrorAction SilentlyContinue
@@ -504,7 +507,7 @@ function Set-TargetResource
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Host "Updating the Intune Windows Office Suite App with DisplayName {$DisplayName}"
+        Write-Verbose -Message "Updating the Intune Windows Office Suite App with DisplayName {$DisplayName}"
         $BoundParameters.Remove('Assignments') | Out-Null
 
         $UpdateParameters = ([Hashtable]$BoundParameters).Clone()
@@ -578,7 +581,7 @@ function Set-TargetResource
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Host "Remove the Intune Windows Office Suite App with Id {$($currentInstance.Id)}"
+        Write-Verbose -Message "Remove the Intune Windows Office Suite App with Id {$($currentInstance.Id)}"
         Remove-MgBetaDeviceAppManagementMobileApp -MobileAppId $currentInstance.Id -Confirm:$false
     }
 }
@@ -744,12 +747,6 @@ function Test-TargetResource
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
-
-    if ($CurrentValues.Ensure -ne $Ensure)
-    {
-        Write-Verbose -Message "Test-TargetResource returned $false"
-        return $false
-    }
     $testResult = $true
 
     #Compare Cim instances
@@ -854,22 +851,22 @@ function Export-TargetResource
     try
     {
         $Script:ExportMode = $true
-        [array] $Script:getInstances = Get-MgBetaDeviceAppManagementMobileApp `
+        [array] $getValue = Get-MgBetaDeviceAppManagementMobileApp `
             -Filter "isof('microsoft.graph.officeSuiteApp')" `
             -ErrorAction Stop
 
         $i = 1
         $dscContent = ''
-        if ($Script:getInstances.Length -eq 0)
+        if ($getValue.Length -eq 0)
         {
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         else
         {
-            Write-Host "`r`n" -NoNewline
+            Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
 
-        foreach ($config in $Script:getInstances)
+        foreach ($config in $getValue)
         {
             if ($null -ne $Global:M365DSCExportResourceInstancesCount)
             {
@@ -877,7 +874,7 @@ function Export-TargetResource
             }
 
             $displayedKey = $config.Id
-            Write-Host "    |---[$i/$($Script:getInstances.Count)] $displayedKey" -NoNewline
+            Write-M365DSCHost -Message "    |---[$i/$($getValue.Count)] $displayedKey" -DeferWrite
 
             $params = @{
                 Id                    = $config.Id
@@ -892,9 +889,8 @@ function Export-TargetResource
                 AccessTokens          = $AccessTokens
             }
 
-            $Results = Get-TargetResource @params
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
+            $Script:exportedInstance = $config
+            $Results = Get-TargetResource @Params
 
             #region complex types
             if ($null -ne $Results.Categories)
@@ -969,42 +965,21 @@ function Export-TargetResource
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -Credential $Credential
-
-            #region complex types
-            if ($null -ne $Results.Categories)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Categories' -IsCIMArray:$true
-            }
-
-            if ($null -ne $Results.ExcludedApps)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'ExcludedApps' -IsCIMArray:$false
-            }
-
-            # if ($null -ne $Results.LargeIcon)
-            # {
-            #     $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'LargeIcon' -IsCIMArray:$false
-            # }
-
-            if ($null -ne $Results.Assignments)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Assignments' -IsCIMArray:$true
-            }
-            #endregion complex types
+                -Credential $Credential `
+                -NoEscape @('Categories', 'ExcludedApps', 'Assignments')
 
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
 
         return $dscContent
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `

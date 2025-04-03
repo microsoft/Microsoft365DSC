@@ -439,20 +439,24 @@ function Export-TargetResource
         $dscContent = ''
         if ($getValue.Length -eq 0)
         {
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         else
         {
-            Write-Host "`r`n" -NoNewline
+            Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
         foreach ($config in $getValue)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
             $displayedKey = $config.Id
             if (-not [string]::IsNullOrEmpty($config.name))
             {
                 $displayedKey = $config.name
             }
-            Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
+            Write-M365DSCHost -Message "    |---[$i/$($getValue.Count)] $displayedKey" -DeferWrite
             $params = @{
                 Id                    = $config.Id
                 Name                  = $config.Name
@@ -466,37 +470,50 @@ function Export-TargetResource
             }
 
             $Results = Get-TargetResource @Params
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
 
-            if ($Results.Policies.Count -gt 0)
+            if ($null -ne $Results.Policies)
             {
-                $Results.Policies = Get-PoliciesAsString $Results.Policies
+                $complexMapping = @(
+                    @{
+                        Name            = 'Policies'
+                        CimInstanceName = 'MicrosoftGraphNetworkaccessPolicyLink'
+                        IsRequired      = $False
+                    }
+                )
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                    -ComplexObject $Results.Policies `
+                    -CIMInstanceName 'MicrosoftGraphNetworkaccessPolicyLink' `
+                    -ComplexTypeMapping $complexMapping
+
+                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                {
+                    $Results.Policies = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('Policies') | Out-Null
+                }
             }
 
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -Credential $Credential
+                -Credential $Credential `
+                -NoEscape @('Policies')
 
-            if ($null -ne $Results.Policies)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                    -ParameterName 'Policies'
-            }
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
 
             $i++
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         return $dscContent
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `
@@ -506,29 +523,6 @@ function Export-TargetResource
 
         return ''
     }
-}
-
-function Get-PoliciesAsString
-{
-    [CmdletBinding()]
-    [OutputType([System.String])]
-    param(
-        [Parameter(Mandatory = $true)]
-        [System.Collections.ArrayList]
-        $Policies
-    )
-
-    $StringContent = '@('
-    foreach ($policy in $Policies)
-    {
-        $StringContent += "MSFT_MicrosoftGraphNetworkaccessPolicyLink {`r`n"
-        $StringContent += "                State = '" + $policy.State + "'`r`n"
-        $StringContent += "                PolicyLinkId  = '" + $policy.PolicyLinkId + "'`r`n"
-        $StringContent += "                Name = '" + $policy.Name + "'`r`n"
-        $StringContent += "            }`r`n"
-    }
-    $StringContent += '            )'
-    return $StringContent
 }
 
 Export-ModuleMember -Function *-TargetResource

@@ -463,7 +463,14 @@ function New-M365DSCConfigurationToExcel
         $OutputPath
     )
 
-    $excel = New-Object -ComObject excel.application
+    try
+    {
+        $excel = New-Object -ComObject excel.application
+    }
+    catch [System.Runtime.InteropServices.COMException]
+    {
+        throw 'Excel is not installed on this machine. Please install Excel to use this feature.'
+    }
     $excel.visible = $True
     $workbook = $excel.Workbooks.Add()
     $report = $workbook.Worksheets.Item(1)
@@ -616,7 +623,7 @@ function New-M365DSCConfigurationToCSV
                         }
                         else
                         {
-                            $value = ($resource.$property).ToString().Replace('$', '')
+                            $value = ($resource.$property).ToString() # .Replace('$', '')
                             $value = $value.Replace('@', '')
                             $value = $value.Replace('(', '')
                             $value = $value.Replace(')', '')
@@ -709,6 +716,7 @@ function New-M365DSCReportFromConfiguration
             $delimiterParam = [System.Management.Automation.RuntimeDefinedParameter]::New("Delimiter", [System.String], $attributeCollection)
             $delimiterParam.Value = ';' # default value, comma makes a mess when importing a CSV-file in Excel
             $paramDictionary.Add("Delimiter", $delimiterParam)
+            $PSBoundParameters.Add("Delimiter", $delimiterParam.Value)
         }
         return $paramDictionary
     }
@@ -2072,8 +2080,12 @@ function Initialize-M365DSCReporting
         $parsedContent = ConvertTo-DSCObject -Content $fileContent
     }
 
-    return $parsedContent
+    if ($null -eq $parsedContent)
+    {
+        Write-Warning -Message "No configuration found in $ConfigurationPath. Either the configuration was empty or the file was not a valid DSC configuration."
+    }
 
+    return $parsedContent
 }
 
 Export-ModuleMember -Function @(

@@ -110,7 +110,6 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    ##TODO - Replace the workload by the one associated to your resource
     New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
         -InboundParameters $PSBoundParameters | Out-Null
 
@@ -843,31 +842,31 @@ function Set-TargetResource
         {
             Set-M365DSCSCInsiderRiskExclusionGroup -CurrentValues $currentInstance.ExceptionKeyworkGroups `
                 -DesiredValues $ExceptionKeyworkGroups `
-                -Name 'IrmXSGExcludedKeywords '
+                -Name 'IrmXSGExceptionKeywords'
         }
         elseif ($null -ne $ExcludedKeyworkGroups -and $ExcludedKeyworkGroups.Length -gt 0)
         {
             Set-M365DSCSCInsiderRiskExclusionGroup -CurrentValues $currentInstance.ExcludedKeyworkGroups `
                 -DesiredValues $ExcludedKeyworkGroups `
-                -Name 'IrmXSGExcludedKeywords '
+                -Name 'IrmXSGExcludedKeywords'
         }
         elseif ($null -ne $ExcludedSensitiveInformationTypeGroups -and $ExcludedSensitiveInformationTypeGroups.Length -gt 0)
         {
             Set-M365DSCSCInsiderRiskExclusionGroup -CurrentValues $currentInstance.ExcludedSensitiveInformationTypeGroups `
                 -DesiredValues $ExcludedSensitiveInformationTypeGroups `
-                -Name 'IrmXSGSensitiveInfoTypes '
+                -Name 'IrmXSGSensitiveInfoTypes'
         }
         elseif ($null -ne $ExcludedSiteGroups -and $ExcludedSiteGroups.Length -gt 0)
         {
             Set-M365DSCSCInsiderRiskExclusionGroup -CurrentValues $currentInstance.ExcludedSiteGroups `
                 -DesiredValues $ExcludedSiteGroups `
-                -Name 'IrmXSGSites '
+                -Name 'IrmXSGSites'
         }
         elseif ($null -ne $ExcludedClassifierGroups -and $ExcludedClassifierGroups.Length -gt 0)
         {
             Set-M365DSCSCInsiderRiskExclusionGroup -CurrentValues $currentInstance.ExcludedClassifierGroups `
                 -DesiredValues $ExcludedClassifierGroups `
-                -Name 'IrmXSGMLClassifierTypes '
+                -Name 'IrmXSGMLClassifierTypes'
         }
     }
     # REMOVE
@@ -1086,11 +1085,11 @@ function Export-TargetResource
         $dscContent = ''
         if ($Script:exportedInstances.Length -eq 0)
         {
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         else
         {
-            Write-Host "`r`n" -NoNewline
+            Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
         foreach ($config in $Script:exportedInstances)
         {
@@ -1099,7 +1098,7 @@ function Export-TargetResource
                 $Global:M365DSCExportResourceInstancesCount++
             }
             $displayedKey = $config.ListType + ' - ' + $config.Name
-            Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -NoNewline
+            Write-M365DSCHost -Message "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -DeferWrite
             $params = @{
                 DisplayName           = $config.DisplayName
                 Name                  = $config.Name
@@ -1113,7 +1112,6 @@ function Export-TargetResource
             }
 
             $Results = Get-TargetResource @Params
-
             if ($null -ne $Results.Domains -and $Results.Domains.Length -gt 0 -and `
                 ($Results.ListType -eq 'CustomDomainLists' -or $Results.ListType -eq 'DomainLists'))
             {
@@ -1126,38 +1124,25 @@ function Export-TargetResource
                 $Results.Sites = ConvertTo-M365DSCSCInsiderRiskSiteToString -Sites $Results.Sites
             }
 
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
 
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -Credential $Credential
-
-            if ($null -ne $Results.Domains -and `
-                ($Results.ListType -eq 'CustomDomainLists' -or $Results.ListType -eq 'DomainLists'))
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Domains' -IsCIMArray $true
-            }
-
-            if ($null -ne $Results.Sites -and `
-                ($Results.ListType -eq 'CustomSiteLists' -or $Results.ListType -eq 'SiteLists'))
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Sites' -IsCIMArray $true
-            }
+                -Credential $Credential `
+                -NoEscape @('Domains', 'Sites')
 
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         return $dscContent
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `

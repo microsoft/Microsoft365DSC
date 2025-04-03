@@ -1,7 +1,7 @@
 [ClassVersion("1.0.0.0")]
-class MSFT_PPPowerAPpPolicyUrlPatternsRule
+class MSFT_PPPowerAppPolicyUrlPatternsRule
 {
-    [Write, Description("Rule priority order.")] String order;
+    [Write, Description("Rule priority order.")] UInt32 order;
     [Write, Description("Rule classification.")] String customConnectorRuleClassification;
     [Write, Description("Rule pattern.")] String pattern;
 };

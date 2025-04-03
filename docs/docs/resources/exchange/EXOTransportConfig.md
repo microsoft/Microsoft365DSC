@@ -23,7 +23,7 @@
 | **InternalDsnReportingAuthority** | Write | String | The InternalDsnReportingAuthority parameter specifies the domain in the machine-readable part of internal DSN messages. | |
 | **InternalDsnSendHtml** | Write | Boolean | The InternalDsnSendHtml parameter specifies whether internal DSN messages should be HTML or plain text. | |
 | **JournalMessageExpirationDays** | Write | SInt32 | The JournalMessageExpirationDays parameter extends the number of days that undeliverable journal reports are queued before they expire. | |
-| **JournalingReportNdrTo** | Write | String | The JournalingReportNdrTo parameter specifies the email address to which journal reports are sent if the journaling mailbox is unavailable. | |
+| **JournalingReportNdrTo** | Write | String | The JournalingReportNdrTo parameter specifies the email address to which journal reports are sent if the journaling mailbox is unavailable. Once set, it cannot be reset to blank again. | |
 | **MaxRecipientEnvelopeLimit** | Write | String | The MaxRecipientEnvelopeLimit parameter specifies the maximum number of recipients in a message. | |
 | **ReplyAllStormBlockDurationHours** | Write | SInt32 | Reply all storm block duration hours. | |
 | **ReplyAllStormDetectionMinimumRecipients** | Write | SInt32 | Reply all storm detection minimum recipients. | |

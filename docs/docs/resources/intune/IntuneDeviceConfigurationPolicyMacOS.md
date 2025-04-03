@@ -115,7 +115,7 @@
 | **blockMicrophone** | Write | Boolean | Block access to microphone. | |
 | **blockScreenCapture** | Write | Boolean | Block app from capturing contents of system display. Requires macOS 10.15 or later. | |
 | **calendar** | Write | String | Allow or block access to event information managed by Calendar. | `notConfigured`, `enabled`, `disabled` |
-| **codeRequirement** | Write | String | Enter the code requirement, which can be obtained with the command 'codesign -display -r -' in the Terminal app. Include everything after '=>'. | |
+| **codeRequirement** | Write | String | Enter the code requirement, which can be obtained with the command 'codesign -display -r -' in the Terminal app. Include everything after '=&gt;'. | |
 | **displayName** | Write | String | The display name of the app, process, or executable. | |
 | **fileProviderPresence** | Write | String | Allow the app or process to access files managed by another app's file provider extension. Requires macOS 10.15 or later. | `notConfigured`, `enabled`, `disabled` |
 | **identifier** | Write | String | The bundle ID or path of the app, process, or executable. | |

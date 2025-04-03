@@ -7,6 +7,16 @@
 | **DisplayName** | Key | String | Display name of the Android Device Owner device compliance policy. | |
 | **Description** | Write | String | Description of the Android Device Owner device compliance policy. | |
 | **Assignments** | Write | MSFT_DeviceManagementConfigurationPolicyAssignments[] | Assignments of the Intune Policy. | |
+| **MinAndroidSecurityPatchLevel** | Write | String | Minimum Android security patch level. | |
+| **PasswordMinimumLetterCharacters** | Write | UInt32 | Indicates the minimum number of letter characters required for device password. Valid values 1 to 16. | |
+| **PasswordMinimumLowerCaseCharacters** | Write | UInt32 | Indicates the minimum number of lower case characters required for device password. Valid values 1 to 16. | |
+| **PasswordMinimumNonLetterCharacters** | Write | UInt32 | Indicates the minimum number of non-letter characters required for device password. Valid values 1 to 16. | |
+| **PasswordMinimumNumericCharacters** | Write | UInt32 | Indicates the minimum number of numeric characters required for device password. Valid values 1 to 16. | |
+| **PasswordMinimumSymbolCharacters** | Write | UInt32 | Indicates the minimum number of symbol characters required for device password. Valid values 1 to 16. | |
+| **PasswordMinimumUpperCaseCharacters** | Write | UInt32 | Indicates the minimum number of upper case letter characters required for device password. Valid values 1 to 16. | |
+| **RequireNoPendingSystemUpdates** | Write | Boolean | Require device to have no pending Android system updates. | |
+| **SecurityRequiredAndroidSafetyNetEvaluationType** | Write | String | Require a specific Play Integrity evaluation type for compliance. Possible values are: basic, hardwareBacked. | `basic`, `hardwareBacked` |
+| **ScheduledActionsForRule** | Write | MSFT_scheduledActionConfigurations[] | Specifies the non-compliance actions. | |
 | **DeviceThreatProtectionEnabled** | Write | Boolean | DeviceThreatProtectionEnabled of the Android Device Owner device compliance policy. | |
 | **DeviceThreatProtectionRequiredSecurityLevel** | Write | String | DeviceThreatProtectionRequiredSecurityLevel of the Android Device Owner device compliance policy. | |
 | **AdvancedThreatProtectionRequiredSecurityLevel** | Write | String | AdvancedThreatProtectionRequiredSecurityLevel of the Android Device Owner device compliance policy. | |
@@ -44,6 +54,18 @@
 | **groupId** | Write | String | The group Id that is the target of the assignment. | |
 | **groupDisplayName** | Write | String | The group Display Name that is the target of the assignment. | |
 | **collectionId** | Write | String | The collection Id that is the target of the assignment.(ConfigMgr) | |
+
+### MSFT_scheduledActionConfigurations
+
+#### Parameters
+
+| Parameter | Attribute | DataType | Description | Allowed Values |
+| --- | --- | --- | --- | --- |
+| **id** | Write | String | The unique identifier of the action configuration. | |
+| **gracePeriodHours** | Write | UInt32 | Number of hours to wait till the action will be enforced. Valid values 0 to 8760. | |
+| **actionType** | Write | String | The action to take. | `notification`, `block`, `retire`, `remoteLock`, `pushNotification` |
+| **notificationTemplateId** | Write | String | The notification Message template to use. | |
+| **notificationMessageCCList** | Write | StringArray[] | A list of group IDs to specify who to CC this notification message to. | |
 
 ## Description
 

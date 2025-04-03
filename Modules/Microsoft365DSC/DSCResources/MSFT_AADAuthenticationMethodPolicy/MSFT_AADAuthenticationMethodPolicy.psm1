@@ -79,50 +79,57 @@ function Get-TargetResource
 
     try
     {
-        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters
-
-        #Ensure the proper dependencies are installed in the current environment.
-        Confirm-M365DSCDependencies
-
-        #region Telemetry
-        $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
-        $CommandName = $MyInvocation.MyCommand
-        $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-            -CommandName $CommandName `
-            -Parameters $PSBoundParameters
-        Add-M365DSCTelemetryEvent -Data $data
-        #endregion
-
-        $nullResult = $PSBoundParameters
-        $nullResult.Ensure = 'Absent'
-
-        $getValue = $null
-        #region resource generator code
-        if (-not [System.String]::IsNullOrEmpty($Id))
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.DisplayName -ne $DisplayName)
         {
-            $getValue = Get-MgBetaPolicyAuthenticationMethodPolicy -ErrorAction SilentlyContinue
-        }
+            $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+                -InboundParameters $PSBoundParameters
 
-        if ($null -eq $getValue)
-        {
-            Write-Verbose -Message "Could not find an Azure AD Authentication Method Policy with Id {$Id}"
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
 
-            if (-Not [string]::IsNullOrEmpty($DisplayName))
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullResult = $PSBoundParameters
+            $nullResult.Ensure = 'Absent'
+
+            $getValue = $null
+            #region resource generator code
+            if (-not [System.String]::IsNullOrEmpty($Id))
             {
-                $getValue = Get-MgBetaPolicyAuthenticationMethodPolicy `
-                    -ErrorAction SilentlyContinue | Where-Object `
-                    -FilterScript { `
-                        $_.DisplayName -eq "$($DisplayName)" `
-                        -and $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.AuthenticationMethodsPolicy' `
+                $getValue = Get-MgBetaPolicyAuthenticationMethodPolicy -ErrorAction SilentlyContinue
+            }
+
+            if ($null -eq $getValue)
+            {
+                Write-Verbose -Message "Could not find an Azure AD Authentication Method Policy with Id {$Id}"
+
+                if (-Not [string]::IsNullOrEmpty($DisplayName))
+                {
+                    $getValue = Get-MgBetaPolicyAuthenticationMethodPolicy `
+                        -ErrorAction SilentlyContinue | Where-Object `
+                        -FilterScript { `
+                            $_.DisplayName -eq "$($DisplayName)" `
+                            -and $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.AuthenticationMethodsPolicy' `
+                    }
                 }
             }
+            #endregion
+            if ($null -eq $getValue)
+            {
+                Write-Verbose -Message "Could not find an Azure AD Authentication Method Policy with DisplayName {$DisplayName}"
+                return $nullResult
+            }
         }
-        #endregion
-        if ($null -eq $getValue)
+        else
         {
-            Write-Verbose -Message "Could not find an Azure AD Authentication Method Policy with DisplayName {$DisplayName}"
-            return $nullResult
+            $getValue = $Script:exportedInstance
         }
         $Id = $getValue.Id
         Write-Verbose -Message "An Azure AD Authentication Method Policy with Id {$Id} and DisplayName {$DisplayName} was found."
@@ -239,19 +246,11 @@ function Get-TargetResource
         }
         #endregion
 
-        #region resource generator code
-        $enumPolicyMigrationState = $null
-        if ($null -ne $getValue.PolicyMigrationState)
-        {
-            $enumPolicyMigrationState = $getValue.PolicyMigrationState.ToString()
-        }
-        #endregion
-
         $results = @{
             #region resource generator code
             Description                      = $getValue.Description
             DisplayName                      = $getValue.DisplayName
-            PolicyMigrationState             = $enumPolicyMigrationState
+            #PolicyMigrationState             = $enumPolicyMigrationState #DEPRECATED - Cannot be set
             PolicyVersion                    = $getValue.PolicyVersion
             ReconfirmationInDays             = $getValue.ReconfirmationInDays
             RegistrationEnforcement          = $complexRegistrationEnforcement
@@ -398,6 +397,13 @@ function Set-TargetResource
                 $UpdateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters.$key
             }
         }
+
+        if (-not [System.String]::IsNullOrEmpty($PolicyMigrationState))
+        {
+            Write-Verbose -Message "DEPRECATED - Property PolicyMigrationState cannot be set."
+            $UpdateParameters.Remove('PolicyMigrationState') | Out-Null
+        }
+
         #region resource generator code
         $UpdateParameters.Add('@odata.type', '#microsoft.graph.AuthenticationMethodsPolicy')
         Write-Verbose -Message "Updating AuthenticationMethodPolicy with: `r`n$(Convert-M365DscHashtableToString -Hashtable $UpdateParameters)"
@@ -500,13 +506,8 @@ function Test-TargetResource
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
-
-    if ($CurrentValues.Ensure -ne $Ensure)
-    {
-        Write-Verbose -Message "Test-TargetResource returned $false"
-        return $false
-    }
     $testResult = $true
+    $testTargetResource = $true
 
     #Compare Cim instances
     foreach ($key in $PSBoundParameters.Keys)
@@ -517,7 +518,7 @@ function Test-TargetResource
         {
             $source = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
 
-            $testResult = Compare-M365DSCComplexObject `
+            $testTargetResource = Compare-M365DSCComplexObject `
                 -Source ($source) `
                 -Target ($target)
 
@@ -532,21 +533,22 @@ function Test-TargetResource
     }
 
     $ValuesToCheck.remove('Id') | Out-Null
+    $ValuesToCheck.remove('PolicyMigrationState') | Out-Null
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
 
-    if ($testResult)
+    $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck $ValuesToCheck.Keys
+
+    if (-not $TestResult)
     {
-        $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
-            -Source $($MyInvocation.MyCommand.Source) `
-            -DesiredValues $PSBoundParameters `
-            -ValuesToCheck $ValuesToCheck.Keys
+        $testTargetResource = $false
     }
-
-    Write-Verbose -Message "Test-TargetResource returned $testResult"
-
-    return $testResult
+    Write-Verbose -Message "Test-TargetResource returned $testTargetResource"
+    return $testTargetResource
 }
 
 function Export-TargetResource
@@ -610,11 +612,11 @@ function Export-TargetResource
         $dscContent = ''
         if ($getValue.Length -eq 0)
         {
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         else
         {
-            Write-Host "`r`n" -NoNewline
+            Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
         foreach ($config in $getValue)
         {
@@ -628,7 +630,7 @@ function Export-TargetResource
             {
                 $displayedKey = $config.displayName
 
-                Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
+                Write-M365DSCHost -Message "    |---[$i/$($getValue.Count)] $displayedKey" -DeferWrite
                 $params = @{
                     Id                    = $config.Id
                     DisplayName           = $config.DisplayName
@@ -642,9 +644,8 @@ function Export-TargetResource
                     AccessTokens          = $AccessTokens
                 }
 
+                $Script:exportedInstance = $config
                 $Results = Get-TargetResource @Params
-                $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                    -Results $Results
                 if ($null -ne $Results.RegistrationEnforcement)
                 {
                     $complexMapping = @(
@@ -752,32 +753,21 @@ function Export-TargetResource
                     -ConnectionMode $ConnectionMode `
                     -ModulePath $PSScriptRoot `
                     -Results $Results `
-                    -Credential $Credential
-                if ($Results.RegistrationEnforcement)
-                {
-                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'RegistrationEnforcement' -IsCIMArray:$False
-                }
-                if ($Results.SystemCredentialPreferences)
-                {
-                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'SystemCredentialPreferences' -IsCIMArray:$False
-                }
+                    -Credential $Credential `
+                    -NoEscape @('RegistrationEnforcement', 'ReportSuspiciousActivitySettings', 'SystemCredentialPreferences')
 
-                if ($Results.ReportSuspiciousActivitySettings)
-                {
-                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'ReportSuspiciousActivitySettings' -IsCIMArray:$False
-                }
                 $dscContent += $currentDSCBlock
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
                     -FileName $Global:PartialExportFileName
             }
             $i++
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         return $dscContent
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `

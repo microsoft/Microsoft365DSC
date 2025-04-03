@@ -58,9 +58,6 @@ function Get-TargetResource
             -InboundParameters $PSBoundParameters
     }
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters
-
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
@@ -83,8 +80,8 @@ function Get-TargetResource
 
         if ($null -ne $AvailabilityConfigs -and $null -ne $AvailabilityConfigs.OrgWideAccount)
         {
-            $user = Get-MgUser -UserId $OrgWideAccount -ErrorAction Stop
-            $AvailabilityConfig = ($AvailabilityConfigs | Where-Object -FilterScript { $_.OrgWideAccount -IMatch $user.UserId })
+            $user = Get-User -Identity $OrgWideAccount -ErrorAction Stop
+            $AvailabilityConfig = ($AvailabilityConfigs | Where-Object -FilterScript { $_.OrgWideAccount -IMatch $user.Id })
         }
         if ($null -eq $AvailabilityConfig)
         {
@@ -347,14 +344,14 @@ function Export-TargetResource
 
         if ($null -eq (Get-Command Get-AvailabilityConfig -ErrorAction SilentlyContinue))
         {
-            Write-Host "`r`n    $($Global:M365DSCEmojiRedX) The specified account doesn't have permissions to access Availibility Config"
+            Write-M365DSCHost -Message "`r`n    $($Global:M365DSCEmojiRedX) The specified account doesn't have permissions to access Availibility Config"
             return ''
         }
         $AvailabilityConfig = Get-AvailabilityConfig -ErrorAction Stop
 
         if ($null -eq $AvailabilityConfig)
         {
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
             return ''
         }
 
@@ -376,8 +373,6 @@ function Export-TargetResource
             AccessTokens          = $AccessTokens
         }
         $Results = Get-TargetResource @Params
-        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-            -Results $Results
         $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
             -ConnectionMode $ConnectionMode `
             -ModulePath $PSScriptRoot `
@@ -387,12 +382,12 @@ function Export-TargetResource
 
         Save-M365DSCPartialExport -Content $currentDSCBlock `
             -FileName $Global:PartialExportFileName
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
+        Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         return $dscContent
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `

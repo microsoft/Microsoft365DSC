@@ -62,10 +62,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Invoke-MgGraphRequest -MockWith {
             }
 
-            # Mock Write-Host to hide output during the tests
-            Mock -CommandName Write-Host -MockWith {
+            # Mock Write-M365DSCHost to hide output during the tests
+            Mock -CommandName Write-M365DSCHost -MockWith {
             }
-            $Script:exportedInstances =$null
+            $Script:exportedInstance =$null
             $Script:ExportMode = $false
         }
         # Test contexts
@@ -157,7 +157,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         IsEnabled             = $true
                         NotifyReviewers       = $False;
                         RemindersEnabled      = $True;
-                        RequestDurationInDays = 30;
+                        RequestDurationInDays = 29; #drift
                         Reviewers             =                 @(
                             @{
                                 Query = "/v1.0/users/e362df2b-8f61-4e5a-9e5e-c6069f3ed2ee"

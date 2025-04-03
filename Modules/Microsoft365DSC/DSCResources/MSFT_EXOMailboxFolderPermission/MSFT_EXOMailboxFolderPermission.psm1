@@ -407,7 +407,7 @@ function Export-TargetResource
 
         if ($null -eq $cmdletInfo)
         {
-            Write-Host "    `r`n$($Global:M365DSCEmojiYellowCircle) The Get-MailboxFolder cmdlet is not avalaible. Service Principals do not have mailboxes."
+            Write-M365DSCHost -Message "    `r`n$($Global:M365DSCEmojiYellowCircle) The Get-MailboxFolder cmdlet is not avalaible. Service Principals do not have mailboxes." -CommitWrite
             return ''
         }
 
@@ -415,18 +415,18 @@ function Export-TargetResource
 
         if ($mailboxes.Length -eq 0)
         {
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         else
         {
-            Write-Host "`r`n" -NoNewline
+            Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
 
         $j = 1
         foreach ($mailboxFolder in $mailboxFolders)
         {
-            Write-Host "        |---[$j/$($mailboxFolders.count)] $($mailboxFolder.Identity)" -NoNewline
-            Write-Host "`r`n" -NoNewline
+            Write-M365DSCHost -Message "        |---[$j/$($mailboxFolders.count)] $($mailboxFolder.Identity)" -DeferWrite
+            Write-M365DSCHost -Message "`r`n" -DeferWrite
 
             $Params = @{
                 Identity              = $mailboxFolder.Identity
@@ -442,8 +442,6 @@ function Export-TargetResource
             $MailboxFolderPermissions = Get-TargetResource @Params
 
             $Result = $MailboxFolderPermissions
-            $Result = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Result
             if ($Result.UserPermissions.Count -gt 0)
             {
                 $Result.UserPermissions = Get-M365DSCEXOUserPermissionsList $Result.UserPermissions
@@ -452,13 +450,8 @@ function Export-TargetResource
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Result `
-                -Credential $Credential
-
-            if ($null -ne $Result.UserPermissions)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                    -ParameterName 'UserPermissions'
-            }
+                -Credential $Credential `
+                -NoEscape @('UserPermissions')
 
             $dscContent += $currentDSCBlock
 
@@ -471,7 +464,7 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `

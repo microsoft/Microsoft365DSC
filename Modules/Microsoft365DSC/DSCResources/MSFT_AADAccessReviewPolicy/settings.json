@@ -15,6 +15,9 @@
                 "read": [
                     {
                         "name": "Policy.Read.All"
+                    },
+                    {
+                        "name": "AccessReview.Read.All"
                     }
                 ],
                 "update": [

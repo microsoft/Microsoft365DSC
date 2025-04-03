@@ -20,7 +20,7 @@ class MSFT_EXOTransportConfig : OMI_BaseResource
     [Write, Description("The InternalDsnReportingAuthority parameter specifies the domain in the machine-readable part of internal DSN messages.")] String InternalDsnReportingAuthority;
     [Write, Description("The InternalDsnSendHtml parameter specifies whether internal DSN messages should be HTML or plain text.")] Boolean InternalDsnSendHtml;
     [Write, Description("The JournalMessageExpirationDays parameter extends the number of days that undeliverable journal reports are queued before they expire.")] SInt32 JournalMessageExpirationDays;
-    [Write, Description("The JournalingReportNdrTo parameter specifies the email address to which journal reports are sent if the journaling mailbox is unavailable.")] String JournalingReportNdrTo;
+    [Write, Description("The JournalingReportNdrTo parameter specifies the email address to which journal reports are sent if the journaling mailbox is unavailable. Once set, it cannot be reset to blank again.")] String JournalingReportNdrTo;
     [Write, Description("The MaxRecipientEnvelopeLimit parameter specifies the maximum number of recipients in a message.")] String MaxRecipientEnvelopeLimit;
     [Write, Description("Reply all storm block duration hours.")] SInt32 ReplyAllStormBlockDurationHours;
     [Write, Description("Reply all storm detection minimum recipients.")] SInt32 ReplyAllStormDetectionMinimumRecipients;

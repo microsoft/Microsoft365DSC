@@ -6,7 +6,7 @@ class MSFT_EXOMigrationEndpoint : OMI_BaseResource
     [Write, Description("The Application ID used for authentication.")] String AppID;
     [Write, Description("The URL of the Key Vault that stores the application secret.")] String AppSecretKeyVaultUrl;
     [Write, Description("The authentication method for the migration endpoint.")] String Authentication;
-    [Write, Description("The type of migration endpoint."), ValueMap{"IMAP"}, Values{"IMAP"}] String EndpointType;
+    [Write, Description("The type of migration endpoint."), ValueMap{"IMAP", "ExchangeRemoteMove"}, Values{"IMAP", "ExchangeRemoteMove"}] String EndpointType;
     [Write, Description("The Exchange Server address for the migration endpoint.")] String ExchangeServer;
     [Write, Description("The mailbox permission for the migration endpoint.")] String MailboxPermission;
     [Write, Description("The maximum number of concurrent incremental syncs.")] String MaxConcurrentIncrementalSyncs;

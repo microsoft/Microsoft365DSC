@@ -103,6 +103,9 @@ function Get-TargetResource
 
     try
     {
+        $IdentityParts = $Identity.Split(':')
+        $userInfo = Get-User -Identity $IdentityParts[0]
+        $IdentityValue = $userInfo.UserPrincipalName + ":" + $IdentityParts[1]
         $folder = Get-MailboxCalendarFolder -Identity $Identity -ErrorAction SilentlyContinue
 
         if ($null -eq $folder)
@@ -111,7 +114,7 @@ function Get-TargetResource
         }
 
         $result = @{
-            Identity                    = $folder.Identity
+            Identity                    = $IdentityValue
             DetailLevel                 = $folder.DetailLevel
             PublishDateRangeFrom        = $folder.PublishDateRangeFrom
             PublishDateRangeTo          = $folder.PublishDateRangeTo
@@ -426,12 +429,12 @@ function Export-TargetResource
 
         if ($null -eq $mailboxes)
         {
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
             return ''
         }
         else
         {
-            Write-Host "`r`n" -NoNewline
+            Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
 
         $i = 1
@@ -445,7 +448,7 @@ function Export-TargetResource
             # Name of calendar folder depends on the language of the mailbox
             $calendarFolderName = (Get-MailboxFolderStatistics -Identity $($mailbox.UserPrincipalName) -FolderScope Calendar | Where-Object { $_.FolderType -eq 'Calendar' }).Name
             $folderPath = $mailbox.UserPrincipalName + ':\' + $calendarFolderName
-            Write-Host "    |---[$i/$($mailboxes.Count)] $($folderPath)" -NoNewline
+            Write-M365DSCHost -Message "    |---[$i/$($mailboxes.Count)] $($folderPath)" -DeferWrite
             $Params = @{
                 Identity              = $folderPath
                 Credential            = $Credential
@@ -463,8 +466,6 @@ function Export-TargetResource
                 $Results.Remove('SharedCalendarSyncStartDate') | Out-Null
             }
 
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
@@ -474,7 +475,7 @@ function Export-TargetResource
 
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
             $i++
         }
 
@@ -482,7 +483,7 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `

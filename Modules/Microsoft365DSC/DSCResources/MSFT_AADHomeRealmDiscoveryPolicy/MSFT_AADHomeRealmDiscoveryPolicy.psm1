@@ -352,12 +352,6 @@ function Test-TargetResource
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
-
-    if ($CurrentValues.Ensure -ne $Ensure)
-    {
-        Write-Verbose -Message "Test-TargetResource returned $false"
-        return $false
-    }
     $testResult = $true
 
     #Compare Cim instances
@@ -464,11 +458,11 @@ function Export-TargetResource
         $dscContent = ''
         if ($getValue.Length -eq 0)
         {
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         else
         {
-            Write-Host "`r`n" -NoNewline
+            Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
         foreach ($config in $getValue)
         {
@@ -481,7 +475,7 @@ function Export-TargetResource
             {
                 $displayedKey = $config.name
             }
-            Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
+            Write-M365DSCHost -Message "    |---[$i/$($getValue.Count)] $displayedKey" -DeferWrite
             $params = @{
                 DisplayName           = $config.DisplayName
                 Ensure                = 'Present'
@@ -495,37 +489,52 @@ function Export-TargetResource
             }
 
             $Results = Get-TargetResource @Params
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
-
             if ($null -ne $Results.Definition)
             {
-                $Results.Definition = Get-M365DSCAADHomeRealDiscoveryPolicyDefinitionAsString $Results.Definition
-            }
+                $complexMapping = @(
+                    @{
+                        Name            = 'Definition'
+                        CimInstanceName = 'AADHomeRealDiscoveryPolicyDefinition'
+                        IsRequired      = $False
+                    },
+                    @{
+                        Name            = 'AlternateIdLogin'
+                        CimInstanceName = 'AADHomeRealDiscoveryPolicyDefinitionAlternateIdLogin'
+                        IsRequired      = $False
+                    }
+                )
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                    -ComplexObject $Results.Definition `
+                    -CIMInstanceName 'AADHomeRealDiscoveryPolicyDefinition' `
+                    -ComplexTypeMapping $complexMapping
 
+                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                {
+                    $Results.Definition = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('Definition') | Out-Null
+                }
+            }
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -Credential $Credential
-
-            if ($null -ne $Results.Definition)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                    -ParameterName 'Definition'
-            }
+                -Credential $Credential `
+                -NoEscape @('Definition')
 
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         return $dscContent
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `
@@ -536,41 +545,5 @@ function Export-TargetResource
         return ''
     }
 }
-
-function Get-M365DSCAADHomeRealDiscoveryPolicyDefinitionAsString
-{
-    [CmdletBinding()]
-    [OutputType([System.String])]
-    param(
-        [Parameter(Mandatory = $true)]
-        [System.Collections.ArrayList]
-        $Definitions
-    )
-
-    $StringContent = [System.Text.StringBuilder]::new()
-    $StringContent.Append('@(') | Out-Null
-
-    foreach ($definition in $Definitions)
-    {
-        $StringContent.Append("`n                MSFT_AADHomeRealDiscoveryPolicyDefinition {`r`n") | Out-Null
-        $StringContent.Append("                    PreferredDomain       = '" + $definition.PreferredDomain + "'`r`n") | Out-Null
-        if ($null -ne $definition.AccelerateToFederatedDomain)
-        {
-            $StringContent.Append('                    AccelerateToFederatedDomain         = $' + $definition.AccelerateToFederatedDomain + "`r`n") | Out-Null
-        }
-        if ($null -ne $definition.AllowCloudPasswordValidation)
-        {
-            $StringContent.Append('                    AllowCloudPasswordValidation         = $' + $definition.AllowCloudPasswordValidation + "`r`n") | Out-Null
-        }
-        $StringContent.Append("                    AlternateIdLogin = MSFT_AADHomeRealDiscoveryPolicyDefinitionAlternateIdLogin {`r`n") | Out-Null
-        $StringContent.Append('                        Enabled = $' + $definition.AlternateIdLogin.Enabled + "`r`n") | Out-Null
-        $StringContent.Append("                    }`r`n") | Out-Null
-        $StringContent.Append("                }`r`n") | Out-Null
-    }
-
-    $StringContent.Append('            )') | Out-Null
-    return $StringContent.ToString()
-}
-
 
 Export-ModuleMember -Function *-TargetResource

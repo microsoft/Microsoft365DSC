@@ -112,67 +112,84 @@ function Get-TargetResource
         $AccessTokens
     )
 
+    Write-Verbose -Message "Getting configuration of the Intune Device Enrollment Status Page for Windows 10 with Id {$Id} and DisplayName {$DisplayName}"
+
     try
     {
-        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters
-
-        #Ensure the proper dependencies are installed in the current environment.
-        Confirm-M365DSCDependencies
-
-        #region Telemetry
-        $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
-        $CommandName = $MyInvocation.MyCommand
-        $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-            -CommandName $CommandName `
-            -Parameters $PSBoundParameters
-        Add-M365DSCTelemetryEvent -Data $data
-        #endregion
-
-        Write-Verbose -Message "Getting configuration of the Intune Device Enrollment Status Page for Windows 10 with Id {$Id} and DisplayName {$DisplayName}"
-
-        $nullResult = $PSBoundParameters
-        $nullResult.Ensure = 'Absent'
-
-        if ($PSBoundParameters.ContainsKey('SelectedMobileAppIds') -and $PSBoundParameters.ContainsKey('SelectedMobileAppNames'))
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.DisplayName -ne $DisplayName)
         {
-            Write-Verbose -Message '[WARNING] Both SelectedMobileAppIds and SelectedMobileAppNames are specified. SelectedMobileAppNames will be ignored!'
-        }
+            $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+                -InboundParameters $PSBoundParameters
 
-        $getValue = $null
-        #region resource generator code
-        $getValue = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -DeviceEnrollmentConfigurationId $Id -ErrorAction SilentlyContinue `
-        | Where-Object -FilterScript { $null -ne $_.DisplayName }
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
 
-        if ($null -eq $getValue)
-        {
-            Write-Verbose -Message "Could not find an Intune Device Enrollment Configuration for Windows10 with Id {$Id}"
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
 
-            if (-Not [string]::IsNullOrEmpty($DisplayName))
+            $nullResult = $PSBoundParameters
+            $nullResult.Ensure = 'Absent'
+
+            if ($PSBoundParameters.ContainsKey('SelectedMobileAppIds') -and $PSBoundParameters.ContainsKey('SelectedMobileAppNames'))
             {
-                $getValue = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration `
-                    -All `
-                    -Filter "DisplayName eq '$DisplayName'" `
-                    -ErrorAction SilentlyContinue | Where-Object `
-                    -FilterScript { `
-                        $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windows10EnrollmentCompletionPageConfiguration' `
-                } | Where-Object -FilterScript { $null -ne $_.DisplayName }
+                Write-Verbose -Message '[WARNING] Both SelectedMobileAppIds and SelectedMobileAppNames are specified. SelectedMobileAppIds will be ignored!'
+            }
+
+            $getValue = $null
+            #region resource generator code
+            if (-not [string]::IsNullOrEmpty($Id))
+            {
+                $getValue = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -DeviceEnrollmentConfigurationId $Id -ErrorAction SilentlyContinue `
+                    | Where-Object -FilterScript { $null -ne $_.DisplayName }
+            }
+
+            if ($null -eq $getValue)
+            {
+                Write-Verbose -Message "Could not find an Intune Device Enrollment Configuration for Windows10 with Id {$Id}"
+
+                if (-Not [string]::IsNullOrEmpty($DisplayName))
+                {
+                    $getValue = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration `
+                        -All `
+                        -Filter "DisplayName eq '$DisplayName'" `
+                        -ErrorAction SilentlyContinue | Where-Object `
+                        -FilterScript { `
+                            $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windows10EnrollmentCompletionPageConfiguration' `
+                    } | Where-Object -FilterScript { $null -ne $_.DisplayName }
+                }
+            }
+            #endregion
+            if ($null -eq $getValue)
+            {
+                Write-Verbose -Message "Could not find an Intune Device Enrollment Configuration for Windows10 with DisplayName {$DisplayName}"
+                return $nullResult
+            }
+
+            if ($getValue -is [Array] -and $getValue.Length -gt 1)
+            {
+                Throw "The DisplayName {$DisplayName} returned multiple policies, make sure DisplayName is unique."
             }
         }
-        #endregion
-        if ($null -eq $getValue)
+        else
         {
-            Write-Verbose -Message "Could not find an Intune Device Enrollment Configuration for Windows10 with DisplayName {$DisplayName}"
-            return $nullResult
-        }
-
-        if ($getValue -is [Array] -and $getValue.Length -gt 1)
-        {
-            Throw "The DisplayName {$DisplayName} returned multiple policies, make sure DisplayName is unique."
+            $getValue = $Script:exportedInstance
         }
 
         $Id = $getValue.Id
         Write-Verbose -Message "An Intune Device Enrollment Configuration for Windows10 with Id {$Id} and DisplayName {$DisplayName} was found."
+
+        $SelectedMobileAppNamesValue = @()
+        foreach ($mobileApp in $getValue.AdditionalProperties.selectedMobileAppIds)
+        {
+            $mobileEntry = Get-MgBetaDeviceAppManagementMobileApp -MobileAppId $mobileApp
+            $SelectedMobileAppNamesValue += $mobileEntry.DisplayName
+        }
 
         $results = @{
             #region resource generator code
@@ -185,7 +202,8 @@ function Get-TargetResource
             DisableUserStatusTrackingAfterFirstUser = $getValue.AdditionalProperties.disableUserStatusTrackingAfterFirstUser
             InstallProgressTimeoutInMinutes         = $getValue.AdditionalProperties.installProgressTimeoutInMinutes
             InstallQualityUpdates                   = $getValue.AdditionalProperties.installQualityUpdates
-            SelectedMobileAppNames                  = $getValue.AdditionalProperties.selectedMobileAppIds | ForEach-Object { (Get-MgBetaDeviceAppManagementMobileApp -MobileAppId $_).DisplayName }
+            SelectedMobileAppNames                  = $SelectedMobileAppNamesValue
+            SelectedMobileAppIds                    = $getValue.AdditionalProperties.selectedMobileAppIds
             ShowInstallationProgress                = $getValue.AdditionalProperties.showInstallationProgress
             TrackInstallProgressForAutopilotOnly    = $getValue.AdditionalProperties.trackInstallProgressForAutopilotOnly
             Priority                                = $getValue.Priority
@@ -357,7 +375,7 @@ function Set-TargetResource
     $currentInstance = Get-TargetResource @PSBoundParameters
     $PSBoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
-    if ($PSBoundParameters.ContainsKey('SelectedMobileAppIds') -eq $false -and $PSBoundParameters.ContainsKey('SelectedMobileAppNames') -eq $true)
+    if ($PSBoundParameters.ContainsKey('SelectedMobileAppNames') -eq $true)
     {
         Write-Verbose -Message 'Converting SelectedMobileAppNames to SelectedMobileAppIds'
         if ($PSBoundParameters.SelectedMobileAppNames.Count -ne 0)
@@ -600,22 +618,16 @@ function Test-TargetResource
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
-    if ($PSBoundParameters.ContainsKey('SelectedMobileAppIds') -eq $true)
+    if ($PSBoundParameters.ContainsKey('SelectedMobileAppIds') -eq $true -and $PSBoundParameters.ContainsKey('SelectedMobileAppNames') -eq $false)
     {
         Write-Verbose -Message 'Converting SelectedMobileAppIds to SelectedMobileAppNames'
         $PSBoundParameters.SelectedMobileAppNames = $SelectedMobileAppIds | ForEach-Object { (Get-MgBetaDeviceAppManagementMobileApp -MobileAppId $_).DisplayName }
-        $PSBoundParameters.Remove('SelectedMobileAppIds') | Out-Null
     }
+    $PSBoundParameters.Remove('SelectedMobileAppIds') | Out-Null
 
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
     $ValuesToCheck = Remove-M365DSCAuthenticationParameter -BoundParameters $ValuesToCheck
     $ValuesToCheck.Remove('Id') | Out-Null
-
-    if ($CurrentValues.Ensure -ne $Ensure)
-    {
-        Write-Verbose -Message "Test-TargetResource returned $false"
-        return $false
-    }
     $testResult = $true
 
     #Compare Cim instances
@@ -623,7 +635,7 @@ function Test-TargetResource
     {
         $source = $PSBoundParameters.$key
         $target = $CurrentValues.$key
-        if ($source.getType().Name -like '*CimInstance*')
+        if (-not [System.String]::IsNullOrEmpty($source) -and $source.getType().Name -like '*CimInstance*')
         {
             $testResult = Compare-M365DSCComplexObject `
                 -Source ($source) `
@@ -725,11 +737,11 @@ function Export-TargetResource
         $dscContent = ''
         if ($getValue.Length -eq 0)
         {
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         else
         {
-            Write-Host "`r`n" -NoNewline
+            Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
         foreach ($config in $getValue)
         {
@@ -743,7 +755,7 @@ function Export-TargetResource
             {
                 $displayedKey = $config.displayName
             }
-            Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
+            Write-M365DSCHost -Message "    |---[$i/$($getValue.Count)] $displayedKey" -DeferWrite
             $params = @{
                 Id                    = $config.Id
                 DisplayName           = $config.displayName
@@ -756,9 +768,8 @@ function Export-TargetResource
                 AccessTokens          = $AccessTokens
             }
 
+            $Script:exportedInstance = $config
             $Results = Get-TargetResource @Params
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
             if ($Results.Assignments)
             {
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.Assignments -CIMInstanceName DeviceManagementConfigurationPolicyAssignments
@@ -775,17 +786,14 @@ function Export-TargetResource
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -Credential $Credential
-            if ($Results.Assignments)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Assignments' -IsCIMArray:$true
-            }
+                -Credential $Credential `
+                -NoEscape @('Assignments')
 
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
 
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
             $i++
         }
         return $dscContent
@@ -795,11 +803,11 @@ function Export-TargetResource
         if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
                 $_.Exception -like '*Request not applicable to target tenant*')
         {
-            Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
+            Write-M365DSCHost -Message "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }
         else
         {
-            Write-Host $Global:M365DSCEmojiRedX
+            Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
             New-M365DSCLogEntry -Message 'Error during Export:' `
                 -Exception $_ `

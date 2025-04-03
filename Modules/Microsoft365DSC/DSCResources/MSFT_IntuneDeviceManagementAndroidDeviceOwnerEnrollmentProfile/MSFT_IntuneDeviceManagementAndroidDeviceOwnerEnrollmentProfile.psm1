@@ -116,53 +116,63 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    Write-Verbose -Message "Checking for the Intune Android Device Owner Enrollment Profile {$DisplayName}"
-    New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters | Out-Null
+    Write-Verbose -Message "Getting configuration of the Intune Android Device Owner Enrollment Profile with Id {$Id} and DisplayName {$DisplayName}"
 
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullResult = $PSBoundParameters
-    $nullResult.Ensure = 'Absent'
     try
     {
-        if (-not [System.String]::IsNullOrEmpty($Id))
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.DisplayName -ne $DisplayName)
         {
-            Write-Verbose -Message 'Trying to retrieve profile by Id'
-            $androidDeviceOwnerEnrollmentProfile = Get-MgBetaDeviceManagementAndroidDeviceOwnerEnrollmentProfile `
-                -AndroidDeviceOwnerEnrollmentProfileId $Id
-        }
-        if ($null -eq $androidDeviceOwnerEnrollmentProfile)
-        {
-            Write-Verbose -Message 'Trying to retrieve profile by DisplayName'
-            $androidDeviceOwnerEnrollmentProfile = Get-MgBetaDeviceManagementAndroidDeviceOwnerEnrollmentProfile `
-                -All `
-                -Filter "displayName eq '$DisplayName'" `
-                -ErrorAction SilentlyContinue
+            New-M365DSCConnection -Workload 'MicrosoftGraph' `
+                -InboundParameters $PSBoundParameters | Out-Null
 
-            # Need to do another call by id to get QrCode info. Can't just expand the property.
-            if ($null -ne $androidDeviceOwnerEnrollmentProfile)
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullResult = $PSBoundParameters
+            $nullResult.Ensure = 'Absent'
+
+            $androidDeviceOwnerEnrollmentProfile = $null
+            if (-not [System.String]::IsNullOrEmpty($Id))
             {
-                Write-Verbose -Message 'Found by DisplayName, now retrieving additional details by id.'
+                Write-Verbose -Message 'Trying to retrieve profile by Id'
                 $androidDeviceOwnerEnrollmentProfile = Get-MgBetaDeviceManagementAndroidDeviceOwnerEnrollmentProfile `
-                    -AndroidDeviceOwnerEnrollmentProfileId $androidDeviceOwnerEnrollmentProfile.Id
+                    -AndroidDeviceOwnerEnrollmentProfileId $Id
+            }
+            if ($null -eq $androidDeviceOwnerEnrollmentProfile)
+            {
+                Write-Verbose -Message 'Trying to retrieve profile by DisplayName'
+                $androidDeviceOwnerEnrollmentProfile = Get-MgBetaDeviceManagementAndroidDeviceOwnerEnrollmentProfile `
+                    -All `
+                    -Filter "displayName eq '$DisplayName'" `
+                    -ErrorAction SilentlyContinue
+
+                # Need to do another call by id to get QrCode info. Can't just expand the property.
+                if ($null -ne $androidDeviceOwnerEnrollmentProfile)
+                {
+                    Write-Verbose -Message 'Found by DisplayName, now retrieving additional details by id.'
+                    $androidDeviceOwnerEnrollmentProfile = Get-MgBetaDeviceManagementAndroidDeviceOwnerEnrollmentProfile `
+                        -AndroidDeviceOwnerEnrollmentProfileId $androidDeviceOwnerEnrollmentProfile.Id
+                }
+            }
+
+            if ($null -eq $androidDeviceOwnerEnrollmentProfile)
+            {
+                Write-Verbose -Message "No AndroidDeviceOwnerEnrollmentProfiles with {$Id} was found."
+                return $nullResult
             }
         }
-
-        if ($null -eq $androidDeviceOwnerEnrollmentProfile)
+        else
         {
-            Write-Verbose -Message "No AndroidDeviceOwnerEnrollmentProfiles with {$Id} was found."
-            return $nullResult
+            $androidDeviceOwnerEnrollmentProfile = $Script:exportedInstance
         }
 
         $QrCodeImageValue = $null
@@ -630,11 +640,11 @@ function Export-TargetResource
         $dscContent = ''
         if ($Script:exportedInstances.Length -eq 0)
         {
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         else
         {
-            Write-Host "`r`n" -NoNewline
+            Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
         foreach ($config in $Script:exportedInstances)
         {
@@ -643,7 +653,7 @@ function Export-TargetResource
                 $Global:M365DSCExportResourceInstancesCount++
             }
             $displayedKey = $config.DisplayName
-            Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -NoNewline
+            Write-M365DSCHost -Message "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -DeferWrite
             $params = @{
                 Id                    = $config.Id
                 DisplayName           = $config.DisplayName
@@ -657,9 +667,8 @@ function Export-TargetResource
                 AccessTokens          = $AccessTokens
             }
 
+            $Script:exportedInstance = $config
             $Results = Get-TargetResource @Params
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
 
             if ($Results.QrCodeImage)
             {
@@ -680,25 +689,20 @@ function Export-TargetResource
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -Credential $Credential
-
-            if ($Results.QrCodeImage)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'QrCodeImage' -IsCIMArray:$false
-
-            }
+                -Credential $Credential `
+                -NoEscape @('QrCodeImage')
 
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         return $dscContent
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `

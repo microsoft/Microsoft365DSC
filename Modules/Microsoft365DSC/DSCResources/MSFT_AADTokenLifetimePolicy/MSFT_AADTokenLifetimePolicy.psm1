@@ -57,79 +57,83 @@ function Get-TargetResource
         [System.String[]]
         $AccessTokens
     )
-
-    Write-Verbose -Message 'Getting configuration of AzureAD Token Lifetime Policy'
-    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
     try
     {
-        $nullReturn = $PSBoundParameters
-        $nullReturn.Ensure = 'Absent'
-        try
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.DisplayName -ne $DisplayName)
         {
-            if (-Not [System.String]::IsNullOrEMpty($Id))
-            {
-                $Policy = Get-MgBetaPolicyTokenLifetimePolicy -TokenLifetimePolicyId $Id -ErrorAction SilentlyContinue
-            }
-        }
-        catch
-        {
-            Write-Verbose -Message "Could not retrieve AzureAD Token Lifetime Policy by ID {$Id}"
-        }
-        if ($null -eq $Policy)
-        {
+            Write-Verbose -Message 'Getting configuration of AzureAD Token Lifetime Policy'
+            $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+                -InboundParameters $PSBoundParameters
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullReturn = $PSBoundParameters
+            $nullReturn.Ensure = 'Absent'
             try
             {
-                $Policy = Get-MgBetaPolicyTokenLifetimePolicy -Filter "DisplayName eq '$DisplayName'" -ErrorAction SilentlyContinue
+                if (-Not [System.String]::IsNullOrEMpty($Id))
+                {
+                    $Policy = Get-MgBetaPolicyTokenLifetimePolicy -TokenLifetimePolicyId $Id -ErrorAction SilentlyContinue
+                }
             }
             catch
             {
-                New-M365DSCLogEntry -Message 'Error retrieving data:' `
-                    -Exception $_ `
-                    -Source $($MyInvocation.MyCommand.Source) `
-                    -TenantId $TenantId `
-                    -Credential $Credential
+                Write-Verbose -Message "Could not retrieve AzureAD Token Lifetime Policy by ID {$Id}"
             }
-        }
-        if ($null -eq $Policy)
-        {
-            return $nullReturn
+            if ($null -eq $Policy)
+            {
+                try
+                {
+                    $Policy = Get-MgBetaPolicyTokenLifetimePolicy -Filter "DisplayName eq '$DisplayName'" -ErrorAction SilentlyContinue
+                }
+                catch
+                {
+                    New-M365DSCLogEntry -Message 'Error retrieving data:' `
+                        -Exception $_ `
+                        -Source $($MyInvocation.MyCommand.Source) `
+                        -TenantId $TenantId `
+                        -Credential $Credential
+                }
+            }
+            if ($null -eq $Policy)
+            {
+                return $nullReturn
+            }
         }
         else
         {
-            Write-Verbose "Found existing AzureAD Policy {$($Policy.DisplayName)}"
-            $Result = @{
-                Id                    = $Policy.Id
-                Description           = $Policy.Description
-                Definition            = $Policy.Definition
-                DisplayName           = $Policy.DisplayName
-                IsOrganizationDefault = $Policy.IsOrganizationDefault
-                Ensure                = 'Present'
-                Credential            = $Credential
-                ApplicationId         = $ApplicationId
-                ApplicationSecret     = $ApplicationSecret
-                TenantId              = $TenantId
-                CertificateThumbprint = $CertificateThumbprint
-                Managedidentity       = $ManagedIdentity.IsPresent
-                AccessTokens          = $AccessTokens
-            }
-
-            Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
-            return $result
+            $Policy = $Script:exportedInstance
         }
+
+        Write-Verbose "Found existing AzureAD Policy {$($Policy.DisplayName)}"
+        $Result = @{
+            Id                    = $Policy.Id
+            Description           = $Policy.Description
+            Definition            = $Policy.Definition
+            DisplayName           = $Policy.DisplayName
+            IsOrganizationDefault = $Policy.IsOrganizationDefault
+            Ensure                = 'Present'
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            ApplicationSecret     = $ApplicationSecret
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
+            Managedidentity       = $ManagedIdentity.IsPresent
+            AccessTokens          = $AccessTokens
+        }
+
+        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
+        return $result
     }
     catch
     {
@@ -390,11 +394,11 @@ function Export-TargetResource
 
         if ($AADPolicies.Length -eq 0)
         {
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         else
         {
-            Write-Host "`r`n" -NoNewline
+            Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
         foreach ($AADPolicy in $AADPolicies)
         {
@@ -403,7 +407,7 @@ function Export-TargetResource
                 $Global:M365DSCExportResourceInstancesCount++
             }
 
-            Write-Host "    |---[$i/$($AADPolicies.Count)] $($AADPolicy.DisplayName)" -NoNewline
+            Write-M365DSCHost -Message "    |---[$i/$($AADPolicies.Count)] $($AADPolicy.DisplayName)" -DeferWrite
             $Params = @{
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
@@ -415,8 +419,8 @@ function Export-TargetResource
                 ID                    = $AADPolicy.ID
                 AccessTokens          = $AccessTokens
             }
+            $Script:exportedInstance = $AADPolicy
             $Results = Get-TargetResource @Params
-
             # Fix quotes inside the Definition's JSON;
             $NewDefinition = @()
             foreach ($item in $Results.Definition)
@@ -428,8 +432,6 @@ function Export-TargetResource
 
             if ($Results.Ensure -eq 'Present')
             {
-                $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                    -Results $Results
                 $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                     -ConnectionMode $ConnectionMode `
                     -ModulePath $PSScriptRoot `
@@ -439,7 +441,7 @@ function Export-TargetResource
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
                     -FileName $Global:PartialExportFileName
 
-                Write-Host $Global:M365DSCEmojiGreenCheckMark
+                Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
                 $i++
             }
         }
@@ -447,7 +449,7 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `

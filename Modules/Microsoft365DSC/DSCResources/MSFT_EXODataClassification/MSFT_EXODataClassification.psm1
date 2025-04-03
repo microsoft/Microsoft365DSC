@@ -65,59 +65,51 @@ function Get-TargetResource
         [System.String[]]
         $AccessTokens
     )
-    Write-Verbose -Message "Getting Data classification policy for $($Identity)"
-
-    if ($Global:CurrentModeIsExport)
-    {
-        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters `
-            -SkipModuleReload $true
-    }
-    else
-    {
-        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters
-    }
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = 'Absent'
-
     try
     {
-        if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Identity -ne $Identity)
         {
-            $DataClassification = $Script:exportedInstances | Where-Object -FilterScript { $_.Identity -eq $Identity }
+            Write-Verbose -Message "Getting Data classification policy for $($Identity)"
+
+            $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+                -InboundParameters $PSBoundParameters
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullReturn = $PSBoundParameters
+            $nullReturn.Ensure = 'Absent'
+
+            $DataClassification = Get-DataClassification -Identity $Identity -ErrorAction Stop
+            if ($null -eq $DataClassification)
+            {
+                if (-not [System.String]::IsNullOrEmpty($Name))
+                {
+                    Write-Verbose -Message "Couldn't retrieve data classification by Identity. Trying by Name {$Name}."
+                    $DataClassification = Get-DataClassification -Identity $Name
+                }
+
+                if ($null -eq $DataClassification)
+                {
+                    Write-Verbose -Message "Data classification $($Identity) does not exist."
+                    return $nullReturn
+                }
+            }
         }
         else
         {
-            $DataClassification = Get-DataClassification -Identity $Identity -ErrorAction Stop
+            $DataClassification = $Script:exportedInstance
         }
-        if ($null -eq $DataClassification)
-        {
-            if (-not [System.String]::IsNullOrEmpty($Name))
-            {
-                Write-Verbose -Message "Couldn't retrieve data classification by Identity. Trying by Name {$Name}."
-                $DataClassification = Get-DataClassification -Identity $Name
-            }
 
-            if ($null -eq $DataClassification)
-            {
-                Write-Verbose -Message "Data classification $($Identity) does not exist."
-                return $nullReturn
-            }
-        }
         $currentDefaultCultureName = ([system.globalization.cultureinfo]$DataClassification.DefaultCulture).Name
         $DataClassificationLocale = $currentDefaultCultureName
         $DataClassificationIsDefault = $false
@@ -447,11 +439,11 @@ function Export-TargetResource
 
         if ($Script:exportedInstances.Length -eq 0)
         {
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         else
         {
-            Write-Host "`r`n" -NoNewline
+            Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
         $i = 1
         foreach ($DataClassification in $Script:exportedInstances)
@@ -461,7 +453,7 @@ function Export-TargetResource
                 $Global:M365DSCExportResourceInstancesCount++
             }
 
-            Write-Host "    |---[$i/$($Script:exportedInstances.Length)] $($DataClassification.Name)" -NoNewline
+            Write-M365DSCHost -Message "    |---[$i/$($Script:exportedInstances.Length)] $($DataClassification.Name)" -DeferWrite
 
             $Params = @{
                 Identity              = $DataClassification.Identity
@@ -475,9 +467,8 @@ function Export-TargetResource
                 AccessTokens          = $AccessTokens
             }
 
+            $Script:exportedInstance = $DataClassification
             $Results = Get-TargetResource @Params
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
@@ -486,14 +477,14 @@ function Export-TargetResource
             $dscContent.Append($currentDSCBlock) | Out-Null
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
             $i++
         }
         return $dscContent.ToString()
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `

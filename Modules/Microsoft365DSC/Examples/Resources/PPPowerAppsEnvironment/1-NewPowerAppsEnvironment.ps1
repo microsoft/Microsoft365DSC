@@ -18,6 +18,9 @@ Configuration Example
             DisplayName        = "My Demo Environment"
             EnvironmentSKU     = "Production"
             Location           = "canada"
+            ProvisionDatabase  = $true
+            LanguageName       = 1033;
+            CurrencyName	   = "CAD";
             Ensure             = "Present"
             Credential         = $Credscredential
         }

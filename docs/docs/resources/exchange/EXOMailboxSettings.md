@@ -11,6 +11,7 @@
 | **SharingPolicy** | Write | String | Associated sharing policy. | |
 | **TimeZone** | Write | String | The name of the Time Zone to assign to the mailbox | |
 | **Locale** | Write | String | The code of the Locale to assign to the mailbox | |
+| **AuditEnabled** | Write | Boolean | The AuditEnabled parameter specifies whether to enable or disable mailbox audit logging for the mailbox. If auditing is enabled, actions specified in the AuditAdmin, AuditDelegate, and AuditOwner parameters are logged | |
 | **Ensure** | Write | String | Present ensures the Mailbox Settings are applied | `Present` |
 | **Credential** | Write | PSCredential | Credentials of the Exchange Global Admin | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |

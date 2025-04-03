@@ -72,21 +72,21 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - Group.Read.All, RoleManagement.Read.Directory, RoleManagementPolicy.Read.Directory, User.Read.All
+    - Group.Read.All, RoleManagementPolicy.Read.Directory, User.Read.All
 
 - **Update**
 
-    - Group.Read.All, RoleManagementPolicy.Read.Directory, User.Read.All
+    - Group.Read.All, RoleManagement.ReadWrite.Directory, User.Read.All
 
 #### Application permissions
 
 - **Read**
 
-    - Group.Read.All, RoleManagement.Read.Directory, RoleManagementPolicy.Read.Directory, User.Read.All
+    - Group.Read.All, RoleManagement.Read.Directory, User.Read.All
 
 - **Update**
 
-    - Group.Read.All, RoleManagementPolicy.Read.Directory, User.Read.All
+    - Group.Read.All, RoleManagement.ReadWrite.Directory, User.Read.All
 
 ## Examples
 

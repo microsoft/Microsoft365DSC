@@ -291,59 +291,64 @@ function Set-TargetResource
         {
             $groupId = $groupObject.Id
         }
+
+        # Filtering Deprecated value that sometimes causes issues
+        # https://learn.microsoft.com/en-us/graph/group-directory-settings?tabs=http#groupunified
+        $newValues = $Policy.Values | Where-Object { $_.Name -ne "EnableMSStandardBlockedWords"}
+
         $index = 0
-        foreach ($property in $Policy.Values)
+        foreach ($property in $newValues)
         {
             if ($property.Name -eq 'EnableGroupCreation')
             {
-                $entry = $Policy.Values | Where-Object -FilterScript { $_.Name -eq 'EnableGroupCreation' }
+                $entry = $newValues | Where-Object -FilterScript { $_.Name -eq 'EnableGroupCreation' }
                 $entry.Value = [System.Boolean]$EnableGroupCreation
             }
             elseif ($property.Name -eq 'EnableMIPLabels')
             {
-                $entry = $Policy.Values | Where-Object -FilterScript { $_.Name -eq 'EnableMIPLabels' }
+                $entry = $newValues | Where-Object -FilterScript { $_.Name -eq 'EnableMIPLabels' }
                 $entry.Value = [System.Boolean]$EnableMIPLabels
             }
             elseif ($property.Name -eq 'AllowGuestsToBeGroupOwner')
             {
-                $entry = $Policy.Values | Where-Object -FilterScript { $_.Name -eq 'AllowGuestsToBeGroupOwner' }
+                $entry = $newValues | Where-Object -FilterScript { $_.Name -eq 'AllowGuestsToBeGroupOwner' }
                 $entry.Value = [System.Boolean]$AllowGuestsToBeGroupOwner
             }
             elseif ($property.Name -eq 'AllowGuestsToAccessGroups')
             {
-                $entry = $Policy.Values | Where-Object -FilterScript { $_.Name -eq 'AllowGuestsToAccessGroups' }
+                $entry = $newValues | Where-Object -FilterScript { $_.Name -eq 'AllowGuestsToAccessGroups' }
                 $entry.Value = [System.Boolean]$AllowGuestsToAccessGroups
             }
             elseif ($property.Name -eq 'GuestUsageGuidelinesUrl')
             {
-                $entry = $Policy.Values | Where-Object -FilterScript { $_.Name -eq 'GuestUsageGuidelinesUrl' }
+                $entry = $newValues | Where-Object -FilterScript { $_.Name -eq 'GuestUsageGuidelinesUrl' }
                 $entry.Value = $GuestUsageGuidelinesUrl
             }
             elseif ($property.Name -eq 'GroupCreationAllowedGroupId')
             {
-                $entry = $Policy.Values | Where-Object -FilterScript { $_.Name -eq 'GroupCreationAllowedGroupId' }
+                $entry = $newValues | Where-Object -FilterScript { $_.Name -eq 'GroupCreationAllowedGroupId' }
                 $entry.Value = $groupId
             }
             elseif ($property.Name -eq 'AllowToAddGuests')
             {
-                $entry = $Policy.Values | Where-Object -FilterScript { $_.Name -eq 'AllowToAddGuests' }
+                $entry = $newValues | Where-Object -FilterScript { $_.Name -eq 'AllowToAddGuests' }
                 $entry.Value = [System.Boolean]$AllowToAddGuests
             }
             elseif ($property.Name -eq 'UsageGuidelinesUrl')
             {
-                $entry = $Policy.Values | Where-Object -FilterScript { $_.Name -eq 'UsageGuidelinesUrl' }
+                $entry = $newValues | Where-Object -FilterScript { $_.Name -eq 'UsageGuidelinesUrl' }
                 $entry.Value = $UsageGuidelinesUrl
             }
             elseif ($property.Name -eq 'NewUnifiedGroupWritebackDefault')
             {
-                $entry = $Policy.Values | Where-Object -FilterScript { $_.Name -eq 'NewUnifiedGroupWritebackDefault' }
+                $entry = $newValues | Where-Object -FilterScript { $_.Name -eq 'NewUnifiedGroupWritebackDefault' }
                 $entry.Value = [System.Boolean]$NewUnifiedGroupWritebackDefault
             }
             $index++
         }
 
-        Write-Verbose -Message "Updating Policy's Values with $($Policy.Values | Out-String)"
-        Update-MgBetaDirectorySetting -DirectorySettingId $Policy.id -Values $Policy.Values | Out-Null
+        Write-Verbose -Message "Updating Policy's Values with $($newValues | Out-String)"
+        Update-MgBetaDirectorySetting -DirectorySettingId $Policy.id -Values $newValues | Out-Null
     }
     elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present')
     {
@@ -534,8 +539,6 @@ function Export-TargetResource
         }
         $dscContent = ''
         $Results = Get-TargetResource @Params
-        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-            -Results $Results
         $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
             -ConnectionMode $ConnectionMode `
             -ModulePath $PSScriptRoot `
@@ -544,12 +547,12 @@ function Export-TargetResource
         $dscContent += $currentDSCBlock
         Save-M365DSCPartialExport -Content $currentDSCBlock `
             -FileName $Global:PartialExportFileName
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
+        Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         return $dscContent
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `

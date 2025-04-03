@@ -183,7 +183,7 @@
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
 | **defaultMessage** | Write | String | The default message displayed if the user's locale doesn't match with any of the localized messages. | |
-| **localizedMessages** | Write | MSFT_MicrosoftGraphkeyvaluepair[] | The list of <locale, message> pairs. This collection can contain a maximum of 500 elements. | |
+| **localizedMessages** | Write | MSFT_MicrosoftGraphkeyvaluepair[] | The list of &lt;locale, message&gt; pairs. This collection can contain a maximum of 500 elements. | |
 
 ### MSFT_MicrosoftGraphkeyvaluepair
 

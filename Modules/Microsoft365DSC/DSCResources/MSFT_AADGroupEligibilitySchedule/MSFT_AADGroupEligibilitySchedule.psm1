@@ -107,13 +107,13 @@ function Get-TargetResource
             $GroupId = (Get-MgGroup -Filter $Filter).Id
         }
         if ($Id -notmatch '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}_member_[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$') {
-            $getId = Get-MgIdentityGovernancePrivilegedAccessGroupEligibilitySchedule `
+            $getId = Get-MgBetaIdentityGovernancePrivilegedAccessGroupEligibilitySchedule `
                 -Filter "Groupid eq '$GroupId'" `
                 -ErrorAction SilentlyContinue
                 $Id = $getId.Id
         }
 
-        $uri = 'https://graph.microsoft.com/v1.0/identityGovernance/privilegedAccess/group/eligibilitySchedules/' + $Id
+        $uri = "$((Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl)v1.0/identityGovernance/privilegedAccess/group/eligibilitySchedules/" + $Id
         $getvalue = Invoke-GraphRequest -Uri $uri -Method Get -ErrorAction SilentlyContinue
 
         #endregion
@@ -217,17 +217,27 @@ function Get-TargetResource
         }
         #endregion
 
-        switch ($getValue.PrincipalType)
+        if ([string]::IsNullOrEmpty($getValue.PrincipalType))
         {
-            'group' {
-                $PrincipalDisplayName = (Get-MgGroup -GroupId $getvalue.PrincipalId).DisplayName
-            }
-            'user' {
-                $PrincipalDisplayName = (Get-MgUser -UserId $getvalue.PrincipalId).DisplayName
-            }
+            $getValue.PrincipalType = "unknown"
         }
 
-        $GroupDisplayName = (Get-MgGroup -GroupId $getvalue.GroupId).DisplayName
+       	switch ($getValue.PrincipalType)
+       	{
+       	    'group' {
+		$PrincipalDisplayName = (Get-MgGroup -GroupId $getvalue.PrincipalId).DisplayName
+            }
+       	    'user' {
+		$PrincipalDisplayName = (Get-MgUser -UserId $getvalue.PrincipalId).DisplayName
+       	    }
+       	    'unknown' {
+		        $objectInfo = Get-MgBetaDirectoryObjectById -Ids $getvalue.PrincipalId -ErrorAction SilentlyContinue
+            	$getValue.PrincipalType = $objectInfo.AdditionalProperties['@odata.type'].Split('.')[2]
+		        $PrincipalDisplayName = $objectInfo.AdditionalProperties['displayName']
+       	    }
+       	}
+
+	$GroupDisplayName = (Get-MgGroup -GroupId $getvalue.GroupId).DisplayName
 
         $results = @{
             #region resource generator code
@@ -235,7 +245,7 @@ function Get-TargetResource
             GroupId               = $getValue.groupId
             GroupDisplayName      = $GroupDisplayName
             MemberType            = $enumMemberType
-            PrincipalType         = $PrincipalType
+            PrincipalType         = $getValue.PrincipalType
             PrincipalDisplayname  = $PrincipalDisplayName
             ScheduleInfo          = $complexScheduleInfo
             Id                    = $getValue.Id
@@ -686,12 +696,6 @@ function Test-TargetResource
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
-
-    if ($CurrentValues.Ensure -ne $Ensure)
-    {
-        Write-Verbose -Message "Test-TargetResource returned $false"
-        return $false
-    }
     $testResult = $true
 
     #Compare Cim instances
@@ -790,33 +794,45 @@ function Export-TargetResource
     try
     {
 
-        $groups = Get-MgGroup -Filter "MailEnabled eq false and NOT(groupTypes/any(x:x eq 'DynamicMembership'))" -Property "displayname,Id" -CountVariable CountVar  -ConsistencyLevel eventual -ErrorAction Stop
+        $groups = Get-MgGroup -Filter "MailEnabled eq false and NOT(groupTypes/any(x:x eq 'DynamicMembership'))" -Property "displayname,Id" -CountVariable CountVar -All -ConsistencyLevel eventual -ErrorAction Stop
+        $j = 1
+        if ($groups.Length -eq 0)
+        {
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
+        }
+        else
+        {
+            Write-M365DSCHost -Message "`r`n" -DeferWrite
+        }
+
+        $dscContent = ''
+
         foreach ($group in $groups)
         {
-            Write-Host "get group $($group.DisplayName)"
+            Write-M365DSCHost -Message  "    |---[$j/$($groups.Count)] $($group.DisplayName)" -DeferWrite
             #region resource generator code
-            $getValue = Get-MgIdentityGovernancePrivilegedAccessGroupEligibilitySchedule `
+            $getValue = Get-MgBetaIdentityGovernancePrivilegedAccessGroupEligibilitySchedule `
                 -Filter "groupId eq '$($group.Id)'" `
                 -All `
-                -ErrorAction Stop
-            if($null -eq $getValue)
-            {
-                continue
-            }
+                -ErrorAction SilentlyContinue
 
             $i = 1
-            $dscContent = ''
+
             if ($getValue.Length -eq 0)
             {
-                Write-Host $Global:M365DSCEmojiGreenCheckMark
+                Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
             }
             else
             {
-                Write-Host "`r`n" -NoNewline
+                Write-M365DSCHost -Message "`r`n" -DeferWrite
             }
             foreach ($config in $getValue)
             {
-                Write-Host "    |---[$i/$($getValue.Count)] $($group.DisplayName)" -NoNewline
+                if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+                {
+                    $Global:M365DSCExportResourceInstancesCount++
+                }
+                Write-M365DSCHost -Message "        |---[$i/$($getValue.Count)] $($config.Id)" -DeferWrite
                 $params = @{
                     Id                    = $config.Id
                     GroupDisplayName      = $group.DisplayName
@@ -831,8 +847,7 @@ function Export-TargetResource
                 }
 
                 $Results = Get-TargetResource @Params
-                $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                    -Results $Results
+
                 if ($null -ne $Results.ScheduleInfo)
                 {
                     $complexMapping = @(
@@ -881,24 +896,22 @@ function Export-TargetResource
                     -ConnectionMode $ConnectionMode `
                     -ModulePath $PSScriptRoot `
                     -Results $Results `
-                    -Credential $Credential
-                if ($Results.ScheduleInfo)
-                {
-                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "ScheduleInfo" -IsCIMArray:$False
-                }
+                    -Credential $Credential `
+                    -NoEscape @('ScheduleInfo')
 
                 $dscContent += $currentDSCBlock
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
                     -FileName $Global:PartialExportFileName
                 $i++
-                Write-Host $Global:M365DSCEmojiGreenCheckMark
+                Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
             }
-            return $dscContent
+            $j++
         }
+        return $dscContent
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `

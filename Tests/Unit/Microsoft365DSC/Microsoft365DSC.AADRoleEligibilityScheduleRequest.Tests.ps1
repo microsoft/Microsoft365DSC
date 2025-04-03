@@ -46,21 +46,33 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
+            Mock -CommandName Get-MgBetaDirectoryObjectById -MockWith {
+                return @{
+                    Id = '123456'
+                    AdditionalProperties = @{
+                        '@odata.type' = '#microsoft.graph.user'
+                        userPrincipalName = 'John.Smith@contoso.com'
+                    }
+                }
+            }
+
             Mock -CommandName Get-MgBetaRoleManagementDirectoryRoleDefinition -MockWith {
                 return @{
-                    DisplayName = 'Teams Communications Administrator'
-                    Id          = '12345'
+                    DisplayName      = 'Teams Communications Administrator'
+                    Id               = '12345'
+                    DirectoryScopeId = '/'
                 }
             }
             Mock -CommandName Get-MgBetaRoleManagementDirectoryRoleEligibilitySchedule -MockWith {
                 return @{
                     Id          = '12345-12345-12345-12345-12345'
                     RoleDefinitionId = "12345"
+                    DirectoryScopeId = '/'
                 }
             }
 
-            # Mock Write-Host to hide output during the tests
-            Mock -CommandName Write-Host -MockWith {
+            # Mock Write-M365DSCHost to hide output during the tests
+            Mock -CommandName Write-M365DSCHost -MockWith {
             }
             $Script:exportedInstances =$null
             $Script:ExportMode = $false
@@ -87,6 +99,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
 
                 Mock -CommandName Get-MgBetaRoleManagementDirectoryRoleEligibilityScheduleRequest -MockWith {
+                    return $null
+                }
+
+                Mock -CommandName Get-MgBetaRoleManagementDirectoryRoleEligibilitySchedule -MockWith {
                     return $null
                 }
             }
@@ -165,7 +181,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Principal            = "John.Smith@contoso.com";
                     RoleDefinition       = "Teams Communications Administrator";
                     ScheduleInfo         = New-CimInstance -ClassName MSFT_AADRoleEligibilityScheduleRequestSchedule -Property @{
-
                             expiration = New-CimInstance -ClassName MSFT_AADRoleEligibilityScheduleRequestScheduleExpiration -Property @{
                                 type        = 'afterDateTime'
                             } -ClientOnly
@@ -263,7 +278,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should call the Set to Update the instance' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Get-MgBetaRoleManagementDirectoryRoleEligibilityScheduleRequest -Exactly 1
+                Should -Invoke -CommandName New-MgBetaRoleManagementDirectoryRoleEligibilityScheduleRequest -Exactly 1
             }
         }
         Context -Name 'ReverseDSC Tests' -Fixture {
@@ -293,6 +308,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
             }
+
             It 'Should Reverse Engineer resource from the Export method' {
                 $result = Export-TargetResource @testParams
                 $result | Should -Not -BeNullOrEmpty

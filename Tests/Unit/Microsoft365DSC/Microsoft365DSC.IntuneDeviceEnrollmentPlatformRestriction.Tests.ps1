@@ -25,14 +25,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $secpasswd = ConvertTo-SecureString ((New-Guid).ToString()) -AsPlainText -Force
             $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin@mydomain.com', $secpasswd)
 
-            #Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
-            #   return @{}
-            #}
-
-            #Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
-
-            #}
-
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
             }
 
@@ -54,7 +46,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return @()
             }
 
-            Mock -CommandName Write-Host -MockWith {
+            Mock -CommandName Write-M365DSCHost -MockWith {
             }
         }
 

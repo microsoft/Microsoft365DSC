@@ -427,7 +427,7 @@ function Set-TargetResource
         Confirm                    = $false
     }
     # Removes empty properties from Splat to prevent function throwing errors if parameter is null or empty
-    Remove-EmptyValue -Splat $NewOrganizationRelationshipParams
+    Remove-M365DSCEmptyValue -Splat $NewOrganizationRelationshipParams
 
     $SetOrganizationRelationshipParams = @{
         ArchiveAccessEnabled       = $ArchiveAccessEnabled
@@ -454,7 +454,7 @@ function Set-TargetResource
         Confirm                    = $false
     }
     # Removes empty properties from Splat to prevent function throwing errors if parameter is null or empty
-    Remove-EmptyValue -Splat $SetOrganizationRelationshipParams
+    Remove-M365DSCEmptyValue -Splat $SetOrganizationRelationshipParams
 
     # CASE: Organization Relationship doesn't exist but should;
     if ($Ensure -eq 'Present' -and $currentOrgRelationshipConfig.Ensure -eq 'Absent')
@@ -702,11 +702,11 @@ function Export-TargetResource
 
         if ($AllOrganizationRelationships.Length -eq 0)
         {
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         else
         {
-            Write-Host "`r`n" -NoNewline
+            Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
         $i = 1
         foreach ($relationship in $AllOrgRelationships)
@@ -716,7 +716,7 @@ function Export-TargetResource
                 $Global:M365DSCExportResourceInstancesCount++
             }
 
-            Write-Host "    |---[$i/$($AllOrgRelationships.Length)] $($relationship.Name)" -NoNewline
+            Write-M365DSCHost -Message "    |---[$i/$($AllOrgRelationships.Length)] $($relationship.Name)" -DeferWrite
 
             $Params = @{
                 Name                  = $relationship.Name
@@ -730,8 +730,6 @@ function Export-TargetResource
                 AccessTokens          = $AccessTokens
             }
             $Results = Get-TargetResource @Params
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
@@ -740,14 +738,14 @@ function Export-TargetResource
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
             $i++
         }
         return $dscContent
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `

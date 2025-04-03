@@ -326,11 +326,11 @@ function Export-TargetResource
         # Get all instances;
         $instances = Get-PnPUser | Where-Object -FilterScript { $_.PrincipalType -eq 'User' -and '' -ne $_.Email }
         $dscContent = ''
-        Write-Host "`r`n" -NoNewline
+        Write-M365DSCHost -Message "`r`n" -DeferWrite
         $i = 1
         foreach ($instance in $Instances)
         {
-            Write-Host "    |---[$i/$($Instances.Count)] $($instance.Email)" -NoNewline
+            Write-M365DSCHost -Message "    |---[$i/$($Instances.Count)] $($instance.Email)" -DeferWrite
             $Params = @{
                 UserName              = $instance.Email
                 ApplicationId         = $ApplicationId
@@ -343,7 +343,6 @@ function Export-TargetResource
             }
 
             $Results = Get-TargetResource @Params
-
             if ($Results -is [System.Collections.Hashtable] -and $Results.Count -gt 1)
             {
                 if ($Results.Properties)
@@ -353,28 +352,46 @@ function Export-TargetResource
                         $Global:M365DSCExportResourceInstancesCount++
                     }
 
-                    $Results.Properties = ConvertTo-M365DSCSPOUserProfilePropertyInstanceString -Properties $Results.Properties
-                    $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                        -Results $Results
+                    if ($null -ne $Results.Properties)
+                    {
+                        $complexMapping = @(
+                            @{
+                                Name            = 'Properties'
+                                CimInstanceName = 'MSFT_SPOUserProfilePropertyInstance'
+                                IsRequired      = $False
+                            }
+                        )
+                        $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                            -ComplexObject $Results.Properties `
+                            -CIMInstanceName 'MSFT_SPOUserProfilePropertyInstance' `
+                            -ComplexTypeMapping $complexMapping
+
+                        if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                        {
+                            $Results.Properties = $complexTypeStringResult
+                        }
+                        else
+                        {
+                            $Results.Remove('Properties') | Out-Null
+                        }
+                    }
+
                     $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                         -ConnectionMode $ConnectionMode `
                         -ModulePath $PSScriptRoot `
                         -Results $Results `
-                        -Credential $Credential
-                    if ($null -ne $Results.Properties)
-                    {
-                        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Properties'
-                    }
+                        -Credential $Credential `
+                        -NoEscape @('Properties')
                     $dscContent += $currentDSCBlock
                     Save-M365DSCPartialExport -Content $currentDSCBlock `
                         -FileName $Global:PartialExportFileName
                 }
 
-                Write-Host $Global:M365DSCEmojiGreenCheckMark
+                Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
             }
             else
             {
-                Write-Host $Global:M365DSCEmojiRedX
+                Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
             }
 
             $i++
@@ -398,7 +415,7 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `

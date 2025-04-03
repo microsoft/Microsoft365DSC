@@ -59,66 +59,83 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    Write-Verbose -Message "Getting Role Group configuration for $Name"
-    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
-        -InboundParameters $PSBoundParameters
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = 'Absent'
-
     try
     {
-        if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Name -ne $Name)
         {
-            $RoleGroup = $Script:exportedInstances | Where-Object -FilterScript { $_.Name -eq $Name }
-        }
-        else
-        {
+            Write-Verbose -Message "Getting Role Group configuration for $Name"
+            $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+                -InboundParameters $PSBoundParameters
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullReturn = $PSBoundParameters
+            $nullReturn.Ensure = 'Absent'
+
             $AllRoleGroups = Get-RoleGroup -ErrorAction Stop
             $RoleGroup = $AllRoleGroups | Where-Object -FilterScript { $_.Name -eq $Name }
-        }
 
-        if ($null -eq $RoleGroup)
-        {
-            Write-Verbose -Message "Role Group $($Name) does not exist."
-            return $nullReturn
+            if ($null -eq $RoleGroup)
+            {
+                Write-Verbose -Message "Role Group $($Name) does not exist."
+                return $nullReturn
+            }
         }
         else
         {
-            # Get RoleGroup Members DN if RoleGroup exists. This is required especially when adding Members like "Exchange Administrator" or "Global Administrator" that have different Names across Tenants
-            $roleGroupMember = Get-RoleGroupMember -Identity $Name | Select-Object DisplayName
-
-            $result = @{
-                Name                  = $RoleGroup.Name
-                Description           = $RoleGroup.Description
-                Members               = $roleGroupMember.DisplayName
-                Roles                 = $RoleGroup.Roles
-                Ensure                = 'Present'
-                Credential            = $Credential
-                ApplicationId         = $ApplicationId
-                CertificateThumbprint = $CertificateThumbprint
-                CertificatePath       = $CertificatePath
-                CertificatePassword   = $CertificatePassword
-                Managedidentity       = $ManagedIdentity.IsPresent
-                TenantId              = $TenantId
-                AccessTokens          = $AccessTokens
-            }
-
-            Write-Verbose -Message "Found Role Group $($Name)"
-            return $result
+            $RoleGroup = $Script:exportedInstance
         }
+
+        # Get RoleGroup Members DN if RoleGroup exists. This is required especially when adding Members like "Exchange Administrator" or "Global Administrator" that have different Names across Tenants
+        $roleGroupMembers = Get-RoleGroupMember -Identity $Name | Select-Object DisplayName, RecipientTypeDetails, PrimarySmtpAddress, WindowsLiveId
+
+        $roleGroupMembersValue = @()
+        foreach ($member in $roleGroupMembers)
+        {
+            if ($member.RecipientTypeDetails -eq 'UserMailbox' -or $member.RecipientTypeDetails -eq 'User')
+            {
+                if (-not [System.String]::IsNullOrEmpty($member.PrimarySmtpAddress))
+                {
+                    $roleGroupMembersValue += $member.PrimarySmtpAddress
+                }
+                elseif (-not [System.String]::IsNullOrEmpty($member.WindowsLiveID))
+                {
+                    $roleGroupMembersValue += $member.WindowsLiveID
+                }
+            }
+            else
+            {
+                $roleGroupMembersValue += $member.DisplayName
+            }
+        }
+        $result = @{
+            Name                  = $RoleGroup.Name
+            Description           = $RoleGroup.Description
+            Members               = $roleGroupMembersValue
+            Roles                 = $RoleGroup.Roles
+            Ensure                = 'Present'
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            CertificateThumbprint = $CertificateThumbprint
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
+            Managedidentity       = $ManagedIdentity.IsPresent
+            TenantId              = $TenantId
+            AccessTokens          = $AccessTokens
+        }
+
+        Write-Verbose -Message "Found Role Group $($Name)"
+        return $result
     }
     catch
     {
@@ -221,6 +238,11 @@ function Set-TargetResource
     if ([System.String]::IsNullOrEmpty($Description))
     {
         $NewRoleGroupParams.Remove('Description') | Out-Null
+    }
+    # Remove Roles Parameter if null or Empty as the creation requires at least one Role
+    if ($Roles.Length -eq 0)
+    {
+        $NewRoleGroupParams.Remove('Roles') | Out-Null
     }
     # CASE: Role Group doesn't exist but should;
     if ($Ensure -eq 'Present' -and $currentRoleGroupConfig.Ensure -eq 'Absent')
@@ -351,10 +373,31 @@ function Test-TargetResource
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
-    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
-    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
-
     $ValuesToCheck = $PSBoundParameters
+
+    # If the group is passed in a display name (no @) then we resolve it manually
+    $newMembersValue = @()
+    foreach ($member in $Members)
+    {
+        if ($member.Contains('@'))
+        {
+            Write-Verbose -Message "The current member {$member} is provided as a group display name."
+            $group = Get-Group -Identity $member -ErrorAction 'SilentlyContinue'
+
+            if ($null -ne $group)
+            {
+                $newMembersValue += $group.DisplayName
+            }
+        }
+        else
+        {
+            $newMembersValue += $member
+        }
+    }
+    $ValuesToCheck.Members = $newMembersValue
+
+    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -428,11 +471,11 @@ function Export-TargetResource
 
         if ($Script:exportedInstances.Length -eq 0)
         {
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         else
         {
-            Write-Host "`r`n" -NoNewline
+            Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
         $i = 1
         foreach ($RoleGroup in $Script:exportedInstances)
@@ -442,7 +485,7 @@ function Export-TargetResource
                 $Global:M365DSCExportResourceInstancesCount++
             }
 
-            Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $($RoleGroup.Name)" -NoNewline
+            Write-M365DSCHost -Message "    |---[$i/$($Script:exportedInstances.Count)] $($RoleGroup.Name)" -DeferWrite
             $roleGroupMember = Get-RoleGroupMember -Identity $RoleGroup.Name | Select-Object DisplayName
 
             $Params = @{
@@ -458,9 +501,8 @@ function Export-TargetResource
                 CertificatePath       = $CertificatePath
                 AccessTokens          = $AccessTokens
             }
+            $Script:exportedInstance = $RoleGroup
             $Results = Get-TargetResource @Params
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
@@ -469,14 +511,14 @@ function Export-TargetResource
             $dscContent.Append($currentDSCBlock) | Out-Null
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
             $i++
         }
         return $dscContent.ToString()
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `

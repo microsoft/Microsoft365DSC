@@ -6,6 +6,43 @@
 | --- | --- | --- | --- | --- |
 | **DisplayName** | Key | String | Display name of the Android App Protection Policy. | |
 | **Description** | Write | String | Description of the Android App Protection Policy. | |
+| **AllowedAndroidDeviceModels** | Write | StringArray[] | List of allowed Android device models. | |
+| **AllowedOutboundClipboardSharingExceptionLength** | Write | UInt32 | Maximum length of outbound clipboard sharing exceptions. | |
+| **BiometricAuthenticationBlocked** | Write | Boolean | Indicates whether biometric authentication is blocked. | |
+| **BlockAfterCompanyPortalUpdateDeferralInDays** | Write | UInt32 | Number of days to block access after a company portal update deferral. | |
+| **BlockDataIngestionIntoOrganizationDocuments** | Write | Boolean | Indicates whether data ingestion into organization documents is blocked. | |
+| **ConnectToVpnOnLaunch** | Write | Boolean | Indicates whether to connect to VPN on launch. | |
+| **CustomDialerAppDisplayName** | Write | String | Display name of the custom dialer app. | |
+| **CustomDialerAppPackageId** | Write | String | Package ID of the custom dialer app. | |
+| **DeviceLockRequired** | Write | Boolean | Indicates whether device lock is required. | |
+| **FingerprintAndBiometricEnabled** | Write | Boolean | Indicates whether fingerprint and biometric authentication are enabled. | |
+| **KeyboardsRestricted** | Write | Boolean | Indicates whether keyboards are restricted. | |
+| **MessagingRedirectAppDisplayName** | Write | String | Display name of the messaging redirect app. | |
+| **MessagingRedirectAppPackageId** | Write | String | Package ID of the messaging redirect app. | |
+| **MinimumWipePatchVersion** | Write | String | Minimum required patch version for wipe. | |
+| **PreviousPinBlockCount** | Write | UInt32 | Number of previous PIN block counts. | |
+| **WarnAfterCompanyPortalUpdateDeferralInDays** | Write | UInt32 | Number of days to warn after a company portal update deferral. | |
+| **WipeAfterCompanyPortalUpdateDeferralInDays** | Write | UInt32 | Number of days to wipe after a company portal update deferral. | |
+| **Alloweddataingestionlocations** | Write | StringArray[] | Sources from which data is allowed to be transferred. | |
+| **AppActionIfAndroidDeviceManufacturerNotAllowed** | Write | String | Defines a managed app behavior, either block or wipe, if the specified device manufacturer is not allowed. | `block`, `wipe`, `warn`, `blockWhenSettingIsSupported` |
+| **AppActionIfAndroidDeviceModelNotAllowed** | Write | String | Defines a managed app behavior, either block or wipe, if the specified device model is not allowed. | `block`, `wipe`, `warn`, `blockWhenSettingIsSupported` |
+| **AppActionIfAndroidSafetyNetAppsVerificationFailed** | Write | String | Defines a managed app behavior, either warn or block, if the specified Android App Verification requirement fails. | `block`, `wipe`, `warn`, `blockWhenSettingIsSupported` |
+| **AppActionIfAndroidSafetyNetDeviceAttestationFailed** | Write | String | Defines a managed app behavior, either warn or block, if the specified Android SafetyNet Attestation requirement fails. | `block`, `wipe`, `warn`, `blockWhenSettingIsSupported` |
+| **AppActionIfDeviceComplianceRequired** | Write | String | Defines a managed app behavior, either block or wipe, when the device is either rooted or jailbroken, if DeviceComplianceRequired is set to true. | `block`, `wipe`, `warn`, `blockWhenSettingIsSupported` |
+| **AppActionIfDeviceLockNotSet** | Write | String | Defines a managed app behavior, either warn, block, or wipe, if the screen lock is required on an Android device but is not set. | `block`, `wipe`, `warn`, `blockWhenSettingIsSupported` |
+| **AppActionIfMaximumPinRetriesExceeded** | Write | String | Defines a managed app behavior, either block or wipe, based on the maximum number of incorrect pin retry attempts. | `block`, `wipe`, `warn`, `blockWhenSettingIsSupported` |
+| **appActionIfUnableToAuthenticateUser** | Write | String | Specifies what action to take in the case where the user is unable to check in because their authentication token is invalid, such as when the user is deleted or disabled in Azure AD. | `block`, `wipe`, `warn`, `blockWhenSettingIsSupported` |
+| **MobileThreatDefenseRemediationAction** | Write | String | Determines what action to take if the mobile threat defense threat threshold isn't met. Warn isn't a supported value for this property. | `block`, `wipe`, `warn`, `blockWhenSettingIsSupported` |
+| **DialerRestrictionLevel** | Write | String | The classes of dialer apps that are allowed to click-to-open a phone number. Inherited from managedAppProtection. | `allApps`, `managedApps`, `customApp`, `blocked` |
+| **MaximumAllowedDeviceThreatLevel** | Write | String | Maximum allowed device threat level, as reported by the MTD app. Inherited from managedAppProtection. | `notConfigured`, `secured`, `low`, `medium`, `high` |
+| **NotificationRestriction** | Write | String | Specify app notification restriction. Inherited from managedAppProtection. | `allow`, `blockOrganizationalData`, `block` |
+| **ProtectedMessagingRedirectAppType** | Write | String | Defines how app messaging redirection is protected by an App Protection Policy. Default is anyApp. Inherited from managedAppProtection. | `anyApp`, `anyManagedApp`, `specificApps`, `blocked` |
+| **RequiredAndroidSafetyNetAppsVerificationType** | Write | String | Defines the Android SafetyNet Apps Verification requirement for a managed app to work. | `none`, `enabled` |
+| **RequiredAndroidSafetyNetDeviceAttestationType** | Write | String | Defines the Android SafetyNet Device Attestation requirement for a managed app to work. | `none`, `basicIntegrity`, `basicIntegrityAndDeviceCertification` |
+| **RequiredAndroidSafetyNetEvaluationType** | Write | String | Defines the Android SafetyNet evaluation type requirement for a managed app to work. | `basic`, `hardwareBacked` |
+| **TargetedAppManagementLevels** | Write | String | The intended app management levels for this policy. Inherited from targetedManagedAppProtection. | `unspecified`, `unmanaged`, `mdm`, `androidEnterprise`, `androidEnterpriseDedicatedDevicesWithAzureAdSharedMode`, `androidOpenSourceProjectUserAssociated`, `androidOpenSourceProjectUserless`, `unknownFutureValue` |
+| **ApprovedKeyboards** | Write | StringArray[] | If Keyboard Restriction is enabled, only keyboards in this approved list will be allowed. A key should be Android package id for a keyboard and value should be a friendly name. | |
+| **ExemptedAppPackages** | Write | StringArray[] | App packages in this list will be exempt from the policy and will be able to receive data from managed apps. | |
 | **PeriodOfflineBeforeAccessCheck** | Write | String | The period after which access is checked when the device is not connected to the internet. | |
 | **PeriodOnlineBeforeAccessCheck** | Write | String | The period after which access is checked when the device is connected to the internet. | |
 | **AllowedInboundDataTransferSources** | Write | String | Sources from which data is allowed to be transferred. Possible values are: allApps, managedApps, none. | `allApps`, `managedApps`, `none` |

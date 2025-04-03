@@ -135,90 +135,86 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    Write-Verbose -Message "Getting configuration of Auto sensitivity Label Policy for $Name"
-    if ($Global:CurrentModeIsExport)
-    {
-        $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
-            -InboundParameters $PSBoundParameters `
-            -SkipModuleReload $true
-    }
-    else
-    {
-        $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
-            -InboundParameters $PSBoundParameters
-    }
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = 'Absent'
     try
     {
-        try
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Name -ne $Name)
         {
-            # There is a bug with the Get-AutoSensitivityLabelPolicy where if you get by Identity, the priority is an invalid number.
-            # Threfore we get it by name.
-            $policy = Get-AutoSensitivityLabelPolicy | Where-Object -FilterScript { $_.Name -eq $Name }
-        }
-        catch
-        {
-            throw $_
-        }
+            Write-Verbose -Message "Getting configuration of Auto sensitivity Label Policy for $Name"
 
-        if ($null -eq $policy)
-        {
-            Write-Verbose -Message "Auto Sensitivity label policy $($Name) does not exist."
-            return $nullReturn
+            $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
+                -InboundParameters $PSBoundParameters
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullReturn = $PSBoundParameters
+            $nullReturn.Ensure = 'Absent'
+            try
+            {
+                # There is a bug with the Get-AutoSensitivityLabelPolicy where if you get by Identity, the priority is an invalid number.
+                # Threfore we get it by name.
+                $policy = Get-AutoSensitivityLabelPolicy | Where-Object -FilterScript { $_.Name -eq $Name }
+            }
+            catch
+            {
+                throw $_
+            }
+
+            if ($null -eq $policy)
+            {
+                Write-Verbose -Message "Auto Sensitivity label policy $($Name) does not exist."
+                return $nullReturn
+            }
         }
         else
         {
-
-            Write-Verbose "Found existing Auto Sensitivity label policy $($Name)"
-            $result = @{
-                Name                              = $policy.Name
-                Comment                           = $policy.Comment
-                ApplySensitivityLabel             = $policy.ApplySensitivityLabel
-                Credential                        = $Credential
-                Ensure                            = 'Present'
-                ExchangeSender                    = $policy.ExchangeSender
-                ExchangeSenderException           = $policy.ExchangeSenderException
-                ExchangeSenderMemberOf            = $policy.ExchangeSenderMemberOf
-                ExchangeSenderMemberOfException   = $policy.ExchangeSenderMemberOfException
-                ExchangeLocation                  = $policy.ExchangeLocation
-                AddExchangeLocation               = $policy.AddExchangeLocation
-                RemoveExchangeLocation            = $policy.RemoveExchangeLocation
-                Mode                              = $policy.Mode
-                OneDriveLocation                  = $policy.OneDriveLocation
-                AddOneDriveLocation               = $policy.AddOneDriveLocation
-                RemoveOneDriveLocation            = $policy.RemoveOneDriveLocation
-                OneDriveLocationException         = $policy.OneDriveLocationException
-                AddOneDriveLocationException      = $policy.AddOneDriveLocationException
-                RemoveOneDriveLocationException   = $policy.RemoveOneDriveLocationException
-                Priority                          = $policy.Priority
-                SharePointLocation                = $policy.SharePointLocation
-                SharePointLocationException       = $policy.SharePointLocationException
-                AddSharePointLocationException    = $policy.AddSharePointLocationException
-                RemoveSharePointLocationException = $policy.RemoveSharePointLocationException
-                AddSharePointLocation             = $policy.AddSharePointLocation
-                RemoveSharePointLocation          = $policy.RemoveSharePointLocation
-                ApplicationId                     = $ApplicationId
-                TenantId                          = $TenantId
-                CertificateThumbprint             = $CertificateThumbprint
-                CertificatePath                   = $CertificatePath
-                CertificatePassword               = $CertificatePassword
-                AccessTokens                      = $AccessTokens
-            }
-
-            Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
-            return $result
+            $policy = $Script:exportedInstance
         }
+
+        Write-Verbose "Found existing Auto Sensitivity label policy $($Name)"
+        $result = @{
+            Name                              = $policy.Name
+            Comment                           = $policy.Comment
+            ApplySensitivityLabel             = $policy.ApplySensitivityLabel
+            Credential                        = $Credential
+            Ensure                            = 'Present'
+            ExchangeSender                    = $policy.ExchangeSender
+            ExchangeSenderException           = $policy.ExchangeSenderException
+            ExchangeSenderMemberOf            = $policy.ExchangeSenderMemberOf
+            ExchangeSenderMemberOfException   = $policy.ExchangeSenderMemberOfException
+            ExchangeLocation                  = $policy.ExchangeLocation
+            AddExchangeLocation               = $policy.AddExchangeLocation
+            RemoveExchangeLocation            = $policy.RemoveExchangeLocation
+            Mode                              = $policy.Mode
+            OneDriveLocation                  = $policy.OneDriveLocation
+            AddOneDriveLocation               = $policy.AddOneDriveLocation
+            RemoveOneDriveLocation            = $policy.RemoveOneDriveLocation
+            OneDriveLocationException         = $policy.OneDriveLocationException
+            AddOneDriveLocationException      = $policy.AddOneDriveLocationException
+            RemoveOneDriveLocationException   = $policy.RemoveOneDriveLocationException
+            Priority                          = $policy.Priority
+            SharePointLocation                = $policy.SharePointLocation
+            SharePointLocationException       = $policy.SharePointLocationException
+            AddSharePointLocationException    = $policy.AddSharePointLocationException
+            RemoveSharePointLocationException = $policy.RemoveSharePointLocationException
+            AddSharePointLocation             = $policy.AddSharePointLocation
+            RemoveSharePointLocation          = $policy.RemoveSharePointLocation
+            ApplicationId                     = $ApplicationId
+            TenantId                          = $TenantId
+            CertificateThumbprint             = $CertificateThumbprint
+            CertificatePath                   = $CertificatePath
+            CertificatePassword               = $CertificatePassword
+            AccessTokens                      = $AccessTokens
+        }
+
+        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
+        return $result
     }
     catch
     {
@@ -777,7 +773,7 @@ function Test-TargetResource
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
-        -DesiredValues $ValuesToCheck `
+        -DesiredValues $PSBoundParameters `
         -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
@@ -820,8 +816,7 @@ function Export-TargetResource
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
-        -InboundParameters $PSBoundParameters `
-        -SkipModuleReload $true
+        -InboundParameters $PSBoundParameters
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
@@ -840,11 +835,11 @@ function Export-TargetResource
         $i = 1
         if ($policies.Length -eq 0)
         {
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         else
         {
-            Write-Host "`r`n" -NoNewline
+            Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
         foreach ($policy in $policies)
         {
@@ -853,18 +848,17 @@ function Export-TargetResource
                 $Global:M365DSCExportResourceInstancesCount++
             }
 
-            Write-Host "    |---[$i/$($policies.Count)] $($policy.Name)" -NoNewline
+            Write-M365DSCHost -Message "    |---[$i/$($policies.Count)] $($policy.Name)" -DeferWrite
 
+            $Script:exportedInstance = $policy
             $Results = Get-TargetResource @PSBoundParameters -Name $policy.Name
 
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
@@ -875,11 +869,11 @@ function Export-TargetResource
     {
         if ($_.Exception.Message -like '*is not recognized as the name of a cmdlet*')
         {
-            Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for this feature."
+            Write-M365DSCHost -Message "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for this feature."
         }
         else
         {
-            Write-Host $Global:M365DSCEmojiRedX
+            Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
             New-M365DSCLogEntry -Message 'Error during Export:' `
                 -Exception $_ `

@@ -157,35 +157,42 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    Write-Verbose -Message "Getting configuration for site collection $Url"
-
-    $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
-        -InboundParameters $PSBoundParameters
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = 'Absent'
-
     try
     {
-        Write-Verbose -Message "Getting site collection $Url"
-
-        $site = Get-PnPTenantSite -Identity $Url -ErrorAction 'SilentlyContinue'
-        if ($null -eq $site)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Url -ne $Url)
         {
-            Write-Verbose -Message "The specified Site Collection {$Url} doesn't exist."
-            return $nullReturn
+            Write-Verbose -Message "Getting configuration for site collection $Url"
+
+            $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
+                -InboundParameters $PSBoundParameters
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullReturn = $PSBoundParameters
+            $nullReturn.Ensure = 'Absent'
+
+            Write-Verbose -Message "Getting site collection $Url"
+
+            $site = Get-PnPTenantSite -Identity $Url -ErrorAction 'SilentlyContinue'
+            if ($null -eq $site)
+            {
+                Write-Verbose -Message "The specified Site Collection {$Url} doesn't exist."
+                return $nullReturn
+            }
+        }
+        else
+        {
+            $site = $Script:exportedInstance
         }
 
         $web = Get-PnPWeb -Includes RegionalSettings.TimeZone
@@ -234,7 +241,6 @@ function Get-TargetResource
             HubUrl                                      = $CurrentHubUrl
             Classification                              = $site.Classification
             DisableFlows                                = $DisableFlowValue
-            LogoFilePath                                = $LogoFilePath
             SharingCapability                           = $site.SharingCapability
             StorageMaximumLevel                         = $site.StorageQuota
             StorageWarningLevel                         = $site.StorageQuotaWarningLevel
@@ -245,18 +251,16 @@ function Get-TargetResource
             DefaultSharingLinkType                      = $site.DefaultSharingLinkType
             DisableAppViews                             = $site.DisableAppViews
             DisableCompanyWideSharingLinks              = $site.DisableCompanyWideSharingLinks
-            DisableSharingForNonOwners                  = $DisableSharingForNonOwners
             LocaleId                                    = $site.LocaleId
-            RestrictedToRegion                          = $RestrictedToRegion
-            SocialBarOnSitePagesDisabled                = $SocialBarOnSitePagesDisabled
-            SiteDesign                                  = $SiteDesign
+            RestrictedToRegion                          = $site.RestrictedToGeo
+            SocialBarOnSitePagesDisabled                = $site.SocialBarOnSitePagesDisabled
             DenyAddAndCustomizePages                    = $DenyAddAndCustomizePagesValue
-            SharingAllowedDomainList                    = $SharingAllowedDomainList
-            SharingBlockedDomainList                    = $SharingBlockedDomainList
-            SharingDomainRestrictionMode                = $SharingDomainRestrictionMode
-            ShowPeoplePickerSuggestionsForGuestUsers    = $ShowPeoplePickerSuggestionsForGuestUsers
-            AnonymousLinkExpirationInDays               = $AnonymousLinkExpirationInDays
-            OverrideTenantAnonymousLinkExpirationPolicy = $OverrideTenantAnonymousLinkExpirationPolicy
+            SharingAllowedDomainList                    = $site.SharingAllowedDomainList
+            SharingBlockedDomainList                    = $site.SharingBlockedDomainList
+            SharingDomainRestrictionMode                = $site.SharingDomainRestrictionMode
+            ShowPeoplePickerSuggestionsForGuestUsers    = $site.ShowPeoplePickerSuggestionsForGuestUsers
+            AnonymousLinkExpirationInDays               = $site.AnonymousLinkExpirationInDays
+            OverrideTenantAnonymousLinkExpirationPolicy = $site.OverrideTenantAnonymousLinkExpirationPolicy
             Ensure                                      = 'Present'
             Credential                                  = $Credential
             ApplicationId                               = $ApplicationId
@@ -939,7 +943,7 @@ function Export-TargetResource
         }
         $dscContent = ''
         $i = 1
-        Write-Host "`r`n" -NoNewline
+        Write-M365DSCHost -Message "`r`n" -DeferWrite
         foreach ($site in $sites)
         {
             if ($null -ne $Global:M365DSCExportResourceInstancesCount)
@@ -947,7 +951,7 @@ function Export-TargetResource
                 $Global:M365DSCExportResourceInstancesCount++
             }
 
-            Write-Host "    [$i/$($sites.Length)] $($site.Url)" -NoNewline
+            Write-M365DSCHost -Message "    [$i/$($sites.Length)] $($site.Url)" -DeferWrite
             $site = Get-PnPTenantSite -Identity $site.Url
             $siteTitle = 'Null'
             if (-not [System.String]::IsNullOrEmpty($site.Title))
@@ -967,15 +971,15 @@ function Export-TargetResource
                 CertificatePassword   = $CertificatePassword
                 CertificatePath       = $CertificatePath
                 CertificateThumbprint = $CertificateThumbprint
-                Managedidentity       = $ManagedIdentity.IsPresent
+                ManagedIdentity       = $ManagedIdentity.IsPresent
                 Credential            = $Credential
                 AccessTokens          = $AccessTokens
             }
 
             try
             {
+                $Script:exportedInstance = $site
                 $Results = Get-TargetResource @Params
-
                 if ([System.String]::IsNullOrEmpty($Results.SharingDomainRestrictionMode))
                 {
                     $Results.Remove('SharingDomainRestrictionMode') | Out-Null
@@ -1001,8 +1005,6 @@ function Export-TargetResource
                     $Results.Remove('HubUrl') | Out-Null
                 }
 
-                $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                    -Results $Results
 
                 $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                     -ConnectionMode $ConnectionMode `
@@ -1018,11 +1020,11 @@ function Export-TargetResource
                 $dscContent += $currentDSCBlock
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
                     -FileName $Global:PartialExportFileName
-                Write-Host $Global:M365DSCEmojiGreenCheckMark
+                Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
             }
             catch
             {
-                Write-Host "$($Global:M365DSCEmojiYellowCircle) $_"
+                Write-M365DSCHost -Message "$($Global:M365DSCEmojiYellowCircle) $_"
             }
             $i++
         }
@@ -1030,7 +1032,7 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `

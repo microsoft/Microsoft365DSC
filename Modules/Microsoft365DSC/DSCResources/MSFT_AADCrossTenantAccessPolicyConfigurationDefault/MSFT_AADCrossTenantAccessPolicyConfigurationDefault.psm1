@@ -349,14 +349,8 @@ function Test-TargetResource
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
-
-    if ($CurrentValues.Ensure -ne $Ensure)
-    {
-        Write-Verbose -Message "Test-TargetResource returned $false"
-        return $false
-    }
-
     $testResult = $true
+    $testTargetResource = $true
 
     #Compare Cim instances
     foreach ($key in $PSBoundParameters.Keys)
@@ -374,7 +368,7 @@ function Test-TargetResource
             if (-Not $testResult)
             {
                 Write-Verbose -Message "Difference found for $key"
-                $testResult = $false
+                $testTargetResource = $false
                 break
             }
 
@@ -385,17 +379,17 @@ function Test-TargetResource
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
-    if ($testResult)
+    $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck $ValuesToCheck.Keys
+
+    if (-not $TestResult)
     {
-        $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
-            -Source $($MyInvocation.MyCommand.Source) `
-            -DesiredValues $PSBoundParameters `
-            -ValuesToCheck $ValuesToCheck.Keys
+        $testTargetResource = $false
     }
-
-    Write-Verbose -Message "Test-TargetResource returned $testResult"
-
-    return $testResult
+    Write-Verbose -Message "Test-TargetResource returned $testTargetResource"
+    return $testTargetResource
 }
 
 function Export-TargetResource
@@ -467,61 +461,193 @@ function Export-TargetResource
             AccessTokens          = $AccessTokens
         }
         $Results = Get-TargetResource @Params
-        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-            -Results $Results
 
         if ($null -ne $Results.B2BCollaborationInbound)
         {
-            $Results.B2BCollaborationInbound = Get-M365DSCAADCrossTenantAccessPolicyB2BSettingAsString -Setting $Results.B2BCollaborationInbound
+            $complexMapping = @(
+                @{
+                    Name            = 'B2BCollaborationInbound'
+                    CimInstanceName = 'AADCrossTenantAccessPolicyB2BSetting'
+                    IsRequired      = $False
+                },
+                @{
+                    Name            = 'Applications'
+                    CimInstanceName = 'AADCrossTenantAccessPolicyTargetConfiguration'
+                    IsRequired      = $False
+                },
+                @{
+                    Name            = 'UsersAndGroups'
+                    CimInstanceName = 'AADCrossTenantAccessPolicyTargetConfiguration'
+                    IsRequired      = $False
+                },
+                @{
+                    Name            = 'Targets'
+                    CimInstanceName = 'AADCrossTenantAccessPolicyTarget'
+                    IsRequired      = $False
+                }
+            )
+            $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                -ComplexObject $Results.B2BCollaborationInbound `
+                -CIMInstanceName 'AADCrossTenantAccessPolicyB2BSetting' `
+                -ComplexTypeMapping $complexMapping
+
+            if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+            {
+                $Results.B2BCollaborationInbound = $complexTypeStringResult
+            }
+            else
+            {
+                $Results.Remove('B2BCollaborationInbound') | Out-Null
+            }
         }
+
         if ($null -ne $Results.B2BCollaborationOutbound)
         {
-            $Results.B2BCollaborationOutbound = Get-M365DSCAADCrossTenantAccessPolicyB2BSettingAsString -Setting $Results.B2BCollaborationOutbound
+            $complexMapping = @(
+                @{
+                    Name            = 'B2BCollaborationOutbound'
+                    CimInstanceName = 'AADCrossTenantAccessPolicyB2BSetting'
+                    IsRequired      = $False
+                },
+                @{
+                    Name            = 'Applications'
+                    CimInstanceName = 'AADCrossTenantAccessPolicyTargetConfiguration'
+                    IsRequired      = $False
+                },
+                @{
+                    Name            = 'UsersAndGroups'
+                    CimInstanceName = 'AADCrossTenantAccessPolicyTargetConfiguration'
+                    IsRequired      = $False
+                },
+                @{
+                    Name            = 'Targets'
+                    CimInstanceName = 'AADCrossTenantAccessPolicyTarget'
+                    IsRequired      = $False
+                }
+            )
+            $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                -ComplexObject $Results.B2BCollaborationOutbound `
+                -CIMInstanceName 'AADCrossTenantAccessPolicyB2BSetting' `
+                -ComplexTypeMapping $complexMapping
+
+            if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+            {
+                $Results.B2BCollaborationOutbound = $complexTypeStringResult
+            }
+            else
+            {
+                $Results.Remove('B2BCollaborationOutbound') | Out-Null
+            }
         }
+
         if ($null -ne $Results.B2BDirectConnectInbound)
         {
-            $Results.B2BDirectConnectInbound = Get-M365DSCAADCrossTenantAccessPolicyB2BSettingAsString -Setting $Results.B2BDirectConnectInbound
+            $complexMapping = @(
+                @{
+                    Name            = 'B2BDirectConnectInbound'
+                    CimInstanceName = 'AADCrossTenantAccessPolicyB2BSetting'
+                    IsRequired      = $False
+                },
+                @{
+                    Name            = 'Applications'
+                    CimInstanceName = 'AADCrossTenantAccessPolicyTargetConfiguration'
+                    IsRequired      = $False
+                },
+                @{
+                    Name            = 'UsersAndGroups'
+                    CimInstanceName = 'AADCrossTenantAccessPolicyTargetConfiguration'
+                    IsRequired      = $False
+                },
+                @{
+                    Name            = 'Targets'
+                    CimInstanceName = 'AADCrossTenantAccessPolicyTarget'
+                    IsRequired      = $False
+                }
+            )
+            $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                -ComplexObject $Results.B2BDirectConnectInbound `
+                -CIMInstanceName 'AADCrossTenantAccessPolicyB2BSetting' `
+                -ComplexTypeMapping $complexMapping
+
+            if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+            {
+                $Results.B2BDirectConnectInbound = $complexTypeStringResult
+            }
+            else
+            {
+                $Results.Remove('B2BDirectConnectInbound') | Out-Null
+            }
         }
+
         if ($null -ne $Results.B2BDirectConnectOutbound)
         {
-            $Results.B2BDirectConnectOutbound = Get-M365DSCAADCrossTenantAccessPolicyB2BSettingAsString -Setting $Results.B2BDirectConnectOutbound
+            $complexMapping = @(
+                @{
+                    Name            = 'B2BDirectConnectOutbound'
+                    CimInstanceName = 'AADCrossTenantAccessPolicyB2BSetting'
+                    IsRequired      = $False
+                },
+                @{
+                    Name            = 'Applications'
+                    CimInstanceName = 'AADCrossTenantAccessPolicyTargetConfiguration'
+                    IsRequired      = $False
+                },
+                @{
+                    Name            = 'UsersAndGroups'
+                    CimInstanceName = 'AADCrossTenantAccessPolicyTargetConfiguration'
+                    IsRequired      = $False
+                },
+                @{
+                    Name            = 'Targets'
+                    CimInstanceName = 'AADCrossTenantAccessPolicyTarget'
+                    IsRequired      = $False
+                }
+            )
+            $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                -ComplexObject $Results.B2BDirectConnectOutbound `
+                -CIMInstanceName 'AADCrossTenantAccessPolicyB2BSetting' `
+                -ComplexTypeMapping $complexMapping
+
+            if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+            {
+                $Results.B2BDirectConnectOutbound = $complexTypeStringResult
+            }
+            else
+            {
+                $Results.Remove('B2BDirectConnectOutbound') | Out-Null
+            }
         }
+
         if ($null -ne $Results.InboundTrust)
         {
-            $Results.InboundTrust = Get-M365DSCAADCrossTenantAccessPolicyInboundTrustAsString -Setting $Results.InboundTrust
+            $complexMapping = @(
+                @{
+                    Name            = 'InboundTrust'
+                    CimInstanceName = 'AADCrossTenantAccessPolicyInboundTrust'
+                    IsRequired      = $False
+                }
+            )
+            $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                -ComplexObject $Results.InboundTrust `
+                -CIMInstanceName 'AADCrossTenantAccessPolicyInboundTrust' `
+                -ComplexTypeMapping $complexMapping
+
+            if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+            {
+                $Results.InboundTrust = $complexTypeStringResult
+            }
+            else
+            {
+                $Results.Remove('InboundTrust') | Out-Null
+            }
         }
 
         $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
             -ConnectionMode $ConnectionMode `
             -ModulePath $PSScriptRoot `
             -Results $Results `
-            -Credential $Credential
-
-        if ($null -ne $Results.B2BCollaborationInbound)
-        {
-            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                -ParameterName 'B2BCollaborationInbound'
-        }
-        if ($null -ne $Results.B2BCollaborationOutbound)
-        {
-            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                -ParameterName 'B2BCollaborationOutbound'
-        }
-        if ($null -ne $Results.B2BDirectConnectInbound)
-        {
-            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                -ParameterName 'B2BDirectConnectInbound'
-        }
-        if ($null -ne $Results.B2BDirectConnectOutbound)
-        {
-            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                -ParameterName 'B2BDirectConnectOutbound'
-        }
-        if ($null -ne $Results.InboundTrust)
-        {
-            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                -ParameterName 'InboundTrust'
-        }
+            -Credential $Credential `
+            -NoEscape @('B2BCollaborationInbound', 'B2BCollaborationOutbound', 'B2BDirectConnectInbound', 'B2BDirectConnectOutbound', 'InboundTrust')
 
         # Fix OrganizationName variable in CIMInstance
         $currentDSCBlock = $currentDSCBlock.Replace('@$OrganizationName''', "@' + `$OrganizationName")
@@ -530,13 +656,13 @@ function Export-TargetResource
         Save-M365DSCPartialExport -Content $currentDSCBlock `
             -FileName $Global:PartialExportFileName
 
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
+        Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
 
         return $dscContent
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `

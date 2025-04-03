@@ -10,10 +10,6 @@ function Get-TargetResource
         $IsSingleInstance,
 
         [Parameter()]
-        [System.String]
-        $Identity,
-
-        [Parameter()]
         [System.String[]]
         $ArcTrustedSealers,
 
@@ -89,7 +85,7 @@ function Get-TargetResource
             CertificateThumbprint = $CertificateThumbprint
             CertificatePath       = $CertificatePath
             CertificatePassword   = $CertificatePassword
-            Managedidentity       = $ManagedIdentity.IsPresent
+            ManagedIdentity       = $ManagedIdentity.IsPresent
             TenantId              = $TenantId
             AccessTokens          = $AccessTokens
         }
@@ -119,10 +115,6 @@ function Set-TargetResource
         [System.String]
         [ValidateSet('Yes')]
         $IsSingleInstance,
-
-        [Parameter()]
-        [System.String]
-        $Identity,
 
         [Parameter()]
         [System.String[]]
@@ -201,10 +193,6 @@ function Test-TargetResource
         $IsSingleInstance,
 
         [Parameter()]
-        [System.String]
-        $Identity,
-
-        [Parameter()]
         [System.String[]]
         $ArcTrustedSealers,
 
@@ -259,9 +247,6 @@ function Test-TargetResource
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
 
     $ValuesToCheck = Remove-M365DSCAuthenticationParameter -BoundParameters $ValuesToCheck
-    # Need to remove Identity as Get-ArcConfig doesn't return Identity
-    $ValuesToCheck.Remove('Identity') | Out-Null
-
     $PSBoundParameters.ArcTrustedSealers = $PSBoundParameters.ArcTrustedSealers -Join ','
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
@@ -343,9 +328,8 @@ function Export-TargetResource
 
         $ArcConfigSettings = Get-ArcConfig -ErrorAction Stop
         $dscContent = ''
-        Write-Host "`r`n" -NoNewline
-
-        Write-Host '    |---[1/1]' -NoNewline
+        Write-M365DSCHost -Message "`r`n" -DeferWrite
+        Write-M365DSCHost -Message '    |---[1/1]' -DeferWrite
 
         $Params = @{
             IsSingleInstance      = 'Yes'
@@ -354,14 +338,12 @@ function Export-TargetResource
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint
             CertificatePassword   = $CertificatePassword
-            Managedidentity       = $ManagedIdentity.IsPresent
+            ManagedIdentity       = $ManagedIdentity.IsPresent
             CertificatePath       = $CertificatePath
             AccessTokens          = $AccessTokens
         }
 
         $Results = Get-TargetResource @Params
-        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-            -Results $Results
         $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
             -ConnectionMode $ConnectionMode `
             -ModulePath $PSScriptRoot `
@@ -370,12 +352,12 @@ function Export-TargetResource
         $dscContent += $currentDSCBlock
         Save-M365DSCPartialExport -Content $currentDSCBlock `
             -FileName $Global:PartialExportFileName
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
+        Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         return $dscContent
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `

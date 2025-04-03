@@ -13,6 +13,7 @@ This function does not generate any output.
 | Parameter | Required | DataType | Default Value | Allowed Values | Description |
 | --- | --- | --- | --- | --- | --- |
 | Scope | False | Object | AllUsers | CurrentUser, AllUsers | Specifies the scope of the update of the module. The default value is AllUsers(needs to run as elevated user). |
+| Proxy | False | String |  |  |  |
 
 ## Examples
 

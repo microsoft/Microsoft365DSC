@@ -37,7 +37,7 @@
 | **DeviceThreatProtectionRequiredSecurityLevel** | Write | String | DeviceThreatProtectionRequiredSecurityLevel of the Windows 10 device compliance policy. | `Unavailable`, `Secured`, `Low`, `Medium`, `High`, `NotSet` |
 | **ConfigurationManagerComplianceRequired** | Write | Boolean | ConfigurationManagerComplianceRequired of the Windows 10 device compliance policy. | |
 | **TpmRequired** | Write | Boolean | TpmRequired of the Windows 10 device compliance policy. | |
-| **DeviceCompliancePolicyScript** | Write | String | DeviceCompliancePolicyScript of the Windows 10 device compliance policy. | |
+| **DeviceCompliancePolicyScript** | Write | MSFT_MicrosoftGraphDeviceCompliancePolicyScript | DeviceCompliancePolicyScript of the Windows 10 device compliance policy. | |
 | **ValidOperatingSystemBuildRanges** | Write | MSFT_MicrosoftGraphOperatingSystemVersionRange[] | ValidOperatingSystemBuildRanges of the Windows 10 device compliance policy. | |
 | **Ensure** | Write | String | Present ensures the policy exists, absent ensures it is removed. | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials of the Intune Admin | |
@@ -70,6 +70,15 @@
 | **Description** | Write | String | The description of this range (e.g. Valid 1702 builds) | |
 | **LowestVersion** | Write | String | The lowest inclusive version that this range contains. | |
 | **HighestVersion** | Write | String | The highest inclusive version that this range contains. | |
+
+### MSFT_MicrosoftGraphDeviceCompliancePolicyScript
+
+#### Parameters
+
+| Parameter | Attribute | DataType | Description | Allowed Values |
+| --- | --- | --- | --- | --- |
+| **DisplayName** | Key | String | Device compliance script name. | |
+| **RulesContent** | Write | String | Rules content of the custom settings. | |
 
 
 ## Description

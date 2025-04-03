@@ -29,6 +29,8 @@
 | **ReportPhishAddresses** | Write | StringArray[] | The ReportPhishAddresses parameter specifies the email address of the reporting mailbox in Exchange Online to receive user reported messages in reporting in Outlook using Microsoft or third-party reporting tools in Outlook. | |
 | **ReportPhishToCustomizedAddress** | Write | Boolean | The ReportPhishToCustomizedAddress parameter specifies whether to send user reported messages from Outlook (using Microsoft or third-party reporting tools) to the reporting mailbox as part of reporting in Outlook. | |
 | **ThirdPartyReportAddresses** | Write | StringArray[] | Use the ThirdPartyReportAddresses parameter to specify the email address of the reporting mailbox when you're using a third-party product for user submissions instead of reporting in Outlook. | |
+| **ReportChatMessageEnabled** | Write | Boolean | TBD | |
+| **ReportChatMessageToCustomizedAddressEnabled** | Write | Boolean | TBD | |
 | **Ensure** | Write | String | Specifies if this report submission policy should exist. | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials of the Exchange Global Admin | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |

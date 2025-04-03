@@ -5,6 +5,8 @@
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
 | **IsSingleInstance** | Key | String | Specifies the resource is a single instance, the value must be 'Yes' | `Yes` |
+| **EnableAzureADB2BIntegration** | Write | Boolean | Enables OneDrive and SharePoint integration with Microsoft Entra B2B. | |
+| **OneDriveSharingCapability** | Write | String | Determines what level of sharing is available for OneDrive sites. It corresponds to the SharingCapabilities for OneDrive sites. | `ExternalUserAndGuestSharing`, `Disabled`, `ExternalUserSharingOnly`, `ExistingExternalUserSharingOnly` |
 | **MinCompatibilityLevel** | Write | UInt32 | Specifies the lower bound on the compatibility level for new sites. | |
 | **MaxCompatibilityLevel** | Write | UInt32 | Specifies the upper bound on the compatibility level for new sites. | |
 | **SearchResolveExactEmailOrUPN** | Write | Boolean | Removes the search capability from People Picker. Note, recently resolved names will still appear in the list until browser cache is cleared or expired. | |

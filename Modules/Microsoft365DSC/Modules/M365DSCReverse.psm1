@@ -115,13 +115,11 @@ function Start-M365DSCConfigurationExtract
         $Global:M365DSCExportResourceInstancesCount = 0
 
         $M365DSCExportStartTime = [System.DateTime]::Now
-        $InformationPreference = 'Continue'
-        $VerbosePreference = 'SilentlyContinue'
-        $WarningPreference = 'SilentlyContinue'
 
         if ($null -ne $Workloads)
         {
             Write-Verbose -Message 'Retrieving the resources to export by workloads'
+            $Workloads = $Workloads | Select-Object -Unique
             $Components = Get-M365DSCResourcesByWorkloads -Workloads $Workloads `
                 -Mode $Mode
         }
@@ -149,61 +147,62 @@ function Start-M365DSCConfigurationExtract
         # we are allowed to export the selected components.
         $AuthMethods = @()
 
-        Write-Host -Object ' '
-        Write-Host -Object 'Authentication methods specified:'
+        Write-M365DSCHost -Message ' '
+        Write-M365DSCHost -Message 'Authentication methods specified:'
         if ($null -ne $Credential -and `
                 [System.String]::IsNullOrEmpty($ApplicationId) )
         {
-            Write-Host -Object '- Credentials'
+            Write-M365DSCHost -Message '- Credentials'
             $AuthMethods += 'Credentials'
         }
         if ($null -ne $Credential -and `
                 [System.String]::IsNullOrEmpty($ApplicationId) -and `
                 -not [System.String]::IsNullOrEmpty($TenantId))
         {
-            Write-Host -Object '- Credentials with Tenant Id'
+            Write-M365DSCHost -Message '- Credentials with Tenant Id'
             $AuthMethods += 'CredentialsWithTenantId'
         }
         if ($null -ne $Credential -and `
                 -not [System.String]::IsNullOrEmpty($ApplicationId))
         {
-            Write-Host -Object '- CredentialsWithApplicationId'
+            Write-M365DSCHost -Message '- CredentialsWithApplicationId'
             $AuthMethods += 'CredentialsWithApplicationId'
         }
         if (-not [System.String]::IsNullOrEmpty($CertificateThumbprint))
         {
-            Write-Host -Object '- Service Principal with Certificate Thumbprint'
+            Write-M365DSCHost -Message '- Service Principal with Certificate Thumbprint'
             $AuthMethods += 'CertificateThumbprint'
         }
 
         if (-not [System.String]::IsNullOrEmpty($CertificatePath))
         {
-            Write-Host -Object '- Service Principal with Certificate Path'
+            Write-M365DSCHost -Message '- Service Principal with Certificate Path'
             $AuthMethods += 'CertificatePath'
         }
 
         if (-not [System.String]::IsNullOrEmpty($ApplicationSecret))
         {
-            Write-Host -Object '- Service Principal with Application Secret'
+            Write-M365DSCHost -Message '- Service Principal with Application Secret'
             $AuthMethods += 'ApplicationWithSecret'
         }
 
         if ($ManagedIdentity.IsPresent)
         {
-            Write-Host -Object '- Managed Identity'
+            Write-M365DSCHost -Message '- Managed Identity'
             $AuthMethods += 'ManagedIdentity'
         }
 
         if ($null -ne $AccessTokens)
         {
-            Write-Host -Object '- Access Tokens'
+            Write-M365DSCHost -Message '- Access Tokens'
             $AuthMethods += 'AccessTokens'
         }
 
-        Write-Host -Object ' '
+        Write-M365DSCHost -Message ' '
 
         # If some resources are not supported based on the Authentication parameters
         # received, write a warning.
+        $Components = $Components | Select-Object -Unique
         if ($Components.Length -eq 0)
         {
             Write-Verbose -Message 'Retrieving all resources'
@@ -280,11 +279,7 @@ function Start-M365DSCConfigurationExtract
                 [PSCredential]$AppSecretAsPSCredential = New-Object System.Management.Automation.PSCredential ('ApplicationSecret', $secStringPassword)
             }
 
-            $organization = Get-M365DSCTenantDomain -ApplicationId $ApplicationId `
-                -TenantId $TenantId `
-                -CertificateThumbprint $CertificateThumbprint `
-                -ApplicationSecret $AppSecretAsPSCredential `
-                -CertificatePath $CertificatePath
+            $organization = $TenantId
         }
         elseif ($AuthMethods -Contains 'Credentials' -or `
                 $AuthMethods -Contains 'CredentialsWithApplicationId')
@@ -555,7 +550,7 @@ function Start-M365DSCConfigurationExtract
         }
         foreach ($Workload in $WorkloadsToConnectTo)
         {
-            Write-Host "Connecting to {$($Workload.Name)}..." -NoNewline
+            Write-M365DSCHost -Message "Connecting to {$($Workload.Name)}..." -DeferWrite
             $ConnectionParams = @{
                 Workload              = $Workload.Name
                 ApplicationId         = $ApplicationId
@@ -577,12 +572,17 @@ function Start-M365DSCConfigurationExtract
 
             try
             {
+                $existingEndpoints = (Get-MSCloudLoginConnectionProfile -Workload $Workload.Name).Endpoints
+                if ($null -ne $existingEndpoints)
+                {
+                    $ConnectionParams.Add('Endpoints', $existingEndpoints)
+                }
                 Connect-M365Tenant @ConnectionParams | Out-Null
-                Write-Host $Global:M365DSCEmojiGreenCheckmark
+                Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckmark -CommitWrite
             }
             catch
             {
-                Write-Host $Global:M365DSCEmojiRedX
+                Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
                 throw $_
             }
         }
@@ -651,11 +651,11 @@ function Start-M365DSCConfigurationExtract
 
             if ($ComponentsToSkip -notcontains $resourceName)
             {
-                Write-Host "[$i/$($ResourcesToExport.Length)] Extracting [" -NoNewline
-                Write-Host $resourceName -ForegroundColor Green -NoNewline
-                Write-Host '] using {' -NoNewline
-                Write-Host $mostSecureAuthMethod -ForegroundColor Cyan -NoNewline
-                Write-Host '}...' -NoNewline
+                Write-M365DSCHost -Message "[$i/$($ResourcesToExport.Length)] Extracting [" -DeferWrite
+                Write-M365DSCHost -Message $resourceName -ForegroundColor Green -DeferWrite
+                Write-M365DSCHost -Message '] using {' -DeferWrite
+                Write-M365DSCHost -Message $mostSecureAuthMethod -ForegroundColor Cyan -DeferWrite
+                Write-M365DSCHost -Message '}...' -DeferWrite
                 $exportString = [System.Text.StringBuilder]::New()
                 if ($GenerateInfo)
                 {
@@ -668,14 +668,14 @@ function Start-M365DSCConfigurationExtract
                 $resourceName = $resource.Name.Split('.')[0] -replace 'MSFT_', ''
                 if ($FilterExists -and $null -ne $Filters -and $Filters.Keys.Contains($resourceName))
                 {
-                    $resourceFilter = $Filters.($resource.Name.Split('.')[0] -replace 'MSFT_', '')
+                    $resourceFilter = $Filters.$resourceName
                     if ($FilterExists)
                     {
                         $parameters.Add('Filter', $resourceFilter)
                     }
                     elseif ($null -ne $resourceFilter)
                     {
-                        Write-Host "    `r`n$($Global:M365DSCEmojiYellowCircle) You specified a filter for resource {$resourceName} but it doesn't support filters. Filter will be ignored and all instances of the resource will be captured."
+                        Write-M365DSCHost -Message "    `r`n$($Global:M365DSCEmojiYellowCircle) You specified a filter for resource {$resourceName} but it doesn't support filters. Filter will be ignored and all instances of the resource will be captured."
                     }
                 }
                 $Global:M365DSCExportResourceTypes += $resourceName
@@ -743,11 +743,11 @@ function Start-M365DSCConfigurationExtract
         $M365DSCExportEndTime = [System.DateTime]::Now
         $timeTaken = New-TimeSpan -Start ($M365DSCExportStartTime.ToString()) `
             -End ($M365DSCExportEndTime.ToString())
-        Write-Host "$($Global:M365DSCEmojiHourglass) Export took {" -NoNewline
-        Write-Host "$($timeTaken.TotalSeconds) seconds" -NoNewline -ForegroundColor Cyan
-        Write-Host '} for {' -NoNewline
-        Write-Host "$($Global:M365DSCExportResourceInstancesCount) instances" -NoNewline -ForegroundColor Magenta
-        Write-Host '}'
+        Write-M365DSCHost -Message "$($Global:M365DSCEmojiHourglass) Export took {" -DeferWrite
+        Write-M365DSCHost -Message "$($timeTaken.TotalSeconds) seconds" -DeferWrite -ForegroundColor Cyan
+        Write-M365DSCHost -Message '} for {' -DeferWrite
+        Write-M365DSCHost -Message "$($Global:M365DSCExportResourceInstancesCount) instances" -DeferWrite -ForegroundColor Magenta
+        Write-M365DSCHost -Message '}' -CommitWrite
         #endregion
 
         $sessions = Get-PSSession | Where-Object -FilterScript { $_.Name -like 'SfBPowerShellSessionViaTeamsModule_*' -or `
@@ -768,9 +768,9 @@ function Start-M365DSCConfigurationExtract
         # Check if configuration validation needs to be performed
         if ($Validate.IsPresent)
         {
-            Write-Host "$($Global:M365DSCMagnifyingGlass) Starting configuration validation..." -NoNewline
+            Write-M365DSCHost -Message "$($Global:M365DSCMagnifyingGlass) Starting configuration validation..."
             [Array]$results = Get-M365DSCConfigurationConflict -ConfigurationContent $DSCContent.ToString()
-            Write-Host "Results:"
+            Write-M365DSCHost -Message "Results:"
             if ($results.Count -gt 0)
             {
                 $errorMessage = ''
@@ -782,7 +782,7 @@ function Start-M365DSCConfigurationExtract
             }
             else
             {
-                Write-Host "No conflicts detected" -NoNewLine
+                Write-M365DSCHost -Message "No conflicts detected"
             }
         }
 
@@ -807,7 +807,7 @@ function Start-M365DSCConfigurationExtract
         {
             try
             {
-                Write-Host "Directory `"$OutputDSCPath`" doesn't exist; creating..."
+                Write-M365DSCHost -Message "Directory `"$OutputDSCPath`" doesn't exist; creating..."
                 New-Item -Path $OutputDSCPath -ItemType Directory | Out-Null
                 if ($?)
                 {
@@ -850,7 +850,7 @@ function Start-M365DSCConfigurationExtract
                     {
                         $filePath = Join-Path $env:Temp $fileToCopy.Name -Resolve
                         $destPath = Join-Path $OutputDSCPath $fileToCopy.Name
-                        Copy-Item -Path $filePath -Destination $destPath
+                        Copy-Item -Path $filePath -Destination $destPath -Force
                     }
                 }
             }
@@ -945,7 +945,7 @@ function Start-M365DSCConfigurationExtract
         if (-not [System.String]::IsNullOrEmpty($env:Temp))
         {
             $partialPath = Join-Path $env:TEMP -ChildPath "$($Global:PartialExportFileName)"
-            Write-Host "Partial Export file was saved at: $partialPath"
+            Write-M365DSCHost -Message "Partial Export file was saved at: $partialPath"
         }
         throw $_
     }
@@ -977,7 +977,7 @@ function Get-M365DSCResourcesByWorkloads
     $Components = @()
     foreach ($Workload in $Workloads)
     {
-        Write-Host "Finding all resources for workload {$Workload} and Mode {$Mode}" -ForegroundColor Gray
+        Write-M365DSCHost -Message "Finding all resources for workload {$Workload} and Mode {$Mode}" -ForegroundColor Gray
 
         foreach ($resource in $modules)
         {

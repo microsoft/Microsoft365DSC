@@ -57,25 +57,25 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters | Out-Null
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullResult = $PSBoundParameters
     try
     {
-        $instance = Get-MgBetaPolicyAdminConsentRequestPolicy -ErrorAction Stop
+        New-M365DSCConnection -Workload 'MicrosoftGraph' `
+            -InboundParameters $PSBoundParameters | Out-Null
+
+        #Ensure the proper dependencies are installed in the current environment.
+        Confirm-M365DSCDependencies
+
+        #region Telemetry
+        $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+        $CommandName = $MyInvocation.MyCommand
+        $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+            -CommandName $CommandName `
+            -Parameters $PSBoundParameters
+        Add-M365DSCTelemetryEvent -Data $data
+        #endregion
+
+        $nullResult = $PSBoundParameters
+        $instance = Get-MgBetaPolicyAdminConsentRequestPolicy -ErrorAction SilentlyContinue
         if ($null -eq $instance)
         {
             throw 'Could not retrieve the Admin Consent Request Policy'
@@ -351,33 +351,45 @@ function Test-TargetResource
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
+    $testTargetResource = $true
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
-
-    $testResult = $true
-    foreach ($reviewer in $Reviewers)
+    #Compare Cim instances
+    foreach ($key in $PSBoundParameters.Keys)
     {
-        $currentEquivalent = $CurrentValues.Reviewers | Where-Object -FilterScript { $_.ReviewerId -eq $reviewer.ReviewerId -and $_.ReviewerType -eq $reviewer.ReviewerType }
-        if ($null -eq $currentEquivalent)
-        {
-            $testResult = $false
-            Write-Verbose -Message "Couldn't find current reviewer {$($reviewer.ReviewerId)}"
-        }
+         $source = $PSBoundParameters.$key
+         $target = $CurrentValues.$key
+         if ($null -ne $source -and $source.GetType().Name -like '*CimInstance*')
+         {
+             $testResult = Compare-M365DSCComplexObject `
+                 -Source ($source) `
+                 -Target ($target)
+
+             if (-not $testResult)
+             {
+                 Write-Verbose "TestResult returned False for $source"
+                 $testTargetResource = $false
+             }
+             else
+             {
+                 $ValuesToCheck.Remove($key) | Out-Null
+             }
+         }
     }
 
-    if ($testResult)
+    $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck $ValuesToCheck.Keys
+
+    if (-not $TestResult)
     {
-        $ValuesToCheck.Remove('Reviewers') | Out-Null
-        $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
-            -Source $($MyInvocation.MyCommand.Source) `
-            -DesiredValues $PSBoundParameters `
-            -ValuesToCheck $ValuesToCheck.Keys
+        $testTargetResource = $false
     }
+    Write-Verbose -Message "Test-TargetResource returned $testTargetResource"
 
-    Write-Verbose -Message "Test-TargetResource returned $testResult"
-
-    return $testResult
+    return $testTargetResource
 }
 
 function Export-TargetResource
@@ -432,18 +444,17 @@ function Export-TargetResource
 
     try
     {
-        $Script:ExportMode = $true
         [array] $Script:exportedInstances = Get-MgBetaPolicyAdminConsentRequestPolicy -ErrorAction Stop
 
         $i = 1
         $dscContent = ''
         if ($Script:exportedInstances.Length -eq 0)
         {
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         else
         {
-            Write-Host "`r`n" -NoNewline
+            Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
         foreach ($config in $Script:exportedInstances)
         {
@@ -453,7 +464,7 @@ function Export-TargetResource
             }
 
             $displayedKey = 'Policy'
-            Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -NoNewline
+            Write-M365DSCHost -Message "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -DeferWrite
             $params = @{
                 IsSingleInstance      = 'Yes'
                 Credential            = $Credential
@@ -465,36 +476,49 @@ function Export-TargetResource
                 AccessTokens          = $AccessTokens
             }
 
+            $Script:exportedInstance = $config
             $Results = Get-TargetResource @Params
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
-
-            if ($Results.Reviewers.Count -gt 0)
+            if ($null -ne $Results.Reviewers)
             {
-                $Results.Reviewers = Get-M365DSCAzureADAAdminConsentPolicyReviewerAsString $Results.Reviewers
+                $complexMapping = @(
+                    @{
+                        Name            = 'Reviewers'
+                        CimInstanceName = 'AADAdminConsentRequestPolicyReviewer'
+                        IsRequired      = $False
+                    }
+                )
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                    -ComplexObject $Results.Reviewers `
+                    -CIMInstanceName 'AADAdminConsentRequestPolicyReviewer' `
+                    -ComplexTypeMapping $complexMapping
+
+                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                {
+                    $Results.Reviewers = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('Reviewers') | Out-Null
+                }
             }
 
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -Credential $Credential
-
-            if ($Results.Reviewers)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Reviewers' -IsCIMArray:$true
-            }
+                -Credential $Credential `
+                -NoEscape @('Reviewers')
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         return $dscContent
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `

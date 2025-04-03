@@ -30,10 +30,10 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **endDate** | Required | String | The date to stop applying the recurrence pattern. Depending on the recurrence pattern of the event, the last occurrence of the meeting may not be this date. | |
+| **endDate** | Required | DateTime | The date to stop applying the recurrence pattern. Depending on the recurrence pattern of the event, the last occurrence of the meeting may not be this date. | |
 | **numberOfOccurrences** | Write | UInt32 | The number of times to repeat the event. Required and must be positive if type is numbered. | |
 | **recurrenceTimeZone** | Write | String | Time zone for the startDate and endDate properties. | |
-| **startDate** | Required | String | The date to start applying the recurrence pattern. The first occurrence of the meeting may be this date or later, depending on the recurrence pattern of the event. Must be the same value as the start property of the recurring event. | |
+| **startDate** | Required | DateTime | The date to start applying the recurrence pattern. The first occurrence of the meeting may be this date or later, depending on the recurrence pattern of the event. Must be the same value as the start property of the recurring event. | |
 | **type** | Required | String | The recurrence range. The possible values are: endDate, noEnd, numbered. | `endDate`, `noEnd`, `numbered` |
 
 ### MSFT_AADRoleAssignmentScheduleRequestScheduleRecurrencePattern

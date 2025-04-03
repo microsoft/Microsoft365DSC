@@ -34,12 +34,13 @@ function Remove-M365DSCCimInstanceTrailingCharacterFromExport
         $DSCBlock
     )
 
-    $DSCBlock = $DSCBlock.replace("    ,`r`n" , "    `r`n" )
-    $DSCBlock = $DSCBlock.replace("`r`n;`r`n" , "`r`n" )
-    $DSCBlock = $DSCBlock.replace("`r`n,`r`n" , "`r`n" )
+    $DSCBlock = $DSCBlock.Replace("    ,`r`n" , "    `r`n" )
+    $DSCBlock = $DSCBlock.Replace("`r`n;`r`n" , "`r`n" )
+    $DSCBlock = $DSCBlock.Replace("`r`n,`r`n" , "`r`n" )
 
     return $DSCBlock
 }
+
 function Rename-M365DSCCimInstanceParameter
 {
     [CmdletBinding()]
@@ -54,7 +55,7 @@ function Rename-M365DSCCimInstanceParameter
     )
 
     $result = $Properties
-    $type = $Properties.getType().FullName
+    $type = $Properties.GetType().FullName
     #region Array
     if ($type -like '*[[\]]')
     {
@@ -63,7 +64,7 @@ function Rename-M365DSCCimInstanceParameter
         {
             try
             {
-                $values += Rename-M365DSCCimInstanceParameter $item -KeyMapping $KeyMapping
+                $values += Rename-M365DSCCimInstanceParameter -Properties $item -KeyMapping $KeyMapping
             }
             catch
             {
@@ -79,17 +80,17 @@ function Rename-M365DSCCimInstanceParameter
     #region Single
     if ($type -like '*Hashtable')
     {
-        $result = ([Hashtable]$Properties).clone()
+        $result = ([Hashtable]$Properties).Clone()
     }
 
     if ($type -like '*CimInstance*' -or $type -like '*Hashtable*' -or $type -like '*Object*')
     {
         $hashProperties = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $result
-        $keys = ($hashProperties.clone()).keys
+        $keys = ($hashProperties.Clone()).keys
 
         foreach ($key in $keys)
         {
-            $keyName = $key.substring(0, 1).tolower() + $key.substring(1, $key.length - 1)
+            $keyName = $key.Substring(0, 1).Tolower() + $key.Substring(1, $key.length - 1)
             if ($key -in $KeyMapping.Keys)
             {
                 $keyName = $KeyMapping.$key
@@ -116,6 +117,7 @@ function Rename-M365DSCCimInstanceParameter
         }
         $result = $hashProperties
     }
+
     return $result
     #endregion
 }
@@ -134,7 +136,7 @@ function Get-M365DSCDRGComplexTypeToHashtable
         return $null
     }
 
-    if ($ComplexObject.gettype().fullname -like '*[[\]]')
+    if ($ComplexObject.GetType().FullName -like '*[[\]]')
     {
         $results = @()
 
@@ -153,8 +155,7 @@ function Get-M365DSCDRGComplexTypeToHashtable
         return , [hashtable[]]$results
     }
 
-
-    if ($ComplexObject.getType().fullname -like '*Dictionary*')
+    if ($ComplexObject.GetType().FullName -like '*Dictionary*')
     {
         $results = @{}
 
@@ -166,7 +167,7 @@ function Get-M365DSCDRGComplexTypeToHashtable
             if ($null -ne $ComplexObject.$key)
             {
                 $keyName = $key
-                $keyType = $ComplexObject.$key.gettype().fullname
+                $keyType = $ComplexObject.$key.GetType().FullName
                 if ($keyType -like '*CimInstance*' -or $keyType -like '*Dictionary*' -or $keyType -like 'Microsoft.Graph.PowerShell.Models.*' -or $keyType -like 'Microsoft.Graph.Beta.PowerShell.Models.*' -or $keyType -like '*[[\]]')
                 {
                     $hash = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject.$key
@@ -184,9 +185,9 @@ function Get-M365DSCDRGComplexTypeToHashtable
 
     $results = @{}
 
-    if ($ComplexObject.getType().Fullname -like '*hashtable')
+    if ($ComplexObject.GetType().Fullname -like '*hashtable')
     {
-        $keys = $ComplexObject.keys
+        $keys = $ComplexObject.Keys
     }
     else
     {
@@ -196,14 +197,14 @@ function Get-M365DSCDRGComplexTypeToHashtable
     foreach ($key in $keys)
     {
         $keyName = $key
-        if ($ComplexObject.getType().Fullname -notlike '*hashtable')
+        if ($ComplexObject.GetType().FullName -notlike '*hashtable')
         {
             $keyName = $key.Name
         }
 
         if ($null -ne $ComplexObject.$keyName)
         {
-            $keyType = $ComplexObject.$keyName.gettype().fullname
+            $keyType = $ComplexObject.$keyName.GetType().FullName
             if ($keyType -like '*CimInstance*' -or $keyType -like '*Dictionary*' -or $keyType -like 'Microsoft.Graph.*PowerShell.Models.*')
             {
                 $hash = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject.$keyName
@@ -250,6 +251,7 @@ function Get-M365DSCDRGComplexTypeToHashtable
 function Get-M365DSCDRGComplexTypeToString
 {
     [CmdletBinding()]
+    [OutputType([System.String])]
     param(
         [Parameter()]
         $ComplexObject,
@@ -306,6 +308,12 @@ function Get-M365DSCDRGComplexTypeToString
             $currentProperty += Get-M365DSCDRGComplexTypeToString -IsArray @splat
         }
 
+        # Add an indented new line after the last item in the array
+        if ($currentProperty.Count -gt 0)
+        {
+            $currentProperty[-1] += "`r`n" + $indent
+        }
+
         #PowerShell returns all non-captured stream output, not just the argument of the return statement.
         #An empty array is mangled into $null in the process.
         #However, an array can be preserved on return by prepending it with the array construction operator (,)
@@ -325,22 +333,36 @@ function Get-M365DSCDRGComplexTypeToString
     $indent = '    ' * $IndentLevel
     $keyNotNull = 0
 
+    $keys = $ComplexObject.Keys
     if ($ComplexObject.Keys.Count -eq 0)
     {
-        return $null
+        $properties = $ComplexObject | Get-Member -MemberType Properties
+        if ($null -eq $properties)
+        {
+            return $null
+        }
+        else
+        {
+            $keys = $properties.Name
+        }
     }
 
-    foreach ($key in $ComplexObject.Keys)
+    foreach ($key in $keys)
     {
         if ($null -ne $ComplexObject.$key)
         {
             $keyNotNull++
             if ($ComplexObject.$key.GetType().FullName -like 'Microsoft.Graph.PowerShell.Models.*' -or $key -in $ComplexTypeMapping.Name)
             {
-                $hashPropertyType = $ComplexObject[$key].GetType().Name.ToLower()
+                $itemValue = $ComplexObject[$key]
+                if ([System.String]::IsNullOrEmpty($itemValue))
+                {
+                    $itemValue = $ComplexObject.$key
+                }
+                $hashPropertyType = $itemValue.GetType().Name.ToLower()
 
                 $IsArray = $false
-                if ($ComplexObject[$key].GetType().FullName -like '*[[\]]')
+                if ($itemValue.GetType().FullName -like '*[[\]]')
                 {
                     $IsArray = $true
                 }
@@ -348,12 +370,11 @@ function Get-M365DSCDRGComplexTypeToString
                 if ($key -in $ComplexTypeMapping.Name)
                 {
                     $hashPropertyType = ([Array]($ComplexTypeMapping | Where-Object -FilterScript { $_.Name -eq $key }).CimInstanceName)[0]
-                    $hashProperty = $ComplexObject[$key]
-                    #$currentProperty += "`r`n"
+                    $hashProperty = $itemValue
                 }
                 else
                 {
-                    $hashProperty = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject[$key]
+                    $hashProperty = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $itemValue
                 }
 
                 if (-not $IsArray)
@@ -373,7 +394,7 @@ function Get-M365DSCDRGComplexTypeToString
                 if ($IsArray)
                 {
                     $IndentLevel++
-                    for ($i = 0; $i -lt $ComplexObject[$key].Count; $i++)
+                    for ($i = 0; $i -lt $itemValue.Count; $i++)
                     {
                         $item = $ComplexObject.$key[$i]
                         if ($ComplexObject.$key.GetType().FullName -like 'Microsoft.Graph.PowerShell.Models.*')
@@ -397,6 +418,10 @@ function Get-M365DSCDRGComplexTypeToString
                             $nestedPropertyString = $nestedPropertyString.Substring(2)
                         }
                         $currentProperty += $nestedPropertyString
+                        if (-not $currentProperty.EndsWith("`r`n"))
+                        {
+                            $currentProperty += "`r`n"
+                        }
                     }
                     $IndentLevel--
                 }
@@ -411,7 +436,7 @@ function Get-M365DSCDRGComplexTypeToString
                     {
                         $nestedPropertyString = "`$null`r`n"
                     }
-                    $currentProperty += $nestedPropertyString
+                    $currentProperty += $nestedPropertyString + "`r`n"
                 }
                 if ($IsArray)
                 {
@@ -427,11 +452,18 @@ function Get-M365DSCDRGComplexTypeToString
             else
             {
                 $currentValue = $ComplexObject[$key]
-                if ($currentValue.GetType().Name -eq 'String')
+                if ([System.String]::IsNullOrEmpty($currentValue))
                 {
-                     $currentValue = $ComplexObject[$key].Replace("'", "''").Replace("�", "''")
+                    $currentValue = $ComplexObject.$key
                 }
-                $currentProperty += Get-M365DSCDRGSimpleObjectTypeToString -Key $key -Value $currentValue -Space ($indent)
+                if (-not [System.String]::IsNullOrEmpty($currentValue) -and $currentValue.GetType().Name -ne 'Dictionary`2')
+                {
+                    if ($currentValue.GetType().Name -eq 'String')
+                    {
+                         $currentValue = $currentValue.Replace("'", "''").Replace("�", "''")
+                    }
+                    $currentProperty += Get-M365DSCDRGSimpleObjectTypeToString -Key $key -Value $currentValue -Space ($indent)
+                }
             }
         }
         else
@@ -451,40 +483,57 @@ function Get-M365DSCDRGComplexTypeToString
             }
         }
     }
+
     $indent = ''
     $indent = '    ' * ($IndentLevel -1)
-    if ($key -in $ComplexTypeMapping.Name)
+
+    if ($key -in $ComplexTypeMapping.Name -and -not $currentProperty.EndsWith("`r`n"))
     {
         $currentProperty += "`r`n"
     }
 
     $currentProperty += "$indent}"
-    if ($IsArray -or $IndentLevel -gt 4)
-    {
-        $currentProperty += "`r`n"
-    }
-
-    #Indenting last parenthesis when the cim instance is an array
-    if ($IndentLevel -eq 5)
-    {
-        $indent = '    ' * ($IndentLevel -2)
-        $currentProperty += $indent
-    }
-
     $emptyCIM = $currentProperty.Replace(' ', '').Replace("`r`n", '')
     if ($emptyCIM -eq "MSFT_$CIMInstanceName{}")
     {
-        $currentProperty = $null
+        $currentProperty = [string]::Empty
     }
 
-    if ($null -ne $currentProperty)
-    {
-        $fancySingleQuotes = "[\u2019\u2018]"
-        $fancyDoubleQuotes = "[\u201C\u201D]"
-        $currentProperty = [regex]::Replace($currentProperty, $fancySingleQuotes, "''")
-        $currentProperty = [regex]::Replace($currentProperty, $fancyDoubleQuotes, '"')
-    }
     return $currentProperty
+}
+
+<#
+.SYNOPSIS
+    Update special characters in a string to be escaped in a DSC configuration.
+
+.DESCRIPTION
+    This function updates special characters in a string to be escaped in a DSC configuration.
+    The function replaces the following characters:
+        - 0x201C = “
+        - 0x201D = ”
+        - 0x201E = „
+
+.PARAMETER String
+    The string to be updated.
+
+.EXAMPLE
+    PS> Update-M365DSCSpecialCharacters -String 'This is a test string with special characters: „, “, ”'
+#>
+function Update-M365DSCSpecialCharacters
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $String
+    )
+
+    $String = $String.Replace("$([char]0x201C)", "``$([char]0x201C)")
+    $String = $String.Replace("$([char]0x201D)", "``$([char]0x201D)")
+    $String = $String.Replace("$([char]0x201E)", "``$([char]0x201E)")
+
+    return $String
 }
 
 function Get-M365DSCDRGSimpleObjectTypeToString
@@ -517,11 +566,15 @@ function Get-M365DSCDRGSimpleObjectTypeToString
             {
                 $key = 'odataType'
             }
-            $returnValue = $Space + $Key + " = '" + $Value + "'`r`n"
+
+            $newString = $Value.Replace('`', '``').Replace('$', '`$')
+            $newString = Update-M365DSCSpecialCharacters -String $newString
+            $newString = $newString.Replace('"', '`"')
+            $returnValue = $Space + $Key + ' = "' + $newString + """`r`n"
         }
         '*.DateTime'
         {
-            $returnValue = $Space + $Key + " = '" + $Value + "'`r`n"
+            $returnValue = $Space + $Key + ' = "' + $Value + """`r`n"
         }
         '*[[\]]'
         {
@@ -540,11 +593,12 @@ function Get-M365DSCDRGSimpleObjectTypeToString
                 {
                     '*.String'
                     {
-                        $returnValue += "$whitespace'$item'$newline"
+                        $item = $item.Replace('`', '``').Replace('$', '`$').Replace('"', '`"')
+                        $returnValue += "$whitespace""$item""$newline"
                     }
                     '*.DateTime'
                     {
-                        $returnValue += "$whitespace'$item'$newline"
+                        $returnValue += "$whitespace""$item""$newline"
                     }
                     Default
                     {
@@ -552,7 +606,8 @@ function Get-M365DSCDRGSimpleObjectTypeToString
                     }
                 }
             }
-            if ($Value.count -gt 1)
+
+            if ($Value.Count -gt 1)
             {
                 $returnValue += "$Space)`r`n"
             }
@@ -567,6 +622,7 @@ function Get-M365DSCDRGSimpleObjectTypeToString
             $returnValue = $Space + $Key + ' = ' + $Value + "`r`n"
         }
     }
+
     return $returnValue
 }
 
@@ -580,7 +636,6 @@ function Compare-M365DSCComplexObject
         [Parameter()]
         $Target
     )
-
     #Comparing full objects
     if ($null -eq $Source -and $null -eq $Target)
     {
@@ -638,19 +693,49 @@ function Compare-M365DSCComplexObject
 
         foreach ($item in $Source)
         {
+            $foundMatch = $false
             foreach ($targetItem in $Target)
             {
-                $compareResult = Compare-M365DSCComplexObject `
-                    -Source $item `
-                    -Target $targetItem
-
-                if ($compareResult)
+                if (-not $foundMatch)
                 {
-                    break
+                    $compareResult = Compare-M365DSCComplexObject `
+                        -Source $item `
+                        -Target $targetItem
+
+                    if ($compareResult)
+                    {
+                        $foundMatch = $true
+                    }
                 }
             }
 
-            if (-not $compareResult)
+            if (-not $foundMatch)
+            {
+                Write-Verbose -Message 'Configuration drift - The complex array items are not identical'
+                return $false
+            }
+        }
+
+        # Do the opposite check
+        foreach ($item in $target)
+        {
+            $foundMatch = $false
+            foreach ($targetItem in $Source)
+            {
+                if (-not $foundMatch)
+                {
+                    $compareResult = Compare-M365DSCComplexObject `
+                        -Source $item `
+                        -Target $targetItem
+
+                    if ($compareResult)
+                    {
+                        $foundMatch = $true
+                    }
+                }
+            }
+
+            if (-not $foundMatch)
             {
                 Write-Verbose -Message 'Configuration drift - The complex array items are not identical'
                 return $false
@@ -699,120 +784,129 @@ function Compare-M365DSCComplexObject
 
     foreach ($key in $keys)
     {
-        #Matching possible key names between Source and Target
-        $sourceValue = $Source.$key
+        if (($target.GetType().Name -eq 'Hashtable' -and $target.ContainsKey($key)) -or `
+            ($target.GetType().Name -eq 'CIMInstance' -and $null -ne $target.$key))
+        {
+            #Matching possible key names between Source and Target
+            $sourceValue = $Source.$key
 
-        # Some classes might contain default properties that have the same name as the key,
-        # so we need to check if the key is present in the target object --> Hashtable <-> IsReadOnly property
-        if ($key -in $targetKeys)
-        {
-            $targetValue = $Target.$key
-        }
-        else
-        {
-            $targetValue = $null
-        }
-
-        #One of the item is null and not the other
-        if (($Source.$key.Length -eq 0) -xor ($targetValue.Length -eq 0))
-        {
-            if ($null -eq $Source.$key)
+            # Some classes might contain default properties that have the same name as the key,
+            # so we need to check if the key is present in the target object --> Hashtable <-> IsReadOnly property
+            if ($key -in $targetKeys)
             {
-                $sourceValue = 'null'
-            }
-
-            if ($null -eq $targetValue)
-            {
-                $targetValue = 'null'
-            }
-
-            Write-Verbose -Message "Configuration drift - key: $key"
-            Write-Verbose -Message "Source {$sourceValue}"
-            Write-Verbose -Message "Target {$targetValue}"
-            return $false
-        }
-
-        #Both keys aren't null or empty
-        if (($null -ne $Source.$key) -and ($null -ne $Target.$key))
-        {
-            if ($Source.$key.GetType().FullName -like '*CimInstance*' -or $Source.$key.GetType().FullName -like '*hashtable*')
-            {
-                if ($Source.$key.GetType().FullName -like '*CimInstance' -and (
-                        $Source.$key.CimClass.CimClassName -eq 'MSFT_DeviceManagementConfigurationPolicyAssignments' -or
-                        $Source.$key.CimClass.CimClassName -like 'MSFT_DeviceManagementMobileAppAssignment' -or
-                        $Source.$key.CimClass.CimClassName -like 'MSFT_Intune*Assignments'
-                    ))
-                {
-                    $compareResult = Compare-M365DSCIntunePolicyAssignment `
-                        -Source @($Source.$key) `
-                        -Target @($Target.$key)
-                }
-                else
-                {
-                    #Recursive call for complex object
-                    $compareResult = Compare-M365DSCComplexObject `
-                        -Source $Source.$key `
-                        -Target $Target.$key
-                }
-
-                if (-not $compareResult)
-                {
-                    Write-Verbose -Message "Configuration drift - complex object key: $key"
-                    Write-Verbose -Message "Source {$sourceValue}"
-                    Write-Verbose -Message "Target {$targetValue}"
-                    return $false
-                }
+                $targetValue = $Target.$key
             }
             else
             {
-                #Simple object comparison
-                $referenceObject = $Target.$key
-                $differenceObject = $Source.$key
+                $targetValue = $null
+            }
 
-                #Identifying date from the current values
-                $targetType = ($Target.$key.GetType()).Name
-                if ($targetType -like '*Date*')
+            #One of the item is null and not the other
+            if (($Source.$key.Length -eq 0) -xor ($targetValue.Length -eq 0))
+            {
+                if ($null -eq $Source.$key)
                 {
-                    $compareResult = $true
-                    $sourceDate = [DateTime]$Source.$key
-                    if ($sourceDate -ne $targetType)
-                    {
-                        $compareResult = $null
-                    }
+                    $sourceValue = 'null'
                 }
-                elseif ($targetType -eq 'String')
+
+                if ($null -eq $targetValue)
                 {
-                    # Align line breaks
-                    if (-not [System.String]::IsNullOrEmpty($referenceObject))
+                    $targetValue = 'null'
+                }
+
+                Write-Verbose -Message "Configuration drift - key: $key"
+                Write-Verbose -Message "Source {$sourceValue}"
+                Write-Verbose -Message "Target {$targetValue}"
+                return $false
+            }
+
+            #Both keys aren't null or empty
+            if (($null -ne $Source.$key) -and ($null -ne $Target.$key))
+            {
+                if ($Source.$key.GetType().FullName -like '*CimInstance*' -or $Source.$key.GetType().FullName -like '*hashtable*' -or `
+                    $Source.$key.GetType().Name -eq 'Object[]')
+                {
+                    if ($Source.$key.GetType().FullName -like '*CimInstance' -and (
+                            $Source.$key.CimClass.CimClassName -eq 'MSFT_DeviceManagementConfigurationPolicyAssignments' -or
+                            $Source.$key.CimClass.CimClassName -like 'MSFT_DeviceManagementMobileAppAssignment' -or
+                            $Source.$key.CimClass.CimClassName -like 'MSFT_Intune*Assignments'
+                        ))
                     {
-                        $referenceObject = $referenceObject.Replace("`r`n", "`n")
+                        $compareResult = Compare-M365DSCIntunePolicyAssignment `
+                            -Source @($Source.$key) `
+                            -Target @($Target.$key)
+                    }
+                    else
+                    {
+                        #Recursive call for complex object
+                        $compareResult = Compare-M365DSCComplexObject `
+                            -Source $Source.$key `
+                            -Target $Target.$key
                     }
 
-                    if (-not [System.String]::IsNullOrEmpty($differenceObject))
+                    if (-not $compareResult)
                     {
-                        $differenceObject = $differenceObject.Replace("`r`n", "`n")
-                    }
-
-                    $compareResult = $true
-                    $ordinalComparison = [System.String]::Equals($referenceObject, $differenceObject, [System.StringComparison]::Ordinal)
-                    if ($ordinalComparison)
-                    {
-                        $compareResult = $null
+                        Write-Verbose -Message "Configuration drift - complex object key: $key"
+                        Write-Verbose -Message "Source {$sourceValue}"
+                        Write-Verbose -Message "Target {$targetValue}"
+                        return $false
                     }
                 }
                 else
                 {
-                    $compareResult = Compare-Object `
-                        -ReferenceObject ($referenceObject) `
-                        -DifferenceObject ($differenceObject)
-                }
+                    #Simple object comparison
+                    $referenceObject = $Target.$key
+                    $differenceObject = $Source.$key
 
-                if ($null -ne $compareResult)
-                {
-                    Write-Verbose -Message "Configuration drift - simple object key: $key"
-                    Write-Verbose -Message "Source {$sourceValue}"
-                    Write-Verbose -Message "Target {$targetValue}"
-                    return $false
+                    #Identifying date from the current values
+                    $targetType = ($Target.$key.GetType()).Name
+                    if ($targetType -like '*Date*')
+                    {
+                        $compareResult = $true
+                        $sourceDate = [DateTime]$Source.$key
+                        if ($sourceDate -ne $targetType)
+                        {
+                            $compareResult = $null
+                        }
+                    }
+                    elseif ($targetType -eq 'String')
+                    {
+                        # Align line breaks
+                        if (-not [System.String]::IsNullOrEmpty($referenceObject))
+                        {
+                            $referenceObject = $referenceObject.Replace("`r`n", "`n")
+                        }
+
+                        if (-not [System.String]::IsNullOrEmpty($differenceObject))
+                        {
+                            $differenceObject = $differenceObject.Replace("`r`n", "`n")
+                        }
+
+                        $compareResult = $true
+                        $ordinalComparison = [System.String]::Equals($referenceObject, $differenceObject, [System.StringComparison]::OrdinalIgnoreCase)
+                        if (-not $ordinalComparison)
+                        {
+                            $compareResult = $false
+                        }
+                        elseif ($ordinalComparison)
+                        {
+                            $compareResult = $null
+                        }
+                    }
+                    else
+                    {
+                        $compareResult = Compare-Object `
+                            -ReferenceObject ($referenceObject) `
+                            -DifferenceObject ($differenceObject)
+                    }
+
+                    if ($null -ne $compareResult -and $compareResult.Length -gt 0)
+                    {
+                        Write-Verbose -Message "Configuration drift - simple object key: $key"
+                        Write-Verbose -Message "Source {$sourceValue}"
+                        Write-Verbose -Message "Target {$targetValue}"
+                        return $false
+                    }
                 }
             }
         }
@@ -1265,8 +1359,20 @@ function Compare-M365DSCIntunePolicyAssignment
         [Parameter()]
         [array]$Target
     )
-
+    $DriftObject = @{
+        DriftInfo     = @{}
+        CurrentValues = @{}
+        DesiredValues = @{}
+    }
     $testResult = $Source.Count -eq $Target.Count
+    if (-not $testResult)
+    {
+        $DriftObject.DriftInfo.Add("Assignments.Count", @{
+            PropertyName = "Assignments.Count"
+            CurrentValue = $Source.Count
+            DesiredValue = $Target.Count
+        })
+    }
     Write-Verbose "Count: $($Source.Count) - $($Target.Count)"
     if ($testResult)
     {
@@ -1279,16 +1385,20 @@ function Compare-M365DSCIntunePolicyAssignment
                 # Check for mobile app assignments with intent
                 $testResult = $assignment.intent -eq $assignmentTarget.intent
                 # Using assignment groupDisplayName only if the groupId is not found in the directory otherwise groupId should be the key
-                if (-not $testResult)
-                {
-                    Write-Verbose 'Group not found by groupId, checking if group exists by id'
-                    $groupNotFound =  $null -eq (Get-MgGroup -GroupId ($assignment.groupId) -ErrorAction SilentlyContinue)
-                }
                 if (-not $testResult -and $groupNotFound)
                 {
                     Write-Verbose 'Group not found by groupId, looking for group by groupDisplayName'
                     $assignmentTarget = $Target | Where-Object -FilterScript { $_.dataType -eq $assignment.DataType -and $_.groupDisplayName -eq $assignment.groupDisplayName }
                     $testResult = $null -ne $assignmentTarget
+
+                    if (-not $testResult)
+                    {
+                        $DriftObject.DriftInfo.Add("Assignments.GroupDisplayName", @{
+                            PropertyName = "Assignments.GroupDisplayName"
+                            CurrentValue = $assignment.groupDisplayName
+                            DesiredValue = $null
+                        })
+                    }
                 }
 
                 if ($testResult)
@@ -1308,22 +1418,48 @@ function Compare-M365DSCIntunePolicyAssignment
                         Write-Verbose 'FilterId specified, checking filterId'
                         $testResult = $assignment.deviceAndAppManagementAssignmentFilterId -eq $assignmentTarget.deviceAndAppManagementAssignmentFilterId
                     }
+                    if (-not $testResult)
+                    {
+                        $DriftObject.DriftInfo.Add("Assignments.Filters", @{
+                            PropertyName = "Assignments.Filters"
+                            CurrentValue = $assignment.deviceAndAppManagementAssignmentFilterType
+                            DesiredValue = $assignmentTarget.deviceAndAppManagementAssignmentFilterType
+                        })
+                    }
                 }
 
                 if ($testResult)
                 {
                     Write-Verbose 'Group and filters match, checking collectionId'
                     $testResult = $assignment.collectionId -eq $assignmentTarget.collectionId
+                    if (-not $testResult)
+                    {
+                        $DriftObject.DriftInfo.Add("Assignments.collectionId", @{
+                            PropertyName = "Assignments.collectionId"
+                            CurrentValue = $assignment.collectionId
+                            DesiredValue = $assignmentTarget.collectionId
+                        })
+                    }
                 }
             }
             else
             {
                 $testResult = $null -ne ($Target | Where-Object -FilterScript { $_.dataType -eq $assignment.DataType })
+                if (-not $testResult)
+                {
+                    $DriftObject.DriftInfo.Add("Assignments.collectionId", @{
+                        PropertyName = "Assignments.DataType"
+                        CurrentValue = $assignment.DataType
+                        DesiredValue = $null
+                    })
+                }
             }
+            $Global:CCMCurrentDriftInfo = $DriftObject
             if (-not $testResult) { break }
         }
     }
 
+    $Global:CCMCurrentDriftInfo = $DriftObject
     return $testResult
 }
 
