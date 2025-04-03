@@ -34,6 +34,8 @@
 * IntuneDeviceEnrollmentStatusPageWindows10
   * Use `SelectedMobileAppNames` as the primary source for the apps.
     FIXES [#5913](https://github.com/microsoft/Microsoft365DSC/issues/5913)
+* IntuneDeviceManagementComplianceManagementPartner
+  * Initial release, enables integration with 3rd party MDM solutions
 * IntuneDeviceFeaturesConfigurationPolicyIOS
   * Initial release
 * IntuneWifiConfigurationPolicyMacOS

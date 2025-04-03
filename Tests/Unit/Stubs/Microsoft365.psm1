@@ -103196,6 +103196,530 @@ function Remove-MgBetaDeviceManagementComplianceManagementPartner
 		[switch]$WhatIf
 	)
 }
+
+function Get-MgBetaDeviceManagementComplianceManagementPartner
+{
+    [Cmdletbinding()]
+    param(
+    	[Parameter()]
+    	[string]$ComplianceManagementPartnerId,
+
+    	[Parameter()]
+    	[object]$InputObject,
+
+    	[Parameter()]
+    	[string[]]$ExpandProperty,
+
+    	[Parameter()]
+    	[string[]]$Property,
+
+    	[Parameter()]
+    	[string]$Filter,
+
+    	[Parameter()]
+    	[string]$Search,
+
+    	[Parameter()]
+    	[int]$Skip,
+
+    	[Parameter()]
+    	[string[]]$Sort,
+
+    	[Parameter()]
+    	[int]$Top,
+
+    	[Parameter()]
+    	[string]$ResponseHeadersVariable,
+
+    	[Parameter()]
+    	[switch]$Break,
+
+    	[Parameter()]
+    	[System.Collections.IDictionary]$Headers,
+
+    	[Parameter()]
+    	[PSObject]$HttpPipelineAppend,
+
+    	[Parameter()]
+    	[PSObject]$HttpPipelinePrepend,
+
+    	[Parameter()]
+    	[uri]$Proxy,
+
+    	[Parameter()]
+    	[pscredential]$ProxyCredential,
+
+    	[Parameter()]
+    	[switch]$ProxyUseDefaultCredentials,
+
+    	[Parameter()]
+    	[int]$PageSize,
+
+    	[Parameter()]
+    	[switch]$All,
+
+    	[Parameter()]
+    	[string]$CountVariable
+    )
+}
+
+function New-MgBetaDeviceManagementComplianceManagementPartner
+{
+    [Cmdletbinding()]
+    param(
+		[Parameter()]
+		[object]$BodyParameter,
+
+		[Parameter()]
+		[string]$ResponseHeadersVariable,
+
+		[Parameter()]
+		[hashtable]$AdditionalProperties,
+
+		[Parameter()]
+		[object[]]$AndroidEnrollmentAssignments,
+
+		[Parameter()]
+		[switch]$AndroidOnboarded,
+
+		[Parameter()]
+		[string]$DisplayName,
+
+		[Parameter()]
+		[string]$Id,
+
+		[Parameter()]
+		[object[]]$IosEnrollmentAssignments,
+
+		[Parameter()]
+		[switch]$IosOnboarded,
+
+		[Parameter()]
+		[datetime]$LastHeartbeatDateTime,
+
+		[Parameter()]
+		[object[]]$MacOSEnrollmentAssignments,
+
+		[Parameter()]
+		[switch]$MacOSOnboarded,
+
+		[Parameter()]
+		[object]$PartnerState,
+
+		[Parameter()]
+		[switch]$Break,
+
+		[Parameter()]
+		[System.Collections.IDictionary]$Headers,
+
+		[Parameter()]
+		[PSObject]$HttpPipelineAppend,
+
+		[Parameter()]
+		[PSObject]$HttpPipelinePrepend,
+
+		[Parameter()]
+		[uri]$Proxy,
+
+		[Parameter()]
+		[pscredential]$ProxyCredential,
+
+		[Parameter()]
+		[switch]$ProxyUseDefaultCredentials,
+
+		[Parameter()]
+		[switch]$Confirm,
+
+		[Parameter()]
+		[switch]$WhatIf
+	)
+}
+function Update-MgBetaDeviceManagementComplianceManagementPartner
+{
+    [Cmdletbinding()]
+    param(
+        [Parameter()]
+        [string]$ComplianceManagementPartnerId,
+
+        [Parameter()]
+        [object]$InputObject,
+
+        [Parameter()]
+        [object]$BodyParameter,
+
+        [Parameter()]
+        [string]$ResponseHeadersVariable,
+
+        [Parameter()]
+        [hashtable]$AdditionalProperties,
+
+        [Parameter()]
+        [object[]]$AndroidEnrollmentAssignments,
+
+        [Parameter()]
+        [switch]$AndroidOnboarded,
+
+        [Parameter()]
+        [string]$DisplayName,
+
+        [Parameter()]
+        [string]$Id,
+
+        [Parameter()]
+        [object[]]$IosEnrollmentAssignments,
+
+        [Parameter()]
+        [switch]$IosOnboarded,
+
+        [Parameter()]
+        [datetime]$LastHeartbeatDateTime,
+
+        [Parameter()]
+        [object[]]$MacOSEnrollmentAssignments,
+
+        [Parameter()]
+        [switch]$MacOSOnboarded,
+
+        [Parameter()]
+        [object]$PartnerState,
+
+        [Parameter()]
+        [switch]$Break,
+
+        [Parameter()]
+        [System.Collections.IDictionary]$Headers,
+
+        [Parameter()]
+        [PSObject]$HttpPipelineAppend,
+
+        [Parameter()]
+        [PSObject]$HttpPipelinePrepend,
+
+        [Parameter()]
+        [uri]$Proxy,
+
+        [Parameter()]
+        [pscredential]$ProxyCredential,
+
+        [Parameter()]
+        [switch]$ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [switch]$WhatIf,
+
+        [Parameter()]
+        [switch]$Confirm
+    )
+}
+function Remove-MgBetaDeviceManagementComplianceManagementPartner
+{
+    [Cmdletbinding()]
+    param(
+		[Parameter()]
+		[string]$ComplianceManagementPartnerId,
+
+		[Parameter()]
+		[object]$InputObject,
+
+		[Parameter()]
+		[string]$IfMatch,
+
+		[Parameter()]
+		[string]$ResponseHeadersVariable,
+
+		[Parameter()]
+		[switch]$Break,
+
+		[Parameter()]
+		[System.Collections.IDictionary]$Headers,
+
+		[Parameter()]
+		[PSObject]$HttpPipelineAppend,
+
+		[Parameter()]
+		[PSObject]$HttpPipelinePrepend,
+
+		[Parameter()]
+		[switch]$PassThru,
+
+		[Parameter()]
+		[uri]$Proxy,
+
+		[Parameter()]
+		[pscredential]$ProxyCredential,
+
+		[Parameter()]
+		[switch]$ProxyUseDefaultCredentials,
+
+		[Parameter()]
+		[switch]$Confirm,
+
+		[Parameter()]
+		[switch]$WhatIf
+	)
+}
+
+function Get-MgBetaDeviceManagementComplianceManagementPartner
+{
+    [Cmdletbinding()]
+    param(
+    	[Parameter()]
+    	[string]$ComplianceManagementPartnerId,
+
+    	[Parameter()]
+    	[object]$InputObject,
+
+    	[Parameter()]
+    	[string[]]$ExpandProperty,
+
+    	[Parameter()]
+    	[string[]]$Property,
+
+    	[Parameter()]
+    	[string]$Filter,
+
+    	[Parameter()]
+    	[string]$Search,
+
+    	[Parameter()]
+    	[int]$Skip,
+
+    	[Parameter()]
+    	[string[]]$Sort,
+
+    	[Parameter()]
+    	[int]$Top,
+
+    	[Parameter()]
+    	[string]$ResponseHeadersVariable,
+
+    	[Parameter()]
+    	[switch]$Break,
+
+    	[Parameter()]
+    	[System.Collections.IDictionary]$Headers,
+
+    	[Parameter()]
+    	[PSObject]$HttpPipelineAppend,
+
+    	[Parameter()]
+    	[PSObject]$HttpPipelinePrepend,
+
+    	[Parameter()]
+    	[uri]$Proxy,
+
+    	[Parameter()]
+    	[pscredential]$ProxyCredential,
+
+    	[Parameter()]
+    	[switch]$ProxyUseDefaultCredentials,
+
+    	[Parameter()]
+    	[int]$PageSize,
+
+    	[Parameter()]
+    	[switch]$All,
+
+    	[Parameter()]
+    	[string]$CountVariable
+    )
+}
+
+function New-MgBetaDeviceManagementComplianceManagementPartner
+{
+    [Cmdletbinding()]
+    param(
+		[Parameter()]
+		[object]$BodyParameter,
+
+		[Parameter()]
+		[string]$ResponseHeadersVariable,
+
+		[Parameter()]
+		[hashtable]$AdditionalProperties,
+
+		[Parameter()]
+		[object[]]$AndroidEnrollmentAssignments,
+
+		[Parameter()]
+		[switch]$AndroidOnboarded,
+
+		[Parameter()]
+		[string]$DisplayName,
+
+		[Parameter()]
+		[string]$Id,
+
+		[Parameter()]
+		[object[]]$IosEnrollmentAssignments,
+
+		[Parameter()]
+		[switch]$IosOnboarded,
+
+		[Parameter()]
+		[datetime]$LastHeartbeatDateTime,
+
+		[Parameter()]
+		[object[]]$MacOSEnrollmentAssignments,
+
+		[Parameter()]
+		[switch]$MacOSOnboarded,
+
+		[Parameter()]
+		[object]$PartnerState,
+
+		[Parameter()]
+		[switch]$Break,
+
+		[Parameter()]
+		[System.Collections.IDictionary]$Headers,
+
+		[Parameter()]
+		[PSObject]$HttpPipelineAppend,
+
+		[Parameter()]
+		[PSObject]$HttpPipelinePrepend,
+
+		[Parameter()]
+		[uri]$Proxy,
+
+		[Parameter()]
+		[pscredential]$ProxyCredential,
+
+		[Parameter()]
+		[switch]$ProxyUseDefaultCredentials,
+
+		[Parameter()]
+		[switch]$Confirm,
+
+		[Parameter()]
+		[switch]$WhatIf
+	)
+}
+function Update-MgBetaDeviceManagementComplianceManagementPartner
+{
+    [Cmdletbinding()]
+    param(
+        [Parameter()]
+        [string]$ComplianceManagementPartnerId,
+
+        [Parameter()]
+        [object]$InputObject,
+
+        [Parameter()]
+        [object]$BodyParameter,
+
+        [Parameter()]
+        [string]$ResponseHeadersVariable,
+
+        [Parameter()]
+        [hashtable]$AdditionalProperties,
+
+        [Parameter()]
+        [object[]]$AndroidEnrollmentAssignments,
+
+        [Parameter()]
+        [switch]$AndroidOnboarded,
+
+        [Parameter()]
+        [string]$DisplayName,
+
+        [Parameter()]
+        [string]$Id,
+
+        [Parameter()]
+        [object[]]$IosEnrollmentAssignments,
+
+        [Parameter()]
+        [switch]$IosOnboarded,
+
+        [Parameter()]
+        [datetime]$LastHeartbeatDateTime,
+
+        [Parameter()]
+        [object[]]$MacOSEnrollmentAssignments,
+
+        [Parameter()]
+        [switch]$MacOSOnboarded,
+
+        [Parameter()]
+        [object]$PartnerState,
+
+        [Parameter()]
+        [switch]$Break,
+
+        [Parameter()]
+        [System.Collections.IDictionary]$Headers,
+
+        [Parameter()]
+        [PSObject]$HttpPipelineAppend,
+
+        [Parameter()]
+        [PSObject]$HttpPipelinePrepend,
+
+        [Parameter()]
+        [uri]$Proxy,
+
+        [Parameter()]
+        [pscredential]$ProxyCredential,
+
+        [Parameter()]
+        [switch]$ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [switch]$WhatIf,
+
+        [Parameter()]
+        [switch]$Confirm
+    )
+}
+function Remove-MgBetaDeviceManagementComplianceManagementPartner
+{
+    [Cmdletbinding()]
+    param(
+		[Parameter()]
+		[string]$ComplianceManagementPartnerId,
+
+		[Parameter()]
+		[object]$InputObject,
+
+		[Parameter()]
+		[string]$IfMatch,
+
+		[Parameter()]
+		[string]$ResponseHeadersVariable,
+
+		[Parameter()]
+		[switch]$Break,
+
+		[Parameter()]
+		[System.Collections.IDictionary]$Headers,
+
+		[Parameter()]
+		[PSObject]$HttpPipelineAppend,
+
+		[Parameter()]
+		[PSObject]$HttpPipelinePrepend,
+
+		[Parameter()]
+		[switch]$PassThru,
+
+		[Parameter()]
+		[uri]$Proxy,
+
+		[Parameter()]
+		[pscredential]$ProxyCredential,
+
+		[Parameter()]
+		[switch]$ProxyUseDefaultCredentials,
+
+		[Parameter()]
+		[switch]$Confirm,
+
+		[Parameter()]
+		[switch]$WhatIf
+	)
+}
 #endregion
 #region Microsoft.Graph.Authentication
 function Update-MgBetaNetworkAccessFilteringPolicyRule
@@ -105981,7 +106505,7 @@ function Get-MgBetaIdentityGovernancePrivilegedAccessGroupEligibilitySchedule
     (
         [Parameter()]
         [System.String]
-        $PrivilegedAccessGroupEligibilityScheduleId,
+        $ComplianceManagementPartnerId,
 
         [Parameter()]
         [PSObject]
@@ -106061,7 +106585,7 @@ function Get-MgBetaIdentityGovernancePrivilegedAccessGroupEligibilitySchedule
     )
 }
 
-function New-MgBetaIdentityGovernancePrivilegedAccessGroupEligibilityScheduleRequest
+function New-MgBetaDeviceManagementComplianceManagementPartner
 {
     [CmdletBinding()]
     param
@@ -106075,84 +106599,48 @@ function New-MgBetaIdentityGovernancePrivilegedAccessGroupEligibilityScheduleReq
         $ResponseHeadersVariable,
 
         [Parameter()]
-        [System.String]
-        $AccessId,
-
-        [Parameter()]
-        [System.String]
-        $Action,
-
-        [Parameter()]
         [System.Collections.Hashtable]
         $AdditionalProperties,
 
         [Parameter()]
-        [System.String]
-        $ApprovalId,
+        [PSObject[]]
+        $AndroidEnrollmentAssignments,
 
         [Parameter()]
-        [System.DateTime]
-        $CompletedDateTime,
-
-        [Parameter()]
-        [PSObject]
-        $CreatedBy,
-
-        [Parameter()]
-        [System.DateTime]
-        $CreatedDateTime,
+        [switch]
+        $AndroidOnboarded,
 
         [Parameter()]
         [System.String]
-        $CustomData,
-
-        [Parameter()]
-        [PSObject]
-        $Group,
-
-        [Parameter()]
-        [System.String]
-        $GroupId,
+        $DisplayName,
 
         [Parameter()]
         [System.String]
         $Id,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $IsValidationOnly,
+        [PSObject[]]
+        $IosEnrollmentAssignments,
 
         [Parameter()]
-        [System.String]
-        $Justification,
+        [switch]
+        $IosOnboarded,
 
         [Parameter()]
-        [PSObject]
-        $Principal,
+        [System.Datetime]
+        $LastHeartbeatDateTime,
 
         [Parameter()]
-        [System.String]
-        $PrincipalId,
+        [PSObject[]]
+        $MacOsEnrollmentAssignments,
 
         [Parameter()]
-        [PSObject]
-        $ScheduleInfo,
+        [switch]
+        $MacOsOnboarded,
 
         [Parameter()]
-        [System.String]
-        $Status,
-
-        [Parameter()]
-        [PSObject]
-        $TargetSchedule,
-
-        [Parameter()]
-        [System.String]
-        $TargetScheduleId,
-
-        [Parameter()]
-        [PSObject]
-        $TicketInfo,
+        [System.string]
+        $PartnerState,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -106195,43 +106683,15 @@ function Get-MgBetaPolicyRoleManagementPolicyAssignment
     (
         [Parameter()]
         [System.String]
-        $PolicyAssignmentId,
+        $ComplianceManagementPartnerId,
 
         [Parameter()]
         [System.String]
-        $PolicyId,
+        $IfMatch,
 
         [Parameter()]
         [PSObject]
         $InputObject,
-
-        [Parameter()]
-        [System.String[]]
-        $ExpandProperty,
-
-        [Parameter()]
-        [System.String[]]
-        $Property,
-
-        [Parameter()]
-        [System.String]
-        $Filter,
-
-        [Parameter()]
-        [System.String]
-        $Search,
-
-        [Parameter()]
-        [System.Int32]
-        $Skip,
-
-        [Parameter()]
-        [System.String[]]
-        $Sort,
-
-        [Parameter()]
-        [System.Int32]
-        $Top,
 
         [Parameter()]
         [System.String]
@@ -106254,6 +106714,10 @@ function Get-MgBetaPolicyRoleManagementPolicyAssignment
         $HttpPipelinePrepend,
 
         [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
         [System.Uri]
         $Proxy,
 
@@ -106266,16 +106730,8 @@ function Get-MgBetaPolicyRoleManagementPolicyAssignment
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [System.Int32]
-        $PageSize,
-
-        [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $All,
-
-        [Parameter()]
-        [System.String]
-        $CountVariable
+        $Confirm
     )
 }
 
