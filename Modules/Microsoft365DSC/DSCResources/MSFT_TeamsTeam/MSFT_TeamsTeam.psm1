@@ -728,7 +728,7 @@ function Export-TargetResource
         $teams = Get-Team | Sort-Object -Property GroupId
         $i = 1
         $dscContent = ''
-        Write-Host "`r`n" -NoNewline
+        Write-M365DSCHost -Message "`r`n" -DeferWrite
         foreach ($team in $teams)
         {
             # Skip Teams without DisplayName (orphaned/deleted Teams) because the Get method cannot be called without a display name
@@ -739,7 +739,7 @@ function Export-TargetResource
                     $Global:M365DSCExportResourceInstancesCount++
                 }
 
-                Write-Host "    |---[$i/$($teams.Length)] $($team.DisplayName)" -NoNewline
+                Write-M365DSCHost -Message "    |---[$i/$($teams.Length)] $($team.DisplayName)" -DeferWrite
                 $params = @{
                     DisplayName           = $team.DisplayName
                     GroupID               = $team.GroupId
@@ -760,7 +760,7 @@ function Export-TargetResource
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
                     -FileName $Global:PartialExportFileName
                 $i++
-                Write-Host $Global:M365DSCEmojiGreenCheckMark
+                Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
             }
         }
 
@@ -768,7 +768,7 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `

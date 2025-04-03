@@ -49,8 +49,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-MgBetaDeviceAppManagementTargetedManagedAppConfigurationApp -MockWith {
             }
 
-            # Mock Write-Host to hide output during the tests
-            Mock -CommandName Write-Host -MockWith {
+            # Mock Write-M365DSCHost to hide output during the tests
+            Mock -CommandName Write-M365DSCHost -MockWith {
             }
             $Script:exportedInstances =$null
             $Script:ExportMode = $false
@@ -102,7 +102,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             name                               = 'FakeStringValue'
                             value                              = '1'
                         } -ClientOnly)
-                    )  
+                    )
                 }
 
                 Mock -CommandName Get-MgBetaDeviceAppManagementTargetedManagedAppConfiguration -MockWith {
@@ -114,11 +114,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         TargetedAppManagementLevels = "unspecified"
                         AppGroupType                = "selectedPublicApps"
                         CustomSettings              = @(
-                                @{
-                                    name  = 'FakeStringValue'
-                                    value = '1'
-                                }
-                            ) 
+                            @{
+                                name  = 'FakeStringValue'
+                                value = '1'
+                            }
+                        )
                     }
                 }
             }
@@ -154,7 +154,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             name  = 'FakeStringValue'
                             value = '1'
                         } -ClientOnly)
-                    )  
+                    )
                 }
 
                 Mock -CommandName Get-MgBetaDeviceAppManagementTargetedManagedAppConfiguration -MockWith {
@@ -165,12 +165,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         RoleScopeTagIds             = @("0")
                         TargetedAppManagementLevels = "unspecified"
                         AppGroupType                = "selectedPublicApps"
-                          CustomSettings              = @(
-                                @{
-                                    name  = 'FakeStringValue'
-                                    value = '1'
-                                }
-                            )#>
+                        CustomSettings              = @(
+                            @{
+                                name  = 'FakeStringValue'
+                                value = '1'
+                            }
+                        )
                     }
                 }
                 Mock -CommandName Get-MgBetaDeviceAppManagementTargetedManagedAppConfigurationAssignment -MockWith {
@@ -201,7 +201,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             name  = 'FakeStringValue'
                             value = '1'
                         } -ClientOnly)
-                    )  
+                    )
                 }
 
                 Mock -CommandName Get-MgBetaDeviceAppManagementTargetedManagedAppConfiguration -MockWith {
@@ -218,7 +218,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                     name  = 'FakeStringValue'
                                     value = '1'
                                 }
-                            ) 
+                            )
                     }
                 }
             }
@@ -258,7 +258,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                     name  = 'FakeStringValue'
                                     value = '1'
                                 }
-                            ) 
+                            )
                     }
                 }
             }

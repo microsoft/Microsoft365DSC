@@ -1070,13 +1070,13 @@ function Export-TargetResource
 
         Save-M365DSCPartialExport -Content $currentDSCBlock `
             -FileName $Global:PartialExportFileName
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
+        Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
 
         return $dscContent
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `
@@ -1169,7 +1169,6 @@ function Get-M365DSCOrgSettingsInstallationOptions
         [System.String]
         $AuthenticationOption
     )
-    $VerbosePreference = 'SilentlyContinue'
 
     try
     {
@@ -1197,7 +1196,6 @@ function Update-M365DSCOrgSettingsInstallationOptions
         [System.String]
         $AuthenticationOption
     )
-    $VerbosePreference = 'SilentlyContinue'
 
     try
     {
@@ -1224,7 +1222,6 @@ function Get-M365DSCOrgSettingsForms
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
     param()
-    $VerbosePreference = 'SilentlyContinue'
 
     try
     {
@@ -1248,7 +1245,6 @@ function Update-M365DSCOrgSettingsForms
         [System.Collections.Hashtable]
         $Options
     )
-    $VerbosePreference = 'SilentlyContinue'
 
     try
     {
@@ -1271,7 +1267,6 @@ function Get-M365DSCOrgSettingsDynamicsCustomerVoice
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
     param()
-    $VerbosePreference = 'SilentlyContinue'
 
     try
     {
@@ -1295,7 +1290,6 @@ function Update-M365DSCOrgSettingsDynamicsCustomerVoice
         [System.Collections.Hashtable]
         $Options
     )
-    $VerbosePreference = 'SilentlyContinue'
 
     try
     {
@@ -1317,7 +1311,6 @@ function Get-M365DSCOrgSettingsAppsAndServices
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
     param()
-    $VerbosePreference = 'SilentlyContinue'
 
     try
     {
@@ -1341,7 +1334,6 @@ function Update-M365DSCOrgSettingsAppsAndServices
         [System.Collections.Hashtable]
         $Options
     )
-    $VerbosePreference = 'SilentlyContinue'
 
     try
     {
@@ -1362,7 +1354,6 @@ function Get-M365DSCOrgSettingsToDo
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
     param()
-    $VerbosePreference = 'SilentlyContinue'
 
     try
     {
@@ -1386,7 +1377,6 @@ function Update-M365DSCOrgSettingsToDo
         [System.Collections.Hashtable]
         $Options
     )
-    $VerbosePreference = 'SilentlyContinue'
 
     try
     {
@@ -1409,7 +1399,6 @@ function Get-M365DSCOrgSettingsAdminCenterReport
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
     param()
-    $VerbosePreference = 'SilentlyContinue'
 
     try
     {
@@ -1433,7 +1422,7 @@ function Update-M365DSCOrgSettingsAdminCenterReport
         [System.Boolean]
         $DisplayConcealedNames
     )
-    $VerbosePreference = 'SilentlyContinue'
+
     $url = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + 'beta/admin/reportSettings'
     $body = @{
         '@odata.context'      = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + 'beta/$metadata#admin/reportSettings/$entity'

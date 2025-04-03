@@ -407,7 +407,7 @@ function Export-TargetResource
 
         if ($null -eq $cmdletInfo)
         {
-            Write-Host "    `r`n$($Global:M365DSCEmojiYellowCircle) The Get-MailboxFolder cmdlet is not avalaible. Service Principals do not have mailboxes."
+            Write-M365DSCHost -Message "    `r`n$($Global:M365DSCEmojiYellowCircle) The Get-MailboxFolder cmdlet is not avalaible. Service Principals do not have mailboxes." -CommitWrite
             return ''
         }
 
@@ -415,18 +415,18 @@ function Export-TargetResource
 
         if ($mailboxes.Length -eq 0)
         {
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         else
         {
-            Write-Host "`r`n" -NoNewline
+            Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
 
         $j = 1
         foreach ($mailboxFolder in $mailboxFolders)
         {
-            Write-Host "        |---[$j/$($mailboxFolders.count)] $($mailboxFolder.Identity)" -NoNewline
-            Write-Host "`r`n" -NoNewline
+            Write-M365DSCHost -Message "        |---[$j/$($mailboxFolders.count)] $($mailboxFolder.Identity)" -DeferWrite
+            Write-M365DSCHost -Message "`r`n" -DeferWrite
 
             $Params = @{
                 Identity              = $mailboxFolder.Identity
@@ -464,7 +464,7 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `

@@ -373,10 +373,10 @@ function Export-TargetResource
 
         $i = 1
         $dscContent = ''
-        Write-Host "`r`n" -NoNewline
+        Write-M365DSCHost -Message "`r`n" -DeferWrite
         foreach ($group in $groups)
         {
-            Write-Host "    [$i/$($groups.Length)] $($group.DisplayName) - {$($group.Id)}"
+            Write-M365DSCHost -Message "    [$i/$($groups.Length)] $($group.DisplayName) - {$($group.Id)}"
             try
             {
                 [Array]$plans = Get-MgGroupPlannerPlan -GroupId $group.Id `
@@ -402,7 +402,7 @@ function Export-TargetResource
                         ManagedIdentity       = $ManagedIdentity.IsPresent
                     }
 
-                    Write-Host "        [$j/$($plans.Length)] $($plan.Title)"
+                    Write-M365DSCHost -Message "        [$j/$($plans.Length)] $($plan.Title)"
                     $results = Get-TargetResource @params
                     $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                         -ConnectionMode $ConnectionMode `
@@ -414,13 +414,13 @@ function Export-TargetResource
                     Save-M365DSCPartialExport -Content $currentDSCBlock `
                         -FileName $Global:PartialExportFileName
                     $j++
-                    Write-Host $Global:M365DSCEmojiGreenCheckmark
+                    Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
                 }
                 $i++
             }
             catch
             {
-                Write-Host $Global:M365DSCEmojiRedX
+                Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
                 New-M365DSCLogEntry -Message 'Error during Export:' `
                     -Exception $_ `
@@ -434,7 +434,7 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `

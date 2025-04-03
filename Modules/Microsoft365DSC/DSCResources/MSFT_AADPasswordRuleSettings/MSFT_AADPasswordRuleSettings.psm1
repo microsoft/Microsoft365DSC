@@ -30,7 +30,7 @@ function Get-TargetResource
         $EnableBannedPasswordCheckOnPremises,
 
         [Parameter()]
-        [validateset('Enforced', 'Audit')]
+        [ValidateSet('Enforce', 'Audit')]
         [System.String]
         $BannedPasswordCheckOnPremisesMode,
 
@@ -169,7 +169,7 @@ function Set-TargetResource
         $EnableBannedPasswordCheckOnPremises,
 
         [Parameter()]
-        [validateset('Enforced', 'Audit')]
+        [ValidateSet('Enforce', 'Audit')]
         [System.String]
         $BannedPasswordCheckOnPremisesMode,
 
@@ -236,7 +236,6 @@ function Set-TargetResource
 
     if (($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Present') -or $needToUpdate)
     {
-        $index = 0
         foreach ($property in $Policy.Values)
         {
             if ($property.Name -eq 'LockoutThreshold')
@@ -269,7 +268,6 @@ function Set-TargetResource
                 $entry = $Policy.Values | Where-Object -FilterScript { $_.Name -eq $property.Name }
                 $entry.Value = $BannedPasswordCheckOnPremisesMode
             }
-            $index++
         }
 
         Write-Verbose -Message "Updating Policy's Values with $($Policy.Values | Out-String)"
@@ -314,7 +312,7 @@ function Test-TargetResource
         $EnableBannedPasswordCheckOnPremises,
 
         [Parameter()]
-        [validateset('Enforced', 'Audit')]
+        [ValidateSet('Enforce', 'Audit')]
         [System.String]
         $BannedPasswordCheckOnPremisesMode,
 
@@ -461,12 +459,12 @@ function Export-TargetResource
         $dscContent += $currentDSCBlock
         Save-M365DSCPartialExport -Content $currentDSCBlock `
             -FileName $Global:PartialExportFileName
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
+        Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         return $dscContent
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `

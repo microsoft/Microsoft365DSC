@@ -201,7 +201,7 @@ function Test-TargetResource
         }
 
         Write-Verbose -Message "Importing module from Path {$($module)}"
-        Import-Module $module -Force -Function 'Export-TargetResource' | Out-Null
+        Import-Module $module -Force -Function 'Export-TargetResource'
         $cmdName = "MSFT_$ResourceTypeName\Export-TargetResource"
 
         # Ensure the referenced resource supports ManagedIdentity before adding the parameter.
@@ -423,7 +423,7 @@ function Export-TargetResource
         [System.String[]]
         $AccessTokens
     )
-    Write-Host "`r`n" -NoNewline
+    Write-M365DSCHost -Message "`r`n" -DeferWrite
     return $null
 }
 

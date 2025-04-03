@@ -118,7 +118,7 @@ function Get-PropertyReport
             Write-Progress -Activity 'Checking resources' -Status $cmdlet.Name -PercentComplete (($i / $setCmdlets.Length) * 100)
 
             $resourceExists = $false
-            $resourceName = 'MSFT_' + $module.Prefix + $cmdlet.Name.split('-')[1]
+            $resourceName = 'MSFT_' + $module.Prefix + $cmdlet.Name.Split('-')[1]
 
             if ($module.ModuleName -eq 'MicrosoftTeams' -and $resourceName -like '*TeamsCsTeams*')
             {
@@ -132,7 +132,7 @@ function Get-PropertyReport
 
             if ($null -eq $foundInFiles)
             {
-                $resourceNameFromMapping = $cmdletMapping[$cmdlet.Name.split('-')[1]]
+                $resourceNameFromMapping = $cmdletMapping[$cmdlet.Name.Split('-')[1]]
                 if ($null -ne $resourceNameFromMapping)
                 {
                     $resourceName = 'MSFT_' + $module.Prefix + $resourceNameFromMapping

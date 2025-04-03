@@ -519,11 +519,11 @@ function Export-TargetResource
         $AADNamedLocations = Get-MgBetaIdentityConditionalAccessNamedLocation -Filter $Filter -All:$true -ErrorAction Stop
         if ($AADNamedLocations.Length -eq 0)
         {
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         else
         {
-            Write-Host "`r`n" -NoNewline
+            Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
         foreach ($AADNamedLocation in $AADNamedLocations)
         {
@@ -532,7 +532,7 @@ function Export-TargetResource
                 $Global:M365DSCExportResourceInstancesCount++
             }
 
-            Write-Host "    |---[$i/$($AADNamedLocations.Count)] $($AADNamedLocation.DisplayName)" -NoNewline
+            Write-M365DSCHost -Message "    |---[$i/$($AADNamedLocations.Count)] $($AADNamedLocation.DisplayName)" -DeferWrite
             $Params = @{
                 ApplicationSecret     = $ApplicationSecret
                 ApplicationId         = $ApplicationId
@@ -557,7 +557,7 @@ function Export-TargetResource
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
                     -FileName $Global:PartialExportFileName
 
-                Write-Host $Global:M365DSCEmojiGreenCheckMark
+                Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
                 $i++
             }
         }
@@ -565,7 +565,7 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `

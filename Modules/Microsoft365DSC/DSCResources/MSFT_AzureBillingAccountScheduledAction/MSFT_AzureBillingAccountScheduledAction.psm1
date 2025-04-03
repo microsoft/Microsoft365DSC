@@ -453,16 +453,16 @@ function Export-TargetResource
         $dscContent = ''
         if ($accounts.Length -eq 0)
         {
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         else
         {
-            Write-Host "`r`n" -NoNewline
+            Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
         foreach ($account in $accounts.value)
         {
             $displayedKey = $account.properties.displayName
-            Write-Host "    |---[$i/$($accounts.value.Length)] $displayedKey" -NoNewline
+            Write-M365DSCHost -Message "    |---[$i/$($accounts.value.Length)] $displayedKey" -DeferWrite
 
             $uri = "https://management.azure.com/providers/Microsoft.Billing/billingAccounts/$($account.name)/providers/Microsoft.CostManagement/scheduledActions?api-version=2023-11-01"
             $response = Invoke-AzRest -Uri $uri -Method GET
@@ -470,11 +470,11 @@ function Export-TargetResource
             $j = 1
             if ($actions.Length -eq 0)
             {
-                Write-Host $Global:M365DSCEmojiGreenCheckMark
+                Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
             }
             else
             {
-                Write-Host "`r`n" -NoNewline
+                Write-M365DSCHost -Message "`r`n" -DeferWrite
             }
             foreach ($config in $actions)
             {
@@ -484,7 +484,7 @@ function Export-TargetResource
                 }
 
                 $displayedKey = $config.properties.displayName
-                Write-Host "        |---[$j/$($actions.Count)] $displayedKey" -NoNewline
+                Write-M365DSCHost -Message "        |---[$j/$($actions.Count)] $displayedKey" -DeferWrite
                 $params = @{
                     DisplayName           = $config.properties.displayName
                     BillingAccount        = $account.name
@@ -532,14 +532,14 @@ function Export-TargetResource
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
                     -FileName $Global:PartialExportFileName
                 $i++
-                Write-Host $Global:M365DSCEmojiGreenCheckMark
+                Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
             }
         }
         return $dscContent
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `

@@ -298,7 +298,7 @@ function Set-TargetResource
 
         # Create a new migration batch with the specified parameters
         New-MigrationBatch @BatchParams
-        Write-Host "A new migration batch named '$($currentInstance.Identity)' has been created with the specified parameters."
+        Write-M365DSCHost -Message "A new migration batch named '$($currentInstance.Identity)' has been created with the specified parameters."
     }
 
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
@@ -310,21 +310,21 @@ function Set-TargetResource
         {
             # If the migration batch is in a final state, remove it directly
             Remove-MigrationBatch -Identity $currentInstance.Identity -Confirm:$false
-            Write-Host "Migration batch '$($currentInstance.Identity)' has been removed as it was in a completed or stopped state."
+            Write-M365DSCHost -Message "Migration batch '$($currentInstance.Identity)' has been removed as it was in a completed or stopped state."
         }
         elseif ($migrationBatch.Status.Value -in @('InProgress', 'Syncing', 'Queued', 'Completing'))
         {
             # If the migration batch is in progress, stop it first
             Stop-MigrationBatch -Identity $currentInstance.Identity -Confirm:$false
-            Write-Host "Migration batch '$($currentInstance.Identity)' was in progress and has been stopped."
+            Write-M365DSCHost -Message "Migration batch '$($currentInstance.Identity)' was in progress and has been stopped."
 
             # Now remove the migration batch
             Remove-MigrationBatch -Identity $currentInstance.Identity -Confirm:$false
-            Write-Host "Migration batch '$($currentInstance.Identity)' has been removed after stopping."
+            Write-M365DSCHost -Message "Migration batch '$($currentInstance.Identity)' has been removed after stopping."
         }
         else
         {
-            Write-Host "Migration batch '$($currentInstance.Identity)' is in an unexpected status: $($migrationBatch.Status.Value). Manual intervention may be required."
+            Write-M365DSCHost -Message "Migration batch '$($currentInstance.Identity)' is in an unexpected status: $($migrationBatch.Status.Value). Manual intervention may be required."
         }
     }
 
@@ -360,13 +360,13 @@ function Set-TargetResource
         {
             # If currentInstance is stopped but migrationBatch is started, stop the migration batch
             Stop-MigrationBatch -Identity $currentInstance.Identity -Confirm:$false
-            Write-Host "Migration batch '$($currentInstance.Identity)' was running and has been stopped to match the current instance status."
+            Write-M365DSCHost -Message "Migration batch '$($currentInstance.Identity)' was running and has been stopped to match the current instance status."
         }
         elseif ($currentInstance.Status -eq 'Started' -and $migrationBatch.Status -eq 'Stopped')
         {
             # If currentInstance is started but migrationBatch is stopped, start the migration batch
             Start-MigrationBatch -Identity $currentInstance.Identity -Confirm:$false
-            Write-Host "Migration batch '$($currentInstance.Identity)' was stopped and has been started to match the current instance status."
+            Write-M365DSCHost -Message "Migration batch '$($currentInstance.Identity)' was stopped and has been started to match the current instance status."
         }
     }
 }
@@ -547,16 +547,16 @@ function Export-TargetResource
         $dscContent = ''
         if ($Script:exportedInstances.Length -eq 0)
         {
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         else
         {
-            Write-Host "`r`n" -NoNewline
+            Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
         foreach ($config in $Script:exportedInstances)
         {
             $displayedKey = $config.Identity
-            Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -NoNewline
+            Write-M365DSCHost -Message "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -DeferWrite
             $params = @{
                 Identity              = $config.Identity
                 Credential            = $Credential
@@ -578,13 +578,13 @@ function Export-TargetResource
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         return $dscContent
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `

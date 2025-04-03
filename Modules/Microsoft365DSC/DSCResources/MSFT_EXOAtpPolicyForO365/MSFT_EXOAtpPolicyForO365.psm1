@@ -399,11 +399,11 @@ function Export-TargetResource
 
             if ($ATPPolicies.Length -eq 0)
             {
-                Write-Host $Global:M365DSCEmojiGreenCheckMark
+                Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
             }
             else
             {
-                Write-Host "`r`n" -NoNewline
+                Write-M365DSCHost -Message "`r`n" -DeferWrite
             }
             $i = 1
             foreach ($atpPolicy in $ATPPolicies)
@@ -413,7 +413,7 @@ function Export-TargetResource
                     $Global:M365DSCExportResourceInstancesCount++
                 }
 
-                Write-Host "    |---[$i/$($ATPPolicies.Length)] $($atpPolicy.Identity)" -NoNewline
+                Write-M365DSCHost -Message "    |---[$i/$($ATPPolicies.Length)] $($atpPolicy.Identity)" -DeferWrite
 
                 $Params = @{
                     IsSingleInstance      = 'Yes'
@@ -440,11 +440,11 @@ function Export-TargetResource
                     Save-M365DSCPartialExport -Content $currentDSCBlock `
                         -FileName $Global:PartialExportFileName
 
-                    Write-Host $Global:M365DSCEmojiGreenCheckMark
+                    Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
                 }
                 else
                 {
-                    Write-Host $Global:M365DSCEmojiRedX
+                    Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
                 }
 
                 $i++
@@ -452,14 +452,14 @@ function Export-TargetResource
         }
         else
         {
-            Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered to allow for ATP Policies"
+            Write-M365DSCHost -Message "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered to allow for ATP Policies"
         }
 
         return $dscContent
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `

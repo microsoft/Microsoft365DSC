@@ -45,8 +45,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
             Mock -CommandName Update-DeviceConfigurationPolicyAssignment -MockWith {
             }
-            # Mock Write-Host to hide output during the tests
-            Mock -CommandName Write-Host -MockWith {
+            # Mock Write-M365DSCHost to hide output during the tests
+            Mock -CommandName Write-M365DSCHost -MockWith {
             }
             $Script:exportedInstances =$null
             $Script:ExportMode = $false
@@ -184,7 +184,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             realm                              = 'EXAMPLE.COM'
                         } -ClientOnly)
                     )
-                    Assignments                                = @()                                                                                      
+                    Assignments                                = @()
 
                     Ensure                                     = 'Present'
                     Credential                                 = $Credential
@@ -211,13 +211,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name 'When the IntuneDeviceFeaturesConfigurationPolicyIOS already exists and is NOT in the Desired State' -Fixture {
             BeforeAll {
-               $testParams = @{                                 
+               $testParams = @{
                     Assignments              = @()
                     Description              = 'FakeStringValue'
                     DisplayName              = 'FakeStringValue'
                     Id                       = 'ab915bca-1234-4b11-8acb-719a771139bc'
                     TenantId                 = $OrganizationName;
-                    WallpaperDisplayLocation = 'notConfigured';  
+                    WallpaperDisplayLocation = 'notConfigured';
                     AirPrintDestinations = [CimInstance[]]@(
                         (New-CimInstance `
                         -ClassName MSFT_AirPrintDestination `
@@ -249,7 +249,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             displayName = 'Apple Store'
                             isWebClip = $False
                         } -ClientOnly)
-                    ) 
+                    )
                     HomeScreenPages                              = [CimInstance[]]@(
                         (New-CimInstance `
                         -ClassName MSFT_iosHomeScreenItem `
@@ -309,7 +309,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             realm              = 'EXAMPLE.COM'
                             domains            = @('example.com')
                         } -ClientOnly)
-                    )                                               
+                    )
                     Ensure                                       = 'Present'
                     Credential                                   = $Credential
                 }
@@ -409,19 +409,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It 'Should update the IntuneDeviceFeaturesConfigurationPolicyIOS from the Set method' {
                 Set-TargetResource @testParams
                 Should -Invoke -CommandName Update-MgBetaDeviceManagementDeviceConfiguration -Exactly 1
-               
+
             }
         }
 
        Context -Name 'When the policy already exists and IS in the Desired State' -Fixture {
             BeforeAll {
-               $testParams = @{                                 
+               $testParams = @{
                     Assignments              = @()
                     Description              = 'FakeStringValue'
                     DisplayName              = 'FakeStringValue'
                     Id                       = 'ab915bca-1234-4b11-8acb-719a771139bc'
                     TenantId                 = $OrganizationName;
-                    WallpaperDisplayLocation = 'notConfigured';  
+                    WallpaperDisplayLocation = 'notConfigured';
                     AirPrintDestinations = [CimInstance[]]@(
                         (New-CimInstance `
                         -ClassName MSFT_AirPrintDestination `
@@ -453,7 +453,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             displayName = 'Apple Store'
                             isWebClip = $False
                         } -ClientOnly)
-                    ) 
+                    )
                     HomeScreenPages                              = [CimInstance[]]@(
                         (New-CimInstance `
                         -ClassName MSFT_iosHomeScreenItem `
@@ -513,7 +513,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             realm              = 'EXAMPLE.COM'
                             domains            = @('example.com')
                         } -ClientOnly)
-                    )                                               
+                    )
                     Ensure                                       = 'Present'
                     Credential                                   = $Credential
                 }
@@ -615,7 +615,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Id                                           = 'FakeStringValue'
                     RoleScopeTagIds                              = @('0')
                     WallpaperDisplayLocation                     = 'notConfigured'
-                    Assignments                                  = @()                                                                                      
+                    Assignments                                  = @()
                     Ensure                                       = 'Absent'
                     Credential                                   = $Credential
                 }
@@ -731,7 +731,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                         appId  = 'com.microsoft.companyportal'
                                     }
                                 )
-                            }  
+                            }
                             iosCredentialSingleSignOnExtension = @{
                                 '@odata.type'        = '#microsoft.graph.iosCredentialSingleSignOnExtension'
                                 extensionIdentifier  = 'com.example.sso.credential'
@@ -755,7 +755,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                     value        = 4
                                 }
                             )
-                            } 
+                            }
                         }
                     }
                 }

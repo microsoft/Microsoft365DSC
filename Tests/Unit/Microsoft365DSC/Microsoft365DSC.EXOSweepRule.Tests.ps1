@@ -50,14 +50,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
+            # Mock Write-M365DSCHost to hide output during the tests
+            Mock -CommandName Write-M365DSCHost -MockWith {
+            }
+
             Mock -CommandName Get-User -MockWith {
                 return @{
                     UserPrincipalName = "Test2"
                 }
-            }
-
-            # Mock Write-Host to hide output during the tests
-            Mock -CommandName Write-Host -MockWith {
             }
             $Script:exportedInstances =$null
             $Script:ExportMode = $false

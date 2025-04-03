@@ -384,16 +384,16 @@ function Export-TargetResource
         $dscContent = ''
         if ($Script:exportedInstances.Length -eq 0)
         {
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         else
         {
-            Write-Host "`r`n" -NoNewline
+            Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
         foreach ($config in $accounts.value)
         {
             $displayedKey = $config.properties.displayName
-            Write-Host "    |---[$i/$($accounts.Count)] $displayedKey"
+            Write-M365DSCHost -Message "    |---[$i/$($accounts.Count)] $displayedKey"
 
             $assignments = Get-M365DSCAzureBillingAccountsRoleAssignment -BillingAccountId $config.name
 
@@ -410,7 +410,7 @@ function Export-TargetResource
                 $roleDefinitionId = $assignment.properties.roleDefinitionId.Split('/')
                 $roleDefinitionId = $roleDefinitionId[$roleDefinitionId.Length - 1]
 
-                Write-Host "        |---[$j/$($assignments.value.Length)] $($assignment.properties.principalId)" -NoNewline
+                Write-M365DSCHost -Message "        |---[$j/$($assignments.value.Length)] $($assignment.properties.principalId)" -DeferWrite
                 $params = @{
                     BillingAccount        = $config.properties.displayName
                     PrincipalName         = $PrincipalNameValue
@@ -436,7 +436,7 @@ function Export-TargetResource
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
                     -FileName $Global:PartialExportFileName
                 $j++
-                Write-Host $Global:M365DSCEmojiGreenCheckMark
+                Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
             }
             $i++
         }
@@ -444,7 +444,7 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `

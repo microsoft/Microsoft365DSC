@@ -1083,7 +1083,7 @@ function Export-TargetResource
 
         $dscContent = [System.Text.StringBuilder]::new()
         $i = 1
-        Write-Host "`r`n" -NoNewline
+        Write-M365DSCHost -Message "`r`n" -DeferWrite
         foreach ($user in $Script:M365DSCExportInstances)
         {
             if ($null -ne $Global:M365DSCExportResourceInstancesCount)
@@ -1091,7 +1091,7 @@ function Export-TargetResource
                 $Global:M365DSCExportResourceInstancesCount++
             }
 
-            Write-Host "    |---[$i/$($Script:M365DSCExportInstances.Length)] $($user.UserPrincipalName)" -NoNewline
+            Write-M365DSCHost -Message "    |---[$i/$($Script:M365DSCExportInstances.Length)] $($user.UserPrincipalName)" -DeferWrite
             $userUPN = $user.UserPrincipalName
             if (-not [System.String]::IsNullOrEmpty($userUPN))
             {
@@ -1122,14 +1122,14 @@ function Export-TargetResource
                         -FileName $Global:PartialExportFileName
                 }
             }
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
             $i++
         }
         return $dscContent.ToString()
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `

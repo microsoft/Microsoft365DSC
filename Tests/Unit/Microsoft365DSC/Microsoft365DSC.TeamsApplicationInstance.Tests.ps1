@@ -40,8 +40,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Set-CsOnlineApplicationInstance -MockWith {
             }
 
-            # Mock Write-Host to hide output during the tests
-            Mock -CommandName Write-Host -MockWith {
+            # Mock Write-M365DSCHost to hide output during the tests
+            Mock -CommandName Write-M365DSCHost -MockWith {
             }
             $Script:exportedInstances = $null
             $Script:ExportMode = $false
@@ -50,7 +50,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The instance should exist but it DOES NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    DisplayName         = 'john.smith@contoso.com'                    
+                    DisplayName         = 'john.smith@contoso.com'
                     UserPrincipalName   = 'john.smith@contoso.com'
                     ResourceAccountType = 'AutoAttendant'
                     Ensure              = 'Present'
@@ -77,7 +77,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The instance exists but it SHOULD NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    DisplayName         = 'john.smith@contoso.com'                    
+                    DisplayName         = 'john.smith@contoso.com'
                     UserPrincipalName   = 'john.smith@contoso.com'
                     ResourceAccountType = 'AutoAttendant'
                     Ensure              = 'Absent'
@@ -86,7 +86,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-CsOnlineApplicationInstance -MockWith {
                     return @{
-                        DisplayName         = 'john.smith@contoso.com'                    
+                        DisplayName         = 'john.smith@contoso.com'
                         UserPrincipalName   = 'john.smith@contoso.com'
                         ApplicationId       = 'ce933385-9390-45d1-9512-c8d228074e07'
                     }
@@ -107,7 +107,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The instance exists and values are already in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    DisplayName         = 'john.smith@contoso.com'                    
+                    DisplayName         = 'john.smith@contoso.com'
                     UserPrincipalName   = 'john.smith@contoso.com'
                     ResourceAccountType = 'AutoAttendant'
                     Ensure              = 'Present'
@@ -116,7 +116,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-CsOnlineApplicationInstance -MockWith {
                     return @{
-                        DisplayName         = 'john.smith@contoso.com'                    
+                        DisplayName         = 'john.smith@contoso.com'
                         UserPrincipalName   = 'john.smith@contoso.com'
                         ApplicationId       = 'ce933385-9390-45d1-9512-c8d228074e07'
                     }
@@ -131,7 +131,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The instance exists and values are NOT in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    DisplayName         = 'john.smith@contoso.com'                    
+                    DisplayName         = 'john.smith@contoso.com'
                     UserPrincipalName   = 'john.smith@contoso.com'
                     ResourceAccountType = 'AutoAttendant'
                     Ensure              = 'Present'
@@ -140,7 +140,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-CsOnlineApplicationInstance -MockWith {
                     return @{
-                        DisplayName         = 'john.smith@contoso.com'                    
+                        DisplayName         = 'john.smith@contoso.com'
                         UserPrincipalName   = 'john.smith@contoso.com'
                         ApplicationId       = '11cd3e2e-fccb-42ad-ad00-878b93575e07' # Drift
                     }
@@ -171,7 +171,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-CsOnlineApplicationInstance -MockWith {
                     return @{
-                        DisplayName         = 'john.smith@contoso.com'                    
+                        DisplayName         = 'john.smith@contoso.com'
                         UserPrincipalName   = 'john.smith@contoso.com'
                         ApplicationId       = '11cd3e2e-fccb-42ad-ad00-878b93575e07' # Drift
                     }

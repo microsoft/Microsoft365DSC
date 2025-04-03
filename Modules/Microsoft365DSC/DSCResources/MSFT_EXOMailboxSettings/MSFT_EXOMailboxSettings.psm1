@@ -436,11 +436,11 @@ function Export-TargetResource
     $i = 1
     if ($mailboxes.Length -eq 0)
     {
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
+        Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
     }
     else
     {
-        Write-Host "`r`n"-NoNewline
+        Write-M365DSCHost -Message "`r`n"-DeferWrite
     }
     $dscContent = ''
     $ObjectGuid = [System.Guid]::empty
@@ -460,7 +460,7 @@ function Export-TargetResource
                 Write-Verbose -Message "Could not retrieve user with id {$($mailbox.Identity)}"
             }
         }
-        Write-Host "    |---[$i/$($mailboxes.Length)] $($DisplayNameValue)" -NoNewline
+        Write-M365DSCHost -Message "    |---[$i/$($mailboxes.Length)] $($DisplayNameValue)" -DeferWrite
 
         if (-not [System.String]::IsNullOrEmpty($DisplayNameValue))
         {
@@ -492,11 +492,11 @@ function Export-TargetResource
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
                     -FileName $Global:PartialExportFileName
 
-                Write-Host $Global:M365DSCEmojiGreenCheckMark
+                Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
             }
             else
             {
-                Write-Host $Global:M365DSCEmojiRedX
+                Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
             }
         }
 

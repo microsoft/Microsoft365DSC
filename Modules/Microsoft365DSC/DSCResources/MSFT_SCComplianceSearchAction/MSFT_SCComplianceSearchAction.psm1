@@ -555,17 +555,17 @@ function Export-TargetResource
 
         if ($actions.Count -gt 0)
         {
-            Write-Host "`r`n    Tenant Wide Actions:"
+            Write-M365DSCHost -Message "`r`n    Tenant Wide Actions:"
         }
         else
         {
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         $i = 1
         $dscContent = ''
         foreach ($action in $actions)
         {
-            Write-Host "        |---[$i/$($actions.Length)] $($action.Name)" -NoNewline
+            Write-M365DSCHost -Message "        |---[$i/$($actions.Length)] $($action.Name)" -DeferWrite
             $Params = @{
                 Action     = $action.Action
                 SearchName = $action.SearchName
@@ -587,7 +587,7 @@ function Export-TargetResource
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
             $i++
         }
 
@@ -596,7 +596,7 @@ function Export-TargetResource
         $j = 1
         foreach ($case in $cases)
         {
-            Write-Host "    Case [$j/$($cases.Count)] $($Case.Name)"
+            Write-M365DSCHost -Message "    Case [$j/$($cases.Count)] $($Case.Name)"
 
             $actions = Get-ComplianceSearchAction -Case $Case.Name
 
@@ -608,7 +608,7 @@ function Export-TargetResource
                     $Global:M365DSCExportResourceInstancesCount++
                 }
 
-                Write-Host "        |---[$i/$($actions.Length)] $($action.Name)" -NoNewline
+                Write-M365DSCHost -Message "        |---[$i/$($actions.Length)] $($action.Name)" -DeferWrite
 
                 $Params = @{
                     Action     = $action.Action
@@ -628,7 +628,7 @@ function Export-TargetResource
                     -ModulePath $PSScriptRoot `
                     -Results $Results `
                     -Credential $Credential
-                Write-Host $Global:M365DSCEmojiGreenCheckMark
+                Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
                 $i++
             }
             $j++
@@ -637,7 +637,7 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `

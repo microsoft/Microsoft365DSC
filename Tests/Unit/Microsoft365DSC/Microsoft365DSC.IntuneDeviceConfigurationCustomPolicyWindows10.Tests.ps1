@@ -50,7 +50,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
             Mock -CommandName Update-DeviceConfigurationPolicyAssignment -MockWith {
             }
-            Mock -CommandName Write-Host -MockWith {
+            Mock -CommandName Write-M365DSCHost -MockWith {
             }
         }
         # Test contexts

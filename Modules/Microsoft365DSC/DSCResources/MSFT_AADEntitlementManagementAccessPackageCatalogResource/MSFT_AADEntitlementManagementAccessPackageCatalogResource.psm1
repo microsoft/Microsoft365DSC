@@ -701,11 +701,11 @@ function Export-TargetResource
         $dscContent = ''
         if ($catalogs.Length -eq 0)
         {
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         else
         {
-            Write-Host "`r`n" -NoNewline
+            Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
 
         foreach ($catalog in $catalogs)
@@ -715,7 +715,7 @@ function Export-TargetResource
             {
                 $displayedKey = $catalog.displayName
             }
-            Write-Host "    |---[$i/$($catalogs.Count)] $displayedKey" -NoNewline
+            Write-M365DSCHost -Message "    |---[$i/$($catalogs.Count)] $displayedKey" -DeferWrite
 
             $catalogId = $catalog.id
 
@@ -725,11 +725,11 @@ function Export-TargetResource
 
             if ($resources.Length -eq 0)
             {
-                Write-Host $Global:M365DSCEmojiGreenCheckMark
+                Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
             }
             else
             {
-                Write-Host "`r`n" -NoNewline
+                Write-M365DSCHost -Message "`r`n" -DeferWrite
             }
 
             foreach ($resource in $resources)
@@ -739,7 +739,7 @@ function Export-TargetResource
                     $Global:M365DSCExportResourceInstancesCount++
                 }
 
-                Write-Host "        |---[$j/$($resources.Count)] $($resource.DisplayName)" -NoNewline
+                Write-M365DSCHost -Message "        |---[$j/$($resources.Count)] $($resource.DisplayName)" -DeferWrite
 
                 $params = @{
                     Id                    = $resource.id
@@ -810,7 +810,7 @@ function Export-TargetResource
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
                     -FileName $Global:PartialExportFileName
 
-                Write-Host $Global:M365DSCEmojiGreenCheckMark
+                Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
                 $j++
             }
 
@@ -825,11 +825,11 @@ function Export-TargetResource
     {
         if ($_.ErrorDetails.Message -like '*User is not authorized to perform the operation.*')
         {
-            Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) Tenant does not meet license requirement to extract this component."
+            Write-M365DSCHost -Message "`r`n    $($Global:M365DSCEmojiYellowCircle) Tenant does not meet license requirement to extract this component."
         }
         else
         {
-            Write-Host $Global:M365DSCEmojiRedX
+            Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
             New-M365DSCLogEntry -Message 'Error during Export:' `
                 -Exception $_ `

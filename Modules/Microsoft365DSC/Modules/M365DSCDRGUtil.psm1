@@ -34,12 +34,13 @@ function Remove-M365DSCCimInstanceTrailingCharacterFromExport
         $DSCBlock
     )
 
-    $DSCBlock = $DSCBlock.replace("    ,`r`n" , "    `r`n" )
-    $DSCBlock = $DSCBlock.replace("`r`n;`r`n" , "`r`n" )
-    $DSCBlock = $DSCBlock.replace("`r`n,`r`n" , "`r`n" )
+    $DSCBlock = $DSCBlock.Replace("    ,`r`n" , "    `r`n" )
+    $DSCBlock = $DSCBlock.Replace("`r`n;`r`n" , "`r`n" )
+    $DSCBlock = $DSCBlock.Replace("`r`n,`r`n" , "`r`n" )
 
     return $DSCBlock
 }
+
 function Rename-M365DSCCimInstanceParameter
 {
     [CmdletBinding()]
@@ -54,7 +55,7 @@ function Rename-M365DSCCimInstanceParameter
     )
 
     $result = $Properties
-    $type = $Properties.getType().FullName
+    $type = $Properties.GetType().FullName
     #region Array
     if ($type -like '*[[\]]')
     {
@@ -63,7 +64,7 @@ function Rename-M365DSCCimInstanceParameter
         {
             try
             {
-                $values += Rename-M365DSCCimInstanceParameter $item -KeyMapping $KeyMapping
+                $values += Rename-M365DSCCimInstanceParameter -Properties $item -KeyMapping $KeyMapping
             }
             catch
             {
@@ -79,16 +80,21 @@ function Rename-M365DSCCimInstanceParameter
     #region Single
     if ($type -like '*Hashtable')
     {
-        $result = ([Hashtable]$Properties).clone()
+        $result = ([Hashtable]$Properties).Clone()
     }
 
     if ($type -like '*CimInstance*' -or $type -like '*Hashtable*' -or $type -like '*Object*')
     {
         $hashProperties = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $result
+<<<<<<< HEAD
         $keys = ($hashProperties.clone()).keys
+=======
+        $keys = ($hashProperties.Clone()).keys
+
+>>>>>>> Dev
         foreach ($key in $keys)
         {
-            $keyName = $key.substring(0, 1).tolower() + $key.substring(1, $key.length - 1)
+            $keyName = $key.Substring(0, 1).Tolower() + $key.Substring(1, $key.length - 1)
             if ($key -in $KeyMapping.Keys)
             {
                 $keyName = $KeyMapping.$key
@@ -115,6 +121,7 @@ function Rename-M365DSCCimInstanceParameter
         }
         $result = $hashProperties
     }
+
     return $result
     #endregion
 }
@@ -133,7 +140,7 @@ function Get-M365DSCDRGComplexTypeToHashtable
         return $null
     }
 
-    if ($ComplexObject.gettype().fullname -like '*[[\]]')
+    if ($ComplexObject.GetType().FullName -like '*[[\]]')
     {
         $results = @()
 
@@ -152,8 +159,7 @@ function Get-M365DSCDRGComplexTypeToHashtable
         return , [hashtable[]]$results
     }
 
-
-    if ($ComplexObject.getType().fullname -like '*Dictionary*')
+    if ($ComplexObject.GetType().FullName -like '*Dictionary*')
     {
         $results = @{}
 
@@ -165,7 +171,7 @@ function Get-M365DSCDRGComplexTypeToHashtable
             if ($null -ne $ComplexObject.$key)
             {
                 $keyName = $key
-                $keyType = $ComplexObject.$key.gettype().fullname
+                $keyType = $ComplexObject.$key.GetType().FullName
                 if ($keyType -like '*CimInstance*' -or $keyType -like '*Dictionary*' -or $keyType -like 'Microsoft.Graph.PowerShell.Models.*' -or $keyType -like 'Microsoft.Graph.Beta.PowerShell.Models.*' -or $keyType -like '*[[\]]')
                 {
                     $hash = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject.$key
@@ -183,9 +189,9 @@ function Get-M365DSCDRGComplexTypeToHashtable
 
     $results = @{}
 
-    if ($ComplexObject.getType().Fullname -like '*hashtable')
+    if ($ComplexObject.GetType().Fullname -like '*hashtable')
     {
-        $keys = $ComplexObject.keys
+        $keys = $ComplexObject.Keys
     }
     else
     {
@@ -195,14 +201,14 @@ function Get-M365DSCDRGComplexTypeToHashtable
     foreach ($key in $keys)
     {
         $keyName = $key
-        if ($ComplexObject.getType().Fullname -notlike '*hashtable')
+        if ($ComplexObject.GetType().FullName -notlike '*hashtable')
         {
             $keyName = $key.Name
         }
 
         if ($null -ne $ComplexObject.$keyName)
         {
-            $keyType = $ComplexObject.$keyName.gettype().fullname
+            $keyType = $ComplexObject.$keyName.GetType().FullName
             if ($keyType -like '*CimInstance*' -or $keyType -like '*Dictionary*' -or $keyType -like 'Microsoft.Graph.*PowerShell.Models.*')
             {
                 $hash = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject.$keyName
@@ -500,6 +506,40 @@ function Get-M365DSCDRGComplexTypeToString
     return $currentProperty
 }
 
+<#
+.SYNOPSIS
+    Update special characters in a string to be escaped in a DSC configuration.
+
+.DESCRIPTION
+    This function updates special characters in a string to be escaped in a DSC configuration.
+    The function replaces the following characters:
+        - 0x201C = “
+        - 0x201D = ”
+        - 0x201E = „
+
+.PARAMETER String
+    The string to be updated.
+
+.EXAMPLE
+    PS> Update-M365DSCSpecialCharacters -String 'This is a test string with special characters: „, “, ”'
+#>
+function Update-M365DSCSpecialCharacters
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $String
+    )
+
+    $String = $String.Replace("$([char]0x201C)", "``$([char]0x201C)")
+    $String = $String.Replace("$([char]0x201D)", "``$([char]0x201D)")
+    $String = $String.Replace("$([char]0x201E)", "``$([char]0x201E)")
+
+    return $String
+}
+
 function Get-M365DSCDRGSimpleObjectTypeToString
 {
     [CmdletBinding()]
@@ -530,13 +570,9 @@ function Get-M365DSCDRGSimpleObjectTypeToString
             {
                 $key = 'odataType'
             }
-            #0x201E = „
-            #0x201C = “
-            #0x201D = ”
+
             $newString = $Value.Replace('`', '``').Replace('$', '`$')
-            $newString = $newString.Replace("$([char]0x201E)", "``$([char]0x201E)")
-            $newString = $newString.Replace("$([char]0x201C)", "``$([char]0x201C)")
-            $newString = $newString.Replace("$([char]0x201D)", "``$([char]0x201D)")
+            $newString = Update-M365DSCSpecialCharacters -String $newString
             $newString = $newString.Replace('"', '`"')
             $returnValue = $Space + $Key + ' = "' + $newString + """`r`n"
         }

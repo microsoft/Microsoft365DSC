@@ -400,15 +400,15 @@ function Export-TargetResource
 
             if ($filesToDownload.Length -eq 0)
             {
-                Write-Host $Global:M365DSCEmojiGreenCheckmark
+                Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
             }
             else
             {
-                Write-Host "`r`n"
+                Write-M365DSCHost -Message "`r`n"
             }
             foreach ($file in $filesToDownload)
             {
-                Write-Host "    |---[$i/$($filesToDownload.Length)] $($file.Name)" -NoNewline
+                Write-M365DSCHost -Message "    |---[$i/$($filesToDownload.Length)] $($file.Name)" -DeferWrite
 
                 $identity = $file.Name.ToLower().Replace('.app', '').Replace('.sppkg', '')
                 $app = Get-PnPApp -Identity $identity -ErrorAction SilentlyContinue
@@ -450,7 +450,7 @@ function Export-TargetResource
                         -FileName $Global:PartialExportFileName
                 }
                 $i++
-                Write-Host $Global:M365DSCEmojiGreenCheckmark
+                Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
             }
 
             $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
@@ -467,13 +467,13 @@ function Export-TargetResource
         else
         {
             Write-Verbose -Message '    * App Catalog is not configured on tenant. Cannot extract information about SharePoint apps.'
-            Write-Host $Global:M365DSCEmojiGreenCheckmark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         return $dscContent
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `

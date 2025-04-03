@@ -418,14 +418,14 @@ function Export-TargetResource
         $teams = Get-Team -ErrorAction Stop | Sort-Object -Property GroupId
         $j = 1
         $dscContent = ''
-        Write-Host "`r`n" -NoNewline
+        Write-M365DSCHost -Message "`r`n" -DeferWrite
         foreach ($team in $Teams)
         {
             if ($null -ne $team.GroupId)
             {
                 $channels = Get-TeamChannel -GroupId $team.GroupId
                 $i = 1
-                Write-Host "    |---[$j/$($Teams.Length)] Team {$($team.DisplayName)}"
+                Write-M365DSCHost -Message  "    |---[$j/$($Teams.Length)] Team {$($team.DisplayName)}"
                 foreach ($channel in $channels)
                 {
                     if ($null -ne $Global:M365DSCExportResourceInstancesCount)
@@ -433,7 +433,7 @@ function Export-TargetResource
                         $Global:M365DSCExportResourceInstancesCount++
                     }
 
-                    Write-Host "        |---[$i/$($channels.Length)] $($channel.DisplayName)" -NoNewline
+                    Write-M365DSCHost -Message "        |---[$i/$($channels.Length)] $($channel.DisplayName)" -DeferWrite
                     $params = @{
                         TeamName              = $team.DisplayName
                         GroupId               = $team.GroupId
@@ -455,12 +455,12 @@ function Export-TargetResource
                     Save-M365DSCPartialExport -Content $currentDSCBlock `
                         -FileName $Global:PartialExportFileName
                     $i++
-                    Write-Host $Global:M365DSCEmojiGreenCheckMark
+                    Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
                 }
             }
             else
             {
-                Write-Host "    |---[$j/$($Teams.Length)] Team has no GroupId and will be skipped"
+                Write-M365DSCHost -Message  "    |---[$j/$($Teams.Length)] Team has no GroupId and will be skipped"
             }
             $j++
         }
@@ -468,7 +468,7 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `

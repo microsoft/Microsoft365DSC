@@ -303,7 +303,7 @@ function Set-TargetResource
         }
         catch
         {
-            Write-Information -Message "Exception: $($_.Exception)"
+            Write-Warning -Message "Exception: $($_.Exception)"
             if ($_ -notlike '*This library is already an organization assets library.*')
             {
                 throw $_
@@ -474,11 +474,11 @@ function Export-TargetResource
 
         if ($orgAssets.Length -eq 0)
         {
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         else
         {
-            Write-Host "`r`n" -NoNewline
+            Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
         if ($null -ne $orgAssets)
         {
@@ -489,7 +489,7 @@ function Export-TargetResource
                     $Global:M365DSCExportResourceInstancesCount++
                 }
 
-                Write-Host "    [$i/$($orgAssets.Length)] $($orgAssetLib.libraryurl.DecodedUrl)" -NoNewline
+                Write-M365DSCHost -Message "    [$i/$($orgAssets.Length)] $($orgAssetLib.libraryurl.DecodedUrl)" -DeferWrite
                 $Params = @{
                     Credential            = $Credential
                     LibraryUrl            = "https://$tenantName.sharepoint.com/$($orgAssetLib.libraryurl.DecodedUrl)"
@@ -511,7 +511,7 @@ function Export-TargetResource
                 $dscContent += $currentDSCBlock
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
                     -FileName $Global:PartialExportFileName
-                Write-Host $Global:M365DSCEmojiGreenCheckMark
+                Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
                 $i++
             }
         }
@@ -519,7 +519,7 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `

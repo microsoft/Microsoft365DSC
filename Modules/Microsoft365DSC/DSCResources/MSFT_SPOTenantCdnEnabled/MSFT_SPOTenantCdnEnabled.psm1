@@ -353,7 +353,7 @@ function Export-TargetResource
         $cdnTypes = 'Public', 'Private'
 
         $i = 1
-        Write-Host "`r`n" -NoNewline
+        Write-M365DSCHost -Message "`r`n" -DeferWrite
         foreach ($cType in $cdnTypes)
         {
             if ($null -ne $Global:M365DSCExportResourceInstancesCount)
@@ -361,7 +361,7 @@ function Export-TargetResource
                 $Global:M365DSCExportResourceInstancesCount++
             }
 
-            Write-Host "    |---[$i/2] $cType" -NoNewline
+            Write-M365DSCHost -Message  "    |---[$i/2] $cType" -DeferWrite
             $Params = @{
                 Credential            = $Credential
                 CdnType               = $cType
@@ -387,11 +387,11 @@ function Export-TargetResource
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
                     -FileName $Global:PartialExportFileName
 
-                Write-Host $Global:M365DSCEmojiGreenCheckmark
+                Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
             }
             else
             {
-                Write-Host $Global:M365DSCEmojiRedX
+                Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
             }
 
             $i++
@@ -404,11 +404,11 @@ function Export-TargetResource
         # This method is not implemented in some sovereign clouds (e.g. GCCHigh)
         if ($_.Exception -like '*The method or operation is not implemented*')
         {
-            Write-Host "    $($Global:M365DSCEmojiYellowCircle) The current tenant does not support this feature."
+            Write-M365DSCHost -Message "    $($Global:M365DSCEmojiYellowCircle) The current tenant does not support this feature." -CommitWrite
         }
         else
         {
-            Write-Host $Global:M365DSCEmojiRedX
+            Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
             New-M365DSCLogEntry -Message 'Error during Export:' `
                 -Exception $_ `

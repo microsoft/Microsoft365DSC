@@ -41,6 +41,29 @@ function Get-M365DSCApplicationInsightsTelemetryClient
 }
 
 <#
+.DESCRIPTION
+    This function sets the LCM configuration for the current session.
+
+.PARAMETER LCMConfig
+    The Local Configuration Manager configuration to set for the session.
+
+.EXAMPLE
+    PS> $lcmConfig = Get-DscLocalConfigurationManager
+    PS> Set-M365DSCLCMConfiguration -LCMConfig $lcmConfig
+#>
+function Set-M365DSCLCMConfiguration
+{
+    [CmdletBinding()]
+    param (
+        [Parameter()]
+        [object]
+        $LCMConfig
+    )
+
+    $Script:LCMConfig = $LCMConfig
+}
+
+<#
 .Description
 This function sends telemetry information to Application Insights
 
@@ -626,5 +649,6 @@ Export-ModuleMember -Function @(
     'Add-M365DSCTelemetryEvent',
     'Format-M365DSCTelemetryParameters',
     'Get-M365DSCTelemetryOption',
-    'Set-M365DSCTelemetryOption'
+    'Set-M365DSCTelemetryOption',
+    'Set-M365DSCLCMConfiguration'
 )

@@ -46,7 +46,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return @()
             }
 
-            Mock -CommandName Write-Host -MockWith {
+            Mock -CommandName Write-M365DSCHost -MockWith {
             }
         }
 

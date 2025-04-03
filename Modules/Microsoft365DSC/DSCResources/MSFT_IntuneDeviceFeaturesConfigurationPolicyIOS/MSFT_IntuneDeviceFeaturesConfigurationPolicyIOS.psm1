@@ -150,8 +150,8 @@ function Get-TargetResource
             $nullResult.Ensure = 'Absent'
 
             if (-not [string]::IsNullOrWhiteSpace($Id))
-            { 
-                $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -DeviceConfigurationId $Id -ErrorAction SilentlyContinue 
+            {
+                $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -DeviceConfigurationId $Id -ErrorAction SilentlyContinue
             }
 
             #region resource generator code
@@ -209,11 +209,11 @@ function Get-TargetResource
             HomeScreenGridHeight     = $getValue.AdditionalProperties.homeScreenGridHeight
             NotificationSettings     = Convert-ComplexObjectToHashtableArray $getValue.AdditionalProperties.notificationSettings
             SingleSignOnSettings     = Convert-ComplexObjectToHashtableArray $getValue.AdditionalProperties.singleSignOnSettings
-            WallpaperDisplayLocation = $getValue.AdditionalProperties.wallpaperDisplayLocation 
+            WallpaperDisplayLocation = $getValue.AdditionalProperties.wallpaperDisplayLocation
             WallpaperImage           = Convert-ComplexObjectToHashtableArray $getValue.AdditionalProperties.wallpaperImage
             IosSingleSignOnExtension = $complexIosSingleSignonExtension
         }
-                                          
+
         $assignmentsValues = Get-MgBetaDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId $Results.Id
         $assignmentResult = @()
         if ($assignmentsValues.Count -gt 0)
@@ -407,7 +407,7 @@ function Set-TargetResource
                 $CreateParameters[$key] = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters[$key]
             }
         }
-        
+
         #create params need some processing to get payload in correct format
         $CreateParameters.Add('@odata.type', '#microsoft.graph.iosDeviceFeaturesConfiguration') #add odata type or payload will be rejected
         if($CreateParameters.WallpaperImage)
@@ -440,15 +440,15 @@ function Set-TargetResource
         }
         if ($CreateParameters.IosSingleSignOnExtension)
         {
-            Convert-DataTypeFormat $CreateParameters.IosSingleSignOnExtension 
+            Convert-DataTypeFormat $CreateParameters.IosSingleSignOnExtension
             if ($null -ne $CreateParameters.IosSingleSignOnExtension.configurations)
             {
                 Convert-StringToBooleans $CreateParameters.IosSingleSignOnExtension.configurations
             }
             $CreateParameters['iosSingleSignOnExtension'] = $CreateParameters.IosSingleSignOnExtension[0] #needs the hashtable not embedded in array
         }
-        #finished processing create parameters 
-           
+        #finished processing create parameters
+
         #region resource generator code
         $policy = New-MgBetaDeviceManagementDeviceConfiguration -BodyParameter $CreateParameters
         $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
@@ -469,7 +469,7 @@ function Set-TargetResource
         $UpdateParameters = ([Hashtable]$BoundParameters).clone()
         $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
         $UpdateParameters.Remove('Id') | Out-Null
-        
+
         foreach ($key in ($UpdateParameters.clone()).Keys)
         {
             if ($UpdateParameters[$key].getType().Fullname -like '*CimInstance*')
@@ -511,14 +511,14 @@ function Set-TargetResource
         }
         if ($UpdateParameters.IosSingleSignOnExtension)
         {
-            Convert-DataTypeFormat $UpdateParameters.IosSingleSignOnExtension 
+            Convert-DataTypeFormat $UpdateParameters.IosSingleSignOnExtension
             if ($null -ne $UpdateParameters.IosSingleSignOnExtension.configurations)
             {
                 Convert-StringToBooleans $UpdateParameters.IosSingleSignOnExtension.configurations
             }
             $UpdateParameters['IosSingleSignOnExtension'] = $UpdateParameters.IosSingleSignOnExtension[0] #needs the hashtable not embedded in array
         }
-        #finished processing update parameters 
+        #finished processing update parameters
 
         #region resource generator code
         Update-MgBetaDeviceManagementDeviceConfiguration  -BodyParameter $UpdateParameters `
@@ -805,11 +805,11 @@ function Export-TargetResource
         $dscContent = ''
         if ($getValue.Length -eq 0)
         {
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         else
         {
-            Write-Host "`r`n" -NoNewline
+            Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
         foreach ($config in $getValue)
         {
@@ -818,7 +818,7 @@ function Export-TargetResource
                 $Global:M365DSCExportResourceInstancesCount++
             }
 
-            Write-Host "    |---[$i/$($getValue.Count)] $($config.DisplayName)" -NoNewline
+            Write-M365DSCHost -Message "    |---[$i/$($getValue.Count)] $($config.DisplayName)" -DeferWrite
             $params = @{
                 Id                    = $config.id
                 DisplayName           = $config.DisplayName
@@ -847,12 +847,12 @@ function Export-TargetResource
                     $Results.Remove('Assignments') | Out-Null
                 }
             }
-            
+
             if ($null -ne $Results.airPrintDestinations)
             {
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                     -ComplexObject $Results.AirPrintDestinations `
-                    -CIMInstanceName 'MSFT_airPrintDestination' 
+                    -CIMInstanceName 'MSFT_airPrintDestination'
                 if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.AirPrintDestinations = $complexTypeStringResult
@@ -862,7 +862,7 @@ function Export-TargetResource
                     $Results.Remove('AirPrintDestinations') | Out-Null
                 }
             }
-            
+
             if ($null -ne $Results.ContentFilterSettings)
             {
                 $complexMapping = @(
@@ -890,12 +890,12 @@ function Export-TargetResource
                     $Results.Remove('contentFilterSettings') | Out-Null
                 }
             }
-            
+
             if ($null -ne $Results.HomeScreenDockIcons)
             {
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                     -ComplexObject $Results.HomeScreenDockIcons `
-                    -CIMInstanceName 'MSFT_iosHomeScreenApp' 
+                    -CIMInstanceName 'MSFT_iosHomeScreenApp'
                 if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.HomeScreenDockIcons = $complexTypeStringResult
@@ -933,7 +933,7 @@ function Export-TargetResource
             {
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                     -ComplexObject $Results.WallpaperImage `
-                    -CIMInstanceName 'MSFT_mimeContent' 
+                    -CIMInstanceName 'MSFT_mimeContent'
                 if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.WallpaperImage = $complexTypeStringResult
@@ -943,7 +943,7 @@ function Export-TargetResource
                     $Results.Remove('WallpaperImage') | Out-Null
                 }
             }
-            
+
             if ($null -ne $Results.IosSingleSignOnExtension)
             {
                 $complexMapping = @(
@@ -971,7 +971,7 @@ function Export-TargetResource
             {
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                     -ComplexObject $Results.NotificationSettings `
-                    -CIMInstanceName 'MSFT_iosNotificationSettings' 
+                    -CIMInstanceName 'MSFT_iosNotificationSettings'
                 if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.NotificationSettings = $complexTypeStringResult
@@ -1016,7 +1016,7 @@ function Export-TargetResource
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         return $dscContent
     }
@@ -1025,11 +1025,11 @@ function Export-TargetResource
         if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
         $_.Exception -like "*Request not applicable to target tenant*")
         {
-            Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
+            Write-M365DSCHost -Message "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }
         else
         {
-            Write-Host $Global:M365DSCEmojiRedX
+            Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
             New-M365DSCLogEntry -Message 'Error during Export:' `
                 -Exception $_ `
@@ -1046,14 +1046,14 @@ function Convert-ComplexObjectToHashtableArray {
     param (
         [Parameter()]
         [Object]$InputObject
-        
+
     )
 
     $resultArray = @()
 
     foreach ($item in $InputObject) {
         $hashTable = @{}
-        
+
         foreach ($key in $item.Keys) {
             $keyValue = $item.$key
             if ($key -ne '@odata.type')
@@ -1069,8 +1069,8 @@ function Convert-ComplexObjectToHashtableArray {
                 $hashTable.Add($key, $keyValue)
             }
         }
-        
-        # Add the hash table to the result array only if it contains non-null values       
+
+        # Add the hash table to the result array only if it contains non-null values
         if ($hashTable.Values.Where({ $null -ne $_ }).Count -gt 0) {
             $resultArray += $hashTable
         }
@@ -1083,14 +1083,14 @@ function Convert-ComplexObjectToHashtableArray_ExportDataType {
     param (
         [Parameter()]
         [Object]$InputObject
-        
+
     )
 
     $resultArray = @()
 
     foreach ($item in $InputObject) {
         $hashTable = @{}
-        
+
         foreach ($key in $item.Keys) {
             $keyValue = $item.$key
             if ($key -ne '@odata.type')
@@ -1108,8 +1108,8 @@ function Convert-ComplexObjectToHashtableArray_ExportDataType {
                 $hashTable.Add('dataType', $item.$key)
             }
         }
-        
-        # Add the hash table to the result array only if it contains non-null values       
+
+        # Add the hash table to the result array only if it contains non-null values
         if ($hashTable.Values.Where({ $null -ne $_ }).Count -gt 0) {
             $resultArray += $hashTable
         }
@@ -1123,7 +1123,7 @@ function Convert-StringToBooleans {
         [Parameter(Mandatory = $true)]
         [array]$Configurations
     )
-    
+
     foreach ($config in $Configurations) {
         if ($config.ContainsKey("value")) {
             switch ($config.value) {
@@ -1140,7 +1140,7 @@ function Convert-DataTypeFormat {
         [Parameter()]
         [Object]$InputObject
     )
-    foreach ($item in $InputObject) {        
+    foreach ($item in $InputObject) {
         $keysToModify = @()
         $keysToRecurse = @()
         foreach ($key in $item.Keys) {
@@ -1150,16 +1150,16 @@ function Convert-DataTypeFormat {
             if ($item.$key -is [array] -and ($item.$key | Where-Object { $_ -is [hashtable] }))
             {
             $keysToRecurse += $key
-            } 
+            }
         }
         foreach ($key in $keysToModify) {
-            
+
             $item['@odata.type'] = $item.$key
             $item.Remove($key)
         }
         foreach ($key in $keysToRecurse) {
-            
-            $item[$key] = Convert-DataTypeFormat $item.$key            
+
+            $item[$key] = Convert-DataTypeFormat $item.$key
         }
     }
     return $InputObject

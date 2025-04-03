@@ -2,6 +2,10 @@
 
 As defined by our [Breaking Changes Policy](https://microsoft365dsc.com/concepts/breaking-changes/), twice a year we allow for breaking changes to be deployed as part of a release. Our next major release, scheduled to go out on April 2nd 2025, will include several breaking changes and will be labeled version 1.25.402.1. This article provides details on the breaking changes and other important updates that will be included as part of our April 2025 Major release.
 
+## AADPasswordRuleSettings - Updated the BannedPasswordCheckOnPremisesMode Accepted Values ([5966](https://github.com/microsoft/Microsoft365DSC/pull/5966))
+
+To reflect and align with a change in the associated API, we are changing the possible value of the BannedPasswordCheckOnPremisesMode property from <strong>Enforced</strong> to <strong>Enforce</strong>. Existing configuration that use this resource, should check for that property and make sure that if the value is specified as Enforced, that it gets updated to Enforce.
+
 ## EXOArcConfig - Removed Identity Parameter ([#5917](https://github.com/microsoft/Microsoft365DSC/pull/5917))
 
 This change removes the Identity property from the resource. The reason for this change is that the property is a tenant wide setting and always set to 'default'. To fix configuration files that define this parameter, simply find the EXOArcConfig entry and remove the Identity parameter entirely.

@@ -28984,7 +28984,7 @@ function Get-MgBetaDirectory
         $Break
     )
 }
-function Get-MgBetaDirectoryAdministrativeUnit
+function Get-MgBetaAdministrativeUnit
 {
     [CmdletBinding()]
     param(
@@ -29061,7 +29061,7 @@ function Get-MgBetaDirectoryAdministrativeUnit
         $HttpPipelineAppend
     )
 }
-function Get-MgBetaDirectoryAdministrativeUnitMember
+function Get-MgBetaAdministrativeUnitMember
 {
     [CmdletBinding()]
     param(
@@ -29138,7 +29138,7 @@ function Get-MgBetaDirectoryAdministrativeUnitMember
         $HttpPipelineAppend
     )
 }
-function Get-MgBetaDirectoryAdministrativeUnitScopedRoleMember
+function Get-MgBetaAdministrativeUnitScopedRoleMember
 {
     [CmdletBinding()]
     param(
@@ -29936,7 +29936,7 @@ function New-MgBetaDevice
         $Kind
     )
 }
-function New-MgBetaDirectoryAdministrativeUnit
+function New-MgBetaAdministrativeUnit
 {
     [CmdletBinding()]
     param(
@@ -30013,7 +30013,7 @@ function New-MgBetaDirectoryAdministrativeUnit
         $HttpPipelineAppend
     )
 }
-function New-MgBetaDirectoryAdministrativeUnitMember
+function New-MgBetaAdministrativeUnitMember
 {
     [CmdletBinding()]
     param(
@@ -30070,7 +30070,7 @@ function New-MgBetaDirectoryAdministrativeUnitMember
         $Break
     )
 }
-function New-MgBetaDirectoryAdministrativeUnitMemberByRef
+function New-MgBetaAdministrativeUnitMemberByRef
 {
     [CmdletBinding()]
     param(
@@ -30127,7 +30127,7 @@ function New-MgBetaDirectoryAdministrativeUnitMemberByRef
         $Break
     )
 }
-function New-MgBetaDirectoryAdministrativeUnitScopedRoleMember
+function New-MgBetaAdministrativeUnitScopedRoleMember
 {
     [CmdletBinding()]
     param(
@@ -30424,7 +30424,7 @@ function Remove-MgBetaDevice
         $HttpPipelineAppend
     )
 }
-function Remove-MgBetaDirectoryAdministrativeUnit
+function Remove-MgBetaAdministrativeUnit
 {
     [CmdletBinding()]
     param(
@@ -30473,7 +30473,7 @@ function Remove-MgBetaDirectoryAdministrativeUnit
         $Break
     )
 }
-function Remove-MgBetaDirectoryAdministrativeUnitMemberDirectoryObjectByRef
+function Remove-MgBetaAdministrativeUnitMemberDirectoryObjectByRef
 {
     [CmdletBinding()]
     param(
@@ -30530,7 +30530,7 @@ function Remove-MgBetaDirectoryAdministrativeUnitMemberDirectoryObjectByRef
         $Break
     )
 }
-function Remove-MgBetaDirectoryAdministrativeUnitScopedRoleMember
+function Remove-MgBetaAdministrativeUnitScopedRoleMember
 {
     [CmdletBinding()]
     param(
@@ -31113,7 +31113,7 @@ function Update-MgBetaDirectory
         $HttpPipelineAppend
     )
 }
-function Update-MgBetaDirectoryAdministrativeUnit
+function Update-MgBetaAdministrativeUnit
 {
     [CmdletBinding()]
     param(
@@ -61857,7 +61857,7 @@ function Get-MgBetaDirectory
         $Break
     )
 }
-function Get-MgBetaDirectoryAdministrativeUnit
+function Get-MgBetaAdministrativeUnit
 {
     [CmdletBinding()]
     param(
@@ -61934,7 +61934,7 @@ function Get-MgBetaDirectoryAdministrativeUnit
         $HttpPipelineAppend
     )
 }
-function Get-MgBetaDirectoryAdministrativeUnitMember
+function Get-MgBetaAdministrativeUnitMember
 {
     [CmdletBinding()]
     param(
@@ -62011,7 +62011,7 @@ function Get-MgBetaDirectoryAdministrativeUnitMember
         $HttpPipelineAppend
     )
 }
-function Get-MgBetaDirectoryAdministrativeUnitScopedRoleMember
+function Get-MgBetaAdministrativeUnitScopedRoleMember
 {
     [CmdletBinding()]
     param(
@@ -63008,7 +63008,7 @@ function New-MgBetaDevice
         $Kind
     )
 }
-function New-MgBetaDirectoryAdministrativeUnit
+function New-MgBetaAdministrativeUnit
 {
     [CmdletBinding()]
     param(
@@ -63085,7 +63085,7 @@ function New-MgBetaDirectoryAdministrativeUnit
         $HttpPipelineAppend
     )
 }
-function New-MgBetaDirectoryAdministrativeUnitMember
+function New-MgBetaAdministrativeUnitMember
 {
     [CmdletBinding()]
     param(
@@ -63142,7 +63142,7 @@ function New-MgBetaDirectoryAdministrativeUnitMember
         $Break
     )
 }
-function New-MgBetaDirectoryAdministrativeUnitMemberByRef
+function New-MgBetaAdministrativeUnitMemberByRef
 {
     [CmdletBinding()]
     param(
@@ -63199,7 +63199,7 @@ function New-MgBetaDirectoryAdministrativeUnitMemberByRef
         $Break
     )
 }
-function New-MgBetaDirectoryAdministrativeUnitScopedRoleMember
+function New-MgBetaAdministrativeUnitScopedRoleMember
 {
     [CmdletBinding()]
     param(
@@ -63549,7 +63549,7 @@ function Remove-MgBetaDevice
         $HttpPipelineAppend
     )
 }
-function Remove-MgBetaDirectoryAdministrativeUnit
+function Remove-MgBetaAdministrativeUnit
 {
     [CmdletBinding()]
     param(
@@ -63598,7 +63598,7 @@ function Remove-MgBetaDirectoryAdministrativeUnit
         $Break
     )
 }
-function Remove-MgBetaDirectoryAdministrativeUnitMemberDirectoryObjectByRef
+function Remove-MgBetaAdministrativeUnitMemberDirectoryObjectByRef
 {
     [CmdletBinding()]
     param(
@@ -63675,7 +63675,7 @@ function Get-MgBetaDirectoryDeletedItemAsGroup
     )
 }
 
-function Remove-MgBetaDirectoryAdministrativeUnitScopedRoleMember
+function Remove-MgBetaAdministrativeUnitScopedRoleMember
 {
     [CmdletBinding()]
     param(
@@ -64307,7 +64307,7 @@ function Update-MgBetaDirectory
         $HttpPipelineAppend
     )
 }
-function Update-MgBetaDirectoryAdministrativeUnit
+function Update-MgBetaAdministrativeUnit
 {
     [CmdletBinding()]
     param(

@@ -483,7 +483,7 @@ function Export-TargetResource
     #endregion
 
     $dscContent = [System.Text.StringBuilder]::new()
-    Write-Host "`r`n" -NoNewline
+    Write-M365DSCHost -Message "`r`n" -DeferWrite
     try
     {
         [array] $roles = Get-MgBetaRoleManagementDirectoryRoleDefinition -Filter $Filter -All
@@ -496,7 +496,7 @@ function Export-TargetResource
             $rules = Get-MgBetaPolicyRoleManagementPolicyRule `
                 -UnifiedRoleManagementPolicyId $policyId
 
-            Write-Host "    |---[$j/$($roles.Count)] $($role.displayName)"
+            Write-M365DSCHost -Message  "    |---[$j/$($roles.Count)] $($role.displayName)"
             $i = 1
             foreach ($rule in $rules)
             {
@@ -504,7 +504,7 @@ function Export-TargetResource
                 {
                     $Global:M365DSCExportResourceInstancesCount++
                 }
-                Write-Host "        |---[$i/$($rules.Count)] $($role.displayName)_$($rule.id)" -NoNewline
+                Write-M365DSCHost -Message "        |---[$i/$($rules.Count)] $($role.displayName)_$($rule.id)" -DeferWrite
                 $Params = @{
                     roleDisplayName       = $role.displayName
                     id                    = $rule.id
@@ -671,7 +671,7 @@ function Export-TargetResource
                 $dscContent.Append($currentDSCBlock) | Out-Null
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
                     -FileName $Global:PartialExportFileName
-                Write-Host $Global:M365DSCEmojiGreenCheckMark
+                Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
                 $i++
             }
             $j++
@@ -680,7 +680,7 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `

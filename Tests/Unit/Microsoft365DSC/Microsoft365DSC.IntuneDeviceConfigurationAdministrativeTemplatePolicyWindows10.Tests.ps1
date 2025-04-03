@@ -36,7 +36,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-PSSession -MockWith {
             }
 
-            Mock -CommandName Write-Host -MockWith {
+            Mock -CommandName Write-M365DSCHost -MockWith {
             }
 
             Mock -CommandName Update-MgBetaDeviceManagementGroupPolicyConfiguration -MockWith {

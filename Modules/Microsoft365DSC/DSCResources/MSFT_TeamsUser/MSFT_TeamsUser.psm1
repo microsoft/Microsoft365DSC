@@ -332,7 +332,7 @@ function Export-TargetResource
         [System.String[]]
         $AccessTokens
     )
-    $InformationPreference = 'Continue'
+
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -352,11 +352,11 @@ function Export-TargetResource
         [array]$instances = Get-Team | Sort-Object -Property GroupId
         if ($instances.Length -eq 0)
         {
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         else
         {
-            Write-Host "`r`n" -NoNewline
+            Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
         $dscContent = [System.Text.StringBuilder]::new()
         $j = 1
@@ -373,7 +373,7 @@ function Export-TargetResource
                     {
                         $totalCount = 1
                     }
-                    Write-Host "    > [$j/$totalCount] Team {$($team.DisplayName)}"
+                    Write-M365DSCHost -Message "    > [$j/$totalCount] Team {$($team.DisplayName)}"
                     foreach ($user in $users)
                     {
                         if ($null -ne $Global:M365DSCExportResourceInstancesCount)
@@ -381,7 +381,7 @@ function Export-TargetResource
                             $Global:M365DSCExportResourceInstancesCount++
                         }
 
-                        Write-Host "        - [$k/$($users.Length)] $($user.User)" -NoNewline
+                        Write-M365DSCHost -Message "        - [$k/$($users.Length)] $($user.User)" -DeferWrite
 
                         $getParams = @{
                             TeamName              = $team.DisplayName
@@ -402,7 +402,7 @@ function Export-TargetResource
                         $dscContent.Append($currentDSCBlock) | Out-Null
                         Save-M365DSCPartialExport -Content $currentDSCBlock `
                             -FileName $Global:PartialExportFileName
-                        Write-Host $Global:M365DSCEmojiGreenCheckMark
+                        Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
                         $k++
                     }
                 }
@@ -418,7 +418,7 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `

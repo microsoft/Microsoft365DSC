@@ -9,7 +9,7 @@
 | **LockoutDurationInSeconds** | Write | UInt32 | The duration in seconds of the initial lockout period. | |
 | **EnableBannedPasswordCheck** | Write | Boolean | Boolean indicating if the banned password check for tenant specific banned password list is turned on or not. | |
 | **BannedPasswordList** | Write | StringArray[] | A list of banned words in passwords. | |
-| **BannedPasswordCheckOnPremisesMode** | Write | String | How should we enforce password policy check in on-premises system. | `Enforced`, `Audit` |
+| **BannedPasswordCheckOnPremisesMode** | Write | String | How should we enforce password policy check in on-premises system. | `Enforce`, `Audit` |
 | **EnableBannedPasswordCheckOnPremises** | Write | Boolean | Boolean indicating if the banned password check is turned on or not for on-premises system. | |
 | **Ensure** | Write | String | Specify if the Azure AD Password Rule Settings should exist or not. | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials for the Microsoft Graph delegated permissions. | |

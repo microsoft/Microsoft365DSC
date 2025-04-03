@@ -350,9 +350,9 @@ function Export-TargetResource
         }
 
         $dscContent = ''
-        Write-Host "`r`n" -NoNewline
+        Write-M365DSCHost -Message "`r`n" -DeferWrite
 
-        Write-Host "    |---[1/1] $($ResourceConfiguration.Identity)" -NoNewline
+        Write-M365DSCHost -Message  "    |---[1/1] $($ResourceConfiguration.Identity)" -DeferWrite
 
         if ($null -ne $Global:M365DSCExportResourceInstancesCount)
         {
@@ -380,12 +380,12 @@ function Export-TargetResource
         $dscContent += $currentDSCBlock
         Save-M365DSCPartialExport -Content $currentDSCBlock `
             -FileName $Global:PartialExportFileName
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
+        Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         return $dscContent
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `

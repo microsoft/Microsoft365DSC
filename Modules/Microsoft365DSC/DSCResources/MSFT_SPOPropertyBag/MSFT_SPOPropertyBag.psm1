@@ -403,16 +403,16 @@ function Export-TargetResource
 
         if ($sites.Length -eq 0)
         {
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         else
         {
-            Write-Host "`r`n" -NoNewline
+            Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
         foreach ($site in $sites)
         {
             $siteUrl = $site.Url
-            Write-Host "    [$i/$($sites.Length)] $($siteUrl)"
+            Write-M365DSCHost -Message "    [$i/$($sites.Length)] $($siteUrl)"
             try
             {
                 $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
@@ -421,7 +421,7 @@ function Export-TargetResource
             }
             catch
             {
-                Write-Host $Global:M365DSCEmojiRedX
+                Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
                 New-M365DSCLogEntry -Message 'Error during Export:' `
                     -Exception $_ `
@@ -443,7 +443,7 @@ function Export-TargetResource
                         $Global:M365DSCExportResourceInstancesCount++
                     }
 
-                    Write-Host "        |---  [$j/$($properties.Length)] $($property.Key)" -NoNewline
+                    Write-M365DSCHost -Message "        |---  [$j/$($properties.Length)] $($property.Key)" -DeferWrite
                     $Params = @{
                         Url                   = $siteUrl
                         Key                   = $property.Key
@@ -469,13 +469,13 @@ function Export-TargetResource
                     Save-M365DSCPartialExport -Content $currentDSCBlock `
                         -FileName $Global:PartialExportFileName
 
-                    Write-Host $Global:M365DSCEmojiGreenCheckMark
+                    Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
                     $j++
                 }
             }
             catch
             {
-                Write-Host $Global:M365DSCEmojiRedX
+                Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
                 New-M365DSCLogEntry -Message 'Error during Export:' `
                     -Exception $_ `
@@ -515,7 +515,7 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `

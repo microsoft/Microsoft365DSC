@@ -45,8 +45,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
             Mock -CommandName Update-DeviceConfigurationPolicyAssignment -MockWith {
             }
-            # Mock Write-Host to hide output during the tests
-            Mock -CommandName Write-Host -MockWith {
+            # Mock Write-M365DSCHost to hide output during the tests
+            Mock -CommandName Write-M365DSCHost -MockWith {
             }
             $Script:exportedInstances =$null
             $Script:ExportMode = $false
@@ -100,7 +100,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return @{
                         DisplayName          = 'Test IntuneDeviceConfigurationCustomPolicyiOS'
                         Description          = 'Different Value'
-                        Id                   = 'e30954ac-a65e-4dcb-ab79-91d45f3c52b4'                    
+                        Id                   = 'e30954ac-a65e-4dcb-ab79-91d45f3c52b4'
                         AdditionalProperties = @{
                             Payload         = 'PHJvb3Q+PC9yb290Pg=='
                             PayloadFileName = 'simple.xml'
@@ -122,7 +122,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It 'Should update the IntuneDeviceConfigurationCustomPolicyiOS from the Set method' {
                 Set-TargetResource @testParams
                 Should -Invoke -CommandName Update-MgBetaDeviceManagementDeviceConfiguration -Exactly 1
-               
+
             }
         }
 
@@ -142,7 +142,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return @{
                         DisplayName          = 'Test IntuneDeviceConfigurationCustomPolicyiOS'
                         Description          = 'Test IntuneDeviceConfigurationCustomPolicyiOS Description'
-                        Id                   = 'e30954ac-a65e-4dcb-ab79-91d45f3c52b4'                   
+                        Id                   = 'e30954ac-a65e-4dcb-ab79-91d45f3c52b4'
                         AdditionalProperties = @{
                             Payload         = 'PHJvb3Q+PC9yb290Pg=='
                             PayloadFileName = 'simple.xml'

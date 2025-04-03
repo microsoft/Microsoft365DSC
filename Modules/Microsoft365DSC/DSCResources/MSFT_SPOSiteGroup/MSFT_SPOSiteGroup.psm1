@@ -528,7 +528,7 @@ function Export-TargetResource
         }
 
         $dscContent = ''
-        Write-Host "`r`n" -NoNewline
+        Write-M365DSCHost -Message "`r`n" -DeferWrite
         foreach ($site in $sites)
         {
             if ($null -ne $Global:M365DSCExportResourceInstancesCount)
@@ -536,7 +536,7 @@ function Export-TargetResource
                 $Global:M365DSCExportResourceInstancesCount++
             }
 
-            Write-Host "    |---[$i/$($sites.Length)] SPOSite groups for {$($site.Url)}"
+            Write-M365DSCHost -Message "    |---[$i/$($sites.Length)] SPOSite groups for {$($site.Url)}"
             $siteGroups = $null
             try
             {
@@ -554,7 +554,7 @@ function Export-TargetResource
             $j = 1
             foreach ($siteGroup in $siteGroups)
             {
-                Write-Host "        |---[$j/$($siteGroups.Length)] $($siteGroup.Title)" -NoNewline
+                Write-M365DSCHost -Message "        |---[$j/$($siteGroups.Length)] $($siteGroup.Title)" -DeferWrite
                 $Params = @{
                     Url                   = $site.Url
                     Identity              = $siteGroup.Title
@@ -599,7 +599,7 @@ function Export-TargetResource
                     Write-Verbose -Message "There was an issue retrieving the SiteGroups for $($Url)"
                 }
                 $j++
-                Write-Host $Global:M365DSCEmojiGreenCheckmark
+                Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
             }
 
             $i++
@@ -607,14 +607,14 @@ function Export-TargetResource
 
         if ($i -eq 1)
         {
-            Write-Host ''
+            Write-M365DSCHost -Message ''
         }
 
         return $dscContent
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `

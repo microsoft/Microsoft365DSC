@@ -36,8 +36,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-PSSession -MockWith {
             }
 
-            # Mock Write-Host to hide output during the tests
-            Mock -CommandName Write-Host -MockWith {
+            # Mock Write-M365DSCHost to hide output during the tests
+            Mock -CommandName Write-M365DSCHost -MockWith {
             }
             $Script:exportedInstances =$null
             $Script:ExportMode = $false
@@ -199,6 +199,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It 'Should Reverse Engineer resource from the Export method when multiple' {
                 Mock -CommandName Get-AcceptedDomain -MockWith {
                     return @($acceptedDomain1, $acceptedDomain2)
+                }
+                Mock -CommandName Get-AcceptedDomain -ParameterFilter { $Identity -eq $acceptedDomain1.Identity } -MockWith {
+                    return $acceptedDomain1
+                }
+                Mock -CommandName Get-AcceptedDomain -ParameterFilter { $Identity -eq $acceptedDomain2.Identity } -MockWith {
+                    return $acceptedDomain2
                 }
                 $result = Export-TargetResource @testParams
                 $result | Should -Not -BeNullOrEmpty

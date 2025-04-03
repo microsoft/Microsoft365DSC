@@ -529,11 +529,11 @@ function Export-TargetResource
 
         if ($searches.Length -eq 0)
         {
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         else
         {
-            Write-Host "    `r`n* Searches not assigned to an eDiscovery Case"
+            Write-M365DSCHost -Message "    `r`n* Searches not assigned to an eDiscovery Case"
         }
         $i = 1
         $dscContent = ''
@@ -545,7 +545,7 @@ function Export-TargetResource
                 $Global:M365DSCExportResourceInstancesCount++
             }
 
-            Write-Host "        |---[$i/$($searches.Name.Count)] $($search.Name)" -NoNewline
+            Write-M365DSCHost -Message "        |---[$i/$($searches.Name.Count)] $($search.Name)" -DeferWrite
 
             $Script:exportedInstance = $search
             $Results = Get-TargetResource @PSBoundParameters -Name $search.Name
@@ -554,7 +554,7 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
             $i++
         }
 
@@ -565,7 +565,7 @@ function Export-TargetResource
         {
             $searches = Get-ComplianceSearch -Case $case.Name
 
-            Write-Host "    * [$j/$($cases.Length)] Searches assigned to case $($case.Name)"
+            Write-M365DSCHost -Message "    * [$j/$($cases.Length)] Searches assigned to case $($case.Name)"
             $i = 1
             foreach ($search in $searches)
             {
@@ -580,7 +580,7 @@ function Export-TargetResource
                     CertificatePassword   = $CertificatePassword
                     AccessTokens          = $AccessTokens
                 }
-                Write-Host "        |---[$i/$($searches.Name.Count)] $($search.Name)" -NoNewline
+                Write-M365DSCHost -Message "        |---[$i/$($searches.Name.Count)] $($search.Name)" -DeferWrite
                 $Results = Get-TargetResource @Params
 
                 $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
@@ -592,7 +592,7 @@ function Export-TargetResource
 
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
                     -FileName $Global:PartialExportFileName
-                Write-Host $Global:M365DSCEmojiGreenCheckMark
+                Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
                 $i++
             }
             $j++
@@ -602,7 +602,7 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `

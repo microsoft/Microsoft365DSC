@@ -347,11 +347,11 @@ function Export-TargetResource
         $dscContent = ''
         if ($categories.Length -eq 0)
         {
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         else
         {
-            Write-Host "`r`n" -NoNewline
+            Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
 
         foreach ($cleanupRule in $cleanupRules)
@@ -361,7 +361,7 @@ function Export-TargetResource
                 $Global:M365DSCExportResourceInstancesCount++
             }
 
-            Write-Host "    |---[$i/$($cleanupRules.Count)] Cleanup Rule" -NoNewline
+            Write-M365DSCHost -Message "    |---[$i/$($cleanupRules.Count)] Cleanup Rule" -DeferWrite
             $params = @{
                 Enabled               = $cleanupRule.deviceInactivityBeforeRetirementInDays -gt 0
                 Ensure                = 'Present'
@@ -391,7 +391,7 @@ function Export-TargetResource
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
         return $dscContent
     }
@@ -402,11 +402,11 @@ function Export-TargetResource
                 $_.Exception -like '*Request not applicable to target tenant*' -or `
                 $_.Exception -like '*BadRequest*')
         {
-            Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
+            Write-M365DSCHost -Message "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }
         else
         {
-            Write-Host $Global:M365DSCEmojiRedX
+            Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
 
             New-M365DSCLogEntry -Message 'Error during Export:' `
                 -Exception $_ `
