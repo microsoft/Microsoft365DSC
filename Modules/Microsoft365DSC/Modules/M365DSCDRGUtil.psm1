@@ -86,12 +86,7 @@ function Rename-M365DSCCimInstanceParameter
     if ($type -like '*CimInstance*' -or $type -like '*Hashtable*' -or $type -like '*Object*')
     {
         $hashProperties = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $result
-<<<<<<< HEAD
-        $keys = ($hashProperties.clone()).keys
-=======
         $keys = ($hashProperties.Clone()).keys
-
->>>>>>> Dev
         foreach ($key in $keys)
         {
             $keyName = $key.Substring(0, 1).Tolower() + $key.Substring(1, $key.length - 1)
