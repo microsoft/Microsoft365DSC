@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.25.402.1
 
 * AADAdministrativeUnit
   * Fix issue where AdministrativeUnit calls fail with ODATA error on dynamic membership.
@@ -15,8 +15,17 @@
 * AADGroup
   * Fixed `isAssignableToRole` to support for null values returned by graph.
     FIXES [#5959](https://github.com/microsoft/Microsoft365DSC/issues/5959)
+* AADPasswordRuleSettings
+  * [BREAKING CHANGE] Replace `Enforced` with `Enforce` as a possibility of
+    `BannedPasswordCheckOnPremisesMode` to align with updated Graph value.
+* EXOArcConfig
+  * [BREAKING CHANGE] Removed the `Identity` parameter since it does not
+    have any functionality and is not exported by default.
 * EXOMailboxSettings
-  * Add AuditEnabled
+  * Add the AuditEnabled property.
+* EXOMailTips
+  * [BREAKING CHANGE] Removed resource. Use `EXOOrganizationConfig` instead.
+    Fixes [#5647](https://github.com/microsoft/Microsoft365DSC/issues/5647)
 * EXOManagementRoleEntry
   * Added the ability to add and remove entries by adding the Ensure property
     to the resource.
@@ -30,7 +39,7 @@
 * IntuneAppConfigurationPolicy
   * Changed export logic of CustomSettings to use centralized function.
 * IntuneDeviceConfigurationCustomPolicyiOS
-  * Initial release, adds support for iOS 'Custom' Device Configuration policies.
+  * Initial release, adds support for iOS `Custom` Device Configuration policies.
 * IntuneDeviceEnrollmentStatusPageWindows10
   * Use `SelectedMobileAppNames` as the primary source for the apps.
     FIXES [#5913](https://github.com/microsoft/Microsoft365DSC/issues/5913)
@@ -38,6 +47,8 @@
   * Initial release, enables integration with 3rd party MDM solutions
 * IntuneDeviceFeaturesConfigurationPolicyIOS
   * Initial release
+* IntuneSecurityBaselineMicrosoftEdge
+  * [BREAKING CHANGE] Remove deprecated parameter `authschemes`.
 * IntuneWifiConfigurationPolicyMacOS
   * Fixes a naming issue with the primary key when calling the update assignment
     cmdlet.
@@ -63,27 +74,12 @@
     FIXES [#5669](https://github.com/microsoft/Microsoft365DSC/issues/5669)
     FIXES [#4824](https://github.com/microsoft/Microsoft365DSC/issues/4824)
   * Add PowerShell 5 to 7 compatibility layer.
+* DEPENDENCIES
+  * Updated DSCParser to version 2.0.0.16.
 * MISC
   * Fix CSV-report so variable-names are passed correctly in the report
   * Replace `Write-Host` with custom function to support logs in non-interactive
     environments using the verbose stream.
-
-## BREAKING CHANGES
-
-* AADPasswordRuleSettings
-  * [BREAKING CHANGE] Replace `Enforced` with `Enforce` as a possibility of
-    `BannedPasswordCheckOnPremisesMode` to align with updated Graph value.
-* EXOArcConfig
-  * [BREAKING CHANGE] Removed the `Identity` parameter since it does not
-    have any functionality and is not exported by default.
-* EXOMailTips
-  * [BREAKING CHANGE] Removed resource. Use `EXOOrganizationConfig` instead.
-    Fixes [#5647](https://github.com/microsoft/Microsoft365DSC/issues/5647)
-* IntuneAccountProtectionLocalUserGroupMembershipPolicy
-  * [BREAKING CHANGE] Remove deprecated value `add_replace` from `Action` parameter.
-* IntuneSecurityBaselineMicrosoftEdge
-  * [BREAKING CHANGE] Remove deprecated parameter `authschemes`.
-* MISC
   * [BREAKING CHANGE] Removed the command `Import-M365DSCDependencies`.
 * Whitepaper
   * Parallel to this release the code for the whitepaper also implements a

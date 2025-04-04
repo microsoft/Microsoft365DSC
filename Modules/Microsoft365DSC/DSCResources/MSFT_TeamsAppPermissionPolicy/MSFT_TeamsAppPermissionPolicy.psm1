@@ -116,9 +116,9 @@ function Get-TargetResource
             GlobalCatalogAppsType  = $instance.GlobalCatalogAppsType
             PrivateCatalogAppsType = $instance.PrivateCatalogAppsType
             DefaultCatalogAppsType = $instance.DefaultCatalogAppsType
-            GlobalCatalogApps      = $GlobalCatalogAppsValue
-            PrivateCatalogApps     = $PrivateCatalogAppsValue
-            DefaultCatalogApps     = $DefaultCatalogAppsValue
+            GlobalCatalogApps      = [Array]$GlobalCatalogAppsValue
+            PrivateCatalogApps     = [Array]$PrivateCatalogAppsValue
+            DefaultCatalogApps     = [Array]$DefaultCatalogAppsValue
             Ensure                 = 'Present'
             Credential             = $Credential
             ApplicationId          = $ApplicationId

@@ -182,9 +182,15 @@ function Set-TargetResource
 
         $CreateParameters.Remove('Verbose') | Out-Null
 
-        $keys = $CreateParameters.Keys
+        $keys = @($CreateParameters.Keys)
         foreach ($key in $keys)
         {
+            if ($key -eq 'MeetingInvitePhoneNumbers')
+            {
+                $keyValue = $CreateParameters.$key -join ','
+                $CreateParameters.Remove($key) | Out-Null
+                $CreateParameters.Add($key, $keyValue)
+            }
             if ($null -ne $CreateParameters.$key -and $CreateParameters.$key.GetType().Name -like '*cimInstance*')
             {
                 $keyValue = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters.$key
@@ -202,9 +208,15 @@ function Set-TargetResource
         $UpdateParameters = ([Hashtable]$PSBoundParameters).Clone()
         $UpdateParameters.Remove('Verbose') | Out-Null
 
-        $keys = $UpdateParameters.Keys
+        $keys = @($UpdateParameters.Keys)
         foreach ($key in $keys)
         {
+            if ($key -eq 'MeetingInvitePhoneNumbers')
+            {
+                $keyValue = $UpdateParameters.$key -join ','
+                $UpdateParameters.Remove($key) | Out-Null
+                $UpdateParameters.Add($key, $keyValue)
+            }
             if ($null -ne $UpdateParameters.$key -and $UpdateParameters.$key.GetType().Name -like '*cimInstance*')
             {
                 $keyValue = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters.$key

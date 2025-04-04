@@ -80,6 +80,7 @@ nav:
       - 'Power Platform': 'resources/power-platform'
       - 'Security & Compliance': 'resources/security-compliance'
       - 'Sentinel': 'resources/sentinel'
+      - 'Services Hub': 'resources/services-hub'
       - 'SharePoint': 'resources/sharepoint'
       - 'Teams': 'resources/teams'
   - About:

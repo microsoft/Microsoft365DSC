@@ -994,6 +994,9 @@ function Update-M365DSCResourceDocumentationPage
             'Sentinel*'
             { $targetFolder = 'sentinel'
             }
+            'SH*'
+            { $targetFolder = 'services-hub'
+            }
             'SPO*'
             { $targetFolder = 'sharepoint'
             }

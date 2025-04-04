@@ -97,7 +97,7 @@ function Get-TargetResource
         if ($policy.EmergencyNumbers.Count -gt 0)
         {
             $numbers = Get-TeamsEmergencyNumbers -Numbers $policy.EmergencyNumbers
-            $results.Add('EmergencyNumbers', $numbers)
+            $results.Add('EmergencyNumbers', [Array]$numbers)
         }
         return $results
     }

@@ -102,7 +102,7 @@ function Get-TargetResource
             ExternalLocationLookupMode         = $policy.ExternalLocationLookupMode
             NotificationDialOutNumber          = $policy.NotificationDialOutNumber
             NotificationGroup                  = $policy.NotificationGroup
-            NotificationMode                   = $policy.NotificationMode
+            NotificationMode                   = [String]$policy.NotificationMode
             Ensure                             = 'Present'
             Credential                         = $Credential
             ApplicationId                      = $ApplicationId
