@@ -171,7 +171,7 @@ function Set-TargetResource
         [Parameter()]
         [ValidateSet('Enforce', 'Audit')]
         [System.String]
-        $BannedPasswordCheckOnPremisesMode,
+        $BannedPasswordCheckOnPremisesMode = 'Audit',
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
