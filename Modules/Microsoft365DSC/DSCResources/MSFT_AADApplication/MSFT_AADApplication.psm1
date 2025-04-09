@@ -1591,7 +1591,18 @@ function Export-TargetResource
     try
     {
         $Script:ExportMode = $true
-        [array] $Script:exportedInstances = Get-MgBetaApplication -Filter $Filter -All -ErrorAction Stop
+        if ($null -ne $Filter)
+        {
+            $filterArgs = @{
+                ConsistencyLevel = 'Eventual'
+                CountVariable    = 'tempCountVar'
+            }
+        }
+        else
+        {
+            $filterArgs = @{}
+        }
+        [array] $Script:exportedInstances = Get-MgBetaApplication -Filter $Filter @filterArgs -All -ErrorAction Stop
         foreach ($AADApp in $Script:exportedInstances)
         {
             if ($null -ne $Global:M365DSCExportResourceInstancesCount)
