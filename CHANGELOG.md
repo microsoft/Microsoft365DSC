@@ -1,5 +1,7 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
 # 1.25.402.1
 
 * AADAdministrativeUnit
