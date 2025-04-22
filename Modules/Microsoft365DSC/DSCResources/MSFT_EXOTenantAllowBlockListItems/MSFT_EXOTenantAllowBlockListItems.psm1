@@ -1,27 +1,3 @@
-function Add-ActionParameters
-{
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Action,
-
-        [Parameter(Mandatory = $true)]
-        [System.Collections.Hashtable]
-        $Parameters
-    )
-
-    if ($Action -eq 'Allow')
-    {
-        $Parameters.Add('Allow', $true) | Out-Null
-    }
-    elseif ($Action -eq 'Block')
-    {
-        $Parameters.Add('Block', $true) | Out-Null
-    }
-    $Parameters.Remove('Action') | Out-Null
-}
-
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -245,7 +221,15 @@ function Set-TargetResource
         $CreateParameters.Remove('Verbose') | Out-Null
         $CreateParameters.Remove('Value') | Out-Null
         $CreateParameters.Add('Entries', @($Value)) | Out-Null
-        Add-ActionParameters -Action $Action -Parameters $CreateParameters
+        if ($Action -eq 'Allow')
+        {
+            $CreateParameters.Add('Allow', $true) | Out-Null
+        }
+        elseif ($Action -eq 'Block')
+        {
+            $CreateParameters.Add('Block', $true) | Out-Null
+        }
+        $CreateParameters.Remove('Action') | Out-Null
 
         $keys = $CreateParameters.Keys
         foreach ($key in $keys)

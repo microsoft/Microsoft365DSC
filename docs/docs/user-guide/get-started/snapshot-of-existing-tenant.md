@@ -1,5 +1,5 @@
-The first thing that most folks using Microsoft365DSC will want to do, is take a snapshot of an existing tenant they have access to and that they are familiar with.
-As soon as you install the Microsoft365DSC module on a system, it will automatically get access to run the <a href="../../cmdlets/Export-M365DSCConfiguration/" target="_blank">Export-M365DSCConfiguration</a> PowerShell cmdlet, which is the main command for initiating a snapshot of an existing configuration.
+The first thing that most folks using Microsoft365DSC will want to do is take a snapshot of an existing tenant they have access to and are familiar with.
+As soon as you install the Microsoft365DSC module on a system, it will automatically get access to run the <a href="../../cmdlets/Export-M365DSCConfiguration/" target="_blank">Export-M365DSCConfiguration</a> PowerShell cmdlet which is the main command for initiating a snapshot of an existing configuration.
 
 In previous versions of the module, simply running the above cmdlet would automatically launch a Graphical User Interface that would allow you to pick and choose the components you wanted to capture the configuration for as part of your snapshot and initiate the capture process. Current versions of the module have moved to an unattended process by default, meaning that running the cmdlet will expect additional parameters by default and will then attempt to initiate the snapshot process automatically without further human interaction.
 
@@ -202,13 +202,20 @@ This parameter allows you to specify the location where the resulting file will 
 This parameter accepts an array containing the names of various workloads you wish to capture the components for as part of your snapshot process.  Users need to specify the acronym of the workloads, which can be any of:
 
 - **AAD** – Azure Active Directory
+- **ADO** – Azure DevOps
+- **AZURE** – Azure resources
+- **Commerce** – MS Commerce
+- **Defender** – Defender Portal
 - **EXO** – Exchange Online
-- **O365** – Office 365 administration
+- **Fabric** – Fabric
 - **Intune** – Intune
+- **O365** – Office 365 administration
 - **OD** – OneDrive
 - **Planner** – Planner
 - **PP** – Power Platform
 - **SC** – Security and Compliance
+- **Sentinel** – Sentinel
+- **SH** – Services Hub
 - **SPO** – SharePoint Online
 - **Teams** – Microsoft Teams
 

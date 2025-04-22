@@ -1402,7 +1402,7 @@ function Compare-M365DSCIntunePolicyAssignment
                 # Check for mobile app assignments with intent
                 $testResult = $assignment.intent -eq $assignmentTarget.intent
                 # Using assignment groupDisplayName only if the groupId is not found in the directory otherwise groupId should be the key
-                if (-not $testResult -and $groupNotFound)
+                if (-not $testResult)
                 {
                     Write-Verbose 'Group not found by groupId, looking for group by groupDisplayName'
                     $assignmentTarget = $Target | Where-Object -FilterScript { $_.dataType -eq $assignment.DataType -and $_.groupDisplayName -eq $assignment.groupDisplayName }
@@ -1867,7 +1867,7 @@ function Get-IntuneSettingCatalogPolicySetting
         }
         $settingValueName = $settingType.Replace('#microsoft.graph.deviceManagementConfiguration', '').Replace('Instance', 'Value')
         $settingValueName = $settingValueName.Substring(0, 1).ToLower() + $settingValueName.Substring(1, $settingValueName.length - 1 )
-        [string]$settingValueType = $settingInstanceTemplate.AdditionalProperties."$($settingValueName)Template".'@odata.type'
+        [string]$settingValueType = $settingInstanceTemplate.AdditionalProperties."$($settingValueName)Template".'@odata.type' | Select-Object -Unique
         if (-not [System.String]::IsNullOrEmpty($settingValueType))
         {
             $settingValueType = $settingValueType.Replace('ValueTemplate', 'Value')

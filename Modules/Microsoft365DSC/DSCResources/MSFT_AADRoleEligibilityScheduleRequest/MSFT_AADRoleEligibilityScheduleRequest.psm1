@@ -462,7 +462,7 @@ function Set-TargetResource
         $instanceParams.Add('action', 'AdminAssign')
         $instanceParams.Add('justification', 'AdminAssign by Microsoft365DSC')
         Write-Verbose -Message "Creating new role eligibility Schedule with parameters:`r`n$(ConvertTo-Json $instanceParams -Depth 10)"
-        New-MgBetaRoleManagementDirectoryRoleEligibilityScheduleRequest @instanceParams -Verbose
+        New-MgBetaRoleManagementDirectoryRoleEligibilityScheduleRequest @instanceParams
     }
     # UPDATE
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')

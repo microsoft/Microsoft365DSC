@@ -572,7 +572,6 @@ function Get-TargetResource
                 -TenantId $TenantId `
                 -Credential $Credential
 
-            $nullResult = Clear-M365DSCAuthenticationParameter -BoundParameters $nullResult
             return $nullResult
         }
     }
@@ -1536,15 +1535,10 @@ function Test-TargetResource
     Write-Verbose -Message "Testing configuration of Android App Protection Policy {$DisplayName}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
-    if (-not (Test-M365DSCAuthenticationParameter -BoundParameters $CurrentValues))
-    {
-        Write-Verbose "An error occured in Get-TargetResource, the policy {$displayName} will not be processed"
-        throw "An error occured in Get-TargetResource, the policy {$displayName} will not be processed. Refer to the event viewer logs for more information."
-    }
 
     if ($CurrentValues.Ensure -eq 'ERROR')
     {
-        Throw 'Error when searching for current policy details - Please check verbose output for further detail'
+        throw 'Error when searching for current policy details - Please check verbose output for further detail'
     }
 
     if ($Ensure -eq 'Absent')
@@ -1749,11 +1743,7 @@ function Export-TargetResource
 
             $Script:exportedInstance = $policy
             $Results = Get-TargetResource @params
-            if (-not (Test-M365DSCAuthenticationParameter -BoundParameters $Results))
-            {
-                Write-Verbose "An error occured in Get-TargetResource, the policy {$($params.displayName)} will not be processed"
-                throw "An error occured in Get-TargetResource, the policy {$($params.displayName)} will not be processed. Refer to the event viewer logs for more information."
-            }
+
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `

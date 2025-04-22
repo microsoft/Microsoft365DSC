@@ -34,7 +34,9 @@
                 "Distribution Groups",
                 "Mail Recipients"
             ],
-            "requiredrolegroups": "Organization Management"
+            "requiredrolegroups": [
+                "Organization Management"
+            ]
         }
     }
 }

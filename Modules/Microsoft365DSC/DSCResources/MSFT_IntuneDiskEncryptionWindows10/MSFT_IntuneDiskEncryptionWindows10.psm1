@@ -448,7 +448,6 @@ function Get-TargetResource
             throw $_
         }
 
-        $nullResult = Clear-M365DSCAuthenticationParameter -BoundParameters $nullResult
         return $nullResult
     }
 }

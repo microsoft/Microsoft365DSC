@@ -28,7 +28,9 @@
                 "Organization Management",
                 "View-Only Organization Management"
             ],
-            "requiredrolegroups": "Organization Management"
+            "requiredrolegroups": [
+                "Organization Management"
+            ]
         }
     }
 }

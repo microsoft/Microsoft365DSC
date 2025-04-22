@@ -30,7 +30,9 @@
                 "View-Only Configuration",
                 "Security Reader"
             ],
-            "requiredrolegroups": "Organization Management"
+            "requiredrolegroups": [
+                "Organization Management"
+            ]
         }
     }
 }

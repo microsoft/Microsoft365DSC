@@ -181,7 +181,6 @@ function Get-TargetResource
             -TenantId $TenantId `
             -Credential $Credential
 
-        $nullResult = Clear-M365DSCAuthenticationParameter -BoundParameters $nullResult
         return $nullResult
     }
 }
@@ -440,12 +439,8 @@ function Test-TargetResource
     Write-Verbose -Message "Testing configuration of the Intune Device Configuration Domain Join Policy for Windows10 with Id {$Id} and DisplayName {$DisplayName}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
-    if (-not (Test-M365DSCAuthenticationParameter -BoundParameters $CurrentValues))
-    {
-        Write-Verbose "An error occured in Get-TargetResource, the policy {$displayName} will not be processed"
-        throw "An error occured in Get-TargetResource, the policy {$displayName} will not be processed. Refer to the event viewer logs for more information."
-    }
-    $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
+
+    $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
     $testResult = $true
 
     #Compare Cim instances
@@ -453,7 +448,7 @@ function Test-TargetResource
     {
         $source = $PSBoundParameters.$key
         $target = $CurrentValues.$key
-        if ($source.getType().Name -like '*CimInstance*')
+        if ($source.GetType().Name -like '*CimInstance*')
         {
             $testResult = Compare-M365DSCComplexObject `
                 -Source ($source) `
@@ -469,7 +464,7 @@ function Test-TargetResource
         }
     }
 
-    $ValuesToCheck.remove('Id') | Out-Null
+    $ValuesToCheck.Remove('Id') | Out-Null
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
@@ -589,11 +584,6 @@ function Export-TargetResource
 
             $Script:exportedInstance = $config
             $Results = Get-TargetResource @params
-            if (-not (Test-M365DSCAuthenticationParameter -BoundParameters $Results))
-            {
-                Write-Verbose "An error occured in Get-TargetResource, the policy {$($params.displayName)} will not be processed"
-                throw "An error occured in Get-TargetResource, the policy {$($params.displayName)} will not be processed. Refer to the event viewer logs for more information."
-            }
 
             if ($Results.Assignments)
             {

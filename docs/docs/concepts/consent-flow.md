@@ -30,8 +30,10 @@ This will give you the following response:
 ```PowerShell
 Name                           Value
 ----                           -----
-ReadPermissions                {Organization.Read.All}
-UpdatePermissions              {Organization.ReadWrite.All}
+RequiredRoleGroups             {}
+RequiredRoles                  {}
+Read                           {Organization.Read.All}
+Update                         {Organization.ReadWrite.All}
 ```
 
 For more information, check out the [Microsoft Graph Permissions](../../user-guide/get-started/authentication-and-permissions/#microsoft-graph-permissions) section on the **Authentication and Permissions** page.

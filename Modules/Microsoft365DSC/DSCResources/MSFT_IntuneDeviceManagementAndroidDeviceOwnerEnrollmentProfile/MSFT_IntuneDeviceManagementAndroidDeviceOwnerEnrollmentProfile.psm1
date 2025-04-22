@@ -25,10 +25,6 @@ function Get-TargetResource
         $Description,
 
         [Parameter()]
-        [System.Int32]
-        $EnrolledDeviceCount,
-
-        [Parameter()]
         [System.String]
         [ValidateSet( 'corporateOwnedDedicatedDevice', 'corporateOwnedFullyManaged', 'corporateOwnedWorkProfile', 'corporateOwnedAOSPUserlessDevice', 'corporateOwnedAOSPUserAssociatedDevice')]
         $EnrollmentMode,
@@ -38,32 +34,12 @@ function Get-TargetResource
         $EnrollmentTokenType,
 
         [Parameter()]
-        [System.Int32]
-        $EnrollmentTokenUsageCount,
-
-        [Parameter()]
         [System.Boolean]
         $IsTeamsDeviceProfile,
 
         [Parameter()]
-        [System.String]
-        $QrCodeContent,
-
-        [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance]
-        $QrCodeImage,
-
-        [Parameter()]
         [System.String[]]
         $RoleScopeTagIds,
-
-        [Parameter()]
-        [System.String]
-        $TokenValue,
-
-        [Parameter()]
-        [System.String]
-        $TokenCreationDateTime,
 
         [Parameter()]
         [System.String]
@@ -145,8 +121,10 @@ function Get-TargetResource
             {
                 Write-Verbose -Message 'Trying to retrieve profile by Id'
                 $androidDeviceOwnerEnrollmentProfile = Get-MgBetaDeviceManagementAndroidDeviceOwnerEnrollmentProfile `
-                    -AndroidDeviceOwnerEnrollmentProfileId $Id
+                    -AndroidDeviceOwnerEnrollmentProfileId $Id `
+                    -ErrorAction SilentlyContinue
             }
+
             if ($null -eq $androidDeviceOwnerEnrollmentProfile)
             {
                 Write-Verbose -Message 'Trying to retrieve profile by DisplayName'
@@ -154,19 +132,11 @@ function Get-TargetResource
                     -All `
                     -Filter "displayName eq '$DisplayName'" `
                     -ErrorAction SilentlyContinue
-
-                # Need to do another call by id to get QrCode info. Can't just expand the property.
-                if ($null -ne $androidDeviceOwnerEnrollmentProfile)
-                {
-                    Write-Verbose -Message 'Found by DisplayName, now retrieving additional details by id.'
-                    $androidDeviceOwnerEnrollmentProfile = Get-MgBetaDeviceManagementAndroidDeviceOwnerEnrollmentProfile `
-                        -AndroidDeviceOwnerEnrollmentProfileId $androidDeviceOwnerEnrollmentProfile.Id
-                }
             }
 
             if ($null -eq $androidDeviceOwnerEnrollmentProfile)
             {
-                Write-Verbose -Message "No AndroidDeviceOwnerEnrollmentProfiles with {$Id} was found."
+                Write-Verbose -Message "No AndroidDeviceOwnerEnrollmentProfile with {$Id} was found."
                 return $nullResult
             }
         }
@@ -175,37 +145,21 @@ function Get-TargetResource
             $androidDeviceOwnerEnrollmentProfile = $Script:exportedInstance
         }
 
-        $QrCodeImageValue = $null
-        if ($null -ne $androidDeviceOwnerEnrollmentProfile.QrCodeImage.Type)
-        {
-            $QrCodeImageValue = @{
-                type  = $androidDeviceOwnerEnrollmentProfile.QrCodeImage.Type
-                value = [Array] ($androidDeviceOwnerEnrollmentProfile.QrCodeImage.Value -join ',')
-            }
-        }
-
         $results = @{
             Id                        = $androidDeviceOwnerEnrollmentProfile.Id
             DisplayName               = $androidDeviceOwnerEnrollmentProfile.DisplayName
             AccountId                 = $androidDeviceOwnerEnrollmentProfile.AccountId
             ConfigureWifi             = $androidDeviceOwnerEnrollmentProfile.ConfigureWifi
             Description               = $androidDeviceOwnerEnrollmentProfile.Description
-            EnrolledDeviceCount       = $androidDeviceOwnerEnrollmentProfile.EnrolledDeviceCount
             EnrollmentMode            = $androidDeviceOwnerEnrollmentProfile.EnrollmentMode.ToString()
             EnrollmentTokenType       = $androidDeviceOwnerEnrollmentProfile.EnrollmentTokenType.ToString()
-            EnrollmentTokenUsageCount = $androidDeviceOwnerEnrollmentProfile.EnrollmentTokenUsageCount
             IsTeamsDeviceProfile      = $androidDeviceOwnerEnrollmentProfile.IsTeamsDeviceProfile
-            QrCodeContent             = $androidDeviceOwnerEnrollmentProfile.QrCodeContent
-            QrCodeImage               = $QrCodeImageValue
             RoleScopeTagIds           = $androidDeviceOwnerEnrollmentProfile.RoleScopeTagIds
-            TokenCreationDateTime     = $androidDeviceOwnerEnrollmentProfile.TokenCreationDateTime.ToString()
             TokenExpirationDateTime   = $androidDeviceOwnerEnrollmentProfile.TokenExpirationDateTime.ToString()
-            TokenValue                = $androidDeviceOwnerEnrollmentProfile.TokenValue
             WifiHidden                = $androidDeviceOwnerEnrollmentProfile.WifiHidden
             WifiPassword              = $androidDeviceOwnerEnrollmentProfile.WifiPassword
             WifiSecurityType          = $androidDeviceOwnerEnrollmentProfile.WifiSecurityType.ToString()
             WifiSsid                  = $androidDeviceOwnerEnrollmentProfile.WifiSsid
-
             Ensure                    = 'Present'
             Credential                = $Credential
             ApplicationId             = $ApplicationId
@@ -214,6 +168,7 @@ function Get-TargetResource
             ManagedIdentity           = $ManagedIdentity.IsPresent
             AccessTokens              = $AccessTokens
         }
+
         return [System.Collections.Hashtable] $results
     }
     catch
@@ -255,10 +210,6 @@ function Set-TargetResource
         $Description,
 
         [Parameter()]
-        [System.Int32]
-        $EnrolledDeviceCount,
-
-        [Parameter()]
         [System.String]
         [ValidateSet( 'corporateOwnedDedicatedDevice', 'corporateOwnedFullyManaged', 'corporateOwnedWorkProfile', 'corporateOwnedAOSPUserlessDevice', 'corporateOwnedAOSPUserAssociatedDevice')]
         $EnrollmentMode,
@@ -268,32 +219,12 @@ function Set-TargetResource
         $EnrollmentTokenType,
 
         [Parameter()]
-        [System.Int32]
-        $EnrollmentTokenUsageCount,
-
-        [Parameter()]
         [System.Boolean]
         $IsTeamsDeviceProfile,
 
         [Parameter()]
-        [System.String]
-        $QrCodeContent,
-
-        [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance]
-        $QrCodeImage,
-
-        [Parameter()]
         [System.String[]]
         $RoleScopeTagIds,
-
-        [Parameter()]
-        [System.String]
-        $TokenValue,
-
-        [Parameter()]
-        [System.String]
-        $TokenCreationDateTime,
 
         [Parameter()]
         [System.String]
@@ -361,37 +292,20 @@ function Set-TargetResource
     $currentInstance = Get-TargetResource @PSBoundParameters
     $setParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
-    if ($null -ne $QrCodeImage)
-    {
-        $QrCodeImageValue = @{
-            type = $QrCodeImage.type
-            value = [System.Byte[]] @()
-        }
-
-        foreach ($byteValue in $QrCodeImage.value)
-        {
-            $convertedValue = [System.Byte]([BitConverter]::GetBytes($byteValue))[0]
-            $QrCodeImageValue.value += $convertedValue
-        }
-        $setParameters.QrCodeImage = $QrCodeImageValue
-        $setParameters.QrCodeImage.value = [System.Byte[]]($setParameters.QrCodeImage.value)
-    }
     # CREATE
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Create AndroidDeviceOwnerEnrollmentProfile: $DisplayName with Enrollment Mode: $EnrollmentMode"
 
-        $setParameters.remove('Id') | Out-Null
-        $setParameters.remove('Ensure') | Out-Null
-        $setParameters.Remove('Verbose') | Out-Null
-        $response = New-MgBetaDeviceManagementAndroidDeviceOwnerEnrollmentProfile @setParameters
+        $setParameters.Remove('Id') | Out-Null
+        $null = New-MgBetaDeviceManagementAndroidDeviceOwnerEnrollmentProfile @setParameters
     }
     # UPDATE
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating AndroidDeviceOwnerEnrollmentProfile: $DisplayName"
         Remove-MgBetaDeviceManagementAndroidDeviceOwnerEnrollmentProfile -AndroidDeviceOwnerEnrollmentProfileId $currentInstance.Id -Confirm:$false
-        $response = New-MgBetaDeviceManagementAndroidDeviceOwnerEnrollmentProfile @setParameters
+        $null = New-MgBetaDeviceManagementAndroidDeviceOwnerEnrollmentProfile @setParameters
     }
     # REMOVE
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
@@ -428,10 +342,6 @@ function Test-TargetResource
         $Description,
 
         [Parameter()]
-        [System.Int32]
-        $EnrolledDeviceCount,
-
-        [Parameter()]
         [System.String]
         [ValidateSet( 'corporateOwnedDedicatedDevice', 'corporateOwnedFullyManaged', 'corporateOwnedWorkProfile', 'corporateOwnedAOSPUserlessDevice', 'corporateOwnedAOSPUserAssociatedDevice')]
         $EnrollmentMode,
@@ -441,32 +351,12 @@ function Test-TargetResource
         $EnrollmentTokenType,
 
         [Parameter()]
-        [System.Int32]
-        $EnrollmentTokenUsageCount,
-
-        [Parameter()]
         [System.Boolean]
         $IsTeamsDeviceProfile,
 
         [Parameter()]
-        [System.String]
-        $QrCodeContent,
-
-        [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance]
-        $QrCodeImage,
-
-        [Parameter()]
         [System.String[]]
         $RoleScopeTagIds,
-
-        [Parameter()]
-        [System.String]
-        $TokenValue,
-
-        [Parameter()]
-        [System.String]
-        $TokenCreationDateTime,
 
         [Parameter()]
         [System.String]
@@ -536,11 +426,6 @@ function Test-TargetResource
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
     $ValuesToCheck.Remove('WifiPassword') | Out-Null
-    $ValuesToCheck.Remove("QrCodeImage") | Out-Null
-    $ValuesToCheck.Remove("QrCodeContent") | Out-Null
-    $ValuesToCheck.Remove("TokenValue") | Out-Null
-    $ValuesToCheck.Remove("TokenCreationDateTime") | Out-Null
-    $ValuesToCheck.Remove("TokenExpirationDateTime") | Out-Null
 
     #Compare Cim instances
     Write-Verbose -Message "Evaluating CIM Instances"
@@ -657,7 +542,6 @@ function Export-TargetResource
             $params = @{
                 Id                    = $config.Id
                 DisplayName           = $config.DisplayName
-
                 Ensure                = 'Present'
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
@@ -669,28 +553,11 @@ function Export-TargetResource
 
             $Script:exportedInstance = $config
             $Results = Get-TargetResource @Params
-
-            if ($Results.QrCodeImage)
-            {
-                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.QrCodeImage `
-                                                                             -CIMInstanceName 'IntuneDeviceManagementAndroidDeviceOwnerEnrollmentProfileQRImage'
-                if ($complexTypeStringResult)
-                {
-                    $Results.QrCodeImage = $complexTypeStringResult
-                    $Results.QrCodeImage = $Results.QrCodeImage.ReplacE("@('", "@(").Replace("')", "`)")
-                }
-                else
-                {
-                    $Results.Remove('QrCodeImage') | Out-Null
-                }
-            }
-
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
-                -Credential $Credential `
-                -NoEscape @('QrCodeImage')
+                -Credential $Credential
 
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `

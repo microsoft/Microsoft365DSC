@@ -280,20 +280,15 @@ function Set-TargetResource
 
     $SafeLinksRules = Get-SafeLinksRule
     $SafeLinksRule = $SafeLinksRules | Where-Object -FilterScript { $_.Identity -eq $Identity }
-    $SafeLinksRuleParams = [System.Collections.Hashtable]($PSBoundParameters)
-    $SafeLinksRuleParams.Remove('Ensure') | Out-Null
-    $SafeLinksRuleParams.Remove('Credential') | Out-Null
-    $SafeLinksRuleParams.Remove('ApplicationId') | Out-Null
-    $SafeLinksRuleParams.Remove('TenantId') | Out-Null
-    $SafeLinksRuleParams.Remove('CertificateThumbprint') | Out-Null
-    $SafeLinksRuleParams.Remove('CertificatePath') | Out-Null
-    $SafeLinksRuleParams.Remove('CertificatePassword') | Out-Null
-    $SafeLinksRuleParams.Remove('ManagedIdentity') | Out-Null
-    $SafeLinksRuleParams.Remove('AcccessTokens') | Out-Null
+    $SafeLinksRuleParams = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
     if (('Present' -eq $Ensure ) -and (-not $SafeLinksRule))
     {
-        New-EXOSafeLinksRule -SafeLinksRuleParams $PSBoundParameters
+        $SafeLinksRuleParams.Add('Name', $SafeLinksRuleParams.Identity)
+        $SafeLinksRuleParams.Remove('Identity') | Out-Null
+        $SafeLinksRuleParams.Remove('MakeDefault') | Out-Null
+        Write-Verbose -Message "Creating New SafeLinksRule $($SafeLinksRuleParams.Name)"
+        New-SafeLinksRule @SafeLinksRuleParams -Confirm:$false
     }
 
     if (('Present' -eq $Ensure ) -and ($SafeLinksRule))
@@ -304,19 +299,20 @@ function Set-TargetResource
             # There doesn't appear to be any way to change the Enabled state of a rule once created.
             Write-Verbose -Message "Removing SafeLinksRule $($Identity) in order to change Enabled state."
             Remove-SafeLinksRule -Identity $Identity -Confirm:$false
-            New-EXOSafeLinksRule -SafeLinksRuleParams $PSBoundParameters
+            $SafeLinksRuleParams.Add('Name', $SafeLinksRuleParams.Identity)
+            $SafeLinksRuleParams.Remove('Identity') | Out-Null
+            $SafeLinksRuleParams.Remove('MakeDefault') | Out-Null
+            New-SafeLinksRule @SafeLinksRuleParams -Confirm:$false
         }
         else
         {
-            if ($SafeLinksRuleParams.SafeLinksPolicy -ne $SafeLinksRule.SafeLinksPolicy)
-            {
-                Set-EXOSafeLinksRule -SafeLinksRuleParams $SafeLinksRuleParams
-            }
-            else
+            $SafeLinksRuleParams.Remove('Enabled') | Out-Null
+            if ($SafeLinksRuleParams.SafeLinksPolicy -eq $SafeLinksRule.SafeLinksPolicy)
             {
                 $SafeLinksRuleParams.Remove('SafeLinksPolicy')
-                Set-EXOSafeLinksRule -SafeLinksRuleParams $SafeLinksRuleParams
             }
+            Write-Verbose -Message "Setting SafeLinksRule $($Identity)"
+            Set-SafeLinksRule @SafeLinksRuleParams -Confirm:$false
         }
     }
 

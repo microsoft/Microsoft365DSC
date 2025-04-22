@@ -168,7 +168,7 @@ function Get-TargetResource
 
         $results = @{
             Id                              = $getValue.Id
-            CatalogId                       = $catalog.DisplayName
+            CatalogId                       = $catalog.Id
             Description                     = $getValue.Description
             DisplayName                     = $getValue.DisplayName
             IsHidden                        = $getValue.IsHidden

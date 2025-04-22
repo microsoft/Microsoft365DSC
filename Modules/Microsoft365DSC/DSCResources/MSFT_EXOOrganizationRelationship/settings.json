@@ -29,7 +29,9 @@
                 "Message Tracking",
                 "Organization Configuration"
             ],
-            "requiredrolegroups": "Organization Management"
+            "requiredrolegroups": [
+                "Organization Management"
+            ]
         }
     }
 }

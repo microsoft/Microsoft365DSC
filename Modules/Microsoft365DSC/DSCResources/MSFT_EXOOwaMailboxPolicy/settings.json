@@ -26,7 +26,9 @@
                 "View-Only Configuration",
                 "Mail Recipients"
             ],
-            "requiredrolegroups": "Organization Management"
+            "requiredrolegroups": [
+                "Organization Management"
+            ]
         }
     }
 }

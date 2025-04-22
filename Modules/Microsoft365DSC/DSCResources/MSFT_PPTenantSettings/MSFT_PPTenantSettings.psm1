@@ -1092,33 +1092,4 @@ function Get-M365DSCPowerPlatformTenantSettings
     return $result
 }
 
-function Set-M365DSCPPTenantSettings
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.Collections.Hashtable]
-        $Body
-    )
-
-    $url = "$((Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatformREST').ResourceUrl)/providers/Microsoft.BusinessAppPlatform/scopes/admin/updateTenantSettings?api-version=2016-11-01"
-
-}
-
-function Get-M365DSCPPTenantSettings
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.Collections.Hashtable]
-        $Body
-    )
-
-    $url = "$((Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatformREST').ResourceUrl)/providers/Microsoft.BusinessAppPlatform/scopes/admin/getTenantSettings?api-version=2016-11-01"
-    $headers = @{
-        Authorization = (Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatformREST').AccessToken
-    }
-    Invoke-WebRequest -Uri $url -Headers $headers -ContentType "application/json"
-}
-
 Export-ModuleMember -Function *-TargetResource

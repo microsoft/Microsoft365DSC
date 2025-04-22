@@ -15,6 +15,35 @@
                 "read": [],
                 "update": []
             }
+        },
+        "Azure DevOps": {
+            "delegated": {
+                "read": [
+                    {
+                        "name": "vso.graph"
+                    },
+                    {
+                        "name": "vso.profile"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "vso.identity"
+                    },
+                    {
+                        "name": "vso.graph"
+                    },
+                    {
+                        "name": "vso.profile"
+                    },
+                    {
+                        "name": "vso.security_manage"
+                    },
+                    {
+                        "name": "vso.security_manage"
+                    }
+                ]
+            }
         }
     }
 }

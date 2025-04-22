@@ -420,7 +420,7 @@ function Test-TargetResource
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
-        -ValuesToCheck $valuesToCheck.Keys -Verbose
+        -ValuesToCheck $valuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 

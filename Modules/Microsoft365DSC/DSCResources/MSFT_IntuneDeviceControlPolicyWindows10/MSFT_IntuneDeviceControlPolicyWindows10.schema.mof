@@ -60,6 +60,8 @@ class MSFT_IntuneDeviceControlPolicyWindows10 : OMI_BaseResource
     [Write, Description("WPD Devices: Deny write access (0: Disabled, 1: Enabled)"), ValueMap{"0", "1"}, Values{"0", "1"}] String WPDDevices_DenyWrite_Access_2;
     [Write, Description("WPD Devices: Deny write access (User) (0: Disabled, 1: Enabled)"), ValueMap{"0", "1"}, Values{"0", "1"}] String WPDDevices_DenyWrite_Access_1;
     [Write, Description("Allow Full Scan Removable Drive Scanning (0: Not allowed. Turns off scanning on removable drives., 1: Allowed. Scans removable drives.)"), ValueMap{"0", "1"}, Values{"0", "1"}] String AllowFullScanRemovableDriveScanning;
+    [Write, Description("Default Enforcement (1: Default Allow Enforcement, 2: Default Deny Enforcement)"), ValueMap{"1", "2"}, Values{"1", "2"}] String DefaultEnforcement;
+    [Write, Description("Device Control Enabled (0: Device Control is disabled, 1: Device Control is enabled)"), ValueMap{"0", "1"}, Values{"0", "1"}] String DeviceControlEnabled;
     [Write, Description("Allow Direct Memory Access (0: Not allowed., 1: Allowed.)"), ValueMap{"0", "1"}, Values{"0", "1"}] String AllowDirectMemoryAccess;
     [Write, Description("Device Enumeration Policy (0: Block all (Most restrictive), 1: Only after log in/screen unlock, 2: Allow all (Least restrictive))"), ValueMap{"0", "1", "2"}, Values{"0", "1", "2"}] String DeviceEnumerationPolicy;
     [Write, Description("Removable Disk Deny Write Access (0: Disabled., 1: Enabled.)"), ValueMap{"0", "1"}, Values{"0", "1"}] String RemovableDiskDenyWriteAccess;

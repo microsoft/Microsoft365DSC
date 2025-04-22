@@ -457,7 +457,7 @@ function Export-TargetResource
     {
         try
         {
-            [array]$AllApplicationAccessPolicies = Get-ApplicationAccessPolicy -ErrorAction SilentlyContinue
+            [array]$AllApplicationAccessPolicies = Get-ApplicationAccessPolicy -ErrorAction Stop
         }
         catch
         {

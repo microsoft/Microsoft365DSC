@@ -63,26 +63,30 @@ function Get-M365DSCCompiledPermissionList
     }
 
     $results = @{
-        Read               = @(
+        AdministrativeRoles = @{
+            Read = @()
+            Update = @()
+        }
+        Read                = @(
             @{
-                API        = 'Graph'
-                Permission = @{
+                API         = 'Graph'
+                Permission  = @{
                     Name = 'Organization.Read.All'
                     Type = 'Application'
                 }
             }
         )
-        Update             = @(
+        Update              = @(
             @{
-                API        = 'Graph'
-                Permission = @{
+                API         = 'Graph'
+                Permission  = @{
                     Name = 'Organization.Read.All'
                     Type = 'Application'
                 }
             }
         )
-        RequiredRoles      = @()
-        RequiredRoleGroups = @()
+        RequiredRoles       = @()
+        RequiredRoleGroups  = @()
     }
 
     $total = $ResourceNameList.Count
@@ -110,6 +114,37 @@ function Get-M365DSCCompiledPermissionList
         {
             $fileContent = Get-Content $settingsFilePath -Raw
             $resourceSettings = ConvertFrom-Json -InputObject $fileContent
+
+            # Entra / Administrative roles
+            if ($null -ne $resourceSettings.roles.read -or $null -ne $resourceSettings.roles.update)
+            {
+                $readRoles = $resourceSettings.roles.read
+                $updateRoles = $resourceSettings.roles.update
+                foreach ($role in $readRoles)
+                {
+                    if (-not $results.AdministrativeRoles.Read.Contains($role))
+                    {
+                        Write-Verbose -Message "    Found new Administrative Read role {$($role)}"
+                        $results.AdministrativeRoles.Read += $role
+                    }
+                    else
+                    {
+                        Write-Verbose -Message "    Administrative Read role {$($role)} was already added"
+                    }
+                }
+                foreach ($role in $updateRoles)
+                {
+                    if (-not $results.AdministrativeRoles.Update.Contains($role))
+                    {
+                        Write-Verbose -Message "    Found new Administrative Update role {$($role)}"
+                        $results.AdministrativeRoles.Update += $role
+                    }
+                    else
+                    {
+                        Write-Verbose -Message "    Administrative Update role {$($role)} was already added"
+                    }
+                }
+            }
 
             if ($null -eq $resourceSettings.permissions)
             {
@@ -259,10 +294,15 @@ function Get-M365DSCCompiledPermissionList
 
     if ($PSBoundParameters.ContainsKey('PermissionType'))
     {
-        $results = $results.$AccessType | Where-Object -FilterScript { $_. Permission.Type -eq $PermissionType }
-        $results | ForEach-Object -Process {
+        $resultsByType = $results.$AccessType | Where-Object -FilterScript { $_.Permission.Type -eq $PermissionType }
+        $resultsByType | ForEach-Object -Process {
             $_.PermissionName = $_.Permission.Name
             $_.Remove('Permission')
+        }
+        $results = @{
+            AdministrativeRoles = $results.AdministrativeRoles.$AccessType
+            Permissions = $resultsByType
+            RequiredRoles = $results.RequiredRoles
         }
     }
 
@@ -415,147 +455,6 @@ function Update-M365DSCAllowedGraphScopes
         Write-Output 'Error during updating allowed Graph scopes!'
     }
 }
-
-<#
-.Description
-This function updates the settings.json files for all resources that use Graph cmdlets.
-It is compiling a permissions list based on all used Graph cmdlets in the resource and
-retrieving the permissions for these cmdlets from the Graph. Then it updates the
-settings.json file
-
-.Example
-Update-M365DSCResourcesSettingsJSON
-
-.Functionality
-Public
-#>
-<#
-## HIDDEN BECAUSE OF ISSUES WITH THE FIND-MGGRAPHCOMMAND CMDLET. TEMPORARILY REPLACED WITH BELOW FUNCTION.
-function Update-M365DSCResourcesSettingsJSON
-{
-    [CmdletBinding()]
-    param()
-
-    Write-Verbose "Determining DSCResources path"
-    $dscResourcesRoot = Join-Path -Path $PSScriptRoot -ChildPath '..\DSCResources'
-    Write-Verbose "  DSCResouces path: $dscResourcesRoot"
-
-    Write-Verbose "Getting all psm1 files"
-    $files = Get-ChildItem -Path "$dscResourcesRoot\*.psm1" -Recurse
-    Write-Verbose "  Found $($files.Count) psm1 files"
-
-    $ignoredCmdlets = @("Get-MgContext")
-
-    foreach ($file in $files)
-    {
-        $readPermissions = @()
-        $updatePermissions = @()
-        if ($file -notlike "*Intune*")
-        {
-            Write-Verbose "Processing file: $($file.BaseName)"
-            $content = Get-Content $file -Raw
-
-            $sb = [ScriptBlock]::Create($content)
-
-            $functions = $sb.Ast.FindAll({ $args[0] -is [System.Management.Automation.Language.FunctionDefinitionAst] }, $true)
-
-            $functions = $functions | Where-Object { $_.Name -in ("Get-TargetResource", "Set-TargetResource") }
-
-            foreach ($function in $functions)
-            {
-                Write-Verbose "  Function: $($function.Name)"
-
-                $regex = [Regex]::new('(?<Cmdlet>(Update|Get|Remove|Set)-Mg\w*)')
-                $regexMatches = $regex.Matches($function.Extent.Text)
-
-                $cmdlets = $regexMatches.Value | Sort-Object | Select-Object -Unique
-
-                $functionPermissions = @()
-                foreach ($cmdlet in $cmdlets)
-                {
-                    if ($cmdlet -notin $ignoredCmdlets)
-                    {
-                        $commands = Find-MgGraphCommand -Command $cmdlet
-
-                        $cmdletPermissions = $commands[0].Permissions
-                        $functionPermissions += $cmdletPermissions.Name
-                    }
-                }
-                $cleanFunctionPermissions = $functionPermissions | Sort-Object | Select-Object -Unique
-
-                if ($null -ne $cleanFunctionPermissions)
-                {
-                    switch ($function.Name)
-                    {
-                        "Get-TargetResource"
-                        {
-                            $readPermissions = @()
-                            foreach ($item in $cleanFunctionPermissions)
-                            {
-                                $readPermissions += [PSCustomObject]@{
-                                    name = $item
-                                }
-                            }
-                        }
-                        "Set-TargetResource"
-                        {
-                            $updatePermissions = @()
-                            foreach ($item in $cleanFunctionPermissions)
-                            {
-                                $updatePermissions += [PSCustomObject]@{
-                                    name = $item
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            $settingsFile = Join-Path -Path $file.DirectoryName -ChildPath 'settings.json'
-            if (Test-Path -Path $settingsFile)
-            {
-                Write-Verbose "  Updating existing settings.json file"
-                $settingsJson = Get-Content -Path $settingsFile -Raw
-                $settings = ConvertFrom-Json $settingsJson
-
-                if ($readPermissions.Count -eq 0 -and $settings.permissions.read.Count -ne 0)
-                {
-                    [array]$readPermissions = $settings.permissions.read
-                }
-
-                if ($updatePermissions.Count -eq 0 -and $settings.permissions.update.Count -ne 0)
-                {
-                    [array]$updatePermissions = $settings.permissions.update
-                }
-
-                $settings.permissions = @([PSCustomObject]@{
-                        read   = $readPermissions
-                        update = $updatePermissions
-                    })
-
-            }
-            else
-            {
-                Write-Verbose "    Creating new settings.json file"
-                $settings = [PSCustomObject]@{
-                    resourceName = $file.BaseName -replace 'MSFT_'
-                    description  = ""
-                    permissions  = @([PSCustomObject]@{
-                            read   = $readPermissions
-                            update = $updatePermissions
-                        })
-                }
-            }
-            $json = ConvertTo-Json -InputObject $settings -Depth 10
-            Set-Content -Path $settingsFile -Value $json -Encoding UTF8
-        }
-        else
-        {
-            Write-Verbose "$($file.BaseName) - Skipping Intune resources (unable to process those Graph cmdlets)"
-        }
-    }
-}
-#>
 
 <#
 .Description

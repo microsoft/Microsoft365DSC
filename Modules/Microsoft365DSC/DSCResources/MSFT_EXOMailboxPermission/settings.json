@@ -28,7 +28,9 @@
                 "Mail Recipients",
                 "UM Mailboxes"
             ],
-            "requiredrolegroups": "Organization Management"
+            "requiredrolegroups": [
+                "Organization Management"
+            ]
         }
     }
 }

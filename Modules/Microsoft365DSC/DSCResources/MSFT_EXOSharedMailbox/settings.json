@@ -47,7 +47,9 @@
                 "MyMailboxDelegation",
                 "MyDisplayName"
             ],
-            "requiredrolegroups": "Organization Management"
+            "requiredrolegroups": [
+                "Organization Management"
+            ]
         }
     }
 }

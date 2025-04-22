@@ -41,7 +41,7 @@ function Start-M365DSCConfigurationExtract
         $MaxProcesses = 16,
 
         [Parameter()]
-        [ValidateSet('AAD', 'ADO', 'AZURE', 'COMMERCE','FABRIC', 'SPO', 'DEFENDER', 'EXO', 'INTUNE', 'SC', 'SENTINEL', 'OD', 'O365', 'TEAMS', 'PP', 'PLANNER', 'SH')]
+        [ValidateSet('AAD', 'ADO', 'AZURE', 'COMMERCE', 'DEFENDER', 'EXO', 'FABRIC', 'INTUNE', 'O365', 'OD', 'PLANNER', 'PP', 'SC', 'SENTINEL', 'SH', 'SPO', 'TEAMS')]
         [System.String[]]
         $Workloads,
 

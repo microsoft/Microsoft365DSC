@@ -105,6 +105,11 @@ function Get-TargetResource
         $Spa,
 
         [Parameter()]
+        [ValidateSet("AzureADandPersonalMicrosoftAccount", "AzureADMultipleOrgs", "AzureADMyOrg", "PersonalMicrosoftAccount")]
+        [System.String]
+        $SignInAudience,
+
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -375,13 +380,13 @@ function Get-TargetResource
             $isPublicClient = $true
         }
 
-
         $PublicClientRedirectUrisValue = $null
         if ($null -ne $AADApp.PublicClient -and $AADApp.PublicClient.RedirectUris.Length -gt 0)
         {
             $PublicClientRedirectUrisValue = $AADApp.PublicClient.RedirectUris
         }
 
+        # DEPRECATED
         $AvailableToOtherTenantsValue = $false
         if ($AADApp.SignInAudience -ne 'AzureADMyOrg')
         {
@@ -525,6 +530,7 @@ function Get-TargetResource
             ApplicationTemplateId    = $AADApp.AdditionalProperties.applicationTemplateId
             Spa                      = $SpaValue
             PublicClientRedirectUris = $PublicClientRedirectUrisValue
+            SignInAudience           = $AADApp.SignInAudience
             Ensure                   = 'Present'
             Credential               = $Credential
             ApplicationId            = $ApplicationId
@@ -662,6 +668,11 @@ function Set-TargetResource
         $Spa,
 
         [Parameter()]
+        [ValidateSet("AzureADandPersonalMicrosoftAccount", "AzureADMultipleOrgs", "AzureADMyOrg", "PersonalMicrosoftAccount")]
+        [System.String]
+        $SignInAudience,
+
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -771,13 +782,9 @@ function Set-TargetResource
 
     }
 
-    if ($currentParameters.AvailableToOtherTenants)
+    if ($currentParameters.ContainsKey('AvailableToOtherTenants'))
     {
-        $currentParameters.Add('SignInAudience', 'AzureADMultipleOrgs')
-    }
-    else
-    {
-        $currentParameters.Add('SignInAudience', 'AzureADMyOrg')
+        Write-Verbose -Message "Property AvailableToOtherTenants is deprecated and will not have any effect. We recommend removing it from your configuration."
     }
     $currentParameters.Remove('AvailableToOtherTenants') | Out-Null
     $currentParameters.Remove('PublicClient') | Out-Null
@@ -1422,6 +1429,11 @@ function Test-TargetResource
         $Spa,
 
         [Parameter()]
+        [ValidateSet("AzureADandPersonalMicrosoftAccount", "AzureADMultipleOrgs", "AzureADMyOrg", "PersonalMicrosoftAccount")]
+        [System.String]
+        $SignInAudience,
+
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -1513,6 +1525,7 @@ function Test-TargetResource
 
     $ValuesToCheck.Remove('ObjectId') | Out-Null
     $ValuesToCheck.Remove('AppId') | Out-Null
+    $ValuesToCheck.Remove('AvailableToOtherTenants') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -1989,30 +2002,6 @@ function Get-M365DSCAzureADAppPermissions
     }
 
     return $permissions
-}
-
-function Get-M365DSCAzureADAppPermissionsAsString
-{
-    [CmdletBinding()]
-    [OutputType([System.String])]
-    param(
-        [Parameter(Mandatory = $true)]
-        [System.Collections.ArrayList]
-        $Permissions
-    )
-
-    $StringContent = '@('
-    foreach ($permission in $Permissions)
-    {
-        $StringContent += "MSFT_AADApplicationPermission {`r`n"
-        $StringContent += "                Name                = '" + $permission.Name + "'`r`n"
-        $StringContent += "                Type                = '" + $permission.Type + "'`r`n"
-        $StringContent += "                SourceAPI           = '" + $permission.SourceAPI + "'`r`n"
-        $StringContent += "                AdminConsentGranted = `$" + $permission.AdminConsentGranted + "`r`n"
-        $StringContent += "            }`r`n"
-    }
-    $StringContent += '            )'
-    return $StringContent
 }
 
 Export-ModuleMember -Function *-TargetResource

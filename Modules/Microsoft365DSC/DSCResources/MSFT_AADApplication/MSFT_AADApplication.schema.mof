@@ -159,7 +159,7 @@ class MSFT_AADApplication : OMI_BaseResource
     [Key, Description("DisplayName of the app")] string DisplayName;
     [Write, Description("ObjectID of the app.")] String ObjectId;
     [Write, Description("AppId for the app.")] String AppId;
-    [Write, Description("Indicates whether this application is available in other tenants.")] Boolean AvailableToOtherTenants;
+    [Write, Description("DEPRECATED: Indicates whether this application is available in other tenants.")] Boolean AvailableToOtherTenants;
     [Write, Description("A free text field to provide a description of the application object to end users. The maximum allowed size is 1024 characters.")] String Description;
     [Write, Description("A bitmask that configures the groups claim issued in a user or OAuth 2.0 access token that the application expects.")] String GroupMembershipClaims;
     [Write, Description("The URL to the application's homepage.")] String Homepage;
@@ -180,6 +180,7 @@ class MSFT_AADApplication : OMI_BaseResource
     [Write, Description("Identifier of the associated Application Template.")] String ApplicationTemplateId;
     [Write, Description("List of public clients redirect URIs.")] String PublicClientRedirectUris[];
     [Write, Description("List of single page application settings."), EmbeddedInstance("MSFT_AADApplicationSpa")] String Spa;
+    [Write, Description("Specifies the Microsoft accounts that are supported for the current application. The possible values are: AzureADMyOrg (default), AzureADMultipleOrgs, AzureADandPersonalMicrosoftAccount, and PersonalMicrosoftAccount"), ValueMap{"AzureADandPersonalMicrosoftAccount", "AzureADMultipleOrgs", "AzureADMyOrg", "PersonalMicrosoftAccount"}, Values{"AzureADandPersonalMicrosoftAccount", "AzureADMultipleOrgs", "AzureADMyOrg", "PersonalMicrosoftAccount"}] String SignInAudience;
     [Write, Description("Specify if the Azure AD App should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
     [Write, Description("Credentials for the Microsoft Graph delegated permissions."), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;

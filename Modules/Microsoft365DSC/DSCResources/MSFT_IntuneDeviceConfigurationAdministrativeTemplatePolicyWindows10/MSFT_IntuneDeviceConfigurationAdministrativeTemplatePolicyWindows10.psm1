@@ -280,7 +280,7 @@ function Get-TargetResource
                 -TenantId $TenantId `
                 -Credential $Credential
         }
-        $nullResult = Clear-M365DSCAuthenticationParameter -BoundParameters $nullResult
+
         return $nullResult
     }
 }
@@ -686,13 +686,8 @@ function Test-TargetResource
     Write-Verbose -Message "Testing configuration of the Intune Device Configuration Administrative Template Policy for Windows10 with Id {$Id} and DisplayName {$DisplayName}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
-    if (-not (Test-M365DSCAuthenticationParameter -BoundParameters $CurrentValues))
-    {
-        Write-Verbose "An error occured in Get-TargetResource, the policy {$displayName} will not be processed"
-        throw "An error occured in Get-TargetResource, the policy {$displayName} will not be processed. Refer to the event viewer logs for more information."
-    }
 
-    $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
+    $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
     $testResult = $true
 
     #Compare Cim instances
@@ -700,7 +695,7 @@ function Test-TargetResource
     {
         $source = $PSBoundParameters.$key
         $target = $CurrentValues.$key
-        if ($source.getType().Name -like '*CimInstance*')
+        if ($source.GetType().Name -like '*CimInstance*')
         {
             #Removing Key Definition because it is Read-Only and ID as random
             if ($key -eq 'DefinitionValues')
@@ -709,24 +704,24 @@ function Test-TargetResource
                 $target = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $target
                 foreach ($definitionValue in $source)
                 {
-                    $definitionValue.remove('Definition') | Out-Null
-                    $definitionValue.remove('Id') | Out-Null
+                    $definitionValue.Remove('Definition') | Out-Null
+                    $definitionValue.Remove('Id') | Out-Null
                     #Removing Key presentationDefinitionLabel because it is Read-Only and ID as random
                     foreach ($presentationValue in $definitionValue.PresentationValues)
                     {
-                        $presentationValue.remove('presentationDefinitionLabel') | Out-Null
-                        $presentationValue.remove('Id') | Out-Null
+                        $presentationValue.Remove('presentationDefinitionLabel') | Out-Null
+                        $presentationValue.Remove('Id') | Out-Null
                     }
                 }
                 foreach ($definitionValue in $target)
                 {
-                    $definitionValue.remove('Definition') | Out-Null
-                    $definitionValue.remove('Id') | Out-Null
+                    $definitionValue.Remove('Definition') | Out-Null
+                    $definitionValue.Remove('Id') | Out-Null
                     #Removing Key presentationDefinitionLabel because it is Read-Only and ID as random
                     foreach ($presentationValue in $definitionValue.PresentationValues)
                     {
-                        $presentationValue.remove('presentationDefinitionLabel') | Out-Null
-                        $presentationValue.remove('Id') | Out-Null
+                        $presentationValue.Remove('presentationDefinitionLabel') | Out-Null
+                        $presentationValue.Remove('Id') | Out-Null
                     }
                 }
             }
@@ -863,11 +858,6 @@ function Export-TargetResource
 
             $Script:exportedInstance = $config
             $Results = Get-TargetResource @params
-            if (-not (Test-M365DSCAuthenticationParameter -BoundParameters $Results))
-            {
-                Write-Verbose "An error occured in Get-TargetResource, the policy {$($params.displayName)} will not be processed"
-                throw "An error occured in Get-TargetResource, the policy {$($params.displayName)} will not be processed. Refer to the event viewer logs for more information."
-            }
 
             if ($Results.DefinitionValues)
             {

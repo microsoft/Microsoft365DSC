@@ -792,52 +792,6 @@ function Update-M365DSCSettingUserIdFromUPN
     }
     return $Setting
 }
-function Get-M365DSCAADCrossTenantAccessPolicyB2BSettingAsString
-{
-    [CmdletBinding()]
-    [OutputType([System.String])]
-    param(
-        [Parameter(Mandatory = $true)]
-        $Setting
-    )
-
-    $StringContent = $null
-    if ($null -ne $Setting.applications.targets -and $null -ne $Setting.usersAndGroups.targets)
-    {
-        $StringContent = "MSFT_AADCrossTenantAccessPolicyB2BSetting {`r`n"
-        $StringContent += "                Applications = MSFT_AADCrossTenantAccessPolicyTargetConfiguration{`r`n"
-        $StringContent += "                    AccessType = '" + $Setting.applications.accessType + "'`r`n"
-        $StringContent += "                    Targets    = @(`r`n"
-
-        foreach ($target in $Setting.applications.targets)
-        {
-            $StringContent += "                        MSFT_AADCrossTenantAccessPolicyTarget{`r`n"
-            $StringContent += "                            Target     = '" + $target.target + "'`r`n"
-            $StringContent += "                            TargetType = '" + $target.targetType + "'`r`n"
-            $StringContent += "                        }`r`n"
-        }
-
-        $StringContent += "                    )`r`n"
-        $StringContent += "                }`r`n"
-        $StringContent += "                UsersAndGroups = MSFT_AADCrossTenantAccessPolicyTargetConfiguration{`r`n"
-        $StringContent += "                    AccessType = '" + $Setting.usersAndGroups.accessType + "'`r`n"
-        $StringContent += "                    Targets    = @(`r`n"
-
-        foreach ($target in $Setting.usersAndGroups.targets)
-        {
-            $StringContent += "                        MSFT_AADCrossTenantAccessPolicyTarget{`r`n"
-            $StringContent += "                            Target     = '" + $target.target + "'`r`n"
-            $StringContent += "                            TargetType = '" + $target.targetType + "'`r`n"
-            $StringContent += "                        }`r`n"
-        }
-
-        $StringContent += "                    )`r`n"
-        $StringContent += "                }`r`n"
-        $StringContent += "            }`r`n"
-    }
-
-    return $StringContent
-}
 
 function Get-M365DSCAADCrossTenantAccessPolicyB2BSetting
 {
@@ -930,33 +884,6 @@ function Get-M365DSCAADCrossTenantAccessPolicyAutomaticUserConsentSettings
     return $result
 }
 
-function Get-M365DSCAADCrossTenantAccessPolicyAutomaticUserConsentSettingsAsString
-{
-    [CmdletBinding()]
-    [OutputType([System.String])]
-    param(
-        [Parameter(Mandatory = $true)]
-        $Setting
-    )
-
-    $StringContent = $null
-    if ($null -ne $Setting.InboundAllowed -or $null -ne $Setting.OutboundAllowed)
-    {
-        $StringContent = "MSFT_AADCrossTenantAccessPolicyAutomaticUserConsentSettings {`r`n"
-        if ($null -ne $Setting.InboundAllowed)
-        {
-            $StringContent += "                InboundAllowed           = `$" + $Setting.InboundAllowed.ToString() + "`r`n"
-        }
-        if ($null -ne $Setting.OutboundAllowed)
-        {
-            $StringContent += "                OutboundAllowed          = `$" + $Setting.OutboundAllowed.ToString() + "`r`n"
-        }
-        $StringContent += "            }`r`n"
-    }
-
-    return $StringContent
-}
-
 function Get-M365DSCAADCrossTenantAccessPolicyInboundTrust
 {
     [CmdletBinding()]
@@ -974,38 +901,6 @@ function Get-M365DSCAADCrossTenantAccessPolicyInboundTrust
     }
 
     return $result
-}
-
-function Get-M365DSCAADCrossTenantAccessPolicyInboundTrustAsString
-{
-    [CmdletBinding()]
-    [OutputType([System.String])]
-    param(
-        [Parameter(Mandatory = $true)]
-        $Setting
-    )
-
-    $StringContent = $null
-    if ($null -ne $Setting.IsCompliantDeviceAccepted -or $null -ne $Setting.IsHybridAzureADJoinedDeviceAccepted -or `
-            $null -ne $Setting.IsMfaAccepted)
-    {
-        $StringContent = "MSFT_AADCrossTenantAccessPolicyInboundTrust {`r`n"
-        if ($null -ne $Setting.IsCompliantDeviceAccepted)
-        {
-            $StringContent += "                IsCompliantDeviceAccepted           = `$" + $Setting.IsCompliantDeviceAccepted.ToString() + "`r`n"
-        }
-        if ($null -ne $Setting.IsHybridAzureADJoinedDeviceAccepted)
-        {
-            $StringContent += "                IsHybridAzureADJoinedDeviceAccepted = `$" + $Setting.IsHybridAzureADJoinedDeviceAccepted.ToString() + "`r`n"
-        }
-        if ($null -ne $Setting.IsMfaAccepted)
-        {
-            $StringContent += "                IsMfaAccepted                       = `$" + $Setting.IsMfaAccepted.ToString() + "`r`n"
-        }
-        $StringContent += "            }`r`n"
-    }
-
-    return $StringContent
 }
 
 Export-ModuleMember -Function *-TargetResource

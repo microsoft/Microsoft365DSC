@@ -351,13 +351,7 @@ function Set-TargetResource
 
     $currentValues = Get-TargetResource @PSBoundParameters
 
-    $setParams = ([HashTable]$PSBoundParameters).Clone()
-    $setParams.Remove('Ensure') | Out-Null
-    $setParams.Remove('Credential') | Out-Null
-    $setParams.Remove('ApplicationId') | Out-Null
-    $setParams.Remove('TenantId') | Out-Null
-    $setParams.Remove('CertificateThumbprint') | Out-Null
-    $setParams.Remove('ApplicationSecret') | Out-Null
+    $setParams = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
     #region Assignments
     Write-Verbose -Message 'Converting Assignments into the proper format'
@@ -758,22 +752,34 @@ function Export-TargetResource
                             $result.Remove('AssignedUsers') | Out-Null
                         }
 
-                        if ($result.Attachments.Length -gt 0)
+                        if ($result.Attachments)
                         {
-                            $result.Attachments = Convert-M365DSCPlannerTaskAssignmentToCIMArray -Attachments $result.Attachments
-                        }
-                        else
-                        {
-                            $result.Remove('Attachments') | Out-Null
+                            $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                                -ComplexObject $result.Attachments `
+                                -CIMInstanceName 'PlannerTaskAttachment'
+                            if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                            {
+                                $result.Attachments = $complexTypeStringResult
+                            }
+                            else
+                            {
+                                $result.Remove('Attachments') | Out-Null
+                            }
                         }
 
-                        if ($result.Checklist.Length -gt 0)
+                        if ($result.Checklist)
                         {
-                            $result.Checklist = Convert-M365DSCPlannerTaskChecklistToCIMArray -Checklist $result.Checklist
-                        }
-                        else
-                        {
-                            $result.Remove('Checklist') | Out-Null
+                            $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                                -ComplexObject $result.Checklist `
+                                -CIMInstanceName 'PlannerTaskChecklistItem'
+                            if (-not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                            {
+                                $result.Checklist = $complexTypeStringResult
+                            }
+                            else
+                            {
+                                $result.Remove('Checklist') | Out-Null
+                            }
                         }
 
                         # Fix Notes which can have multiple lines
@@ -865,82 +871,6 @@ function Test-M365DSCPlannerTaskCheckListValues
         }
     }
     return $true
-}
-
-function Convert-M365DSCPlannerTaskAssignmentToCIMArray
-{
-    [CmdletBinding()]
-    [OutputType([System.String[]])]
-    Param(
-        [Parameter(Mandatory = $true)]
-        [System.Collections.HashTable[]]
-        $Attachments
-    )
-
-    $stringContent = "@(`r`n"
-    foreach ($attachment in $Attachments)
-    {
-        $stringContent += "                MSFT_PlannerTaskAttachment`r`n"
-        $stringContent += "                {`r`n"
-        $stringContent += "                    Uri = '$($attachment.Uri.Replace("'", "''"))'`r`n"
-        $stringContent += "                    Alias = '$($attachment.Alias.Replace("'", "''"))'`r`n"
-        $stringContent += "                    Type = '$($attachment.Type)'`r`n"
-        $StringContent += "                }`r`n"
-    }
-    $StringContent += '            )'
-    return $StringContent
-}
-
-function Convert-M365DSCPlannerTaskChecklistToCIMArray
-{
-    [CmdletBinding()]
-    [OutputType([System.String[]])]
-    Param(
-        [Parameter(Mandatory = $true)]
-        [System.Collections.HashTable[]]
-        $Checklist
-    )
-
-    $stringContent = "@(`r`n"
-    foreach ($checklistItem in $Checklist)
-    {
-        $stringContent += "                MSFT_PlannerTaskChecklistItem`r`n"
-        $stringCOntent += "                {`r`n"
-        $stringContent += "                   Title = '$($checklistItem.Title.Replace("'", "''"))'`r`n"
-        $stringContent += "                   Completed = `$$($checklistItem.Completed.ToString())`r`n"
-        $StringContent += "                }`r`n"
-    }
-    $StringContent += '            )'
-    return $StringContent
-}
-
-
-function Get-M365DSCPlannerTasksFromPlan
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable[]])]
-    Param(
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $PlanId,
-
-        [Parameter(Mandatory = $true)]
-        [System.Management.Automation.PSCredential]
-        $Credential
-    )
-    $results = @()
-    $uri = "$((Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl)v1.0/planner/plans/$PlanId/tasks"
-    $taskResponse = Invoke-MSCloudLoginMicrosoftGraphAPI -Credential $Credential `
-        -Uri $uri `
-        -Method Get
-    foreach ($task in $taskResponse.value)
-    {
-        $results += @{
-            Title = $task.title
-            Id    = $task.id
-        }
-    }
-    return $results
 }
 
 function GetTaskCategoryNameByColor

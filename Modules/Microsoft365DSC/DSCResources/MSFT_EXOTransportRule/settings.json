@@ -29,7 +29,9 @@
                 "Security Reader",
                 "Information Rights Management"
             ],
-            "requiredrolegroups": "Organization Management"
+            "requiredrolegroups": [
+                "Organization Management"
+            ]
         }
     }
 }

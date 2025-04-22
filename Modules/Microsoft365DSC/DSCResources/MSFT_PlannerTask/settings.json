@@ -9,6 +9,9 @@
                         "name": "Group.Read.All"
                     },
                     {
+                        "name": "Tasks.Read.All"
+                    },
+                    {
                         "name": "User.Read.All"
                     }
                 ],
@@ -17,7 +20,7 @@
                         "name": "Group.Read.All"
                     },
                     {
-                        "name": "Group.ReadWrite.All"
+                        "name": "Tasks.ReadWrite.All"
                     },
                     {
                         "name": "User.Read.All"
@@ -30,6 +33,9 @@
                         "name": "Group.Read.All"
                     },
                     {
+                        "name": "Tasks.Read.All"
+                    },
+                    {
                         "name": "User.Read.All"
                     }
                 ],
@@ -38,7 +44,7 @@
                         "name": "Group.Read.All"
                     },
                     {
-                        "name": "Group.ReadWrite.All"
+                        "name": "Tasks.ReadWrite.All"
                     },
                     {
                         "name": "User.Read.All"

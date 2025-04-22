@@ -25,7 +25,9 @@
                 "View-Only Configuration",
                 "Organization Configuration"
             ],
-            "requiredrolegroups": "Organization Management"
+            "requiredrolegroups": [
+                "Organization Management"
+            ]
         }
     }
 }

@@ -1382,64 +1382,250 @@ function Export-TargetResource
         $Results = Get-TargetResource @Params
         if ($null -ne $Results.BusinessJustificationList -and $Results.BusinessJustificationList.Length -gt 0)
         {
-            $Results.BusinessJustificationList = ConvertTo-BusinessJustificationListString -ObjectHash $Results.BusinessJustificationList
+            $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                -ComplexObject $Results.BusinessJustificationList `
+                -CIMInstanceName 'PolicyConfigBusinessJustificationList'
+            if (-not [String]::IsNullOrEmpty($complexTypeStringResult))
+            {
+                $Results.BusinessJustificationList = $complexTypeStringResult
+            }
+            else
+            {
+                $Results.Remove('BusinessJustificationList') | Out-Null            }
         }
 
         if ($null -ne $Results.DLPAppGroups -and $Results.DLPAppGroups.Length -gt 0)
         {
-            $Results.DLPAppGroups = ConvertTo-DLPAppGroupsString -ObjectHash $Results.DLPAppGroups
+            $complexTypeMapping = @(
+                @{
+                    Name            = 'DLPAppGroups'
+                    CimInstanceName = 'PolicyConfigDLPAppGroups'
+                },
+                @{
+                    Name            = 'Apps'
+                    CimInstanceName = 'PolicyConfigDLPApp'
+                    IsArray         = $true
+                }
+            )
+
+            $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                -ComplexObject $Results.DLPAppGroups `
+                -CIMInstanceName 'PolicyConfigDLPAppGroups' `
+                -ComplexTypeMapping $complexTypeMapping
+            if (-not [String]::IsNullOrEmpty($complexTypeStringResult))
+            {
+                $Results.DLPAppGroups = $complexTypeStringResult
+            }
+            else
+            {
+                $Results.Remove('DLPAppGroups') | Out-Null
+            }
         }
 
         if ($null -ne $Results.DLPNetworkShareGroups -and $Results.DLPNetworkShareGroups.Length -gt 0)
         {
-            $Results.DLPNetworkShareGroups = ConvertTo-DLPNetworkShareGroupsString -ObjectHash $Results.DLPNetworkShareGroups
+            $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                -ComplexObject $Results.DLPNetworkShareGroups `
+                -CIMInstanceName 'PolicyConfigDLPNetworkShareGroups'
+            if (-not [String]::IsNullOrEmpty($complexTypeStringResult))
+            {
+                $Results.DLPNetworkShareGroups = $complexTypeStringResult
+            }
+            else
+            {
+                $Results.Remove('DLPNetworkShareGroups') | Out-Null
+            }
         }
 
         if ($null -ne $Results.DLPPrinterGroups -and $Results.DLPPrinterGroups.Length -gt 0)
         {
-            $Results.DLPPrinterGroups = ConvertTo-DLPPrinterGroupsString -ObjectHash $Results.DLPPrinterGroups
+            $complexTypeMapping = @(
+                @{
+                    Name            = 'DLPPrinterGroups'
+                    CimInstanceName = 'PolicyConfigDLPPrinterGroups'
+                },
+                @{
+                    Name            = 'printers'
+                    CimInstanceName = 'PolicyConfigPrinter'
+                    IsArray         = $true
+                },
+                @{
+                    Name            = 'ipRange'
+                    CimInstanceName = 'PolicyConfigIPRange'
+                }
+            )
+            $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                -ComplexObject $Results.DLPPrinterGroups `
+                -CIMInstanceName 'PolicyConfigDLPPrinterGroups' `
+                -ComplexTypeMapping $complexTypeMapping
+            if (-not [String]::IsNullOrEmpty($complexTypeStringResult))
+            {
+                $Results.DLPPrinterGroups = $complexTypeStringResult
+            }
+            else
+            {
+                $Results.Remove('DLPPrinterGroups') | Out-Null
+            }
         }
 
         if ($null -ne $Results.DLPRemovableMediaGroups -and $Results.DLPRemovableMediaGroups.Length -gt 0)
         {
-            $Results.DLPRemovableMediaGroups = ConvertTo-DLPRemovableMediaGroupsString -ObjectHash $Results.DLPRemovableMediaGroups
+            $complexTypeMapping = @(
+                @{
+                    Name            = 'DLPRemovableMediaGroups'
+                    CimInstanceName = 'PolicyConfigDLPRemovableMediaGroups'
+                },
+                @{
+                    Name            = 'removableMedia'
+                    CimInstanceName = 'PolicyConfigRemovableMedia'
+                    IsArray         = $true
+                }
+            )
+
+            $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                -ComplexObject $Results.DLPRemovableMediaGroups `
+                -CIMInstanceName 'PolicyConfigDLPRemovableMediaGroups' `
+                -ComplexTypeMapping $complexTypeMapping
+            if (-not [String]::IsNullOrEmpty($complexTypeStringResult))
+            {
+                $Results.DLPRemovableMediaGroups = $complexTypeStringResult
+            }
+            else
+            {
+                $Results.Remove('DLPRemovableMediaGroups') | Out-Null
+            }
         }
 
         if ($null -ne $Results.EvidenceStoreSettings)
         {
-            $Results.EvidenceStoreSettings = ConvertTo-EvidenceStoreSettingsString -ObjectHash $Results.EvidenceStoreSettings
+            $complexTypeMapping = @(
+                @{
+                    Name            = 'EvidenceStoreSettings'
+                    CimInstanceName = 'PolicyConfigEvidenceStoreSettings'
+                },
+                @{
+                    Name            = 'StorageAccounts'
+                    CimInstanceName = 'PolicyConfigStorageAccount'
+                    IsArray         = $true
+                }
+            )
+
+            $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                -ComplexObject $Results.EvidenceStoreSettings `
+                -CIMInstanceName 'PolicyConfigEvidenceStoreSettings' `
+                -ComplexTypeMapping $complexTypeMapping
+            if (-not [String]::IsNullOrEmpty($complexTypeStringResult))
+            {
+                $Results.EvidenceStoreSettings = $complexTypeStringResult
+            }
+            else
+            {
+                $Results.Remove('EvidenceStoreSettings') | Out-Null
+            }
         }
 
         if ($null -ne $Results.SiteGroups -and $Results.SiteGroups.Length -gt 0)
         {
-            $Results.SiteGroups = ConvertTo-SiteGroupsString -ObjectHash $Results.SiteGroups
+            $complexTypeMapping = @(
+                @{
+                    Name            = 'SiteGroups'
+                    CimInstanceName = 'PolicyConfigDLPSiteGroups'
+                },
+                @{
+                    Name            = 'Addresses'
+                    CimInstanceName = 'PolicyConfigSiteGroupAddress'
+                    IsArray         = $true
+                }
+            )
+
+            $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                -ComplexObject $Results.SiteGroups `
+                -CIMInstanceName 'PolicyConfigDLPSiteGroups' `
+                -ComplexTypeMapping $complexTypeMapping
+            if (-not [String]::IsNullOrEmpty($complexTypeStringResult))
+            {
+                $Results.SiteGroups = $complexTypeStringResult
+            }
+            else
+            {
+                $Results.Remove('SiteGroups') | Out-Null
+            }
         }
 
         if ($null -ne $Results.UnallowedApp -and -not [System.String]::IsNullOrEmpty($Results.UnallowedApp))
         {
-            $Results.UnallowedApp = ConvertTo-AppsString -ObjectHash $Results.UnallowedApp
+            $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                -ComplexObject $Results.UnallowedApp `
+                -CIMInstanceName 'PolicyConfigApp'
+            if (-not [String]::IsNullOrEmpty($complexTypeStringResult))
+            {
+                $Results.UnallowedApp = $complexTypeStringResult
+            }
+            else
+            {
+                $Results.Remove('UnallowedApp') | Out-Null
+            }
         }
 
         if ($null -ne $Results.UnallowedCloudSyncApp -and -not [System.String]::IsNullOrEmpty($Results.UnallowedCloudSyncApp))
         {
-            $Results.UnallowedCloudSyncApp = ConvertTo-AppsString -ObjectHash $Results.UnallowedCloudSyncApp
+            $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                -ComplexObject $Results.UnallowedCloudSyncApp `
+                -CIMInstanceName 'PolicyConfigApp'
+            if (-not [String]::IsNullOrEmpty($complexTypeStringResult))
+            {
+                $Results.UnallowedCloudSyncApp = $complexTypeStringResult
+            }
+            else
+            {
+                $Results.Remove('UnallowedCloudSyncApp') | Out-Null
+            }
         }
 
         if ($null -ne $Results.UnallowedBluetoothApp -and -not [System.String]::IsNullOrEmpty($Results.UnallowedBluetoothApp))
         {
-            $Results.UnallowedBluetoothApp = ConvertTo-AppsString -ObjectHash $Results.UnallowedBluetoothApp
+            $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                -ComplexObject $Results.UnallowedBluetoothApp `
+                -CIMInstanceName 'PolicyConfigApp'
+            if (-not [String]::IsNullOrEmpty($complexTypeStringResult))
+            {
+                $Results.UnallowedBluetoothApp = $complexTypeStringResult
+            }
+            else
+            {
+                $Results.Remove('UnallowedBluetoothApp') | Out-Null
+            }
         }
 
         if ($null -ne $Results.UnallowedBrowser -and -not [System.String]::IsNullOrEmpty($Results.UnallowedBrowser))
         {
-            $Results.UnallowedBrowser = ConvertTo-AppsString -ObjectHash $Results.UnallowedBrowser
+            $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                -ComplexObject $Results.UnallowedBrowser `
+                -CIMInstanceName 'PolicyConfigApp'
+            if (-not [String]::IsNullOrEmpty($complexTypeStringResult))
+            {
+                $Results.UnallowedBrowser = $complexTypeStringResult
+            }
+            else
+            {
+                $Results.Remove('UnallowedBrowser') | Out-Null
+            }
         }
 
         if ($null -ne $Results.QuarantineParameters -and -not [System.String]::IsNullOrEmpty($Results.QuarantineParameters))
         {
-            $Results.QuarantineParameters = ConvertTo-QuarantineParametersString -ObjectHash $Results.QuarantineParameters
+            $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                -ComplexObject $Results.QuarantineParameters `
+                -CIMInstanceName 'PolicyConfigQuarantineParameters'
+            if (-not [String]::IsNullOrEmpty($complexTypeStringResult))
+            {
+                $Results.QuarantineParameters = $complexTypeStringResult
+            }
+            else
+            {
+                $Results.Remove('QuarantineParameters') | Out-Null
+            }
         }
-
 
         $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
             -ConnectionMode $ConnectionMode `
@@ -1469,305 +1655,6 @@ function Export-TargetResource
 
         return ''
     }
-}
-
-function ConvertTo-QuarantineParametersString
-{
-    [CmdletBinding()]
-    [OutputType([System.String])]
-    param(
-        [Parameter(Mandatory = $true)]
-        [Array]
-        $ObjectHash
-    )
-
-    $content = [System.Text.StringBuilder]::new()
-    [void]$content.AppendLine('                MSFT_PolicyConfigQuarantineParameters')
-    [void]$content.AppendLine('                {')
-    [void]$content.AppendLine("                    EnableQuarantineForCloudSyncApps = `$$($ObjectHash.EnableQuarantineForCloudSyncApps)")
-    [void]$content.AppendLine("                    QuarantinePath                   = '$($ObjectHash.QuarantinePath.ToString())'")
-    [void]$content.AppendLine("                    MacQuarantinePath                = '$($ObjectHash.MacQuarantinePath)'")
-    [void]$content.AppendLine("                    ShouldReplaceFile                = `$$($ObjectHash.ShouldReplaceFile.ToString())")
-    [void]$content.AppendLine("                    FileReplacementText              = '$($ObjectHash.FileReplacementText)'")
-    [void]$content.AppendLine('                }')
-    return $content.ToString()
-}
-
-function ConvertTo-BusinessJustificationListString
-{
-    [CmdletBinding()]
-    [OutputType([System.String])]
-    param(
-        [Parameter(Mandatory = $true)]
-        [Array]
-        $ObjectHash
-    )
-
-    $content = [System.Text.StringBuilder]::new()
-
-    [void]$content.Append('@(')
-    foreach ($instance in $ObjectHash)
-    {
-        [void]$content.AppendLine('                MSFT_PolicyConfigBusinessJustificationList')
-        [void]$content.AppendLine('                {')
-        [void]$content.AppendLine("                    Id                = '$($instance.Id)'")
-        [void]$content.AppendLine("                    Enable            = `$$($instance.Enable)")
-        [void]$content.AppendLine("                    justificationText = '$($instance.justificationText)'")
-        [void]$content.AppendLine('                }')
-    }
-    [void]$content.Append('                )')
-    $result = $content.ToString()
-    return $result
-}
-
-function ConvertTo-DLPAppGroupsString
-{
-    [CmdletBinding()]
-    [OutputType([System.String])]
-    param(
-        [Parameter(Mandatory = $true)]
-        [Array]
-        $ObjectHash
-    )
-    $content = [System.Text.StringBuilder]::new()
-
-    [void]$content.Append('@(')
-    foreach ($instance in $ObjectHash)
-    {
-        [void]$content.AppendLine('                MSFT_PolicyConfigDLPAppGroups')
-        [void]$content.AppendLine('                {')
-        [void]$content.AppendLine("                    Name        = '$($instance.Name)'")
-        [void]$content.AppendLine("                    Id          = '$($instance.Id)'")
-        [void]$content.AppendLine("                    Description = '$($instance.Description)'")
-        [void]$content.AppendLine('                    Apps = @(')
-        foreach ($app in $instance.Apps)
-        {
-            [void]$content.AppendLine('                        MSFT_PolicyConfigDLPApp')
-            [void]$content.AppendLine('                        {')
-            [void]$content.AppendLine("                            ExecutableName    = '$($app.ExecutableName)'")
-            [void]$content.AppendLine("                            Name              = '$($app.Name)'")
-            [void]$content.AppendLine("                            Quarantine        = `$$($app.Quarantine)")
-            [void]$content.AppendLine('                        }')
-        }
-        [void]$content.AppendLine('                )}')
-    }
-    [void]$content.Append('                )')
-    $result = $content.ToString()
-    return $result
-}
-
-function ConvertTo-DLPNetworkShareGroupsString
-{
-    [CmdletBinding()]
-    [OutputType([System.String])]
-    param(
-        [Parameter(Mandatory = $true)]
-        [Array]
-        $ObjectHash
-    )
-    $content = [System.Text.StringBuilder]::new()
-
-    [void]$content.Append('@(')
-    foreach ($instance in $ObjectHash)
-    {
-        [void]$content.AppendLine('                MSFT_PolicyConfigDLPNetworkShareGroups')
-        [void]$content.AppendLine('                {')
-        [void]$content.AppendLine("                    groupName    = '$($instance.groupName)'")
-        [void]$content.AppendLine("                    groupId      = '$($instance.groupId)'")
-        [void]$content.Append('                    networkPaths = @(')
-        $countPath = 1
-        foreach ($path in $instance.networkPaths)
-        {
-            [void]$content.Append("'$path'")
-            if ($countPath -lt $instance.networkPaths.Length)
-            {
-                [void]$content.Append(',')
-            }
-            $countPath++
-        }
-        [void]$content.AppendLine(')')
-        [void]$content.AppendLine('                }')
-    }
-    [void]$content.Append('                )')
-    $result = $content.ToString()
-    return $result
-}
-
-function ConvertTo-EvidenceStoreSettingsString
-{
-    [CmdletBinding()]
-    [OutputType([System.String])]
-    param(
-        [Parameter(Mandatory = $true)]
-        [Hashtable]
-        $ObjectHash
-    )
-    $content = [System.Text.StringBuilder]::new()
-    [void]$content.AppendLine('                MSFT_PolicyConfigEvidenceStoreSettings')
-    [void]$content.AppendLine('                {')
-    [void]$content.AppendLine("                    FileEvidenceIsEnabled = `$$($ObjectHash.FileEvidenceIsEnabled)")
-    [void]$content.AppendLine("                    NumberOfDaysToRetain  = $($ObjectHash.NumberOfDaysToRetain)")
-    [void]$content.AppendLine('                    StorageAccounts       = @(')
-    foreach ($storageAccount in $ObjectHash.StorageAccounts)
-    {
-        [void]$content.AppendLine('                        MSFT_PolicyConfigStorageAccount')
-        [void]$content.AppendLine('                        {')
-        [void]$content.AppendLine("                            Name    = '$($storageAccount.Name)'")
-        [void]$content.AppendLine("                            BlobUri = '$($storageAccount.BlobUri)'")
-        [void]$content.AppendLine('                        }')
-    }
-    [void]$content.AppendLine('                    )')
-    [void]$content.AppendLine("                    Store                 = '$($ObjectHash.Store)'")
-    [void]$content.AppendLine('                }')
-    return $content.ToString()
-}
-
-function ConvertTo-DLPPrinterGroupsString
-{
-    [CmdletBinding()]
-    [OutputType([System.String])]
-    param(
-        [Parameter(Mandatory = $true)]
-        [Array]
-        $ObjectHash
-    )
-    $content = [System.Text.StringBuilder]::new()
-
-    [void]$content.Append('@(')
-    foreach ($instance in $ObjectHash)
-    {
-        [void]$content.AppendLine('                MSFT_PolicyConfigDLPPrinterGroups')
-        [void]$content.AppendLine('                {')
-        [void]$content.AppendLine("                    groupName    = '$($instance.groupName)'")
-        [void]$content.AppendLine("                    groupId      = '$($instance.groupId)'")
-        [void]$content.AppendLine('                    printers = @(')
-        foreach ($printer in $instance.printers)
-        {
-            [void]$content.AppendLine('                        MSFT_PolicyConfigPrinter')
-            [void]$content.AppendLine('                        {')
-            [void]$content.AppendLine("                            universalPrinter = `$$($printer.universalPrinter)")
-            [void]$content.AppendLine("                            usbPrinter       = `$$($printer.usbPrinter)")
-            [void]$content.AppendLine("                            usbPrinterId     = '$($printer.usbPrinterId)'")
-            [void]$content.AppendLine("                            name             = '$($printer.name)'")
-            [void]$content.AppendLine("                            alias            = '$($printer.alias)'")
-            [void]$content.AppendLine("                            usbPrinterVID    = '$($printer.usbPrinterVID)'")
-            [void]$content.AppendLine('                            ipRange          = MSFT_PolicyConfigIPRange')
-            [void]$content.AppendLine('                                {')
-            [void]$content.AppendLine("                                    fromAddress = '$($printer.ipRange.fromAddress)'")
-            [void]$content.AppendLine("                                    toAddress   = '$($printer.ipRange.toAddress)'")
-            [void]$content.AppendLine('                                }')
-            [void]$content.AppendLine("                            corporatePrinter = `$$($printer.corporatePrinter)")
-            [void]$content.AppendLine("                            printToLocal     = `$$($printer.printToLocal)")
-            [void]$content.AppendLine("                            printToFile      = `$$($printer.printToFile)")
-            [void]$content.AppendLine('                        }')
-        }
-        [void]$content.AppendLine('                    )')
-        [void]$content.AppendLine('                }')
-    }
-    [void]$content.Append(')')
-    $result = $content.ToString()
-    return $result
-}
-
-function ConvertTo-DLPRemovableMediaGroupsString
-{
-    [CmdletBinding()]
-    [OutputType([System.String])]
-    param(
-        [Parameter(Mandatory = $true)]
-        [Array]
-        $ObjectHash
-    )
-    $content = [System.Text.StringBuilder]::new()
-
-    [void]$content.Append('@(')
-    foreach ($instance in $ObjectHash)
-    {
-        [void]$content.AppendLine('                MSFT_PolicyConfigDLPRemovableMediaGroups')
-        [void]$content.AppendLine('                {')
-        [void]$content.AppendLine("                    groupName = '$($instance.groupName)'")
-        [void]$content.AppendLine('                    removableMedias   = @(')
-        foreach ($media in $instance.removableMedia)
-        {
-            [void]$content.AppendLine('                        MSFT_PolicyConfigRemovableMedia')
-            [void]$content.AppendLine('                        {')
-            [void]$content.AppendLine("                            deviceId          = '$($media.deviceId)'")
-            [void]$content.AppendLine("                            removableMediaVID = '$($media.removableMediaVID)'")
-            [void]$content.AppendLine("                            name              = '$($media.name)'")
-            [void]$content.AppendLine("                            alias             = '$($media.alias)'")
-            [void]$content.AppendLine("                            removableMediaPID = '$($media.removableMediaPID)'")
-            [void]$content.AppendLine("                            instancePathId    = '$($media.instancePathId)'")
-            [void]$content.AppendLine("                            serialNumberId    = '$($media.serialNumberId)'")
-            [void]$content.AppendLine("                            hardwareId        = '$($media.hardwareId)'")
-            [void]$content.AppendLine('                        }')
-        }
-        [void]$content.AppendLine('                    )')
-        [void]$content.AppendLine(                '}')
-    }
-    [void]$content.Append('                )')
-    $result = $content.ToString()
-    return $result
-}
-function ConvertTo-SiteGroupsString
-{
-    [CmdletBinding()]
-    [OutputType([System.String])]
-    param(
-        [Parameter(Mandatory = $true)]
-        [Array]
-        $ObjectHash
-    )
-    $content = [System.Text.StringBuilder]::new()
-
-    [void]$content.Append('@(')
-    foreach ($instance in $ObjectHash)
-    {
-        [void]$content.AppendLine('                MSFT_PolicyConfigDLPSiteGroups')
-        [void]$content.AppendLine('                {')
-        [void]$content.AppendLine("                    Id        = '$($instance.Id)'")
-        [void]$content.AppendLine("                    Name      = '$($instance.Name)'")
-        [void]$content.AppendLine('                    Addresses = @(')
-        foreach ($address in $instance.addresses)
-        {
-            [void]$content.AppendLine('                        MSFT_PolicyConfigSiteGroupAddress')
-            [void]$content.AppendLine('                        {')
-            [void]$content.AppendLine("                            MatchType    = '$($address.MatchType)'")
-            [void]$content.AppendLine("                            Url          = '$($address.Url)'")
-            [void]$content.AppendLine("                            AddressLower = '$($address.AddressLower)'")
-            [void]$content.AppendLine("                            AddressUpper = '$($address.AddressUpper)'")
-            [void]$content.AppendLine('                        }')
-        }
-        [void]$content.AppendLine('                    )')
-        [void]$content.AppendLine('                }')
-    }
-    [void]$content.Append('                )')
-    $result = $content.ToString()
-    return $result
-}
-
-function ConvertTo-AppsString
-{
-    [CmdletBinding()]
-    [OutputType([System.String])]
-    param(
-        [Parameter(Mandatory = $true)]
-        [Array]
-        $ObjectHash
-    )
-    $content = [System.Text.StringBuilder]::new()
-
-    [void]$content.Append('@(')
-    foreach ($instance in $ObjectHash)
-    {
-        [void]$content.AppendLine('                MSFT_PolicyConfigApp')
-        [void]$content.AppendLine('                {')
-        [void]$content.AppendLine("                    Value        = '$($instance.Value)'")
-        [void]$content.AppendLine("                    Executable   = '$($instance.Executable)'")
-        [void]$content.AppendLine('                }')
-    }
-    [void]$content.Append(')')
-    $result = $content.ToString()
-    return $result
 }
 
 Export-ModuleMember -Function *-TargetResource

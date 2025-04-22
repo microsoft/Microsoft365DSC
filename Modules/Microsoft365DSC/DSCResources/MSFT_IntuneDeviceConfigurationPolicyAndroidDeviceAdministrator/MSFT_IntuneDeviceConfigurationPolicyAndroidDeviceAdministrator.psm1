@@ -1162,7 +1162,7 @@ function Test-TargetResource
         {
             $testResult = Compare-M365DSCComplexObject `
                 -Source ($source) `
-                -Target ($target) -Verbose
+                -Target ($target)
 
             if (-Not $testResult)
             {

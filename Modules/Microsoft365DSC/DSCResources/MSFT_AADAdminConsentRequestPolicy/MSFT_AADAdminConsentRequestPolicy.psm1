@@ -530,27 +530,4 @@ function Export-TargetResource
     }
 }
 
-function Get-M365DSCAzureADAAdminConsentPolicyReviewerAsString
-{
-    [CmdletBinding()]
-    [OutputType([System.String])]
-    param(
-        [Parameter(Mandatory = $true)]
-        [Array]
-        $Reviewers
-    )
-
-    $result = "                @(`r`n"
-    foreach ($reviewer in $reviewers)
-    {
-        $result += "                MSFT_AADAdminConsentRequestPolicyReviewer {`r`n"
-        $result += "                     ReviewerType = '$($reviewer.ReviewerType)'`r`n"
-        $result += "                     ReviewerId   = '$($reviewer.ReviewerId)'`r`n"
-        $result += "                     QueryRoot    = '$($reviewer.QueryRoot)'`r`n"
-        $result += "                }`r`n"
-    }
-    $result += '                )'
-    return $result
-}
-
 Export-ModuleMember -Function *-TargetResource

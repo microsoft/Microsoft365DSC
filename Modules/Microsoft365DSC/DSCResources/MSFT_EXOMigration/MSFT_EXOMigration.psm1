@@ -489,6 +489,7 @@ function Test-TargetResource
 
     return $testResult
 }
+
 function Export-TargetResource
 {
     [CmdletBinding()]
@@ -595,3 +596,5 @@ function Export-TargetResource
         return ''
     }
 }
+
+Export-ModuleMember -Function *-TargetResource

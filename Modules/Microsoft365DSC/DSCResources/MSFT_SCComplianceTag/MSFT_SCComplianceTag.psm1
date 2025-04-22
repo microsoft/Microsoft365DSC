@@ -564,7 +564,20 @@ function Export-TargetResource
             Write-M365DSCHost -Message "    |---[$i/$($totalTags)] $($tag.Name)" -DeferWrite
             $Script:exportedInstance = $tag
             $Results = Get-TargetResource @PSBoundParameters -Name $tag.Name
-            $Results.FilePlanProperty = Get-SCFilePlanPropertyAsString $Results.FilePlanProperty
+            if ($Results.FilePlanProperty)
+            {
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                    -ComplexObject $Results.FilePlanProperty `
+                    -CIMInstanceName 'SCFilePlanProperty'
+                if (-not [String]::IsNullOrEmpty($complexTypeStringResult))
+                {
+                    $Results.FilePlanProperty = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('FilePlanProperty') | Out-Null
+                }   
+            }
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
@@ -647,21 +660,6 @@ function Get-SCFilePlanProperty
     }
 
     return $result
-}
-
-function Get-SCFilePlanPropertyAsString($params)
-{
-    if ($null -eq $params)
-    {
-        return $null
-    }
-    $currentProperty = "MSFT_SCFilePlanProperty{`r`n"
-    foreach ($key in $params.Keys)
-    {
-        $currentProperty += '                ' + $key + " = '" + $params[$key] + "'`r`n"
-    }
-    $currentProperty += '            }'
-    return $currentProperty
 }
 
 function Test-SCFilePlanProperties

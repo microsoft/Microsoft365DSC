@@ -66,7 +66,7 @@ Within Microsoft365DSC there are many resources that are not backed by a configu
 
 Over the last year we have seen various issues that were caused by duplicate keys in a Microsoft365DSC configuration. The root cause for these issues was caused by newly created configurations from M365DSC exports.
 
-To resolve this issue it is important to understand the difference between key parameters and immutable identifiers in Microsoft 365. The key parameters are the parameters that are used to identify a resource. The immutable identifiers are the unique identifiers that are created during the creation of the resource. These identifiers are not configurable and are not exposed to the user. The key parameters are used to identify the resource and the immutable identifiers are used to identify the resource within the platform.
+To resolve this issue, it is important to understand the difference between key parameters and immutable identifiers in Microsoft 365. The key parameters are the parameters that are used to identify a resource. The immutable identifiers are the unique identifiers that are created during the creation of the resource. These identifiers are not configurable and are not exposed to the user. The key parameters are used to identify the resource and the immutable identifiers are used to identify the resource within the platform.
 
 Changing the key parameters of those resource with duplicate keys is not an option as we would create a different configuration. In most cases the root cause is the fact, that we can have objects in Azure and Microsoft 365 with the same display name, but different immutable identifiers.
 
@@ -79,7 +79,7 @@ For 1. we can change the key parameters and the configuration will compile. We c
 
 ## The current implementation of key parameters in Microsoft365DSC
 
-With the [April 2023 release](../../blog/april-2023-major-release/index.html) of Microsoft365DSC we have many breaking changes that help to better identify the resources in the configuration. There were several changes to key parameters. This implementation  a new way of handling key parameters. This new implementation is based on the following principles:
+With the [April 2023 release](../../blog/april-2023-major-release/index.html) of Microsoft365DSC, we have many breaking changes that help to better identify the resources in the configuration. There were several changes to key parameters. This implementation contains a new way of handling key parameters and is based on the following principles:
 
 1. The key parameters are the parameters that are used to identify a resource.
    There is [more information](https://docs.microsoft.com/en-us/powershell/dsc/authoringresourcekey) available on how to define key parameters in DSC resources:

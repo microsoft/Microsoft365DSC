@@ -27,7 +27,9 @@
                 "Mail Tips",
                 "Message Tracking"
             ],
-            "requiredrolegroups": "Organization Management"
+            "requiredrolegroups": [
+                "Organization Management"
+            ]
         }
     }
 }

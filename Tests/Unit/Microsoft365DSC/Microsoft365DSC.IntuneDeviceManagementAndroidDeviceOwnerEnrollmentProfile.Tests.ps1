@@ -55,9 +55,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName             = "Android Owner Enrollment Profile"
                     Description             = "Profile for enrolling Android devices"
                     TokenExpirationDateTime = "2024-12-31T23:59:59Z"
-                    TokenValue              = "your-token-value"
                     EnrollmentMode          = "corporateOwnedWorkProfile"
-                    QrCodeContent           = "your-qr-code-content"
                     WifiSsid                = "your-wifi-ssid"
                     WifiPassword            = New-Object System.Management.Automation.PSCredential ($userName, (ConvertTo-SecureString "your-wifi-password" -AsPlainText -Force))
                     WifiSecurityType        = "wpa"
@@ -89,9 +87,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName             = "Android Owner Enrollment Profile"
                     Description             = "Profile for enrolling Android devices"
                     TokenExpirationDateTime = "2024-12-31T23:59:59Z"
-                    TokenValue              = "your-token-value"
                     EnrollmentMode          = "corporateOwnedWorkProfile"
-                    QrCodeContent           = "your-qr-code-content"
                     WifiSsid                = "your-wifi-ssid"
                     WifiPassword            = New-Object System.Management.Automation.PSCredential ($userName, (ConvertTo-SecureString "your-wifi-password" -AsPlainText -Force))
                     WifiSecurityType        = "wpa"
@@ -137,9 +133,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName             = "Android Owner Enrollment Profile"
                     Description             = "Profile for enrolling Android devices"
                     TokenExpirationDateTime = "2024-12-31T23:59:59Z"
-                    TokenValue              = "your-token-value"
                     EnrollmentMode          = "corporateOwnedWorkProfile"
-                    QrCodeContent           = "your-qr-code-content"
                     WifiSsid                = "your-wifi-ssid"
                     WifiPassword            = New-Object System.Management.Automation.PSCredential ($userName, (ConvertTo-SecureString "your-wifi-password" -AsPlainText -Force))
                     WifiSecurityType        = "wpa"
@@ -178,9 +172,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName             = "Android Owner Enrollment Profile"
                     Description             = "Profile for enrolling Android" # Drift
                     TokenExpirationDateTime = "2024-12-31T23:59:59Z"
-                    TokenValue              = "your-token-value"
                     EnrollmentMode          = "corporateOwnedWorkProfile"
-                    QrCodeContent           = "your-qr-code-content"
                     WifiSsid                = "your-wifi-ssid"
                     WifiPassword            = New-Object System.Management.Automation.PSCredential ($userName, (ConvertTo-SecureString "your-wifi-password" -AsPlainText -Force))
                     WifiSecurityType        = "wpa"

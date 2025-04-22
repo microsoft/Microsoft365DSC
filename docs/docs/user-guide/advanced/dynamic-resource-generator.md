@@ -10,7 +10,7 @@ The DRG files are located at the root of the project under the /ResourceGenerato
 
 |Parameter Name|Required|Accepted Values|Description|
 ---|---|---|---|
-|ResourceName|**True**|String|The name of the resource to be generated. E.g., AADDomain, IntuneResourcex, etc.|
+|ResourceName|**True**|String|The name of the resource to be generated. E.g., AADDomain, IntuneResourceX, etc.|
 |Workload|**True**|String. Any of: "ExchangeOnline", "Intune", "MicrosoftGraph", "MicrosoftTeams", "PnP", "PowerPlatforms", "SecurityComplianceCenter"|The name of the Microsoft 365 workload associated with the resource to be generated|
 |CmdLetNoun|False|String|The noun part of the cmdlet associated with the resource. E.g., for the AADDomain resource, the associated cmdlets is Get-MgBetaDomain. Therefore the value for this property is 'MgDomain'.|
 |Path|False|String|Local path to the root DSCResources folder where all the DSC Resources are being stored (e.g., C:\Github\Microsoft365DSC\Modules\Microsoft365DSC\DSCResources)|
@@ -18,6 +18,8 @@ The DRG files are located at the root of the project under the /ResourceGenerato
 |ExampleFilePath|False|String|Local path to the root of the examples Ressources' folder (e.g. C:\GitHub\Microsoft365DSC\Modules\Microsoft365DSC\Examples\Resources)|
 |APIVersion|False|String. Any of: "v1.0", "beta"|Represents what version of the Microsoft Graph APIs to use. Should use 'v1.0' whenever possible.|
 |Credential|False|PSCredential|Credentials of a Microsoft 365 account that will be used to take a snapshot of the resource to be generated from a given tenant. This is used to generate the examples. **Use a test tenant**.|
+|SettingsCatalogSettingTemplates|False|Array of device configuration policy templates|Templates of an Intune policy that is based on the Settings Catalog. The templates can be obtained with `Get-MgBetaDeviceManagementConfigurationPolicyTemplateSettingTemplate`.|
+|SkipPlatformsAndTechnologies|False|Switch|For a settings catalog resource, if the platforms and technologies should be removed from the parameters for the resource.|
 
 As an example, to generate the AADDomain resource for the Azure Active Directory workload, we've run the following command. **NOTE: The paths specified represent the local path on the machine we've used. Make sure to update this to point to the location of your local branch on your machine.**
 
@@ -30,7 +32,7 @@ $UnitTestPath = "C:\GitHub\Microsoft365DSC\Tests\Unit\Microsoft365DSC"
 $ExamplePath = "C:\GitHub\Microsoft365DSC\Modules\Microsoft365DSC\Examples\Resources"
 $creds = Get-Credential
 
-New-M365DSCResource -ResourceName AADDomain -Workload MicrosoftGraph -GraphModuleCmdletNoun 'MgDomain' -Path $ResourcePath -UnitTestPath $UnitTestPath -ExampleFilePath $ExamplePath -Credential $creds
+New-M365DSCResource -ResourceName AADDomain -Workload MicrosoftGraph -CmdletNoun 'MgDomain' -Path $ResourcePath -UnitTestPath $UnitTestPath -ExampleFilePath $ExamplePath -Credential $creds
 ```
 
-We are currently looking for users to help us test and improve the DRG. If you are interested in helping out, please try it out with the instructions above and report any issues or questions in the Issues section of the GitHub repository (https://GitHub.com/Microsoft/Microsoft365DSC) mentioning that the item is related to the DRG testing.
+We are currently looking for users to help us test and improve the DRG. If you are interested in helping out, please try it out with the instructions above and report any issues or questions in the Issues section of the [GitHub repository](https://github.com/microsoft/Microsoft365DSC) mentioning that the item is related to the DRG testing.

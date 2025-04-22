@@ -1,0 +1,44 @@
+{
+    "resourceName":"IntuneSecurityBaselineHoloLens2Advanced",
+    "description":"This resource configures an Intune Security Baseline HoloLens2 Advanced.",
+    "permissions":{
+        "graph":{
+            "delegated":{
+                "read":[
+                    {
+                        "name":"DeviceManagementConfiguration.Read.All"
+                    },
+                    {
+                        "name":"Group.Read.All"
+                    }
+                ],
+                "update":[
+                    {
+                        "name":"DeviceManagementConfiguration.ReadWrite.All"
+                    },
+                    {
+                        "name":"Group.Read.All"
+                    }
+                ]
+            },
+            "application":{
+                "read":[
+                    {
+                        "name":"DeviceManagementConfiguration.Read.All"
+                    },
+                    {
+                        "name":"Group.Read.All"
+                    }
+                ],
+                "update":[
+                    {
+                        "name":"DeviceManagementConfiguration.ReadWrite.All"
+                    },
+                    {
+                        "name":"Group.Read.All"
+                    }
+                ]
+            }
+        }
+    }
+}

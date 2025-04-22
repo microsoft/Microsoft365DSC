@@ -2,8 +2,12 @@
     "resourceName": "EXOResourceConfiguration",
     "description": "",
     "roles": {
-        "read": [],
-        "update": []
+        "read": [
+            "Global Reader"
+        ],
+        "update": [
+            "Exchange Administrator"
+        ]
     },
     "permissions": {
         "graph": {
@@ -20,7 +24,9 @@
             "requiredroles": [
                 "Organization Configuration"
             ],
-            "requiredrolegroups": ""
+            "requiredrolegroups": [
+                "Organization Management"
+            ]
         }
     }
 }

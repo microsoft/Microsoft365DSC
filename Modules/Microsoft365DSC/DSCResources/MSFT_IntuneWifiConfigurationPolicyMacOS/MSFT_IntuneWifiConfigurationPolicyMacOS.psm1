@@ -148,6 +148,7 @@ function Get-TargetResource
         {
             $getValue = $Script:exportedInstance
         }
+        $Id = $getValue.Id
 
         Write-Verbose -Message "Found an Intune Wifi Configuration Policy for MacOS with id {$Id}"
         $results = @{
@@ -321,40 +322,28 @@ function Set-TargetResource
     #endregion
 
     $currentInstance = Get-TargetResource @PSBoundParameters
-
-    $PSBoundParameters.Remove('Ensure') | Out-Null
-    $PSBoundParameters.Remove('Credential') | Out-Null
-    $PSBoundParameters.Remove('ApplicationId') | Out-Null
-    $PSBoundParameters.Remove('ApplicationSecret') | Out-Null
-    $PSBoundParameters.Remove('TenantId') | Out-Null
-    $PSBoundParameters.Remove('CertificateThumbprint') | Out-Null
-    $PSBoundParameters.Remove('ManagedIdentity') | Out-Null
-    $PSBoundParameters.Remove('AccessTokens') | Out-Null
+    $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating {$DisplayName}"
-        $PSBoundParameters.Remove('Assignments') | Out-Null
-
-        $CreateParameters = ([Hashtable]$PSBoundParameters).clone()
-        $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
+        $CreateParameters = ([Hashtable]$BoundParameters).Clone()
+        $CreateParameters.Remove('Assignments') | Out-Null
 
         $AdditionalProperties = Get-M365DSCAdditionalProperties -Properties ($CreateParameters)
         foreach ($key in $AdditionalProperties.keys)
         {
             if ($key -ne '@odata.type')
             {
-                $keyName = $key.substring(0, 1).ToUpper() + $key.substring(1, $key.length - 1)
-                $CreateParameters.remove($keyName)
+                $keyName = $key.Substring(0, 1).ToUpper() + $key.Substring(1, $key.Length - 1)
+                $CreateParameters.Remove($keyName)
             }
         }
 
         $CreateParameters.Remove('Id') | Out-Null
-        $CreateParameters.Remove('Verbose') | Out-Null
-
-        foreach ($key in ($CreateParameters.clone()).Keys)
+        foreach ($key in ($CreateParameters.Clone()).Keys)
         {
-            if ($CreateParameters[$key].getType().Fullname -like '*CimInstance*')
+            if ($CreateParameters[$key].GetType().Fullname -like '*CimInstance*')
             {
                 $CreateParameters[$key] = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters[$key]
             }
@@ -362,16 +351,17 @@ function Set-TargetResource
 
         if ($AdditionalProperties)
         {
-            $CreateParameters.add('AdditionalProperties', $AdditionalProperties)
+            $CreateParameters.Add('AdditionalProperties', $AdditionalProperties)
         }
 
         #region resource generator code
         $policy = New-MgBetaDeviceManagementDeviceConfiguration @CreateParameters
         $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
 
-        if ($policy.id)
+        if ($policy.Id)
         {
-            Update-MgBetaDeviceManagementConfigurationPolicyAssignment -DeviceManagementConfigurationPolicyId $policy.id `
+            Update-DeviceConfigurationPolicyAssignment `
+                -DeviceConfigurationPolicyId $policy.Id `
                 -Targets $assignmentsHash `
                 -Repository 'deviceManagement/deviceConfigurations'
         }
@@ -380,27 +370,23 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating {$DisplayName}"
-        $PSBoundParameters.Remove('Assignments') | Out-Null
-
-        $UpdateParameters = ([Hashtable]$PSBoundParameters).clone()
-        $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
+        $UpdateParameters = ([Hashtable]$BoundParameters).Clone()
+        $UpdateParameters.Remove('Assignments') | Out-Null
 
         $AdditionalProperties = Get-M365DSCAdditionalProperties -Properties ($UpdateParameters)
         foreach ($key in $AdditionalProperties.keys)
         {
             if ($key -ne '@odata.type')
             {
-                $keyName = $key.substring(0, 1).ToUpper() + $key.substring(1, $key.length - 1)
-                $UpdateParameters.remove($keyName)
+                $keyName = $key.Substring(0, 1).ToUpper() + $key.Substring(1, $key.Length - 1)
+                $UpdateParameters.Remove($keyName)
             }
         }
 
         $UpdateParameters.Remove('Id') | Out-Null
-        $UpdateParameters.Remove('Verbose') | Out-Null
-
-        foreach ($key in ($UpdateParameters.clone()).Keys)
+        foreach ($key in ($UpdateParameters.Clone()).Keys)
         {
-            if ($UpdateParameters[$key].getType().Fullname -like '*CimInstance*')
+            if ($UpdateParameters[$key].GetType().Fullname -like '*CimInstance*')
             {
                 $UpdateParameters[$key] = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters[$key]
             }
@@ -408,14 +394,15 @@ function Set-TargetResource
 
         if ($AdditionalProperties)
         {
-            $UpdateParameters.add('AdditionalProperties', $AdditionalProperties)
+            $UpdateParameters.Add('AdditionalProperties', $AdditionalProperties)
         }
 
         #region resource generator code
         Update-MgBetaDeviceManagementDeviceConfiguration @UpdateParameters `
             -DeviceConfigurationId $currentInstance.Id
         $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
-        Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $currentInstance.id `
+        Update-DeviceConfigurationPolicyAssignment `
+            -DeviceConfigurationPolicyId $currentInstance.Id `
             -Targets $assignmentsHash `
             -Repository 'deviceManagement/deviceConfigurations'
         #endregion
@@ -544,18 +531,18 @@ function Test-TargetResource
     Write-Verbose -Message "Testing configuration of {$Id}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
-    $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
+    $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
     $testResult = $true
 
     foreach ($key in $PSBoundParameters.Keys)
     {
-        if ($PSBoundParameters[$key].getType().Name -like '*CimInstance*')
+        if ($PSBoundParameters[$key].GetType().Name -like '*CimInstance*')
         {
             $CIMArraySource = @()
             $CIMArrayTarget = @()
             $CIMArraySource += $PSBoundParameters[$key]
             $CIMArrayTarget += $CurrentValues.$key
-            if ($CIMArraySource.count -ne $CIMArrayTarget.count)
+            if ($CIMArraySource.Count -ne $CIMArrayTarget.Count)
             {
                 Write-Verbose -Message "Configuration drift:Number of items does not match: Source=$($CIMArraySource.count) Target=$($CIMArrayTarget.count)"
                 $testResult = $false
@@ -593,9 +580,9 @@ function Test-TargetResource
     foreach ($key in $ValuesToCheck.Keys)
     {
         if (($null -ne $CurrentValues[$key]) `
-                -and ($CurrentValues[$key].getType().Name -eq 'DateTime'))
+                -and ($CurrentValues[$key].GetType().Name -eq 'DateTime'))
         {
-            $CurrentValues[$key] = $CurrentValues[$key].toString()
+            $CurrentValues[$key] = $CurrentValues[$key].ToString()
         }
     }
 
@@ -785,15 +772,15 @@ function Get-M365DSCAdditionalProperties
     )
 
     $results = @{'@odata.type' = '#microsoft.graph.macOSWiFiConfiguration' }
-    $cloneProperties = $Properties.clone()
+    $cloneProperties = $Properties.Clone()
     foreach ($property in $cloneProperties.Keys)
     {
         if ($property -in ($additionalProperties) )
         {
             $propertyName = $property[0].ToString().ToLower() + $property.Substring(1, $property.Length - 1)
-            if ($properties.$property -and $properties.$property.getType().FullName -like '*CIMInstance*')
+            if ($properties.$property -and $properties.$property.GetType().FullName -like '*CIMInstance*')
             {
-                if ($properties.$property.getType().FullName -like '*[[\]]')
+                if ($properties.$property.GetType().FullName -like '*[[\]]')
                 {
                     $array = @()
                     foreach ($item in $properties.$property)

@@ -427,35 +427,4 @@ function Export-TargetResource
     }
 }
 
-<#
-.Description
-This function converts the custom object array into a string
-
-.Functionality
-Internal
-#>
-function ConvertTo-M365DSCSPOUserProfilePropertyInstanceString
-{
-    [CmdletBinding()]
-    [OutputType([System.String[]])]
-    param(
-        [Parameter(Mandatory = $true)]
-        [System.Object[]]
-        $Properties
-    )
-
-    $results = @()
-    $content = "@(`r`n"
-    foreach ($property in $Properties)
-    {
-        $content += "             MSFT_SPOUserProfilePropertyInstance`r`n"
-        $content += "             {`r`n"
-        $content += "                Key   = '$($property.Key)'`r`n"
-        $content += "                Value = '$($property.Value)'`r`n"
-        $content += "            }`r`n"
-    }
-    $content += '            )'
-    return $content
-}
-
 Export-ModuleMember -Function *-TargetResource

@@ -10,7 +10,7 @@ Great, we always love to add more features and capabilities to Microsoft365DSC B
 
 ## You have found a bug in Microsoft365DSC
 
-We try our best to avoid any bugs, but sometimes they do happen though. So if you encounter a bug while using Microsoft365DSC please check if that bug is already part of our [issue list](https://github.com/microsoft/Microsoft365DSC/issues) and if not we would like to know what problems you encountered. So feel free to add a new issue of type `Bug report` in the [issue list](https://github.com/microsoft/Microsoft365DSC/issues) along with information about the bug itself and how to reproduce it. If there is anything unclear to us or we cannot reproduce the bug, we will ask you for clarification to get things sorted out.
+We try our best to avoid any bugs, but sometimes they do happen though. So if you encounter a bug while using Microsoft365DSC, please check if that bug is already part of our [issue list](https://github.com/microsoft/Microsoft365DSC/issues) and if not, we would like to know what problems you encountered. So feel free to add a new issue of type `Bug report` in the [issue list](https://github.com/microsoft/Microsoft365DSC/issues) along with information about the bug itself and how to reproduce it. If there is anything unclear to us or we cannot reproduce the bug, we will ask you for clarification to get things sorted out.
 
 ## Fixing typos
 

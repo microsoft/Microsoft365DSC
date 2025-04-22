@@ -1480,42 +1480,131 @@ function Export-TargetResource
                 -Name $rule.name `
                 -Policy $rule.ParentPolicyName
 
-            $IsCIMArray = $false
-            $IsSitCIMArray = $false
-
-            if ($Results.ContentContainsSensitiveInformation.Length -gt 1)
-            {
-                $IsSitCIMArray = $true
-            }
-
-            if ($Results.ExceptIfContentContainsSensitiveInformation.Length -gt 1)
-            {
-                $IsCIMArray = $true
-            }
-
-            if ($null -ne $Results.ContentContainsSensitiveInformation)
-            {
-                if ($null -ne $results.ContentContainsSensitiveInformation.Groups)
+                if ($null -ne $Results.ContentContainsSensitiveInformation)
                 {
-                    $Results.ContentContainsSensitiveInformation = ConvertTo-SCDLPSensitiveInformationStringGroup -InformationArray $Results.ContentContainsSensitiveInformation
-                }
-                else
-                {
-                    $Results.ContentContainsSensitiveInformation = ConvertTo-SCDLPSensitiveInformationString -InformationArray $Results.ContentContainsSensitiveInformation
-                }
-            }
+                    $complexTypeMapping = @(
+                        @{
+                            Name            = 'ContentContainsSensitiveInformation'
+                            CimInstanceName = 'SCDLPContainsSensitiveInformation'
+                        },
+                        @{
+                            Name            = 'Groups'
+                            CimInstanceName = 'SCDLPContainsSensitiveInformationGroup'
+                            IsArray         = $true
+                        },
+                        @{
+                            Name            = 'SensitiveInformation'
+                            CimInstanceName = 'SCDLPSensitiveInformation'
+                            IsArray         = $true
+                        },
+                        @{
+                            Name            = 'Labels'
+                            CimInstanceName = 'SCDLPLabel'
+                            IsArray         = $true
+                        }
+                    )
 
-            if ($null -ne $Results.ExceptIfContentContainsSensitiveInformation)
-            {
-                if ($null -ne $results.ExceptIfContentContainsSensitiveInformation.Groups)
-                {
-                    $Results.ExceptIfContentContainsSensitiveInformation = ConvertTo-SCDLPSensitiveInformationStringGroup -InformationArray $Results.ExceptIfContentContainsSensitiveInformation
+                    if ($null -ne $Results.ContentContainsSensitiveInformation.groups)
+                    {
+                        foreach ($group in $Results.ContentContainsSensitiveInformation.groups)
+                        {
+                            foreach ($sensitiveType in $group.sensitivetypes)
+                            {
+                                $sensitiveType.Remove('confidencelevel') | Out-Null
+                                $sensitiveType.Remove('rulePackId') | Out-Null
+                            }
+                            $group.SensitiveInformation = [array]$group.sensitivetypes
+                            $group.Remove('sensitivetypes') | Out-Null
+                        }
+                    }
+                    else
+                    {
+                        foreach ($sensitiveInformation in $Results.ContentContainsSensitiveInformation)
+                        {
+                            $sensitiveInformation.Remove('confidencelevel') | Out-Null
+                            $sensitiveInformation.Remove('rulePackId') | Out-Null
+                        }
+                        $Results.ContentContainsSensitiveInformation = @{
+                            SensitiveInformation = [array]$Results.ContentContainsSensitiveInformation
+                        }
+                    }
+
+                    $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                        -ComplexObject $Results.ContentContainsSensitiveInformation `
+                        -CIMInstanceName 'SCDLPContainsSensitiveInformation' `
+                        -ComplexTypeMapping $complexTypeMapping
+                    if (-not [String]::IsNullOrEmpty($complexTypeStringResult))
+                    {
+                        $Results.ContentContainsSensitiveInformation = $complexTypeStringResult
+                    }
+                    else
+                    {
+                        $Results.Remove('ContentContainsSensitiveInformation') | Out-Null
+                    }
                 }
-                else
+
+                if ($null -ne $Results.ExceptIfContentContainsSensitiveInformation)
                 {
-                    $Results.ExceptIfContentContainsSensitiveInformation = ConvertTo-SCDLPSensitiveInformationString -InformationArray $Results.ExceptIfContentContainsSensitiveInformation
+                    $complexTypeMapping = @(
+                        @{
+                            Name            = 'ExceptIfContentContainsSensitiveInformation'
+                            CimInstanceName = 'SCDLPContainsSensitiveInformation'
+                        },
+                        @{
+                            Name            = 'Groups'
+                            CimInstanceName = 'SCDLPContainsSensitiveInformationGroup'
+                            IsArray         = $true
+                        },
+                        @{
+                            Name            = 'SensitiveInformation'
+                            CimInstanceName = 'SCDLPSensitiveInformation'
+                            IsArray         = $true
+                        },
+                        @{
+                            Name            = 'Labels'
+                            CimInstanceName = 'SCDLPLabel'
+                            IsArray         = $true
+                        }
+                    )
+
+                    if ($null -ne $Results.ExceptIfContentContainsSensitiveInformation.groups)
+                    {
+                        foreach ($group in $Results.ExceptIfContentContainsSensitiveInformation.groups)
+                        {
+                            foreach ($sensitiveType in $group.sensitivetypes)
+                            {
+                                $sensitiveType.Remove('confidencelevel') | Out-Null
+                                $sensitiveType.Remove('rulePackId') | Out-Null
+                            }
+                            $group.SensitiveInformation = [array]$group.sensitivetypes
+                            $group.Remove('sensitivetypes') | Out-Null
+                        }
+                    }
+                    else
+                    {
+                        foreach ($sensitiveInformation in $Results.ExceptIfContentContainsSensitiveInformation)
+                        {
+                            $sensitiveInformation.Remove('confidencelevel') | Out-Null
+                            $sensitiveInformation.Remove('rulePackId') | Out-Null
+                        }
+                        $Results.ExceptIfContentContainsSensitiveInformation = @{
+                            SensitiveInformation = [array]$Results.ExceptIfContentContainsSensitiveInformation
+                        }
+                    }
+
+                    $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                        -ComplexObject $Results.ExceptIfContentContainsSensitiveInformation `
+                        -CIMInstanceName 'SCDLPContainsSensitiveInformation' `
+                        -ComplexTypeMapping $complexTypeMapping
+                    if (-not [String]::IsNullOrEmpty($complexTypeStringResult))
+                    {
+                        $Results.ExceptIfContentContainsSensitiveInformation = $complexTypeStringResult
+                    }
+                    else
+                    {
+                        $Results.Remove('ExceptIfContentContainsSensitiveInformation') | Out-Null
+                    }
                 }
-            }
 
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `

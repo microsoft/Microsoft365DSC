@@ -133,7 +133,7 @@ function Get-TargetResource
         Write-Verbose -Message "Found access package assignment policy with id {$($getValue.Id)} and DisplayName {$DisplayName}"
 
         #region Format AccessReviewSettings
-        $formattedAccessReviewSettings = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $getValue.AccessReviewSettings -Verbose
+        $formattedAccessReviewSettings = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $getValue.AccessReviewSettings
         if ($null -ne $formattedAccessReviewSettings)
         {
             $formattedAccessReviewSettings.remove('additionalProperties') | Out-Null

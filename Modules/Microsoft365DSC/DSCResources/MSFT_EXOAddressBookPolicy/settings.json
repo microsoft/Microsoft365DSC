@@ -28,7 +28,9 @@
                 "Mail Recipients",
                 "Address Lists"
             ],
-            "requiredrolegroups": "Organization Management"
+            "requiredrolegroups": [
+                "Organization Management"
+            ]
         }
     }
 }

@@ -24,7 +24,9 @@
             "requiredroles": [
                 "E-Mail Address Policies"
             ],
-            "requiredrolegroups": "Organization Management"
+            "requiredrolegroups": [
+                "Organization Management"
+            ]
         }
     }
 }

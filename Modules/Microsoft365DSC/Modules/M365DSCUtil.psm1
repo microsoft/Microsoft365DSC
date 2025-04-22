@@ -16,46 +16,6 @@ $Global:FullComponents = @('AADRoleManagementPolicyRule', 'AADGroup', 'AADServic
 
 <#
 .Description
-This function cleans up an EXO parameter hashtable
-
-.Functionality
-Internal, Hidden
-#>
-function Format-EXOParams
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param
-    (
-        [Parameter()]
-        [System.Collections.Hashtable]
-        $InputEXOParams,
-
-        [Parameter()]
-        [ValidateSet('New', 'Set')]
-        [System.String]
-        $Operation
-    )
-
-    $EXOParams = Remove-M365DSCAuthenticationParameter -BoundParameters $InputEXOParams
-    if ('New' -eq $Operation)
-    {
-        $EXOParams += @{
-            Name = $EXOParams.Identity
-        }
-        $EXOParams.Remove('Identity') | Out-Null
-        $EXOParams.Remove('MakeDefault') | Out-Null
-        return $EXOParams
-    }
-    if ('Set' -eq $Operation)
-    {
-        $EXOParams.Remove('Enabled') | Out-Null
-        return $EXOParams
-    }
-}
-
-<#
-.Description
 This function retrieves a Teams team by its name
 
 .Functionality
@@ -244,63 +204,6 @@ function Convert-M365DscCIMInstanceToString
     return $str
 }
 
-
-<#
-.Description
-This function creates a new EXO Safe Attachment rule
-
-.Functionality
-Internal
-#>
-function New-EXOSafeAttachmentRule
-{
-    param
-    (
-        [Parameter()]
-        [System.Collections.Hashtable]
-        $SafeAttachmentRuleParams
-    )
-
-    try
-    {
-        $BuiltParams = (Format-EXOParams -InputEXOParams $SafeAttachmentRuleParams -Operation 'New' )
-        Write-Verbose -Message "Creating New SafeAttachmentRule $($BuiltParams.Name) with values: $(Convert-M365DscHashtableToString -Hashtable $BuiltParams)" -Verbose
-        New-SafeAttachmentRule @BuiltParams -Confirm:$false
-    }
-    catch
-    {
-        Write-M365DSCLogEvent -Message $_ -EventSource $($MyInvocation.MyCommand.Source) -TenantId $tenantid -Credential $Credential
-    }
-}
-
-<#
-.Description
-This function creates a new EXO Safe Links rule
-
-.Functionality
-Internal
-#>
-function New-EXOSafeLinksRule
-{
-    param
-    (
-        [Parameter()]
-        [System.Collections.Hashtable]
-        $SafeLinksRuleParams
-    )
-
-    try
-    {
-        $BuiltParams = (Format-EXOParams -InputEXOParams $SafeLinksRuleParams -Operation 'New' )
-        Write-Verbose -Message "Creating New SafeLinksRule $($BuiltParams.Name) with values: $(Convert-M365DscHashtableToString -Hashtable $BuiltParams)" -Verbose
-        New-SafeLinksRule @BuiltParams -Confirm:$false
-    }
-    catch
-    {
-        Write-M365DSCLogEvent -Message $_ -EventSource $($MyInvocation.MyCommand.Source) -TenantId $tenantid -Credential $Credential
-    }
-}
-
 <#
 .Description
 This function checks if the specified cmdlet is available or not
@@ -334,76 +237,6 @@ function Confirm-ImportedCmdletIsAvailable
     catch
     {
         return $false
-    }
-}
-
-<#
-.Description
-This function updates a new EXO Safe Attachment rule
-
-.Functionality
-Internal
-#>
-function Set-EXOSafeAttachmentRule
-{
-    param
-    (
-        [Parameter()]
-        [System.Collections.Hashtable]
-        $SafeAttachmentRuleParams
-    )
-
-    try
-    {
-        $BuiltParams = (Format-EXOParams -InputEXOParams $SafeAttachmentRuleParams -Operation 'Set' )
-        if ($BuiltParams.keys -gt 1)
-        {
-            Write-Verbose -Message "Setting SafeAttachmentRule $($BuiltParams.Identity) with values: $(Convert-M365DscHashtableToString -Hashtable $BuiltParams)" -Verbose
-            Set-SafeAttachmentRule @BuiltParams -Confirm:$false
-        }
-        else
-        {
-            Write-Verbose -Message "No more values to Set on SafeAttachmentRule $($BuiltParams.Identity) using supplied values: $(Convert-M365DscHashtableToString -Hashtable $BuiltParams)" -Verbose
-        }
-    }
-    catch
-    {
-        Write-M365DSCLogEvent -Message $_ -EventSource $($MyInvocation.MyCommand.Source) -TenantId $tenantid -Credential $Credential
-    }
-}
-
-<#
-.Description
-This function creates a new EXO Safe Links rule
-
-.Functionality
-Internal
-#>
-function Set-EXOSafeLinksRule
-{
-    param
-    (
-        [Parameter()]
-        [System.Collections.Hashtable]
-        $SafeLinksRuleParams
-    )
-
-    try
-    {
-        $BuiltParams = (Format-EXOParams -InputEXOParams $SafeLinksRuleParams -Operation 'Set' )
-        if ($BuiltParams.keys -gt 1)
-        {
-            Write-Verbose -Message "Setting SafeLinksRule $($BuiltParams.Identity) with values: $(Convert-M365DscHashtableToString -Hashtable $BuiltParams)" -Verbose
-            Set-SafeLinksRule @BuiltParams -Confirm:$false
-        }
-        else
-        {
-            Write-Verbose -Message "No more values to Set on SafeLinksRule $($BuiltParams.Identity) using supplied values: $(Convert-M365DscHashtableToString -Hashtable $BuiltParams)" -Verbose
-        }
-    }
-    catch
-    {
-        Write-M365DSCLogEvent -Message $_ -EventSource $($MyInvocation.MyCommand.Source) -TenantId $tenantid -Credential $Credential
     }
 }
 
@@ -1264,7 +1097,7 @@ function Export-M365DSCConfiguration
         $Components,
 
         [Parameter(ParameterSetName = 'Export')]
-        [ValidateSet('AAD', 'DEFENDER', 'FABRIC', 'SPO', 'EXO', 'INTUNE', 'SC', 'OD', 'O365', 'PLANNER', 'PP', 'TEAMS')]
+        [ValidateSet('AAD', 'ADO', 'AZURE', 'COMMERCE', 'DEFENDER', 'EXO', 'FABRIC', 'INTUNE', 'O365', 'OD', 'PLANNER', 'PP', 'SC', 'SENTINEL', 'SH', 'SPO', 'TEAMS')]
         [System.String[]]
         $Workloads,
 
@@ -1624,50 +1457,6 @@ function Test-CodePage
 
 <#
 .Description
-This function removes all versions of dependencies that are not specified in the manifest from the current PowerShell session.
-
-.Example
-Remove-M365DSCInvalidDependenciesFromSession
-
-.Functionality
-Private
-#>
-function Remove-M365DSCInvalidDependenciesFromSession
-{
-    [CmdletBinding()]
-    param()
-
-    $currentPath = Join-Path -Path $PSScriptRoot -ChildPath '..\' -Resolve
-    $manifest = Import-PowerShellDataFile "$currentPath/Dependencies/Manifest.psd1"
-    $dependencies = $manifest.Dependencies
-
-    foreach ($dependency in $dependencies)
-    {
-        $loadedModuleInstances = Get-Module $dependency.ModuleName
-
-        $incorrectModuleVersions = $null
-        if ($loadedModuleInstances)
-        {
-            $incorrectModuleVersions = $loadedModuleInstances | Where-Object -FilterScript { $_.Version -ne $dependency.RequiredVersion }
-
-            if ($incorrectModuleVersions)
-            {
-                foreach ($incorrectVersion in $incorrectModuleVersions)
-                {
-                    $FQN = @{
-                        ModuleName    = $incorrectVersion.Name
-                        ModuleVersion = $incorrectVersion.Version
-                    }
-                    Write-Verbose -Message "Removing Module {$($incorrectVersion.Name)} version {$($incorrectVersion.Version)} from the current PowerShell session"
-                    Remove-Module -FullyQualifiedName $FQN -Force -ErrorAction SilentlyContinue
-                }
-            }
-        }
-    }
-}
-
-<#
-.Description
 This function retrieves the various endpoint urls based on the cloud environment.
 
 .Example
@@ -1839,7 +1628,7 @@ function Get-M365DSCOrganization
 
 <#
 .Description
-This function creates a new connection to the specifiek M365 workload
+This function creates a new connection to the specified M365 workload
 
 .Functionality
 Internal
@@ -1849,9 +1638,9 @@ function New-M365DSCConnection
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateSet('AdminAPI', 'Azure', 'AzureDevOPS', 'DefenderForEndPoint', 'EngageHub', 'ExchangeOnline', 'Fabric', 'Intune', 'Licensing', `
+        [ValidateSet('AdminAPI', 'Azure', 'AzureDevOPS', 'DefenderForEndpoint', 'EngageHub', 'ExchangeOnline', 'Fabric', 'Licensing', `
                 'SecurityComplianceCenter', 'PnP', 'PowerPlatforms', 'PowerPlatformREST', `
-                'MicrosoftTeams', 'MicrosoftGraph', 'SharePointOnlineREST', 'Tasks', 'AdminAPI')]
+                'MicrosoftTeams', 'MicrosoftGraph', 'SharePointOnlineREST', 'Tasks')]
         [System.String]
         $Workload,
 
@@ -2569,22 +2358,23 @@ function Split-ArrayByParts
     {
         $PartSize = [Math]::Ceiling($Array.Count / $Parts)
     }
-    $outArray = New-Object 'System.Collections.Generic.List[PSObject]'
+    $outArray = New-Object -TypeName 'System.Collections.Generic.List[PSObject]'
 
-    for ($i = 1; $i -le $Parts; $i++)
+    for ($i = 0; $i -lt $Parts; $i++)
     {
-        $start = (($i - 1) * $PartSize)
+        $start = ($i * $PartSize)
 
         if ($start -lt $Array.Count)
         {
-            $end = (($i) * $PartSize) - 1
-            if ($end -ge $Array.count)
+            $end = (($i + 1) * $PartSize) - 1
+            if ($end -ge $Array.Count)
             {
-                $end = $Array.count - 1
+                $end = $Array.Count - 1
             }
             $outArray.Add(@($Array[$start..$end]))
         }
     }
+
     return , $outArray
 }
 
@@ -3881,86 +3671,6 @@ function Get-M365DSCExportContentForResource
 
 <#
 .Description
-This function gets all resources that support the specified authentication method
-
-.Functionality
-Internal
-#>
-function Get-M365DSCComponentsForAuthenticationType
-{
-    [CmdletBinding()]
-    [OutputType([System.String[]])]
-    param
-    (
-        [Parameter()]
-        [System.String[]]
-        [ValidateSet('Application', 'ApplicationWithSecret', 'Certificate', 'Credentials')]
-        $AuthenticationMethod,
-
-        [Parameter()]
-        [System.String[]]
-        $ResourcesToExport
-    )
-
-    $modules = Get-ChildItem -Path ($PSScriptRoot + '\..\DSCResources\') -Recurse -Filter '*.psm1'
-    $Components = @()
-    foreach ($resource in $modules)
-    {
-        if ($ResourcesToExport.Contains($resource.Name.Replace('MSFT_', '').Split('.')[0]))
-        {
-            Import-Module $resource.FullName -Force
-            $parameters = (Get-Command 'Set-TargetResource').Parameters.Keys
-
-            # Case - Resource only supports AppID & GlobalAdmin
-            if ($AuthenticationMethod.Contains('Application') -and `
-                    $AuthenticationMethod.Contains('Credentials') -and `
-                ($parameters.Contains('ApplicationId') -and `
-                        $parameters.Contains('Credential') -and `
-                        -not $parameters.Contains('CertificateThumbprint') -and `
-                        -not $parameters.Contains('CertificatePath') -and `
-                        -not $parameters.Contains('CertificatePassword') -and `
-                        -not $parameters.Contains('TenantId')))
-            {
-                $Components += $resource.Name -replace 'MSFT_', '' -replace '.psm1', ''
-            }
-
-            #Case - Resource certificate info and TenantId
-            elseif ($AuthenticationMethod.Contains('Certificate') -and `
-                ($parameters.Contains('CertificateThumbprint') -or `
-                        $parameters.Contains('CertificatePath') -or `
-                        $parameters.Contains('CertificatePassword')) -and `
-                    $parameters.Contains('TenantId'))
-            {
-                $Components += $resource.Name -replace 'MSFT_', '' -replace '.psm1', ''
-            }
-
-            # Case - Resource contains ApplicationSecret
-            elseif ($AuthenticationMethod.Contains('ApplicationWithSecret') -and `
-                    $parameters.Contains('ApplicationId') -and `
-                    $parameters.Contains('ApplicationSecret') -and `
-                    $parameters.Contains('TenantId'))
-            {
-                $Components += $resource.Name -replace 'MSFT_', '' -replace '.psm1', ''
-            }
-
-            # Case - Resource contains Credential
-            elseif ($AuthenticationMethod.Contains('Credentials') -and `
-                    $parameters.Contains('Credential'))
-            {
-                $Components += $resource.Name -replace 'MSFT_', '' -replace '.psm1', ''
-            }
-            elseif ($AuthenticationMethod.Contains('ManagedIdentity') -and `
-                    $parameters.Contains('ManagedIdentity'))
-            {
-                $Components += $resource.Name -replace 'MSFT_', '' -replace '.psm1', ''
-            }
-        }
-    }
-    return $Components
-}
-
-<#
-.Description
 This function gets all resources that support the specified authentication method and
 determines the most secure authentication method supported by the resource.
 
@@ -3992,7 +3702,7 @@ function Get-M365DSCComponentsWithMostSecureAuthenticationType
             Import-Module $resource.FullName -Force
             $parameters = (Get-Command 'Set-TargetResource').Parameters.Keys
 
-            #Case - Resource supports CertificateThumbprint
+            # Case - Resource supports CertificateThumbprint
             if ($AuthenticationMethod.Contains('CertificateThumbprint') -and `
                     $parameters.Contains('ApplicationId') -and `
                     $parameters.Contains('CertificateThumbprint') -and `
@@ -4127,7 +3837,7 @@ function Test-M365DSCObjectHasProperty
         $PropertyName
     )
 
-    if (([bool]($Object.PSobject.Properties.name -contains $PropertyName)) -eq $true)
+    if (([bool]($Object.PSobject.Properties.Name -contains $PropertyName)) -eq $true)
     {
         if ($null -ne $Object.$PropertyName)
         {
@@ -4735,68 +4445,6 @@ function Update-M365DSCModule
 
 <#
 .Description
-This function writes messages and adds M365DSCEvents to Eventlog
-
-.Example
-Write-M365DSCLogEvent -Message $_ -EventSource $($MyInvocation.MyCommand.Source) -TenantId $tenantid -Credential $Credential
-
-.Functionality
-Internal
-#>
-function Write-M365DSCLogEvent
-{
-    [CmdletBinding()]
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Message,
-
-        [Parameter()]
-        [System.String]
-        $EventSource = 'M365DSC',
-
-        [Parameter()]
-        [System.Uint32]
-        $EventID = 1,
-
-        [Parameter()]
-        [ValidateSet('Error', 'Information', 'FailureAudit', 'SuccessAudit', 'Warning')]
-        [System.String]
-        $EventEntryType = 'Error',
-
-        [Parameter()]
-        [System.String]
-        $TenantId,
-
-        [Parameter()]
-        [PSCredential]
-        $Credential
-    )
-
-    try
-    {
-        Write-Verbose -Message $Message
-        $tenantIdValue = ''
-        if (-not [System.String]::IsNullOrEmpty($TenantId))
-        {
-            $tenantIdValue = $TenantId
-        }
-        elseif ($null -ne $Credential)
-        {
-            $tenantIdValue = $Credential.UserName.Split('@')[1]
-        }
-        Add-M365DSCEvent -Message $Message -EntryType $EventEntryType -EventID $EventID -Source $EventSource -TenantId $tenantIdValue
-    }
-    catch
-    {
-        Write-Verbose -Message $_
-    }
-    return $nullReturn
-}
-
-<#
-.Description
 This function removes the authentication parameters from the hashtable.
 
 .Functionality
@@ -4857,75 +4505,6 @@ function Remove-M365DSCAuthenticationParameter
         $BoundParameters.Remove('AccessTokens') | Out-Null
     }
     return $BoundParameters
-}
-
-<#
-.Description
-This function clears the authentication parameters from the hashtable.
-
-.Functionality
-Internal
-#>
-function Clear-M365DSCAuthenticationParameter
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param(
-        [Parameter(Mandatory = $true)]
-        [System.Collections.Hashtable]
-        $BoundParameters
-    )
-
-    $BoundParameters.Credential = $null
-    $BoundParameters.ApplicationId = $null
-    $BoundParameters.ApplicationSecret = $null
-    $BoundParameters.TenantId = $null
-    $BoundParameters.CertificatePassword = $null
-    $BoundParameters.CertificatePath = $null
-    $BoundParameters.CertificateThumbprint = $null
-    $BoundParameters.ManagedIdentity = $null
-
-    return $BoundParameters
-}
-<#
-.Description
-This function validate if the authentication parameters from the hashtable have been cleared.
-
-.Functionality
-Internal
-#>
-function Test-M365DSCAuthenticationParameter
-{
-    [CmdletBinding()]
-    [OutputType([System.Boolean])]
-    param(
-        [Parameter(Mandatory = $true)]
-        [System.Collections.Hashtable]
-        $BoundParameters
-    )
-
-    $authenticationParameterList = @(
-        'Credential'
-        'ApplicationId'
-        'ApplicationSecret'
-        'TenantId'
-        'CertificatePassword'
-        'CertificatePath'
-        'CertificateThumbprint'
-        'ManagedIdentity'
-    )
-
-    $containsAuthenticationParameter = $false
-    foreach ($parameter in $authenticationParameterList)
-    {
-        if ($null -ne $BoundParameters.$parameter)
-        {
-            $containsAuthenticationParameter = $true
-            break
-        }
-    }
-
-    return $containsAuthenticationParameter
 }
 
 <#
@@ -4996,6 +4575,7 @@ function Get-M365DSCConfigurationConflict
     return $results
 }
 
+# TODO: Check if necessary to keep this function.
 <#
 .Description
 This function returns a hashtable with aligned to the parameter pattern of the given cmdlet.
@@ -5294,7 +4874,7 @@ function Write-M365DSCHost
     [CmdletBinding(DefaultParameterSetName = 'Default')]
     param
     (
-        [Parameter(Mandatory = $true, Position = 0)]
+        [Parameter(Position = 0)]
         [System.String]
         $Message,
 
@@ -5311,49 +4891,58 @@ function Write-M365DSCHost
         $CommitWrite
     )
 
-    if ($null -eq $Script:M365DSCHostMessages)
+    if (-not [System.String]::IsNullOrEmpty($Message))
     {
-        $Script:M365DSCHostMessages = @()
-    }
-
-    if ($DeferWrite)
-    {
-        $Script:M365DSCHostMessages += @{
-            Message = $Message
-            ForegroundColor = $ForegroundColor
-        }
-        return
-    }
-
-    if ([Environment]::UserInteractive)
-    {
-        if ($CommitWrite -and $Script:M365DSCHostMessages.Count -gt 0)
+        if ($null -eq $Script:M365DSCHostMessages)
         {
-            for ($i = 0; $i -lt $Script:M365DSCHostMessages.Count - 1; $i++)
-            {
-                Write-Host -Object $Script:M365DSCHostMessages[$i].Message -ForegroundColor $Script:M365DSCHostMessages[$i].ForegroundColor -NoNewline
+            $Script:M365DSCHostMessages = @()
+        }
+
+        if ($DeferWrite)
+        {
+            $Script:M365DSCHostMessages += @{
+                Message = $Message
+                ForegroundColor = $ForegroundColor
             }
-            Write-Host -Object $Script:M365DSCHostMessages[-1].Message -ForegroundColor $Script:M365DSCHostMessages[-1].ForegroundColor -NoNewline
-            $Script:M365DSCHostMessages = @()
+            return
         }
-        Write-Host -Object $Message -ForegroundColor $ForegroundColor
-    }
-    else
-    {
-        $outputMessage = ''
-        if ($CommitWrite)
+
+        if ([Environment]::UserInteractive)
         {
-            $outputMessage += $Script:M365DSCHostMessages.Message -join ''
-            $Script:M365DSCHostMessages = @()
+            if ($CommitWrite -and $Script:M365DSCHostMessages.Count -gt 0)
+            {
+                for ($i = 0; $i -lt $Script:M365DSCHostMessages.Count - 1; $i++)
+                {
+                    Write-Host -Object $Script:M365DSCHostMessages[$i].Message -ForegroundColor $Script:M365DSCHostMessages[$i].ForegroundColor -NoNewline
+                }
+                Write-Host -Object $Script:M365DSCHostMessages[-1].Message -ForegroundColor $Script:M365DSCHostMessages[-1].ForegroundColor -NoNewline
+                $Script:M365DSCHostMessages = @()
+            }
+
+            if (-not [System.String]::IsNullOrEmpty($Message))
+            {
+                Write-Host -Object $Message -ForegroundColor $ForegroundColor
+            }
         }
-        $finalMessage = $outputMessage + $Message
-        Write-Verbose -Message $finalMessage -Verbose
+        else
+        {
+            $outputMessage = ''
+            if ($CommitWrite)
+            {
+                $outputMessage += $Script:M365DSCHostMessages.Message -join ''
+                $Script:M365DSCHostMessages = @()
+            }
+            $finalMessage = $outputMessage + $Message
+            if (-not [System.String]::IsNullOrEmpty($Message))
+            {
+                Write-Verbose -Message $finalMessage -Verbose
+            }
+        }
     }
 }
 
 Export-ModuleMember -Function @(
     'Assert-M365DSCBlueprint',
-    'Clear-M365DSCAuthenticationParameter',
     'Confirm-ImportedCmdletIsAvailable',
     'Confirm-M365DSCDependencies',
     'Convert-M365DscHashtableToString',
@@ -5363,7 +4952,6 @@ Export-ModuleMember -Function @(
     'Get-M365DSCAllResources',
     'Get-M365DSCAPIEndpoint'
     'Get-M365DSCAuthenticationMode',
-    'Get-M365DSCComponentsForAuthenticationType',
     'Get-M365DSCComponentsWithMostSecureAuthenticationType',
     'Get-M365DSCConfigurationConflict',
     'Get-M365DSCExportContentForResource',
@@ -5376,18 +4964,13 @@ Export-ModuleMember -Function @(
     'Get-TeamByName',
     'Install-M365DSCDevBranch',
     'Join-M365DSCConfiguration',
-    'New-EXOSafeAttachmentRule',
-    'New-EXOSafeLinksRule',
     'New-M365DSCCmdletDocumentation',
     'New-M365DSCConnection',
     'New-M365DSCMissingResourcesExample',
     'Remove-M365DSCEmptyValue',
     'Remove-M365DSCAuthenticationParameter',
     'Remove-NullEntriesFromHashtable',
-    'Set-EXOSafeAttachmentRule',
-    'Set-EXOSafeLinksRule',
     'Split-ArrayByParts',
-    'Test-M365DSCAuthenticationParameter'
     'Test-M365DSCDependenciesForNewVersions',
     'Test-M365DSCModuleValidity',
     'Test-M365DSCParameterState',
@@ -5395,7 +4978,6 @@ Export-ModuleMember -Function @(
     'Update-M365DSCDependencies',
     'Update-M365DSCExportAuthenticationResults',
     'Update-M365DSCModule',
-    'Write-M365DSCLogEvent',
     'Sync-M365DSCParameter',
     'Invoke-PowerShellCoreResource',
     'Write-M365DSCHost'

@@ -240,7 +240,7 @@ function Get-TargetResource
         }
 
         # Viva Insights settings
-        $currentVivaInsightsSettings = Get-DefaultTenantMyAnalyticsFeatureConfig -Verbose:$false
+        $currentVivaInsightsSettings = Get-DefaultTenantMyAnalyticsFeatureConfig
         if ($null -ne $currentVivaInsightsSettings)
         {
             $results += @{
@@ -588,7 +588,7 @@ function Set-TargetResource
     if ($currentValues.MicrosoftVivaBriefingEmail -and $MicrosoftVivaBriefingEmail -ne $currentValues.MicrosoftVivaBriefingEmail)
     {
         Write-Verbose -Message "Updating Microsoft Viva Briefing Email settings."
-        Set-DefaultTenantBriefingConfig -IsEnabledByDefault $briefingValue -Verbose:$false | Out-Null
+        Set-DefaultTenantBriefingConfig -IsEnabledByDefault $briefingValue | Out-Null
     }#>
 
     # Viva Insights
@@ -596,28 +596,28 @@ function Set-TargetResource
         ($currentValues.VivaInsightsWebExperience -ne $VivaInsightsWebExperience))
     {
         Write-Verbose -Message 'Updating Viva Insights settings for Web Experience'
-        Set-DefaultTenantMyAnalyticsFeatureConfig -Feature 'Dashboard' -IsEnabled $VivaInsightsWebExperience -Verbose:$false | Out-Null
+        Set-DefaultTenantMyAnalyticsFeatureConfig -Feature 'Dashboard' -IsEnabled $VivaInsightsWebExperience | Out-Null
     }
 
     if ($PSBoundParameters.ContainsKey('VivaInsightsDigestEmail') -and `
         ($currentValues.VivaInsightsDigestEmail -ne $VivaInsightsDigestEmail))
     {
         Write-Verbose -Message 'Updating Viva Insights settings for Digest Email'
-        Set-DefaultTenantMyAnalyticsFeatureConfig -Feature 'Digest-email' -IsEnabled $VivaInsightsDigestEmail -Verbose:$false | Out-Null
+        Set-DefaultTenantMyAnalyticsFeatureConfig -Feature 'Digest-email' -IsEnabled $VivaInsightsDigestEmail | Out-Null
     }
 
     if ($PSBoundParameters.ContainsKey('VivaInsightsOutlookAddInAndInlineSuggestions') -and `
         ($currentValues.VivaInsightsOutlookAddInAndInlineSuggestions -ne $VivaInsightsOutlookAddInAndInlineSuggestions))
     {
         Write-Verbose -Message 'Updating Viva Insights settings for Addin and Inline Suggestions'
-        Set-DefaultTenantMyAnalyticsFeatureConfig -Feature 'Add-In' -IsEnabled $VivaInsightsOutlookAddInAndInlineSuggestions -Verbose:$false | Out-Null
+        Set-DefaultTenantMyAnalyticsFeatureConfig -Feature 'Add-In' -IsEnabled $VivaInsightsOutlookAddInAndInlineSuggestions | Out-Null
     }
 
     if ($PSBoundParameters.ContainsKey('VivaInsightsScheduleSendSuggestions') -and `
         ($currentValues.VivaInsightsScheduleSendSuggestions -ne $VivaInsightsScheduleSendSuggestions))
     {
         Write-Verbose -Message 'Updating Viva Insights settings for ScheduleSendSuggestions'
-        Set-DefaultTenantMyAnalyticsFeatureConfig -Feature 'Scheduled-send' -IsEnabled $VivaInsightsScheduleSendSuggestions -Verbose:$false | Out-Null
+        Set-DefaultTenantMyAnalyticsFeatureConfig -Feature 'Scheduled-send' -IsEnabled $VivaInsightsScheduleSendSuggestions | Out-Null
     }
 
     # Reports Display Names

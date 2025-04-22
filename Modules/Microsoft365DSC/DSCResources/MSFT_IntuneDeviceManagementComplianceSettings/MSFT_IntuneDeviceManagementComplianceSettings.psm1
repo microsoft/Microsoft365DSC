@@ -69,7 +69,7 @@ function Get-TargetResource
 
         $uri = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + 'beta/deviceManagement/settings'
         $settings = Invoke-MgGraphRequest -Method 'GET' -Uri $uri
-    
+
         $results = @{
             IsSingleInstance                     = 'Yes'
             DeviceComplianceCheckinThresholdDays = $settings.deviceComplianceCheckinThresholdDays
@@ -92,7 +92,7 @@ function Get-TargetResource
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `
             -Credential $Credential
-        $nullResult = Clear-M365DSCAuthenticationParameter -BoundParameters $nullResult
+
         return $nullResult
     }
 }

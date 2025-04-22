@@ -29,15 +29,12 @@ Configuration Example
             ConfigureWifi             = $True;
             Description               = "This is my enrollment profile";
             DisplayName               = "MyTestEnrollmentProfile";
-            EnrolledDeviceCount       = 0;
             EnrollmentMode            = "corporateOwnedDedicatedDevice";
             EnrollmentTokenType       = "default";
-            EnrollmentTokenUsageCount = 0;
             Ensure                    = "Present";
             IsTeamsDeviceProfile      = $False;
             RoleScopeTagIds           = @("0");
             TenantId                  = $TenantId;
-            TokenCreationDateTime     = "10/26/2024 1:02:29 AM";
             TokenExpirationDateTime   = "10/31/2024 3:59:59 AM";
             WifiHidden                = $True; #Drift
             WifiSecurityType          = "none";

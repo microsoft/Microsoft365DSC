@@ -9,18 +9,18 @@ DSC resources need to support CRUD operations, meaning that we need to be able t
 For example, the SCComplianceCase resource has the following cmdlets available in the Security and Compliance Powershell module: **New-ComplianceCase**, **Set-ComplianceCase**, **Get-ComplianceCase** and **Remove-ComplianceCase**. It is therefore a candidate to be added as a resource to the project.
 
 A few rules also apply to your resource selection:
-* For SharePoint Online, where possible, prioritize using the PnP module over the Microsoft.Online.SharePoint.PowerShell one. We are slowly transitioning over an exclusive use of the PnP module and will eventually phase out the use of the SharePoint Online Management Shell.
 
-* Some cmdlets in the Exchange and Security and Compliance modules are only available to certain SKUs, you will need to make sure that executing a configuration that uses your resource against a SKU that doesn’t support its underlying cmdlets or API is gracefully handled, and does not throw a blocking error.
+* Some cmdlets in the Exchange and Security and Compliance modules are only available to certain SKUs. You will need to make sure that executing a configuration that uses your resource against a SKU that doesn't support its underlying cmdlets or API is gracefully handled, and does not throw a blocking error.
 
 ## Create the Resource Files
 
 The best way to get started here is to simply copy and existing resource, and then to rename and modify it. All resources are found under **/Modules/Microsoft365DSC/DSCResources**. Each resource is represented by a folder, a .psm1 file which contains the logic of the resource, a .schema.mof file which is a class defining the properties of the resource as well as with a readme.md file which describes what the resource is for.
 
-The Folder, module and schema files need to be named based on the following pattern:
-- Need to start with **MSFT_** to indicate that this is for a project under the Microsoft organization.
-- Need to then contain letters representing the workload associated to the resource (EXO for Exchange Online, SPO for SharePoint Online, OD for OneDrive, SC for Security and Compliance, TEAMS for teams, and O365 for generic admin resources).
-- The rest of the name should normally follow the same naming convention as the cmdlet it represents. For example, because the cmdlet to create a new compliance case is New-ComplianceCase, the associated resource would be named **MSFT_SCComplianceCase**.
+The folder, module and schema files need to be named based on the following pattern:
+
+* Need to start with **MSFT_** to indicate that this is for a project under the Microsoft organization.
+* Need to then contain letters representing the workload associated to the resource (EXO for Exchange Online, SPO for SharePoint Online, OD for OneDrive, SC for Security and Compliance, TEAMS for teams, and O365 for generic admin resources).
+* The rest of the name should normally follow the same naming convention as the cmdlet it represents. For example, because the cmdlet to create a new compliance case is New-ComplianceCase, the associated resource would be named **MSFT_SCComplianceCase**.
 
 ## Start with the Parameters
 
@@ -60,7 +60,7 @@ $Description,
 $Status = "Active"
 ```
 
-On top of these resources specific parameters, each resource should define the **Ensure** when they support removing instances of the resource. Every resource is  also required to define the **GlobalAdminAccount**. By adding these two additional properties, the function signature of our resource then becomes:
+On top of these resources specific parameters, each resource should define the **Ensure** when they support removing instances of the resource. Every resource is  also required to define **Credential** . By adding these two additional properties, the function signature of our resource then becomes:
 
 ```PowerShell
 function Get|Set|Test-TargetResource
@@ -86,13 +86,62 @@ param
     [System.String]
     $Ensure = 'Present',
 
-    [Parameter(Mandatory = $true)]
+    [Parameter()]
     [System.Management.Automation.PSCredential]
-    $GlobalAdminAccount
+    $Credential
 )
 ```
 
-Microsoft365DSC also supports [ReverseDSC](https://github.com/Microsoft/ReverseDSC) natively, which means that it needs to define a fourth function named **Export-TargetResource** in each resources. This function should only ever accept the **GlobalAdminAccount** property. The logic of this function should loop through each instances of your resources in the tenant, and convert them into DSC strings. Please refer to existing resources to better understand the logic of this function.
+Other authentication properties should be added if the resource supports it:
+
+* `ApplicationId` - The client id of the app registration
+* `ApplicationSecret` - The client secret used for authentication with the app registration
+* `CertificateThumbprint` - Alternative to client secret. Thumbprint of the certificate used for authentication with the app registration
+* `TenantId` - The tenant name to be managed
+* `ManagedIdentity` - If the resource supports managed identity for authentication
+* `AccessTokens` - Access tokens passed to the authentication
+
+```PowerShell
+function Get|Set|Test-TargetResource
+[CmdletBinding()]
+[OutputType([Hashtable|void|Boolean])]
+param
+(
+    .
+    .
+    .
+
+    [Parameter()]
+    [System.Management.Automation.PSCredential]
+    $Credential,
+
+    [Parameter()]
+    [System.String]
+    $ApplicationId,
+
+    [Parameter()]
+    [System.Management.Automation.PSCredential]
+    $ApplicationSecret,
+
+    [Parameter()]
+    [System.String]
+    $CertificateThumbprint,
+
+    [Parameter()]
+    [System.String]
+    $TenantId,
+
+    [Parameter()]
+    [Switch]
+    $ManagedIdentity,
+
+    [Parameter()]
+    [System.String[]]
+    $AccessTokens
+)
+```
+
+Microsoft365DSC also supports [ReverseDSC](https://github.com/Microsoft/ReverseDSC) natively, which means that it needs to define a fourth function named **Export-TargetResource** in each resources. This function should only ever accept the authentication properties and, if supported, a `Filter` possibility. The logic of this function should loop through each instances of your resources in the tenant, and convert them into DSC strings. Please refer to existing resources to better understand the logic of this function.
 
 ## Define the Schema
 
@@ -114,7 +163,13 @@ class MSFT_SCComplianceCase : OMI_BaseResource
     [Write, Description("The description of the case.")] String Description;
     [Write, Description("Specify if this case should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
     [Write, Description("Status for the case. Can either be 'Active' or 'Closed'"), ValueMap{"Active","Closed"}, Values{"Active","Closed"}] String Status;
-    [Required, Description("Credentials of the Global Admin Account"), EmbeddedInstance("MSFT_Credential")] String GlobalAdminAccount;
+    [Write, Description("Credentials of the Global Admin Account"), EmbeddedInstance("MSFT_Credential")] string Credential;
+    [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
+    [Write, Description("Secret of the Azure Active Directory application to authenticate with."), EmbeddedInstance("MSFT_Credential")] String ApplicationSecret;
+    [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
+    [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
+    [Write, Description("Managed ID being used for authentication.")] Boolean ManagedIdentity;
+    [Write, Description("Access token used for authentication.")] String AccessTokens[];
 };
 ```
 

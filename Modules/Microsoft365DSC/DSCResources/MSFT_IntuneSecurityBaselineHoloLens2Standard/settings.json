@@ -1,0 +1,38 @@
+{
+    "resourceName":"IntuneSecurityBaselineHoloLens2Standard",
+    "description":"This resource configures an Intune Security Baseline HoloLens2 Standard.",
+    "permissions":{
+        "graph":{
+            "delegated":{
+                "read":[
+                    {
+                        "name":"DeviceManagementConfiguration.Read.All"
+                    },
+                    {
+                        "name":"Group.Read.All"
+                    }
+                ],
+                "update":[
+                    {
+                        "name":"Group.Read.All"
+                    }
+                ]
+            },
+            "application":{
+                "read":[
+                    {
+                        "name":"DeviceManagementConfiguration.Read.All"
+                    },
+                    {
+                        "name":"Group.Read.All"
+                    }
+                ],
+                "update":[
+                    {
+                        "name":"Group.Read.All"
+                    }
+                ]
+            }
+        }
+    }
+}

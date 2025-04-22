@@ -289,22 +289,15 @@ function Set-TargetResource
 
     $SafeAttachmentRules = Get-SafeAttachmentRule
     $SafeAttachmentRule = $SafeAttachmentRules | Where-Object -FilterScript { $_.Identity -eq $Identity }
-    $SafeAttachmentRuleParams = [System.Collections.Hashtable]($PSBoundParameters)
-    $SafeAttachmentRuleParams.Remove('Ensure') | Out-Null
-    $SafeAttachmentRuleParams.Remove('Credential') | Out-Null
-    $SafeAttachmentRuleParams.Remove('ApplicationId') | Out-Null
-    $SafeAttachmentRuleParams.Remove('TenantId') | Out-Null
-    $SafeAttachmentRuleParams.Remove('CertificateThumbprint') | Out-Null
-    $SafeAttachmentRuleParams.Remove('CertificatePath') | Out-Null
-    $SafeAttachmentRuleParams.Remove('CertificatePassword') | Out-Null
-    $SafeAttachmentRuleParams.Remove('ManagedIdentity') | Out-Null
-    $SafeAttachmentRuleParams.Remove('AccessTokens') | Out-Null
+    $SafeAttachmentRuleParams = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
     if (('Present' -eq $Ensure ) -and (-not $SafeAttachmentRule))
     {
-        New-EXOSafeAttachmentRule -SafeAttachmentRuleParams $PSBoundParameters
+        $SafeAttachmentRuleParams.Add('Name', $SafeAttachmentRuleParams.Identity)
+        $SafeAttachmentRuleParams.Remove('Identity') | Out-Null
+        $SafeAttachmentRuleParams.Remove('MakeDefault') | Out-Null
+        New-SafeAttachmentRule @SafeAttachmentRuleParams -Confirm:$false
     }
-
     elseif (('Present' -eq $Ensure ) -and ($SafeAttachmentRule))
     {
         if ($SafeAttachmentRuleParams.Enabled -and ('Disabled' -eq $SafeAttachmentRule.State))
@@ -313,22 +306,22 @@ function Set-TargetResource
             # There doesn't appear to be any way to change the Enabled state of a rule once created.
             Write-Verbose -Message "Removing SafeAttachmentRule $($Identity) in order to change Enabled state."
             Remove-SafeAttachmentRule -Identity $Identity -Confirm:$false
-            New-EXOSafeAttachmentRule -SafeAttachmentRuleParams $SafeAttachmentRuleParams
+            $SafeAttachmentRuleParams.Add('Name', $SafeAttachmentRuleParams.Identity)
+            $SafeAttachmentRuleParams.Remove('Identity') | Out-Null
+            $SafeAttachmentRuleParams.Remove('MakeDefault') | Out-Null
+            New-SafeAttachmentRule @SafeAttachmentRuleParams -Confirm:$false
         }
         else
         {
-            if ($SafeAttachmentRuleParams.SafeAttachmentPolicy -ne $SafeAttachmentRule.SafeAttachmentPolicy)
-            {
-                Set-EXOSafeAttachmentRule -SafeAttachmentRuleParams $SafeAttachmentRuleParams
-            }
-            else
+            $SafeAttachmentRuleParams.Remove('Enabled') | Out-Null
+            if ($SafeAttachmentRuleParams.SafeAttachmentPolicy -eq $SafeAttachmentRule.SafeAttachmentPolicy)
             {
                 $SafeAttachmentRuleParams.Remove('SafeAttachmentPolicy')
-                Set-EXOSafeAttachmentRule -SafeAttachmentRuleParams $SafeAttachmentRuleParams
             }
+            Write-Verbose -Message "Setting SafeAttachmentRule $($Identity)"
+            Set-SafeAttachmentRule @SafeAttachmentRuleParams -Confirm:$false
         }
     }
-
     elseif (('Absent' -eq $Ensure ) -and ($SafeAttachmentRule))
     {
         Write-Verbose -Message "Removing SafeAttachmentRule $($Identity)"

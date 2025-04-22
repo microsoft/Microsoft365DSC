@@ -1086,29 +1086,6 @@ function Test-AdvancedSettings
     return $foundSettings
 }
 
-function ConvertTo-AdvancedSettingsString
-{
-    [CmdletBinding()]
-    [OutputType([System.String])]
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        $AdvancedSettings
-    )
-
-    $StringContent = "@(`r`n"
-    foreach ($advancedSetting in $AdvancedSettings)
-    {
-        $StringContent += "                MSFT_SCLabelSetting`r`n"
-        $StringContent += "                {`r`n"
-        $StringContent += "                    Key   = '$($advancedSetting.Key.Replace("'", "''"))'`r`n"
-        $StringContent += "                    Value = '$($advancedSetting.Value.Replace("'", "''"))'`r`n"
-        $StringContent += "                }`r`n"
-    }
-    $StringContent += '            )'
-    return $StringContent
-}
-
 function Convert-ArrayList
 {
     [CmdletBinding()]
@@ -1126,7 +1103,6 @@ function Convert-ArrayList
     }
 
     return $currentItems
-
 }
 
 function New-PolicyData

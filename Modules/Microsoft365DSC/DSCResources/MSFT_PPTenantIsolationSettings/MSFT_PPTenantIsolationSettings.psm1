@@ -751,31 +751,9 @@ function Get-M365TenantId
         return '*'
     }
 
-    $result = Invoke-WebRequest "https://login.windows.net/$TenantName/.well-known/openid-configuration" -UseBasicParsing -Verbose:$false
+    $result = Invoke-WebRequest "https://login.windows.net/$TenantName/.well-known/openid-configuration" -UseBasicParsing
     $jsonResult = $result | ConvertFrom-Json
     return $jsonResult.token_endpoint.Split('/')[3]
-}
-
-function Get-M365DSCTenantIsolationRule
-{
-    [CmdletBinding()]
-    [OutputType([System.String])]
-    param(
-        [Parameter(Mandatory = $true)]
-        [System.Collections.ArrayList]
-        $Rules
-    )
-
-    $StringContent = '@('
-    foreach ($rule in $Rules)
-    {
-        $StringContent += "MSFT_PPTenantRule {`r`n"
-        $StringContent += "                TenantName          = '" + $rule.TenantName + "'`r`n"
-        $StringContent += "                Direction           = '" + $rule.Direction + "'`r`n"
-        $StringContent += "            }`r`n"
-    }
-    $StringContent += '            )'
-    return $StringContent
 }
 
 Export-ModuleMember -Function *-TargetResource
