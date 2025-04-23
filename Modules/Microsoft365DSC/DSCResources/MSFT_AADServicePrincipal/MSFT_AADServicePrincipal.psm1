@@ -160,6 +160,7 @@ function Get-TargetResource
                     $AADServicePrincipal = Get-MgServicePrincipal -ServicePrincipalId $ObjectId `
                         -Expand 'AppRoleAssignedTo' `
                         -ErrorAction Stop
+                    $AppIdToValue = $AADServicePrincipal.DisplayName
                 }
             }
             catch
@@ -176,11 +177,13 @@ function Get-TargetResource
                     if ($appInstance)
                     {
                         $AADServicePrincipal = Get-MgServicePrincipal -Filter "AppID eq '$($appInstance.AppId)'"
+                        $AppIdToValue = $AADServicePrincipal.DisplayName
                     }
                 }
                 else
                 {
                     $AADServicePrincipal = Get-MgServicePrincipal -Filter "AppID eq '$($AppId)'"
+                    $AppIdToValue = $AADServicePrincipal.AppId
                 }
             }
             if ($null -eq $AADServicePrincipal)
@@ -191,6 +194,7 @@ function Get-TargetResource
         else
         {
             $AADServicePrincipal = $Script:exportedInstance
+            $AppIdToValue = $AADServicePrincipal.DisplayName
         }
 
         $AppRoleAssignedToValues = @()
@@ -310,7 +314,7 @@ function Get-TargetResource
         }
 
         $result = @{
-            AppId                              = $AADServicePrincipal.AppDisplayName
+            AppId                              = $AppIdToValue
             AppRoleAssignedTo                  = $AppRoleAssignedToValues
             ObjectID                           = $AADServicePrincipal.Id
             DisplayName                        = $AADServicePrincipal.DisplayName
