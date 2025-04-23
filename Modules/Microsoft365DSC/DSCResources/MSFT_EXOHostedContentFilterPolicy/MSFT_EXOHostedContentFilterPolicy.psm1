@@ -733,20 +733,14 @@ function Set-TargetResource
         -InboundParameters $PSBoundParameters
 
     Write-Verbose (Get-HostedContentFilterPolicy | Out-String)
-    $HostedContentFilterPolicies = Get-HostedContentFilterPolicy
+    $HostedContentFilterPolicy = Get-HostedContentFilterPolicy -Identity $Identity
 
-    $HostedContentFilterPolicy = $HostedContentFilterPolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }
-    $HostedContentFilterPolicyParams = [System.Collections.Hashtable]($PSBoundParameters)
-    $HostedContentFilterPolicyParams.Remove('Ensure') | Out-Null
-    $HostedContentFilterPolicyParams.Remove('Credential') | Out-Null
-    $HostedContentFilterPolicyParams.Remove('MakeDefault') | Out-Null
-    $HostedContentFilterPolicyParams.Remove('ApplicationId') | Out-Null
-    $HostedContentFilterPolicyParams.Remove('TenantId') | Out-Null
-    $HostedContentFilterPolicyParams.Remove('CertificateThumbprint') | Out-Null
-    $HostedContentFilterPolicyParams.Remove('CertificatePath') | Out-Null
-    $HostedContentFilterPolicyParams.Remove('CertificatePassword') | Out-Null
-    $HostedContentFilterPolicyParams.Remove('ManagedIdentity') | Out-Null
-    $HostedContentFilterPolicyParams.Remove('AccessTokens') | Out-Null
+    $HostedContentFilterPolicyParams = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+
+    if ($IntraOrgFilterState -eq 'Default')
+    {
+        $HostedContentFilterPolicyParams.IntraOrgFilterState = 'HighConfidencePhish'
+    }
 
     if (('Present' -eq $Ensure ) -and ($null -eq $HostedContentFilterPolicy))
     {
@@ -759,6 +753,7 @@ function Set-TargetResource
         if ($PSBoundParameters.MakeDefault)
         {
             Write-Verbose -Message 'Updating Policy as default'
+            $HostedContentFilterPolicyParams.Remove('MakeDefault') | Out-Null
             Set-HostedContentFilterPolicy @HostedContentFilterPolicyParams -MakeDefault -Confirm:$false
         }
     }
@@ -768,6 +763,7 @@ function Set-TargetResource
         if ($PSBoundParameters.MakeDefault)
         {
             Write-Verbose -Message 'Updating Policy as default'
+            $HostedContentFilterPolicyParams.Remove('MakeDefault') | Out-Null
             Set-HostedContentFilterPolicy @HostedContentFilterPolicyParams -MakeDefault -Confirm:$false
         }
         else
@@ -1088,6 +1084,11 @@ function Test-TargetResource
     $ValuesToCheck.Remove('EndUserSpamNotificationLanguage') | Out-Null
     $ValuesToCheck.Remove('EndUserSpamNotificationFrequency') | Out-Null
     $ValuesToCheck.Remove('EndUserSpamNotificationCustomSubject') | Out-Null
+
+    if ($CurrentValues.IntraOrgFilterState -ne $IntraOrgFilterState -and $IntraOrgFilterState -eq 'Default')
+    {
+        $ValuesToCheck.IntraOrgFilterState = 'HighConfidencePhish'
+    }
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
