@@ -4,6 +4,7 @@
 
 * DEPENDENCIES
   * Updated Microsoft.Graph to version 2.27.0.
+  * Updated MSCoudLoginAssistant to version 1.1.43.
 
 # 1.25.416.1
 
