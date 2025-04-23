@@ -1,7 +1,8 @@
 # Change log for Microsoft365DSC
 
 # UNRELEASED
-
+* AADServicePrincipal
+  * Fixed an issue whenn you use AppID ID as Key Identifier. It never match with current value.
 * AADEntitlementManagementConnectedOrganization
   * Fixed an issue where an empty display name would result in a parameter binding exception.
     FIXES [#4981](https://github.com/microsoft/Microsoft365DSC/issues/4981)
