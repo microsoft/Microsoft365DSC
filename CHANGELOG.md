@@ -14,6 +14,12 @@
 * IntuneDeviceEnrollmentLimitRestriction
   * Added support for `Assignments`, `Priority` and `RoleScopeTagIds` properties.
     FIXES [#3915](https://github.com/microsoft/Microsoft365DSC/issues/3915)
+* IntuneAppProtectionPolicyiOS
+  * Fixed empty array comparison.
+    FIXES [#5736](https://github.com/microsoft/Microsoft365DSC/issues/5736)
+* IntuneDeviceEnrollmentLimitRestriction
+  * Added support for `Assignments`, `Priority` and `RoleScopeTagIds` properties.
+    FIXES [#3915](https://github.com/microsoft/Microsoft365DSC/issues/3915)
 * IntuneWifiConfigurationPolicyAndroidEnterpriseWorkProfile
   * Fixes the data type for extraction and creation.
 * SPOSearchManagedProperty
