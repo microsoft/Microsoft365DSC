@@ -3,6 +3,9 @@
 # UNRELEASED
 * AADServicePrincipal
   * Fixed an issue whenn you use AppID ID as Key Identifier. It never match with current value.
+
+# 1.25.423.1
+
 * AADEntitlementManagementConnectedOrganization
   * Fixed an issue where an empty display name would result in a parameter binding exception.
     FIXES [#4981](https://github.com/microsoft/Microsoft365DSC/issues/4981)
@@ -12,6 +15,11 @@
 * IntuneAppProtectionPolicyiOS
   * Fixed empty array comparison.
     FIXES [#5736](https://github.com/microsoft/Microsoft365DSC/issues/5736)
+* IntuneDeviceEnrollmentLimitRestriction
+  * Added support for `Assignments`, `Priority` and `RoleScopeTagIds` properties.
+    FIXES [#3915](https://github.com/microsoft/Microsoft365DSC/issues/3915)
+* IntuneWifiConfigurationPolicyAndroidEnterpriseWorkProfile
+  * Fixes the data type for extraction and creation.
 * SPOSearchManagedProperty
   * Fixed an issue where the connection url was not the admin url required by the resource.
     FIXES [#5093](https://github.com/microsoft/Microsoft365DSC/issues/5093)
