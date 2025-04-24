@@ -1,5 +1,9 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+* AADServicePrincipal
+  * Fixed an issue whenn you use AppID ID as Key Identifier. It never match with current value.
+
 # 1.25.423.1
 
 * AADEntitlementManagementConnectedOrganization
