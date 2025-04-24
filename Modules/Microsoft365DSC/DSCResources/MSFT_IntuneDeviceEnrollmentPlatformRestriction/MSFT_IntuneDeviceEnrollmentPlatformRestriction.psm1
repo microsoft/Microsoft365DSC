@@ -123,11 +123,11 @@ function Get-TargetResource
             $keys = (([Hashtable]$PSBoundParameters).Clone()).Keys
             foreach ($key in $keys)
             {
-                if ($null -ne $PSBoundParameters.$key -and $PSBoundParameters.$key.getType().Name -like '*cimInstance*' -and $key -like '*Restriction')
+                if ($null -ne $PSBoundParameters.$key -and $PSBoundParameters.$key.GetType().Name -like '*cimInstance*' -and $key -like '*Restriction')
                 {
                     if ($DeviceEnrollmentConfigurationType -eq 'singlePlatformRestriction' )
                     {
-                        $PlatformType = $key.replace('Restriction', '')
+                        $PlatformType = $key.Replace('Restriction', '')
                         break
                     }
                 }
@@ -359,28 +359,28 @@ function Set-TargetResource
         $keys = (([Hashtable]$PSBoundParameters).Clone()).Keys
         foreach ($key in $keys)
         {
-            $keyName = $key.substring(0, 1).toLower() + $key.substring(1, $key.length - 1)
+            $keyName = $key.Substring(0, 1).ToLower() + $key.Substring(1, $key.Length - 1)
             $keyValue = $PSBoundParameters.$key
-            if ($null -ne $PSBoundParameters.$key -and $PSBoundParameters.$key.getType().Name -like '*cimInstance*')
+            if ($null -ne $PSBoundParameters.$key -and $PSBoundParameters.$key.GetType().Name -like '*cimInstance*')
             {
                 $keyValue = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $PSBoundParameters.$key
                 if ($DeviceEnrollmentConfigurationType -eq 'singlePlatformRestriction' )
                 {
                     $keyName = 'platformRestriction'
-                    $PSBoundParameters.add('platformType', ($key.replace('Restriction', '')))
+                    $PSBoundParameters.Add('platformType', ($key.Replace('Restriction', '')))
                 }
             }
-            $PSBoundParameters.remove($key)
-            $PSBoundParameters.add($keyName, $keyValue)
+            $PSBoundParameters.Remove($key)
+            $PSBoundParameters.Add($keyName, $keyValue)
         }
 
         $policyType = '#microsoft.graph.deviceEnrollmentPlatformRestrictionConfiguration'
         if ($DeviceEnrollmentConfigurationType -eq 'platformRestrictions' )
         {
             $policyType = '#microsoft.graph.deviceEnrollmentPlatformRestrictionsConfiguration'
-            $PSBoundParameters.add('deviceEnrollmentConfigurationType ', 'limit')
+            $PSBoundParameters.Add('deviceEnrollmentConfigurationType ', 'limit')
         }
-        $PSBoundParameters.add('@odata.type', $policyType)
+        $PSBoundParameters.Add('@odata.type', $policyType)
 
         #Write-Verbose ($PSBoundParameters | ConvertTo-Json -Depth 20)
 
@@ -425,9 +425,9 @@ function Set-TargetResource
         $keys = (([Hashtable]$PSBoundParameters).Clone()).Keys
         foreach ($key in $keys)
         {
-            $keyName = $key.substring(0, 1).toLower() + $key.substring(1, $key.length - 1)
+            $keyName = $key.Substring(0, 1).ToLower() + $key.Substring(1, $key.Length - 1)
             $keyValue = $PSBoundParameters.$key
-            if ($null -ne $PSBoundParameters.$key -and $PSBoundParameters.$key.getType().Name -like '*cimInstance*')
+            if ($null -ne $PSBoundParameters.$key -and $PSBoundParameters.$key.GetType().Name -like '*cimInstance*')
             {
                 $keyValue = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $PSBoundParameters.$key
                 if ($DeviceEnrollmentConfigurationType -eq 'singlePlatformRestriction' )
@@ -435,8 +435,8 @@ function Set-TargetResource
                     $keyName = 'platformRestriction'
                 }
             }
-            $PSBoundParameters.remove($key)
-            $PSBoundParameters.add($keyName, $keyValue)
+            $PSBoundParameters.Remove($key)
+            $PSBoundParameters.Add($keyName, $keyValue)
         }
 
         $policyType = '#microsoft.graph.deviceEnrollmentPlatformRestrictionConfiguration'
@@ -444,7 +444,7 @@ function Set-TargetResource
         {
             $policyType = '#microsoft.graph.deviceEnrollmentPlatformRestrictionsConfiguration'
         }
-        $PSBoundParameters.add('@odata.type', $policyType)
+        $PSBoundParameters.Add('@odata.type', $policyType)
 
         Write-Verbose "Updating with values:`r`n$($PSBoundParameters | ConvertTo-Json -Depth 20)"
 
@@ -597,13 +597,13 @@ function Test-TargetResource
     {
         $source = $PSBoundParameters.$key
         $target = $CurrentValues.$key
-        if ($source.getType().Name -like '*CimInstance*' -and $key -ne 'WindowsMobileRestriction')
+        if ($source.GetType().Name -like '*CimInstance*' -and $key -ne 'WindowsMobileRestriction')
         {
             $testResult = Compare-M365DSCComplexObject `
                 -Source ($source) `
                 -Target ($target)
 
-            if (-Not $testResult)
+            if (-not $testResult)
             {
                 $testResult = $false
                 break
@@ -621,9 +621,9 @@ function Test-TargetResource
     foreach ($key in $ValuesToCheck.Keys)
     {
         if (($null -ne $CurrentValues[$key]) `
-                -and ($CurrentValues[$key].getType().Name -eq 'DateTime'))
+                -and ($CurrentValues[$key].GetType().Name -eq 'DateTime'))
         {
-            $CurrentValues[$key] = $CurrentValues[$key].toString()
+            $CurrentValues[$key] = $CurrentValues[$key].ToString()
         }
     }
 
@@ -683,6 +683,7 @@ function Export-TargetResource
         [System.String[]]
         $AccessTokens
     )
+
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
@@ -907,77 +908,77 @@ function Get-DevicePlatformRestrictionSetting
 
     if ($null -ne $Properties.platformType)
     {
-        $keyName = ($Properties.platformType).Substring(0, 1).toUpper() + ($Properties.platformType).substring(1, $Properties.platformType.length - 1) + 'Restriction'
+        $keyName = ($Properties.platformType).Substring(0, 1).ToUpper() + ($Properties.platformType).Substring(1, $Properties.platformType.length - 1) + 'Restriction'
         $keyValue = [Hashtable]::new($Properties.platformRestriction)
         $hash = @{}
         foreach ($key in $keyValue.Keys)
         {
             if ($null -ne $keyValue.$key)
             {
-                switch -Wildcard ($keyValue.$key.getType().name)
+                switch -Wildcard ($keyValue.$key.GetType().name)
                 {
                     '*[[\]]'
                     {
                         if ($keyValue.$key.count -gt 0)
                         {
-                            $hash.add($key, $keyValue.$key)
+                            $hash.Add($key, $keyValue.$key)
                         }
                     }
                     'String'
                     {
                         if (-Not [String]::IsNullOrEmpty($keyValue.$key))
                         {
-                            $hash.add($key, $keyValue.$key)
+                            $hash.Add($key, $keyValue.$key)
                         }
                     }
                     Default
                     {
-                        $hash.add($key, $keyValue.$key)
+                        $hash.Add($key, $keyValue.$key)
                     }
                 }
             }
         }
-        $results.add($keyName, $hash)
+        $results.Add($keyName, $hash)
     }
     else
     {
         $platformRestrictions = [Hashtable]::new($Properties)
-        $platformRestrictions.remove('@odata.type')
-        $platformRestrictions.remove('@odata.context')
+        $platformRestrictions.Remove('@odata.type')
+        $platformRestrictions.Remove('@odata.context')
         foreach ($key in $platformRestrictions.Keys)
         {
-            $keyName = $key.Substring(0, 1).toUpper() + $key.substring(1, $key.length - 1)
+            $keyName = $key.Substring(0, 1).ToUpper() + $key.Substring(1, $key.Length - 1)
             $keyValue = [Hashtable]::new($platformRestrictions.$key)
             $hash = @{}
             foreach ($key in $keyValue.Keys)
             {
                 if ($null -ne $keyValue.$key)
                 {
-                    switch -Wildcard ($keyValue.$key.getType().name)
+                    switch -Wildcard ($keyValue.$key.GetType().name)
                     {
                         '*[[\]]'
                         {
                             if ($keyValue.$key.count -gt 0)
                             {
-                                $hash.add($key, $keyValue.$key)
+                                $hash.Add($key, $keyValue.$key)
                             }
                         }
                         'String'
                         {
                             if (-Not [String]::IsNullOrEmpty($keyValue.$key))
                             {
-                                $hash.add($key, $keyValue.$key)
+                                $hash.Add($key, $keyValue.$key)
                             }
                         }
                         Default
                         {
-                            $hash.add($key, $keyValue.$key)
+                            $hash.Add($key, $keyValue.$key)
                         }
                     }
 
                 }
             }
-            $results.add($keyName, $hash)
+            $results.Add($keyName, $hash)
         }
     }
 

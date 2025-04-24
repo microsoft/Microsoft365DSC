@@ -447,37 +447,37 @@ function Get-TargetResource
         $myPeriodOfflineBeforeAccessCheck = $policy.PeriodOfflineBeforeAccessCheck
         if ($null -ne $policy.PeriodOfflineBeforeAccessCheck)
         {
-            $myPeriodOfflineBeforeAccessCheck = $policy.PeriodOfflineBeforeAccessCheck.toString()
+            $myPeriodOfflineBeforeAccessCheck = $policy.PeriodOfflineBeforeAccessCheck.ToString()
         }
 
         $myPeriodOnlineBeforeAccessCheck = $policy.PeriodOnlineBeforeAccessCheck
         if ($null -ne $policy.PeriodOnlineBeforeAccessCheck)
         {
-            $myPeriodOnlineBeforeAccessCheck = $policy.PeriodOnlineBeforeAccessCheck.toString()
+            $myPeriodOnlineBeforeAccessCheck = $policy.PeriodOnlineBeforeAccessCheck.ToString()
         }
 
         $myPeriodOfflineBeforeWipeIsEnforced = $policy.PeriodOfflineBeforeWipeIsEnforced
         if ($null -ne $policy.PeriodOfflineBeforeWipeIsEnforced)
         {
-            $myPeriodOfflineBeforeWipeIsEnforced = $policy.PeriodOfflineBeforeWipeIsEnforced.toString()
+            $myPeriodOfflineBeforeWipeIsEnforced = $policy.PeriodOfflineBeforeWipeIsEnforced.ToString()
         }
 
         $myPeriodBeforePinReset = $policy.PeriodBeforePinReset
         if ($null -ne $policy.PeriodBeforePinReset)
         {
-            $myPeriodBeforePinReset = $policy.PeriodBeforePinReset.toString()
+            $myPeriodBeforePinReset = $policy.PeriodBeforePinReset.ToString()
         }
 
         $myPinRequiredInsteadOfBiometricTimeout = $policy.PinRequiredInsteadOfBiometricTimeout
         if ($null -ne $policy.PinRequiredInsteadOfBiometricTimeout)
         {
-            $myPinRequiredInsteadOfBiometricTimeout = $policy.PinRequiredInsteadOfBiometricTimeout.toString()
+            $myPinRequiredInsteadOfBiometricTimeout = $policy.PinRequiredInsteadOfBiometricTimeout.ToString()
         }
 
         $myGracePeriodToBlockAppsDuringOffClockHours = $policy.gracePeriodToBlockAppsDuringOffClockHours
         if ($null -ne $policy.gracePeriodToBlockAppsDuringOffClockHours)
         {
-            $myGracePeriodToBlockAppsDuringOffClockHours = $policy.gracePeriodToBlockAppsDuringOffClockHours.toString()
+            $myGracePeriodToBlockAppsDuringOffClockHours = $policy.gracePeriodToBlockAppsDuringOffClockHours.ToString()
         }
 
         $AllowedDataIngestionLocationsValue = @()
@@ -486,8 +486,26 @@ function Get-TargetResource
             $AllowedDataIngestionLocationsValue = [String[]]($policy.AllowedDataIngestionLocations)
         }
 
+        $exemptedUniversalLinks = @()
+        if ($null -ne $policy.exemptedUniversalLinks)
+        {
+            $exemptedUniversalLinks = [String[]]($policy.exemptedUniversalLinks)
+        }
+
+        $managedUniversalLinks = @()
+        if ($null -ne $policy.managedUniversalLinks)
+        {
+            $managedUniversalLinks = [String[]]($policy.managedUniversalLinks)
+        }
+
+        $AllowedDataStorageLocations = @()
+        if ($null -ne $policy.AllowedDataStorageLocations)
+        {
+            $AllowedDataStorageLocations = [String[]]($policy.AllowedDataStorageLocations)
+        }
+
         return @{
-            Identity                                       = $policy.id
+            Identity                                       = $policy.Id
             DisplayName                                    = $policy.DisplayName
             Description                                    = $policy.Description
             AllowedDataIngestionLocations                  = $AllowedDataIngestionLocationsValue
@@ -499,10 +517,10 @@ function Get-TargetResource
             CustomDialerAppProtocol                        = [string]$policy.customDialerAppProtocol
             DeployedAppCount                               = $policy.deployedAppCount
             DialerRestrictionLevel                         = [string]$policy.dialerRestrictionLevel
-            ExemptedUniversalLinks                         = $policy.exemptedUniversalLinks
+            ExemptedUniversalLinks                         = $exemptedUniversalLinks
             GracePeriodToBlockAppsDuringOffClockHours      = $myGracePeriodToBlockAppsDuringOffClockHours
             IsAssigned                                     = $policy.isAssigned
-            ManagedUniversalLinks                          = $policy.managedUniversalLinks
+            ManagedUniversalLinks                          = $managedUniversalLinks
             MaximumAllowedDeviceThreatLevel                = [string]$policy.maximumAllowedDeviceThreatLevel
             MaximumRequiredOsVersion                       = [string]$policy.maximumRequiredOsVersion
             MaximumWarningOsVersion                        = [string]$policy.maximumWarningOsVersion
@@ -537,7 +555,7 @@ function Get-TargetResource
             SimplePinBlocked                               = $policy.SimplePinBlocked
             MinimumPinLength                               = $policy.MinimumPinLength
             PinCharacterSet                                = [String]$policy.PinCharacterSet
-            AllowedDataStorageLocations                    = [String[]]$policy.AllowedDataStorageLocations
+            AllowedDataStorageLocations                    = $AllowedDataStorageLocations
             ContactSyncBlocked                             = $policy.ContactSyncBlocked
             PeriodBeforePinReset                           = $myPeriodBeforePinReset
             FaceIdBlocked                                  = $policy.FaceIdBlocked
@@ -979,7 +997,7 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating new iOS App Protection Policy {$DisplayName}"
-        $createParameters = ([Hashtable]$PSBoundParameters).clone()
+        $createParameters = ([Hashtable]$PSBoundParameters).Clone()
         $createParameters.Remove('Identity')
         $createParameters.Remove('Assignments')
         $createParameters.Remove('Apps')
@@ -1001,7 +1019,7 @@ function Set-TargetResource
             if (-not [String]::IsNullOrEmpty($createParameters.$duration))
             {
                 Write-Verbose -Message "Parsing {$($createParameters.$duration)} into TimeSpan"
-                if ($createParameters.$duration.startswith('P'))
+                if ($createParameters.$duration.Startswith('P'))
                 {
                     $timespan = [System.Xml.XmlConvert]::ToTimeSpan($createParameters.$duration)
                 }
@@ -1016,8 +1034,8 @@ function Set-TargetResource
         foreach ($exemptedAppProtocol in $ExemptedAppProtocols)
         {
             $myExemptedAppProtocols += @{
-                Name  = $exemptedAppProtocol.split(':')[0]
-                Value = $exemptedAppProtocol.split(':')[1]
+                Name  = $exemptedAppProtocol.Split(':')[0]
+                Value = $exemptedAppProtocol.Split(':')[1]
             }
         }
         $createParameters.ExemptedAppProtocols = $myExemptedAppProtocols
@@ -1039,7 +1057,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating existing iOS App Protection Policy {$DisplayName}"
-        $updateParameters = ([Hashtable]$PSBoundParameters).clone()
+        $updateParameters = ([Hashtable]$PSBoundParameters).Clone()
         $updateParameters.Remove('Identity')
         $updateParameters.Remove('Assignments')
         $updateParameters.Remove('Apps')
@@ -1069,15 +1087,15 @@ function Set-TargetResource
         {
             if (-not [String]::IsNullOrEmpty($updateParameters.$duration))
             {
-                $updateParameters.$duration = [TimeSpan]::parse($updateParameters.$duration)
+                $updateParameters.$duration = [TimeSpan]::Parse($updateParameters.$duration)
             }
         }
         $myExemptedAppProtocols = @()
         foreach ($exemptedAppProtocol in $ExemptedAppProtocols)
         {
             $myExemptedAppProtocols += @{
-                Name  = $exemptedAppProtocol.split(':')[0]
-                Value = $exemptedAppProtocol.split(':')[1]
+                Name  = $exemptedAppProtocol.Split(':')[0]
+                Value = $exemptedAppProtocol.Split(':')[1]
             }
         }
         $updateParameters.ExemptedAppProtocols = $myExemptedAppProtocols
@@ -1471,7 +1489,7 @@ function Test-TargetResource
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
-    $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
+    $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
     $ValuesToCheck.Remove('Identity')
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `

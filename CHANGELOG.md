@@ -1,9 +1,5 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
-* AADServicePrincipal
-  * Fixed an issue whenn you use AppID ID as Key Identifier. It never match with current value.
-
 # 1.25.423.1
 
 * AADEntitlementManagementConnectedOrganization
@@ -12,6 +8,12 @@
 * EXOHostedContentFilterPolicy
   * Fixed an issue with setting the default value for `IntraOrgFilterState`.
     FIXES [#5031](https://github.com/microsoft/Microsoft365DSC/issues/5031)
+* IntuneAppProtectionPolicyiOS
+  * Fixed empty array comparison.
+    FIXES [#5736](https://github.com/microsoft/Microsoft365DSC/issues/5736)
+* IntuneDeviceEnrollmentLimitRestriction
+  * Added support for `Assignments`, `Priority` and `RoleScopeTagIds` properties.
+    FIXES [#3915](https://github.com/microsoft/Microsoft365DSC/issues/3915)
 * IntuneAppProtectionPolicyiOS
   * Fixed empty array comparison.
     FIXES [#5736](https://github.com/microsoft/Microsoft365DSC/issues/5736)
