@@ -310,7 +310,7 @@ function Get-TargetResource
         }
 
         $result = @{
-            AppId                              = $AADServicePrincipal.DisplayName
+            AppId                              = $AADServicePrincipal.AppDisplayName
             AppRoleAssignedTo                  = $AppRoleAssignedToValues
             ObjectID                           = $AADServicePrincipal.Id
             DisplayName                        = $AADServicePrincipal.DisplayName
