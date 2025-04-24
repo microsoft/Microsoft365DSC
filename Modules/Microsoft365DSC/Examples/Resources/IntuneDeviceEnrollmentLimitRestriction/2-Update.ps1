@@ -23,9 +23,11 @@ Configuration Example
     {
         IntuneDeviceEnrollmentLimitRestriction 'DeviceEnrollmentLimitRestriction'
         {
+            Assignments = @()
             DisplayName = 'My DSC Limit'
             Description = 'My Restriction'
             Limit       = 11 # Updated Property
+            Priority    = 1
             Ensure      = 'Present'
             ApplicationId         = $ApplicationId;
             TenantId              = $TenantId;
