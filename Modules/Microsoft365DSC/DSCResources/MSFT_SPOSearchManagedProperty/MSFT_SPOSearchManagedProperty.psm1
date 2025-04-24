@@ -128,7 +128,7 @@ function Get-TargetResource
     Write-Verbose -Message "Getting configuration for Managed Property instance $Name"
 
     $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
-        -InboundParameters $PSBoundParameters
+        -InboundParameters $PSBoundParameters -Url (Get-MSCloudLoginConnectionProfile -Workload PnP).AdminUrl
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -383,7 +383,7 @@ function Set-TargetResource
     #endregion
 
     $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
-        -InboundParameters $PSBoundParameters
+        -InboundParameters $PSBoundParameters  -Url (Get-MSCloudLoginConnectionProfile -Workload PnP).AdminUrl
 
     if ($Ensure -eq 'Absent')
     {
@@ -913,7 +913,7 @@ function Export-TargetResource
     try
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
-            -InboundParameters $PSBoundParameters
+            -InboundParameters $PSBoundParameters -Url (Get-MSCloudLoginConnectionProfile -Workload PnP).AdminUrl
 
         #Ensure the proper dependencies are installed in the current environment.
         Confirm-M365DSCDependencies
