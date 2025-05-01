@@ -83,7 +83,7 @@ function Get-TargetResource
         }
         else
         {
-            $instance = Get-RetentionPolicy -Identity $Identity -ErrorAction Stop
+            $instance = Get-RetentionPolicy -Identity $Identity -ErrorAction SilentlyContinue
         }
         if ($null -eq $instance)
         {

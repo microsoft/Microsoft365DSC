@@ -102,16 +102,17 @@ function Get-TargetResource
         $roleGroupMembersValue = @()
         foreach ($member in $roleGroupMembers)
         {
-            if ($member.RecipientTypeDetails -eq 'UserMailbox' -or $member.RecipientTypeDetails -eq 'User')
+            if (-not [System.String]::IsNullOrEmpty($member.PrimarySmtpAddress))
             {
-                if (-not [System.String]::IsNullOrEmpty($member.PrimarySmtpAddress))
-                {
-                    $roleGroupMembersValue += $member.PrimarySmtpAddress
-                }
-                elseif (-not [System.String]::IsNullOrEmpty($member.WindowsLiveID))
-                {
-                    $roleGroupMembersValue += $member.WindowsLiveID
-                }
+                $roleGroupMembersValue += $member.PrimarySmtpAddress
+            }
+            elseif (-not [System.String]::IsNullOrEmpty($member.WindowsLiveID))
+            {
+                $roleGroupMembersValue += $member.WindowsLiveID
+            }
+            elseif (-not [System.String]::IsNullOrEmpty($member.WindowsEmailAddress))
+            {
+                $roleGroupMembersValue += $member.WindowsEmailAddress
             }
             else
             {
@@ -379,19 +380,27 @@ function Test-TargetResource
     $newMembersValue = @()
     foreach ($member in $Members)
     {
-        if ($member.Contains('@'))
-        {
-            Write-Verbose -Message "The current member {$member} is provided as a group display name."
-            $group = Get-Group -Identity $member -ErrorAction 'SilentlyContinue'
+        Write-Verbose -Message "The current member {$member} is provided as a group display name."
+        $group = Get-Group -Identity $member -ErrorAction 'SilentlyContinue'
 
-            if ($null -ne $group)
+        if ($null -ne $group)
+        {
+            if ($null -ne $group.PrimaryStmpAddress)
             {
-                $newMembersValue += $group.DisplayName
+                $newMembersValue += $group.PrimarySmtpAddress
+            }
+            elseif ($null -ne $group.WindowsEmailAddress)
+            {
+                $newMembersValue += $group.WindowsEmailAddress
             }
         }
         else
         {
-            $newMembersValue += $member
+            $user = Get-User -Identity $member -ErrorAction 'SilentlyContinue'
+            if ($null -ne $user)
+            {
+                $newMembersValue += $user.UserPrincipalName
+            }
         }
     }
     $ValuesToCheck.Members = $newMembersValue

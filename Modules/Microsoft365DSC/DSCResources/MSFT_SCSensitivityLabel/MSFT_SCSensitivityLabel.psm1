@@ -1137,14 +1137,14 @@ function Set-TargetResource
 
         try
         {
-            Write-Verbose -Message "Creating Label {$Name}"
+            Write-Verbose -Message "Creating Label {$Name} with:`r`n$(ConvertTo-Json $CreationParams -Depth 10)"
             $newLabel = New-Label @CreationParams -ErrorAction Stop
 
             ## Can't set priority until label created
             if ($PSBoundParameters.ContainsKey('Priority') -and $Priority -lt $newLabel.Priority)
             {
                 Start-Sleep 5
-                Write-Verbose -Message "Updating the priority for newly created label {$Name}"
+                Write-Verbose -Message "Updating the priority for newly created label {$Name} and Priority {$priority})"
                 Set-Label -Identity $Name -priority $Priority -ErrorAction Stop
             }
         }
@@ -1211,6 +1211,7 @@ function Set-TargetResource
 
         try
         {
+            Write-Verbose -Message "Updating label {$Name} with:`r`n$(ConvertTo-Json $SetParams -Depth 10)"
             Set-Label @SetParams -Identity $Name -ErrorAction Stop
         }
         catch

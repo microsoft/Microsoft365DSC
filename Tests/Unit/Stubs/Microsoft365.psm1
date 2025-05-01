@@ -88154,7 +88154,11 @@ function Get-CsOnlineUser
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $UsePreferredDC
+        $UsePreferredDC,
+
+        [Parameter()]
+        [System.String[]]
+        $Properties
     )
 }
 function Get-CsOnlineVoicemailUserSettings

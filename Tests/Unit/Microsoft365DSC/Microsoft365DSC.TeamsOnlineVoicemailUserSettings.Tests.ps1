@@ -168,7 +168,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential
                 }
 
-                Mock -CommandName Get-MgUser -MockWith {
+                Mock -CommandName Get-CsOnlineUser -MockWith {
                     return @(
                         @{
                             UserPrincipalName = 'JohnSmith@Contoso.com'

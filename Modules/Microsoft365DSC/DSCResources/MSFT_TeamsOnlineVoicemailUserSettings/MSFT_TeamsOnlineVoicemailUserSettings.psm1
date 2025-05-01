@@ -408,9 +408,6 @@ function Export-TargetResource
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
         -InboundParameters $PSBoundParameters
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters
-
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
@@ -425,7 +422,7 @@ function Export-TargetResource
 
     try
     {
-        $allUsers = Get-MgUser -All -Property 'UserPrincipalName'
+        $allUsers = Get-CsOnlineUser -Properties 'UserPrincipalName'
         $i = 1
         Write-M365DSCHost -Message "`r`n" -DeferWrite
         $dscContent = [System.Text.StringBuilder]::New()

@@ -57,7 +57,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             # Mock Write-M365DSCHost to hide output during the tests
             Mock -CommandName Write-M365DSCHost -MockWith {
             }
-            $Script:exportedInstances =$null
+            $Script:exportedInstance = $null
             $Script:ExportMode = $false
         }
 
@@ -96,6 +96,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential  = $Credential
                 }
 
+                Mock -CommandName Get-Group -MockWith {
+                    return @{
+                        WindowsEmailAddress = 'ExchangeAdministrator@contoso.com'
+                    }
+                }
+
                 Mock -CommandName Get-RoleGroup -MockWith {
                     return @{
                         Name        = 'Contoso Role Group'
@@ -106,7 +112,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
 
                 Mock -Command Get-RoleGroupMember -parameterFilter { $name -eq 'Contoso Role Group'}  -MockWith {
-                    [PSCustomObject]@{Displayname = 'Exchange Administrator'}
+                    [PSCustomObject]@{
+                        Displayname = 'Exchange Administrator'
+                        PrimarySmtpAddress = "ExchangeAdministrator@contoso.com"
+                    }
                 }
 
             }

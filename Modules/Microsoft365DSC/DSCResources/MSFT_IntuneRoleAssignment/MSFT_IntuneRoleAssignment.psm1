@@ -644,7 +644,7 @@ function Export-TargetResource
         }
 
         $i = 1
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::new()
         if ($getValue.Length -eq 0)
         {
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
@@ -688,13 +688,13 @@ function Export-TargetResource
                 -Results $Results `
                 -Credential $Credential
 
-            $dscContent += $currentDSCBlock
+            $dscContent.Append($currentDSCBlock) | Out-Null
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             $i++
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

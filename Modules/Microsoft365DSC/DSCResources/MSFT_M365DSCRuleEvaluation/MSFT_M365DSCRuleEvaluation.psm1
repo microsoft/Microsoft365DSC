@@ -220,8 +220,8 @@ function Test-TargetResource
 
         [Array]$instances = &$cmdName @params
 
-        #Write-Verbose -Message "Unloading module {$module} from memory"
-        #Remove-Module $module -Force
+        Write-Verbose -Message "Unloading module {MSFT_$($ResourceTypeName)} from memory"
+        Remove-Module "MSFT_$($ResourceTypeName)" -Force
 
         $DSCStringContent = @"
         # Generated with Microsoft365DSC version 1.23.906.1

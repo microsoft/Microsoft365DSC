@@ -948,6 +948,11 @@ function Test-TargetResource
         {
             $ValuesToCheck.AppId = $appInstance.DisplayName
         }
+        else
+        {
+            $spn = Get-MgServicePrincipal -Filter "AppId eq '$($ValuesToCheck.AppId)'"
+            $ValuesToCheck.AppId = $spn.DisplayName
+        }
     }
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
@@ -1023,7 +1028,7 @@ function Export-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $dscContent = ''
+    $dscContent = [System.Text.StringBuilder]::new()
     try
     {
         $i = 1
@@ -1146,7 +1151,7 @@ function Export-TargetResource
                     -Credential $Credential `
                     -NoEscape @('AppRoleAssignedTo', 'DelegatedPermissionClassifications', 'KeyCredentials', 'PasswordCredentials', 'CustomSecurityAttributes')
 
-                $dscContent += $currentDSCBlock
+                $dscContent.Append($currentDSCBlock) | Out-Null
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
                     -FileName $Global:PartialExportFileName
 
@@ -1154,7 +1159,7 @@ function Export-TargetResource
                 $i++
             }
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

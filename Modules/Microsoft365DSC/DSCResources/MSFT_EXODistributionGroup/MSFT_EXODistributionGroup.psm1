@@ -243,11 +243,11 @@ function Get-TargetResource
 
             if (-not [System.String]::IsNullOrEmpty($PrimarySmtpAddress))
             {
-                $distributionGroup = Get-DistributionGroup -Identity $PrimarySmtpAddress -ErrorAction Stop
+                $distributionGroup = Get-DistributionGroup -Identity $PrimarySmtpAddress -ErrorAction SilentlyContinue
             }
             else
             {
-                $distributionGroup = Get-DistributionGroup -Identity $Identity -ErrorAction Stop
+                $distributionGroup = Get-DistributionGroup -Identity $Identity -ErrorAction SilentlyContinue
             }
 
             if ($null -eq $distributionGroup)
