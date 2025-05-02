@@ -1538,7 +1538,6 @@ function Test-TargetResource
         $testTargetResource = $false
     }
 
-
     Write-Verbose -Message "Test-TargetResource returned $testTargetResource"
 
     return $testTargetResource

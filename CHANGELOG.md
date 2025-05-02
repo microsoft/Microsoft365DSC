@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* AADAppManagementPolicy
+  * Initial release.
+
 # 1.25.430.1
 
 * AADServicePrincipal
