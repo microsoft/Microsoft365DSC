@@ -6,35 +6,19 @@ function Get-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $Identity,
-
-        [Parameter()]
-        [System.String]
-        $Comment,
-
-        [Parameter()]
-        [System.String]
-        $AgeLimitForRetention,
-
-        [Parameter()]
-        [System.String]
-        $MessageClass,
+        $IsSingleInstance = 'Yes',
 
         [Parameter()]
         [System.Boolean]
-        $MustDisplayCommentEnabled,
-
-        [Parameter()]
-        [System.String]
-        $RetentionAction,
+        $IsEmailPasswordAuthenticationEnabled,
 
         [Parameter()]
         [System.Boolean]
-        $RetentionEnabled,
+        $IsUserNameAuthenticationEnabled,
 
         [Parameter()]
-        [System.String]
-        $Type,
+        [System.Boolean]
+        $IsPhoneOneTimePasswordAuthenticationEnabled,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -66,7 +50,7 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    New-M365DSCConnection -Workload 'ExchangeOnline' `
+    New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters | Out-Null
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -85,39 +69,25 @@ function Get-TargetResource
     $nullResult.Ensure = 'Absent'
     try
     {
-        if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
-        {
-            $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.Identity -eq $Identity}
-        }
-        else
-        {
-            $instance = Get-RetentionPolicyTag -Identity $Identity -ErrorAction SilentlyContinue
-        }
+        $instance = Get-MgBetaPolicyB2CAuthenticationMethodPolicy -ErrorAction SilentlyContinue
+
         if ($null -eq $instance)
         {
             return $nullResult
         }
 
-        Write-Verbose -Message "Found existing instace of retention policy tag {$Identity}"
         $results = @{
-            Identity                  = $instance.Identity
-            Comment                   = $instance.Comment
-            MessageClass              = $instance.MessageClass
-            MustDisplayCommentEnabled = $instance.MustDisplayCommentEnabled
-            RetentionAction           = $instance.RetentionAction
-            RetentionEnabled          = $instance.RetentionEnabled
-            Type                      = $instance.Type
-            Ensure                    = 'Present'
-            Credential                = $Credential
-            ApplicationId             = $ApplicationId
-            TenantId                  = $TenantId
-            CertificateThumbprint     = $CertificateThumbprint
-            ManagedIdentity           = $ManagedIdentity.IsPresent
-            AccessTokens              = $AccessTokens
-        }
-        if (-not [System.String]::IsNullOrEmpty($instance.AgeLimitForRetention))
-        {
-            $results.Add('AgeLimitForRetention', $instance.AgeLimitForRetention.Split('.')[0])
+            IsSingleInstance                            = 'Yes'
+            IsEmailPasswordAuthenticationEnabled        = $instance.IsEmailPasswordAuthenticationEnabled
+            IsUserNameAuthenticationEnabled             = $instance.IsUserNameAuthenticationEnabled
+            IsPhoneOneTimePasswordAuthenticationEnabled = $instance.IsPhoneOneTimePasswordAuthenticationEnabled
+            Ensure                                      = 'Present'
+            Credential                                  = $Credential
+            ApplicationId                               = $ApplicationId
+            TenantId                                    = $TenantId
+            CertificateThumbprint                       = $CertificateThumbprint
+            ManagedIdentity                             = $ManagedIdentity.IsPresent
+            AccessTokens                                = $AccessTokens
         }
         return [System.Collections.Hashtable] $results
     }
@@ -141,35 +111,19 @@ function Set-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $Identity,
-
-        [Parameter()]
-        [System.String]
-        $Comment,
-
-        [Parameter()]
-        [System.String]
-        $AgeLimitForRetention,
-
-        [Parameter()]
-        [System.String]
-        $MessageClass,
+        $IsSingleInstance = 'Yes',
 
         [Parameter()]
         [System.Boolean]
-        $MustDisplayCommentEnabled,
-
-        [Parameter()]
-        [System.String]
-        $RetentionAction,
+        $IsEmailPasswordAuthenticationEnabled,
 
         [Parameter()]
         [System.Boolean]
-        $RetentionEnabled,
+        $IsUserNameAuthenticationEnabled,
 
         [Parameter()]
-        [System.String]
-        $Type,
+        [System.Boolean]
+        $IsPhoneOneTimePasswordAuthenticationEnabled,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -213,30 +167,10 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $currentInstance = Get-TargetResource @PSBoundParameters
     $setParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
-
-    # CREATE
-    if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
-    {
-        Write-Verbose -Message "Creating new retention policy tag {$Identity}"
-        $setParameters.Add('Name', $Identity)
-        $setParameters.Remove("Identity") | Out-Null
-        New-RetentionPolicyTag @SetParameters
-    }
-    # UPDATE
-    elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
-    {
-        Write-Verbose -Message "Updating retention policy tag {$Identity}"
-        $setParameters.Remove('Type') | Out-Null
-        Set-RetentionPolicyTag @SetParameters
-    }
-    # REMOVE
-    elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
-    {
-        Write-Verbose -Message "Removing retention policy tag {$Identity}"
-        Remove-RetentionPolicyTag -Identity $Identity
-    }
+    $setParameters.Remove('IsSingleInstance') | Out-Null
+    Write-Verbose -Message "Updating B2C Authentication Methods Policy"
+    Update-MgBetaPolicyB2CAuthenticationMethodPolicy @setParameters
 }
 
 function Test-TargetResource
@@ -247,35 +181,19 @@ function Test-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $Identity,
-
-        [Parameter()]
-        [System.String]
-        $Comment,
-
-        [Parameter()]
-        [System.String]
-        $AgeLimitForRetention,
-
-        [Parameter()]
-        [System.String]
-        $MessageClass,
+        $IsSingleInstance = 'Yes',
 
         [Parameter()]
         [System.Boolean]
-        $MustDisplayCommentEnabled,
-
-        [Parameter()]
-        [System.String]
-        $RetentionAction,
+        $IsEmailPasswordAuthenticationEnabled,
 
         [Parameter()]
         [System.Boolean]
-        $RetentionEnabled,
+        $IsUserNameAuthenticationEnabled,
 
         [Parameter()]
-        [System.String]
-        $Type,
+        [System.Boolean]
+        $IsPhoneOneTimePasswordAuthenticationEnabled,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -370,11 +288,11 @@ function Export-TargetResource
         $AccessTokens
     )
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
-        -InboundParameters $PSBoundParameters
-
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
+
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+        -InboundParameters $PSBoundParameters
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
@@ -388,50 +306,33 @@ function Export-TargetResource
     try
     {
         $Script:ExportMode = $true
-        [array] $Script:exportedInstances = Get-RetentionPolicyTag -ErrorAction Stop
 
-        $i = 1
-        $dscContent = ''
-        if ($Script:exportedInstances.Length -eq 0)
-        {
-            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
+        $params = @{
+            IsSingleInstance      = 'Yes'
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
+            ManagedIdentity       = $ManagedIdentity.IsPresent
+            AccessTokens          = $AccessTokens
         }
-        else
+        if ($null -ne $Global:M365DSCExportResourceInstancesCount)
         {
-            Write-M365DSCHost -Message "`r`n" -DeferWrite
+            $Global:M365DSCExportResourceInstancesCount++
         }
-        foreach ($config in $Script:exportedInstances)
-        {
-            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
-            {
-                $Global:M365DSCExportResourceInstancesCount++
-            }
 
-            $displayedKey = $config.Identity
-            Write-M365DSCHost -Message "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -DeferWrite
-            $params = @{
-                Identity              = $config.Identity
-                Credential            = $Credential
-                ApplicationId         = $ApplicationId
-                TenantId              = $TenantId
-                CertificateThumbprint = $CertificateThumbprint
-                ManagedIdentity       = $ManagedIdentity.IsPresent
-                AccessTokens          = $AccessTokens
-            }
+        $Results = Get-TargetResource @Params
+        $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+            -ConnectionMode $ConnectionMode `
+            -ModulePath $PSScriptRoot `
+            -Results $Results `
+            -Credential $Credential
+        $dscContent += $currentDSCBlock
+        Save-M365DSCPartialExport -Content $currentDSCBlock `
+            -FileName $Global:PartialExportFileName
+        $i++
+        Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
 
-            $Results = Get-TargetResource @Params
-
-            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                -ConnectionMode $ConnectionMode `
-                -ModulePath $PSScriptRoot `
-                -Results $Results `
-                -Credential $Credential
-            $dscContent += $currentDSCBlock
-            Save-M365DSCPartialExport -Content $currentDSCBlock `
-                -FileName $Global:PartialExportFileName
-            $i++
-            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
-        }
         return $dscContent
     }
     catch

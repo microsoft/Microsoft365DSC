@@ -1,0 +1,30 @@
+﻿{
+    "resourceName": "AADB2CAuthenticationMethodsPolicy",
+    "description": "B2C allows tenant admins to choose a mechanism for letting end users register via local accounts.",
+    "roles": {
+        "read": [
+        ],
+        "update": [
+        ]
+    },
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [],
+                "update": []
+            },
+            "application": {
+                "read": [
+                    {
+                        "name": "Policy.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Policy.ReadWrite.AuthenticationMethod"
+                    }
+                ]
+            }
+        }
+    }
+}

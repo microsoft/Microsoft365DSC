@@ -91,14 +91,38 @@ function Get-TargetResource
             return $nullResult
         }
 
+        $AppPresetListValue = $instance.AppPresetList.Id
+        if ($instance.AppPresetList.Count -eq 0)
+        {
+            $AppPresetListValue = @()
+        }
+
+        $AppPresetMeetingListValue = $instance.AppPresetMeetingList.Id
+        if ($instance.AppPresetMeetingList.Count -eq 0)
+        {
+            $AppPresetMeetingListValue = @()
+        }
+
+        $PinnedAppBarAppsValue = $instance.PinnedAppBarApps.Id
+        if ($instance.PinnedAppBarApps.Count -eq 0)
+        {
+            $PinnedAppBarAppsValue = @()
+        }
+
+        $PinnedMessageBarAppsValue = $instance.PinnedMessageBarApps.Id
+        if ($instance.PinnedMessageBarApps.Count -eq 0)
+        {
+            $PinnedMessageBarAppsValue = @()
+        }
+
         Write-Verbose -Message "Found an instance with Identity {$Identity}"
         $results = @{
             Identity              = $instance.Identity.Replace('Tag:', '')
             Description           = $instance.Description
-            AppPresetList         = $instance.AppPresetList.Id
-            AppPresetMeetingList  = $instance.AppPresetMeetingList.Id
-            PinnedAppBarApps      = $instance.PinnedAppBarApps.Id
-            PinnedMessageBarApps  = $instance.PinnedMessageBarApps.Id
+            AppPresetList         = [Array]$AppPresetListValue
+            AppPresetMeetingList  = [Array]$AppPresetMeetingListValue
+            PinnedAppBarApps      = [Array]$PinnedAppBarAppsValue
+            PinnedMessageBarApps  = [Array]$PinnedMessageBarAppsValue
             AllowUserPinning      = $instance.AllowUserPinning
             AllowSideLoading      = $instance.AllowSideLoading
             Ensure                = 'Present'

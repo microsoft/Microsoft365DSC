@@ -576,7 +576,7 @@ function Export-TargetResource
                 else
                 {
                     $Results.Remove('FilePlanProperty') | Out-Null
-                }   
+                }
             }
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `

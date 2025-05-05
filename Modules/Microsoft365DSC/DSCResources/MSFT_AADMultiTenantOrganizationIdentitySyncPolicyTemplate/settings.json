@@ -1,0 +1,28 @@
+﻿{
+    "resourceName": "AADMultiTenantOrganizationIdentitySyncPolicyTemplate",
+    "description": "Defines an optional cross-tenant access policy template with user synchronization settings for multitenant organization tenants.",
+    "roles": {
+        "read": [],
+        "update": []
+    },
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [],
+                "update": []
+            },
+            "application": {
+                "read": [
+                    {
+                        "name": "Policy.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Policy.ReadWrite.CrossTenantAccess"
+                    }
+                ]
+            }
+        }
+    }
+}
