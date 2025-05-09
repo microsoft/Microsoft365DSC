@@ -24,8 +24,7 @@
   * Removed the parameter `MaxProcesses` from the public `Export-M365DSCConfiguration` function.
     FIXES [#5982](https://github.com/microsoft/Microsoft365DSC/issues/5982)
   * Add a $null check in `Get-AllSPOPackages` 
-    FIXES [#5810](https://github.com/microsoft/Microsoft365DSC/issues/5810)
-    FIXES [#4557](https://github.com/microsoft/Microsoft365DSC/issues/4557)
+    FIXES [#5810](https://github.com/microsoft/Microsoft365DSC/issues/5810) [#4557](https://github.com/microsoft/Microsoft365DSC/issues/4557)
 
 # 1.25.430.1
 
