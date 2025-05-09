@@ -2563,7 +2563,10 @@ function Get-AllSPOPackages
 
                 foreach ($file in $allFiles)
                 {
-                    $filesToDownload += @{Name = $file.Name; Site = $tenantAppCatalogUrl; Title = $file.Title }
+                    if($null -ne $file) 
+                    {
+                        $filesToDownload += @{Name = $file.Name; Site = $tenantAppCatalogUrl; Title = $file.Title }
+                    }
                 }
             }
             catch
