@@ -37,10 +37,6 @@ function Start-M365DSCConfigurationExtract
         $ConfigurationName = 'M365TenantConfig',
 
         [Parameter()]
-        [ValidateRange(1, 100)]
-        $MaxProcesses = 16,
-
-        [Parameter()]
         [ValidateSet('AAD', 'ADO', 'AZURE', 'COMMERCE', 'DEFENDER', 'EXO', 'FABRIC', 'INTUNE', 'O365', 'OD', 'PLANNER', 'PP', 'SC', 'SENTINEL', 'SH', 'SPO', 'TEAMS')]
         [System.String[]]
         $Workloads,
@@ -594,7 +590,6 @@ function Start-M365DSCConfigurationExtract
             $mostSecureAuthMethod = ($allSupportedResourcesWithMostSecureAuthMethod | Where-Object { $_.Resource -eq $resourceName }).AuthMethod
 
             Import-Module $resource.FullName | Out-Null
-            $MaxProcessesExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains('MaxProcesses')
             $FilterExists = (Get-Command 'Export-TargetResource').Parameters.Keys.Contains('Filter')
 
             $parameters = @{}
@@ -642,11 +637,6 @@ function Start-M365DSCConfigurationExtract
                     $parameters.Add('AccessTokens', $AccessTokens)
                     $parameters.Add('TenantId', $TenantId)
                 }
-            }
-
-            if ($MaxProcessesExists -and -not [System.String]::IsNullOrEmpty($MaxProcesses))
-            {
-                $parameters.Add('MaxProcesses', $MaxProcesses)
             }
 
             if ($ComponentsToSkip -notcontains $resourceName)

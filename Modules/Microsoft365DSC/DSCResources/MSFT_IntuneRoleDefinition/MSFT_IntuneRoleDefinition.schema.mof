@@ -1,7 +1,7 @@
 [ClassVersion("1.0.0.0"), FriendlyName("IntuneRoleDefinition")]
 class MSFT_IntuneRoleDefinition : OMI_BaseResource
 {
-    [Write, Description("The unique idenfier for an entity. Read-only.")] String Id;
+    [Write, Description("The unique identifier for an entity. Read-only.")] String Id;
     [Write, Description("Description of the Role definition.")] String Description;
     [Key, Description("Display Name of the Role definition.")] String DisplayName;
     [Write, Description("Type of Role. Set to True if it is built-in, or set to False if it is a custom role definition.")] Boolean IsBuiltIn;

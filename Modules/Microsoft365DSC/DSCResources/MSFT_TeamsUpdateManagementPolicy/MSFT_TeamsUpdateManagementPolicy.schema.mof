@@ -6,7 +6,7 @@ class MSFT_TeamsUpdateManagementPolicy : OMI_BaseResource
     [Write, Description("Determines if managed updates should be allowed or not.")] Boolean AllowManagedUpdates;
     [Write, Description("Determines if preview builds should be allowed or not.")] Boolean AllowPreview;
     [Write, Description("Determines the ring of public previews to subscribes to."), ValueMap{"Disabled","Enabled","Forced","FollowOfficePreview"}, Values{"Disabled","Enabled","Forced","FollowOfficePreview"}] String AllowPublicPreview;
-    [Write, Description("Determines the day of week to perform the updates. Value shoud be between 0 and 6.")] UInt32 UpdateDayOfWeek;
+    [Write, Description("Determines the day of week to perform the updates. Value should be between 0 and 6.")] UInt32 UpdateDayOfWeek;
     [Write, Description("Determines the time of day to perform the updates. Must be a valid HH:MM format string with leading 0. For instance 08:30.")] String UpdateTime;
     [Write, Description("Determines the time of day to perform the updates. Accepts a DateTime as string. Only the time will be considered.")] String UpdateTimeOfDay;
     [Write, Description("Determines whether or not users will use the new Teams client."), ValueMap{"NewTeamsAsDefault","UserChoice","MicrosoftChoice","AdminDisabled","NewTeamsOnly"}, Values{"NewTeamsAsDefault","UserChoice","MicrosoftChoice","AdminDisabled","NewTeamsOnly"}] String UseNewTeamsClient;

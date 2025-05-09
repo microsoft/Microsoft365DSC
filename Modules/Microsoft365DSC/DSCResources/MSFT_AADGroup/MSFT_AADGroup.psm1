@@ -540,6 +540,10 @@ function Set-TargetResource
                 $licensesToRemove += $skuInfo.SkuId
             }
         }
+        else
+        {
+            Write-Warning -Message "Specified Sku {$($assignedLicense.SkuId)} could not be found on the tenant."
+        }
     }
 
     $currentParameters.Remove('AssignedLicenses') | Out-Null

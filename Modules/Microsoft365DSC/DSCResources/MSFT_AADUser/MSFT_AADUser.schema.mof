@@ -21,7 +21,7 @@ class MSFT_AADUser : OMI_BaseResource
     [Write, Description("Specifies password policies for the user.")] String PasswordPolicies;
     [Write, Description("The Phone Number of the user")] String PhoneNumber;
     [Write, Description("The Postal Code of the user")] String PostalCode;
-    [Write, Description("The Prefered Language of the user")] String PreferredLanguage;
+    [Write, Description("The Preferred Language of the user")] String PreferredLanguage;
     [Write, Description("Specifies the state or province where the user is located")] String State;
     [Write, Description("Specifies the street address of the user")] String StreetAddress;
     [Write, Description("Specifies the title of the user")] String Title;

@@ -7,7 +7,7 @@ class MSFT_EXOMailboxPermission : OMI_BaseResource
     [Key, Description("The InheritanceType parameter specifies how permissions are inherited by folders in the mailbox. Valid values are: None, All, Children, Descendents, SelfAndChildren."), ValueMap{"None", "All", "Children", "Descendents", "SelfAndChildren"}, Values{"None", "All", "Children", "Descendents", "SelfAndChildren"}] String InheritanceType;
     [Write, Description("The Owner parameter specifies the owner of the mailbox object.")] String Owner;
     [Write, Description("The Deny switch specifies that the permissions you're adding are Deny permissions.")] Boolean Deny;
-    [Write, Description("Determines wheter or not the permission should exist on the mailbox."), ValueMap{"Present"}, Values{"Present"}] String Ensure;
+    [Write, Description("Determines whether or not the permission should exist on the mailbox."), ValueMap{"Present"}, Values{"Present"}] String Ensure;
     [Write, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
     [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;

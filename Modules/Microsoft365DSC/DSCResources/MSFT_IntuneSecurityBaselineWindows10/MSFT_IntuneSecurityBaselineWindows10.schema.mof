@@ -50,7 +50,7 @@ class MSFT_MicrosoftGraphIntuneSettingsCatalogDeviceSettings_IntuneSecurityBasel
     [Write, Description("RPC over TCP port: (Device) - Depends on ConfigureRpcTcpPort")] SInt32 RpcTcpPort;
     [Write, Description("Limits print driver installation to Administrators (0: Disabled, 1: Enabled)"), ValueMap{"0", "1"}, Values{"0", "1"}] String RestrictDriverInstallationToAdministrators;
     [Write, Description("Manage processing of Queue-specific files (0: Disabled, 1: Enabled)"), ValueMap{"0", "1"}, Values{"0", "1"}] String ConfigureCopyFilesPolicy;
-    [Write, Description("Manage processing of Queue-Specific files: (Device) - Depends on ConfigureCopyFilesPolicy (0: Do not allow Queue-specific files, 1: Limit Queue-specific files to Color profiles, 2: Allow all Queue-specfic files)"), ValueMap{"0", "1", "2"}, Values{"0", "1", "2"}] String CopyFilesPolicy_Enum;
+    [Write, Description("Manage processing of Queue-Specific files: (Device) - Depends on ConfigureCopyFilesPolicy (0: Do not allow Queue-specific files, 1: Limit Queue-specific files to Color profiles, 2: Allow all Queue-specific files)"), ValueMap{"0", "1", "2"}, Values{"0", "1", "2"}] String CopyFilesPolicy_Enum;
     [Write, Description("Encryption Oracle Remediation (0: Disabled, 1: Enabled)"), ValueMap{"0", "1"}, Values{"0", "1"}] String AllowEncryptionOracle;
     [Write, Description("Protection Level: (Device) - Depends on AllowEncryptionOracle (0: Force Updated Clients, 1: Mitigated, 2: Vulnerable)"), ValueMap{"0", "1", "2"}, Values{"0", "1", "2"}] String AllowEncryptionOracleDrop;
     [Write, Description("Remote host allows delegation of non-exportable credentials (0: Disabled, 1: Enabled)"), ValueMap{"0", "1"}, Values{"0", "1"}] String AllowProtectedCreds;

@@ -154,22 +154,6 @@ This parameter allows users to specify whether or not comments should be added a
   <figcaption>Example of specifying whether to generate additional information</figcaption>
 </figure>
 
-### MaxProcesses
-
-There are a few components inside of Microsoft365DSC for which parallelism has been implemented as part of their snapshot process to improve speed. This parameter allows user to specify how many parallel threads should be created during the capture process. Components leveraging parallelism are: SPOPropertyBag, SPOUserProfileProperty and TeamsUser. The specified value for this parameter has to be between **1** and **100**. Instances of the components will be equally divided amongst the various threads.
-
-<figure markdown>
-  ![Example of specifying a maximum number of processes (max 17)](../../Images/ExportMaxProcesses17.png)
-  <figcaption>Example of specifying a maximum number of 17 processes</figcaption>
-</figure>
-
-<figure markdown>
-  ![Example of specifying a maximum number of processes (max 6)](../../Images/ExportMaxProcesses6.png)
-  <figcaption>Example of specifying a maximum number of 6 processes</figcaption>
-</figure>
-
-While there are advantages to implementing multithreading for the snapshot process, there are many disadvantages as well such as not being able to properly view ongoing progress inside threads and added complexity to the design of the resources. After weighting in the pros can cons of implementing this approach across all components to speed up the entire capture process, we’ve opted to keep the design of the resources simpler (no use parallelism) for maintenance purposes and to ensure users have a consistent way of view progress during the snapshot process.
-
 ### Mode
 
 This parameter allows users to specify what set of components they wish to capture as part of their snapshot process. By default, Microsoft365DSC will exclude some components from the capture process either because these are likely to take a very long time to export (e.g. SPOPropertyBag) or that they are more related to data than actual configuration settings (e.g. Planner Tasks, SPOUserProfileProperty, etc.). Available modes are:

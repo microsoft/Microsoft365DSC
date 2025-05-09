@@ -1,7 +1,7 @@
 [ClassVersion("1.0.0.0"), FriendlyName("IntuneRoleAssignment")]
 class MSFT_IntuneRoleAssignment : OMI_BaseResource
 {
-    [Write, Description("The unique idenfier for an entity. Read-only.")] String Id;
+    [Write, Description("The unique identifier for an entity. Read-only.")] String Id;
     [Write, Description("Description of the Role Assignment.")] String Description;
     [Key, Description("The display or friendly name of the role Assignment.")] String DisplayName;
     [Write, Description("List of ids of role scope member security groups. These are IDs from Azure Active Directory. Ignored if ScopeType is not 'ResourceScope'")] String ResourceScopes[];

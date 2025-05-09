@@ -123,7 +123,7 @@ class MSFT_IntuneDeviceConfigurationEndpointProtectionPolicyWindows10 : OMI_Base
 {
     [Write, Description("Gets or sets whether applications inside Microsoft Defender Application Guard can access the devices camera and microphone.")] Boolean ApplicationGuardAllowCameraMicrophoneRedirection;
     [Write, Description("Allow users to download files from Edge in the application guard container and save them on the host file system")] Boolean ApplicationGuardAllowFileSaveOnHost;
-    [Write, Description("Allow persisting user generated data inside the App Guard Containter (favorites, cookies, web passwords, etc.)")] Boolean ApplicationGuardAllowPersistence;
+    [Write, Description("Allow persisting user generated data inside the App Guard Container (favorites, cookies, web passwords, etc.)")] Boolean ApplicationGuardAllowPersistence;
     [Write, Description("Allow printing to Local Printers from Container")] Boolean ApplicationGuardAllowPrintToLocalPrinters;
     [Write, Description("Allow printing to Network Printers from Container")] Boolean ApplicationGuardAllowPrintToNetworkPrinters;
     [Write, Description("Allow printing to PDF from Container")] Boolean ApplicationGuardAllowPrintToPDF;
@@ -137,7 +137,7 @@ class MSFT_IntuneDeviceConfigurationEndpointProtectionPolicyWindows10 : OMI_Base
     [Write, Description("Enable Windows Defender Application Guard for newer Windows builds. Possible values are: notConfigured, enabledForEdge, enabledForOffice, enabledForEdgeAndOffice."), ValueMap{"notConfigured","enabledForEdge","enabledForOffice","enabledForEdgeAndOffice"}, Values{"notConfigured","enabledForEdge","enabledForOffice","enabledForEdgeAndOffice"}] String ApplicationGuardEnabledOptions;
     [Write, Description("Force auditing will persist Windows logs and events to meet security/compliance criteria (sample events are user login-logoff, use of privilege rights, software installation, system changes, etc.)")] Boolean ApplicationGuardForceAuditing;
     [Write, Description("Enables the Admin to choose what types of app to allow on devices. Possible values are: notConfigured, enforceComponentsAndStoreApps, auditComponentsAndStoreApps, enforceComponentsStoreAppsAndSmartlocker, auditComponentsStoreAppsAndSmartlocker."), ValueMap{"notConfigured","enforceComponentsAndStoreApps","auditComponentsAndStoreApps","enforceComponentsStoreAppsAndSmartlocker","auditComponentsStoreAppsAndSmartlocker"}, Values{"notConfigured","enforceComponentsAndStoreApps","auditComponentsAndStoreApps","enforceComponentsStoreAppsAndSmartlocker","auditComponentsStoreAppsAndSmartlocker"}] String AppLockerApplicationControl;
-    [Write, Description("Allows the admin to allow standard users to enable encrpytion during Azure AD Join.")] Boolean BitLockerAllowStandardUserEncryption;
+    [Write, Description("Allows the admin to allow standard users to enable encryption during Azure AD Join.")] Boolean BitLockerAllowStandardUserEncryption;
     [Write, Description("Allows the Admin to disable the warning prompt for other disk encryption on the user machines.")] Boolean BitLockerDisableWarningForOtherDiskEncryption;
     [Write, Description("Allows the admin to require encryption to be turned on using BitLocker. This policy is valid only for a mobile SKU.")] Boolean BitLockerEnableStorageCardEncryptionOnMobile;
     [Write, Description("Allows the admin to require encryption to be turned on using BitLocker.")] Boolean BitLockerEncryptDevice;

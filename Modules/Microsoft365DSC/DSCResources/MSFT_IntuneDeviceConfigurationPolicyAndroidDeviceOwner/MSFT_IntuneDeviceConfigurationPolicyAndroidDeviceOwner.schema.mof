@@ -85,7 +85,7 @@ class MSFT_MicrosoftGraphandroiddeviceownersystemupdatefreezeperiod
 class MSFT_IntuneDeviceConfigurationPolicyAndroidDeviceOwner : OMI_BaseResource
 {
     [Write, Description("The Id of the policy.")] String Id;
-    [Key, Description("The display name of hte policy.")] String DisplayName;
+    [Key, Description("The display name of the policy.")] String DisplayName;
     [Write, Description("The description of the policy.")] String Description;
     [Write, Description("Block modification of accounts. Only supported on Dedicated devices.")] Boolean AccountsBlockModification;
     [Write, Description("When allowed, users can enable the 'unknown sources' setting to install apps from sources other than the Google Play Store.")] Boolean AppsAllowInstallFromUnknownSources;

@@ -16,7 +16,7 @@ class MSFT_EXOMailboxAutoReplyConfiguration : OMI_BaseResource
     [Write, Description("The InternalMessage parameter specifies the Automatic Replies message that's sent to internal senders or senders within the organization. If the value contains spaces, enclose the value in quotation marks.")] String InternalMessage;
     [Write, Description("The OOFEventSubject parameter specifies the subject for the calendar event that's automatically created when the CreateOOFEvent parameter is set to $true.")] String OOFEventSubject;
     [Write, Description("The StartTime parameter specifies the start date and time that Automatic Replies are sent for the specified mailbox. You use this parameter only when the AutoReplyState parameter is set to Scheduled, and the value of this parameter is meaningful only when AutoReplyState is Scheduled.")] String StartTime;
-    [Write, Description("Represents the existance of the instance. This must be set to 'Present'"), ValueMap{"Present"}, Values{"Present"}] String Ensure;
+    [Write, Description("Represents the existence of the instance. This must be set to 'Present'"), ValueMap{"Present"}, Values{"Present"}] String Ensure;
     [Write, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
     [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;

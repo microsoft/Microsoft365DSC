@@ -227,8 +227,8 @@ class MSFT_IntuneDeviceConfigurationPolicyIOS : OMI_BaseResource
     [Write, Description("Indicates whether or not to allow notifications settings modification (iOS 9.3 and later).")] Boolean NotificationsBlockSettingsModification;
     [Write, Description("Indicates whether or not to enforce on device only dictation.")] Boolean OnDeviceOnlyDictationForced;
     [Write, Description("Indicates whether or not to enforce on device only translation.")] Boolean OnDeviceOnlyTranslationForced;
-    [Write, Description("Block users from adding, changing, or removing fingerprints and faces. Face ID is avaliable in iOS 11.0 and later.")] Boolean PasscodeBlockFingerprintModification;
-    [Write, Description("Face ID is avaliable on iOS 11.0 and later.")] Boolean PasscodeBlockFingerprintUnlock;
+    [Write, Description("Block users from adding, changing, or removing fingerprints and faces. Face ID is available in iOS 11.0 and later.")] Boolean PasscodeBlockFingerprintModification;
+    [Write, Description("Face ID is available on iOS 11.0 and later.")] Boolean PasscodeBlockFingerprintUnlock;
     [Write, Description("Block passcode from being added, changed or removed. Changes to passcode restrictions will be ignored on supervised devices after blocking passcode modification.")] Boolean PasscodeBlockModification;
     [Write, Description("Block simple password sequences, such as 1234 or 1111.")] Boolean PasscodeBlockSimple;
     [Write, Description("Number of days until device password must be changed. (1-65535)")] UInt32 PasscodeExpirationDays;

@@ -41,7 +41,7 @@ class MSFT_EXOCalendarProcessing : OMI_BaseResource
     [Write, Description("The ScheduleOnlyDuringWorkHours parameter specifies whether to allow meetings to be scheduled outside of the working hours that are defined for the resource mailbox.")] Boolean ScheduleOnlyDuringWorkHours;
     [Write, Description("The TentativePendingApproval parameter specifies whether to mark pending requests as tentative on the calendar.")] Boolean TentativePendingApproval;
     [Write, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
-    [Write, Description("Determines wether or not the instance exist."), ValueMap{"Present"}, Values{"Present"}] String Ensure;
+    [Write, Description("Determines whether or not the instance exist."), ValueMap{"Present"}, Values{"Present"}] String Ensure;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
     [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
     [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;

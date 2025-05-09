@@ -1,0 +1,28 @@
+﻿{
+    "resourceName": "AADTokenIssuancePolicy",
+    "description": "Represents the policy to specify the characteristics of SAML tokens issued by Microsoft Entra ID.",
+    "roles": {
+        "read": [],
+        "update": []
+    },
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [],
+                "update": []
+            },
+            "application": {
+                "read": [
+                    {
+                        "name": "Policy.Read.ApplicationConfiguration"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Policy.ReadWrite.ApplicationConfiguration"
+                    }
+                ]
+            }
+        }
+    }
+}

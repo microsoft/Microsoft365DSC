@@ -19,7 +19,6 @@ This function does not generate any output.
 | Components | False | String[] |  |  | Specifies the components for which an export should be created. |
 | Workloads | False | String[] |  | AAD, DEFENDER, FABRIC, SPO, EXO, INTUNE, SC, OD, O365, PLANNER, PP, TEAMS | Specifies the workload for which an export should be created for all resources. |
 | Mode | False | String | Default | Lite, Default, Full | Specifies the mode of the export: Lite, Default or Full. |
-| MaxProcesses | False | Object |  |  | Specifies the maximum number of processes that should run simultanious. |
 | GenerateInfo | False | Boolean |  |  | Specifies if each exported resource should get a link to the Wiki article of the resource. |
 | Filters | False | Hashtable |  |  | Specifies resource level filters to apply in order to reduce the number of instances exported. |
 | ApplicationId | False | String |  |  | Specifies the application id to be used for authentication. |

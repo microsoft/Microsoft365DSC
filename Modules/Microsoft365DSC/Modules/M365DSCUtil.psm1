@@ -1020,9 +1020,6 @@ Specifies the workload for which an export should be created for all resources.
 .Parameter Mode
 Specifies the mode of the export: Lite, Default or Full.
 
-.Parameter MaxProcesses
-Specifies the maximum number of processes that should run simultanious.
-
 .Parameter GenerateInfo
 Specifies if each exported resource should get a link to the Wiki article of the resource.
 
@@ -1105,10 +1102,6 @@ function Export-M365DSCConfiguration
         [ValidateSet('Lite', 'Default', 'Full')]
         [System.String]
         $Mode = 'Default',
-
-        [Parameter(ParameterSetName = 'Export')]
-        [ValidateRange(1, 100)]
-        $MaxProcesses,
 
         [Parameter(ParameterSetName = 'Export')]
         [System.Boolean]
@@ -1274,13 +1267,7 @@ function Export-M365DSCConfiguration
     $data.Add('FileName', $null -ne [System.String]::IsNullOrEmpty($FileName))
     $data.Add('Components', $Components)
     $data.Add('Workloads', $Workloads)
-    $data.Add('MaxProcesses', $MaxProcesses)
     #endregion
-
-    if ($null -eq $MaxProcesses)
-    {
-        $MaxProcesses = 16
-    }
 
     # Make sure we are not connected to Microsoft Graph on another tenant
     try
@@ -1308,7 +1295,6 @@ function Export-M365DSCConfiguration
             -Workloads $Workloads `
             -Mode $Mode `
             -Path $Path -FileName $FileName `
-            -MaxProcesses $MaxProcesses `
             -ConfigurationName $ConfigurationName `
             -ApplicationId $ApplicationId `
             -ApplicationSecret $ApplicationSecret `
@@ -1328,7 +1314,6 @@ function Export-M365DSCConfiguration
         Start-M365DSCConfigurationExtract -Credential $Credential `
             -Components $Components `
             -Path $Path -FileName $FileName `
-            -MaxProcesses $MaxProcesses `
             -ConfigurationName $ConfigurationName `
             -ApplicationId $ApplicationId `
             -ApplicationSecret $ApplicationSecret `
@@ -1348,7 +1333,6 @@ function Export-M365DSCConfiguration
         Start-M365DSCConfigurationExtract -Credential $Credential `
             -Mode $Mode `
             -Path $Path -FileName $FileName `
-            -MaxProcesses $MaxProcesses `
             -ConfigurationName $ConfigurationName `
             -ApplicationId $ApplicationId `
             -ApplicationSecret $ApplicationSecret `

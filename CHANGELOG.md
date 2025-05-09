@@ -10,10 +10,19 @@
   * Initial release.
 * AADTenantAppManagementPolicy
   * Initial release.
+* AADTokenIssuancePolicy
+  * Initial release.
 * EXORetentionPolicyTag
   * Fixes the evaluation of the AgeLimitForRetention property.
+* IntuneWifiConfigurationPolicyAndroidEnterpriseDeviceOwner
+  * Fixes the template type in the Get-Targetresource.
 * TeamsAppSetupPolicy
   * Fixes evaluation of empty values in Test-TargetResource.
+* M365DSCReverse
+  * Removed the parameter `MaxProcesses` from the internal `Start-M365DSCConfigurationExtract` function.
+* M365DSCUtil
+  * Removed the parameter `MaxProcesses` from the public `Export-M365DSCConfiguration` function.
+    FIXES [#5982](https://github.com/microsoft/Microsoft365DSC/issues/5982)
 
 # 1.25.430.1
 

@@ -274,10 +274,6 @@ function Export-TargetResource
     param
     (
         [Parameter()]
-        [ValidateRange(1, 100)]
-        $MaxProcesses = 16,
-
-        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 

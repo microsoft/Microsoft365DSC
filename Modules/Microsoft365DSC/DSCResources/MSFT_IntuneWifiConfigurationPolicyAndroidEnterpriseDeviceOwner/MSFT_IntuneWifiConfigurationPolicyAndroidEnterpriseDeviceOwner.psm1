@@ -141,7 +141,7 @@ function Get-TargetResource
             {
                 $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -All -Filter "DisplayName eq '$DisplayName'" -ErrorAction SilentlyContinue | Where-Object `
                     -FilterScript { `
-                        $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidDeviceOwnerWiFiConfiguration' `
+                        $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidDeviceOwnerEnterpriseWiFiConfiguration' `
                 }
             }
             #endregion

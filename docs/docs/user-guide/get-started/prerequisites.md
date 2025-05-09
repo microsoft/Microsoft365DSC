@@ -34,7 +34,7 @@ That is why it is important that you have the correct experience and skills. To 
 
 - <a href="https://docs.microsoft.com/en-us/microsoft-365/admin/admin-overview/admin-center-overview" target="_blank">Microsoft 365 administration across all services / workloads</a>
 - <a href="https://docs.microsoft.com/en-us/powershell/" target="_blank">(Windows) PowerShell</a>
-- <a href="https://docs.microsoft.com/nl-nl/powershell/dsc/getting-started/winGettingStarted?view=dsc-1.1" target="_blank">PowerShell Desired State Configuration</a>
+- <a href="https://docs.microsoft.com/en-us/powershell/dsc/getting-started/winGettingStarted?view=dsc-1.1" target="_blank">PowerShell Desired State Configuration</a>
 - <a href="https://docs.microsoft.com/en-us/azure/active-directory/develop/msal-authentication-flows" target="_blank">Authentication methods and permission management in Azure Active Directory</a>
 
 Additionally it can be helpful, depending on the planned use of Microsoft365DSC, to have a good understanding of:

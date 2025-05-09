@@ -6,7 +6,7 @@ class MSFT_EXOEOPProtectionPolicyRule : OMI_BaseResource
     [Write, Description("The ExceptIfSentTo parameter specifies an exception that looks for recipients in messages. You can use any value that uniquely identifies the recipient.")] String ExceptIfSentTo[];
     [Write, Description("The ExceptIfSentToMemberOf parameter specifies an exception that looks for messages sent to members of groups. You can use any value that uniquely identifies the group.")] String ExceptIfSentToMemberOf[];
     [Key, Description("The Identity parameter specifies the rule that you want to view. You can use any value that uniquely identifies the rule. ")] String Identity;
-    [Write, Description("This parameter defin if the rule is enabled or disabled")] String State;
+    [Write, Description("This parameter define if the rule is enabled or disabled")] String State;
     [Write, Description("The Name parameter specifies a unique name for the rule. The maximum length is 64 characters.")] String Name;
     [Write, Description("The Priority parameter specifies a priority value for the rule that determines the order of rule processing. A lower integer value indicates a higher priority, the value 0 is the highest priority, and rules can't have the same priority value.")] UInt32 Priority;
     [Write, Description("The RecipientDomainIs parameter specifies a condition that looks for recipients with email addresses in the specified domains. You can specify multiple domains separated by commas.")] String RecipientDomainIs[];

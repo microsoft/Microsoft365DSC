@@ -9,7 +9,7 @@ class MSFT_EXOMailboxCalendarFolder : OMI_BaseResource
     [Write, Description("The SearchableUrlEnabled parameter specifies whether the published calendar URL is discoverable on the web.")] Boolean SearchableUrlEnabled;
     [Write, Description("The SharedCalendarSyncStartDate parameter specifies the limit for past events in the shared calendar that are visible to delegates. A copy of the shared calendar within the specified date range is stored in the delegate's mailbox.")] String SharedCalendarSyncStartDate;
     [Write, Description("Credentials of the Exchange Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
-    [Write, Description("Determines wether or not the instance exist."), ValueMap{"Present"}, Values{"Present"}] String Ensure;
+    [Write, Description("Determines whether or not the instance exist."), ValueMap{"Present"}, Values{"Present"}] String Ensure;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
     [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
     [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;

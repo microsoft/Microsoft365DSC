@@ -12,7 +12,7 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
 [ClassVersion("1.0.0.0"), FriendlyName("IntuneDeviceConfigurationWiredNetworkPolicyWindows10")]
 class MSFT_IntuneDeviceConfigurationWiredNetworkPolicyWindows10 : OMI_BaseResource
 {
-    [Write, Description("Specify the duration for which automatic authentication attempts will be blocked from occuring after a failed authentication attempt.")] UInt32 AuthenticationBlockPeriodInMinutes;
+    [Write, Description("Specify the duration for which automatic authentication attempts will be blocked from occurring after a failed authentication attempt.")] UInt32 AuthenticationBlockPeriodInMinutes;
     [Write, Description("Specify the authentication method. Possible values are: certificate, usernameAndPassword, derivedCredential. Possible values are: certificate, usernameAndPassword, derivedCredential, unknownFutureValue."), ValueMap{"certificate","usernameAndPassword","derivedCredential","unknownFutureValue"}, Values{"certificate","usernameAndPassword","derivedCredential","unknownFutureValue"}] String AuthenticationMethod;
     [Write, Description("Specify the number of seconds for the client to wait after an authentication attempt before failing. Valid range 1-3600.")] UInt32 AuthenticationPeriodInSeconds;
     [Write, Description("Specify the number of seconds between a failed authentication and the next authentication attempt. Valid range 1-3600.")] UInt32 AuthenticationRetryDelayPeriodInSeconds;

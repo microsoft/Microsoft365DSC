@@ -68,10 +68,10 @@ class MSFT_IntuneAppProtectionPolicyiOS : OMI_BaseResource
     [Write, Description("Require app data to be encrypted."), Values{"useDeviceSettings","afterDeviceRestart","whenDeviceLockedExceptOpenFiles","whenDeviceLocked"}, ValueMap{"useDeviceSettings","afterDeviceRestart","whenDeviceLockedExceptOpenFiles","whenDeviceLocked"}] String AppDataEncryptionType;  
     [Write, Description("Apps in this list will be exempt from the policy and will be able to receive data from managed apps.")] String ExemptedAppProtocols[];
     [Write, Description("Versions less than the specified version will block the managed app from accessing company data.")] String MinimumWipeSdkVersion;
-    [Write, Description("Semicolon seperated list of device models allowed, as a string, for the managed app to work.")] String AllowedIosDeviceModels[];
+    [Write, Description("Semicolon separated list of device models allowed, as a string, for the managed app to work.")] String AllowedIosDeviceModels[];
     [Write, Description("Defines a managed app behavior, either block or wipe, if the specified device model is not allowed."), ValueMap{"block","wipe","warn"}, Values{"block","wipe","warn"}] String AppActionIfIosDeviceModelNotAllowed;
     [Write, Description("Defines if open-in operation is supported from the managed app to the filesharing locations selected. This setting only applies when AllowedOutboundDataTransferDestinations is set to ManagedApps and DisableProtectionOfManagedOutboundOpenInData is set to False.")] Boolean FilterOpenInToOnlyManagedApps;
-    [Write, Description("Disable protection of data transferred to other apps through IOS OpenIn option. This setting is only allowed to be True when AllowedOutboundDataTransferDestinations is set to ManagedApps.")] Boolean DisableProtectionOfManagedOutboundOpenInData;
+    [Write, Description("Disable protection of data transferred to other apps through IOS 'OpenIn' option. This setting is only allowed to be True when AllowedOutboundDataTransferDestinations is set to ManagedApps.")] Boolean DisableProtectionOfManagedOutboundOpenInData;
     [Write, Description("Protect incoming data from unknown source. This setting is only allowed to be True when AllowedInboundDataTransferSources is set to AllApps.")] Boolean ProtectInboundDataFromUnknownSources;
     [Write, Description("A custom browser protocol to open weblink on iOS.")] String CustomBrowserProtocol;
     [Write, Description("List of IDs representing the iOS apps controlled by this protection policy.")] String Apps[];
