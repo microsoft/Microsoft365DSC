@@ -69,10 +69,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ProxyAutomaticConfigurationUrl = 'FakeStringValue'
                     ProxyManualAddress             = 'FakeStringValue'
                     ProxyManualPort                = 25
-                    ProxySettings                  = 'none'
+                    ProxySettings                  = 'automatic'
                     Ssid                           = 'FakeStringValue'
                     WiFiSecurityType               = 'open'
-
                     Ensure                         = 'Present'
                     Credential                     = $Credential
                 }
@@ -106,10 +105,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ProxyAutomaticConfigurationUrl = 'FakeStringValue'
                     ProxyManualAddress             = 'FakeStringValue'
                     ProxyManualPort                = 25
-                    ProxySettings                  = 'none'
+                    ProxySettings                  = 'automatic'
                     Ssid                           = 'FakeStringValue'
                     WiFiSecurityType               = 'open'
-
                     Ensure                         = 'Absent'
                     Credential                     = $Credential
                 }
@@ -125,15 +123,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             ProxyAutomaticConfigurationUrl = 'FakeStringValue'
                             PreSharedKey                   = 'FakeStringValue'
                             ConnectWhenNetworkNameIsHidden = $True
-                            ProxySettings                  = 'none'
+                            ProxySettings                  = 'automatic'
                             Ssid                           = 'FakeStringValue'
                             ProxyManualAddress             = 'FakeStringValue'
-
                         }
                         Description          = 'FakeStringValue'
                         DisplayName          = 'FakeStringValue'
                         Id                   = 'FakeStringValue'
-
                     }
                 }
             }
@@ -164,10 +160,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ProxyAutomaticConfigurationUrl = 'FakeStringValue'
                     ProxyManualAddress             = 'FakeStringValue'
                     ProxyManualPort                = 25
-                    ProxySettings                  = 'none'
+                    ProxySettings                  = 'automatic'
                     Ssid                           = 'FakeStringValue'
                     WiFiSecurityType               = 'open'
-
                     Ensure                         = 'Present'
                     Credential                     = $Credential
                 }
@@ -183,15 +178,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             ProxyAutomaticConfigurationUrl = 'FakeStringValue'
                             PreSharedKey                   = 'FakeStringValue'
                             ConnectWhenNetworkNameIsHidden = $True
-                            ProxySettings                  = 'none'
+                            ProxySettings                  = 'automatic'
                             Ssid                           = 'FakeStringValue'
                             ProxyManualAddress             = 'FakeStringValue'
-
                         }
                         Description          = 'FakeStringValue'
                         DisplayName          = 'FakeStringValue'
                         Id                   = 'FakeStringValue'
-
                     }
                 }
             }
@@ -215,10 +208,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ProxyAutomaticConfigurationUrl = 'FakeStringValue'
                     ProxyManualAddress             = 'FakeStringValue'
                     ProxyManualPort                = 25
-                    ProxySettings                  = 'none'
+                    ProxySettings                  = 'automatic'
                     Ssid                           = 'FakeStringValue'
                     WiFiSecurityType               = 'open'
-
                     Ensure                         = 'Present'
                     Credential                     = $Credential
                 }
@@ -232,15 +224,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             ProxyAutomaticConfigurationUrl = 'FakeStringValue'
                             PreSharedKey                   = 'FakeStringValue'
                             ProxyManualPort                = 7
-                            ProxySettings                  = 'none'
+                            ProxySettings                  = 'automatic'
                             Ssid                           = 'FakeStringValue'
                             ProxyManualAddress             = 'FakeStringValue'
-
                         }
                         Description          = 'FakeStringValue'
                         DisplayName          = 'FakeStringValue'
                         Id                   = 'FakeStringValue'
-
                     }
                 }
             }
@@ -261,6 +251,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name 'ReverseDSC Tests' -Fixture {
             BeforeAll {
+                $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
                     Credential = $Credential
                 }
@@ -276,15 +267,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             ProxyAutomaticConfigurationUrl = 'FakeStringValue'
                             PreSharedKey                   = 'FakeStringValue'
                             ConnectWhenNetworkNameIsHidden = $True
-                            ProxySettings                  = 'none'
+                            ProxySettings                  = 'automatic'
                             Ssid                           = 'FakeStringValue'
                             ProxyManualAddress             = 'FakeStringValue'
-
                         }
                         Description          = 'FakeStringValue'
                         DisplayName          = 'FakeStringValue'
                         Id                   = 'FakeStringValue'
-
                     }
                 }
             }

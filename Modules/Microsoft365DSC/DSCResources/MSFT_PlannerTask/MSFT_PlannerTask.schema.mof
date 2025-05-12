@@ -16,7 +16,7 @@ class MSFT_PlannerTask : OMI_BaseResource
 {
     [Key, Description("Id of the Planner Plan which contains the Task.")] string PlanId;
     [Key, Description("The Title of the Planner Task.")] string Title;
-    [Write, Description("List of categories assigned to the task."), ValueMap{"Pink", "Red", "Yellow", "Green", "Blue", "Purple"}, Values{"Pink", "Red", "Yellow", "Green", "Blue", "Purple"}] string Categories[];
+    [Write, Description("List of categories assigned to the task.")] string Categories[];
     [Write, Description("List of users assigned to the tasks (ex: @('john.smith@contoso.com', 'bob.houle@contoso.com')).")] string AssignedUsers[];
     [Write, Description("List of links to attachments assigned to the task."), EmbeddedInstance("MSFT_PlannerTaskAttachment")] string Attachments[];
     [Write, Description("List checklist items associated with the task."), EmbeddedInstance("MSFT_PlannerTaskChecklistItem")] string Checklist[];

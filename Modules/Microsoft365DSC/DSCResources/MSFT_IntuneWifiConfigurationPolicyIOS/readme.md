@@ -3,4 +3,4 @@
 
 ## Description
 
-This resource configures an Intune Wifi Configuration Policy for iOS Device.
+This resource configures an Intune Wifi Configuration Policy for iOS with Basic Wi-Fi type.

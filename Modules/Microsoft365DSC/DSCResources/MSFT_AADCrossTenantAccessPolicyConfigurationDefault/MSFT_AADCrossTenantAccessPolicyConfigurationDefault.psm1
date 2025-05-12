@@ -87,7 +87,7 @@ function Get-TargetResource
 
         if ($null -eq $getValue)
         {
-            Write-Verbose -Message "Could not find an Azure AD Cross Tenant Access Configuration Default with TenantId {$PartnerTenantId}"
+            Write-Verbose -Message "Could not find an Azure AD Cross Tenant Access Configuration Default"
             return $nullResult
         }
 
@@ -236,31 +236,49 @@ function Set-TargetResource
     {
         $OperationParams.B2BCollaborationInbound = (Get-M365DSCAADCrossTenantAccessPolicyB2BSetting -Setting $OperationParams.B2BCollaborationInbound)
         $OperationParams.B2BCollaborationInbound = (Update-M365DSCSettingUserIdFromUPN -Setting $OperationParams.B2BCollaborationInbound)
+        $temp = $OperationParams.B2BCollaborationInbound
+        $OperationParams.Remove('B2BCollaborationInbound') | Out-Null
+        $OperationParams.Add('b2bCollaborationInbound', $temp)
     }
     if ($null -ne $OperationParams.B2BCollaborationOutbound)
     {
         $OperationParams.B2BCollaborationOutbound = (Get-M365DSCAADCrossTenantAccessPolicyB2BSetting -Setting $OperationParams.B2BCollaborationOutbound)
         $OperationParams.B2BCollaborationOutbound = (Update-M365DSCSettingUserIdFromUPN -Setting $OperationParams.B2BCollaborationOutbound)
+        $temp = $OperationParams.B2BCollaborationOutbound
+        $OperationParams.Remove('B2BCollaborationOutbound') | Out-Null
+        $OperationParams.Add('b2bCollaborationOutbound', $temp)
     }
     if ($null -ne $OperationParams.B2BDirectConnectInbound)
     {
         $OperationParams.B2BDirectConnectInbound = (Get-M365DSCAADCrossTenantAccessPolicyB2BSetting -Setting $OperationParams.B2BDirectConnectInbound)
         $OperationParams.B2BDirectConnectInbound = (Update-M365DSCSettingUserIdFromUPN -Setting $OperationParams.B2BDirectConnectInbound)
+        $temp = $OperationParams.B2BDirectConnectInbound
+        $OperationParams.Remove('B2BDirectConnectInbound') | Out-Null
+        $OperationParams.Add('b2bDirectConnectInbound', $temp)
     }
     if ($null -ne $OperationParams.B2BDirectConnectOutbound)
     {
         $OperationParams.B2BDirectConnectOutbound = (Get-M365DSCAADCrossTenantAccessPolicyB2BSetting -Setting $OperationParams.B2BDirectConnectOutbound)
         $OperationParams.B2BDirectConnectOutbound = (Update-M365DSCSettingUserIdFromUPN -Setting $OperationParams.B2BDirectConnectOutbound)
+        $temp = $OperationParams.B2BDirectConnectOutbound
+        $OperationParams.Remove('B2BDirectConnectOutbound') | Out-Null
+        $OperationParams.Add('b2bDirectConnectOutbound', $temp)
     }
     if ($null -ne $OperationParams.InboundTrust)
     {
         $OperationParams.InboundTrust = (Get-M365DSCAADCrossTenantAccessPolicyInboundTrust -Setting $OperationParams.InboundTrust)
+        $temp = $OperationParams.InboundTrust
+        $OperationParams.Remove('InboundTrust') | Out-Null
+        $OperationParams.Add('inboundTrust', $temp)
     }
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message 'Updating Cross Tenant Access Policy Configuration Default'
-        Update-MgBetaPolicyCrossTenantAccessPolicyDefault @OperationParams
+        $body = ConvertTo-Json $OperationParams -Depth 10
+        Write-Verbose -Message "Updating Cross Tenant Access Policy Configuration Default with:`r`n$body"
+        $uri = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + 'beta/policies/crossTenantAccessPolicy/default'
+        Invoke-MgGraphRequest -Method 'PATCH' -Uri $uri -Body $body
+        #Update-MgBetaPolicyCrossTenantAccessPolicyDefault @OperationParams
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
@@ -345,7 +363,7 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of the Azure AD Cross Tenant Access Policy Configuration Default with Tenant Id [$PartnerTenantId]"
+    Write-Verbose -Message "Testing configuration of the Azure AD Cross Tenant Access Policy Configuration Default"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
@@ -692,7 +710,7 @@ function Update-M365DSCSettingUserIdFromUPN
             $userValue = $user.Target
             if ($null -ne $userValue)
             {
-                if ($user.TargetType -eq 'User')
+                if ($user.TargetType -eq 'user')
                 {
                     Write-Verbose -Message "Detected User type with UPN {$($user.Target)}"
                     $user = Get-MgUser -UserId $user.Target -ErrorAction SilentlyContinue
@@ -701,7 +719,7 @@ function Update-M365DSCSettingUserIdFromUPN
                         $userValue = $user.Id
                     }
                 }
-                elseif ($user.TargetType -eq 'Group')
+                elseif ($user.TargetType -eq 'group')
                 {
                     Write-Verbose -Message "Detected Group type with Name {$($user.Target)}"
                     $group = Get-MgGroup -Filter "DisplayName eq  '$($user.Target)'" -ErrorAction SilentlyContinue
@@ -736,7 +754,7 @@ function Get-M365DSCAADCrossTenantAccessPolicyB2BSetting
 
     #region Applications
     $applications = @{
-        AccessType = $Setting.applications.accessType
+        accessType = $Setting.applications.accessType
     }
 
     if ($null -ne $Setting.applications.targets)
@@ -745,17 +763,17 @@ function Get-M365DSCAADCrossTenantAccessPolicyB2BSetting
         foreach ($currentTarget in $Setting.applications.targets)
         {
             $targets += @{
-                Target     = $currentTarget.target
-                TargetType = $currentTarget.targetType
+                target     = $currentTarget.target
+                targetType = $currentTarget.targetType
             }
         }
-        $applications.Add('Targets', $targets)
+        $applications.Add('targets', $targets)
     }
     #endregion
 
     #region UsersAndGroups
     $usersAndGroups = @{
-        AccessType = $Setting.usersAndGroups.accessType
+        accessType = $Setting.usersAndGroups.accessType
     }
 
     if ($null -ne $Setting.usersAndGroups.targets)
@@ -782,16 +800,16 @@ function Get-M365DSCAADCrossTenantAccessPolicyB2BSetting
                 $targetValue = $group.DisplayName
             }
             $targets += @{
-                Target     = $targetValue
-                TargetType = $currentTarget.targetType
+                target     = $targetValue
+                targetType = $currentTarget.targetType
             }
         }
-        $usersAndGroups.Add('Targets', $targets)
+        $usersAndGroups.Add('targets', $targets)
     }
     #endregion
     $results = @{
-        Applications   = $applications
-        UsersAndGroups = $usersAndGroups
+        applications   = $applications
+        usersAndGroups = $usersAndGroups
     }
 
     return $results
@@ -808,9 +826,9 @@ function Get-M365DSCAADCrossTenantAccessPolicyInboundTrust
     )
 
     $result = @{
-        IsCompliantDeviceAccepted           = $Setting.isCompliantDeviceAccepted
-        IsHybridAzureADJoinedDeviceAccepted = $Setting.isHybridAzureADJoinedDeviceAccepted
-        IsMfaAccepted                       = $Setting.isMfaAccepted
+        isCompliantDeviceAccepted           = $Setting.isCompliantDeviceAccepted
+        isHybridAzureADJoinedDeviceAccepted = $Setting.isHybridAzureADJoinedDeviceAccepted
+        isMfaAccepted                       = $Setting.isMfaAccepted
     }
 
     return $result

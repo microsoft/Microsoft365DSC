@@ -18,12 +18,14 @@ class MSFT_IntuneWifiConfigurationPolicyIOS : OMI_BaseResource
     [Write, Description("Connect automatically")] Boolean ConnectAutomatically;
     [Write, Description("Connect when network name is hidden")] Boolean ConnectWhenNetworkNameIsHidden;
     [Write, Description("Disable the MAC address randomization.")] Boolean DisableMacAddressRandomization;
+    [Write, Description("If the pre shared key should be updated, even if the policy is already equal.")] Boolean ForcePreSharedKeyUpdate;
     [Write, Description("Network name")] String NetworkName;
     [Write, Description("Pre shared key")] String PreSharedKey;
     [Write, Description("Proxy automatic configuration url")] String ProxyAutomaticConfigurationUrl;
     [Write, Description("Proxy manual address")] String ProxyManualAddress;
     [Write, Description("Proxy manual port")] UInt32 ProxyManualPort;
     [Write, Description("Proxy settings"), ValueMap{"none","manual","automatic"}, Values{"none","manual","automatic"}] String ProxySettings;
+    [Write, Description("List of Scope Tags for this Entity instance.")] String RoleScopeTagIds[];
     [Write, Description("SSID")] String Ssid;
     [Write, Description("Wi-Fi security"), ValueMap{"open","wpaPersonal","wpaEnterprise","wep","wpa2Personal","wpa2Enterprise"}, Values{"open","wpaPersonal","wpaEnterprise","wep","wpa2Personal","wpa2Enterprise"}] String WiFiSecurityType;
     [Write, Description("Represents the assignment to the Intune policy."), EmbeddedInstance("MSFT_DeviceManagementConfigurationPolicyAssignments")] String Assignments[];

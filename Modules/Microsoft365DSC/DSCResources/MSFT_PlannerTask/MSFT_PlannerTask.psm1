@@ -37,7 +37,6 @@ function Get-TargetResource
         $DueDateTime,
 
         [Parameter()]
-        [ValidateSet('Pink', 'Red', 'Yellow', 'Green', 'Blue', 'Purple')]
         [System.String[]]
         $Categories,
 
@@ -158,7 +157,12 @@ function Get-TargetResource
         {
             foreach ($category in $taskResponse.appliedCategories.AdditionalProperties.Keys)
             {
-                $categoriesValue += GetTaskColorNameByCategory($category)
+                $categoryValue = $Script:AppliedCategories.$category
+                if ([String]::IsNullOrEmpty($categoryValue))
+                {
+                    $categoryValue = Get-TaskColorNameByCategory -CategoryName $category
+                }
+                $categoriesValue += $categoryValue
             }
         }
         #endregion
@@ -277,7 +281,6 @@ function Set-TargetResource
         $DueDateTime,
 
         [Parameter()]
-        [ValidateSet('Pink', 'Red', 'Yellow', 'Green', 'Blue', 'Purple')]
         [System.String[]]
         $Categories,
 
@@ -422,10 +425,37 @@ function Set-TargetResource
         category4 = $false
         category5 = $false
         category6 = $false
+        category7 = $false
+        category8 = $false
+        category9 = $false
+        category10 = $false
+        category11 = $false
+        category12 = $false
+        category13 = $false
+        category14 = $false
+        category15 = $false
+        category16 = $false
+        category17 = $false
+        category18 = $false
+        category19 = $false
+        category20 = $false
+        category21 = $false
+        category22 = $false
+        category23 = $false
+        category24 = $false
+        category25 = $false
     }
+
+    $planDetails = Get-MgPlannerPlanDetail -PlannerPlanId $PlanId | Select-Object -ExpandProperty CategoryDescriptions
+    $appliedCategoriesInverse = $planDetails | ConvertTo-Json | ConvertFrom-Json # Convert to PSObject instead of Graph type
     foreach ($category in $setParams.Categories)
     {
-        $categoriesValue.(GetTaskCategoryNameByColor($category)) = $true
+        $categoryName = $appliedCategoriesInverse.PSObject.Properties | Where-Object { $_.Value -eq $category } | Select-Object -ExpandProperty Name
+        if ([String]::IsNullOrEmpty($categoryName))
+        {
+            $categoryName = Get-TaskCategoryNameByColor -ColorName $category
+        }
+        $categoriesValue.$categoryName = $true
     }
     $setParams.Add('AppliedCategories', $categoriesValue)
     $setParams.Remove('Categories') | Out-Null
@@ -472,7 +502,10 @@ function Set-TargetResource
         $setParams.Add('priority', $setParams.Priority)
         $setParams.Remove('Priority') | Out-Null
 
-        $setParams.Add('startDateTime', [DateTime]::Parse($setParams.StartDateTime).ToUniversalTime().ToString('yyyy-MM-ddTHH:mm:ss.fffK'))
+        if ($null -ne $setParams.StartDateTime)
+        {
+            $setParams.Add('startDateTime', [DateTime]::Parse($setParams.StartDateTime).ToUniversalTime().ToString('yyyy-MM-ddTHH:mm:ss.fffK'))
+        }
         $setParams.Remove('StartDateTime') | Out-Null
 
         Write-Verbose -Message "Planner Task {$Title} already exists, but is not in the `
@@ -551,7 +584,6 @@ function Test-TargetResource
         $DueDateTime,
 
         [Parameter()]
-        [ValidateSet('Pink', 'Red', 'Yellow', 'Green', 'Blue', 'Purple')]
         [System.String[]]
         $Categories,
 
@@ -721,6 +753,7 @@ function Export-TargetResource
                     Write-M365DSCHost -Message "        |---[$j/$($plans.Length)] $($plan.Title)"
 
                     [Array]$tasks = Get-MgGroupPlannerPlanTask -GroupId $group.Id -PlannerPlanId $plan.Id -ErrorAction 'SilentlyContinue'
+                    $Script:AppliedCategories = Get-MgPlannerPlanDetail -PlannerPlanId $plan.Id | Select-Object -ExpandProperty CategoryDescriptions
 
                     $k = 1
                     foreach ($task in $tasks)
@@ -873,7 +906,7 @@ function Test-M365DSCPlannerTaskCheckListValues
     return $true
 }
 
-function GetTaskCategoryNameByColor
+function Get-TaskCategoryNameByColor
 {
     [CmdletBinding()]
     [OutputType([System.string])]
@@ -908,11 +941,87 @@ function GetTaskCategoryNameByColor
         {
             return 'category6'
         }
+        'Bronze'
+        {
+            return "category7"
+        }
+        'Lime'
+        {
+            return "category8"
+        }
+        'Aqua'
+        {
+            return "category9"
+        }
+        'Gray'
+        {
+            return "category10"
+        }
+        'Silver'
+        {
+            return "category11"
+        }
+        'Brown'
+        {
+            return "category12"
+        }
+        'Cranberry'
+        {
+            return "category13"
+        }
+        'Orange'
+        {
+            return "category14"
+        }
+        'Peach'
+        {
+            return "category15"
+        }
+        'Marigold'
+        {
+            return "category16"
+        }
+        'Light green'
+        {
+            return "category17"
+        }
+        'Dark green'
+        {
+            return "category18"
+        }
+        'Teal'
+        {
+            return "category19"
+        }
+        'Light blue'
+        {
+            return "category20"
+        }
+        'Dark blue'
+        {
+            return "category21"
+        }
+        'Lavender'
+        {
+            return "category22"
+        }
+        'Plum'
+        {
+            return "category23"
+        }
+        'Light gray'
+        {
+            return "category24"
+        }
+        'Dark gray'
+        {
+            return "category25"
+        }
     }
     return $null
 }
 
-function GetTaskColorNameByCategory
+function Get-TaskColorNameByCategory
 {
     [CmdletBinding()]
     [OutputType([System.string])]
@@ -946,6 +1055,82 @@ function GetTaskColorNameByCategory
         'category6'
         {
             return 'Purple'
+        }
+        'category7'
+        {
+            return 'Bronze'
+        }
+        'category8'
+        {
+            return 'Lime'
+        }
+        'category9'
+        {
+            return 'Aqua'
+        }
+        'category10'
+        {
+            return 'Gray'
+        }
+        'category11'
+        {
+            return 'Silver'
+        }
+        'category12'
+        {
+            return 'Brown'
+        }
+        'category13'
+        {
+            return 'Cranberry'
+        }
+        'category14'
+        {
+            return 'Orange'
+        }
+        'category15'
+        {
+            return 'Peach'
+        }
+        'category16'
+        {
+            return 'Marigold'
+        }
+        'category17'
+        {
+            return 'Light green'
+        }
+        'category18'
+        {
+            return 'Dark green'
+        }
+        'category19'
+        {
+            return 'Teal'
+        }
+        'category20'
+        {
+            return 'Light blue'
+        }
+        'category21'
+        {
+            return 'Dark blue'
+        }
+        'category22'
+        {
+            return 'Lavender'
+        }
+        'category23'
+        {
+            return 'Plum'
+        }
+        'category24'
+        {
+            return 'Light gray'
+        }
+        'category25'
+        {
+            return 'Dark gray'
         }
     }
     return $null

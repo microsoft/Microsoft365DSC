@@ -1,21 +1,40 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.25.509.1
 
 * AADAppManagementPolicy
   * Initial release.
+* AADAuthenticationFlowPolicy
+  * Fixes way argument is passed to `Update-MgBetaPolicyAuthenticationFlowPolicy` to now send as bodyparameter instead of `-SelfServiceSignUp $true/$false`
 * AADB2CAuthenticationMethodsPolicy
   * Initial release.
+* AADCrossTenantAccessPolicyConfigurationDefault
+  * Updated Set-TargetResource to call the REST APIs directly, fixing
+    an issue with the cmdlet parameter casing.
 * AADMultiTenantOrganizationIdentitySyncPolicyTemplate
   * Initial release.
 * AADTenantAppManagementPolicy
   * Initial release.
 * AADTokenIssuancePolicy
   * Initial release.
+* EXORecipientPermission
+  * Ensures the right entry is retrieved from the Get-TargetResource
+    method when multiple instances start with the same word pattern.
 * EXORetentionPolicyTag
   * Fixes the evaluation of the AgeLimitForRetention property.
 * IntuneWifiConfigurationPolicyAndroidEnterpriseDeviceOwner
   * Fixes the template type in the Get-Targetresource.
+* IntuneWifiConfigurationPolicyIOS
+  * Fixed Test-TargetResource and available properties.
+    FIXES [#3973](https://github.com/microsoft/Microsoft365DSC/issues/3973)
+* IntuneWifiConfigurationPolicyMacOS
+  * Added additional properties to the export.
+* IntuneWifiConfigurationPolicyWindows10
+  * Added additional properties to the export.
+    FIXES [#3963](https://github.com/microsoft/Microsoft365DSC/issues/3963)
+ * PlannerTask
+  * Allow setting of up to 25 categories.
+    FIXES [#6052](https://github.com/microsoft/Microsoft365DSC/issues/6052)
 * TeamsAppSetupPolicy
   * Fixes evaluation of empty values in Test-TargetResource.
 * M365DSCReverse
@@ -23,6 +42,10 @@
 * M365DSCUtil
   * Removed the parameter `MaxProcesses` from the public `Export-M365DSCConfiguration` function.
     FIXES [#5982](https://github.com/microsoft/Microsoft365DSC/issues/5982)
+  * Fixed an issue where basic arrays would not be compared correctly.
+* DEPENDENCIES
+  * Updated ExchangeOnlineManagement to version 3.7.2
+  * Updated MicrosoftTeams to version 7.0.0
 
 # 1.25.430.1
 

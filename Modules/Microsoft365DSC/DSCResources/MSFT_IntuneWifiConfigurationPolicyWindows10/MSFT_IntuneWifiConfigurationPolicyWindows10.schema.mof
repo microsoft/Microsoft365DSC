@@ -9,6 +9,22 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
     [Write, Description("The collection Id that is the target of the assignment.(ConfigMgr)")] String collectionId;
 };
 
+[ClassVersion("1.0.0")]
+class MSFT_DeviceManagementApplicabilityRuleOsEdition
+{
+    [Write, Description("Name for object")] String Name;
+    [Write, Description("Applicability rule OS edition type")] String OsEditionTypes[];
+    [Write, Description("Applicability Rule type"), ValueMap{"include","exclude"}, Values{"include","exclude"}] String RuleType;
+};
+[ClassVersion("1.0.0")]
+class MSFT_DeviceManagementApplicabilityRuleOsVersion
+{
+    [Write, Description("Name for object")] String Name;
+    [Write, Description("Min OS version for Applicability Rule")] String MinOSVersion;
+    [Write, Description("Max OS version for Applicability Rule")] String MaxOSVersion;
+    [Write, Description("Applicability Rule type"), ValueMap{"include","exclude"}, Values{"include","exclude"}] String RuleType;
+};
+
 [ClassVersion("1.0.0.0"), FriendlyName("IntuneWifiConfigurationPolicyWindows10")]
 class MSFT_IntuneWifiConfigurationPolicyWindows10 : OMI_BaseResource
 {
@@ -18,7 +34,10 @@ class MSFT_IntuneWifiConfigurationPolicyWindows10 : OMI_BaseResource
     [Write, Description("Connect automatically")] Boolean ConnectAutomatically;
     [Write, Description("Connect to preferred network")] Boolean ConnectToPreferredNetwork;
     [Write, Description("Connect when network name is hidden")] Boolean ConnectWhenNetworkNameIsHidden;
+    [Write, Description("The OS edition applicability for this Policy. "), EmbeddedInstance("MSFT_DeviceManagementApplicabilityRuleOsEdition")] String DeviceManagementApplicabilityRuleOsEdition;
+    [Write, Description("The OS version applicability rule for this Policy."), EmbeddedInstance("MSFT_DeviceManagementApplicabilityRuleOsVersion")] String DeviceManagementApplicabilityRuleOsVersion;
     [Write, Description("Force FIPS compliance")] Boolean ForceFIPSCompliance;
+    [Write, Description("If the pre shared key should be updated, even if the policy is already equal.")] Boolean ForcePreSharedKeyUpdate;
     [Write, Description("Metered connection limit"), ValueMap{"unrestricted","fixed","variable"}, Values{"unrestricted","fixed","variable"}] String MeteredConnectionLimit;
     [Write, Description("Network name")] String NetworkName;
     [Write, Description("Pre shared key")] String PreSharedKey;
@@ -26,6 +45,7 @@ class MSFT_IntuneWifiConfigurationPolicyWindows10 : OMI_BaseResource
     [Write, Description("Proxy manual address")] String ProxyManualAddress;
     [Write, Description("Proxy manual port")] UInt32 ProxyManualPort;
     [Write, Description("Proxy setting"), ValueMap{"none","manual","automatic"}, Values{"none","manual","automatic"}] String ProxySetting;
+    [Write, Description("List of Scope Tags for this Entity instance.")] String RoleScopeTagIds[];
     [Write, Description("SSID")] String Ssid;
     [Write, Description("Wi-Fi security"), ValueMap{"open","wpaPersonal","wpaEnterprise","wep","wpa2Personal","wpa2Enterprise"}, Values{"open","wpaPersonal","wpaEnterprise","wep","wpa2Personal","wpa2Enterprise"}] String WifiSecurityType;
     [Write, Description("Represents the assignment to the Intune policy."), EmbeddedInstance("MSFT_DeviceManagementConfigurationPolicyAssignments")] String Assignments[];

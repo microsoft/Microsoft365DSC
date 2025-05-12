@@ -30,6 +30,10 @@ function Get-TargetResource
         $DisableMacAddressRandomization,
 
         [Parameter()]
+        [System.Boolean]
+        $ForcePreSharedKeyUpdate,
+
+        [Parameter()]
         [System.String]
         $NetworkName,
 
@@ -53,6 +57,10 @@ function Get-TargetResource
         [ValidateSet('none', 'manual', 'automatic')]
         [System.String]
         $ProxySettings,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
 
         [Parameter()]
         [System.String]
@@ -152,6 +160,7 @@ function Get-TargetResource
         {
             $getValue = $Script:exportedInstance
         }
+        $Id = $getValue.Id
 
         Write-Verbose -Message "Found an Intune Wifi Configuration Policy for iOS with id {$Id}"
         $results = @{
@@ -168,6 +177,7 @@ function Get-TargetResource
             ProxyManualAddress             = $getValue.AdditionalProperties.proxyManualAddress
             ProxyManualPort                = $getValue.AdditionalProperties.proxyManualPort
             ProxySettings                  = $getValue.AdditionalProperties.proxySettings
+            RoleScopeTagIds                = $getValue.RoleScopeTagIds
             Ssid                           = $getValue.AdditionalProperties.ssid
             WiFiSecurityType               = $getValue.AdditionalProperties.wiFiSecurityType
             Ensure                         = 'Present'
@@ -176,7 +186,7 @@ function Get-TargetResource
             TenantId                       = $TenantId
             ApplicationSecret              = $ApplicationSecret
             CertificateThumbprint          = $CertificateThumbprint
-            Managedidentity                = $ManagedIdentity.IsPresent
+            ManagedIdentity                = $ManagedIdentity.IsPresent
             AccessTokens                   = $AccessTokens
         }
 
@@ -235,6 +245,10 @@ function Set-TargetResource
         $DisableMacAddressRandomization,
 
         [Parameter()]
+        [System.Boolean]
+        $ForcePreSharedKeyUpdate,
+
+        [Parameter()]
         [System.String]
         $NetworkName,
 
@@ -258,6 +272,10 @@ function Set-TargetResource
         [ValidateSet('none', 'manual', 'automatic')]
         [System.String]
         $ProxySettings,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
 
         [Parameter()]
         [System.String]
@@ -307,15 +325,16 @@ function Set-TargetResource
         $AccessTokens
     )
 
-    try
-    {
-        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters
+    if ($ProxySettings -ne 'automatic' -and $ProxyAutomaticConfigurationUrl -ne '') {
+        throw 'ProxyAutomaticConfigurationUrl must be empty if ProxySettings is not "automatic"'
     }
-    catch
-    {
-        Write-Verbose -Message $_
+
+    if ($WiFiSecurityType -eq 'wpaPersonal' -and [string]::IsNullOrEmpty($PreSharedKey)) {
+        throw 'PreSharedKey is required but was not set.'
     }
+
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -330,40 +349,29 @@ function Set-TargetResource
     #endregion
 
     $currentInstance = Get-TargetResource @PSBoundParameters
-
-    $PSBoundParameters.Remove('Ensure') | Out-Null
-    $PSBoundParameters.Remove('Credential') | Out-Null
-    $PSBoundParameters.Remove('ApplicationId') | Out-Null
-    $PSBoundParameters.Remove('ApplicationSecret') | Out-Null
-    $PSBoundParameters.Remove('TenantId') | Out-Null
-    $PSBoundParameters.Remove('CertificateThumbprint') | Out-Null
-    $PSBoundParameters.Remove('ManagedIdentity') | Out-Null
-    $PSBoundParameters.Remove('AccessTokens') | Out-Null
+    $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        Write-Verbose -Message "Creating {$DisplayName}"
-        $PSBoundParameters.Remove('Assignments') | Out-Null
-
-        $CreateParameters = ([Hashtable]$PSBoundParameters).clone()
-        $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
+        Write-Verbose -Message "Creating an Intune Wifi Configuration Policy for iOS with DisplayName {$DisplayName}"
+        $CreateParameters = ([Hashtable]$BoundParameters).Clone()
+        $CreateParameters.Remove('Id') | Out-Null
+        $CreateParameters.Remove('Assignments') | Out-Null
+        $CreateParameters.Remove('ForcePreSharedKeyUpdate') | Out-Null
 
         $AdditionalProperties = Get-M365DSCAdditionalProperties -Properties ($CreateParameters)
         foreach ($key in $AdditionalProperties.keys)
         {
             if ($key -ne '@odata.type')
             {
-                $keyName = $key.substring(0, 1).ToUpper() + $key.substring(1, $key.length - 1)
-                $CreateParameters.remove($keyName)
+                $keyName = $key.Substring(0, 1).ToUpper() + $key.Substring(1, $key.Length - 1)
+                $CreateParameters.Remove($keyName) | Out-Null
             }
         }
 
-        $CreateParameters.Remove('Id') | Out-Null
-        $CreateParameters.Remove('Verbose') | Out-Null
-
-        foreach ($key in ($CreateParameters.clone()).Keys)
+        foreach ($key in ($CreateParameters.Clone()).Keys)
         {
-            if ($CreateParameters[$key].getType().Fullname -like '*CimInstance*')
+            if ($CreateParameters[$key].GetType().Fullname -like '*CimInstance*')
             {
                 $CreateParameters[$key] = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters[$key]
             }
@@ -371,16 +379,19 @@ function Set-TargetResource
 
         if ($AdditionalProperties)
         {
-            $CreateParameters.add('AdditionalProperties', $AdditionalProperties)
+            if ($AdditionalProperties['proxyAutomaticConfigurationUrl'] -eq '') {
+                $AdditionalProperties['proxyAutomaticConfigurationUrl'] = $null
+            }
+            $CreateParameters.Add('AdditionalProperties', $AdditionalProperties)
         }
 
         #region resource generator code
         $policy = New-MgBetaDeviceManagementDeviceConfiguration @CreateParameters
         $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
 
-        if ($policy.id)
+        if ($policy.Id)
         {
-            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $policy.id `
+            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $policy.Id `
                 -Targets $assignmentsHash `
                 -Repository 'deviceManagement/deviceConfigurations'
         }
@@ -388,28 +399,26 @@ function Set-TargetResource
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Updating {$DisplayName}"
-        $PSBoundParameters.Remove('Assignments') | Out-Null
+        Write-Verbose -Message "Updating the Intune Wifi Configuration Policy for iOS with Id {$Id} and DisplayName {$DisplayName}"
 
-        $UpdateParameters = ([Hashtable]$PSBoundParameters).clone()
-        $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
+        $UpdateParameters = ([Hashtable]$BoundParameters).Clone()
+        $UpdateParameters.Remove('Id') | Out-Null
+        $UpdateParameters.Remove('Assignments') | Out-Null
+        $UpdateParameters.Remove('ForcePreSharedKeyUpdate') | Out-Null
 
         $AdditionalProperties = Get-M365DSCAdditionalProperties -Properties ($UpdateParameters)
         foreach ($key in $AdditionalProperties.keys)
         {
             if ($key -ne '@odata.type')
             {
-                $keyName = $key.substring(0, 1).ToUpper() + $key.substring(1, $key.length - 1)
-                $UpdateParameters.remove($keyName)
+                $keyName = $key.Substring(0, 1).ToUpper() + $key.Substring(1, $key.Length - 1)
+                $UpdateParameters.Remove($keyName)
             }
         }
 
-        $UpdateParameters.Remove('Id') | Out-Null
-        $UpdateParameters.Remove('Verbose') | Out-Null
-
-        foreach ($key in ($UpdateParameters.clone()).Keys)
+        foreach ($key in ($UpdateParameters.Clone()).Keys)
         {
-            if ($UpdateParameters[$key].getType().Fullname -like '*CimInstance*')
+            if ($UpdateParameters[$key].GetType().Fullname -like '*CimInstance*')
             {
                 $UpdateParameters[$key] = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters[$key]
             }
@@ -417,7 +426,10 @@ function Set-TargetResource
 
         if ($AdditionalProperties)
         {
-            $UpdateParameters.add('AdditionalProperties', $AdditionalProperties)
+            if ($AdditionalProperties['proxyAutomaticConfigurationUrl'] -eq '') {
+                $AdditionalProperties['proxyAutomaticConfigurationUrl'] = $null
+            }
+            $UpdateParameters.Add('AdditionalProperties', $AdditionalProperties)
         }
 
         #region resource generator code
@@ -431,7 +443,7 @@ function Set-TargetResource
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing {$DisplayName}"
+        Write-Verbose -Message "Removing the Intune Wifi Configuration Policy for iOS with Id {$($currentInstance.Id)} and DisplayName {$DisplayName}"
         #region resource generator code
         Remove-MgBetaDeviceManagementDeviceConfiguration -DeviceConfigurationId $currentInstance.Id
         #endregion
@@ -470,6 +482,10 @@ function Test-TargetResource
         $DisableMacAddressRandomization,
 
         [Parameter()]
+        [System.Boolean]
+        $ForcePreSharedKeyUpdate,
+
+        [Parameter()]
         [System.String]
         $NetworkName,
 
@@ -493,6 +509,10 @@ function Test-TargetResource
         [ValidateSet('none', 'manual', 'automatic')]
         [System.String]
         $ProxySettings,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
 
         [Parameter()]
         [System.String]
@@ -554,43 +574,29 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of {$Id}"
+    Write-Verbose -Message "Testing configuration of the Intune Wifi Configuration Policy for iOS with Id {$Id} and DisplayName {$DisplayName}"
+
+    if ($ProxySettings -ne 'automatic' -and $ProxyAutomaticConfigurationUrl -ne '') {
+        throw 'ProxyAutomaticConfigurationUrl must be empty if ProxySettings is not "automatic".'
+    }
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
-    $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
+    $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
     $testResult = $true
 
+    #Compare Cim instances
     foreach ($key in $PSBoundParameters.Keys)
     {
-        if ($PSBoundParameters[$key].getType().Name -like '*CimInstance*')
+        $source = $PSBoundParameters.$key
+        $target = $CurrentValues.$key
+        if ($null -ne $source -and $source.GetType().Name -like '*CimInstance*')
         {
-            $CIMArraySource = @()
-            $CIMArrayTarget = @()
-            $CIMArraySource += $PSBoundParameters[$key]
-            $CIMArrayTarget += $CurrentValues.$key
-            if ($CIMArraySource.count -ne $CIMArrayTarget.count)
-            {
-                Write-Verbose -Message "Configuration drift:Number of items does not match: Source=$($CIMArraySource.count) Target=$($CIMArrayTarget.count)"
-                $testResult = $false
-                break
-            }
-            $i = 0
-            foreach ($item in $CIMArraySource )
-            {
-                $testResult = Compare-M365DSCComplexObject `
-                    -Source (Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $CIMArraySource[$i]) `
-                    -Target ($CIMArrayTarget[$i])
+            $testResult = Compare-M365DSCComplexObject `
+                -Source ($source) `
+                -Target ($target)
 
-                $i++
-                if (-Not $testResult)
-                {
-                    $testResult = $false
-                    break
-                }
-            }
-            if (-Not $testResult)
+            if (-not $testResult)
             {
-                $testResult = $false
                 break
             }
 
@@ -598,19 +604,10 @@ function Test-TargetResource
         }
     }
     $ValuesToCheck.Remove('Id') | Out-Null
+    $ValuesToCheck.Remove('PreSharedKey') | Out-Null
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
-
-    #Convert any DateTime to String
-    foreach ($key in $ValuesToCheck.Keys)
-    {
-        if (($null -ne $CurrentValues[$key]) `
-                -and ($CurrentValues[$key].getType().Name -eq 'DateTime'))
-        {
-            $CurrentValues[$key] = $CurrentValues[$key].toString()
-        }
-    }
 
     if ($testResult)
     {
@@ -798,16 +795,18 @@ function Get-M365DSCAdditionalProperties
         'WiFiSecurityType'
     )
 
-    $results = @{'@odata.type' = '#microsoft.graph.iosWiFiConfiguration' }
-    $cloneProperties = $Properties.clone()
+    $results = @{
+        '@odata.type' = '#microsoft.graph.iosWiFiConfiguration'
+    }
+    $cloneProperties = $Properties.Clone()
     foreach ($property in $cloneProperties.Keys)
     {
         if ($property -in ($additionalProperties) )
         {
             $propertyName = $property[0].ToString().ToLower() + $property.Substring(1, $property.Length - 1)
-            if ($properties.$property -and $properties.$property.getType().FullName -like '*CIMInstance*')
+            if ($properties.$property -and $properties.$property.GetType().FullName -like '*CIMInstance*')
             {
-                if ($properties.$property.getType().FullName -like '*[[\]]')
+                if ($properties.$property.GetType().FullName -like '*[[\]]')
                 {
                     $array = @()
                     foreach ($item in $properties.$property)

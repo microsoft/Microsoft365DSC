@@ -303,6 +303,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         }
                     }
                 }
+                Mock -CommandName Invoke-MGGraphRequest -MockWith {
+                }
             }
             It 'Should return Values from the Get method' {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
@@ -312,7 +314,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
             It 'Should update the instance from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Update-MgBetaPolicyCrossTenantAccessPolicyDefault -Exactly 1
+                Should -Invoke -CommandName Invoke-MgGraphRequest -Exactly 1
             }
         }
 

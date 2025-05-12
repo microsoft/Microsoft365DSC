@@ -3,4 +3,4 @@
 
 ## Description
 
-This resource configures an Intune Wifi Configuration Policy for Windows10 Device.
+This resource configures an Intune Wifi Configuration Policy for Windows10 with Basic Wi-Fi type.
