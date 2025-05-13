@@ -59,38 +59,47 @@ function Get-TargetResource
         $ApplicationSecret
     )
 
-    New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
-        -InboundParameters $PSBoundParameters | Out-Null
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullResult = $PSBoundParameters
-    $nullResult.Ensure = 'Absent'
     try
     {
-        [array]$instances = @(Get-UnifiedAuditLogRetentionPolicy -ErrorAction SilentlyContinue | Where-Object { $_.Mode -ne 'PendingDeletion' })
-        if ($null -eq $instances)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Name -ne $Name)
         {
-            return $nullResult
+            $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
+                -InboundParameters $PSBoundParameters | Out-Null
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullResult = $PSBoundParameters
+            $nullResult.Ensure = 'Absent'
+
+            [array]$instances = @(Get-UnifiedAuditLogRetentionPolicy -ErrorAction SilentlyContinue | Where-Object { $_.Mode -ne 'PendingDeletion' })
+            if ($null -eq $instances)
+            {
+                return $nullResult
+            }
+
+            $instance = $instances | Where-Object { $_.Name -eq $Name } | Select-Object -First 1
+        }
+        else
+        {
+            $instance = $Script:exportedInstance
         }
 
-        $instance = $instances | Where-Object { $_.Name -eq $Name } | Select-Object -First 1
         if ($null -eq $instance)
         {
             return $nullResult
         }
 
-        Write-Verbose -Message "Found an instance with Name {$Name}"
+        Write-Verbose -Message "Found an SC Unified Audit Log Retention Policy with Name {$Name}"
         $results = @{
             Identity              = $instance.Identity
             Description           = $instance.Description
@@ -442,6 +451,7 @@ function Export-TargetResource
                 ApplicationSecret     = $ApplicationSecret
             }
 
+            $Script:exportedInstance = $config
             $Results = Get-TargetResource @Params
             $Results.Remove('Identity') | Out-Null
 

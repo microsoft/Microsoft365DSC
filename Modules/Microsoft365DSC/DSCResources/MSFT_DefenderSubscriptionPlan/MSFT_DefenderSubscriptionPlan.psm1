@@ -59,52 +59,39 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    New-M365DSCConnection -Workload 'Azure' `
-        -InboundParameters $PSBoundParameters | Out-Null
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-
-    $nullResult = $PSBoundParameters
-    $nullResult.Ensure = 'Absent'
     try
     {
-        if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Id -ne $SubscriptionId)
         {
-            if (-not [System.String]::IsNullOrEmpty($SubscriptionId))
-            {
-                $instance = $Script:exportedInstances | Where-Object -FilterScript { $_.SubscriptionId -eq $SubscriptionId -and $_.Name -eq $PlanName }
-            }
-            elseif ($null -eq $instance -and -not [System.String]::IsNullOrEmpty($SubscriptionName))
-            {
-                $instance = $Script:exportedInstances | Where-Object -FilterScript { $_.SubscriptionName -eq $SubscriptionName -and $_.Name -eq $PlanName }
-            }
-        }
-        else
-        {
-            $subscriptionId = $SubscriptionId
+            $ConnectionMode = New-M365DSCConnection -Workload 'Azure' `
+                -InboundParameters $PSBoundParameters | Out-Null
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullResult = $PSBoundParameters
+            $nullResult.Ensure = 'Absent'
+
             if ([System.String]::IsNullOrEmpty($subscriptionId))
             {
                 $subscription = Get-AzSubscription -SubscriptionName $SubscriptionName
 
-                if ($subscription -ne $null)
+                if ($null -ne $subscription)
                 {
                     $subscriptionId = $subscription.Id
                 }
             }
 
-
-            if ($subscriptionId -ne $null)
+            if ($null -ne $subscriptionId)
             {
                 Set-AzContext -Subscription $subscriptionId -ErrorAction Stop
                 $instance = Get-AzSecurityPricing -Name $PlanName -ErrorAction Stop
@@ -112,8 +99,12 @@ function Get-TargetResource
                 Add-Member -InputObject $instance -NotePropertyName 'SubscriptionName' -NotePropertyValue $azContext.Subscription.Name
                 Add-Member -InputObject $instance -NotePropertyName 'SubscriptionId' -NotePropertyValue $azContext.Subscription.Id
             }
-
         }
+        else
+        {
+            $instance = $Script:exportedInstance
+        }
+
         if ($null -eq $instance)
         {
             return $nullResult
@@ -391,7 +382,6 @@ function Export-TargetResource
 
     try
     {
-        $Script:ExportMode = $true
         [array] $Script:exportedInstances = Get-SubscriptionsDefenderPlansFromArg -ErrorAction Stop
 
         $i = 1
@@ -420,6 +410,7 @@ function Export-TargetResource
                 AccessTokens          = $AccessTokens
             }
 
+            $Script:exportedInstance = $config
             $Results = Get-TargetResource @Params
 
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `

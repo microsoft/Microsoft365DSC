@@ -1920,6 +1920,12 @@ function Get-M365DSCAzureADAppPermissions
     {
         Write-Verbose -Message "[$i/$($requiredAccesses.Length)]Obtaining information for App's Permission for {$($requiredAccess.ResourceAppId)}"
         $SourceAPI = Get-MgServicePrincipal -Filter "AppId eq '$($requiredAccess.ResourceAppId)'"
+        $appServicePrincipal = Get-MgServicePrincipal -Filter "AppId eq '$($app.AppId)'" -All:$true
+        if ($null -ne $appServicePrincipal)
+        {
+            $oAuth2grant = Get-MgBetaOauth2PermissionGrant -Filter "ClientId eq '$($appServicePrincipal.Id)'"
+            $roleAssignments = Get-MgServicePrincipalAppRoleAssignment -ServicePrincipalId $appServicePrincipal.Id
+        }
 
         foreach ($resourceAccess in $requiredAccess.ResourceAccess)
         {
@@ -1945,14 +1951,12 @@ function Get-M365DSCAzureADAppPermissions
                 $currentPermission.Add('Name', $scopeInfoValue)
                 $currentPermission.Add('AdminConsentGranted', $false)
 
-                $appServicePrincipal = Get-MgServicePrincipal -Filter "AppId eq '$($app.AppId)'" -All:$true
                 if ($null -ne $appServicePrincipal)
                 {
-                    $oAuth2grant = Get-MgBetaOauth2PermissionGrant -Filter "ClientId eq '$($appServicePrincipal.Id)'"
                     if ($null -ne $oAuth2grant)
                     {
                         $scopes = $oAuth2grant.Scope.Split(' ')
-                        if ($scopes.Contains($scopeInfoValue.Value))
+                        if ($scopes.Contains($scopeInfoValue))
                         {
                             $currentPermission.AdminConsentGranted = $true
                         }
@@ -1979,16 +1983,9 @@ function Get-M365DSCAzureADAppPermissions
                 $currentPermission.Add('Name', $roleValue)
                 $currentPermission.Add('AdminConsentGranted', $false)
 
-                $appServicePrincipal = Get-MgServicePrincipal -Filter "AppId eq '$($app.AppId)'" -All:$true
                 if ($null -ne $appServicePrincipal)
                 {
-                    $roleAssignments = Get-MgServicePrincipalAppRoleAssignment -ServicePrincipalId $appServicePrincipal.Id | Sort-Object ResourceDisplayName -Unique
-                    foreach ($oAuth2Grant in $roleAssignments)
-                    {
-                        $foundPermission = $oAuth2Grant | Where-Object -FilterScript { $_.AppRoleId -eq '134fd756-38ce-4afd-ba33-e9623dbe66c2' }
-                        break
-                    }
-
+                    $foundPermission = $roleAssignments | Where-Object -FilterScript { $_.AppRoleId -eq $resourceAccess.Id }
                     if ($foundPermission)
                     {
                         $currentPermission.AdminConsentGranted = $true

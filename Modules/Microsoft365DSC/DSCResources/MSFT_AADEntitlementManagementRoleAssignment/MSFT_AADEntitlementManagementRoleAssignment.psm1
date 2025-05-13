@@ -62,62 +62,62 @@ function Get-TargetResource
 
     try
     {
-        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters
-    }
-    catch
-    {
-        Write-Verbose -Message ($_)
-    }
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullResult = $PSBoundParameters
-    $nullResult.Ensure = 'Absent'
-    try
-    {
-        $getValue = $null
-
-        if (-not [System.String]::IsNullOrEmpty($Id))
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Id -ne $Id)
         {
-            $getValue = Get-MgBetaRoleManagementEntitlementManagementRoleAssignment -UnifiedRoleAssignmentId $Id
-        }
+            $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+                -InboundParameters $PSBoundParameters
 
-        $user = Get-MgUser -UserId $Principal
-        $roleInfo = Get-MgBetaRoleManagementEntitlementManagementRoleDefinition -Filter "DisplayName eq '$RoleDefinition'"
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
 
-        if ($null -eq $getValue)
-        {
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullResult = $PSBoundParameters
+            $nullResult.Ensure = 'Absent'
+            $getValue = $null
+
             if (-not [System.String]::IsNullOrEmpty($Id))
             {
-                Write-Verbose -Message "Nothing with id {$Id} was found"
+                $getValue = Get-MgBetaRoleManagementEntitlementManagementRoleAssignment -UnifiedRoleAssignmentId $Id
             }
 
-            if (-Not [string]::IsNullOrEmpty($Principal))
+            $user = Get-MgUser -UserId $Principal
+            $roleInfo = Get-MgBetaRoleManagementEntitlementManagementRoleDefinition -Filter "DisplayName eq '$RoleDefinition'"
+
+            if ($null -eq $getValue)
             {
-                $PrincipalId = $null
-                if ($null -ne $user)
+                if (-not [System.String]::IsNullOrEmpty($Id))
                 {
-                    $PrincipalId = $user.Id
+                    Write-Verbose -Message "Nothing with id {$Id} was found"
                 }
 
-                $RoleDefinitionId = $null
-                if ($null -ne $roleInfo)
+                if (-not [string]::IsNullOrEmpty($Principal))
                 {
-                    $RoleDefinitionId = $roleInfo.Id
+                    $PrincipalId = $null
+                    if ($null -ne $user)
+                    {
+                        $PrincipalId = $user.Id
+                    }
+
+                    $RoleDefinitionId = $null
+                    if ($null -ne $roleInfo)
+                    {
+                        $RoleDefinitionId = $roleInfo.Id
+                    }
+                    $getValue = Get-MgBetaRoleManagementEntitlementManagementRoleAssignment -Filter "PrincipalId eq '$PrincipalId' and RoleDefinitionId eq '$RoleDefinitionId'"
                 }
-                $getValue = Get-MgBetaRoleManagementEntitlementManagementRoleAssignment -Filter "PrincipalId eq '$PrincipalId' and RoleDefinitionId eq '$RoleDefinitionId'"
             }
+        }
+        else
+        {
+            $getValue = $Script:exportedInstance
         }
 
         if ($null -eq $getValue)
@@ -474,6 +474,7 @@ function Export-TargetResource
                 AccessTokens          = $AccessTokens
             }
 
+            $Script:exportedInstance = $config
             $Results = Get-TargetResource @Params
 
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `

@@ -140,9 +140,9 @@ function Get-TargetResource
             if ($null -eq $getValue)
             {
                 $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -All -Filter "DisplayName eq '$DisplayName'" -ErrorAction SilentlyContinue | Where-Object `
-                    -FilterScript { `
+                    -FilterScript {
                         $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidDeviceOwnerEnterpriseWiFiConfiguration' `
-                }
+                    }
             }
             #endregion
 
@@ -340,21 +340,12 @@ function Set-TargetResource
 
     $currentInstance = Get-TargetResource @PSBoundParameters
 
-    $PSBoundParameters.Remove('Ensure') | Out-Null
-    $PSBoundParameters.Remove('Credential') | Out-Null
-    $PSBoundParameters.Remove('ApplicationId') | Out-Null
-    $PSBoundParameters.Remove('ApplicationSecret') | Out-Null
-    $PSBoundParameters.Remove('TenantId') | Out-Null
-    $PSBoundParameters.Remove('CertificateThumbprint') | Out-Null
-    $PSBoundParameters.Remove('ManagedIdentity') | Out-Null
-    $PSBoundParameters.Remove('AccessTokens') | Out-Null
-
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        Write-Verbose -Message "Creating {$DisplayName}"
+        Write-Verbose -Message "Creating the Intune Wifi Configuration Policy Android Enterprise Device Owner with DisplayName {$DisplayName}"
         $PSBoundParameters.Remove('Assignments') | Out-Null
 
-        $CreateParameters = ([Hashtable]$PSBoundParameters).clone()
+        $CreateParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
         $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
 
         $AdditionalProperties = Get-M365DSCAdditionalProperties -Properties ($CreateParameters)
@@ -362,17 +353,17 @@ function Set-TargetResource
         {
             if ($key -ne '@odata.type')
             {
-                $keyName = $key.substring(0, 1).ToUpper() + $key.substring(1, $key.length - 1)
-                $CreateParameters.remove($keyName)
+                $keyName = $key.Substring(0, 1).ToUpper() + $key.Substring(1, $key.Length - 1)
+                $CreateParameters.Remove($keyName)
             }
         }
 
         $CreateParameters.Remove('Id') | Out-Null
         $CreateParameters.Remove('Verbose') | Out-Null
 
-        foreach ($key in ($CreateParameters.clone()).Keys)
+        foreach ($key in ($CreateParameters.Clone()).Keys)
         {
-            if ($CreateParameters[$key].getType().Fullname -like '*CimInstance*')
+            if ($CreateParameters[$key].GetType().Fullname -like '*CimInstance*')
             {
                 $CreateParameters[$key] = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters[$key]
             }
@@ -380,7 +371,7 @@ function Set-TargetResource
 
         if ($AdditionalProperties)
         {
-            $CreateParameters.add('AdditionalProperties', $AdditionalProperties)
+            $CreateParameters.Add('AdditionalProperties', $AdditionalProperties)
         }
 
         #region resource generator code
@@ -397,10 +388,10 @@ function Set-TargetResource
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Updating {$DisplayName}"
+        Write-Verbose -Message "Updating the Intune Wifi Configuration Policy Android Enterprise Device Owner with Id {$Id} and DisplayName {$DisplayName}"
         $PSBoundParameters.Remove('Assignments') | Out-Null
 
-        $UpdateParameters = ([Hashtable]$PSBoundParameters).clone()
+        $UpdateParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
         $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
 
         $AdditionalProperties = Get-M365DSCAdditionalProperties -Properties ($UpdateParameters)
@@ -408,17 +399,17 @@ function Set-TargetResource
         {
             if ($key -ne '@odata.type')
             {
-                $keyName = $key.substring(0, 1).ToUpper() + $key.substring(1, $key.length - 1)
-                $UpdateParameters.remove($keyName)
+                $keyName = $key.Substring(0, 1).ToUpper() + $key.Substring(1, $key.length - 1)
+                $UpdateParameters.Remove($keyName)
             }
         }
 
         $UpdateParameters.Remove('Id') | Out-Null
         $UpdateParameters.Remove('Verbose') | Out-Null
 
-        foreach ($key in ($UpdateParameters.clone()).Keys)
+        foreach ($key in ($UpdateParameters.Clone()).Keys)
         {
-            if ($UpdateParameters[$key].getType().Fullname -like '*CimInstance*')
+            if ($UpdateParameters[$key].GetType().Fullname -like '*CimInstance*')
             {
                 $UpdateParameters[$key] = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters[$key]
             }
@@ -426,7 +417,7 @@ function Set-TargetResource
 
         if ($AdditionalProperties)
         {
-            $UpdateParameters.add('AdditionalProperties', $AdditionalProperties)
+            $UpdateParameters.Add('AdditionalProperties', $AdditionalProperties)
         }
 
         #region resource generator code
@@ -571,12 +562,12 @@ function Test-TargetResource
     Write-Verbose -Message "Testing configuration of {$Id}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
-    $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
+    $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
     $testResult = $true
 
     foreach ($key in $PSBoundParameters.Keys)
     {
-        if ($PSBoundParameters[$key].getType().Name -like '*CimInstance*')
+        if ($PSBoundParameters[$key].GetType().Name -like '*CimInstance*')
         {
             $CIMArraySource = @()
             $CIMArrayTarget = @()
@@ -619,9 +610,9 @@ function Test-TargetResource
     foreach ($key in $ValuesToCheck.Keys)
     {
         if (($null -ne $CurrentValues[$key]) `
-                -and ($CurrentValues[$key].getType().Name -eq 'DateTime'))
+                -and ($CurrentValues[$key].GetType().Name -eq 'DateTime'))
         {
-            $CurrentValues[$key] = $CurrentValues[$key].toString()
+            $CurrentValues[$key] = $CurrentValues[$key].ToString()
         }
     }
 
@@ -815,15 +806,15 @@ function Get-M365DSCAdditionalProperties
     )
 
     $results = @{'@odata.type' = '#microsoft.graph.androidDeviceOwnerEnterpriseWiFiConfiguration' }
-    $cloneProperties = $Properties.clone()
+    $cloneProperties = $Properties.Clone()
     foreach ($property in $cloneProperties.Keys)
     {
         if ($property -in ($additionalProperties) )
         {
             $propertyName = $property[0].ToString().ToLower() + $property.Substring(1, $property.Length - 1)
-            if ($properties.$property -and $properties.$property.getType().FullName -like '*CIMInstance*')
+            if ($properties.$property -and $properties.$property.GetType().FullName -like '*CIMInstance*')
             {
-                if ($properties.$property.getType().FullName -like '*[[\]]')
+                if ($properties.$property.GetType().FullName -like '*[[\]]')
                 {
                     $array = @()
                     foreach ($item in $properties.$property)

@@ -1,5 +1,21 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* AADApplication
+  * Fixed an issue where the `AdminConsentGranted` property had an incorrect value.
+    FIXES [#5027](https://github.com/microsoft/Microsoft365DSC/issues/5027)
+* EXOTransportRule
+  * Fixed an issue where not specified properties would lead to an exception.
+* IntuneWifiConfigurationPolicyAndroidForWork
+  * Fixed an issue where the wrong odata type was used for export and creation.
+* TeamsFederationConfiguration
+  * DEPRECATED the AllowPublicUsers property.
+* DEPENDENCIES
+  * Updates DSCParser to version 2.0.0.17.
+* MISC
+  * Improved export speed for multiple resources.
+
 # 1.25.509.1
 
 * AADAppManagementPolicy

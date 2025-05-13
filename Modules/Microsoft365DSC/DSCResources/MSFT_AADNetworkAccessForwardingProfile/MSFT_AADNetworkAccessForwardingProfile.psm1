@@ -53,39 +53,47 @@ function Get-TargetResource
 
     try
     {
-        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters
-
-        #Ensure the proper dependencies are installed in the current environment.
-        Confirm-M365DSCDependencies
-
-        #region Telemetry
-        $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
-        $CommandName = $MyInvocation.MyCommand
-        $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-            -CommandName $CommandName `
-            -Parameters $PSBoundParameters
-        Add-M365DSCTelemetryEvent -Data $data
-        #endregion
-
-        $nullResult = $PSBoundParameters
-
-        $getValue = $null
-        #region resource generator code
-        if (-not [System.String]::IsNullOrEmpty($Id))
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Id -ne $Id)
         {
-            $getValue = Get-MgBetaNetworkAccessForwardingProfile -ForwardingProfileId $Id -ErrorAction SilentlyContinue
-        }
+            $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+                -InboundParameters $PSBoundParameters
 
-        if ($null -eq $getValue)
-        {
-            Write-Verbose -Message "Could not find an Azure AD Network Access Forwarding Profile with  Id:{$Id}"
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
 
-            if (-not [System.String]::IsNullOrEmpty($Name))
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullResult = $PSBoundParameters
+
+            $getValue = $null
+            #region resource generator code
+            if (-not [System.String]::IsNullOrEmpty($Id))
             {
-                $getValue = Get-MgBetaNetworkAccessForwardingProfile -ErrorAction SilentlyContinue | Where-Object { $_.Name -eq $Name }
+                $getValue = Get-MgBetaNetworkAccessForwardingProfile -ForwardingProfileId $Id -ErrorAction SilentlyContinue
+            }
+
+            if ($null -eq $getValue)
+            {
+                Write-Verbose -Message "Could not find an Azure AD Network Access Forwarding Profile with  Id {$Id}"
+
+                if (-not [System.String]::IsNullOrEmpty($Name))
+                {
+                    $getValue = Get-MgBetaNetworkAccessForwardingProfile -ErrorAction SilentlyContinue | Where-Object { $_.Name -eq $Name }
+                }
             }
         }
+        else
+        {
+            $getValue = $Script:exportedInstance
+        }
+        $Id = $getValue.Id
 
         #endregion
         if ($null -eq $getValue)
@@ -115,7 +123,6 @@ function Get-TargetResource
                 $complexPolicies += $myPolicies
             }
         }
-
 
         $results = @{
             Name                  = $getValue.Name
@@ -469,6 +476,7 @@ function Export-TargetResource
                 AccessTokens          = $AccessTokens
             }
 
+            $Script:exportedInstance = $config
             $Results = Get-TargetResource @Params
 
             if ($null -ne $Results.Policies)

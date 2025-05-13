@@ -3,4 +3,4 @@
 
 ## Description
 
-This resource configures an Intune Wifi Configuration Policy Android Enterprise Work Profile Device.
+This resource configures an Intune Wifi Configuration Policy for Android Enterprise, Personally Owned Work Profile of Basic Wi-Fi type.

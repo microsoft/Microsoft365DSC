@@ -218,6 +218,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-MgBetaIdentityGovernanceLifecycleWorkflow -MockWith {
                     return @{
+                        Id                   = "random guid"
                         Category             = "joiner";
                         Description          = "Description the onboard of prehire employee";
                         DisplayName          = "Onboard pre-hire employee updated version";

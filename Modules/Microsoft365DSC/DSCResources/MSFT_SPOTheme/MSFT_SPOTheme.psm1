@@ -60,28 +60,36 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration for SPO Theme $Name"
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'PNP' `
-        -InboundParameters $PSBoundParameters
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = 'Absent'
-
     try
     {
-        Write-Verbose -Message "Getting theme $Name"
-        $theme = Get-PnPTenantTheme -ErrorAction Stop | Where-Object -FilterScript { $_.Name -eq $Name }
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Name -ne $Name)
+        {
+            $ConnectionMode = New-M365DSCConnection -Workload 'PNP' `
+                -InboundParameters $PSBoundParameters
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullReturn = $PSBoundParameters
+            $nullReturn.Ensure = 'Absent'
+
+            Write-Verbose -Message "Getting theme $Name"
+            $theme = Get-PnPTenantTheme -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.Name -eq $Name }
+        }
+        else
+        {
+            $theme = $Script:exportedInstance
+        }
+
         if ($null -eq $theme)
         {
             Write-Verbose -Message "The specified theme doesn't exist."
@@ -429,6 +437,8 @@ function Export-TargetResource
                 Credential            = $Credential
                 AccessTokens          = $AccessTokens
             }
+
+            $Script:exportedInstance = $theme
             $Results = Get-TargetResource @Params
             if ($null -ne $Results.Palette)
             {

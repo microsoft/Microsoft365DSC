@@ -62,42 +62,45 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration for PowerApps Environment {$DisplayName}"
-    $ConnectionMode = New-M365DSCConnection -Workload 'PowerPlatformREST' `
-        -InboundParameters $PSBoundParameters
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = 'Absent'
 
     try
     {
-        $uri = "https://" + (Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatformREST').BapEndpoint + `
-               "/providers/Microsoft.BusinessAppPlatform/scopes/admin/environments?`$expand=permissions&api-version=2016-11-01"
-
-        $environments = (Invoke-M365DSCPowerPlatformRESTWebRequest -Uri $uri -Method 'GET').value
-        foreach ($environmentInfo in $environments)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.properties.displayName -ne $DisplayName)
         {
-            if ($environmentInfo.properties.displayName -eq $DisplayName)
+            $ConnectionMode = New-M365DSCConnection -Workload 'PowerPlatformREST' `
+                -InboundParameters $PSBoundParameters
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullReturn = $PSBoundParameters
+            $nullReturn.Ensure = 'Absent'
+
+            $uri = "https://" + (Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatformREST').BapEndpoint + `
+                "/providers/Microsoft.BusinessAppPlatform/scopes/admin/environments?`$expand=permissions&api-version=2016-11-01"
+
+            $environments = (Invoke-M365DSCPowerPlatformRESTWebRequest -Uri $uri -Method 'GET').value
+            foreach ($environmentInfo in $environments)
             {
-                $environment = $environmentInfo
-                if($null -ne $environmentInfo.properties.linkedEnvironmentMetadata)
+                if ($environmentInfo.properties.displayName -eq $DisplayName)
                 {
-                    $ProvisionDatabaseparam = $true
-                    $LanguageNameparam = $environmentInfo.properties.linkedEnvironmentMetadata.baseLanguage
+                    $environment = $environmentInfo
+                    break
                 }
-                break
             }
+        }
+        else
+        {
+            $environment = $Script:exportedInstance
         }
 
         if ($null -eq $environment)
@@ -107,6 +110,12 @@ function Get-TargetResource
         }
 
         Write-Verbose -Message "Found PowerApps Environment {$DisplayName}"
+        if ($null -ne $environmentInfo.properties.linkedEnvironmentMetadata)
+        {
+            $ProvisionDatabaseparam = $true
+            $LanguageNameparam = $environmentInfo.properties.linkedEnvironmentMetadata.baseLanguage
+        }
+
         $environmentSKU = $environment.properties.EnvironmentSKU
         if ($environmentSKU -eq 'Notspecified')
         {
@@ -412,6 +421,7 @@ function Export-TargetResource
         [System.Management.Automation.PSCredential]
         $ApplicationSecret
     )
+
     $ConnectionMode = New-M365DSCConnection -Workload 'PowerPlatformREST' `
         -InboundParameters $PSBoundParameters
 
@@ -469,7 +479,10 @@ function Export-TargetResource
                     CertificateThumbprint = $CertificateThumbprint
                     ApplicationSecret     = $ApplicationSecret
                 }
+
+                $Script:exportedInstance = $environment
                 $Results = Get-TargetResource @Params
+
                 $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                     -ConnectionMode $ConnectionMode `
                     -ModulePath $PSScriptRoot `

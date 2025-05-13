@@ -112,7 +112,7 @@ function Get-TargetResource
             {
                 $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -All -Filter "DisplayName eq '$DisplayName'" -ErrorAction SilentlyContinue | Where-Object `
                     -FilterScript { `
-                        $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidForWorkWiFiConfiguration' `
+                        $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidForWorkWifiConfiguration' `
                 }
             }
             #endregion
@@ -605,7 +605,7 @@ function Export-TargetResource
         [array]$getValue = Get-MgBetaDeviceManagementDeviceConfiguration -Filter $Filter -All `
             -ErrorAction Stop | Where-Object `
             -FilterScript { `
-                $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidWorkProfileWiFiConfiguration'  `
+                $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidForWorkWifiConfiguration'  `
         }
         #endregion
 
@@ -712,7 +712,7 @@ function Get-M365DSCAdditionalProperties
         'WiFiSecurityType'
     )
 
-    $results = @{'@odata.type' = '#microsoft.graph.androidWorkProfileWiFiConfiguration' }
+    $results = @{'@odata.type' = '#microsoft.graph.androidForWorkWifiConfiguration' }
     $cloneProperties = $Properties.clone()
     foreach ($property in $cloneProperties.Keys)
     {

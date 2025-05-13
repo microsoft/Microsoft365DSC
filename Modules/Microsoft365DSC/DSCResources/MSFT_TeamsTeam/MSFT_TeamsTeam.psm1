@@ -129,55 +129,63 @@ function Get-TargetResource
         [System.String[]]
         $AccessTokens
     )
+
     Write-Verbose -Message "Getting configuration of Team $DisplayName"
-
-    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' -InboundParameters $PSBoundParameters
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = 'Absent'
-
-    Write-Verbose -Message "Checking for existence of Team $DisplayName"
 
     try
     {
-        ## will only return 1 instance
-        if ($PSBoundParameters.ContainsKey('GroupID'))
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.DisplayName -ne $DisplayName)
         {
-            Write-Verbose -Message 'GroupID was specified'
-            $team = Get-Team -GroupId $GroupID
-            if ($null -eq $team)
+            $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' -InboundParameters $PSBoundParameters
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullReturn = $PSBoundParameters
+            $nullReturn.Ensure = 'Absent'
+
+            Write-Verbose -Message "Checking for existence of Team $DisplayName"
+
+            ## will only return 1 instance
+            if ($PSBoundParameters.ContainsKey('GroupID'))
             {
-                Write-Verbose -Message "Teams with GroupId $($GroupID) doesn't exist"
-                return $nullReturn
+                Write-Verbose -Message 'GroupID was specified'
+                $team = Get-Team -GroupId $GroupID
+                if ($null -eq $team)
+                {
+                    Write-Verbose -Message "Teams with GroupId $($GroupID) doesn't exist"
+                    return $nullReturn
+                }
+            }
+            else
+            {
+                Write-Verbose -Message 'GroupID was NOT specified'
+                ## Can retreive multiple Teams since displayname is not unique
+                # Filter on DisplayName as -DisplayName also does partial matches and will report duplicate names that are not real duplicate names
+                $team = Get-Team -DisplayName $DisplayName | Where-Object { $_.DisplayName -eq $DisplayName }
+                if ($null -eq $team)
+                {
+                    Write-Verbose -Message "Teams with displayname $DisplayName doesn't exist"
+                    return $nullReturn
+                }
+                if ($team.Length -gt 1)
+                {
+                    throw "Duplicate Teams name $DisplayName exist in tenant"
+                }
             }
         }
         else
         {
-            Write-Verbose -Message 'GroupID was NOT specified'
-            ## Can retreive multiple Teams since displayname is not unique
-            # Filter on DisplayName as -DisplayName also does partial matches and will report duplicate names that are not real duplicate names
-            $team = Get-Team -DisplayName $DisplayName | Where-Object { $_.DisplayName -eq $DisplayName }
-            if ($null -eq $team)
-            {
-                Write-Verbose -Message "Teams with displayname $DisplayName doesn't exist"
-                return $nullReturn
-            }
-            if ($team.Length -gt 1)
-            {
-                throw "Duplicate Teams name $DisplayName exist in tenant"
-            }
+            $team = $Script:exportedInstance
         }
 
         Write-Verbose -Message "Getting Team {$DisplayName} Owners"
@@ -700,6 +708,7 @@ function Export-TargetResource
         [System.String[]]
         $AccessTokens
     )
+
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -750,6 +759,8 @@ function Export-TargetResource
                     ManagedIdentity       = $ManagedIdentity.IsPresent
                     AccessTokens          = $AccessTokens
                 }
+
+                $Script:exportedInstance = $team
                 $Results = Get-TargetResource @Params
                 $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                     -ConnectionMode $ConnectionMode `

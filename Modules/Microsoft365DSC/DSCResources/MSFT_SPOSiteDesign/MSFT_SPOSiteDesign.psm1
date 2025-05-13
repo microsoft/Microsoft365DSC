@@ -81,28 +81,36 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration for SPO SiteDesign for $Title"
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'PNP' `
-        -InboundParameters $PSBoundParameters
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = 'Absent'
     try
     {
-        Write-Verbose -Message "Getting Site Design for $Title"
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Title -ne $Title)
+        {
+            $ConnectionMode = New-M365DSCConnection -Workload 'PNP' `
+                -InboundParameters $PSBoundParameters
 
-        $siteDesign = Get-PnPSiteDesign -Identity $Title -ErrorAction SilentlyContinue
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullReturn = $PSBoundParameters
+            $nullReturn.Ensure = 'Absent'
+
+            Write-Verbose -Message "Getting Site Design for $Title"
+            $siteDesign = Get-PnPSiteDesign -Identity $Title -ErrorAction SilentlyContinue
+        }
+        else
+        {
+            $siteDesign = $Script:exportedInstance
+        }
+
         if ($null -eq $siteDesign)
         {
             Write-Verbose -Message "No Site Design found for $Title"
@@ -514,10 +522,12 @@ function Export-TargetResource
                 CertificatePassword   = $CertificatePassword
                 CertificatePath       = $CertificatePath
                 CertificateThumbprint = $CertificateThumbprint
-                Managedidentity       = $ManagedIdentity.IsPresent
+                ManagedIdentity       = $ManagedIdentity.IsPresent
                 Credential            = $Credential
                 AccessTokens          = $AccessTokens
             }
+
+            $Script:exportedInstance = $design
             $Results = Get-TargetResource @Params
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `

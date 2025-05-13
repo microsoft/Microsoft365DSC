@@ -1824,18 +1824,22 @@ function Set-TargetResource
         if ($null -ne $HeaderContainsMessageHeader -and $null -eq $currentTransportRuleConfig.HeaderContainsMessageHeader)
         {
             $SetTransportRuleParams.Add("HeaderContainsMessageHeader",$null)
+            $SetTransportRuleParams.Add("HeaderContainsWords", @())
         }
         if ($null -ne $HeaderMatchesPatterns -and $null -eq $currentTransportRuleConfig.HeaderMatchesMessageHeader)
         {
             $SetTransportRuleParams.Add("HeaderMatchesMessageHeader",$null)
+            $SetTransportRuleParams.Add("HeaderMatchesPatterns", @())
         }
         if ($null -ne $ExceptIfHeaderContainsWords -and $null -eq $currentTransportRuleConfig.ExceptIfHeaderContainsMessageHeader)
         {
             $SetTransportRuleParams.Add("ExceptIfHeaderContainsMessageHeader",$null)
+            $SetTransportRuleParams.Add("ExceptIfHeaderContainsWords", @())
         }
         if ($null -ne $ExceptIfHeaderMatchesPatterns -and $null -eq $currentTransportRuleConfig.ExceptIfHeaderMatchesMessageHeader)
         {
             $SetTransportRuleParams.Add("ExceptIfHeaderMatchesMessageHeader",$null)
+            $SetTransportRuleParams.Add("ExceptIfHeaderMatchesPatterns", @())
         }
         if ($null -ne $ApplyOME)
         {

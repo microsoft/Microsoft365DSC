@@ -68,40 +68,48 @@ function Get-TargetResource
 
     try
     {
-        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters
-
-        #Ensure the proper dependencies are installed in the current environment.
-        Confirm-M365DSCDependencies
-
-        #region Telemetry
-        $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
-        $CommandName = $MyInvocation.MyCommand
-        $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-            -CommandName $CommandName `
-            -Parameters $PSBoundParameters
-        Add-M365DSCTelemetryEvent -Data $data
-        #endregion
-
-        $nullResult = $PSBoundParameters
-        $nullResult.Ensure = 'Absent'
-
-        $getValue = $null
-        #region resource generator code
-        $getValue = Get-MgBetaPolicyFeatureRolloutPolicy -FeatureRolloutPolicyId $Id -ErrorAction SilentlyContinue
-
-        if ($null -eq $getValue)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Id -ne $Id)
         {
-            Write-Verbose -Message "Could not find an Azure AD Policy Feature Rollout Policy with Id {$Id}"
+            $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+                -InboundParameters $PSBoundParameters
 
-            if (-not [System.String]::IsNullOrEmpty($DisplayName))
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullResult = $PSBoundParameters
+            $nullResult.Ensure = 'Absent'
+
+            $getValue = $null
+            #region resource generator code
+            $getValue = Get-MgBetaPolicyFeatureRolloutPolicy -FeatureRolloutPolicyId $Id -ErrorAction SilentlyContinue
+
+            if ($null -eq $getValue)
             {
-                $getValue = Get-MgBetaPolicyFeatureRolloutPolicy `
-                    -Filter "DisplayName eq '$DisplayName'" `
-                    -ErrorAction SilentlyContinue
+                Write-Verbose -Message "Could not find an Azure AD Policy Feature Rollout Policy with Id {$Id}"
+
+                if (-not [System.String]::IsNullOrEmpty($DisplayName))
+                {
+                    $getValue = Get-MgBetaPolicyFeatureRolloutPolicy `
+                        -Filter "DisplayName eq '$DisplayName'" `
+                        -ErrorAction SilentlyContinue
+                }
             }
         }
+        else
+        {
+            $getValue = $Script:exportedInstance    
+        }
         #endregion
+
         if ($null -eq $getValue)
         {
             Write-Verbose -Message "Could not find an Azure AD Policy Feature Rollout Policy with DisplayName {$DisplayName}."
@@ -468,6 +476,7 @@ function Export-TargetResource
                 AccessTokens          = $AccessTokens
             }
 
+            $Script:exportedInstance = $config
             $Results = Get-TargetResource @Params
 
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `

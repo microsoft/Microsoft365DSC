@@ -64,48 +64,55 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting Site Script: $Title"
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
-        -InboundParameters $PSBoundParameters
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = 'Absent'
-
     try
     {
-        Write-Verbose -Message "Getting the SPO Site Script with Identity {$Identity} and Title {$Title}"
-
-        if (-not [System.String]::IsNullOrEmpty($Identity))
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Id -ne $Identity)
         {
-            $SiteScript = Get-PnPSiteScript -Identity $Identity -ErrorAction SilentlyContinue
-        }
+            $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
+                -InboundParameters $PSBoundParameters
 
-        if ($null -eq $SiteScript)
-        {
-            $SiteScript = Get-PnPSiteScript -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.Title -eq $Title } | Select-Object -First 1
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
 
-            # No script was returned
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullReturn = $PSBoundParameters
+            $nullReturn.Ensure = 'Absent'
+
+            Write-Verbose -Message "Getting the SPO Site Script with Identity {$Identity} and Title {$Title}"
+
+            if (-not [System.String]::IsNullOrEmpty($Identity))
+            {
+                $SiteScript = Get-PnPSiteScript -Identity $Identity -ErrorAction SilentlyContinue
+            }
+
             if ($null -eq $SiteScript)
             {
-                Write-Verbose -Message "No Site Script with the Title, {$Title}, was found."
-                return $nullReturn
+                $SiteScript = Get-PnPSiteScript -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.Title -eq $Title } | Select-Object -First 1
+
+                # No script was returned
+                if ($null -eq $SiteScript)
+                {
+                    Write-Verbose -Message "No Site Script with the Title, {$Title}, was found."
+                    return $nullReturn
+                }
+                else
+                {
+                    # get site script *with* content
+                    $SiteScript = Get-PnPSiteScript -Identity $SiteScript.Id
+                }
             }
-            else
-            {
-                # get site script *with* content
-                $SiteScript = Get-PnPSiteScript -Identity $SiteScript.Id
-            }
+        }
+        else
+        {
+            $SiteScript = Get-PnPSiteScript -Identity $Script:exportedInstance.Id -ErrorAction SilentlyContinue
         }
         ##### End of Check
 
@@ -522,6 +529,7 @@ function Export-TargetResource
                 AccessTokens          = $AccessTokens
             }
 
+            $Script:exportedInstance = $script
             $Results = Get-TargetResource @Params
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `

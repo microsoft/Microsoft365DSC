@@ -234,7 +234,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-MgBetaDeviceManagementDeviceConfiguration -MockWith {
                     return @{
                         AdditionalProperties = @{
-                            '@odata.type'                  = '#microsoft.graph.androidWorkProfileWiFiConfiguration'
+                            '@odata.type'                  = '#microsoft.graph.androidForWorkWifiConfiguration'
                             NetworkName                    = 'FakeStringValue'
                             WiFiSecurityType               = 'open'
                             ConnectAutomatically           = $True

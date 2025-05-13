@@ -122,7 +122,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return @{
                         AdditionalProperties = @{
                             NetworkName                    = 'FakeStringValue'
-                            '@odata.type'                  = '#microsoft.graph.androidDeviceOwnerWifiConfiguration'
+                            '@odata.type'                  = '#microsoft.graph.androidDeviceOwnerEnterpriseWiFiConfiguration'
                             PreSharedKey                   = 'FakeStringValue'
                             WiFiSecurityType               = 'open'
                             ConnectAutomatically           = $True
@@ -184,7 +184,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return @{
                         AdditionalProperties = @{
                             NetworkName                    = 'FakeStringValue'
-                            '@odata.type'                  = '#microsoft.graph.androidDeviceOwnerWifiConfiguration'
+                            '@odata.type'                  = '#microsoft.graph.androidDeviceOwnerEnterpriseWiFiConfiguration'
                             PreSharedKey                   = 'FakeStringValue'
                             WiFiSecurityType               = 'open'
                             ConnectAutomatically           = $True
@@ -238,7 +238,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-MgBetaDeviceManagementDeviceConfiguration -MockWith {
                     return @{
                         AdditionalProperties = @{
-                            '@odata.type'                  = '#microsoft.graph.androidDeviceOwnerWifiConfiguration'
+                            '@odata.type'                  = '#microsoft.graph.androidDeviceOwnerEnterpriseWiFiConfiguration'
                             NetworkName                    = 'FakeStringValue'
                             WiFiSecurityType               = 'open'
                             ProxyExclusionList             = 'FakeStringValue'

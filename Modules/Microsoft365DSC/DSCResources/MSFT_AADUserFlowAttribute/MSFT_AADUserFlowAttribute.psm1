@@ -54,55 +54,50 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    Write-Verbose -Message "Getting configuration of user flow attribute: $DisplayName"
-    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters
-
-    Write-Verbose -Message 'Getting configuration of user flow attribute'
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = 'Absent'
-
-    $userFlowAttribute = $null
-    if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
+    try
     {
-        $userFlowAttribute = $Script:exportedInstances | Where-Object -FilterScript { $_.Id -eq $Id }
-    }
-    elseif (-not [System.String]::IsNullOrEmpty($Id))
-    {
-        $UserFlowAttribute = Get-MgBetaIdentityUserFlowAttribute -IdentityUserFlowAttributeId $Id -ErrorAction SilentlyContinue
-    }
-
-    if ($null -eq $UserFlowAttribute -and -not [System.String]::IsNullOrEmpty($DisplayName))
-    {
-        if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Id -ne $Id)
         {
-            $UserFlowAttribute = $Script:exportedInstances | Where-Object -FilterScript { $_.DisplayName -eq $DisplayName }
+        Write-Verbose -Message "Getting configuration of user flow attribute: $DisplayName"
+        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+            -InboundParameters $PSBoundParameters
+
+        Write-Verbose -Message 'Getting configuration of user flow attribute'
+
+        #Ensure the proper dependencies are installed in the current environment.
+        Confirm-M365DSCDependencies
+
+        #region Telemetry
+        $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+        $CommandName = $MyInvocation.MyCommand
+        $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+            -CommandName $CommandName `
+            -Parameters $PSBoundParameters
+        Add-M365DSCTelemetryEvent -Data $data
+        #endregion
+
+        $nullReturn = $PSBoundParameters
+        $nullReturn.Ensure = 'Absent'
+
+        if (-not [System.String]::IsNullOrEmpty($Id))
+        {
+            $UserFlowAttribute = Get-MgBetaIdentityUserFlowAttribute -IdentityUserFlowAttributeId $Id -ErrorAction SilentlyContinue
         }
-        else
+
+        if ($null -eq $UserFlowAttribute -and -not [System.String]::IsNullOrEmpty($DisplayName))
         {
             $UserFlowAttribute = Get-MgBetaIdentityUserFlowAttribute -Filter "displayName eq '$DisplayName'"
         }
-    }
+        }
+        else
+        {
+            $UserFlowAttribute = $Script:exportedInstance
+        }
 
-    if ($null -eq $UserFlowAttribute)
-    {
-        return $nullReturn
-    }
-    try
-    {
+        if ($null -eq $UserFlowAttribute)
+        {
+            return $nullReturn
+        }
         Write-Verbose -Message "Found configuration of user flow attribute $($DisplayName)"
         $result = @{
             Id                    = $UserFlowAttribute.Id
@@ -293,7 +288,6 @@ function Test-TargetResource
         [System.String[]]
         $AccessTokens
     )
-    $Script:ExportMode = $false
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -381,7 +375,6 @@ function Export-TargetResource
     #endregion
     try
     {
-        $Script:ExportMode = $true
         [array] $Script:exportedInstances = Get-MgBetaIdentityUserFlowAttribute -Filter "userFlowAttributeType ne 'builtIn'" -Sort DisplayName -ErrorAction Stop
         $i = 1
         $dscContent = ''
@@ -406,6 +399,7 @@ function Export-TargetResource
                 AccessTokens          = $AccessTokens
             }
 
+            $Script:exportedInstance = $userFlowAttribute
             $Results = Get-TargetResource @Params
             if ($Results.Ensure -eq 'Present')
             {

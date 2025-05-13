@@ -62,40 +62,28 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters | Out-Null
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullResult = $PSBoundParameters
-    $nullResult.Ensure = 'Absent'
     try
     {
-        if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Id -ne $Id)
         {
-            if (-not [System.String]::IsNullOrEmpty($Id))
-            {
-                Write-Verbose -Message "Retrieving profile by Id {$Id}"
-                $instance = $Script:exportedInstances | Where-Object -FilterScript { $_.Id -eq $Id }
-            }
-            if ($null -eq $instance)
-            {
-                Write-Verbose -Message "Retrieving profile by Name {$Name}"
-                $instance = $Script:exportedInstances | Where-Object -FilterScript { $_.Name -eq $Name }
-            }
-        }
-        else
-        {
+            New-M365DSCConnection -Workload 'MicrosoftGraph' `
+                -InboundParameters $PSBoundParameters | Out-Null
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullResult = $PSBoundParameters
+            $nullResult.Ensure = 'Absent'
+
             if (-not [System.String]::IsNullOrEmpty($Id))
             {
                 Write-Verbose -Message "Retrieving profile by Id {$Id}"
@@ -107,6 +95,11 @@ function Get-TargetResource
                 $instance = Get-MgBetaNetworkAccessFilteringProfile -All -ExpandProperty Policies | Where-Object -FilterScript { $_.Name -eq $Name }
             }
         }
+        else
+        {
+            $instance = $Script:exportedInstance
+        }
+
         if ($null -eq $instance)
         {
             return $nullResult
@@ -457,7 +450,6 @@ function Export-TargetResource
 
     try
     {
-        $Script:ExportMode = $true
         [array] $Script:exportedInstances = Get-MgBetaNetworkAccessFilteringProfile -ExpandProperty Policies -All -ErrorAction Stop
 
         $i = 1
@@ -491,6 +483,7 @@ function Export-TargetResource
                 AccessTokens          = $AccessTokens
             }
 
+            $Script:exportedInstance = $config
             $Results = Get-TargetResource @Params
 
             if ($Results.Policies)

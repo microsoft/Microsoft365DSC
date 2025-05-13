@@ -52,46 +52,53 @@ function Get-TargetResource
 
     try
     {
-        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters
-
-        #Ensure the proper dependencies are installed in the current environment.
-        Confirm-M365DSCDependencies
-
-        #region Telemetry
-        $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
-        $CommandName = $MyInvocation.MyCommand
-        $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-            -CommandName $CommandName `
-            -Parameters $PSBoundParameters
-        Add-M365DSCTelemetryEvent -Data $data
-        #endregion
-
-        $nullResult = $PSBoundParameters
-        $nullResult.Ensure = 'Absent'
-
-        $getValue = $null
-
-        if (-not [System.String]::IsNullOrEmpty($Id))
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Id -ne $Id)
         {
-            $getValue = Get-MgBetaProgram -ProgramId $Id -ErrorAction SilentlyContinue
-        }
+            $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+                -InboundParameters $PSBoundParameters
 
-        if ($null -eq $getValue)
-        {
-            Write-Verbose -Message "Could not find an Azure AD Identity Governance Program with Id {$Id}"
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
 
-            if (-not [System.String]::IsNullOrEmpty($DisplayName))
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullResult = $PSBoundParameters
+            $nullResult.Ensure = 'Absent'
+
+            $getValue = $null
+
+            if (-not [System.String]::IsNullOrEmpty($Id))
             {
-                $getValue = Get-MgBetaProgram `
-                    -Filter "DisplayName eq '$DisplayName'" `
-                    -ErrorAction SilentlyContinue
+                $getValue = Get-MgBetaProgram -ProgramId $Id -ErrorAction SilentlyContinue
+            }
 
-                if ($null -ne $getValue -and $getValue.Count -gt 1)
+            if ($null -eq $getValue)
+            {
+                Write-Verbose -Message "Could not find an Azure AD Identity Governance Program with Id {$Id}"
+
+                if (-not [System.String]::IsNullOrEmpty($DisplayName))
                 {
-                    Throw "Multiple AAD Identity Governance Programs with the Displayname $($DisplayName) exist in the tenant."
+                    $getValue = Get-MgBetaProgram `
+                        -Filter "DisplayName eq '$DisplayName'" `
+                        -ErrorAction SilentlyContinue
+
+                    if ($null -ne $getValue -and $getValue.Count -gt 1)
+                    {
+                        Throw "Multiple AAD Identity Governance Programs with the Displayname $($DisplayName) exist in the tenant."
+                    }
                 }
             }
+        }
+        else
+        {
+            $getValue = $Script:exportedInstance
         }
 
         if ($null -eq $getValue)
@@ -406,6 +413,7 @@ function Export-TargetResource
                 AccessTokens          = $AccessTokens
             }
 
+            $Script:exportedInstance = $config
             $Results = Get-TargetResource @Params
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `

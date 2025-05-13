@@ -61,32 +61,38 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration for SPO SiteDesignRights for $SiteDesignTitle"
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'PNP' `
-        -InboundParameters $PSBoundParameters
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = 'Absent'
-
     try
     {
-        Write-Verbose -Message "Getting Site Design Rights for $SiteDesignTitle"
-
-        $siteDesign = Get-PnPSiteDesign -Identity $SiteDesignTitle -ErrorAction Stop
-        if ($null -eq $siteDesign)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Title -ne $SiteDesignTitle)
         {
-            throw "Site Design with title $SiteDesignTitle doesn't exist in tenant"
+            $ConnectionMode = New-M365DSCConnection -Workload 'PNP' `
+                -InboundParameters $PSBoundParameters
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullReturn = $PSBoundParameters
+            $nullReturn.Ensure = 'Absent'
+
+            Write-Verbose -Message "Getting Site Design Rights for $SiteDesignTitle"
+            $siteDesign = Get-PnPSiteDesign -Identity $SiteDesignTitle -ErrorAction Stop
+            if ($null -eq $siteDesign)
+            {
+                throw "Site Design with title $SiteDesignTitle doesn't exist in tenant"
+            }
+        }
+        else
+        {
+            $siteDesign = $Script:exportedInstance
         }
 
         Write-Verbose -Message "Site Design ID is $($siteDesign.Id)"
@@ -101,7 +107,6 @@ function Get-TargetResource
         }
 
         $curUserPrincipals = @()
-
         foreach ($siteDesignRight in $siteDesignRights)
         {
             $curUserPrincipals += $siteDesignRight.PrincipalName.split('|')[2]
@@ -453,6 +458,8 @@ function Export-TargetResource
                 Credential            = $Credential
                 AccessTokens          = $AccessTokens
             }
+
+            $Script:exportedInstance = $siteDesign
             $Results = Get-TargetResource @Params
             if ($Results.Ensure -eq 'Present')
             {

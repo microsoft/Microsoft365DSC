@@ -11,6 +11,7 @@
 
     # Remove invalid characters
     $settingName = [regex]::Replace($SettingDefinition.Name, "[\{\}\$]", "")
+    $settingName = $settingName.Replace(" ", "_")
 
     $settingsWithSameName = $AllSettingDefinitions | Where-Object -FilterScript { $_.Name -eq $settingName }
 

@@ -388,8 +388,6 @@ function Export-TargetResource
 
     try
     {
-        $Script:ExportMode = $true
-
         #Get all billing account
         $accounts = Get-M365DSCAzureBillingAccount
 
