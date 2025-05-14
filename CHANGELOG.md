@@ -7,6 +7,8 @@
     FIXES [#5027](https://github.com/microsoft/Microsoft365DSC/issues/5027)
 * EXOTransportRule
   * Fixed an issue where not specified properties would lead to an exception.
+* IntuneASRRulesPolicyWindows10
+  * Added filter on additional template ID for both the Export and Get methods.
 * IntuneWifiConfigurationPolicyAndroidForWork
   * Fixed an issue where the wrong odata type was used for export and creation.
 * TeamsFederationConfiguration

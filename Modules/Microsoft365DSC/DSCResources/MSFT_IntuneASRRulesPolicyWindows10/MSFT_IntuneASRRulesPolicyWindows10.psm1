@@ -188,7 +188,9 @@ function Get-TargetResource
             #Retrieve policy general settings
             if (-not [string]::IsNullOrEmpty($Identity))
             {
-                $policy = Get-MgBetaDeviceManagementIntent -DeviceManagementIntentId $Identity -ErrorAction SilentlyContinue
+                $policy = Get-MgBetaDeviceManagementIntent -DeviceManagementIntentId $Identity `
+                                                           -Filter "TemplateId eq '0e237410-1367-4844-bd7f-15fb0f08943b' or TemplateId eq '63be6324-e3c9-4c97-948a-e7f4b96f0f20'" `
+                                                           -ErrorAction SilentlyContinue
             }
 
             if ($null -eq $policy)
@@ -196,7 +198,9 @@ function Get-TargetResource
                 Write-Verbose -Message "No Endpoint Protection Attack Surface Protection rules Policy with identity {$Identity} was found"
                 if (-not [String]::IsNullOrEmpty($DisplayName))
                 {
-                    $policy = Get-MgBetaDeviceManagementIntent -All -Filter "DisplayName eq '$DisplayName'" -ErrorAction SilentlyContinue
+                    $filter = "displayName eq '$($DisplayName)' and (TemplateId eq '0e237410-1367-4844-bd7f-15fb0f08943b' or TemplateId eq '63be6324-e3c9-4c97-948a-e7f4b96f0f20')"
+                    $policy = Get-MgBetaDeviceManagementIntent -All `
+                                                               -Filter $filter -ErrorAction SilentlyContinue
                 }
 
                 if (([array]$policy).count -gt 1)
@@ -838,9 +842,9 @@ function Export-TargetResource
 
     try
     {
-        $policyTemplateID = '0e237410-1367-4844-bd7f-15fb0f08943b'
+        $policyTemplateIDs = @('0e237410-1367-4844-bd7f-15fb0f08943b','63be6324-e3c9-4c97-948a-e7f4b96f0f20')
         [array]$policies = Get-MgBetaDeviceManagementIntent -Filter $Filter -All:$true `
-            -ErrorAction Stop | Where-Object -FilterScript { $_.TemplateId -eq $policyTemplateID }
+            -ErrorAction Stop | Where-Object -FilterScript {$policyTemplateIDs.Contains($_.TemplateId) }
 
         if ($policies.Length -eq 0)
         {
