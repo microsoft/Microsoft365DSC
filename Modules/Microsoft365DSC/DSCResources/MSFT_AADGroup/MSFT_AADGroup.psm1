@@ -614,7 +614,7 @@ function Set-TargetResource
             {
                 try
                 {
-                    Write-Verbose -Message 'Setting Group Licenses'
+                    Write-Verbose -Message "Setting Group Licenses with:`r`nLicensesToAdd: $(ConvertTo-Json $licensesToAdd)`r`nLicensesToRemove: $(ConvertTo-Json $licensesToRemove)"
                     Set-MgGroupLicense -GroupId $currentGroup.Id `
                         -AddLicenses $licensesToAdd `
                         -RemoveLicenses $licensesToRemove `

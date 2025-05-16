@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.25.515.1
 
 * AADApplication
   * Fixed an issue where the `AdminConsentGranted` property had an incorrect value.
