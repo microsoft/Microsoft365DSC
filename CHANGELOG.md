@@ -1,6 +1,11 @@
 # Change log for Microsoft365DSC
 
-# 1.25.515.1
+# UNRELEASED
+
+* AADServicePrincipal
+  * Fixed the assignment of AppRoleAssignedTo when creatign a new Service Principal.
+
+# 1.25.514.1
 
 * AADApplication
   * Fixed an issue where the `AdminConsentGranted` property had an incorrect value.

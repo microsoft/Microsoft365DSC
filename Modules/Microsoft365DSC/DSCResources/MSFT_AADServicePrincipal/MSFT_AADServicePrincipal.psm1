@@ -538,15 +538,13 @@ function Set-TargetResource
         Write-Verbose -Message "Translated to AppId {$($currentParameters.AppId)}"
     }
 
+    $AppRoleAssignedToSpecified = $currentParameters.ContainsKey('AppRoleAssignedTo')
     # ServicePrincipal should exist but it doesn't
     if ($Ensure -eq 'Present' -and $currentAADServicePrincipal.Ensure -eq 'Absent')
     {
-        if ($null -ne $AppRoleAssignedTo)
-        {
-            $currentParameters.AppRoleAssignedTo = $AppRoleAssignedToValues
-        }
         # removing Delegated permission classifications from this new call, as adding below separately
         $currentParameters.Remove('DelegatedPermissionClassifications') | Out-Null
+        $currentParameters.Remove('AppRoleAssignedTo') | Out-Null
 
         Write-Verbose -Message 'Creating new Service Principal'
         Write-Verbose -Message "With Values: $(Convert-M365DscHashtableToString -Hashtable $currentParameters)"
@@ -574,6 +572,40 @@ function Set-TargetResource
                 }
                 $Uri = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "v1.0/servicePrincipals(appId='$($currentParameters.AppId)')/delegatedPermissionClassifications"
                 Invoke-MgGraphRequest -Uri $Uri -Method Post -Body $params
+            }
+        }
+
+        # Update AppRoleAssignedTo
+        if ($AppRoleAssignedToSpecified)
+        {
+            Write-Verbose -Message "Updating AppRoleAssignedTo value"
+            foreach ($assignment in $AppRoleAssignedTo)
+            {
+                $AppRoleAssignedToValues += @{
+                    PrincipalType = $assignment.PrincipalType
+                    Identity      = $assignment.Identity
+                }
+
+                if ($assignment.PrincipalType -eq 'User')
+                {
+                    Write-Verbose -Message "Retrieving user {$($assignment.Identity)}"
+                    $user = Get-MgUser -Filter "startswith(UserPrincipalName, '$($assignment.Identity)')"
+                    $PrincipalIdValue = $user.Id
+                }
+                else
+                {
+                    Write-Verbose -Message "Retrieving group {$($assignment.Identity)}"
+                    $group = Get-MgGroup -Filter "DisplayName eq '$($assignment.Identity)'"
+                    $PrincipalIdValue = $group.Id
+                }
+                $bodyParam = @{
+                    principalId = $PrincipalIdValue
+                    resourceId  = $newSP.Id
+                    appRoleId   = '00000000-0000-0000-0000-000000000000'
+                }
+                Write-Verbose -Message "Adding Service Principal AppRoleAssignedTo with values:`r`n$(ConvertTo-Json $bodyParam -Depth 3)"
+                New-MgServicePrincipalAppRoleAssignedTo -ServicePrincipalId $newSP.Id `
+                    -BodyParameter $bodyParam | Out-Null
             }
         }
     }
