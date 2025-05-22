@@ -10,6 +10,9 @@
                     },
                     {
                         "name": "DeviceManagementConfiguration.Read.All"
+                    },
+                    {
+                        "name": "DeviceManagementScripts.Read.All"
                     }
                 ],
                 "update": [
@@ -28,6 +31,9 @@
                     },
                     {
                         "name": "DeviceManagementConfiguration.Read.All"
+                    },
+                    {
+                        "name": "DeviceManagementScripts.Read.All"
                     }
                 ],
                 "update": [

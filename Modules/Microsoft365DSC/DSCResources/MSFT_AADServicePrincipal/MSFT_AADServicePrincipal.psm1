@@ -194,7 +194,7 @@ function Get-TargetResource
         }
 
         $AppRoleAssignedToValues = @()
-        $assignmentsValue = Get-MgServicePrincipalAppROleAssignedTo -ServicePrincipalId $AADServicePrincipal.Id -ErrorAction SilentlyContinue
+        $assignmentsValue = Get-MgServicePrincipalAppRoleAssignedTo -ServicePrincipalId $AADServicePrincipal.Id -All -ErrorAction SilentlyContinue
         foreach ($principal in $assignmentsValue)
         {
             $currentAssignment = @{
@@ -728,7 +728,7 @@ function Set-TargetResource
                         }
                         Write-Verbose -Message "PrincipalID Value = '$PrincipalIdValue'"
                         Write-Verbose -Message "ServicePrincipalId = '$($currentAADServicePrincipal.ObjectID)'"
-                        $allAssignments = Get-MgServicePrincipalAppRoleAssignedTo -ServicePrincipalId $currentAADServicePrincipal.ObjectID
+                        $allAssignments = Get-MgServicePrincipalAppRoleAssignedTo -ServicePrincipalId $currentAADServicePrincipal.ObjectID -All
                         $assignmentToRemove = $allAssignments | Where-Object -FilterScript { $_.PrincipalId -eq $PrincipalIdValue }
                         Write-Verbose -Message "Removing member {$($member.InputObject.ToString())}"
                         Remove-MgServicePrincipalAppRoleAssignedTo -ServicePrincipalId $currentAADServicePrincipal.ObjectID `

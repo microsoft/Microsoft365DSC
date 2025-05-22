@@ -181,6 +181,10 @@ function Get-TargetResource
         $BlockedAnonymousJoinClientTypes,
 
         [Parameter()]
+        [System.String]
+        $CaptchaVerificationForMeetingJoin,
+
+        [Parameter()]
         [ValidateSet('Allow', 'Block')]
         [System.String]
         $ChannelRecordingDownload,
@@ -449,6 +453,7 @@ function Get-TargetResource
             AutomaticallyStartCopilot                  = $policy.AutomaticallyStartCopilot
             AutoRecording                              = $policy.AutoRecording
             BlockedAnonymousJoinClientTypes            = $policy.BlockedAnonymousJoinClientTypes
+            CaptchaVerificationForMeetingJoin          = $policy.CaptchaVerificationForMeetingJoin
             ChannelRecordingDownload                   = $policy.ChannelRecordingDownload
             ConnectToMeetingControls                   = $policy.ConnectToMeetingControls
             ContentSharingInExternalMeetings           = $policy.ContentSharingInExternalMeetings
@@ -681,6 +686,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $BlockedAnonymousJoinClientTypes,
+
+        [Parameter()]
+        [System.String]
+        $CaptchaVerificationForMeetingJoin,
 
         [Parameter()]
         [ValidateSet('Allow', 'Block')]
@@ -1129,6 +1138,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $BlockedAnonymousJoinClientTypes,
+
+        [Parameter()]
+        [System.String]
+        $CaptchaVerificationForMeetingJoin,
 
         [Parameter()]
         [ValidateSet('Allow', 'Block')]

@@ -391,12 +391,12 @@ function Export-TargetResource
 
             if ($ConnectionMode -eq 'Credentials')
             {
-                $filesToDownload = Get-AllSPOPackages -Credential $Credential
+                [array]$filesToDownload = Get-AllSPOPackages -Credential $Credential
             }
             else
             {
                 # mlh
-                $filesToDownload = Get-AllSPOPackages -ApplicationId $ApplicationId -CertificateThumbprint $CertificateThumbprint `
+                [array]$filesToDownload = Get-AllSPOPackages -ApplicationId $ApplicationId -CertificateThumbprint $CertificateThumbprint `
                     -CertificatePassword $CertificatePassword -TenantId $TenantId -CertificatePath $CertificatePath -ManagedIdentity:$ManagedIdentity.IsPresent
             }
             $tenantAppCatalogPath = $tenantAppCatalogUrl.Replace('https://', '')
@@ -405,18 +405,17 @@ function Export-TargetResource
             $dscContent = ''
             $i = 1
 
-
-            if ($filesToDownload.Length -eq 0)
+            if ($filesToDownload.Count -eq 0)
             {
                 Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
             }
             else
             {
-                Write-M365DSCHost -Message "`r`n"
+                Write-M365DSCHost -Message "`r`n" -CommitWrite
             }
             foreach ($file in $filesToDownload)
             {
-                Write-M365DSCHost -Message "    |---[$i/$($filesToDownload.Length)] $($file.Name)" -DeferWrite
+                Write-M365DSCHost -Message "    |---[$i/$($filesToDownload.Count)] $($file.Name)" -DeferWrite
 
                 $identity = $file.Name.ToLower().Replace('.app', '').Replace('.sppkg', '')
                 $app = Get-PnPApp -Identity $identity -ErrorAction SilentlyContinue
@@ -461,10 +460,6 @@ function Export-TargetResource
                 $i++
                 Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
             }
-
-            $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
-                -InboundParameters $PSBoundParameters `
-                -Url $tenantAppCatalogUrl
 
             foreach ($file in $filesToDownload)
             {

@@ -215,6 +215,10 @@ function Get-TargetResource
                 $complexExcludedApps.Add($_.Key, $_.Value)
             }
         }
+        if ($complexExcludedApps.Count -eq 0)
+        {
+            $complexExcludedApps = $null
+        }
 
         # $complexLargeIcon = @{}
         # if ($null -ne $instance.LargeIcon.Value)

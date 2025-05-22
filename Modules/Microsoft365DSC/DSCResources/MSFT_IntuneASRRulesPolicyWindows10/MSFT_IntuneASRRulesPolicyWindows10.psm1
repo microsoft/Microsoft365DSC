@@ -188,9 +188,7 @@ function Get-TargetResource
             #Retrieve policy general settings
             if (-not [string]::IsNullOrEmpty($Identity))
             {
-                $policy = Get-MgBetaDeviceManagementIntent -DeviceManagementIntentId $Identity `
-                                                           -Filter "TemplateId eq '0e237410-1367-4844-bd7f-15fb0f08943b' or TemplateId eq '63be6324-e3c9-4c97-948a-e7f4b96f0f20'" `
-                                                           -ErrorAction SilentlyContinue
+                $policy = Get-MgBetaDeviceManagementIntent -DeviceManagementIntentId $Identity -ErrorAction SilentlyContinue
             }
 
             if ($null -eq $policy)
@@ -198,7 +196,7 @@ function Get-TargetResource
                 Write-Verbose -Message "No Endpoint Protection Attack Surface Protection rules Policy with identity {$Identity} was found"
                 if (-not [String]::IsNullOrEmpty($DisplayName))
                 {
-                    $filter = "displayName eq '$($DisplayName)' and (TemplateId eq '0e237410-1367-4844-bd7f-15fb0f08943b' or TemplateId eq '63be6324-e3c9-4c97-948a-e7f4b96f0f20')"
+                    $filter = "displayName eq '$($DisplayName)' and (TemplateId eq '0e237410-1367-4844-bd7f-15fb0f08943b')"
                     $policy = Get-MgBetaDeviceManagementIntent -All `
                                                                -Filter $filter -ErrorAction SilentlyContinue
                 }
@@ -842,9 +840,9 @@ function Export-TargetResource
 
     try
     {
-        $policyTemplateIDs = @('0e237410-1367-4844-bd7f-15fb0f08943b','63be6324-e3c9-4c97-948a-e7f4b96f0f20')
+        $policyTemplateID = '0e237410-1367-4844-bd7f-15fb0f08943b'
         [array]$policies = Get-MgBetaDeviceManagementIntent -Filter $Filter -All:$true `
-            -ErrorAction Stop | Where-Object -FilterScript {$policyTemplateIDs.Contains($_.TemplateId) }
+            -ErrorAction Stop | Where-Object -FilterScript { $_.TemplateId -eq $policyTemplateID }
 
         if ($policies.Length -eq 0)
         {

@@ -9,10 +9,7 @@
             "name": "Group.Read.All"
           },
           {
-            "name": "DeviceManagementConfiguration.Read.All"
-          },
-          {
-            "name": "DeviceManagementManagedDevices.Read.All"
+            "name": "DeviceManagementScripts.Read.All"
           }
         ],
         "update": [
@@ -20,10 +17,7 @@
             "name": "Group.Read.All"
           },
           {
-            "name": "DeviceManagementConfiguration.ReadWrite.All"
-          },
-          {
-            "name": "DeviceManagementManagedDevices.ReadWrite.All"
+            "name": "DeviceManagementScripts.ReadWrite.All"
           }
         ]
       },
@@ -33,10 +27,7 @@
             "name": "Group.Read.All"
           },
           {
-            "name": "DeviceManagementConfiguration.Read.All"
-          },
-          {
-            "name": "DeviceManagementManagedDevices.Read.All"
+            "name": "DeviceManagementScripts.Read.All"
           }
         ],
         "update": [
@@ -44,10 +35,7 @@
             "name": "Group.Read.All"
           },
           {
-            "name": "DeviceManagementConfiguration.ReadWrite.All"
-          },
-          {
-            "name": "DeviceManagementManagedDevices.ReadWrite.All"
+            "name": "DeviceManagementScripts.ReadWrite.All"
           }
         ]
       }

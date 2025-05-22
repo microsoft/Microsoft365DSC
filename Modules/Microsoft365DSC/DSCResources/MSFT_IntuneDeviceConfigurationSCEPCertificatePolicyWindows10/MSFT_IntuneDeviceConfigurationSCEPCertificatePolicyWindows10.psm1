@@ -11,7 +11,7 @@ function Get-TargetResource
         $CertificateStore,
 
         [Parameter()]
-        [ValidateSet('sha1', 'sha2')]
+        [ValidateSet('sha1', 'sha2', 'sha1,sha2')]
         [System.String]
         $HashAlgorithm,
 
@@ -344,7 +344,7 @@ function Set-TargetResource
         $CertificateStore,
 
         [Parameter()]
-        [ValidateSet('sha1', 'sha2')]
+        [ValidateSet('sha1', 'sha2', 'sha1,sha2')]
         [System.String]
         $HashAlgorithm,
 
@@ -637,7 +637,7 @@ function Test-TargetResource
         $CertificateStore,
 
         [Parameter()]
-        [ValidateSet('sha1', 'sha2')]
+        [ValidateSet('sha1', 'sha2', 'sha1,sha2')]
         [System.String]
         $HashAlgorithm,
 

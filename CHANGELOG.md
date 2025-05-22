@@ -1,9 +1,25 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.25.521.1
 
 * AADServicePrincipal
   * Fixed the assignment of AppRoleAssignedTo when creatign a new Service Principal.
+  * Adds `-All` to `Get-MgServicePrincipalAppRoleAssignedTo` call to return more than 100 records
+* IntuneASRRulesPolicyWindows10
+  * Removed newly added template ID, it belongs to `IntuneApplicationControlPolicyWindows10`.
+* IntuneDeviceConfigurationSCEPCertificatePolicyWindows10
+  * Allow the combination of `sha1,sha2` as a value for `HashAlgorithm`.
+* IntuneMobileAppsWindowsOfficeSuiteApp
+  * Fixed an issue where the `ExcludedApps` property would be in an invalid format.
+* SPOApp
+  * Fixed an issue where the export would fail.
+    FIXES [#5810](https://github.com/microsoft/Microsoft365DSC/issues/5810)
+    FIXES [#4557](https://github.com/microsoft/Microsoft365DSC/issues/4557)
+* TeamsMeetingPolicy
+  * Added support for the new CaptchaVerificationForMeetingJoin property.
+* MISC
+  * Updated required permissions for Intune script resources.
+  * Added a new LCMState property to drifts in event logging.
 
 # 1.25.514.1
 
