@@ -110,10 +110,10 @@ function Get-TargetResource
         }
 
         Write-Verbose -Message "Found PowerApps Environment {$DisplayName}"
-        if ($null -ne $environmentInfo.properties.linkedEnvironmentMetadata)
+        if ($null -ne $environment.properties.linkedEnvironmentMetadata)
         {
             $ProvisionDatabaseparam = $true
-            $LanguageNameparam = $environmentInfo.properties.linkedEnvironmentMetadata.baseLanguage
+            $LanguageNameparam = $environment.properties.linkedEnvironmentMetadata.baseLanguage
         }
 
         $environmentSKU = $environment.properties.EnvironmentSKU

@@ -17,6 +17,10 @@
     FIXES [#4557](https://github.com/microsoft/Microsoft365DSC/issues/4557)
 * TeamsMeetingPolicy
   * Added support for the new CaptchaVerificationForMeetingJoin property.
+* DEPENDENCIES
+  * Updated ExchangeOnlineManagement to version 3.2.0
+  * Updated Microsoft.Graph to version 2.28.0
+  * Updated MSCloudLoginAssistant to version 1.1.44
 * MISC
   * Updated required permissions for Intune script resources.
   * Added a new LCMState property to drifts in event logging.
