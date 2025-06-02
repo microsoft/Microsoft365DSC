@@ -1,5 +1,15 @@
 # Change log for Microsoft365DSC
 
+# 1.25.528.1
+
+* EXORetentionPolicyTag
+  * Fixes an issue where the AgeLimitForRetention  could be added twice in the results
+    from Get-TargetResource.
+* DEPENDENCIES
+  * Updated ExchangeOnlineManagement to version 3.2.0
+  * Updated Microsoft.Graph to version 2.28.0
+  * Updated MSCloudLoginAssistant to version 1.1.44
+
 # 1.25.521.1
 
 * AADServicePrincipal
@@ -17,10 +27,6 @@
     FIXES [#4557](https://github.com/microsoft/Microsoft365DSC/issues/4557)
 * TeamsMeetingPolicy
   * Added support for the new CaptchaVerificationForMeetingJoin property.
-* DEPENDENCIES
-  * Updated ExchangeOnlineManagement to version 3.2.0
-  * Updated Microsoft.Graph to version 2.28.0
-  * Updated MSCloudLoginAssistant to version 1.1.44
 * MISC
   * Updated required permissions for Intune script resources.
   * Added a new LCMState property to drifts in event logging.
