@@ -1,0 +1,28 @@
+﻿{
+    "resourceName": "VivaEngagementRoleMember",
+    "description": "Manage a Viva Engage roles assigned to a user.",
+    "roles": {
+        "read": [],
+        "update": []
+    },
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [],
+                "update": []
+            },
+            "application": {
+                "read": [
+                    {
+                        "name": "EngagementRole.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "EngagementRole.ReadWrite.All"
+                    }
+                ]
+            }
+        }
+    }
+}
