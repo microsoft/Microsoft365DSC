@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* VivaEngagementRoleMember
+  * Initial release.
+
 # 1.25.528.1
 
 * EXORetentionPolicyTag
