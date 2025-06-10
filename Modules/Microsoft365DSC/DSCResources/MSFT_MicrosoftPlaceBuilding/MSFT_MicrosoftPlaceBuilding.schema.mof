@@ -1,0 +1,21 @@
+[ClassVersion("1.0.0.0"), FriendlyName("MicrosoftPlaceBuilding")]
+class MSFT_MicrosoftPlaceBuilding : OMI_BaseResource
+{
+    [Key, Description("The unique identifier for the building.")] String Identity;
+    [Write, Description("The display name of the building.")] String DisplayName;
+    [Write, Description("The physical address of the building.")] String Address;
+    [Write, Description("The city where the building is located.")] String City;
+    [Write, Description("The state or province where the building is located.")] String State;
+    [Write, Description("The country or region where the building is located.")] String CountryOrRegion;
+    [Write, Description("The postal code of the building.")] String PostalCode;
+    [Write, Description("The phone number for the building.")] String Phone;
+    [Write, Description("The geographic coordinates of the building.")] String GeoCoordinates;
+    [Write, Description("Specify if the building should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
+    [Write, Description("Credentials of the Microsoft Graph delegated permissions."), EmbeddedInstance("MSFT_Credential")] string Credential;
+    [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
+    [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
+    [Write, Description("Secret of the Azure Active Directory application to authenticate with."), EmbeddedInstance("MSFT_Credential")] String ApplicationSecret;
+    [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
+    [Write, Description("Managed ID being used for authentication.")] Boolean ManagedIdentity;
+    [Write, Description("Access token used for authentication.")] String AccessTokens[];
+};
