@@ -1,0 +1,36 @@
+{
+    "resourceName": "MicrosoftPlaceDesk",
+    "description": "This resource configures a Microsoft Place Desk in Microsoft 365.",
+    "roles": {
+        "read": [],
+        "update": []
+    },
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [
+                    {
+                        "name": "Place.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Place.ReadWrite.All"
+                    }
+                ]
+            },
+            "application": {
+                "read": [
+                    {
+                        "name": "Place.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Place.ReadWrite.All"
+                    }
+                ]
+            }
+        }
+    }
+}

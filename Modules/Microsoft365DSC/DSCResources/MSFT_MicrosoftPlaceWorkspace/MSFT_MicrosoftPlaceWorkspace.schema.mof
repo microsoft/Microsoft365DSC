@@ -1,0 +1,28 @@
+[ClassVersion("1.0.0.0"), FriendlyName("MicrosoftPlaceWorkspace")]
+class MSFT_MicrosoftPlaceWorkspace : OMI_BaseResource
+{
+    [Key, Description("The unique identifier for the workspace.")] String Identity;
+    [Write, Description("The display name of the workspace.")] String DisplayName;
+    [Write, Description("The physical address of the workspace.")] String Address;
+    [Write, Description("The city where the workspace is located.")] String City;
+    [Write, Description("The state or province where the workspace is located.")] String State;
+    [Write, Description("The country or region where the workspace is located.")] String CountryOrRegion;
+    [Write, Description("The postal code of the workspace.")] String PostalCode;
+    [Write, Description("The phone number for the workspace.")] String Phone;
+    [Write, Description("The geographic coordinates of the workspace.")] String GeoCoordinates;
+    [Write, Description("The capacity of the workspace.")] UInt32 Capacity;
+    [Write, Description("The building identifier where the workspace is located.")] String BuildingId;
+    [Write, Description("The floor number where the workspace is located.")] String Floor;
+    [Write, Description("The floor label where the workspace is located.")] String FloorLabel;
+    [Write, Description("The label for the workspace.")] String Label;
+    [Write, Description("Indicates if the workspace is wheelchair accessible.")] Boolean IsWheelChairAccessible;
+    [Write, Description("Additional features or tags for the workspace.")] String Tags[];
+    [Write, Description("Specify if the workspace should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
+    [Write, Description("Credentials of the Microsoft Graph delegated permissions."), EmbeddedInstance("MSFT_Credential")] string Credential;
+    [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
+    [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
+    [Write, Description("Secret of the Azure Active Directory application to authenticate with."), EmbeddedInstance("MSFT_Credential")] String ApplicationSecret;
+    [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
+    [Write, Description("Managed ID being used for authentication.")] Boolean ManagedIdentity;
+    [Write, Description("Access token used for authentication.")] String AccessTokens[];
+};

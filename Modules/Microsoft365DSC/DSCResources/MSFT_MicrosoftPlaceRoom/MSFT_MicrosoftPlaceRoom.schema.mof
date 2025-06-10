@@ -1,0 +1,32 @@
+[ClassVersion("1.0.0.0"), FriendlyName("MicrosoftPlaceRoom")]
+class MSFT_MicrosoftPlaceRoom : OMI_BaseResource
+{
+    [Key, Description("The unique identifier for the room.")] String Identity;
+    [Write, Description("The display name of the room.")] String DisplayName;
+    [Write, Description("The physical address of the room.")] String Address;
+    [Write, Description("The city where the room is located.")] String City;
+    [Write, Description("The state or province where the room is located.")] String State;
+    [Write, Description("The country or region where the room is located.")] String CountryOrRegion;
+    [Write, Description("The postal code of the room.")] String PostalCode;
+    [Write, Description("The phone number for the room.")] String Phone;
+    [Write, Description("The geographic coordinates of the room.")] String GeoCoordinates;
+    [Write, Description("The capacity of the room.")] UInt32 Capacity;
+    [Write, Description("The building identifier where the room is located.")] String BuildingId;
+    [Write, Description("The floor number where the room is located.")] String Floor;
+    [Write, Description("The floor label where the room is located.")] String FloorLabel;
+    [Write, Description("The label for the room.")] String Label;
+    [Write, Description("Indicates if the room is wheelchair accessible.")] Boolean IsWheelChairAccessible;
+    [Write, Description("The audio device name for the room.")] String AudioDeviceName;
+    [Write, Description("The video device name for the room.")] String VideoDeviceName;
+    [Write, Description("The display device name for the room.")] String DisplayDeviceName;
+    [Write, Description("Indicates if Microsoft Teams Rooms is enabled.")] Boolean MTREnabled;
+    [Write, Description("Additional features or tags for the room.")] String Tags[];
+    [Write, Description("Specify if the room should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
+    [Write, Description("Credentials of the Microsoft Graph delegated permissions."), EmbeddedInstance("MSFT_Credential")] string Credential;
+    [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
+    [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
+    [Write, Description("Secret of the Azure Active Directory application to authenticate with."), EmbeddedInstance("MSFT_Credential")] String ApplicationSecret;
+    [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
+    [Write, Description("Managed ID being used for authentication.")] Boolean ManagedIdentity;
+    [Write, Description("Access token used for authentication.")] String AccessTokens[];
+};
