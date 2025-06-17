@@ -211,6 +211,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     MediaBitRateKb                             = 50000
                     ScreenSharingMode                          = 'EntireScreen'
                     WhoCanRegister                             = 'EveryoneInCompany'
+                    RoomAttributeUserOverride                  = 'OFF'
                     Ensure                                     = 'Present'
                     Credential                                 = $Credential
                 }
@@ -249,6 +250,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         ScreenSharingMode                          = 'EntireScreen'
                         VoiceIsolation                             = 'Disabled'
                         WhoCanRegister                             = 'EveryoneInCompany'
+                        RoomAttributeUserOverride                  = 'OFF'
                     }
                 }
             }
