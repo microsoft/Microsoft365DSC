@@ -477,6 +477,7 @@ function Get-TargetResource
             ParticipantNameChange                      = $policy.ParticipantNameChange
             PreferredMeetingProviderForIslandsMode     = $policy.PreferredMeetingProviderForIslandsMode
             QnAEngagementMode                          = $policy.QnAEngagementMode
+            RoomAttributeUserOverride                  = $policy.RoomAttributeUserOverride
             RoomPeopleNameUserOverride                 = $policy.RoomPeopleNameUserOverride
             ScreenSharingMode                          = $policy.ScreenSharingMode
             SpeakerAttributionMode                     = $policy.SpeakerAttributionMode
