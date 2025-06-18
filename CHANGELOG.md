@@ -53,6 +53,9 @@
     Fixes [#6183](https://github.com/microsoft/Microsoft365DSC/issues/6183)
 * M365DSCPermissions
   * Fixed an issue when accessing permissions from the compiled list returns no permissions.
+* M365DSCDRGUtil
+  * Update comparison in `Compare-M365DSCComplexObject` function.
+    FIXES [#6195](https://github.com/microsoft/Microsoft365DSC/issues/6195)
 * MISC
   * Added `deviceAndAppManagementAssignmentFilterDisplayName` property to Intune assignments.
     FIXES [#4609](https://github.com/microsoft/Microsoft365DSC/issues/4609)
