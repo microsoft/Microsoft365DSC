@@ -1,0 +1,71 @@
+﻿{
+    "resourceName": "AADPIMGroupSetting",
+    "description": "This resource configures an PIM Group.",
+    "roles": {
+        "read": [],
+        "update": [
+            "Privileged Role Administrator"
+        ]
+    },
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [
+                    {
+                        "name": "Group.Read.All"
+                    },
+                    {
+                        "name": "RoleManagementPolicy.Read.AzureADGroup"
+                    },
+                    {
+                        "name": "PrivilegedEligibilitySchedule.Read.AzureADGroup"
+                    },
+                    {
+                        "name": "User.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Group.Read.All"
+                    },
+                    {
+                        "name": "RoleManagementPolicy.ReadWrite.AzureADGroup"
+                    },
+                    {
+                        "name": "User.Read.All"
+                    }
+                ]
+            },
+            "application": {
+                "read": [
+                    {
+                        "name": "Group.Read.All"
+                    },
+                    {
+                        "name": "RoleManagementPolicy.Read.AzureADGroup"
+                    },
+                    {
+                        "name": "PrivilegedEligibilitySchedule.Read.AzureADGroup"
+                    },
+                    {
+                        "name": "User.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Group.Read.All"
+                    },
+                    {
+                        "name": "RoleManagementPolicy.ReadWrite.AzureADGroup"
+                    },
+                    {
+                        "name": "RoleManagementPolicy.ReadWrite.AzureADGroup"
+                    },
+                    {
+                        "name": "User.Read.All"
+                    }
+                ]
+            }
+        }
+    }
+}

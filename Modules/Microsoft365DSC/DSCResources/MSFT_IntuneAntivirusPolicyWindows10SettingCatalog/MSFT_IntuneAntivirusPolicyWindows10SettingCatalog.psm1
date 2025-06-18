@@ -17,6 +17,10 @@ function Get-TargetResource
         $Description,
 
         [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
+
+        [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
         $AllowArchiveScanning,
@@ -461,7 +465,7 @@ function Get-TargetResource
                 {
                     $policy = Get-MgBetaDeviceManagementConfigurationPolicy `
                         -All `
-                        -Filter "Name eq '$DisplayName'" `
+                        -Filter "Name eq '$($DisplayName -replace "'", "''")'" `
                         -ErrorAction SilentlyContinue | Where-Object `
                         -FilterScript {
                         $_.TemplateReference.TemplateId -in $templateReferences
@@ -501,6 +505,7 @@ function Get-TargetResource
         $returnHashtable.Add('Identity', $Identity)
         $returnHashtable.Add('DisplayName', $policy.name)
         $returnHashtable.Add('Description', $policy.description)
+        $returnHashtable.Add('RoleScopeTagIds', $policy.roleScopeTagIds)
         $returnHashtable.Add('TemplateId', $policy.templateReference.TemplateId)
 
         if ($null -ne $policySettings.SevereThreatDefaultAction)
@@ -580,6 +585,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $Description,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
 
         [Parameter()]
         [ValidateSet('0', '1')]
@@ -1106,6 +1115,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $Description,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
 
         [Parameter()]
         [ValidateSet('0', '1')]

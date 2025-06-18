@@ -18,6 +18,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String[]]
+        $RoleScopeTagIds,
+
+        [Parameter()]
+        [System.String[]]
         $AllowedDataIngestionLocations,
 
         [Parameter()]
@@ -387,7 +391,7 @@ function Get-TargetResource
             if ($policy.Length -eq 0)
             {
                 Write-Verbose -Message "No iOS App Protection Policy {$Identity} was found by Identity. Trying to retrieve by DisplayName"
-                [Array]$policy = Get-MgBetaDeviceAppManagementiOSManagedAppProtection -All -Filter "DisplayName eq '$DisplayName'" -ErrorAction SilentlyContinue
+                [Array]$policy = Get-MgBetaDeviceAppManagementiOSManagedAppProtection -All -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'" -ErrorAction SilentlyContinue
             }
 
             if ($policy.Length -gt 1)
@@ -508,6 +512,7 @@ function Get-TargetResource
             Identity                                       = $policy.Id
             DisplayName                                    = $policy.DisplayName
             Description                                    = $policy.Description
+            RoleScopeTagIds                                = $policy.RoleScopeTagIds
             AllowedDataIngestionLocations                  = $AllowedDataIngestionLocationsValue
             AllowWidgetContentSync                         = $policy.AllowWidgetContentSync
             AppActionIfAccountIsClockedOut                 = [string]$policy.appActionIfAccountIsClockedOut
@@ -626,6 +631,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $Description,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
 
         [Parameter()]
         [System.String[]]
@@ -1131,6 +1140,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $Description,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
 
         [Parameter()]
         [System.String[]]
@@ -1675,7 +1688,7 @@ function Get-IntuneAppProtectionPolicyiOSAssignmentToHashtable
         $assignmentValue = $assignment
         if (-not [System.Guid]::TryParse($assignment, [System.Management.Automation.PSReference]$ObjectGuid))
         {
-            $groupInfo = Get-MgGroup -Filter "DisplayName eq '$assignment'"
+            $groupInfo = Get-MgGroup -Filter "DisplayName eq '$($assignment -replace "'", "''")'"
             $assignmentValue = $groupInfo.Id
         }
         $assignments += @{
@@ -1690,7 +1703,7 @@ function Get-IntuneAppProtectionPolicyiOSAssignmentToHashtable
         $assignmentValue = $exclusion
         if (-not [System.Guid]::TryParse($exclusion, [System.Management.Automation.PSReference]$ObjectGuid))
         {
-            $groupInfo = Get-MgGroup -Filter "DisplayName eq '$exclusion'"
+            $groupInfo = Get-MgGroup -Filter "DisplayName eq '$($exclusion -replace "'", "''")'"
             $assignmentValue = $groupInfo.Id
         }
         $assignments += @{

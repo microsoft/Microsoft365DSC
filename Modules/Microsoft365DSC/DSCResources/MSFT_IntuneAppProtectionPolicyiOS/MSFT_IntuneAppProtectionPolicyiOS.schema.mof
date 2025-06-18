@@ -4,6 +4,7 @@ class MSFT_IntuneAppProtectionPolicyiOS : OMI_BaseResource
     [Key, Description("Display name of the iOS App Protection Policy.")] String DisplayName;
     [Write, Description("Identity of the iOS App Protection Policy.")] String Identity;
     [Write, Description("Description of the iOS App Protection Policy.")] String Description;
+    [Write, Description("List of Scope Tags for this Entity instance.")] String RoleScopeTagIds[];
     [Write, Description("Data storage locations where a user may store managed data. Inherited from managedAppProtection.")] String AllowedDataIngestionLocations[];
     [Write, Description("Indicates if content sync for widgets is allowed for iOS on App Protection Policies.")] Boolean AllowWidgetContentSync;
     [Write, Description("Defines a managed app behavior, either block or warn, if the user is clocked out (non-working time)."), ValueMap{"block","wipe","warn","blockWhenSettingIsSupported"}, Values{"block","wipe","warn","blockWhenSettingIsSupported"}] String AppActionIfAccountIsClockedOut;
@@ -13,8 +14,8 @@ class MSFT_IntuneAppProtectionPolicyiOS : OMI_BaseResource
     [Write, Description("Protocol of a custom dialer app to click-to-open a phone number on iOS, for example, skype:.")] String CustomDialerAppProtocol;
     [Write, Description("Count of apps to which the current policy is deployed.")] UInt32 DeployedAppCount;
     [Write, Description("The classes of dialer apps that are allowed to click-to-open a phone number."), ValueMap{"allApps","managedApps","customApp","blocked"}, Values{"allApps","managedApps","customApp","blocked"}] String DialerRestrictionLevel;
-    [Write, Description("A list of custom urls that are allowed to invocate an unmanaged app.")] String ExemptedUniversalLinks[]; 
-    [Write, Description("A grace period before blocking app access during off clock hours.")] String GracePeriodToBlockAppsDuringOffClockHours; 
+    [Write, Description("A list of custom urls that are allowed to invocate an unmanaged app.")] String ExemptedUniversalLinks[];
+    [Write, Description("A grace period before blocking app access during off clock hours.")] String GracePeriodToBlockAppsDuringOffClockHours;
     [Write, Description("Indicates if the policy is deployed to any inclusion groups or not.")] Boolean IsAssigned;
     [Write, Description("A list of custom urls that are allowed to invocate a managed app.")] String managedUniversalLinks[];
     [Write, Description("Maximum allowed device threat level, as reported by the MTD app Inherited from managedAppProtection."), ValueMap{"notConfigured","secured","low","medium","high"}, Values{"notConfigured","secured","low","medium","high"}] String MaximumAllowedDeviceThreatLevel;
@@ -65,7 +66,7 @@ class MSFT_IntuneAppProtectionPolicyiOS : OMI_BaseResource
     [Write, Description("Specify the number of characters that may be cut or copied from Org data and accounts to any application. This setting overrides the AllowedOutboundClipboardSharingLevel restriction. Default value of '0' means no exception is allowed.")] Uint32 AllowedOutboundClipboardSharingExceptionLength;
     [Write, Description("Specify app notification restriction."), ValueMap{"allow","blockOrganizationalData","block"}, Values{"allow","blockOrganizationalData","block"}] String NotificationRestriction;
     [Write, Description("The intended app management levels for this policy."), ValueMap{"unspecified","unmanaged","mdm","androidEnterprise"}, Values{"unspecified","unmanaged","mdm","androidEnterprise"}] String TargetedAppManagementLevels[];
-    [Write, Description("Require app data to be encrypted."), Values{"useDeviceSettings","afterDeviceRestart","whenDeviceLockedExceptOpenFiles","whenDeviceLocked"}, ValueMap{"useDeviceSettings","afterDeviceRestart","whenDeviceLockedExceptOpenFiles","whenDeviceLocked"}] String AppDataEncryptionType;  
+    [Write, Description("Require app data to be encrypted."), Values{"useDeviceSettings","afterDeviceRestart","whenDeviceLockedExceptOpenFiles","whenDeviceLocked"}, ValueMap{"useDeviceSettings","afterDeviceRestart","whenDeviceLockedExceptOpenFiles","whenDeviceLocked"}] String AppDataEncryptionType;
     [Write, Description("Apps in this list will be exempt from the policy and will be able to receive data from managed apps.")] String ExemptedAppProtocols[];
     [Write, Description("Versions less than the specified version will block the managed app from accessing company data.")] String MinimumWipeSdkVersion;
     [Write, Description("Semicolon separated list of device models allowed, as a string, for the managed app to work.")] String AllowedIosDeviceModels[];

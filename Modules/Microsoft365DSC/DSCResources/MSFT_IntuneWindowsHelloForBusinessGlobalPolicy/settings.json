@@ -1,0 +1,44 @@
+{
+    "resourceName":"IntuneWindowsHelloForBusinessGlobalPolicy",
+    "description":"This resource configures an Intune Windows Hello For Business Global Policy.",
+    "permissions":{
+        "graph":{
+            "delegated":{
+                "update":[
+                    {
+                        "name":"DeviceManagementServiceConfig.ReadWrite.All"
+                    },
+                    {
+                        "name":"DeviceManagementConfiguration.ReadWrite.All"
+                    }
+                ],
+                "read":[
+                    {
+                        "name":"DeviceManagementServiceConfig.Read.All"
+                    },
+                    {
+                        "name":"DeviceManagementConfiguration.Read.All"
+                    }
+                ]
+            },
+            "application":{
+                "update":[
+                    {
+                        "name":"DeviceManagementServiceConfig.ReadWrite.All"
+                    },
+                    {
+                        "name":"DeviceManagementConfiguration.ReadWrite.All"
+                    }
+                ],
+                "read":[
+                    {
+                        "name":"DeviceManagementServiceConfig.Read.All"
+                    },
+                    {
+                        "name":"DeviceManagementConfiguration.Read.All"
+                    }
+                ]
+            }
+        }
+    }
+}

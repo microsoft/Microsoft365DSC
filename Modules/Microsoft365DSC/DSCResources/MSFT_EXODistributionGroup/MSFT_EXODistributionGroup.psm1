@@ -261,6 +261,7 @@ function Get-TargetResource
             $distributionGroup = $Script:exportedInstance
         }
 
+        Write-Verbose -Message "Getting Distribution Group members for $Identity"
         if (-not [System.String]::IsNullOrEmpty($PrimarySmtpAddress))
         {
             $distributionGroupMembers = Get-DistributionGroupMember -Identity $PrimarySmtpAddress `
@@ -277,15 +278,7 @@ function Get-TargetResource
         $distributionMembersValue = @()
         foreach ($member in $distributionGroupMembers)
         {
-            $user = Get-User -Identity $member.DisplayName -ErrorAction SilentlyContinue
-            if ($null -ne $user)
-            {
-                $distributionMembersValue += $user.UserPrincipalName
-            }
-            else
-            {
-                $distributionMembersValue += $member.DisplayName
-            }
+            $distributionMembersValue += $member.PrimarySmtpAddress
         }
 
         Write-Verbose -Message "Found existing Distribution Group {$Identity}."
@@ -304,16 +297,17 @@ function Get-TargetResource
         $ManagedByValue = @()
         if ($null -ne $distributionGroup.ManagedBy)
         {
-            foreach ($user in $distributionGroup.ManagedBy)
+            Write-Verbose -Message "Getting Distribution Group managers for $Identity"
+            foreach ($manager in $distributionGroup.ManagedBy)
             {
                 try
                 {
-                    $user = Get-User -Identity $user -ErrorAction Stop
-                    $ManagedByValue += $user.UserPrincipalName
+                    $recipient = Get-Recipient -Identity $manager -ErrorAction Stop
+                    $ManagedByValue += $recipient.PrimarySmtpAddress
                 }
                 catch
                 {
-                    Write-Verbose -Message "Couldn't retrieve user {$user}"
+                    Write-Verbose -Message "Couldn't retrieve manager recipient {$manager}"
                 }
             }
         }
@@ -321,16 +315,17 @@ function Get-TargetResource
         $ModeratedByValue = @()
         if ($null -ne $distributionGroup.ModeratedBy)
         {
-            foreach ($user in $distributionGroup.ModeratedBy)
+            Write-Verbose -Message "Getting Distribution Group moderators for $Identity"
+            foreach ($moderator in $distributionGroup.ModeratedBy)
             {
                 try
                 {
-                    $user = Get-User -Identity $user -ErrorAction Stop
-                    $ModeratedByValue += $user.UserPrincipalName
+                    $recipient = Get-Recipient -Identity $moderator -ErrorAction Stop
+                    $ModeratedByValue += $recipient.PrimarySmtpAddress
                 }
                 catch
                 {
-                    Write-Verbose -Message "Couldn't retrieve moderating user {$user}"
+                    Write-Verbose -Message "Couldn't retrieve moderating recipient {$moderator}"
                 }
             }
         }

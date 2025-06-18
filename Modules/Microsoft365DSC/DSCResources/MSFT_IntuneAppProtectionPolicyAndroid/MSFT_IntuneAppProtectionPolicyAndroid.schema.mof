@@ -3,6 +3,7 @@ class MSFT_IntuneAppProtectionPolicyAndroid : OMI_BaseResource
 {
     [Key, Description("Display name of the Android App Protection Policy.")] String DisplayName;
     [Write, Description("Description of the Android App Protection Policy.")] String Description;
+    [Write, Description("List of Scope Tags for this Entity instance.")] String RoleScopeTagIds[];
     [Write, Description("List of allowed Android device models.")] string AllowedAndroidDeviceModels[];
     [Write, Description("Maximum length of outbound clipboard sharing exceptions.")] uint32 AllowedOutboundClipboardSharingExceptionLength;
     [Write, Description("Indicates whether biometric authentication is blocked.")] boolean BiometricAuthenticationBlocked;

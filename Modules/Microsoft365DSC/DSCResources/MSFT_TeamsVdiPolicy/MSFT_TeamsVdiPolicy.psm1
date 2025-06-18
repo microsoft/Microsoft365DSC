@@ -17,6 +17,11 @@ function Get-TargetResource
         $DisableCallsAndMeetings,
 
         [Parameter()]
+        [ValidateSet('Enabled', 'Disabled')]
+        [System.String]
+        $VDI2Optimization,
+
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -85,6 +90,7 @@ function Get-TargetResource
             Identity                            = $instance.Identity
             DisableAudioVideoInCallsAndMeetings = $instance.DisableAudioVideoInCallsAndMeetings
             DisableCallsAndMeetings             = $instance.DisableCallsAndMeetings
+            VDI2Optimization                    = $instance.VDI2Optimization
             Ensure                              = 'Present'
             Credential                          = $Credential
             ApplicationId                       = $ApplicationId
@@ -123,6 +129,11 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $DisableCallsAndMeetings,
+
+        [Parameter()]
+        [ValidateSet('Enabled', 'Disabled')]
+        [System.String]
+        $VDI2Optimization,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -243,6 +254,11 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $DisableCallsAndMeetings,
+
+        [Parameter()]
+        [ValidateSet('Enabled', 'Disabled')]
+        [System.String]
+        $VDI2Optimization,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]

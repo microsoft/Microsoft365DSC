@@ -49,9 +49,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Name            = 'My Test'
                     RoleScopeTagIds = @("FakeStringValue")
                     TemplateReference = @{
-                       TemplateId = '66df8dce-0166-4b82-92f7-1f74e3ca17a3_1'
+                       TemplateId = '66df8dce-0166-4b82-92f7-1f74e3ca17a3_4'
                     }
-                }                
+                }
             }
 
             Mock -CommandName Remove-MgBetaDeviceManagementConfigurationPolicy -MockWith {
@@ -77,7 +77,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                     options=@(
                                         @{
                                             name ='Enabled'
-                                            itemId = 'device_vendor_msft_policy_config_msslegacy_ipv6sourceroutingprotectionlevel_1'                                                                                        
+                                            itemId = 'device_vendor_msft_policy_config_msslegacy_ipv6sourceroutingprotectionlevel_1'
                                         }
                                     )
                                 }
@@ -97,7 +97,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                                     dependentOn = 'device_vendor_msft_policy_config_msslegacy_ipv6sourceroutingprotectionlevel_1'
                                                     parentSettingId = 'device_vendor_msft_policy_config_msslegacy_ipv6sourceroutingprotectionlevel'
                                                 }
-                                            )                                                                                        
+                                            )
                                         }
                                     )
                                 }
@@ -113,7 +113,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 choiceSettingValue = @{
                                     children = @(
                                         @{
-                                            SettingDefinitionId = 'device_vendor_msft_policy_config_msslegacy_ipv6sourceroutingprotectionlevel_disableipsourceroutingipv6'                                                                                       
+                                            SettingDefinitionId = 'device_vendor_msft_policy_config_msslegacy_ipv6sourceroutingprotectionlevel_disableipsourceroutingipv6'
                                             '@odata.type' = "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance"
                                             choiceSettingValue = @{
                                                 children = @()
@@ -124,7 +124,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                     value = "device_vendor_msft_policy_config_msslegacy_ipv6sourceroutingprotectionlevel_1"
                                 }
                             }
-                        }                         
+                        }
                     }
                     @{
                         Id = '1'
@@ -138,7 +138,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                     options = @(
                                         @{
                                             name ='Enabled'
-                                            itemId = 'device_vendor_msft_policy_config_connectivity_hardeneduncpaths_1'                                                                                                                                 
+                                            itemId = 'device_vendor_msft_policy_config_connectivity_hardeneduncpaths_1'
                                         }
                                     )
                                 }
@@ -153,7 +153,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                     minimumCount = 1
                                     childIds = @(
                                         'device_vendor_msft_policy_config_connectivity_hardeneduncpaths_pol_hardenedpaths_key',
-                                        'device_vendor_msft_policy_config_connectivity_hardeneduncpaths_pol_hardenedpaths_value'         
+                                        'device_vendor_msft_policy_config_connectivity_hardeneduncpaths_pol_hardenedpaths_value'
                                     )
                                     dependentOn = @(
                                         @{
@@ -174,8 +174,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                             dependentOn = 'device_vendor_msft_policy_config_connectivity_hardeneduncpaths_pol_hardenedpaths'
                                             parentSettingId = 'device_vendor_msft_policy_config_connectivity_hardeneduncpaths_pol_hardenedpaths'
                                         }
-                                    )                                                             
-                                }                                                                
+                                    )
+                                }
                             },
                             @{
                                 Id = 'device_vendor_msft_policy_config_connectivity_hardeneduncpaths_pol_hardenedpaths_key'
@@ -188,8 +188,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                             dependentOn = 'device_vendor_msft_policy_config_connectivity_hardeneduncpaths_pol_hardenedpaths'
                                             parentSettingId = 'device_vendor_msft_policy_config_connectivity_hardeneduncpaths_pol_hardenedpaths'
                                         }
-                                    )                                                             
-                                }                                                                
+                                    )
+                                }
                             }
                         )
                         SettingInstance = @{
@@ -202,7 +202,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                  choiceSettingValue = @{
                                     children = @(
                                         @{
-                                            SettingDefinitionId = 'device_vendor_msft_policy_config_connectivity_hardeneduncpaths_pol_hardenedpaths'                                                                                       
+                                            SettingDefinitionId = 'device_vendor_msft_policy_config_connectivity_hardeneduncpaths_pol_hardenedpaths'
                                             '@odata.type' = "#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance"
                                             groupSettingCollectionValue = @{
                                                 children = @(
@@ -220,9 +220,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                                         simpleSettingValue = @{
                                                             '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
                                                             value = '\\*\SYSVOL'
-                                                        }                                                        
+                                                        }
                                                     }
-                                                 )                                                 
+                                                 )
                                              }
                                         }
                                     )
@@ -230,7 +230,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 }
                             }
                         }
-                    }                    
+                    }
                     @{
                         Id = '2'
                         SettingDefinitions = @(
@@ -243,7 +243,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                     options=@(
                                         @{
                                             name ='Allowed.'
-                                            itemId = 'user_vendor_msft_policy_config_experience_allowwindowsspotlight_1'                                            
+                                            itemId = 'user_vendor_msft_policy_config_experience_allowwindowsspotlight_1'
                                         }
                                     )
                                 }
@@ -261,7 +261,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                     value = "user_vendor_msft_policy_config_experience_allowwindowsspotlight_1"
                                 }
                             }
-                        }                         
+                        }
                     }
                     @{
                         Id = '3'
@@ -275,8 +275,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                     maximumCount = 1
                                     minimumCount = 0
                                     childIds = @(
-                                        'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockexecutionofpotentiallyobfuscatedscripts'         
-                                    )                            
+                                        'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockexecutionofpotentiallyobfuscatedscripts'
+                                    )
 
                                 }
                             },
@@ -295,7 +295,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                                     dependentOn = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules'
                                                     parentSettingId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules'
                                                 }
-                                            )                                            
+                                            )
                                         }
                                     )
                                 }
@@ -307,7 +307,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 SettingInstanceTemplateId = '3d6107c2-c307-4399-8070-6542f1760309'
                             }
                             AdditionalProperties = @{
-                                SettingDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules'                                                                                       
+                                SettingDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules'
                                 '@odata.type' = "#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance"
                                 groupSettingCollectionValue = @{
                                     children = @(
@@ -318,15 +318,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                                 children = @()
                                                 value = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockexecutionofpotentiallyobfuscatedscripts_block'
                                             }
-                                        }                                                    
-                                    )                                                 
+                                        }
+                                    )
                                 }
-                            }                                    
+                            }
                         }
                     }
                 )
             }
-            
+
             Mock -CommandName Update-DeviceConfigurationPolicyAssignment -MockWith {
             }
 
@@ -374,7 +374,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Description = "My Test"
                     deviceSettings = (New-CimInstance -ClassName MSFT_MicrosoftGraphIntuneSettingsCatalogDeviceSettings_IntuneSecurityBaselineWindows10 -Property @{
                         Pol_MSS_DisableIPSourceRoutingIPv6 = '1'
-                        DisableIPSourceRoutingIPv6 = '0'                        
+                        DisableIPSourceRoutingIPv6 = '0'
                         HardenedUNCPaths_Pol_HardenedPaths = '1'
                         BlockExecutionOfPotentiallyObfuscatedScripts = 'block'
                         pol_hardenedpaths = [CimInstance[]]@(
@@ -385,10 +385,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         )
                     } -ClientOnly)
                     Id = "12345-12345-12345-12345-12345"
-                    DisplayName = "My Test"                    
+                    DisplayName = "My Test"
                     RoleScopeTagIds = @("FakeStringValue")
                     userSettings = (New-CimInstance -ClassName MSFT_MicrosoftGraphIntuneSettingsCatalogUserSettings_IntuneSecurityBaselineWindows10 -Property @{
-                        AllowWindowsSpotlight = '1'                   
+                        AllowWindowsSpotlight = '1'
                     } -ClientOnly)
                     Ensure = "Present"
                     Credential = $Credential;
@@ -423,7 +423,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Description = "My Test"
                     deviceSettings = (New-CimInstance -ClassName MSFT_MicrosoftGraphIntuneSettingsCatalogDeviceSettings_IntuneSecurityBaselineWindows10 -Property @{
                         Pol_MSS_DisableIPSourceRoutingIPv6 = '1'
-                        DisableIPSourceRoutingIPv6 = '0'                        
+                        DisableIPSourceRoutingIPv6 = '0'
                         HardenedUNCPaths_Pol_HardenedPaths = '1'
                         BlockExecutionOfPotentiallyObfuscatedScripts = 'block'
                         pol_hardenedpaths = [CimInstance[]]@(
@@ -434,10 +434,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         )
                     } -ClientOnly)
                     Id = "12345-12345-12345-12345-12345"
-                    DisplayName = "My Test"                    
+                    DisplayName = "My Test"
                     RoleScopeTagIds = @("FakeStringValue")
                     userSettings = (New-CimInstance -ClassName MSFT_MicrosoftGraphIntuneSettingsCatalogUserSettings_IntuneSecurityBaselineWindows10 -Property @{
-                        AllowWindowsSpotlight = '1'                   
+                        AllowWindowsSpotlight = '1'
                     } -ClientOnly)
                     Ensure = "Absent"
                     Credential = $Credential;
@@ -471,7 +471,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Description = "My Test"
                     deviceSettings = (New-CimInstance -ClassName MSFT_MicrosoftGraphIntuneSettingsCatalogDeviceSettings_IntuneSecurityBaselineWindows10 -Property @{
                         Pol_MSS_DisableIPSourceRoutingIPv6 = '1'
-                        DisableIPSourceRoutingIPv6 = '0'                        
+                        DisableIPSourceRoutingIPv6 = '0'
                         HardenedUNCPaths_Pol_HardenedPaths = '1'
                         BlockExecutionOfPotentiallyObfuscatedScripts = 'block'
                         pol_hardenedpaths = [CimInstance[]]@(
@@ -482,10 +482,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         )
                     } -ClientOnly)
                     Id = "12345-12345-12345-12345-12345"
-                    DisplayName = "My Test"                    
+                    DisplayName = "My Test"
                     RoleScopeTagIds = @("FakeStringValue")
                     userSettings = (New-CimInstance -ClassName MSFT_MicrosoftGraphIntuneSettingsCatalogUserSettings_IntuneSecurityBaselineWindows10 -Property @{
-                        AllowWindowsSpotlight = '1'                   
+                        AllowWindowsSpotlight = '1'
                     } -ClientOnly)
                     Ensure = "Present"
                     Credential = $Credential;
@@ -510,7 +510,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Description = "My Test"
                     deviceSettings = (New-CimInstance -ClassName MSFT_MicrosoftGraphIntuneSettingsCatalogDeviceSettings_IntuneSecurityBaselineWindows10 -Property @{
                         Pol_MSS_DisableIPSourceRoutingIPv6 = '1'
-                        DisableIPSourceRoutingIPv6 = '0'                        
+                        DisableIPSourceRoutingIPv6 = '0'
                         HardenedUNCPaths_Pol_HardenedPaths = '1'
                         BlockExecutionOfPotentiallyObfuscatedScripts = 'block'
                         pol_hardenedpaths = [CimInstance[]]@(
@@ -521,10 +521,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         )
                     } -ClientOnly)
                     Id = "12345-12345-12345-12345-12345"
-                    DisplayName = "My Test"                    
+                    DisplayName = "My Test"
                     RoleScopeTagIds = @("FakeStringValue")
                     userSettings = (New-CimInstance -ClassName MSFT_MicrosoftGraphIntuneSettingsCatalogUserSettings_IntuneSecurityBaselineWindows10 -Property @{
-                        AllowWindowsSpotlight = '0' #drift                 
+                        AllowWindowsSpotlight = '0' #drift
                     } -ClientOnly)
                     Ensure = "Present"
                     Credential = $Credential;

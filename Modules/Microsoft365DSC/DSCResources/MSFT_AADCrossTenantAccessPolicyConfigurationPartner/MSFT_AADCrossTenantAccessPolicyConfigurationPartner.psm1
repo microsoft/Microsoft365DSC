@@ -103,19 +103,19 @@ function Get-TargetResource
         }
 
         $B2BCollaborationInboundValue = $null
-        if ($null -ne $getValue.B2BCollaborationInbound)
+        if ($null -ne $getValue.B2BCollaborationInbound -and (Test-M365DSCB2BIsDefault -B2BSetting $getValue.B2BCollaborationInbound) -eq $false)
         {
             $B2BCollaborationInboundValue = $getValue.B2BCollaborationInbound
         }
-        if ($null -ne $getValue.B2BCollaborationOutbound)
+        if ($null -ne $getValue.B2BCollaborationOutbound -and (Test-M365DSCB2BIsDefault -B2BSetting $getValue.B2BCollaborationOutbound) -eq $false)
         {
             $B2BCollaborationOutboundValue = $getValue.B2BCollaborationOutbound
         }
-        if ($null -ne $getValue.B2BDirectConnectInbound)
+        if ($null -ne $getValue.B2BDirectConnectInbound -and (Test-M365DSCB2BIsDefault -B2BSetting $getValue.B2BDirectConnectInbound) -eq $false)
         {
             $B2BDirectConnectInboundValue = $getValue.B2BDirectConnectInbound
         }
-        if ($null -ne $getValue.B2BDirectConnectOutbound)
+        if ($null -ne $getValue.B2BDirectConnectOutbound -and (Test-M365DSCB2BIsDefault -B2BSetting $getValue.B2BDirectConnectOutbound) -eq $false)
         {
             $B2BDirectConnectOutboundValue = $getValue.B2BDirectConnectOutbound
         }
@@ -901,6 +901,28 @@ function Get-M365DSCAADCrossTenantAccessPolicyInboundTrust
     }
 
     return $result
+}
+
+function Test-M365DSCB2BIsDefault
+{
+    [CmdletBinding()]
+    [OutputType([System.Boolean])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.Object]
+        $B2BSetting
+    )
+
+    if ($null -eq $B2BSetting.Applications.AccessType -and `
+        $null -eq $B2BSetting.Applications.Target -and `
+        $null -eq $B2BSetting.UsersAndGroups.AccessType -and `
+        $null -eq $B2BSetting.UsersAndGroups.Target)
+    {
+        return $true
+    }
+
+    return $false
 }
 
 Export-ModuleMember -Function *-TargetResource

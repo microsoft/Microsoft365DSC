@@ -74,7 +74,7 @@ function Get-TargetResource
         $EndUserSpamNotificationFrequency,
 
         [Parameter()]
-        [System.Int32]
+        [System.String]
         $EndUserSpamNotificationFrequencyInDays,
 
         [Parameter()]
@@ -358,7 +358,7 @@ function Set-TargetResource
         $EndUserSpamNotificationFrequency,
 
         [Parameter()]
-        [System.Int32]
+        [System.String]
         $EndUserSpamNotificationFrequencyInDays,
 
         [Parameter()]
@@ -522,7 +522,7 @@ function Test-TargetResource
         $EndUserSpamNotificationFrequency,
 
         [Parameter()]
-        [System.Int32]
+        [System.String]
         $EndUserSpamNotificationFrequencyInDays,
 
         [Parameter()]

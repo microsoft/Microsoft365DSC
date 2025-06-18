@@ -103,7 +103,7 @@ function Get-TargetResource
             }
             if ($null -eq $instance)
             {
-                $instance = Get-MgBetaDirectoryCustomSecurityAttributeDefinition -Filter "Name eq '$Name'" `
+                $instance = Get-MgBetaDirectoryCustomSecurityAttributeDefinition -Filter "Name eq '$($Name -replace "'", "''")'" `
                     -ErrorAction SilentlyContinue
             }
             if ($null -eq $instance)

@@ -257,12 +257,12 @@ function Set-TargetResource
         {
             if ($delta.SideIndicator -eq '<=')
             {
-                $groupInfo = Get-MgGroup -Filter "displayName eq '$($delta.InputObject)'" -ErrorAction Stop
+                $groupInfo = Get-MgGroup -Filter "DisplayName eq '$($delta.InputObject -replace "'", "''")'" -ErrorAction Stop
                 $groupsToRemove += $groupInfo.Id
             }
             elseif ($delta.SideIndicator -eq '=>')
             {
-                $groupInfo = Get-MgGroup -Filter "displayName eq '$($delta.InputObject)'" -ErrorAction Stop
+                $groupInfo = Get-MgGroup -Filter "DisplayName eq '$($delta.InputObject -replace "'", "''")'" -ErrorAction Stop
                 $groupsToAdd += $groupInfo.Id
             }
         }

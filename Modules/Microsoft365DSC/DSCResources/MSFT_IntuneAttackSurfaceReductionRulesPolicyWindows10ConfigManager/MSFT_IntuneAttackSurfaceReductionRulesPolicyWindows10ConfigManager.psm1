@@ -18,6 +18,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String[]]
+        $RoleScopeTagIds,
+
+        [Parameter()]
+        [System.String[]]
         $AttackSurfaceReductionOnlyExclusions,
 
         [Parameter()]
@@ -197,7 +201,7 @@ function Get-TargetResource
                 {
                     $policy = Get-MgBetaDeviceManagementConfigurationPolicy `
                         -All `
-                        -Filter "Name eq '$DisplayName' and templateReference/TemplateId eq '$templateReferenceId'" `
+                        -Filter "Name eq '$($DisplayName -replace "'", "''")' and templateReference/TemplateId eq '$templateReferenceId'" `
                         -ErrorAction SilentlyContinue
                 }
 
@@ -228,6 +232,7 @@ function Get-TargetResource
         $returnHashtable.Add('Identity', $Identity)
         $returnHashtable.Add('DisplayName', $policy.Name)
         $returnHashtable.Add('Description', $policy.Description)
+        $returnHashtable.Add('RoleScopeTagIds', $policy.RoleScopeTagIds)
 
         $returnHashtable = Export-IntuneSettingCatalogPolicySettings -Settings $settings -ReturnHashtable $returnHashtable
 
@@ -282,6 +287,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $Description,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
 
         [Parameter()]
         [System.String[]]
@@ -523,6 +532,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $Description,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
 
         [Parameter()]
         [System.String[]]

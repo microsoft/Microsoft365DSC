@@ -61,7 +61,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
             Mock -CommandName Update-DeviceConfigurationGroupPolicyDefinitionValue -MockWith {
             }
-            
+
             $Script:exportedInstances = $null
             $Script:exportedInstance = $null
             $Script:ExportMode = $false

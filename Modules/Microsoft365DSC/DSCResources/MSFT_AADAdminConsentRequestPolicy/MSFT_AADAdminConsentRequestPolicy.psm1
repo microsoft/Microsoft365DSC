@@ -244,7 +244,7 @@ function Set-TargetResource
         }
         elseif ($reviewer.ReviewerType -eq 'Group')
         {
-            $groupInfo = Get-MgGroup -Filter "DisplayName eq '$($reviewer.ReviewerId)'"
+            $groupInfo = Get-MgGroup -Filter "DisplayName eq '$($reviewer.ReviewerId -replace "'", "''")'"
             $entry = @{
                 query     = "/groups/$($groupInfo.Id)/transitiveMembers/microsoft.graph.user"
                 queryType = 'MicrosoftGraph'
@@ -253,7 +253,7 @@ function Set-TargetResource
         }
         elseif ($reviewer.ReviewerType -eq 'Role')
         {
-            $roleInfo = Get-MgBetaRoleManagementDirectoryRoleDefinition -Filter "DisplayName eq '$($reviewer.ReviewerId)'"
+            $roleInfo = Get-MgBetaRoleManagementDirectoryRoleDefinition -Filter "DisplayName eq '$($reviewer.ReviewerId -replace "'", "''")'"
             $entry = @{
                 query     = "/roleManagement/directory/roleAssignments?`$filter=roleDefinitionId eq '$($roleInfo.Id.Replace('\u0027', ''))'"
                 queryType = 'MicrosoftGraph'

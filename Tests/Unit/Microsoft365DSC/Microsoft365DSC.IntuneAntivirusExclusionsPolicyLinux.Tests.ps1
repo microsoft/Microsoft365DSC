@@ -57,9 +57,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-MgBetaDeviceManagementConfigurationPolicy -MockWith {
             }
 
-            Mock -CommandName Remove-MgBetaDeviceManagementConfigurationPolicy -MockWith {
-            }
-
             Mock -CommandName Update-IntuneDeviceConfigurationPolicy -MockWith {
             }
 

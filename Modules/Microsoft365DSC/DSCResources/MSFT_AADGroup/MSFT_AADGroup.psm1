@@ -145,12 +145,7 @@ function Get-TargetResource
                 catch
                 {
                     Write-Verbose -Message "Couldn't get group by ID, trying by name"
-                    if ($DisplayName.Contains("'"))
-                    {
-                        $DisplayName = $DisplayName -replace "'", "''"
-                    }
-                    $filter = "DisplayName eq '$DisplayName'"
-                    $Group = Get-MgGroup -Filter $filter -ErrorAction Stop
+                    $Group = Get-MgGroup -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'" -ErrorAction Stop
                     if ($Group.Length -gt 1)
                     {
                         throw "Duplicate AzureAD Groups named $DisplayName exist in tenant"
@@ -161,12 +156,7 @@ function Get-TargetResource
             {
                 Write-Verbose -Message 'Id was NOT specified'
                 ## Can retreive multiple AAD Groups since displayname is not unique
-                if ($DisplayName.Contains("'"))
-                {
-                    $DisplayName = $DisplayName -replace "'", "''"
-                }
-                $filter = "DisplayName eq '$DisplayName'"
-                $Group = Get-MgGroup -Filter $filter -ErrorAction Stop
+                $Group = Get-MgGroup -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'" -ErrorAction Stop
                 if ($Group.Length -gt 1)
                 {
                     throw "Duplicate AzureAD Groups named $DisplayName exist in tenant"
@@ -265,36 +255,35 @@ function Get-TargetResource
 
         if ($assignedLicensesRequest.value.Length -gt 0)
         {
-            $assignedLicensesValues = Get-M365DSCAzureADGroupLicenses -AssignedLicenses $assignedLicensesRequest.value
-
+            [Array]$assignedLicensesValues = Get-M365DSCAzureADGroupLicenses -AssignedLicenses $assignedLicensesRequest.value
         }
 
-            $policySettings = @{
-                DisplayName                   = $Group.DisplayName
-                Id                            = $Group.Id
-                Owners                        = $OwnersValues
-                MemberOf                      = $MemberOfValues
-                Description                   = $Group.Description
-                GroupTypes                    = [System.String[]]$Group.GroupTypes
-                MembershipRule                = $Group.MembershipRule
-                MembershipRuleProcessingState = $Group.MembershipRuleProcessingState
-                SecurityEnabled               = $Group.SecurityEnabled
-                MailEnabled                   = $Group.MailEnabled
-                IsAssignableToRole            = $false -or $Group.IsAssignableToRole
-                AssignedToRole                = $AssignedToRoleValues
-                MailNickname                  = $Group.MailNickname
-                Visibility                    = $Group.Visibility
-                AssignedLicenses              = $assignedLicensesValues
-                Ensure                        = 'Present'
-                ApplicationId                 = $ApplicationId
-                TenantId                      = $TenantId
-                CertificateThumbprint         = $CertificateThumbprint
-                ApplicationSecret             = $ApplicationSecret
-                Credential                    = $Credential
-                Managedidentity               = $ManagedIdentity.IsPresent
-                AccessTokens                  = $AccessTokens
-            }
-            $result += $policySettings
+        $policySettings = @{
+            DisplayName                   = $Group.DisplayName
+            Id                            = $Group.Id
+            Owners                        = $OwnersValues
+            MemberOf                      = $MemberOfValues
+            Description                   = $Group.Description
+            GroupTypes                    = [System.String[]]$Group.GroupTypes
+            MembershipRule                = $Group.MembershipRule
+            MembershipRuleProcessingState = $Group.MembershipRuleProcessingState
+            SecurityEnabled               = $Group.SecurityEnabled
+            MailEnabled                   = $Group.MailEnabled
+            IsAssignableToRole            = $false -or $Group.IsAssignableToRole
+            AssignedToRole                = $AssignedToRoleValues
+            MailNickname                  = $Group.MailNickname
+            Visibility                    = $Group.Visibility
+            AssignedLicenses              = $assignedLicensesValues
+            Ensure                        = 'Present'
+            ApplicationId                 = $ApplicationId
+            TenantId                      = $TenantId
+            CertificateThumbprint         = $CertificateThumbprint
+            ApplicationSecret             = $ApplicationSecret
+            Credential                    = $Credential
+            Managedidentity               = $ManagedIdentity.IsPresent
+            AccessTokens                  = $AccessTokens
+        }
+        $result += $policySettings
 
         return $result
     }
@@ -552,10 +541,10 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Checking to see if an existing deleted group exists with DisplayName {$DisplayName}"
         $restoringExisting = $false
-        [Array]$groups = Get-MgBetaDirectoryDeletedItemAsGroup -Filter "DisplayName eq '$DisplayName'"
+        [Array]$groups = Get-MgBetaDirectoryDeletedItemAsGroup -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'"
         if ($groups.Length -gt 1)
         {
-            throw "Multiple deleted groups with the name {$DisplayName} were found. Cannot restore the existig group. Please ensure that you either have no instance of the group in the deleted list or that you have a single one."
+            throw "Multiple deleted groups with the name {$DisplayName} were found. Cannot restore the existing group. Please ensure that you either have no instance of the group in the deleted list or that you have a single one."
         }
 
         if ($groups.Length -eq 1)
@@ -563,7 +552,7 @@ function Set-TargetResource
             Write-Verbose -Message "Found an instance of a deleted group {$DisplayName}. Restoring it."
             Restore-MgBetaDirectoryDeletedItem -DirectoryObjectId $groups[0].Id
             $restoringExisting = $true
-            $currentGroup = Get-MgGroup -Filter "DisplayName eq '$DisplayName'" -ErrorAction Stop
+            $currentGroup = Get-MgGroup -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'" -ErrorAction Stop
         }
 
         if (-not $restoringExisting)
@@ -637,7 +626,7 @@ function Set-TargetResource
     {
         try
         {
-            Remove-MgGroup -GroupId $currentGroup.ID | Out-Null
+            Remove-MgGroup -GroupId $currentGroup.Id | Out-Null
         }
         catch
         {
@@ -674,7 +663,7 @@ function Set-TargetResource
                 if ($null -eq $directoryObject)
                 {
                     Write-Verbose -Message "Trying to retrieve Service Principal {$($diff.InputObject)}"
-                    $app = Get-MgApplication -Filter "DisplayName eq '$($diff.InputObject)'"
+                    $app = Get-MgApplication -Filter "DisplayName eq '$($diff.InputObject -replace "'", "''")'"
                     if ($null -ne $app)
                     {
                         $directoryObject = Get-MgServicePrincipal -Filter "AppId eq '$($app.AppId)'"
@@ -701,7 +690,7 @@ function Set-TargetResource
                 elseif ($diff.SideIndicator -eq '<=')
                 {
                     Write-Verbose -Message "Removing new owner {$($diff.InputObject)} to AAD Group {$($currentGroup.DisplayName)}"
-                    Remove-MgGroupOwnerDirectoryObjectByRef -GroupId ($currentGroup.Id) -DirectoryObjectId ($user.Id) | Out-Null
+                    Remove-MgGroupOwnerDirectoryObjectByRef -GroupId ($currentGroup.Id) -DirectoryObjectId ($directoryObject.Id) | Out-Null
                 }
             }
 
@@ -735,7 +724,7 @@ function Set-TargetResource
                 if ($null -eq $directoryObject)
                 {
                     Write-Verbose -Message "Trying to retrieve Service Principal {$($diff.InputObject)}"
-                    $app = Get-MgApplication -Filter "DisplayName eq '$($diff.InputObject)'"
+                    $app = Get-MgApplication -Filter "DisplayName eq '$($diff.InputObject -replace "'", "''")'"
                     if ($null -ne $app)
                     {
                         $directoryObject = Get-MgServicePrincipal -Filter "AppId eq '$($app.AppId)'"
@@ -745,7 +734,7 @@ function Set-TargetResource
                 if ($null -eq $directoryObject)
                 {
                     Write-Verbose -Message "Trying to retrieve Device {$($diff.InputObject)}"
-                    $directoryObject = Get-MgBetaDevice -Filter "DisplayName eq '$($diff.InputObject)'"
+                    $directoryObject = Get-MgDevice -Filter "DisplayName eq '$($diff.InputObject -replace "'", "''")'"
                 }
 
                 if ($diff.SideIndicator -eq '=>')
@@ -794,7 +783,7 @@ function Set-TargetResource
             {
                 try
                 {
-                    $groupAsMember = Get-MgGroup -Filter "DisplayName eq '$($diff.InputObject)'" -ErrorAction SilentlyContinue
+                    $groupAsMember = Get-MgGroup -Filter "DisplayName eq '$($diff.InputObject -replace "'", "''")'" -ErrorAction SilentlyContinue
                 }
                 catch
                 {
@@ -846,7 +835,7 @@ function Set-TargetResource
             {
                 try
                 {
-                    $memberOfGroup = Get-MgGroup -Filter "DisplayName eq '$($diff.InputObject)'" -ErrorAction Stop
+                    $memberOfGroup = Get-MgGroup -Filter "DisplayName eq '$($diff.InputObject -replace "'", "''")'" -ErrorAction Stop
                 }
                 catch
                 {
@@ -861,7 +850,7 @@ function Set-TargetResource
                     if ($diff.SideIndicator -eq '=>')
                     {
                         # see if memberOfGroup contains property SecurityEnabled (it can be true or false)
-                        if ($memberOfgroup.psobject.Typenames -match 'Group')
+                        if ($memberOfGroup.psobject.Typenames -match 'Group')
                         {
                             Write-Verbose -Message "Adding AAD group {$($currentGroup.DisplayName)} as member of AAD group {$($memberOfGroup.DisplayName)}"
                             New-MgGroupMember -GroupId ($memberOfGroup.Id) -DirectoryObject ($currentGroup.Id) | Out-Null
@@ -873,7 +862,7 @@ function Set-TargetResource
                     }
                     elseif ($diff.SideIndicator -eq '<=')
                     {
-                        if ($memberOfgroup.psobject.Typenames -match 'Group')
+                        if ($memberOfGroup.psobject.Typenames -match 'Group')
                         {
                             Write-Verbose -Message "Removing AAD Group {$($currentGroup.DisplayName)} from AAD group {$($memberOfGroup.DisplayName)}"
                             Remove-MgGroupMemberDirectoryObjectByRef -GroupId ($memberOfGroup.Id) -DirectoryObjectId ($currentGroup.Id) | Out-Null
@@ -909,7 +898,7 @@ function Set-TargetResource
             {
                 try
                 {
-                    $role = Get-MgBetaRoleManagementDirectoryRoleDefinition -Filter "DisplayName eq '$($diff.InputObject)'"
+                    $role = Get-MgBetaRoleManagementDirectoryRoleDefinition -Filter "DisplayName eq '$($diff.InputObject -replace "'", "''")'"
                 }
                 catch
                 {

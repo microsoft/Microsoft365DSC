@@ -199,7 +199,7 @@ function Set-TargetResource
         -InboundParameters $PSBoundParameters | Out-Null
 
     Write-Verbose -Message "Retrieving group id for {$GroupName}"
-    $groupInfo = Get-MgGroup -Filter "displayName eq '$GroupName'"
+    $groupInfo = Get-MgGroup -Filter "DisplayName eq '$($GroupName -replace "'", "''")'"
     Write-Verbose -Message "Found group info:`r`n$($groupInfo | Out-String)"
     $groupId = $null
     if ($null -ne $groupInfo)

@@ -48,10 +48,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Get-MgBetaDeviceManagementDeviceCompliancePolicyAssignment -MockWith {
-
                 return @()
             }
+
             Mock -CommandName Update-DeviceConfigurationPolicyAssignment -MockWith {
+            }
+
+            Mock -CommandName Get-MgBetaDeviceManagementNotificationMessageTemplate -MockWith {
+                return @()
             }
             # Mock Write-M365DSCHost to hide output during the tests
             Mock -CommandName Write-M365DSCHost -MockWith {

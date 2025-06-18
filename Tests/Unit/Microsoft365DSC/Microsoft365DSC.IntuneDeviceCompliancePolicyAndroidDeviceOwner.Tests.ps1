@@ -85,7 +85,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     MinAndroidSecurityPatchLevel                       = '2024-01-24'
                     SecurityRequiredAndroidSafetyNetEvaluationType     = 'hardwareBacked'
                     Ensure                                             = 'Present'
-                    Credential                                         = $Credential   
+                    Credential                                         = $Credential
                     ScheduledActionsForRule = [CimInstance[]]@(
                                                 (New-CimInstance `
                                                 -ClassName MSFT_scheduledActionConfigurations `
@@ -116,7 +116,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                                     notificationTemplateId = '00000000-0000-0000-0000-000000000000'
                                                     notificationMessageCCList = @('00000000-0000-0000-0000-000000000000','00000000-0000-0000-0000-000000000000')
                                                 } -ClientOnly)
-                        )                 
+                        )
                 }
 
                 Mock -CommandName Get-MgBetaDeviceManagementDeviceCompliancePolicy -MockWith {
@@ -168,7 +168,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     minAndroidSecurityPatchLevel                       = '2024-01-24'
                     securityRequiredAndroidSafetyNetEvaluationType     = 'hardwareBacked'
                     Ensure                                             = 'Present'
-                    Credential                                         = $Credential      
+                    Credential                                         = $Credential
                     ScheduledActionsForRule = [CimInstance[]]@(
                                                 (New-CimInstance `
                                                 -ClassName MSFT_scheduledActionConfigurations `
@@ -199,7 +199,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                                     notificationTemplateId = '00000000-0000-0000-0000-000000000000'
                                                     notificationMessageCCList = @('00000000-0000-0000-0000-000000000000','00000000-0000-0000-0000-000000000000')
                                                 } -ClientOnly)
-                        )                
+                        )
             }
 
             Mock -CommandName Get-MgBetaDeviceManagementDeviceCompliancePolicy -MockWith {
@@ -345,7 +345,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                                     notificationTemplateId = '00000000-0000-0000-0000-000000000000'
                                                     notificationMessageCCList = @('00000000-0000-0000-0000-000000000000','00000000-0000-0000-0000-000000000000')
                                                 } -ClientOnly)
-                        ) 
+                        )
                 }
 
                 Mock -CommandName Get-MgBetaDeviceManagementDeviceCompliancePolicy -MockWith {

@@ -109,7 +109,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         DisplayName = 'Group 01'
                     }
                 }
-                Mock -CommandName Get-MgBetaDirectoryRoleTemplate -MockWith {
+                Mock -CommandName Get-MgDirectoryRoleTemplate -MockWith {
                     return @{
                         Id          = '17315797-102d-40b4-93e0-432062caca18'
                         DisplayName = 'Compliance Administrator'
@@ -274,7 +274,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         DisplayName = 'Group 01'
                     }
                 }
-                Mock -CommandName Get-MgBetaDirectoryRoleTemplate -MockWith {
+                Mock -CommandName Get-MgDirectoryRoleTemplate -MockWith {
                     return @{
                         Id          = '17315797-102d-40b4-93e0-432062caca18'
                         DisplayName = 'Compliance Administrator'
@@ -395,7 +395,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         DisplayName = 'Group 01'
                     }
                 }
-                Mock -CommandName Get-MgBetaDirectoryRoleTemplate -MockWith {
+                Mock -CommandName Get-MgDirectoryRoleTemplate -MockWith {
                     return @{
                         Id          = '17315797-102d-40b4-93e0-432062caca18'
                         DisplayName = 'Compliance Administrator'
@@ -575,7 +575,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         DisplayName = 'Group 01'
                     }
                 }
-                Mock -CommandName Get-MgBetaDirectoryRoleTemplate -MockWith {
+                Mock -CommandName Get-MgDirectoryRoleTemplate -MockWith {
                     return @{
                         Id          = '17315797-102d-40b4-93e0-432062caca18'
                         DisplayName = 'Compliance Administrator'
@@ -722,7 +722,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         DisplayName = 'Group 01'
                     }
                 }
-                Mock -CommandName Get-MgBetaDirectoryRoleTemplate -MockWith {
+                Mock -CommandName Get-MgDirectoryRoleTemplate -MockWith {
                     return @{
                         Id          = '17315797-102d-40b4-93e0-432062caca18'
                         DisplayName = 'Compliance Administrator'
@@ -842,7 +842,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         DisplayName = 'Group 01'
                     }
                 }
-                Mock -CommandName Get-MgBetaDirectoryRoleTemplate -MockWith {
+                Mock -CommandName Get-MgDirectoryRoleTemplate -MockWith {
                     return @{
                         Id          = '17315797-102d-40b4-93e0-432062caca18'
                         DisplayName = 'Compliance Administrator'

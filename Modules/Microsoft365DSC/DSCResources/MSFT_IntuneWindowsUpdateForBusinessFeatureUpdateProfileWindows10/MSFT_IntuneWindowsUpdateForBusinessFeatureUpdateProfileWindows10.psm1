@@ -18,6 +18,10 @@ function Get-TargetResource
         $Description,
 
         [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
+
+        [Parameter()]
         [System.String]
         $FeatureUpdateVersion,
 
@@ -151,6 +155,7 @@ function Get-TargetResource
             #region resource generator code
             Description                                       = $getValue.Description
             DisplayName                                       = $getValue.DisplayName
+            RoleScopeTagIds                                   = $getValue.RoleScopeTagIds
             FeatureUpdateVersion                              = $getValue.FeatureUpdateVersion
             InstallFeatureUpdatesOptional                     = $getValue.InstallFeatureUpdatesOptional
             InstallLatestWindows10OnWindows11IneligibleDevice = $getValue.InstallLatestWindows10OnWindows11IneligibleDevice
@@ -208,6 +213,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $Description,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
 
         [Parameter()]
         [System.String]
@@ -491,6 +500,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $Description,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
 
         [Parameter()]
         [System.String]

@@ -122,7 +122,7 @@ function Get-TargetResource
             $ObjectGuid = [System.Guid]::empty
             if (-not [System.Guid]::TryParse($CatalogId, [System.Management.Automation.PSReference]$ObjectGuid))
             {
-                $catalogInstance = Get-MgBetaEntitlementManagementAccessPackageCatalog -Filter "DisplayName eq '$catalogId'"
+                $catalogInstance = Get-MgBetaEntitlementManagementAccessPackageCatalog -Filter "DisplayName eq '$($catalogId -replace "'", "''")'"
                 $CatalogId = $catalogInstance.Id
                 $CatalogIdValue = $catalogInstance.DisplayName
             }
@@ -136,7 +136,7 @@ function Get-TargetResource
                 Write-Verbose -Message "Retrieving Resource by Display Name {$DisplayName}"
                 $getValue = Get-MgBetaEntitlementManagementAccessPackageCatalogAccessPackageResource `
                     -AccessPackageCatalogId $CatalogId `
-                    -Filter "DisplayName eq '$DisplayName'" -ErrorAction SilentlyContinue
+                    -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'" -ErrorAction SilentlyContinue
             }
         }
 
@@ -342,7 +342,7 @@ function Set-TargetResource
             -not [System.Guid]::TryParse($OriginId, [System.Management.Automation.PSReference]$ObjectGuid))
     {
         Write-Verbose -Message "The Group reference was provided by name {$OriginId}. Retrieving associated id."
-        $groupInfo = Get-MgGroup -Filter "DisplayName eq '$OriginId'"
+        $groupInfo = Get-MgGroup -Filter "DisplayName eq '$($OriginId -replace "'", "''")'"
         if ($null -ne $groupInfo)
         {
             $resource.OriginId = $groupInfo.Id
@@ -354,7 +354,7 @@ function Set-TargetResource
         if (-not [System.Guid]::TryParse($CatalogId, [System.Management.Automation.PSReference]$ObjectGuid))
         {
             Write-Verbose -Message 'Retrieving Catalog by Display Name'
-            $catalogInstance = Get-MgBetaEntitlementManagementAccessPackageCatalog -Filter "DisplayName eq '$($CatalogId)'"
+            $catalogInstance = Get-MgBetaEntitlementManagementAccessPackageCatalog -Filter "DisplayName eq '$($CatalogId -replace "'", "''")'"
             if ($catalogInstance)
             {
                 $CatalogId = $catalogInstance.Id
@@ -407,7 +407,7 @@ function Set-TargetResource
         if (-not [System.Guid]::TryParse($CatalogId, [System.Management.Automation.PSReference]$ObjectGuid))
         {
             Write-Verbose -Message 'Retrieving Catalog by Display Name'
-            $catalogInstance = Get-MgBetaEntitlementManagementAccessPackageCatalog -Filter "DisplayName eq '$($CatalogId)'"
+            $catalogInstance = Get-MgBetaEntitlementManagementAccessPackageCatalog -Filter "DisplayName eq '$($CatalogId -replace "'", "''")'"
             if ($catalogInstance)
             {
                 $CatalogId = $catalogInstance.Id

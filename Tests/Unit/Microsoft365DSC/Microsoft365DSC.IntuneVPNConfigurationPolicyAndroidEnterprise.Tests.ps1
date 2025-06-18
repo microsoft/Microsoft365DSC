@@ -78,7 +78,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             description                        = 'server'
                             address                            = 'vpn.test.com'
                         } -ClientOnly)
-                    )                                                                                         
+                    )
                     customData                                 = [CimInstance[]]@(
                         (New-CimInstance `
                         -ClassName MSFT_CustomData `
@@ -86,7 +86,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             key                                = 'FakeStringValue'
                             value                              = 'FakeStringValue'
                         } -ClientOnly)
-                    )     
+                    )
                     customKeyValueData                         = [CimInstance[]]@(
                         (New-CimInstance `
                         -ClassName MSFT_CustomData `
@@ -94,7 +94,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             name                               = 'FakeStringValue'
                             value                              = 'FakeStringValue'
                         } -ClientOnly)
-                    )                                                                                                                                                                                    
+                    )
                      targetedMobileApps                      = [CimInstance[]]@(
                         (New-CimInstance `
                         -ClassName MSFT_targetedMobileApps `
@@ -154,7 +154,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             description                       = 'server'
                             address                           = 'vpn.test.com'
                         } -ClientOnly)
-                    )                                                                                        
+                    )
                     customData                                = [CimInstance[]]@(
                         (New-CimInstance `
                         -ClassName MSFT_CustomData `
@@ -162,7 +162,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                            key                                = 'FakeStringValue'
                             value                             = 'FakeStringValue'
                         } -ClientOnly)
-                    )     
+                    )
                     customKeyValueData                        = [CimInstance[]]@(
                         (New-CimInstance `
                         -ClassName MSFT_CustomData `
@@ -170,7 +170,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             name                              = 'FakeStringValue'
                             value                             = 'FakeStringValue'
                         } -ClientOnly)
-                    )                                                                                                                                                                                       
+                    )
                     targetedMobileApps                      = [CimInstance[]]@(
                         (New-CimInstance `
                         -ClassName MSFT_targetedMobileApps `
@@ -200,20 +200,20 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                     key                  = 'FakeStringValue'
                                     value                = 'FakeStringValue'
                                 }
-                            )     
+                            )
                             customKeyValueData      = @(
                                 @{
                                     name                  = 'FakeStringValue'
                                     value                = 'FakeStringValue'
                                 }
-                            )                                                                                                                                                                             
+                            )
                             servers                                  = @(
                                 @{
                                     isDefaultServer                  = $True
                                     description                      = 'server'
                                     address                          = 'vpn.CHANGED.com' #changed value
                                 }
-                            )    
+                            )
                             proxyServer                              = @(
                                  @{
                                     port                             = 80
@@ -228,7 +228,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                     appStoreUrl                     = 'FakeStringValue'
                                     appId                           = 'FakeStringValue'
                                 }
-                            )                                                                                      
+                            )
                         }
                     }
                 }
@@ -245,7 +245,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It 'Should update the IntuneVPNConfigurationPolicyAndroidEnterprise from the Set method' {
                 Set-TargetResource @testParams
                 Should -Invoke -CommandName Update-MgBetaDeviceManagementDeviceConfiguration -Exactly 1
-               
+
             }
         }
 
@@ -282,7 +282,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             key                              = 'FakeStringValue'
                             value                            = 'FakeStringValue'
                         } -ClientOnly)
-                    )  
+                    )
                     customKeyValueData      = [CimInstance[]]@(
                         (New-CimInstance `
                         -ClassName MSFT_CustomData `
@@ -290,7 +290,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             name                            = 'FakeStringValue'
                             value                           = 'FakeStringValue'
                         } -ClientOnly)
-                    )                                                                                                                                                                       
+                    )
                     targetedMobileApps                    = [CimInstance[]]@(
                         (New-CimInstance `
                         -ClassName MSFT_targetedMobileApps `
@@ -300,7 +300,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             appStoreUrl                     = 'FakeStringValue'
                             appId                           = 'FakeStringValue'
                         } -ClientOnly)
-                    )  
+                    )
                     Ensure                                  = 'Present'
                     Credential                              = $Credential
                 }

@@ -120,7 +120,7 @@ function Get-TargetResource
                 if (-Not [string]::IsNullOrEmpty($DisplayName))
                 {
                     $getValue = Get-MgBetaEntitlementManagementAccessPackage `
-                        -Filter "displayName eq '$DisplayName'" `
+                        -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'" `
                         -ExpandProperty "accessPackageResourceRoleScopes(`$expand=accessPackageResourceRole,accessPackageResourceScope)" `
                         -ErrorAction SilentlyContinue
                 }
@@ -334,7 +334,7 @@ function Set-TargetResource
         $ObjectGuid = [System.Guid]::empty
         if (-not [System.Guid]::TryParse($CreateParameters.CatalogId, [System.Management.Automation.PSReference]$ObjectGuid))
         {
-            $catalogInstance = Get-MgBetaEntitlementManagementAccessPackageCatalog -Filter "DisplayName eq '$($CreateParameters.CatalogId)'"
+            $catalogInstance = Get-MgBetaEntitlementManagementAccessPackageCatalog -Filter "DisplayName eq '$($CreateParameters.CatalogId -replace "'", "''")'"
             if ($catalogInstance)
             {
                 $CreateParameters.CatalogId = $catalogInstance.Id
@@ -395,7 +395,7 @@ function Set-TargetResource
 
             $resourceRole = Get-MgBetaEntitlementManagementAccessPackageCatalogAccessPackageResourceRole `
                 -AccessPackageCatalogId $CatalogId `
-                -Filter "(accessPackageResource/Id eq '$($resourceScope.id)' and displayname eq '$roleName' and originSystem eq '$($resourceScope.originSystem)')" `
+                -Filter "(accessPackageResource/Id eq '$($resourceScope.id)' and DisplayName eq '$($roleName -replace "'", "''")' and originSystem eq '$($resourceScope.originSystem)')" `
                 -ExpandProperty 'accessPackageResource'
 
             $isValidRoleScope = $true
@@ -450,7 +450,7 @@ function Set-TargetResource
         $ObjectGuid = [System.Guid]::empty
         if (-not [System.Guid]::TryParse($CreateParameters.CatalogId, [System.Management.Automation.PSReference]$ObjectGuid))
         {
-            $catalogInstance = Get-MgBetaEntitlementManagementAccessPackageCatalog -Filter "DisplayName eq '$($UpdateParameters.CatalogId)'"
+            $catalogInstance = Get-MgBetaEntitlementManagementAccessPackageCatalog -Filter "DisplayName eq '$($UpdateParameters.CatalogId -replace "'", "''")'"
             if ($catalogInstance)
             {
                 $UpdateParameters.CatalogId = $catalogInstance.Id
@@ -561,7 +561,7 @@ function Set-TargetResource
 
                 $resourceRole = Get-MgBetaEntitlementManagementAccessPackageCatalogAccessPackageResourceRole `
                     -AccessPackageCatalogId $CatalogId `
-                    -Filter "(accessPackageResource/Id eq '$($resourceScope.id)' and displayname eq '$roleName' and originSystem eq '$($resourceScope.originSystem)')" `
+                    -Filter "(accessPackageResource/Id eq '$($resourceScope.id)' and DisplayName eq '$($roleName -replace "'", "''")' and originSystem eq '$($resourceScope.originSystem)')" `
                     -ExpandProperty 'accessPackageResource'
 
                 $isValidRoleScope = $true
@@ -622,7 +622,7 @@ function Set-TargetResource
 
                     $resourceRole = Get-MgBetaEntitlementManagementAccessPackageCatalogAccessPackageResourceRole `
                         -AccessPackageCatalogId $CatalogId `
-                        -Filter "(accessPackageResource/Id eq '$($resourceScope.id)' and displayname eq '$roleName' and originSystem eq '$($resourceScope.originSystem)')" `
+                        -Filter "(accessPackageResource/Id eq '$($resourceScope.id)' and DisplayName eq '$($roleName -replace "'", "''")' and originSystem eq '$($resourceScope.originSystem)')" `
                         -ExpandProperty 'accessPackageResource'
 
                     $isValidRoleScope = $true

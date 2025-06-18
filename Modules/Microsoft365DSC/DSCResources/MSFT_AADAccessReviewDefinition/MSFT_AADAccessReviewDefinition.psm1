@@ -99,7 +99,7 @@ function Get-TargetResource
                 if (-not [System.String]::IsNullOrEmpty($DisplayName))
                 {
                     $getValue = Get-MgBetaIdentityGovernanceAccessReviewDefinition `
-                        -Filter "DisplayName eq '$DisplayName'" `
+                        -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'" `
                         -ErrorAction SilentlyContinue | Where-Object `
                         -FilterScript {
                         $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.AccessReviewScheduleDefinition'

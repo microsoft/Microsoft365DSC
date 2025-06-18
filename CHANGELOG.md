@@ -2,8 +2,119 @@
 
 # UNRELEASED
 
+* AADGroup
+  * Fix for removing Group owner.
+* IntuneDeviceCompliancePolicyAndroidDeviceOwner
+  * Added new property `SecurityBlockJailbrokenDevices`.
+* IntuneDefenderGlobalExclusionsPolicyLinux
+  * Initial release.
+* IntuneWindowsHelloForBusinessGlobalPolicy
+  * Initial release.
+    FIXES [#4561](https://github.com/microsoft/Microsoft365DSC/issues/4561)
+* MISC
+  * Added `deviceAndAppManagementAssignmentFilterDisplayName` property to Intune assignments.
+    FIXES [#4609](https://github.com/microsoft/Microsoft365DSC/issues/4609)
+* AADGroupElegibilityScheduleSettings
+  * New resource AADGroupElegibilityScheduleSettings
+
+# 1.25.611.1
+
+* AADAdministrativeUnit
+  * Upgrade from beta to v1.0 Microsoft Graph endpoint for Administrative Unit,
+    Device, Directory Role and Directory Role Template.
+    FIXES [#4438](https://github.com/microsoft/Microsoft365DSC/issues/4438)
+  * Remove unnecessary Graph requests when retrieving AU membership.
+* AADConditionalAccessPolicy
+  * Upgrade from beta to v1.0 Microsoft Graph endpoint for Directory Role Template.
+* AADGroup
+  * Allow DisplayName to include apostrophes.
+  * Upgrade from beta to v1.0 Microsoft Graph endpoint for Device.
+* AADPIMGroupSetting
+  * [#6117] Initial relase.
+* EXODistributionGroup
+  * Return PrimarySmtpAddress instead of DisplayName for Members field,
+    and ManagedBy and ModeratedBy field, to allow values to be set.
+  * Allow ManagedBy and ModeratedBy fields including groups or contacts.
+* EXOGroupSettings
+  * Use the existing group ID to apply updates instead of DisplayName.
+* EXOManagementRoleAssignment
+  * Upgrade from beta to v1.0 Microsoft Graph endpoint for Administrative Units.
+    FIXES [#4438](https://github.com/microsoft/Microsoft365DSC/issues/4438)
+* EXORoleGroup
+  * Add offline filter capability to `Export-TargetResource`.
+    FIXES [#4286](https://github.com/microsoft/Microsoft365DSC/issues/4286)
+* IntuneDeviceCompliancePolicyWindows10
+  * Added support for `Id` and `ScheduledActionsForRule` property.
+    FIXES [#6123](https://github.com/microsoft/Microsoft365DSC/issues/6123)
+    FIXES [#3563](https://github.com/microsoft/Microsoft365DSC/issues/3563)
+* IntuneRoleAssignment
+  * Update evaluation of parameters.
+    FIXES [#5929](https://github.com/microsoft/Microsoft365DSC/issues/5929)
+* DEPENDENCIES
+  * Added dependency on Microsoft.Graph.Identity.DirectoryManagement.
+  * Added dependency on Microsoft.Graph.Identity.Signins.
+  * Updated MSCloudLoginAssistant to version 1.1.45;
+* MISC
+  * Allow use of apostrophes in DisplayName for all resources types.
+
+# 1.25.604.1
+
+* AADAdministrativeUnit
+  * Allow DisplayName to include apostrophes.
+* AADApplication
+  * Fixed issue where the property AuthenticationBehaviors was incorrectly
+    exported as an array.
+  * Fixed issue where the AuthenticationBehaviors wasn't processed properly
+    and added example how to enforce an empty configuration.
+  * Deprecated AuthenticationBehavior\RequireClientServicePrincipal property.
+    Trying to set this property will throw an error.
+  * Fixed issue where the property Permissions was not exported as an array
+* AADCrossTenantAccessPolicyConfigurationPartner
+  * Fix export issue where B2B settings are not exported when these are set
+    to default settings.
+* AADEntitlementManagementAccessPackageAssignmentPolicy
+  * Fixing export issue where AccessReviewSettings does not contain correct
+    info when access reviews are disabled.
+    FIXES [#5941](https://github.com/microsoft/Microsoft365DSC/issues/5941)
+* AADGroup
+  * Fixed issue where the property Permissions was not exported as an array
+* AADRoleAssignmentScheduleRequest
+  * Fix export issue where Recurrence settings are not exported when they
+    are not configured.
+* AADRoleEligibilityScheduleRequest
+  * Fix export issue where Recurrence settings are not exported when they
+    are not configured.
+* EXOMobileDeviceMailboxPolicy
+  * Fix export issue where two properties were exported as integer, where
+    the schema expects a string.
+* EXOQuarantinePolicy
+  * Updated the schema to match the parameter value in the code. The schema
+    defined this property as a string, where the code expected and integer.
+    NOTE: This should not cause any issues, since the export already exported
+    this value as an integer.
+* IntuneSecurityBaselineMicrosoftEdge
+  * Updated to latest template and deprecated `EdgeEnhanceImagesEnabled` as well as `WebSQLAccess`.
+* IntuneSecurityBaselineWindows10
+  * Updated resource with new 24H2 properties.
+* SCDLPComplianceRule
+  * Fixed apostrophes in the export method.
+* SCSensitivityLabel
+  * Fixed issue where the Groups property in AutoLabelingSettings was not
+    exported as an array.
+  * Fixed issue where the export of AdvancedSettings had a key but no value,
+    which caused errors during deployment. Now ignoring setting if no value
+    is set.
+* SPORetentionLabelsSettings
+  * Correcting permissions in settings.json
+* TeamsGroupPolicyAssignment
+  * Fix export issue where two properties were exported as integer, where
+    the schema expects a string.
+* TeamsVdiPolicy
+  * Added support for `VDI2Optimization` property.
 * VivaEngagementRoleMember
   * Initial release.
+* MISC
+  * Added `RoleScopeTagIds` property across the Intune resources.
 
 # 1.25.528.1
 
@@ -14,6 +125,11 @@
   * Updated ExchangeOnlineManagement to version 3.2.0
   * Updated Microsoft.Graph to version 2.28.0
   * Updated MSCloudLoginAssistant to version 1.1.44
+
+# UNRELEASED
+
+* AADGroupElegibilityScheduleSettings
+  * New resource AADGroupElegibilityScheduleSettings
 
 # 1.25.521.1
 

@@ -330,7 +330,7 @@ function Get-TargetResource
                 {
                     $getValue = Get-MgBetaDeviceManagementConfigurationPolicy `
                         -All `
-                        -Filter "Name eq '$DisplayName'" `
+                        -Filter "Name eq '$($DisplayName -replace "'", "''")'" `
                         -ErrorAction SilentlyContinue
                 }
             }

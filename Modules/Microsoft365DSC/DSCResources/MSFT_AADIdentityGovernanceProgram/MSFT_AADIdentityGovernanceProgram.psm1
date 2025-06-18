@@ -86,7 +86,7 @@ function Get-TargetResource
                 if (-not [System.String]::IsNullOrEmpty($DisplayName))
                 {
                     $getValue = Get-MgBetaProgram `
-                        -Filter "DisplayName eq '$DisplayName'" `
+                        -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'" `
                         -ErrorAction SilentlyContinue
 
                     if ($null -ne $getValue -and $getValue.Count -gt 1)

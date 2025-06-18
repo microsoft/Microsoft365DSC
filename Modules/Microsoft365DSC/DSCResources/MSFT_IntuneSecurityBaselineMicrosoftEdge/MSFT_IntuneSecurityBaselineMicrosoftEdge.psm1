@@ -126,6 +126,21 @@ function Get-TargetResource
         $TyposquattingCheckerEnabled,
 
         [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $edge_DynamicCodeSettings,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $DynamicCodeSettings_DynamicCodeSettings,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $ApplicationBoundEncryptionEnabled,
+
+        [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
         #endregion
@@ -170,6 +185,7 @@ function Get-TargetResource
     {
         if (-not $Script:exportedInstance -or $Script:exportedInstance.DisplayName -ne $DisplayName)
         {
+
             $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
                 -InboundParameters $PSBoundParameters
 
@@ -189,6 +205,7 @@ function Get-TargetResource
             $nullResult.Ensure = 'Absent'
 
             $getValue = $null
+
             #region resource generator code
             if (-not [System.String]::IsNullOrEmpty($Id))
             {
@@ -203,7 +220,7 @@ function Get-TargetResource
                 {
                     $getValue = Get-MgBetaDeviceManagementConfigurationPolicy `
                         -All `
-                        -Filter "Name eq '$DisplayName'" `
+                        -Filter "Name eq '$($DisplayName -replace "'", "''")'" `
                         -ErrorAction SilentlyContinue
                 }
             }
@@ -397,6 +414,21 @@ function Set-TargetResource
         $TyposquattingCheckerEnabled,
 
         [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $edge_DynamicCodeSettings,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $DynamicCodeSettings_DynamicCodeSettings,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $ApplicationBoundEncryptionEnabled,
+
+        [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
         #endregion
@@ -434,6 +466,20 @@ function Set-TargetResource
         $AccessTokens
     )
 
+    Write-Verbose -Message "Setting configuration of the Intune Security Baseline Microsoft Edge with Id {$Id} and Name {$Name}"
+
+    if ($PSBoundParameters.ContainsKey('WebSQLAccess'))
+    {
+        Write-Warning -Message "The WebSQLAccess parameter is deprecated and will be removed in a future version. It will not be used in the current operation."
+        $PSBoundParameters.Remove('WebSQLAccess') | Out-Null
+    }
+
+    if ($PSBoundParameters.ContainsKey('EdgeEnhanceImagesEnabled'))
+    {
+        Write-Warning -Message "The EdgeEnhanceImagesEnabled parameter is deprecated and will be removed in a future version. It will not be used in the current operation."
+        $PSBoundParameters.Remove('EdgeEnhanceImagesEnabled') | Out-Null
+    }
+
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
@@ -450,14 +496,14 @@ function Set-TargetResource
 
     $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
-    $templateReferenceId = 'c66347b7-8325-4954-a235-3bf2233dfbfd_2'
+    $templateReferenceId = 'c66347b7-8325-4954-a235-3bf2233dfbfd_3'
     $platforms = 'windows10'
     $technologies = 'mdm'
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating an Intune Security Baseline Microsoft Edge with Name {$DisplayName}"
-        $BoundParameters.Remove('Assignments') | Out-Null
+        $BoundParameters.Remove("Assignments") | Out-Null
 
         $settings = Get-IntuneSettingCatalogPolicySetting `
             -DSCParams ([System.Collections.Hashtable]$BoundParameters) `
@@ -488,7 +534,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating the Intune Security Baseline Microsoft Edge with Id {$($currentInstance.Id)}"
-        $BoundParameters.Remove('Assignments') | Out-Null
+        $BoundParameters.Remove("Assignments") | Out-Null
 
         $settings = Get-IntuneSettingCatalogPolicySetting `
             -DSCParams ([System.Collections.Hashtable]$BoundParameters) `
@@ -648,6 +694,21 @@ function Test-TargetResource
         $TyposquattingCheckerEnabled,
 
         [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $edge_DynamicCodeSettings,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $DynamicCodeSettings_DynamicCodeSettings,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $ApplicationBoundEncryptionEnabled,
+
+        [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
         #endregion
@@ -685,6 +746,18 @@ function Test-TargetResource
         [System.String[]]
         $AccessTokens
     )
+
+    if ($PSBoundParameters.ContainsKey('WebSQLAccess'))
+    {
+        Write-Warning -Message "The WebSQLAccess parameter is deprecated and will be removed in a future version. It will not be used in the current operation."
+        $PSBoundParameters.Remove('WebSQLAccess') | Out-Null
+    }
+
+    if ($PSBoundParameters.ContainsKey('EdgeEnhanceImagesEnabled'))
+    {
+        Write-Warning -Message "The EdgeEnhanceImagesEnabled parameter is deprecated and will be removed in a future version. It will not be used in the current operation."
+        $PSBoundParameters.Remove('EdgeEnhanceImagesEnabled') | Out-Null
+    }
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -819,8 +892,8 @@ function Export-TargetResource
             -All `
             -ErrorAction Stop | Where-Object `
             -FilterScript {
-            $_.TemplateReference.TemplateId -eq $policyTemplateID
-        }
+                $_.TemplateReference.TemplateId -eq $policyTemplateID
+            }
         #endregion
 
         $i = 1
@@ -880,7 +953,6 @@ function Export-TargetResource
                 -Results $Results `
                 -Credential $Credential `
                 -NoEscape @('Assignments')
-
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName

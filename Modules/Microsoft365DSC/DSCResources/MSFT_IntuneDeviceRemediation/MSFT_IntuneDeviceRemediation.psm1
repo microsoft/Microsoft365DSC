@@ -136,7 +136,7 @@ function Get-TargetResource
             {
                 $getValue = Get-MgBetaDeviceManagementDeviceHealthScript `
                     -All `
-                    -Filter "DisplayName eq '$DisplayName'" `
+                    -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'" `
                     -ErrorAction SilentlyContinue | Where-Object `
                     -FilterScript { `
                         $_.DeviceHealthScriptType -eq 'deviceHealthScript' `

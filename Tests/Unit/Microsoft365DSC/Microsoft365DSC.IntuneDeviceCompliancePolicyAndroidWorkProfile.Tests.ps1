@@ -124,7 +124,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                                     notificationTemplateId = '00000000-0000-0000-0000-000000000000'
                                                     notificationMessageCCList = @('00000000-0000-0000-0000-000000000000','00000000-0000-0000-0000-000000000000')
                                                 } -ClientOnly)
-                        )   
+                        )
                 }
 
                 Mock -CommandName Get-MgBetaDeviceManagementDeviceCompliancePolicy -MockWith {
@@ -217,7 +217,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                                     notificationTemplateId = '00000000-0000-0000-0000-000000000000'
                                                     notificationMessageCCList = @('00000000-0000-0000-0000-000000000000','00000000-0000-0000-0000-000000000000')
                                                 } -ClientOnly)
-                        )   
+                        )
 
                 }
 
@@ -339,7 +339,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     SecurityRequireSafetyNetAttestationCertifiedDevice = $True
                     SecurityRequireGooglePlayServices                  = $True
                     SecurityRequireUpToDateSecurityProviders           = $True
-                    SecurityRequireCompanyPortalAppIntegrity           = $True                   
+                    SecurityRequireCompanyPortalAppIntegrity           = $True
                     MinAndroidSecurityPatchLevel                       = "2024-01-01";
                     SecurityRequiredAndroidSafetyNetEvaluationType     = "hardwareBacked"
                     WorkProfileInactiveBeforeScreenLockInMinutes       = 480
@@ -384,14 +384,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                                     notificationTemplateId = '00000000-0000-0000-0000-000000000000'
                                                     notificationMessageCCList = @('00000000-0000-0000-0000-000000000000','00000000-0000-0000-0000-000000000000')
                                                 } -ClientOnly)
-                        )   
+                        )
                 }
 
                 Mock -CommandName Get-MgBetaDeviceManagementDeviceCompliancePolicy -MockWith {
                     return @{
                         DisplayName                                    = 'Test Android Work Profile Device Compliance Policy'
                         Description                                    = 'Test Android Work Profile Device Compliance Policy Description'
-                        Id                                             = '9c4e2ed7-706e-4874-a826-0c2778352d46'                       
+                        Id                                             = '9c4e2ed7-706e-4874-a826-0c2778352d46'
                         ScheduledActionsForRule =@(
                         @{
                             ruleName = ''
@@ -532,7 +532,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                                     notificationTemplateId = '00000000-0000-0000-0000-000000000000'
                                                     notificationMessageCCList = @('00000000-0000-0000-0000-000000000000','00000000-0000-0000-0000-000000000000')
                                                 } -ClientOnly)
-                        )   
+                        )
                 }
 
                 Mock -CommandName Get-MgBetaDeviceManagementDeviceCompliancePolicy -MockWith {

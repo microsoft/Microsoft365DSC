@@ -90,7 +90,7 @@ function Get-TargetResource
             }
             if ($null -eq $instance)
             {
-                $instance = Get-MgBetaIdentityGovernanceLifecycleWorkflowCustomTaskExtension -Filter "DisplayName eq '$($DisplayName)'"
+                $instance = Get-MgBetaIdentityGovernanceLifecycleWorkflowCustomTaskExtension -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'"
             }
         }
         else
@@ -276,7 +276,7 @@ function Set-TargetResource
             $appsValue = @()
             foreach ($app in $CallbackConfiguration.AuthorizedApps)
             {
-                $appInfo = Get-MgApplication -Filter "DisplayName eq '$app'" -ErrorAction SilentlyContinue
+                $appInfo = Get-MgApplication -Filter "DisplayName eq '$($app -replace "'", "''")'" -ErrorAction SilentlyContinue
                 if ($null -ne $appInfo)
                 {
                     $appsValue += $appInfo.Id

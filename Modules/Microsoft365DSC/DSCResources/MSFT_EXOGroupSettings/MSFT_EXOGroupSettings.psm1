@@ -694,8 +694,10 @@ function Set-TargetResource
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
+    $CurrentValues = Get-TargetResource @PSBoundParameters
+
     $UpdateParameters = ([Hashtable]$PSBoundParameters).Clone()
-    $UpdateParameters.Add('Identity', $DisplayName)
+    $UpdateParameters.Add('Identity', $CurrentValues.Id)
     $UpdateParameters.Remove('DisplayName') | Out-Null
     $UpdateParameters.Remove('Credential') | Out-Null
     $UpdateParameters.Remove('ApplicationId') | Out-Null

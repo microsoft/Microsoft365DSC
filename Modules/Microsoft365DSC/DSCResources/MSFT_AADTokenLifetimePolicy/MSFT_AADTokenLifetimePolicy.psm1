@@ -94,7 +94,7 @@ function Get-TargetResource
             {
                 try
                 {
-                    $Policy = Get-MgBetaPolicyTokenLifetimePolicy -Filter "DisplayName eq '$DisplayName'" -ErrorAction SilentlyContinue
+                    $Policy = Get-MgBetaPolicyTokenLifetimePolicy -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'" -ErrorAction SilentlyContinue
                 }
                 catch
                 {

@@ -350,11 +350,13 @@ function Get-TargetResource
                 MaxEmailHTMLBodyTruncationSize           = $MobileDeviceMailboxPolicy.MaxEmailHTMLBodyTruncationSize
                 MaxInactivityTimeLock                    = $MobileDeviceMailboxPolicy.MaxInactivityTimeLock
                 MaxPasswordFailedAttempts                = $MobileDeviceMailboxPolicy.MaxPasswordFailedAttempts
-                MinPasswordComplexCharacters             = $MobileDeviceMailboxPolicy.MinPasswordComplexCharacters
+                # The MinPasswordComplexCharacters property is an integer, but the DSC resource expects a string.
+                MinPasswordComplexCharacters             = if ($null -ne $MobileDeviceMailboxPolicy.MinPasswordComplexCharacters) { $MobileDeviceMailboxPolicy.MinPasswordComplexCharacters.ToString() } else { $null }
                 MinPasswordLength                        = $MobileDeviceMailboxPolicy.MinPasswordLength
                 PasswordEnabled                          = $MobileDeviceMailboxPolicy.PasswordEnabled
                 PasswordExpiration                       = $MobileDeviceMailboxPolicy.PasswordExpiration
-                PasswordHistory                          = $MobileDeviceMailboxPolicy.PasswordHistory
+                # The PasswordHistory property is an integer, but the DSC resource expects a string.
+                PasswordHistory                          = if ($null -ne $MobileDeviceMailboxPolicy.PasswordHistory) { $MobileDeviceMailboxPolicy.PasswordHistory.ToString() } else { $null }
                 PasswordRecoveryEnabled                  = $MobileDeviceMailboxPolicy.PasswordRecoveryEnabled
                 RequireDeviceEncryption                  = $MobileDeviceMailboxPolicy.RequireDeviceEncryption
                 RequireEncryptedSMIMEMessages            = $MobileDeviceMailboxPolicy.RequireSignedSMIMEMessages

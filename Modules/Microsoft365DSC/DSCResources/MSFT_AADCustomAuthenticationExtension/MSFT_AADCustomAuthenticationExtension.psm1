@@ -116,7 +116,7 @@ function Get-TargetResource
             }
             if ($null -eq $instance)
             {
-                $instance = Get-MgBetaIdentityCustomAuthenticationExtension -Filter "DisplayName eq '$DisplayName'" `
+                $instance = Get-MgBetaIdentityCustomAuthenticationExtension -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'" `
                     -ErrorAction SilentlyContinue
             }
             if ($null -eq $instance)

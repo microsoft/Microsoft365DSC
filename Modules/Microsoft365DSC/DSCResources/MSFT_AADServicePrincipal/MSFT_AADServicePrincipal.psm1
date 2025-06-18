@@ -172,7 +172,7 @@ function Get-TargetResource
                 $ObjectGuid = [System.Guid]::empty
                 if (-not [System.Guid]::TryParse($AppId, [System.Management.Automation.PSReference]$ObjectGuid))
                 {
-                    $appInstance = Get-MgApplication -Filter "DisplayName eq '$AppId'"
+                    $appInstance = Get-MgApplication -Filter "DisplayName eq '$($AppId -replace "'", "''")'"
                     if ($appInstance)
                     {
                         $AADServicePrincipal = Get-MgServicePrincipal -Filter "AppID eq '$($appInstance.AppId)'"
@@ -533,7 +533,7 @@ function Set-TargetResource
     if (-not [System.Guid]::TryParse($AppId, [System.Management.Automation.PSReference]$ObjectGuid))
     {
         Write-Verbose -Message "AppId was provided as a DisplayName. Translating it to an a GUID."
-        $appInstance = Get-MgApplication -Filter "DisplayName eq '$AppId'"
+        $appInstance = Get-MgApplication -Filter "DisplayName eq '$($AppId -replace "'", "''")'"
         $currentParameters.AppId = $appInstance.AppId
         Write-Verbose -Message "Translated to AppId {$($currentParameters.AppId)}"
     }
@@ -595,7 +595,7 @@ function Set-TargetResource
                 else
                 {
                     Write-Verbose -Message "Retrieving group {$($assignment.Identity)}"
-                    $group = Get-MgGroup -Filter "DisplayName eq '$($assignment.Identity)'"
+                    $group = Get-MgGroup -Filter "DisplayName eq '$($assignment.Identity -replace "'", "''")'"
                     $PrincipalIdValue = $group.Id
                 }
                 $bodyParam = @{
@@ -686,7 +686,7 @@ function Set-TargetResource
                         else
                         {
                             Write-Verbose -Message "Retrieving group {$($assignment.Identity)}"
-                            $group = Get-MgGroup -Filter "DisplayName eq '$($assignment.Identity)'"
+                            $group = Get-MgGroup -Filter "DisplayName eq '$($assignment.Identity -replace "'", "''")'"
                             $PrincipalIdValue = $group.Id
                         }
 
@@ -723,7 +723,7 @@ function Set-TargetResource
                         else
                         {
                             Write-Verbose -Message "Retrieving group {$($assignment.Identity)}"
-                            $group = Get-MgGroup -Filter "DisplayName eq '$($assignment.Identity)'"
+                            $group = Get-MgGroup -Filter "DisplayName eq '$($assignment.Identity -replace "'", "''")'"
                             $PrincipalIdValue = $group.Id
                         }
                         Write-Verbose -Message "PrincipalID Value = '$PrincipalIdValue'"

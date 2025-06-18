@@ -117,6 +117,10 @@ function Get-TargetResource
         $SecurityRequireIntuneAppIntegrity,
 
         [Parameter()]
+        [System.Boolean]
+        $SecurityBlockJailbrokenDevices,
+
+        [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
 
@@ -259,6 +263,7 @@ function Get-TargetResource
             PasswordPreviousPasswordCountToBlock               = $devicePolicy.AdditionalProperties.passwordPreviousPasswordCountToBlock
             StorageRequireEncryption                           = $devicePolicy.AdditionalProperties.storageRequireEncryption
             SecurityRequireIntuneAppIntegrity                  = $devicePolicy.AdditionalProperties.securityRequireIntuneAppIntegrity
+            SecurityBlockJailbrokenDevices                     = $devicePolicy.AdditionalProperties.securityBlockJailbrokenDevices
             RoleScopeTagIds                                    = $devicePolicy.roleScopeTagIds
             Ensure                                             = 'Present'
             Credential                                         = $Credential
@@ -266,7 +271,7 @@ function Get-TargetResource
             TenantId                                           = $TenantId
             ApplicationSecret                                  = $ApplicationSecret
             CertificateThumbprint                              = $CertificateThumbprint
-            Managedidentity                                    = $ManagedIdentity.IsPresent
+            ManagedIdentity                                    = $ManagedIdentity.IsPresent
             AccessTokens                                       = $AccessTokens
         }
 
@@ -410,6 +415,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $SecurityRequireIntuneAppIntegrity,
+
+        [Parameter()]
+        [System.Boolean]
+        $SecurityBlockJailbrokenDevices,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
@@ -680,6 +689,10 @@ function Test-TargetResource
         $SecurityRequireIntuneAppIntegrity,
 
         [Parameter()]
+        [System.Boolean]
+        $SecurityBlockJailbrokenDevices,
+
+        [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
 
@@ -880,7 +893,7 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
-                Managedidentity       = $ManagedIdentity.IsPresent
+                ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }
 

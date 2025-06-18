@@ -115,7 +115,7 @@ function Get-TargetResource
             {
                 $getValue = Get-MgBetaDeviceManagementScript `
                     -All `
-                    -Filter "DisplayName eq '$DisplayName'" `
+                    -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'" `
                     -ErrorAction SilentlyContinue
                 if ($null -ne $getValue)
                 {

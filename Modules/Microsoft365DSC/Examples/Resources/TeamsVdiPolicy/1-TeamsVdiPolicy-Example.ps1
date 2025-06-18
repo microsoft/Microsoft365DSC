@@ -21,6 +21,7 @@ Configuration Example
             DisableCallsAndMeetings             = $False;
             Ensure                              = "Present";
             Identity                            = "Global";
+            VDI2Optimization                    = "Enabled";
         }
     }
 }

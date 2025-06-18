@@ -89,7 +89,7 @@ function Get-TargetResource
         $nullResult = $PSBoundParameters
 
         $getValue = $null
-        $role = Get-MgBetaRoleManagementDirectoryRoleDefinition -All -Filter "DisplayName eq '$($roleDisplayName)'"
+        $role = Get-MgBetaRoleManagementDirectoryRoleDefinition -All -Filter "DisplayName eq '$($roleDisplayName -replace "'", "''")'"
         if ($null -eq $role)
         {
             Write-Verbose -Message "Could not find an Azure AD Role Management Definition with DisplayName {$roleDisplayName}"

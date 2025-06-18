@@ -124,7 +124,7 @@ function Get-TargetResource
             GroupDisplayName      = $Group.DisplayName
             PolicyType            = $GroupPolicyAssignment.PolicyType
             PolicyName            = $GroupPolicyAssignment.PolicyName
-            Priority              = $GroupPolicyAssignment.Priority
+            Priority              = if ($null -ne $GroupPolicyAssignment.Priority) { $GroupPolicyAssignment.Priority.ToString() } else { $null }
             Ensure                = 'Present'
             Credential            = $Credential
             ApplicationId         = $ApplicationId

@@ -114,7 +114,7 @@ function Get-TargetResource
 
                 try
                 {
-                    $configPolicy = Get-MgBetaDeviceAppManagementTargetedManagedAppConfiguration -All -Filter "displayName eq '$DisplayName'" -ExpandProperty 'Apps' `
+                    $configPolicy = Get-MgBetaDeviceAppManagementTargetedManagedAppConfiguration -All -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'" -ExpandProperty 'Apps' `
                         -ErrorAction Stop
                 }
                 catch

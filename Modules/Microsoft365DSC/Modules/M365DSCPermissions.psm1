@@ -1178,7 +1178,7 @@ Update-M365DSCAzureAdApplication -ApplicationName 'Microsoft365DSC' -Permissions
 Update-M365DSCAzureAdApplication -ApplicationName 'Microsoft365DSC' -Permissions @(@{Api='SharePoint';PermissionName='Sites.FullControl.All'},@{Api='Graph';PermissionName='Group.ReadWrite.All'},@{Api='Exchange';PermissionName='Exchange.ManageAsApp'}) -AdminConsent -Credential $creds -Type Certificate -CertificatePath c:\Temp\M365DSC.cer
 
 .EXAMPLE
-Update-M365DSCAzureAdApplication -ApplicationName $Microsoft365DSC -Permissions $(Get-M365DSCCompiledPermissionList -ResourceNameList (Get-M365DSCAllResources) -PermissionType Application -AccessType Read) -Type Certificate -CreateSelfSignedCertificate -AdminConsent -MonthsValid 12 -Credential $creds -CertificatePath c:\Temp\M365DSC.cer
+Update-M365DSCAzureAdApplication -ApplicationName $Microsoft365DSC -Permissions $((Get-M365DSCCompiledPermissionList -ResourceNameList (Get-M365DSCAllResources) -PermissionType Application -AccessType Read).Permissions) -Type Certificate -CreateSelfSignedCertificate -AdminConsent -MonthsValid 12 -Credential $creds -CertificatePath c:\Temp\M365DSC.cer
 
 
 .Functionality
@@ -1367,8 +1367,8 @@ function Update-M365DSCAzureAdApplication
     $exSvcprincipal = Get-MgServicePrincipal -Filter "AppId eq '$resourceAppIdExchange'"
 
     Write-LogEntry ' '
-    Write-LogEntry 'Checking existance of AD Application'
-    if (-not ($azureADApp = Get-MgApplication -Filter "DisplayName eq '$($ApplicationName)'" -ErrorAction SilentlyContinue))
+    Write-LogEntry 'Checking existence of AD Application'
+    if (-not ($azureADApp = Get-MgApplication -Filter "DisplayName eq '$($ApplicationName -replace "'", "''")'" -ErrorAction SilentlyContinue))
     {
         $azureADApp = New-MgApplication -DisplayName $ApplicationName
         Write-LogEntry "  New Azure AD application '$ApplicationName' created!"

@@ -248,7 +248,7 @@ function Set-TargetResource
         $newApiConnectorConfiguration = @{}
         if (-not [string]::IsNullOrEmpty($ApiConnectorConfiguration.postFederationSignupConnectorName))
         {
-            $getConnector = Get-MgBetaIdentityApiConnector -Filter "DisplayName eq '$($ApiConnectorConfiguration.postFederationSignupConnectorName)'"
+            $getConnector = Get-MgBetaIdentityApiConnector -Filter "DisplayName eq '$($ApiConnectorConfiguration.postFederationSignupConnectorName -replace "'", "''")'"
             $newApiConnectorConfiguration['PostFederationSignup'] = @{
                 'Id' = $getConnector.Id
             }
@@ -256,7 +256,7 @@ function Set-TargetResource
 
         if (-not [string]::IsNullOrEmpty($ApiConnectorConfiguration.postAttributeCollectionConnectorName))
         {
-            $getConnector = Get-MgBetaIdentityApiConnector -Filter "DisplayName eq '$($ApiConnectorConfiguration.postAttributeCollectionConnectorName)'"
+            $getConnector = Get-MgBetaIdentityApiConnector -Filter "DisplayName eq '$($ApiConnectorConfiguration.postAttributeCollectionConnectorName -replace "'", "''")'"
             $newApiConnectorConfiguration['PostAttributeCollection'] = @{
                 'Id' = $getConnector.Id
             }
@@ -323,7 +323,7 @@ function Set-TargetResource
         #region Update ApiConnectorConfiguration object
         if (-not [string]::IsNullOrEmpty($ApiConnectorConfiguration.postFederationSignupConnectorName))
         {
-            $getConnector = Get-MgBetaIdentityApiConnector -Filter "DisplayName eq '$($ApiConnectorConfiguration.postFederationSignupConnectorName)'"
+            $getConnector = Get-MgBetaIdentityApiConnector -Filter "DisplayName eq '$($ApiConnectorConfiguration.postFederationSignupConnectorName -replace "'", "''")'"
             $params = @{
                 '@odata.id' = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/identity/apiConnectors/$($getConnector.Id)"
             }
@@ -335,7 +335,7 @@ function Set-TargetResource
 
         if (-not [string]::IsNullOrEmpty($ApiConnectorConfiguration.postAttributeCollectionConnectorName))
         {
-            $getConnector = Get-MgBetaIdentityApiConnector -Filter "DisplayName eq '$($ApiConnectorConfiguration.postAttributeCollectionConnectorName)'"
+            $getConnector = Get-MgBetaIdentityApiConnector -Filter "DisplayName eq '$($ApiConnectorConfiguration.postAttributeCollectionConnectorName -replace "'", "''")'"
             $params = @{
                 '@odata.id' = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/identity/apiConnectors/$($getConnector.Id)"
             }

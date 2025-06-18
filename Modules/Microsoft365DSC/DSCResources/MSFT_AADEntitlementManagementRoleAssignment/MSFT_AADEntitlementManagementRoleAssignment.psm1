@@ -89,7 +89,7 @@ function Get-TargetResource
             }
 
             $user = Get-MgUser -UserId $Principal
-            $roleInfo = Get-MgBetaRoleManagementEntitlementManagementRoleDefinition -Filter "DisplayName eq '$RoleDefinition'"
+            $roleInfo = Get-MgBetaRoleManagementEntitlementManagementRoleDefinition -Filter "DisplayName eq '$($RoleDefinition -replace "'", "''")'"
 
             if ($null -eq $getValue)
             {
@@ -117,7 +117,8 @@ function Get-TargetResource
         }
         else
         {
-            $getValue = $Script:exportedInstance
+            $getValue = $Script:exportedInstance            
+            $user = Get-MgUser -UserId $Principal
         }
 
         if ($null -eq $getValue)
@@ -255,7 +256,7 @@ function Set-TargetResource
 
     $setParameters = ([Hashtable]$PSBoundParameters).clone()
     $userInfo = Get-MgUser -UserId $Principal
-    $roleInfo = Get-MgBetaRoleManagementEntitlementManagementRoleDefinition -Filter "DisplayName eq '$RoleDefinition'"
+    $roleInfo = Get-MgBetaRoleManagementEntitlementManagementRoleDefinition -Filter "DisplayName eq '$($RoleDefinition -replace "'", "''")'"
     $setParameters.Add('PrincipalId', $userInfo.Id)
     $setParameters.Add('RoleDefinitionId', $roleInfo.Id)
     $setParameters.Remove('Principal') | Out-Null

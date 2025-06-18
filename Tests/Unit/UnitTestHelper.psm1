@@ -49,7 +49,7 @@ function New-M365DscUnitTestHelper
 
     $initScript = @"
             Remove-Module -Name "AzureAD" -Force -ErrorAction SilentlyContinue
-            Import-Module -Name "$StubModule" -WarningAction SilentlyContinue
+            Import-Module -Name "$StubModule" -WarningAction SilentlyContinue -Global
             Import-Module -Name "$GenericStubModule" -WarningAction SilentlyContinue
             Import-Module -Name "$moduleToLoad"
 

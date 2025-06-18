@@ -69,7 +69,7 @@ function Get-TargetResource
     $nullResult.Ensure = 'Absent'
     try
     {
-        $servicePrincipal = Get-MgServicePrincipal -Filter "DisplayName eq '$($AppName)'"
+        $servicePrincipal = Get-MgServicePrincipal -Filter "DisplayName eq '$($AppName -replace "'", "''")'"
 
         if ($null -eq $servicePrincipal)
         {
@@ -183,7 +183,7 @@ function Set-TargetResource
 
     $setParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
-    $servicePrincipal = Get-MgServicePrincipal -Filter "DisplayName eq '$($AppName)'"
+    $servicePrincipal = Get-MgServicePrincipal -Filter "DisplayName eq '$($AppName -replace "'", "''")'"
 
     # CREATE
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')

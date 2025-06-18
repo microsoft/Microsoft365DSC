@@ -106,7 +106,7 @@ function Get-TargetResource
                 {
                     $config = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration `
                         -All `
-                        -Filter "displayName eq '$DisplayName'" | Where-Object -FilterScript {
+                        -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'" | Where-Object -FilterScript {
                             $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.deviceEnrollmentLimitConfiguration'
                         }
                 }

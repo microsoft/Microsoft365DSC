@@ -2,8 +2,8 @@
 
 ## Description
 
-This resource configures the settings of Android Work Profile device compliance policies
-in your cloud-based organization.
+This resource configures the settings of Android Work Profile device compliance policies in your cloud-based organization.
+Labeled in Intune as `Fully managed, dedicated, and corporate-owned work profile` policy type under `Android Enterprise`.
 
 ## Parameters
 

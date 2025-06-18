@@ -17,6 +17,10 @@ function Get-TargetResource
         $Description,
 
         [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
+
+        [Parameter()]
         [System.String]
         [ValidateSet('notConfigured', 'true', 'false')]
         $WindowsHelloForBusinessBlocked,
@@ -160,7 +164,7 @@ function Get-TargetResource
                 Write-Verbose -Message "No Account Protection Policy with identity {$Identity} was found"
                 if (-not [String]::IsNullOrEmpty($DisplayName))
                 {
-                    $policy = Get-MgBetaDeviceManagementIntent -Filter "DisplayName eq '$DisplayName'" -ErrorAction SilentlyContinue
+                    $policy = Get-MgBetaDeviceManagementIntent -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'" -ErrorAction SilentlyContinue
                 }
 
                 if ($null -eq $policy)
@@ -190,6 +194,7 @@ function Get-TargetResource
         $returnHashtable.Add('Identity', $policy.Id)
         $returnHashtable.Add('DisplayName', $policy.DisplayName)
         $returnHashtable.Add('Description', $policy.Description)
+        $returnHashtable.Add('RoleScopeTagIds', $policy.RoleScopeTagIds)
 
         foreach ($setting in $settings)
         {
@@ -271,6 +276,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $Description,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
 
         [Parameter()]
         [System.String]
@@ -496,6 +505,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $Description,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
 
         [Parameter()]
         [System.String]

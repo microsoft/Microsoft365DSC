@@ -151,7 +151,7 @@ function Get-TargetResource
             {
                 # There is no API which searches MobileThreatDefenseConnector by its DisplayName so the below code is commented out.
                 # $instance = Get-MgBetaDeviceManagementMobileThreatDefenseConnector `
-                #       -Filter "DisplayName eq '$DisplayName'" `
+                #       -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'" `
 
                 # The DisplayName property is not supported by the any API of this resource, hence hard-coded in below function for convenience.
                 $connectorId = (Get-MobileThreatDefenseConnectorIdOrDisplayName -DisplayName $DisplayName).Id

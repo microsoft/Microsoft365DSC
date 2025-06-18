@@ -1,0 +1,60 @@
+{
+    "resourceName": "AADGroupEligibilityScheduleSettings",
+    "description": "This resource configures an Azure AD Group Eligibility Schedule Settings.",
+    "permissions":    {
+    "graph":  {
+                  "delegated":  {
+                                    "read":  [
+                                                 {
+                                                     "name":  "PrivilegedAccess.Read.AzureADGroup"
+                                                 },
+                                                 {
+                                                     "name":  "RoleManagement.Read.All"
+                                                 },
+                                                 {
+                                                     "name":  "RoleManagement.ReadWrite.Directoryy"
+                                                 },
+                                                 {
+                                                     "name":  "RoleManagement.Read.Directory"
+                                                 }
+                                             ],
+                                    "update":  [
+                                                   {
+                                                       "name":  "RoleManagementPolicy.ReadWrite.Directory"
+                                                   },
+                                                   {
+                                                       "name":  "RoleManagement.ReadWrite.Directory"
+                                                   }
+                                               ]
+                                },
+                  "application":  {
+                                      "read":  [
+                                                   {
+                                                       "name":  "PrivilegedAccess.Read.AzureADGroup"
+                                                   },
+                                                   {
+                                                       "name":  "RoleManagementPolicy.Read.Directory"
+                                                   },
+                                                   {
+                                                       "name":  "RoleManagement.Read.Directory"
+                                                   },
+                                                   {
+                                                       "name":  "RoleManagement.Read.All"
+                                                   },
+                                                   {
+                                                       "name":  "RoleManagement.Read.All"
+                                                   }
+                                               ],
+                                      "update":  [
+                                                     {
+                                                         "name":  "RoleManagementPolicy.ReadWrite.Directory"
+                                                     },
+                                                     {
+                                                         "name":  "RoleManagement.ReadWrite.Directory"
+                                                     }
+                                                 ]
+                                  }
+              }
+}
+
+}

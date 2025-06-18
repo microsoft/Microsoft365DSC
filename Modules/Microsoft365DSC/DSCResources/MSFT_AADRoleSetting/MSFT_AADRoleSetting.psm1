@@ -239,7 +239,7 @@ function Get-TargetResource
 
         if ($null -eq $RoleDefinition -and -not [System.String]::IsNullOrEmpty($DisplayName))
         {
-            $RoleDefinition = Get-MgBetaRoleManagementDirectoryRoleDefinition -Filter "displayName eq '$DisplayName'"
+            $RoleDefinition = Get-MgBetaRoleManagementDirectoryRoleDefinition -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'"
         }
     }
     else
@@ -646,7 +646,7 @@ function Set-TargetResource
     #endregion
 
     #get role
-    $RoleDefinition = Get-MgBetaRoleManagementDirectoryRoleDefinition -Filter "displayName eq '$DisplayName'"
+    $RoleDefinition = Get-MgBetaRoleManagementDirectoryRoleDefinition -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'"
 
     $Policy = $null
     if (-not [System.String]::IsNullOrEmpty($Id))

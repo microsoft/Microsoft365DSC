@@ -150,7 +150,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It 'Should update the Android Managed Store App Configuration Policy from the Set method' {
                 Set-TargetResource @testParams
                 Should -Invoke -CommandName Update-MgBetaDeviceAppManagementMobileAppConfiguration -Exactly 1
-               
+
             }
         }
 

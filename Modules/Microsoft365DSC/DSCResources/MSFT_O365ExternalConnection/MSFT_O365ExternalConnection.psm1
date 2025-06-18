@@ -78,7 +78,7 @@ function Get-TargetResource
             }
             if ($null -eq $instance)
             {
-                $instance = Get-MgBetaExternalConnection -Filter "Name eq '$Name'"
+                $instance = Get-MgBetaExternalConnection -Filter "Name eq '$($Name -replace "'", "''")'"
             }
         }
         else
@@ -205,7 +205,7 @@ function Set-TargetResource
     {
         foreach ($app in $AuthorizedAppIds)
         {
-            $app = Get-MgApplication -Filter "DisplayName eq '$app'" -ErrorAction SilentlyContinue
+            $app = Get-MgApplication -Filter "DisplayName eq '$($app -replace "'", "''")'" -ErrorAction SilentlyContinue
             if ($null -ne $app)
             {
                 $AuthorizedAppIdsValue += $app.AppId

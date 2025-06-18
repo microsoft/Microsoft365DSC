@@ -23,10 +23,14 @@
             },
             "application": {
                 "read": [
-                    "Sites.FullControl.All"
+                    {
+                        "name": "Sites.FullControl.All"
+                    }
                 ],
                 "update": [
-                    "Sites.FullControl.All"
+                    {
+                        "name": "Sites.FullControl.All"
+                    }
                 ]
             }
         }

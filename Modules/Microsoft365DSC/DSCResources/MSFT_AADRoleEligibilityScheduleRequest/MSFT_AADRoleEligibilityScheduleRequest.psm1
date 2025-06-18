@@ -118,24 +118,24 @@
         if ($PrincipalType -eq 'User')
         {
             Write-Verbose -Message "Retrieving Principal by UserPrincipalName {$Principal}"
-            $PrincipalInstance = Get-MgUser -Filter "UserPrincipalName eq '$Principal'" -ErrorAction SilentlyContinue
+            $PrincipalInstance = Get-MgUser -Filter "UserPrincipalName eq '$($Principal -replace "'", "''")'" -ErrorAction SilentlyContinue
             $PrincipalValue = $PrincipalInstance.UserPrincipalName
         }
         elseif ($null -eq $PrincipalIdValue -and $PrincipalType -eq 'Group')
         {
             Write-Verbose -Message "Retrieving Principal by DisplayName {$Principal}"
-            $PrincipalInstance = Get-MgGroup -Filter "DisplayName eq '$Principal'" -ErrorAction SilentlyContinue
+            $PrincipalInstance = Get-MgGroup -Filter "DisplayName eq '$($Principal -replace "'", "''")'" -ErrorAction SilentlyContinue
             $PrincipalValue = $PrincipalInstance.DisplayName
         }
         else
         {
             Write-Verbose -Message "Retrieving Principal by DisplayName {$Principal}"
-            $PrincipalInstance = Get-MgServicePrincipal -Filter "DisplayName eq '$Principal'" -ErrorAction SilentlyContinue
+            $PrincipalInstance = Get-MgServicePrincipal -Filter "DisplayName eq '$($Principal -replace "'", "''")'" -ErrorAction SilentlyContinue
             $PrincipalValue = $PrincipalInstance.DisplayName
         }
 
         Write-Verbose -Message "Found Principal {$PrincipalValue}"
-        $RoleDefinitionId = (Get-MgBetaRoleManagementDirectoryRoleDefinition -Filter "DisplayName eq '$RoleDefinition'").Id
+        $RoleDefinitionId = (Get-MgBetaRoleManagementDirectoryRoleDefinition -Filter "DisplayName eq '$($RoleDefinition -replace "'", "''")'").Id
         Write-Verbose -Message "Retrieved role definition {$RoleDefinition} with ID {$RoleDefinitionId}"
 
         if ($null -eq $schedule)
@@ -147,7 +147,7 @@
                 # We need to make sure we're not ending up here because the role is a custom role (which has a different id).
                 # We start by retrieving all schedules for the given principal.
                 [Array] $schedulesForPrincipal = Get-MgBetaRoleManagementDirectoryRoleEligibilitySchedule -Filter "PrincipalId eq '$($PrincipalInstance.Id)' and DirectoryScopeId eq '$($DirectoryScopeId)'"
-                
+
                 # Loop through the role associated with each schedule to check and see if we have a match on the name.
                 $schedule = $null
                 foreach ($foundSchedule in $schedulesForPrincipal)
@@ -216,25 +216,28 @@
         }
         if ($null -ne $schedule.ScheduleInfo.Recurrence)
         {
-            $recurrenceValue = @{
-                pattern = @{
-                    dayOfMonth     = $schedule.ScheduleInfo.Recurrence.Pattern.dayOfMonth
-                    daysOfWeek     = $schedule.ScheduleInfo.Recurrence.Pattern.daysOfWeek
-                    firstDayOfWeek = $schedule.ScheduleInfo.Recurrence.Pattern.firstDayOfWeek
-                    index          = $schedule.ScheduleInfo.Recurrence.Pattern.index
-                    interval       = $schedule.ScheduleInfo.Recurrence.Pattern.interval
-                    month          = $schedule.ScheduleInfo.Recurrence.Pattern.month
-                    type           = $schedule.ScheduleInfo.Recurrence.Pattern.type
+            if (Test-M365DSCRecurrenceIsConfigured -RecurrenceSettings $schedule.ScheduleInfo.Recurrence)
+            {
+                $recurrenceValue = @{
+                    pattern = @{
+                        dayOfMonth     = $schedule.ScheduleInfo.Recurrence.Pattern.dayOfMonth
+                        daysOfWeek     = $schedule.ScheduleInfo.Recurrence.Pattern.daysOfWeek
+                        firstDayOfWeek = $schedule.ScheduleInfo.Recurrence.Pattern.firstDayOfWeek
+                        index          = $schedule.ScheduleInfo.Recurrence.Pattern.index
+                        interval       = $schedule.ScheduleInfo.Recurrence.Pattern.interval
+                        month          = $schedule.ScheduleInfo.Recurrence.Pattern.month
+                        type           = $schedule.ScheduleInfo.Recurrence.Pattern.type
+                    }
+                    range   = @{
+                        endDate             = $schedule.ScheduleInfo.Recurrence.Range.endDate
+                        numberOfOccurrences = $schedule.ScheduleInfo.Recurrence.Range.numberOfOccurrences
+                        recurrenceTimeZone  = $schedule.ScheduleInfo.Recurrence.Range.recurrenceTimeZone
+                        startDate           = $schedule.ScheduleInfo.Recurrence.Range.startDate
+                        type                = $schedule.ScheduleInfo.Recurrence.Range.type
+                    }
                 }
-                range   = @{
-                    endDate             = $schedule.ScheduleInfo.Recurrence.Range.endDate
-                    numberOfOccurrences = $schedule.ScheduleInfo.Recurrence.Range.numberOfOccurrences
-                    recurrenceTimeZone  = $schedule.ScheduleInfo.Recurrence.Range.recurrenceTimeZone
-                    startDate           = $schedule.ScheduleInfo.Recurrence.Range.startDate
-                    type                = $schedule.ScheduleInfo.Recurrence.Range.type
-                }
+                $ScheduleInfoValue.Add('Recurrence', $recurrenceValue)
             }
-            $ScheduleInfoValue.Add('Recurrence', $recurrenceValue)
         }
         if ($null -ne $schedule.ScheduleInfo.StartDateTime)
         {
@@ -376,24 +379,24 @@ function Set-TargetResource
     if ($PrincipalType -eq 'User')
     {
         Write-Verbose -Message "Retrieving Principal by UserPrincipalName {$Principal}"
-        $PrincipalInstance = Get-MgUser -Filter "UserPrincipalName eq '$Principal'" -ErrorAction SilentlyContinue
+        $PrincipalInstance = Get-MgUser -Filter "UserPrincipalName eq '$($Principal -replace "'", "''")'" -ErrorAction SilentlyContinue
         $PrincipalId = $PrincipalInstance.Id
     }
     elseif ($null -eq $PrincipalIdValue -and $PrincipalType -eq 'Group')
     {
         Write-Verbose -Message "Retrieving Principal by DisplayName {$Principal}"
-        $PrincipalInstance = Get-MgGroup -Filter "DisplayName eq '$Principal'" -ErrorAction SilentlyContinue
+        $PrincipalInstance = Get-MgGroup -Filter "DisplayName eq '$($Principal -replace "'", "''")'" -ErrorAction SilentlyContinue
         $PrincipalId = $PrincipalInstance.Id
     }
     else
     {
         Write-Verbose -Message "Retrieving Principal by DisplayName {$Principal}"
-        $PrincipalInstance = Get-MgServicePrincipal -Filter "DisplayName eq '$Principal'" -ErrorAction SilentlyContinue
+        $PrincipalInstance = Get-MgServicePrincipal -Filter "DisplayName eq '$($Principal -replace "'", "''")'" -ErrorAction SilentlyContinue
         $PrincipalId = $PrincipalInstance.Id
     }
 
     Write-Verbose -Message "Retrieving ROleDefinitionId from Set-TargetResource"
-    $RoleDefinitionId = (Get-MgBetaRoleManagementDirectoryRoleDefinition -Filter "DisplayName eq '$RoleDefinition'").Id
+    $RoleDefinitionId = (Get-MgBetaRoleManagementDirectoryRoleDefinition -Filter "DisplayName eq '$($RoleDefinition -replace "'", "''")'").Id
 
     $instanceParams = @{
         directoryScopeId = $DirectoryScopeId
@@ -620,7 +623,7 @@ function Test-TargetResource
             return $false
         }
     }
-    $ValuesToCheck.Remove('ScheduleInfo') | Out-Null    
+    $ValuesToCheck.Remove('ScheduleInfo') | Out-Null
     $ValuesToCheck.Remove('Action') | Out-Null
     $ValuesToCheck.Remove('IsValidationOnly') | Out-Null
     $ValuesToCheck.Remove('Justification') | Out-Null
@@ -810,6 +813,36 @@ function Export-TargetResource
 
         return ''
     }
+}
+
+function Test-M365DSCRecurrenceIsConfigured
+{
+    [CmdletBinding()]
+    [OutputType([System.Boolean])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.Object]
+        $RecurrenceSettings
+    )
+
+    if ($null -eq $RecurrenceSettings.Pattern.DayOfMonth -and `
+        $null -eq $RecurrenceSettings.Pattern.DayOfWeek -and `
+        $null -eq $RecurrenceSettings.Pattern.FirstDayOfWeek -and `
+        $null -eq $RecurrenceSettings.Pattern.Index -and `
+        $null -eq $RecurrenceSettings.Pattern.Interval -and `
+        $null -eq $RecurrenceSettings.Pattern.Month -and `
+        $null -eq $RecurrenceSettings.Pattern.Type -and `
+        $null -eq $RecurrenceSettings.Range.EndDate -and `
+        $null -eq $RecurrenceSettings.Range.NumberOfOccurrences -and `
+        $null -eq $RecurrenceSettings.Range.RecurrenceTimeZone -and `
+        $null -eq $RecurrenceSettings.Range.StartDate -and `
+        $null -eq $RecurrenceSettings.Range.Type)
+    {
+        return $false
+    }
+
+    return $true
 }
 
 Export-ModuleMember -Function *-TargetResource

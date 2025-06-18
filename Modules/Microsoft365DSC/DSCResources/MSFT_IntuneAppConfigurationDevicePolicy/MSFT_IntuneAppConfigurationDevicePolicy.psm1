@@ -134,7 +134,7 @@ function Get-TargetResource
                 {
                     $getValue = Get-MgBetaDeviceAppManagementMobileAppConfiguration `
                         -All `
-                        -Filter "DisplayName eq '$DisplayName'" `
+                        -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'" `
                         -ErrorAction SilentlyContinue
                 }
             }

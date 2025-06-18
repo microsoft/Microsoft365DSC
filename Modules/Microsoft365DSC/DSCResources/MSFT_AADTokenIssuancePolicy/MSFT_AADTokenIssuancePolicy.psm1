@@ -85,7 +85,7 @@ function Get-TargetResource
             }
             else
             {
-                $instance = Get-MgBetaPolicyTokenIssuancePolicy -Filter "displayName eq '$DisplayName'" -ErrorAction SilentlyContinue
+                $instance = Get-MgBetaPolicyTokenIssuancePolicy -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'" -ErrorAction SilentlyContinue
             }
         }
         if ($null -eq $instance)

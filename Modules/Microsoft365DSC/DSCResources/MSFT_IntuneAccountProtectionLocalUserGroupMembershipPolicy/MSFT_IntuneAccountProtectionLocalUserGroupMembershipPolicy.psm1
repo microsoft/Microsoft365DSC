@@ -17,6 +17,10 @@ function Get-TargetResource
         $Description,
 
         [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
+
+        [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $LocalUserGroupCollection,
 
@@ -95,7 +99,7 @@ function Get-TargetResource
                 Write-Verbose -Message "No Account Protection Local User Group Membership Policy with identity {$Identity} was found"
                 if (-not [String]::IsNullOrEmpty($DisplayName))
                 {
-                    $policy = Get-MgBetaDeviceManagementConfigurationPolicy -All -Filter "Name eq '$DisplayName'" -ErrorAction SilentlyContinue
+                    $policy = Get-MgBetaDeviceManagementConfigurationPolicy -All -Filter "Name eq '$($DisplayName -replace "'", "''")'" -ErrorAction SilentlyContinue
 
                     if (([array]$devicePolicy).Count -gt 1)
                     {
@@ -126,6 +130,7 @@ function Get-TargetResource
         $returnHashtable.Add('Identity', $policy.Id)
         $returnHashtable.Add('DisplayName', $policy.Name)
         $returnHashtable.Add('Description', $policy.Description)
+        $returnHashtable.Add('RoleScopeTagIds', $policy.RoleScopeTagIds)
 
         $groupCollections = @()
         foreach ($setting in $settings)
@@ -221,6 +226,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $Description,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
@@ -372,6 +381,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $Description,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]

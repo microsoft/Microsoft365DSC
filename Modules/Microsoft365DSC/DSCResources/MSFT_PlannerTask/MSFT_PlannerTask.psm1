@@ -446,7 +446,7 @@ function Set-TargetResource
         category25 = $false
     }
 
-    $planDetails = Get-MgPlannerPlanDetail -PlannerPlanId $PlanId | Select-Object -ExpandProperty CategoryDescriptions
+    $planDetails = (Get-MgPlannerPlanDetail -PlannerPlanId $PlanId).CategoryDescriptions
     $appliedCategoriesInverse = $planDetails | ConvertTo-Json | ConvertFrom-Json # Convert to PSObject instead of Graph type
     foreach ($category in $setParams.Categories)
     {
@@ -753,7 +753,7 @@ function Export-TargetResource
                     Write-M365DSCHost -Message "        |---[$j/$($plans.Length)] $($plan.Title)"
 
                     [Array]$tasks = Get-MgGroupPlannerPlanTask -GroupId $group.Id -PlannerPlanId $plan.Id -ErrorAction 'SilentlyContinue'
-                    $Script:AppliedCategories = Get-MgPlannerPlanDetail -PlannerPlanId $plan.Id | Select-Object -ExpandProperty CategoryDescriptions
+                    $Script:AppliedCategories = (Get-MgPlannerPlanDetail -PlannerPlanId $plan.Id).CategoryDescriptions
 
                     $k = 1
                     foreach ($task in $tasks)

@@ -4,6 +4,7 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
     [Write, Description("The type of the target assignment."), ValueMap{"#microsoft.graph.groupAssignmentTarget","#microsoft.graph.allLicensedUsersAssignmentTarget","#microsoft.graph.allDevicesAssignmentTarget","#microsoft.graph.exclusionGroupAssignmentTarget","#microsoft.graph.configurationManagerCollectionAssignmentTarget"}, Values{"#microsoft.graph.groupAssignmentTarget","#microsoft.graph.allLicensedUsersAssignmentTarget","#microsoft.graph.allDevicesAssignmentTarget","#microsoft.graph.exclusionGroupAssignmentTarget","#microsoft.graph.configurationManagerCollectionAssignmentTarget"}] String dataType;
     [Write, Description("The type of filter of the target assignment i.e. Exclude or Include. Possible values are:none, include, exclude."), ValueMap{"none","include","exclude"}, Values{"none","include","exclude"}] String deviceAndAppManagementAssignmentFilterType;
     [Write, Description("The Id of the filter for the target assignment.")] String deviceAndAppManagementAssignmentFilterId;
+    [Write, Description("The display name of the filter for the target assignment.")] String deviceAndAppManagementAssignmentFilterDisplayName;
     [Write, Description("The group Id that is the target of the assignment.")] String groupId;
     [Write, Description("The group Display Name that is the target of the assignment.")] String groupDisplayName;
     [Write, Description("The collection Id that is the target of the assignment.(ConfigMgr)")] String collectionId;
@@ -379,7 +380,7 @@ class MSFT_MicrosoftGraphIntuneSettingsCatalogDeviceSettings_IntuneSecurityBasel
     [Write, Description("Block untrusted and unsigned processes that run from USB - Depends on AttackSurfaceReductionRules (off: Off, block: Block, audit: Audit, warn: Warn)"), ValueMap{"off", "block", "audit", "warn"}, Values{"off", "block", "audit", "warn"}] String BlockUntrustedUnsignedProcessesThatRunFromUSB;
     [Write, Description("ASR Only Per Rule Exclusions")] String BlockUntrustedUnsignedProcessesThatRunFromUSB_ASROnlyPerRuleExclusions[];
     [Write, Description("Block persistence through WMI event subscription - Depends on AttackSurfaceReductionRules (off: Off, block: Block, audit: Audit, warn: Warn)"), ValueMap{"off", "block", "audit", "warn"}, Values{"off", "block", "audit", "warn"}] String BlockPersistenceThroughWMIEventSubscription;
-    [Write, Description("[PREVIEW] Block use of copied or impersonated system tools - Depends on AttackSurfaceReductionRules (off: Off, block: Block, audit: Audit, warn: Warn)"), ValueMap{"off", "block", "audit", "warn"}, Values{"off", "block", "audit", "warn"}] String BlockUseOfCopiedOrImpersonatedSystemTools;
+    [Write, Description("Block use of copied or impersonated system tools - Depends on AttackSurfaceReductionRules (off: Off, block: Block, audit: Audit, warn: Warn)"), ValueMap{"off", "block", "audit", "warn"}, Values{"off", "block", "audit", "warn"}] String BlockUseOfCopiedOrImpersonatedSystemTools;
     [Write, Description("ASR Only Per Rule Exclusions")] String BlockUseOfCopiedOrImpersonatedSystemTools_ASROnlyPerRuleExclusions[];
     [Write, Description("Block abuse of exploited vulnerable signed drivers (Device) - Depends on AttackSurfaceReductionRules (off: Off, block: Block, audit: Audit, warn: Warn)"), ValueMap{"off", "block", "audit", "warn"}, Values{"off", "block", "audit", "warn"}] String BlockAbuseOfExploitedVulnerableSignedDrivers;
     [Write, Description("ASR Only Per Rule Exclusions")] String BlockAbuseOfExploitedVulnerableSignedDrivers_ASROnlyPerRuleExclusions[];
@@ -389,7 +390,7 @@ class MSFT_MicrosoftGraphIntuneSettingsCatalogDeviceSettings_IntuneSecurityBasel
     [Write, Description("ASR Only Per Rule Exclusions")] String BlockOfficeApplicationsFromCreatingExecutableContent_ASROnlyPerRuleExclusions[];
     [Write, Description("Block Office applications from injecting code into other processes - Depends on AttackSurfaceReductionRules (off: Off, block: Block, audit: Audit, warn: Warn)"), ValueMap{"off", "block", "audit", "warn"}, Values{"off", "block", "audit", "warn"}] String BlockOfficeApplicationsFromInjectingCodeIntoOtherProcesses;
     [Write, Description("ASR Only Per Rule Exclusions")] String BlockOfficeApplicationsFromInjectingCodeIntoOtherProcesses_ASROnlyPerRuleExclusions[];
-    [Write, Description("[PREVIEW] Block rebooting machine in Safe Mode - Depends on AttackSurfaceReductionRules (off: Off, block: Block, audit: Audit, warn: Warn)"), ValueMap{"off", "block", "audit", "warn"}, Values{"off", "block", "audit", "warn"}] String BlockRebootingMachineInSafeMode;
+    [Write, Description("Block rebooting machine in Safe Mode - Depends on AttackSurfaceReductionRules (off: Off, block: Block, audit: Audit, warn: Warn)"), ValueMap{"off", "block", "audit", "warn"}, Values{"off", "block", "audit", "warn"}] String BlockRebootingMachineInSafeMode;
     [Write, Description("ASR Only Per Rule Exclusions")] String BlockRebootingMachineInSafeMode_ASROnlyPerRuleExclusions[];
     [Write, Description("Use advanced protection against ransomware - Depends on AttackSurfaceReductionRules (off: Off, block: Block, audit: Audit, warn: Warn)"), ValueMap{"off", "block", "audit", "warn"}, Values{"off", "block", "audit", "warn"}] String UseAdvancedProtectionAgainstRansomware;
     [Write, Description("ASR Only Per Rule Exclusions")] String UseAdvancedProtectionAgainstRansomware_ASROnlyPerRuleExclusions[];
@@ -488,6 +489,33 @@ class MSFT_MicrosoftGraphIntuneSettingsCatalogDeviceSettings_IntuneSecurityBasel
     [Write, Description("Password Age Days - Depends on BackupDirectory")] SInt32 passwordagedays_aad;
     [Write, Description("AD Password Encryption Principal - Depends on BackupDirectory")] String ADPasswordEncryptionPrincipal;
     [Write, Description("Password Expiration Protection Enabled - Depends on BackupDirectory (false: Allow configured password expiriration timestamp to exceed maximum password age, true: Do not allow configured password expiriration timestamp to exceed maximum password age)"), ValueMap{"false", "true"}, Values{"false", "true"}] String PasswordExpirationProtectionEnabled;
+    [Write, Description("Enable Convert Warn To Block (1: Warn verdicts are converted to block, 0: Warn verdicts are not converted to block)"), ValueMap{"1", "0"}, Values{"1", "0"}] String EnableConvertWarnToBlock;
+    [Write, Description("Hide Exclusions From Local Users (1: If you enable this setting, local users will no longer be able to see the exclusion list in Windows Security App or via PowerShell., 0: If you disable or do not configure this setting, local users will be able to see exclusions in the Windows Security App and via PowerShell.)"), ValueMap{"1", "0"}, Values{"1", "0"}] String HideExclusionsFromLocalUsers;
+    [Write, Description("Oobe Enable Rtp And Sig Update (1: If you enable this setting, real-time protection and Security Intelligence Updates are enabled during OOBE., 0: If you either disable or do not configure this setting, real-time protection and Security Intelligence Updates during OOBE is not enabled.)"), ValueMap{"1", "0"}, Values{"1", "0"}] String OobeEnableRtpAndSigUpdate;
+    [Write, Description("Passive Remediation (0: Passive Remediation is turned off (default), 1: PASSIVE_REMEDIATION_FLAG_SENSE_AUTO_REMEDIATION: Passive Remediation Sense AutoRemediation, 2: PASSIVE_REMEDIATION_FLAG_RTP_AUDIT: Passive Remediation Realtime Protection Audit, 4: PASSIVE_REMEDIATION_FLAG_RTP_REMEDIATION: Passive Remediation Realtime Protection Remediation)"), ValueMap{"0", "1", "2", "4"}, Values{"0", "1", "2", "4"}] SInt32 PassiveRemediation[];
+    [Write, Description("Quick Scan Include Exclusions (0: If you set this setting to 0 or do not configure it, exclusions are not scanned during quick scans., 1: If you set this setting to 1, all files and directories that are excluded from real-time protection using contextual exclusions are scanned during a quick scan.)"), ValueMap{"0", "1"}, Values{"0", "1"}] String QuickScanIncludeExclusions;
+    [Write, Description("PK Init Hash Algorithm Configuration (0: Disabled / Not Configured, 1: Enabled)"), ValueMap{"0", "1"}, Values{"0", "1"}] String PKInitHashAlgorithmConfiguration;
+    [Write, Description("PK Init Hash Algorithm SHA256 - Depends on PKInitHashAlgorithmConfiguration (0: Not Supported, 1: Default, 2: Audited, 3: Supported)"), ValueMap{"0", "1", "2", "3"}, Values{"0", "1", "2", "3"}] String PKInitHashAlgorithmSHA256;
+    [Write, Description("PK Init Hash Algorithm SHA512 - Depends on PKInitHashAlgorithmConfiguration (0: Not Supported, 1: Default, 2: Audited, 3: Supported)"), ValueMap{"0", "1", "2", "3"}, Values{"0", "1", "2", "3"}] String PKInitHashAlgorithmSHA512;
+    [Write, Description("PK Init Hash Algorithm SHA384 - Depends on PKInitHashAlgorithmConfiguration (0: Not Supported, 1: Default, 2: Audited, 3: Supported)"), ValueMap{"0", "1", "2", "3"}, Values{"0", "1", "2", "3"}] String PKInitHashAlgorithmSHA384;
+    [Write, Description("PK Init Hash Algorithm SHA1 - Depends on PKInitHashAlgorithmConfiguration (0: Not Supported, 1: Default, 2: Audited, 3: Supported)"), ValueMap{"0", "1", "2", "3"}, Values{"0", "1", "2", "3"}] String PKInitHashAlgorithmSHA1;
+    [Write, Description("Enable Sudo (0: Sudo is disabled., 1: Sudo is allowed in 'force new window' mode., 2: Sudo is allowed in 'disable input' mode., 3: Sudo is allowed in 'inline' mode.)"), ValueMap{"0", "1", "2", "3"}, Values{"0", "1", "2", "3"}] String EnableSudo;
+    [Write, Description("Machine Identity Isolation (0: (Disabled) Machine password is only LSASS-bound and stored in $MACHINE.ACC registry key., 1: (Enabled in audit mode) Machine password both LSASS-bound and IUM-bound. It is stored in $MACHINE.ACC and $MACHINE.ACC.IUM registry keys., 2: (Enabled in enforcement mode) Machine password is only IUM-bound and stored in $MACHINE.ACC.IUM registry key.)"), ValueMap{"0", "1", "2"}, Values{"0", "1", "2"}] String MachineIdentityIsolation;
+    [Write, Description("Audit Client Does Not Support Encryption (0: Disabled, 1: Enabled)"), ValueMap{"0", "1"}, Values{"0", "1"}] String AuditClientDoesNotSupportEncryption;
+    [Write, Description("Audit Client Does Not Support Signing (0: Disabled, 1: Enabled)"), ValueMap{"0", "1"}, Values{"0", "1"}] String AuditClientDoesNotSupportSigning;
+    [Write, Description("Audit Insecure Guest Logon (0: Disabled, 1: Enabled)"), ValueMap{"0", "1"}, Values{"0", "1"}] String LanmanServer_AuditInsecureGuestLogon;
+    [Write, Description("Auth Rate Limiter Delay In Ms")] SInt32 AuthRateLimiterDelayInMs;
+    [Write, Description("Enable Auth Rate Limiter (0: Disabled, 1: Enabled)"), ValueMap{"0", "1"}, Values{"0", "1"}] String EnableAuthRateLimiter;
+    [Write, Description("Enable Mailslots (0: Disabled, 1: Enabled)"), ValueMap{"0", "1"}, Values{"0", "1"}] String LanmanServer_EnableMailslots;
+    [Write, Description("Max Smb2 Dialect (514: SMB 2.0.2, 528: SMB 2.1.0, 768: SMB 3.0.0, 770: SMB 3.0.2, 785: SMB 3.1.1)"), ValueMap{"514", "528", "768", "770", "785"}, Values{"514", "528", "768", "770", "785"}] String LanmanServer_MaxSmb2Dialect;
+    [Write, Description("Min Smb2 Dialect (514: SMB 2.0.2, 528: SMB 2.1.0, 768: SMB 3.0.0, 770: SMB 3.0.2, 785: SMB 3.1.1)"), ValueMap{"514", "528", "768", "770", "785"}, Values{"514", "528", "768", "770", "785"}] String LanmanServer_MinSmb2Dialect;
+    [Write, Description("Audit Insecure Guest Logon (0: Disabled, 1: Enabled)"), ValueMap{"0", "1"}, Values{"0", "1"}] String LanmanWorkstation_AuditInsecureGuestLogon;
+    [Write, Description("Audit Server Does Not Support Encryption (0: Disabled, 1: Enabled)"), ValueMap{"0", "1"}, Values{"0", "1"}] String AuditServerDoesNotSupportEncryption;
+    [Write, Description("Audit Server Does Not Support Signing (0: Disabled, 1: Enabled)"), ValueMap{"0", "1"}, Values{"0", "1"}] String AuditServerDoesNotSupportSigning;
+    [Write, Description("Enable Mailslots (0: Disabled, 1: Enabled)"), ValueMap{"0", "1"}, Values{"0", "1"}] String LanmanWorkstation_EnableMailslots;
+    [Write, Description("Max Smb2 Dialect (514: SMB 2.0.2, 528: SMB 2.1.0, 768: SMB 3.0.0, 770: SMB 3.0.2, 785: SMB 3.1.1)"), ValueMap{"514", "528", "768", "770", "785"}, Values{"514", "528", "768", "770", "785"}] String LanmanWorkstation_MaxSmb2Dialect;
+    [Write, Description("Min Smb2 Dialect (514: SMB 2.0.2, 528: SMB 2.1.0, 768: SMB 3.0.0, 770: SMB 3.0.2, 785: SMB 3.1.1)"), ValueMap{"514", "528", "768", "770", "785"}, Values{"514", "528", "768", "770", "785"}] String LanmanWorkstation_MinSmb2Dialect;
+    [Write, Description("Require Encryption (0: Disabled, 1: Enabled)"), ValueMap{"0", "1"}, Values{"0", "1"}] String RequireEncryption;
 };
 
 [ClassVersion("1.0.0.0")]
@@ -505,7 +533,6 @@ class MSFT_MicrosoftGraphIntuneSettingsCatalogUserSettings_IntuneSecurityBaselin
     [Write, Description("Allow Windows Spotlight Windows Welcome Experience (User) - Depends on AllowWindowsSpotlight (0: Not allowed., 1: Allowed.)"), ValueMap{"0", "1"}, Values{"0", "1"}] String AllowWindowsSpotlightWindowsWelcomeExperience;
     [Write, Description("Allow Third Party Suggestions In Windows Spotlight (User) - Depends on AllowWindowsSpotlight (0: Third-party suggestions not allowed., 1: Third-party suggestions allowed.)"), ValueMap{"0", "1"}, Values{"0", "1"}] String AllowThirdPartySuggestionsInWindowsSpotlight;
 };
-
 [ClassVersion("1.0.0.0"), FriendlyName("IntuneSecurityBaselineWindows10")]
 class MSFT_IntuneSecurityBaselineWindows10 : OMI_BaseResource
 {

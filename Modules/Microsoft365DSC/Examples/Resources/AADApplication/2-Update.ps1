@@ -25,6 +25,11 @@ Configuration Example
         AADApplication 'AADApp1'
         {
             DisplayName               = "AppDisplayName"
+            AuthenticationBehaviors = MSFT_MicrosoftGraphauthenticationBehaviors # To make sure these parameters are not configured
+                {
+                    BlockAzureADGraphAccess       = 'Null'
+                    RemoveUnverifiedEmailClaim    = 'Null'
+                }
             AvailableToOtherTenants   = $true # Updated Property
             Description               = "Application Description"
             GroupMembershipClaims     = "None"

@@ -14,6 +14,10 @@ function Get-TargetResource
         $DisplayName,
 
         [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
+
+        [Parameter()]
         [System.Boolean]
         $AzureRightsManagementServicesAllowed,
 
@@ -177,7 +181,7 @@ function Get-TargetResource
             {
                 $getValue = Get-MgBetaDeviceAppManagementMdmWindowsInformationProtectionPolicy `
                     -All `
-                    -Filter "DisplayName eq '$DisplayName'" `
+                    -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'" `
                     -ErrorAction SilentlyContinue
                 if ($getValue.Count -gt 1)
                 {
@@ -415,6 +419,7 @@ function Get-TargetResource
             Description                            = $getValue.Description
             DisplayName                            = $getValue.DisplayName
             Id                                     = $getValue.Id
+            RoleScopeTagIds                        = $getValue.RoleScopeTagIds
             Ensure                                 = 'Present'
             Credential                             = $Credential
             ApplicationId                          = $ApplicationId
@@ -457,6 +462,10 @@ function Set-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
 
         [Parameter()]
         [System.Boolean]
@@ -695,6 +704,10 @@ function Test-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
 
         [Parameter()]
         [System.Boolean]

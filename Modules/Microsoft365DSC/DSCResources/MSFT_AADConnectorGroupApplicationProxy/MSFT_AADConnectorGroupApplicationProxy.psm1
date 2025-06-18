@@ -85,7 +85,7 @@ function Get-TargetResource
                 Write-Verbose -Message "Could not find an Azure AD Connector Group Application Proxy with Name {$Name}"
                 if (-not [string]::IsNullOrEmpty($Name))
                 {
-                    $getValue = Get-MgBetaOnPremisePublishingProfileConnectorGroup -OnPremisesPublishingProfileId 'applicationProxy' -Filter "Name eq '$Name'" -ErrorAction Stop
+                    $getValue = Get-MgBetaOnPremisePublishingProfileConnectorGroup -OnPremisesPublishingProfileId 'applicationProxy' -Filter "Name eq '$($Name -replace "'", "''")'" -ErrorAction Stop
                 }
             }
             #endregion

@@ -935,7 +935,7 @@ function Set-TargetResource
     }
     elseif (('Present' -eq $Ensure) -and ('Present' -eq $CurrentRule.Ensure))
     {
-        Write-Verbose "Rule {$($CurrentRule.Name)} already exists and needs to. Updating Rule."
+        Write-Verbose "Rule {$($CurrentRule.Name)} already exists and needs to get updated. Updating Rule."
         $UpdateParams = $PSBoundParameters
 
         if ($null -ne $UpdateParams.ContentContainsSensitiveInformation)
@@ -1748,7 +1748,7 @@ function ConvertTo-SCDLPSensitiveInformationString
     {
 
         $StringContent = "MSFT_SCDLPSensitiveInformation`r`n            {`r`n"
-        $StringContent += "                name = '$($SensitiveInformationHash.name.Replace("'", "''"))'`r`n"
+        $StringContent += "                name = '$($SensitiveInformationHash.name)'`r`n"
 
         if ($null -ne $SensitiveInformationHash.id)
         {

@@ -554,7 +554,7 @@ function Get-TargetResource
 
             $autoApplyType = ''
             $policyTip = ''
-            $groups = foreach ($group in $currConditions.$($operator))
+            [array]$groups = foreach ($group in $currConditions.$($operator))
             {
                 $grpObject = @{
                     Name     = ''
@@ -1795,7 +1795,12 @@ function Convert-StringToAdvancedSettings
                 Key   = $settingKey
                 Value = $values.Trim()
             }
-            $settings += $entry
+
+            # Only export the entry if it has a value
+            if ([String]::IsNullOrEmpty($entry.Value) -eq $false)
+            {
+                $settings += $entry
+            }
         }
     }
     return $settings

@@ -18,6 +18,10 @@ function Get-TargetResource
         $Description,
 
         [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
+
+        [Parameter()]
         [System.Boolean]
         $AllowDeviceResetOnInstallFailure,
 
@@ -157,7 +161,7 @@ function Get-TargetResource
                 {
                     $getValue = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration `
                         -All `
-                        -Filter "DisplayName eq '$DisplayName'" `
+                        -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'" `
                         -ErrorAction SilentlyContinue | Where-Object `
                         -FilterScript { `
                             $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windows10EnrollmentCompletionPageConfiguration' `
@@ -210,6 +214,7 @@ function Get-TargetResource
             Description                             = $getValue.Description
             DisplayName                             = $getValue.DisplayName
             Id                                      = $getValue.Id
+            RoleScopeTagIds                         = $getValue.RoleScopeTagIds
             Ensure                                  = 'Present'
             Credential                              = $Credential
             ApplicationId                           = $ApplicationId
@@ -262,6 +267,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $Description,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
 
         [Parameter()]
         [System.Boolean]
@@ -380,7 +389,7 @@ function Set-TargetResource
         Write-Verbose -Message 'Converting SelectedMobileAppNames to SelectedMobileAppIds'
         if ($PSBoundParameters.SelectedMobileAppNames.Count -ne 0)
         {
-            [Array]$mobileAppIds = $SelectedMobileAppNames | ForEach-Object { (Get-MgBetaDeviceAppManagementMobileApp -Filter "DisplayName eq '$_'").Id }
+            [Array]$mobileAppIds = $SelectedMobileAppNames | ForEach-Object { (Get-MgBetaDeviceAppManagementMobileApp -Filter "DisplayName eq '$($_ -replace "'", "''")'").Id }
             $PSBoundParameters.SelectedMobileAppIds = $mobileAppIds
         }
         else
@@ -506,6 +515,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $Description,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
 
         [Parameter()]
         [System.Boolean]

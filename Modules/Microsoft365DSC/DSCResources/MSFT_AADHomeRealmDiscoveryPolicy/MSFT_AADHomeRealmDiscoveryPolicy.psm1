@@ -81,7 +81,7 @@ function Get-TargetResource
             $getValue = $null
             #region resource generator code
             $getValue = Get-MgBetaPolicyHomeRealmDiscoveryPolicy `
-                -Filter "DisplayName eq '$DisplayName'"
+                -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'"
         }
         else
         {
@@ -222,7 +222,7 @@ function Set-TargetResource
 
     # to get the id parameter
     $getValue = Get-MgBetaPolicyHomeRealmDiscoveryPolicy `
-        -Filter "DisplayName eq '$DisplayName'"
+        -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'"
 
     $newDefinitions = @()
     foreach ($Def in $Definition)
@@ -472,7 +472,12 @@ function Export-TargetResource
             Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
         foreach ($config in $getValue)
-        {
+        {        
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             $displayedKey = $config.DisplayName
             if (-not [String]::IsNullOrEmpty($config.displayName))
             {
@@ -495,7 +500,6 @@ function Export-TargetResource
                 AccessTokens          = $AccessTokens
             }
 
-            $Script:exportedInstance
             $Results = Get-TargetResource @Params
             if ($null -ne $Results.Definition)
             {

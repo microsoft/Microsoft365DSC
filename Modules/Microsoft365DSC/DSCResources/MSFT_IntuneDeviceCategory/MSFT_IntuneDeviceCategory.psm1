@@ -70,7 +70,7 @@ function Get-TargetResource
             $nullResult = $PSBoundParameters
             $nullResult.Ensure = 'Absent'
 
-            $category = Get-MgBetaDeviceManagementDeviceCategory -Filter "displayName eq '$DisplayName'" -All
+            $category = Get-MgBetaDeviceManagementDeviceCategory -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'" -All
             if ($null -eq $category)
             {
                 Write-Verbose -Message "No Device Category with DisplayName {$DisplayName} was found"
@@ -183,14 +183,14 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentCategory.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating Device Category {$DisplayName}"
-        $category = Get-MgBetaDeviceManagementDeviceCategory -Filter "displayName eq '$DisplayName'"
+        $category = Get-MgBetaDeviceManagementDeviceCategory -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'"
         Update-MgBetaDeviceManagementDeviceCategory -DeviceCategoryId $category.id `
             -DisplayName $DisplayName -Description $Description
     }
     elseif ($Ensure -eq 'Absent' -and $currentCategory.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing Device Category {$DisplayName}"
-        $category = Get-MgBetaDeviceManagementDeviceCategory -Filter "displayName eq '$DisplayName'"
+        $category = Get-MgBetaDeviceManagementDeviceCategory -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'"
         Remove-MgBetaDeviceManagementDeviceCategory -DeviceCategoryId $category.id
     }
 }

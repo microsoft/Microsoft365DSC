@@ -371,7 +371,7 @@ function Set-TargetResource
         $azureADRegistrationAllowedGroups = @()
         foreach ($group in $AzureADAllowedToJoinGroups)
         {
-            $groupInfo = Get-MgGroup -Filter "DisplayName eq '$group'"
+            $groupInfo = Get-MgGroup -Filter "DisplayName eq '$($group -replace "'", "''")'"
             $azureADRegistrationAllowedGroups += $groupInfo.Id
         }
     }
@@ -395,7 +395,7 @@ function Set-TargetResource
         $localAdminAllowedGroups = @()
         foreach ($group in $AzureAdJoinLocalAdminsRegisteringGroups)
         {
-            $groupInfo = Get-MgGroup -Filter "DisplayName eq '$group'"
+            $groupInfo = Get-MgGroup -Filter "DisplayName eq '$($group -replace "'", "''")'"
             $localAdminAllowedGroups += $groupInfo.Id
         }
     }

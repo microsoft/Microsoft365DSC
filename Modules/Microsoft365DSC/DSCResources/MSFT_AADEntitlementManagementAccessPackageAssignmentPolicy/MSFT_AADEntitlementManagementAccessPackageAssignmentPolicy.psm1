@@ -134,10 +134,15 @@ function Get-TargetResource
 
         #region Format AccessReviewSettings
         $formattedAccessReviewSettings = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $getValue.AccessReviewSettings
-        if ($null -ne $formattedAccessReviewSettings)
+        if ($null -ne $formattedAccessReviewSettings -and $formattedAccessReviewSettings.Count -ne 0)
         {
-            $formattedAccessReviewSettings.remove('additionalProperties') | Out-Null
+            $formattedAccessReviewSettings.Remove('additionalProperties') | Out-Null
         }
+        else
+        {
+            $formattedAccessReviewSettings = $null
+        }
+
         if ($null -ne $formattedAccessReviewSettings.Reviewers -and $formattedAccessReviewSettings.Reviewers.count -gt 0 )
         {
             foreach ($setting in $formattedAccessReviewSettings.Reviewers)
@@ -560,7 +565,7 @@ function Set-TargetResource
             {
                 # Retrieve by name
                 Write-Verbose -Message "Retrieving Entitlement Management Access Package by Name {$AccessPackageId}"
-                $package = Get-MgBetaEntitlementManagementAccessPackage -Filter "displayName eq '$AccessPackageId'"
+                $package = Get-MgBetaEntitlementManagementAccessPackage -Filter "DisplayName eq '$($AccessPackageId -replace "'", "''")'"
                 if ($null -ne $package)
                 {
                     $AccessPackageId = $package.Id
@@ -680,7 +685,7 @@ function Set-TargetResource
             {
                 # Retrieve by name
                 Write-Verbose -Message "Retrieving Entitlement Management Access Package by Name {$AccessPackageId}"
-                $package = Get-MgBetaEntitlementManagementAccessPackage -Filter "displayName eq '$AccessPackageId'"
+                $package = Get-MgBetaEntitlementManagementAccessPackage -Filter "DisplayName eq '$($AccessPackageId -replace "'", "''")'"
                 if ($null -ne $package)
                 {
                     $AccessPackageId = $package.Id

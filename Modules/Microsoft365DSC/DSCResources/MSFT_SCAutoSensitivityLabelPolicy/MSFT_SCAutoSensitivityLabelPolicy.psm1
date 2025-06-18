@@ -153,8 +153,10 @@ function Get-TargetResource
             Add-M365DSCTelemetryEvent -Data $data
             #endregion
 
-            $nullReturn = $PSBoundParameters
-            $nullReturn.Ensure = 'Absent'
+            $nullReturn = @{
+                Ensure = 'Absent'
+                Name = $Name
+            }
             try
             {
                 # There is a bug with the Get-AutoSensitivityLabelPolicy where if you get by Identity, the priority is an invalid number.
@@ -188,18 +190,18 @@ function Get-TargetResource
             ExchangeSenderException           = $policy.ExchangeSenderException
             ExchangeSenderMemberOf            = $policy.ExchangeSenderMemberOf
             ExchangeSenderMemberOfException   = $policy.ExchangeSenderMemberOfException
-            ExchangeLocation                  = $policy.ExchangeLocation
+            ExchangeLocation                  = $policy.ExchangeLocation.Name
             AddExchangeLocation               = $policy.AddExchangeLocation
             RemoveExchangeLocation            = $policy.RemoveExchangeLocation
             Mode                              = $policy.Mode
-            OneDriveLocation                  = $policy.OneDriveLocation
+            OneDriveLocation                  = $policy.OneDriveLocation.Name
             AddOneDriveLocation               = $policy.AddOneDriveLocation
             RemoveOneDriveLocation            = $policy.RemoveOneDriveLocation
-            OneDriveLocationException         = $policy.OneDriveLocationException
+            OneDriveLocationException         = $policy.OneDriveLocationException.Name
             AddOneDriveLocationException      = $policy.AddOneDriveLocationException
             RemoveOneDriveLocationException   = $policy.RemoveOneDriveLocationException
             Priority                          = $policy.Priority
-            SharePointLocation                = $policy.SharePointLocation
+            SharePointLocation                = $policy.SharePointLocation.Name
             SharePointLocationException       = $policy.SharePointLocationException
             AddSharePointLocationException    = $policy.AddSharePointLocationException
             RemoveSharePointLocationException = $policy.RemoveSharePointLocationException
@@ -666,108 +668,6 @@ function Test-TargetResource
 
     $ValuesToCheck = $PSBoundParameters
 
-    if ($null -ne $RemoveExchangeLocation -or $null -ne $AddExchangeLocation -or $null -ne $ExchangeLocation)
-    {
-        $configData = New-PolicyData -configData $ExchangeLocation -currentData $CurrentValues.ExchangeLocation `
-            -removedData $RemoveExchangeLocation -additionalData $AddExchangeLocation
-        if ($null -ne $configData)
-        {
-            $ValuesToCheck['ExchangeLocation'] = $configData
-        }
-        if ($null -eq $configData -and $null -ne $CurrentValues.ExchangeLocation `
-                -and $null -ne $RemoveExchangeLocation)
-        {
-            #last entry removed so trigger drift
-            return $false
-        }
-    }
-
-    if ($null -ne $RemoveExchangeLocationException -or $null -ne $AddExchangeLocationException -or $null -ne $ExchangeLocationException)
-    {
-        $configData = New-PolicyData -configData $ExchangeLocationException -currentData $CurrentValues.ExchangeLocationException `
-            -removedData $RemoveExchangeLocationException -additionalData $AddExchangeLocationException
-
-        if ($null -ne $configData)
-        {
-            $ValuesToCheck['ExchangeLocationException'] = $configData
-        }
-
-        if ($null -eq $configData -and $null -ne $CurrentValues.ExchangeLocationException `
-                -and $null -ne $RemoveExchangeLocationException)
-        {
-            #last entry removed so trigger drift
-            return $false
-        }
-    }
-
-    if ($null -ne $RemoveSharePointLocation -or $null -ne $AddSharePointLocation -or $null -ne $SharePointLocation)
-    {
-        $configData = New-PolicyData -configData $SharePointLocation -currentData $CurrentValues.SharePointLocation `
-            -removedData $RemoveSharePointLocation -additionalData $AddSharePointLocation
-        if ($null -ne $configData)
-        {
-            $ValuesToCheck['SharePointLocation'] = $configData
-        }
-        if ($null -eq $configData -and $null -ne $CurrentValues.SharePointLocation `
-                -and $null -ne $SharePointLocation)
-        {
-            #last entry removed so trigger drift
-            return $false
-        }
-    }
-
-    if ($null -ne $RemoveSharePointLocationException -or $null -ne $AddSharePointLocationException -or $null -ne $SharePointLocationException)
-    {
-        $configData = New-PolicyData -configData $SharePointLocationException -currentData $CurrentValues.SharePointLocationException `
-            -removedData $RemoveSharePointLocationException -additionalData $AddSharePointLocationException
-
-        if ($null -ne $configData)
-        {
-            $ValuesToCheck['SharePointLocationException'] = $configData
-        }
-
-        if ($null -eq $configData -and $null -ne $CurrentValues.SharePointLocationException `
-                -and $null -ne $RemoveSharePointLocationException)
-        {
-            #last entry removed so trigger drift
-            return $false
-        }
-    }
-
-    if ($null -ne $RemoveOneDriveLocation -or $null -ne $AddOneDriveLocation -or $null -ne $OneDriveLocation)
-    {
-        $configData = New-PolicyData -configData $OneDriveLocation -currentData $CurrentValues.OneDriveLocation `
-            -removedData $RemoveOneDriveLocation -additionalData $AddOneDriveLocation
-        if ($null -ne $configData)
-        {
-            $ValuesToCheck['OneDriveLocation'] = $configData
-        }
-        if ($null -eq $configData -and $null -ne $CurrentValues.OneDriveLocation `
-                -and $null -ne $OneDriveLocation)
-        {
-            #last entry removed so trigger drift
-            return $false
-        }
-    }
-
-    if ($null -ne $RemoveOneDriveLocationException -or $null -ne $AddOneDriveLocationException -or $null -ne $OneDriveLocationException)
-    {
-        $configData = New-PolicyData -configData $OneDriveLocationException -currentData $CurrentValues.OneDriveLocationException `
-            -removedData $RemoveOneDriveLocationException -additionalData $AddOneDriveLocationException
-
-        if ($null -ne $configData)
-        {
-            $ValuesToCheck['OneDriveLocationException'] = $configData
-        }
-
-        if ($null -eq $configData -and $null -ne $CurrentValues.OneDriveLocationException `
-                -and $null -ne $RemoveOneDriveLocationException)
-        {
-            #last entry removed so trigger drift
-            return $false
-        }
-    }
-
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
 
@@ -885,58 +785,6 @@ function Export-TargetResource
         return ''
     }
     return $dscContent
-}
-
-function New-PolicyData
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.ArrayList])]
-    param
-    (
-        [Parameter ()]
-        $configData,
-
-        [Parameter ()]
-        $currentData,
-
-        [Parameter ()]
-        $removedData,
-
-        [Parameter ()]
-        $additionalData
-    )
-
-    [System.Collections.ArrayList]$desiredData = @()
-    foreach ($currItem in $currentData)
-    {
-        if (-not $desiredData.Contains($currItem))
-        {
-            $desiredData.add($currItem) | Out-Null
-        }
-    }
-
-    foreach ($currItem in $configData)
-    {
-        if (-not $desiredData.Contains("$curritem"))
-        {
-            $desiredData.add($currItem) | Out-Null
-        }
-    }
-
-    foreach ($currItem in $removedData)
-    {
-        $desiredData.remove($currItem) | Out-Null
-    }
-
-    foreach ($currItem in $additionalData)
-    {
-        if (-not $desiredData.Contains("$curritem"))
-        {
-            $desiredData.add($currItem) | Out-Null
-        }
-    }
-
-    return $desiredData
 }
 
 Export-ModuleMember -Function *-TargetResource

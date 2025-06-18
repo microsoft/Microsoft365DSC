@@ -88,7 +88,7 @@ function Get-TargetResource
                 {
                     $instance = Get-MgBetaDeviceAppManagementMobileAppCategory `
                         -All `
-                        -Filter "DisplayName eq '$DisplayName'" `
+                        -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'" `
                         -ErrorAction SilentlyContinue
                 }
             }

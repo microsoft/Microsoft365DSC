@@ -105,7 +105,7 @@ function Get-TargetResource
             }
             if ($null -eq $AADRoleDefinition)
             {
-                $AADRoleDefinition = Get-MgBetaRoleManagementDirectoryRoleDefinition -Filter "DisplayName eq '$($DisplayName)'"
+                $AADRoleDefinition = Get-MgBetaRoleManagementDirectoryRoleDefinition -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'"
             }
             if ($null -eq $AADRoleDefinition)
             {

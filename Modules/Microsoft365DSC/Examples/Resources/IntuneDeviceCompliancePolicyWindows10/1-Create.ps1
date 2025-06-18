@@ -57,6 +57,13 @@ Configuration Example
             TPMRequired                                 = $False
             deviceCompliancePolicyScript                = $null
             ValidOperatingSystemBuildRanges             = @()
+            ScheduledActionsForRule                     = @(
+                MSFT_MicrosoftGraphDeviceComplianceScheduledActionsForRuleConfiguration
+                {
+                    ActionType         = 'block'
+                    GracePeriodHours   = 0
+                }
+            )
             Ensure                                      = 'Present'
             ApplicationId         = $ApplicationId;
             TenantId              = $TenantId;

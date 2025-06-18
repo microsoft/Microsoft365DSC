@@ -631,7 +631,7 @@ function Set-TargetResource
         foreach ($group in $TargetGroups)
         {
             $groupValue = ''
-            $entry = Get-MgGroup -Filter "DisplayName eq '$group'" -ErrorAction SilentlyContinue
+            $entry = Get-MgGroup -Filter "DisplayName eq '$($group -replace "'", "''")'" -ErrorAction SilentlyContinue
             if ($null -eq $entry)
             {
                 $entry = Get-MgUser -UserId $group -ErrorAction SilentlyContinue

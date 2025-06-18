@@ -82,10 +82,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             address                            = 'vpn.test.com'
                         } -ClientOnly)
                     )
-                    safariDomains                              = @{}                                                                                      
-                    associatedDomains                          = @{}                                                                                      
-                    excludedDomains                            = @{}                                                                                                                                                                          
-                    excludeList                                = @{}                                                                                            
+                    safariDomains                              = @{}
+                    associatedDomains                          = @{}
+                    excludedDomains                            = @{}
+                    excludeList                                = @{}
                     customData                                 = [CimInstance[]]@(
                         (New-CimInstance `
                         -ClassName MSFT_CustomData `
@@ -93,7 +93,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             key                                = 'FakeStringValue'
                             value                              = 'FakeStringValue'
                         } -ClientOnly)
-                    )     
+                    )
                     customKeyValueData                         = [CimInstance[]]@(
                         (New-CimInstance `
                         -ClassName MSFT_CustomData `
@@ -101,7 +101,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             name                               = 'FakeStringValue'
                             value                              = 'FakeStringValue'
                         } -ClientOnly)
-                    )                                                                                                                                                                   
+                    )
                     onDemandRules                              = [CimInstance[]]@(
                         (New-CimInstance `
                         -ClassName MSFT_DeviceManagementConfigurationPolicyVpnOnDemandRule `
@@ -116,7 +116,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             interfaceTypeMatch                 = 'notConfigured'
                             dnsServerAddressMatch              = 'FakeStringValue'
                         } -ClientOnly)
-                    )                  
+                    )
                      targetedMobileApps                      = [CimInstance[]]@(
                         (New-CimInstance `
                         -ClassName MSFT_targetedMobileApps `
@@ -180,10 +180,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             address                           = 'vpn.test.com'
                         } -ClientOnly)
                     )
-                    safariDomains                             = @{}                                                                                      
-                    associatedDomains                         = @{}                                                                                      
-                    excludedDomains                           = @{}                                                                                                                                                                          
-                    excludeList                               = @{}                                                                                            
+                    safariDomains                             = @{}
+                    associatedDomains                         = @{}
+                    excludedDomains                           = @{}
+                    excludeList                               = @{}
                     customData                                = [CimInstance[]]@(
                         (New-CimInstance `
                         -ClassName MSFT_CustomData `
@@ -191,7 +191,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                            key                                = 'FakeStringValue'
                             value                             = 'FakeStringValue'
                         } -ClientOnly)
-                    )     
+                    )
                     customKeyValueData                        = [CimInstance[]]@(
                         (New-CimInstance `
                         -ClassName MSFT_CustomData `
@@ -199,7 +199,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             name                              = 'FakeStringValue'
                             value                             = 'FakeStringValue'
                         } -ClientOnly)
-                    )                                                                                                                                                                      
+                    )
                     onDemandRules      = [CimInstance[]]@(
                         (New-CimInstance `
                         -ClassName MSFT_DeviceManagementConfigurationPolicyVpnOnDemandRule `
@@ -214,7 +214,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             interfaceTypeMatch                = 'notConfigured'
                             dnsServerAddressMatch             = 'FakeStringValue'
                         } -ClientOnly)
-                    )                    
+                    )
                     targetedMobileApps                      = [CimInstance[]]@(
                         (New-CimInstance `
                         -ClassName MSFT_targetedMobileApps `
@@ -244,17 +244,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                     key                  = 'FakeStringValue'
                                     value                = 'FakeStringValue'
                                 }
-                            )     
+                            )
                             customKeyValueData      = @(
                                 @{
                                     name                  = 'FakeStringValue'
                                     value                = 'FakeStringValue'
                                 }
-                            )      
+                            )
                             enableSplitTunneling                    = $False
                             enablePerApp                            = $False
-                            disableOnDemandUserOverride             = $True   
-                            disconnectOnIdle                        = $True  
+                            disableOnDemandUserOverride             = $True
+                            disconnectOnIdle                        = $True
                             optInToDeviceIdSharing                  = $True
                             onDemandRules      = @(`
                                 @{
@@ -268,14 +268,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                     interfaceTypeMatch       = 'notConfigured'
                                     dnsServerAddressMatch    = 'FakeStringValue'
                                 }
-                            )                                                                                                                                                                        
+                            )
                             server                                   = @(
                                 @{
                                     isDefaultServer                  = $True
                                     description                      = 'server'
                                     address                          = 'vpn.CHANGED.com' #changed value
                                 }
-                            )    
+                            )
                             proxyServer                              = @(
                                  @{
                                     port                             = 80
@@ -290,7 +290,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                     appStoreUrl                     = 'FakeStringValue'
                                     appId                           = 'FakeStringValue'
                                 }
-                            )                                                                                      
+                            )
                         }
                     }
                 }
@@ -307,7 +307,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It 'Should update the IntuneVPNConfigurationPolicyIOS from the Set method' {
                 Set-TargetResource @testParams
                 Should -Invoke -CommandName Update-MgBetaDeviceManagementDeviceConfiguration -Exactly 1
-               
+
             }
         }
 
@@ -347,7 +347,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             key                              = 'FakeStringValue'
                             value                            = 'FakeStringValue'
                         } -ClientOnly)
-                    )  
+                    )
                     customKeyValueData      = [CimInstance[]]@(
                         (New-CimInstance `
                         -ClassName MSFT_CustomData `
@@ -355,7 +355,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             name                            = 'FakeStringValue'
                             value                           = 'FakeStringValue'
                         } -ClientOnly)
-                    )                                                                                                                                                                      
+                    )
                     onDemandRules      = [CimInstance[]]@(
                         (New-CimInstance `
                         -ClassName MSFT_DeviceManagementConfigurationPolicyVpnOnDemandRule `
@@ -370,7 +370,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             interfaceTypeMatch              = 'notConfigured'
                             dnsServerAddressMatch           = 'FakeStringValue'
                         } -ClientOnly)
-                    )  
+                    )
                     targetedMobileApps                    = [CimInstance[]]@(
                         (New-CimInstance `
                         -ClassName MSFT_targetedMobileApps `
@@ -380,7 +380,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             appStoreUrl                     = 'FakeStringValue'
                             appId                           = 'FakeStringValue'
                         } -ClientOnly)
-                    )  
+                    )
                     safariDomains                           = @{}
                     associatedDomains                       = @{}
                     excludedDomains                         = @{}

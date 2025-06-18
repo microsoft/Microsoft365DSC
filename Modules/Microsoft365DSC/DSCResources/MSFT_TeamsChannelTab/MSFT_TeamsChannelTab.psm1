@@ -108,7 +108,7 @@ function Get-TargetResource
             if ([System.String]::IsNullOrEmpty($TeamId))
             {
                 Write-Verbose -Message "Getting team by Name {$TeamName}"
-                [array]$teamInstance = Get-MgGroup -Filter "resourceProvisioningOptions/Any(x:x eq 'Team') and DisplayName eq '$TeamName'" -All
+                [array]$teamInstance = Get-MgGroup -Filter "resourceProvisioningOptions/Any(x:x eq 'Team') and DisplayName eq '$($TeamName -replace "'", "''")'" -All
                 if ($teamInstance.Length -gt 1)
                 {
                     throw "Multiple Teams with name {$TeamName} were found. Please specify TeamId in your configuration instead."
@@ -161,7 +161,7 @@ function Get-TargetResource
         Write-Verbose -Message "Getting Tabs for Channel {$ChannelName}"
         [array]$tabInstance = Get-MgBetaTeamChannelTab -TeamId $teamInstance.Id `
             -ChannelId $channelInstance.Id `
-            -Filter "DisplayName eq '$DisplayName'" `
+            -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'" `
             -ExpandProperty 'TeamsApp'
 
         if ($tabInstance.Length -gt 1)
@@ -316,7 +316,7 @@ function Set-TargetResource
 
     Write-Verbose -Message "Retrieving Team Channel {$ChannelName} from Team {$($tab.TeamId)}"
     $ChannelInstance = Get-MgBetaTeamChannel -TeamId $tab.TeamId `
-        -Filter "DisplayName eq '$ChannelName'"
+        -Filter "DisplayName eq '$($ChannelName -replace "'", "''")'"
 
     $configuration = @{}
 
@@ -348,7 +348,7 @@ function Set-TargetResource
         Write-Verbose -Message "Retrieving Tab {$DisplayName} from Channel {$($ChannelInstance.Id))} from Team {$($tab.TeamId)}"
         $tabInstance = Get-MgBetaTeamChannelTab -TeamId $tab.TeamId `
             -ChannelId $ChannelInstance.Id `
-            -Filter "DisplayName eq '$DisplayName'"
+            -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'"
 
         $CurrentParameters.TeamId = $tab.TeamId
         $CurrentParameters.Add('ChannelId', $ChannelInstance.Id)
@@ -379,7 +379,7 @@ function Set-TargetResource
         Write-Verbose -Message "Retrieving Tab {$DisplayName} from Channel {$($ChannelInstance.Id))} from Team {$($tab.TeamId)}"
         $tabInstance = Get-MgBetaTeamChannelTab -TeamId $tab.TeamId `
             -ChannelId $ChannelInstance.Id `
-            -Filter "DisplayName eq '$DisplayName'"
+            -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'"
         Write-Verbose -Message "Removing existing tab {$DisplayName}"
         $RemoveParams = @{
             ChannelId  = $ChannelInstance.Id

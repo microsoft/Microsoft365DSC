@@ -284,7 +284,7 @@ function Set-TargetResource
         $groupObject = $null
         if (-not [System.String]::IsNullOrEmpty($GroupCreationAllowedGroupName))
         {
-            $groupObject = Get-MgGroup -Filter "DisplayName eq '$GroupCreationAllowedGroupName'"
+            $groupObject = Get-MgGroup -Filter "DisplayName eq '$($GroupCreationAllowedGroupName -replace "'", "''")'"
         }
         $groupId = $null
         if ($null -ne $groupObject)

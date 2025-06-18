@@ -13,6 +13,10 @@ function Get-TargetResource
         $Description,
 
         [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
+
+        [Parameter()]
         [ValidateSet('notConfigured', 'enforceComponentsAndStoreApps', 'auditComponentsAndStoreApps', 'enforceComponentsStoreAppsAndSmartlocker', 'auditComponentsStoreAppsAndSmartlocker')]
         [System.String]
         $AppLockerApplicationControl,
@@ -98,7 +102,7 @@ function Get-TargetResource
             {
                 if (-not [System.String]::IsNullOrEmpty($DisplayName))
                 {
-                    $policy = Get-MgBetaDeviceManagementIntent -All -Filter "displayName eq '$DisplayName'" -ErrorAction Stop | Where-Object -FilterScript { $_.TemplateId -eq '63be6324-e3c9-4c97-948a-e7f4b96f0f20' }
+                    $policy = Get-MgBetaDeviceManagementIntent -All -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'" -ErrorAction Stop | Where-Object -FilterScript { $_.TemplateId -eq '63be6324-e3c9-4c97-948a-e7f4b96f0f20' }
                 }
             }
 
@@ -128,6 +132,7 @@ function Get-TargetResource
         $returnHashtable = @{
             Description                      = $policy.Description
             DisplayName                      = $policy.DisplayName
+            RoleScopeTagIds                  = $policy.RoleScopeTagIds
             AppLockerApplicationControl      = $settingAppLockerApplicationControl
             SmartScreenBlockOverrideForFiles = $settingSmartScreenBlockOverrideForFiles
             SmartScreenEnableInShell         = $settingSmartScreenEnableInShell
@@ -173,6 +178,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $Description,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
 
         [Parameter()]
         [ValidateSet('notConfigured', 'enforceComponentsAndStoreApps', 'auditComponentsAndStoreApps', 'enforceComponentsStoreAppsAndSmartlocker', 'auditComponentsStoreAppsAndSmartlocker')]
@@ -333,6 +342,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $Description,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
 
         [Parameter()]
         [ValidateSet('notConfigured', 'enforceComponentsAndStoreApps', 'auditComponentsAndStoreApps', 'enforceComponentsStoreAppsAndSmartlocker', 'auditComponentsStoreAppsAndSmartlocker')]

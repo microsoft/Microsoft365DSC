@@ -893,6 +893,7 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
     [Write, Description("The type of the target assignment."), ValueMap{"#microsoft.graph.groupAssignmentTarget","#microsoft.graph.allLicensedUsersAssignmentTarget","#microsoft.graph.allDevicesAssignmentTarget","#microsoft.graph.exclusionGroupAssignmentTarget","#microsoft.graph.configurationManagerCollectionAssignmentTarget"}, Values{"#microsoft.graph.groupAssignmentTarget","#microsoft.graph.allLicensedUsersAssignmentTarget","#microsoft.graph.allDevicesAssignmentTarget","#microsoft.graph.exclusionGroupAssignmentTarget","#microsoft.graph.configurationManagerCollectionAssignmentTarget"}] String dataType;
     [Write, Description("The type of filter of the target assignment i.e. Exclude or Include. Possible values are:none, include, exclude."), ValueMap{"none","include","exclude"}, Values{"none","include","exclude"}] String deviceAndAppManagementAssignmentFilterType;
     [Write, Description("The Id of the filter for the target assignment.")] String deviceAndAppManagementAssignmentFilterId;
+    [Write, Description("The display name of the filter for the target assignment.")] String deviceAndAppManagementAssignmentFilterDisplayName;
     [Write, Description("The group Id that is the target of the assignment.")] String groupId;
     [Write, Description("The group Display Name that is the target of the assignment.")] String groupDisplayName;
     [Write, Description("The collection Id that is the target of the assignment.(ConfigMgr)")] String collectionId;
@@ -2143,7 +2144,7 @@ function Get-ComplexTypeConstructorToString
     }
     else
     {
-        $complexString.AppendLine($spacing + "if (`$$tempPropertyName.values.Where({`$null -ne `$_}).Count -eq 0)" ) | Out-Null
+        $complexString.AppendLine($spacing + "if (`$$tempPropertyName.Values.Where({ `$null -ne `$_ }).Count -eq 0)" ) | Out-Null
         $complexString.AppendLine($spacing + "{" ) | Out-Null
         $IndentCount++
         $spacing = $indent * $IndentCount

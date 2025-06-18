@@ -603,7 +603,7 @@ function Set-TargetResource
                 # user is not currently a member of any groups, add user to groups listed in MemberOf
                 foreach ($memberOfGroup in $MemberOf)
                 {
-                    $group = Get-MgGroup -Filter "DisplayName eq '$memberOfGroup'" -Property Id, GroupTypes
+                    $group = Get-MgGroup -Filter "DisplayName eq '$($memberOfGroup -replace "'", "''")'" -Property Id, GroupTypes
                     if ($null -eq $group)
                     {
                         New-M365DSCLogEntry -Message 'Error updating data:' `
@@ -631,7 +631,7 @@ function Set-TargetResource
             {
                 # user is a member of some groups, ensure that user is only a member of groups listed in MemberOf
                 Compare-Object -ReferenceObject $MemberOf -DifferenceObject $user.MemberOf | ForEach-Object {
-                    $group = Get-MgGroup -Filter "DisplayName eq '$($_.InputObject)'" -Property Id, GroupTypes
+                    $group = Get-MgGroup -Filter "DisplayName eq '$($_.InputObject -replace "'", "''")'" -Property Id, GroupTypes
                     if ($_.SideIndicator -eq '<=')
                     {
                         # Group in MemberOf not present in groups that user is a member of, add user to group
@@ -688,7 +688,7 @@ function Set-TargetResource
 
             foreach ($roleDifference in $diffRoles)
             {
-                $roleDefinitionId = (Get-MgBetaRoleManagementDirectoryRoleDefinition -Filter "DisplayName eq '$($roleDifference.InputObject)'").Id
+                $roleDefinitionId = (Get-MgBetaRoleManagementDirectoryRoleDefinition -Filter "DisplayName eq '$($roleDifference.InputObject -replace "'", "''")'").Id
 
                 # Roles to remove
                 if ($roleDifference.SideIndicator -eq '=>')

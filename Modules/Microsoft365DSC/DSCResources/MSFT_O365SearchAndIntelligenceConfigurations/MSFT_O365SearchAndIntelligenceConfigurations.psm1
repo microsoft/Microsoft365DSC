@@ -233,7 +233,7 @@ function Set-TargetResource
         $disabledForGroupValue = $null
         try
         {
-            $group = Get-MgGroup -Filter "DisplayName eq '$ItemInsightsDisabledForGroup'"
+            $group = Get-MgGroup -Filter "DisplayName eq '$($ItemInsightsDisabledForGroup -replace "'", "''")'"
             $disabledForGroupValue = $group.Id
         }
         catch
@@ -260,7 +260,7 @@ function Set-TargetResource
         $disabledForGroupValue = $null
         try
         {
-            $group = Get-MgGroup -Filter "DisplayName eq '$PersonInsightsDisabledForGroup'"
+            $group = Get-MgGroup -Filter "DisplayName eq '$($PersonInsightsDisabledForGroup -replace "'", "''")'"
             $disabledForGroupValue = $group.Id
         }
         catch

@@ -139,6 +139,10 @@ function Get-TargetResource
         $Id,
 
         [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
+
+        [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
         #endregion
@@ -205,7 +209,7 @@ function Get-TargetResource
             #region resource generator code
             if (-not [string]::IsNullOrEmpty($Id))
             {
-                $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -DeviceConfigurationId $Id -ErrorAction SilentlyContinue
+                $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -All -Filter "Id eq '$Id'" -ErrorAction SilentlyContinue
             }
 
             if ($null -eq $getValue)
@@ -216,7 +220,7 @@ function Get-TargetResource
                 {
                     $getValue = Get-MgBetaDeviceManagementDeviceConfiguration `
                         -All `
-                        -Filter "DisplayName eq '$DisplayName'" `
+                        -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'" `
                         -ErrorAction SilentlyContinue | Where-Object `
                         -FilterScript { `
                             $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windowsWiredNetworkConfiguration' `
@@ -309,6 +313,7 @@ function Get-TargetResource
             Description                                                    = $getValue.Description
             DisplayName                                                    = $getValue.DisplayName
             Id                                                             = $getValue.Id
+            RoleScopeTagIds                                                = $getValue.RoleScopeTagIds
             Ensure                                                         = 'Present'
             Credential                                                     = $Credential
             ApplicationId                                                  = $ApplicationId
@@ -482,6 +487,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $Id,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
@@ -927,6 +936,10 @@ function Test-TargetResource
         $Id,
 
         [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
+
+        [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
         #endregion
@@ -1306,7 +1319,7 @@ function Get-IntuneDeviceConfigurationCertificateId
         Write-Verbose -Message "Could not find certificate with Id {$CertificateId}, searching by display name {$CertificateDisplayName}"
 
         $Certificate = Get-MgBetaDeviceManagementDeviceConfiguration `
-            -Filter "DisplayName eq '$CertificateDisplayName'" `
+            -Filter "DisplayName eq '$($CertificateDisplayName -replace "'", "''")'" `
             -ErrorAction SilentlyContinue | `
                 Where-Object -FilterScript {
                 $_.AdditionalProperties.'@odata.type' -in $OdataTypes

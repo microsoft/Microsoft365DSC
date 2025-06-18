@@ -4,6 +4,10 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
+        [Parameter()]
+        [System.String]
+        $Id,
+
         [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
@@ -11,6 +15,10 @@ function Get-TargetResource
         [Parameter()]
         [System.String]
         $Description,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
 
         [Parameter()]
         [System.Boolean]
@@ -141,6 +149,10 @@ function Get-TargetResource
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $ValidOperatingSystemBuildRanges,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $ScheduledActionsForRule,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
@@ -206,7 +218,8 @@ function Get-TargetResource
 
             $devicePolicy = Get-MgBetaDeviceManagementDeviceCompliancePolicy `
                 -All `
-                -Filter "displayName eq '$DisplayName' and isof('microsoft.graph.windows10CompliancePolicy')" `
+                -Filter "DisplayName eq '$($DisplayName -replace "'", "''")' and isof('microsoft.graph.windows10CompliancePolicy')" `
+                -ExpandProperty 'scheduledActionsForRule($expand=scheduledActionConfigurations)' `
                 -ErrorAction SilentlyContinue
             if (([array]$devicePolicy).Count -gt 1)
             {
@@ -220,7 +233,10 @@ function Get-TargetResource
         }
         else
         {
-            $devicePolicy = $Script:exportedInstance
+            $devicePolicy = Get-MgBetaDeviceManagementDeviceCompliancePolicy `
+                -DeviceCompliancePolicyId $Script:exportedInstance.Id `
+                -ExpandProperty 'scheduledActionsForRule($expand=scheduledActionConfigurations)' `
+                -ErrorAction SilentlyContinue
         }
 
         $complexValidOperatingSystemBuildRanges = @()
@@ -258,10 +274,40 @@ function Get-TargetResource
             $complexDeviceCompliancePolicyScript = $null
         }
 
+        $complexScheduledActionsForRule = @()
+        foreach ($actionConfiguration in $devicePolicy.ScheduledActionsForRule.ScheduledActionConfigurations)
+        {
+            $scheduledAction = @{
+                ActionType    = [string]$actionConfiguration.ActionType
+                GracePeriodHours = $actionConfiguration.GracePeriodHours
+            }
+            if ($null -ne $actionConfiguration.NotificationMessageCCList -and `
+                $actionConfiguration.NotificationMessageCCList.Count -gt 0)
+            {
+                $groups = @()
+                foreach ($group in $actionConfiguration.NotificationMessageCCList)
+                {
+                    $groups += Get-MgGroup -GroupId $group -ErrorAction SilentlyContinue | Select-Object -ExpandProperty DisplayName
+                }
+                $scheduledAction.Add('NotificationMessageCCList', $groups)
+            }
+            if ($null -ne $actionConfiguration.NotificationTemplateId -and `
+                $actionConfiguration.NotificationTemplateId -ne '00000000-0000-0000-0000-000000000000')
+            {
+                $notificationTemplate = Get-MgBetaDeviceManagementNotificationMessageTemplate `
+                    -NotificationMessageTemplateId $actionConfiguration.NotificationTemplateId `
+                    -ErrorAction SilentlyContinue
+                $scheduledAction.Add('NotificationTemplate', $notificationTemplate.DisplayName)
+            }
+            $complexScheduledActionsForRule += $scheduledAction
+        }
+
         Write-Verbose -Message "Found Windows 10 Device Compliance Policy with displayName {$DisplayName}"
         $results = @{
+            Id                                          = $devicePolicy.Id
             DisplayName                                 = $devicePolicy.DisplayName
             Description                                 = $devicePolicy.Description
+            RoleScopeTagIds                             = $devicePolicy.RoleScopeTagIds
             PasswordRequired                            = $devicePolicy.AdditionalProperties.passwordRequired
             PasswordBlockSimple                         = $devicePolicy.AdditionalProperties.passwordBlockSimple
             PasswordRequiredToUnlockFromIdle            = $devicePolicy.AdditionalProperties.passwordRequiredToUnlockFromIdle
@@ -292,6 +338,7 @@ function Get-TargetResource
             DeviceThreatProtectionRequiredSecurityLevel = $devicePolicy.AdditionalProperties.deviceThreatProtectionRequiredSecurityLevel
             ConfigurationManagerComplianceRequired      = $devicePolicy.AdditionalProperties.configurationManagerComplianceRequired
             TpmRequired                                 = $devicePolicy.AdditionalProperties.tpmRequired
+            ScheduledActionsForRule                     = $complexScheduledActionsForRule
             DeviceCompliancePolicyScript                = $complexDeviceCompliancePolicyScript
             ValidOperatingSystemBuildRanges             = $complexValidOperatingSystemBuildRanges
             Ensure                                      = 'Present'
@@ -334,6 +381,10 @@ function Set-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
+        [Parameter()]
+        [System.String]
+        $Id,
+
         [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
@@ -341,6 +392,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $Description,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
 
         [Parameter()]
         [System.Boolean]
@@ -471,6 +526,10 @@ function Set-TargetResource
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $ValidOperatingSystemBuildRanges,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $ScheduledActionsForRule,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
@@ -529,24 +588,13 @@ function Set-TargetResource
     $currentDeviceWindows10Policy = Get-TargetResource @PSBoundParameters
     $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
-    $scheduledActionsForRule = @{
-        '@odata.type'                 = '#microsoft.graph.deviceComplianceScheduledActionForRule'
-        ruleName                      = 'PasswordRequired'
-        scheduledActionConfigurations = @(
-            @{
-                '@odata.type' = '#microsoft.graph.deviceComplianceActionItem'
-                actionType    = 'block'
-            }
-        )
-    }
-
     if ($null -ne $BoundParameters.DeviceCompliancePolicyScript)
     {
         $script = $BoundParameters.DeviceCompliancePolicyScript
         $scriptName = $script.Displayname
         $scriptRulesContent = $script.RulesContent
 
-        $complianceScript = (Invoke-MgGraphRequest -Uri "/beta/deviceManagement/deviceComplianceScripts?`$filter=displayName eq '$scriptName'" -Method GET).value
+        $complianceScript = (Invoke-MgGraphRequest -Uri "/beta/deviceManagement/deviceComplianceScripts?`$filter=DisplayName eq '$($scriptName -replace "'", "''")'" -Method GET).value
         if ($complianceScript.Count -eq 0)
         {
             throw "The referenced Intune Device Compliance Script with DisplayName {$scriptName} was not found"
@@ -560,6 +608,52 @@ function Set-TargetResource
         $BoundParameters.Add('DeviceCompliancePolicyScript', $script)
     }
 
+    $notificationTemplates = Get-MgBetaDeviceManagementNotificationMessageTemplate -All | Where-Object -FilterScript {
+        $_.Id -ne '8ca486fc-bee8-4ef2-983b-21e8908d11b8' # Exclude the second, unused default template
+    }
+    $complexScheduledActionsForRule = @(
+        @{
+            ruleName      = "PasswordRequired"
+            scheduledActionConfigurations = @()
+        }
+    )
+    foreach ($scheduledAction in $BoundParameters.ScheduledActionsForRule)
+    {
+        $actionConfiguration = @{
+            actionType = $scheduledAction.ActionType
+            gracePeriodHours = $scheduledAction.GracePeriodHours
+        }
+
+        $ccList = @()
+        if ($null -ne $scheduledAction.NotificationMessageCCList)
+        {
+            foreach ($group in $scheduledAction.NotificationMessageCCList)
+            {
+                $groupObject = Get-MgGroup -Filter "displayName eq '$group'" -ErrorAction SilentlyContinue
+                if ($null -eq $groupObject)
+                {
+                    throw "The referenced Intune Group with DisplayName {$group} was not found for NotificationMessageCCList"
+                }
+                $ccList += $groupObject.Id
+            }
+        }
+        $actionConfiguration.notificationMessageCCList = $ccList
+
+        $template = [System.Guid]::Empty
+        if (-not [string]::IsNullOrEmpty($scheduledAction.NotificationTemplate))
+        {
+            $template = $notificationTemplates | Where-Object -FilterScript { $_.DisplayName -eq $scheduledAction.NotificationTemplate }
+            if ($null -eq $template)
+            {
+                throw "The referenced Intune Notification Template with DisplayName {$($scheduledAction.NotificationTemplate)} was not found"
+            }
+            $template = $template.Id
+        }
+        $actionConfiguration.notificationTemplateId = [string]$template
+        $complexScheduledActionsForRule[0].scheduledActionConfigurations += $actionConfiguration
+    }
+    $BoundParameters.Remove('ScheduledActionsForRule') | Out-Null
+
     if ($Ensure -eq 'Present' -and $currentDeviceWindows10Policy.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating new Intune Device Compliance Windows 10 Policy {$DisplayName}"
@@ -571,7 +665,7 @@ function Set-TargetResource
         $policy = New-MgBetaDeviceManagementDeviceCompliancePolicy -DisplayName $DisplayName `
             -Description $Description `
             -AdditionalProperties $AdditionalProperties `
-            -ScheduledActionsForRule $scheduledActionsForRule
+            -ScheduledActionsForRule $complexScheduledActionsForRule
 
         if ($Assignments.Count -gt 0)
         {
@@ -584,11 +678,6 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentDeviceWindows10Policy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating Intune Device Compliance Windows 10 Policy {$DisplayName}"
-        $configDevicePolicy = Get-MgBetaDeviceManagementDeviceCompliancePolicy `
-            -ErrorAction Stop | Where-Object `
-            -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windows10CompliancePolicy' -and `
-                $_.displayName -eq $($DisplayName) }
-
         $BoundParameters.Remove('DisplayName') | Out-Null
         $BoundParameters.Remove('Description') | Out-Null
         $BoundParameters.Remove('Assignments') | Out-Null
@@ -596,12 +685,17 @@ function Set-TargetResource
         $AdditionalProperties = Get-M365DSCIntuneDeviceCompliancePolicyWindows10AdditionalProperties -Properties ([System.Collections.Hashtable]$BoundParameters)
         Update-MgBetaDeviceManagementDeviceCompliancePolicy -AdditionalProperties $AdditionalProperties `
             -Description $Description `
-            -DeviceCompliancePolicyId $configDevicePolicy.Id
+            -DeviceCompliancePolicyId $currentDeviceWindows10Policy.Id
+
+        $body = @{
+            deviceComplianceScheduledActionForRules = $complexScheduledActionsForRule
+        } | ConvertTo-Json -Depth 10
+        Invoke-MgGraphRequest -Method POST -Uri "beta/deviceManagement/deviceCompliancePolicies/$($currentDeviceWindows10Policy.Id)/scheduleActionsForRules" -Body $body
 
         if ($Assignments.Count -gt 0)
         {
             $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
-            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $configDevicePolicy.id `
+            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $currentDeviceWindows10Policy.id `
                 -Targets $assignmentsHash `
                 -Repository 'deviceManagement/deviceCompliancePolicies'
         }
@@ -609,12 +703,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Absent' -and $currentDeviceWindows10Policy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing Intune Device Compliance Windows 10 Policy {$DisplayName}"
-        $configDevicePolicy = Get-MgBetaDeviceManagementDeviceCompliancePolicy `
-            -ErrorAction Stop | Where-Object `
-            -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windows10CompliancePolicy' -and `
-                $_.displayName -eq $($DisplayName) }
-
-        Remove-MgBetaDeviceManagementDeviceCompliancePolicy -DeviceCompliancePolicyId $configDevicePolicy.Id
+        Remove-MgBetaDeviceManagementDeviceCompliancePolicy -DeviceCompliancePolicyId $currentDeviceWindows10Policy.Id
     }
 }
 
@@ -624,6 +713,10 @@ function Test-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
+        [Parameter()]
+        [System.String]
+        $Id,
+
         [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
@@ -631,6 +724,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $Description,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
 
         [Parameter()]
         [System.Boolean]
@@ -761,6 +858,10 @@ function Test-TargetResource
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $ValidOperatingSystemBuildRanges,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $ScheduledActionsForRule,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
@@ -982,6 +1083,21 @@ function Export-TargetResource
                     $Results.Remove('DeviceCompliancePolicyScript') | Out-Null
                 }
             }
+            if ($null -ne $Results.ScheduledActionsForRule)
+            {
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                    -ComplexObject $Results.ScheduledActionsForRule `
+                    -CIMInstanceName 'MicrosoftGraphDeviceComplianceScheduledActionsForRuleConfiguration' `
+                    -IsArray
+                if (-not [string]::IsNullOrWhiteSpace($complexTypeStringResult))
+                {
+                    $Results.ScheduledActionsForRule = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('ScheduledActionsForRule') | Out-Null
+                }
+            }
             if ($null -ne $Results.Assignments)
             {
                 $complexMapping = @(
@@ -1010,7 +1126,7 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential `
-                -NoEscape @('ValidOperatingSystemBuildRanges', 'DeviceCompliancePolicyScript', 'Assignments')
+                -NoEscape @('ValidOperatingSystemBuildRanges', 'DeviceCompliancePolicyScript', 'ScheduledActionsForRule', 'Assignments')
 
             $dscContent += $currentDSCBlock
 
@@ -1053,7 +1169,7 @@ function Get-M365DSCIntuneDeviceCompliancePolicyWindows10AdditionalProperties
         $Properties
     )
 
-    $results = @{'@odata.type' = '#microsoft.graph.windows10CompliancePolicy' }
+    $results = @{ '@odata.type' = '#microsoft.graph.windows10CompliancePolicy' }
     foreach ($property in $properties.Keys)
     {
         if ($property -ne 'Verbose')

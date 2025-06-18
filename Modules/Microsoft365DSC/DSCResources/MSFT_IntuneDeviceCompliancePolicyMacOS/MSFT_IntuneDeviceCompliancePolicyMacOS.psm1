@@ -13,6 +13,10 @@ function Get-TargetResource
         $Description,
 
         [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
+
+        [Parameter()]
         [System.Boolean]
         $PasswordRequired,
 
@@ -186,6 +190,7 @@ function Get-TargetResource
         $results = @{
             DisplayName                                   = $devicePolicy.DisplayName
             Description                                   = $devicePolicy.Description
+            RoleScopeTagIds                               = $devicePolicy.RoleScopeTagIds
             PasswordRequired                              = $devicePolicy.AdditionalProperties.passwordRequired
             PasswordBlockSimple                           = $devicePolicy.AdditionalProperties.passwordBlockSimple
             PasswordExpirationDays                        = $devicePolicy.AdditionalProperties.passwordExpirationDays
@@ -254,6 +259,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $Description,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
 
         [Parameter()]
         [System.Boolean]
@@ -491,6 +500,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $Description,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
 
         [Parameter()]
         [System.Boolean]

@@ -14,6 +14,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String[]]
+        $RoleScopeTagIds,
+
+        [Parameter()]
+        [System.String[]]
         $AllowedAndroidDeviceModels,
 
         [Parameter()]
@@ -525,6 +529,7 @@ function Get-TargetResource
         {
             $policy.Add($param, (Get-Variable -Name $param).value)
         }
+        $policy.Add('RoleScopeTagIds', $policyInfo.RoleScopeTagIds)
         # fix for managed identity credential value
         $policy.Add('ManagedIdentity', $ManagedIdentity.IsPresent)
         # add complex parameters manually as they all have different requirements - potential to change in future
@@ -589,6 +594,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $Description,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
 
         [Parameter()]
         [System.String[]]
@@ -1025,7 +1034,7 @@ function Set-TargetResource
         $PSBoundParameters.Assignments | ForEach-Object {
             if ($_ -ne $null)
             {
-                $groupInfo = Get-MgGroup -Filter "DisplayName eq '$_'"
+                $groupInfo = Get-MgGroup -Filter "DisplayName eq '$($_ -replace "'", "''")'"
                 $idValue = $_
                 if (-not [System.String]::IsNullOrEmpty($groupInfo))
                 {
@@ -1152,6 +1161,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $Description,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
 
         [Parameter()]
         [System.String[]]

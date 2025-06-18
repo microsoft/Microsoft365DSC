@@ -98,7 +98,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return @{
                         DisplayName                      = 'Test IntuneTrustedRootCertificateAndroidDeviceOwner'
                         Description                      = 'Different Value'
-                        Id                               = 'e30954ac-a65e-4dcb-ab79-91d45f3c52b4'                    
+                        Id                               = 'e30954ac-a65e-4dcb-ab79-91d45f3c52b4'
                         AdditionalProperties             = @{
                             certFileName                 = "FakeStringValue"
                             trustedRootCertificate       = "fakestringvalue0"
@@ -119,7 +119,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It 'Should update the IntuneTrustedRootCertificateAndroidDeviceOwner from the Set method' {
                 Set-TargetResource @testParams
                 Should -Invoke -CommandName Update-MgBetaDeviceManagementDeviceConfiguration -Exactly 1
-               
+
             }
         }
 
@@ -138,7 +138,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return @{
                         DisplayName                             = 'Test IntuneTrustedRootCertificateAndroidDeviceOwner'
                         Description                             = 'Test IntuneTrustedRootCertificateAndroidDeviceOwner Description'
-                        Id                                      = 'e30954ac-a65e-4dcb-ab79-91d45f3c52b4'                   
+                        Id                                      = 'e30954ac-a65e-4dcb-ab79-91d45f3c52b4'
                         AdditionalProperties                    = @{
                             certFileName                        = "FakeStringValue"
                             trustedRootCertificate              = "fakestringvalue0"
@@ -204,7 +204,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return @{
                         DisplayName                      = 'Test IntuneTrustedRootCertificateAndroidDeviceOwner'
                         Description                      = 'Test IntuneTrustedRootCertificateAndroidDeviceOwner Description'
-                        Id                               = 'e30954ac-a65e-4dcb-ab79-91d45f3c52b4'                     
+                        Id                               = 'e30954ac-a65e-4dcb-ab79-91d45f3c52b4'
                         AdditionalProperties             = @{
                             certFileName                 = "FakeStringValue"
                             trustedRootCertificate       = "fakestringvalue0"

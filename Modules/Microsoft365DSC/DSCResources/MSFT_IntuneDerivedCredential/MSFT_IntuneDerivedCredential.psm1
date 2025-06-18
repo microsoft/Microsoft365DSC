@@ -107,7 +107,7 @@ function Get-TargetResource
                 {
                     $instance = Get-MgBetaDeviceManagementDerivedCredential `
                         -All `
-                        -Filter "DisplayName eq '$DisplayName'" `
+                        -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'" `
                         -ErrorAction SilentlyContinue
 
                     if ($null -eq $instance)

@@ -110,7 +110,7 @@ function Get-TargetResource
             if (-not [string]::IsNullOrEmpty($DisplayName))
             {
                 $getValue = (Invoke-MgGraphRequest -Method GET `
-                    -Uri "/beta/deviceManagement/deviceComplianceScripts?`$filter=displayName eq '$DisplayName'").value
+                    -Uri "/beta/deviceManagement/deviceComplianceScripts?`$filter=DisplayName eq '$($DisplayName -replace "'", "''")'").value
                 if ($getValue.Count -gt 0)
                 {
                     $getValue = Invoke-MgGraphRequest -Method GET -Uri "/beta/deviceManagement/deviceComplianceScripts/$($getValue.id)"

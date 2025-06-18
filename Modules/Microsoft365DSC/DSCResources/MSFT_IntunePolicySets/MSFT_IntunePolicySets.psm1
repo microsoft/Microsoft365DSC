@@ -105,7 +105,7 @@ function Get-TargetResource
             {
                 [array]$getValue = Get-MgBetaDeviceAppManagementPolicySet `
                     -All `
-                    -Filter "DisplayName eq '$DisplayName'"
+                    -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'"
 
                 if ($null -eq $getValue)
                 {
