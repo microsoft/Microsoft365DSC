@@ -24,6 +24,7 @@ Configuration Example
     {
         AADApplication 'AADApp1'
         {
+            AppId                     = "12345678-1234-5678-1234-567812345678"
             DisplayName               = "AppDisplayName"
             AuthenticationBehaviors = MSFT_MicrosoftGraphauthenticationBehaviors # To make sure these parameters are not configured
                 {

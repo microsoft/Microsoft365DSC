@@ -169,10 +169,7 @@ function Get-TargetResource
 
             try
             {
-                if (-not [System.String]::IsNullOrEmpty($AppId))
-                {
-                    $AADApp = Get-MgBetaApplication -Filter "AppId eq '$AppId'"
-                }
+                [array]$AADApp = Get-MgBetaApplication -Filter "AppId eq '$AppId'"
             }
             catch
             {

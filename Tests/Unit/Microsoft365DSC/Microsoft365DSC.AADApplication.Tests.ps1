@@ -83,6 +83,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'The application should exist but it does not' -Fixture {
             BeforeAll {
                 $testParams = @{
+                    AppId                     = '12345-12345-12345-12345-12345'
                     DisplayName               = 'App1'
                     AvailableToOtherTenants   = $false
                     Description               = 'App description'
@@ -104,7 +105,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should return values from the get method' {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Absent'
-                Should -Invoke -CommandName 'Get-MgBetaApplication' -Exactly 1
+                Should -Invoke -CommandName 'Get-MgBetaApplication' -Exactly 2
             }
             It 'Should return false from the test method' {
                 Test-TargetResource @testParams | Should -Be $false
@@ -118,6 +119,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'The application exists but it should not' -Fixture {
             BeforeAll {
                 $testParams = @{
+                    AppId                     = '12345-12345-12345-12345-12345'
                     ObjectId                  = '5dcb2237-c61b-4258-9c85-eae2aaeba9d6'
                     DisplayName               = 'App1'
                     AvailableToOtherTenants   = $false
@@ -137,6 +139,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     $AADApp = New-Object PSCustomObject
                     $AADApp | Add-Member -MemberType NoteProperty -Name DisplayName -Value 'App1'
                     $AADApp | Add-Member -MemberType NoteProperty -Name Id -Value '5dcb2237-c61b-4258-9c85-eae2aaeba9d6'
+                    $AADApp | Add-Member -MemberType NoteProperty -Name AppId -Value '12345-12345-12345-12345-12345'
                     $AADApp | Add-Member -MemberType NoteProperty -Name AvailableToOtherTenants -Value $false
                     $AADApp | Add-Member -MemberType NoteProperty -Name Description -Value 'App description'
                     $AADApp | Add-Member -MemberType NoteProperty -Name GroupMembershipClaims -Value 0
@@ -170,6 +173,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'The app exists and values are already in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
+                    AppId                     = '12345-12345-12345-12345-12345'
                     DisplayName               = 'App1'
                     AvailableToOtherTenants   = $false
                     Description               = 'App description'
@@ -264,6 +268,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     $AADApp = New-Object PSCustomObject
                     $AADApp | Add-Member -MemberType NoteProperty -Name DisplayName -Value 'App1'
                     $AADApp | Add-Member -MemberType NoteProperty -Name Id -Value '5dcb2237-c61b-4258-9c85-eae2aaeba9d6'
+                    $AADApp | Add-Member -MemberType NoteProperty -Name AppId -Value '12345-12345-12345-12345-12345'
                     $AADApp | Add-Member -MemberType NoteProperty -Name Description -Value 'App description'
                     $AADApp | Add-Member -MemberType NoteProperty -Name GroupMembershipClaims -Value 0
                     $AADApp | Add-Member -MemberType NoteProperty -Name SignInAudience -Value 'AzureADMyOrg'
@@ -365,6 +370,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'Values are not in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
+                    AppId                     = '12345-12345-12345-12345-12345'
                     DisplayName               = 'App1'
                     AvailableToOtherTenants   = $false
                     Description               = 'App description'
@@ -383,6 +389,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     $AADApp = New-Object PSCustomObject
                     $AADApp | Add-Member -MemberType NoteProperty -Name DisplayName -Value 'App1'
                     $AADApp | Add-Member -MemberType NoteProperty -Name Id -Value '5dcb2237-c61b-4258-9c85-eae2aaeba9d6'
+                    $AADApp | Add-Member -MemberType NoteProperty -Name AppId -Value '12345-12345-12345-12345-12345'
                     $AADApp | Add-Member -MemberType NoteProperty -Name AvailableToOtherTenants -Value $false
                     $AADApp | Add-Member -MemberType NoteProperty -Name Description -Value 'App description'
                     $AADApp | Add-Member -MemberType NoteProperty -Name GroupMembershipClaims -Value 0
@@ -415,6 +422,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'Assigning Authentication Behaviors to a new Application' -Fixture {
             BeforeAll {
                 $testParams = @{
+                    AppId                     = '12345-12345-12345-12345-12345'
                     DisplayName               = 'App1'
                     AvailableToOtherTenants   = $false
                     Description               = 'App description'
@@ -463,6 +471,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'Assigning Permissions to a new Application' -Fixture {
             BeforeAll {
                 $testParams = @{
+                    AppId                     = '12345-12345-12345-12345-12345'
                     DisplayName               = 'App1'
                     AvailableToOtherTenants   = $false
                     Description               = 'App description'
@@ -502,7 +511,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should return values from the get method' {
                 Get-TargetResource @testParams
-                Should -Invoke -CommandName 'Get-MgBetaApplication' -Exactly 1
+                Should -Invoke -CommandName 'Get-MgBetaApplication' -Exactly 2
             }
 
             It 'Should return false from the test method' {
@@ -527,6 +536,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     $AADApp = New-Object PSCustomObject
                     $AADApp | Add-Member -MemberType NoteProperty -Name DisplayName -Value 'App1'
                     $AADApp | Add-Member -MemberType NoteProperty -Name Id -Value '5dcb2237-c61b-4258-9c85-eae2aaeba9d6'
+                    $AADApp | Add-Member -MemberType NoteProperty -Name AppId -Value '12345-12345-12345-12345-12345'
                     $AADApp | Add-Member -MemberType NoteProperty -Name AvailableToOtherTenants -Value $false
                     $AADApp | Add-Member -MemberType NoteProperty -Name Description -Value 'App description'
                     $AADApp | Add-Member -MemberType NoteProperty -Name GroupMembershipClaims -Value 0
