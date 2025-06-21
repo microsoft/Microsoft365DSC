@@ -5,6 +5,8 @@
 * AADApplication
   * Fix to properly handle PreAuthorizedApplications in the Set-TargetResource method
     FIXES [#6182](https://github.com/microsoft/Microsoft365DSC/issues/6182)
+  * [BREAKING CHANGE] Added the `AppId` as a secondary key parameter.
+    FIXES [#6078](https://github.com/microsoft/Microsoft365DSC/issues/6078)
 * AADGroup
   * Fix for removing Group owner.
 * IntuneDeviceCompliancePolicyAndroidDeviceOwner

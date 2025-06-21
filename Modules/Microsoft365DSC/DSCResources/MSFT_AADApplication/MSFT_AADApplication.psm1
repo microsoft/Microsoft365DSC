@@ -12,7 +12,7 @@ function Get-TargetResource
         [System.String]
         $ObjectId,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $AppId,
 
@@ -572,7 +572,7 @@ function Set-TargetResource
         [System.String]
         $ObjectId,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $AppId,
 
@@ -837,7 +837,7 @@ function Set-TargetResource
     if ($currentParameters.Api.PreAuthorizedApplications)
     {
         $PreAuthorizedApplicationsValue = @()
-        
+
         foreach ($preAuthApp in $currentParameters.Api.PreAuthorizedApplications)
         {
             $PreAuthorizedApplicationsValue += @{
@@ -1348,7 +1348,7 @@ function Test-TargetResource
         [System.String]
         $ObjectId,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $AppId,
 
