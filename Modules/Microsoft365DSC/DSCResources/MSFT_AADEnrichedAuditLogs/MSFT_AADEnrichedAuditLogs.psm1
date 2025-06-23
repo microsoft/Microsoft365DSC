@@ -66,7 +66,7 @@ function Get-TargetResource
     $nullResults = $PSBoundParameters
     try
     {
-        $instance = Get-MgBetaNetworkAccessSettingEnrichedAuditLog
+        $instance = Get-MgBetaNetworkAccessSettingEnrichedAuditLog -ErrorAction Stop
 
         $results = @{
             IsSingleInstance      = 'Yes'
@@ -85,13 +85,13 @@ function Get-TargetResource
     }
     catch
     {
-        Write-Verbose -Message $_
         New-M365DSCLogEntry -Message 'Error retrieving data:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `
             -Credential $Credential
 
+        Write-Error -Message $_
         return $nullResult
     }
 }

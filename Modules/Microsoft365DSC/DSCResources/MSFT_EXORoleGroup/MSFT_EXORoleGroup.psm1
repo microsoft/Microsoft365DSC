@@ -399,7 +399,14 @@ function Test-TargetResource
             $user = Get-User -Identity $member -ErrorAction 'SilentlyContinue'
             if ($null -ne $user)
             {
-                $newMembersValue += $user.UserPrincipalName
+                if ($member.Contains('@'))
+                {
+                    $newMembersValue += $user.UserPrincipalName
+                }
+                else
+                {
+                    $newMembersValue += $user.DisplayName
+                }
             }
             else
             {

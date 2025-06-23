@@ -61,7 +61,11 @@ function Get-TargetResource
         }
         else
         {
-            $instance = Get-MailboxAuditBypassAssociation -Identity $Identity -ErrorAction Stop
+            # We need the Where-Object clause because calling the cmdlet by Identity only can retrieve similar
+            # patterns.
+            $instance = Get-MailboxAuditBypassAssociation -Identity $Identity.Replace("`r",'') -ErrorAction Stop | 
+                Where-Object -FilterScript {$_.Identity -eq $Identity.Replace("`r",'')}
+            
         }
         if ($null -eq $instance)
         {
@@ -285,7 +289,7 @@ function Export-TargetResource
             $displayedKey = $config.Identity
             Write-M365DSCHost -Message "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -DeferWrite
             $params = @{
-                Identity              = $config.Identity
+                Identity              = $config.Identity.Replace("`r","")
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId

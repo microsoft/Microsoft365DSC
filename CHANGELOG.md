@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* AADApplication
+  * Fix to properly handle PreAuthorizedApplications in the Set-TargetResource method
+    FIXES [#6182](https://github.com/microsoft/Microsoft365DSC/issues/6182)
 * AADGroup
   * Fix for removing Group owner.
 * IntuneDeviceCompliancePolicyAndroidDeviceOwner

@@ -832,6 +832,21 @@ function Set-TargetResource
         }
         $apiValue.Add('Oauth2PermissionScopes', $scopeValue)
     }
+
+    # Pre-Authorized Applications
+    if ($currentParameters.Api.PreAuthorizedApplications)
+    {
+        $PreAuthorizedApplicationsValue = @()
+        
+        foreach ($preAuthApp in $currentParameters.Api.PreAuthorizedApplications)
+        {
+            $PreAuthorizedApplicationsValue += @{
+                appId                  = $currentParameters.Api.PreAuthorizedApplications.AppId
+                delegatedPermissionIds = $currentParameters.Api.PreAuthorizedApplications.PermissionIds
+            }
+        }
+        $apiValue.Add('PreAuthorizedApplications', $PreAuthorizedApplicationsValue)
+    }
     $currentParameters.Remove('KnownClientApplications') | Out-Null
     #endregion
 
@@ -1534,7 +1549,6 @@ function Test-TargetResource
     {
         $testTargetResource = $false
     }
-
     Write-Verbose -Message "Test-TargetResource returned $testTargetResource"
 
     return $testTargetResource

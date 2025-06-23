@@ -3,4 +3,4 @@
 
 ## Description
 
-Configures advanced audit logs for Global Secure Access in Entra Id
+DEPRECATED - This resource has been deprecated and is no longer supported.
