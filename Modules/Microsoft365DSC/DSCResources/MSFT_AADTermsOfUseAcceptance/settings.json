@@ -1,0 +1,52 @@
+{
+    "resourceName": "AADTermsOfUseAcceptance",
+    "description": "Configures the Terms of Use Acceptance in Entra Id.",
+    "roles": {
+        "read": [
+            "Security Reader"
+        ],
+        "update": [
+            "Compliance Administrator"
+        ]
+    },
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [
+                    {
+                        "name": "Agreement.Read.All"
+                    },
+                    {
+                        "name": "User.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Agreement.ReadWrite.All"
+                    },
+                    {
+                        "name": "User.Read.All"
+                    }
+                ]
+            },
+            "application": {
+                "read": [
+                    {
+                        "name": "Agreement.Read.All"
+                    },
+                    {
+                        "name": "User.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Agreement.ReadWrite.All"
+                    },
+                    {
+                        "name": "User.Read.All"
+                    }
+                ]
+            }
+        }
+    }
+}
