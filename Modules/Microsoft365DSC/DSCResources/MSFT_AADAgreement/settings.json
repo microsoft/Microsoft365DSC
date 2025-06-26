@@ -1,0 +1,36 @@
+{
+    "resourceName": "AADAgreement",
+    "description": "Manages Terms of Use Agreements in Azure Active Directory.",
+    "roles": {
+        "read": [],
+        "update": []
+    },
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [
+                    {
+                        "name": "Agreement.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Agreement.ReadWrite.All"
+                    }
+                ]
+            },
+            "application": {
+                "read": [
+                    {
+                        "name": "Agreement.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Agreement.ReadWrite.All"
+                    }
+                ]
+            }
+        }
+    }
+}

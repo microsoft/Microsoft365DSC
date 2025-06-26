@@ -1,0 +1,19 @@
+[ClassVersion("1.0.0.0"), FriendlyName("AADAgreement")]
+class MSFT_AADAgreement : OMI_BaseResource
+{
+    [Key, Description("The Id of the Terms of Use Agreement.")] String Id;
+    [Write, Description("The display name of the Terms of Use Agreement.")] String DisplayName;
+    [Write, Description("Indicates whether this terms of use is available for use in multiple languages.")] Boolean IsPerDeviceAcceptanceRequired;
+    [Write, Description("Indicates whether the user has to accept this agreement on every device that they are accessing it from.")] Boolean IsViewingBeforeAcceptanceRequired;
+    [Write, Description("Content of the terms of use agreement.")] String TermsOfUseUrl;
+    [Write, Description("Indicates the frequency with which the terms of use document versions expire, after which it must be re-accepted. The value is represented in ISO 8601 format for durations.")] String UserReacceptRequiredFrequency;
+    [Write, Description("Specify if this Terms of Use Agreement should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
+
+    [Write, Description("Credentials of the workload's Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
+    [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
+    [Write, Description("Secret of the Azure Active Directory application to authenticate with."), EmbeddedInstance("MSFT_Credential")] String ApplicationSecret;
+    [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
+    [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
+    [Write, Description("Managed ID being used for authentication.")] Boolean ManagedIdentity;
+    [Write, Description("Access token used for authentication.")] String AccessTokens[];
+};
