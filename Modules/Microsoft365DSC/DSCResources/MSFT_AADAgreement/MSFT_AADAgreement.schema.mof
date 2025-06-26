@@ -1,0 +1,40 @@
+[ClassVersion("1.0.0")]
+class MSFT_MicrosoftGraphTermsExpiration
+{
+    [Write, Description("The duration after which the terms expire, after its first acceptance. The value is represented in ISO 8601 format for durations.")] String Duration;
+    [Write, Description("The date time when the agreement expires for all users. The timestamp type represents date and time information using ISO 8601 format and is always in UTC time.")] String StartDateTime;
+    [Write, Description("The frequency at which the terms will expire, after its first acceptance. The value is represented in ISO 8601 format for durations.")] String Frequency;
+};
+
+[ClassVersion("1.0.0")]
+class MSFT_MicrosoftGraphAgreementFileLocalization
+{
+    [Write, Description("The date time when the agreement file was created. The timestamp type represents date and time information using ISO 8601 format and is always in UTC time.")] String CreatedDateTime;
+    [Write, Description("Localized display name of the policy file of an agreement.")] String DisplayName;
+    [Write, Description("Data that represents the terms of use PDF document.")] String FileData;
+    [Write, Description("Name of the agreement file.")] String FileName;
+    [Write, Description("The language of the agreement file in the format languagecode2-country/regioncode2.")] String Language;
+    [Write, Description("Indicates whether the agreement file is the default file if none of the culture matches the client preference.")] Boolean IsDefault;
+    [Write, Description("Indicates whether the agreement file is a major version update.")] Boolean IsMajorVersion;
+    [Write, Description("Read-only. The unique identifier of the entity.")] String Id;
+};
+
+[ClassVersion("1.0.0.0"), FriendlyName("AADAgreement")]
+class MSFT_AADAgreement : OMI_BaseResource
+{
+    [Key, Description("Display name of the agreement. The display name is used for internal tracking of the agreement but isn't shown to end users who view the agreement.")] String DisplayName;
+    [Write, Description("The unique identifier of the agreement.")] String Id;
+    [Write, Description("Indicates whether end users are required to accept this agreement on every device that they access it from.")] Boolean IsPerDeviceAcceptanceRequired;
+    [Write, Description("Indicates whether the user has to expand the agreement before accepting.")] Boolean IsViewingBeforeAcceptanceRequired;
+    [Write, Description("Expiration schedule and frequency of agreement for all users."), EmbeddedInstance("MSFT_MicrosoftGraphTermsExpiration")] String TermsExpiration;
+    [Write, Description("The duration after which the user must reaccept the terms of use. The value is represented in ISO 8601 format for durations.")] String UserReacceptRequiredFrequency;
+    [Write, Description("Files containing the terms of use. This property is being deprecated. Use file property instead."), EmbeddedInstance("MSFT_MicrosoftGraphAgreementFileLocalization")] String Files[];
+    [Write, Description("Specify if the Azure AD Agreement should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
+    [Write, Description("Credentials for the Microsoft Graph delegated permissions."), EmbeddedInstance("MSFT_Credential")] String Credential;
+    [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
+    [Write, Description("Secret of the Azure Active Directory application to authenticate with."), EmbeddedInstance("MSFT_Credential")] String ApplicationSecret;
+    [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
+    [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
+    [Write, Description("Managed ID being used for authentication.")] Boolean ManagedIdentity;
+    [Write, Description("Access token used for authentication.")] String AccessTokens[];
+};

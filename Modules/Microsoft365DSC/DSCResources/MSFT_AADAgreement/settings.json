@@ -1,0 +1,47 @@
+{
+    "resourceName": "AADAgreement",
+    "description": "This resource configures Azure Active Directory Terms of Use Agreements.",
+    "roles": {
+        "read": [
+            "Security Reader",
+            "Compliance Administrator"
+        ],
+        "update": [
+            "Compliance Administrator"
+        ]
+    },
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [
+                    {
+                        "name": "Agreement.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Agreement.Read.All"
+                    },
+                    {
+                        "name": "Agreement.ReadWrite.All"
+                    }
+                ]
+            },
+            "application": {
+                "read": [
+                    {
+                        "name": "Agreement.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Agreement.Read.All"
+                    },
+                    {
+                        "name": "Agreement.ReadWrite.All"
+                    }
+                ]
+            }
+        }
+    }
+}
