@@ -1060,11 +1060,12 @@ function Test-TargetResource
         [System.String[]]
         $AccessTokens
     )
+
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
     $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
@@ -1217,3 +1218,4 @@ function Export-TargetResource
 }
 
 Export-ModuleMember -Function *-TargetResource
+

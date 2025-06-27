@@ -2,8 +2,12 @@
     "resourceName": "FabricAdminTenantSettings",
     "description": "This resource configures the tenant settings for Microsoft Fabric.",
     "roles": {
-        "read": [],
-        "update": []
+        "read": [
+            "Global Reader"
+        ],
+        "update": [
+            "Fabric Administrator"
+        ]
     },
     "permissions": {
         "graph": {

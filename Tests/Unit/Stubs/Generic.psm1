@@ -428,6 +428,76 @@ function Get-SPOAdministrationUrl
     )
 }
 
+function Connect-M365Tenant
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Workload,
+
+        [Parameter()]
+        [System.String]
+        $Url,
+
+        [Parameter()]
+        [Alias('o365Credential')]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $UseModernAuth,
+
+        [Parameter()]
+        [SecureString]
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Boolean]
+        $SkipModuleReload = $false,
+
+        [Parameter()]
+        [Switch]
+        $Identity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $Endpoints,
+
+        [Parameter()]
+        [ValidateScript(
+            { $Workload -eq 'ExchangeOnline' }
+        )]
+        [System.String[]]
+        $ExchangeOnlineCmdlets = @()
+    )
+}
+
 function New-M365DSCConnection
 {
     [CmdletBinding()]

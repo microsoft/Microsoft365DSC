@@ -389,6 +389,7 @@ function Get-M365DSCTenantNameFromParameterSet
         [System.Collections.HashTable]
         $ParameterSet
     )
+
     if ($ParameterSet.ContainsKey('TenantId'))
     {
         return $ParameterSet.TenantId
@@ -412,7 +413,7 @@ function Get-M365DSCTenantNameFromParameterSet
 This function tests if the DSC hashtables have the same values
 
 .Functionality
-Internal
+Public
 #>
 function Test-M365DSCParameterState
 {
@@ -442,7 +443,11 @@ function Test-M365DSCParameterState
 
         [Parameter(Position = 6)]
         [System.Collections.Hashtable]
-        $IncludedDrifts
+        $IncludedDrifts,
+
+        [Parameter(Position = 7)]
+        [switch]
+        $NoEventMessage
     )
 
     #region Telemetry
@@ -474,6 +479,7 @@ function Test-M365DSCParameterState
         CurrentValues = @{}
         DesiredValues = @{}
     }
+
     if ($null -ne $IncludedDrifts -and $IncludedDrifts.Keys.Count -gt 0)
     {
         $DriftedParameters = $IncludedDrifts
@@ -904,6 +910,7 @@ function Test-M365DSCParameterState
     {
         Write-Verbose -Message $_
     }
+
     if ($returnValue -eq $false -or $DriftedParameters.Keys.Length -gt 0)
     {
         $EventMessage = [System.Text.StringBuilder]::New()
@@ -996,10 +1003,20 @@ function Test-M365DSCParameterState
         }
         $EventMessage.Append("    </CurrentValues>`r`n") | Out-Null
         $EventMessage.Append('</M365DSCEvent>') | Out-Null
-
+        foreach ($key in $DriftObject.DriftInfo.Keys)
+        {
+            $Global:AllDrifts.DriftInfo += @{
+                PropertyName = $key
+                CurrentValue = $DriftObject.DriftInfo.$key.CurrentValue
+                DesiredValue = $DriftObject.DriftInfo.$key.DesiredValue
+            }
+        }
+        if (-not $NoEventMessage)
+        {
+            Add-M365DSCEvent -Message $EventMessage.ToString() -EventType 'Drift' -EntryType 'Warning' `
+                -EventID 1 -Source $Source
+        }
         $Global:CCMCurrentDriftInfo = $DriftObject
-        Add-M365DSCEvent -Message $EventMessage.ToString() -EventType 'Drift' -EntryType 'Warning' `
-            -EventID 1 -Source $Source
     }
     elseif ($includeNonDriftsInformation -eq $true)
     {
@@ -1024,6 +1041,188 @@ function Test-M365DSCParameterState
     }
 
     return $returnValue
+}
+
+$Global:AllDrifts = @{
+    DriftInfo     = @()
+    CurrentValues = @{}
+    DesiredValues = @{}
+}
+
+<#
+.Description
+    Centralized method to evaluate the result of the various Test-TargetResource functions
+
+.FUNCTIONALITY
+    Internal
+#>
+function Test-M365DSCTargetResource
+{
+    [CmdletBinding()]
+    [OutputType([System.Boolean])]
+    [OutputType([System.Collections.Hashtable], ParameterSetName = 'PassThru')]
+    param(
+        [Parameter()]
+        $DesiredValues,
+
+        [Parameter()]
+        [System.String]
+        $ResourceName,
+
+        [Parameter()]
+        [System.String[]]
+        $ExcludedProperties,
+
+        [Parameter(
+            ParameterSetName = 'PassThru'
+        )]
+        [switch]
+        $PassThru
+    )
+
+    $Global:AllDrifts = @{
+        DriftInfo     = @()
+        CurrentValues = @{}
+        DesiredValues = @{}
+    }
+
+    #Ensure the proper dependencies are installed in the current environment.
+    Confirm-M365DSCDependencies
+
+    # Retrieve the primary keys of the given resource and remove them from the list of values to check.
+    $currentPath = $PSScriptRoot
+    if ($null -eq $Script:M365DSCSchema)
+    {
+        $schemaPath = Join-Path -Path $currentPath -ChildPath '..\SchemaDefinition.json'
+        $schemaJSON = Get-Content $schemaPath -Raw
+        $Script:M365DSCSchema = ConvertFrom-Json $schemaJSON
+    }
+    $resourceDefinition = $Script:M365DSCSchema | Where-Object -FilterScript { $_.ClassName -eq "MSFT_$ResourceName" }
+    $resourceKeys = $resourceDefinition.Parameters | Where-Object -FilterScript { $_.Option -eq 'Key' }
+
+    $keyStrings = @()
+    foreach ($resourceKey in $resourceKeys)
+    {
+        $keyName = $resourceKey.Name
+        $keyStrings += "$keyName {$($DesiredValues.$keyName)}"
+    }
+    $finalString = $keyStrings -join ' and '
+
+    Write-Verbose -Message "Testing configuration of the $ResourceName with $finalString"
+
+    $CurrentValues = & MSFT_$ResourceName\Get-TargetResource @DesiredValues
+    $ValuesToCheck = ([Hashtable]$DesiredValues).Clone()
+
+    # Remove the key parameters from the comparison
+    foreach ($keyToRemove in $resourceKeys)
+    {
+        $ValuesToCheck.Remove($keyToRemove.Name) | Out-Null
+    }
+
+    # Remove PSCredential object from the list of properties to be evaluated
+    $credentialProperties = $resourceDefinition.Parameters | Where-Object -FilterScript { $_.CIMType -eq 'MSFT_Credential' }
+    foreach ($property in $credentialProperties)
+    {
+        $ValuesToCheck.Remove($property.Name) | Out-Null
+    }
+
+    # Remove the ExcludedProperties from the list of properties to be evaluated
+    foreach ($property in $ExcludedProperties)
+    {
+        $ValuesToCheck.Remove($property) | Out-Null
+    }
+
+    $testTargetResource = $true
+
+    # Compare Cim instances
+    $desiredKeys = ([Hashtable]$DesiredValues).Clone().Keys
+    foreach ($key in $desiredKeys)
+    {
+        $source = $DesiredValues.$key
+        $target = $CurrentValues.$key
+        if ($null -ne $source -and $source.GetType().Name -like '*CimInstance*')
+        {
+            $CIMProperty = $resourceDefinition.Parameters | Where-Object -FilterScript { $_.Name -eq $key }
+            $CIMName = $CIMProperty.CIMType.Replace('[]', '')
+            $CIMDefinition = $Global:M365DSCSchema | Where-Object -FilterScript { $_.ClassName -eq $CIMName }
+            $CIMPrimaryKeys = $CIMDefinition.Parameters | Where-Object -FilterScript { $_.Option -eq 'Required' }
+
+            $targetObjects = @{}
+            if ($source.GetType().Name -eq 'CimInstance[]')
+            {
+                $targetObjects = @()
+            }
+
+            foreach ($targetObject in $target)
+            {
+                foreach ($primaryKey in $CIMPrimaryKeys.Name)
+                {
+                    $targetObject.Remove($primaryKey) | Out-Null
+                }
+
+                if ($targetObjects -is [array])
+                {
+                    $targetObjects += $targetObject
+                }
+                else
+                {
+                    $targetObjects = $targetObject
+                }
+            }
+
+            $testResult = Compare-M365DSCComplexObjectV2 `
+                -Source ($source) `
+                -Target ($targetObjects) `
+                -PropertyName $key
+
+            if (-not $testResult)
+            {
+                Write-Verbose "TestResult returned False for $source"
+                $testTargetResource = $false
+            }
+
+            $DesiredValues.Remove($key) | Out-Null
+            $ValuesToCheck.Remove($key) | Out-Null
+        }
+    }
+
+    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
+
+    $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -DesiredValues $DesiredValues `
+            -ValuesToCheck $ValuesToCheck.Keys `
+            -NoEventMessage
+
+    Write-Verbose -Message "Test-M365DSCTargetResource returned $testResult"
+
+    if (-not $testResult)
+    {
+        $testTargetResource = $false
+    }
+
+    if (-not $testTargetResource)
+    {
+        $TenantName = Get-M365DSCTenantNameFromParameterSet -ParameterSet $DesiredValues
+        Write-M365DSCDriftsToEventLog -Drifts $Global:AllDrifts `
+                                      -ResourceName $ResourceName `
+                                      -TenantName $TenantName `
+                                      -CurrentValues $CurrentValues `
+                                      -DesiredValues $DesiredValues
+    }
+
+    if ($PassThru)
+    {
+        return @{
+            ResourceName = $ResourceName
+            CurrentValues = $CurrentValues
+            DesiredValues = $DesiredValues
+            TestTargetResource = $testTargetResource
+        }
+    }
+
+    return $testTargetResource
 }
 
 <#
@@ -5001,6 +5200,7 @@ Export-ModuleMember -Function @(
     'Get-M365DSCExportContentForResource',
     'Get-M365DSCOrganization',
     'Get-M365DSCTenantDomain',
+    'Get-M365DSCTenantNameFromParameterSet',
     'Get-M365DSCWorkloadsListFromResourceNames',
     'Get-M365TenantName',
     'Get-SPOAdministrationUrl',
@@ -5018,6 +5218,7 @@ Export-ModuleMember -Function @(
     'Test-M365DSCDependenciesForNewVersions',
     'Test-M365DSCModuleValidity',
     'Test-M365DSCParameterState',
+    'Test-M365DSCTargetResource',
     'Uninstall-M365DSCOutdatedDependencies',
     'Update-M365DSCDependencies',
     'Update-M365DSCExportAuthenticationResults',

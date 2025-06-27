@@ -1,13 +1,11 @@
 function New-M365DSCSchemaDefinition
 {
     [CmdletBinding()]
-    param (
-    )
+    param ()
 
     $schemaFiles = Get-ChildItem -Path '.\Modules\Microsoft365DSC\DSCResources\*.schema.mof' -Recurse
 
     $classInfoList = @()
-
     $classesList = @()
 
     foreach ($file in $schemaFiles)
@@ -64,7 +62,7 @@ function New-M365DSCSchemaDefinition
                         Description = $propertyDescription
                     }
 
-                    if($ValueMap.Length -gt 0)
+                    if ($ValueMap.Length -gt 0)
                     {
                         $ValueMap = $ValueMap.Split(',')
                         $Values = $Values.Split(',')
@@ -73,18 +71,17 @@ function New-M365DSCSchemaDefinition
                         $ValueMap = $ValueMap | ForEach-Object { $_.Trim().Replace('"', '') }
                         $Values = $Values | ForEach-Object { $_.Trim().Replace('"', '') }
 
-                        if ($propertyType.ToLower().Contains('string')) 
+                        if ($propertyType.ToLower().Contains('string'))
                         {
                             $propertyInfoList[-1].ValueMap = [String[]]$valueMap
                             $propertyInfoList[-1].Values = [String[]]$values
                         }
-                        elseif ($propertyType.ToLower().Contains('int')) 
+                        elseif ($propertyType.ToLower().Contains('int'))
                         {
                             $propertyInfoList[-1].ValueMap = [int[]]$valueMap
                             $propertyInfoList[-1].Values = [int[]]$values
                         }
                     }
-
                 }
 
                 $classInfoList += [ordered] @{
@@ -94,10 +91,8 @@ function New-M365DSCSchemaDefinition
                 }
             }
         }
-
     }
 
     $jsonContent = ConvertTo-Json $classInfoList -Depth 99
     Set-Content -Value $jsonContent -Path '.\Modules\Microsoft365DSC\SchemaDefinition.json'
-
 }

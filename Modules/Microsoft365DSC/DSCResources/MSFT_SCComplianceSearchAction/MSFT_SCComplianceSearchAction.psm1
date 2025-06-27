@@ -113,7 +113,7 @@ function Get-TargetResource
             $currentAction = $Script:exportedInstance
         }
 
-        if ('Purge' -ne $Action)
+        if ($Action -eq 'Export' -or $Action -eq 'Retention')
         {
             $Scenario = Get-ResultProperty -ResultString $currentAction.Results -PropertyName 'Scenario'
             $FileTypeExclusion = Get-ResultProperty -ResultString $currentAction.Results -PropertyName 'File type exclusions for unindexed'
@@ -150,13 +150,29 @@ function Get-TargetResource
                 $result.Remove('EnableDedupe') | Out-Null
             }
         }
-        else
+        elseif ($Action -eq 'Purge')
         {
             $PurgeTP = Get-ResultProperty -ResultString $currentAction.Results -PropertyName 'Purge Type'
             $result = @{
                 Action                = $currentAction.Action
                 SearchName            = $currentAction.SearchName
                 PurgeType             = $PurgeTP
+                RetryOnError          = $currentAction.Retry
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
+                Ensure                = 'Present'
+                AccessTokens          = $AccessTokens
+            }
+        }
+        else
+        {
+            $result = @{
+                Action                = $currentAction.Action
+                SearchName            = $currentAction.SearchName
                 RetryOnError          = $currentAction.Retry
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
