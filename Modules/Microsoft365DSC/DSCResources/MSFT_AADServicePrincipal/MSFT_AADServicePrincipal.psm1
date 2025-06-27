@@ -309,8 +309,14 @@ function Get-TargetResource
             $complexCustomSecurityAttributes = @()
         }
 
+        $appIdToExport = $AADServicePrincipal.AppDisplayName
+        if ([System.String]::IsNullOrEmpty($appIdToExport))
+        {
+            $appIdToExport = $AADServicePrincipal.AppId
+        }
+
         $result = @{
-            AppId                              = $AADServicePrincipal.AppDisplayName
+            AppId                              = $appIdToExport
             AppRoleAssignedTo                  = $AppRoleAssignedToValues
             ObjectID                           = $AADServicePrincipal.Id
             DisplayName                        = $AADServicePrincipal.DisplayName

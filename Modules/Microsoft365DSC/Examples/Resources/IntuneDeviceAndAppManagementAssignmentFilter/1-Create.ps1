@@ -25,6 +25,7 @@ Configuration Example
         {
             DisplayName = 'Test Device Filter'
             Description = 'This is a new Filter'
+            AssignmentFilterManagementType = 'devices'
             Platform    = 'windows10AndLater'
             Rule        = "(device.manufacturer -ne `"Microsoft Corporation`")"
             Ensure      = 'Present'

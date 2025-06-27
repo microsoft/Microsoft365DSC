@@ -436,7 +436,7 @@ function Update-M365DSCAllowedGraphScopes
     }
 
     Write-Verbose -Message "Specified type: $Type"
-    $results = Get-M365DSCCompiledPermissionList -ResourceNameList $resourceNames -PermissionType 'Delegated' -AccessType $Type
+    $results = (Get-M365DSCCompiledPermissionList -ResourceNameList $resourceNames -PermissionType 'Delegated' -AccessType $Type).Permissions
     $permissions = ($results | Where-Object -FilterScript { $_.API -eq 'Graph' }).PermissionName
 
     Write-Verbose -Message "Found permissions: $($permissions -join ', ')"
@@ -1384,7 +1384,7 @@ function Update-M365DSCAzureAdApplication
         Write-LogEntry ' '
         Write-LogEntry 'Checking app permissions'
         $allRequiredAccess = @{}
-        foreach ($permission in $Permissions)
+        foreach ($permission in $Permissions.Permissions)
         {
             if ($null -eq $permission.Api -or $permission.Api -notin @('Graph', 'SharePoint', 'Exchange'))
             {

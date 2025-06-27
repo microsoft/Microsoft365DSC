@@ -44,24 +44,24 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-DeviceConditionalAccessRule -MockWith {
             }
 
-            Mock -Command Get-MgGroup -MockWith {
+            Mock -Command Get-Group -MockWith {
                 return @{
-                    Id = "33333-33333-33333-33333-33333"
-                    DisplayName = 'Communications'
+                    GuId = "12345-12345-12345-12345-12345"
+                    Name = 'Communications'
                 }
             }
 
             Mock -CommandName Get-DeviceConditionalAccessPolicy -MockWith {
                 return @{
                     Name = 'MyPolicy'
-                    Id   = '12345-12345-12345-12345-12345'
+                    Guid   = '12345-12345-12345-12345-12345'
                 }
             }
 
             # Mock Write-M365DSCHost to hide output during the tests
             Mock -CommandName Write-M365DSCHost -MockWith {
             }
-            $Script:exportedInstances =$null
+            $Script:exportedInstance =$null
             $Script:ExportMode = $false
         }
         # Test contexts
@@ -237,7 +237,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return @{
                         Id                        = '11111-11111-11111-11111-11111'
                         Name                      = 'MyPolicy{394b}'
-                        TargetGroups              = @('22222-22222-22222-22222-22222')
+                        TargetGroups              = @(@{Guid='12345-12345-12345-12345-12345'})
                         AllowAppStore             = $True;
                         AllowAssistantWhileLocked = $True;
                         AllowConvenienceLogon     = $True;

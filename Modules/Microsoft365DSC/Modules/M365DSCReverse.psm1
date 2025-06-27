@@ -21,6 +21,10 @@ function Start-M365DSCConfigurationExtract
         $Components,
 
         [Parameter()]
+        [System.String[]]
+        $ExcludeComponents,
+
+        [Parameter()]
         [Switch]
         $AllComponents,
 
@@ -137,6 +141,10 @@ function Start-M365DSCConfigurationExtract
         elseif ($Mode -eq 'Lite' -and $null -eq $Components)
         {
             $ComponentsToSkip = $Global:DefaultComponents + $Global:FullComponents
+        }
+
+        if( $null -ne $ExcludeComponents ) {
+            $ComponentsToSkip += $ExcludeComponents
         }
 
         # Check to validate that based on the received authentication parameters

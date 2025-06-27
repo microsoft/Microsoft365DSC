@@ -1383,22 +1383,6 @@ function Get-SCDLPSensitiveInformation
     return $returnValue
 }
 
-function Get-SCHeaderPatternsAsObject
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [System.Object[]]
-        $Patterns
-    )
-    $returnValue = @{
-        $Patterns.Name = $Patterns.Value
-    }
-    return $returnValue
-}
-
 function Get-SCDLPSensitiveInformationGroups
 {
     [CmdletBinding()]

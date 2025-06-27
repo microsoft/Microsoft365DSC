@@ -1,5 +1,6 @@
 <#
-This example creates a new Device and App Management Assignment Filter.
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
 #>
 
 Configuration Example
@@ -21,14 +22,10 @@ Configuration Example
 
     node localhost
     {
-        IntuneDeviceAndAppManagementAssignmentFilter 'AssignmentFilter'
+        IntuneDeviceConfigurationDeliveryOptimizationPolicyWindows10SettingCatalog 'IntuneDeviceConfigurationDeliveryOptimizationPolicyWindows10SettingCatalog'
         {
-            DisplayName = 'Test Device Filter'
-            Description = 'This is a new Filter'
-            AssignmentFilterManagementType = 'devices'
-            Platform    = 'windows10AndLater'
-            Rule        = "(device.manufacturer -ne `"Apple`")" # Updated Property
-            Ensure      = 'Present'
+            DisplayName           = "Example";
+            Ensure                = "Absent";
             ApplicationId         = $ApplicationId;
             TenantId              = $TenantId;
             CertificateThumbprint = $CertificateThumbprint;

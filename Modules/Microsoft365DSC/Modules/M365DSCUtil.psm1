@@ -1045,6 +1045,9 @@ Specifies the name of the configuration that will be generated.
 .Parameter Components
 Specifies the components for which an export should be created.
 
+.Parameter ExcludeComponents
+Specifies the components to skip when creating the export
+
 .Parameter Workloads
 Specifies the workload for which an export should be created for all resources.
 
@@ -1096,6 +1099,9 @@ Export-M365DSCConfiguration -Components @("AADApplication", "AADConditionalAcces
 .Example
 Export-M365DSCConfiguration -Credential $Credential -Filters @{AADApplication = "DisplayName eq 'MyApp'"}
 
+.Example
+Export-M365DSCConfiguration -Workloads @("SPO") -ExcludeComponents @("SPOPropertyBag") -Credential $Credential
+
 .Functionality
 Public
 #>
@@ -1123,6 +1129,10 @@ function Export-M365DSCConfiguration
         [Parameter(ParameterSetName = 'Export')]
         [System.String[]]
         $Components,
+
+        [Parameter(ParameterSetName = 'Export')]
+        [System.String[]]
+        $ExcludeComponents,
 
         [Parameter(ParameterSetName = 'Export')]
         [ValidateSet('AAD', 'ADO', 'AZURE', 'COMMERCE', 'DEFENDER', 'EXO', 'FABRIC', 'INTUNE', 'O365', 'OD', 'PLANNER', 'PP', 'SC', 'SENTINEL', 'SH', 'SPO', 'TEAMS')]
@@ -1327,6 +1337,7 @@ function Export-M365DSCConfiguration
         Write-M365DSCHost -Message "Exporting Microsoft 365 configuration for Workloads: $($Workloads -join ', ')"
         Start-M365DSCConfigurationExtract -Credential $Credential `
             -Workloads $Workloads `
+            -ExcludeComponents $ExcludeComponents `
             -Mode $Mode `
             -Path $Path -FileName $FileName `
             -ConfigurationName $ConfigurationName `
@@ -1347,6 +1358,7 @@ function Export-M365DSCConfiguration
         Write-M365DSCHost -Message "Exporting Microsoft 365 configuration for Components: $($Components -join ', ')"
         Start-M365DSCConfigurationExtract -Credential $Credential `
             -Components $Components `
+            -ExcludeComponents $ExcludeComponents `
             -Path $Path -FileName $FileName `
             -ConfigurationName $ConfigurationName `
             -ApplicationId $ApplicationId `
@@ -1366,6 +1378,7 @@ function Export-M365DSCConfiguration
         Write-M365DSCHost -Message "Exporting Microsoft 365 configuration for Mode: $Mode"
         Start-M365DSCConfigurationExtract -Credential $Credential `
             -Mode $Mode `
+            -ExcludeComponents $ExcludeComponents `
             -Path $Path -FileName $FileName `
             -ConfigurationName $ConfigurationName `
             -ApplicationId $ApplicationId `

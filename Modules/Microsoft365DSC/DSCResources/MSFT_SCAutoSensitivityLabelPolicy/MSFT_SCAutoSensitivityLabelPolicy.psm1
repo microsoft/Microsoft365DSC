@@ -187,9 +187,7 @@ function Get-TargetResource
             Credential                        = $Credential
             Ensure                            = 'Present'
             ExchangeSender                    = $policy.ExchangeSender
-            ExchangeSenderException           = $policy.ExchangeSenderException
             ExchangeSenderMemberOf            = $policy.ExchangeSenderMemberOf
-            ExchangeSenderMemberOfException   = $policy.ExchangeSenderMemberOfException
             ExchangeLocation                  = $policy.ExchangeLocation.Name
             AddExchangeLocation               = $policy.AddExchangeLocation
             RemoveExchangeLocation            = $policy.RemoveExchangeLocation
@@ -198,13 +196,13 @@ function Get-TargetResource
             AddOneDriveLocation               = $policy.AddOneDriveLocation
             RemoveOneDriveLocation            = $policy.RemoveOneDriveLocation
             OneDriveLocationException         = $policy.OneDriveLocationException.Name
-            AddOneDriveLocationException      = $policy.AddOneDriveLocationException
-            RemoveOneDriveLocationException   = $policy.RemoveOneDriveLocationException
+            AddOneDriveLocationException      = $policy.AddOneDriveLocationException.Name
+            RemoveOneDriveLocationException   = $policy.RemoveOneDriveLocationException.Name
             Priority                          = $policy.Priority
             SharePointLocation                = $policy.SharePointLocation.Name
-            SharePointLocationException       = $policy.SharePointLocationException
-            AddSharePointLocationException    = $policy.AddSharePointLocationException
-            RemoveSharePointLocationException = $policy.RemoveSharePointLocationException
+            SharePointLocationException       = $policy.SharePointLocationException.Name
+            AddSharePointLocationException    = $policy.AddSharePointLocationException.Name
+            RemoveSharePointLocationException = $policy.RemoveSharePointLocationException.Name
             AddSharePointLocation             = $policy.AddSharePointLocation
             RemoveSharePointLocation          = $policy.RemoveSharePointLocation
             ApplicationId                     = $ApplicationId
@@ -214,6 +212,20 @@ function Get-TargetResource
             CertificatePassword               = $CertificatePassword
             AccessTokens                      = $AccessTokens
         }
+
+        $ExchangeSenderMemberOfExceptionValue = @()
+        if (-not [System.String]::IsNullOrEmpty($policy.ExchangeSenderMemberOfException))
+        {            
+            $ExchangeSenderMemberOfExceptionValue = $policy.ExchangeSenderMemberOfException.Name
+        }
+        $result.Add('ExchangeSenderMemberOfException', $ExchangeSenderMemberOfExceptionValue)
+
+        $ExchangeSenderExceptionValue = @()
+        if (-not [System.String]::IsNullOrEmpty($policy.ExchangeSenderException))
+        {            
+            $ExchangeSenderExceptionValue = $policy.ExchangeSenderException.Name
+        }
+        $result.Add('ExchangeSenderException', $ExchangeSenderExceptionValue)
 
         Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
         return $result

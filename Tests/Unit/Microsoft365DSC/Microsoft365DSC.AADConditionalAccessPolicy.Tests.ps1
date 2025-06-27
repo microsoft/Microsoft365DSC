@@ -180,6 +180,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     PersistentBrowserIsEnabled               = $True
                     PersistentBrowserMode                    = 'Always'
                     DisableResilienceDefaultsIsEnabled       = $True
+                    ServicePrincipalRiskLevels               = @('High')
                     SignInFrequencyIsEnabled                 = $True
                     SignInFrequencyType                      = 'Days'
                     SignInFrequencyValue                     = 5
@@ -231,6 +232,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             ClientAppTypes   = @('Browser', 'MobileAppsAndDesktopClients')
                             SignInRiskLevels = @('High')
                             UserRiskLevels   = @('High')
+                            ServicePrincipalRiskLevels = @('High')
                         }
                         GrantControls   = @{
                             _Operator       = 'AND'

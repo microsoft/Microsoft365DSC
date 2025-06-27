@@ -9,6 +9,7 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
     [Write, Description("The group Display Name that is the target of the assignment.")] String groupDisplayName;
     [Write, Description("The collection Id that is the target of the assignment.(ConfigMgr)")] String collectionId;
 };
+
 [ClassVersion("1.0.0")]
 class MSFT_MicrosoftGraphDeliveryOptimizationBandwidth
 {

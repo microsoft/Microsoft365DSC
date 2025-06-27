@@ -192,10 +192,14 @@ function Get-TargetResource
                         $member.Add('Identity', $auMember.AdditionalProperties.displayName)
                         $member.Add('Type', 'Group')
                     }
-                    else
+                    elseif ($auMember.AdditionalProperties.'@odata.type' -match 'device')
                     {
                         $member.Add('Identity', $auMember.AdditionalProperties.displayName)
                         $member.Add('Type', 'Device')
+                    }
+                    else
+                    {
+                        throw "AU {$DisplayName}: member {$($auMember.Id)} has invalid type {$($auMember.AdditionalProperties.'@odata.type')}"
                     }
                     $memberSpec += $member
                 }
@@ -224,7 +228,7 @@ function Get-TargetResource
                     }
                 }
                 Write-Verbose -Message "AU {$DisplayName} verify RoleMemberInfo.Id {$($auScopedRoleMember.RoleMemberInfo.Id)}"
-                $url = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "v1.0/directoryobjects/$($auScopedRoleMember.RoleMemberInfo.Id)"
+                $url = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "v1.0/directoryObjects/$($auScopedRoleMember.RoleMemberInfo.Id)"
                 $memberObject = Invoke-MgGraphRequest -Uri $url
                 Write-Verbose -Message "AU {$DisplayName} @odata.Type={$($memberObject.'@odata.type')}"
                 if (($memberObject.'@odata.type') -match 'user')
@@ -239,11 +243,15 @@ function Get-TargetResource
                     $scopedRoleMember.RoleMemberInfo.Identity = $auScopedRoleMember.RoleMemberInfo.DisplayName
                     $scopedRoleMember.RoleMemberInfo.Type = 'Group'
                 }
-                else
+                elseif (($memberObject.'@odata.type') -match 'servicePrincipal')
                 {
                     Write-Verbose -Message "AU {$DisplayName} SPN = {$($auScopedRoleMember.RoleMemberInfo.DisplayName)}"
                     $scopedRoleMember.RoleMemberInfo.Identity = $auScopedRoleMember.RoleMemberInfo.DisplayName
                     $scopedRoleMember.RoleMemberInfo.Type = 'ServicePrincipal'
+                }
+                else
+                {
+                    throw "AU {$DisplayName}: scoped role member {$($memberObject.Id)} has invalid type {$($memberObject.'@odata.type')}"
                 }
                 Write-Verbose -Message "AU {$DisplayName} scoped role member: RoleName '$($scopedRoleMember.RoleName)' Type '$($scopedRoleMember.RoleMemberInfo.Type)' Identity '$($scopedRoleMember.RoleMemberInfo.Identity)'"
                 $scopedRoleMemberSpec += $scopedRoleMember
@@ -417,7 +425,7 @@ function Set-TargetResource
                     $memberIdentity = Get-MgUser -Filter "UserPrincipalName eq '$($member.Identity -replace "'", "''")'" -ErrorAction Stop
                     if ($memberIdentity)
                     {
-                        $memberSpecification += [pscustomobject]@{Type = "$($member.Type)s"; Id = $memberIdentity.Id }
+                        $memberSpecification += $memberIdentity.Id
                     }
                     else
                     {
@@ -433,7 +441,7 @@ function Set-TargetResource
                         {
                             throw "AU {$($DisplayName)}: Group displayname {$($member.Identity)} is not unique"
                         }
-                        $memberSpecification += [pscustomobject]@{Type = "$($member.Type)s"; Id = $memberIdentity.Id }
+                        $memberSpecification += $memberIdentity.Id
                     }
                     else
                     {
@@ -449,7 +457,7 @@ function Set-TargetResource
                         {
                             throw "AU {$($DisplayName)}: Device displayname {$($member.Identity)} is not unique"
                         }
-                        $memberSpecification += [pscustomobject]@{Type = "$($member.Type)s"; Id = $memberIdentity.Id }
+                        $memberSpecification += $memberIdentity.Id
                     }
                     else
                     {
@@ -458,7 +466,7 @@ function Set-TargetResource
                 }
                 else
                 {
-                    throw "AU {$($DisplayName)}: Member {$($Member.Identity)} has invalid type {$($Member.Type)}"
+                    throw "AU {$($DisplayName)}: Member {$($member.Identity)} has invalid type {$($member.Type)}"
                 }
             }
             # Members are added to the AU *after* it has been created
@@ -557,8 +565,8 @@ function Set-TargetResource
         {
             foreach ($member in $memberSpecification)
             {
-                Write-Verbose -Message "Adding new dynamic member {$($member.Id)}"
-                $url = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "v1.0/$($member.Type)/$($member.Id)"
+                Write-Verbose -Message "Adding new assigned member {$($member)}"
+                $url = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "v1.0/directoryObjects/$($member)"
 
                 New-MgDirectoryAdministrativeUnitMemberByRef -AdministrativeUnitId $policy.Id -OdataId $url
             }
@@ -620,17 +628,17 @@ function Set-TargetResource
                     if ($diff.Type -eq 'User')
                     {
                         $memberObject = Get-MgUser -Filter "UserPrincipalName eq '$($diff.Identity -replace "'", "''")'"
-                        $memberType = 'users'
+                        #$memberType = 'users'
                     }
                     elseif ($diff.Type -eq 'Group')
                     {
                         $memberObject = Get-MgGroup -Filter "DisplayName eq '$($diff.Identity -replace "'", "''")'"
-                        $membertype = 'groups'
+                        #$memberType = 'groups'
                     }
                     elseif ($diff.Type -eq 'Device')
                     {
                         $memberObject = Get-MgDevice -Filter "DisplayName eq '$($diff.Identity -replace "'", "''")'"
-                        $membertype = 'devices'
+                        #memberType = 'devices'
                     }
                     else
                     {
@@ -649,7 +657,7 @@ function Set-TargetResource
                     {
                         Write-Verbose -Message "AdministrativeUnit {$DisplayName} Adding member {$($diff.Identity)}, type {$($diff.Type)}"
 
-                        $url = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "v1.0/$memberType/$($memberObject.Id)"
+                        $url = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "v1.0/directoryObjects/$($memberObject.Id)"
                         New-MgDirectoryAdministrativeUnitMemberByRef -AdministrativeUnitId ($currentInstance.Id) -OdataId $url | Out-Null
                     }
                     else

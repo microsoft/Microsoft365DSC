@@ -99,9 +99,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-MgGroupMemberDirectoryObjectByRef -MockWith {
             }
 
-            Mock -CommandName Remove-MgBetaDirectoryRoleMemberDirectoryObjectByRef -MockWith {
-            }
-
             Mock -CommandName Invoke-MgGraphRequest -MockWith {
             }
 

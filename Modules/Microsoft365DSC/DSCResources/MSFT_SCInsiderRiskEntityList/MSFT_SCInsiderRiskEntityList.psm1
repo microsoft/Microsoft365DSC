@@ -131,13 +131,9 @@ function Get-TargetResource
 
             $nullResult = $PSBoundParameters
             $nullResult.Ensure = 'Absent'
-
-            $instance = Get-InsiderRiskEntityList -Identity $Name -ErrorAction Stop
         }
-        else
-        {
-            $instance = $Script:exportedInstance
-        }
+        
+        $instance = Get-InsiderRiskEntityList -Identity $Name -ErrorAction Stop
 
         if ($null -eq $instance)
         {

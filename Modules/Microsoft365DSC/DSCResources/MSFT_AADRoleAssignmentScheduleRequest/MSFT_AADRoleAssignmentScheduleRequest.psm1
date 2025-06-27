@@ -125,7 +125,7 @@ function Get-TargetResource
             $PrincipalInstance = Get-MgUser -Filter "UserPrincipalName eq '$($Principal -replace "'", "''")'" -ErrorAction SilentlyContinue
             $PrincipalValue = $PrincipalInstance.UserPrincipalName
         }
-        elseif ($null -eq $PrincipalIdValue -and $PrincipalType -eq 'Group')
+        elseif ($PrincipalType -eq 'Group')
         {
             Write-Verbose -Message "Retrieving Principal by DisplayName {$Principal}"
             $PrincipalInstance = Get-MgGroup -Filter "DisplayName eq '$($Principal -replace "'", "''")'" -ErrorAction SilentlyContinue
@@ -157,6 +157,10 @@ function Get-TargetResource
                 $reverseRoleId = $null
                 foreach ($partialRequest in $partialRequests)
                 {
+                    #skip if RoleDefinitionId is missing or not a valid GUID
+                    if ([string]::IsNullOrWhiteSpace($partialRequest.RoleDefinitionId) -or -not [guid]::TryParse($partialRequest.RoleDefinitionId, [ref]([guid]::Empty))) {
+                        continue
+                    }
                     $roleEntry = Get-MgBetaRoleManagementDirectoryRoleDefinition -UnifiedRoleDefinitionId $partialRequest.RoleDefinitionId | Where-Object -FilterScript {$_.DisplayName -eq $RoleDefinition}
                     if ($null -ne $roleEntry)
                     {

@@ -3869,7 +3869,9 @@ function Get-SettingsCatalogSettingDefinitionValueType {
 
     # Type can be Choice, Simple or *Collection
     $type = $SettingDefinition.AdditionalProperties.'@odata.type'.Replace($settingDefinitionOdataTypeBase, "").Replace("Setting", "").Replace("Definition", "")
-    if ($type -eq 'Simple') {
+    if ($type -eq 'Choice') {
+        $type += $SettingDefinition.AdditionalProperties.options[0].optionValue.'@odata.type'.Replace('#microsoft.graph.deviceManagementConfiguration', '').Replace('SettingValue', '')
+    } elseif ($type -eq 'Simple') {
         $type += $SettingDefinition.AdditionalProperties.valueDefinition.'@odata.type'.Replace($settingDefinitionOdataTypeBase, "").Replace("SettingValueDefinition", "")
     } elseif ($type -eq 'SimpleCollection') {
         if ($null -ne $SettingDefinition.AdditionalProperties.defaultValue) {
@@ -4010,7 +4012,8 @@ function New-ParameterDefinitionFromSettingsCatalogTemplateSetting {
     )
 
     $mofTypeMapping = @{
-        "Choice" = "String"
+        "ChoiceString" = "String"
+        "ChoiceInteger" = "SInt32"
         "ChoiceIntegerCollection" = "SInt32"
         "ChoiceStringCollection" = "String"
         "SimpleString" = "String"
@@ -4022,7 +4025,8 @@ function New-ParameterDefinitionFromSettingsCatalogTemplateSetting {
         "SimpleIntegerCollection" = "SInt32"
     }
     $powerShellTypeMapping = @{
-        "Choice" = "System.String"
+        "ChoiceString" = "System.String"
+        "ChoiceInteger" = "System.Int32"
         "ChoiceIntegerCollection" = "System.Int32[]"
         "ChoiceStringCollection" = "System.String[]"
         "SimpleString" = "System.String"
@@ -4089,7 +4093,11 @@ class <ClassName>
         }
     }
     if ($null -ne $TemplateSetting.Options) {
-        $restriction = "    [ValidateSet('$($TemplateSetting.Options.Id -join "', '")')]"
+        if ($TemplateSetting.Type -eq 'ChoiceInteger' -or $TemplateSetting.Type -eq 'ChoiceIntegerCollection') {
+            $restriction = "    [ValidateSet($($TemplateSetting.Options.Id -join ", "))]"
+        } else {
+            $restriction = "    [ValidateSet('$($TemplateSetting.Options.Id -join "', '")')]"
+        }
     }
     $powerShellDefinition = $powerShellDefinition.Replace("<Restriction>", $( if ($restriction) { "`n    $restriction" } else { "" }))
 

@@ -228,6 +228,11 @@ function Get-TargetResource
         [System.String[]]
         $InsiderRiskLevels,
 
+        [Parameter()]
+        [ValidateSet('low', 'medium', 'high', 'none', 'unknownFutureValue')]
+        [System.String[]]
+        $ServicePrincipalRiskLevels,
+
         #generic
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -664,6 +669,12 @@ function Get-TargetResource
         $InsiderRiskLevelsValue = $Policy.Conditions.InsiderRiskLevels.Split(',')
     }
 
+    $ServicePrincipalRiskLevelsValue = $null
+    if (-not [System.String]::IsNullOrEmpty($Policy.Conditions.ServicePrincipalRiskLevels))
+    {
+        $ServicePrincipalRiskLevelsValue = $Policy.Conditions.ServicePrincipalRiskLevels.Split(',')
+    }
+
     $result = @{
         DisplayName                              = $Policy.DisplayName
         Id                                       = $Policy.Id
@@ -743,6 +754,7 @@ function Get-TargetResource
         #Standard part
         TermsOfUse                               = $termOfUseName
         InsiderRiskLevels                        = $InsiderRiskLevelsValue
+        ServicePrincipalRiskLevels               = $ServicePrincipalRiskLevelsValue
         Ensure                                   = 'Present'
         Credential                               = $Credential
         ApplicationSecret                        = $ApplicationSecret
@@ -985,6 +997,11 @@ function Set-TargetResource
         [ValidateSet('minor', 'moderate', 'elevated', 'unknownFutureValue')]
         [System.String[]]
         $InsiderRiskLevels,
+
+        [Parameter()]
+        [ValidateSet('low', 'medium', 'high', 'none', 'unknownFutureValue')]
+        [System.String[]]
+        $ServicePrincipalRiskLevels,
 
         #generic
         [Parameter()]
@@ -1705,6 +1722,11 @@ function Set-TargetResource
             $conditions.Add('insiderRiskLevels', $($InsiderRiskLevels -join ','))
         }
 
+        if ([String]::IsNullOrEmpty($ServicePrincipalRiskLevels) -eq $false)
+        {
+            $conditions.Add('servicePrincipalRiskLevels', $($ServicePrincipalRiskLevels -join ','))
+        }
+
         Write-Verbose -Message 'Set-Targetresource: process risk levels and app types'
         Write-Verbose -Message "Set-Targetresource: UserRiskLevels: $UserRiskLevels"
         If ($currentParameters.ContainsKey('UserRiskLevels'))
@@ -1765,15 +1787,15 @@ function Set-TargetResource
                 operator = $GrantControlOperator
             }
 
-            if ($BuiltInControls)
+            if ($currentParameters.ContainsKey('builtInControls'))
             {
                 $GrantControls.Add('builtInControls', $BuiltInControls)
             }
-            if ($customAuthenticationFactors)
+            if ($currentParameters.ContainsKey('customAuthenticationFactors'))
             {
                 $GrantControls.Add('customAuthenticationFactors', $CustomAuthenticationFactors)
             }
-            if ($AuthenticationStrength)
+            if ($currentParameters.ContainsKey('authenticationStrength'))
             {
                 $strengthPolicy = Get-MgBetaPolicyAuthenticationStrengthPolicy | Where-Object -FilterScript { $_.DisplayName -eq $AuthenticationStrength } -ErrorAction SilentlyContinue
                 if ($null -ne $strengthPolicy)
@@ -1786,7 +1808,7 @@ function Set-TargetResource
                 }
             }
 
-           if ($TermsOfUse)
+           if ($currentParameters.ContainsKey('termsOfUse'))
            {
                Write-Verbose -Message "Getting Terms of Use {$TermsOfUse}"
                $TermsOfUseObj = Get-MgBetaAgreement | Where-Object -FilterScript { $_.DisplayName -eq $TermsOfUse }
@@ -2183,6 +2205,11 @@ function Test-TargetResource
         [ValidateSet('minor', 'moderate', 'elevated', 'unknownFutureValue')]
         [System.String[]]
         $InsiderRiskLevels,
+
+        [Parameter()]
+        [ValidateSet('low', 'medium', 'high', 'none', 'unknownFutureValue')]
+        [System.String[]]
+        $ServicePrincipalRiskLevels,
 
         #generic
         [Parameter()]
