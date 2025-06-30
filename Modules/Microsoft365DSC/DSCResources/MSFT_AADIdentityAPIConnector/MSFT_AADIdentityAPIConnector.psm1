@@ -480,9 +480,6 @@ function Test-TargetResource
         $AccessTokens
     )
 
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
     $CommandName = $MyInvocation.MyCommand
@@ -492,98 +489,10 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of the Azure AD Identity A P I Connector with Id {$Id} and DisplayName {$DisplayName}"
-
-    $CurrentValues = Get-TargetResource @PSBoundParameters
-    $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
-    $testResult = $true
-
-    #Compare Cim instances
-    foreach ($key in $PSBoundParameters.Keys)
-    {
-        $source = $PSBoundParameters.$key
-        $target = $CurrentValues.$key
-        if ($null -ne $source -and $source.GetType().Name -like '*CimInstance*')
-        {
-
-            # create a list of thumbprints from the source list
-            $sourceThumbprints = @()
-            foreach ($item in $source)
-            {
-                $myCertificate = @{}
-                $myCertificate.Add('Thumbprint', $item.Thumbprint)
-                $myCertificate.Add('IsActive', $item.IsActive)
-                $sourceThumbprints += $myCertificate
-            }
-
-            # create a list of thumbprints from the target list
-            $targetThumbprints = @()
-            foreach ($item in $target)
-            {
-                $myCertificate = @{}
-                $myCertificate.Add('Thumbprint', $item.Thumbprint)
-                $myCertificate.Add('IsActive', $item.IsActive)
-                $targetThumbprints += $myCertificate
-            }
-            # sort the lists
-            $sourceThumbprints = $sourceThumbprints | Sort-Object -Property { $_.Thumbprint }
-            $targetThumbprints = $targetThumbprints | Sort-Object -Property { $_.Thumbprint }
-
-            # print the list in verbose logs
-            foreach ($item in $sourceThumbprints)
-            {
-                Write-Verbose -Message "Source Thumbprints: $(Convert-M365DscHashtableToString -Hashtable $item)"
-            }
-
-            foreach ($item in $targetThumbprints)
-            {
-                Write-Verbose -Message "Target Thumbprints: $(Convert-M365DscHashtableToString -Hashtable $item)"
-            }
-
-            # check if the lists are identical
-            $compareResult = $true
-            if ($sourceThumbprints.Count -ne $targetThumbprints.Count)
-            {
-                $compareResult = $false
-            }
-            else
-            {
-                for ($i = 0; $i -lt $sourceThumbprints.Count; $i++)
-                {
-                    if ($sourceThumbprints[$i].Thumbprint -ne $targetThumbprints[$i].Thumbprint)
-                    {
-                        $compareResult = $false
-                        Write-Verbose -Message "Thumbprint mismatch: $($sourceThumbprints[$i].Thumbprint) - $($targetThumbprints[$i].Thumbprint)"
-                        break
-                    }
-                }
-            }
-
-            if ($compareResult -eq $true)
-            {
-                $ValuesToCheck.Remove($key) | Out-Null
-            }
-        }
-    }
-
-    $ValuesToCheck.Remove('Id') | Out-Null
-    $ValuesToCheck.Remove('Password') | Out-Null
-    $ValuesToCheck = Remove-M365DSCAuthenticationParameter -BoundParameters $ValuesToCheck
-
-    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
-    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
-
-    if ($testResult)
-    {
-        $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
-            -Source $($MyInvocation.MyCommand.Source) `
-            -DesiredValues $PSBoundParameters `
-            -ValuesToCheck $ValuesToCheck.Keys
-    }
-
-    Write-Verbose -Message "Test-TargetResource returned $testResult"
-
-    return $testResult
+    $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
+                                         -ResourceName $ResourceName `
+                                         -ExcludedProperties @('Password')
+    return $result
 }
 
 function Export-TargetResource
@@ -747,3 +656,4 @@ function Export-TargetResource
 }
 
 Export-ModuleMember -Function *-TargetResource
+

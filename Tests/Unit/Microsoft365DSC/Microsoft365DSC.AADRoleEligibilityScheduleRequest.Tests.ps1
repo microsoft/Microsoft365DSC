@@ -29,7 +29,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Add-M365DSCTelemetryEvent -MockWith {
             }
 
-            Mock -CommandName Confirm-M365DSCDependencies -MockWith {
+            Mock -ModuleName M365DSCUtil -CommandName Confirm-M365DSCDependencies -MockWith {
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
@@ -89,12 +89,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     PrincipalType        = "User"
                     RoleDefinition       = "Teams Communications Administrator";
                     ScheduleInfo         = New-CimInstance -ClassName MSFT_AADRoleEligibilityScheduleRequestSchedule -Property @{
-                            startDateTime             = '2023-09-01T02:40:44Z'
-                            expiration = New-CimInstance -ClassName MSFT_AADRoleEligibilityScheduleRequestScheduleExpiration -Property @{
-                                endDateTime = '2025-10-31T02:40:09Z'
-                                type        = 'afterDateTime'
-                            } -ClientOnly
+                        startDateTime             = '2023-09-01T02:40:44Z'
+                        expiration = New-CimInstance -ClassName MSFT_AADRoleEligibilityScheduleRequestScheduleExpiration -Property @{
+                            endDateTime = '2025-10-31T02:40:09Z'
+                            type        = 'afterDateTime'
                         } -ClientOnly
+                    } -ClientOnly
                     Credential  = $Credential
                 }
 
@@ -129,12 +129,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Principal            = "John.Smith@contoso.com";
                     RoleDefinition       = "Teams Communications Administrator";
                     ScheduleInfo         = New-CimInstance -ClassName MSFT_AADRoleEligibilityScheduleRequestSchedule -Property @{
-
-                            expiration = New-CimInstance -ClassName MSFT_AADRoleEligibilityScheduleRequestScheduleExpiration -Property @{
-
-                                type        = 'afterDateTime'
-                            } -ClientOnly
+                        expiration = New-CimInstance -ClassName MSFT_AADRoleEligibilityScheduleRequestScheduleExpiration -Property @{
+                            type        = 'afterDateTime'
                         } -ClientOnly
+                    } -ClientOnly
                     Credential  = $Credential
                 }
 
@@ -149,9 +147,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         ScheduleInfo         = @{
                             startDateTime             = [System.DateTime]::Parse('2023-09-01T02:40:44Z')
                             expiration                = @{
-                                    endDateTime = [System.DateTime]::Parse('2025-10-31T02:40:09Z')
-                                    type        = 'afterDateTime'
-                                }
+                                endDateTime = [System.DateTime]::Parse('2025-10-31T02:40:09Z')
+                                type        = 'afterDateTime'
+                            }
                         };
                     }
                 }
@@ -181,10 +179,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Principal            = "John.Smith@contoso.com";
                     RoleDefinition       = "Teams Communications Administrator";
                     ScheduleInfo         = New-CimInstance -ClassName MSFT_AADRoleEligibilityScheduleRequestSchedule -Property @{
-                            expiration = New-CimInstance -ClassName MSFT_AADRoleEligibilityScheduleRequestScheduleExpiration -Property @{
-                                type        = 'afterDateTime'
-                            } -ClientOnly
+                        expiration = New-CimInstance -ClassName MSFT_AADRoleEligibilityScheduleRequestScheduleExpiration -Property @{
+                            type        = 'afterDateTime'
                         } -ClientOnly
+                    } -ClientOnly
                     Credential  = $Credential
                 }
 
@@ -198,8 +196,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         RoleDefinitionId     = "12345";
                         ScheduleInfo         = @{
                             expiration                = @{
-                                    type        = 'afterDateTime'
-                                }
+                                type        = 'afterDateTime'
+                            }
                         };
                     }
                 }
@@ -213,8 +211,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         RoleDefinitionId     = "12345";
                         ScheduleInfo         = @{
                             expiration                = @{
-                                    type        = 'afterDateTime'
-                                }
+                                type        = 'afterDateTime'
+                            }
                         };
                     }
                 }
@@ -239,12 +237,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Principal            = "John.Smith@contoso.com";
                     RoleDefinition       = "Teams Communications Administrator";
                     ScheduleInfo         = New-CimInstance -ClassName MSFT_AADRoleEligibilityScheduleRequestSchedule -Property @{
-
-                            expiration = New-CimInstance -ClassName MSFT_AADRoleEligibilityScheduleRequestScheduleExpiration -Property @{
-
-                                type        = 'afterDateTime'
-                            } -ClientOnly
+                        startDateTime             = '2021-01-01T02:40:44Z'
+                        expiration = New-CimInstance -ClassName MSFT_AADRoleEligibilityScheduleRequestScheduleExpiration -Property @{
+                            endDateTime = '2025-10-31T02:40:09Z'
+                            type        = 'afterDateTime'
                         } -ClientOnly
+                    } -ClientOnly
                     Credential  = $Credential
                 }
 
@@ -257,15 +255,32 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         PrincipalId          = "123456";
                         RoleDefinitionId     = "12345";
                         ScheduleInfo         = @{
-                            startDateTime             = [System.DateTime]::Parse('2023-09-01T02:40:44Z')
+                            startDateTime             = [System.DateTime]::Parse('2023-09-01T02:40:44Z') # Drift
                             expiration                = @{
-                                    endDateTime = [System.DateTime]::Parse('2025-10-31T02:40:09Z')
-                                    type        = 'afterDateTime'
-                                }
+                                endDateTime = [System.DateTime]::Parse('2025-10-31T02:40:09Z')
+                                type        = 'afterDateTime'
+                            }
                         };
                     }
                 }
 
+                Mock -CommandName Get-MgBetaRoleManagementDirectoryRoleEligibilitySchedule -MockWith {
+                    return @{
+                        Action               = "AdminAssign";
+                        Id                   = '12345-12345-12345-12345-12345'
+                        DirectoryScopeId     = "/";
+                        IsValidationOnly     = $False;
+                        PrincipalId          = "123456";
+                        RoleDefinitionId     = "12345";
+                        ScheduleInfo         = @{
+                            startDateTime             = [System.DateTime]::Parse('2023-09-01T02:40:44Z') # Drift
+                            expiration                = @{
+                                endDateTime = [System.DateTime]::Parse('2025-10-31T02:40:09Z')
+                                type        = 'afterDateTime'
+                            }
+                        };
+                    }
+                }
             }
 
             It 'Should return Values from the Get method' {
@@ -300,9 +315,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         ScheduleInfo         = @{
                             startDateTime             = [System.DateTime]::Parse('2023-09-01T02:40:44Z')
                             expiration                = @{
-                                    endDateTime = [System.DateTime]::Parse('2025-10-31T02:40:09Z')
-                                    type        = 'afterDateTime'
-                                }
+                                endDateTime = [System.DateTime]::Parse('2025-10-31T02:40:09Z')
+                                type        = 'afterDateTime'
+                            }
                         };
                         TargetScheduleId = "12345-12345-12345-12345-12345"
                     }

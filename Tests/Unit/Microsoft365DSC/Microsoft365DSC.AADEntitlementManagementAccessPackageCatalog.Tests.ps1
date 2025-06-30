@@ -24,7 +24,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $secpasswd = ConvertTo-SecureString (New-Guid | Out-String) -AsPlainText -Force
             $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin@mydomain.com', $secpasswd)
 
-            Mock -CommandName Confirm-M365DSCDependencies -MockWith {
+            Mock -ModuleName M365DSCUtil -CommandName Confirm-M365DSCDependencies -MockWith {
             }
 
             Mock -CommandName Get-PSSession -MockWith {
@@ -93,7 +93,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName         = 'FakeStringValue'
                     Id                  = 'FakeStringValue'
                     IsExternallyVisible = $True
-
                     Ensure              = 'Absent'
                     Credential          = $Credential
                 }
@@ -106,7 +105,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         DisplayName         = 'FakeStringValue'
                         Id                  = 'FakeStringValue'
                         IsExternallyVisible = $True
-
                     }
                 }
             }
@@ -133,7 +131,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName         = 'FakeStringValue'
                     Id                  = 'FakeStringValue'
                     IsExternallyVisible = $True
-
                     Ensure              = 'Present'
                     Credential          = $Credential
                 }
@@ -146,7 +143,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         DisplayName         = 'FakeStringValue'
                         Id                  = 'FakeStringValue'
                         IsExternallyVisible = $True
-
                     }
                 }
             }
@@ -166,7 +162,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName         = 'FakeStringValue'
                     Id                  = 'FakeStringValue'
                     IsExternallyVisible = $True
-
                     Ensure              = 'Present'
                     Credential          = $Credential
                 }

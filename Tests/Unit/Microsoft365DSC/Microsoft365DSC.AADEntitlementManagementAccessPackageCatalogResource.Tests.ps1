@@ -24,7 +24,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $secpasswd = ConvertTo-SecureString (New-Guid | Out-String) -AsPlainText -Force
             $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin@mydomain.com', $secpasswd)
 
-            Mock -CommandName Confirm-M365DSCDependencies -MockWith {
+            Mock -ModuleName M365DSCUtil -CommandName Confirm-M365DSCDependencies -MockWith {
             }
 
             Mock -CommandName Get-PSSession -MockWith {
@@ -208,15 +208,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         AddedBy             = 'myAdmin'
                         AddedOn             = '25/10/2022 18:47:28'
                         CatalogId           = 'f34c2d92-9e9d-4703-ba9b-955b6ac8dcb3'
-                        Description         = 'https://001q1.sharepoint.com/'
-                        DisplayName         = 'Communication site - drifted' #Drift
+                        Description         = 'https://001q2.sharepoint.com/' # Drift
+                        DisplayName         = 'Communication site'
                         Id                  = '6a636d76-5025-44d4-9a80-78618f00c16d'
                         IsPendingOnboarding = $False
                         ManagedIdentity     = $False
-                        OriginId            = 'https://001q1.sharepoint.com/'
+                        OriginId            = 'https://001q2.sharepoint.com/' # Drift
                         OriginSystem        = 'SharePointOnline'
                         ResourceType        = 'SharePoint Online Site'
-                        Url                 = 'https://001q1.sharepoint.com/'
+                        Url                 = 'https://001q2.sharepoint.com/' # Drift
                     }
                 }
             }

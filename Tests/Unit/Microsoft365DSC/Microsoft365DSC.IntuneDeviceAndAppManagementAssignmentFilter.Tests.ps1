@@ -44,7 +44,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             # Mock Write-M365DSCHost to hide output during the tests
             Mock -CommandName Write-M365DSCHost -MockWith {
             }
-            $Script:exportedInstance = $null
+            $Script:exportedInstances =$null
             $Script:ExportMode = $false
         }
 
@@ -85,7 +85,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Description = 'Test'
                     DisplayName = 'Test Device Filter'
                     Ensure      = 'Present'
-                    AssignmentFilterManagementType = 'devices'
                     Platform    = 'windows10AndLater'
                     Rule        = "(device.manufacturer -ne `"bibi`")"
                     Credential  = $Credential
@@ -103,7 +102,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should return Present from the Get method' {
-                    (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
             It 'Should return false from the Test method' {
@@ -122,7 +121,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Description = 'Test'
                     DisplayName = 'Test Device Filter'
                     Ensure      = 'Present'
-                    AssignmentFilterManagementType = 'devices'
                     Platform    = 'windows10AndLater'
                     Rule        = "(device.manufacturer -ne `"bibi`")"
                     Credential  = $Credential
@@ -150,7 +148,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Description = 'Test'
                     DisplayName = 'Test Device Filter'
                     Ensure      = 'Absent'
-                    AssignmentFilterManagementType = 'devices'
                     Platform    = 'windows10AndLater'
                     Rule        = "(device.manufacturer -ne `"bibi`")"
                     Credential  = $Credential
@@ -206,7 +203,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
     }
-
 }
 
 Invoke-Command -ScriptBlock $Global:DscHelper.CleanupScript -NoNewScope

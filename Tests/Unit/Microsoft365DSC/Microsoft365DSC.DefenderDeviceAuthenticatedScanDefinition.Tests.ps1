@@ -28,13 +28,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $secpasswd = ConvertTo-SecureString (New-Guid | Out-String) -AsPlainText -Force
             $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin@mydomain.com', $secpasswd)
 
-            Mock -CommandName Confirm-M365DSCDependencies -MockWith {
+            Mock -ModuleName M365DSCUtil -CommandName Confirm-M365DSCDependencies -MockWith {
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
                 return "Credentials"
             }
-            
+
             # Mock Write-M365DSCHost to hide output during the tests
             Mock -CommandName Write-M365DSCHost -MockWith {
             }
@@ -119,8 +119,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 IsActive                 = $True;
                                 scanName                 = "MyScan";
                                 ScanType                 = "Network";
-                                Target                   = "172.1.12.1"; 
-                            }                   
+                                Target                   = "172.1.12.1";
+                            }
                         )
                     }
                 }
@@ -161,7 +161,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Invoke-M365DSCDefenderREST -MockWith {
                     return @{
-                        value = 
+                        value =
                             @{
                                 id = "12345-12345-12345-12345-12345"
                                 scannerAgent = @{
@@ -177,8 +177,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 IsActive                 = $True;
                                 scanName                 = "MyScan";
                                 ScanType                 = "Network";
-                                Target                   = "172.1.12.1"; 
-                            }  
+                                Target                   = "172.1.12.1";
+                            }
                     }
                 }
             }
@@ -227,8 +227,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 IsActive                 = $True;
                                 scanName                 = "MyScan";
                                 ScanType                 = "Network";
-                                Target                   = "172.1.12.1"; 
-                            }                   
+                                Target                   = "172.1.12.1";
+                            }
                         )
                     }
                 }
@@ -274,8 +274,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 IsActive                 = $True;
                                 scanName                 = "MyScan";
                                 ScanType                 = "Network";
-                                Target                   = "172.1.12.1"; 
-                            }                   
+                                Target                   = "172.1.12.1";
+                            }
                         )
                     }
                 }

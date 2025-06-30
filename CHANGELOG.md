@@ -25,9 +25,14 @@
     FIXES [#6181](https://github.com/microsoft/Microsoft365DSC/issues/6181)
     FIXES [#6045](https://github.com/microsoft/Microsoft365DSC/issues/6045)
     FIXES [#5419](https://github.com/microsoft/Microsoft365DSC/issues/5419)
+  * Fixed an issue where updating the configuration with `CustomSecurityAttributes` would fail.
+    FIXES [#6208](https://github.com/microsoft/Microsoft365DSC/issues/6208)
 * EXODistributionGroup
   * Always use the retrieved Identity when updating the distribution group
     to ensure correct group is updated when retrieved with PrimarySmtpAddress.
+* FabricAdminTenantSettings
+  * Fixed an issue where exported titles could contain unescaped string literals.
+    FIXES [#6199](https://github.com/microsoft/Microsoft365DSC/issues/6199)
 * IntuneDeviceAndAppManagementAssignmentFilter
   * Added property `AssignmentFilterManagementType` to supported properties.
 * IntuneDeviceCompliancePolicyAndroidDeviceOwner
@@ -43,6 +48,10 @@
 * IntuneWindowsHelloForBusinessGlobalPolicy
   * Initial release.
     FIXES [#4561](https://github.com/microsoft/Microsoft365DSC/issues/4561)
+* SCComplianceSearchAction
+  * Fixed an issue where the export would fail for preview actions.
+    FIXES [#6215](https://github.com/microsoft/Microsoft365DSC/issues/6215)
+    FIXES [#3534](https://github.com/microsoft/Microsoft365DSC/issues/3534)
 * SCDLPComplianceRule
   * Fixed an issue where the export of `SetHeader` is wrongly formatted.
     FIXES [#6140](https://github.com/microsoft/Microsoft365DSC/issues/6140)
@@ -53,11 +62,14 @@
     Fixes [#6183](https://github.com/microsoft/Microsoft365DSC/issues/6183)
 * M365DSCPermissions
   * Fixed an issue when accessing permissions from the compiled list returns no permissions.
+* M365DSCUtil
+  * Add -ExcludeComponents parameter to `Export-M365DSCConfiguration`to allow
+    for easy skipping of certain components.
+    FIXES [#6192(https://github.com/microsoft/Microsoft365DSC/issues/6192)]
 * MISC
   * Added `deviceAndAppManagementAssignmentFilterDisplayName` property to Intune assignments.
     FIXES [#4609](https://github.com/microsoft/Microsoft365DSC/issues/4609)
-  * Export-M365DSCConfiguration - Add -ExcludeComponents parameter to allow for easy skipping of certain components.
-    FIXED [#6192(https://github.com/microsoft/Microsoft365DSC/issues/6192)]
+  * Streamlined `Test-TargetResource` for many resources.
 * DEPENDENCIES
   * Updated MSCloudLoginAssistant to version 1.1.46.
 

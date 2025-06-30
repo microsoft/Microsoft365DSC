@@ -525,7 +525,7 @@ function Set-TargetResource
     $currentParameters.Remove('Owners') | Out-Null
 
     # update the custom security attributes to be cmdlet comsumable
-    if ($null -ne $currentParameters.CustomSecurityAttributes -and $currentParameters.CustomSecurityAttributes -gt 0)
+    if ($null -ne $currentParameters.CustomSecurityAttributes -and $currentParameters.CustomSecurityAttributes.Count -gt 0)
     {
         $currentParameters.CustomSecurityAttributes = Get-M365DSCAADServicePrincipalCustomSecurityAttributesAsCmdletHashtable -CustomSecurityAttributes $currentParameters.CustomSecurityAttributes
     }
@@ -933,11 +933,8 @@ function Test-TargetResource
         $AccessTokens
     )
 
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
     $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
@@ -945,46 +942,17 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message 'Testing configuration of Azure AD ServicePrincipal'
-
-    $testTargetResource = $true
-    $CurrentValues = Get-TargetResource @PSBoundParameters
-    $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
-
-    #Compare Cim instances
-    foreach ($key in $PSBoundParameters.Keys)
-    {
-        $source = $PSBoundParameters.$key
-        $target = $CurrentValues.$key
-
-        if ($null -ne $source -and $source.GetType().Name -like '*CimInstance*')
-        {
-            $testResult = Compare-M365DSCComplexObject `
-                -Source ($source) `
-                -Target ($target)
-
-            if (-not $testResult)
-            {
-                $testTargetResource = $false
-            }
-            else
-            {
-                $ValuesToCheck.Remove($key) | Out-Null
-            }
-        }
-    }
-
     # Evaluate AppId in GUID or DisplayName form.
-    $ObjectGuid = [System.Guid]::empty
-    if ([System.Guid]::TryParse($ValuesToCheck.AppId, [System.Management.Automation.PSReference]$ObjectGuid))
+    $ObjectGuid = [System.Guid]::Empty
+    if ([System.Guid]::TryParse($PSBoundParameters.AppId, [System.Management.Automation.PSReference]$ObjectGuid))
     {
         # AppId was provided as a GUID, but Get-TargetResource returns it as Display name.
         # Evaluate the translation to display name
         Write-Verbose -Message "AppId was provided as a GUID, translating into a DisplayName"
-        $appInstance = Get-MgApplication -Filter "AppId eq '$($ValuesToCheck.AppId)'" -ErrorAction SilentlyContinue
+        $appInstance = Get-MgApplication -Filter "AppId eq '$($PSBoundParameters.AppId)'" -ErrorAction SilentlyContinue
         if ($null -ne $appInstance)
         {
-            $ValuesToCheck.AppId = $appInstance.DisplayName
+            $PSBoundParameters.AppId = $appInstance.DisplayName
         }
         else
         {
@@ -993,23 +961,9 @@ function Test-TargetResource
         }
     }
 
-    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
-    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
-
-    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
-        -Source $($MyInvocation.MyCommand.Source) `
-        -DesiredValues $ValuesToCheck `
-        -ValuesToCheck $ValuesToCheck.Keys `
-        -IncludedDrifts $driftedParams
-
-    if (-not $TestResult)
-    {
-        $testTargetResource = $false
-    }
-
-    Write-Verbose -Message "Test-TargetResource returned $testTargetResource"
-
-    return $testTargetResource
+    $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
+                                         -ResourceName $ResourceName
+    return $result
 }
 
 function Export-TargetResource
@@ -1367,3 +1321,4 @@ function Get-CustomSecurityAttributes
 }
 
 Export-ModuleMember -Function *-TargetResource
+

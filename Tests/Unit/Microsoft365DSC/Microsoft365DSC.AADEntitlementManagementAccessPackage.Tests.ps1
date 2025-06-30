@@ -24,7 +24,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $secpasswd = ConvertTo-SecureString (New-Guid | Out-String) -AsPlainText -Force
             $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin@mydomain.com', $secpasswd)
 
-            Mock -CommandName Confirm-M365DSCDependencies -MockWith {
+            Mock -ModuleName M365DSCUtil -CommandName Confirm-M365DSCDependencies -MockWith {
             }
 
             Mock -CommandName Get-MSCloudLoginConnectionProfile -MockWith {
@@ -186,6 +186,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         IsHidden                        = $True
                         IsRoleScopesVisible             = $True
                         AccessPackageResourceRoleScopes = @{
+                            Id = 'FakeStringValue'
                             AccessPackageResourceScope = @{
                                 OriginId = '123456789'
                             }
@@ -220,7 +221,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-
             It 'Should return true from the Test method' {
                 Test-TargetResource @testParams | Should -Be $true
             }
@@ -253,6 +253,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         IsHidden                        = $False #Drift
                         IsRoleScopesVisible             = $True
                         AccessPackageResourceRoleScopes = @{
+                            Id = 'FakeStringValue'
                             AccessPackageResourceScope = @{
                                 OriginId = '123456789'
                             }
