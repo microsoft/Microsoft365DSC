@@ -57,6 +57,9 @@
     FIXES [#6140](https://github.com/microsoft/Microsoft365DSC/issues/6140)
   * Fixed an issue where the export of `AdvancedRule` with multiple and nested subconditions
     would throw an error during removal of the sensitive type id.
+* SPOTenantSettings
+  * [BREAKING CHANGE] Removed the property `OneDriveSharingCapability`.
+    FIXES [#5933](https://github.com/microsoft/Microsoft365DSC/issues/5933)
 * TeamsMeetingPolicy
   * Added missing Parameter 'RoomAttributeUserOverride' to Get-TargetResource's output.
     Fixes [#6183](https://github.com/microsoft/Microsoft365DSC/issues/6183)
