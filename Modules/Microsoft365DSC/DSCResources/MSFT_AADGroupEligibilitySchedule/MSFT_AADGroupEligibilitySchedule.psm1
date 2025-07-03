@@ -31,7 +31,7 @@ function Get-TargetResource
         [System.String]
         $PrincipalType,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $PrincipalDisplayName,
 
@@ -114,7 +114,7 @@ function Get-TargetResource
         }
 
         $uri = "$((Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl)v1.0/identityGovernance/privilegedAccess/group/eligibilitySchedules/" + $Id
-        $getvalue = Invoke-GraphRequest -Uri $uri -Method Get -ErrorAction SilentlyContinue
+        $getvalue = Invoke-MgGraphRequest -Uri $uri -Method Get -ErrorAction SilentlyContinue
 
         #endregion
         if ($null -eq $getValue)
@@ -224,20 +224,23 @@ function Get-TargetResource
 
        	switch ($getValue.PrincipalType)
        	{
-       	    'group' {
-		$PrincipalDisplayName = (Get-MgGroup -GroupId $getvalue.PrincipalId).DisplayName
+       	    'group'
+            {
+		        $PrincipalDisplayName = (Get-MgGroup -GroupId $getvalue.PrincipalId).DisplayName
             }
-       	    'user' {
-		$PrincipalDisplayName = (Get-MgUser -UserId $getvalue.PrincipalId).DisplayName
+       	    'user'
+            {
+		        $PrincipalDisplayName = (Get-MgUser -UserId $getvalue.PrincipalId).DisplayName
        	    }
-       	    'unknown' {
+       	    'unknown'
+            {
 		        $objectInfo = Get-MgBetaDirectoryObjectById -Ids $getvalue.PrincipalId -ErrorAction SilentlyContinue
             	$getValue.PrincipalType = $objectInfo.AdditionalProperties['@odata.type'].Split('.')[2]
 		        $PrincipalDisplayName = $objectInfo.AdditionalProperties['displayName']
        	    }
        	}
 
-	$GroupDisplayName = (Get-MgGroup -GroupId $getvalue.GroupId).DisplayName
+	    $GroupDisplayName = (Get-MgGroup -GroupId $getvalue.GroupId).DisplayName
 
         $results = @{
             #region resource generator code
@@ -305,7 +308,7 @@ function Set-TargetResource
         [System.String]
         $PrincipalType,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $PrincipalDisplayName,
 
@@ -632,7 +635,7 @@ function Test-TargetResource
         [System.String]
         $PrincipalType,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $PrincipalDisplayName,
 
@@ -793,6 +796,7 @@ function Export-TargetResource
                 $params = @{
                     Id                    = $config.Id
                     GroupDisplayName      = $group.DisplayName
+                    PrincipalDisplayName  = "Export"
                     Ensure                = 'Present'
                     Credential            = $Credential
                     ApplicationId         = $ApplicationId
@@ -881,4 +885,3 @@ function Export-TargetResource
 }
 
 Export-ModuleMember -Function *-TargetResource
-

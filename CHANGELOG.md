@@ -15,8 +15,10 @@
   * FIXES [#6198] Adds support for ServicePrincipalRiskLevels
 * AADGroup
   * Fix for removing Group owner.
-* AADGroupElegibilityScheduleSettings
-  * New resource AADGroupElegibilityScheduleSettings
+* AADGroupEligibilitySchedule
+  * Added secondary key parameter `PrincipalDisplayName`.
+* AADGroupEligibilityScheduleSettings
+  * New resource AADGroupEligibilityScheduleSettings
 * AADRoleAssignmentScheduleRequest
   * FIXES [#5710](https://github.com/microsoft/Microsoft365DSC/issues/5710)
 * AADServicePrincipal
