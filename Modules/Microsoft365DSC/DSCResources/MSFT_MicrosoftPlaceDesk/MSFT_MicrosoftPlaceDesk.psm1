@@ -121,7 +121,7 @@ function Get-TargetResource
     try
     {
         # Get desk from Microsoft Places API
-        $uri = "https://graph.microsoft.com/beta/places/$Identity"
+        $uri = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/places/$Identity"
         $desk = Invoke-MgGraphRequest -Uri $uri -Method GET -ErrorAction SilentlyContinue
 
         if ($null -eq $desk)
@@ -380,21 +380,21 @@ function Set-TargetResource
                 throw "DisplayName is required when creating a new Microsoft Place Desk"
             }
 
-            $uri = "https://graph.microsoft.com/beta/places"
+            $uri = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/places"
             $createResponse = Invoke-MgGraphRequest -Uri $uri -Method POST -Body ($requestBody | ConvertTo-Json -Depth 10)
             Write-Verbose -Message "Successfully created Microsoft Place Desk {$($createResponse.id)}"
         }
         elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
         {
             Write-Verbose -Message "Updating Microsoft Place Desk {$Identity}"
-            $uri = "https://graph.microsoft.com/beta/places/$Identity"
+            $uri = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/places/$Identity"
             Invoke-MgGraphRequest -Uri $uri -Method PATCH -Body ($requestBody | ConvertTo-Json -Depth 10)
             Write-Verbose -Message "Successfully updated Microsoft Place Desk {$Identity}"
         }
         elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
         {
             Write-Verbose -Message "Removing Microsoft Place Desk {$Identity}"
-            $uri = "https://graph.microsoft.com/beta/places/$Identity"
+            $uri = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/places/$Identity"
             Invoke-MgGraphRequest -Uri $uri -Method DELETE
             Write-Verbose -Message "Successfully removed Microsoft Place Desk {$Identity}"
         }
@@ -602,7 +602,7 @@ function Export-TargetResource
     try
     {
         # Get all desks from Microsoft Places API
-        $uri = "https://graph.microsoft.com/beta/places?\$filter=microsoft.graph.room/placeType eq 'Desk'"
+        $uri = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/places?\$filter=microsoft.graph.room/placeType eq 'Desk'"
         $desks = Invoke-MgGraphRequest -Uri $uri -Method GET
         $dscContent = ''
 
@@ -632,8 +632,6 @@ function Export-TargetResource
             }
 
             $Results = Get-TargetResource @params
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
