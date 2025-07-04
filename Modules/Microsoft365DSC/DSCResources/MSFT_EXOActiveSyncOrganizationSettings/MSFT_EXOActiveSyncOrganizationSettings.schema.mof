@@ -1,0 +1,25 @@
+[ClassVersion("1.0.0.0"), FriendlyName("EXOActiveSyncOrganizationSettings")]
+class MSFT_EXOActiveSyncOrganizationSettings : OMI_BaseResource
+{
+    [Key, Description("Only valid value is 'Yes'."), ValueMap{"Yes"}, Values{"Yes"}] String IsSingleInstance;
+    [Write, Description("The default access level for new ActiveSync devices.")] String DefaultAccessLevel;
+    [Write, Description("The tenant admin preference for ActiveSync.")] String TenantAdminPreference;
+    [Write, Description("The text to include in email messages sent to users whose devices are blocked.")] String UserMailInsert;
+    [Write, Description("Allow access for unsupported platforms.")] Boolean AllowAccessForUnSupportedPlatform;
+    [Write, Description("Enable mobile mailbox policy when conditional access is in place.")] Boolean EnableMobileMailboxPolicyWhenCAInplace;
+    [Write, Description("Allow RMS support for unenlightened apps.")] Boolean AllowRMSSupportForUnenlightenedApps;
+    [Write, Description("The email addresses of administrators who receive messages about blocked devices.")] String AdminMailRecipients[];
+    [Write, Description("The text to include in notification emails sent to administrators.")] String OtaNotificationMailInsert;
+    [Write, Description("Device filtering settings for ActiveSync.")] String DeviceFiltering;
+    [Write, Description("The identity of the organization.")] String Identity;
+    [Write, Description("Indicates whether the organization is managed by Intune.")] Boolean IsIntuneManaged;
+    [Write, Description("Indicates whether the organization has an Azure Premium subscription.")] Boolean HasAzurePremiumSubscription;
+    [Write, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
+    [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
+    [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
+    [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
+    [Write, Description("Path to certificate used in service principal usually a PFX file.")] String CertificatePath;
+    [Write, Description("Username can be made up to anything but password will be used for CertificatePassword"), EmbeddedInstance("MSFT_Credential")] String CertificatePassword;
+    [Write, Description("Managed ID being used for authentication.")] Boolean ManagedIdentity;
+    [Write, Description("Access token used for authentication.")] String AccessTokens[];
+};

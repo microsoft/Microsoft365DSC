@@ -1,0 +1,35 @@
+{
+  "resourceName": "EXOActiveSyncOrganizationSettings",
+  "description": "This resource allows users to manage ActiveSync organization settings.",
+  "roles": {
+    "read": [
+      "Global Reader"
+    ],
+    "update": [
+      "Exchange Administrator"
+    ]
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [],
+        "update": []
+      },
+      "application": {
+        "read": [],
+        "update": []
+      }
+    },
+    "exchange": {
+      "requiredroles": [
+        "Organization Management",
+        "Security Reader"
+      ],
+      "requiredrolegroups": [
+        "Organization Management",
+        "Security Administrator"
+      ]
+    }
+  },
+  "requiredModules": []
+}
