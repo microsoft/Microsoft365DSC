@@ -60,6 +60,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             # Mock Write-M365DSCHost to hide output during the tests
             Mock -CommandName Write-M365DSCHost -MockWith {
             }
+
+            Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
+                return "EXOActiveSyncOrganizationSettings 'TestResource' { IsSingleInstance = 'Yes' }"
+            }
+
+            Mock -CommandName Save-M365DSCPartialExport -MockWith {
+            }
+
             $Script:exportedInstances =$null
             $Script:ExportMode = $false
         }

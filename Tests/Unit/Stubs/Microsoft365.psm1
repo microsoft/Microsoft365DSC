@@ -2180,6 +2180,56 @@ function Get-ActiveSyncDeviceAccessRule
         $Identity
     )
 }
+
+function Get-ActiveSyncOrganizationSettings
+{
+    [CmdletBinding()]
+    param(
+    )
+}
+
+function Set-ActiveSyncOrganizationSettings
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $DefaultAccessLevel,
+
+        [Parameter()]
+        [System.String]
+        $TenantAdminPreference,
+
+        [Parameter()]
+        [System.String]
+        $UserMailInsert,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowAccessForUnSupportedPlatform,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableMobileMailboxPolicyWhenCAInplace,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowRMSSupportForUnenlightenedApps,
+
+        [Parameter()]
+        [System.String[]]
+        $AdminMailRecipients,
+
+        [Parameter()]
+        [System.String]
+        $OtaNotificationMailInsert,
+
+        [Parameter()]
+        [System.String]
+        $DeviceFiltering
+    )
+}
+
 function Get-AddressBookPolicy
 {
     [CmdletBinding()]
