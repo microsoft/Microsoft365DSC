@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_TeamsCallQueue'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -934,11 +936,18 @@ function Export-TargetResource
     try
     {
         $i = 1
-        [array] $Script:exportedInstances = Get-CsCallQueue -ErrorAction Stop
-        if ($Script:exportedInstances.Count -eq $Script:MaxSize)
+        [array] $Script:exportedInstances = @()
+        $offset = 0
+
+        do
         {
-            Write-Verbose -Message "WARNING: CsCallQueue isn't exporting all of them, you reach the max size."
-        }
+            [array] $currentBatch = Get-CsCallQueue -First 100 -Skip $offset
+            if ($currentBatch)
+            {
+                $Script:exportedInstances += $currentBatch
+                $offset += $currentBatch.Count
+            }
+        } while ($currentBatch.Count -eq 100)
 
         $dscContent = [System.Text.StringBuilder]::New()
         Write-M365DSCHost -Message "`r`n" -DeferWrite
@@ -992,3 +1001,4 @@ function Export-TargetResource
 }
 
 Export-ModuleMember -Function *-TargetResource
+

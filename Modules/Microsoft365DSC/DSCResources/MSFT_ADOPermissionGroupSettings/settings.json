@@ -1,49 +1,50 @@
-﻿{
-    "resourceName": "ADOPermissionGroupSettings",
-    "description": "Manages permissions in Azure DevOPS.",
-    "roles": {
+{
+  "resourceName": "ADOPermissionGroupSettings",
+  "description": "Manages permissions in Azure DevOPS.",
+  "roles": {
+    "read": [],
+    "update": []
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
         "read": [],
         "update": []
+      },
+      "application": {
+        "read": [],
+        "update": []
+      }
     },
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [],
-                "update": []
-            },
-            "application": {
-                "read": [],
-                "update": []
-            }
-        },
-        "Azure DevOps": {
-            "delegated": {
-                "read": [
-                    {
-                        "name": "vso.graph"
-                    },
-                    {
-                        "name": "vso.profile"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "vso.identity"
-                    },
-                    {
-                        "name": "vso.graph"
-                    },
-                    {
-                        "name": "vso.profile"
-                    },
-                    {
-                        "name": "vso.security_manage"
-                    },
-                    {
-                        "name": "vso.security_manage"
-                    }
-                ]
-            }
-        }
+    "Azure DevOps": {
+      "delegated": {
+        "read": [
+          {
+            "name": "vso.graph"
+          },
+          {
+            "name": "vso.profile"
+          }
+        ],
+        "update": [
+          {
+            "name": "vso.identity"
+          },
+          {
+            "name": "vso.graph"
+          },
+          {
+            "name": "vso.profile"
+          },
+          {
+            "name": "vso.security_manage"
+          },
+          {
+            "name": "vso.security_manage"
+          }
+        ]
+      }
     }
+  },
+  "requiredModules": []
 }

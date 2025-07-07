@@ -1,60 +1,66 @@
-﻿{
-    "resourceName": "TeamsChannelTab",
-    "description": "",
-    "roles": {
-        "read": [],
-        "update": []
-    },
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [
-                    {
-                        "name": "ChannelSettings.Read.All"
-                    },
-                    {
-                        "name": "Group.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Channel.Delete.All"
-                    },
-                    {
-                        "name": "ChannelSettings.Read.All"
-                    },
-                    {
-                        "name": "TeamsTab.Create"
-                    },
-                    {
-                        "name": "TeamsTab.ReadWrite.All"
-                    }
-                ]
-            },
-            "application": {
-                "read": [
-                    {
-                        "name": "ChannelSettings.Read.All"
-                    },
-                    {
-                        "name": "Group.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Channel.Delete.All"
-                    },
-                    {
-                        "name": "ChannelSettings.Read.All"
-                    },
-                    {
-                        "name": "TeamsTab.Create"
-                    },
-                    {
-                        "name": "TeamsTab.ReadWrite.All"
-                    }
-                ]
-            }
-        }
+{
+  "resourceName": "TeamsChannelTab",
+  "description": "",
+  "roles": {
+    "read": [],
+    "update": []
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "ChannelSettings.Read.All"
+          },
+          {
+            "name": "Group.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Channel.Delete.All"
+          },
+          {
+            "name": "ChannelSettings.Read.All"
+          },
+          {
+            "name": "TeamsTab.Create"
+          },
+          {
+            "name": "TeamsTab.ReadWrite.All"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "ChannelSettings.Read.All"
+          },
+          {
+            "name": "Group.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Channel.Delete.All"
+          },
+          {
+            "name": "ChannelSettings.Read.All"
+          },
+          {
+            "name": "TeamsTab.Create"
+          },
+          {
+            "name": "TeamsTab.ReadWrite.All"
+          }
+        ]
+      }
     }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.Teams",
+    "Microsoft.Graph.Groups",
+    "MSCloudLoginAssistant"
+  ]
 }

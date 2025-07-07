@@ -48,6 +48,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName <RemoveCmdletName> -MockWith {
             }
 
+            Mock -CommandName <GetCmdletName> -MockWith {
+                return @{
+<FakeValues>
+                }
+            }
+
             Mock -CommandName New-M365DSCConnection -MockWith {
                 return "Credentials"
             }
@@ -55,7 +61,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             # Mock Write-M365DSCHost to hide output during the tests
             Mock -CommandName Write-M365DSCHost -MockWith {
             }
-            $Script:exportedInstances =$null
+            $Script:exportedInstance = $null
             $Script:ExportMode = $false<AssignmentMock>
         }
 
@@ -89,19 +95,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 <TargetResourceFakeValues>                    Ensure = 'Absent'
                     Credential = $Credential;
                 }
-
-                Mock -CommandName <GetCmdletName> -MockWith {
-                    return @{
-<FakeValues>
-                    }
-                }
             }
 
             It 'Should return Values from the Get method' {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It 'Should return true from the Test method' {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 
@@ -117,12 +117,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 <TargetResourceFakeValues>                    Ensure = 'Present'
                     Credential = $Credential;
                 }
-
-                Mock -CommandName <GetCmdletName> -MockWith {
-                    return @{
-<FakeValues>
-                    }
-                }
             }
 
             It 'Should return true from the Test method' {
@@ -135,11 +129,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
 <TargetResourceFakeValues>                    Ensure = 'Present'
                     Credential = $Credential;
-                }
-
-                Mock -CommandName <GetCmdletName> -MockWith {
-                    return @{
-<DriftValues>                    }
                 }
             }
 
@@ -163,12 +152,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
                     Credential = $Credential
-                }
-
-                Mock -CommandName <GetCmdletName> -MockWith {
-                    return @{
-<FakeValues>
-                    }
                 }
             }
 

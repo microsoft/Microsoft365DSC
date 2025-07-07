@@ -1,44 +1,48 @@
 {
-    "resourceName":"IntuneSecurityBaselineWindows365",
-    "description":"This resource configures an Intune Security Baseline Windows365.",
-    "permissions":{
-       "graph":{
-          "delegated":{
-             "read":[
-                {
-                   "name":"DeviceManagementConfiguration.Read.All"
-                },
-                {
-                   "name":"Group.Read.All"
-                }
-             ],
-             "update":[
-                {
-                   "name":"Group.Read.All"
-                },
-                {
-                    "name": "DeviceManagementConfiguration.ReadWrite.All"
-                }
-             ]
+  "resourceName": "IntuneSecurityBaselineWindows365",
+  "description": "This resource configures an Intune Security Baseline Windows365.",
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "DeviceManagementConfiguration.Read.All"
           },
-          "application":{
-             "read":[
-                {
-                   "name":"DeviceManagementConfiguration.Read.All"
-                },
-                {
-                   "name":"Group.Read.All"
-                }
-             ],
-             "update":[
-                {
-                   "name":"Group.Read.All"
-                },
-                {
-                    "name": "DeviceManagementConfiguration.ReadWrite.All"
-                }
-             ]
+          {
+            "name": "Group.Read.All"
           }
-       }
+        ],
+        "update": [
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "DeviceManagementConfiguration.ReadWrite.All"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "DeviceManagementConfiguration.Read.All"
+          },
+          {
+            "name": "Group.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "DeviceManagementConfiguration.ReadWrite.All"
+          }
+        ]
+      }
     }
- }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.DeviceManagement"
+  ]
+}

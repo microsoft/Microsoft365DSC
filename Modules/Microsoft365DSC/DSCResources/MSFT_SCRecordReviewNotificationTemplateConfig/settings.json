@@ -1,16 +1,17 @@
-﻿{
-    "resourceName": "SCRecordReviewNotificationTemplateConfig",
-    "description": "Configures Purview Records Management disposition settings.",
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [],
-                "update": []
-            },
-            "application": {
-                "read": [],
-                "update": []
-            }
-        }
+{
+  "resourceName": "SCRecordReviewNotificationTemplateConfig",
+  "description": "Configures Purview Records Management disposition settings.",
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [],
+        "update": []
+      },
+      "application": {
+        "read": [],
+        "update": []
+      }
     }
+  },
+  "requiredModules": []
 }

@@ -1,44 +1,48 @@
 {
-    "resourceName": "IntuneWindowsAutopilotDeploymentProfileAzureADHybridJoined",
-    "description": "This resource configures an Intune Windows Autopilot Deployment Profile Azure AD Hybrid Joined.",
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [
-                    {
-                        "name": "Group.Read.All"
-                    },
-                    {
-                        "name": "DeviceManagementServiceConfig.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Group.Read.All"
-                    },
-                    {
-                        "name": "DeviceManagementServiceConfig.ReadWrite.All"
-                    }
-                ]
-            },
-            "application": {
-                "read": [
-                    {
-                        "name": "Group.Read.All"
-                    },
-                    {
-                        "name": "DeviceManagementServiceConfig.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Group.Read.All"
-                    },
-                    {
-                        "name": "DeviceManagementServiceConfig.ReadWrite.All"
-                    }
-                ]
-            }
-        }
+  "resourceName": "IntuneWindowsAutopilotDeploymentProfileAzureADHybridJoined",
+  "description": "This resource configures an Intune Windows Autopilot Deployment Profile Azure AD Hybrid Joined.",
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "DeviceManagementServiceConfig.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "DeviceManagementServiceConfig.ReadWrite.All"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "DeviceManagementServiceConfig.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "DeviceManagementServiceConfig.ReadWrite.All"
+          }
+        ]
+      }
     }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.DeviceManagement.Enrollment"
+  ]
 }

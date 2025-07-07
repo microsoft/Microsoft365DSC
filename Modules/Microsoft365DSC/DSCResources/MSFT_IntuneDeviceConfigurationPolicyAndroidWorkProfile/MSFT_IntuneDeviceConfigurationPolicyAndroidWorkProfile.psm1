@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_IntuneDeviceConfigurationPolicyAndroidWorkProfile'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -1163,3 +1165,4 @@ function Get-M365DSCIntuneDeviceConfigurationPolicyAndroidWorkProfileAdditionalP
 }
 
 Export-ModuleMember -Function *-TargetResource
+

@@ -1,0 +1,48 @@
+{
+  "resourceName": "IntuneMobileAppsWebLink",
+  "description": "This resource configures an Intune Mobile Apps Web Link for the iOS, MacOS, Windows and general platform.",
+  "permissions": {
+    "graph": {
+      "application": {
+        "read": [
+          {
+            "name": "DeviceManagementApps.Read.All"
+          },
+          {
+            "name": "Group.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "DeviceManagementApps.ReadWrite.All"
+          },
+          {
+            "name": "Group.Read.All"
+          }
+        ]
+      },
+      "delegated": {
+        "read": [
+          {
+            "name": "DeviceManagementApps.Read.All"
+          },
+          {
+            "name": "Group.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "DeviceManagementApps.ReadWrite.All"
+          },
+          {
+            "name": "Group.Read.All"
+          }
+        ]
+      }
+    }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.Devices.CorporateManagement"
+  ]
+}

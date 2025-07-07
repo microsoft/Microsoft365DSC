@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_IntuneMobileAppsMacOSLobApp'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -437,26 +439,7 @@ function Set-TargetResource
         $CreateParameters.Add('@odata.type', '#microsoft.graph.macOSLobApp')
         $app = New-MgBetaDeviceAppManagementMobileApp -BodyParameter $CreateParameters
 
-        foreach ($category in $Categories)
-        {
-            if ($category.Id)
-            {
-                $currentCategory = Get-MgBetaDeviceAppManagementMobileAppCategory -CategoryId $category.Id
-            }
-            else
-            {
-                $currentCategory = Get-MgBetaDeviceAppManagementMobileAppCategory -Filter "DisplayName eq '$($category.DisplayName -replace "'", "''")'"
-            }
-
-            if ($null -eq $currentCategory)
-            {
-                throw "Mobile App Category with DisplayName $($category.DisplayName) not found."
-            }
-
-            Invoke-MgGraphRequest -Uri "$((Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl)beta/deviceAppManagement/mobileApps/$($app.Id)/categories/`$ref" -Method 'POST' -Body @{
-                '@odata.id' = "$((Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl)beta/deviceAppManagement/mobileAppCategories/$($currentCategory.Id)"
-            }
-        }
+        Update-DeviceAppManagementAppCategory -App $app -Categories $Categories
 
         #Assignments
         if ($app.Id)
@@ -487,52 +470,7 @@ function Set-TargetResource
         $UpdateParameters.Add('@odata.type', '#microsoft.graph.macOSLobApp')
         Update-MgBetaDeviceAppManagementMobileApp -MobileAppId $currentInstance.Id -BodyParameter $UpdateParameters
 
-        [array]$referenceObject = if ($null -ne $currentInstance.Categories.DisplayName)
-        {
-            $currentInstance.Categories.DisplayName
-        }
-        else
-        {
-            , @()
-        }
-        [array]$differenceObject = if ($null -ne $Categories.DisplayName)
-        {
-            $Categories.DisplayName
-        }
-        else
-        {
-            , @()
-        }
-        $delta = Compare-Object -ReferenceObject $referenceObject -DifferenceObject $differenceObject -PassThru
-        foreach ($diff in $delta)
-        {
-            if ($diff.SideIndicator -eq '=>')
-            {
-                $category = $Categories | Where-Object { $_.DisplayName -eq $diff }
-                if ($category.Id)
-                {
-                    $currentCategory = Get-MgBetaDeviceAppManagementMobileAppCategory -MobileAppCategoryId $category.Id
-                }
-                else
-                {
-                    $currentCategory = Get-MgBetaDeviceAppManagementMobileAppCategory -Filter "DisplayName eq '$($category.DisplayName -replace "'", "''")'"
-                }
-
-                if ($null -eq $currentCategory)
-                {
-                    throw "Mobile App Category with DisplayName $($category.DisplayName) not found."
-                }
-
-                Invoke-MgGraphRequest -Uri "/beta/deviceAppManagement/mobileApps/$($currentInstance.Id)/categories/`$ref" -Method 'POST' -Body @{
-                    '@odata.id' = "$((Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl)beta/deviceAppManagement/mobileAppCategories/$($currentCategory.Id)"
-                }
-            }
-            else
-            {
-                $category = $currentInstance.Categories | Where-Object { $_.DisplayName -eq $diff }
-                Invoke-MgGraphRequest -Uri "/beta/deviceAppManagement/mobileApps/$($currentInstance.Id)/categories/$($category.Id)/`$ref" -Method 'DELETE'
-            }
-        }
+        Update-DeviceAppManagementAppCategory -App $currentInstance -Categories $Categories -Compare
 
         #Assignments
         $assignmentsHash = ConvertTo-IntuneMobileAppAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
@@ -949,3 +887,4 @@ function Export-TargetResource
 }
 
 Export-ModuleMember -Function *-TargetResource
+

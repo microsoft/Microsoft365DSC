@@ -1,4 +1,6 @@
-﻿function Get-TargetResource
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_EXODataAtRestEncryptionPolicyAssignment'
+
+function Get-TargetResource
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
@@ -314,3 +316,4 @@ function Export-TargetResource
 }
 
 Export-ModuleMember -Function *-TargetResource
+

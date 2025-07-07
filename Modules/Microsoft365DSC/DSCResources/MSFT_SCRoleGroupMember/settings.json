@@ -1,16 +1,17 @@
-﻿{
-    "resourceName": "SCRoleGroupMember",
-    "description": "",
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [],
-                "update": []
-            },
-            "application": {
-                "read": [],
-                "update": []
-            }
-        }
+{
+  "resourceName": "SCRoleGroupMember",
+  "description": "",
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [],
+        "update": []
+      },
+      "application": {
+        "read": [],
+        "update": []
+      }
     }
+  },
+  "requiredModules": []
 }

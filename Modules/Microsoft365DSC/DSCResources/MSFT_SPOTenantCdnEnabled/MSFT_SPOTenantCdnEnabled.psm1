@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_SPOTenantCdnEnabled'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -421,3 +423,4 @@ function Export-TargetResource
 }
 
 Export-ModuleMember -Function *-TargetResource
+

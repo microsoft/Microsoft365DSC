@@ -1,44 +1,49 @@
 {
-    "resourceName": "IntuneDeviceCompliancePolicyAndroidWorkProfile",
-    "description": "This resource configures the settings of Android Work Profile device compliance policies in your cloud-based organization.",
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [
-                    {
-                        "name": "Group.Read.All"
-                    },
-                    {
-                        "name": "DeviceManagementConfiguration.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Group.Read.All"
-                    },
-                    {
-                        "name": "DeviceManagementConfiguration.ReadWrite.All"
-                    }
-                ]
-            },
-            "application": {
-                "read": [
-                    {
-                        "name": "Group.Read.All"
-                    },
-                    {
-                        "name": "DeviceManagementConfiguration.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Group.Read.All"
-                    },
-                    {
-                        "name": "DeviceManagementConfiguration.ReadWrite.All"
-                    }
-                ]
-            }
-        }
+  "resourceName": "IntuneDeviceCompliancePolicyAndroidWorkProfile",
+  "description": "This resource configures the settings of Android Work Profile device compliance policies in your cloud-based organization.",
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "DeviceManagementConfiguration.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "DeviceManagementConfiguration.ReadWrite.All"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "DeviceManagementConfiguration.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "DeviceManagementConfiguration.ReadWrite.All"
+          }
+        ]
+      }
     }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.DeviceManagement",
+    "MSCloudLoginAssistant"
+  ]
 }

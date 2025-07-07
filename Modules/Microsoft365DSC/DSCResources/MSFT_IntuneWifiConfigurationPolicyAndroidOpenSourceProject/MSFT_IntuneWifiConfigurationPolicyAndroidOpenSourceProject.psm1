@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_IntuneWifiConfigurationPolicyAndroidOpenSourceProject'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -794,3 +796,4 @@ function Get-M365DSCAdditionalProperties
 }
 
 Export-ModuleMember -Function *-TargetResource
+

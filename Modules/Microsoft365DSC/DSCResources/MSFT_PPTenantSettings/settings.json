@@ -1,16 +1,19 @@
-﻿{
-    "resourceName": "PPTenantSettings",
-    "description": "",
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [],
-                "update": []
-            },
-            "application": {
-                "read": [],
-                "update": []
-            }
-        }
+{
+  "resourceName": "PPTenantSettings",
+  "description": "",
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [],
+        "update": []
+      },
+      "application": {
+        "read": [],
+        "update": []
+      }
     }
+  },
+  "requiredModules": [
+    "MSCloudLoginAssistant"
+  ]
 }

@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_AADConditionalAccessPolicy'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -1638,6 +1640,7 @@ function Set-TargetResource
                                 -Source $($MyInvocation.MyCommand.Source) `
                                 -TenantId $TenantId `
                                 -Credential $Credential
+                            throw $message # and avoid creating or updating a policy with a missing location
                         }
                         else
                         {
@@ -1664,6 +1667,7 @@ function Set-TargetResource
                                 -Source $($MyInvocation.MyCommand.Source) `
                                 -TenantId $TenantId `
                                 -Credential $Credential
+                            throw $message # and avoid creating or updating a policy with a missing location
                         }
                         else
                         {

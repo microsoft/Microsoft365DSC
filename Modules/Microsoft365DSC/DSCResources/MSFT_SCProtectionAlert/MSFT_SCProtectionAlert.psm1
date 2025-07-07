@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_SCProtectionAlert'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -700,3 +702,4 @@ function Export-TargetResource
 }
 
 Export-ModuleMember -Function *-TargetResource
+

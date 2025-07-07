@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_AADGroupsNamingPolicy'
+
 function Get-TargetResource
 {
     [CmdletBinding()]

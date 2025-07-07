@@ -1,44 +1,48 @@
 {
-    "resourceName":"IntuneDefenderGlobalExclusionsPolicyLinux",
-    "description":"This resource configures an Intune Defender Global Exclusions Policy for Linux.",
-    "permissions":{
-        "graph":{
-            "delegated":{
-                "read":[
-                    {
-                        "name":"DeviceManagementConfiguration.Read.All"
-                    },
-                    {
-                        "name":"Group.Read.All"
-                    }
-                ],
-                "update":[
-                    {
-                        "name":"DeviceManagementConfiguration.ReadWrite.All"
-                    },
-                    {
-                        "name":"Group.Read.All"
-                    }
-                ]
-            },
-            "application":{
-                "read":[
-                    {
-                        "name":"DeviceManagementConfiguration.Read.All"
-                    },
-                    {
-                        "name":"Group.Read.All"
-                    }
-                ],
-                "update":[
-                    {
-                        "name":"DeviceManagementConfiguration.ReadWrite.All"
-                    },
-                    {
-                        "name":"Group.Read.All"
-                    }
-                ]
-            }
-        }
+  "resourceName": "IntuneDefenderGlobalExclusionsPolicyLinux",
+  "description": "This resource configures an Intune Defender Global Exclusions Policy for Linux.",
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "DeviceManagementConfiguration.Read.All"
+          },
+          {
+            "name": "Group.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "DeviceManagementConfiguration.ReadWrite.All"
+          },
+          {
+            "name": "Group.Read.All"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "DeviceManagementConfiguration.Read.All"
+          },
+          {
+            "name": "Group.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "DeviceManagementConfiguration.ReadWrite.All"
+          },
+          {
+            "name": "Group.Read.All"
+          }
+        ]
+      }
     }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.DeviceManagement"
+  ]
 }

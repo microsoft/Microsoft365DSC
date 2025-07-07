@@ -1,44 +1,50 @@
-﻿{
-    "resourceName": "O365Group",
-    "description": "",
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [
-                    {
-                        "name": "Group.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Group.Read.All"
-                    },
-                    {
-                        "name": "Group.ReadWrite.All"
-                    },
-                    {
-                        "name": "User.Read.All"
-                    }
-                ]
-            },
-            "application": {
-                "read": [
-                    {
-                        "name": "Group.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Group.Read.All"
-                    },
-                    {
-                        "name": "Group.ReadWrite.All"
-                    },
-                    {
-                        "name": "User.Read.All"
-                    }
-                ]
-            }
-        }
+{
+  "resourceName": "O365Group",
+  "description": "",
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "Group.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "Group.ReadWrite.All"
+          },
+          {
+            "name": "User.Read.All"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "Group.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "Group.ReadWrite.All"
+          },
+          {
+            "name": "User.Read.All"
+          }
+        ]
+      }
     }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Groups",
+    "Microsoft.Graph.Users",
+    "MSCloudLoginAssistant"
+  ]
 }

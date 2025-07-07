@@ -1,74 +1,77 @@
-﻿{
-    "resourceName": "TeamsChannel",
-    "description": "",
-    "roles": {
+{
+  "resourceName": "TeamsChannel",
+  "description": "",
+  "roles": {
+    "read": [
+      "Global Reader"
+    ],
+    "update": [
+      "Teams Administrator"
+    ]
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [],
+        "update": []
+      },
+      "application": {
         "read": [
-            "Global Reader"
+          {
+            "name": "Organization.Read.All"
+          },
+          {
+            "name": "User.Read.All"
+          },
+          {
+            "name": "Group.ReadWrite.All"
+          },
+          {
+            "name": "AppCatalog.ReadWrite.All"
+          },
+          {
+            "name": "TeamSettings.ReadWrite.All"
+          },
+          {
+            "name": "Channel.Delete.All"
+          },
+          {
+            "name": "ChannelSettings.ReadWrite.All"
+          },
+          {
+            "name": "ChannelMember.ReadWrite.All"
+          }
         ],
         "update": [
-            "Teams Administrator"
+          {
+            "name": "Organization.Read.All"
+          },
+          {
+            "name": "User.Read.All"
+          },
+          {
+            "name": "Group.ReadWrite.All"
+          },
+          {
+            "name": "AppCatalog.ReadWrite.All"
+          },
+          {
+            "name": "TeamSettings.ReadWrite.All"
+          },
+          {
+            "name": "Channel.Delete.All"
+          },
+          {
+            "name": "ChannelSettings.ReadWrite.All"
+          },
+          {
+            "name": "ChannelMember.ReadWrite.All"
+          }
         ]
-    },
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [],
-                "update": []
-            },
-            "application": {
-                "read": [
-                    {
-                        "name": "Organization.Read.All"
-                    },
-                    {
-                        "name": "User.Read.All"
-                    },
-                    {
-                        "name": "Group.ReadWrite.All"
-                    },
-                    {
-                        "name": "AppCatalog.ReadWrite.All"
-                    },
-                    {
-                        "name": "TeamSettings.ReadWrite.All"
-                    },
-                    {
-                        "name": "Channel.Delete.All"
-                    },
-                    {
-                        "name": "ChannelSettings.ReadWrite.All"
-                    },
-                    {
-                        "name": "ChannelMember.ReadWrite.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Organization.Read.All"
-                    },
-                    {
-                        "name": "User.Read.All"
-                    },
-                    {
-                        "name": "Group.ReadWrite.All"
-                    },
-                    {
-                        "name": "AppCatalog.ReadWrite.All"
-                    },
-                    {
-                        "name": "TeamSettings.ReadWrite.All"
-                    },
-                    {
-                        "name": "Channel.Delete.All"
-                    },
-                    {
-                        "name": "ChannelSettings.ReadWrite.All"
-                    },
-                    {
-                        "name": "ChannelMember.ReadWrite.All"
-                    }
-                ]
-            }
-        }
+      }
     }
+  },
+  "requiredModules": [
+    "MicrosoftTeams"
+  ]
 }

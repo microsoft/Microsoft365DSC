@@ -1,44 +1,51 @@
 {
-    "resourceName": "IntuneRoleAssignment",
-    "description": "This resource configures an Intune Role Assignment.",
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [
-                    {
-                        "name": "Group.Read.All"
-                    },
-                    {
-                        "name": "DeviceManagementRBAC.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Group.Read.All"
-                    },
-                    {
-                        "name": "DeviceManagementRBAC.ReadWrite.All"
-                    }
-                ]
-            },
-            "application": {
-                "read": [
-                    {
-                        "name": "Group.Read.All"
-                    },
-                    {
-                        "name": "DeviceManagementRBAC.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Group.Read.All"
-                    },
-                    {
-                        "name": "DeviceManagementRBAC.ReadWrite.All"
-                    }
-                ]
-            }
-        }
+  "resourceName": "IntuneRoleAssignment",
+  "description": "This resource configures an Intune Role Assignment.",
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "DeviceManagementRBAC.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "DeviceManagementRBAC.ReadWrite.All"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "DeviceManagementRBAC.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "DeviceManagementRBAC.ReadWrite.All"
+          }
+        ]
+      }
     }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.DeviceManagement.Administration",
+    "Microsoft.Graph.DeviceManagement.Administration",
+    "Microsoft.Graph.Groups",
+    "MSCloudLoginAssistant"
+  ]
 }

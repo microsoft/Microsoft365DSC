@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_AADDeviceRegistrationPolicy'
+
 function Get-TargetResource
 {
     [CmdletBinding()]

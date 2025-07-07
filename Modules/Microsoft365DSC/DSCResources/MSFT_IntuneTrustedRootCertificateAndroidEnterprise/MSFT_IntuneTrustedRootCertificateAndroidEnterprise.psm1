@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_IntuneTrustedRootCertificateAndroidEnterprise'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -698,3 +700,4 @@ function Get-M365DSCAdditionalProperties
 }
 
 Export-ModuleMember -Function *-TargetResource
+

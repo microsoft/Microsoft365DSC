@@ -355,7 +355,7 @@ function Start-M365DSCConfigurationExtract
 
             if ([System.String]::IsNullOrEmpty($ConfigurationName))
             {
-                $ConfigurationName = $FileName.Replace('.' + $FileParts[$FileParts.Length - 1], '')
+                $ConfigurationName = $FileName.Replace('.' + $FileParts[$FileParts.Length - 1], '').Replace(' ', '_')
             }
         }
         if ([System.String]::IsNullOrEmpty($ConfigurationName))

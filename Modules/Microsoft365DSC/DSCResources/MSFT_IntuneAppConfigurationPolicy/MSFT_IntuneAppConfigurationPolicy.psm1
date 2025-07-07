@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_IntuneAppConfigurationPolicy'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -811,3 +813,4 @@ function ConvertTo-M365DSCIntuneAppConfigurationPolicyCustomSettings
 }
 
 Export-ModuleMember -Function *-TargetResource
+

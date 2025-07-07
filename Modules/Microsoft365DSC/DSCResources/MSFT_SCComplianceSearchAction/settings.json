@@ -1,16 +1,17 @@
-﻿{
-    "resourceName": "SCComplianceSearchAction",
-    "description": "",
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [],
-                "update": []
-            },
-            "application": {
-                "read": [],
-                "update": []
-            }
-        }
+{
+  "resourceName": "SCComplianceSearchAction",
+  "description": "",
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [],
+        "update": []
+      },
+      "application": {
+        "read": [],
+        "update": []
+      }
     }
+  },
+  "requiredModules": []
 }

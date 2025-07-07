@@ -1,40 +1,44 @@
 {
-    "resourceName": "AADAuthenticationMethodPolicy",
-    "description": "This resource configures an Azure AD Authentication Method Policy.",
-    "roles": {
+  "resourceName": "AADAuthenticationMethodPolicy",
+  "description": "This resource configures an Azure AD Authentication Method Policy.",
+  "roles": {
+    "read": [
+      "Security Reader"
+    ],
+    "update": [
+      "Authentication Policy Administrator"
+    ]
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
         "read": [
-            "Security Reader"
+          {
+            "name": "Policy.ReadWrite.AuthenticationMethod"
+          }
         ],
         "update": [
-            "Authentication Policy Administrator"
+          {
+            "name": "Policy.ReadWrite.AuthenticationMethod"
+          }
         ]
-    },
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [
-                    {
-                        "name": "Policy.ReadWrite.AuthenticationMethod"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Policy.ReadWrite.AuthenticationMethod"
-                    }
-                ]
-            },
-            "application": {
-                "read": [
-                    {
-                        "name": "Policy.ReadWrite.AuthenticationMethod"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Policy.ReadWrite.AuthenticationMethod"
-                    }
-                ]
-            }
-        }
+      },
+      "application": {
+        "read": [
+          {
+            "name": "Policy.ReadWrite.AuthenticationMethod"
+          }
+        ],
+        "update": [
+          {
+            "name": "Policy.ReadWrite.AuthenticationMethod"
+          }
+        ]
+      }
     }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.Identity.SignIns"
+  ]
 }

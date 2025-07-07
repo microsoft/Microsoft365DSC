@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_AADNamedLocationPolicy'
+
 function Get-TargetResource
 {
     [CmdletBinding()]

@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_ADOPermissionGroup'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -592,3 +594,4 @@ function Set-M365DSCADOPermissionGroupMember
 }
 
 Export-ModuleMember -Function *-TargetResource
+

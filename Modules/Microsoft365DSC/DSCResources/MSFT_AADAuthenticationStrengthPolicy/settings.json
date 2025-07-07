@@ -1,38 +1,42 @@
 {
-    "resourceName": "AADAuthenticationStrengthPolicy",
-    "description": "This resource configures an Azure AD Authentication Strength Policy.",
-    "roles": {
-        "read": [],
+  "resourceName": "AADAuthenticationStrengthPolicy",
+  "description": "This resource configures an Azure AD Authentication Strength Policy.",
+  "roles": {
+    "read": [],
+    "update": [
+      "Security Administrator"
+    ]
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "Policy.ReadWrite.AuthenticationMethod"
+          }
+        ],
         "update": [
-            "Security Administrator"
+          {
+            "name": "Policy.ReadWrite.AuthenticationMethod"
+          }
         ]
-    },
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [
-                    {
-                        "name": "Policy.ReadWrite.AuthenticationMethod"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Policy.ReadWrite.AuthenticationMethod"
-                    }
-                ]
-            },
-            "application": {
-                "read": [
-                    {
-                        "name": "Policy.ReadWrite.AuthenticationMethod"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Policy.ReadWrite.AuthenticationMethod"
-                    }
-                ]
-            }
-        }
+      },
+      "application": {
+        "read": [
+          {
+            "name": "Policy.ReadWrite.AuthenticationMethod"
+          }
+        ],
+        "update": [
+          {
+            "name": "Policy.ReadWrite.AuthenticationMethod"
+          }
+        ]
+      }
     }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.Identity.SignIns"
+  ]
 }

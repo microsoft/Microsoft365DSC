@@ -1,32 +1,35 @@
-﻿{
-    "resourceName": "TeamsPstnUsage",
-    "description": "",
-    "roles": {
+{
+  "resourceName": "TeamsPstnUsage",
+  "description": "",
+  "roles": {
+    "read": [
+      "Global Reader"
+    ],
+    "update": [
+      "Teams Administrator"
+    ]
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [],
+        "update": []
+      },
+      "application": {
         "read": [
-            "Global Reader"
+          {
+            "name": "Organization.Read.All"
+          }
         ],
         "update": [
-            "Teams Administrator"
+          {
+            "name": "Organization.Read.All"
+          }
         ]
-    },
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [],
-                "update": []
-            },
-            "application": {
-                "read": [
-                    {
-                        "name": "Organization.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Organization.Read.All"
-                    }
-                ]
-            }
-        }
+      }
     }
+  },
+  "requiredModules": [
+    "MicrosoftTeams"
+  ]
 }

@@ -1,20 +1,23 @@
-﻿{
-    "resourceName": "PPAdminDLPPolicy",
-    "description": "Manages a policy's environment and default API group settings.",
-    "roles": {
+{
+  "resourceName": "PPAdminDLPPolicy",
+  "description": "Manages a policy's environment and default API group settings.",
+  "roles": {
+    "read": [],
+    "update": []
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
         "read": [],
         "update": []
-    },
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [],
-                "update": []
-            },
-            "application": {
-                "read": [],
-                "update": []
-            }
-        }
+      },
+      "application": {
+        "read": [],
+        "update": []
+      }
     }
+  },
+  "requiredModules": [
+    "MSCloudLoginAssistant"
+  ]
 }

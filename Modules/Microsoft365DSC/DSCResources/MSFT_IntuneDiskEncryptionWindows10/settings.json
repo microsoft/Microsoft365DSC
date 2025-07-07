@@ -1,44 +1,48 @@
 {
-    "resourceName": "IntuneDiskEncryptionWindows10",
-    "description": "This resource configures an Intune Disk Encryption for Windows10.",
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [
-                    {
-                        "name": "Group.Read.All"
-                    },
-                    {
-                        "name": "DeviceManagementConfiguration.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Group.Read.All"
-                    },
-                    {
-                        "name": "DeviceManagementConfiguration.ReadWrite.All"
-                    }
-                ]
-            },
-            "application": {
-                "read": [
-                    {
-                        "name": "Group.Read.All"
-                    },
-                    {
-                        "name": "DeviceManagementConfiguration.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Group.Read.All"
-                    },
-                    {
-                        "name": "DeviceManagementConfiguration.ReadWrite.All"
-                    }
-                ]
-            }
-        }
+  "resourceName": "IntuneDiskEncryptionWindows10",
+  "description": "This resource configures an Intune Disk Encryption for Windows10.",
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "DeviceManagementConfiguration.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "DeviceManagementConfiguration.ReadWrite.All"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "DeviceManagementConfiguration.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "DeviceManagementConfiguration.ReadWrite.All"
+          }
+        ]
+      }
     }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.DeviceManagement"
+  ]
 }

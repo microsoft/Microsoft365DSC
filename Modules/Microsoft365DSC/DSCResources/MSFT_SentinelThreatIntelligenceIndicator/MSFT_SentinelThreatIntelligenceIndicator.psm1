@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_SentinelThreatIntelligenceIndicator'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -849,3 +851,4 @@ function Remove-M365DSCSentinelThreatIntelligenceIndicator
 }
 
 Export-ModuleMember -Function *-TargetResource
+

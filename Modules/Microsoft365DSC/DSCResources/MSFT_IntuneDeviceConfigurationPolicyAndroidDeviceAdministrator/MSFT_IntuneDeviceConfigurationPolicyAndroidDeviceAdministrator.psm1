@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_IntuneDeviceConfigurationPolicyAndroidDeviceAdministrator'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -1522,3 +1524,4 @@ function Get-M365DSCAdditionalProperties
 }
 
 Export-ModuleMember -Function *-TargetResource
+

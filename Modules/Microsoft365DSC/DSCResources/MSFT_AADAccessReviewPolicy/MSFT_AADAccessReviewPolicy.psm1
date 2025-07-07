@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_AADAccessReviewPolicy'
+
 function Get-TargetResource
 {
     [CmdletBinding()]

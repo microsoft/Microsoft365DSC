@@ -1,16 +1,17 @@
-﻿{
-    "resourceName": "SCAuditConfigurationPolicy",
-    "description": "",
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [],
-                "update": []
-            },
-            "application": {
-                "read": [],
-                "update": []
-            }
-        }
+{
+  "resourceName": "SCAuditConfigurationPolicy",
+  "description": "",
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [],
+        "update": []
+      },
+      "application": {
+        "read": [],
+        "update": []
+      }
     }
+  },
+  "requiredModules": []
 }

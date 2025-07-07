@@ -141,7 +141,7 @@ function New-M365DSCResource
         $cmdletDefinition = Get-CmdletDefinition -Entity $actualType `
             -APIVersion $ApiVersion
 
-        #Check if the actual type returns multiple type of policies
+        # Check if the actual type returns multiple type of policies
         $policyTypes = ($cmdletDefinition.EntityType | Where-Object -FilterScript { $_.basetype -like "*$actualType" }).Name
         if ($null -ne $policyTypes -and $policyTypes.GetType().Name -like '*[[\]]')
         {
@@ -430,17 +430,7 @@ $($userDefinitionSettings.MOF -join "`r`n")
         $fakeValues2 = $fakeValues
         $fakeValuesString2 = Get-M365DSCHashAsString -Values $fakeValues2 -isCmdletCall $true
         Write-TokenReplacement -Token '<FakeValues2>' -Value $fakeValuesString2 -FilePath $unitTestPath
-
-        $fakeDriftValues = Get-M365DSCFakeValues -ParametersInformation $parameterInformation `
-            -IntroduceDrift $true `
-            -isCmdletCall $true `
-            -AdditionalPropertiesType $AdditionalPropertiesType `
-            -Workload $Workload `
-            -DateFormat $DateFormat
-        $fakeDriftValuesString = Get-M365DSCHashAsString -Values $fakeDriftValues -isCmdletCall $true
-        Write-TokenReplacement -Token '<DriftValues>' -Value $fakeDriftValuesString -FilePath $unitTestPath
         Write-TokenReplacement -Token '<ResourceName>' -Value $ResourceName -FilePath $unitTestPath
-
         Write-TokenReplacement -Token '<GetCmdletName>' -Value $GetcmdletName -FilePath $unitTestPath
         $updateVerb = 'Update'
         $updateCmdlet = Find-MgGraphCommand -Command "$updateVerb-$CmdLetNoun" -ApiVersion $ApiVersion -ErrorAction SilentlyContinue
@@ -524,17 +514,17 @@ $($userDefinitionSettings.MOF -join "`r`n")
         $getAlternativeFilterString = [System.Text.StringBuilder]::New()
         if ($getListIdentifier -contains 'Filter')
         {
-            $getAlternativeFilterString.AppendLine("                    -Filter `"$alternativeKey eq '`$$alternativeKey'`" ``") | Out-Null
-            $getAlternativeFilterString.AppendLine("                    -ErrorAction SilentlyContinue | Where-Object ``") | Out-Null
-            $getAlternativeFilterString.AppendLine("                    -FilterScript {") | Out-Null
-            $getAlternativeFilterString.AppendLine("                        `$_.AdditionalProperties.'@odata.type' -eq `"`#microsoft.graph.$SelectedODataType`"") | Out-Null
-            $getAlternativeFilterString.Append("                    }") | Out-Null
+            $getAlternativeFilterString.AppendLine("                    -Filter `"$alternativeKey eq '`$(`$$alternativeKey -replace `"'`", `"''`")'`" ``") | Out-Null
+            $getAlternativeFilterString.AppendLine("                        -ErrorAction SilentlyContinue | Where-Object ``") | Out-Null
+            $getAlternativeFilterString.AppendLine("                        -FilterScript {") | Out-Null
+            $getAlternativeFilterString.AppendLine("                            `$_.AdditionalProperties.'@odata.type' -eq `"`#microsoft.graph.$SelectedODataType`"") | Out-Null
+            $getAlternativeFilterString.Append("                        }") | Out-Null
         }
         else
         {
             $getAlternativeFilterString.AppendLine("                    -ErrorAction SilentlyContinue | Where-Object ``") | Out-Null
             $getAlternativeFilterString.AppendLine("                    -FilterScript {") | Out-Null
-            $getAlternativeFilterString.AppendLine("                        `$_.$alternativeKey -eq `"`$(`$$alternativeKey)`" ``") | Out-Null
+            $getAlternativeFilterString.AppendLine("                        `$_.$alternativeKey -eq `"`$(`$$alternativeKey -replace `"'`", `"''`")`" ``") | Out-Null
             $getAlternativeFilterString.AppendLine("                        -and `$_.AdditionalProperties.'@odata.type' -eq `"`#microsoft.graph.$SelectedODataType`"") | Out-Null
             $getAlternativeFilterString.Append("                    }") | Out-Null
         }
@@ -745,7 +735,7 @@ $($userDefinitionSettings.MOF -join "`r`n")
         $requiredKey = ''
         if (-not [String]::IsNullOrEmpty($alternativeKey))
         {
-            $requiredKey = "`r`n                DisplayName           =  `$config.DisplayName"
+            $requiredKey = "`r`n                DisplayName           = `$config.DisplayName"
         }
         Write-TokenReplacement -Token '<exportGetCommand>' -Value $exportGetCommand.ToString() -FilePath $moduleFilePath
         Write-TokenReplacement -Token '<RequiredKey>' -Value $requiredKey -FilePath $moduleFilePath
@@ -755,6 +745,10 @@ $($userDefinitionSettings.MOF -join "`r`n")
 
         if ($addIntuneAssignments)
         {
+            if (-not $hashtableResults.ContainsKey('ToEscape'))
+            {
+                $hashtableResults.Add('ToEscape', @())
+            }
             $hashtableResults.ToEscape = ,"Assignments" + $hashtableResults.ToEscape
         }
         $toEscapeValue = "```r`n                -NoEscape @('$($hashtableResults.ToEscape -join "', '")')"
@@ -924,11 +918,11 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
         Write-TokenReplacement -Token '<#AssignmentsFunctions#>' -Value $AssignmentsFunctions -FilePath $moduleFilePath
         Write-TokenReplacement -Token '<#AssignmentsConvertComplexToString#>' -Value $AssignmentsConvertComplexToString -FilePath $moduleFilePath
 
-        $defaultTestValuesToCheck = "    `$ValuesToCheck = ([Hashtable]`$PSBoundParameters).clone()"
+        $defaultTestValuesToCheck = "    `$ValuesToCheck = ([hashtable]`$PSBoundParameters).Clone()"
         if ($CmdLetNoun -like "*DeviceManagementConfigurationPolicy")
         {
             $defaultTestValuesToCheck = @"
-    [Hashtable]`$ValuesToCheck = @{}
+    [hashtable]`$ValuesToCheck = @{}
     `$MyInvocation.MyCommand.Parameters.GetEnumerator() | ForEach-Object {
         if (`$_.Key -notlike '*Variable' -or `$_.Key -notin @('Verbose', 'Debug', 'ErrorAction', 'WarningAction', 'InformationAction'))
         {
@@ -989,6 +983,47 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
         Write-TokenReplacement -Token '<ResourceFriendlyName>' -Value $ResourceName -FilePath $settingsFilePath
         Write-TokenReplacement -Token '<ResourceDescription>' -Value $resourceDescription -FilePath $settingsFilePath
         Write-TokenReplacement -Token '<ResourcePermissions>' -Value $ResourcePermissions -FilePath $settingsFilePath
+        #endregion
+
+        #region Required Modules
+        $MaximumFunctionCount = 32767
+        $m365dscModules = (Import-PowerShellDataFile -Path "$(Split-Path -Path $PSScriptRoot -Parent)\Modules\Microsoft365DSC\Dependencies\Manifest.psd1").Dependencies.ModuleName
+        $ast = [System.Management.Automation.Language.Parser]::ParseFile($moduleFilePath, [ref]$null, [ref]$null)
+        $targetResourceFunctions = $ast.FindAll(
+            {
+                param($Item)
+                return (
+                    ($Item -is [System.Management.Automation.Language.FunctionDefinitionAst]) -and
+                    ($Item.Name -like '*-TargetResource')
+                )
+            }, $true
+        )
+        $commands = $targetResourceFunctions | ForEach-Object -Process {
+            $_.FindAll(
+                {
+                    param($Item)
+                    return (
+                        ($Item -is [System.Management.Automation.Language.CommandAst])
+                    )
+                }, $true
+            )
+        } | Foreach-Object -Process {
+            $_.CommandElements[0]
+        } | Select-Object -ExpandProperty Value -Unique
+        $modules = @()
+        foreach ($command in $commands) {
+            $module = Get-Command -Name $command -ErrorAction SilentlyContinue | Select-Object -ExpandProperty ModuleName
+            if ($module -in $m365dscModules) {
+                if ($module -like "Microsoft.Graph.*" -and -not $modules -contains "Microsoft.Graph.Authentication") {
+                    $modules += "Microsoft.Graph.Authentication"
+                }
+                $modules += $module
+            }
+        }
+        $modules = $modules | Sort-Object -Unique
+        $settingsContent = Get-Content -Path $settingsFilePath -Raw | ConvertFrom-Json
+        $settingsContent.requiredModules = @($modules)
+        $settingsContent | ConvertTo-Json -Depth 20 | Set-Content -Path $settingsFilePath -Force
         #endregion
         #region ReadMe
         Write-TokenReplacement -Token '<ResourceFriendlyName>' -Value $ResourceName -FilePath $readmeFilePath
@@ -1309,8 +1344,7 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
         Write-TokenReplacement -Token '<SetCmdletName>' -Value "Set-$cmdletNoun" -FilePath $unitTestPath
         Write-TokenReplacement -Token '<NewCmdletName>' -Value "New-$cmdletNoun" -FilePath $unitTestPath
         Write-TokenReplacement -Token '<RemoveCmdletName>' -Value "Remove-$cmdletNoun" -FilePath $unitTestPath
-        Write-TokenReplacement -Token '<FakeValues>' -Value $fakeValuesString.ToString().Replace('#$#', '                    ') -FilePath $unitTestPath
-        Write-TokenReplacement -Token '<DriftValues>' -Value $fakeValuesDriftString.ToString().Replace('#$#', '                    ') -FilePath $unitTestPath
+        Write-TokenReplacement -Token '<FakeValues>' -Value $fakeValuesString.ToString().Replace('#$#', '                ') -FilePath $unitTestPath
         #endregion
 
         #region Generate Examples
@@ -3517,15 +3551,15 @@ function New-M365HashTableMapping
             }
             if ($property.IsEnumType)
             {
-                $enumTypeConstructor.AppendLine((Get-EnumTypeConstructorToString -Property $property -IndentCount 2 -DateFormat $DateFormat))
+                $enumTypeConstructor.AppendLine((Get-EnumTypeConstructorToString -Property $property -IndentCount 2 -DateFormat $DateFormat)) | Out-Null
             }
             if ($property.Type -like "System.Date*")
             {
-                $dateTypeConstructor.AppendLine((Get-DateTypeConstructorToString -Property $property -IndentCount 2 -DateFormat $DateFormat))
+                $dateTypeConstructor.AppendLine((Get-DateTypeConstructorToString -Property $property -IndentCount 2 -DateFormat $DateFormat)) | Out-Null
             }
             if ($property.Type -like "System.Time*")
             {
-                $timeTypeConstructor.AppendLine((Get-TimeTypeConstructorToString -Property $property -IndentCount 2 -DateFormat $DateFormat))
+                $timeTypeConstructor.AppendLine((Get-TimeTypeConstructorToString -Property $property -IndentCount 2 -DateFormat $DateFormat)) | Out-Null
             }
 
             $spacing = $biggestParameterLength - $property.Name.Length

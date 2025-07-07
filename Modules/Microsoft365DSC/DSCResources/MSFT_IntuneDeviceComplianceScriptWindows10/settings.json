@@ -1,44 +1,47 @@
 {
-    "resourceName": "IntuneDeviceComplianceScriptWindows10",
-    "description": "This resource configures an Intune Device Compliance Script for Windows10.",
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [
-                    {
-                        "name": "Group.Read.All"
-                    },
-                    {
-                        "name": "DeviceManagementScripts.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Group.Read.All"
-                    },
-                    {
-                        "name": "DeviceManagementScripts.ReadWrite.All"
-                    }
-                ]
-            },
-            "application": {
-                "read": [
-                    {
-                        "name": "Group.Read.All"
-                    },
-                    {
-                        "name": "DeviceManagementScripts.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Group.Read.All"
-                    },
-                    {
-                        "name": "DeviceManagementScripts.ReadWrite.All"
-                    }
-                ]
-            }
-        }
+  "resourceName": "IntuneDeviceComplianceScriptWindows10",
+  "description": "This resource configures an Intune Device Compliance Script for Windows10.",
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "DeviceManagementScripts.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "DeviceManagementScripts.ReadWrite.All"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "DeviceManagementScripts.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "DeviceManagementScripts.ReadWrite.All"
+          }
+        ]
+      }
     }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication"
+  ]
 }

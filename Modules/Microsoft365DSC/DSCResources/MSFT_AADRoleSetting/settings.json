@@ -1,62 +1,69 @@
-﻿{
-    "resourceName": "AADRoleSetting",
-    "description": "This resource configures an Azure Role.",
-    "roles": {
-        "read": [],
+{
+  "resourceName": "AADRoleSetting",
+  "description": "This resource configures an Azure Role.",
+  "roles": {
+    "read": [],
+    "update": [
+      "Privileged Role Administrator"
+    ]
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "RoleManagementPolicy.Read.Directory"
+          },
+          {
+            "name": "User.Read.All"
+          }
+        ],
         "update": [
-            "Privileged Role Administrator"
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "RoleManagement.ReadWrite.Directory"
+          },
+          {
+            "name": "User.Read.All"
+          }
         ]
-    },
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [
-                    {
-                        "name": "Group.Read.All"
-                    },
-                    {
-                        "name": "RoleManagementPolicy.Read.Directory"
-                    },
-                    {
-                        "name": "User.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Group.Read.All"
-                    },
-                    {
-                        "name": "RoleManagement.ReadWrite.Directory"
-                    },
-                    {
-                        "name": "User.Read.All"
-                    }
-                ]
-            },
-            "application": {
-                "read": [
-                    {
-                        "name": "Group.Read.All"
-                    },
-                    {
-                        "name": "RoleManagement.Read.Directory"
-                    },
-                    {
-                        "name": "User.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Group.Read.All"
-                    },
-                    {
-                        "name": "RoleManagement.ReadWrite.Directory"
-                    },
-                    {
-                        "name": "User.Read.All"
-                    }
-                ]
-            }
-        }
+      },
+      "application": {
+        "read": [
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "RoleManagement.Read.Directory"
+          },
+          {
+            "name": "User.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "RoleManagement.ReadWrite.Directory"
+          },
+          {
+            "name": "User.Read.All"
+          }
+        ]
+      }
     }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.Identity.Governance",
+    "Microsoft.Graph.Beta.Identity.SignIns",
+    "Microsoft.Graph.Groups",
+    "Microsoft.Graph.Users"
+  ]
 }

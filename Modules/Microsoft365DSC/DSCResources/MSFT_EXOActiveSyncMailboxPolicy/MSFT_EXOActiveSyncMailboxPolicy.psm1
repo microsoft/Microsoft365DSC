@@ -1,4 +1,6 @@
-﻿function Get-TargetResource
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_EXOActiveSyncMailboxPolicy'
+
+function Get-TargetResource
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
@@ -1053,3 +1055,4 @@ function Export-TargetResource
 }
 
 Export-ModuleMember -Function *-TargetResource
+

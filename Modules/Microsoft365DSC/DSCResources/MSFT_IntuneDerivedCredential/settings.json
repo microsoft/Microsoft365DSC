@@ -12,5 +12,9 @@
         "update": []
       }
     }
-  }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.DeviceManagement"
+  ]
 }

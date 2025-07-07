@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_SCSensitivityLabel'
+
 $allTrainableClassifiers = @(
     [PSCustomObject]@{ Name = 'Actuary reports'; Id = 'b27df2ee-fd14-4ce9-b02f-4070a5d68132' }
     [PSCustomObject]@{ Name = 'Agreements'; Id = '7f12e403-5335-4da8-a91e-6c2210b7a2b1' }
@@ -2183,3 +2185,4 @@ function Test-AutoLabelingSettings
 }
 
 Export-ModuleMember -Function *-TargetResource
+

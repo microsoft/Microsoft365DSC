@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_IntuneDeviceCompliancePolicyWindows10'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -1188,3 +1190,4 @@ function Get-M365DSCIntuneDeviceCompliancePolicyWindows10AdditionalProperties
 }
 
 Export-ModuleMember -Function *-TargetResource
+

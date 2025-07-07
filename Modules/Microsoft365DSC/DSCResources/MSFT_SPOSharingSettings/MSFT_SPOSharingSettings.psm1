@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_SPOSharingSettings'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -466,13 +468,6 @@ function Set-TargetResource
         Write-Warning -Message 'ExternalUserExpirationRequired is set to be false. For that the ExternalUserExpireInDays property cannot be configured'
         $CurrentParameters.Remove('ExternalUserExpireInDays') | Out-Null
     }
-    if ($RequireAcceptingAccountMatchInvitedAccount -eq $false)
-    {
-        Write-Warning -Message 'RequireAcceptingAccountMatchInvitedAccount is set to be false. For that SharingAllowedDomainList / SharingBlockedDomainList cannot be configured'
-        $CurrentParameters.Remove('SharingAllowedDomainList') | Out-Null
-        $CurrentParameters.Remove('SharingBlockedDomainList') | Out-Null
-    }
-
     if ($SharingCapability -ne 'ExternalUserAndGuestSharing' -and ($null -ne $FileAnonymousLinkType -or $null -ne $FolderAnonymousLinkType))
     {
         Write-Warning -Message 'If anonymous file or folder links are set, SharingCapability must be set to ExternalUserAndGuestSharing '
@@ -711,19 +706,14 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
     $ValuesToCheck.Remove('AccessTokens') | Out-Null
+
+    # DEPRECATED
     $ValuesToCheck.Remove('RequireAcceptingAccountMatchInvitedAccount') | Out-Null
 
     if ($DefaultLinkPermission -eq 'None')
     {
         Write-Verbose -Message 'Valid values to set are View and Edit. A value of None will be set to Edit as its the default value.'
         $ValuesToCheck['DefaultLinkPermission'] = 'Edit'
-    }
-
-    if ($null -eq $SharingAllowedDomainList -and $null -eq $SharingBlockedDomainList -and
-        ($null -ne $RequireAcceptingAccountMatchInvitedAccount -and $RequireAcceptingAccountMatchInvitedAccount -eq $false))
-    {
-        Write-Warning -Message 'If SharingAllowedDomainList / SharingBlockedDomainList are set to null RequireAcceptingAccountMatchInvitedAccount must be set to True '
-        $ValuesToCheck.Remove('RequireAcceptingAccountMatchInvitedAccount') | Out-Null
     }
 
     if ($null -eq $SignInAccelerationDomain)
@@ -741,13 +731,6 @@ function Test-TargetResource
         Write-Warning -Message 'ExternalUserExpirationRequired is set to be false. For that the ExternalUserExpireInDays property cannot be configured'
         $ValuesToCheck.Remove('ExternalUserExpireInDays') | Out-Null
     }
-    if ($RequireAcceptingAccountMatchInvitedAccount -eq $false)
-    {
-        Write-Warning -Message 'RequireAcceptingAccountMatchInvitedAccount is set to be false. For that SharingAllowedDomainList / SharingBlockedDomainList cannot be configured'
-        $ValuesToCheck.Remove('SharingAllowedDomainList') | Out-Null
-        $ValuesToCheck.Remove('SharingBlockedDomainList') | Out-Null
-    }
-
     if ($SharingCapability -ne 'ExternalUserAndGuestSharing' -and ($null -ne $FileAnonymousLinkType -or $null -ne $FolderAnonymousLinkType))
     {
         Write-Warning -Message 'If anonymous file or folder links are set, SharingCapability must be set to ExternalUserAndGuestSharing '
@@ -891,3 +874,4 @@ function Export-TargetResource
 }
 
 Export-ModuleMember -Function *-TargetResource
+

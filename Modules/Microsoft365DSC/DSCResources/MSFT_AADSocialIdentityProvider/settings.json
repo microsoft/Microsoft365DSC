@@ -1,40 +1,44 @@
 {
-    "resourceName": "AADSocialIdentityProvider",
-    "description": "Represents a group of related custom security attribute definitions.",
-    "roles": {
+  "resourceName": "AADSocialIdentityProvider",
+  "description": "Represents a group of related custom security attribute definitions.",
+  "roles": {
+    "read": [
+      "Security Reader"
+    ],
+    "update": [
+      "Authentication Policy Administrator"
+    ]
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
         "read": [
-            "Security Reader"
+          {
+            "name": "IdentityProvider.Read.All"
+          }
         ],
         "update": [
-            "Authentication Policy Administrator"
+          {
+            "name": "IdentityProvider.ReadWrite.All"
+          }
         ]
-    },
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [
-                    {
-                        "name": "IdentityProvider.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "IdentityProvider.ReadWrite.All"
-                    }
-                ]
-            },
-            "application": {
-                "read": [
-                    {
-                        "name": "IdentityProvider.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "IdentityProvider.ReadWrite.All"
-                    }
-                ]
-            }
-        }
+      },
+      "application": {
+        "read": [
+          {
+            "name": "IdentityProvider.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "IdentityProvider.ReadWrite.All"
+          }
+        ]
+      }
     }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.Identity.SignIns"
+  ]
 }

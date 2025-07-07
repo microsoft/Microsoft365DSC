@@ -1,29 +1,30 @@
-﻿{
-    "resourceName": "EXODistributionGroup",
-    "roles": {
+{
+  "resourceName": "EXODistributionGroup",
+  "roles": {
+    "read": [],
+    "update": [
+      "Exchange Administrator"
+    ]
+  },
+  "description": "",
+  "permissions": {
+    "graph": {
+      "delegated": {
         "read": [],
-        "update": [
-            "Exchange Administrator"
-        ]
+        "update": []
+      },
+      "application": {
+        "read": [],
+        "update": []
+      }
     },
-    "description": "",
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [],
-                "update": []
-            },
-            "application": {
-                "read": [],
-                "update": []
-            }
-        },
-        "exchange": {
-            "requiredroles": [
-                "Organization Management",
-                "Recipient Management"
-            ],
-            "requiredrolegroups": []
-        }
+    "exchange": {
+      "requiredroles": [
+        "Organization Management",
+        "Recipient Management"
+      ],
+      "requiredrolegroups": []
     }
+  },
+  "requiredModules": []
 }

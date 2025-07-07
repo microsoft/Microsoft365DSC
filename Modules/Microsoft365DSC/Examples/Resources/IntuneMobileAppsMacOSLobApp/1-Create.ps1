@@ -56,7 +56,11 @@ Configuration Example
                 MSFT_DeviceManagementMobileAppCategory {
                     Id  = '1bff2652-03ec-4a48-941c-152e93736515'
                     DisplayName = 'Kajal 3'
-                });
+                }
+            );
+            ApplicationId         = $ApplicationId;
+            TenantId              = $TenantId;
+            CertificateThumbprint = $CertificateThumbprint;
         }
     }
 }

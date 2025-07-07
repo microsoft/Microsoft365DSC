@@ -1,44 +1,48 @@
 {
-    "resourceName": "IntuneRoleScopeTag",
-    "description": "This resource configures an Intune Role Scope Tag.",
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [
-                    {
-                        "name": "DeviceManagementConfiguration.Read.All"
-                    },
-                    {
-                        "name": "Group.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "DeviceManagementConfiguration.ReadWrite.All"
-                    },
-                    {
-                        "name": "Group.Read.All"
-                    }
-                ]
-            },
-            "application": {
-                "read": [
-                    {
-                        "name": "DeviceManagementConfiguration.Read.All"
-                    },
-                    {
-                        "name": "Group.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "DeviceManagementConfiguration.ReadWrite.All"
-                    },
-                    {
-                        "name": "Group.Read.All"
-                    }
-                ]
-            }
-        }
+  "resourceName": "IntuneRoleScopeTag",
+  "description": "This resource configures an Intune Role Scope Tag.",
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "DeviceManagementConfiguration.Read.All"
+          },
+          {
+            "name": "Group.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "DeviceManagementConfiguration.ReadWrite.All"
+          },
+          {
+            "name": "Group.Read.All"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "DeviceManagementConfiguration.Read.All"
+          },
+          {
+            "name": "Group.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "DeviceManagementConfiguration.ReadWrite.All"
+          },
+          {
+            "name": "Group.Read.All"
+          }
+        ]
+      }
     }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.DeviceManagement.Administration"
+  ]
 }

@@ -1,33 +1,34 @@
-﻿{
-    "resourceName": "EXOOutboundConnector",
-    "description": "",
-    "roles": {
-        "read": [
-            "Global Reader"
-        ],
-        "update": [
-            "Exchange Administrator"
-        ]
+{
+  "resourceName": "EXOOutboundConnector",
+  "description": "",
+  "roles": {
+    "read": [
+      "Global Reader"
+    ],
+    "update": [
+      "Exchange Administrator"
+    ]
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [],
+        "update": []
+      },
+      "application": {
+        "read": [],
+        "update": []
+      }
     },
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [],
-                "update": []
-            },
-            "application": {
-                "read": [],
-                "update": []
-            }
-        },
-        "exchange": {
-            "requiredroles": [
-                "Remote and Accepted Domains",
-                "View-Only Configuration"
-            ],
-            "requiredrolegroups": [
-                "Organization Management"
-            ]
-        }
+    "exchange": {
+      "requiredroles": [
+        "Remote and Accepted Domains",
+        "View-Only Configuration"
+      ],
+      "requiredrolegroups": [
+        "Organization Management"
+      ]
     }
+  },
+  "requiredModules": []
 }

@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_IntuneApplicationControlPolicyWindows10'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -249,6 +251,7 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
+    $policyTemplateID = '63be6324-e3c9-4c97-948a-e7f4b96f0f20'
     $currentPolicy = Get-TargetResource @PSBoundParameters
     $PSBoundParameters.Remove('Ensure') | Out-Null
     $PSBoundParameters.Remove('Credential') | Out-Null
@@ -265,10 +268,13 @@ function Set-TargetResource
         $PSBoundParameters.Remove('Description') | Out-Null
         $PSBoundParameters.Remove('Assignments') | Out-Null
 
-        $Settings = Get-M365DSCIntuneEndpointProtectionPolicyWindowsSettings -Properties ([System.Collections.Hashtable]$PSBoundParameters)
+        $settings = Get-M365DSCIntuneDeviceConfigurationSettings `
+            -Properties ([System.Collections.Hashtable]$PSBoundParameters) `
+            -TemplateId $policyTemplateID
+
         $policy = New-MgBetaDeviceManagementIntent -DisplayName $DisplayName `
             -Description $Description `
-            -TemplateId '63be6324-e3c9-4c97-948a-e7f4b96f0f20' `
+            -TemplateId $policyTemplateID `
             -Settings $Settings
 
         #region Assignments
@@ -286,33 +292,28 @@ function Set-TargetResource
         Write-Verbose -Message "Updating existing Endpoint Protection Application Control Policy {$DisplayName}"
         $appControlPolicy = Get-MgBetaDeviceManagementIntent `
             -ErrorAction Stop | Where-Object `
-            -FilterScript { $_.TemplateId -eq '63be6324-e3c9-4c97-948a-e7f4b96f0f20' -and `
+            -FilterScript { $_.TemplateId -eq $policyTemplateID -and `
                 $_.displayName -eq $($DisplayName) }
 
         $PSBoundParameters.Remove('DisplayName') | Out-Null
         $PSBoundParameters.Remove('Description') | Out-Null
         $PSBoundParameters.Remove('Assignments') | Out-Null
 
-        $Settings = Get-M365DSCIntuneEndpointProtectionPolicyWindowsSettings -Properties ([System.Collections.Hashtable]$PSBoundParameters)
         Update-MgBetaDeviceManagementIntent -ErrorAction Stop `
             -Description $Description `
             -DeviceManagementIntentId $appControlPolicy.Id
 
-        $currentSettings = Get-MgBetaDeviceManagementIntentSetting -DeviceManagementIntentId $appControlPolicy.Id -ErrorAction Stop
-        foreach ($setting in $Settings)
-        {
-            $s = $currentSettings | Where-Object { $_.DefinitionId -eq $setting.DefinitionId }
+        $settings = Get-M365DSCIntuneDeviceConfigurationSettings `
+            -Properties ([System.Collections.Hashtable]$PSBoundParameters) `
+            -TemplateId $policyTemplateID
 
-            Update-MgBetaDeviceManagementIntentSetting -ErrorAction Stop `
-                -DeviceManagementIntentId $appControlPolicy.Id `
-                -DeviceManagementSettingInstanceId $s.Id `
-                -ValueJson ($setting.value | ConvertTo-Json) `
-                -AdditionalProperties @{'@odata.type' = $setting.'@odata.type' }
-        }
+        $Uri = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/deviceManagement/intents/$($appControlPolicy.Id)/updateSettings"
+        $body = @{'settings' = $settings }
+        Invoke-MgGraphRequest -Method POST -Uri $Uri -Body ($body | ConvertTo-Json -Depth 20) -ContentType 'application/json' 4> $null
 
         #region Assignments
         $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
-        Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $appControlPolicy.id `
+        Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $appControlPolicy.Id `
             -Targets $assignmentsHash `
             -Repository 'deviceManagement/intents'
         #endregion
@@ -587,51 +588,5 @@ function Export-TargetResource
     }
 }
 
-function Get-M365DSCIntuneEndpointProtectionPolicyWindowsSettings
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param(
-        [Parameter(Mandatory = 'true')]
-        [System.Collections.Hashtable]
-        $Properties
-    )
-
-    $results = @()
-    foreach ($property in $properties.Keys)
-    {
-        if ($property -ne 'Verbose')
-        {
-            $setting = @{}
-            $settingType = ($properties.$property.gettype()).name
-            switch ($settingType)
-            {
-                'String'
-                {
-                    $setting.Add('@odata.type', '#microsoft.graph.deviceManagementStringSettingInstance')
-                }
-                'Boolean'
-                {
-                    $setting.Add('@odata.type', '#microsoft.graph.deviceManagementBooleanSettingInstance')
-                }
-                'Int32'
-                {
-                    $setting.Add('@odata.type', '#microsoft.graph.deviceManagementIntegerSettingInstance')
-                }
-                Default
-                {
-                    $setting.Add('@odata.type', '#microsoft.graph.deviceManagementComplexSettingInstance')
-                }
-            }
-            $settingDefinitionIdPrefix = 'deviceConfiguration--windows10EndpointProtectionConfiguration_'
-            $settingDefinitionId = $settingDefinitionIdPrefix + $property[0].ToString().ToLower() + $property.Substring(1, $property.Length - 1)
-            $setting.Add('DefinitionId', $settingDefinitionId)
-            $settingValue = $properties.$property
-            $setting.Add('value', $settingValue)
-            $results += $setting
-        }
-    }
-    return $results
-}
-
 Export-ModuleMember -Function *-TargetResource
+

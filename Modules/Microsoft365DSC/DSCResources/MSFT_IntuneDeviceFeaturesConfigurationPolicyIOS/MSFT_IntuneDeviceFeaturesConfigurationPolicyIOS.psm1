@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_IntuneDeviceFeaturesConfigurationPolicyIOS'
+
 
 function Get-TargetResource
 {
@@ -1166,3 +1168,4 @@ function Convert-DataTypeFormat {
 }
 
 Export-ModuleMember -Function *-TargetResource
+

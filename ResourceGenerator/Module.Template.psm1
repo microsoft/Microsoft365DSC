@@ -192,7 +192,8 @@ function Set-TargetResource
 <#AssignmentsRemove#>
 <#DefaultUpdateParameters#><#ResourceGenerator
         #region resource generator code
-<UpdateDataType><UpdateCmdLetName><#UpdateKeyIdentifier#><#AssignmentsUpdate#>
+<UpdateDataType><UpdateCmdLetName><#UpdateKeyIdentifier#>
+<#AssignmentsUpdate#>
         #endregionResourceGenerator#>
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
@@ -386,15 +387,15 @@ function Export-TargetResource
             }
             Write-M365DSCHost -Message "    |---[$i/$($getValue.Count)] $displayedKey" -DeferWrite
             $params = @{
-                <PrimaryKey> = $config.<PrimaryKey><RequiredKey>
-                Ensure = 'Present'
-                Credential = $Credential
-                ApplicationId = $ApplicationId
-                TenantId = $TenantId
-                ApplicationSecret = $ApplicationSecret
+                <PrimaryKey>                    = $config.<PrimaryKey><RequiredKey>
+                Ensure                = 'Present'
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
-                ManagedIdentity = $ManagedIdentity.IsPresent
-                AccessTokens = $AccessTokens
+                ManagedIdentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
             }
 
             $Script:exportedInstance = $config

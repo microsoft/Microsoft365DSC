@@ -1,40 +1,34 @@
 
 {
-    "resourceName": "AADGroupEligibilitySchedule",
-    "description": "This resource configures an Azure AD Group Eligibility Schedule.",
-    "permissions":    {
-    "graph":  {
-                  "delegated":  {
-                                    "read":  [
-                                                 {
-                                                     "name":  "PrivilegedEligibilitySchedule.Read.AzureADGroup"
-                                                 },
-                                                 {
-                                                    "name":  "Group.Read.All"
-                                                 }
-                                             ],
-                                    "update":  [
-                                                {
-                                                     "name":  "PrivilegedEligibilitySchedule.ReadWrite.AzureADGroup"
-                                                 }
-                                               ]
-                                },
-                  "application":  {
-                                      "read":  [
-                                                   {
-                                                       "name":  "PrivilegedEligibilitySchedule.Read.AzureADGroup"
-                                                   },
-                                                   {
-                                                      "name":  "Group.Read.All"
-                                                   }
-                                               ],
-                                      "update":  [
-                                                    {
-                                                         "name":  "PrivilegedEligibilitySchedule.ReadWrite.AzureADGroup"
-                                                    }
-                                                 ]
-                                  }
-              }
-}
-
+  "resourceName": "AADGroupEligibilitySchedule",
+  "description": "This resource configures an Azure AD Group Eligibility Schedule.",
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "PrivilegedEligibilitySchedule.Read.AzureADGroup"
+          }
+        ],
+        "update": []
+      },
+      "application": {
+        "read": [
+          {
+            "name": "PrivilegedEligibilitySchedule.Read.AzureADGroup"
+          }
+        ],
+        "update": []
+      }
+    }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.DirectoryObjects",
+    "Microsoft.Graph.Beta.Identity.Governance",
+    "Microsoft.Graph.Beta.Identity.SignIns",
+    "Microsoft.Graph.Groups",
+    "Microsoft.Graph.Users",
+    "MSCloudLoginAssistant"
+  ]
 }

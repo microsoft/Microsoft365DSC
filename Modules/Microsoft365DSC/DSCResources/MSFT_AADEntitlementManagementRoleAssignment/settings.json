@@ -1,49 +1,54 @@
-﻿{
-    "resourceName": "AADEntitlementManagementRoleAssignment",
-    "description": "This resource configures an Azure AD Entitlement Management Role Assignments.",
-    "roles": {
+{
+  "resourceName": "AADEntitlementManagementRoleAssignment",
+  "description": "This resource configures an Azure AD Entitlement Management Role Assignments.",
+  "roles": {
+    "read": [
+      "Security Reader"
+    ],
+    "update": [
+      "Identity Governance Administrator"
+    ]
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
         "read": [
-            "Security Reader"
+          {
+            "name": "EntitlementManagement.Read.All"
+          }
         ],
         "update": [
-            "Identity Governance Administrator"
+          {
+            "name": "EntitlementManagement.Read.All"
+          },
+          {
+            "name": "EntitlementManagement.ReadWrite.All"
+          }
         ]
-    },
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [
-                    {
-                        "name": "EntitlementManagement.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "EntitlementManagement.Read.All"
-                    },
-                    {
-                        "name": "EntitlementManagement.ReadWrite.All"
-                    }
-                ]
-            },
-            "application": {
-                "read": [
-                    {
-                        "name": "EntitlementManagement.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "EntitlementManagement.Read.All"
-                    },
-                    {
-                        "name": "EntitlementManagement.ReadWrite.All"
-                    },
-                    {
-                        "name": "RoleManagement.ReadWrite.Directory"
-                    }
-                ]
-            }
-        }
+      },
+      "application": {
+        "read": [
+          {
+            "name": "EntitlementManagement.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "EntitlementManagement.Read.All"
+          },
+          {
+            "name": "EntitlementManagement.ReadWrite.All"
+          },
+          {
+            "name": "RoleManagement.ReadWrite.Directory"
+          }
+        ]
+      }
     }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.Identity.Governance",
+    "Microsoft.Graph.Users"
+  ]
 }

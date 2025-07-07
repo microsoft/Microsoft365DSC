@@ -878,15 +878,10 @@
                                                 "Absent"
                                             ],
                                "Name":  "Ensure",
-                               "Values":  [
-                                              "Present",
-                                              "Absent"
-                                          ],
-                               "CIMType":  "string"
+                               "Option":  "Write"
                            },
                            {
                                "CIMType":  "MSFT_Credential",
-                               "Description":  "Credentials of the Intune Admin",
                                "Name":  "Credential",
                                "Option":  "Write"
                            },

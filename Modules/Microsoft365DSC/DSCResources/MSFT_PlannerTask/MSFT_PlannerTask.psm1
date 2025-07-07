@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_PlannerTask'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -1137,3 +1139,4 @@ function Get-TaskColorNameByCategory
 }
 
 Export-ModuleMember -Function *-TargetResource
+

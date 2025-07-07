@@ -1,32 +1,36 @@
 {
-    "resourceName": "AADConnectorGroupApplicationProxy",
-    "description": "This resource configures an Azure AD Connector Group Application Proxy.",
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [
-                    {
-                        "name": "Directory.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Directory.ReadWrite.All"
-                    }
-                ]
-            },
-            "application": {
-                "read": [
-                    {
-                        "name": "Directory.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Directory.ReadWrite.All"
-                    }
-                ]
-            }
-        }
+  "resourceName": "AADConnectorGroupApplicationProxy",
+  "description": "This resource configures an Azure AD Connector Group Application Proxy.",
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "Directory.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Directory.ReadWrite.All"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "Directory.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Directory.ReadWrite.All"
+          }
+        ]
+      }
     }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.Applications"
+  ]
 }

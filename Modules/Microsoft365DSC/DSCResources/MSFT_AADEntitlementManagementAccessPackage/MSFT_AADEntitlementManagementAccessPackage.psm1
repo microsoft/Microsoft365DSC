@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_AADEntitlementManagementAccessPackage'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -177,7 +179,7 @@ function Get-TargetResource
 
         $results = @{
             Id                              = $getValue.Id
-            CatalogId                       = $catalog.Id
+            CatalogId                       = $catalog.DisplayName
             Description                     = $getValue.Description
             DisplayName                     = $getValue.DisplayName
             IsHidden                        = $getValue.IsHidden
@@ -389,7 +391,7 @@ function Set-TargetResource
             Write-Verbose -Message "Adding roleScope {$originId`:$roleName} to access package with Id {$($accessPackage.Id)}"
 
             $resourceScope = Get-MgBetaEntitlementManagementAccessPackageCatalogAccessPackageResource `
-                -AccessPackageCatalogId $CatalogId `
+                -AccessPackageCatalogId $CreateParameters.CatalogId `
                 -Filter "originId eq '$originId'" `
                 -ExpandProperty 'accessPackageResourceScopes'
 
@@ -555,7 +557,7 @@ function Set-TargetResource
                 Write-Verbose -Message "Adding roleScope {$originId`:$roleName} to access package with Id {$($currentInstance.Id)}"
 
                 $resourceScope = Get-MgBetaEntitlementManagementAccessPackageCatalogAccessPackageResource `
-                    -AccessPackageCatalogId $CatalogId `
+                    -AccessPackageCatalogId $UpdateParameters.CatalogId `
                     -Filter "originId eq '$originId'" `
                     -ExpandProperty 'accessPackageResourceScopes'
 
@@ -616,7 +618,7 @@ function Set-TargetResource
                     Write-Verbose -Message "Updating role {$roleName} from access package rolescope with Id {$($accessPackageResourceRoleScope.id)}"
 
                     $resourceScope = Get-MgBetaEntitlementManagementAccessPackageCatalogAccessPackageResource `
-                        -AccessPackageCatalogId $CatalogId `
+                        -AccessPackageCatalogId $UpdateParameters.CatalogId `
                         -Filter "originId eq '$originId'" `
                         -ExpandProperty 'accessPackageResourceScopes'
 

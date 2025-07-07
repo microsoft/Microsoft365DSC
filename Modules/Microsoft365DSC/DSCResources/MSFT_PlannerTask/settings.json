@@ -1,56 +1,63 @@
-﻿{
-    "resourceName": "PlannerTask",
-    "description": "",
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [
-                    {
-                        "name": "Group.Read.All"
-                    },
-                    {
-                        "name": "Tasks.Read.All"
-                    },
-                    {
-                        "name": "User.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Group.Read.All"
-                    },
-                    {
-                        "name": "Tasks.ReadWrite.All"
-                    },
-                    {
-                        "name": "User.Read.All"
-                    }
-                ]
-            },
-            "application": {
-                "read": [
-                    {
-                        "name": "Group.Read.All"
-                    },
-                    {
-                        "name": "Tasks.Read.All"
-                    },
-                    {
-                        "name": "User.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Group.Read.All"
-                    },
-                    {
-                        "name": "Tasks.ReadWrite.All"
-                    },
-                    {
-                        "name": "User.Read.All"
-                    }
-                ]
-            }
-        }
+{
+  "resourceName": "PlannerTask",
+  "description": "",
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "Tasks.Read.All"
+          },
+          {
+            "name": "User.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "Tasks.ReadWrite.All"
+          },
+          {
+            "name": "User.Read.All"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "Tasks.Read.All"
+          },
+          {
+            "name": "User.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "Tasks.ReadWrite.All"
+          },
+          {
+            "name": "User.Read.All"
+          }
+        ]
+      }
     }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Groups",
+    "Microsoft.Graph.Planner",
+    "Microsoft.Graph.Users",
+    "MSCloudLoginAssistant"
+  ]
 }

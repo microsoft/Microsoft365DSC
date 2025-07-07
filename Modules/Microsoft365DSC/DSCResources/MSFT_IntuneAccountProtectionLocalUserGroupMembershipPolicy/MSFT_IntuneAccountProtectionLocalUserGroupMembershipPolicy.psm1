@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_IntuneAccountProtectionLocalUserGroupMembershipPolicy'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -310,7 +312,9 @@ function Set-TargetResource
         $PSBoundParameters.Remove('DisplayName') | Out-Null
         $PSBoundParameters.Remove('Description') | Out-Null
 
-        $settings = Get-M365DSCIntuneDeviceConfigurationSettings -Properties ([System.Collections.Hashtable]$PSBoundParameters)
+        $settings = Get-IntuneSettingCatalogPolicySetting `
+            -DSCParams ([System.Collections.Hashtable]$PSBoundParameters) `
+            -TemplateId $templateReferenceId
 
         $createParameters = @{}
         $createParameters.Add('name', $DisplayName)
@@ -319,8 +323,8 @@ function Set-TargetResource
         $createParameters.Add('platforms', $platforms)
         $createParameters.Add('technologies', $technologies)
         $createParameters.Add('templateReference', @{
-                templateId = $templateReferenceId
-            })
+            templateId = $templateReferenceId
+        })
         $policy = New-MgBetaDeviceManagementConfigurationPolicy -BodyParameter $createParameters
 
         #region Assignments
@@ -339,7 +343,9 @@ function Set-TargetResource
         $PSBoundParameters.Remove('Description') | Out-Null
         $PSBoundParameters.Remove('Assignments') | Out-Null
 
-        $settings = Get-M365DSCIntuneDeviceConfigurationSettings -Properties ([System.Collections.Hashtable]$PSBoundParameters)
+        $settings = Get-IntuneSettingCatalogPolicySetting `
+            -DSCParams ([System.Collections.Hashtable]$PSBoundParameters) `
+            -TemplateId $templateReferenceId
 
         Update-IntuneDeviceConfigurationPolicy `
             -DeviceConfigurationPolicyId $currentPolicy.Identity `
@@ -647,98 +653,5 @@ function Export-TargetResource
     }
 }
 
-function Get-M365DSCIntuneDeviceConfigurationSettings
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param
-    (
-        [Parameter(Mandatory = 'true')]
-        [System.Collections.Hashtable]
-        $Properties
-    )
-
-    $settingDefinition = 'device_vendor_msft_policy_config_localusersandgroups_configure'
-    $defaultValue = @{
-        '@odata.type'     = '#microsoft.graph.deviceManagementConfigurationSetting'
-        'settingInstance' = @{
-            '@odata.type'                      = '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
-            'settingDefinitionId'              = $settingDefinition
-            'groupSettingCollectionValue'      = @()
-            'settingInstanceTemplateReference' = @{
-                'settingInstanceTemplateId' = 'de06bec1-4852-48a0-9799-cf7b85992d45'
-            }
-        }
-    }
-    foreach ($groupConfiguration in $Properties.LocalUserGroupCollection)
-    {
-        $groupDefaultValue = @{
-            children = @(
-                @{
-                    '@odata.type'                      = '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
-                    'settingDefinitionId'              = $settingDefinition + '_groupconfiguration_accessgroup'
-                    'groupSettingCollectionValue'      = @(
-                        @{
-                            'children' = @(
-                                @{
-                                    '@odata.type'         = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                    'settingDefinitionId' = $settingDefinition + '_groupconfiguration_accessgroup_userselectiontype'
-                                    'choiceSettingValue'  = @{
-                                        '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingValue'
-                                        'value'       = $settingDefinition + '_groupconfiguration_accessgroup_userselectiontype_' + $groupConfiguration.UserSelectionType
-                                        'children'    = @(
-                                            @{
-                                                '@odata.type'                  = '#microsoft.graph.deviceManagementConfigurationSimpleSettingCollectionInstance'
-                                                'settingDefinitionId'          = $settingDefinition + '_groupconfiguration_accessgroup_users'
-                                                'simpleSettingCollectionValue' = @()
-                                            }
-                                        )
-                                    }
-                                },
-                                @{
-                                    '@odata.type'         = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                    'settingDefinitionId' = $settingDefinition + '_groupconfiguration_accessgroup_action'
-                                    'choiceSettingValue'  = @{
-                                        '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingValue'
-                                        'value'       = $settingDefinition + '_groupconfiguration_accessgroup_action_' + $groupConfiguration.Action
-                                        'children'    = @()
-                                    }
-                                },
-                                @{
-                                    '@odata.type'                  = '#microsoft.graph.deviceManagementConfigurationChoiceSettingCollectionInstance'
-                                    'settingDefinitionId'          = $settingDefinition + '_groupconfiguration_accessgroup_desc'
-                                    'choiceSettingCollectionValue' = @()
-                                }
-                            )
-                        }
-                    )
-                    'settingInstanceTemplateReference' = @{
-                        'settingInstanceTemplateId' = '76fa254e-cbdb-4718-8bdd-cd41e57caa02'
-                    }
-                }
-            )
-        }
-
-        foreach ($member in $groupConfiguration.Members)
-        {
-            $groupDefaultValue.children[0].groupSettingCollectionValue[0].children[0].choiceSettingValue.children[0].simpleSettingCollectionValue += @{
-                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
-                'value'       = $member
-            }
-        }
-
-        foreach ($localGroup in $groupConfiguration.LocalGroups)
-        {
-            $groupDefaultValue.children[0].groupSettingCollectionValue[0].children[2].choiceSettingCollectionValue += @{
-                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingValue'
-                'value'       = $settingDefinition + '_groupconfiguration_accessgroup_desc_' + $localGroup
-                'children'    = @()
-            }
-        }
-
-        $defaultValue.settingInstance.groupSettingCollectionValue += $groupDefaultValue
-    }
-    return $defaultValue
-}
-
 Export-ModuleMember -Function *-TargetResource
+

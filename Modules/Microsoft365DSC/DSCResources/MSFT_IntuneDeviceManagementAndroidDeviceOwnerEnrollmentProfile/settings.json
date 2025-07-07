@@ -1,32 +1,36 @@
-﻿{
-    "resourceName": "IntuneDeviceManagementAndroidDeviceOwnerEnrollmentProfile",
-    "description": "Enrollment Profile used to enroll Android Enterprise devices using Google's Cloud Management.",
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [
-                    {
-                        "name": "DeviceManagementConfiguration.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "DeviceManagementConfiguration.ReadWrite.All"
-                    }
-                ]
-            },
-            "application": {
-                "read": [
-                    {
-                        "name": "DeviceManagementConfiguration.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "DeviceManagementConfiguration.ReadWrite.All"
-                    }
-                ]
-            }
-        }
+{
+  "resourceName": "IntuneDeviceManagementAndroidDeviceOwnerEnrollmentProfile",
+  "description": "Enrollment Profile used to enroll Android Enterprise devices using Google's Cloud Management.",
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "DeviceManagementConfiguration.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "DeviceManagementConfiguration.ReadWrite.All"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "DeviceManagementConfiguration.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "DeviceManagementConfiguration.ReadWrite.All"
+          }
+        ]
+      }
     }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.DeviceManagement.Enrollment"
+  ]
 }

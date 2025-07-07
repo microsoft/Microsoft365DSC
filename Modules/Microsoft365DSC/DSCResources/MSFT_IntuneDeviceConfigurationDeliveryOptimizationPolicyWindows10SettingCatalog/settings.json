@@ -1,44 +1,48 @@
 {
-    "resourceName":"IntuneDeviceConfigurationDeliveryOptimizationPolicyWindows10SettingCatalog",
-    "description":"This resource configures an Intune Device Configuration Delivery Optimization Policy for Windows10 Setting Catalog.",
-    "permissions":{
-        "graph":{
-            "delegated":{
-                "read":[
-                    {
-                        "name":"DeviceManagementConfiguration.Read.All"
-                    },
-                    {
-                        "name":"Group.Read.All"
-                    }
-                ],
-                "update":[
-                    {
-                        "name":"DeviceManagementConfiguration.ReadWrite.All"
-                    },
-                    {
-                        "name":"Group.Read.All"
-                    }
-                ]
-            },
-            "application":{
-                "read":[
-                    {
-                        "name":"DeviceManagementConfiguration.Read.All"
-                    },
-                    {
-                        "name":"Group.Read.All"
-                    }
-                ],
-                "update":[
-                    {
-                        "name":"DeviceManagementConfiguration.ReadWrite.All"
-                    },
-                    {
-                        "name":"Group.Read.All"
-                    }
-                ]
-            }
-        }
+  "resourceName": "IntuneDeviceConfigurationDeliveryOptimizationPolicyWindows10SettingCatalog",
+  "description": "This resource configures an Intune Device Configuration Delivery Optimization Policy for Windows10 Setting Catalog.",
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "DeviceManagementConfiguration.Read.All"
+          },
+          {
+            "name": "Group.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "DeviceManagementConfiguration.ReadWrite.All"
+          },
+          {
+            "name": "Group.Read.All"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "DeviceManagementConfiguration.Read.All"
+          },
+          {
+            "name": "Group.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "DeviceManagementConfiguration.ReadWrite.All"
+          },
+          {
+            "name": "Group.Read.All"
+          }
+        ]
+      }
     }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.DeviceManagement"
+  ]
 }

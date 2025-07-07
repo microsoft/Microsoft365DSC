@@ -1,32 +1,33 @@
 {
-    "resourceName": "EXODataAtRestEncryptionPolicyAssignment",
-    "description": "Use the Set-M365DataAtRestEncryptionPolicyAssignment cmdlet to assign a Microsoft 365 data-at-rest encryption policy at the tenant level.",
-    "roles": {
-        "read": [
-            "Global Reader"
-        ],
-        "update": [
-            "Exchange Administrator"
-        ]
+  "resourceName": "EXODataAtRestEncryptionPolicyAssignment",
+  "description": "Use the Set-M365DataAtRestEncryptionPolicyAssignment cmdlet to assign a Microsoft 365 data-at-rest encryption policy at the tenant level.",
+  "roles": {
+    "read": [
+      "Global Reader"
+    ],
+    "update": [
+      "Exchange Administrator"
+    ]
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [],
+        "update": []
+      },
+      "application": {
+        "read": [],
+        "update": []
+      }
     },
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [],
-                "update": []
-            },
-            "application": {
-                "read": [],
-                "update": []
-            }
-        },
-        "exchange": {
-            "requiredroles": [
-                "Compliance Admin"
-            ],
-            "requiredrolegroups": [
-                "Organization Management"
-            ]
-        }
+    "exchange": {
+      "requiredroles": [
+        "Compliance Admin"
+      ],
+      "requiredrolegroups": [
+        "Organization Management"
+      ]
     }
+  },
+  "requiredModules": []
 }

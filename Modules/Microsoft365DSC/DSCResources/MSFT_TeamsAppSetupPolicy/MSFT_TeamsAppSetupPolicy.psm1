@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_TeamsAppSetupPolicy'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -535,3 +537,4 @@ function Export-TargetResource
 }
 
 Export-ModuleMember -Function *-TargetResource
+

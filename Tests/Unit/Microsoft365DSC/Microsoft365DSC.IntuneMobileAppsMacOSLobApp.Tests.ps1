@@ -44,9 +44,33 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return "Credentials"
             }
 
+            Mock -CommandName Update-DeviceAppManagementAppCategory -MockWith {
+            }
+
             Mock -CommandName Get-MgBetaDeviceAppManagementMobileApp -MockWith {
             }
             Mock -CommandName New-MgBetaDeviceAppManagementMobileApp -MockWith {
+                return @{
+                    Id                    = "ad027f94-0682-431e-97c1-827d1879fa79"
+                    Categories            = @()
+                    Description           = "TeamsForBusinessInstaller"
+                    Developer             = "Contoso"
+                    DisplayName           = "TeamsForBusinessInstaller"
+                    InformationUrl        = ""
+                    IsFeatured            = $False
+                    Notes                 = ""
+                    Owner                 = ""
+                    PrivacyInformationUrl = ""
+                    Publisher             = "Contoso"
+                    RoleScopeTagIds       = @()
+                    IgnoreVersionDetection = $True
+                    AdditionalProperties   = @{
+                        '@odata.type' = '#microsoft.graph.macOSLobApp'
+                        minimumSupportedOperatingSystem = @{
+                            v11_0 = $true
+                        }
+                    }
+                }
             }
             Mock -CommandName Update-MgBetaDeviceAppManagementMobileApp -MockWith {
             }
@@ -59,7 +83,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Write-M365DSCHost -MockWith {
             }
 
-            $Script:exportedInstances =$null
+            $Script:exportedInstance = $null
             $Script:ExportMode = $false
         }
 

@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_SCDLPComplianceRule'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -2096,3 +2098,4 @@ function Add-AdvancedRuleConditionId
 }
 
 Export-ModuleMember -Function *-TargetResource
+

@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_IntuneDeviceConfigurationAdministrativeTemplatePolicyWindows10'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -1006,3 +1008,4 @@ function Update-DeviceConfigurationGroupPolicyDefinitionValue
 }
 
 Export-ModuleMember -Function *-TargetResource
+

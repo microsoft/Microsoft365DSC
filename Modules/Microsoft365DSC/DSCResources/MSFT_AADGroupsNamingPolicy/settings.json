@@ -1,44 +1,48 @@
-﻿{
-    "resourceName": "AADGroupsNamingPolicy",
-    "description": "This resource configures the Azure Active Directory groups naming policy.",
-    "roles": {
-        "read": [],
+{
+  "resourceName": "AADGroupsNamingPolicy",
+  "description": "This resource configures the Azure Active Directory groups naming policy.",
+  "roles": {
+    "read": [],
+    "update": [
+      "Groups Administrator"
+    ]
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "Directory.Read.All"
+          }
+        ],
         "update": [
-            "Groups Administrator"
+          {
+            "name": "Directory.Read.All"
+          },
+          {
+            "name": "Directory.ReadWrite.All"
+          }
         ]
-    },
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [
-                    {
-                        "name": "Directory.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Directory.Read.All"
-                    },
-                    {
-                        "name": "Directory.ReadWrite.All"
-                    }
-                ]
-            },
-            "application": {
-                "read": [
-                    {
-                        "name": "Directory.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Directory.Read.All"
-                    },
-                    {
-                        "name": "Directory.ReadWrite.All"
-                    }
-                ]
-            }
-        }
+      },
+      "application": {
+        "read": [
+          {
+            "name": "Directory.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Directory.Read.All"
+          },
+          {
+            "name": "Directory.ReadWrite.All"
+          }
+        ]
+      }
     }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.Identity.DirectoryManagement"
+  ]
 }

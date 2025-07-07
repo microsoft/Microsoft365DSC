@@ -930,7 +930,11 @@ function Compare-M365DSCComplexObjectV2
 
         [Parameter()]
         [System.String[]]
-        $PrimaryKeys
+        $PrimaryKeys,
+
+        [Parameter()]
+        [switch]
+        $NoDriftReport
     )
 
     $returnValue = $true
@@ -955,11 +959,20 @@ function Compare-M365DSCComplexObjectV2
         }
 
         Write-Verbose -Message "Configuration drift - Complex object: {$sourceValue$targetValue}"
-        $Global:AllDrifts.DriftInfo += @{
+        $drift = @{
             PropertyName = $PropertyName
             CurrentValue = $targetValue
             DesiredValue = $sourceValue
         }
+        if (-not $NoDriftReport)
+        {
+            $Global:AllDrifts.DriftInfo += $drift
+        }
+        else
+        {
+            $Global:PotentialDrifts += $drift
+        }
+
 
         return $false
     }
@@ -1005,6 +1018,7 @@ function Compare-M365DSCComplexObjectV2
             return $returnValue
         }
 
+        $compareResult = $null
         for ($counter = 0; $counter -lt $Source.Count; $counter++)
         {
             $item = $Source[$counter]
@@ -1016,7 +1030,8 @@ function Compare-M365DSCComplexObjectV2
                     $compareResult = Compare-M365DSCComplexObjectV2 `
                         -Source $item `
                         -Target $targetItem `
-                        -PropertyName ("$PropertyName[$counter]")
+                        -PropertyName ("$PropertyName[$counter]") `
+                        -NoDriftReport
 
                     if ($compareResult)
                     {
@@ -1029,10 +1044,18 @@ function Compare-M365DSCComplexObjectV2
             if (-not $foundMatch)
             {
                 Write-Verbose -Message 'Configuration drift - The complex array items are not identical'
-                $Global:AllDrifts.DriftInfo += @{
-                    PropertyName = ("$PropertyName[$counter]")
-                    CurrentValue = $Target
-                    DesiredValue = $Source
+                if ($null -eq $compareResult) # The loop contained no elements, no potential drifts
+                {
+                    $Global:AllDrifts.DriftInfo += @{
+                        PropertyName = ("$PropertyName[$counter]")
+                        CurrentValue = $Target
+                        DesiredValue = $Source
+                    }
+                }
+                else
+                {
+                    $Global:AllDrifts.DriftInfo += $Global:PotentialDrifts[-1]
+                    $Global:PotentialDrifts = @()
                 }
 
                 return $false
@@ -1040,6 +1063,7 @@ function Compare-M365DSCComplexObjectV2
         }
 
         # Do the opposite check
+        $compareResult = $null
         for ($counter = 0; $counter -lt $Target.Count; $counter++)
         {
             $item = $Target[$counter]
@@ -1051,7 +1075,8 @@ function Compare-M365DSCComplexObjectV2
                     $compareResult = Compare-M365DSCComplexObjectV2 `
                         -Source $item `
                         -Target $targetItem `
-                        -PropertyName ("$PropertyName[$counter]")
+                        -PropertyName ("$PropertyName[$counter]") `
+                        -NoDriftReport
 
                     if ($compareResult)
                     {
@@ -1063,10 +1088,21 @@ function Compare-M365DSCComplexObjectV2
             if (-not $foundMatch -and $Target.GetType().Name -ne 'Hashtable' -and $Target.GetType().Name -ne 'Object[]')
             {
                 Write-Verbose -Message 'Configuration drift - The complex array items are not identical'
-                $Global:AllDrifts.DriftInfo += @{
-                    PropertyName = ("$PropertyName[$counter]")
-                    CurrentValue = $Target
-                    DesiredValue = $Source
+                if (-not $NoDriftReport)
+                {
+                    if ($null -eq $compareResult) # The loop contained no elements, no potential drifts
+                    {
+                        $Global:AllDrifts.DriftInfo += @{
+                            PropertyName = ("$PropertyName[$counter]")
+                            CurrentValue = $Target
+                            DesiredValue = $Source
+                        }
+                    }
+                    else
+                    {
+                        $Global:AllDrifts.DriftInfo += $Global:PotentialDrifts[-1]
+                        $Global:PotentialDrifts = @()
+                    }
                 }
 
                 return $false
@@ -1148,10 +1184,18 @@ function Compare-M365DSCComplexObjectV2
                 Write-Verbose -Message "Configuration drift - key: $key"
                 Write-Verbose -Message "Source {$sourceValue}"
                 Write-Verbose -Message "Target {$targetValue}"
-                $Global:AllDrifts.DriftInfo += @{
-                    PropertyName = ($PropertyName + "." + $key)
+                $drift = @{
+                    PropertyName = $PropertyName + "." + $key
                     CurrentValue = $targetValue
-                    DesiredValue = $SourceValue
+                    DesiredValue = $sourceValue
+                }
+                if (-not $NoDriftReport)
+                {
+                    $Global:AllDrifts.DriftInfo += $drift
+                }
+                else
+                {
+                    $Global:PotentialDrifts += $drift
                 }
 
                 $returnValue = $false
@@ -1179,7 +1223,8 @@ function Compare-M365DSCComplexObjectV2
                         $compareResult = Compare-M365DSCComplexObjectV2 `
                             -Source $Source.$key `
                             -Target $Target.$key `
-                            -PropertyName ($PropertyName + "." + $key)
+                            -PropertyName ($PropertyName + "." + $key) `
+                            -NoDriftReport:$NoDriftReport
                     }
 
                     if (-not $compareResult -and $targetValue.GetType().Name -ne "Hashtable" -and $targetValue.GetType().Name -ne 'Object[]')
@@ -1187,10 +1232,18 @@ function Compare-M365DSCComplexObjectV2
                         Write-Verbose -Message "Configuration drift - complex object key: $key"
                         Write-Verbose -Message "Source {$sourceValue}"
                         Write-Verbose -Message "Target {$targetValue}"
-                        $Global:AllDrifts.DriftInfo += @{
+                        $drift = @{
                             PropertyName = ($PropertyName + "." + $key)
                             CurrentValue = $targetValue
-                            DesiredValue = $SourceValue
+                            DesiredValue = $sourceValue
+                        }
+                        if (-not $NoDriftReport)
+                        {
+                            $Global:AllDrifts.DriftInfo += $drift
+                        }
+                        else
+                        {
+                            $Global:PotentialDrifts += $drift
                         }
 
                         $returnValue = $false
@@ -1254,10 +1307,18 @@ function Compare-M365DSCComplexObjectV2
                         Write-Verbose -Message "Configuration drift - simple object key: $key"
                         Write-Verbose -Message "Source {$sourceValue}"
                         Write-Verbose -Message "Target {$targetValue}"
-                        $Global:AllDrifts.DriftInfo += @{
+                        $drift = @{
                             PropertyName = ($PropertyName + "." + $key)
                             CurrentValue = $targetValue
-                            DesiredValue = $SourceValue
+                            DesiredValue = $sourceValue
+                        }
+                        if (-not $NoDriftReport)
+                        {
+                            $Global:AllDrifts.DriftInfo += $drift
+                        }
+                        else
+                        {
+                            $Global:PotentialDrifts += $drift
                         }
 
                         return $false
@@ -1641,6 +1702,7 @@ function ConvertFrom-IntuneMobileAppAssignment
         [Parameter(Mandatory = $true)]
         [Array]
         $Assignments,
+
         [Parameter()]
         [System.Boolean]
         $IncludeDeviceFilter = $true
@@ -2183,6 +2245,182 @@ function Update-DeviceAppManagementPolicyAssignment
 
         return $null
     }
+}
+
+function Update-DeviceAppManagementAppCategory
+{
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory = $true)]
+        $App,
+
+        [Parameter(Mandatory = $true)]
+        [AllowEmptyCollection()]
+        [Array]
+        $Categories,
+
+        [Parameter()]
+        [switch]
+        $Compare
+    )
+
+    if ($Compare)
+    {
+        [array]$referenceObject = if ($null -ne $App.Categories.DisplayName)
+        {
+            $App.Categories.DisplayName
+        }
+        else
+        {
+            , @()
+        }
+        [array]$differenceObject = if ($null -ne $Categories.DisplayName)
+        {
+            $Categories.DisplayName
+        }
+        else
+        {
+            , @()
+        }
+        $delta = Compare-Object -ReferenceObject $referenceObject -DifferenceObject $differenceObject -PassThru
+        foreach ($diff in $delta)
+        {
+            if ($diff.SideIndicator -eq '=>')
+            {
+                $category = $Categories | Where-Object { $_.DisplayName -eq $diff }
+                if ($category.Id)
+                {
+                    $currentCategory = Get-MgBetaDeviceAppManagementMobileAppCategory -MobileAppCategoryId $category.Id
+                }
+                else
+                {
+                    $currentCategory = Get-MgBetaDeviceAppManagementMobileAppCategory -Filter "DisplayName eq '$($category.DisplayName -replace "'", "''")'"
+                }
+
+                if ($null -eq $currentCategory)
+                {
+                    throw "Mobile App Category with DisplayName $($category.DisplayName) not found."
+                }
+
+                Invoke-MgGraphRequest -Uri "/beta/deviceAppManagement/mobileApps/$($App.Id)/categories/`$ref" -Method 'POST' -Body @{
+                    '@odata.id' = "$((Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl)beta/deviceAppManagement/mobileAppCategories/$($currentCategory.Id)"
+                }
+            }
+            else
+            {
+                $category = $App.Categories | Where-Object { $_.DisplayName -eq $diff }
+                Invoke-MgGraphRequest -Uri "/beta/deviceAppManagement/mobileApps/$($App.Id)/categories/$($category.Id)/`$ref" -Method 'DELETE'
+            }
+        }
+    }
+    else
+    {
+        foreach ($category in $Categories)
+        {
+            if ($category.Id)
+            {
+                $currentCategory = Get-MgBetaDeviceAppManagementMobileAppCategory -CategoryId $category.Id
+            }
+            else
+            {
+                $currentCategory = Get-MgBetaDeviceAppManagementMobileAppCategory -Filter "DisplayName eq '$($category.DisplayName -replace "'", "''")'"
+            }
+
+            if ($null -eq $currentCategory)
+            {
+                throw "Mobile App Category with DisplayName $($category.DisplayName) not found."
+            }
+
+            Invoke-MgGraphRequest -Uri "$((Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl)beta/deviceAppManagement/mobileApps/$($App.Id)/categories/`$ref" -Method 'POST' -Body @{
+                '@odata.id' = "$((Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl)beta/deviceAppManagement/mobileAppCategories/$($currentCategory.Id)"
+            }
+        }
+    }
+}
+
+function Get-M365DSCIntuneDeviceConfigurationSettings
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = 'true')]
+        [System.Collections.Hashtable]
+        $Properties,
+
+        [Parameter()]
+        [System.String]
+        $TemplateId
+    )
+
+    $templateCategoryId = (Get-MgBetaDeviceManagementTemplateCategory -DeviceManagementTemplateId $TemplateId).Id
+    $templateSettings = Get-MgBetaDeviceManagementTemplateCategoryRecommendedSetting `
+        -DeviceManagementTemplateId $TemplateId `
+        -DeviceManagementTemplateSettingCategoryId $templateCategoryId
+
+    $results = @()
+    foreach ($setting in $templateSettings)
+    {
+        $result = @{}
+        $settingType = $setting.AdditionalProperties.'@odata.type'
+        $settingValue = $null
+        $currentValueKey = $Properties.keys | Where-Object -FilterScript { $setting.DefinitionId -like "*$_" }
+        if ($null -ne $currentValueKey)
+        {
+            $settingValue = $Properties.$currentValueKey
+        }
+
+        $requiresValueJson = $false
+        switch ($settingType)
+        {
+            {
+                ( $_ -eq '#microsoft.graph.deviceManagementStringSettingInstance' ) -or
+                ( $_ -eq '#microsoft.graph.deviceManagementBooleanSettingInstance' )
+            }
+            {
+                if ([String]::IsNullOrEmpty($settingValue))
+                {
+                    $settingValue = $setting.ValueJson | ConvertFrom-Json
+                }
+            }
+            '#microsoft.graph.deviceManagementCollectionSettingInstance'
+            {
+                $requiresValueJson = $true
+                if ($null -eq $settingValue)
+                {
+                    $settingValue = ConvertTo-Json -InputObject @()
+                }
+                else
+                {
+                    $settingValue = ConvertTo-Json -InputObject ([Array]$settingValue)
+                }
+            }
+            default
+            {
+                if ($null -eq $settingValue)
+                {
+                    $settingValue = $setting.ValueJson | ConvertFrom-Json
+                }
+            }
+        }
+
+        $result.Add('@odata.type', $settingType)
+        $result.Add('Id', $setting.Id)
+        $result.Add('definitionId', $setting.DefinitionId)
+
+        if ($requiresValueJson)
+        {
+            $result.Add('valueJson', $settingValue)
+        }
+        else
+        {
+            $result.Add('value', $settingValue)
+        }
+
+        $results += $result
+    }
+
+    return $results
 }
 
 function Get-OmaSettingPlainTextValue

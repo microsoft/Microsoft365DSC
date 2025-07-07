@@ -1,20 +1,24 @@
-﻿{
-    "resourceName": "SentinelSetting",
-    "description": "Configures settings for a Sentinel instance.",
-    "roles": {
+{
+  "resourceName": "SentinelSetting",
+  "description": "Configures settings for a Sentinel instance.",
+  "roles": {
+    "read": [],
+    "update": []
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
         "read": [],
         "update": []
-    },
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [],
-                "update": []
-            },
-            "application": {
-                "read": [],
-                "update": []
-            }
-        }
+      },
+      "application": {
+        "read": [],
+        "update": []
+      }
     }
+  },
+  "requiredModules": [
+    "Az.Resources",
+    "Az.SecurityInsights"
+  ]
 }

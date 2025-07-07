@@ -1,38 +1,39 @@
-﻿{
-    "resourceName": "EXOOMEConfiguration",
-    "description": "",
-    "roles": {
-        "read": [
-            "Security Reader"
-        ],
-        "update": [
-            "Exchange Administrator"
-        ]
+{
+  "resourceName": "EXOOMEConfiguration",
+  "description": "",
+  "roles": {
+    "read": [
+      "Security Reader"
+    ],
+    "update": [
+      "Exchange Administrator"
+    ]
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [],
+        "update": []
+      },
+      "application": {
+        "read": [],
+        "update": []
+      }
     },
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [],
-                "update": []
-            },
-            "application": {
-                "read": [],
-                "update": []
-            }
-        },
-        "exchange": {
-            "requiredroles": [
-                "Compliance Admin",
-                "Security Admin",
-                "Data Loss Prevention",
-                "Transport Rules",
-                "Information Rights Management",
-                "View-Only Configuration",
-                "Security Reader"
-            ],
-            "requiredrolegroups": [
-                "Organization Management"
-            ]
-        }
+    "exchange": {
+      "requiredroles": [
+        "Compliance Admin",
+        "Security Admin",
+        "Data Loss Prevention",
+        "Transport Rules",
+        "Information Rights Management",
+        "View-Only Configuration",
+        "Security Reader"
+      ],
+      "requiredrolegroups": [
+        "Organization Management"
+      ]
     }
+  },
+  "requiredModules": []
 }

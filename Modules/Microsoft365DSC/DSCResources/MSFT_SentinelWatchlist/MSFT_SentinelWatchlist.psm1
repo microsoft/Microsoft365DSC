@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_SentinelWatchlist'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -737,3 +739,4 @@ function Remove-M365DSCSentinelWatchlist
 }
 
 Export-ModuleMember -Function *-TargetResource
+

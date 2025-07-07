@@ -1,35 +1,36 @@
-﻿{
-    "resourceName": "EXOReportSubmissionRule",
-    "description": "",
-    "roles": {
-        "read": [
-            "Security Reader"
-        ],
-        "update": [
-            "Security Administrator"
-        ]
+{
+  "resourceName": "EXOReportSubmissionRule",
+  "description": "",
+  "roles": {
+    "read": [
+      "Security Reader"
+    ],
+    "update": [
+      "Security Administrator"
+    ]
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [],
+        "update": []
+      },
+      "application": {
+        "read": [],
+        "update": []
+      }
     },
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [],
-                "update": []
-            },
-            "application": {
-                "read": [],
-                "update": []
-            }
-        },
-        "exchange": {
-            "requiredroles": [
-                "Transport Hygiene",
-                "Security Admin",
-                "View-Only Configuration",
-                "Security Reader"
-            ],
-            "requiredrolegroups": [
-                "Organization Management"
-            ]
-        }
+    "exchange": {
+      "requiredroles": [
+        "Transport Hygiene",
+        "Security Admin",
+        "View-Only Configuration",
+        "Security Reader"
+      ],
+      "requiredrolegroups": [
+        "Organization Management"
+      ]
     }
+  },
+  "requiredModules": []
 }

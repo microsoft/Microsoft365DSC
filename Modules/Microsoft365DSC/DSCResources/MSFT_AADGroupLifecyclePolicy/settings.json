@@ -1,44 +1,48 @@
-﻿{
-    "resourceName": "AADGroupLifecyclePolicy",
-    "description": "This resource configures an Azure Active Directory Group Lifecycle Policy (e.g. Expiration).",
-    "roles": {
-        "read": [],
+{
+  "resourceName": "AADGroupLifecyclePolicy",
+  "description": "This resource configures an Azure Active Directory Group Lifecycle Policy (e.g. Expiration).",
+  "roles": {
+    "read": [],
+    "update": [
+      "Groups Administrator"
+    ]
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "Directory.Read.All"
+          }
+        ],
         "update": [
-            "Groups Administrator"
+          {
+            "name": "Directory.Read.All"
+          },
+          {
+            "name": "Directory.ReadWrite.All"
+          }
         ]
-    },
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [
-                    {
-                        "name": "Directory.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Directory.Read.All"
-                    },
-                    {
-                        "name": "Directory.ReadWrite.All"
-                    }
-                ]
-            },
-            "application": {
-                "read": [
-                    {
-                        "name": "Directory.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Directory.Read.All"
-                    },
-                    {
-                        "name": "Directory.ReadWrite.All"
-                    }
-                ]
-            }
-        }
+      },
+      "application": {
+        "read": [
+          {
+            "name": "Directory.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Directory.Read.All"
+          },
+          {
+            "name": "Directory.ReadWrite.All"
+          }
+        ]
+      }
     }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Groups"
+  ]
 }

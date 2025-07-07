@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_IntuneDeviceEnrollmentPlatformRestriction'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -999,3 +1001,4 @@ function Get-DevicePlatformRestrictionSetting
 }
 
 Export-ModuleMember -Function *-TargetResource
+

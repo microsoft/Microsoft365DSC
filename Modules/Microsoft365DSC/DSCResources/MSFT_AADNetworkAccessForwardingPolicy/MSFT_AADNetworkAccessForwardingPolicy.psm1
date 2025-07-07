@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_AADNetworkAccessForwardingPolicy'
+
 function Get-TargetResource
 {
     [CmdletBinding()]

@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_AADRoleSetting'
+
 function Get-TargetResource
 {
     [CmdletBinding()]

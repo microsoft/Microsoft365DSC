@@ -1,0 +1,32 @@
+{
+    "resourceName": "AADAgreement",
+    "description": "This resource configures Azure AD Terms of Use Agreements in Entra ID.",
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [
+                    {
+                        "name": "Agreement.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Agreement.ReadWrite.All"
+                    }
+                ]
+            },
+            "application": {
+                "read": [
+                    {
+                        "name": "Agreement.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Agreement.ReadWrite.All"
+                    }
+                ]
+            }
+        }
+    }
+}

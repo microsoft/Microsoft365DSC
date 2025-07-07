@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_SentinelAlertRule'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -1365,3 +1367,4 @@ function Remove-M365DSCSentinelAlertRule
 }
 
 Export-ModuleMember -Function *-TargetResource
+

@@ -1,40 +1,44 @@
-﻿{
-    "resourceName": "AADCustomSecurityAttributeDefinition",
-    "description": "Configures custom security attribute definitions in Entra Id.",
-    "roles": {
+{
+  "resourceName": "AADCustomSecurityAttributeDefinition",
+  "description": "Configures custom security attribute definitions in Entra Id.",
+  "roles": {
+    "read": [
+      "Attribute Definition Reader"
+    ],
+    "update": [
+      "Attribute Definition Administrator"
+    ]
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
         "read": [
-            "Attribute Definition Reader"
+          {
+            "name": "CustomSecAttributeDefinition.Read.All"
+          }
         ],
         "update": [
-            "Attribute Definition Administrator"
+          {
+            "name": "CustomSecAttributeDefinition.ReadWrite.All"
+          }
         ]
-    },
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [
-                    {
-                        "name": "CustomSecAttributeDefinition.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "CustomSecAttributeDefinition.ReadWrite.All"
-                    }
-                ]
-            },
-            "application": {
-                "read": [
-                    {
-                        "name": "CustomSecAttributeDefinition.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "CustomSecAttributeDefinition.ReadWrite.All"
-                    }
-                ]
-            }
-        }
+      },
+      "application": {
+        "read": [
+          {
+            "name": "CustomSecAttributeDefinition.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "CustomSecAttributeDefinition.ReadWrite.All"
+          }
+        ]
+      }
     }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.Identity.DirectoryManagement"
+  ]
 }

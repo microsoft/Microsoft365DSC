@@ -1,72 +1,83 @@
-﻿{
-    "resourceName": "AADGroup",
-    "description": "This resource configures an Azure Active Directory group.",
-    "roles": {
-        "read": [],
-        "update": []
-    },
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [
-                    {
-                        "name": "Group.Read.All"
-                    },
-                    {
-                        "name": "ReportSettings.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Group.ReadWrite.All"
-                    },
-                    {
-                        "name": "Organization.Read.All"
-                    },
-                    {
-                        "name": "RoleManagement.ReadWrite.Directory"
-                    },
-                    {
-                        "name": "User.Read.All"
-                    },
-                    {
-                        "name": "ReportSettings.ReadWrite.All"
-                    }
-                ]
-            },
-            "application": {
-                "read": [
-                    {
-                        "name": "Group.Read.All"
-                    },
-                    {
-                        "name": "ReportSettings.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Group.Read.All"
-                    },
-                    {
-                        "name": "Group.ReadWrite.All"
-                    },
-                    {
-                        "name": "Organization.Read.All"
-                    },
-                    {
-                        "name": "RoleManagement.Read.Directory"
-                    },
-                    {
-                        "name": "RoleManagement.ReadWrite.Directory"
-                    },
-                    {
-                        "name": "User.Read.All"
-                    },
-                    {
-                        "name": "ReportSettings.ReadWrite.All"
-                    }
-                ]
-            }
-        }
+{
+  "resourceName": "AADGroup",
+  "description": "This resource configures an Azure Active Directory group.",
+  "roles": {
+    "read": [],
+    "update": []
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "ReportSettings.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Group.ReadWrite.All"
+          },
+          {
+            "name": "Organization.Read.All"
+          },
+          {
+            "name": "RoleManagement.ReadWrite.Directory"
+          },
+          {
+            "name": "User.Read.All"
+          },
+          {
+            "name": "ReportSettings.ReadWrite.All"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "ReportSettings.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "Group.ReadWrite.All"
+          },
+          {
+            "name": "Organization.Read.All"
+          },
+          {
+            "name": "RoleManagement.Read.Directory"
+          },
+          {
+            "name": "RoleManagement.ReadWrite.Directory"
+          },
+          {
+            "name": "User.Read.All"
+          },
+          {
+            "name": "ReportSettings.ReadWrite.All"
+          }
+        ]
+      }
     }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Applications",
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.Groups",
+    "Microsoft.Graph.Beta.Identity.DirectoryManagement",
+    "Microsoft.Graph.Beta.Identity.Governance",
+    "Microsoft.Graph.Groups",
+    "Microsoft.Graph.Identity.DirectoryManagement",
+    "Microsoft.Graph.Users",
+    "MSCloudLoginAssistant"
+  ]
 }

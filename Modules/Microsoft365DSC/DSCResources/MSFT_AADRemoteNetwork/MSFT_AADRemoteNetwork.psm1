@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_AADRemoteNetwork'
+
 function Get-TargetResource
 {
     [CmdletBinding()]

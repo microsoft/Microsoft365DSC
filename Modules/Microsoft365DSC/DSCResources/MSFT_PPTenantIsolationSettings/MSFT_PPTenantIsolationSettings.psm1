@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_PPTenantIsolationSettings'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -757,3 +759,4 @@ function Get-M365TenantId
 }
 
 Export-ModuleMember -Function *-TargetResource
+

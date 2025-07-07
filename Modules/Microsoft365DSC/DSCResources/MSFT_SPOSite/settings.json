@@ -1,64 +1,67 @@
-﻿{
-    "resourceName": "SPOSite",
-    "description": "",
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [
-                    {
-                        "name": "Application.Read.All"
-                    },
-                    {
-                        "name": "Domain.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Domain.Read.All"
-                    }
-                ]
-            },
-            "application": {
-                "read": [
-                    {
-                        "name": "Application.Read.All"
-                    },
-                    {
-                        "name": "Domain.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Domain.Read.All"
-                    }
-                ]
-            }
-        },
-        "sharepoint": {
-            "delegated": {
-                "read": [
-                    {
-                        "name": "Sites.FullControl.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Sites.FullControl.All"
-                    }
-                ]
-            },
-            "application": {
-                "read": [
-                    {
-                        "name": "Sites.FullControl.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Sites.FullControl.All"
-                    }
-                ]
-            }
-        }
+{
+  "resourceName": "SPOSite",
+  "description": "",
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "Application.Read.All"
+          },
+          {
+            "name": "Domain.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Domain.Read.All"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "Application.Read.All"
+          },
+          {
+            "name": "Domain.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Domain.Read.All"
+          }
+        ]
+      }
+    },
+    "sharepoint": {
+      "delegated": {
+        "read": [
+          {
+            "name": "Sites.FullControl.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Sites.FullControl.All"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "Sites.FullControl.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Sites.FullControl.All"
+          }
+        ]
+      }
     }
+  },
+  "requiredModules": [
+    "PnP.PowerShell"
+  ]
 }

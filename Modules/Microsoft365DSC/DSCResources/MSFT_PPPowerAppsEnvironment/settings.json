@@ -1,16 +1,19 @@
-﻿{
-    "resourceName": "PPPowerAppsEnvironment",
-    "description": "",
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [],
-                "update": []
-            },
-            "application": {
-                "read": [],
-                "update": []
-            }
-        }
+{
+  "resourceName": "PPPowerAppsEnvironment",
+  "description": "",
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [],
+        "update": []
+      },
+      "application": {
+        "read": [],
+        "update": []
+      }
     }
+  },
+  "requiredModules": [
+    "MSCloudLoginAssistant"
+  ]
 }

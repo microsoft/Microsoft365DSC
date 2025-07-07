@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_IntuneDeviceManagementAndroidDeviceOwnerEnrollmentProfile'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -582,3 +584,4 @@ function Export-TargetResource
 }
 
 Export-ModuleMember -Function *-TargetResource
+

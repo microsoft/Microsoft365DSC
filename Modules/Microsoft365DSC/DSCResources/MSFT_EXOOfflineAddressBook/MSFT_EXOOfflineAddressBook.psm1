@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_EXOOfflineAddressBook'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -483,4 +485,5 @@ function Export-TargetResource
 }
 
 Export-ModuleMember -Function *-TargetResource
+
 

@@ -1,32 +1,35 @@
-﻿{
-    "resourceName": "TeamsComplianceRecordingPolicy",
-    "description": "This resource configures an Creates a new Teams recording policy for governing automatic policy-based recording in your tenant. Automatic policy-based recording is only applicable to Microsoft Teams users.",
-    "roles": {
+{
+  "resourceName": "TeamsComplianceRecordingPolicy",
+  "description": "This resource configures an Creates a new Teams recording policy for governing automatic policy-based recording in your tenant. Automatic policy-based recording is only applicable to Microsoft Teams users.",
+  "roles": {
+    "read": [
+      "Global Reader"
+    ],
+    "update": [
+      "Teams Administrator"
+    ]
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [],
+        "update": []
+      },
+      "application": {
         "read": [
-            "Global Reader"
+          {
+            "name": "Organization.Read.All"
+          }
         ],
         "update": [
-            "Teams Administrator"
+          {
+            "name": "Organization.Read.All"
+          }
         ]
-    },
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [],
-                "update": []
-            },
-            "application": {
-                "read": [
-                    {
-                        "name": "Organization.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Organization.Read.All"
-                    }
-                ]
-            }
-        }
+      }
     }
+  },
+  "requiredModules": [
+    "MicrosoftTeams"
+  ]
 }

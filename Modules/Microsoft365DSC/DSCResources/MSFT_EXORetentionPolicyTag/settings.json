@@ -1,34 +1,35 @@
-﻿{
-    "resourceName": "EXORetentionPolicyTag",
-    "description": "Manage Exchange Online retention policy tags.",
-    "roles": {
-        "read": [
-            "Global Reader"
-        ],
-        "update": [
-            "Exchange Administrator"
-        ]
+{
+  "resourceName": "EXORetentionPolicyTag",
+  "description": "Manage Exchange Online retention policy tags.",
+  "roles": {
+    "read": [
+      "Global Reader"
+    ],
+    "update": [
+      "Exchange Administrator"
+    ]
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [],
+        "update": []
+      },
+      "application": {
+        "read": [],
+        "update": []
+      }
     },
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [],
-                "update": []
-            },
-            "application": {
-                "read": [],
-                "update": []
-            }
-        },
-        "exchange": {
-            "requiredroles": [
-                "Organization Management",
-                "Recipient Management"
-            ],
-            "requiredrolegroups": [
-                "Organization Management",
-                "Help Desk"
-            ]
-        }
+    "exchange": {
+      "requiredroles": [
+        "Organization Management",
+        "Recipient Management"
+      ],
+      "requiredrolegroups": [
+        "Organization Management",
+        "Help Desk"
+      ]
     }
+  },
+  "requiredModules": []
 }

@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_IntuneASRRulesPolicyWindows10'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -503,7 +505,7 @@ function Set-TargetResource
         }
     }
 
-    if (![string]::IsNullOrEmpty($ExceptionMessage))
+    if (-not [string]::IsNullOrEmpty($ExceptionMessage))
     {
         $ExceptionMessage += 'Please update your configuration.'
         Write-Verbose -Message $ExceptionMessage
@@ -531,10 +533,10 @@ function Set-TargetResource
             -TemplateId $policyTemplateID
 
         $createParameters = @{}
-        $createParameters.add('DisplayName', $DisplayName)
-        $createParameters.add('Description', $Description)
-        $createParameters.add('Settings', $settings)
-        $createParameters.add('TemplateId', $policyTemplateID)
+        $createParameters.Add('DisplayName', $DisplayName)
+        $createParameters.Add('Description', $Description)
+        $createParameters.Add('Settings', $settings)
+        $createParameters.Add('TemplateId', $policyTemplateID)
         $policy = New-MgBetaDeviceManagementIntent -BodyParameter $createParameters
 
         #region Assignments
@@ -562,13 +564,10 @@ function Set-TargetResource
             -TemplateId $policyTemplateID
 
         $updateParameters = @{}
-        $updateParameters.add('DisplayName', $DisplayName)
-        $updateParameters.add('Description', $Description)
+        $updateParameters.Add('DisplayName', $DisplayName)
+        $updateParameters.Add('Description', $Description)
         Update-MgBetaDeviceManagementIntent -DeviceManagementIntentId $currentPolicy.Identity -BodyParameter $updateParameters
 
-        #Update-MgBetaDeviceManagementIntent does not support updating the property settings
-        #Update-MgBetaDeviceManagementIntentSetting only support updating a single setting at a time
-        #Using Rest to reduce the number of calls
         $Uri = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/deviceManagement/intents/$($currentPolicy.Identity)/updateSettings"
         $body = @{'settings' = $settings }
         Invoke-MgGraphRequest -Method POST -Uri $Uri -Body ($body | ConvertTo-Json -Depth 20) -ContentType 'application/json' 4> $null
@@ -944,74 +943,5 @@ function Export-TargetResource
     }
 }
 
-function Get-M365DSCIntuneDeviceConfigurationSettings
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param
-    (
-        [Parameter(Mandatory = 'true')]
-        [System.Collections.Hashtable]
-        $Properties,
-
-        [Parameter()]
-        [System.String]
-        $TemplateId
-    )
-
-    $templateCategoryId = (Get-MgBetaDeviceManagementTemplateCategory -DeviceManagementTemplateId $TemplateId).Id
-    $templateSettings = Get-MgBetaDeviceManagementTemplateCategoryRecommendedSetting `
-        -DeviceManagementTemplateId $TemplateId `
-        -DeviceManagementTemplateSettingCategoryId $templateCategoryId
-
-    $results = @()
-    foreach ($setting in $templateSettings)
-    {
-        $result = @{}
-        $settingType = $setting.AdditionalProperties.'@odata.type'
-        $settingValue = $null
-        $currentValueKey = $Properties.keys | Where-Object -FilterScript { $setting.DefinitionId -like "*$_" }
-        if ($null -ne $currentValueKey)
-        {
-            $settingValue = $Properties.$currentValueKey
-        }
-
-        switch ($settingType)
-        {
-            '#microsoft.graph.deviceManagementStringSettingInstance'
-            {
-                if ([String]::IsNullOrEmpty($settingValue))
-                {
-                    $settingValue = $setting.ValueJson
-                }
-                else
-                {
-                    $settingValue = ConvertTo-Json -InputObject $settingValue
-                }
-            }
-            '#microsoft.graph.deviceManagementCollectionSettingInstance'
-            {
-                if ($null -eq $settingValue)
-                {
-                    $settingValue = ConvertTo-Json -InputObject @()
-                }
-                else
-                {
-                    $settingValue = ConvertTo-Json -InputObject ([Array]$settingValue)
-                }
-            }
-            Default
-            {
-                $settingValue = $setting.ValueJson
-            }
-        }        $result.Add('@odata.type', $settingType)
-        $result.Add('Id', $setting.Id)
-        $result.Add('definitionId', $setting.DefinitionId)
-        $result.Add('valueJson', ($settingValue ))
-
-        $results += $result
-    }
-    return $results
-}
-
 Export-ModuleMember -Function *-TargetResource
+

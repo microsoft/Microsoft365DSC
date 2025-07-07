@@ -1,35 +1,35 @@
 {
-    "resourceName": "EXOSmtpDaneInbound",
-    "description": "This resource configures an Accepted Domain to use DANE for inbound mail.",
-	"roles": {
-        "read": [
-            "Security Reader"
-        ],
-        "update": [
-            "Security Administrator"
-        ]
+  "resourceName": "EXOSmtpDaneInbound",
+  "roles": {
+    "read": [
+      "Security Reader"
+    ],
+    "update": [
+      "Security Administrator"
+    ]
+  },
+  "description": "",
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [],
+        "update": []
+      },
+      "application": {
+        "read": [],
+        "update": []
+      }
     },
-    "description": "",
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [],
-                "update": []
-            },
-            "application": {
-                "read": [],
-                "update": []
-            }
-        },
-        "exchange": {
-            "requiredroles": [
-                "Security Admin",
-                "View-Only Configuration",
-                "Security Reader"
-            ],
-            "requiredrolegroups": [
-                "Organization Management"
-            ]
-        }
+    "exchange": {
+      "requiredroles": [
+        "Security Admin",
+        "View-Only Configuration",
+        "Security Reader"
+      ],
+      "requiredrolegroups": [
+        "Organization Management"
+      ]
     }
+  },
+  "requiredModules": []
 }

@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_IntuneDeviceConfigurationWiredNetworkPolicyWindows10'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -1342,3 +1344,4 @@ function Get-IntuneDeviceConfigurationCertificateId
 }
 
 Export-ModuleMember -Function *-TargetResource
+

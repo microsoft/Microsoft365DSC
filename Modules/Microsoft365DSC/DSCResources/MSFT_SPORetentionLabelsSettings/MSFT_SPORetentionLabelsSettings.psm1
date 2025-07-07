@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_SPORetentionLabelsSettings'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -416,3 +418,4 @@ function Invoke-M365DSCSPORetentionLabelsSetting
 }
 
 Export-ModuleMember -Function *-TargetResource
+

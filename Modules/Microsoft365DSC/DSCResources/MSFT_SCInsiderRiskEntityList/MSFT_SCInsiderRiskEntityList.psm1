@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_SCInsiderRiskEntityList'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -1219,3 +1221,4 @@ function Set-M365DSCSCInsiderRiskExclusionGroup
 }
 
 Export-ModuleMember -Function *-TargetResource
+

@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_IntuneDeviceEnrollmentStatusPageWindows10'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -870,3 +872,4 @@ function Update-DeviceEnrollmentConfigurationPriority
 }
 
 Export-ModuleMember -Function *-TargetResource
+

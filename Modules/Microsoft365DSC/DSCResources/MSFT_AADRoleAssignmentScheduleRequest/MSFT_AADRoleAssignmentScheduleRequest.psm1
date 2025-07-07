@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_AADRoleAssignmentScheduleRequest'
+
 function Get-TargetResource
 {
     [CmdletBinding()]

@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_IntuneDeviceConfigurationPolicyMacOS'
+
 # More information on the properties can be found here:
 # - https://learn.microsoft.com/en-us/graph/api/intune-deviceconfig-macosgeneraldeviceconfiguration-create?view=graph-rest-beta
 # - https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-applistitem?view=graph-rest-beta
@@ -1434,3 +1436,4 @@ function Export-TargetResource
 }
 
 Export-ModuleMember -Function *-TargetResource
+

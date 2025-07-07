@@ -1,32 +1,36 @@
-﻿{
-    "resourceName": "IntuneAppCategory",
-    "description": "Configures a resource for navigation property for Intune mobile app categories.",
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [
-                    {
-                        "name": "DeviceManagementApps.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "DeviceManagementApps.ReadWrite.All"
-                    }
-                ]
-            },
-            "application": {
-                "read": [
-                    {
-                        "name": "DeviceManagementApps.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "DeviceManagementApps.ReadWrite.All"
-                    }
-                ]
-            }
-        }
+{
+  "resourceName": "IntuneAppCategory",
+  "description": "Configures a resource for navigation property for Intune mobile app categories.",
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "DeviceManagementApps.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "DeviceManagementApps.ReadWrite.All"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "DeviceManagementApps.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "DeviceManagementApps.ReadWrite.All"
+          }
+        ]
+      }
     }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.Devices.CorporateManagement"
+  ]
 }

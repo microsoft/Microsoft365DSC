@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_EXOHostedContentFilterPolicy'
+
 function Get-TargetResource
 {
     [CmdletBinding()]

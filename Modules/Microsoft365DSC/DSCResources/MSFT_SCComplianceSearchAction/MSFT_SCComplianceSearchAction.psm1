@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_SCComplianceSearchAction'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -769,3 +771,4 @@ function Get-CurrentAction
 }
 
 Export-ModuleMember -Function *-TargetResource
+

@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_O365AdminAuditLogConfig'
+
 function Get-TargetResource
 {
     [CmdletBinding()]

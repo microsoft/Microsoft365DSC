@@ -1,56 +1,61 @@
-﻿{
-    "resourceName": "AADGroupsSettings",
-    "description": "This resource configures the Azure Active Directory groups settings.",
-    "roles": {
-        "read": [],
+{
+  "resourceName": "AADGroupsSettings",
+  "description": "This resource configures the Azure Active Directory groups settings.",
+  "roles": {
+    "read": [],
+    "update": [
+      "Groups Administrator"
+    ]
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "Directory.Read.All"
+          },
+          {
+            "name": "Group.Read.All"
+          }
+        ],
         "update": [
-            "Groups Administrator"
+          {
+            "name": "Directory.Read.All"
+          },
+          {
+            "name": "Directory.ReadWrite.All"
+          },
+          {
+            "name": "Group.Read.All"
+          }
         ]
-    },
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [
-                    {
-                        "name": "Directory.Read.All"
-                    },
-                    {
-                        "name": "Group.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Directory.Read.All"
-                    },
-                    {
-                        "name": "Directory.ReadWrite.All"
-                    },
-                    {
-                        "name": "Group.Read.All"
-                    }
-                ]
-            },
-            "application": {
-                "read": [
-                    {
-                        "name": "Directory.Read.All"
-                    },
-                    {
-                        "name": "Group.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Directory.Read.All"
-                    },
-                    {
-                        "name": "Directory.ReadWrite.All"
-                    },
-                    {
-                        "name": "Group.Read.All"
-                    }
-                ]
-            }
-        }
+      },
+      "application": {
+        "read": [
+          {
+            "name": "Directory.Read.All"
+          },
+          {
+            "name": "Group.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Directory.Read.All"
+          },
+          {
+            "name": "Directory.ReadWrite.All"
+          },
+          {
+            "name": "Group.Read.All"
+          }
+        ]
+      }
     }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.Identity.DirectoryManagement",
+    "Microsoft.Graph.Groups"
+  ]
 }

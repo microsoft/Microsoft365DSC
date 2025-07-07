@@ -1,32 +1,36 @@
-﻿{
-    "resourceName": "AADAppManagementPolicy",
-    "description": "Manages an app management policy that can be assigned to an application or service principal object.",
-    "roles": {
+{
+  "resourceName": "AADAppManagementPolicy",
+  "description": "Manages an app management policy that can be assigned to an application or service principal object.",
+  "roles": {
+    "read": [
+      "Application Administrator"
+    ],
+    "update": [
+      "Application Administrator"
+    ]
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [],
+        "update": []
+      },
+      "application": {
         "read": [
-            "Application Administrator"
+          {
+            "name": "Policy.Read.ApplicationConfiguration"
+          }
         ],
         "update": [
-            "Application Administrator"
+          {
+            "name": "Policy.ReadWrite.ApplicationConfiguration"
+          }
         ]
-    },
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [],
-                "update": []
-            },
-            "application": {
-                "read": [
-                    {
-                        "name": "Policy.Read.ApplicationConfiguration"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Policy.ReadWrite.ApplicationConfiguration"
-                    }
-                ]
-            }
-        }
+      }
     }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.Identity.SignIns"
+  ]
 }

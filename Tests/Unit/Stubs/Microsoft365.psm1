@@ -28567,71 +28567,6 @@ function Update-MgBetaDeviceManagementIntent
         $HttpPipelineAppend
     )
 }
-function Update-MgBetaDeviceManagementIntentSetting
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.String]
-        $DeviceManagementSettingInstanceId,
-
-        [Parameter()]
-        [System.Collections.Hashtable]
-        $AdditionalProperties,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.String]
-        $ValueJson,
-
-        [Parameter()]
-        [PSObject]
-        $InputObject,
-
-        [Parameter()]
-        [System.String]
-        $DeviceManagementIntentId,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [PSObject]
-        $BodyParameter,
-
-        [Parameter()]
-        [System.String]
-        $Id,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.String]
-        $DefinitionId,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelineAppend
-    )
-}
 function Get-MgBetaDeviceManagementDeviceHealthScriptAssignment
 {
     [CmdletBinding()]
@@ -39001,12 +38936,155 @@ function Get-MgBetaAgreement
         $Search,
 
         [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
         [PSObject]
         $HttpPipelineAppend,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Break
+    )
+}
+function New-MgBetaAgreement
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PSObject]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $ResponseHeadersVariable,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.Collections.IDictionary]
+        $Headers,
+
+        [Parameter()]
+        [PSObject[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [PSObject[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm
+    )
+}
+function Update-MgBetaAgreement
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $AgreementId,
+
+        [Parameter()]
+        [PSObject]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $ResponseHeadersVariable,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.Collections.IDictionary]
+        $Headers,
+
+        [Parameter()]
+        [PSObject[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [PSObject[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm
+    )
+}
+function Remove-MgBetaAgreement
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $AgreementId,
+
+        [Parameter()]
+        [System.String]
+        $ResponseHeadersVariable,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.Collections.IDictionary]
+        $Headers,
+
+        [Parameter()]
+        [PSObject[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [PSObject[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm
     )
 }
 function Get-MgBetaEntitlementManagementAccessPackage

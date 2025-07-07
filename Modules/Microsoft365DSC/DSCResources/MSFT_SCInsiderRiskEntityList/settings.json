@@ -1,20 +1,21 @@
-﻿{
-    "resourceName": "SCInsiderRiskEntityList",
-    "description": "Configures settings for Insider Risk in Purview.",
-    "roles": {
+{
+  "resourceName": "SCInsiderRiskEntityList",
+  "description": "Configures settings for Insider Risk in Purview.",
+  "roles": {
+    "read": [],
+    "update": []
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
         "read": [],
         "update": []
-    },
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [],
-                "update": []
-            },
-            "application": {
-                "read": [],
-                "update": []
-            }
-        }
+      },
+      "application": {
+        "read": [],
+        "update": []
+      }
     }
+  },
+  "requiredModules": []
 }

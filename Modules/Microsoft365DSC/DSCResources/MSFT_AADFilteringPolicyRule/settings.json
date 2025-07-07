@@ -1,28 +1,32 @@
-﻿{
-    "resourceName": "AADFilteringPolicyRule",
-    "description": "Configures filtering rules in Entra Id.",
-    "roles": {
+{
+  "resourceName": "AADFilteringPolicyRule",
+  "description": "Configures filtering rules in Entra Id.",
+  "roles": {
+    "read": [],
+    "update": []
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
         "read": [],
         "update": []
-    },
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [],
-                "update": []
-            },
-            "application": {
-                "read": [
-                    {
-                        "name": "NetworkAccess.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "NetworkAccess.ReadWrite.All"
-                    }
-                ]
-            }
-        }
+      },
+      "application": {
+        "read": [
+          {
+            "name": "NetworkAccess.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "NetworkAccess.ReadWrite.All"
+          }
+        ]
+      }
     }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.NetworkAccess"
+  ]
 }

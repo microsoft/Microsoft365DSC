@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_IntuneDiskEncryptionMacOS'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -356,7 +358,7 @@ function Set-TargetResource
             -Properties ([System.Collections.Hashtable]$BoundParameters) `
             -TemplateId $policyTemplateId
 
-        $CreateParameters = ([Hashtable]$BoundParameters).clone()
+        $CreateParameters = ([Hashtable]$BoundParameters).Clone()
         $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
         $CreateParameters.Add('DisplayName', $DisplayName)
         $CreateParameters.Add('Description', $Description)
@@ -533,8 +535,6 @@ function Test-TargetResource
     Write-Verbose -Message "Testing configuration of the Intune Disk Encryption for macOS with Id {$Id} and DisplayName {$DisplayName}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
-
-
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
@@ -755,86 +755,5 @@ function Export-TargetResource
     }
 }
 
-function Get-M365DSCIntuneDeviceConfigurationSettings
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param
-    (
-        [Parameter(Mandatory = 'true')]
-        [System.Collections.Hashtable]
-        $Properties,
-
-        [Parameter()]
-        [System.String]
-        $TemplateId
-    )
-
-    $templateCategoryId = (Get-MgBetaDeviceManagementTemplateCategory -DeviceManagementTemplateId $TemplateId).Id
-    $templateSettings = Get-MgBetaDeviceManagementTemplateCategoryRecommendedSetting `
-        -DeviceManagementTemplateId $TemplateId `
-        -DeviceManagementTemplateSettingCategoryId $templateCategoryId
-
-    $results = @()
-    foreach ($setting in $templateSettings)
-    {
-        $result = @{}
-        $settingType = $setting.AdditionalProperties.'@odata.type'
-        $settingValue = $null
-        $currentValueKey = $Properties.keys | Where-Object -FilterScript { $setting.DefinitionId -like "*$_" }
-        if ($null -ne $currentValueKey)
-        {
-            $settingValue = $Properties.$currentValueKey
-        }
-
-        $requiresValueJson = $false
-        switch ($settingType)
-        {
-            {
-                ( $_ -eq '#microsoft.graph.deviceManagementStringSettingInstance' ) -or
-                ( $_ -eq '#microsoft.graph.deviceManagementBooleanSettingInstance' )
-            }
-            {
-                if ([String]::IsNullOrEmpty($settingValue))
-                {
-                    $settingValue = $setting.ValueJson | ConvertFrom-Json
-                }
-            }
-            '#microsoft.graph.deviceManagementCollectionSettingInstance'
-            {
-                $requiresValueJson = $true
-                if ($null -eq $settingValue)
-                {
-                    $settingValue = ConvertTo-Json -InputObject @() -Compress
-                }
-                else
-                {
-                    $settingValue = ConvertTo-Json -InputObject ([Array]$settingValue) -Compress
-                }
-            }
-            Default
-            {
-                if ($null -eq $settingValue)
-                {
-                    $settingValue = $setting.ValueJson | ConvertFrom-Json
-                }
-            }
-        }
-        $result.Add('@odata.type', $settingType)
-        $result.Add('Id', $setting.Id)
-        $result.Add('definitionId', $setting.DefinitionId)
-        if ($requiresValueJson)
-        {
-            $result.Add('valueJson', ($settingValue))
-        }
-        else
-        {
-            $result.Add('value', ($settingValue))
-        }
-
-        $results += $result
-    }
-    return $results
-}
-
 Export-ModuleMember -Function *-TargetResource
+

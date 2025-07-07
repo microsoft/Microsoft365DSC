@@ -18,7 +18,7 @@
         },
         @{
             ModuleName      = 'DSCParser'
-            RequiredVersion = '2.0.0.17'
+            RequiredVersion = '2.0.0.18'
         },
         @{
             ModuleName      = 'ExchangeOnlineManagement'
@@ -126,7 +126,7 @@
         },
         @{
             ModuleName      = "MSCloudLoginAssistant"
-            RequiredVersion = "1.1.46"
+            RequiredVersion = "1.1.48"
         },
         @{
             ModuleName      = 'PnP.PowerShell'
