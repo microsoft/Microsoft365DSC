@@ -766,12 +766,18 @@ function Get-TargetResource
 
             if ($null -eq $TransportRule)
             {
-                Write-Verbose -Message "Transport Rule $($Name) does not exist."
-                $nullReturn = $PSBoundParameters
-                $nullReturn.Ensure = 'Absent'
-                return $nullReturn
+                if ($ResourceName -like "*Transport*")
+                {
+                    Write-Verbose -Message "Transport Rule $($Name) does not exist."
+                    $nullReturn = $PSBoundParameters
+                    $nullReturn.Ensure = 'Absent'
+                    return $nullReturn
+                }
+                else
+                {
+                    Write-Verbose "Moving forward with the evaluation"
+                }
             }
-        }
         else
         {
             $TransportRule = $Script:exportedInstance
@@ -1794,29 +1800,7 @@ function Set-TargetResource
     $SetTransportRuleParams.Remove('Enabled') | Out-Null
 
     # CASE: Transport Rule doesn't exist but should;
-    if ($Ensure -eq 'Present' -and $currentTransportRuleConfig.Ensure -eq 'Absent')
-    {
-        Write-Verbose -Message "Transport Rule '$($Name)' does not exist but it should. Create and configure it."
-
-        $nullKeysToRemove = @()
-        foreach ($key in $NewTransportRuleParams.Keys)
-        {
-            if ($NewTransportRuleParams.$key.GetType().Name -eq 'String[]' -and $NewTransportRuleParams.$key.Length -eq 0)
-            {
-                $nullKeysToRemove += $key
-            }
-        }
-        foreach ($paramToRemove in $nullKeysToRemove)
-        {
-            $NewTransportRuleParams.Remove($paramToRemove) | Out-Null
-        }
-
-        # Create Transport Rule
-        New-TransportRule @NewTransportRuleParams
-
-    }
-    # CASE: Transport Rule exists but it shouldn't;
-    elseif ($Ensure -eq 'Absent' -and $currentTransportRuleConfig.Ensure -eq 'Present')
+    if ($Ensure -eq 'Absent' -and $currentTransportRuleConfig.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Transport Rule '$($Name)' exists but it shouldn't. Remove it."
         Remove-TransportRule -Identity $Name -Confirm:$false
