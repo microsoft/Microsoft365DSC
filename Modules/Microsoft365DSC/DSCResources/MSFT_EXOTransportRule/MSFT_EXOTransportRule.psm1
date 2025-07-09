@@ -795,6 +795,7 @@ function Get-TargetResource
 
         $result = @{
             Name                                         = $TransportRule.Name
+            NewValue                                     = $NewValue
             ADComparisonAttribute                        = $TransportRule.ADComparisonAttribute
             ADComparisonOperator                         = $TransportRule.ADComparisonOperator
             ActivationDate                               = $TransportRule.ActivationDate
@@ -2628,7 +2629,6 @@ function Test-TargetResource
         -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
-    return $TestResult
 }
 
 function Export-TargetResource

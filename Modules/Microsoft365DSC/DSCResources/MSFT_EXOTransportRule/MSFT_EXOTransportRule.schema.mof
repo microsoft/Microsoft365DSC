@@ -2,7 +2,6 @@
 class MSFT_EXOTransportRule : OMI_BaseResource
 {
     [Key, Description("The Name parameter specifies the display name of the transport rule to be created. The maximum length is 64 characters.")] String Name;
-    [Write, Description("This parameter specifies a condition or part of a condition for the rule. The name of the corresponding exception parameter starts with ExceptIf.")] String ADComparisonAttribute;
     [Write, Description("This parameter specifies a condition or part of a condition for the rule. The name of the corresponding exception parameter starts with ExceptIf."), ValueMap{"Equal","NotEqual"}, Values{"Equal","NotEqual"}] String ADComparisonOperator;
     [Write, Description("The ActivationDate parameter specifies when the rule starts processing messages. The rule won't take any action on messages until the specified date/time.")] String ActivationDate;
     [Write, Description("The AddManagerAsRecipientType parameter specifies an action that delivers or redirects messages to the user that's defined in the sender's Manager attribute."), ValueMap{"To","Cc","Bcc","Redirect"}, Values{"To","Cc","Bcc","Redirect"}] String AddManagerAsRecipientType;
