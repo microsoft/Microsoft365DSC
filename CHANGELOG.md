@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* EXOTransportRule
+  * This PR is simply a test.
 * MISC
   * Updated CIM version for `MSFT_DeviceManagementConfigurationPolicyAssignments` class.
 * DEPENDENCIES

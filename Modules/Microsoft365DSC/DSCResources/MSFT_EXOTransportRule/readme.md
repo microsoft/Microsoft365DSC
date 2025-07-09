@@ -2,4 +2,4 @@
 
 ## Description
 
-This resource configures Transport Rules in Exchange Online.
+This resource deals with EXO components.

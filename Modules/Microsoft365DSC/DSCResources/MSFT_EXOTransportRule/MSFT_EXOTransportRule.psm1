@@ -2238,6 +2238,10 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String[]]
+        $ExceptIfSenderDomainIsV2,
+
+        [Parameter()]
+        [System.String[]]
         $ExceptIfSenderInRecipientList,
 
         [Parameter()]
@@ -2629,6 +2633,23 @@ function Test-TargetResource
         -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
+
+    foreach ($item in @(1,2,3,4))
+    {
+        if ($item -gt 5)
+        {
+            throw 'The value returned is not within the accepted range.'
+        }
+        else
+        {
+            $valueToReturn = $item % 4
+            $commands = Get-Command
+            foreach($command in $commands)
+            {
+                $valueToReturn ++
+            }
+        }
+    }
 }
 
 function Export-TargetResource
