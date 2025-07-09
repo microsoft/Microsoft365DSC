@@ -51,8 +51,19 @@ function Rename-M365DSCCimInstanceParameter
 
         [Parameter(Mandatory = $false)]
         [System.Collections.Hashtable]
-        $KeyMapping = @{'odataType' = '@odata.type'}
+        $KeyMapping = @{'odataType' = '@odata.type'},
+
+        [Parameter()]
+        [System.Int32]
+        $Depth = 0
     )
+
+    # Prevent call depth overflow by limiting recursive depth
+    if ($Depth -gt 100)
+    {
+        Write-Warning "Maximum recursion depth exceeded while processing complex object. Returning null to prevent call depth overflow."
+        return $null
+    }
 
     $result = $Properties
     $type = $Properties.GetType().FullName
@@ -64,7 +75,7 @@ function Rename-M365DSCCimInstanceParameter
         {
             try
             {
-                $values += Rename-M365DSCCimInstanceParameter -Properties $item -KeyMapping $KeyMapping
+                $values += Rename-M365DSCCimInstanceParameter -Properties $item -KeyMapping $KeyMapping -Depth ($Depth + 1)
             }
             catch
             {
@@ -85,7 +96,7 @@ function Rename-M365DSCCimInstanceParameter
 
     if ($type -like '*CimInstance*' -or $type -like '*Hashtable*' -or $type -like '*Object*')
     {
-        $hashProperties = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $result
+        $hashProperties = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $result -Depth ($Depth + 1)
         $keys = ($hashProperties.Clone()).keys
 
         foreach ($key in $keys)
@@ -103,7 +114,7 @@ function Rename-M365DSCCimInstanceParameter
                 $hashProperties.Remove($key)
                 try
                 {
-                    $subValue = Rename-M365DSCCimInstanceParameter $property -KeyMapping $KeyMapping
+                    $subValue = Rename-M365DSCCimInstanceParameter $property -KeyMapping $KeyMapping -Depth ($Depth + 1)
                     if ($null -ne $subValue)
                     {
                         $hashProperties.Add($keyName, $subValue)
@@ -128,11 +139,22 @@ function Get-M365DSCDRGComplexTypeToHashtable
     [OutputType([hashtable], [hashtable[]])]
     param(
         [Parameter()]
-        $ComplexObject
+        $ComplexObject,
+
+        [Parameter()]
+        [System.Int32]
+        $Depth = 0
     )
 
     if ($null -eq $ComplexObject)
     {
+        return $null
+    }
+
+    # Prevent call depth overflow by limiting recursive depth
+    if ($Depth -gt 100)
+    {
+        Write-Warning "Maximum recursion depth exceeded while processing complex object. Returning null to prevent call depth overflow."
         return $null
     }
 
@@ -144,7 +166,7 @@ function Get-M365DSCDRGComplexTypeToHashtable
         {
             if ($item)
             {
-                $hash = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $item
+                $hash = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $item -Depth ($Depth + 1)
                 $results += $hash
             }
         }
@@ -170,7 +192,7 @@ function Get-M365DSCDRGComplexTypeToHashtable
                 $keyType = $ComplexObject.$key.GetType().FullName
                 if ($keyType -like '*CimInstance*' -or $keyType -like '*Dictionary*' -or $keyType -like 'Microsoft.Graph.PowerShell.Models.*' -or $keyType -like 'Microsoft.Graph.Beta.PowerShell.Models.*' -or $keyType -like '*[[\]]')
                 {
-                    $hash = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject.$key
+                    $hash = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject.$key -Depth ($Depth + 1)
 
                     $results.Add($keyName, $hash)
                 }
@@ -207,7 +229,7 @@ function Get-M365DSCDRGComplexTypeToHashtable
             $keyType = $ComplexObject.$keyName.GetType().FullName
             if ($keyType -like '*CimInstance*' -or $keyType -like '*Dictionary*' -or $keyType -like 'Microsoft.Graph.*PowerShell.Models.*')
             {
-                $hash = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject.$keyName
+                $hash = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject.$keyName -Depth ($Depth + 1)
 
                 if ($null -ne $hash -and $hash.Keys.Count -gt 0)
                 {
@@ -274,12 +296,23 @@ function Get-M365DSCDRGComplexTypeToString
 
         [Parameter()]
         [switch]
-        $IsArray
+        $IsArray,
+
+        [Parameter()]
+        [System.Int32]
+        $Depth = 0
     )
 
     if ($null -eq $ComplexObject)
     {
         return $null
+    }
+
+    # Prevent call depth overflow by limiting recursive depth
+    if ($Depth -gt 100)
+    {
+        Write-Warning "Maximum recursion depth exceeded while processing complex object. Returning empty string to prevent call depth overflow."
+        return ""
     }
 
     $indent = ''
@@ -299,6 +332,7 @@ function Get-M365DSCDRGComplexTypeToString
                 'ComplexObject'   = $item
                 'CIMInstanceName' = $CIMInstanceName
                 'IndentLevel'     = $IndentLevel
+                'Depth'           = $Depth + 1
             }
             if ($ComplexTypeMapping)
             {
@@ -374,7 +408,7 @@ function Get-M365DSCDRGComplexTypeToString
                 }
                 else
                 {
-                    $hashProperty = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $itemValue
+                    $hashProperty = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $itemValue -Depth ($Depth + 1)
                 }
 
                 if (-not $IsArray)
@@ -399,14 +433,15 @@ function Get-M365DSCDRGComplexTypeToString
                         $item = $ComplexObject.$key[$i]
                         if ($ComplexObject.$key.GetType().FullName -like 'Microsoft.Graph.PowerShell.Models.*')
                         {
-                            $item = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $item
+                            $item = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $item -Depth ($Depth + 1)
                         }
                         $nestedPropertyString = Get-M365DSCDRGComplexTypeToString `
                             -ComplexObject $item `
                             -CIMInstanceName $hashPropertyType `
                             -IndentLevel $IndentLevel `
                             -ComplexTypeMapping $ComplexTypeMapping `
-                            -IsArray
+                            -IsArray `
+                            -Depth ($Depth + 1)
                         if ([string]::IsNullOrWhiteSpace($nestedPropertyString))
                         {
                             $nestedPropertyString = "@()`r`n"
@@ -431,7 +466,8 @@ function Get-M365DSCDRGComplexTypeToString
                         -ComplexObject $hashProperty `
                         -CIMInstanceName $hashPropertyType `
                         -IndentLevel $IndentLevel `
-                        -ComplexTypeMapping $ComplexTypeMapping
+                        -ComplexTypeMapping $ComplexTypeMapping `
+                        -Depth ($Depth + 1)
                     if ([string]::IsNullOrWhiteSpace($nestedPropertyString))
                     {
                         $nestedPropertyString = "`$null`r`n"
@@ -1418,11 +1454,22 @@ function Convert-M365DSCDRGComplexTypeToHashtable
 
         [Parameter()]
         [switch]
-        $ExcludeUnchangedProperties
+        $ExcludeUnchangedProperties,
+
+        [Parameter()]
+        [System.Int32]
+        $Depth = 0
     )
 
     if ($null -eq $ComplexObject)
     {
+        return @{}
+    }
+
+    # Prevent call depth overflow by limiting recursive depth
+    if ($Depth -gt 100)
+    {
+        Write-Warning "Maximum recursion depth exceeded while processing complex object. Returning empty hashtable to prevent call depth overflow."
         return @{}
     }
 
@@ -1431,7 +1478,7 @@ function Convert-M365DSCDRGComplexTypeToHashtable
         $results = @()
         foreach ($item in $ComplexObject)
         {
-            $hash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $item
+            $hash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $item -Depth ($Depth + 1)
             $results += $hash
         }
 
@@ -1459,7 +1506,7 @@ function Convert-M365DSCDRGComplexTypeToHashtable
         return [hashtable]$returnObject
     }
 
-    $hashComplexObject = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject
+    $hashComplexObject = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject -Depth ($Depth + 1)
 
     if ($null -ne $hashComplexObject)
     {
@@ -1474,7 +1521,7 @@ function Convert-M365DSCDRGComplexTypeToHashtable
         {
             if ($hashComplexObject[$key] -and $hashComplexObject[$key].GetType().Fullname -like '*CimInstance*')
             {
-                $results[$key] = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $hashComplexObject[$key]
+                $results[$key] = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $hashComplexObject[$key] -Depth ($Depth + 1)
             }
             else
             {
