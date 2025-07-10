@@ -22,7 +22,7 @@ Configuration Example
 
     node localhost
     {
-        IntuneDeviceConfigurationDeliveryOptimizationPolicyWindows10SettingCatalog 'IntuneDeviceConfigurationDeliveryOptimizationPolicyWindows10SettingCatalog'
+        IntuneDeviceConfigurationDeliveryOptimizationPolicyWindows10V2 'IntuneDeviceConfigurationDeliveryOptimizationPolicyWindows10V2'
         {
             Assignments                                               = @(
                 MSFT_DeviceManagementConfigurationPolicyAssignments{
@@ -33,7 +33,7 @@ Configuration Example
             ApplicationId                                  = $ApplicationId;
             CertificateThumbprint                          = $CertificateThumbprint;
             Description                                    = "";
-            DisplayName                                    = "Example";
+            DisplayName                                    = "IntuneDeviceConfigurationDeliveryOptimizationPolicyWindows10V2_1";
             DOAbsoluteMaxCacheSize                         = 4;
             DOAllowVPNPeerCaching                          = "1";
             DOCacheHost                                    = @("Cache Host");

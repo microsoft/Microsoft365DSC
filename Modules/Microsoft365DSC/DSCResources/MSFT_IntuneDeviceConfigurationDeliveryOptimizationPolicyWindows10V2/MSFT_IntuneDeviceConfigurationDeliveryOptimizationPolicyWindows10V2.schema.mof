@@ -10,8 +10,8 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
     [Write, Description("The collection Id that is the target of the assignment.(ConfigMgr)")] String collectionId;
 };
 
-[ClassVersion("1.0.0.0"), FriendlyName("IntuneDeviceConfigurationDeliveryOptimizationPolicyWindows10SettingCatalog")]
-class MSFT_IntuneDeviceConfigurationDeliveryOptimizationPolicyWindows10SettingCatalog : OMI_BaseResource
+[ClassVersion("1.0.0.0"), FriendlyName("IntuneDeviceConfigurationDeliveryOptimizationPolicyWindows10V2")]
+class MSFT_IntuneDeviceConfigurationDeliveryOptimizationPolicyWindows10V2 : OMI_BaseResource
 {
     [Write, Description("Policy description")] String Description;
     [Key, Description("Policy name")] String DisplayName;

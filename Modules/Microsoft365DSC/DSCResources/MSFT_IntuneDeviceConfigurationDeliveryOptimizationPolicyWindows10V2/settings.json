@@ -1,5 +1,5 @@
 {
-  "resourceName": "IntuneDeviceConfigurationDeliveryOptimizationPolicyWindows10SettingCatalog",
+  "resourceName": "IntuneDeviceConfigurationDeliveryOptimizationPolicyWindows10V2",
   "description": "This resource configures an Intune Device Configuration Delivery Optimization Policy for Windows10 Setting Catalog.",
   "permissions": {
     "graph": {

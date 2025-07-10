@@ -22,9 +22,9 @@ Configuration Example
 
     node localhost
     {
-        IntuneDeviceConfigurationDeliveryOptimizationPolicyWindows10SettingCatalog 'IntuneDeviceConfigurationDeliveryOptimizationPolicyWindows10SettingCatalog'
+        IntuneDeviceConfigurationDeliveryOptimizationPolicyWindows10V2 'IntuneDeviceConfigurationDeliveryOptimizationPolicyWindows10V2'
         {
-            DisplayName           = "Example";
+            DisplayName           = "IntuneDeviceConfigurationDeliveryOptimizationPolicyWindows10V2_1";
             Ensure                = "Absent";
             ApplicationId         = $ApplicationId;
             TenantId              = $TenantId;

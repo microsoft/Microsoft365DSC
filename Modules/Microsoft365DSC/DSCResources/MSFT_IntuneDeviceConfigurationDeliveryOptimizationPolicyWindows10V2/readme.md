@@ -1,5 +1,5 @@
 
-# IntuneDeviceConfigurationDeliveryOptimizationPolicyWindows10SettingCatalog
+# IntuneDeviceConfigurationDeliveryOptimizationPolicyWindows10V2
 
 ## Description
 

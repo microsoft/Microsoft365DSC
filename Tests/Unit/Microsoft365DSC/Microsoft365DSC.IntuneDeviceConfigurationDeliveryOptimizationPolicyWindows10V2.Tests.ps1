@@ -15,7 +15,7 @@ Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
         -Resolve)
 
 $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "IntuneDeviceConfigurationDeliveryOptimizationPolicyWindows10SettingCatalog" -GenericStubModule $GenericStubPath
+    -DscResource "IntuneDeviceConfigurationDeliveryOptimizationPolicyWindows10V2" -GenericStubModule $GenericStubPath
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
@@ -205,7 +205,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         }
 
         # Test contexts
-        Context -Name "The IntuneDeviceConfigurationDeliveryOptimizationPolicyWindows10SettingCatalog should exist but it DOES NOT" -Fixture {
+        Context -Name "The IntuneDeviceConfigurationDeliveryOptimizationPolicyWindows10V2 should exist but it DOES NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
                     Assignments = [CimInstance[]]@(
@@ -242,7 +242,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "The IntuneDeviceConfigurationDeliveryOptimizationPolicyWindows10SettingCatalog exists but it SHOULD NOT" -Fixture {
+        Context -Name "The IntuneDeviceConfigurationDeliveryOptimizationPolicyWindows10V2 exists but it SHOULD NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
                     Assignments = [CimInstance[]]@(
@@ -278,7 +278,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "The IntuneDeviceConfigurationDeliveryOptimizationPolicyWindows10SettingCatalog Exists and Values are already in the desired state" -Fixture {
+        Context -Name "The IntuneDeviceConfigurationDeliveryOptimizationPolicyWindows10V2 Exists and Values are already in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
                     Assignments = [CimInstance[]]@(
@@ -305,7 +305,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "The IntuneDeviceConfigurationDeliveryOptimizationPolicyWindows10SettingCatalog exists and values are NOT in the desired state" -Fixture {
+        Context -Name "The IntuneDeviceConfigurationDeliveryOptimizationPolicyWindows10V2 exists and values are NOT in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
                     Assignments = [CimInstance[]]@(

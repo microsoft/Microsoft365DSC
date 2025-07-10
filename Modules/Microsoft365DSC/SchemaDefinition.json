@@ -46672,7 +46672,7 @@
         "Description":  ""
     },
     {
-        "ClassName":  "MSFT_IntuneDeviceConfigurationDeliveryOptimizationPolicyWindows10SettingCatalog",
+        "ClassName":  "MSFT_IntuneDeviceConfigurationDeliveryOptimizationPolicyWindows10V2",
         "Parameters":  [
                            {
                                "CIMType":  "String",
