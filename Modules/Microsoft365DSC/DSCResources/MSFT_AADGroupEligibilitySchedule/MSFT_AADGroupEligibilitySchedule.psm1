@@ -768,7 +768,7 @@ function Export-TargetResource
     $ExportParameters = @{
         Filter      = $Filter
         All         = [switch]$true
-        Property    = "displayname,Id"
+        Property    = "displayname,Id,mailEnabled,groupTypes,securityEnabled,onPremisesSyncEnabled"
         CountVariable = "CountVar"
         ConsistencyLevel = "eventual"
         ErrorAction = 'Stop'
