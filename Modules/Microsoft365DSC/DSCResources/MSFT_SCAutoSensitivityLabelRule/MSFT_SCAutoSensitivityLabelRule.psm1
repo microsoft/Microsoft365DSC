@@ -1502,7 +1502,7 @@ function Test-ContainsSensitiveInformation
     foreach ($sit in $targetValues)
     {
         Write-Verbose -Message "Trying to find existing Sensitive Information Action matching name {$($sit.name)}"
-        $matchingExistingRule = $sourceValues | Where-Object -FilterScript { $_.name -eq $sit.name }
+        $matchingExistingRule = $sourceValues | Where-Object -FilterScript { $_.name -eq $sit.name.Replace("''", "'") }
 
         if ($null -ne $matchingExistingRule)
         {

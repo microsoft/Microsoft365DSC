@@ -1,11 +1,22 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* EXOTransportRule
+  * Changed the update logic to handle empty parameters.
+
 # 1.25.709.1
 
 * IntuneDeviceConfigurationDeliveryOptimizationPolicyWindows10SettingCatalog
   * Shortened resource name to `IntuneDeviceConfigurationDeliveryOptimizationPolicyWindows10V2`
     because of a path too long exception in Azure Automation.
     FIXES [#6289](https://github.com/microsoft/Microsoft365DSC/issues/6289)
+* SCAutoSensitivityLabelRule
+  * Fix logic to test actions with apostrophes in the name.
+* SCDeviceConfigurationRule
+  * Changes in logic retrieving existing rule associated policy.
+* SCDLPComplianceRule
+  * Fix logic to test actions with apostrophes in the name.
 * M365DSCUtil
   * Fixed an issue where `Uninstall-M365DSCOutdatedDependencies` would throw an error during
     checking of the Microsoft.Graph.Authentication module.

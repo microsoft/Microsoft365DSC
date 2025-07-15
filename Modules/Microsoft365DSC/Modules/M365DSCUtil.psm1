@@ -1209,7 +1209,7 @@ function Test-M365DSCTargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
 
     $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
-            -Source $($MyInvocation.MyCommand.Source) `
+            -Source $ResourceName `
             -DesiredValues $DesiredValues `
             -ValuesToCheck $ValuesToCheck.Keys `
             -NoEventMessage `

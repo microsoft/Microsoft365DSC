@@ -259,7 +259,8 @@ function Get-TargetResource
         $nullResult = $PSBoundParameters
         $nullResult.Ensure = 'Absent'
 
-        $policyObj = Get-DeviceConfigurationPolicy | Where-Object -FilterScript { $_.Name -eq $Policy }
+        $policyObj = Get-DeviceConfigurationPolicy -ErrorAction SilentlyContinue
+        $policyObj = $policyObj | Where-Object -FilterScript { $_.Name -eq $Policy }
         if ($null -ne $policyObj)
         {
             Write-Verbose -Message "Found policy object {$Policy}"

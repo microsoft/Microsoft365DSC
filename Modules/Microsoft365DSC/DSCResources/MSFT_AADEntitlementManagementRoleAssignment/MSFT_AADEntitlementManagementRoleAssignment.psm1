@@ -119,7 +119,7 @@ function Get-TargetResource
         }
         else
         {
-            $getValue = $Script:exportedInstance            
+            $getValue = $Script:exportedInstance
             $user = Get-MgUser -UserId $Principal
         }
 
@@ -351,7 +351,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $ResourceName
+                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 

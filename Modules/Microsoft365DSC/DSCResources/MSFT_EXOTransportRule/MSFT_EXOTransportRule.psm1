@@ -1825,23 +1825,89 @@ function Set-TargetResource
     {
         if ($null -ne $HeaderContainsMessageHeader -and $null -eq $currentTransportRuleConfig.HeaderContainsMessageHeader)
         {
-            $SetTransportRuleParams.Add("HeaderContainsMessageHeader",$null)
-            $SetTransportRuleParams.Add("HeaderContainsWords", @())
+            if (-not $SetTransportRuleParams.ContainsKey('HeaderContainsMessageHeader'))
+            {
+                $SetTransportRuleParams.Add("HeaderContainsMessageHeader", $null)
+            }
+            else
+            {
+                $SetTransportRuleParams.HeaderContainsMessageHeader = $null
+            }
+
+            if (-not $SetTransportRuleParams.ContainsKey('HeaderContainsWords'))
+            {
+                $SetTransportRuleParams.Add("HeaderContainsWords", @())
+            }
+            else
+            {
+                $SetTransportRuleParams.HeaderContainsWords = @()
+            }
         }
-        if ($null -ne $HeaderMatchesPatterns -and $null -eq $currentTransportRuleConfig.HeaderMatchesMessageHeader)
+        elseif ([System.String]::IsNullOrEmpty($HeaderContainsMessageHeader))
         {
-            $SetTransportRuleParams.Add("HeaderMatchesMessageHeader",$null)
-            $SetTransportRuleParams.Add("HeaderMatchesPatterns", @())
+            $SetTransportRuleParams.HeaderContainsMessageHeader = $null
         }
-        if ($null -ne $ExceptIfHeaderContainsWords -and $null -eq $currentTransportRuleConfig.ExceptIfHeaderContainsMessageHeader)
+
+        if ($null -eq $HeaderMatchesPatterns -and $null -eq $currentTransportRuleConfig.HeaderMatchesMessageHeader)
         {
-            $SetTransportRuleParams.Add("ExceptIfHeaderContainsMessageHeader",$null)
-            $SetTransportRuleParams.Add("ExceptIfHeaderContainsWords", @())
+
+            if (-not $SetTransportRuleParams.ContainsKey('HeaderMatchesMessageHeader'))
+            {
+                $SetTransportRuleParams.Add("HeaderMatchesMessageHeader", $null)
+            }
+            else
+            {
+                $SetTransportRuleParams.HeaderMatchesMessageHeader = $null
+            }
+
+            if (-not $SetTransportRuleParams.ContainsKey('HeaderMatchesPatterns'))
+            {
+                $SetTransportRuleParams.Add("HeaderMatchesPatterns", @())
+            }
+            else
+            {
+                $SetTransportRuleParams.HeaderMatchesPatterns = @()
+            }
         }
-        if ($null -ne $ExceptIfHeaderMatchesPatterns -and $null -eq $currentTransportRuleConfig.ExceptIfHeaderMatchesMessageHeader)
+        if ($null -eq $ExceptIfHeaderContainsWords -and $null -eq $currentTransportRuleConfig.ExceptIfHeaderContainsMessageHeader)
         {
-            $SetTransportRuleParams.Add("ExceptIfHeaderMatchesMessageHeader",$null)
-            $SetTransportRuleParams.Add("ExceptIfHeaderMatchesPatterns", @())
+            if (-not $SetTransportRuleParams.ContainsKey('ExceptIfHeaderContainsMessageHeader'))
+            {
+                $SetTransportRuleParams.Add("ExceptIfHeaderContainsMessageHeader", $null)
+            }
+            else
+            {
+                $SetTransportRuleParams.ExceptIfHeaderContainsMessageHeader = $null
+            }
+
+            if (-not $SetTransportRuleParams.ContainsKey('ExceptIfHeaderContainsWords'))
+            {
+                $SetTransportRuleParams.Add("ExceptIfHeaderContainsWords", @())
+            }
+            else
+            {
+                $SetTransportRuleParams.ExceptIfHeaderContainsWords = @()
+            }
+        }
+        if ($null -eq $ExceptIfHeaderMatchesPatterns -and $null -eq $currentTransportRuleConfig.ExceptIfHeaderMatchesMessageHeader)
+        {
+            if (-not $SetTransportRuleParams.ContainsKey('ExceptIfHeaderMatchesMessageHeader'))
+            {
+                $SetTransportRuleParams.Add("ExceptIfHeaderMatchesMessageHeader", $null)
+            }
+            else
+            {
+                $SetTransportRuleParams.ExceptIfHeaderMatchesMessageHeader = $null
+            }
+
+            if (-not $SetTransportRuleParams.ContainsKey('ExceptIfHeaderMatchesPatterns'))
+            {
+                $SetTransportRuleParams.Add("ExceptIfHeaderMatchesPatterns", @())
+            }
+            else
+            {
+                $SetTransportRuleParams.ExceptIfHeaderMatchesPatterns = @()
+            }
         }
         if ($null -ne $ApplyOME)
         {

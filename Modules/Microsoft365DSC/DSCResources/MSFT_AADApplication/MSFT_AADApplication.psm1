@@ -839,7 +839,7 @@ function Set-TargetResource
     if ($currentParameters.Api.PreAuthorizedApplications)
     {
         $PreAuthorizedApplicationsValue = @()
-        
+
         foreach ($preAuthApp in $currentParameters.Api.PreAuthorizedApplications)
         {
             $PreAuthorizedApplicationsValue += @{
@@ -1491,7 +1491,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $ResourceName `
+                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
                                          -ExcludedProperties @('AppId', 'ObjectId', 'AvailableToOtherTenants')
     return $result
 }

@@ -355,7 +355,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $ResourceName
+                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 
@@ -433,7 +433,7 @@ function Export-TargetResource
             Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
         foreach ($config in $getValue)
-        {        
+        {
             if ($null -ne $Global:M365DSCExportResourceInstancesCount)
             {
                 $Global:M365DSCExportResourceInstancesCount++
