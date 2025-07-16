@@ -7,6 +7,8 @@
     FIXES [#6298](https://github.com/microsoft/Microsoft365DSC/issues/6298)
 * EXOTransportRule
   * Changed the update logic to handle empty parameters.
+* SPOTenantSettings
+  * Property OneDriveSharingCapability has been deprecated in PnP REST API. Added verbose message stating that it should be removed from the configuration
 * MISC
   * Added logging to various resource to improve troubleshooting
 * DEPENDENCIES
