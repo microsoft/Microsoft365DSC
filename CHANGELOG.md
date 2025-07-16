@@ -5,6 +5,8 @@
 * AADConditionalAccessPolicy
   * Fixed issue with setting empty ExcludePlatform in Target state when current state contains a value
     FIXES [#6298](https://github.com/microsoft/Microsoft365DSC/issues/6298)
+* AADPasswordRuleSettings
+  * Fix initial creation of settings to use explicit values from the template default values
 * EXOTransportRule
   * Changed the update logic to handle empty parameters.
 * MISC
