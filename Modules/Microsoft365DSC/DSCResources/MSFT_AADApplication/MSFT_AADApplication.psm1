@@ -144,14 +144,15 @@ function Get-TargetResource
         [System.String[]]
         $AccessTokens
     )
+
+    Write-Verbose -Message "Getting configuration of Azure AD Application '$DisplayName'"
+
     try
     {
         if (-not $Script:exportedInstance -or $Script:exportedInstance.DisplayName -ne $DisplayName)
         {
             $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
                 -InboundParameters $PSBoundParameters
-
-            Write-Verbose -Message "Getting configuration of Azure AD Application '$DisplayName'"
 
             #Ensure the proper dependencies are installed in the current environment.
             Confirm-M365DSCDependencies

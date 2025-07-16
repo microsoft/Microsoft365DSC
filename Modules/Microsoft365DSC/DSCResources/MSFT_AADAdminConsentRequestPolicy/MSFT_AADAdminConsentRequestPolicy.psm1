@@ -59,6 +59,8 @@ function Get-TargetResource
         $AccessTokens
     )
 
+    Write-Verbose -Message "Getting configuration for Admin Consent Request Policy"
+
     try
     {
         New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -216,6 +218,8 @@ function Set-TargetResource
         [System.String[]]
         $AccessTokens
     )
+
+    Write-Verbose -Message "Setting configuration for Admin Consent Request Policy"
 
     New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters | Out-Null

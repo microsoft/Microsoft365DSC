@@ -47,6 +47,8 @@ function Get-TargetResource
         $AccessTokens
     )
 
+    Write-Verbose -Message "Getting configuration for Entitlement Management Settings"
+
     New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters | Out-Null
 
@@ -143,6 +145,8 @@ function Set-TargetResource
         [System.String[]]
         $AccessTokens
     )
+
+    Write-Verbose -Message "Setting configuration for Entitlement Management Settings"
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies

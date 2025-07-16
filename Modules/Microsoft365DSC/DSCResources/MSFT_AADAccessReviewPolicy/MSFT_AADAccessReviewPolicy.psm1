@@ -135,6 +135,8 @@ function Set-TargetResource
         $AccessTokens
     )
 
+    Write-Verbose -Message "Setting configuration for Access Review Policy"
+
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
@@ -198,6 +200,8 @@ function Test-TargetResource
         [System.String[]]
         $AccessTokens
     )
+
+    Write-Verbose -Message "Testing configuration for Access Review Policy"
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')

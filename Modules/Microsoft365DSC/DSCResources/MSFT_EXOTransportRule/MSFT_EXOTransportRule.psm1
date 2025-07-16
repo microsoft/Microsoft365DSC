@@ -741,12 +741,15 @@ function Get-TargetResource
         $AccessTokens
     )
 
+    Write-Verbose -Message "Getting Transport Rule configuration for $Name"
+
     try
     {
+        $nullReturn = $PSBoundParameters
+        $nullReturn.Ensure = 'Absent'
+
         if (-not $Script:exportedInstance -or $Script:exportedInstance.Name -ne $Name)
         {
-            Write-Verbose -Message "Getting Transport Rule configuration for $Name"
-
             $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
                 -InboundParameters $PSBoundParameters
 
@@ -767,8 +770,6 @@ function Get-TargetResource
             if ($null -eq $TransportRule)
             {
                 Write-Verbose -Message "Transport Rule $($Name) does not exist."
-                $nullReturn = $PSBoundParameters
-                $nullReturn.Ensure = 'Absent'
                 return $nullReturn
             }
         }

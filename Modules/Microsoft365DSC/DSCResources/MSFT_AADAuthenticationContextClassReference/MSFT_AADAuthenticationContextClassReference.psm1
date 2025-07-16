@@ -58,6 +58,8 @@ function Get-TargetResource
         $AccessTokens
     )
 
+    Write-Verbose -Message "Getting configuration of Authentication Context Class Reference '$Id'"
+
     try
     {
         if (-not $Script:exportedInstance -or $Script:exportedInstance.Id -ne $Id)
@@ -184,6 +186,8 @@ function Set-TargetResource
         $AccessTokens
     )
 
+    Write-Verbose -Message "Setting configuration of Authentication Context Class Reference '$Id'"
+
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
@@ -275,6 +279,8 @@ function Test-TargetResource
         [System.String[]]
         $AccessTokens
     )
+
+    Write-Verbose -Message "Testing configuration of Authentication Context Class Reference '$Id'"
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
