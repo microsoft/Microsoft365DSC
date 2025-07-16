@@ -3,7 +3,7 @@
 # UNRELEASED
 
 * AADAdministrativeUnit
-  * Add detection/support for not filters as they require additional headers (ConsistencyLevel: Eventual). 
+  * Add detection/support for not filters as they require additional headers (ConsistencyLevel: Eventual).
 * AADGroup
   * Add detection/support for not filters as they require additional headers (ConsistencyLevel: Eventual).
 * AADUser
@@ -15,6 +15,8 @@
   * Changed the update logic to handle empty parameters.
 * O365Group
   * Add detection/support for not filters as they require additional headers (ConsistencyLevel: Eventual).
+* SPOTenantSettings
+  * Property OneDriveSharingCapability has been deprecated in PnP REST API. Added verbose message stating that it should be removed from the configuration
 * MISC
   * Added logging to various resource to improve troubleshooting
 * DEPENDENCIES

@@ -221,8 +221,8 @@ function Get-TargetResource
             'DenySelectSGsInODBListInTenant',
             'DenySelectSecurityGroupsInSPSitesList',
             'AllowSelectSecurityGroupsInSPSitesList',
-            'EnableAzureADB2BIntegration',
-            'OneDriveSharingCapability')
+            'EnableAzureADB2BIntegration')#,
+            #'OneDriveSharingCapability') # property deprecated in PnP
 
         $response = Invoke-PnPSPRestMethod -Method Get `
             -Url "$((Get-MSCloudLoginConnectionProfile -Workload PnP).AdminUrl)/_api/SPO.Tenant?`$select=$($parametersToRetrieve -join ',')"
@@ -564,10 +564,12 @@ function Set-TargetResource
             $paramsToUpdate.Add('EnableAzureADB2BIntegration', $EnableAzureADB2BIntegration)
         }
 
+
         if ($null -ne $OneDriveSharingCapability)
         {
-            $needToUpdate = $true
-            $paramsToUpdate.Add('OneDriveSharingCapability', $OneDriveSharingCapability)
+            Write-Verbose -Message "Property OneDriveSharingCapability is deprecated. We recommend removing it from your configuration."
+            #$needToUpdate = $true
+            #$paramsToUpdate.Add('OneDriveSharingCapability', $OneDriveSharingCapability)
         }
 
         if ($needToUpdate)
