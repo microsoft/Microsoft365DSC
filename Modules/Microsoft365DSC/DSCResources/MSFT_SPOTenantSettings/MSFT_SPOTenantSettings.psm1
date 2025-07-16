@@ -567,7 +567,7 @@ function Set-TargetResource
 
         if ($null -ne $OneDriveSharingCapability)
         {
-            Write-Verbose -Message "Property OneDriveSharingCapability is deprecated. We recommend removing it from your configuration."
+            Write-Warning -Message "Property OneDriveSharingCapability is deprecated. We recommend removing it from your configuration."
             #$needToUpdate = $true
             #$paramsToUpdate.Add('OneDriveSharingCapability', $OneDriveSharingCapability)
         }
