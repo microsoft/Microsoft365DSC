@@ -57,6 +57,8 @@ function Get-TargetResource
         $AccessTokens
     )
 
+    Write-Verbose -Message "Getting the Azure AD Authentication Strength Policy for {$DisplayName}"
+
     try
     {
         if (-not $Script:exportedInstance -or $DisplayName -ne $Script:exportedInstance.DisplayName)
@@ -184,6 +186,8 @@ function Set-TargetResource
         [System.String[]]
         $AccessTokens
     )
+
+    Write-Verbose -Message "Setting the Azure AD Authentication Strength Policy for {$DisplayName}"
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies

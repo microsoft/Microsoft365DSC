@@ -44,6 +44,8 @@ function Get-TargetResource
         $AccessTokens
     )
 
+    Write-Verbose -Message "Getting the Azure AD Authentication Requirement for {$UserPrincipalName}"
+
     try
     {
         if (-not $Script:exportedInstance -or $Script:exportedInstance.UserPrincipalName -ne $UserPrincipalName)
@@ -150,6 +152,8 @@ function Set-TargetResource
         [System.String[]]
         $AccessTokens
     )
+
+    Write-Verbose -Message "Setting the Azure AD Authentication Requirement for {$UserPrincipalName}"
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies

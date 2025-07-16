@@ -278,7 +278,7 @@ function Set-TargetResource
         $AccessTokens
     )
 
-    Write-Verbose -Message "Setting the Azure AD Authentication Method Policy Fido2 with Id {$Id}"
+    Write-Verbose -Message "Setting the Azure AD Authentication Method Policy Sms with Id {$Id}"
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies

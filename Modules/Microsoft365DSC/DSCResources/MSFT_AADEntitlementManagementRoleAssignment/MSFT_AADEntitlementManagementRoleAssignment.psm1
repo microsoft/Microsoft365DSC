@@ -62,6 +62,8 @@ function Get-TargetResource
         $AccessTokens
     )
 
+    Write-Verbose -Message "Getting configuration of AzureAD Entitlement Management Role Assignment for Principal {$Principal}"
+
     try
     {
         if (-not $Script:exportedInstance -or $Script:exportedInstance.Id -ne $Id)
@@ -222,6 +224,8 @@ function Set-TargetResource
         [System.String[]]
         $AccessTokens
     )
+
+    Write-Verbose -Message "Getting configuration of AzureAD Entitlement Management Role Assignment for Principal {$Principal}"
 
     try
     {

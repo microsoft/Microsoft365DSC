@@ -7,7 +7,6 @@ function Get-TargetResource
     param
     (
         #region resource generator code
-
         [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
@@ -23,7 +22,6 @@ function Get-TargetResource
         [Parameter()]
         [System.String]
         $DefaultTimeOut,
-
         #endregion
 
         [Parameter()]
@@ -59,6 +57,8 @@ function Get-TargetResource
         [System.String[]]
         $AccessTokens
     )
+
+    Write-Verbose -Message "Getting configuration for Activity Based Timeout Policy '$DisplayName'"
 
     try
     {
@@ -156,8 +156,8 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $DefaultTimeOut,
-
         #endregion
+
         [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
@@ -191,6 +191,8 @@ function Set-TargetResource
         [System.String[]]
         $AccessTokens
     )
+
+    Write-Verbose -Message "Setting configuration for Activity Based Timeout Policy '$DisplayName'"
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -341,7 +343,6 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $DefaultTimeOut,
-
         #endregion
 
         [Parameter()]

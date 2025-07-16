@@ -2,8 +2,15 @@
 
 # UNRELEASED
 
+* AADConditionalAccessPolicy
+  * Fixed issue with setting empty ExcludePlatform in Target state when current state contains a value
+    FIXES [#6298](https://github.com/microsoft/Microsoft365DSC/issues/6298)
 * EXOTransportRule
   * Changed the update logic to handle empty parameters.
+* MISC
+  * Added logging to various resource to improve troubleshooting
+* DEPENDENCIES
+  * Updated MSCloudLoginAssistant to version 1.1.50.
 
 # 1.25.709.1
 

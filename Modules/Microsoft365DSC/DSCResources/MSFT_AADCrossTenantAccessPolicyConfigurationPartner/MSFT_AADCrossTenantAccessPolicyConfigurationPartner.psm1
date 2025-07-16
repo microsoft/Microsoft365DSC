@@ -68,6 +68,8 @@ function Get-TargetResource
         $AccessTokens
     )
 
+    Write-Verbose -Message "Getting configuration of AzureAD Cross Tenant Access Policy Configuration Partner for TenantId {$PartnerTenantId}"
+
     try
     {
         if (-not $Script:exportedInstance -or $Script:exportedInstance.PartnerTenantId -ne $PartnerTenantId)
@@ -226,6 +228,8 @@ function Set-TargetResource
         [System.String[]]
         $AccessTokens
     )
+
+    Write-Verbose -Message "Setting configuration of AzureAD Cross Tenant Access Policy Configuration Partner for TenantId {$PartnerTenantId}"
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies

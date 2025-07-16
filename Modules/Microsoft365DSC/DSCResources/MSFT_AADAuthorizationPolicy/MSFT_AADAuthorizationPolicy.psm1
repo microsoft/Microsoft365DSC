@@ -105,6 +105,7 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message 'Getting configuration of AzureAD Authorization Policy'
+
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
@@ -289,6 +290,7 @@ function Set-TargetResource
         [System.String[]]
         $AccessTokens
     )
+
     Write-Verbose -Message 'Setting configuration of AzureAD Authorization Policy'
 
     #Ensure the proper dependencies are installed in the current environment.
