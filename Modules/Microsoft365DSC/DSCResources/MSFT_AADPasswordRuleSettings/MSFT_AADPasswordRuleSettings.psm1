@@ -229,8 +229,15 @@ function Set-TargetResource
     $needToUpdate = $false
     if ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Absent')
     {
-        #$template = Get-MgBetaDirectorySettingTemplate -All | Where-Object -FilterScript {$_.Displayname -eq 'Password Rule Settings'}
-        $Policy = New-MgBetaDirectorySetting -TemplateId '5cf42378-d67d-4f36-ba46-e8b86229381d' | Out-Null
+        $template = Get-MgBetaDirectorySettingTemplate -All | Where-Object -FilterScript {$_.Displayname -eq 'Password Rule Settings'}
+        $newValues = @()
+        $template.Values | ForEach-Object {
+            $newValues += @{
+                name  = $_.Name
+                value = $_.DefaultValue
+            }
+        }
+        $Policy = New-MgBetaDirectorySetting -TemplateId '5cf42378-d67d-4f36-ba46-e8b86229381d' -Values $newValues | Out-Null
         $needToUpdate = $true
     }
 
