@@ -578,7 +578,7 @@ function Export-TargetResource
             All         = [switch]$true
             ErrorAction = 'Stop'
         }
-        if ($Filter -like '*endsWith*')
+        if ( ($Filter -like '*endsWith*') -or ($Filter -like '*not*') )
         {
             $ExportParameters.Add('CountVariable', 'count')
             $ExportParameters.Add('ConsistencyLevel', 'eventual')
