@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.25.716.1
 
 * AADAdministrativeUnit
   * Add detection/support for not filters as they require additional headers (ConsistencyLevel: Eventual).
@@ -14,6 +14,10 @@
 * EXOTransportRule
   * Changed the update logic to handle empty parameters.
 * IntuneMobileAppsDefenderForEndpointMacOS
+  * Initial release.
+* IntuneMobileAppsMicrosoft365SuiteMacOS
+  * Initial release.
+* IntuneMobileAppsMicrosoftEdge
   * Initial release.
 * O365Group
   * Add detection/support for not filters as they require additional headers (ConsistencyLevel: Eventual).

@@ -2326,7 +2326,7 @@ function Update-DeviceAppManagementAppCategory
         {
             if ($category.Id)
             {
-                $currentCategory = Get-MgBetaDeviceAppManagementMobileAppCategory -CategoryId $category.Id
+                $currentCategory = Get-MgBetaDeviceAppManagementMobileAppCategory -MobileAppCategoryId $category.Id
             }
             else
             {
