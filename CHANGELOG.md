@@ -7181,3 +7181,11 @@ MISC
 * SPOSite
   * Added default value for Storage Quota;
   * Fixed an issue with site creation that could result in infinite loops;
+
+
+# Unreleased
+
+- EXOMailboxAutoReplyConfiguration
+  - Fixed an issue in `Export-M365DSCConfiguration` where export would fail on certain users due to invalid string conversion of `$null` or non-string properties. 
+  - Ensures safer handling of mailbox properties by applying null checks and explicit string casting.  
+  - Fixes [#5998](https://github.com/microsoft/Microsoft365DSC/issues/5998).
