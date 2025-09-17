@@ -1,24 +1,33 @@
-﻿{
-    "resourceName": "EXOSweepRule",
-    "description": "DUse this resource to create Sweep rules in mailboxes. Sweep rules run at regular intervals to help keep your Inbox clean.",
-    "roles": {
+{
+  "resourceName": "EXOSweepRule",
+  "description": "DUse this resource to create Sweep rules in mailboxes. Sweep rules run at regular intervals to help keep your Inbox clean.",
+  "roles": {
+    "read": [
+      "Exchange Admin"
+    ],
+    "update": [
+      "Exchange Admin"
+    ]
+  },
+  "permissions": {
+    "Office 365 Exchange Online": {
+      "application": {
         "read": [
-            "Exchange Admin"
+          {
+            "name": "Exchange.ManageAsApp"
+          }
         ],
         "update": [
-            "Exchange Admin"
+          {
+            "name": "Exchange.ManageAsApp"
+          }
         ]
-    },
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [],
-                "update": []
-            },
-            "application": {
-                "read": [],
-                "update": []
-            }
-        }
+      }
     }
+  },
+  "requiredModules": [],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ]
 }

@@ -1,32 +1,39 @@
-﻿{
-    "resourceName": "TeamsFeedbackPolicy",
-    "description": "This resource configures an \r\nNew-CsTeamsFeedbackPolicy [-Identity] \u003cstring\u003e [-UserInitiatedMode \u003cstring\u003e] [-ReceiveSurveysMode \u003cstring\u003e] [-AllowScreenshotCollection \u003cbool\u003e] [-AllowEmailCollection \u003cbool\u003e] [-AllowLogCollection \u003cbool\u003e] [-EnableFeatureSuggestions \u003cbool\u003e] [-Force] [-WhatIf] [-Confirm] [\u003cCommonParameters\u003e]\r\n.",
-    "roles": {
+{
+  "resourceName": "TeamsFeedbackPolicy",
+  "description": "This resource configures an \r\nNew-CsTeamsFeedbackPolicy [-Identity] <string> [-UserInitiatedMode <string>] [-ReceiveSurveysMode <string>] [-AllowScreenshotCollection <bool>] [-AllowEmailCollection <bool>] [-AllowLogCollection <bool>] [-EnableFeatureSuggestions <bool>] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]\r\n.",
+  "roles": {
+    "read": [
+      "Global Reader"
+    ],
+    "update": [
+      "Teams Administrator"
+    ]
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [],
+        "update": []
+      },
+      "application": {
         "read": [
-            "Global Reader"
+          {
+            "name": "Organization.Read.All"
+          }
         ],
         "update": [
-            "Teams Administrator"
+          {
+            "name": "Organization.Read.All"
+          }
         ]
-    },
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [],
-                "update": []
-            },
-            "application": {
-                "read": [
-                    {
-                        "name": "Organization.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Organization.Read.All"
-                    }
-                ]
-            }
-        }
+      }
     }
+  },
+  "requiredModules": [
+    "MicrosoftTeams"
+  ],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ]
 }

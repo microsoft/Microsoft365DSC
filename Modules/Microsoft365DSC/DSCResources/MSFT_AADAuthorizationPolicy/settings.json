@@ -1,38 +1,46 @@
-﻿{
-    "resourceName": "AADAuthorizationPolicy",
-    "description": "This resource configures the Azure Active Directory Authorization Policy.",
-    "roles": {
-        "read": [],
+{
+  "resourceName": "AADAuthorizationPolicy",
+  "description": "This resource configures the Azure Active Directory Authorization Policy.",
+  "roles": {
+    "read": [],
+    "update": [
+      "Privileged Role Administrator"
+    ]
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "Policy.Read.All"
+          }
+        ],
         "update": [
-            "Privileged Role Administrator"
+          {
+            "name": "Policy.ReadWrite.Authorization"
+          }
         ]
-    },
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [
-                    {
-                        "name": "Policy.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Policy.ReadWrite.Authorization"
-                    }
-                ]
-            },
-            "application": {
-                "read": [
-                    {
-                        "name": "Policy.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Policy.ReadWrite.Authorization"
-                    }
-                ]
-            }
-        }
+      },
+      "application": {
+        "read": [
+          {
+            "name": "Policy.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Policy.ReadWrite.Authorization"
+          }
+        ]
+      }
     }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.Identity.SignIns"
+  ],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ]
 }

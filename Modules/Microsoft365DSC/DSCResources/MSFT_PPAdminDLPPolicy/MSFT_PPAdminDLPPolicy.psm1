@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_PPAdminDLPPolicy'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -108,7 +110,7 @@ function Get-TargetResource
             ManagedIdentity       = $ManagedIdentity.IsPresent
             AccessTokens          = $AccessTokens
         }
-        return [System.Collections.Hashtable] $results
+        return $results
     }
     catch
     {
@@ -441,11 +443,11 @@ function Export-TargetResource
         $uri = "https://" + (Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatformREST').BapEndpoint + `
             "/providers/Microsoft.BusinessAppPlatform/scopes/admin/apiPolicies?api-version=2016-11-01"
 
-        [array] $Script:exportedInstances = Invoke-M365DSCPowerPlatformRESTWebRequest -Uri $uri -Method 'GET'
+        [array] $Script:exportedInstances = (Invoke-M365DSCPowerPlatformRESTWebRequest -Uri $uri -Method 'GET').value
 
         $i = 1
         $dscContent = ''
-        if ($Script:exportedInstances.Length -eq 0)
+        if ($Script:exportedInstances.Count -eq 0)
         {
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
@@ -453,7 +455,7 @@ function Export-TargetResource
         {
             Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
-        foreach ($config in $Script:exportedInstances.value)
+        foreach ($config in $Script:exportedInstances)
         {
             if ($null -ne $Global:M365DSCExportResourceInstancesCount)
             {
@@ -461,7 +463,7 @@ function Export-TargetResource
             }
 
             $displayedKey = $config.properties.displayName
-            Write-M365DSCHost -Message "    |---[$i/$($Script:exportedInstances.value.Count)] $displayedKey" -DeferWrite
+            Write-M365DSCHost -Message "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -DeferWrite
             $params = @{
                 DisplayName           = $config.properties.displayName
                 PolicyName            = $config.name
@@ -504,3 +506,4 @@ function Export-TargetResource
 }
 
 Export-ModuleMember -Function *-TargetResource
+

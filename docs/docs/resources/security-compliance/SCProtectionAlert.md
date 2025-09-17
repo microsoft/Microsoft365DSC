@@ -39,34 +39,9 @@
 
 ## Description
 
-This resource configures a Protection Alert
-in Security and Compliance Center.
+This resource configures a Protection Alert in Purview.
 
 ## Permissions
-
-### Microsoft Graph
-
-To authenticate with the Microsoft Graph API, this resource required the following permissions:
-
-#### Delegated permissions
-
-- **Read**
-
-    - None
-
-- **Update**
-
-    - None
-
-#### Application permissions
-
-- **Read**
-
-    - None
-
-- **Update**
-
-    - None
 
 ## Examples
 
@@ -112,7 +87,7 @@ Configuration Example
             Disabled                = $False;
             Ensure                  = "Present";
             Filter                  = "(Mail.IsMailZAPSuccessful -eq 1) -and Mail.IsCampaignZapped -eq 1 -and (Mail.TenantPolicyFinalVerdictSource -ne 'PhishEdu') -and (Mail.TenantPolicyFinalVerdictSource -ne 'SecOps') -and (Mail.TenantPolicyFinalVerdictSource -ne 'ThirdPartyFiltering')";
-            Name                    = "Custom Email messages from a campaign removed after deliveryâ€‹";
+            Name                    = "Custom Email messages from a campaign removed after delivery​";
             NotificationEnabled     = $False;
             NotifyUser              = @("TenantAdmins");
             NotifyUserOnFilterMatch = $False;

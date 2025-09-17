@@ -2,4 +2,4 @@
 
 ## Description
 
-This resource configures Sensitivity labels in Security and Compliance.
+This resource configures Sensitivity labels in Purview.

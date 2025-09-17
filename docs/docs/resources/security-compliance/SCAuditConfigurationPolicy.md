@@ -16,34 +16,9 @@
 
 ## Description
 
-This resource configures an Audit ConfigurationPolicy
-in Security and Compliance Center.
+This resource configures an Audit ConfigurationPolicy in Purview.
 
 ## Permissions
-
-### Microsoft Graph
-
-To authenticate with the Microsoft Graph API, this resource required the following permissions:
-
-#### Delegated permissions
-
-- **Read**
-
-    - None
-
-- **Update**
-
-    - None
-
-#### Application permissions
-
-- **Read**
-
-    - None
-
-- **Update**
-
-    - None
 
 ## Examples
 

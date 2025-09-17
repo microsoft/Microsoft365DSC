@@ -7,6 +7,7 @@
 | **DisplayName** | Key | String | Display name of the endpoint protection policy for Windows 10. | |
 | **Identity** | Write | String | Identity of the endpoint protection policy for Windows 10. | |
 | **Description** | Write | String | Description of the endpoint protection policy for Windows 10. | |
+| **RoleScopeTagIds** | Write | StringArray[] | List of Scope Tags for this Entity instance. | |
 | **TamperProtection** | Write | String | Allows or disallows scanning of archives. (0: enable feature. 1: disable feature) | `0`, `1` |
 | **DisableAccountProtectionUI** | Write | String | Use this policy setting to specify if to display the Account protection area in Windows Defender Security Center. (0: disable feature. 1: enable feature) | `0`, `1` |
 | **DisableAppBrowserUI** | Write | String | Use this policy setting if you want to disable the display of the app and browser protection area in Windows Defender Security Center. (0: disable feature. 1: enable feature) | `0`, `1` |
@@ -102,6 +103,7 @@
 | **dataType** | Write | String | The type of the target assignment. | `#microsoft.graph.groupAssignmentTarget`, `#microsoft.graph.allLicensedUsersAssignmentTarget`, `#microsoft.graph.allDevicesAssignmentTarget`, `#microsoft.graph.exclusionGroupAssignmentTarget`, `#microsoft.graph.configurationManagerCollectionAssignmentTarget` |
 | **deviceAndAppManagementAssignmentFilterType** | Write | String | The type of filter of the target assignment i.e. Exclude or Include. Possible values are:none, include, exclude. | `none`, `include`, `exclude` |
 | **deviceAndAppManagementAssignmentFilterId** | Write | String | The Id of the filter for the target assignment. | |
+| **deviceAndAppManagementAssignmentFilterDisplayName** | Write | String | The display name of the filter for the target assignment. | |
 | **groupId** | Write | String | The group Id that is the target of the assignment. | |
 | **groupDisplayName** | Write | String | The group Display Name that is the target of the assignment. | |
 | **collectionId** | Write | String | The collection Id that is the target of the assignment.(ConfigMgr) | |

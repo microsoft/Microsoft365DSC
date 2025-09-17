@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_VivaEngagementRoleMember'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -84,7 +86,7 @@ function Get-TargetResource
             ManagedIdentity       = $ManagedIdentity.IsPresent
             AccessTokens          = $AccessTokens
         }
-        return [System.Collections.Hashtable] $results
+        return $results
     }
     catch
     {
@@ -368,3 +370,4 @@ function Export-TargetResource
 }
 
 Export-ModuleMember -Function *-TargetResource
+

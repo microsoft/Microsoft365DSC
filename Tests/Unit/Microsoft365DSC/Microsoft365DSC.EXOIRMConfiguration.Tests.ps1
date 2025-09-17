@@ -60,7 +60,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure                                     = 'Present'
                     InternalLicensingEnabled                   = $True
                     JournalReportDecryptionEnabled             = $True
-                    LicensingLocation                          = @('https://contoso.com/_wmcs/licensing')
+                    LicensingLocation                          = 'https://contoso.com/_wmcs/licensing'
                     RejectIfRecipientHasNoRights               = $False
                     SearchEnabled                              = $True
                     SimplifiedClientAccessDoNotForwardDisabled = $False
@@ -79,7 +79,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Identity                                   = 'Test Config'
                         InternalLicensingEnabled                   = $True
                         JournalReportDecryptionEnabled             = $True
-                        LicensingLocation                          = @('https://contoso.com/_wmcs/licensing')
+                        LicensingLocation                          = 'https://contoso.com/_wmcs/licensing'
                         RejectIfRecipientHasNoRights               = $False
                         SearchEnabled                              = $True
                         SimplifiedClientAccessDoNotForwardDisabled = $False
@@ -113,7 +113,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure                                     = 'Present'
                     InternalLicensingEnabled                   = $True
                     JournalReportDecryptionEnabled             = $True
-                    LicensingLocation                          = @('https://contoso.com/_wmcs/licensing')
+                    LicensingLocation                          = 'https://contoso.com/_wmcs/licensing'
                     RejectIfRecipientHasNoRights               = $False
                     SearchEnabled                              = $True
                     SimplifiedClientAccessDoNotForwardDisabled = $False
@@ -132,7 +132,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Identity                                   = 'Test Config'
                         InternalLicensingEnabled                   = $True
                         JournalReportDecryptionEnabled             = $True
-                        LicensingLocation                          = @('https://contoso.com/_wmcs/licensing')
+                        LicensingLocation                          = 'https://contoso.com/_wmcs/licensing'
                         RejectIfRecipientHasNoRights               = $False
                         SearchEnabled                              = $True
                         SimplifiedClientAccessDoNotForwardDisabled = $False
@@ -166,7 +166,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Identity                                   = 'Test Config'
                         InternalLicensingEnabled                   = $True
                         JournalReportDecryptionEnabled             = $True
-                        LicensingLocation                          = @('https://contoso.com/_wmcs/licensing')
+                        LicensingLocation                          = 'https://contoso.com/_wmcs/licensing'
                         RejectIfRecipientHasNoRights               = $False
                         SearchEnabled                              = $True
                         SimplifiedClientAccessDoNotForwardDisabled = $False

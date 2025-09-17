@@ -1,38 +1,47 @@
-﻿{
-    "resourceName": "EXOOMEConfiguration",
-    "description": "",
-    "roles": {
+{
+  "resourceName": "EXOOMEConfiguration",
+  "description": "",
+  "roles": {
+    "read": [
+      "Security Reader"
+    ],
+    "update": [
+      "Exchange Administrator"
+    ]
+  },
+  "permissions": {
+    "Office 365 Exchange Online": {
+      "application": {
         "read": [
-            "Security Reader"
+          {
+            "name": "Exchange.ManageAsApp"
+          }
         ],
         "update": [
-            "Exchange Administrator"
+          {
+            "name": "Exchange.ManageAsApp"
+          }
         ]
+      }
     },
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [],
-                "update": []
-            },
-            "application": {
-                "read": [],
-                "update": []
-            }
-        },
-        "exchange": {
-            "requiredroles": [
-                "Compliance Admin",
-                "Security Admin",
-                "Data Loss Prevention",
-                "Transport Rules",
-                "Information Rights Management",
-                "View-Only Configuration",
-                "Security Reader"
-            ],
-            "requiredrolegroups": [
-                "Organization Management"
-            ]
-        }
+    "exchange": {
+      "requiredroles": [
+        "Compliance Admin",
+        "Security Admin",
+        "Data Loss Prevention",
+        "Transport Rules",
+        "Information Rights Management",
+        "View-Only Configuration",
+        "Security Reader"
+      ],
+      "requiredrolegroups": [
+        "Organization Management"
+      ]
     }
+  },
+  "requiredModules": [],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ]
 }

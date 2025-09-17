@@ -29,6 +29,7 @@
 | **dataType** | Write | String | The type of the target assignment. | `#microsoft.graph.groupAssignmentTarget`, `#microsoft.graph.allLicensedUsersAssignmentTarget`, `#microsoft.graph.allDevicesAssignmentTarget`, `#microsoft.graph.exclusionGroupAssignmentTarget`, `#microsoft.graph.configurationManagerCollectionAssignmentTarget` |
 | **deviceAndAppManagementAssignmentFilterType** | Write | String | The type of filter of the target assignment i.e. Exclude or Include. Possible values are:none, include, exclude. | `none`, `include`, `exclude` |
 | **deviceAndAppManagementAssignmentFilterId** | Write | String | The Id of the filter for the target assignment. | |
+| **deviceAndAppManagementAssignmentFilterDisplayName** | Write | String | The display name of the filter for the target assignment. | |
 | **groupId** | Write | String | The group Id that is the target of the assignment. | |
 | **groupDisplayName** | Write | String | The group Display Name that is the target of the assignment. | |
 | **collectionId** | Write | String | The collection Id that is the target of the assignment.(ConfigMgr) | |
@@ -79,7 +80,7 @@
 | **RpcTcpPort** | Write | SInt32 | RPC over TCP port: (Device) - Depends on ConfigureRpcTcpPort | |
 | **RestrictDriverInstallationToAdministrators** | Write | String | Limits print driver installation to Administrators (0: Disabled, 1: Enabled) | `0`, `1` |
 | **ConfigureCopyFilesPolicy** | Write | String | Manage processing of Queue-specific files (0: Disabled, 1: Enabled) | `0`, `1` |
-| **CopyFilesPolicy_Enum** | Write | String | Manage processing of Queue-Specific files: (Device) - Depends on ConfigureCopyFilesPolicy (0: Do not allow Queue-specific files, 1: Limit Queue-specific files to Color profiles, 2: Allow all Queue-specfic files) | `0`, `1`, `2` |
+| **CopyFilesPolicy_Enum** | Write | String | Manage processing of Queue-Specific files: (Device) - Depends on ConfigureCopyFilesPolicy (0: Do not allow Queue-specific files, 1: Limit Queue-specific files to Color profiles, 2: Allow all Queue-specific files) | `0`, `1`, `2` |
 | **AllowEncryptionOracle** | Write | String | Encryption Oracle Remediation (0: Disabled, 1: Enabled) | `0`, `1` |
 | **AllowEncryptionOracleDrop** | Write | String | Protection Level: (Device) - Depends on AllowEncryptionOracle (0: Force Updated Clients, 1: Mitigated, 2: Vulnerable) | `0`, `1`, `2` |
 | **AllowProtectedCreds** | Write | String | Remote host allows delegation of non-exportable credentials (0: Disabled, 1: Enabled) | `0`, `1` |
@@ -408,7 +409,7 @@
 | **BlockUntrustedUnsignedProcessesThatRunFromUSB** | Write | String | Block untrusted and unsigned processes that run from USB - Depends on AttackSurfaceReductionRules (off: Off, block: Block, audit: Audit, warn: Warn) | `off`, `block`, `audit`, `warn` |
 | **BlockUntrustedUnsignedProcessesThatRunFromUSB_ASROnlyPerRuleExclusions** | Write | StringArray[] | ASR Only Per Rule Exclusions | |
 | **BlockPersistenceThroughWMIEventSubscription** | Write | String | Block persistence through WMI event subscription - Depends on AttackSurfaceReductionRules (off: Off, block: Block, audit: Audit, warn: Warn) | `off`, `block`, `audit`, `warn` |
-| **BlockUseOfCopiedOrImpersonatedSystemTools** | Write | String | [PREVIEW] Block use of copied or impersonated system tools - Depends on AttackSurfaceReductionRules (off: Off, block: Block, audit: Audit, warn: Warn) | `off`, `block`, `audit`, `warn` |
+| **BlockUseOfCopiedOrImpersonatedSystemTools** | Write | String | Block use of copied or impersonated system tools - Depends on AttackSurfaceReductionRules (off: Off, block: Block, audit: Audit, warn: Warn) | `off`, `block`, `audit`, `warn` |
 | **BlockUseOfCopiedOrImpersonatedSystemTools_ASROnlyPerRuleExclusions** | Write | StringArray[] | ASR Only Per Rule Exclusions | |
 | **BlockAbuseOfExploitedVulnerableSignedDrivers** | Write | String | Block abuse of exploited vulnerable signed drivers (Device) - Depends on AttackSurfaceReductionRules (off: Off, block: Block, audit: Audit, warn: Warn) | `off`, `block`, `audit`, `warn` |
 | **BlockAbuseOfExploitedVulnerableSignedDrivers_ASROnlyPerRuleExclusions** | Write | StringArray[] | ASR Only Per Rule Exclusions | |
@@ -418,7 +419,7 @@
 | **BlockOfficeApplicationsFromCreatingExecutableContent_ASROnlyPerRuleExclusions** | Write | StringArray[] | ASR Only Per Rule Exclusions | |
 | **BlockOfficeApplicationsFromInjectingCodeIntoOtherProcesses** | Write | String | Block Office applications from injecting code into other processes - Depends on AttackSurfaceReductionRules (off: Off, block: Block, audit: Audit, warn: Warn) | `off`, `block`, `audit`, `warn` |
 | **BlockOfficeApplicationsFromInjectingCodeIntoOtherProcesses_ASROnlyPerRuleExclusions** | Write | StringArray[] | ASR Only Per Rule Exclusions | |
-| **BlockRebootingMachineInSafeMode** | Write | String | [PREVIEW] Block rebooting machine in Safe Mode - Depends on AttackSurfaceReductionRules (off: Off, block: Block, audit: Audit, warn: Warn) | `off`, `block`, `audit`, `warn` |
+| **BlockRebootingMachineInSafeMode** | Write | String | Block rebooting machine in Safe Mode - Depends on AttackSurfaceReductionRules (off: Off, block: Block, audit: Audit, warn: Warn) | `off`, `block`, `audit`, `warn` |
 | **BlockRebootingMachineInSafeMode_ASROnlyPerRuleExclusions** | Write | StringArray[] | ASR Only Per Rule Exclusions | |
 | **UseAdvancedProtectionAgainstRansomware** | Write | String | Use advanced protection against ransomware - Depends on AttackSurfaceReductionRules (off: Off, block: Block, audit: Audit, warn: Warn) | `off`, `block`, `audit`, `warn` |
 | **UseAdvancedProtectionAgainstRansomware_ASROnlyPerRuleExclusions** | Write | StringArray[] | ASR Only Per Rule Exclusions | |
@@ -517,6 +518,33 @@
 | **passwordagedays_aad** | Write | SInt32 | Password Age Days - Depends on BackupDirectory | |
 | **ADPasswordEncryptionPrincipal** | Write | String | AD Password Encryption Principal - Depends on BackupDirectory | |
 | **PasswordExpirationProtectionEnabled** | Write | String | Password Expiration Protection Enabled - Depends on BackupDirectory (false: Allow configured password expiriration timestamp to exceed maximum password age, true: Do not allow configured password expiriration timestamp to exceed maximum password age) | `false`, `true` |
+| **EnableConvertWarnToBlock** | Write | String | Enable Convert Warn To Block (1: Warn verdicts are converted to block, 0: Warn verdicts are not converted to block) | `1`, `0` |
+| **HideExclusionsFromLocalUsers** | Write | String | Hide Exclusions From Local Users (1: If you enable this setting, local users will no longer be able to see the exclusion list in Windows Security App or via PowerShell., 0: If you disable or do not configure this setting, local users will be able to see exclusions in the Windows Security App and via PowerShell.) | `1`, `0` |
+| **OobeEnableRtpAndSigUpdate** | Write | String | Oobe Enable Rtp And Sig Update (1: If you enable this setting, real-time protection and Security Intelligence Updates are enabled during OOBE., 0: If you either disable or do not configure this setting, real-time protection and Security Intelligence Updates during OOBE is not enabled.) | `1`, `0` |
+| **PassiveRemediation** | Write | SInt32Array[] | Passive Remediation (0: Passive Remediation is turned off (default), 1: PASSIVE_REMEDIATION_FLAG_SENSE_AUTO_REMEDIATION: Passive Remediation Sense AutoRemediation, 2: PASSIVE_REMEDIATION_FLAG_RTP_AUDIT: Passive Remediation Realtime Protection Audit, 4: PASSIVE_REMEDIATION_FLAG_RTP_REMEDIATION: Passive Remediation Realtime Protection Remediation) | `0`, `1`, `2`, `4` |
+| **QuickScanIncludeExclusions** | Write | String | Quick Scan Include Exclusions (0: If you set this setting to 0 or do not configure it, exclusions are not scanned during quick scans., 1: If you set this setting to 1, all files and directories that are excluded from real-time protection using contextual exclusions are scanned during a quick scan.) | `0`, `1` |
+| **PKInitHashAlgorithmConfiguration** | Write | String | PK Init Hash Algorithm Configuration (0: Disabled / Not Configured, 1: Enabled) | `0`, `1` |
+| **PKInitHashAlgorithmSHA256** | Write | String | PK Init Hash Algorithm SHA256 - Depends on PKInitHashAlgorithmConfiguration (0: Not Supported, 1: Default, 2: Audited, 3: Supported) | `0`, `1`, `2`, `3` |
+| **PKInitHashAlgorithmSHA512** | Write | String | PK Init Hash Algorithm SHA512 - Depends on PKInitHashAlgorithmConfiguration (0: Not Supported, 1: Default, 2: Audited, 3: Supported) | `0`, `1`, `2`, `3` |
+| **PKInitHashAlgorithmSHA384** | Write | String | PK Init Hash Algorithm SHA384 - Depends on PKInitHashAlgorithmConfiguration (0: Not Supported, 1: Default, 2: Audited, 3: Supported) | `0`, `1`, `2`, `3` |
+| **PKInitHashAlgorithmSHA1** | Write | String | PK Init Hash Algorithm SHA1 - Depends on PKInitHashAlgorithmConfiguration (0: Not Supported, 1: Default, 2: Audited, 3: Supported) | `0`, `1`, `2`, `3` |
+| **EnableSudo** | Write | String | Enable Sudo (0: Sudo is disabled., 1: Sudo is allowed in 'force new window' mode., 2: Sudo is allowed in 'disable input' mode., 3: Sudo is allowed in 'inline' mode.) | `0`, `1`, `2`, `3` |
+| **MachineIdentityIsolation** | Write | String | Machine Identity Isolation (0: (Disabled) Machine password is only LSASS-bound and stored in $MACHINE.ACC registry key., 1: (Enabled in audit mode) Machine password both LSASS-bound and IUM-bound. It is stored in $MACHINE.ACC and $MACHINE.ACC.IUM registry keys., 2: (Enabled in enforcement mode) Machine password is only IUM-bound and stored in $MACHINE.ACC.IUM registry key.) | `0`, `1`, `2` |
+| **AuditClientDoesNotSupportEncryption** | Write | String | Audit Client Does Not Support Encryption (0: Disabled, 1: Enabled) | `0`, `1` |
+| **AuditClientDoesNotSupportSigning** | Write | String | Audit Client Does Not Support Signing (0: Disabled, 1: Enabled) | `0`, `1` |
+| **LanmanServer_AuditInsecureGuestLogon** | Write | String | Audit Insecure Guest Logon (0: Disabled, 1: Enabled) | `0`, `1` |
+| **AuthRateLimiterDelayInMs** | Write | SInt32 | Auth Rate Limiter Delay In Ms | |
+| **EnableAuthRateLimiter** | Write | String | Enable Auth Rate Limiter (0: Disabled, 1: Enabled) | `0`, `1` |
+| **LanmanServer_EnableMailslots** | Write | String | Enable Mailslots (0: Disabled, 1: Enabled) | `0`, `1` |
+| **LanmanServer_MaxSmb2Dialect** | Write | String | Max Smb2 Dialect (514: SMB 2.0.2, 528: SMB 2.1.0, 768: SMB 3.0.0, 770: SMB 3.0.2, 785: SMB 3.1.1) | `514`, `528`, `768`, `770`, `785` |
+| **LanmanServer_MinSmb2Dialect** | Write | String | Min Smb2 Dialect (514: SMB 2.0.2, 528: SMB 2.1.0, 768: SMB 3.0.0, 770: SMB 3.0.2, 785: SMB 3.1.1) | `514`, `528`, `768`, `770`, `785` |
+| **LanmanWorkstation_AuditInsecureGuestLogon** | Write | String | Audit Insecure Guest Logon (0: Disabled, 1: Enabled) | `0`, `1` |
+| **AuditServerDoesNotSupportEncryption** | Write | String | Audit Server Does Not Support Encryption (0: Disabled, 1: Enabled) | `0`, `1` |
+| **AuditServerDoesNotSupportSigning** | Write | String | Audit Server Does Not Support Signing (0: Disabled, 1: Enabled) | `0`, `1` |
+| **LanmanWorkstation_EnableMailslots** | Write | String | Enable Mailslots (0: Disabled, 1: Enabled) | `0`, `1` |
+| **LanmanWorkstation_MaxSmb2Dialect** | Write | String | Max Smb2 Dialect (514: SMB 2.0.2, 528: SMB 2.1.0, 768: SMB 3.0.0, 770: SMB 3.0.2, 785: SMB 3.1.1) | `514`, `528`, `768`, `770`, `785` |
+| **LanmanWorkstation_MinSmb2Dialect** | Write | String | Min Smb2 Dialect (514: SMB 2.0.2, 528: SMB 2.1.0, 768: SMB 3.0.0, 770: SMB 3.0.2, 785: SMB 3.1.1) | `514`, `528`, `768`, `770`, `785` |
+| **RequireEncryption** | Write | String | Require Encryption (0: Disabled, 1: Enabled) | `0`, `1` |
 
 ### MSFT_MicrosoftGraphIntuneSettingsCatalogUserSettings_IntuneSecurityBaselineWindows10
 

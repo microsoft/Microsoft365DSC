@@ -1,32 +1,37 @@
-﻿{
-    "resourceName": "O365SearchAndIntelligenceConfigurations",
-    "description": "This resource configures the Search And Intelligence configuration settings.",
-    "roles": {
+{
+  "resourceName": "O365SearchAndIntelligenceConfigurations",
+  "description": "This resource configures the Search And Intelligence configuration settings.",
+  "roles": {
+    "read": [
+      "Global Reader"
+    ],
+    "update": [
+      "Exchange Administrator"
+    ]
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [],
+        "update": []
+      },
+      "application": {
         "read": [
-            "Global Reader"
+          {
+            "name": "PeopleSettings.Read.All"
+          }
         ],
         "update": [
-            "Exchange Administrator"
+          {
+            "name": "PeopleSettings.ReadWrite.All"
+          }
         ]
-    },
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [],
-                "update": []
-            },
-            "application": {
-                "read": [
-                    {
-                        "name": "PeopleSettings.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "PeopleSettings.ReadWrite.All"
-                    }
-                ]
-            }
-        }
+      }
     }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.Identity.DirectoryManagement",
+    "Microsoft.Graph.Groups"
+  ]
 }

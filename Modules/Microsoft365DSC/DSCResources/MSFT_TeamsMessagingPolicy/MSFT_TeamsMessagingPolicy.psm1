@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_TeamsMessagingPolicy'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -7,6 +9,57 @@ function Get-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowChatWithGroup,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCustomGroupChatAvatars,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowFullChatPermissionUserToDeleteAnyMessage,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowGiphyDisplay,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowGroupChatJoinLinks,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowPasteInternetImage,
+
+        [Parameter()]
+        [ValidateSet('Full', 'Limited', 'Restricted')]
+        [System.String]
+        $ChatPermissionRole,
+
+        [Parameter()]
+        [System.Boolean]
+        $CreateCustomEmojis,
+
+        [Parameter()]
+        [System.Boolean]
+        $DeleteCustomEmojis,
+
+        [Parameter()]
+        [ValidateSet('Enabled', 'Disabled')]
+        [System.String]
+        $DesignerForBackgroundsAndImages,
+
+        [Parameter()]
+        [ValidateSet('BlockingDisallowed', 'BlockingAllowed')]
+        [System.String]
+        $InOrganizationChatControl,
+
+        [Parameter()]
+        [System.Boolean]
+        $UsersCanDeleteBotMessages,
 
         [Parameter()]
         [System.Boolean]
@@ -187,39 +240,51 @@ function Get-TargetResource
                 $currentPolicy = $currentPolicy.Split(':')[1]
             }
             return @{
-                Identity                                     = $currentPolicy
-                AllowCommunicationComplianceEndUserReporting = $policy.AllowCommunicationComplianceEndUserReporting
-                AllowGiphy                                   = $policy.AllowGiphy
-                AllowFluidCollaborate                        = $policy.AllowFluidCollaborate
-                AllowMemes                                   = $policy.AllowMemes
-                AllowOwnerDeleteMessage                      = $policy.AllowOwnerDeleteMessage
-                AllowSecurityEndUserReporting                = $policy.AllowSecurityEndUserReporting
-                AllowStickers                                = $policy.AllowStickers
-                AllowUrlPreviews                             = $policy.AllowUrlPreviews
-                AllowUserChat                                = $policy.AllowUserChat
-                AllowUserDeleteMessage                       = $policy.AllowUserDeleteMessage
-                AllowUserEditMessage                         = $policy.AllowUserEditMessage
-                AllowSmartCompose                            = $policy.AllowSmartCompose
-                AllowSmartReply                              = $policy.AllowSmartReply
-                AllowUserTranslation                         = $policy.AllowUserTranslation
-                GiphyRatingType                              = $policy.GiphyRatingType
-                ReadReceiptsEnabledType                      = $policy.ReadReceiptsEnabledType
-                AllowImmersiveReader                         = $policy.AllowImmersiveReader
-                AllowRemoveUser                              = $policy.AllowRemoveUser
-                AllowPriorityMessages                        = $policy.AllowPriorityMessages
-                AllowUserDeleteChat                          = $policy.AllowUserDeleteChat
-                AllowVideoMessages                           = $policy.AllowVideoMessages
-                ChannelsInChatListEnabledType                = $policy.ChannelsInChatListEnabledType
-                AudioMessageEnabledType                      = $policy.AudioMessageEnabledType
-                Description                                  = $policy.Description
-                Tenant                                       = $policy.Tenant
-                Ensure                                       = 'Present'
-                Credential                                   = $Credential
-                ApplicationId                                = $ApplicationId
-                TenantId                                     = $TenantId
-                CertificateThumbprint                        = $CertificateThumbprint
-                ManagedIdentity                              = $ManagedIdentity.IsPresent
-                AccessTokens                                 = $AccessTokens
+                Identity                                      = $currentPolicy
+                AllowChatWithGroup                            = $policy.AllowChatWithGroup
+                AllowCustomGroupChatAvatars                   = $policy.AllowCustomGroupChatAvatars
+                AllowFullChatPermissionUserToDeleteAnyMessage = $policy.AllowFullChatPermissionUserToDeleteAnyMessage
+                AllowGiphyDisplay                             = $policy.AllowGiphyDisplay
+                AllowGroupChatJoinLinks                       = $policy.AllowGroupChatJoinLinks
+                AllowPasteInternetImage                       = $policy.AllowPasteInternetImage
+                ChatPermissionRole                            = $policy.ChatPermissionRole
+                CreateCustomEmojis                            = $policy.CreateCustomEmojis
+                DeleteCustomEmojis                            = $policy.DeleteCustomEmojis
+                DesignerForBackgroundsAndImages               = $policy.DesignerForBackgroundsAndImages
+                InOrganizationChatControl                     = $policy.InOrganizationChatControl
+                UsersCanDeleteBotMessages                     = $policy.UsersCanDeleteBotMessages
+                AllowCommunicationComplianceEndUserReporting  = $policy.AllowCommunicationComplianceEndUserReporting
+                AllowGiphy                                    = $policy.AllowGiphy
+                AllowFluidCollaborate                         = $policy.AllowFluidCollaborate
+                AllowMemes                                    = $policy.AllowMemes
+                AllowOwnerDeleteMessage                       = $policy.AllowOwnerDeleteMessage
+                AllowSecurityEndUserReporting                 = $policy.AllowSecurityEndUserReporting
+                AllowStickers                                 = $policy.AllowStickers
+                AllowUrlPreviews                              = $policy.AllowUrlPreviews
+                AllowUserChat                                 = $policy.AllowUserChat
+                AllowUserDeleteMessage                        = $policy.AllowUserDeleteMessage
+                AllowUserEditMessage                          = $policy.AllowUserEditMessage
+                AllowSmartCompose                             = $policy.AllowSmartCompose
+                AllowSmartReply                               = $policy.AllowSmartReply
+                AllowUserTranslation                          = $policy.AllowUserTranslation
+                GiphyRatingType                               = $policy.GiphyRatingType
+                ReadReceiptsEnabledType                       = $policy.ReadReceiptsEnabledType
+                AllowImmersiveReader                          = $policy.AllowImmersiveReader
+                AllowRemoveUser                               = $policy.AllowRemoveUser
+                AllowPriorityMessages                         = $policy.AllowPriorityMessages
+                AllowUserDeleteChat                           = $policy.AllowUserDeleteChat
+                AllowVideoMessages                            = $policy.AllowVideoMessages
+                ChannelsInChatListEnabledType                 = $policy.ChannelsInChatListEnabledType
+                AudioMessageEnabledType                       = $policy.AudioMessageEnabledType
+                Description                                   = $policy.Description
+                Tenant                                        = $policy.Tenant
+                Ensure                                        = 'Present'
+                Credential                                    = $Credential
+                ApplicationId                                 = $ApplicationId
+                TenantId                                      = $TenantId
+                CertificateThumbprint                         = $CertificateThumbprint
+                ManagedIdentity                               = $ManagedIdentity.IsPresent
+                AccessTokens                                  = $AccessTokens
             }
         }
     }
@@ -243,6 +308,57 @@ function Set-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowChatWithGroup,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCustomGroupChatAvatars,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowFullChatPermissionUserToDeleteAnyMessage,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowGiphyDisplay,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowGroupChatJoinLinks,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowPasteInternetImage,
+
+        [Parameter()]
+        [ValidateSet('Full', 'Limited', 'Restricted')]
+        [System.String]
+        $ChatPermissionRole,
+
+        [Parameter()]
+        [System.Boolean]
+        $CreateCustomEmojis,
+
+        [Parameter()]
+        [System.Boolean]
+        $DeleteCustomEmojis,
+
+        [Parameter()]
+        [ValidateSet('Enabled', 'Disabled')]
+        [System.String]
+        $DesignerForBackgroundsAndImages,
+
+        [Parameter()]
+        [ValidateSet('BlockingDisallowed', 'BlockingAllowed')]
+        [System.String]
+        $InOrganizationChatControl,
+
+        [Parameter()]
+        [System.Boolean]
+        $UsersCanDeleteBotMessages,
 
         [Parameter()]
         [System.Boolean]
@@ -432,6 +548,57 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $AllowChatWithGroup,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCustomGroupChatAvatars,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowFullChatPermissionUserToDeleteAnyMessage,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowGiphyDisplay,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowGroupChatJoinLinks,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowPasteInternetImage,
+
+        [Parameter()]
+        [ValidateSet('Full', 'Limited', 'Restricted')]
+        [System.String]
+        $ChatPermissionRole,
+
+        [Parameter()]
+        [System.Boolean]
+        $CreateCustomEmojis,
+
+        [Parameter()]
+        [System.Boolean]
+        $DeleteCustomEmojis,
+
+        [Parameter()]
+        [ValidateSet('Enabled', 'Disabled')]
+        [System.String]
+        $DesignerForBackgroundsAndImages,
+
+        [Parameter()]
+        [ValidateSet('BlockingDisallowed', 'BlockingAllowed')]
+        [System.String]
+        $InOrganizationChatControl,
+
+        [Parameter()]
+        [System.Boolean]
+        $UsersCanDeleteBotMessages,
+
+        [Parameter()]
+        [System.Boolean]
         $AllowCommunicationComplianceEndUserReporting,
 
         [Parameter()]
@@ -563,7 +730,8 @@ function Test-TargetResource
         [System.String[]]
         $AccessTokens
     )
-    #Ensure the proper dependencies are installed in the current environment.
+
+    # Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
     #region Telemetry
@@ -698,3 +866,4 @@ function Export-TargetResource
 }
 
 Export-ModuleMember -Function *-TargetResource
+

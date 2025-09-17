@@ -6,7 +6,7 @@
 | --- | --- | --- | --- | --- |
 | **IsSingleInstance** | Key | String | Only valid value is 'Yes'. | `Yes` |
 | **SecureByDefault** | Write | Boolean | Device should be noncompliant when there is no compliance policy targeted when this is true. | |
-| **DeviceComplianceCheckinThresholdDays** | Write | UInt32 | The number of days a device is allowed to go without checking in to remain compliant. | |
+| **DeviceComplianceCheckinThresholdDays** | Write | UInt32 | The number of days a device is allowed to go without checking in to remain compliant. Must be between 1 and 120. | |
 | **Credential** | Write | PSCredential | Credentials of the Intune Admin | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
 | **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. | |

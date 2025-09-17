@@ -1,3 +1,4 @@
+[ClassVersion("1.0.0.1")]
 class MSFT_DeviceManagementMobileAppAssignment
 {
     [Write, Description("The type of the target assignment."), ValueMap{"#microsoft.graph.groupAssignmentTarget","#microsoft.graph.allLicensedUsersAssignmentTarget","#microsoft.graph.allDevicesAssignmentTarget","#microsoft.graph.exclusionGroupAssignmentTarget", "#microsoft.graph.mobileAppAssignment"}, Values{"#microsoft.graph.groupAssignmentTarget","#microsoft.graph.allLicensedUsersAssignmentTarget","#microsoft.graph.allDevicesAssignmentTarget","#microsoft.graph.exclusionGroupAssignmentTarget", "#microsoft.graph.mobileAppAssignment"}] String dataType;
@@ -9,18 +10,21 @@ class MSFT_DeviceManagementMobileAppAssignment
     [Write, Description("Possible values for the install intent chosen by the admin."), ValueMap{"available", "required", "uninstall", "availableWithoutEnrollment"}, Values{"available", "required", "uninstall", "availableWithoutEnrollment"}] String intent;
 };
 
+[ClassVersion("1.0.0")]
 class MSFT_DeviceManagementMimeContent
 {
     [Write, Description("Indicates the type of content mime.")] String Type;
     [Write, Description("The Base64 encoded string content.")] String Value;
 };
 
+[ClassVersion("1.0.0")]
 class MSFT_DeviceManagementMobileAppCategory
 {
     [Key, Description("The name of the app category.")] String DisplayName;
     [Write, Description("The unique identifier for an entity. Read-only.")] String Id;
 };
 
+[ClassVersion("1.0.0")]
 class MSFT_DeviceManagementMobileAppExcludedApp
 {
     [Write, Description("Specifies whether to exclude Microsoft Office Access from the installation.")] Boolean Access;

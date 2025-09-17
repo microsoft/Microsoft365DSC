@@ -27,6 +27,9 @@ Configuration Example
             Id                    = "8d027f94-0682-431e-97c1-827d1879fa79";
             DisplayName           = "TeamsForBusinessInstaller";
             Ensure                = "Absent";
+            ApplicationId         = $ApplicationId;
+            TenantId              = $TenantId;
+            CertificateThumbprint = $CertificateThumbprint;
         }
     }
 }

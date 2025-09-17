@@ -86,6 +86,7 @@ function Add-M365DSCTelemetryEvent
         [System.Collections.Generic.Dictionary[[System.String], [System.Double]]]
         $Metrics
     )
+
     $TelemetryEnabled = [System.Environment]::GetEnvironmentVariable('M365DSCTelemetryEnabled', `
             [System.EnvironmentVariableTarget]::Machine)
 
@@ -131,7 +132,8 @@ function Add-M365DSCTelemetryEvent
             {
                 if ($null -eq $Script:M365DSCCurrentRoles -or $Script:M365DSCCurrentRoles.Length -eq 0)
                 {
-                    Connect-M365Tenant -Workload 'MicrosoftGraph' $Global:M365DSCTelemetryConnectionToGraphParams -ErrorAction SilentlyContinue
+                    $telemetryParameters = Get-M365DSCTelemetryConnectionParameter
+                    Connect-M365Tenant -Workload 'MicrosoftGraph' @telemetryParameters -ErrorAction SilentlyContinue
                     $Script:M365DSCCurrentRoles = @()
 
                     $uri = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + 'v1.0/me?$select=id'
@@ -167,10 +169,11 @@ function Add-M365DSCTelemetryEvent
                 {
                     try
                     {
-                        Connect-M365Tenant -Workload 'MicrosoftGraph' $Global:M365DSCTelemetryConnectionToGraphParams -ErrorAction Stop
-                        $Script:M365DSCCurrentRoles = @()
+                        $telemetryParameters = Get-M365DSCTelemetryConnectionParameter
+                        Connect-M365Tenant -Workload 'MicrosoftGraph' @telemetryParameters -ErrorAction Stop
 
-                        $sp = Get-MgServicePrincipal -Filter "AppId eq '$($Global:M365DSCTelemetryConnectionToGraphParams.ApplicationId)'" `
+                        $Script:M365DSCCurrentRoles = @()
+                        $sp = Get-MgServicePrincipal -Filter "AppId eq '$($telemetryParameters.ApplicationId)'" `
                                 -ErrorAction 'SilentlyContinue'
                         if ($null -ne $sp)
                         {

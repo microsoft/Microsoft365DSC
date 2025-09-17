@@ -355,7 +355,7 @@ function Start-M365DSCConfigurationExtract
 
             if ([System.String]::IsNullOrEmpty($ConfigurationName))
             {
-                $ConfigurationName = $FileName.Replace('.' + $FileParts[$FileParts.Length - 1], '')
+                $ConfigurationName = $FileName.Replace('.' + $FileParts[$FileParts.Length - 1], '').Replace(' ', '_')
             }
         }
         if ([System.String]::IsNullOrEmpty($ConfigurationName))
@@ -916,7 +916,7 @@ function Start-M365DSCConfigurationExtract
                 }
                 else
                 {
-                    Write-Warning -Message "Cannot export Local Configuration Manager settings. This process isn't executed with Administrative Privileges!"
+                    Write-Verbose -Message "Cannot export Local Configuration Manager settings. This process isn't executed with Administrative Privileges."
                 }
             }
             catch

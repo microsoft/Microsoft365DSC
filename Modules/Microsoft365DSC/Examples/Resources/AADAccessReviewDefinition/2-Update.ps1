@@ -29,6 +29,21 @@ Configuration Example
             DisplayName             = "Test Access Review Definition";
             Ensure                  = "Present";
             Id                      = "613854e6-c458-4a2c-83fc-e0f4b8b17d60";
+            FallbackReviewers       = @(
+                MSFT_AADAccessReviewDefinitionReviewer{
+                    DisplayName = "Fallback Reviewer 1"
+                    Type = "User"
+                }
+                MSFT_AADAccessReviewDefinitionReviewer{
+                    DisplayName = "Fallback Group 1"
+                    Type = "Group"
+                }
+            );
+            Reviewers               = @(
+                MSFT_AADAccessReviewDefinitionReviewer{
+                    Type = "Manager"
+                }
+            )
             ScopeValue              = MSFT_MicrosoftGraphaccessReviewScope{
                 PrincipalScopes = @(
                     MSFT_MicrosoftGraphAccessReviewScope{

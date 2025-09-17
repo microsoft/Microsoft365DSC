@@ -7,6 +7,7 @@
 | **Id** | Write | String | Id of the Intune policy. | |
 | **DisplayName** | Key | String | Display name of the Intune policy. | |
 | **Description** | Write | String | Description of the Intune policy. | |
+| **RoleScopeTagIds** | Write | StringArray[] | List of Scope Tags for this Entity instance. | |
 | **AccountBlockModification** | Write | Boolean | Indicates whether or not to allow account modification when the device is in supervised mode. | |
 | **ActivationLockAllowWhenSupervised** | Write | Boolean | Activation Lock makes it harder for a lost or stolen device to be reactivated. | |
 | **AirDropBlocked** | Write | Boolean | Indicates whether or not to allow AirDrop when the device is in supervised mode. | |
@@ -149,8 +150,8 @@
 | **NotificationsBlockSettingsModification** | Write | Boolean | Indicates whether or not to allow notifications settings modification (iOS 9.3 and later). | |
 | **OnDeviceOnlyDictationForced** | Write | Boolean | Indicates whether or not to enforce on device only dictation. | |
 | **OnDeviceOnlyTranslationForced** | Write | Boolean | Indicates whether or not to enforce on device only translation. | |
-| **PasscodeBlockFingerprintModification** | Write | Boolean | Block users from adding, changing, or removing fingerprints and faces. Face ID is avaliable in iOS 11.0 and later. | |
-| **PasscodeBlockFingerprintUnlock** | Write | Boolean | Face ID is avaliable on iOS 11.0 and later. | |
+| **PasscodeBlockFingerprintModification** | Write | Boolean | Block users from adding, changing, or removing fingerprints and faces. Face ID is available in iOS 11.0 and later. | |
+| **PasscodeBlockFingerprintUnlock** | Write | Boolean | Face ID is available on iOS 11.0 and later. | |
 | **PasscodeBlockModification** | Write | Boolean | Block passcode from being added, changed or removed. Changes to passcode restrictions will be ignored on supervised devices after blocking passcode modification. | |
 | **PasscodeBlockSimple** | Write | Boolean | Block simple password sequences, such as 1234 or 1111. | |
 | **PasscodeExpirationDays** | Write | UInt32 | Number of days until device password must be changed. (1-65535) | |
@@ -213,6 +214,7 @@
 | **dataType** | Write | String | The type of the target assignment. | `#microsoft.graph.groupAssignmentTarget`, `#microsoft.graph.allLicensedUsersAssignmentTarget`, `#microsoft.graph.allDevicesAssignmentTarget`, `#microsoft.graph.exclusionGroupAssignmentTarget`, `#microsoft.graph.configurationManagerCollectionAssignmentTarget` |
 | **deviceAndAppManagementAssignmentFilterType** | Write | String | The type of filter of the target assignment i.e. Exclude or Include. Possible values are:none, include, exclude. | `none`, `include`, `exclude` |
 | **deviceAndAppManagementAssignmentFilterId** | Write | String | The Id of the filter for the target assignment. | |
+| **deviceAndAppManagementAssignmentFilterDisplayName** | Write | String | The display name of the filter for the target assignment. | |
 | **groupId** | Write | String | The group Id that is the target of the assignment. | |
 | **groupDisplayName** | Write | String | The group Display Name that is the target of the assignment. | |
 | **collectionId** | Write | String | The collection Id that is the target of the assignment.(ConfigMgr) | |

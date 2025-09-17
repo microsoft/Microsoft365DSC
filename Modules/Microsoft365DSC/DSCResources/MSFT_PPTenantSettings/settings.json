@@ -1,16 +1,40 @@
-﻿{
-    "resourceName": "PPTenantSettings",
-    "description": "",
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [],
-                "update": []
-            },
-            "application": {
-                "read": [],
-                "update": []
-            }
-        }
+{
+  "resourceName": "PPTenantSettings",
+  "description": "",
+  "permissions": {
+    "powerAppsService": {
+      "delegated": {
+        "read": [
+          {
+            "name": "User"
+          }
+        ],
+        "update": [
+          {
+            "name": "User"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "User"
+          }
+        ],
+        "update": [
+          {
+            "name": "User"
+          }
+        ]
+      }
+    },
+    "powerPlatform": {
+      "requiredRoles": [
+        "System Administrator"
+      ]
     }
+  },
+  "requiredModules": [
+    "MSCloudLoginAssistant"
+  ]
 }

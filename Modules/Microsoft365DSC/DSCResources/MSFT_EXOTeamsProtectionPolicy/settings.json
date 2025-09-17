@@ -1,36 +1,44 @@
-﻿{
-    "resourceName": "EXOTeamsProtectionPolicy",
-    "description": "",
-    "roles": {
+{
+  "resourceName": "EXOTeamsProtectionPolicy",
+  "description": "",
+  "roles": {
+    "read": [
+      "Security Reader"
+    ],
+    "update": [
+      "Security Administrator"
+    ]
+  },
+  "permissions": {
+    "Office 365 Exchange Online": {
+      "application": {
         "read": [
-            "Security Reader"
+          {
+            "name": "Exchange.ManageAsApp"
+          }
         ],
         "update": [
-            "Security Administrator"
+          {
+            "name": "Exchange.ManageAsApp"
+          }
         ]
+      }
     },
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [],
-                "update": []
-            },
-            "application": {
-                "read": [],
-                "update": []
-            }
-        },
-        "exchange": {
-            "requiredroles": [
-                "Compliance Management",
-                "Delegated Setup",
-                "Hygiene Management",
-                "Organization Management",
-                "View-Only Organization Management"
-            ],
-            "requiredrolegroups": [
-                "Organization Management"
-            ]
-        }
+    "exchange": {
+      "requiredroles": [
+        "Compliance Management",
+        "Delegated Setup",
+        "Hygiene Management",
+        "Organization Management",
+        "View-Only Organization Management"
+      ],
+      "requiredrolegroups": [
+        "Organization Management"
+      ]
     }
+  },
+  "requiredModules": [],
+  "supportedEnvironments": [
+    "Global"
+  ]
 }

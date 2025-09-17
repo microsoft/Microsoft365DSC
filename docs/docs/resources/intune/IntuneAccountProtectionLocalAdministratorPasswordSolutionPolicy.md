@@ -7,6 +7,7 @@
 | **Identity** | Write | String | Identity of the account protection local administrator password solution policy. | |
 | **DisplayName** | Key | String | Display name of the account protection local administrator password solution policy. | |
 | **Description** | Write | String | Description of the account protection local administrator password solution policy. | |
+| **RoleScopeTagIds** | Write | StringArray[] | List of Scope Tags for this policy. | |
 | **Assignments** | Write | MSFT_IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicyAssignments[] | Assignments of the account protection local administrator password solution policy. | |
 | **BackupDirectory** | Write | UInt32 | Configures which directory the local admin account password is backed up to. 0 - Disabled, 1 - Azure AD, 2 - AD | `0`, `1`, `2` |
 | **passwordagedays_aad** | Write | UInt32 | Configures the maximum password age of the managed local administrator account for Azure AD. Minimum - 7, Maximum - 365 | |
@@ -16,10 +17,16 @@
 | **AdPasswordEncryptionEnabled** | Write | Boolean | Configures whether the password is encrypted before being stored in Active Directory. | |
 | **AdPasswordEncryptionPrincipal** | Write | String | Configures the name or SID of a user or group that can decrypt the password stored in Active Directory. | |
 | **AdministratorAccountName** | Write | String | Configures the name of the managed local administrator account. | |
-| **PasswordComplexity** | Write | UInt32 | Configures the password complexity of the managed local administrator account. 1 - Large letters, 2 - Large + small letters, 3 - Large + small letters + numbers, 4 - Large + small letters + numbers + special characters, 5 - Large letters + small letters + numbers + special characters (improved readability) | `1`, `2`, `3`, `4`, `5` |
+| **PasswordComplexity** | Write | UInt32 | Configures the password complexity of the managed local administrator account. (1: Large letters, 2: Large letters + small letters, 3: Large letters + small letters + numbers, 4: Large letters + small letters + numbers + special characters, 5: Large letters + small letters + numbers + special characters (improved readability), 6: Passphrase (long words), 7: Passphrase (short words), 8: Passphrase (short words with unique prefixes)) | `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8` |
+| **PassphraseLength** | Write | SInt32 | Passphrase Length (Minimum 3, Maximum 10 characters) - Depends on PasswordComplexity | |
 | **PasswordLength** | Write | UInt32 | Configures the length of the password of the managed local administrator account. Minimum - 8, Maximum - 64 | |
-| **PostAuthenticationActions** | Write | UInt32 | Specifies the actions to take upon expiration of the configured grace period. 1 - Reset password, 3 - Reset password and log off, 5 - Reset password and restart | `1`, `3`, `5` |
+| **PostAuthenticationActions** | Write | UInt32 | Specifies the actions to take upon expiration of the configured grace period. (1: Reset password, 3: Reset the password and logoff the managed account, 5: Reset the password and reboot, 11: Reset the password, logoff the managed account, and terminate any remaining processes.) | `1`, `3`, `5`, `11` |
 | **PostAuthenticationResetDelay** | Write | UInt32 | Specifies the amount of time (in hours) to wait after an authentication before executing the specified post-authentication actions. Minimum - 0, Maximum - 24 | |
+| **AutomaticAccountManagementEnabled** | Write | String | Automatic Account Management Enabled (false: The target account will not be automatically managed, true: The target account will be automatically managed) | `true`, `false` |
+| **AutomaticAccountManagementTarget** | Write | String | Automatic Account Management Target - Depends on AutomaticAccountManagementEnabled (0: Manage the built-in administrator account, 1: Manage a new custom administrator account) | `0`, `1` |
+| **AutomaticAccountManagementRandomizeName** | Write | String | Automatic Account Management Randomize Name - Depends on AutomaticAccountManagementEnabled (false: The name of the target account will not use a random numeric suffix., true: The name of the target account will use a random numeric suffix.) | `true`, `false` |
+| **AutomaticAccountManagementNameOrPrefix** | Write | String | Automatic Account Management Name Or Prefix - Depends on AutomaticAccountManagementEnabled | |
+| **AutomaticAccountManagementEnableAccount** | Write | String | Automatic Account Management Enable Account - Depends on AutomaticAccountManagementEnabled (false: The target account will be disabled, true: The target account will be enabled) | `true`, `false` |
 | **Ensure** | Write | String | Present ensures the policy exists, absent ensures it is removed | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials of the Intune Admin | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
@@ -38,6 +45,7 @@
 | **dataType** | Write | String | The type of the target assignment. | `#microsoft.graph.groupAssignmentTarget`, `#microsoft.graph.allLicensedUsersAssignmentTarget`, `#microsoft.graph.allDevicesAssignmentTarget`, `#microsoft.graph.exclusionGroupAssignmentTarget`, `#microsoft.graph.configurationManagerCollectionAssignmentTarget` |
 | **deviceAndAppManagementAssignmentFilterType** | Write | String | The type of filter of the target assignment i.e. Exclude or Include. Possible values are:none, include, exclude. | `none`, `include`, `exclude` |
 | **deviceAndAppManagementAssignmentFilterId** | Write | String | The Id of the filter for the target assignment. | |
+| **deviceAndAppManagementAssignmentFilterDisplayName** | Write | String | The display name of the filter for the target assignment. | |
 | **groupId** | Write | String | The group Id that is the target of the assignment. | |
 | **groupDisplayName** | Write | String | The group Display Name that is the target of the assignment. | |
 | **collectionId** | Write | String | The collection Id that is the target of the assignment.(ConfigMgr) | |

@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_EXOOMEConfiguration'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -85,17 +87,18 @@ function Get-TargetResource
         [System.String[]]
         $AccessTokens
     )
+
     Write-Verbose -Message "Getting OME Configuration for $($Identity)"
 
     if ($Global:CurrentModeIsExport)
     {
-        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters `
             -SkipModuleReload $true
     }
     else
     {
-        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters
     }
 
@@ -150,7 +153,7 @@ function Get-TargetResource
                 CertificateThumbprint    = $CertificateThumbprint
                 CertificatePath          = $CertificatePath
                 CertificatePassword      = $CertificatePassword
-                Managedidentity          = $ManagedIdentity.IsPresent
+                ManagedIdentity          = $ManagedIdentity.IsPresent
                 TenantId                 = $TenantId
                 AccessTokens             = $AccessTokens
             }
@@ -272,21 +275,12 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration of OME Configuration for $($Identity)"
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+    $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
     $OMEConfigurations = Get-OMEConfiguration
     $OMEConfiguration = $OMEConfigurations | Where-Object -FilterScript { $_.Identity -eq $Identity }
-    $OMEConfigurationParams = [System.Collections.Hashtable]($PSBoundParameters)
-    $OMEConfigurationParams.Remove('Ensure') | Out-Null
-    $OMEConfigurationParams.Remove('Credential') | Out-Null
-    $OMEConfigurationParams.Remove('ApplicationId') | Out-Null
-    $OMEConfigurationParams.Remove('TenantId') | Out-Null
-    $OMEConfigurationParams.Remove('CertificateThumbprint') | Out-Null
-    $OMEConfigurationParams.Remove('CertificatePath') | Out-Null
-    $OMEConfigurationParams.Remove('CertificatePassword') | Out-Null
-    $OMEConfigurationParams.Remove('ManagedIdentity') | Out-Null
-    $OMEConfigurationParams.Remove('AccessTokens') | Out-Null
+    $OMEConfigurationParams = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
     #ExternalMailExpiryInDays cannot be updated in the default OME configuration
     if ('OME Configuration' -eq $Identity)
@@ -466,6 +460,7 @@ function Export-TargetResource
         [System.String[]]
         $AccessTokens
     )
+
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' -InboundParameters $PSBoundParameters -SkipModuleReload $true
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -517,7 +512,7 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
                 CertificatePassword   = $CertificatePassword
-                Managedidentity       = $ManagedIdentity.IsPresent
+                ManagedIdentity       = $ManagedIdentity.IsPresent
                 CertificatePath       = $CertificatePath
                 AccessTokens          = $AccessTokens
             }

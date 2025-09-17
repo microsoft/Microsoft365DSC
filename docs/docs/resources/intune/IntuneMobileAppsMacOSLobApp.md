@@ -42,6 +42,7 @@
 | --- | --- | --- | --- | --- |
 | **dataType** | Write | String | The type of the target assignment. | `#microsoft.graph.groupAssignmentTarget`, `#microsoft.graph.allLicensedUsersAssignmentTarget`, `#microsoft.graph.allDevicesAssignmentTarget`, `#microsoft.graph.exclusionGroupAssignmentTarget`, `#microsoft.graph.mobileAppAssignment` |
 | **deviceAndAppManagementAssignmentFilterId** | Write | String | The Id of the filter for the target assignment. | |
+| **deviceAndAppManagementAssignmentFilterDisplayName** | Write | String | The display name of the filter for the target assignment. | |
 | **deviceAndAppManagementAssignmentFilterType** | Write | String | The type of filter of the target assignment i.e. Exclude or Include. Possible values are: none, include, exclude. | `none`, `include`, `exclude` |
 | **groupId** | Write | String | The group Id that is the target of the assignment. | |
 | **groupDisplayName** | Write | String | The group Display Name that is the target of the assignment. | |
@@ -170,24 +171,22 @@ Configuration Example
             PrivacyInformationUrl = "";
             Publisher             = "Contoso";
             Assignments          = @(
-                    MSFT_DeviceManagementMobileAppAssignment {
-                        groupDisplayName = 'All devices'
-                        deviceAndAppManagementAssignmentFilterType = 'none'
-                        dataType = '#microsoft.graph.allDevicesAssignmentTarget'
-                        intent = 'required'
-                    }
-                    MSFT_DeviceManagementMobileAppAssignment{
-                        deviceAndAppManagementAssignmentFilterType = 'none'
-                        dataType = '#microsoft.graph.groupAssignmentTarget'
-                        groupId = '57b5e81c-85bb-4644-a4fd-33b03e451c89'
-                        intent = 'required'
-                    }
-                );
+                MSFT_DeviceManagementMobileAppAssignment{
+                    deviceAndAppManagementAssignmentFilterType = 'none'
+                    dataType = '#microsoft.graph.groupAssignmentTarget'
+                    groupId = '57b5e81c-85bb-4644-a4fd-33b03e451c89'
+                    intent = 'required'
+                }
+            );
             Categories           = @(
                 MSFT_DeviceManagementMobileAppCategory {
                     Id  = '1bff2652-03ec-4a48-941c-152e93736515'
                     DisplayName = 'Kajal 3'
-                });
+                }
+            );
+            ApplicationId         = $ApplicationId;
+            TenantId              = $TenantId;
+            CertificateThumbprint = $CertificateThumbprint;
         }
     }
 }
@@ -235,23 +234,22 @@ Configuration Example
             PrivacyInformationUrl = "";
             Publisher             = "Contoso";
             Assignments           = @(
-                    MSFT_DeviceManagementMobileAppAssignment {
-                        groupDisplayName = 'All devices'
-                        deviceAndAppManagementAssignmentFilterType = 'none'
-                        dataType = '#microsoft.graph.allDevicesAssignmentTarget'
-                        intent = 'required'
-                    }
-                    MSFT_DeviceManagementMobileAppAssignment {
-                        deviceAndAppManagementAssignmentFilterType = 'none'
-                        dataType = '#microsoft.graph.groupAssignmentTarget'
-                        groupId = '57b5e81c-85bb-4644-a4fd-33b03e451c89'
-                        intent = 'required'
-                    }
-                );
-            Categories           = @(MSFT_DeviceManagementMobileAppCategory {
+                MSFT_DeviceManagementMobileAppAssignment{
+                    deviceAndAppManagementAssignmentFilterType = 'none'
+                    dataType = '#microsoft.graph.groupAssignmentTarget'
+                    groupId = '57b5e81c-85bb-4644-a4fd-33b03e451c89'
+                    intent = 'required'
+                }
+            );
+            Categories           = @(
+                MSFT_DeviceManagementMobileAppCategory {
                     Id  = '1bff2652-03ec-4a48-941c-152e93736515'
                     DisplayName = 'Kajal 3'
-                });
+                }
+            );
+            ApplicationId         = $ApplicationId;
+            TenantId              = $TenantId;
+            CertificateThumbprint = $CertificateThumbprint;
         }
     }
 }
@@ -287,6 +285,9 @@ Configuration Example
             Id                    = "8d027f94-0682-431e-97c1-827d1879fa79";
             DisplayName           = "TeamsForBusinessInstaller";
             Ensure                = "Absent";
+            ApplicationId         = $ApplicationId;
+            TenantId              = $TenantId;
+            CertificateThumbprint = $CertificateThumbprint;
         }
     }
 }

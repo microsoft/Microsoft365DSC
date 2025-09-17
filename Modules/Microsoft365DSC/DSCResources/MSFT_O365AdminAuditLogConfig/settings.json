@@ -1,22 +1,27 @@
-﻿{
-    "resourceName": "O365AdminAuditLogConfig",
-    "description": "",
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [],
-                "update": []
-            },
-            "application": {
-                "read": [],
-                "update": []
-            }
-        },
-        "exchange": {
-            "requiredroles": [
-                "Audit Logs"
-            ],
-            "requiredrolegroups": []
-        }
+{
+  "resourceName": "O365AdminAuditLogConfig",
+  "description": "",
+  "permissions": {
+    "Office 365 Exchange Online": {
+      "application": {
+        "read": [
+          {
+            "name": "Exchange.ManageAsApp"
+          }
+        ],
+        "update": [
+          {
+            "name": "Exchange.ManageAsApp"
+          }
+        ]
+      }
+    },
+    "exchange": {
+      "requiredroles": [
+        "Audit Logs"
+      ],
+      "requiredrolegroups": []
     }
+  },
+  "requiredModules": []
 }

@@ -82,21 +82,21 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - Policy.ReadWrite.AuthenticationMethod, Policy.Read.All
+    - Policy.Read.AuthenticationMethod, Group.Read.All
 
 - **Update**
 
-    - Policy.ReadWrite.AuthenticationMethod, Policy.Read.All
+    - Policy.ReadWrite.AuthenticationMethod, Group.Read.All
 
 #### Application permissions
 
 - **Read**
 
-    - Policy.ReadWrite.AuthenticationMethod, Policy.Read.All
+    - Policy.Read.AuthenticationMethod, Group.Read.All
 
 - **Update**
 
-    - Policy.ReadWrite.AuthenticationMethod, Policy.Read.All
+    - Policy.ReadWrite.AuthenticationMethod, Group.Read.All
 
 ## Examples
 

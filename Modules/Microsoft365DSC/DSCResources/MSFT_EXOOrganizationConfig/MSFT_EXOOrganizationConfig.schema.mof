@@ -108,6 +108,7 @@ class MSFT_EXOOrganizationConfig : OMI_BaseResource
     [Write, Description("The WebPushNotificationsDisabled parameter specifies whether to enable or disable Web Push Notifications in Outlook on the Web. This feature provides web push notifications which appear on a user's desktop while the user is not using Outlook on the Web. This brings awareness of incoming messages while they are working elsewhere on their computer.")] Boolean WebPushNotificationsDisabled;
     [Write, Description("The WebSuggestedRepliesDisabled parameter specifies whether to enable or disable Suggested Replies in Outlook on the web. This feature provides suggested replies to emails so users can easily and quickly respond to messages.")] Boolean WebSuggestedRepliesDisabled;
     [Write, Description("The WorkspaceTenantEnabled parameter enables or disables workspace booking in the organization.")] Boolean WorkspaceTenantEnabled;
+    [Write, Description("This parameter is available only in the cloud-based service.")] Boolean RejectDirectSend;
     [Write, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
     [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;

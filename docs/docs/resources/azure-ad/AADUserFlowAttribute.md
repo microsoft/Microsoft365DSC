@@ -31,7 +31,7 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - IdentityUserFlow.Read.All, IdentityUserFlow.ReadWrite.All
+    - IdentityUserFlow.Read.All
 
 - **Update**
 
@@ -41,11 +41,11 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - None
+    - IdentityUserFlow.Read.All
 
 - **Update**
 
-    - None
+    - IdentityUserFlow.ReadWrite.All
 
 ## Examples
 

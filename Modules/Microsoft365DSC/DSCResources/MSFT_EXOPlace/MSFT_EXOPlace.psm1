@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_EXOPlace'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -134,17 +136,18 @@ function Get-TargetResource
         [System.String[]]
         $AccessTokens
     )
+
     Write-Verbose -Message "Getting configuration for Place for $($Identity)"
 
     if ($Global:CurrentModeIsExport)
     {
-        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters `
             -SkipModuleReload $true
     }
     else
     {
-        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters
     }
 
@@ -217,7 +220,7 @@ function Get-TargetResource
             CertificateThumbprint  = $CertificateThumbprint
             CertificatePath        = $CertificatePath
             CertificatePassword    = $CertificatePassword
-            Managedidentity        = $ManagedIdentity.IsPresent
+            ManagedIdentity        = $ManagedIdentity.IsPresent
             TenantId               = $TenantId
             AccessTokens           = $AccessTokens
         }
@@ -384,25 +387,17 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration of Place for $($Identity)"
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+    $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
-    $PSBoundParameters.Remove('Ensure') | Out-Null
-    $PSBoundParameters.Remove('Credential') | Out-Null
-    $PSBoundParameters.Remove('ApplicationId') | Out-Null
-    $PSBoundParameters.Remove('TenantId') | Out-Null
-    $PSBoundParameters.Remove('CertificateThumbprint') | Out-Null
-    $PSBoundParameters.Remove('CertificatePath') | Out-Null
-    $PSBoundParameters.Remove('CertificatePassword') | Out-Null
-    $PSBoundParameters.Remove('ManagedIdentity') | Out-Null
-    $PSBoundParameters.Remove('AccessTokens') | Out-Null
+    $updateParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
     if ([System.String]::IsNullOrEmpty($ParentId) -and $null -ne $ParentType)
     {
         Write-Verbose -Message 'ParentId is $null, removing ParentType.'
-        $PSBoundParameters.Remove('ParentType') | Out-Null
+        $updateParameters.Remove('ParentType') | Out-Null
     }
-    Set-Place @PSBoundParameters
+    Set-Place @updateParameters
 }
 
 function Test-TargetResource
@@ -610,6 +605,7 @@ function Export-TargetResource
         [System.String[]]
         $AccessTokens
     )
+
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
         -SkipModuleReload $true
@@ -656,7 +652,7 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
                 CertificatePassword   = $CertificatePassword
-                Managedidentity       = $ManagedIdentity.IsPresent
+                ManagedIdentity       = $ManagedIdentity.IsPresent
                 CertificatePath       = $CertificatePath
                 AccessTokens          = $AccessTokens
             }

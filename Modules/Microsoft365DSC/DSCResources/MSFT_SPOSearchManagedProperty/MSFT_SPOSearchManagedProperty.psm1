@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_SPOSearchManagedProperty'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -127,31 +129,31 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration for Managed Property instance $Name"
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
-        -InboundParameters $PSBoundParameters -Url (Get-MSCloudLoginConnectionProfile -Workload PnP).AdminUrl
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullReturn = @{
-        Name   = $Name
-        Type   = $Type
-        Ensure = 'Absent'
-    }
-
     try
     {
-        if ($null -eq $Script:RecentMPExtract)
+        if (-not $Script:exportMode)
         {
+            $null = New-M365DSCConnection -Workload 'PnP' `
+                -InboundParameters $PSBoundParameters `
+                -Url (Get-MSCloudLoginConnectionProfile -Workload PnP).AdminUrl
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullReturn = @{
+                Name   = $Name
+                Type   = $Type
+                Ensure = 'Absent'
+            }
             $Script:RecentMPExtract = [Xml] (Get-PnPSearchConfiguration -Scope Subscription)
         }
         $property = $Script:RecentMPExtract.SearchConfigurationSettings.SearchSchemaConfigurationSettings.ManagedProperties.dictionary.KeyValueOfstringManagedPropertyInfoy6h3NzC8 `
@@ -227,7 +229,7 @@ function Get-TargetResource
             CertificatePassword         = $CertificatePassword
             CertificatePath             = $CertificatePath
             CertificateThumbprint       = $CertificateThumbprint
-            Managedidentity             = $ManagedIdentity.IsPresent
+            ManagedIdentity             = $ManagedIdentity.IsPresent
             Ensure                      = 'Present'
             AccessTokens                = $AccessTokens
         }
@@ -913,7 +915,8 @@ function Export-TargetResource
     try
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
-            -InboundParameters $PSBoundParameters -Url (Get-MSCloudLoginConnectionProfile -Workload PnP).AdminUrl
+            -InboundParameters $PSBoundParameters `
+            -Url (Get-MSCloudLoginConnectionProfile -Workload PnP).AdminUrl
 
         #Ensure the proper dependencies are installed in the current environment.
         Confirm-M365DSCDependencies
@@ -929,6 +932,8 @@ function Export-TargetResource
 
         $SearchConfig = [Xml] (Get-PnPSearchConfiguration -Scope Subscription -ErrorAction Stop)
         [array]$properties = $SearchConfig.SearchConfigurationSettings.SearchSchemaConfigurationSettings.ManagedProperties.dictionary.KeyValueOfstringManagedPropertyInfoy6h3NzC8
+        $Script:RecentMPExtract = $SearchConfig
+        $Script:exportMode = $true
 
         $dscContent = ''
         $i = 1
@@ -957,7 +962,7 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
-                Managedidentity       = $ManagedIdentity.IsPresent
+                ManagedIdentity       = $ManagedIdentity.IsPresent
                 CertificatePath       = $CertificatePath
                 CertificatePassword   = $CertificatePassword
                 AccessTokens          = $AccessTokens
@@ -1001,3 +1006,4 @@ function Export-TargetResource
 }
 
 Export-ModuleMember -Function *-TargetResource
+

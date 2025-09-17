@@ -32,30 +32,6 @@ This resource configures the Tenant Isolation settings for a Power Platform Tena
 
 ## Permissions
 
-### Microsoft Graph
-
-To authenticate with the Microsoft Graph API, this resource required the following permissions:
-
-#### Delegated permissions
-
-- **Read**
-
-    - None
-
-- **Update**
-
-    - None
-
-#### Application permissions
-
-- **Read**
-
-    - None
-
-- **Update**
-
-    - None
-
 ## Examples
 
 ### Example 1

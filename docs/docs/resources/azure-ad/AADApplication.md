@@ -7,7 +7,7 @@
 | **DisplayName** | Key | String | DisplayName of the app | |
 | **ObjectId** | Write | String | ObjectID of the app. | |
 | **AppId** | Write | String | AppId for the app. | |
-| **AvailableToOtherTenants** | Write | Boolean | Indicates whether this application is available in other tenants. | |
+| **AvailableToOtherTenants** | Write | Boolean | DEPRECATED: Indicates whether this application is available in other tenants. | |
 | **Description** | Write | String | A free text field to provide a description of the application object to end users. The maximum allowed size is 1024 characters. | |
 | **GroupMembershipClaims** | Write | String | A bitmask that configures the groups claim issued in a user or OAuth 2.0 access token that the application expects. | |
 | **Homepage** | Write | String | The URL to the application's homepage. | |
@@ -28,6 +28,7 @@
 | **ApplicationTemplateId** | Write | String | Identifier of the associated Application Template. | |
 | **PublicClientRedirectUris** | Write | StringArray[] | List of public clients redirect URIs. | |
 | **Spa** | Write | MSFT_AADApplicationSpa | List of single page application settings. | |
+| **SignInAudience** | Write | String | Specifies the Microsoft accounts that are supported for the current application. The possible values are: AzureADMyOrg (default), AzureADMultipleOrgs, AzureADandPersonalMicrosoftAccount, and PersonalMicrosoftAccount | `AzureADandPersonalMicrosoftAccount`, `AzureADMultipleOrgs`, `AzureADMyOrg`, `PersonalMicrosoftAccount` |
 | **Ensure** | Write | String | Specify if the Azure AD App should exist or not. | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials for the Microsoft Graph delegated permissions. | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
@@ -170,9 +171,9 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **BlockAzureADGraphAccess** | Write | String | If false, allows the app to have extended access to Azure AD Graph until June 30, 2025 when Azure AD Graph is fully retired. For more information on Azure AD retirement updates, see June 2024 update on Azure AD Graph API retirement. | |
-| **RemoveUnverifiedEmailClaim** | Write | String | If true, removes the email claim from tokens sent to an application when the email address's domain can't be verified. | |
-| **RequireClientServicePrincipal** | Write | String | If true, requires multitenant applications to have a service principal in the resource tenant as part of authorization checks before they're granted access tokens. This property is only modifiable for multitenant resource applications that rely on access from clients without a service principal and had this behavior as set to false by Microsoft. Tenant administrators should respond to security advisories sent through Azure Health Service events and the Microsoft 365 message center. | |
+| **BlockAzureADGraphAccess** | Write | String | If false, allows the app to have extended access to Azure AD Graph until June 30, 2025 when Azure AD Graph is fully retired. For more information on Azure AD retirement updates, see June 2024 update on Azure AD Graph API retirement. Use 'Null' to ensure the value is not configured. | `True`, `False`, `Null` |
+| **RemoveUnverifiedEmailClaim** | Write | String | If true, removes the email claim from tokens sent to an application when the email address's domain can't be verified. Use 'Null' to ensure the value is not configured. | `True`, `False`, `Null` |
+| **RequireClientServicePrincipal** | Write | String | DEPRECATED | |
 
 ### MSFT_MicrosoftGraphKeyCredential
 
@@ -241,7 +242,7 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Update**
 
-    - Application.Read.All, Application.ReadWrite.All, User.Read.All
+    - Application.ReadWrite.All, User.Read.All
 
 #### Application permissions
 
@@ -251,7 +252,7 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Update**
 
-    - Application.Read.All, Application.ReadWrite.All, User.Read.All
+    - Application.ReadWrite.All, User.Read.All
 
 ## Examples
 
@@ -351,6 +352,11 @@ Configuration Example
         AADApplication 'AADApp1'
         {
             DisplayName               = "AppDisplayName"
+            AuthenticationBehaviors = MSFT_MicrosoftGraphauthenticationBehaviors # To make sure these parameters are not configured
+                {
+                    BlockAzureADGraphAccess       = 'Null'
+                    RemoveUnverifiedEmailClaim    = 'Null'
+                }
             AvailableToOtherTenants   = $true # Updated Property
             Description               = "Application Description"
             GroupMembershipClaims     = "None"

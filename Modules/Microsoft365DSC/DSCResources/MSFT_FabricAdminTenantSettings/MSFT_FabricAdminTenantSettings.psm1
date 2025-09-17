@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_FabricAdminTenantSettings'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -566,8 +568,10 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    New-M365DSCConnection -Workload 'Fabric' `
-        -InboundParameters $PSBoundParameters | Out-Null
+    Write-Verbose -Message 'Getting configuration of Fabric Admin Tenant Settings'
+
+    $null = New-M365DSCConnection -Workload 'Fabric' `
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -740,7 +744,7 @@ function Get-TargetResource
             ApplicationSecret                                                     = $ApplicationSecret
             AccessTokens                                                          = $AccessTokens
         }
-        return [System.Collections.Hashtable] $results
+        return $results
     }
     catch
     {
@@ -1905,7 +1909,8 @@ function Test-TargetResource
     #endregion
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
-    $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
+    $ValuesToCheck = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
 
@@ -2012,6 +2017,7 @@ function Export-TargetResource
         $Results = Get-TargetResource @Params
 
         $newResults = ([Hashtable]$Results).Clone()
+        $noEscape = @()
         foreach ($key in @($Results.Keys))
         {
             if ($null -ne $Results.$key -and $key -notin $params.Keys)
@@ -2044,7 +2050,8 @@ function Export-TargetResource
                     -ComplexTypeMapping $complexTypeMapping
                 if (-not [String]::IsNullOrEmpty($complexTypeStringResult))
                 {
-                    $Results.$key = $complexTypeStringResult
+                    $newResults.$key = $complexTypeStringResult
+                    $noEscape += $key
                 }
             }
         }
@@ -2053,7 +2060,8 @@ function Export-TargetResource
             -ConnectionMode $ConnectionMode `
             -ModulePath $PSScriptRoot `
             -Results $newResults `
-            -Credential $Credential
+            -Credential $Credential `
+            -NoEscape $noEscape
 
         $dscContent += $currentDSCBlock
         Save-M365DSCPartialExport -Content $currentDSCBlock `

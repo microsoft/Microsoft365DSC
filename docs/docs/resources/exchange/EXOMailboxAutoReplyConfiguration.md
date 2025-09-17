@@ -19,7 +19,7 @@
 | **InternalMessage** | Write | String | The InternalMessage parameter specifies the Automatic Replies message that's sent to internal senders or senders within the organization. If the value contains spaces, enclose the value in quotation marks. | |
 | **OOFEventSubject** | Write | String | The OOFEventSubject parameter specifies the subject for the calendar event that's automatically created when the CreateOOFEvent parameter is set to $true. | |
 | **StartTime** | Write | String | The StartTime parameter specifies the start date and time that Automatic Replies are sent for the specified mailbox. You use this parameter only when the AutoReplyState parameter is set to Scheduled, and the value of this parameter is meaningful only when AutoReplyState is Scheduled. | |
-| **Ensure** | Write | String | Represents the existance of the instance. This must be set to 'Present' | `Present` |
+| **Ensure** | Write | String | Represents the existence of the instance. This must be set to 'Present' | `Present` |
 | **Credential** | Write | PSCredential | Credentials of the Exchange Global Admin | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
 | **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. | |

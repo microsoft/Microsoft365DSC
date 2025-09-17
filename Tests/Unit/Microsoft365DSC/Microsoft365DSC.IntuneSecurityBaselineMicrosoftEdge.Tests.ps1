@@ -49,7 +49,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Name            = 'My Test'
                     RoleScopeTagIds = @("FakeStringValue")
                     TemplateReference = @{
-                        TemplateId = 'c66347b7-8325-4954-a235-3bf2233dfbfd_2'
+                        TemplateId = 'c66347b7-8325-4954-a235-3bf2233dfbfd_3'
                     }
                 }
             }

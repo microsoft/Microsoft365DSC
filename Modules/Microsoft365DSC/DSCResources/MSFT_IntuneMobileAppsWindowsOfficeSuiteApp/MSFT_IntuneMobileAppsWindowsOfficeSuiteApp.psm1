@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_IntuneMobileAppsWindowsOfficeSuiteApp'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -92,7 +94,7 @@ function Get-TargetResource
         $UpdateVersion,
 
         [Parameter()]
-        [System.Byte[]]
+        [System.String]
         $OfficeConfigurationXml,
 
         [Parameter()]
@@ -147,8 +149,8 @@ function Get-TargetResource
 
     try
     {
-        New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters | Out-Null
+        $null = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+            -InboundParameters $PSBoundParameters
 
         #Ensure the proper dependencies are installed in the current environment.
         Confirm-M365DSCDependencies
@@ -282,7 +284,7 @@ function Get-TargetResource
             $resultAssignments += $convertedAssignments
         }
         $results.Add('Assignments', $resultAssignments)
-        return [System.Collections.Hashtable] $results
+        return $results
     }
     catch
     {
@@ -390,7 +392,7 @@ function Set-TargetResource
         $UpdateVersion,
 
         [Parameter()]
-        [System.Byte[]]
+        [System.String]
         $OfficeConfigurationXml,
 
         [Parameter()]
@@ -684,7 +686,7 @@ function Test-TargetResource
         $UpdateVersion,
 
         [Parameter()]
-        [System.Byte[]]
+        [System.String]
         $OfficeConfigurationXml,
 
         [Parameter()]
@@ -750,7 +752,7 @@ function Test-TargetResource
     Write-Verbose -Message "Testing configuration of the Intune Windows Suite App with Id {$Id} and DisplayName {$DisplayName}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
-    $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
+    $ValuesToCheck = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
     $testResult = $true
 
     #Compare Cim instances
@@ -780,7 +782,6 @@ function Test-TargetResource
 
     $ValuesToCheck.Remove('Id') | Out-Null
     $ValuesToCheck.Remove('OfficePlatformArchitecture') | Out-Null # Cannot be changed after creation
-    $ValuesToCheck = Remove-M365DSCAuthenticationParameter -BoundParameters $ValuesToCheck
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
@@ -855,8 +856,18 @@ function Export-TargetResource
     try
     {
         $Script:ExportMode = $true
+        $baseFilter = "isof('microsoft.graph.officeSuiteApp')"
+        if (-not [String]::IsNullOrEmpty($Filter))
+        {
+            $Filter = "($Filter) and ($baseFilter)"
+        }
+        else
+        {
+            $Filter = $baseFilter
+        }
         [array] $getValue = Get-MgBetaDeviceAppManagementMobileApp `
-            -Filter "isof('microsoft.graph.officeSuiteApp')" `
+            -All `
+            -Filter $Filter `
             -ErrorAction Stop
 
         $i = 1

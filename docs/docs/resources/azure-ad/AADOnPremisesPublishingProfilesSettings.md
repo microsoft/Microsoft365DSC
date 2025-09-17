@@ -29,11 +29,11 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - None
+    - Directory.Read.All
 
 - **Update**
 
-    - None
+    - Directory.ReadWrite.All
 
 #### Application permissions
 

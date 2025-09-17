@@ -9,7 +9,7 @@
 | **ExceptIfSentTo** | Write | StringArray[] | The ExceptIfSentTo parameter specifies an exception that looks for recipients in messages. You can use any value that uniquely identifies the recipient. | |
 | **ExceptIfSentToMemberOf** | Write | StringArray[] | The ExceptIfSentToMemberOf parameter specifies an exception that looks for messages sent to members of groups. You can use any value that uniquely identifies the group. | |
 | **Identity** | Key | String | The Identity parameter specifies the rule that you want to view. You can use any value that uniquely identifies the rule.  | |
-| **State** | Write | String | This parameter defin if the rule is enabled or disabled | |
+| **State** | Write | String | This parameter define if the rule is enabled or disabled | |
 | **Name** | Write | String | The Name parameter specifies a unique name for the rule. The maximum length is 64 characters. | |
 | **Priority** | Write | UInt32 | The Priority parameter specifies a priority value for the rule that determines the order of rule processing. A lower integer value indicates a higher priority, the value 0 is the highest priority, and rules can't have the same priority value. | |
 | **RecipientDomainIs** | Write | StringArray[] | The RecipientDomainIs parameter specifies a condition that looks for recipients with email addresses in the specified domains. You can specify multiple domains separated by commas. | |

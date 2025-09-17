@@ -103,21 +103,21 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - None
+    - Directory.Read.All, RoleAssignmentSchedule.Read.Directory
 
 - **Update**
 
-    - None
+    - Directory.Read.All, RoleAssignmentSchedule.ReadWrite.Directory
 
 #### Application permissions
 
 - **Read**
 
-    - RoleAssignmentSchedule.Read.Directory
+    - Directory.Read.All, RoleAssignmentSchedule.Read.Directory
 
 - **Update**
 
-    - RoleAssignmentSchedule.ReadWrite.Directory
+    - Directory.Read.All, RoleAssignmentSchedule.ReadWrite.Directory
 
 ## Examples
 

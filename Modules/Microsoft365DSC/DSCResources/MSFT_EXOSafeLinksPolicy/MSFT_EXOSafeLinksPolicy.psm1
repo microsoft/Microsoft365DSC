@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_EXOSafeLinksPolicy'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -106,13 +108,13 @@ function Get-TargetResource
 
     if ($Global:CurrentModeIsExport)
     {
-        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters `
             -SkipModuleReload $true
     }
     else
     {
-        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters
     }
     #Ensure the proper dependencies are installed in the current environment.
@@ -172,7 +174,7 @@ function Get-TargetResource
                 CertificateThumbprint      = $CertificateThumbprint
                 CertificatePath            = $CertificatePath
                 CertificatePassword        = $CertificatePassword
-                Managedidentity            = $ManagedIdentity.IsPresent
+                ManagedIdentity            = $ManagedIdentity.IsPresent
                 TenantId                   = $TenantId
                 AccessTokens               = $AccessTokens
             }
@@ -310,22 +312,13 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+    $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
     $SafeLinksPolicies = Get-SafeLinksPolicy
 
     $SafeLinksPolicy = $SafeLinksPolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }
-    $SafeLinksPolicyParams = [System.Collections.Hashtable]($PSBoundParameters)
-    $SafeLinksPolicyParams.Remove('Ensure') | Out-Null
-    $SafeLinksPolicyParams.Remove('Credential') | Out-Null
-    $SafeLinksPolicyParams.Remove('ApplicationId') | Out-Null
-    $SafeLinksPolicyParams.Remove('TenantId') | Out-Null
-    $SafeLinksPolicyParams.Remove('CertificateThumbprint') | Out-Null
-    $SafeLinksPolicyParams.Remove('CertificatePath') | Out-Null
-    $SafeLinksPolicyParams.Remove('CertificatePassword') | Out-Null
-    $SafeLinksPolicyParams.Remove('ManagedIdentity') | Out-Null
-    $SafeLinksPolicyParams.Remove('AccessTokens') | Out-Null
+    $SafeLinksPolicyParams = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
     if (('Present' -eq $Ensure ) -and ($null -eq $SafeLinksPolicy))
     {
@@ -524,6 +517,7 @@ function Export-TargetResource
         [System.String[]]
         $AccessTokens
     )
+
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
         -SkipModuleReload $true
@@ -572,7 +566,7 @@ function Export-TargetResource
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                     CertificatePassword   = $CertificatePassword
-                    Managedidentity       = $ManagedIdentity.IsPresent
+                    ManagedIdentity       = $ManagedIdentity.IsPresent
                     CertificatePath       = $CertificatePath
                     AccessTokens          = $AccessTokens
                 }

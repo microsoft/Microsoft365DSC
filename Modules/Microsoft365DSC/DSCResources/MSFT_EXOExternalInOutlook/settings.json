@@ -1,32 +1,41 @@
 {
-    "resourceName": "EXOExternalInOutlook",
-    "description": "This resource configures an .",
-    "roles": {
+  "resourceName": "EXOExternalInOutlook",
+  "description": "This resource configures an .",
+  "roles": {
+    "read": [
+      "Global Reader"
+    ],
+    "update": [
+      "Exchange Administrator"
+    ]
+  },
+  "permissions": {
+    "Office 365 Exchange Online": {
+      "application": {
         "read": [
-            "Global Reader"
+          {
+            "name": "Exchange.ManageAsApp"
+          }
         ],
         "update": [
-            "Exchange Administrator"
+          {
+            "name": "Exchange.ManageAsApp"
+          }
         ]
+      }
     },
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [],
-                "update": []
-            },
-            "application": {
-                "read": [],
-                "update": []
-            }
-        },
-        "exchange": {
-            "requiredroles": [
-                "O365SupportViewConfig",
-                "OrganizationConfiguration",
-                "ViewOnlyConfiguration"
-            ],
-            "requiredrolegroups": []
-        }
+    "exchange": {
+      "requiredroles": [
+        "O365SupportViewConfig",
+        "OrganizationConfiguration",
+        "ViewOnlyConfiguration"
+      ],
+      "requiredrolegroups": []
     }
+  },
+  "requiredModules": [],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ]
 }

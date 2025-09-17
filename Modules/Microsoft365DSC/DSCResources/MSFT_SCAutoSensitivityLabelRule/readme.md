@@ -2,5 +2,4 @@
 
 ## Description
 
-This resource configures a Auto Sensitivity Label
-Rule in Security and Compliance Center.
+This resource configures an Auto Sensitivity Label Rule in Purview.

@@ -7,6 +7,7 @@
 | **DisplayName** | Key | String | DisplayName of the Assignment Filter. | |
 | **Identity** | Write | String | Key of the Assignment Filter. | |
 | **Description** | Write | String | Description of the Assignment Filter. | |
+| **AssignmentFilterManagementType** | Write | String | Indicates filter is applied to either 'devices' or 'apps' management type. Default is 'devices'. | `apps`, `devices` |
 | **Platform** | Write | String | Platform type of the devices on which the Assignment Filter will be applicable. | `android`, `androidForWork`, `iOS`, `macOS`, `windowsPhone81`, `windows81AndLater`, `windows10AndLater`, `androidWorkProfile`, `unknown`, `androidAOSP`, `androidMobileApplicationManagement`, `iOSMobileApplicationManagement`, `unknownFutureValue` |
 | **Rule** | Write | String | Rule definition of the Assignment Filter. | |
 | **Ensure** | Write | String | Present ensures the policy exists, absent ensures it is removed | `Present`, `Absent` |
@@ -23,6 +24,8 @@
 
 This resource represents the properties of the Intune Assignment Filter.
 For more information: https://docs.microsoft.com/en-us/graph/api/resources/intune-policyset-deviceandappmanagementassignmentfilter?view=graph-rest-beta
+
+**Please note:** After creating a filter, it is not possible to update the `AssignmentFilterManagementType` property. You have to remove and recreate the filter to update it.
 
 
 ## Permissions
@@ -81,6 +84,7 @@ Configuration Example
         {
             DisplayName = 'Test Device Filter'
             Description = 'This is a new Filter'
+            AssignmentFilterManagementType = 'devices'
             Platform    = 'windows10AndLater'
             Rule        = "(device.manufacturer -ne `"Microsoft Corporation`")"
             Ensure      = 'Present'
@@ -120,6 +124,7 @@ Configuration Example
         {
             DisplayName = 'Test Device Filter'
             Description = 'This is a new Filter'
+            AssignmentFilterManagementType = 'devices'
             Platform    = 'windows10AndLater'
             Rule        = "(device.manufacturer -ne `"Apple`")" # Updated Property
             Ensure      = 'Present'

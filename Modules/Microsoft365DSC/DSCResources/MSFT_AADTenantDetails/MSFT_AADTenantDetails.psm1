@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_AADTenantDetails'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -54,7 +56,8 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message 'Getting configuration of AzureAD Tenant Details'
-    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+
+    $null = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -169,7 +172,8 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message 'Setting configuration of AzureAD Tenant Details'
-    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+
+    $null = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -185,35 +189,10 @@ function Set-TargetResource
     #endregion
 
 
-    $currentParameters = $PSBoundParameters
+    $currentParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
     $currentParameters.Remove('IsSingleInstance') | Out-Null
-
-    if ($currentParameters.ContainsKey('Credential'))
-    {
-        $currentParameters.Remove('Credential') | Out-Null
-    }
-    if ($currentParameters.ContainsKey('ApplicationId'))
-    {
-        $currentParameters.Remove('ApplicationId') | Out-Null
-    }
-    if ($currentParameters.ContainsKey('ApplicationSecret'))
-    {
-        $currentParameters.Remove('ApplicationSecret') | Out-Null
-    }
-    if ($currentParameters.ContainsKey('TenantId'))
-    {
-        $currentParameters.Remove('TenantId') | Out-Null
-    }
-    if ($currentParameters.ContainsKey('CertificateThumbprint'))
-    {
-        $currentParameters.Remove('CertificateThumbprint') | Out-Null
-    }
-    if ($currentParameters.ContainsKey('ManagedIdentity'))
-    {
-        $currentParameters.Remove('ManagedIdentity') | Out-Null
-    }
-    $currentParameters.Remove('AccessTokens') | Out-Null
     $currentParameters.Add('OrganizationId', $(Get-MgBetaOrganization).Id)
+
     try
     {
         Write-Verbose -Message 'Calling Update-MGBetaOrganization with parameters:'
@@ -291,7 +270,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $ResourceName
+                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 
@@ -329,6 +308,7 @@ function Export-TargetResource
         [System.String[]]
         $AccessTokens
     )
+
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
@@ -405,4 +385,3 @@ function Export-TargetResource
 }
 
 Export-ModuleMember -Function *-TargetResource
-

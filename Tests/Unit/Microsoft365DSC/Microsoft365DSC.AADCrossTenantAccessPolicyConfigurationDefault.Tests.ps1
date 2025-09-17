@@ -100,7 +100,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         UsersAndGroups = (New-CimInstance -ClassName MSFT_AADCrossTenantAccessPolicyTargetConfiguration -Property @{
                             AccessType = 'allowed'
                             Targets    = [CimInstance[]]@((New-CimInstance -ClassName MSFT_AADCrossTenantAccessPolicyTarget -Property @{
-                                    Target     = 'AllUsers'
+                                    Target     = 'John.Smith@contoso.com'
                                     TargetType = 'user'
                                 } -ClientOnly))
                         } -ClientOnly)
@@ -126,7 +126,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 accessType = 'allowed'
                                 targets    = @(
                                     @{
-                                        target     = 'AllUsers'
+                                        target     = 'John.Smith@contoso.com'
                                         targetType = 'user'
                                     }
                                 )
@@ -283,7 +283,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         }
                         B2BDirectConnectInbound  = @{
                             applications = @{
-                                accessType = 'blocked'
+                                accessType = 'allowed'
                                 targets    = @(
                                     @{
                                         target     = 'AllApplications'

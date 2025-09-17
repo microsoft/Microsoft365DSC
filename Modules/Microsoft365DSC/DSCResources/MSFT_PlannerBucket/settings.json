@@ -1,32 +1,37 @@
-﻿{
-    "resourceName": "PlannerBucket",
-    "description": "",
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [
-                    {
-                        "name": "Tasks.Read"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Tasks.ReadWrite"
-                    }
-                ]
-            },
-            "application": {
-                "read": [
-                    {
-                        "name": "Tasks.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Tasks.ReadWrite.All"
-                    }
-                ]
-            }
-        }
+{
+  "resourceName": "PlannerBucket",
+  "description": "",
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "Tasks.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Tasks.ReadWrite.All"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "Tasks.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Tasks.ReadWrite.All"
+          }
+        ]
+      }
     }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Groups",
+    "Microsoft.Graph.Planner"
+  ]
 }

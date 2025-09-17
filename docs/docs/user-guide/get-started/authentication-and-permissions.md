@@ -11,7 +11,7 @@ Currently, each Microsoft 365 workload can support a different combination of au
 
 **Important**: The recommendation is to use Service Principal whenever possible because:
 
-- Service principals offer the most granular levels of security and do not introduce the risk of having to send high privileged credentials across the wire to authenticate.
+- Service Principals offer the most granular levels of security and do not introduce the risk of having to send high privileged credentials across the wire to authenticate.
 - Since Desired State Configuration is an unattended process, the use of Multi-Factor Authentication for user credentials is not supported by Microsoft365DSC.
   - ***Note:*** The only exception here is creating an Export of an existing tenant. Most often this is an interactive process where the ask for a second factor is possible.
 
@@ -48,15 +48,75 @@ It is also important to note that we have added logic inside of the commands tha
   <figcaption>Export only exports resources that support the used authentication method</figcaption>
 </figure>
 
+## Azure DevOps
+
+In order to authenticate to Azure DevOps using a Service Principal (Certificate Thumbprint or Application Secret), you need to add it as a user to the DevOps organization. Go to your DevOps organization, select **Organization Settings** from the bottom left, and then go to **Users**. There, click **Add users** to add your Service Principal to the organization.
+
+![ADOAddServicePrincipalToOrganization](../../Images/ADOAddServicePrincipalToOrganization.png)
+
+## Azure Permissions
+
+Coming soon!
+
+## Defender Permissions
+
+The Defender resources use two different authentication sources: On one side, they use permissions from the `WindowsDefenderATP` API to authenticate against the Microsoft Defender for Cloud REST API. On the other side, they use an Azure RBAC based approach to fetch information about the current security plans.
+
+Assigning the API permissions is done in the App Registration Permission blade. However, for Azure RBAC, you need to assign an Azure Role to the Service Principal:
+
+```powershell
+# Connect to Azure with an owner account
+Connect-AzAccount
+
+# Assign the required role according to the resource definition
+New-AzRoleAssignment -RoleDefinitionName "<Role Name>" -ApplicationId "<Application Id>" -Scope /
+```
+
+Wait for a couple of minutes for RBAC to take effect and then you're ready for managing the Defender workload with a Service Principal.
+
+**Note**: If you receive an error during the export, make sure you have the appropriate license for accessing Defender for Cloud.
+
+## Fabric Permissions
+
+In order to authenticate to Fabric using a Service Principal (Certificate Thumbprint or Application Secret), you need to create a security group, add the Service Principal as a member and assign the **Global Reader** role to the group.
+
+![Permissions For Fabric](../../Images/PermissionsForFabric.png)
+
+After creating the security group with the Service Principal as a member and assigning the role to the group, you have to allow Service Principal access to Read-Only APIs in the [Fabric admin portal > Tenant Settings](https://app.fabric.microsoft.com/admin-portal/tenantSettings). On the page, scroll down to **Admin API settings** and expand the **Service Principals can access read-only admin APIs** option. Toggle the option to **Enabled** and specify the Entra security group which you previously configured with the role and your Service Principal. Click **Apply** to finish the configuration.
+
+![Fabric Admin Tenant Settings - SPN Read-Only Admin APIs](../../Images/FabricSpnReadOnlyAccess.png)
+
+You now can export the Fabric resources.
+
 ## Power Apps Permissions
 
-In order to authenticate to Power Apps using a Service Principal (Certificate Thumbprint or ApplicationSecret), you will first need to define your app as a Power App Management app. For details on how to proceed, please refer to the following link: <a href="https://learn.microsoft.com/en-us/power-platform/admin/powershell-create-service-principal#registering-an-admin-management-application">https://learn.microsoft.com/en-us/power-platform/admin/powershell-create-service-principal#registering-an-admin-management-application</a>
+In order to authenticate to Power Apps using a Service Principal (Certificate Thumbprint or Application Secret), you will first need to define your app as a Power App Management app. For details on how to proceed, please refer to the following link: <a href="https://learn.microsoft.com/en-us/power-platform/admin/powershell-create-service-principal#registering-an-admin-management-application">https://learn.microsoft.com/en-us/power-platform/admin/powershell-create-service-principal#registering-an-admin-management-application</a>
 
-Additionally, to be able to authenticate using a Certificate Thumbprint, the underlying Power Apps PowerShell module used by Microsoft365DSC requires the certificate's private key (.pfx) to be registered under the current user's certificate store at <strong>Cert:\CurrentUser\My\</strong>. Omitting to register the private key will result in Microsoft365DSC throwing the following error when trying to authenticate to the Power Platform:
+Additionally, to be able to authenticate using a Certificate Thumbprint, the underlying Power Apps PowerShell module used by Microsoft365DSC requires the certificate's private key (.pfx) to be registered under the current user's certificate store at **Cert:\CurrentUser\My\\**. Omitting to register the private key will result in Microsoft365DSC throwing the following error when trying to authenticate to the Power Platform:
 
 ```powershell
 Get-Item: Cannot find path 'Cert:\CurrentUser\My\****************************************' because it does not exist.
 ```
+
+Registering it for the Local Configuration Manager (LCM) requires a tool like [PSExec](https://learn.microsoft.com/en-us/sysinternals/downloads/psexec), with which you can start the MMC.exe and add the certificate in the Current User certificate store.
+
+## Sentinel Permissions
+
+In order to authenticate to Sentinel using a Service Principal (Certificate Thumbprint or Application Secret), you need to API permissions and an Azure RBAC role to the Service Principal:
+
+```powershell
+# Connect to Azure with an owner account
+Connect-AzAccount
+
+# Assign the required role according to the resource definition
+New-AzRoleAssignment -RoleDefinitionName "<Role Name>" -ApplicationId "<Application Id>" -Scope /
+```
+
+Wait for a couple of minutes for RBAC to take effect and then you're ready for managing the Sentinel workload with a Service Principal.
+
+## Services Hub Permissions
+
+TODO
 
 ## Microsoft Graph Permissions
 
@@ -135,9 +195,9 @@ Executing the cmdlet will prompt you to authenticate using an administrator acco
 
 **NOTE:** If you get the error "Device code terminal timed-out after 120 seconds", check out the <a href="../../get-started/troubleshooting/#error-device-code-terminal-timed-out-after-120-seconds-please-try-again/" target="_blank">Troubleshooting section</a>
 
-### Creating a custom service principal
+### Creating a custom Service Principal
 
-As mentioned earlier in this article, there is also the possibility to use Application permissions or custom service principal to authenticate against Microsoft 365. This custom service principal can be created and configured manually, but Microsoft365DSC also offers the <a href="../../cmdlets/Update-M365DSCAzureAdApplication/" target="_blank">Update-M365DSCAzureAdApplication</a> cmdlet. With this cmdlet, you can create the custom service application, grant the correct permissions, provide admin consent and create credentials (secret or certificate).
+As mentioned earlier in this article, there is also the possibility to use Application permissions or custom Service Principal to authenticate against Microsoft 365. This custom Service Principal can be created and configured manually, but Microsoft365DSC also offers the <a href="../../cmdlets/Update-M365DSCAzureAdApplication/" target="_blank">Update-M365DSCAzureAdApplication</a> cmdlet. With this cmdlet, you can create the custom service application, grant the correct permissions, provide admin consent and create credentials (secret or certificate).
 
 ```PowerShell
 Update-M365DSCAzureAdApplication -ApplicationName 'Microsoft365DSC' -Permissions @(@{Api='SharePoint';PermissionName='Sites.FullControl.All'}) -AdminConsent -Type Secret -Credential (Get-Credential)
@@ -209,7 +269,7 @@ Then make sure your service account is a member of the specified Role Group or h
 
 > **NOTE:** There are resources, like the <a href="../../../resources/exchange/EXOAddressList/" target="_blank">EXOAddressList</a> which roles by default are not granted to any of the default role groups. Make sure you grant these permissions correctly before using them.
 
-When using service principals to authenticate against Exchange, make sure your service principal is created using <a href="https://learn.microsoft.com/en-us/powershell/exchange/app-only-auth-powershell-v2?view=exchange-ps#select-and-assign-the-api-permissions-from-the-portal" target="_blank">these instructions</a>.
+When using Service Principals to authenticate against Exchange, make sure your Service Principal is created using <a href="https://learn.microsoft.com/en-us/powershell/exchange/app-only-auth-powershell-v2?view=exchange-ps#select-and-assign-the-api-permissions-from-the-portal" target="_blank">these instructions</a>.
 
 ## Security and Compliance Center Permissions
 
@@ -217,11 +277,11 @@ If you want to leverage Service Principal Authentication (using an App Registrat
 
 <ol>
 <li><p><strong>Create a new Service Principal and associate it with your app registration:</strong></p>
-<p>Start by connecting to the Security and Compliance PowerShell module and run the following line to create the service principal. The cmdlets refer below won't be available if you don't connect first (use the Connect-IPPSsession cmdlet). The AppID and ObjectID represent the application id and its object id. You can retrieve these by navigating to your app instance on the Azure Portal or by leveraging the Get-MgApplication cmdlet from the Graph PowerShell SDK. In my case, my custom App Registration in Azure AD is named "MySCApp" and I am giving the name SC-SPN to the new service principal I am creating.</p>
+<p>Start by connecting to the Security and Compliance PowerShell module and run the following line to create the Service Principal. The cmdlets refer below won't be available if you don't connect first (use the Connect-IPPSsession cmdlet). The AppID and ObjectID represent the application id and its object id. You can retrieve these by navigating to your app instance on the Azure Portal or by leveraging the Get-MgApplication cmdlet from the Graph PowerShell SDK. In my case, my custom App Registration in Azure AD is named "MySCApp" and I am giving the name SC-SPN to the new Service Principal I am creating.</p>
 
 <a href="/Images/AppIdRetrieval.png"><img src="/Images/AppIdRetrieval.png" alt="Retrieving an app registration id from the Azure portal." /></a>
 
-<a href="/Images/CreatingNewSPForSC.png"><img src="/Images/CreatingNewSPForSC.png" alt="PowerShell Script to create a service principal" /></a>
+<a href="/Images/CreatingNewSPForSC.png"><img src="/Images/CreatingNewSPForSC.png" alt="PowerShell Script to create a Service Principal" /></a>
 
 ```powershell
 $App = Get-MgApplication -Filter "DisplayName eq 'MySCApp'"
@@ -233,7 +293,7 @@ New-ServicePrincipal -AppId $App.AppId -ServiceId $App.Id -DisplayName "SC-SPN"
 <li><p><strong>Grant the eDiscovery Manager role to your new Service Principal:</strong></p>
 <p>Run the following PowerShell command to grant the eDiscovery Manager role to your new Service Principal. The ID passed is the Object ID of the Service Principal you created at the previous step. If you don't have it handy, you can use the Get-ServicePrincipal cmdlet to retrieve it.</p>
 
-<a href="/Images/AddSPNeDiscoveryRole.png"><img src="/Images/AddSPNeDiscoveryRole.png" alt="Grant the eDiscovery Manager role to your service principal" /></a>
+<a href="/Images/AddSPNeDiscoveryRole.png"><img src="/Images/AddSPNeDiscoveryRole.png" alt="Grant the eDiscovery Manager role to your Service Principal" /></a>
 
 ``` PowerShell
 $SPN = Get-ServicePrincipal -Identity "SC-SPN"
@@ -247,7 +307,7 @@ Add-RoleGroupMember -Identity eDiscoveryManager -Member $SPN.ObjectId
 
 <p>The Service Principal requires one last permission in order to be able to retrieve values from the Security and Compliance center cmdlets. Run the following PowerShell command to add it as a case admin:</p>
 
-<a href="/Images/Add-eDiscoveryCaseAdmin.png"><img src="/Images/Add-eDiscoveryCaseAdmin.png" alt="Grant the eDiscovery Case Admin role to your service principal" /></a>
+<a href="/Images/Add-eDiscoveryCaseAdmin.png"><img src="/Images/Add-eDiscoveryCaseAdmin.png" alt="Grant the eDiscovery Case Admin role to your Service Principal" /></a>
 
 ``` PowerShell
 $SPN = Get-ServicePrincipal -Identity "SC-SPN"
@@ -264,6 +324,8 @@ Add-eDiscoveryCaseAdmin -User $SPN.Name
 
 </ol>
 <p>We are now ready to authenticate using our app registration to test and confirm that all is working as expected. To do so, you can use the Connect-M365Tenant cmdlet and pass it the information related to your app registration. Below is an example using our app registration. Replace the appid, tenantid and certificatethumbprint parameters by your own. If you are getting an error connecting, you probably haven't granted the Exchange ManageAsApp permission to your app as described in the following article: <a href="https://learn.microsoft.com/en-us/powershell/exchange/app-only-auth-powershell-v2?view=exchange-ps#step-2-assign-api-permissions-to-the-application">https://learn.microsoft.com/en-us/powershell/exchange/app-only-auth-powershell-v2?view=exchange-ps#step-2-assign-api-permissions-to-the-application</a></p>
+
+<p><strong>Important</strong>: For GCC High, you will also need to grant the Exchange.ManageAsApp permission from the Microsoft Exchange Online Protection API in addition to the Office 365 Exchange Online API permissions.</p>
 
 <a href="/Images/GetComplianceCase.png"><img src="/Images/GetComplianceCase.png" alt="Connecting using your app registration and retrieving cases." /></a>
 
@@ -359,7 +421,7 @@ From the Export-M365DSCConfiguration GUI the following fields should be used:
 
 ## Teams Permissions
 
-When using Service Principals to authenticate against Teams, you have to make sure the correct permissions are configured. Besides the permissions specified in the resource documentation, the service principal also needs to get added to the Teams Administrator role in Entra ID. For more information on App-Only authentication with Teams, check <a href="https://learn.microsoft.com/en-us/microsoftteams/teams-powershell-application-authentication" target="_blank">here</a>.
+When using Service Principals to authenticate against Teams, you have to make sure the correct permissions are configured. Besides the permissions specified in the resource documentation, the Service Principal also needs to get added to the Teams Administrator role in Entra ID. For more information on App-Only authentication with Teams, check <a href="https://learn.microsoft.com/en-us/microsoftteams/teams-powershell-application-authentication" target="_blank">here</a>.
 
 ## Using Authentication in DSC configurations
 
@@ -370,6 +432,6 @@ See the next chapter to see how to use the Authentication options in DSC configu
 - <a href="https://docs.microsoft.com/en-us/graph/auth/auth-concepts" target="_blank">Authentication and authorization basics for Microsoft Graph</a>
 - <a href="https://docs.microsoft.com/en-us/graph/permissions-reference" target="_blank">Microsoft Graph permissions reference</a>
 - <a href="https://docs.microsoft.com/en-us/azure/active-directory/develop/quickstart-register-app" target="_blank">Quickstart: Register an application with the Microsoft identity platform</a>
-- <a href="https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-create-service-principal-portal#register-an-application-with-azure-ad-and-create-a-service-principal" target="_blank">Register an application with Azure AD and create a service principal</a>
+- <a href="https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-create-service-principal-portal#register-an-application-with-azure-ad-and-create-a-service-principal" target="_blank">Register an application with Azure AD and create a Service Principal</a>
 - <a href="https://docs.microsoft.com/en-us/azure/active-directory/manage-apps/grant-admin-consent" target="_blank">Grant tenant-wide admin consent to an application</a>
 - <a href="https://docs.microsoft.com/en-us/graph/notifications-integration-app-registration#api-permissions" target="_blank">API permissions</a>

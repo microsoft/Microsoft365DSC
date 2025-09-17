@@ -1,4 +1,4 @@
-﻿{
+{
   "resourceName": "EXOArcConfig",
   "description": "This resource manages the list of trusted Authenticated Received Chain (ARC) sealers that are configured in the organization.",
   "roles": {
@@ -10,14 +10,18 @@
     ]
   },
   "permissions": {
-    "graph": {
-      "delegated": {
-        "read": [],
-        "update": []
-      },
+    "Office 365 Exchange Online": {
       "application": {
-        "read": [],
-        "update": []
+        "read": [
+          {
+            "name": "Exchange.ManageAsApp"
+          }
+        ],
+        "update": [
+          {
+            "name": "Exchange.ManageAsApp"
+          }
+        ]
       }
     },
     "exchange": {
@@ -29,8 +33,13 @@
         "View-Only Configuration"
       ],
       "requiredrolegroups": [
-                "Organization Management"
-            ]
+        "Organization Management"
+      ]
     }
-  }
+  },
+  "requiredModules": [],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ]
 }

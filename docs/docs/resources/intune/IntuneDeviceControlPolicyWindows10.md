@@ -32,6 +32,8 @@
 | **WPDDevices_DenyWrite_Access_2** | Write | String | WPD Devices: Deny write access (0: Disabled, 1: Enabled) | `0`, `1` |
 | **WPDDevices_DenyWrite_Access_1** | Write | String | WPD Devices: Deny write access (User) (0: Disabled, 1: Enabled) | `0`, `1` |
 | **AllowFullScanRemovableDriveScanning** | Write | String | Allow Full Scan Removable Drive Scanning (0: Not allowed. Turns off scanning on removable drives., 1: Allowed. Scans removable drives.) | `0`, `1` |
+| **DefaultEnforcement** | Write | String | Default Enforcement (1: Default Allow Enforcement, 2: Default Deny Enforcement) | `1`, `2` |
+| **DeviceControlEnabled** | Write | String | Device Control Enabled (0: Device Control is disabled, 1: Device Control is enabled) | `0`, `1` |
 | **AllowDirectMemoryAccess** | Write | String | Allow Direct Memory Access (0: Not allowed., 1: Allowed.) | `0`, `1` |
 | **DeviceEnumerationPolicy** | Write | String | Device Enumeration Policy (0: Block all (Most restrictive), 1: Only after log in/screen unlock, 2: Allow all (Least restrictive)) | `0`, `1`, `2` |
 | **RemovableDiskDenyWriteAccess** | Write | String | Removable Disk Deny Write Access (0: Disabled., 1: Enabled.) | `0`, `1` |
@@ -62,6 +64,7 @@
 | **dataType** | Write | String | The type of the target assignment. | `#microsoft.graph.groupAssignmentTarget`, `#microsoft.graph.allLicensedUsersAssignmentTarget`, `#microsoft.graph.allDevicesAssignmentTarget`, `#microsoft.graph.exclusionGroupAssignmentTarget`, `#microsoft.graph.configurationManagerCollectionAssignmentTarget` |
 | **deviceAndAppManagementAssignmentFilterType** | Write | String | The type of filter of the target assignment i.e. Exclude or Include. Possible values are:none, include, exclude. | `none`, `include`, `exclude` |
 | **deviceAndAppManagementAssignmentFilterId** | Write | String | The Id of the filter for the target assignment. | |
+| **deviceAndAppManagementAssignmentFilterDisplayName** | Write | String | The display name of the filter for the target assignment. | |
 | **groupId** | Write | String | The group Id that is the target of the assignment. | |
 | **groupDisplayName** | Write | String | The group Display Name that is the target of the assignment. | |
 | **collectionId** | Write | String | The collection Id that is the target of the assignment.(ConfigMgr) | |

@@ -1,0 +1,52 @@
+{
+  "resourceName": "IntuneMobileAppsMicrosoftEdge",
+  "description": "This resource configures an Intune Mobile Apps Microsoft Edge for the Windows and MacOS platform.",
+  "permissions": {
+    "graph": {
+      "application": {
+        "update": [
+          {
+            "name": "DeviceManagementApps.ReadWrite.All"
+          },
+          {
+            "name": "Group.Read.All"
+          }
+        ],
+        "read": [
+          {
+            "name": "DeviceManagementApps.Read.All"
+          },
+          {
+            "name": "Group.Read.All"
+          }
+        ]
+      },
+      "delegated": {
+        "update": [
+          {
+            "name": "DeviceManagementApps.ReadWrite.All"
+          },
+          {
+            "name": "Group.Read.All"
+          }
+        ],
+        "read": [
+          {
+            "name": "DeviceManagementApps.Read.All"
+          },
+          {
+            "name": "Group.Read.All"
+          }
+        ]
+      }
+    }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.Devices.CorporateManagement"
+  ],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ]
+}

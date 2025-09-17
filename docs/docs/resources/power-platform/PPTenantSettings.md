@@ -67,30 +67,6 @@ This resource configures a Power Platform Tenant.
 
 ## Permissions
 
-### Microsoft Graph
-
-To authenticate with the Microsoft Graph API, this resource required the following permissions:
-
-#### Delegated permissions
-
-- **Read**
-
-    - None
-
-- **Update**
-
-    - None
-
-#### Application permissions
-
-- **Read**
-
-    - None
-
-- **Update**
-
-    - None
-
 ## Examples
 
 ### Example 1

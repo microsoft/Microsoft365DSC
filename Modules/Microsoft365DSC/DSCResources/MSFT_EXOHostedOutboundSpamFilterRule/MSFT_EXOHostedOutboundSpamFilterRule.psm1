@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_EXOHostedOutboundSpamFilterRule'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -102,13 +104,13 @@ function Get-TargetResource
 
     if ($Global:CurrentModeIsExport)
     {
-        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters `
             -SkipModuleReload $true
     }
     else
     {
-        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters
     }
 
@@ -154,7 +156,7 @@ function Get-TargetResource
                 CertificateThumbprint          = $CertificateThumbprint
                 CertificatePath                = $CertificatePath
                 CertificatePassword            = $CertificatePassword
-                Managedidentity                = $ManagedIdentity.IsPresent
+                ManagedIdentity                = $ManagedIdentity.IsPresent
                 TenantId                       = $TenantId
                 AccessTokens                   = $AccessTokens
             }
@@ -286,9 +288,6 @@ function Set-TargetResource
         -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-
-    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
-        -InboundParameters $PSBoundParameters
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $BoundParameters = ([System.Collections.Hashtable]$PSBoundParameters).Clone()
@@ -546,7 +545,7 @@ function Export-TargetResource
                 TenantId                       = $TenantId
                 CertificateThumbprint          = $CertificateThumbprint
                 CertificatePassword            = $CertificatePassword
-                Managedidentity                = $ManagedIdentity.IsPresent
+                ManagedIdentity                = $ManagedIdentity.IsPresent
                 CertificatePath                = $CertificatePath
                 AccessTokens                   = $AccessTokens
             }

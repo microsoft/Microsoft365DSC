@@ -1,0 +1,39 @@
+{
+  "resourceName": "IntuneDeviceCleanupRuleV2",
+  "description": "This resource configures an Intune Device Cleanup Rule V2.",
+  "permissions": {
+    "graph": {
+      "application": {
+        "read": [
+          {
+            "name": "DeviceManagementConfiguration.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "DeviceManagementConfiguration.ReadWrite.All"
+          }
+        ]
+      },
+      "delegated": {
+        "read": [
+          {
+            "name": "DeviceManagementConfiguration.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "DeviceManagementConfiguration.ReadWrite.All"
+          }
+        ]
+      }
+    }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.DeviceManagement"
+  ],
+  "supportedEnvironments": [
+    "Global"
+  ]
+}

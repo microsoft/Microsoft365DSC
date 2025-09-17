@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_PlannerTask'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -128,7 +130,12 @@ function Get-TargetResource
         {
             foreach ($assignmentKey in $taskResponse.Assignments.AdditionalProperties.Keys)
             {
-                $assignedUser = Get-MgUser -UserId $assignmentKey
+                $assignedUser = Get-MgUser -UserId $assignmentKey -ErrorAction SilentlyContinue
+                if ($null -eq $assignedUser)
+                {
+                    Write-Warning -Message "Skipping user with Id [$assignmentKey] because it could not be found."
+                    continue
+                }
                 $assignmentsValue += $assignedUser.UserPrincipalName
             }
         }
@@ -1137,3 +1144,4 @@ function Get-TaskColorNameByCategory
 }
 
 Export-ModuleMember -Function *-TargetResource
+

@@ -19,12 +19,13 @@
 | **MemberOf** | Write | StringArray[] | The Groups that the user is a direct member of | |
 | **MobilePhone** | Write | String | The Mobile Phone Number of the user | |
 | **Office** | Write | String | The Office Name of the user | |
+| **Mail** | Write | String | The mail address of the user | |
 | **OtherMails** | Write | StringArray[] | The other mails assigned to the user | |
 | **PasswordNeverExpires** | Write | Boolean | Specifies whether the user password expires periodically. Default value is false | |
 | **PasswordPolicies** | Write | String | Specifies password policies for the user. | |
 | **PhoneNumber** | Write | String | The Phone Number of the user | |
 | **PostalCode** | Write | String | The Postal Code of the user | |
-| **PreferredLanguage** | Write | String | The Prefered Language of the user | |
+| **PreferredLanguage** | Write | String | The Preferred Language of the user | |
 | **State** | Write | String | Specifies the state or province where the user is located | |
 | **StreetAddress** | Write | String | Specifies the street address of the user | |
 | **Title** | Write | String | Specifies the title of the user | |
@@ -58,7 +59,7 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Update**
 
-    - Organization.Read.All, RoleManagement.Read.Directory, RoleManagement.ReadWrite.Directory, User.Read.All, Group.Read.All, GroupMember.Read.All, User.ReadWrite.All, Group.ReadWrite.All, GroupMember.ReadWrite.All
+    - Organization.Read.All, RoleManagement.ReadWrite.Directory, User.Read.All, User.ReadWrite.All, Group.ReadWrite.All, GroupMember.ReadWrite.All
 
 #### Application permissions
 
@@ -68,7 +69,7 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Update**
 
-    - Organization.Read.All, RoleManagement.Read.Directory, RoleManagement.ReadWrite.Directory, User.Read.All, User.ReadWrite.All
+    - Organization.Read.All, RoleManagement.ReadWrite.Directory, User.Read.All, User.ReadWrite.All, Group.ReadWrite.All, GroupMember.ReadWrite.All
 
 ## Examples
 

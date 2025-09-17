@@ -518,6 +518,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return $mockPolicy
             }
 
+            Mock -CommandName Invoke-M365DSCGraphBatchRequest -MockWith {
+                return @(
+                    @{
+                        id = '81c3d8db-c61c-4dd7-bf63-a9a184f04e50'
+                        body = @{
+                            value = $mockPolicy
+                        }
+                    }
+                )
+            }
+
             # Mock Write-M365DSCHost to hide output during the tests
             Mock -CommandName Write-M365DSCHost -MockWith {
             }
@@ -701,7 +712,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It 'Should reverse engineer resource from the export method' {
                 $result = Export-TargetResource @testParams
                 Assert-MockCalled Get-MgGroup -Exactly 1 -Scope It
-                Assert-MockCalled Get-MgPolicyRoleManagementPolicyAssignment -Exactly 1 -Scope It
+                Assert-MockCalled Invoke-M365DSCGraphBatchRequest -Exactly 1 -Scope It
                 $result | Should -Not -BeNullOrEmpty
             }
 
@@ -710,7 +721,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 $result = Export-TargetResource @testParams
                 Assert-MockCalled Get-MgGroup -Exactly 1 -Scope It
-                Assert-MockCalled Get-MgPolicyRoleManagementPolicyAssignment -Exactly 1 -Scope It
+                Assert-MockCalled Invoke-M365DSCGraphBatchRequest -Exactly 1 -Scope It
                 $result | Should -Not -BeNullOrEmpty
             }
         }

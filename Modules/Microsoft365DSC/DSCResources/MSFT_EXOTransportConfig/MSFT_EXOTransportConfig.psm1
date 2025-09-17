@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_EXOTransportConfig'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -147,15 +149,16 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message 'Getting EXOTransportConfig'
+
     if ($Global:CurrentModeIsExport)
     {
-        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters `
             -SkipModuleReload $true
     }
     else
     {
-        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters
     }
 
@@ -216,7 +219,7 @@ function Get-TargetResource
             CertificateThumbprint                   = $CertificateThumbprint
             CertificatePath                         = $CertificatePath
             CertificatePassword                     = $CertificatePassword
-            Managedidentity                         = $ManagedIdentity.IsPresent
+            ManagedIdentity                         = $ManagedIdentity.IsPresent
             TenantId                                = $TenantId
             AccessTokens                            = $AccessTokens
         }
@@ -381,6 +384,9 @@ function Set-TargetResource
         [System.String[]]
         $AccessTokens
     )
+
+    Write-Verbose -Message 'Setting EXOTransportConfig'
+
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
@@ -393,22 +399,12 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message 'Setting EXOTransportConfig'
-
-    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+    $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
     Write-Verbose -Message "Setting EXOTransportConfig with values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
-    $SetValues = [System.Collections.Hashtable]($PSBoundParameters)
+    $SetValues = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
     $SetValues.Remove('IsSingleInstance') | Out-Null
-    $SetValues.Remove('Credential') | Out-Null
-    $SetValues.Remove('ApplicationId') | Out-Null
-    $SetValues.Remove('TenantId') | Out-Null
-    $SetValues.Remove('CertificateThumbprint') | Out-Null
-    $SetValues.Remove('CertificatePath') | Out-Null
-    $SetValues.Remove('CertificatePassword') | Out-Null
-    $SetValues.Remove('ManagedIdentity') | Out-Null
-    $SetValues.Remove('AccessTokens') | Out-Null
 
     if ($SetValues.JournalingReportNdrTo -eq '<>' -or [System.String]::IsNullOrEmpty($SetValues.JournalingReportNdrTo))
     {
@@ -673,7 +669,7 @@ function Export-TargetResource
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint
             CertificatePassword   = $CertificatePassword
-            Managedidentity       = $ManagedIdentity.IsPresent
+            ManagedIdentity       = $ManagedIdentity.IsPresent
             CertificatePath       = $CertificatePath
             AccessTokens          = $AccessTokens
         }

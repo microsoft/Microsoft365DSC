@@ -1,24 +1,33 @@
 {
-    "resourceName": "EXOSecOpsOverrideRule",
-    "description": "Use this resource to manage phish sim override rules.",
-    "roles": {
+  "resourceName": "EXOSecOpsOverrideRule",
+  "description": "Use this resource to manage phish sim override rules.",
+  "roles": {
+    "read": [
+      "Exchange Admin"
+    ],
+    "update": [
+      "Exchange Admin"
+    ]
+  },
+  "permissions": {
+    "Office 365 Exchange Online": {
+      "application": {
         "read": [
-            "Exchange Admin"
+          {
+            "name": "Exchange.ManageAsApp"
+          }
         ],
         "update": [
-            "Exchange Admin"
+          {
+            "name": "Exchange.ManageAsApp"
+          }
         ]
-    },
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [],
-                "update": []
-            },
-            "application": {
-                "read": [],
-                "update": []
-            }
-        }
+      }
     }
+  },
+  "requiredModules": [],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ]
 }

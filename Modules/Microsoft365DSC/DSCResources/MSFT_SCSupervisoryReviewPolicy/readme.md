@@ -2,4 +2,4 @@
 
 ## Description
 
-This resource configures a Supervision Policy in Security and Compliance.
+This resource configures a Supervision Policy in Purview.

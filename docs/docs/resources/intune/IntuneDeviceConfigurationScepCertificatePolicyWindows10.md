@@ -5,7 +5,7 @@
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
 | **CertificateStore** | Write | String | Target store certificate. Possible values are: user, machine. | `user`, `machine` |
-| **HashAlgorithm** | Write | String | SCEP Hash Algorithm. Possible values are: sha1, sha2. | `sha1`, `sha2` |
+| **HashAlgorithm** | Write | String | SCEP Hash Algorithm. Possible values are: sha1, sha2. | `sha1`, `sha2`, `sha1,sha2` |
 | **KeySize** | Write | String | SCEP Key Size. Possible values are: size1024, size2048, size4096. | `size1024`, `size2048`, `size4096` |
 | **KeyUsage** | Write | StringArray[] | SCEP Key Usage. Possible values are: keyEncipherment, digitalSignature. | `keyEncipherment`, `digitalSignature` |
 | **ScepServerUrls** | Write | StringArray[] | SCEP Server Url(s). | |
@@ -24,6 +24,7 @@
 | **Description** | Write | String | Admin provided description of the Device Configuration. | |
 | **DisplayName** | Key | String | Admin provided name of the device configuration. | |
 | **Id** | Write | String | The unique identifier for an entity. Read-only. | |
+| **RoleScopeTagIds** | Write | StringArray[] | List of Scope Tags for this Entity instance. | |
 | **Assignments** | Write | MSFT_DeviceManagementConfigurationPolicyAssignments[] | Represents the assignment to the Intune policy. | |
 | **Ensure** | Write | String | Present ensures the policy exists, absent ensures it is removed. | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials of the Admin | |
@@ -43,6 +44,7 @@
 | **dataType** | Write | String | The type of the target assignment. | `#microsoft.graph.groupAssignmentTarget`, `#microsoft.graph.allLicensedUsersAssignmentTarget`, `#microsoft.graph.allDevicesAssignmentTarget`, `#microsoft.graph.exclusionGroupAssignmentTarget`, `#microsoft.graph.configurationManagerCollectionAssignmentTarget` |
 | **deviceAndAppManagementAssignmentFilterType** | Write | String | The type of filter of the target assignment i.e. Exclude or Include. Possible values are:none, include, exclude. | `none`, `include`, `exclude` |
 | **deviceAndAppManagementAssignmentFilterId** | Write | String | The Id of the filter for the target assignment. | |
+| **deviceAndAppManagementAssignmentFilterDisplayName** | Write | String | The display name of the filter for the target assignment. | |
 | **groupId** | Write | String | The group Id that is the target of the assignment. | |
 | **groupDisplayName** | Write | String | The group Display Name that is the target of the assignment. | |
 | **collectionId** | Write | String | The collection Id that is the target of the assignment.(ConfigMgr) | |

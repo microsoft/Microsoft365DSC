@@ -1,20 +1,45 @@
-﻿{
-    "resourceName": "PPPowerAppPolicyUrlPatterns",
-    "description": "Configures custom connector patterns for Data Loss Prevention policies in Power Platforms.",
-    "roles": {
-        "read": [],
-        "update": []
+{
+  "resourceName": "PPPowerAppPolicyUrlPatterns",
+  "description": "Configures custom connector patterns for Data Loss Prevention policies in Power Platforms.",
+  "roles": {
+    "read": [],
+    "update": []
+  },
+  "permissions": {
+    "powerAppsService": {
+      "delegated": {
+        "read": [
+          {
+            "name": "User"
+          }
+        ],
+        "update": [
+          {
+            "name": "User"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "User"
+          }
+        ],
+        "update": [
+          {
+            "name": "User"
+          }
+        ]
+      }
     },
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [],
-                "update": []
-            },
-            "application": {
-                "read": [],
-                "update": []
-            }
-        }
+    "powerPlatform": {
+      "requiredRoles": [
+        "System Administrator"
+      ]
     }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "MSCloudLoginAssistant"
+  ]
 }

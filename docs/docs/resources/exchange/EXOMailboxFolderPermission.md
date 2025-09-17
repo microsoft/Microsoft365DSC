@@ -6,7 +6,7 @@
 | --- | --- | --- | --- | --- |
 | **Identity** | Key | String | The Identity parameter specifies the target mailbox and folder. The syntax is MailboxID:\ParentFolder[\SubFolder]. For the MailboxID you can use any value that uniquely identifies the mailbox. | |
 | **UserPermissions** | Write | MSFT_EXOMailboxFolderUserPermission[] | Mailbox Folder Permissions for the current user. | |
-| **Ensure** | Write | String | Determines wheter or not the permission should exist on the mailbox. | `Present` |
+| **Ensure** | Write | String | Determines whether or not the permission should exist on the mailbox. | `Present` |
 | **Credential** | Write | PSCredential | Credentials of the Exchange Global Admin | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
 | **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. | |

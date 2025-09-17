@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_AADAuthenticationMethodPolicyExternal'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -29,7 +31,6 @@ function Get-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
-
         #endregion
 
         [Parameter()]
@@ -66,11 +67,13 @@ function Get-TargetResource
         $AccessTokens
     )
 
+    Write-Verbose -Message "Getting the Azure AD Authentication Method Policy External with Id {$DisplayName}"
+
     try
     {
         if (-not $Script:exportedInstance -or $Script:exportedInstance.DisplayName -ne $DisplayName)
         {
-            $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+            $null = New-M365DSCConnection -Workload 'MicrosoftGraph' `
                 -InboundParameters $PSBoundParameters
 
             #Ensure the proper dependencies are installed in the current environment.
@@ -140,7 +143,7 @@ function Get-TargetResource
 
             if ($null -ne $currentExcludeTargets.targetType)
             {
-                $myExcludeTargets.Add('TargetType', $currentExcludeTargets.targetType.toString())
+                $myExcludeTargets.Add('TargetType', $currentExcludeTargets.targetType.ToString())
             }
 
             if ($myExcludeTargets.values.Where({ $null -ne $_ }).count -gt 0)
@@ -179,7 +182,7 @@ function Get-TargetResource
 
             if ($null -ne $currentincludeTargets.targetType)
             {
-                $myincludeTargets.Add('TargetType', $currentincludeTargets.targetType.toString())
+                $myincludeTargets.Add('TargetType', $currentincludeTargets.targetType.ToString())
             }
 
             if ($myincludeTargets.values.Where({ $null -ne $_ }).count -gt 0)
@@ -215,12 +218,12 @@ function Get-TargetResource
             TenantId              = $TenantId
             ApplicationSecret     = $ApplicationSecret
             CertificateThumbprint = $CertificateThumbprint
-            Managedidentity       = $ManagedIdentity.IsPresent
+            ManagedIdentity       = $ManagedIdentity.IsPresent
             AccessTokens          = $AccessTokens
             #endregion
         }
 
-        return [System.Collections.Hashtable] $results
+        return $results
     }
     catch
     {
@@ -300,6 +303,8 @@ function Set-TargetResource
         $AccessTokens
     )
 
+    Write-Verbose -Message "Setting the Azure AD Authentication Method Policy External with Id {$DisplayName}"
+
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
@@ -315,7 +320,7 @@ function Set-TargetResource
     $currentInstance = Get-TargetResource @PSBoundParameters
 
     $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
-    $params = ([Hashtable]$BoundParameters).clone()
+    $params = ([Hashtable]$BoundParameters).Clone()
     $params = Rename-M365DSCCimInstanceParameter -Properties $params
 
     $params = Get-UpdatedTargetProperty($params)
@@ -432,7 +437,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $ResourceName
+                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 
@@ -522,7 +527,7 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
-                Managedidentity       = $ManagedIdentity.IsPresent
+                ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }
 
@@ -613,10 +618,10 @@ function Get-UpdatedTargetProperty
         $params
     )
 
-    $keys = (([Hashtable]$params).clone()).Keys
+    $keys = (([Hashtable]$params).Clone()).Keys
     foreach ($key in $keys)
     {
-        if ($null -ne $params.$key -and $params.$key.getType().Name -like '*cimInstance*')
+        if ($null -ne $params.$key -and $params.$key.GetType().Name -like '*cimInstance*')
         {
             $params.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $params.$key
         }
@@ -628,7 +633,7 @@ function Get-UpdatedTargetProperty
                 if ($entry.id -notmatch '^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$|all_users')
                 {
                     $Filter = "DisplayName eq '$($entry.id -replace "'", "''")'" | Out-String
-                    $params.$key[$i].foreach('id', (Get-MgGroup -Filter $Filter).id.ToString())
+                    $params.$key[$i].ForEach('id', (Get-MgGroup -Filter $Filter).id.ToString())
                 }
                 $i++
             }
@@ -641,7 +646,7 @@ function Get-UpdatedTargetProperty
                 if ($entry.id -notmatch '^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$|all_users')
                 {
                     $Filter = "DisplayName eq '$($entry.id -replace "'", "''")'" | Out-String
-                    $params.$key[$i].foreach('id', (Get-MgGroup -Filter $Filter).id.ToString())
+                    $params.$key[$i].ForEach('id', (Get-MgGroup -Filter $Filter).id.ToString())
                 }
                 $i++
             }
@@ -652,4 +657,3 @@ function Get-UpdatedTargetProperty
 }
 
 Export-ModuleMember -Function *-TargetResource
-

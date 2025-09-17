@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_SPOHomeSite'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -54,53 +56,59 @@ function Get-TargetResource
         [System.String[]]
         $AccessTokens
     )
+
     Write-Verbose -Message "Getting configuration for hub site collection $Url"
-
-    $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
-        -InboundParameters $PSBoundParameters
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = 'Absent'
+    Write-Verbose -Message 'Getting current home site collection settings'
 
     try
     {
-        Write-Verbose -Message 'Getting current home site collection settings'
-        $homeSiteUrl = Get-PnPHomeSite -ErrorAction Stop
-        if ([string]::IsNullOrEmpty($homeSiteUrl))
+        if ($null -eq $Script:exportedInstance)
         {
-            Write-Verbose -Message 'There is no Home Site Collection set.'
-            return $nullReturn
+            $null = New-M365DSCConnection -Workload 'PnP' `
+                -InboundParameters $PSBoundParameters
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullReturn = $PSBoundParameters
+            $nullReturn.Ensure = 'Absent'
+
+            $homeSiteUrl = Get-PnPHomeSite -ErrorAction Stop
+            if ([string]::IsNullOrEmpty($homeSiteUrl))
+            {
+                Write-Verbose -Message 'There is no Home Site Collection set.'
+                return $nullReturn
+            }
         }
         else
         {
-            $result = @{
-                IsSingleInstance      = $IsSingleInstance
-                Url                   = $homeSiteUrl
-                Ensure                = 'Present'
-                Credential            = $Credential
-                ApplicationId         = $ApplicationId
-                TenantId              = $TenantId
-                ApplicationSecret     = $ApplicationSecret
-                CertificatePassword   = $CertificatePassword
-                CertificatePath       = $CertificatePath
-                CertificateThumbprint = $CertificateThumbprint
-                Managedidentity       = $ManagedIdentity.IsPresent
-                AccessTokens          = $AccessTokens
-            }
-            return $result
+            $homeSiteUrl = $Script:exportedInstance
         }
+
+        $result = @{
+            IsSingleInstance      = $IsSingleInstance
+            Url                   = $homeSiteUrl
+            Ensure                = 'Present'
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            ApplicationSecret     = $ApplicationSecret
+            CertificatePassword   = $CertificatePassword
+            CertificatePath       = $CertificatePath
+            CertificateThumbprint = $CertificateThumbprint
+            ManagedIdentity       = $ManagedIdentity.IsPresent
+            AccessTokens          = $AccessTokens
+        }
+        return $result
     }
     catch
     {
@@ -371,6 +379,8 @@ function Export-TargetResource
             $Global:M365DSCExportResourceInstancesCount++
         }
 
+        $Script:exportedInstance = Get-PnPHomeSite -ErrorAction Stop
+
         $Params = @{
             IsSingleInstance      = 'Yes'
             ApplicationId         = $ApplicationId
@@ -378,7 +388,7 @@ function Export-TargetResource
             CertificatePassword   = $CertificatePassword
             CertificatePath       = $CertificatePath
             CertificateThumbprint = $CertificateThumbprint
-            Managedidentity       = $ManagedIdentity.IsPresent
+            ManagedIdentity       = $ManagedIdentity.IsPresent
             Credential            = $Credential
             ApplicationSecret     = $ApplicationSecret
             AccessTokens          = $AccessTokens
@@ -411,3 +421,4 @@ function Export-TargetResource
 }
 
 Export-ModuleMember -Function *-TargetResource
+

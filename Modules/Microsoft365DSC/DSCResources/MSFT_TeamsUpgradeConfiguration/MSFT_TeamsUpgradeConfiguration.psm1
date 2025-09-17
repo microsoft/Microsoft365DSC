@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_TeamsUpgradeConfiguration'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -341,3 +343,4 @@ function Export-TargetResource
 }
 
 Export-ModuleMember -Function *-TargetResource
+

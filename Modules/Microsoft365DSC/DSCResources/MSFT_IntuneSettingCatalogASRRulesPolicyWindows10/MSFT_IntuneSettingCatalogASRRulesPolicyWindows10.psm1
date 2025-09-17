@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_IntuneSettingCatalogASRRulesPolicyWindows10'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -200,7 +202,7 @@ function Get-TargetResource
         $ControlledFolderAccessAllowedApplications,
 
         [Parameter()]
-        [ValidateSet('0', '1', '2')]
+        [ValidateSet('0', '1', '2', '3', '4')]
         [System.String]
         $EnableControlledFolderAccess,
 
@@ -249,7 +251,7 @@ function Get-TargetResource
     {
         if (-not $Script:exportedInstance -or $Script:exportedInstance.DisplayName -ne $DisplayName)
         {
-            $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+            $null = New-M365DSCConnection -Workload 'MicrosoftGraph' `
                 -InboundParameters $PSBoundParameters `
                 -ErrorAction Stop
 
@@ -561,7 +563,7 @@ function Set-TargetResource
         $ControlledFolderAccessAllowedApplications,
 
         [Parameter()]
-        [ValidateSet('0', '1', '2')]
+        [ValidateSet('0', '1', '2', '3', '4')]
         [System.String]
         $EnableControlledFolderAccess,
 
@@ -603,9 +605,6 @@ function Set-TargetResource
         $AccessTokens
     )
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters
-
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
@@ -642,6 +641,7 @@ function Set-TargetResource
             Platforms         = $platforms
             Technologies      = $technologies
             Settings          = $settings
+            RoleScopeTagIds   = $RoleScopeTagIds
         }
         $policy = New-MgBetaDeviceManagementConfigurationPolicy -BodyParameter $createParameters
 
@@ -672,7 +672,8 @@ function Set-TargetResource
             -TemplateReferenceId $templateReferenceId `
             -Platforms $platforms `
             -Technologies $technologies `
-            -Settings $settings
+            -Settings $settings `
+            -RoleScopeTagIds $RoleScopeTagIds
 
         #region Assignments
         $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
@@ -891,7 +892,7 @@ function Test-TargetResource
         $ControlledFolderAccessAllowedApplications,
 
         [Parameter()]
-        [ValidateSet('0', '1', '2')]
+        [ValidateSet('0', '1', '2', '3', '4')]
         [System.String]
         $EnableControlledFolderAccess,
 
@@ -984,7 +985,6 @@ function Test-TargetResource
         }
     }
     $ValuesToCheck.Remove('Identity') | Out-Null
-    $ValuesToCheck = Remove-M365DSCAuthenticationParameter -BoundParameters $ValuesToCheck
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"

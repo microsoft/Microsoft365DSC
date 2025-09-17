@@ -33,7 +33,7 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Update**
 
-    - EntitlementManagement.Read.All, EntitlementManagement.ReadWrite.All
+    - EntitlementManagement.ReadWrite.All
 
 #### Application permissions
 
@@ -43,7 +43,7 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Update**
 
-    - EntitlementManagement.Read.All, EntitlementManagement.ReadWrite.All, RoleManagement.ReadWrite.Directory
+    - EntitlementManagement.ReadWrite.All
 
 ## Examples
 

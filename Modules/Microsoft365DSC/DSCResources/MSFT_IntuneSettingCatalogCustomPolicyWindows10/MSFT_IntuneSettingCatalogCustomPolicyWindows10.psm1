@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_IntuneSettingCatalogCustomPolicyWindows10'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -30,6 +32,10 @@ function Get-TargetResource
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Settings,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
 
         [Parameter()]
         [System.String]
@@ -78,7 +84,7 @@ function Get-TargetResource
 
     try
     {
-        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+        $null = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters
 
         #Ensure the proper dependencies are installed in the current environment.
@@ -140,7 +146,7 @@ function Get-TargetResource
             $complexSettingInstance = @{}
             $complexSettingInstance.Add('SettingDefinitionId', $currentSettings.settingInstance.settingDefinitionId)
             $complexSettingInstance.Add('odataType', $currentSettings.settingInstance.AdditionalProperties.'@odata.type')
-            $valueName = $currentSettings.settingInstance.AdditionalProperties.'@odata.type'.replace('#microsoft.graph.deviceManagementConfiguration', '').replace('Instance', 'Value')
+            $valueName = $currentSettings.settingInstance.AdditionalProperties.'@odata.type'.Replace('#microsoft.graph.deviceManagementConfiguration', '').Replace('Instance', 'Value')
             $valueName = Get-StringFirstCharacterToLower -Value $valueName
             $rawValue = $currentSettings.settingInstance.AdditionalProperties.$valueName
             $complexValue = get-SettingValue -SettingValue $rawValue -SettingValueType $currentSettings.settingInstance.AdditionalProperties.'@odata.type'
@@ -170,6 +176,7 @@ function Get-TargetResource
             Description           = $getValue.Description
             Name                  = $getValue.Name
             Platforms             = $enumPlatforms
+            RoleScopeTagIds       = $getValue.RoleScopeTagIds
             Technologies          = $enumTechnologies
             Settings              = $complexSettings
             Id                    = $getValue.Id
@@ -179,7 +186,7 @@ function Get-TargetResource
             TenantId              = $TenantId
             ApplicationSecret     = $ApplicationSecret
             CertificateThumbprint = $CertificateThumbprint
-            Managedidentity       = $ManagedIdentity.IsPresent
+            ManagedIdentity       = $ManagedIdentity.IsPresent
             AccessTokens          = $AccessTokens
             #endregion
         }
@@ -193,7 +200,7 @@ function Get-TargetResource
         }
         $results.Add('Assignments', $assignmentResult)
 
-        return [System.Collections.Hashtable] $results
+        return $results
     }
     catch
     {
@@ -243,6 +250,10 @@ function Set-TargetResource
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Settings,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
 
         [Parameter()]
         [System.String]
@@ -411,6 +422,10 @@ function Test-TargetResource
         $Settings,
 
         [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
+
+        [Parameter()]
         [System.String]
         $Id,
 
@@ -468,7 +483,7 @@ function Test-TargetResource
     Write-Verbose -Message "Testing configuration of the Intune Setting Catalog Custom Policy for Windows10 with Id {$Id} and Name {$Name}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
-    $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
+    $ValuesToCheck = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
     $testResult = $true
 
     #Compare Cim instances
@@ -604,7 +619,7 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
-                Managedidentity       = $ManagedIdentity.IsPresent
+                ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }
 
@@ -909,9 +924,13 @@ function Update-IntuneDeviceConfigurationPolicy
 
         [Parameter()]
         [Array]
-        $Settings
+        $Settings,
 
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds
     )
+
     try
     {
         $Uri = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/deviceManagement/configurationPolicies/$DeviceManagementConfigurationPolicyId"
@@ -923,6 +942,7 @@ function Update-IntuneDeviceConfigurationPolicy
             'templateReference' = @{'templateId' = $TemplateReferenceId }
             'technologies'      = $Technologies
             'settings'          = $Settings
+            'roleScopeTagIds'   = $RoleScopeTagIds
         }
         $body = $policy | ConvertTo-Json -Depth 20
         #write-verbose -Message $body

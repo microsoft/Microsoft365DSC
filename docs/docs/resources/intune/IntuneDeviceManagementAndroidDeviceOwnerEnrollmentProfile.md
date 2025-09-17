@@ -10,13 +10,7 @@
 | **Description** | Write | String | Description for the enrollment profile. | |
 | **EnrollmentMode** | Write | String | The enrollment mode of devices that use this enrollment profile. | `corporateOwnedDedicatedDevice`, `corporateOwnedFullyManaged`, `corporateOwnedWorkProfile`, `corporateOwnedAOSPUserlessDevice`, `corporateOwnedAOSPUserAssociatedDevice` |
 | **EnrollmentTokenType** | Write | String | The enrollment token type for an enrollment profile. | `default`, `corporateOwnedDedicatedDeviceWithAzureADSharedMode`, `deviceStaging` |
-| **TokenValue** | Write | String | Value of the most recently created token for this enrollment profile. | |
-| **TokenCreationDateTime** | Write | String | Date time the most recently created token was created. | |
 | **TokenExpirationDateTime** | Write | String | Date time the most recently created token will expire. | |
-| **EnrolledDeviceCount** | Write | UInt32 | Total number of Android devices that have enrolled using this enrollment profile. | |
-| **EnrollmentTokenUsageCount** | Write | UInt32 | Total number of AOSP devices that have enrolled using the current token. Valid values 0 to 20000 | |
-| **QrCodeContent** | Write | String | String used to generate a QR code for the token. | |
-| **QrCodeImage** | Write | MSFT_IntuneDeviceManagementAndroidDeviceOwnerEnrollmentProfileQRImage | String used to generate a QR code for the token. | |
 | **RoleScopeTagIds** | Write | StringArray[] | List of Scope Tags for this Entity instance. | |
 | **ConfigureWifi** | Write | Boolean | Boolean that indicates that the Wi-Fi network should be configured during device provisioning. When set to TRUE, device provisioning will use Wi-Fi related properties to automatically connect to Wi-Fi networks. When set to FALSE or undefined, other Wi-Fi related properties will be ignored. Default value is TRUE. Returned by default. | |
 | **WifiSsid** | Write | String | String that contains the wi-fi login ssid | |
@@ -31,15 +25,6 @@
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
 | **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
-
-### MSFT_IntuneDeviceManagementAndroidDeviceOwnerEnrollmentProfileQRImage
-
-#### Parameters
-
-| Parameter | Attribute | DataType | Description | Allowed Values |
-| --- | --- | --- | --- | --- |
-| **type** | Write | String | Indicates the content mime type. | |
-| **value** | Write | UInt32Array[] | The byte array that contains the actual content. | |
 
 ## Description
 
@@ -106,15 +91,12 @@ Configuration Example
             ConfigureWifi             = $True;
             Description               = "This is my enrollment profile";
             DisplayName               = "MyTestEnrollmentProfile";
-            EnrolledDeviceCount       = 0;
             EnrollmentMode            = "corporateOwnedDedicatedDevice";
             EnrollmentTokenType       = "default";
-            EnrollmentTokenUsageCount = 0;
             Ensure                    = "Present";
             IsTeamsDeviceProfile      = $False;
             RoleScopeTagIds           = @("0");
             TenantId                  = $TenantId;
-            TokenCreationDateTime     = "10/26/2024 1:02:29 AM";
             TokenExpirationDateTime   = "10/31/2024 3:59:59 AM";
             WifiHidden                = $False;
             WifiSecurityType          = "none";
@@ -155,15 +137,12 @@ Configuration Example
             ConfigureWifi             = $True;
             Description               = "This is my enrollment profile";
             DisplayName               = "MyTestEnrollmentProfile";
-            EnrolledDeviceCount       = 0;
             EnrollmentMode            = "corporateOwnedDedicatedDevice";
             EnrollmentTokenType       = "default";
-            EnrollmentTokenUsageCount = 0;
             Ensure                    = "Present";
             IsTeamsDeviceProfile      = $False;
             RoleScopeTagIds           = @("0");
             TenantId                  = $TenantId;
-            TokenCreationDateTime     = "10/26/2024 1:02:29 AM";
             TokenExpirationDateTime   = "10/31/2024 3:59:59 AM";
             WifiHidden                = $True; #Drift
             WifiSecurityType          = "none";
@@ -204,15 +183,12 @@ Configuration Example
             ConfigureWifi             = $True;
             Description               = "This is my enrollment profile";
             DisplayName               = "MyTestEnrollmentProfile";
-            EnrolledDeviceCount       = 0;
             EnrollmentMode            = "corporateOwnedDedicatedDevice";
             EnrollmentTokenType       = "default";
-            EnrollmentTokenUsageCount = 0;
             Ensure                    = "Absent";
             IsTeamsDeviceProfile      = $False;
             RoleScopeTagIds           = @("0");
             TenantId                  = $TenantId;
-            TokenCreationDateTime     = "10/26/2024 1:02:29 AM";
             TokenExpirationDateTime   = "10/31/2024 3:59:59 AM";
             WifiHidden                = $False;
             WifiSecurityType          = "none";

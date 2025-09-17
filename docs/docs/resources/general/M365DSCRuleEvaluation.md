@@ -17,8 +17,6 @@
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
 | **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
-# AAD Tenant Details
-
 ## Description
 
 This resource monitors Microsoft365DSC resources based on provided rules.

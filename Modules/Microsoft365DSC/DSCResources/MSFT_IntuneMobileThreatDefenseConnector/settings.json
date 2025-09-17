@@ -1,32 +1,40 @@
-﻿{
-    "resourceName": "IntuneMobileThreatDefenseConnector",
-    "description": "This resource configures a connection to Mobile Threat Defense partner.",
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [
-                    {
-                        "name": "DeviceManagementServiceConfig.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "DeviceManagementServiceConfig.ReadWrite.All"
-                    }
-                ]
-            },
-            "application": {
-                "read": [
-                    {
-                        "name": "DeviceManagementServiceConfig.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "DeviceManagementServiceConfig.ReadWrite.All"
-                    }
-                ]
-            }
-        }
+{
+  "resourceName": "IntuneMobileThreatDefenseConnector",
+  "description": "This resource configures a connection to Mobile Threat Defense partner.",
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "DeviceManagementServiceConfig.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "DeviceManagementServiceConfig.ReadWrite.All"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "DeviceManagementServiceConfig.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "DeviceManagementServiceConfig.ReadWrite.All"
+          }
+        ]
+      }
     }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.DeviceManagement.Administration"
+  ],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ]
 }

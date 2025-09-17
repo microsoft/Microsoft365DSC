@@ -10,7 +10,7 @@
 | **InheritanceType** | Key | String | The InheritanceType parameter specifies how permissions are inherited by folders in the mailbox. Valid values are: None, All, Children, Descendents, SelfAndChildren. | `None`, `All`, `Children`, `Descendents`, `SelfAndChildren` |
 | **Owner** | Write | String | The Owner parameter specifies the owner of the mailbox object. | |
 | **Deny** | Write | Boolean | The Deny switch specifies that the permissions you're adding are Deny permissions. | |
-| **Ensure** | Write | String | Determines wheter or not the permission should exist on the mailbox. | `Present` |
+| **Ensure** | Write | String | Determines whether or not the permission should exist on the mailbox. | `Present` |
 | **Credential** | Write | PSCredential | Credentials of the Exchange Global Admin | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
 | **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. | |

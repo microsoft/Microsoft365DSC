@@ -2,5 +2,4 @@
 
 ## Description
 
-This resource configures a Protection Alert
-in Security and Compliance Center.
+This resource configures a Protection Alert in Purview.

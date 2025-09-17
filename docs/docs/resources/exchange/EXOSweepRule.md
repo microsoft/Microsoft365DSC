@@ -29,30 +29,6 @@ Use this resource to create Sweep rules in mailboxes. Sweep rules run at regular
 
 ## Permissions
 
-### Microsoft Graph
-
-To authenticate with the Microsoft Graph API, this resource required the following permissions:
-
-#### Delegated permissions
-
-- **Read**
-
-    - None
-
-- **Update**
-
-    - None
-
-#### Application permissions
-
-- **Read**
-
-    - None
-
-- **Update**
-
-    - None
-
 ## Examples
 
 ### Example 1

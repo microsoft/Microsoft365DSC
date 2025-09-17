@@ -33,6 +33,7 @@
 | **dataType** | Write | String | The type of the target assignment. | `#microsoft.graph.groupAssignmentTarget`, `#microsoft.graph.allLicensedUsersAssignmentTarget`, `#microsoft.graph.allDevicesAssignmentTarget`, `#microsoft.graph.exclusionGroupAssignmentTarget`, `#microsoft.graph.configurationManagerCollectionAssignmentTarget` |
 | **deviceAndAppManagementAssignmentFilterType** | Write | String | The type of filter of the target assignment i.e. Exclude or Include. Possible values are:none, include, exclude. | `none`, `include`, `exclude` |
 | **deviceAndAppManagementAssignmentFilterId** | Write | String | The Id of the filter for the target assignment. | |
+| **deviceAndAppManagementAssignmentFilterDisplayName** | Write | String | The display name of the filter for the target assignment. | |
 | **groupId** | Write | String | The group Id that is the target of the assignment. | |
 | **groupDisplayName** | Write | String | The group Display Name that is the target of the assignment. | |
 | **collectionId** | Write | String | The collection Id that is the target of the assignment.(ConfigMgr) | |
@@ -52,21 +53,21 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - Group.Read.All, DeviceManagementConfiguration.Read.All, DeviceManagementManagedDevices.Read.All
+    - Group.Read.All, DeviceManagementScripts.Read.All
 
 - **Update**
 
-    - Group.Read.All, DeviceManagementConfiguration.ReadWrite.All, DeviceManagementManagedDevices.ReadWrite.All
+    - Group.Read.All, DeviceManagementScripts.ReadWrite.All
 
 #### Application permissions
 
 - **Read**
 
-    - Group.Read.All, DeviceManagementConfiguration.Read.All, DeviceManagementManagedDevices.Read.All
+    - Group.Read.All, DeviceManagementScripts.Read.All
 
 - **Update**
 
-    - Group.Read.All, DeviceManagementConfiguration.ReadWrite.All, DeviceManagementManagedDevices.ReadWrite.All
+    - Group.Read.All, DeviceManagementScripts.ReadWrite.All
 
 ## Examples
 

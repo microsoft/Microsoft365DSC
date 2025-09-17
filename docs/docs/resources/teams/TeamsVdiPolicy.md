@@ -7,6 +7,7 @@
 | **Identity** | Key | String | Unique identity of the VDI Policy. | |
 | **DisableAudioVideoInCallsAndMeetings** | Write | Boolean | Disables Audio and Video in Calls and Meeting. | |
 | **DisableCallsAndMeetings** | Write | Boolean | Disables Calls and Meetings. | |
+| **VDI2Optimization** | Write | String | Determines whether a user can be VDI 2.0 optimized. | |
 | **Ensure** | Write | String | Present ensures the instance exists, absent ensures it is removed. | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials of the workload's Admin | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
@@ -73,6 +74,7 @@ Configuration Example
             DisableCallsAndMeetings             = $False;
             Ensure                              = "Present";
             Identity                            = "Global";
+            VDI2Optimization                    = "Enabled";
         }
     }
 }

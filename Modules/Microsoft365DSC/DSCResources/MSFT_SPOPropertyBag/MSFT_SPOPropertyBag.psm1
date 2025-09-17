@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_SPOPropertyBag'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -60,62 +62,70 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of SPOPropertyBag for $Key"
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
-        -InboundParameters $PSBoundParameters `
-        -Url $Url
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = 'Absent'
     try
     {
-        try
+        if ($null -eq $Script:exportedInstance -or $Script:exportedInstance.Key -ne $Key)
         {
-            Write-Verbose -Message "Obtaining all properties from the Get method for url {$Url}"
-            [array]$property = Get-PnPPropertyBag -Key $Key -ErrorAction 'Stop'
+            $null = New-M365DSCConnection -Workload 'PnP' `
+                -InboundParameters $PSBoundParameters `
+                -Url $Url
 
-            Write-Verbose -Message 'Properties obtained correctly'
-        }
-        catch
-        {
-            Write-Verbose "Credential or service principal specified does not have admin access to site {$Url}"
-            if ($_.Exception -like '*Unable to cast object of type*')
-            {
-                [array]$property = Get-PnPPropertyBag | Where-Object -FilterScript { $_.Key -ceq $Key }
-            }
-            elseif ($_.Exception -like '*The underlying connection was closed*')
-            {
-                $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
-                    -InboundParameters $PSBoundParameters `
-                    -Url $Url
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
 
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullReturn = $PSBoundParameters
+            $nullReturn.Ensure = 'Absent'
+            try
+            {
                 Write-Verbose -Message "Obtaining all properties from the Get method for url {$Url}"
-                [array]$property = Get-PnPPropertyBag -Key $Key -ErrorAction 'SilentlyContinue'
+                [array]$property = Get-PnPPropertyBag -Key $Key -ErrorAction 'Stop'
+
+                Write-Verbose -Message 'Properties obtained correctly'
             }
-            else
+            catch
             {
-                New-M365DSCLogEntry -Message "Couldn't get Property Bag for {$Url}" `
-                    -Exception $_ `
-                    -Source $MyInvocation.MyCommand.ModuleName
-                Write-Verbose "Credential specified does not have admin access to site {$Url}"
+                Write-Verbose "Credential or service principal specified does not have admin access to site {$Url}"
+                if ($_.Exception -like '*Unable to cast object of type*')
+                {
+                    [array]$property = Get-PnPPropertyBag | Where-Object -FilterScript { $_.Key -ceq $Key }
+                }
+                elseif ($_.Exception -like '*The underlying connection was closed*')
+                {
+                    $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
+                        -InboundParameters $PSBoundParameters `
+                        -Url $Url
+
+                    Write-Verbose -Message "Obtaining all properties from the Get method for url {$Url}"
+                    [array]$property = Get-PnPPropertyBag -Key $Key -ErrorAction 'SilentlyContinue'
+                }
+                else
+                {
+                    New-M365DSCLogEntry -Message "Couldn't get Property Bag for {$Url}" `
+                        -Exception $_ `
+                        -Source $MyInvocation.MyCommand.ModuleName
+                    Write-Verbose "Credential specified does not have admin access to site {$Url}"
+                }
             }
         }
-        if ($property.Length -ne 1)
+        else
+        {
+            [array]$property = @($Script:exportedInstance.Value)
+        }
+
+        if ($property.Count -ne 1)
         {
             [array]$property = Get-PnPPropertyBag | Where-Object -FilterScript { $_.Key -ceq $Key }
         }
-        if ($property.Length -eq 0)
+        if ($property.Count -eq 0)
         {
             Write-Verbose -Message "SPOPropertyBag $Key does not exist at {$Url}."
             return $nullReturn
@@ -135,7 +145,7 @@ function Get-TargetResource
                 CertificatePassword   = $CertificatePassword
                 CertificatePath       = $CertificatePath
                 CertificateThumbprint = $CertificateThumbprint
-                Managedidentity       = $ManagedIdentity.IsPresent
+                ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }
 
@@ -454,11 +464,15 @@ function Export-TargetResource
                         CertificatePassword   = $CertificatePassword
                         CertificatePath       = $CertificatePath
                         CertificateThumbprint = $CertificateThumbprint
-                        Managedidentity       = $ManagedIdentity.IsPresent
+                        ManagedIdentity       = $ManagedIdentity.IsPresent
                         Credential            = $Credential
                         AccessTokens          = $AccessTokens
                     }
 
+                    $Script:exportedInstance = @{
+                        Key = $property.Key
+                        Value = $property.Value
+                    }
                     $Results = Get-TargetResource @Params
                     $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName 'SPOPropertyBag' `
                         -ConnectionMode $ConnectionMode `
@@ -528,3 +542,4 @@ function Export-TargetResource
 }
 
 Export-ModuleMember -Function *-TargetResource
+

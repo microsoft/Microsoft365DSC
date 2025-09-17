@@ -1,58 +1,65 @@
-﻿{
-    "resourceName": "SPOSiteAuditSettings",
-    "description": "",
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [
-                    {
-                        "name": "Domain.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Domain.Read.All"
-                    }
-                ]
-            },
-            "application": {
-                "read": [
-                    {
-                        "name": "Domain.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Domain.Read.All"
-                    }
-                ]
-            }
-        },
-        "sharepoint": {
-            "delegated": {
-                "read": [
-                    {
-                        "name": "Sites.FullControl.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Sites.FullControl.All"
-                    }
-                ]
-            },
-            "application": {
-                "read": [
-                    {
-                        "name": "Sites.FullControl.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Sites.FullControl.All"
-                    }
-                ]
-            }
-        }
+{
+  "resourceName": "SPOSiteAuditSettings",
+  "description": "",
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "Domain.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Domain.Read.All"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "Domain.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Domain.Read.All"
+          }
+        ]
+      }
+    },
+    "sharepoint": {
+      "delegated": {
+        "read": [
+          {
+            "name": "Sites.FullControl.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Sites.FullControl.All"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "Sites.FullControl.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Sites.FullControl.All"
+          }
+        ]
+      }
     }
+  },
+  "requiredModules": [
+    "PnP.PowerShell"
+  ],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ]
 }

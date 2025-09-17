@@ -9,7 +9,7 @@
 | **Description** | Write | String | The description of the connected organization. | |
 | **IdentitySources** | Write | MSFT_AADEntitlementManagementConnectedOrganizationIdentitySource[] | The identity sources in this connected organization. | |
 | **State** | Write | String | The state of a connected organization defines whether assignment policies with requestor scope type AllConfiguredConnectedOrganizationSubjects are applicable or not. | `configured`, `proposed`, `unknownFutureValue` |
-| **ExternalSponsors** | Write | StringArray[] | Collection of objectID of extenal sponsors. the sponsor can be a user or a group. | |
+| **ExternalSponsors** | Write | StringArray[] | Collection of objectID of external sponsors. the sponsor can be a user or a group. | |
 | **InternalSponsors** | Write | StringArray[] | Collection of objectID of internal sponsors. the sponsor can be a user or a group. | |
 | **Ensure** | Write | String | Present ensures the policy exists, absent ensures it is removed. | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials of the Intune Admin | |

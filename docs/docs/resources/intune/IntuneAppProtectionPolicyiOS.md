@@ -7,6 +7,7 @@
 | **DisplayName** | Key | String | Display name of the iOS App Protection Policy. | |
 | **Identity** | Write | String | Identity of the iOS App Protection Policy. | |
 | **Description** | Write | String | Description of the iOS App Protection Policy. | |
+| **RoleScopeTagIds** | Write | StringArray[] | List of Scope Tags for this Entity instance. | |
 | **AllowedDataIngestionLocations** | Write | StringArray[] | Data storage locations where a user may store managed data. Inherited from managedAppProtection. | |
 | **AllowWidgetContentSync** | Write | Boolean | Indicates if content sync for widgets is allowed for iOS on App Protection Policies. | |
 | **AppActionIfAccountIsClockedOut** | Write | String | Defines a managed app behavior, either block or warn, if the user is clocked out (non-working time). | `block`, `wipe`, `warn`, `blockWhenSettingIsSupported` |
@@ -71,10 +72,10 @@
 | **AppDataEncryptionType** | Write | String | Require app data to be encrypted. | `useDeviceSettings`, `afterDeviceRestart`, `whenDeviceLockedExceptOpenFiles`, `whenDeviceLocked` |
 | **ExemptedAppProtocols** | Write | StringArray[] | Apps in this list will be exempt from the policy and will be able to receive data from managed apps. | |
 | **MinimumWipeSdkVersion** | Write | String | Versions less than the specified version will block the managed app from accessing company data. | |
-| **AllowedIosDeviceModels** | Write | StringArray[] | Semicolon seperated list of device models allowed, as a string, for the managed app to work. | |
+| **AllowedIosDeviceModels** | Write | StringArray[] | Semicolon separated list of device models allowed, as a string, for the managed app to work. | |
 | **AppActionIfIosDeviceModelNotAllowed** | Write | String | Defines a managed app behavior, either block or wipe, if the specified device model is not allowed. | `block`, `wipe`, `warn` |
 | **FilterOpenInToOnlyManagedApps** | Write | Boolean | Defines if open-in operation is supported from the managed app to the filesharing locations selected. This setting only applies when AllowedOutboundDataTransferDestinations is set to ManagedApps and DisableProtectionOfManagedOutboundOpenInData is set to False. | |
-| **DisableProtectionOfManagedOutboundOpenInData** | Write | Boolean | Disable protection of data transferred to other apps through IOS OpenIn option. This setting is only allowed to be True when AllowedOutboundDataTransferDestinations is set to ManagedApps. | |
+| **DisableProtectionOfManagedOutboundOpenInData** | Write | Boolean | Disable protection of data transferred to other apps through IOS 'OpenIn' option. This setting is only allowed to be True when AllowedOutboundDataTransferDestinations is set to ManagedApps. | |
 | **ProtectInboundDataFromUnknownSources** | Write | Boolean | Protect incoming data from unknown source. This setting is only allowed to be True when AllowedInboundDataTransferSources is set to AllApps. | |
 | **CustomBrowserProtocol** | Write | String | A custom browser protocol to open weblink on iOS. | |
 | **Apps** | Write | StringArray[] | List of IDs representing the iOS apps controlled by this protection policy. | |

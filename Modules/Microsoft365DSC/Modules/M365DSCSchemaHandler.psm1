@@ -55,11 +55,11 @@ function New-M365DSCSchemaDefinition
                         $propertyType = $propertyType + '[]'
                     }
 
-                    $propertyInfoList += @{
-                        CIMType = $propertyType
-                        Name    = $propertyName
-                        Option  = $propertyKeyOrWrite
+                    $propertyInfoList += [ordered]@{
+                        CIMType     = $propertyType
                         Description = $propertyDescription
+                        Name        = $propertyName
+                        Option      = $propertyKeyOrWrite
                     }
 
                     if ($ValueMap.Length -gt 0)

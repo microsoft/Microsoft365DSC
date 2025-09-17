@@ -1,32 +1,48 @@
 {
-    "resourceName": "AADAuthenticationContextClassReference",
-    "description": "Represents a Microsoft Entra authentication context class reference. Authentication context class references are custom values that define a Conditional Access authentication requirement.",
-    "roles": {
+  "resourceName": "AADAuthenticationContextClassReference",
+  "description": "Represents a Microsoft Entra authentication context class reference. Authentication context class references are custom values that define a Conditional Access authentication requirement.",
+  "roles": {
+    "read": [
+      "Security Reader"
+    ],
+    "update": [
+      "Authentication Policy Administrator"
+    ]
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
         "read": [
-            "Security Reader"
+          {
+            "name": "Policy.Read.ConditionalAccess"
+          }
         ],
         "update": [
-            "Authentication Policy Administrator"
+          {
+            "name": "Policy.ReadWrite.ConditionalAccess"
+          }
         ]
-    },
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [],
-                "update": []
-            },
-            "application": {
-                "read": [
-                    {
-                        "name": "Policy.Read.ConditionalAccess"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Policy.ReadWrite.ConditionalAccess"
-                    }
-                ]
-            }
-        }
+      },
+      "application": {
+        "read": [
+          {
+            "name": "Policy.Read.ConditionalAccess"
+          }
+        ],
+        "update": [
+          {
+            "name": "Policy.ReadWrite.ConditionalAccess"
+          }
+        ]
+      }
     }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.Identity.SignIns"
+  ],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ]
 }

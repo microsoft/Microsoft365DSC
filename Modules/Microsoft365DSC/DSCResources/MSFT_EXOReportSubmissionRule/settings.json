@@ -1,35 +1,44 @@
-﻿{
-    "resourceName": "EXOReportSubmissionRule",
-    "description": "",
-    "roles": {
+{
+  "resourceName": "EXOReportSubmissionRule",
+  "description": "",
+  "roles": {
+    "read": [
+      "Security Reader"
+    ],
+    "update": [
+      "Security Administrator"
+    ]
+  },
+  "permissions": {
+    "Office 365 Exchange Online": {
+      "application": {
         "read": [
-            "Security Reader"
+          {
+            "name": "Exchange.ManageAsApp"
+          }
         ],
         "update": [
-            "Security Administrator"
+          {
+            "name": "Exchange.ManageAsApp"
+          }
         ]
+      }
     },
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [],
-                "update": []
-            },
-            "application": {
-                "read": [],
-                "update": []
-            }
-        },
-        "exchange": {
-            "requiredroles": [
-                "Transport Hygiene",
-                "Security Admin",
-                "View-Only Configuration",
-                "Security Reader"
-            ],
-            "requiredrolegroups": [
-                "Organization Management"
-            ]
-        }
+    "exchange": {
+      "requiredroles": [
+        "Transport Hygiene",
+        "Security Admin",
+        "View-Only Configuration",
+        "Security Reader"
+      ],
+      "requiredrolegroups": [
+        "Organization Management"
+      ]
     }
+  },
+  "requiredModules": [],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ]
 }

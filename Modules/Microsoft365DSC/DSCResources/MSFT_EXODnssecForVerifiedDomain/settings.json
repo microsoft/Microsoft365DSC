@@ -1,24 +1,32 @@
-﻿{
-    "resourceName": "EXODnssecForVerifiedDomain",
-    "description": "This resource configures the DnsSec status for a verified domain.",
-    "roles": {
+{
+  "resourceName": "EXODnssecForVerifiedDomain",
+  "description": "This resource configures the DnsSec status for a verified domain.",
+  "roles": {
+    "read": [
+      "Global Reader"
+    ],
+    "update": [
+      "Exchange Administrator"
+    ]
+  },
+  "permissions": {
+    "Office 365 Exchange Online": {
+      "application": {
         "read": [
-            "Global Reader"
+          {
+            "name": "Exchange.ManageAsApp"
+          }
         ],
         "update": [
-            "Exchange Administrator"
+          {
+            "name": "Exchange.ManageAsApp"
+          }
         ]
-    },
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [],
-                "update": []
-            },
-            "application": {
-                "read": [],
-                "update": []
-            }
-        }
+      }
     }
+  },
+  "requiredModules": [],
+  "supportedEnvironments": [
+    "Global"
+  ]
 }

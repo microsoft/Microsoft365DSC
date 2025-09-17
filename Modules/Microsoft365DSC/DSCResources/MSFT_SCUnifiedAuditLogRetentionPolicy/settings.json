@@ -1,5 +1,33 @@
 {
-    "resourceName": "SCUnifiedAuditLogRetentionPolicy",
-    "description": "The resource configured the Unified Audit Log Retention Policy in the Security and Compliance.",
-    "permissions": []
+  "resourceName": "SCUnifiedAuditLogRetentionPolicy",
+  "description": "This resource configures a Unified Audit Log Retention Policy in Purview.",
+  "roles": {
+    "read": [
+      "Compliance Administrator"
+    ],
+    "update": [
+      "Compliance Administrator"
+    ]
+  },
+  "permissions": {
+    "Office 365 Exchange Online": {
+      "application": {
+        "read": [
+          {
+            "name": "Exchange.ManageAsApp"
+          }
+        ],
+        "update": [
+          {
+            "name": "Exchange.ManageAsApp"
+          }
+        ]
+      }
+    }
+  },
+  "requiredModules": [],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ]
 }

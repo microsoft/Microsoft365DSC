@@ -1,32 +1,40 @@
 {
-    "resourceName": "IntuneRoleDefinition",
-    "description": "This resource configures an Intune Role Definition.",
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [
-                    {
-                        "name": "DeviceManagementRBAC.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "DeviceManagementRBAC.ReadWrite.All"
-                    }
-                ]
-            },
-            "application": {
-                "read": [
-                    {
-                        "name": "DeviceManagementRBAC.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "DeviceManagementRBAC.ReadWrite.All"
-                    }
-                ]
-            }
-        }
+  "resourceName": "IntuneRoleDefinition",
+  "description": "This resource configures an Intune Role Definition.",
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "DeviceManagementRBAC.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "DeviceManagementRBAC.ReadWrite.All"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "DeviceManagementRBAC.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "DeviceManagementRBAC.ReadWrite.All"
+          }
+        ]
+      }
     }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.DeviceManagement.Administration"
+  ],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ]
 }

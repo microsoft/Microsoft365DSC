@@ -9,12 +9,15 @@
 | **Description** | Write | String | Description of the Intune policy. | |
 | **ConnectAutomatically** | Write | Boolean | Connect automatically | |
 | **ConnectWhenNetworkNameIsHidden** | Write | Boolean | Connect when network name is hidden | |
+| **DeploymentChannel** | Write | String | Indicates the deployment channel type used to deploy the configuration profile. | `deviceChannel`, `userChannel` |
+| **ForcePreSharedKeyUpdate** | Write | Boolean | If the pre shared key should be updated, even if the policy is already equal. | |
 | **NetworkName** | Write | String | Network name | |
 | **PreSharedKey** | Write | String | Pre shared key | |
 | **ProxyAutomaticConfigurationUrl** | Write | String | Proxy automatic configuration url | |
 | **ProxyManualAddress** | Write | String | Proxy manual address | |
 | **ProxyManualPort** | Write | UInt32 | Proxy manual port | |
 | **ProxySettings** | Write | String | Proxy settings | `none`, `manual`, `automatic` |
+| **RoleScopeTagIds** | Write | StringArray[] | List of Scope Tags for this Entity instance. | |
 | **Ssid** | Write | String | SSID | |
 | **WiFiSecurityType** | Write | String | Wi-Fi security | `open`, `wpaPersonal`, `wpaEnterprise`, `wep`, `wpa2Personal`, `wpa2Enterprise` |
 | **Assignments** | Write | MSFT_DeviceManagementConfigurationPolicyAssignments[] | Represents the assignment to the Intune policy. | |
@@ -36,6 +39,7 @@
 | **dataType** | Write | String | The type of the target assignment. | `#microsoft.graph.groupAssignmentTarget`, `#microsoft.graph.allLicensedUsersAssignmentTarget`, `#microsoft.graph.allDevicesAssignmentTarget`, `#microsoft.graph.exclusionGroupAssignmentTarget`, `#microsoft.graph.configurationManagerCollectionAssignmentTarget` |
 | **deviceAndAppManagementAssignmentFilterType** | Write | String | The type of filter of the target assignment i.e. Exclude or Include. Possible values are:none, include, exclude. | `none`, `include`, `exclude` |
 | **deviceAndAppManagementAssignmentFilterId** | Write | String | The Id of the filter for the target assignment. | |
+| **deviceAndAppManagementAssignmentFilterDisplayName** | Write | String | The display name of the filter for the target assignment. | |
 | **groupId** | Write | String | The group Id that is the target of the assignment. | |
 | **groupDisplayName** | Write | String | The group Display Name that is the target of the assignment. | |
 | **collectionId** | Write | String | The collection Id that is the target of the assignment.(ConfigMgr) | |
@@ -43,7 +47,7 @@
 
 ## Description
 
-This resource configures an Intune Wifi Configuration Policy for MacOS Device.
+This resource configures an Intune Wifi Configuration Policy for MacOS with Basic Wi-Fi type.
 
 ## Permissions
 

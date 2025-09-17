@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_EXOIntraOrganizationConnector'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -61,17 +63,18 @@ function Get-TargetResource
         [System.String[]]
         $AccessTokens
     )
+
     Write-Verbose -Message "Getting configuration of IntraOrganizationConnector for $($Identity)"
 
     if ($Global:CurrentModeIsExport)
     {
-        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters `
             -SkipModuleReload $true
     }
     else
     {
-        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters
     }
     #Ensure the proper dependencies are installed in the current environment.
@@ -125,7 +128,7 @@ function Get-TargetResource
                 CertificateThumbprint = $CertificateThumbprint
                 CertificatePath       = $CertificatePath
                 CertificatePassword   = $CertificatePassword
-                Managedidentity       = $ManagedIdentity.IsPresent
+                ManagedIdentity       = $ManagedIdentity.IsPresent
                 TenantId              = $TenantId
                 AccessTokens          = $AccessTokens
             }
@@ -223,21 +226,12 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration of IntraOrganizationConnector for $($Identity)"
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+    $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
     $IntraOrganizationConnectors = Get-IntraOrganizationConnector
     $IntraOrganizationConnector = $IntraOrganizationConnectors | Where-Object -FilterScript { $_.Identity -eq $Identity }
-    $IntraOrganizationConnectorParams = [System.Collections.Hashtable]($PSBoundParameters)
-    $IntraOrganizationConnectorParams.Remove('Ensure') | Out-Null
-    $IntraOrganizationConnectorParams.Remove('Credential') | Out-Null
-    $IntraOrganizationConnectorParams.Remove('ApplicationId') | Out-Null
-    $IntraOrganizationConnectorParams.Remove('TenantId') | Out-Null
-    $IntraOrganizationConnectorParams.Remove('CertificateThumbprint') | Out-Null
-    $IntraOrganizationConnectorParams.Remove('CertificatePath') | Out-Null
-    $IntraOrganizationConnectorParams.Remove('CertificatePassword') | Out-Null
-    $IntraOrganizationConnectorParams.Remove('ManagedIdentity') | Out-Null
-    $IntraOrganizationConnectorParams.Remove('AccessTokens') | Out-Null
+    $IntraOrganizationConnectorParams = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
     if (('Present' -eq $Ensure ) -and ($null -eq $IntraOrganizationConnector))
     {
@@ -390,6 +384,7 @@ function Export-TargetResource
         [System.String[]]
         $AccessTokens
     )
+
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
         -SkipModuleReload $true
@@ -436,7 +431,7 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
                 CertificatePassword   = $CertificatePassword
-                Managedidentity       = $ManagedIdentity.IsPresent
+                ManagedIdentity       = $ManagedIdentity.IsPresent
                 CertificatePath       = $CertificatePath
                 AccessTokens          = $AccessTokens
             }

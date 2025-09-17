@@ -4,7 +4,7 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **Id** | Write | String | The unique idenfier for an entity. Read-only. | |
+| **Id** | Write | String | The unique identifier for an entity. Read-only. | |
 | **Description** | Write | String | Description of the Role definition. | |
 | **DisplayName** | Key | String | Display Name of the Role definition. | |
 | **IsBuiltIn** | Write | Boolean | Type of Role. Set to True if it is built-in, or set to False if it is a custom role definition. | |

@@ -1,82 +1,88 @@
-﻿{
-    "resourceName": "AADAdministrativeUnit",
-    "description": "This resource configures an Azure Active Directory administrative unit.",
-    "roles": {
+{
+  "resourceName": "AADAdministrativeUnit",
+  "description": "This resource configures an Azure Active Directory administrative unit.",
+  "roles": {
+    "read": [
+      "Security Reader"
+    ],
+    "update": [
+      "Privileged Role Administrator"
+    ]
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
         "read": [
-            "Security Reader"
+          {
+            "name": "AdministrativeUnit.Read.All"
+          },
+          {
+            "name": "RoleManagement.Read.Directory"
+          }
         ],
         "update": [
-            "Privileged Role Administrator"
+          {
+            "name": "AdministrativeUnit.ReadWrite.All"
+          },
+          {
+            "name": "Application.Read.All"
+          },
+          {
+            "name": "Device.Read.All"
+          },
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "RoleManagement.Read.Directory"
+          },
+          {
+            "name": "User.Read.All"
+          }
         ]
-    },
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [
-                    {
-                        "name": "AdministrativeUnit.Read.All"
-                    },
-                    {
-                        "name": "RoleManagement.Read.Directory"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "AdministrativeUnit.Read.All"
-                    },
-                    {
-                        "name": "AdministrativeUnit.ReadWrite.All"
-                    },
-                    {
-                        "name": "Application.Read.All"
-                    },
-                    {
-                        "name": "Device.Read.All"
-                    },
-                    {
-                        "name": "Group.Read.All"
-                    },
-                    {
-                        "name": "RoleManagement.Read.Directory"
-                    },
-                    {
-                        "name": "User.Read.All"
-                    }
-                ]
-            },
-            "application": {
-                "read": [
-                    {
-                        "name": "AdministrativeUnit.Read.All"
-                    },
-                    {
-                        "name": "RoleManagement.Read.Directory"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "AdministrativeUnit.Read.All"
-                    },
-                    {
-                        "name": "AdministrativeUnit.ReadWrite.All"
-                    },
-                    {
-                        "name": "Application.Read.All"
-                    },
-                    {
-                        "name": "Device.Read.All"
-                    },
-                    {
-                        "name": "Group.Read.All"
-                    },
-                    {
-                        "name": "RoleManagement.Read.Directory"
-                    },
-                    {
-                        "name": "User.Read.All"
-                    }
-                ]
-            }
-        }
+      },
+      "application": {
+        "read": [
+          {
+            "name": "AdministrativeUnit.Read.All"
+          },
+          {
+            "name": "RoleManagement.Read.Directory"
+          }
+        ],
+        "update": [
+          {
+            "name": "AdministrativeUnit.ReadWrite.All"
+          },
+          {
+            "name": "Application.Read.All"
+          },
+          {
+            "name": "Device.Read.All"
+          },
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "RoleManagement.Read.Directory"
+          },
+          {
+            "name": "User.Read.All"
+          }
+        ]
+      }
     }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Applications",
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Groups",
+    "Microsoft.Graph.Identity.DirectoryManagement",
+    "Microsoft.Graph.Users",
+    "MSCloudLoginAssistant"
+  ],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ]
 }

@@ -1,70 +1,77 @@
-﻿{
-    "resourceName": "TeamsUser",
-    "description": "",
-    "roles": {
+{
+  "resourceName": "TeamsUser",
+  "description": "",
+  "roles": {
+    "read": [],
+    "update": []
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
         "read": [],
         "update": []
-    },
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [],
-                "update": []
-            },
-            "application": {
-                "read": [
-                    {
-                        "name": "Organization.Read.All"
-                    },
-                    {
-                        "name": "User.Read.All"
-                    },
-                    {
-                        "name": "Group.ReadWrite.All"
-                    },
-                    {
-                        "name": "AppCatalog.ReadWrite.All"
-                    },
-                    {
-                        "name": "TeamSettings.ReadWrite.All"
-                    },
-                    {
-                        "name": "Channel.Delete.All"
-                    },
-                    {
-                        "name": "ChannelSettings.ReadWrite.All"
-                    },
-                    {
-                        "name": "ChannelMember.ReadWrite.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Organization.Read.All"
-                    },
-                    {
-                        "name": "User.Read.All"
-                    },
-                    {
-                        "name": "Group.ReadWrite.All"
-                    },
-                    {
-                        "name": "AppCatalog.ReadWrite.All"
-                    },
-                    {
-                        "name": "TeamSettings.ReadWrite.All"
-                    },
-                    {
-                        "name": "Channel.Delete.All"
-                    },
-                    {
-                        "name": "ChannelSettings.ReadWrite.All"
-                    },
-                    {
-                        "name": "ChannelMember.ReadWrite.All"
-                    }
-                ]
-            }
-        }
+      },
+      "application": {
+        "read": [
+          {
+            "name": "Organization.Read.All"
+          },
+          {
+            "name": "User.Read.All"
+          },
+          {
+            "name": "Group.ReadWrite.All"
+          },
+          {
+            "name": "AppCatalog.ReadWrite.All"
+          },
+          {
+            "name": "TeamSettings.ReadWrite.All"
+          },
+          {
+            "name": "Channel.Delete.All"
+          },
+          {
+            "name": "ChannelSettings.ReadWrite.All"
+          },
+          {
+            "name": "ChannelMember.ReadWrite.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Organization.Read.All"
+          },
+          {
+            "name": "User.Read.All"
+          },
+          {
+            "name": "Group.ReadWrite.All"
+          },
+          {
+            "name": "AppCatalog.ReadWrite.All"
+          },
+          {
+            "name": "TeamSettings.ReadWrite.All"
+          },
+          {
+            "name": "Channel.Delete.All"
+          },
+          {
+            "name": "ChannelSettings.ReadWrite.All"
+          },
+          {
+            "name": "ChannelMember.ReadWrite.All"
+          }
+        ]
+      }
     }
+  },
+  "requiredModules": [
+    "MicrosoftTeams"
+  ],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ]
 }

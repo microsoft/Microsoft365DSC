@@ -1,29 +1,45 @@
-﻿{
-    "resourceName": "AADUserflowAttribute",
-    "description": "This resource configures an Azure User Flow attribute..",
-    "roles": {
-        "read": [],
+{
+  "resourceName": "AADUserflowAttribute",
+  "description": "This resource configures an Azure User Flow attribute..",
+  "roles": {
+    "read": [],
+    "update": [
+      "External ID User Flow Attribute Administrator"
+    ]
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "IdentityUserFlow.Read.All"
+          }
+        ],
         "update": [
-            "External ID User Flow Attribute Administrator"
+          {
+            "name": "IdentityUserFlow.ReadWrite.All"
+          }
         ]
-    },
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [
-                    {
-                        "name": "IdentityUserFlow.Read.All"
-                    },
-                    {
-                        "name": "IdentityUserFlow.ReadWrite.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "IdentityUserFlow.ReadWrite.All"
-                    }
-                ]
-            }
-        }
+      },
+      "application": {
+        "read": [
+          {
+            "name": "IdentityUserFlow.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "IdentityUserFlow.ReadWrite.All"
+          }
+        ]
+      }
     }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.Identity.SignIns"
+  ],
+  "supportedEnvironments": [
+    "Global"
+  ]
 }

@@ -11,7 +11,7 @@
 | **CacheServerHostNames** | Write | StringArray[] | Specifies cache servers host names. | |
 | **DeliveryOptimizationMode** | Write | String | Specifies the download method that delivery optimization can use to manage network bandwidth consumption for large content distribution scenarios. Possible values are: userDefined, httpOnly, httpWithPeeringNat, httpWithPeeringPrivateGroup, httpWithInternetPeering, simpleDownload, bypassMode. | `userDefined`, `httpOnly`, `httpWithPeeringNat`, `httpWithPeeringPrivateGroup`, `httpWithInternetPeering`, `simpleDownload`, `bypassMode` |
 | **ForegroundDownloadFromHttpDelayInSeconds** | Write | UInt64 | Specifies number of seconds to delay an HTTP source in a foreground download that is allowed to use peer-to-peer (0-86400). Valid values 0 to 86400 Specifying 0 sets Delivery Optimization to manage this setting using the cloud service. Valid values 0 to 86400 | |
-| **GroupIdSource** | Write | MSFT_MicrosoftGraphdeliveryOptimizationGroupIdSource | Specifies to restrict peer selection to a specfic source. The options set in this policy only apply to Delivery Optimization mode Group (2) download mode. If Group (2) isn't set as Download mode, this policy will be ignored. For option 3 - DHCP Option ID, the client will query DHCP Option ID 234 and use the returned GUID value as the Group ID. | |
+| **GroupIdSource** | Write | MSFT_MicrosoftGraphdeliveryOptimizationGroupIdSource | Specifies to restrict peer selection to a specific source. The options set in this policy only apply to Delivery Optimization mode Group (2) download mode. If Group (2) isn't set as Download mode, this policy will be ignored. For option 3 - DHCP Option ID, the client will query DHCP Option ID 234 and use the returned GUID value as the Group ID. | |
 | **MaximumCacheAgeInDays** | Write | UInt32 | Specifies the maximum time in days that each file is held in the Delivery Optimization cache after downloading successfully (0-3650). Valid values 0 to 3650 | |
 | **MaximumCacheSize** | Write | MSFT_MicrosoftGraphdeliveryOptimizationMaxCacheSize | Specifies the maximum cache size that Delivery Optimization either as a percentage or in GB. | |
 | **MinimumBatteryPercentageAllowedToUpload** | Write | UInt32 | Specifies the minimum battery percentage to allow the device to upload data (0-100). Valid values 0 to 100 The default value is 0. The value 0 (zero) means 'not limited' and the cloud service default value will be used. Valid values 0 to 100 | |
@@ -25,6 +25,7 @@
 | **DisplayName** | Key | String | Admin provided name of the device configuration. | |
 | **SupportsScopeTags** | Write | Boolean | Indicates whether or not the underlying Device Configuration supports the assignment of scope tags. Assigning to the ScopeTags property is not allowed when this value is false and entities will not be visible to scoped users. This occurs for Legacy policies created in Silverlight and can be resolved by deleting and recreating the policy in the Azure Portal. This property is read-only. | |
 | **Id** | Write | String | The unique identifier for an entity. Read-only. | |
+| **RoleScopeTagIds** | Write | StringArray[] | List of Scope Tags for this Entity instance. | |
 | **Assignments** | Write | MSFT_DeviceManagementConfigurationPolicyAssignments[] | Represents the assignment to the Intune policy. | |
 | **Ensure** | Write | String | Present ensures the policy exists, absent ensures it is removed. | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials of the Admin | |
@@ -44,6 +45,7 @@
 | **dataType** | Write | String | The type of the target assignment. | `#microsoft.graph.groupAssignmentTarget`, `#microsoft.graph.allLicensedUsersAssignmentTarget`, `#microsoft.graph.allDevicesAssignmentTarget`, `#microsoft.graph.exclusionGroupAssignmentTarget`, `#microsoft.graph.configurationManagerCollectionAssignmentTarget` |
 | **deviceAndAppManagementAssignmentFilterType** | Write | String | The type of filter of the target assignment i.e. Exclude or Include. Possible values are:none, include, exclude. | `none`, `include`, `exclude` |
 | **deviceAndAppManagementAssignmentFilterId** | Write | String | The Id of the filter for the target assignment. | |
+| **deviceAndAppManagementAssignmentFilterDisplayName** | Write | String | The display name of the filter for the target assignment. | |
 | **groupId** | Write | String | The group Id that is the target of the assignment. | |
 | **groupDisplayName** | Write | String | The group Display Name that is the target of the assignment. | |
 | **collectionId** | Write | String | The collection Id that is the target of the assignment.(ConfigMgr) | |

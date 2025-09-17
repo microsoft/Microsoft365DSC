@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_EXOPerimeterConfiguration'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -50,17 +52,18 @@ function Get-TargetResource
         [System.String[]]
         $AccessTokens
     )
+
     Write-Verbose -Message 'Getting Perimeter Configuration'
 
     if ($Global:CurrentModeIsExport)
     {
-        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters `
             -SkipModuleReload $true
     }
     else
     {
-        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters
     }
 
@@ -97,7 +100,7 @@ function Get-TargetResource
             CertificateThumbprint = $CertificateThumbprint
             CertificatePath       = $CertificatePath
             CertificatePassword   = $CertificatePassword
-            Managedidentity       = $ManagedIdentity.IsPresent
+            ManagedIdentity       = $ManagedIdentity.IsPresent
             TenantId              = $TenantId
             AccessTokens          = $AccessTokens
         }
@@ -183,20 +186,11 @@ function Set-TargetResource
 
     Write-Verbose -Message 'Setting configuration of Perimeter Configuration'
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+    $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
-    $PerimeterConfigurationParams = [System.Collections.Hashtable]($PSBoundParameters)
-    $PerimeterConfigurationParams.Remove('Ensure') | Out-Null
-    $PerimeterConfigurationParams.Remove('Credential') | Out-Null
-    $PerimeterConfigurationParams.Remove('ApplicationId') | Out-Null
-    $PerimeterConfigurationParams.Remove('TenantId') | Out-Null
-    $PerimeterConfigurationParams.Remove('CertificateThumbprint') | Out-Null
-    $PerimeterConfigurationParams.Remove('CertificatePath') | Out-Null
-    $PerimeterConfigurationParams.Remove('CertificatePassword') | Out-Null
-    $PerimeterConfigurationParams.Remove('ManagedIdentity') | Out-Null
+    $PerimeterConfigurationParams = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
     $PerimeterConfigurationParams.Remove('IsSingleInstance') | Out-Null
-    $PerimeterConfigurationParams.Remove('AccessTokens') | Out-Null
 
     if (('Present' -eq $Ensure ) -and ($Null -ne $PerimeterConfigurationParams))
     {
@@ -326,6 +320,7 @@ function Export-TargetResource
         [System.String[]]
         $AccessTokens
     )
+
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' -InboundParameters $PSBoundParameters -SkipModuleReload $true
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -364,7 +359,7 @@ function Export-TargetResource
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint
             CertificatePassword   = $CertificatePassword
-            Managedidentity       = $ManagedIdentity.IsPresent
+            ManagedIdentity       = $ManagedIdentity.IsPresent
             CertificatePath       = $CertificatePath
             AccessTokens          = $AccessTokens
         }

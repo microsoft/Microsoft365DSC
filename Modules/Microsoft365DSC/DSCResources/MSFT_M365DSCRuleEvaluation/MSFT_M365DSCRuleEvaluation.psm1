@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_M365DSCRuleEvaluation'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -173,8 +175,6 @@ function Test-TargetResource
         -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-
-    Write-Verbose -Message 'Testing configuration of Tenant Details'
 
     $Global:PartialExportFileName = "$((New-Guid).ToString()).partial"
     $module = Join-Path -Path $PSScriptRoot -ChildPath "..\MSFT_$ResourceTypeName\MSFT_$ResourceTypeName.psm1" -Resolve
@@ -428,3 +428,4 @@ function Export-TargetResource
 }
 
 Export-ModuleMember -Function *-TargetResource
+

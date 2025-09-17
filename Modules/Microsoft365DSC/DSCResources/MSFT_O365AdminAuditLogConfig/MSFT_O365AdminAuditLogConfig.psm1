@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_O365AdminAuditLogConfig'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -100,7 +102,7 @@ function Get-TargetResource
                 CertificateThumbprint           = $CertificateThumbprint
                 CertificatePath                 = $CertificatePath
                 CertificatePassword             = $CertificatePassword
-                Managedidentity                 = $ManagedIdentity.IsPresent
+                ManagedIdentity                 = $ManagedIdentity.IsPresent
                 UnifiedAuditLogIngestionEnabled = $UnifiedAuditLogIngestionEnabledReturnValue
                 AccessTokens                    = $AccessTokens
             }
@@ -287,7 +289,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $ResourceName `
+                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
                                          -ExcludedProperties @('Ensure')
     return $result
 }
@@ -368,7 +370,7 @@ function Export-TargetResource
             TenantId                        = $TenantId
             CertificateThumbprint           = $CertificateThumbprint
             CertificatePassword             = $CertificatePassword
-            Managedidentity                 = $ManagedIdentity.IsPresent
+            ManagedIdentity                 = $ManagedIdentity.IsPresent
             CertificatePath                 = $CertificatePath
             AccessTokens                    = $AccessTokens
         }

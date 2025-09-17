@@ -1,0 +1,21 @@
+{
+  "resourceName": "M365DSCGraphAPIRuleEvaluation",
+  "description": "This resource monitors Graph API endpoints against the defined rules.",
+  "roles": {
+    "read": [],
+    "update": []
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [],
+        "update": []
+      },
+      "application": {
+        "read": [],
+        "update": []
+      }
+    }
+  },
+  "requiredModules": []
+}

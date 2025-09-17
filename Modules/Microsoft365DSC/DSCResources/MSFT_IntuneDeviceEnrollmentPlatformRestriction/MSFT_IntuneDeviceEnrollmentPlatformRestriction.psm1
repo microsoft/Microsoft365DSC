@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_IntuneDeviceEnrollmentPlatformRestriction'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -105,7 +107,7 @@ function Get-TargetResource
     {
         if (-not $Script:exportedInstance -or $Script:exportedInstance.DisplayName -ne $DisplayName)
         {
-            $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+            $null = New-M365DSCConnection -Workload 'MicrosoftGraph' `
                 -InboundParameters $PSBoundParameters
 
             #Ensure the proper dependencies are installed in the current environment.
@@ -320,8 +322,7 @@ function Set-TargetResource
         $AccessTokens
     )
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters
+    Write-Verbose -Message "Setting configuration of the Intune Device Enrollment Platform Restriction with Id {$Identity} and DisplayName {$DisplayName}"
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -602,7 +603,7 @@ function Test-TargetResource
     Write-Verbose -Message "Testing configuration of the Intune Device Enrollment Platform Restriction with Id {$Identity} and DisplayName {$DisplayName}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
-    $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
+    $ValuesToCheck = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
     $testResult = $true
 
     #Compare Cim instances
@@ -626,7 +627,6 @@ function Test-TargetResource
         }
     }
 
-    $ValuesToCheck = Remove-M365DSCAuthenticationParameter -BoundParameters $ValuesToCheck
     $ValuesToCheck.Remove('Identity') | Out-Null
     $ValuesToCheck.Remove('WindowsMobileRestriction') | Out-Null
 
@@ -922,7 +922,7 @@ function Get-DevicePlatformRestrictionSetting
     if ($null -ne $Properties.platformType)
     {
         $keyName = ($Properties.platformType).Substring(0, 1).ToUpper() + ($Properties.platformType).Substring(1, $Properties.platformType.length - 1) + 'Restriction'
-        $keyValue = [Hashtable]::new($Properties.platformRestriction)
+        $keyValue = $Properties.platformRestriction.Clone()
         $hash = @{}
         foreach ($key in $keyValue.Keys)
         {
@@ -955,13 +955,13 @@ function Get-DevicePlatformRestrictionSetting
     }
     else
     {
-        $platformRestrictions = [Hashtable]::new($Properties)
+        $platformRestrictions = $Properties.Clone()
         $platformRestrictions.Remove('@odata.type')
         $platformRestrictions.Remove('@odata.context')
         foreach ($key in $platformRestrictions.Keys)
         {
             $keyName = $key.Substring(0, 1).ToUpper() + $key.Substring(1, $key.Length - 1)
-            $keyValue = [Hashtable]::new($platformRestrictions.$key)
+            $keyValue = $platformRestrictions.$key.Clone()
             $hash = @{}
             foreach ($key in $keyValue.Keys)
             {

@@ -42,6 +42,40 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName New-MgBetaDirectorySetting -MockWith {
             }
 
+            Mock -CommandName Get-MgBetaDirectorySettingTemplate -MockWith {
+                return @{
+                            DisplayName = 'Password Rule Settings'
+                            Id          = '5cf42378-d67d-4f36-ba46-e8b86229381d'
+                            Values      = @(
+                                @{
+                                    Name         = 'BannedPasswordCheckOnPremisesMode'
+                                    DefaultValue = 'Audit'
+                                },
+                                @{
+                                    Name         = 'EnableBannedPasswordCheckOnPremises'
+                                    DefaultValue = $true
+                                },
+                                @{
+                                    Name         = 'EnableBannedPasswordCheck'
+                                    DefaultValue = $true
+                                },
+                                @{
+                                    Name         = 'LockoutDurationInSeconds'
+                                    DefaultValue = 60
+                                },
+                                @{
+                                    Name         = 'LockoutThreshold'
+                                    DefaultValue = 10
+                                },
+                                @{
+                                    Name         = 'BannedPasswordList'
+                                    DefaultValue = $null
+                                }
+                            )
+                        }
+
+            }
+
             # Mock Write-M365DSCHost to hide output during the tests
             Mock -CommandName Write-M365DSCHost -MockWith {
             }

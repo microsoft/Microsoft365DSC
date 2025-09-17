@@ -67,7 +67,7 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Update**
 
-    - None
+    - IdentityUserFlow.ReadWrite.All
 
 #### Application permissions
 
@@ -77,7 +77,7 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Update**
 
-    - None
+    - IdentityUserFlow.ReadWrite.All
 
 ## Examples
 

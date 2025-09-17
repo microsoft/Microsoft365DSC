@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_SPOSite'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -157,13 +159,13 @@ function Get-TargetResource
         $AccessTokens
     )
 
+    Write-Verbose -Message "Getting configuration for site collection $Url"
+
     try
     {
         if (-not $Script:exportedInstance -or $Script:exportedInstance.Url -ne $Url)
         {
-            Write-Verbose -Message "Getting configuration for site collection $Url"
-
-            $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
+            $null = New-M365DSCConnection -Workload 'PnP' `
                 -InboundParameters $PSBoundParameters
 
             #Ensure the proper dependencies are installed in the current environment.
@@ -195,14 +197,21 @@ function Get-TargetResource
             $site = $Script:exportedInstance
         }
 
-        $web = Get-PnPWeb -Includes RegionalSettings.TimeZone
+        if ($null -eq $Script:PnPWeb)
+        {
+            $Script:PnPWeb = Get-PnPWeb -Includes RegionalSettings.TimeZone
+        }
 
         $CurrentHubUrl = $null
         if ($null -ne $site.HubSiteId -and $site.HubSiteId -ne '00000000-0000-0000-0000-000000000000')
         {
             $hubId = $site.HubSiteId
             Write-Verbose -Message "Site {$Url} is associated with HubSite {$hubId}"
-            $hubSite = Get-PnPHubSite | Where-Object -FilterScript { $_.ID -eq $hubId }
+            if ($null -eq $Script:PnPHubSites)
+            {
+                $Script:PnPHubSites = Get-PnPHubSite
+            }
+            $hubSite = $Script:PnPHubSites | Where-Object -FilterScript { $_.ID -eq $hubId }
 
             if ($null -ne $hubSite)
             {
@@ -237,7 +246,7 @@ function Get-TargetResource
             Url                                         = $Url
             Title                                       = $site.Title
             Template                                    = $site.Template
-            TimeZoneId                                  = $web.RegionalSettings.TimeZone.Id
+            TimeZoneId                                  = $Script:PnPWeb.RegionalSettings.TimeZone.Id
             HubUrl                                      = $CurrentHubUrl
             Classification                              = $site.Classification
             DisableFlows                                = $DisableFlowValue
@@ -269,7 +278,7 @@ function Get-TargetResource
             CertificatePassword                         = $CertificatePassword
             CertificatePath                             = $CertificatePath
             CertificateThumbprint                       = $CertificateThumbprint
-            Managedidentity                             = $ManagedIdentity.IsPresent
+            ManagedIdentity                             = $ManagedIdentity.IsPresent
             AccessTokens                                = $AccessTokens
         }
     }
@@ -1045,3 +1054,4 @@ function Export-TargetResource
 }
 
 Export-ModuleMember -Function *-TargetResource
+

@@ -50,6 +50,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-MgGroupMemberDirectoryObjectByRef -MockWith {
             }
 
+            Mock -CommandName Invoke-M365DSCGraphBatchRequest -MockWith {
+                return @()
+            }
+
             # Mock Write-M365DSCHost to hide output during the tests
             Mock -CommandName Write-M365DSCHost -MockWith {
             }
@@ -124,10 +128,18 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Get-MgUserLicenseDetail -MockWith {
-                    return @(@{
-                            SkuPartNumber = 'ENTERPRISE_PREMIUM'
-                        })
+                Mock -CommandName Invoke-M365DSCGraphBatchRequest -MockWith {
+                    return @(
+                        @{
+                            id = "License"
+                            body = @{
+                                value = @{
+                                    SkuPartNumber = 'ENTERPRISE_PREMIUM'
+                                }
+                            }
+                        }
+
+                    )
                 }
 
                 Mock -CommandName Get-MgBetaSubscribedSku -MockWith {
@@ -174,10 +186,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Get-MgUserLicenseDetail -MockWith {
-                    return @(@{
-                            SkuPartNumber = 'ENTERPRISE_PREMIUM'
-                        })
+                Mock -CommandName Invoke-M365DSCGraphBatchRequest -MockWith {
+                    return @(
+                        @{
+                            id = "License"
+                            body = @{
+                                value = @{
+                                    SkuPartNumber = 'ENTERPRISE_PREMIUM'
+                                }
+                            }
+                        }
+                    )
                 }
 
                 Mock -CommandName Get-MgBetaSubscribedSku -MockWith {
@@ -236,6 +255,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         GroupTypes        = @()
                     }
                 }
+
+                Mock -CommandName Invoke-M365DSCGraphBatchRequest -MockWith {
+                    return @(
+                        @{
+                            id = "MemberOf"
+                            body = @{
+                                value = @()
+                            }
+                        }
+                    )
+                }
             }
 
             It 'Should return present from the Get method' {
@@ -252,7 +282,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name 'When the user already exists and is a member of a group that is not specified' -Fixture {
+        Context -Name 'When the user already exists and is a member of a group and the property is not specified' -Fixture {
             BeforeAll {
                 $testParams = @{
                     UserPrincipalName    = 'JohnSmith@contoso.onmicrosoft.com'
@@ -260,7 +290,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     FirstName            = 'John'
                     LastName             = 'Smith'
                     UsageLocation        = 'US'
-                    #MemberOf             = 'TestGroup'
+                    #MemberOf             = @('TestGroup')
                     Password             = $Credential
                     PasswordNeverExpires = $false
                     Ensure               = 'Present'
@@ -278,22 +308,30 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Get-MgUserMemberOfAsGroup -MockWith {
+                Mock -CommandName Invoke-M365DSCGraphBatchRequest -MockWith {
                     return @(
-                        [pscustomobject]@{
-                            DisplayName       = 'TestGroup'
-                            Id                = '12345-12345-12345-12345-12345'
-                            MailNickName      = 'TestGroup'
-                            Description       = '<...>'
-                            GroupTypes        = @()
-                        },
-                        [pscustomobject]@{
-                            DisplayName       = 'DynamicGroup'
-                            Id                = '12345-12345-12345-12345-54321'
-                            MailNickName      = 'DynGroup'
-                            Description       = '<...>'
-                            GroupTypes        = @('DynamicMembership')
+                        @{
+                            id = "MemberOf"
+                            body = @{
+                                value = @(
+                                    [pscustomobject]@{
+                                        DisplayName       = 'TestGroup'
+                                        Id                = '12345-12345-12345-12345-12345'
+                                        MailNickName      = 'TestGroup'
+                                        Description       = '<...>'
+                                        GroupTypes        = @()
+                                    },
+                                    [pscustomobject]@{
+                                        DisplayName       = 'DynamicGroup'
+                                        Id                = '12345-12345-12345-12345-54321'
+                                        MailNickName      = 'DynGroup'
+                                        Description       = '<...>'
+                                        GroupTypes        = @('DynamicMembership')
+                                    }
+                                )
+                            }
                         }
+
                     )
                 }
             }
@@ -338,30 +376,40 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Get-MgUserMemberOfAsGroup -MockWith {
+                Mock -CommandName Invoke-M365DSCGraphBatchRequest -MockWith {
                     return @(
-                        [pscustomobject]@{
-                            DisplayName       = 'DifferentGroup'
-                            Id                = '12345-12345-12345-12345-12345'
-                            MailNickName      = 'DiffGroup'
-                            Description       = '<...>'
-                            GroupTypes        = @()
-                        },
-                        [pscustomobject]@{
-                            DisplayName       = 'DynamicGroup'
-                            Id                = '12345-12345-12345-12345-54321'
-                            MailNickName      = 'DynGroup'
-                            Description       = '<...>'
-                            GroupTypes        = @('DynamicMembership')
+                        @{
+                            id = "MemberOf"
+                            body = @{
+                                value = @(
+                                    [pscustomobject]@{
+                                        DisplayName       = 'DifferentGroup'
+                                        Id                = '12345-12345-12345-12345-12345'
+                                        MailNickName      = 'DiffGroup'
+                                        Description       = '<...>'
+                                        GroupTypes        = @()
+                                    }
+                                )
+                            }
                         }
                     )
                 }
 
-                Mock -CommandName Get-MgGroup -MockWith {
+                Mock -CommandName Get-MgGroup -ParameterFilter { $Filter -eq "DisplayName eq 'TestGroup'" } -MockWith {
                     return @{
                         DisplayName       = 'TestGroup'
                         Id                = '12345-12345-12345-12345-98765'
                         MailNickName      = 'TestGroup'
+                        Description       = '<...>'
+                        GroupTypes        = @()
+                    }
+                }
+
+                Mock -CommandName Get-MgGroup -ParameterFilter { $Filter -eq "DisplayName eq 'DifferentGroup'" } -MockWith {
+                    return @{
+                        DisplayName       = 'DifferentGroup'
+                        Id                = '12345-12345-12345-12345-12345'
+                        MailNickName      = 'DiffGroup'
                         Description       = '<...>'
                         GroupTypes        = @()
                     }
@@ -401,6 +449,25 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         PasswordPolicies  = 'NONE'
                         Ensure            = 'Present'
                     }
+                }
+
+                Mock -CommandName Invoke-M365DSCGraphBatchRequest -MockWith {
+                    return @(
+                        @{
+                            id = "License"
+                            body = @{
+                                value = @{
+                                    SkuPartNumber = 'ENTERPRISE_PREMIUM'
+                                }
+                            }
+                        },
+                        @{
+                            id = "MemberOf"
+                            body = @{
+                                value = @()
+                            }
+                        }
+                    )
                 }
 
                 Mock -CommandName Get-MgBetaSubscribedSku -MockWith {

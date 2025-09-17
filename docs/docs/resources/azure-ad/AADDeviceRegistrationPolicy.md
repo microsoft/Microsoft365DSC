@@ -39,11 +39,11 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - None
+    - Policy.Read.DeviceConfiguration, Group.Read.All
 
 - **Update**
 
-    - None
+    - Policy.ReadWrite.DeviceConfiguration, Group.Read.All
 
 #### Application permissions
 

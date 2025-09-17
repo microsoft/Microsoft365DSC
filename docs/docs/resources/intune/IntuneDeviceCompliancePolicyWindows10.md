@@ -4,8 +4,10 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
+| **Id** | Write | String | The id of the Windows 10 device compliance policy. | |
 | **DisplayName** | Key | String | Display name of the Windows 10 device compliance policy. | |
 | **Description** | Write | String | Description of the Windows 10 device compliance policy. | |
+| **RoleScopeTagIds** | Write | StringArray[] | List of Scope Tags for this Entity instance. | |
 | **Assignments** | Write | MSFT_DeviceManagementConfigurationPolicyAssignments[] | Represents the assignment to the Intune policy. | |
 | **PasswordRequired** | Write | Boolean | PasswordRequired of the Windows 10 device compliance policy. | |
 | **PasswordBlockSimple** | Write | Boolean | PasswordBlockSimple of the Windows 10 device compliance policy. | |
@@ -39,6 +41,7 @@
 | **TpmRequired** | Write | Boolean | TpmRequired of the Windows 10 device compliance policy. | |
 | **DeviceCompliancePolicyScript** | Write | MSFT_MicrosoftGraphDeviceCompliancePolicyScript | DeviceCompliancePolicyScript of the Windows 10 device compliance policy. | |
 | **ValidOperatingSystemBuildRanges** | Write | MSFT_MicrosoftGraphOperatingSystemVersionRange[] | ValidOperatingSystemBuildRanges of the Windows 10 device compliance policy. | |
+| **ScheduledActionsForRule** | Write | MSFT_MicrosoftGraphDeviceComplianceScheduledActionsForRuleConfiguration[] | Actions to take for noncompliant devices. | |
 | **Ensure** | Write | String | Present ensures the policy exists, absent ensures it is removed. | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials of the Intune Admin | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
@@ -57,6 +60,7 @@
 | **dataType** | Write | String | The type of the target assignment. | `#microsoft.graph.groupAssignmentTarget`, `#microsoft.graph.allLicensedUsersAssignmentTarget`, `#microsoft.graph.allDevicesAssignmentTarget`, `#microsoft.graph.exclusionGroupAssignmentTarget`, `#microsoft.graph.configurationManagerCollectionAssignmentTarget` |
 | **deviceAndAppManagementAssignmentFilterType** | Write | String | The type of filter of the target assignment i.e. Exclude or Include. Possible values are:none, include, exclude. | `none`, `include`, `exclude` |
 | **deviceAndAppManagementAssignmentFilterId** | Write | String | The Id of the filter for the target assignment. | |
+| **deviceAndAppManagementAssignmentFilterDisplayName** | Write | String | The display name of the filter for the target assignment. | |
 | **groupId** | Write | String | The group Id that is the target of the assignment. | |
 | **groupDisplayName** | Write | String | The group Display Name that is the target of the assignment. | |
 | **collectionId** | Write | String | The collection Id that is the target of the assignment.(ConfigMgr) | |
@@ -79,6 +83,17 @@
 | --- | --- | --- | --- | --- |
 | **DisplayName** | Key | String | Device compliance script name. | |
 | **RulesContent** | Write | String | Rules content of the custom settings. | |
+
+### MSFT_MicrosoftGraphDeviceComplianceScheduledActionsForRuleConfiguration
+
+#### Parameters
+
+| Parameter | Attribute | DataType | Description | Allowed Values |
+| --- | --- | --- | --- | --- |
+| **ActionType** | Write | String | The action type of the compliance policy action. | `block`, `notification`, `retire` |
+| **GracePeriodHours** | Write | UInt32 | Number of hours the device can be in grace period. | |
+| **NotificationMessageCCList** | Write | StringArray[] | Display names of the groups that should be notified if the compliance fails. | |
+| **NotificationTemplate** | Write | String | Display name of the Notification Template used in the compliance policy. Can only be used with ActionType 'notification'. | |
 
 
 ## Description
@@ -280,7 +295,7 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - Group.Read.All, DeviceManagementConfiguration.Read.All
+    - Group.Read.All, DeviceManagementConfiguration.Read.All, DeviceManagementScripts.Read.All
 
 - **Update**
 
@@ -290,7 +305,7 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - Group.Read.All, DeviceManagementConfiguration.Read.All
+    - Group.Read.All, DeviceManagementConfiguration.Read.All, DeviceManagementScripts.Read.All
 
 - **Update**
 
@@ -358,6 +373,13 @@ Configuration Example
             TPMRequired                                 = $False
             deviceCompliancePolicyScript                = $null
             ValidOperatingSystemBuildRanges             = @()
+            ScheduledActionsForRule                     = @(
+                MSFT_MicrosoftGraphDeviceComplianceScheduledActionsForRuleConfiguration
+                {
+                    ActionType         = 'block'
+                    GracePeriodHours   = 0
+                }
+            )
             Ensure                                      = 'Present'
             ApplicationId         = $ApplicationId;
             TenantId              = $TenantId;
@@ -427,6 +449,13 @@ Configuration Example
             TPMRequired                                 = $False
             deviceCompliancePolicyScript                = $null
             ValidOperatingSystemBuildRanges             = @()
+            ScheduledActionsForRule                     = @(
+                MSFT_MicrosoftGraphDeviceComplianceScheduledActionsForRuleConfiguration
+                {
+                    ActionType         = 'block'
+                    GracePeriodHours   = 0
+                }
+            )
             Ensure                                      = 'Present'
             ApplicationId         = $ApplicationId;
             TenantId              = $TenantId;

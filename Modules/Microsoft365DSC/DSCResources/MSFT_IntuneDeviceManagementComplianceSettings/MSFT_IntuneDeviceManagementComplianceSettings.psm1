@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_IntuneDeviceManagementComplianceSettings'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -10,6 +12,7 @@ function Get-TargetResource
         $IsSingleInstance,
 
         [Parameter()]
+        [ValidateRange(1, 120)]
         [System.UInt32]
         $DeviceComplianceCheckinThresholdDays,
 
@@ -50,7 +53,7 @@ function Get-TargetResource
 
     try
     {
-        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+        $null = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters
 
         #Ensure the proper dependencies are installed in the current environment.
@@ -70,20 +73,26 @@ function Get-TargetResource
         $uri = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + 'beta/deviceManagement/settings'
         $settings = Invoke-MgGraphRequest -Method 'GET' -Uri $uri
 
+        $thresholdInDays = $settings.deviceComplianceCheckinThresholdDays
+        if ($thresholdInDays -eq 0)
+        {
+            Write-Verbose -Message 'DeviceComplianceCheckinThresholdDays is set to 0, which means it is not configured. Setting to the default value of 30.'
+            $thresholdInDays = 30
+        }
         $results = @{
             IsSingleInstance                     = 'Yes'
-            DeviceComplianceCheckinThresholdDays = $settings.deviceComplianceCheckinThresholdDays
+            DeviceComplianceCheckinThresholdDays = $thresholdInDays
             SecureByDefault                      = [Boolean]$settings.secureByDefault
             Credential                           = $Credential
             ApplicationId                        = $ApplicationId
             TenantId                             = $TenantId
             ApplicationSecret                    = $ApplicationSecret
             CertificateThumbprint                = $CertificateThumbprint
-            Managedidentity                      = $ManagedIdentity.IsPresent
+            ManagedIdentity                      = $ManagedIdentity.IsPresent
             AccessTokens                         = $AccessTokens
         }
 
-        return [System.Collections.Hashtable] $results
+        return $results
     }
     catch
     {
@@ -109,6 +118,7 @@ function Set-TargetResource
         $IsSingleInstance,
 
         [Parameter()]
+        [ValidateRange(1, 120)]
         [System.UInt32]
         $DeviceComplianceCheckinThresholdDays,
 
@@ -146,7 +156,8 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message 'Updating the Intune Device Management Compliance Settings'
-    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+
+    $null = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -180,6 +191,7 @@ function Test-TargetResource
         $IsSingleInstance,
 
         [Parameter()]
+        [ValidateRange(1, 120)]
         [System.UInt32]
         $DeviceComplianceCheckinThresholdDays,
 
@@ -282,6 +294,7 @@ function Export-TargetResource
         [System.String[]]
         $AccessTokens
     )
+
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
@@ -306,7 +319,7 @@ function Export-TargetResource
             TenantId              = $TenantId
             ApplicationSecret     = $ApplicationSecret
             CertificateThumbprint = $CertificateThumbprint
-            Managedidentity       = $ManagedIdentity.IsPresent
+            ManagedIdentity       = $ManagedIdentity.IsPresent
             AccessTokens          = $AccessTokens
         }
         $Results = Get-TargetResource @Params

@@ -1,32 +1,48 @@
 {
-    "resourceName": "AADAttributeSet",
-    "description": "Represents a group of related custom security attribute definitions.",
-    "roles": {
+  "resourceName": "AADAttributeSet",
+  "description": "Represents a group of related custom security attribute definitions.",
+  "roles": {
+    "read": [
+      "Attribute Definition Reader"
+    ],
+    "update": [
+      "Attribute Definition Administrator"
+    ]
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
         "read": [
-            "Attribute Definition Reader"
+          {
+            "name": "CustomSecAttributeDefinition.Read.All"
+          }
         ],
         "update": [
-            "Attribute Definition Administrator"
+          {
+            "name": "CustomSecAttributeDefinition.ReadWrite.All"
+          }
         ]
-    },
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [],
-                "update": []
-            },
-            "application": {
-                "read": [
-                    {
-                        "name": "CustomSecAttributeDefinition.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "CustomSecAttributeDefinition.ReadWrite.All"
-                    }
-                ]
-            }
-        }
+      },
+      "application": {
+        "read": [
+          {
+            "name": "CustomSecAttributeDefinition.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "CustomSecAttributeDefinition.ReadWrite.All"
+          }
+        ]
+      }
     }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.Identity.DirectoryManagement"
+  ],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ]
 }

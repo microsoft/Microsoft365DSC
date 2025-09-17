@@ -111,6 +111,7 @@
 | **WebPushNotificationsDisabled** | Write | Boolean | The WebPushNotificationsDisabled parameter specifies whether to enable or disable Web Push Notifications in Outlook on the Web. This feature provides web push notifications which appear on a user's desktop while the user is not using Outlook on the Web. This brings awareness of incoming messages while they are working elsewhere on their computer. | |
 | **WebSuggestedRepliesDisabled** | Write | Boolean | The WebSuggestedRepliesDisabled parameter specifies whether to enable or disable Suggested Replies in Outlook on the web. This feature provides suggested replies to emails so users can easily and quickly respond to messages. | |
 | **WorkspaceTenantEnabled** | Write | Boolean | The WorkspaceTenantEnabled parameter enables or disables workspace booking in the organization. | |
+| **RejectDirectSend** | Write | Boolean | This parameter is available only in the cloud-based service. | |
 | **Credential** | Write | PSCredential | Credentials of the Exchange Global Admin | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
 | **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. | |

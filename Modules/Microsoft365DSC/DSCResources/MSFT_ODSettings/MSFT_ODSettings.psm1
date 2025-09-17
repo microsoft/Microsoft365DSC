@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_ODSettings'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -202,7 +204,7 @@ function Get-TargetResource
             CertificatePath                           = $CertificatePath
             CertificateThumbprint                     = $CertificateThumbprint
             Credential                                = $Credential
-            Managedidentity                           = $ManagedIdentity.IsPresent
+            ManagedIdentity                           = $ManagedIdentity.IsPresent
             AccessTokens                              = $AccessTokens
         }
     }
@@ -564,7 +566,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $ResourceName
+                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 
@@ -636,7 +638,7 @@ function Export-TargetResource
             CertificatePassword   = $CertificatePassword
             CertificatePath       = $CertificatePath
             CertificateThumbprint = $CertificateThumbprint
-            Managedidentity       = $ManagedIdentity.IsPresent
+            ManagedIdentity       = $ManagedIdentity.IsPresent
             Credential            = $Credential
             AccessTokens          = $AccessTokens
         }

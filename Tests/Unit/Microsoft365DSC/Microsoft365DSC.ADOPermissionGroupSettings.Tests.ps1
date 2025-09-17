@@ -35,6 +35,88 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return "Credentials"
             }
 
+            Mock -CommandName Invoke-M365DSCAzureDevOPSWebRequest -ParameterFilter { $Uri -like "*groups*" } -MockWith {
+                return @{
+                    value = @(
+                        @{
+                            principalName = "[O365DSC-DEV]\My Test Group"
+                            Descriptor    = "vssgp.Uy0xLTktMTU1MTM3NDI0NS0yNzEyNzI0MzgtMzkwMDMyNjIxNC0yMTgxNjI3NzQwLTkxMDg0NDI0NC0xLTgyODcyNzAzNC0yOTkzNjA0MTcxLTI5MjUwMjk4ODgtNTY0MDg1OTcy";
+                        }
+                    )
+                }
+            }
+
+            Mock -CommandName Invoke-M365DSCAzureDevOPSWebRequest -ParameterFilter { $Uri -like "*identities*" } -MockWith {
+                return @{
+                    value = @{
+                        id = "FakeStringValue"
+                        subjectDescriptor = "vssgp.Uy0xLTktMTU1MTM3NDI0NS0yNzEyNzI0MzgtMzkwMDMyNjIxNC0yMTgxNjI3NzQwLTkxMDg0NDI0NC0xLTgyODcyNzAzNC0yOTkzNjA0MTcxLTI5MjUwMjk4ODgtNTY0MDg1OTcy"
+                        descriptor = "Microsoft.TeamFoundation.Identity;S-1-9-1234567890-3479028130-1841756239-2951999137-3860724248-0-0-0-0-3"
+                    }
+                }
+            }
+
+            Mock -CommandName Invoke-M365DSCAzureDevOPSWebRequest -ParameterFilter { $Uri -like "*securitynamespaces*" } -MockWith {
+                return @{
+                    value = @{
+                        namespaceId = "5a27515b-ccd7-42c9-84f1-54c998f03866"
+                        name = "Analytics"
+                        displayName = "Analytics"
+                        actions = @(
+                            @{
+                                bit = 2
+                                name = "Administer"
+                                displayName = "Edit identity information"
+                                namespaceId = "5a27515b-ccd7-42c9-84f1-54c998f03866"
+                            }
+                            @{
+                                bit = 8
+                                name = "ExecuteUnrestrictedQuery"
+                                displayName = "Execute query without any restrictions on the query form"
+                                namespaceId = "5a27515b-ccd7-42c9-84f1-54c998f03866"
+                            }
+                        )
+                    }
+                }
+            }
+
+            Mock -CommandName Invoke-M365DSCAzureDevOPSWebRequest -ParameterFilter { $Uri -like "*accesscontrollists*" } -MockWith {
+                return @{
+                    value = @(
+                        @{
+                            acesDictionary = @{
+                                "Microsoft.TeamFoundation.Identity;S-1-9-1234567890-3479028130-1841756239-2951999137-3860724248-0-0-0-0-3" = @{
+                                    descriptor = "Microsoft.TeamFoundation.Identity;S-1-9-1234567890-3479028130-1841756239-2951999137-3860724248-0-0-0-0-3"
+                                    Allow = 2
+                                    Deny  = 0
+                                }
+                            }
+                            token = "f6492b10-7ae8-4641-8208-ff5c364a6154\dbe6034e-8fbe-4d6e-a7f3-07a7e70816c9"
+                        }
+                    )
+                }
+            }
+
+            Mock -CommandName Invoke-M365DSCAzureDevOPSWebRequest -ParameterFilter { $Uri -like "*profiles/me*" } -MockWith {
+                return @{
+                    id = "FakeStringValue"
+                    displayName = "My Test Group"
+                }
+            }
+
+            Mock -CommandName Invoke-M365DSCAzureDevOPSWebRequest -ParameterFilter { $Uri -like "*&memberId=FakeStringValue*" } -MockWith {
+                return @{
+                    value = @(
+                        @{
+                            accountName = "[O365DSC-DEV]\My Test Group"
+                        }
+                    )
+                }
+            }
+
+            Mock -CommandName Invoke-M365DSCAzureDevOPSWebRequest -MockWith {
+            }
+
             # Mock Write-M365DSCHost to hide output during the tests
             Mock -CommandName Write-M365DSCHost -MockWith {
             }
@@ -60,24 +142,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     GroupName            = "[O365DSC-DEV]\My Test Group";
                     OrganizationName     = "O365DSC-DEV";
                 }
-
-                Mock -CommandName Invoke-M365DSCAzureDevOPSWebRequest -MockWith {
-                    return @{
-                        value = @{
-                            token ='f6492b10-7ae8-4641-8208-ff5c364a6154\dbe6034e-8fbe-4d6e-a7f3-07a7e70816c9'
-                            acesDictionary = @(
-                                @{
-                                    descriptor = @{
-                                        Allow = 2
-                                        Deny  = 0
-                                    }
-                                }
-                            )
-                        }
-                        principalName = "[O365DSC-DEV]\My Test Group"
-                        Descriptor    = "vssgp.Uy0xLTktMTU1MTM3NDI0NS0yNzEyNzI0MzgtMzkwMDMyNjIxNC0yMTgxNjI3NzQwLTkxMDg0NDI0NC0xLTgyODcyNzAzNC0yOTkzNjA0MTcxLTI5MjUwMjk4ODgtNTY0MDg1OTcy";
-                    }
-                }
             }
 
             It 'Should return true from the Test method' {
@@ -102,24 +166,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     GroupName            = "[O365DSC-DEV]\My Test Group";
                     OrganizationName     = "O365DSC-DEV";
                 }
-
-                Mock -CommandName Invoke-M365DSCAzureDevOPSWebRequest -MockWith {
-                    return @{
-                        value = @{
-                            token ='f6492b10-7ae8-4641-8208-ff5c364a6154\dbe6034e-8fbe-4d6e-a7f3-07a7e70816c9'
-                            acesDictionary = @(
-                                @{
-                                    descriptor = @{
-                                        Allow = 2
-                                        Deny  = 0
-                                    }
-                                }
-                            )
-                        principalName = "[O365DSC-DEV]\My Test Group"
-                        Descriptor    = "vssgp.Uy0xLTktMTU1MTM3NDI0NS0yNzEyNzI0MzgtMzkwMDMyNjIxNC0yMTgxNjI3NzQwLTkxMDg0NDI0NC0xLTgyODcyNzAzNC0yOTkzNjA0MTcxLTI5MjUwMjk4ODgtNTY0MDg1OTcy";
-                        }                        
-                    }
-                }
             }
 
             It 'Should return false from the Test method' {
@@ -137,25 +183,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
                     Credential  = $Credential;
-                }
-
-                Mock -CommandName Invoke-M365DSCAzureDevOPSWebRequest -MockWith {
-                    return @{
-                        value = @{
-                            token ='f6492b10-7ae8-4641-8208-ff5c364a6154\dbe6034e-8fbe-4d6e-a7f3-07a7e70816c9'
-                            acesDictionary = @(
-                                @{
-                                    descriptor = @{
-                                        Allow = 2
-                                        Deny  = 0
-                                    }
-                                }
-                            )
-                            principalName = "[O365DSC-DEV]\My Test Group"
-                            Descriptor    = "vssgp.Uy0xLTktMTU1MTM3NDI0NS0yNzEyNzI0MzgtMzkwMDMyNjIxNC0yMTgxNjI3NzQwLTkxMDg0NDI0NC0xLTgyODcyNzAzNC0yOTkzNjA0MTcxLTI5MjUwMjk4ODgtNTY0MDg1OTcy";
-                            AccountName = 'O365DSC-Dev'
-                        }
-                    }
                 }
             }
             It 'Should Reverse Engineer resource from the Export method' {

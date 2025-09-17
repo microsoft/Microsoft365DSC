@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_SCDeviceConfigurationRule'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -257,7 +259,8 @@ function Get-TargetResource
         $nullResult = $PSBoundParameters
         $nullResult.Ensure = 'Absent'
 
-        $policyObj = Get-DeviceConfigurationPolicy | Where-Object -FilterScript { $_.Name -eq $Policy }
+        $policyObj = Get-DeviceConfigurationPolicy -ErrorAction SilentlyContinue
+        $policyObj = $policyObj | Where-Object -FilterScript { $_.Name -eq $Policy }
         if ($null -ne $policyObj)
         {
             Write-Verbose -Message "Found policy object {$Policy}"
@@ -359,7 +362,7 @@ function Get-TargetResource
             ManagedIdentity               = $ManagedIdentity.IsPresent
             AccessTokens                  = $AccessTokens
         }
-        return [System.Collections.Hashtable] $results
+        return $results
     }
     catch
     {
@@ -1057,3 +1060,4 @@ function Export-TargetResource
 }
 
 Export-ModuleMember -Function *-TargetResource
+

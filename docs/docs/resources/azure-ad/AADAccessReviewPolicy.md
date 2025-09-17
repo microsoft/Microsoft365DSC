@@ -29,17 +29,17 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - None
+    - Policy.Read.All
 
 - **Update**
 
-    - None
+    - Policy.ReadWrite.AccessReview
 
 #### Application permissions
 
 - **Read**
 
-    - Policy.Read.All, AccessReview.Read.All
+    - Policy.Read.All
 
 - **Update**
 

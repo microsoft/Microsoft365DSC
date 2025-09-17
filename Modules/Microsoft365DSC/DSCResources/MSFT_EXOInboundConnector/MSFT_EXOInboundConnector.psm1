@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_EXOInboundConnector'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -111,17 +113,18 @@ function Get-TargetResource
         [System.String[]]
         $AccessTokens
     )
+
     Write-Verbose -Message "Getting configuration of InboundConnector for $($Identity)"
 
     if ($Global:CurrentModeIsExport)
     {
-        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters `
             -SkipModuleReload $true
     }
     else
     {
-        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters
     }
 
@@ -181,7 +184,7 @@ function Get-TargetResource
                 CertificateThumbprint        = $CertificateThumbprint
                 CertificatePath              = $CertificatePath
                 CertificatePassword          = $CertificatePassword
-                Managedidentity              = $ManagedIdentity.IsPresent
+                ManagedIdentity              = $ManagedIdentity.IsPresent
                 TenantId                     = $TenantId
                 AccessTokens                 = $AccessTokens
             }
@@ -329,21 +332,12 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration of InboundConnector for $($Identity)"
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+    $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
     $InboundConnectors = Get-InboundConnector
     $InboundConnector = $InboundConnectors | Where-Object -FilterScript { $_.Identity -eq $Identity }
-    $InboundConnectorParams = [System.Collections.Hashtable]($PSBoundParameters)
-    $InboundConnectorParams.Remove('Ensure') | Out-Null
-    $InboundConnectorParams.Remove('Credential') | Out-Null
-    $InboundConnectorParams.Remove('ApplicationId') | Out-Null
-    $InboundConnectorParams.Remove('TenantId') | Out-Null
-    $InboundConnectorParams.Remove('CertificateThumbprint') | Out-Null
-    $InboundConnectorParams.Remove('CertificatePath') | Out-Null
-    $InboundConnectorParams.Remove('CertificatePassword') | Out-Null
-    $InboundConnectorParams.Remove('ManagedIdentity') | Out-Null
-    $InboundConnectorParams.Remove('AccessTokens') | Out-Null
+    $InboundConnectorParams = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
     if (('Present' -eq $Ensure ) -and ($null -eq $InboundConnector))
     {
@@ -564,6 +558,7 @@ function Export-TargetResource
         [System.String[]]
         $AccessTokens
     )
+
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
         -SkipModuleReload $true
@@ -609,7 +604,7 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
                 CertificatePassword   = $CertificatePassword
-                Managedidentity       = $ManagedIdentity.IsPresent
+                ManagedIdentity       = $ManagedIdentity.IsPresent
                 CertificatePath       = $CertificatePath
                 AccessTokens          = $AccessTokens
             }

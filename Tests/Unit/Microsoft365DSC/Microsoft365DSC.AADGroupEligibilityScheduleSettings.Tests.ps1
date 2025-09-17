@@ -85,7 +85,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-
             It 'Should return true from the Test method' {
                 Test-TargetResource @testParams | Should -Be $true
             }
@@ -181,7 +180,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential
                 }
 
-                Mock -CommandName Invoke-GraphRequest -MockWith {
+                Mock -CommandName Invoke-MgGraphRequest -ParameterFilter { $Uri -like "*privilegedAccess/aadGroups/resources*" } -MockWith {
                     return @{
                         Value = @{
                             DisplayName = "FakeStringValue"
@@ -189,24 +188,36 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         }
                     }
                 }
-                Mock -CommandName Get-MgBetaPolicyRoleManagementPolicyAssignment -MockWith {
-                    return @{
-                        Id = "FakeStringValue"
-                        DisplayName = "FakeStringValue"
-                    }
-                }
 
-                Mock -CommandName Get-MgBetaPolicyRoleManagementPolicyRule -MockWith {
-                    return @{
-                        AdditionalProperties = @{
-                            '@odata.type' = "#microsoft.graph.unifiedRoleManagementPolicyExpirationRule"
-                            isExpirationRequired = $true
-                            maximumDuration = "FakeStringValue"
+                Mock -CommandName Invoke-M365DSCGraphBatchRequest -MockWith {
+                    return @(
+                        @{
+                            id = "FakeStringValue"
+                            body = @{
+                                value = @(
+                                    @{
+                                        Id = "FakeStringValue"
+                                        DisplayName = "FakeStringValue"
+                                        RoleDefinitionId = "Member"
+                                        Policy = @{
+                                            Id = "FakeStringValue"
+                                            Rules = @(
+                                                @{
+                                                    '@odata.type' = "#microsoft.graph.unifiedRoleManagementPolicyExpirationRule"
+                                                    isExpirationRequired = $true
+                                                    maximumDuration = "FakeStringValue"
+                                                    id = "FakeStringValue"
+                                                }
+                                            )
+                                        }
+                                    }
+                                )
+                            }
                         }
-                        id = "FakeStringValue"
-                    }
+                    )
                 }
             }
+
             It 'Should Reverse Engineer resource from the Export method' {
                 $result = Export-TargetResource @testParams
                 $result | Should -Not -BeNullOrEmpty

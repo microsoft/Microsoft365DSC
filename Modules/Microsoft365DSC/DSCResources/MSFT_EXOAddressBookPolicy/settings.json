@@ -1,36 +1,45 @@
-﻿{
-    "resourceName": "EXOAddressBookPolicy",
-    "description": "",
-    "roles": {
+{
+  "resourceName": "EXOAddressBookPolicy",
+  "description": "",
+  "roles": {
+    "read": [
+      "Global Reader"
+    ],
+    "update": [
+      "Exchange Administrator"
+    ]
+  },
+  "permissions": {
+    "Office 365 Exchange Online": {
+      "application": {
         "read": [
-            "Global Reader"
+          {
+            "name": "Exchange.ManageAsApp"
+          }
         ],
         "update": [
-            "Exchange Administrator"
+          {
+            "name": "Exchange.ManageAsApp"
+          }
         ]
+      }
     },
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [],
-                "update": []
-            },
-            "application": {
-                "read": [],
-                "update": []
-            }
-        },
-        "exchange": {
-            "requiredroles": [
-                "View-Only Recipients",
-                "Mail Recipient Creation",
-                "View-Only Configuration",
-                "Mail Recipients",
-                "Address Lists"
-            ],
-            "requiredrolegroups": [
-                "Organization Management"
-            ]
-        }
+    "exchange": {
+      "requiredroles": [
+        "View-Only Recipients",
+        "Mail Recipient Creation",
+        "View-Only Configuration",
+        "Mail Recipients",
+        "Address Lists"
+      ],
+      "requiredrolegroups": [
+        "Organization Management"
+      ]
     }
+  },
+  "requiredModules": [],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ]
 }

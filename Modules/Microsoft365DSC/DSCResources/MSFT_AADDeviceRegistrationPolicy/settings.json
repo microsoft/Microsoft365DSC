@@ -1,32 +1,57 @@
 {
-    "resourceName": "AADDeviceRegistrationPolicy",
-    "description": "Represents the policy scope that controls quota restrictions, additional authentication, and authorization policies to register device identities to your organization.",
-    "roles": {
+  "resourceName": "AADDeviceRegistrationPolicy",
+  "description": "Represents the policy scope that controls quota restrictions, additional authentication, and authorization policies to register device identities to your organization.",
+  "roles": {
+    "read": [
+      "Security Reader"
+    ],
+    "update": [
+      "Authentication Policy Administrator"
+    ]
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
         "read": [
-            "Security Reader"
+          {
+            "name": "Policy.Read.DeviceConfiguration"
+          },
+          {
+            "name": "Group.Read.All"
+          }
         ],
         "update": [
-            "Authentication Policy Administrator"
+          {
+            "name": "Policy.ReadWrite.DeviceConfiguration"
+          },
+          {
+            "name": "Group.Read.All"
+          }
         ]
-    },
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [],
-                "update": []
-            },
-            "application": {
-                "read": [
-                    {
-                        "name": "Policy.Read.DeviceConfiguration"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Policy.ReadWrite.DeviceConfiguration"
-                    }
-                ]
-            }
-        }
+      },
+      "application": {
+        "read": [
+          {
+            "name": "Policy.Read.DeviceConfiguration"
+          }
+        ],
+        "update": [
+          {
+            "name": "Policy.ReadWrite.DeviceConfiguration"
+          }
+        ]
+      }
     }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.Identity.SignIns",
+    "Microsoft.Graph.Groups",
+    "Microsoft.Graph.Users",
+    "MSCloudLoginAssistant"
+  ],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ]
 }

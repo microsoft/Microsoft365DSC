@@ -208,7 +208,7 @@ This example is used to test new resources and showcase the usage of new resourc
 It is not meant to use as a production baseline.
 
 ```powershell
-Configuration Example
+configuration Example
 {
     param(
         [Parameter()]
@@ -229,17 +229,17 @@ Configuration Example
     {
         EXOTransportRule 'ConfigureTransportRule'
         {
-            Name                                          = "Ethical Wall - Sales and Executives Departments"
-            BetweenMemberOf1                              = "SalesTeam@$TenantId"
-            BetweenMemberOf2                              = "Executives@$TenantId"
-            ExceptIfFrom                                  = "AdeleV@$TenantId"
-            ExceptIfSubjectContainsWords                  = "Press Release","Corporate Communication"
-            RejectMessageReasonText                       = "Messages sent between the Sales and Brokerage departments are strictly prohibited."
-            Enabled                                       = $True
-            Ensure                                        = "Present"
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            CertificateThumbprint = $CertificateThumbprint
+            Name                         = 'Ethical Wall - Sales and Executives Departments'
+            BetweenMemberOf1             = "SalesTeam@$TenantId"
+            BetweenMemberOf2             = "Executives@$TenantId"
+            ExceptIfFrom                 = "AdeleV@$TenantId"
+            ExceptIfSubjectContainsWords = 'Press Release', 'Corporate Communication'
+            RejectMessageReasonText      = 'Messages sent between the Sales and Brokerage departments are strictly prohibited.'
+            Enabled                      = $True
+            Ensure                       = 'Present'
+            ApplicationId                = $ApplicationId
+            TenantId                     = $TenantId
+            CertificateThumbprint        = $CertificateThumbprint
         }
     }
 }
@@ -251,7 +251,7 @@ This example is used to test new resources and showcase the usage of new resourc
 It is not meant to use as a production baseline.
 
 ```powershell
-Configuration Example
+configuration Example
 {
     param(
         [Parameter()]
@@ -272,17 +272,17 @@ Configuration Example
     {
         EXOTransportRule 'ConfigureTransportRule'
         {
-            Name                                          = "Ethical Wall - Sales and Executives Departments"
-            BetweenMemberOf1                              = "SalesTeam@$TenantId"
-            BetweenMemberOf2                              = "Executives@$TenantId"
-            ExceptIfFrom                                  = "AdeleV@$TenantId"
-            ExceptIfSubjectContainsWords                  = "Press Release","Corporate Communication"
-            RejectMessageReasonText                       = "Messages sent between the Sales and Brokerage departments are strictly prohibited."
-            Enabled                                       = $False # Updated Property
-            Ensure                                        = "Present"
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            CertificateThumbprint = $CertificateThumbprint
+            Name                         = 'Ethical Wall - Sales and Executives Departments'
+            BetweenMemberOf1             = "SalesTeam@$TenantId"
+            BetweenMemberOf2             = "Executives@$TenantId"
+            ExceptIfFrom                 = "AdeleV@$TenantId"
+            ExceptIfSubjectContainsWords = 'Press Release', 'Corporate Communication'
+            RejectMessageReasonText      = 'Messages sent between the Sales and Brokerage departments are strictly prohibited.'
+            Enabled                      = $False # Updated Property
+            Ensure                       = 'Present'
+            ApplicationId                = $ApplicationId
+            TenantId                     = $TenantId
+            CertificateThumbprint        = $CertificateThumbprint
         }
     }
 }

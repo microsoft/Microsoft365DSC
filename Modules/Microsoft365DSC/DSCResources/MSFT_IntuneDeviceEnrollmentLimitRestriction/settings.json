@@ -1,32 +1,40 @@
 {
-    "resourceName": "IntuneDeviceEnrollmentLimitRestriction",
-    "description": "This resource configures the Intune device enrollment limit restrictions.",
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [
-                    {
-                        "name": "DeviceManagementServiceConfig.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "DeviceManagementServiceConfig.ReadWrite.All"
-                    }
-                ]
-            },
-            "application": {
-                "read": [
-                    {
-                        "name": "DeviceManagementServiceConfig.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "DeviceManagementServiceConfig.ReadWrite.All"
-                    }
-                ]
-            }
-        }
+  "resourceName": "IntuneDeviceEnrollmentLimitRestriction",
+  "description": "This resource configures the Intune device enrollment limit restrictions.",
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "DeviceManagementServiceConfig.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "DeviceManagementServiceConfig.ReadWrite.All"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "DeviceManagementServiceConfig.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "DeviceManagementServiceConfig.ReadWrite.All"
+          }
+        ]
+      }
     }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.DeviceManagement.Enrollment"
+  ],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ]
 }

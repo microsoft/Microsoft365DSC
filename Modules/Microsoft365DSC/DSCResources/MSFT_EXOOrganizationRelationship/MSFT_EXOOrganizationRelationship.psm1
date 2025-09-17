@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_EXOOrganizationRelationship'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -131,15 +133,16 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting Organization Relationship configuration for $Name"
+
     if ($Global:CurrentModeIsExport)
     {
-        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters `
             -SkipModuleReload $true
     }
     else
     {
-        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters
     }
 
@@ -195,7 +198,7 @@ function Get-TargetResource
                 CertificateThumbprint      = $CertificateThumbprint
                 CertificatePath            = $CertificatePath
                 CertificatePassword        = $CertificatePassword
-                Managedidentity            = $ManagedIdentity.IsPresent
+                ManagedIdentity            = $ManagedIdentity.IsPresent
                 TenantId                   = $TenantId
                 AccessTokens               = $AccessTokens
             }
@@ -399,7 +402,7 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+    $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
     $NewOrganizationRelationshipParams = @{
@@ -678,6 +681,7 @@ function Export-TargetResource
         [System.String[]]
         $AccessTokens
     )
+
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
         -SkipModuleReload $true
@@ -725,7 +729,7 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
                 CertificatePassword   = $CertificatePassword
-                Managedidentity       = $ManagedIdentity.IsPresent
+                ManagedIdentity       = $ManagedIdentity.IsPresent
                 CertificatePath       = $CertificatePath
                 AccessTokens          = $AccessTokens
             }
@@ -758,4 +762,3 @@ function Export-TargetResource
 }
 
 Export-ModuleMember -Function *-TargetResource
-

@@ -1,37 +1,46 @@
-﻿{
-    "resourceName": "EXOTransportRule",
-    "description": "",
-    "roles": {
+{
+  "resourceName": "EXOTransportRule",
+  "description": "",
+  "roles": {
+    "read": [
+      "Security Reader"
+    ],
+    "update": [
+      "Exchange Administrator"
+    ]
+  },
+  "permissions": {
+    "Office 365 Exchange Online": {
+      "application": {
         "read": [
-            "Security Reader"
+          {
+            "name": "Exchange.ManageAsApp"
+          }
         ],
         "update": [
-            "Exchange Administrator"
+          {
+            "name": "Exchange.ManageAsApp"
+          }
         ]
+      }
     },
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [],
-                "update": []
-            },
-            "application": {
-                "read": [],
-                "update": []
-            }
-        },
-        "exchange": {
-            "requiredroles": [
-                "Security Admin",
-                "Data Loss Prevention",
-                "Transport Rules",
-                "View-Only Configuration",
-                "Security Reader",
-                "Information Rights Management"
-            ],
-            "requiredrolegroups": [
-                "Organization Management"
-            ]
-        }
+    "exchange": {
+      "requiredroles": [
+        "Security Admin",
+        "Data Loss Prevention",
+        "Transport Rules",
+        "View-Only Configuration",
+        "Security Reader",
+        "Information Rights Management"
+      ],
+      "requiredrolegroups": [
+        "Organization Management"
+      ]
     }
+  },
+  "requiredModules": [],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ]
 }

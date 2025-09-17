@@ -1,40 +1,49 @@
 {
-    "resourceName": "AADCrossTenantAccessPolicyConfigurationDefault",
-    "description": "This resource configures an Azure AD Authentication Method Policy Configuration Default.",
-    "roles": {
+  "resourceName": "AADCrossTenantAccessPolicyConfigurationDefault",
+  "description": "This resource configures an Azure AD Authentication Method Policy Configuration Default.",
+  "roles": {
+    "read": [
+      "Global Reader"
+    ],
+    "update": [
+      "Security Administrator"
+    ]
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
         "read": [
-            "Global Reader"
+          {
+            "name": "Policy.Read.All"
+          }
         ],
         "update": [
-            "Security Administrator"
+          {
+            "name": "Policy.ReadWrite.CrossTenantAccess"
+          }
         ]
-    },
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [
-                    {
-                        "name": "Policy.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Policy.ReadWrite.CrossTenantAccess"
-                    }
-                ]
-            },
-            "application": {
-                "read": [
-                    {
-                        "name": "Policy.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Policy.ReadWrite.CrossTenantAccess"
-                    }
-                ]
-            }
-        }
+      },
+      "application": {
+        "read": [
+          {
+            "name": "Policy.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Policy.ReadWrite.CrossTenantAccess"
+          }
+        ]
+      }
     }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.Identity.SignIns",
+    "MSCloudLoginAssistant"
+  ],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ]
 }

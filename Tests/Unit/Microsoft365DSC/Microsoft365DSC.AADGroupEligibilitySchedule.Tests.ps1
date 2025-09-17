@@ -61,7 +61,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             # Mock Write-M365DSCHost to hide output during the tests
             Mock -CommandName Write-M365DSCHost -MockWith {
             }
-            $Script:exportedInstances =$null
+            $Script:exportedInstance = $null
             $Script:ExportMode = $false
         }
 
@@ -81,10 +81,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             } -ClientOnly)
                     Ensure = "Present"
                     Credential = $Credential;
-                }
-
-                Mock -CommandName Get-MgBetaIdentityGovernancePrivilegedAccessGroupEligibilitySchedule -MockWith {
-                    return $null
                 }
 
                 Mock -CommandName New-MgBetaIdentityGovernancePrivilegedAccessGroupEligibilityScheduleRequest -MockWith {
@@ -121,7 +117,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
 
                 Mock -CommandName Get-MgBetaIdentityGovernancePrivilegedAccessGroupEligibilitySchedule -MockWith {
-                    return $null
+                    return @{
+                        AccessId             = 'member'
+                        GroupDisplayName     = 'FakeStringValue'
+                        MemberType           = 'direct'
+                        PrincipalDisplayName = 'FakePrincipal'
+                        ScheduleInfo         = @{
+                            StartDateTime = '2025-01-23T08:59:00.000Z'
+                                Expiration = @{
+                                    EndDateTime = '2025-12-23T08:59:00.000Z'
+                                    type = 'afterDateTime'
+                                }
+                        }
+                    }
                 }
 
                 mock -CommandName Get-MgGroup -MockWith {
@@ -143,23 +151,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName New-MgBetaIdentityGovernancePrivilegedAccessGroupEligibilityScheduleRequest -MockWith {
                     return $null
                 }
-
-                Mock -CommandName Invoke-GraphRequest -MockWith {
-                    return @{
-                        AccessId             = 'member'
-                        GroupDisplayName     = 'FakeStringValue'
-                        MemberType           = 'direct'
-                        PrincipalDisplayName = 'FakePrincipal'
-                        ScheduleInfo         = @{
-                            StartDateTime = '2025-01-23T08:59:00.000Z'
-                                Expiration = @{
-                                    EndDateTime = '2025-12-23T08:59:00.000Z'
-                                    type = 'afterDateTime'
-                                }
-                        }
-                    }
-                }
-
             }
 
             It 'Should return Values from the Get method' {
@@ -191,11 +182,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential;
                 }
 
-                Mock -CommandName Get-MgBetaIdentityGovernancePrivilegedAccessGroupEligibilitySchedule -MockWith {
-                    return $null
-                }
-
-                mock -CommandName Get-MgGroup -MockWith {
+                Mock -CommandName Get-MgGroup -MockWith {
                     return @{
                         Id = 'FakeId'
                         DisplayName = 'FakeStringValue'
@@ -211,16 +198,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Invoke-GraphRequest -MockWith {
+                Mock -CommandName Get-MgBetaIdentityGovernancePrivilegedAccessGroupEligibilitySchedule -MockWith {
                     return @{
                         AccessId             = 'member'
                         GroupDisplayName     = 'FakeStringValue'
                         MemberType           = 'direct'
                         PrincipalDisplayName = 'FakePrincipal'
                         ScheduleInfo         = @{
-                                Expiration = @{
-                                    type = 'noExpiration'
-                                }
+                            Expiration = @{
+                                Type = 'noExpiration'
+                            }
                         }
                     }
                 }
@@ -273,11 +260,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential;
                 }
 
-                Mock -CommandName Get-MgBetaIdentityGovernancePrivilegedAccessGroupEligibilitySchedule -MockWith {
-                    return $null
-                }
-
-                mock -CommandName Get-MgGroup -MockWith {
+                Mock -CommandName Get-MgGroup -MockWith {
                     return @{
                         Id = 'FakeId'
                         DisplayName = 'FakeStringValue'
@@ -293,7 +276,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Invoke-GraphRequest -MockWith {
+                Mock -CommandName Get-MgBetaIdentityGovernancePrivilegedAccessGroupEligibilitySchedule -MockWith {
                     return @{
                         AccessId             = 'member'
                         GroupDisplayName     = 'FakeStringValue'
@@ -301,10 +284,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         PrincipalDisplayName = 'FakePrincipal'
                         ScheduleInfo         = @{
                             StartDateTime = '2025-01-23T08:59:00.000Z'
-                                Expiration = @{
-                                    EndDateTime = '2025-12-22T08:59:00.000Z'
-                                    type = 'afterDateTime'
-                                }
+                            Expiration = @{
+                                EndDateTime = '2025-12-22T08:59:00.000Z'
+                                Type = 'afterDateTime'
+                            }
                         }
                     }
                 }
@@ -356,17 +339,43 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential
                 }
 
-                mock -CommandName Get-MgGroup -MockWith {
+                Mock -CommandName Get-MgGroup -MockWith {
                     return @{
                         Id = 'FakeId'
                         DisplayName = 'FakeStringValue'
                     }
                 }
 
-                Mock -CommandName Get-MgBetaIdentityGovernancePrivilegedAccessGroupEligibilitySchedule -MockWith {
+                Mock -CommandName Get-MgBetaDirectoryObjectById -MockWith {
                     return @{
-                        Id             = 'FakeStringValue'
+                        AdditionalProperties = @{
+                            '@odata.type' = '#microsoft.graph.group'
+                            displayName = 'FakePrincipal'
+                        }
                     }
+                }
+
+                Mock -CommandName Invoke-M365DSCGraphBatchRequest -MockWith {
+                    return @(
+                        @{
+                            id = 'FakeId'
+                            body = @{
+                                value = @{
+                                    accessId             = 'member'
+                                    groupDisplayName     = 'FakeStringValue'
+                                    memberType           = 'direct'
+                                    principalDisplayName = 'FakePrincipal'
+                                    scheduleInfo         = @{
+                                        startDateTime = '2025-01-23T08:59:00.000Z'
+                                        expiration = @{
+                                            endDateTime = '2025-12-22T08:59:00.000Z'
+                                            type = 'afterDateTime'
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    )
                 }
             }
 

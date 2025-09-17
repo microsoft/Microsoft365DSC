@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_EXOOrganizationConfig'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -403,6 +405,10 @@ function Get-TargetResource
         $RecallReadMessagesEnabled,
 
         [Parameter()]
+        [System.Boolean]
+        $RejectDirectSend,
+
+        [Parameter()]
         [System.String[]]
         $RemotePublicFolderMailboxes,
 
@@ -476,15 +482,16 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message 'Getting EXOOrganizationConfig'
+
     if ($Global:CurrentModeIsExport)
     {
-        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters `
             -SkipModuleReload $true
     }
     else
     {
-        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters
     }
 
@@ -610,6 +617,7 @@ function Get-TargetResource
             PublicFolderShowClientControl                             = $ConfigSettings.PublicFolderShowClientControl
             ReadTrackingEnabled                                       = $ConfigSettings.ReadTrackingEnabled
             RecallReadMessagesEnabled                                 = $ConfigSettings.RecallReadMessagesEnabled
+            RejectDirectSend                                          = $ConfigSettings.RejectDirectSend
             RemotePublicFolderMailboxes                               = $ConfigSettings.RemotePublicFolderMailboxes
             SendFromAliasEnabled                                      = $ConfigSettings.SendFromAliasEnabled
             SharedDomainEmailAddressFlowEnabled                       = $ConfigSettings.SharedDomainEmailAddressFlowEnabled
@@ -625,7 +633,7 @@ function Get-TargetResource
             CertificateThumbprint                                     = $CertificateThumbprint
             CertificatePath                                           = $CertificatePath
             CertificatePassword                                       = $CertificatePassword
-            Managedidentity                                           = $ManagedIdentity.IsPresent
+            ManagedIdentity                                           = $ManagedIdentity.IsPresent
             TenantId                                                  = $TenantId
             AccessTokens                                              = $AccessTokens
         }
@@ -1068,6 +1076,10 @@ function Set-TargetResource
         $RecallReadMessagesEnabled,
 
         [Parameter()]
+        [System.Boolean]
+        $RejectDirectSend,
+
+        [Parameter()]
         [System.String[]]
         $RemotePublicFolderMailboxes,
 
@@ -1158,21 +1170,13 @@ function Set-TargetResource
 
     Write-Verbose -Message 'Setting EXOOrganizationConfig'
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+    $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
 
     Write-Verbose -Message "Setting EXOOrganizationConfig with values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
-    $SetValues = [System.Collections.Hashtable]($PSBoundParameters)
+    $SetValues = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
     $SetValues.Remove('IsSingleInstance') | Out-Null
-    $SetValues.Remove('Credential') | Out-Null
-    $SetValues.Remove('ApplicationId') | Out-Null
-    $SetValues.Remove('TenantId') | Out-Null
-    $SetValues.Remove('CertificateThumbprint') | Out-Null
-    $SetValues.Remove('CertificatePath') | Out-Null
-    $SetValues.Remove('CertificatePassword') | Out-Null
-    $SetValues.Remove('ManagedIdentity') | Out-Null
-    $SetValues.Remove('AccessTokens') | Out-Null
 
     $isAutoExpandingArchiveEnabled = Get-OrganizationConfig | Select-Object -Property AutoExpandingArchiveEnabled
 
@@ -1589,6 +1593,10 @@ function Test-TargetResource
         $RecallReadMessagesEnabled,
 
         [Parameter()]
+        [System.Boolean]
+        $RejectDirectSend,
+
+        [Parameter()]
         [System.String[]]
         $RemotePublicFolderMailboxes,
 
@@ -1760,7 +1768,7 @@ function Export-TargetResource
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint
             CertificatePassword   = $CertificatePassword
-            Managedidentity       = $ManagedIdentity.IsPresent
+            ManagedIdentity       = $ManagedIdentity.IsPresent
             CertificatePath       = $CertificatePath
             AccessTokens          = $AccessTokens
         }

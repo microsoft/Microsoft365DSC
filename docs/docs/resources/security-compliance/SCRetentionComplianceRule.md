@@ -24,33 +24,9 @@
 
 ## Description
 
-This resource configures a Retention Compliance Rule in Security and Compliance.
+This resource configures a Retention Compliance Rule in Purview.
 
 ## Permissions
-
-### Microsoft Graph
-
-To authenticate with the Microsoft Graph API, this resource required the following permissions:
-
-#### Delegated permissions
-
-- **Read**
-
-    - None
-
-- **Update**
-
-    - None
-
-#### Application permissions
-
-- **Read**
-
-    - None
-
-- **Update**
-
-    - None
 
 ## Examples
 

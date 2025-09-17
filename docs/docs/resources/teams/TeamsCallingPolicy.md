@@ -6,6 +6,18 @@
 | --- | --- | --- | --- | --- |
 | **Identity** | Key | String | Identity of the Teams Calling Policy. | |
 | **Description** | Write | String | Description of the Teams Calling Policy. | |
+| **AIInterpreter** | Write | String | Enables the user to use the AI Interpreter related features. Possible values are: Disabled, Enabled | `Disabled`, `Enabled` |
+| **CallingSpendUserLimit** | Write | UInt32 | The maximum amount a user can spend on outgoing PSTN calls, including all calls made through Pay-as-you-go Calling Plans and any overages on plans with bundled minutes. | |
+| **Copilot** | Write | String | Setting this parameter lets you control how Copilot is used during calls and if transcription is needed to be turned on and saved after the call. Possible values: Enabled, EnabledWithTranscript, Disabled | `Enabled`, `EnabledWithTranscript`, `Disabled` |
+| **EnableSpendLimits** | Write | Boolean | This setting allows an admin to enable or disable spend limits on PSTN calls for their user base. | |
+| **EnableWebPstnMediaBypass** | Write | Boolean | Determines if MediaBypass is enabled for PSTN calls on specified Web platforms. | |
+| **InboundFederatedCallRoutingTreatment** | Write | String | Setting this parameter lets you control how inbound federated calls should be routed. Possible values are: RegularIncoming, Unanswered, Voicemail. | `RegularIncoming`, `Unanswered`, `Voicemail` |
+| **InboundPstnCallRoutingTreatment** | Write | String | Setting this parameter lets you control how inbound PSTN calls should be routed. Possible values are: RegularIncoming, Unanswered, Voicemail, UserOverride. | `RegularIncoming`, `Unanswered`, `Voicemail`, `UserOverride` |
+| **PopoutAppPathForIncomingPstnCalls** | Write | String | Setting this parameter allows you to set the PopoutForIncomingPstnCalls setting's URL path of the website to launch upon receiving incoming PSTN calls. This parameter accepts an HTTPS URL with less than 1024 characters. The URL can contain a {phone} placeholder that is replaced with the caller's PSTN number in E.164 format when launched. | |
+| **PopoutForIncomingPstnCalls** | Write | String | Setting this parameter allows you to control the tenant users' ability to launch an external website URL automatically in the browser window upon incoming PSTN calls for specific users or user groups. Possible values are: Enabled, Disabled. | `Disabled`, `Enabled` |
+| **RealTimeText** | Write | String | Allows users to use real time text during a call, allowing them to communicate by typing their messages in real time. Possible values are: Disabled, Enabled | `Disabled`, `Enabled` |
+| **ShowTeamsCallsInCallLog** | Write | Boolean | Controls if Teams calls are shown in the call log. | |
+| **VoiceSimulationInInterpreter** | Write | String | Enables the user to use the voice simulation feature while being AI interpreted. Possible values are: Disabled, Enabled | `Disabled`, `Enabled` |
 | **AllowPrivateCalling** | Write | Boolean | Controls all calling capabilities in Teams. Turning this off will turn off all calling functionality in Teams. If you use Skype for Business for calling, this policy will not affect calling functionality in Skype for Business. | |
 | **AllowVoicemail** | Write | String | Enables inbound calls to be routed to voice mail. Valid options are: AlwaysEnabled, AlwaysDisabled, UserOverride. | `AlwaysEnabled`, `AlwaysDisabled`, `UserOverride` |
 | **AllowCallGroups** | Write | Boolean | Enables inbound calls to be routed to call groups. | |

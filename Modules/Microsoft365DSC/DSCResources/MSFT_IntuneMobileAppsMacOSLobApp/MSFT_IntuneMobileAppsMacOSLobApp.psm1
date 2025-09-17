@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_IntuneMobileAppsMacOSLobApp'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -129,8 +131,8 @@ function Get-TargetResource
 
     try
     {
-        New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters | Out-Null
+        $null = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+            -InboundParameters $PSBoundParameters
 
         #Ensure the proper dependencies are installed in the current environment.
         Confirm-M365DSCDependencies
@@ -147,9 +149,10 @@ function Get-TargetResource
         $nullResult = $PSBoundParameters
         $nullResult.Ensure = 'Absent'
 
-        $instance = Get-MgBetaDeviceAppManagementMobileApp -MobileAppId $Id `
-            -ExpandProperty 'categories' `
-            -ErrorAction SilentlyContinue
+        if (-not [System.String]::IsNullOrEmpty($Id))
+        {
+            $instance = Get-MgBetaDeviceAppManagementMobileApp -MobileAppId $Id -ExpandProperty 'categories' -ErrorAction SilentlyContinue
+        }
 
         if ($null -eq $instance)
         {
@@ -168,9 +171,9 @@ function Get-TargetResource
                 $instance = Get-MgBetaDeviceAppManagementMobileApp -MobileAppId $instance.Id `
                     -ExpandProperty 'categories' `
                     -ErrorAction SilentlyContinue
-                $Id = $instance.Id
             }
         }
+        $Id = $instance.Id
 
         if ($null -eq $instance)
         {
@@ -260,7 +263,7 @@ function Get-TargetResource
         }
         $results.Add('Assignments', $resultAssignments)
 
-        return [System.Collections.Hashtable] $results
+        return $results
     }
     catch
     {
@@ -437,26 +440,7 @@ function Set-TargetResource
         $CreateParameters.Add('@odata.type', '#microsoft.graph.macOSLobApp')
         $app = New-MgBetaDeviceAppManagementMobileApp -BodyParameter $CreateParameters
 
-        foreach ($category in $Categories)
-        {
-            if ($category.Id)
-            {
-                $currentCategory = Get-MgBetaDeviceAppManagementMobileAppCategory -CategoryId $category.Id
-            }
-            else
-            {
-                $currentCategory = Get-MgBetaDeviceAppManagementMobileAppCategory -Filter "DisplayName eq '$($category.DisplayName -replace "'", "''")'"
-            }
-
-            if ($null -eq $currentCategory)
-            {
-                throw "Mobile App Category with DisplayName $($category.DisplayName) not found."
-            }
-
-            Invoke-MgGraphRequest -Uri "$((Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl)beta/deviceAppManagement/mobileApps/$($app.Id)/categories/`$ref" -Method 'POST' -Body @{
-                '@odata.id' = "$((Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl)beta/deviceAppManagement/mobileAppCategories/$($currentCategory.Id)"
-            }
-        }
+        Update-DeviceAppManagementAppCategory -App $app -Categories $Categories
 
         #Assignments
         if ($app.Id)
@@ -487,52 +471,7 @@ function Set-TargetResource
         $UpdateParameters.Add('@odata.type', '#microsoft.graph.macOSLobApp')
         Update-MgBetaDeviceAppManagementMobileApp -MobileAppId $currentInstance.Id -BodyParameter $UpdateParameters
 
-        [array]$referenceObject = if ($null -ne $currentInstance.Categories.DisplayName)
-        {
-            $currentInstance.Categories.DisplayName
-        }
-        else
-        {
-            , @()
-        }
-        [array]$differenceObject = if ($null -ne $Categories.DisplayName)
-        {
-            $Categories.DisplayName
-        }
-        else
-        {
-            , @()
-        }
-        $delta = Compare-Object -ReferenceObject $referenceObject -DifferenceObject $differenceObject -PassThru
-        foreach ($diff in $delta)
-        {
-            if ($diff.SideIndicator -eq '=>')
-            {
-                $category = $Categories | Where-Object { $_.DisplayName -eq $diff }
-                if ($category.Id)
-                {
-                    $currentCategory = Get-MgBetaDeviceAppManagementMobileAppCategory -MobileAppCategoryId $category.Id
-                }
-                else
-                {
-                    $currentCategory = Get-MgBetaDeviceAppManagementMobileAppCategory -Filter "DisplayName eq '$($category.DisplayName -replace "'", "''")'"
-                }
-
-                if ($null -eq $currentCategory)
-                {
-                    throw "Mobile App Category with DisplayName $($category.DisplayName) not found."
-                }
-
-                Invoke-MgGraphRequest -Uri "/beta/deviceAppManagement/mobileApps/$($currentInstance.Id)/categories/`$ref" -Method 'POST' -Body @{
-                    '@odata.id' = "$((Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl)beta/deviceAppManagement/mobileAppCategories/$($currentCategory.Id)"
-                }
-            }
-            else
-            {
-                $category = $currentInstance.Categories | Where-Object { $_.DisplayName -eq $diff }
-                Invoke-MgGraphRequest -Uri "/beta/deviceAppManagement/mobileApps/$($currentInstance.Id)/categories/$($category.Id)/`$ref" -Method 'DELETE'
-            }
-        }
+        Update-DeviceAppManagementAppCategory -App $currentInstance -Categories $Categories -Compare
 
         #Assignments
         $assignmentsHash = ConvertTo-IntuneMobileAppAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
@@ -688,7 +627,7 @@ function Test-TargetResource
     Write-Verbose -Message "Testing configuration of the Intune MacOS Lob App with Id {$Id} and DisplayName {$DisplayName}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
-    $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
+    $ValuesToCheck = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
     $testResult = $true
 
     #Compare Cim instances
@@ -717,7 +656,6 @@ function Test-TargetResource
     $PSBoundParameters.Remove('LargeIcon') | Out-Null
 
     $ValuesToCheck.Remove('Id') | Out-Null
-    $ValuesToCheck = Remove-M365DSCAuthenticationParameter -BoundParameters $ValuesToCheck
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
@@ -792,8 +730,18 @@ function Export-TargetResource
     try
     {
         $Script:ExportMode = $true
+        $baseFilter = "isof('microsoft.graph.macOSLobApp')"
+        if (-not [String]::IsNullOrEmpty($Filter))
+        {
+            $Filter = "($Filter) and ($baseFilter)"
+        }
+        else
+        {
+            $Filter = $baseFilter
+        }
         [array] $getValue = Get-MgBetaDeviceAppManagementMobileApp `
-            -Filter "isof('microsoft.graph.macOSLobApp')" `
+            -All `
+            -Filter $Filter `
             -ErrorAction Stop
 
         $i = 1

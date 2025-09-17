@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_TeamsGroupPolicyAssignment'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -54,6 +56,8 @@ function Get-TargetResource
         [System.String[]]
         $AccessTokens
     )
+
+    Write-Verbose "Getting GroupPolicyAssignment for GroupDisplayName: $GroupDisplayName, GroupId: $GroupId, PolicyType: $PolicyType"
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' -InboundParameters $PSBoundParameters
 
@@ -473,3 +477,4 @@ function Export-TargetResource
 }
 
 Export-ModuleMember -Function *-TargetResource
+

@@ -1,29 +1,63 @@
 {
-    "resourceName": "AADGroupEligibilitySchedule",
-    "description": "This resource configures an Azure AD Group Eligibility Schedule.",
-    "permissions":    {
-    "graph":  {
-                  "delegated":  {
-                                    "read":  [
-                                                 {
-                                                     "name":  "PrivilegedEligibilitySchedule.Read.AzureADGroup"
-                                                 }
-                                             ],
-                                    "update":  [
-
-                                               ]
-                                },
-                  "application":  {
-                                      "read":  [
-                                                   {
-                                                       "name":  "PrivilegedEligibilitySchedule.Read.AzureADGroup"
-                                                   }
-                                               ],
-                                      "update":  [
-
-                                                 ]
-                                  }
-              }
-}
-
+  "resourceName": "AADGroupEligibilitySchedule",
+  "description": "This resource configures an Azure AD Group Eligibility Schedule.",
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "Directory.Read.All"
+          },
+          {
+            "name": "PrivilegedEligibilitySchedule.Read.AzureADGroup"
+          }
+        ],
+        "update": [
+          {
+            "name": "Directory.Read.All"
+          },
+          {
+            "name": "PrivilegedEligibilitySchedule.ReadWrite.AzureADGroup"
+          },
+          {
+            "name": "RoleManagementPolicy.ReadWrite.Directory"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "Directory.Read.All"
+          },
+          {
+            "name": "PrivilegedEligibilitySchedule.Read.AzureADGroup"
+          }
+        ],
+        "update": [
+          {
+            "name": "Directory.Read.All"
+          },
+          {
+            "name": "PrivilegedEligibilitySchedule.ReadWrite.AzureADGroup"
+          },
+          {
+            "name": "RoleManagementPolicy.ReadWrite.Directory"
+          }
+        ]
+      }
+    }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.DirectoryObjects",
+    "Microsoft.Graph.Beta.Identity.Governance",
+    "Microsoft.Graph.Beta.Identity.SignIns",
+    "Microsoft.Graph.Groups",
+    "Microsoft.Graph.Users",
+    "MSCloudLoginAssistant"
+  ],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ]
 }

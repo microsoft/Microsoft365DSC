@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_EXOResourceConfiguration'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -50,17 +52,18 @@ function Get-TargetResource
         [System.String[]]
         $AccessTokens
     )
-    Write-Verbose -Message 'Getting Resource Configuration'
+
+    Write-Verbose -Message 'Getting configuration of the EXO Resource Configuration'
 
     if ($Global:CurrentModeIsExport)
     {
-        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters `
             -SkipModuleReload $true
     }
     else
     {
-        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters
     }
 
@@ -97,7 +100,7 @@ function Get-TargetResource
             CertificateThumbprint  = $CertificateThumbprint
             CertificatePath        = $CertificatePath
             CertificatePassword    = $CertificatePassword
-            Managedidentity        = $ManagedIdentity.IsPresent
+            ManagedIdentity        = $ManagedIdentity.IsPresent
             TenantId               = $TenantId
             AccessTokens           = $AccessTokens
         }
@@ -183,20 +186,11 @@ function Set-TargetResource
 
     Write-Verbose -Message 'Setting configuration of Resource Configuration'
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+    $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
-    $ResourceConfigurationParams = [System.Collections.Hashtable]($PSBoundParameters)
-    $ResourceConfigurationParams.Remove('Ensure') | Out-Null
-    $ResourceConfigurationParams.Remove('Credential') | Out-Null
-    $ResourceConfigurationParams.Remove('ApplicationId') | Out-Null
-    $ResourceConfigurationParams.Remove('TenantId') | Out-Null
-    $ResourceConfigurationParams.Remove('CertificateThumbprint') | Out-Null
-    $ResourceConfigurationParams.Remove('CertificatePath') | Out-Null
-    $ResourceConfigurationParams.Remove('CertificatePassword') | Out-Null
-    $ResourceConfigurationParams.Remove('ManagedIdentity') | Out-Null
+    $ResourceConfigurationParams = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
     $ResourceConfigurationParams.Remove('IsSingleInstance') | Out-Null
-    $ResourceConfigurationParams.Remove('AccessTokens') | Out-Null
 
     if (('Present' -eq $Ensure ) -and ($Null -ne $ResourceConfigurationParams))
     {
@@ -366,7 +360,7 @@ function Export-TargetResource
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint
             CertificatePassword   = $CertificatePassword
-            Managedidentity       = $ManagedIdentity.IsPresent
+            ManagedIdentity       = $ManagedIdentity.IsPresent
             CertificatePath       = $CertificatePath
             AccessTokens          = $AccessTokens
         }

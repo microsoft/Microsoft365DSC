@@ -1,28 +1,44 @@
-﻿{
-    "resourceName": "AADTenantAppManagementPolicy",
-    "description": "Tenant-wide application authentication method policy to enforce app management restrictions for all applications and service principals.",
-    "roles": {
-        "read": [],
-        "update": []
-    },
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [],
-                "update": []
-            },
-            "application": {
-                "read": [
-                    {
-                        "name": "Policy.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Policy.Read.ApplicationConfiguration"
-                    }
-                ]
-            }
-        }
+{
+  "resourceName": "AADTenantAppManagementPolicy",
+  "description": "Tenant-wide application authentication method policy to enforce app management restrictions for all applications and service principals.",
+  "roles": {
+    "read": [],
+    "update": []
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "Policy.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Policy.ReadWrite.ApplicationConfiguration"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "Policy.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Policy.ReadWrite.ApplicationConfiguration"
+          }
+        ]
+      }
     }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.Identity.SignIns"
+  ],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ]
 }

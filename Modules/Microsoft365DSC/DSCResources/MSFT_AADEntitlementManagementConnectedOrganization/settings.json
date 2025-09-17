@@ -1,46 +1,57 @@
 {
-   "resourceName": "AADEntitlementManagementConnectedOrganization",
-   "description": "This resource configures an Azure AD Entitlement Management Connected Organization.",
-   "roles": {
-      "read": [
-         "Security Reader"
-      ],
-      "update": [
-         "Identity Governance Administrator"
-      ]
-   },
-   "permissions": {
-      "graph": {
-         "delegated": {
-            "read": [
-               {
-                  "name": "EntitlementManagement.Read.All"
-               }
-            ],
-            "update": [
-               {
-                  "name": "EntitlementManagement.ReadWrite.All"
-               },
-               {
-                  "name": "Directory.Read.All"
-               }
-            ]
-         },
-         "application": {
-            "read": [
-               {
-                  "name": "EntitlementManagement.Read.All"
-               }
-            ],
-            "update": [
-               {
-                  "name": "EntitlementManagement.ReadWrite.All"
-               },
-               {
-                  "name": "Directory.Read.All"
-               }
-            ]
-         }
+  "resourceName": "AADEntitlementManagementConnectedOrganization",
+  "description": "This resource configures an Azure AD Entitlement Management Connected Organization.",
+  "roles": {
+    "read": [
+      "Security Reader"
+    ],
+    "update": [
+      "Identity Governance Administrator"
+    ]
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "EntitlementManagement.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "EntitlementManagement.ReadWrite.All"
+          },
+          {
+            "name": "Directory.Read.All"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "EntitlementManagement.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "EntitlementManagement.ReadWrite.All"
+          },
+          {
+            "name": "Directory.Read.All"
+          }
+        ]
       }
-   }
+    }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.DirectoryObjects",
+    "Microsoft.Graph.Beta.Identity.Governance",
+    "Microsoft.Graph.Users",
+    "MSCloudLoginAssistant"
+  ],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ]
 }

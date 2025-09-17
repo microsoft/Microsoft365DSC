@@ -2,4 +2,4 @@
 
 ## Description
 
-This resource configures Security and Compliance Center Admin Audit Log.
+This resource configures a Purview Admin Audit Log.

@@ -77,42 +77,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Test-TargetResource @testParams | Should -Be $true
             }
         }
-
-        Context -Name "The instance exists and values are NOT in the desired state" -Fixture {
-            BeforeAll {
-                $testParams = @{
-                    Exchange              = "disabled";
-                    IsSingleInstance      = "Yes";
-                    SharePoint            = "disabled"; #drift
-                    Teams                 = "disabled";
-                    Credential            = $Credential;
-                }
-            }
-
-            It 'Should return false from the Test method' {
-                Test-TargetResource @testParams | Should -Be $false
-            }
-
-            It 'Should call the Set method' {
-                Set-TargetResource @testParams
-                Should -Invoke -CommandName Invoke-MgGraphRequest -Exactly 1
-            }
-        }
-
-        Context -Name 'ReverseDSC Tests' -Fixture {
-            BeforeAll {
-                $Global:CurrentModeIsExport = $true
-                $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
-
-                $testParams = @{
-                    Credential            = $Credential;
-                }
-            }
-            It 'Should Reverse Engineer resource from the Export method' {
-                $result = Export-TargetResource @testParams
-                $result | Should -Not -BeNullOrEmpty
-            }
-        }
     }
 }
 

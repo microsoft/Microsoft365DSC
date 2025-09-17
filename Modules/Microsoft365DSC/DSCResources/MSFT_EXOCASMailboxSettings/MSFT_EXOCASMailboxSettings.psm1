@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_EXOCASMailboxSettings'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -186,13 +188,13 @@ function Get-TargetResource
 
     if ($Global:CurrentModeIsExport)
     {
-        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters `
             -SkipModuleReload $true
     }
     else
     {
-        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters
     }
 
@@ -275,7 +277,7 @@ function Get-TargetResource
         CertificateThumbprint                   = $CertificateThumbprint
         CertificatePath                         = $CertificatePath
         CertificatePassword                     = $CertificatePassword
-        Managedidentity                         = $ManagedIdentity.IsPresent
+        ManagedIdentity                         = $ManagedIdentity.IsPresent
         TenantId                                = $TenantId
         AccessTokens                            = $AccessTokens
     }
@@ -480,21 +482,10 @@ function Set-TargetResource
         -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
-        -InboundParameters $PSBoundParameters
 
     $currentMailbox = Get-TargetResource @PSBoundParameters
 
-    $CASMailboxParams = [System.Collections.Hashtable]($PSBoundParameters)
-    $CASMailboxParams.Remove('Ensure') | Out-Null
-    $CASMailboxParams.Remove('Credential') | Out-Null
-    $CASMailboxParams.Remove('ApplicationId') | Out-Null
-    $CASMailboxParams.Remove('TenantId') | Out-Null
-    $CASMailboxParams.Remove('CertificateThumbprint') | Out-Null
-    $CASMailboxParams.Remove('CertificatePath') | Out-Null
-    $CASMailboxParams.Remove('CertificatePassword') | Out-Null
-    $CASMailboxParams.Remove('ManagedIdentity') | Out-Null
-    $CASMailboxParams.Remove('AccessTokens') | Out-Null
+    $CASMailboxParams = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
     # CASE: Mailbox exists;
     Write-Verbose -Message "Setting CAS Mailbox settings for $($Identity) with values: $(Convert-M365DscHashtableToString -Hashtable $CASMailboxParams)"
@@ -754,6 +745,7 @@ function Export-TargetResource
         [System.String[]]
         $AccessTokens
     )
+
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
         -SkipModuleReload $true
@@ -803,7 +795,7 @@ function Export-TargetResource
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                     CertificatePassword   = $CertificatePassword
-                    Managedidentity       = $ManagedIdentity.IsPresent
+                    ManagedIdentity       = $ManagedIdentity.IsPresent
                     CertificatePath       = $CertificatePath
                     AccessTokens          = $AccessTokens
                 }

@@ -25,30 +25,6 @@ This resources configures the PowerApps Environment.
 
 ## Permissions
 
-### Microsoft Graph
-
-To authenticate with the Microsoft Graph API, this resource required the following permissions:
-
-#### Delegated permissions
-
-- **Read**
-
-    - None
-
-- **Update**
-
-    - None
-
-#### Application permissions
-
-- **Read**
-
-    - None
-
-- **Update**
-
-    - None
-
 ## Examples
 
 ### Example 1
@@ -72,6 +48,9 @@ Configuration Example
             DisplayName        = "My Demo Environment"
             EnvironmentSKU     = "Production"
             Location           = "canada"
+            ProvisionDatabase  = $true
+            LanguageName       = 1033;
+            CurrencyName	   = "CAD";
             Ensure             = "Present"
             Credential         = $Credscredential
         }

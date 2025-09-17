@@ -1,24 +1,41 @@
 {
-    "resourceName": "AADIdentityB2XUserFlow",
-    "description": "This resource configures an Azure AD Identity B2 X User Flow.",
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [
-                    {
-                        "name": "IdentityUserFlow.Read.All"
-                    }
-                ],
-                "update": []
-            },
-            "application": {
-                "read": [
-                    {
-                        "name": "IdentityUserFlow.Read.All"
-                    }
-                ],
-                "update": []
-            }
-        }
+  "resourceName":"AADIdentityB2XUserFlow",
+  "description":"This resource configures an Azure AD Identity B2 X User Flow.",
+  "permissions":{
+    "graph":{
+      "delegated":{
+        "read":[
+          {
+            "name":"IdentityUserFlow.Read.All"
+          }
+        ],
+        "update":[
+          {
+            "name":"IdentityUserFlow.ReadWrite.All"
+          }
+        ]
+      },
+      "application":{
+        "read":[
+          {
+            "name":"IdentityUserFlow.Read.All"
+          }
+        ],
+        "update":[
+          {
+            "name":"IdentityUserFlow.ReadWrite.All"
+          }
+        ]
+      }
     }
+  },
+  "requiredModules":[
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.Identity.SignIns",
+    "MSCloudLoginAssistant"
+  ],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ]
 }

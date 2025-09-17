@@ -1,112 +1,126 @@
-﻿{
-    "resourceName": "AADConditionalAccessPolicy",
-    "description": "This resource configures an Azure Active Directory Conditional Access Policy.",
-    "roles": {
+{
+  "resourceName": "AADConditionalAccessPolicy",
+  "description": "This resource configures an Azure Active Directory Conditional Access Policy.",
+  "roles": {
+    "read": [
+      "Security Reader"
+    ],
+    "update": [
+      "Conditional Access Administrator"
+    ]
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
         "read": [
-            "Security Reader"
+          {
+            "name": "Agreement.Read.All"
+          },
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "Policy.Read.All"
+          },
+          {
+            "name": "RoleManagement.Read.Directory"
+          },
+          {
+            "name": "User.Read.All"
+          },
+          {
+            "name": "CustomSecAttributeDefinition.Read.All"
+          }
         ],
         "update": [
-            "Conditional Access Administrator"
+          {
+            "name": "Agreement.Read.All"
+          },
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "Policy.Read.All"
+          },
+          {
+            "name": "Policy.ReadWrite.ConditionalAccess"
+          },
+          {
+            "name": "RoleManagement.Read.Directory"
+          },
+          {
+            "name": "User.Read.All"
+          },
+          {
+            "name": "CustomSecAttributeDefinition.Read.All"
+          }
         ]
-    },
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [
-                    {
-                        "name": "Agreement.Read.All"
-                    },
-                    {
-                        "name": "Group.Read.All"
-                    },
-                    {
-                        "name": "Policy.Read.All"
-                    },
-                    {
-                        "name": "RoleManagement.Read.Directory"
-                    },
-                    {
-                        "name": "User.Read.All"
-                    },
-                    {
-                        "name": "CustomSecAttributeDefinition.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Agreement.Read.All"
-                    },
-                    {
-                        "name": "Group.Read.All"
-                    },
-                    {
-                        "name": "Policy.Read.All"
-                    },
-                    {
-                        "name": "Policy.ReadWrite.ConditionalAccess"
-                    },
-                    {
-                        "name": "RoleManagement.Read.Directory"
-                    },
-                    {
-                        "name": "User.Read.All"
-                    },
-                    {
-                        "name": "CustomSecAttributeDefinition.Read.All"
-                    }
-                ]
-            },
-            "application": {
-                "read": [
-                    {
-                        "name": "Agreement.Read.All"
-                    },
-                    {
-                        "name": "Application.Read.All"
-                    },
-                    {
-                        "name": "Group.Read.All"
-                    },
-                    {
-                        "name": "Policy.Read.All"
-                    },
-                    {
-                        "name": "RoleManagement.Read.Directory"
-                    },
-                    {
-                        "name": "User.Read.All"
-                    },
-                    {
-                        "name": "CustomSecAttributeDefinition.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Agreement.Read.All"
-                    },
-                    {
-                        "name": "Application.Read.All"
-                    },
-                    {
-                        "name": "Group.Read.All"
-                    },
-                    {
-                        "name": "Policy.Read.All"
-                    },
-                    {
-                        "name": "Policy.ReadWrite.ConditionalAccess"
-                    },
-                    {
-                        "name": "RoleManagement.Read.Directory"
-                    },
-                    {
-                        "name": "User.Read.All"
-                    },
-                    {
-                        "name": "CustomSecAttributeDefinition.Read.All"
-                    }
-                ]
-            }
-        }
+      },
+      "application": {
+        "read": [
+          {
+            "name": "Agreement.Read.All"
+          },
+          {
+            "name": "Application.Read.All"
+          },
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "Policy.Read.All"
+          },
+          {
+            "name": "RoleManagement.Read.Directory"
+          },
+          {
+            "name": "User.Read.All"
+          },
+          {
+            "name": "CustomSecAttributeDefinition.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Agreement.Read.All"
+          },
+          {
+            "name": "Application.Read.All"
+          },
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "Policy.Read.All"
+          },
+          {
+            "name": "Policy.ReadWrite.ConditionalAccess"
+          },
+          {
+            "name": "RoleManagement.Read.Directory"
+          },
+          {
+            "name": "User.Read.All"
+          },
+          {
+            "name": "CustomSecAttributeDefinition.Read.All"
+          }
+        ]
+      }
     }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Applications",
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.Identity.Governance",
+    "Microsoft.Graph.Beta.Identity.SignIns",
+    "Microsoft.Graph.Groups",
+    "Microsoft.Graph.Identity.DirectoryManagement",
+    "Microsoft.Graph.Users",
+    "MSCloudLoginAssistant"
+  ],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ]
 }

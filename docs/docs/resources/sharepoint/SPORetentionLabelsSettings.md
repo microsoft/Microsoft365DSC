@@ -55,21 +55,21 @@ To authenticate with the SharePoint API, this resource required the following pe
 
 - **Read**
 
-    - None
+    - Sites.FullControl.All
 
 - **Update**
 
-    - None
+    - Sites.FullControl.All
 
 #### Application permissions
 
 - **Read**
 
-    - 
+    - Sites.FullControl.All
 
 - **Update**
 
-    - 
+    - Sites.FullControl.All
 
 ## Examples
 

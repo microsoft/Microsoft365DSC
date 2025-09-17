@@ -2,5 +2,4 @@
 
 ## Description
 
-This resource configures an Audit ConfigurationPolicy
-in Security and Compliance Center.
+This resource configures an Audit ConfigurationPolicy in Purview.

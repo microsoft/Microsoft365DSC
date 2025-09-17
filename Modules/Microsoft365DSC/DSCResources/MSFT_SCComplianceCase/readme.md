@@ -2,4 +2,4 @@
 
 ## Description
 
-This resource configures an eDiscovery Case in Security and Compliance.
+This resource configures an eDiscovery Case in Purview.

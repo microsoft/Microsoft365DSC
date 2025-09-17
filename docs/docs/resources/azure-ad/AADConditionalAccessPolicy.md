@@ -47,7 +47,7 @@
 | **CustomAuthenticationFactors** | Write | StringArray[] | Custom Controls assigned to the grant property of this policy. | |
 | **SignInFrequencyType** | Write | String | Sign in frequency unit (days/hours) to be interpreted by the policy. | `Days`, `Hours`, `` |
 | **SignInFrequencyIsEnabled** | Write | Boolean | Specifies, whether sign-in frequency is enforced by the Policy. | |
-| **SignInFrequencyInterval** | Write | String | Sign in frequency interval. Possible values are: timeBased, everyTime and unknownFutureValue. | `timeBased`, `everyTime`, `unknownFutureValue` |
+| **SignInFrequencyInterval** | Write | String | Sign in frequency interval. Possible values are: 'timeBased', 'everyTime' and 'unknownFutureValue'. | `timeBased`, `everyTime`, `unknownFutureValue` |
 | **PersistentBrowserIsEnabled** | Write | Boolean | Specifies, whether Browser Persistence is controlled by the Policy. | |
 | **PersistentBrowserMode** | Write | String | Specifies, what Browser Persistence control is enforced by the Policy. | `Always`, `Never`, `` |
 | **DisableResilienceDefaultsIsEnabled** | Write | Boolean | Specifies, if DisableResilienceDefaults is enabled. | |
@@ -56,6 +56,7 @@
 | **AuthenticationContexts** | Write | StringArray[] | Authentication context class references. | |
 | **InsiderRiskLevels** | Write | StringArray[] | Insider risk levels conditions. | `minor`, `moderate`, `elevated`, `unknownFutureValue` |
 | **ServicePrincipalRiskLevels** | Write | StringArray[] | Service principal risk levels included in the policy. | `low`, `medium`, `high`, `none`, `unknownFutureValue` |
+| **ProtocolFlows** | Write | StringArray[] | Specifies the protocol flows to block. | |
 | **Ensure** | Write | String | Specify if the Azure AD CA Policy should exist or not. | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials for the Microsoft Graph delegated permissions. | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |

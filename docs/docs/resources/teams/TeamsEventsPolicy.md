@@ -13,6 +13,13 @@
 | **AllowedQuestionTypesInRegistrationForm** | Write | String | This setting governs which users in a tenant can add which registration form questions to an event registration page for attendees to answer when registering for the event. | `DefaultOnly`, `DefaultAndPredefinedOnly`, `AllQuestions` |
 | **AllowedTownhallTypesForRecordingPublish** | Write | String | This setting describes how IT admins can control which types of Town Hall attendees can have their recordings published. | `None`, `InviteOnly`, `EveryoneInCompanyIncludingGuests`, `Everyone` |
 | **AllowedWebinarTypesForRecordingPublish** | Write | String | This setting describes how IT admins can control which types of webinar attendees can have their recordings published. | `None`, `InviteOnly`, `EveryoneInCompanyIncludingGuests`, `Everyone` |
+| **BroadcastPremiumApps** | Write | String | This setting will enable Tenant Admins to specify if an organizer of a Teams Premium town hall may add an app that is accessible by everyone, including attendees, in a broadcast style Event including a Town hall. | `Enabled`, `Disabled` |
+| **ImmersiveEvents** | Write | String | This setting governs if a user can create Immersive Events using Teams Events. | `Enabled`, `Disabled` |
+| **RecordingForTownhall** | Write | String | Determines whether recording is allowed in a user's townhall. | `Enabled`, `Disabled` |
+| **RecordingForWebinar** | Write | String | Determines whether recording is allowed in a user's webinar. | `Enabled`, `Disabled` |
+| **TownhallEventAttendeeAccess** | Write | String | This setting governs what identity types may attend a Town hall that is scheduled by a particular person or group that is assigned this policy. | `Everyone`, `EveryoneInOrganizationAndGuests` |
+| **TranscriptionForTownhall** | Write | String | Determines whether transcriptions are allowed in a user's townhall. | `Enabled`, `Disabled` |
+| **TranscriptionForWebinar** | Write | String | Determines whether transcriptions are allowed in a user's webinar. | `Enabled`, `Disabled` |
 | **EventAccessType** | Write | String | Defines who is allowed to join the event. | `Everyone`, `EveryoneInCompanyExcludingGuests` |
 | **Ensure** | Write | String | Present ensures the policy exists, absent ensures it is removed. | `Present`, `Absent` |
 | **TownhallChatExperience** | Write | String | This setting governs whether the user can enable the Comment Stream chat experience for Town Halls. | `Optimized`, `None` |

@@ -6,7 +6,7 @@
 | --- | --- | --- | --- | --- |
 | **SiteDesignTitle** | Key | String | The title of the site design | |
 | **Rights** | Key | String | Rights to grant user principals on site design rights. | `View`, `None` |
-| **UserPrincipals** | Write | StringArray[] | List of user principals with seperated by commas to site design rights. | |
+| **UserPrincipals** | Write | StringArray[] | List of user principals with separated by commas to site design rights. | |
 | **Ensure** | Write | String | Used to add or remove list of users from site design rights. | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials of the Office365 Tenant Admin. | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |

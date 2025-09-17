@@ -1,0 +1,52 @@
+{
+  "resourceName": "IntuneWindowsUpdateForBusinessHotpatchProfileWindows10",
+  "description": "This resource configures an Intune Windows Update For Business Hotpatch Profile for Windows10.",
+  "permissions": {
+    "graph": {
+      "application": {
+        "read": [
+          {
+            "name": "DeviceManagementConfiguration.Read.All"
+          },
+          {
+            "name": "Group.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "DeviceManagementConfiguration.ReadWrite.All"
+          },
+          {
+            "name": "Group.Read.All"
+          }
+        ]
+      },
+      "delegated": {
+        "read": [
+          {
+            "name": "DeviceManagementConfiguration.Read.All"
+          },
+          {
+            "name": "Group.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "DeviceManagementConfiguration.ReadWrite.All"
+          },
+          {
+            "name": "Group.Read.All"
+          }
+        ]
+      }
+    }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication"
+  ],
+  "mode": "Configuration",
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ]
+}

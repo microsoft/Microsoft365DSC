@@ -174,6 +174,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         UserPrincipalName = "john.smith@contoso.com";
                     }
                 }
+                Mock -CommandName Get-User -MockWith {
+                    return @{
+                        Identity = "john.smith";
+                        UserPrincipalName = "john.smith@contoso.com"
+                    }
+                }
             }
 
             It 'Should Reverse Engineer resource from the Export method' {

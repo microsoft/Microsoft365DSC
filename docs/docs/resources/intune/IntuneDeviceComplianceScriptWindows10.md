@@ -37,21 +37,21 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - None
+    - Group.Read.All, DeviceManagementScripts.Read.All
 
 - **Update**
 
-    - None
+    - Group.Read.All, DeviceManagementScripts.ReadWrite.All
 
 #### Application permissions
 
 - **Read**
 
-    - None
+    - Group.Read.All, DeviceManagementScripts.Read.All
 
 - **Update**
 
-    - None
+    - Group.Read.All, DeviceManagementScripts.ReadWrite.All
 
 ## Examples
 

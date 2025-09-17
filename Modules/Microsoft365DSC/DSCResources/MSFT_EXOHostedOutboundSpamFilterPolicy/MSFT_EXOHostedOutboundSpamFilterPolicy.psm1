@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_EXOHostedOutboundSpamFilterPolicy'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -90,13 +92,13 @@ function Get-TargetResource
 
     if ($Global:CurrentModeIsExport)
     {
-        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters `
             -SkipModuleReload $true
     }
     else
     {
-        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters
     }
 
@@ -269,19 +271,10 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+    $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
-    $HostedOutboundSpamFilterPolicyParams = [System.Collections.Hashtable]($PSBoundParameters)
-    $HostedOutboundSpamFilterPolicyParams.Remove('Ensure') | Out-Null
-    $HostedOutboundSpamFilterPolicyParams.Remove('Credential') | Out-Null
-    $HostedOutboundSpamFilterPolicyParams.Remove('ApplicationId') | Out-Null
-    $HostedOutboundSpamFilterPolicyParams.Remove('TenantId') | Out-Null
-    $HostedOutboundSpamFilterPolicyParams.Remove('CertificateThumbprint') | Out-Null
-    $HostedOutboundSpamFilterPolicyParams.Remove('CertificatePath') | Out-Null
-    $HostedOutboundSpamFilterPolicyParams.Remove('CertificatePassword') | Out-Null
-    $HostedOutboundSpamFilterPolicyParams.Remove('ManagedIdentity') | Out-Null
-    $HostedOutboundSpamFilterPolicyParams.Remove('AccessTokens') | Out-Null
+    $HostedOutboundSpamFilterPolicyParams = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
     # CASE: Hosted Outbound Spam Filter Policy doesn't exist but should;
     if ($Ensure -eq 'Present' -and $currentHostedOutboundSpamFilterPolicyConfig.Ensure -eq 'Absent')
@@ -462,6 +455,7 @@ function Export-TargetResource
         [System.String[]]
         $AccessTokens
     )
+
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
         -SkipModuleReload $true

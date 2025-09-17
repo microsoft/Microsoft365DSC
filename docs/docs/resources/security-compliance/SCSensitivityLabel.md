@@ -11,7 +11,7 @@
 | **DisplayName** | Write | String | The DisplayName parameter specifies the display name for the sensitivity label. The display name appears in the Microsoft Office and is used by Outlook users to select the appropriate sensitivity label before they send a message. | |
 | **LocaleSettings** | Write | MSFT_SCLabelLocaleSettings[] | The LocaleSettings parameter specifies one or more localized label name or label Tooltips in different languages. Regions include all region codes supported in Office Client applications. | |
 | **ParentId** | Write | String | The ParentId parameter specifies the parent label that you want this label to be under (a sublabel). You can use any value that uniquely identifies the parent sensitivity label for example name. | |
-| **Priority** | Write | UInt32 | The Priority parameter specifies a priority value for the sensitivity label that determines the order of label processing. A lower integer value indicates a highter priority. | |
+| **Priority** | Write | UInt32 | The Priority parameter specifies a priority value for the sensitivity label that determines the order of label processing. A lower integer value indicates a higher priority. | |
 | **Tooltip** | Write | String | The ToolTip parameter specifies the default tooltip and sensitivity label description that's seen by users. It the value contains spaces, enclose the value in quotation marks. | |
 | **ApplyContentMarkingFooterAlignment** | Write | String | The ApplyContentMarkingFooterAlignment parameter specifies the footer alignment. | `Left`, `Center`, `Right` |
 | **ApplyContentMarkingFooterEnabled** | Write | Boolean | The ApplyContentMarkingFooterEnabled parameter specifies whether to enable or disable the sensitivity label. | |
@@ -120,33 +120,9 @@
 
 ## Description
 
-This resource configures Sensitivity labels in Security and Compliance.
+This resource configures Sensitivity labels in Purview.
 
 ## Permissions
-
-### Microsoft Graph
-
-To authenticate with the Microsoft Graph API, this resource required the following permissions:
-
-#### Delegated permissions
-
-- **Read**
-
-    - None
-
-- **Update**
-
-    - None
-
-#### Application permissions
-
-- **Read**
-
-    - None
-
-- **Update**
-
-    - None
 
 ## Examples
 

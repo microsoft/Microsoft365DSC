@@ -1,34 +1,42 @@
-﻿{
-    "resourceName": "EXODataClassification",
-    "description": "",
-    "roles": {
+{
+  "resourceName": "EXODataClassification",
+  "description": "",
+  "roles": {
+    "read": [
+      "Global Reader"
+    ],
+    "update": [
+      "Exchange Administrator"
+    ]
+  },
+  "permissions": {
+    "Office 365 Exchange Online": {
+      "application": {
         "read": [
-            "Global Reader"
+          {
+            "name": "Exchange.ManageAsApp"
+          }
         ],
         "update": [
-            "Exchange Administrator"
+          {
+            "name": "Exchange.ManageAsApp"
+          }
         ]
+      }
     },
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [],
-                "update": []
-            },
-            "application": {
-                "read": [],
-                "update": []
-            }
-        },
-        "exchange": {
-            "requiredroles": [
-                "Data Loss Prevention",
-                "View-Only Configuration"
-            ],
-            "requiredrolegroups": [
-                "Organization Management",
-                "Compliance Management"
-            ]
-        }
+    "exchange": {
+      "requiredroles": [
+        "Data Loss Prevention",
+        "View-Only Configuration"
+      ],
+      "requiredrolegroups": [
+        "Organization Management",
+        "Compliance Management"
+      ]
     }
+  },
+  "requiredModules": [],
+  "supportedEnvironments": [
+    "Global"
+  ]
 }

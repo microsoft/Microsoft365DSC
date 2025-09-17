@@ -7,6 +7,7 @@
 | **Id** | Write | String | Id of the Intune policy. | |
 | **DisplayName** | Key | String | Display name of the Intune policy. | |
 | **Description** | Write | String | Description of the Intune policy. | |
+| **RoleScopeTagIds** | Write | StringArray[] | List of Scope Tags for this Entity instance. | |
 | **ConnectAutomatically** | Write | Boolean | Connect automatically to the network. | |
 | **ConnectWhenNetworkNameIsHidden** | Write | Boolean | Define if the network should be connected if hidden. | |
 | **NetworkName** | Write | String | Define the network name. | |
@@ -33,6 +34,7 @@
 | **dataType** | Write | String | The type of the target assignment. | `#microsoft.graph.groupAssignmentTarget`, `#microsoft.graph.allLicensedUsersAssignmentTarget`, `#microsoft.graph.allDevicesAssignmentTarget`, `#microsoft.graph.exclusionGroupAssignmentTarget`, `#microsoft.graph.configurationManagerCollectionAssignmentTarget` |
 | **deviceAndAppManagementAssignmentFilterType** | Write | String | The type of filter of the target assignment i.e. Exclude or Include. Possible values are:none, include, exclude. | `none`, `include`, `exclude` |
 | **deviceAndAppManagementAssignmentFilterId** | Write | String | The Id of the filter for the target assignment. | |
+| **deviceAndAppManagementAssignmentFilterDisplayName** | Write | String | The display name of the filter for the target assignment. | |
 | **groupId** | Write | String | The group Id that is the target of the assignment. | |
 | **groupDisplayName** | Write | String | The group Display Name that is the target of the assignment. | |
 | **collectionId** | Write | String | The collection Id that is the target of the assignment.(ConfigMgr) | |
@@ -40,7 +42,7 @@
 
 ## Description
 
-This resource configures an Intune Wifi Configuration Policy Android Open Source Project Device.
+This resource configures an Intune Wifi Configuration Policy for Android Open Source Project, Basic Wi-Fi type.
 
 ## Permissions
 

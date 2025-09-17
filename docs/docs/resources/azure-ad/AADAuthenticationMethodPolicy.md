@@ -6,7 +6,7 @@
 | --- | --- | --- | --- | --- |
 | **Description** | Write | String | A description of the policy. | |
 | **DisplayName** | Key | String | The name of the policy. | |
-| **PolicyMigrationState** | Write | String | The state of migration of the authentication methods policy from the legacy multifactor authentication and self-service password reset (SSPR) policies. The possible values are: premigration - means the authentication methods policy is used for authentication only, legacy policies are respected. migrationInProgress - means the authentication methods policy is used for both authenication and SSPR, legacy policies are respected. migrationComplete - means the authentication methods policy is used for authentication and SSPR, legacy policies are ignored. unknownFutureValue - Evolvable enumeration sentinel value. Do not use. | `preMigration`, `migrationInProgress`, `migrationComplete`, `unknownFutureValue` |
+| **PolicyMigrationState** | Write | String | The state of migration of the authentication methods policy from the legacy multifactor authentication and self-service password reset (SSPR) policies. The possible values are: premigration - means the authentication methods policy is used for authentication only, legacy policies are respected. migrationInProgress - means the authentication methods policy is used for both authentication and SSPR, legacy policies are respected. migrationComplete - means the authentication methods policy is used for authentication and SSPR, legacy policies are ignored. unknownFutureValue - Evolvable enumeration sentinel value. Do not use. | `preMigration`, `migrationInProgress`, `migrationComplete`, `unknownFutureValue` |
 | **PolicyVersion** | Write | String | The version of the policy in use. | |
 | **ReconfirmationInDays** | Write | UInt32 | Days before the user will be asked to reconfirm their method. | |
 | **RegistrationEnforcement** | Write | MSFT_MicrosoftGraphregistrationEnforcement | Enforce registration at sign-in time. This property can be used to remind users to set up targeted authentication methods. | |
@@ -113,7 +113,7 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - Policy.ReadWrite.AuthenticationMethod
+    - Policy.Read.AuthenticationMethod
 
 - **Update**
 
@@ -123,7 +123,7 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - Policy.ReadWrite.AuthenticationMethod
+    - Policy.Read.AuthenticationMethod
 
 - **Update**
 

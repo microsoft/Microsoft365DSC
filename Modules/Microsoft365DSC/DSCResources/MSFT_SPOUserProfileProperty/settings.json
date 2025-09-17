@@ -1,82 +1,89 @@
-﻿{
-    "resourceName": "SPOUserProfileProperty",
-    "description": "",
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [
-                    {
-                        "name": "Domain.Read.All"
-                    },
-                    {
-                        "name": "User.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Domain.Read.All"
-                    },
-                    {
-                        "name": "User.Read.All"
-                    }
-                ]
-            },
-            "application": {
-                "read": [
-                    {
-                        "name": "Domain.Read.All"
-                    },
-                    {
-                        "name": "User.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Domain.Read.All"
-                    },
-                    {
-                        "name": "User.Read.All"
-                    }
-                ]
-            }
-        },
-        "sharepoint": {
-            "delegated": {
-                "read": [
-                    {
-                        "name": "Sites.FullControl.All"
-                    },
-                    {
-                        "name": "User.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Sites.FullControl.All"
-                    },
-                    {
-                        "name": "User.ReadWrite.All"
-                    }
-                ]
-            },
-            "application": {
-                "read": [
-                    {
-                        "name": "Sites.FullControl.All"
-                    },
-                    {
-                        "name": "User.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Sites.FullControl.All"
-                    },
-                    {
-                        "name": "User.ReadWrite.All"
-                    }
-                ]
-            }
-        }
+{
+  "resourceName": "SPOUserProfileProperty",
+  "description": "",
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "Domain.Read.All"
+          },
+          {
+            "name": "User.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Domain.Read.All"
+          },
+          {
+            "name": "User.Read.All"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "Domain.Read.All"
+          },
+          {
+            "name": "User.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Domain.Read.All"
+          },
+          {
+            "name": "User.Read.All"
+          }
+        ]
+      }
+    },
+    "sharepoint": {
+      "delegated": {
+        "read": [
+          {
+            "name": "Sites.FullControl.All"
+          },
+          {
+            "name": "User.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Sites.FullControl.All"
+          },
+          {
+            "name": "User.ReadWrite.All"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "Sites.FullControl.All"
+          },
+          {
+            "name": "User.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Sites.FullControl.All"
+          },
+          {
+            "name": "User.ReadWrite.All"
+          }
+        ]
+      }
     }
+  },
+  "requiredModules": [
+    "PnP.PowerShell"
+  ],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ]
 }

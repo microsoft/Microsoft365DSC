@@ -18,7 +18,7 @@
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
 | **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
-##  Description
+## Description
 
 This resource is used to configure the Teams Meeting Broadcast Settings.
 

@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_EXOMailboxSettings'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -76,72 +78,90 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of Office 365 Mailbox Settings for $DisplayName"
 
-    if ($Global:CurrentModeIsExport)
-    {
-        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters `
-            -SkipModuleReload $true
-    }
-    else
-    {
-        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters
-    }
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullReturn = @{
-        DisplayName = $DisplayName
-    }
-
     try
     {
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.UserPrincipalName -ne $DisplayName)
+        {
+            Write-Verbose -Message "No cached instance found, retrieving from service."
+            if ($Global:CurrentModeIsExport)
+            {
+                $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
+                    -InboundParameters $PSBoundParameters `
+                    -SkipModuleReload $true
+            }
+            else
+            {
+                $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
+                    -InboundParameters $PSBoundParameters
+            }
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullReturn = @{
+                DisplayName = $DisplayName
+            }
+
+            $mailboxInfo = Get-Mailbox -Identity $DisplayName -ErrorAction Stop
+        }
+        else
+        {
+            $nullReturn = @{
+                DisplayName = $DisplayName
+            }
+            $mailboxInfo = $Script:exportedInstance
+        }
+
+        Write-Verbose -Message "Found an existing instance of Mailbox '$($DisplayName)'"
+
         $mailboxSettings = Get-MailboxRegionalConfiguration -Identity $DisplayName -ErrorAction Stop
-        $mailboxInfo = Get-Mailbox -Identity $DisplayName -ErrorAction Stop
+        if ($null -eq $mailboxSettings)
+        {
+            Write-Verbose -Message "The specified Mailbox doesn't already exist."
+            return $nullReturn
+        }
+
+        $result = @{
+            DisplayName           = $DisplayName
+            TimeZone              = $mailboxSettings.TimeZone
+            Locale                = $mailboxSettings.Language.Name
+            RetentionPolicy       = $mailboxInfo.RetentionPolicy
+            AddressBookPolicy     = $mailboxInfo.AddressBookPolicy
+            RoleAssignmentPolicy  = $mailboxInfo.RoleAssignmentPolicy
+            SharingPolicy         = $mailboxInfo.SharingPolicy
+            AuditEnabled          = $mailboxInfo.AuditEnabled
+            Ensure                = 'Present'
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            CertificateThumbprint = $CertificateThumbprint
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
+            ManagedIdentity       = $ManagedIdentity.IsPresent
+            TenantId              = $TenantId
+            AccessTokens          = $AccessTokens
+        }
+
+        return $result
     }
     catch
     {
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
         return $nullReturn
     }
-
-    if ($null -eq $mailboxSettings)
-    {
-        Write-Verbose -Message "The specified Mailbox doesn't already exist."
-        return $nullReturn
-    }
-
-    $result = @{
-        DisplayName           = $DisplayName
-        TimeZone              = $mailboxSettings.TimeZone
-        Locale                = $mailboxSettings.Language.Name
-        RetentionPolicy       = $mailboxInfo.RetentionPolicy
-        AddressBookPolicy     = $mailboxInfo.AddressBookPolicy
-        RoleAssignmentPolicy  = $mailboxInfo.RoleAssignmentPolicy
-        SharingPolicy         = $mailboxInfo.SharingPolicy
-        AuditEnabled          = $mailboxInfo.AuditEnabled
-        Ensure                = 'Present'
-        Credential            = $Credential
-        ApplicationId         = $ApplicationId
-        CertificateThumbprint = $CertificateThumbprint
-        CertificatePath       = $CertificatePath
-        CertificatePassword   = $CertificatePassword
-        Managedidentity       = $ManagedIdentity.IsPresent
-        TenantId              = $TenantId
-        AccessTokens          = $AccessTokens
-    }
-
-    Write-Verbose -Message "Found an existing instance of Mailbox '$($DisplayName)'"
-    return $result
 }
 
 function Set-TargetResource
@@ -232,7 +252,7 @@ function Set-TargetResource
         -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+    $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
     Set-MailboxRegionalConfiguration -Identity $DisplayName `
@@ -362,7 +382,7 @@ function Test-TargetResource
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
-    $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
+    $ValuesToCheck = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
@@ -415,6 +435,7 @@ function Export-TargetResource
         [System.String[]]
         $AccessTokens
     )
+
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
         -SkipModuleReload $true
@@ -447,7 +468,6 @@ function Export-TargetResource
     foreach ($mailbox in $mailboxes)
     {
         $DisplayNameValue = $mailbox.Name
-
         if ([System.Guid]::TryParse($mailbox.Identity, [System.Management.Automation.PSReference]$ObjectGuid))
         {
             try
@@ -476,10 +496,12 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
                 CertificatePassword   = $CertificatePassword
-                Managedidentity       = $ManagedIdentity.IsPresent
+                ManagedIdentity       = $ManagedIdentity.IsPresent
                 CertificatePath       = $CertificatePath
                 AccessTokens          = $AccessTokens
             }
+
+            $Script:exportedInstance = $mailbox
             $Results = Get-TargetResource @Params
             if ($Results -is [System.Collections.Hashtable] -and $Results.Count -gt 1)
             {

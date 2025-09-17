@@ -2,4 +2,4 @@
 
 ## Description
 
-This resource configures a Auto Sensitivity label policy in Security and Compliance.
+This resource configures an Auto Sensitivity label policy in Purview.

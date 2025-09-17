@@ -1,28 +1,62 @@
-﻿{
-    "resourceName": "AADRoleAssignmentScheduleRequest",
-    "description": "This resource configures an Azure Active Directory Privilege Identity Management assignment.",
-    "roles": {
+{
+  "resourceName": "AADRoleAssignmentScheduleRequest",
+  "description": "This resource configures an Azure Active Directory Privilege Identity Management assignment.",
+  "roles": {
+    "read": [
+      "Security Reader"
+    ],
+    "update": [
+      "Privileged Role Administrator"
+    ]
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
         "read": [
-            "Security Reader"
+          {
+            "name": "Directory.Read.All"
+          },
+          {
+            "name": "RoleAssignmentSchedule.Read.Directory"
+          }
         ],
         "update": [
-            "Privileged Role Administrator"
+          {
+            "name": "Directory.Read.All"
+          },
+          {
+            "name": "RoleAssignmentSchedule.ReadWrite.Directory"
+          }
         ]
-    },
-    "permissions": {
-        "graph": {
-            "application": {
-                "read": [
-                    {
-                        "name": "RoleAssignmentSchedule.Read.Directory"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "RoleAssignmentSchedule.ReadWrite.Directory"
-                    }
-                ]
-            }
-        }
+      },
+      "application": {
+        "read": [
+          {
+            "name": "Directory.Read.All"
+          },
+          {
+            "name": "RoleAssignmentSchedule.Read.Directory"
+          }
+        ],
+        "update": [
+          {
+            "name": "Directory.Read.All"
+          },
+          {
+            "name": "RoleAssignmentSchedule.ReadWrite.Directory"
+          }
+        ]
+      }
     }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Applications",
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.Identity.Governance",
+    "Microsoft.Graph.Groups",
+    "Microsoft.Graph.Users"
+  ],
+  "supportedEnvironments": [
+    "Global"
+  ]
 }

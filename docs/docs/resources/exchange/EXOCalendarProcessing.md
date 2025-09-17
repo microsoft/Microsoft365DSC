@@ -44,7 +44,7 @@
 | **ScheduleOnlyDuringWorkHours** | Write | Boolean | The ScheduleOnlyDuringWorkHours parameter specifies whether to allow meetings to be scheduled outside of the working hours that are defined for the resource mailbox. | |
 | **TentativePendingApproval** | Write | Boolean | The TentativePendingApproval parameter specifies whether to mark pending requests as tentative on the calendar. | |
 | **Credential** | Write | PSCredential | Credentials of the Exchange Global Admin | |
-| **Ensure** | Write | String | Determines wether or not the instance exist. | `Present` |
+| **Ensure** | Write | String | Determines whether or not the instance exist. | `Present` |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
 | **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. | |
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |

@@ -53,6 +53,7 @@
 | **dataType** | Write | String | The type of the target assignment. | `#microsoft.graph.groupAssignmentTarget`, `#microsoft.graph.allLicensedUsersAssignmentTarget`, `#microsoft.graph.allDevicesAssignmentTarget`, `#microsoft.graph.exclusionGroupAssignmentTarget`, `#microsoft.graph.configurationManagerCollectionAssignmentTarget` |
 | **deviceAndAppManagementAssignmentFilterType** | Write | String | The type of filter of the target assignment i.e. Exclude or Include. Possible values are:none, include, exclude. | `none`, `include`, `exclude` |
 | **deviceAndAppManagementAssignmentFilterId** | Write | String | The Id of the filter for the target assignment. | |
+| **deviceAndAppManagementAssignmentFilterDisplayName** | Write | String | The display name of the filter for the target assignment. | |
 | **groupId** | Write | String | The group Id that is the target of the assignment. | |
 | **groupDisplayName** | Write | String | The group Display Name that is the target of the assignment. | |
 | **collectionId** | Write | String | The collection Id that is the target of the assignment.(ConfigMgr) | |
@@ -188,11 +189,11 @@ The following settings are supported on Android 10 or later, but not on Knox.
         * Pattern
         * Numeric PIN has a repeating (4444) or ordered (1234, 4321, 2468) sequence.
     * Medium - The password satisfies one of the following conditions:
-        * Numeric PIN doesnâ€™t have a repeating (4444) or ordered (1234, 4321, 2468) sequence, and has minimum length of 4.
+        * Numeric PIN doesn’t have a repeating (4444) or ordered (1234, 4321, 2468) sequence, and has minimum length of 4.
         * Alphabetic, with a minimum length of 4.
         * Alphanumeric, with a minimum length of 4.
     * High - The password satisfies one of the following conditions:
-        * Numeric PIN doesnâ€™t have a repeating (4444) or ordered (1234, 4321, 2468) sequence, and has minimum length of 8.
+        * Numeric PIN doesn’t have a repeating (4444) or ordered (1234, 4321, 2468) sequence, and has minimum length of 8.
         * Alphabetic, with a minimum length of 6.
         * Alphanumeric, with a minimum length of 6.
 

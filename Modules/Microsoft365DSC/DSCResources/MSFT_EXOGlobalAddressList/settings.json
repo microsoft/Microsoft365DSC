@@ -1,30 +1,39 @@
-﻿{
-    "resourceName": "EXOGlobalAddressList",
-    "description": "",
-    "roles": {
+{
+  "resourceName": "EXOGlobalAddressList",
+  "description": "",
+  "roles": {
+    "read": [
+      "Global Reader"
+    ],
+    "update": [
+      "Exchange Administrator"
+    ]
+  },
+  "permissions": {
+    "Office 365 Exchange Online": {
+      "application": {
         "read": [
-            "Global Reader"
+          {
+            "name": "Exchange.ManageAsApp"
+          }
         ],
         "update": [
-            "Exchange Administrator"
+          {
+            "name": "Exchange.ManageAsApp"
+          }
         ]
+      }
     },
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [],
-                "update": []
-            },
-            "application": {
-                "read": [],
-                "update": []
-            }
-        },
-        "exchange": {
-            "requiredroles": [
-                "Address Lists"
-            ],
-            "requiredrolegroups": []
-        }
+    "exchange": {
+      "requiredroles": [
+        "Address Lists"
+      ],
+      "requiredrolegroups": []
     }
+  },
+  "requiredModules": [],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ]
 }

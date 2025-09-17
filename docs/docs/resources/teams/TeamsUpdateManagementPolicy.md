@@ -9,7 +9,7 @@
 | **AllowManagedUpdates** | Write | Boolean | Determines if managed updates should be allowed or not. | |
 | **AllowPreview** | Write | Boolean | Determines if preview builds should be allowed or not. | |
 | **AllowPublicPreview** | Write | String | Determines the ring of public previews to subscribes to. | `Disabled`, `Enabled`, `Forced`, `FollowOfficePreview` |
-| **UpdateDayOfWeek** | Write | UInt32 | Determines the day of week to perform the updates. Value shoud be between 0 and 6. | |
+| **UpdateDayOfWeek** | Write | UInt32 | Determines the day of week to perform the updates. Value should be between 0 and 6. | |
 | **UpdateTime** | Write | String | Determines the time of day to perform the updates. Must be a valid HH:MM format string with leading 0. For instance 08:30. | |
 | **UpdateTimeOfDay** | Write | String | Determines the time of day to perform the updates. Accepts a DateTime as string. Only the time will be considered. | |
 | **UseNewTeamsClient** | Write | String | Determines whether or not users will use the new Teams client. | `NewTeamsAsDefault`, `UserChoice`, `MicrosoftChoice`, `AdminDisabled`, `NewTeamsOnly` |

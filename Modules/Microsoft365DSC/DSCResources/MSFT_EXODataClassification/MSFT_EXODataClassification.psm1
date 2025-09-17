@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_EXODataClassification'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -65,13 +67,14 @@ function Get-TargetResource
         [System.String[]]
         $AccessTokens
     )
+
+    Write-Verbose -Message "Getting Data classification policy with Identity $Identity"
+
     try
     {
         if (-not $Script:exportedInstance -or $Script:exportedInstance.Identity -ne $Identity)
         {
-            Write-Verbose -Message "Getting Data classification policy for $($Identity)"
-
-            $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+            $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
                 -InboundParameters $PSBoundParameters
 
             #Ensure the proper dependencies are installed in the current environment.
@@ -218,6 +221,9 @@ function Set-TargetResource
         [System.String[]]
         $AccessTokens
     )
+
+    Write-Verbose -Message "Setting configuration of Data classification policy for $($Identity)"
+
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
@@ -230,28 +236,14 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Setting configuration of Data classification policy for $($Identity)"
-
-    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
-        -InboundParameters $PSBoundParameters
-
     $DataClassifications = Get-DataClassification -ErrorAction Stop
     $DataClassification = $DataClassifications | Where-Object `
         -FilterScript { $_.Identity -eq $Identity }
-    $DataClassificationParams = [System.Collections.Hashtable]($PSBoundParameters)
-    $DataClassificationParams.Remove('Ensure') | Out-Null
-    $DataClassificationParams.Remove('Credential') | Out-Null
-    $DataClassificationParams.Remove('ApplicationId') | Out-Null
-    $DataClassificationParams.Remove('TenantId') | Out-Null
-    $DataClassificationParams.Remove('CertificateThumbprint') | Out-Null
-    $DataClassificationParams.Remove('CertificatePath') | Out-Null
-    $DataClassificationParams.Remove('CertificatePassword') | Out-Null
-    $DataClassificationParams.Remove('ManagedIdentity') | Out-Null
-    $DataClassificationParams.Remove('AccessTokens') | Out-Null
+    $DataClassificationParams = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
     if (('Present' -eq $Ensure ) -and ($null -eq $DataClassification))
     {
-        Write-Verbose -Message 'Data Classification in Exchange Online are now deprecated in favor of Sensitive Information Types in Security and Compliance.'
+        Write-Verbose -Message 'Data Classification in Exchange Online are now deprecated in favor of Sensitive Information Types in Purview.'
     }
     elseif (('Present' -eq $Ensure ) -and ($Null -ne $DataClassification))
     {
@@ -414,6 +406,7 @@ function Export-TargetResource
         [System.String[]]
         $AccessTokens
     )
+
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
         -SkipModuleReload $true

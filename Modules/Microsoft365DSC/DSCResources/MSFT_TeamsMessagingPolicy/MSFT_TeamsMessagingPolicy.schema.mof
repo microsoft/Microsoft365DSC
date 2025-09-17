@@ -2,6 +2,18 @@
 class MSFT_TeamsMessagingPolicy : OMI_BaseResource
 {
     [Key, Description("Identity for the teams messaging policy you're modifying. To modify the global policy, use this syntax: -Identity global. To modify a per-user policy, use syntax similar to this: -Identity TeamsMessagingPolicy.")] string Identity;
+    [Write, Description("This setting determines if users can chat with groups (Distribution, M365 and Security groups). Possible values: True, False")] Boolean AllowChatWithGroup;
+    [Write, Description("These settings enables, disables updating or fetching custom group chat avatars for the users included in the messaging policy. Possible values: True, False")] Boolean AllowCustomGroupChatAvatars;
+    [Write, Description("This setting determines if users with the 'Full permissions' role can delete any group or meeting chat message within their tenant. Possible values: True, False")] Boolean AllowFullChatPermissionUserToDeleteAnyMessage;
+    [Write, Description("Determines if Giphy images should be displayed that had been already sent or received in chat. Possible values: True, False")] Boolean AllowGiphyDisplay;
+    [Write, Description("This setting determines if users in a group chat can create and share join links for other users within the organization to join that chat. Possible values: True, False")] Boolean AllowGroupChatJoinLinks;
+    [Write, Description("Determines if a user is allowed to paste internet-based images in compose. Possible values: True, False")] Boolean AllowPasteInternetImage;
+    [Write, Description("Determines the Supervised Chat role of the user. Set this to Full to allow the user to supervise chats. Supervisors have the ability to initiate chats with and invite any user within the environment. Set this to Limited to allow the user to initiate conversations with Full and Limited permissioned users, but not Restricted. Set this to Restricted to block chat creation with anyone other than Full permissioned users."), ValueMap{"Full","Limited","Restricted"}, Values{"Full","Limited","Restricted"}] String ChatPermissionRole;
+    [Write, Description("This setting enables the creation of custom emojis and reactions within an organization for the specified policy users.")] Boolean CreateCustomEmojis;
+    [Write, Description("These settings enable and disable the editing and deletion of custom emojis and reactions for the users included in the messaging policy.")] Boolean DeleteCustomEmojis;
+    [Write, Description("This setting determines whether a user is allowed to create custom AI-powered backgrounds and images with MS Designer.Possible values are: Enabled, Disabled"), ValueMap{"Enabled","Disabled"}, Values{"Enabled","Disabled"}] String DesignerForBackgroundsAndImages;
+    [Write, Description("This setting determines if chat regulation for internal communication in the tenant is allowed. Possible values: BlockingAllowed, BlockingDisallowed"), ValueMap{"BlockingDisallowed", "BlockingAllowed"}, Values{"BlockingDisallowed", "BlockingAllowed"}] String InOrganizationChatControl;
+    [Write, Description("Determines whether a user is allowed to delete messages sent by bots. Possible values are: True, False")] Boolean UsersCanDeleteBotMessages;
     [Write, Description("Report inappropriate content.")] boolean AllowCommunicationComplianceEndUserReporting;
     [Write, Description("Determines is Fluid Collaboration should be enabled or not.")] boolean AllowFluidCollaborate;
     [Write, Description("Report a security concern.")] boolean AllowSecurityEndUserReporting;

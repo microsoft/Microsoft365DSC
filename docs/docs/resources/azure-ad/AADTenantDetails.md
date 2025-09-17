@@ -37,7 +37,7 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Update**
 
-    - Organization.Read.All, Organization.ReadWrite.All
+    - Organization.ReadWrite.All
 
 #### Application permissions
 
@@ -47,7 +47,7 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Update**
 
-    - Organization.Read.All, Organization.ReadWrite.All
+    - Organization.ReadWrite.All
 
 ## Examples
 

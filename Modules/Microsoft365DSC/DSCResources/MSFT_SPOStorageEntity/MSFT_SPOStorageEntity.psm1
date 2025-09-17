@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_SPOStorageEntity'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -75,41 +77,48 @@ function Get-TargetResource
 
     try
     {
-        $ConnectionMode = New-M365DSCConnection -Workload 'PNP' `
-            -InboundParameters $PSBoundParameters `
-            -Url $SiteUrl
-
-        #Ensure the proper dependencies are installed in the current environment.
-        Confirm-M365DSCDependencies
-
-        #region Telemetry
-        $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-        $CommandName = $MyInvocation.MyCommand
-        $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-            -CommandName $CommandName `
-            -Parameters $PSBoundParameters
-        Add-M365DSCTelemetryEvent -Data $data
-        #endregion
-
-        $nullReturn = $PSBoundParameters
-        $nullReturn.Ensure = 'Absent'
-
-        Write-Verbose -Message "Getting storage entity $Key"
-        $entityStorageParms = @{ }
-        $entityStorageParms.Add('Key', $Key)
-
-        if ($null -ne $EntityScope -and '' -ne $EntityScope)
+        if ($null -eq $Script:exportedInstance)
         {
-            $entityStorageParms.Add('Scope', $EntityScope)
+            $ConnectionMode = New-M365DSCConnection -Workload 'PNP' `
+                -InboundParameters $PSBoundParameters `
+                -Url $SiteUrl
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullReturn = $PSBoundParameters
+            $nullReturn.Ensure = 'Absent'
+
+            Write-Verbose -Message "Getting storage entity $Key"
+            $entityStorageParms = @{ }
+            $entityStorageParms.Add('Key', $Key)
+
+            if ($null -ne $EntityScope -and '' -ne $EntityScope)
+            {
+                $entityStorageParms.Add('Scope', $EntityScope)
+            }
+
+            $Entity = Get-PnPStorageEntity @entityStorageParms -ErrorAction SilentlyContinue
+            ## Get-PnPStorageEntity seems to not return $null when not found
+            ## so checking key
+            if ($null -eq $Entity.Key)
+            {
+                Write-Verbose -Message "No storage entity found for $Key"
+                return $nullReturn
+            }
         }
-
-        $Entity = Get-PnPStorageEntity @entityStorageParms -ErrorAction SilentlyContinue
-        ## Get-PnPStorageEntity seems to not return $null when not found
-        ## so checking key
-        if ($null -eq $Entity.Key)
+        else
         {
-            Write-Verbose -Message "No storage entity found for $Key"
-            return $nullReturn
+            $Entity = $Script:exportedInstance
         }
 
         Write-Verbose -Message "Found storage entity $($Entity.Key)"
@@ -129,7 +138,7 @@ function Get-TargetResource
             CertificatePassword   = $CertificatePassword
             CertificatePath       = $CertificatePath
             CertificateThumbprint = $CertificateThumbprint
-            Managedidentity       = $ManagedIdentity.IsPresent
+            ManagedIdentity       = $ManagedIdentity.IsPresent
             AccessTokens          = $AccessTokens
         }
     }
@@ -490,10 +499,12 @@ function Export-TargetResource
                 CertificatePassword   = $CertificatePassword
                 CertificatePath       = $CertificatePath
                 CertificateThumbprint = $CertificateThumbprint
-                Managedidentity       = $ManagedIdentity.IsPresent
+                ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }
             Write-M365DSCHost -Message "    |---[$i/$($storageEntities.Length)] $($storageEntity.Key)" -DeferWrite
+
+            $Script:exportedInstance = $storageEntity
             $Results = Get-TargetResource @Params
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
@@ -533,3 +544,4 @@ function Export-TargetResource
 }
 
 Export-ModuleMember -Function *-TargetResource
+

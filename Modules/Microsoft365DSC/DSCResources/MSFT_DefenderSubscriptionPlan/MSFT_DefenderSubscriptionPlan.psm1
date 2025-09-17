@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_DefenderSubscriptionPlan'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -59,12 +61,14 @@ function Get-TargetResource
         $AccessTokens
     )
 
+    Write-Verbose -Message "Getting configuration for Defender Device Authenticated Scan Definition with Name $Name"
+
     try
     {
         if (-not $Script:exportedInstance -or $Script:exportedInstance.Id -ne $SubscriptionId)
         {
-            $ConnectionMode = New-M365DSCConnection -Workload 'Azure' `
-                -InboundParameters $PSBoundParameters | Out-Null
+            $null = New-M365DSCConnection -Workload 'Azure' `
+                -InboundParameters $PSBoundParameters
 
             #Ensure the proper dependencies are installed in the current environment.
             Confirm-M365DSCDependencies
@@ -125,7 +129,7 @@ function Get-TargetResource
             ManagedIdentity       = $ManagedIdentity.IsPresent
             AccessTokens          = $AccessTokens
         }
-        return [System.Collections.Hashtable] $results
+        return $results
     }
     catch
     {
@@ -200,6 +204,8 @@ function Set-TargetResource
         $AccessTokens
     )
 
+    Write-Verbose -Message "Setting configuration for Defender Device Authenticated Scan Definition with Name $Name"
+
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
@@ -213,8 +219,6 @@ function Set-TargetResource
     #endregion
 
     $currentInstance = Get-TargetResource @PSBoundParameters
-
-    $setParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
     # CREATE
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
@@ -312,7 +316,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $ResourceName
+                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 
@@ -439,7 +443,7 @@ securityresources | where type == "microsoft.security/pricings" | project Id=id,
         $queryResult = Search-AzGraph -Query $argQuery -First 1000 -UseTenantScope -ErrorAction Stop
         $results += $queryResult.Data
 
-        while ($queryResult.SkipToken -ne $null)
+        while ($null -ne $queryResult.SkipToken)
         {
             $queryResult = Search-AzGraph -Query $argQuery -First 1000 -UseTenantScope -SkipToken $queryResult.SkipToken -ErrorAction Stop
             $results += $queryResult.Data
@@ -455,4 +459,3 @@ securityresources | where type == "microsoft.security/pricings" | project Id=id,
 
 
 Export-ModuleMember -Function *-TargetResource
-

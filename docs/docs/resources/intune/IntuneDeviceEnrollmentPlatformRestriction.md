@@ -7,6 +7,7 @@
 | **Identity** | Key | String | Identity of the device enrollment platform restriction. | |
 | **DisplayName** | Key | String | Display name of the device enrollment platform restriction. | |
 | **Description** | Write | String | Description of the device enrollment platform restriction. | |
+| **RoleScopeTagIds** | Write | StringArray[] | List of Scope Tags for this Entity instance. | |
 | **AndroidForWorkRestriction** | Write | MSFT_DeviceEnrollmentPlatformRestriction | Android for work restrictions based on platform, platform operating system version, and device ownership. | |
 | **AndroidRestriction** | Write | MSFT_DeviceEnrollmentPlatformRestriction | Android restrictions based on platform, platform operating system version, and device ownership. | |
 | **IosRestriction** | Write | MSFT_DeviceEnrollmentPlatformRestriction | Ios restrictions based on platform, platform operating system version, and device ownership. | |
@@ -36,6 +37,7 @@
 | **dataType** | Write | String | The type of the target assignment. | `#microsoft.graph.groupAssignmentTarget`, `#microsoft.graph.allLicensedUsersAssignmentTarget`, `#microsoft.graph.allDevicesAssignmentTarget`, `#microsoft.graph.exclusionGroupAssignmentTarget`, `#microsoft.graph.configurationManagerCollectionAssignmentTarget` |
 | **deviceAndAppManagementAssignmentFilterType** | Write | String | The type of filter of the target assignment i.e. Exclude or Include. Possible values are:none, include, exclude. | `none`, `include`, `exclude` |
 | **deviceAndAppManagementAssignmentFilterId** | Write | String | The Id of the filter for the target assignment. | |
+| **deviceAndAppManagementAssignmentFilterDisplayName** | Write | String | The display name of the filter for the target assignment. | |
 | **groupId** | Write | String | The group Id that is the target of the assignment. | |
 | **groupDisplayName** | Write | String | The group Display Name that is the target of the assignment. | |
 | **collectionId** | Write | String | The collection Id that is the target of the assignment.(ConfigMgr) | |

@@ -3,7 +3,7 @@ class MSFT_IntuneDeviceManagementComplianceSettings : OMI_BaseResource
 {
     [Key, Description("Only valid value is 'Yes'."), ValueMap{"Yes"}, Values{"Yes"}] String IsSingleInstance;
     [Write, Description("Device should be noncompliant when there is no compliance policy targeted when this is true.")] Boolean SecureByDefault;
-    [Write, Description("The number of days a device is allowed to go without checking in to remain compliant.")] UInt32 DeviceComplianceCheckinThresholdDays;
+    [Write, Description("The number of days a device is allowed to go without checking in to remain compliant. Must be between 1 and 120.")] UInt32 DeviceComplianceCheckinThresholdDays;
     [Write, Description("Credentials of the Intune Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
     [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;

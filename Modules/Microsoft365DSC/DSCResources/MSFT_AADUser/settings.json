@@ -1,86 +1,92 @@
-﻿{
-    "resourceName": "AADUser",
-    "description": "",
-    "roles": {
-        "read": [],
+{
+  "resourceName": "AADUser",
+  "description": "",
+  "roles": {
+    "read": [],
+    "update": [
+      "User Administrator"
+    ]
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "RoleManagement.Read.Directory"
+          },
+          {
+            "name": "User.Read.All"
+          },
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "GroupMember.Read.All"
+          }
+        ],
         "update": [
-            "User Administrator"
+          {
+            "name": "Organization.Read.All"
+          },
+          {
+            "name": "RoleManagement.ReadWrite.Directory"
+          },
+          {
+            "name": "User.Read.All"
+          },
+          {
+            "name": "User.ReadWrite.All"
+          },
+          {
+            "name": "Group.ReadWrite.All"
+          },
+          {
+            "name": "GroupMember.ReadWrite.All"
+          }
         ]
-    },
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [
-                    {
-                        "name": "RoleManagement.Read.Directory"
-                    },
-                    {
-                        "name": "User.Read.All"
-                    },
-                    {
-                        "name": "Group.Read.All"
-                    },
-                    {
-                        "name": "GroupMember.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Organization.Read.All"
-                    },
-                    {
-                        "name": "RoleManagement.Read.Directory"
-                    },
-                    {
-                        "name": "RoleManagement.ReadWrite.Directory"
-                    },
-                    {
-                        "name": "User.Read.All"
-                    },
-                    {
-                        "name": "Group.Read.All"
-                    },
-                    {
-                        "name": "GroupMember.Read.All"
-                    },
-                    {
-                        "name": "User.ReadWrite.All"
-                    },
-                    {
-                        "name": "Group.ReadWrite.All"
-                    },
-                    {
-                        "name": "GroupMember.ReadWrite.All"
-                    }
-                ]
-            },
-            "application": {
-                "read": [
-                    {
-                        "name": "RoleManagement.Read.Directory"
-                    },
-                    {
-                        "name": "User.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Organization.Read.All"
-                    },
-                    {
-                        "name": "RoleManagement.Read.Directory"
-                    },
-                    {
-                        "name": "RoleManagement.ReadWrite.Directory"
-                    },
-                    {
-                        "name": "User.Read.All"
-                    },
-                    {
-                        "name": "User.ReadWrite.All"
-                    }
-                ]
-            }
-        }
+      },
+      "application": {
+        "read": [
+          {
+            "name": "RoleManagement.Read.Directory"
+          },
+          {
+            "name": "User.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Organization.Read.All"
+          },
+          {
+            "name": "RoleManagement.ReadWrite.Directory"
+          },
+          {
+            "name": "User.Read.All"
+          },
+          {
+            "name": "User.ReadWrite.All"
+          },
+          {
+            "name": "Group.ReadWrite.All"
+          },
+          {
+            "name": "GroupMember.ReadWrite.All"
+          }
+        ]
+      }
     }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.Identity.DirectoryManagement",
+    "Microsoft.Graph.Beta.Identity.Governance",
+    "Microsoft.Graph.Groups",
+    "Microsoft.Graph.Users",
+    "Microsoft.Graph.Users.Actions"
+  ],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ]
 }

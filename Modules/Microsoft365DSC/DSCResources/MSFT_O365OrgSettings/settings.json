@@ -1,132 +1,137 @@
-﻿{
-    "resourceName": "O365OrgSettings",
-    "description": "",
-    "roles": {
+{
+  "resourceName": "O365OrgSettings",
+  "description": "",
+  "roles": {
+    "read": [
+      "Insights Administrator"
+    ],
+    "update": [
+      "Insights Administrator"
+    ]
+  },
+  "permissions": {
+    "ProjectWorkManagement": {
+      "application": {
         "read": [
-            "Insights Administrator"
+          {
+            "name": "OrgSettings-Planner.Read.All"
+          }
         ],
         "update": [
-            "Insights Administrator"
+          {
+            "name": "OrgSettings-Planner.ReadWrite.All"
+          }
         ]
+      }
     },
-    "permissions": {
-        "ProjectWorkManagement": {
-            "application":{
-                "read": [
-                    {
-                        "name": "OrgSettings-Planner.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "OrgSettings-Planner.ReadWrite.All"
-                    }
-                ]
-            }
-        },
-        "graph": {
-            "delegated": {
-                "read": [
-                    {
-                        "name": "Application.ReadWrite.All"
-                    },
-                    {
-                        "name": "ReportSettings.Read.All"
-                    },
-                    {
-                        "name": "OrgSettings-Microsoft365Install.Read.All"
-                    },
-                    {
-                        "name": "OrgSettings-Forms.Read.All"
-                    },
-                    {
-                        "name": "OrgSettings-Todo.Read.All"
-                    },
-                    {
-                        "name": "OrgSettings-AppsAndServices.Read.All"
-                    },
-                    {
-                        "name": "OrgSettings-DynamicsVoice.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Application.ReadWrite.All"
-                    },
-                    {
-                        "name": "ReportSettings.ReadWrite.All"
-                    },
-                    {
-                        "name": "OrgSettings-Microsoft365Install.ReadWrite.All"
-                    },
-                    {
-                        "name": "OrgSettings-Forms.ReadWrite.All"
-                    },
-                    {
-                        "name": "OrgSettings-Todo.ReadWrite.All"
-                    },
-                    {
-                        "name": "OrgSettings-DynamicsVoice.ReadWrite.All"
-                    },
-                    {
-                        "name": "OrgSettings-AppsAndServices.Read.All"
-                    }
-                ]
-            },
-            "application": {
-                "read": [
-                    {
-                        "name": "Application.ReadWrite.All"
-                    },
-                    {
-                        "name": "ReportSettings.Read.All"
-                    },
-                    {
-                        "name": "OrgSettings-Microsoft365Install.Read.All"
-                    },
-                    {
-                        "name": "OrgSettings-Forms.Read.All"
-                    },
-                    {
-                        "name": "OrgSettings-Todo.Read.All"
-                    },
-                    {
-                        "name": "OrgSettings-AppsAndServices.Read.All"
-                    },
-                    {
-                        "name": "OrgSettings-DynamicsVoice.Read.All"
-                    },
-                    {
-                        "name": "Tasks.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Application.ReadWrite.All"
-                    },
-                    {
-                        "name": "ReportSettings.ReadWrite.All"
-                    },
-                    {
-                        "name": "OrgSettings-Microsoft365Install.ReadWrite.All"
-                    },
-                    {
-                        "name": "OrgSettings-Forms.ReadWrite.All"
-                    },
-                    {
-                        "name": "OrgSettings-Todo.ReadWrite.All"
-                    },
-                    {
-                        "name": "OrgSettings-AppsAndServices.ReadWrite.All"
-                    },
-                    {
-                        "name": "OrgSettings-DynamicsVoice.ReadWrite.All"
-                    },
-                    {
-                        "name": "Tasks.ReadWrite.All"
-                    }
-                ]
-            }
-        }
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "Application.ReadWrite.All"
+          },
+          {
+            "name": "ReportSettings.Read.All"
+          },
+          {
+            "name": "OrgSettings-Microsoft365Install.Read.All"
+          },
+          {
+            "name": "OrgSettings-Forms.Read.All"
+          },
+          {
+            "name": "OrgSettings-Todo.Read.All"
+          },
+          {
+            "name": "OrgSettings-AppsAndServices.Read.All"
+          },
+          {
+            "name": "OrgSettings-DynamicsVoice.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Application.ReadWrite.All"
+          },
+          {
+            "name": "ReportSettings.ReadWrite.All"
+          },
+          {
+            "name": "OrgSettings-Microsoft365Install.ReadWrite.All"
+          },
+          {
+            "name": "OrgSettings-Forms.ReadWrite.All"
+          },
+          {
+            "name": "OrgSettings-Todo.ReadWrite.All"
+          },
+          {
+            "name": "OrgSettings-DynamicsVoice.ReadWrite.All"
+          },
+          {
+            "name": "OrgSettings-AppsAndServices.Read.All"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "Application.ReadWrite.All"
+          },
+          {
+            "name": "ReportSettings.Read.All"
+          },
+          {
+            "name": "OrgSettings-Microsoft365Install.Read.All"
+          },
+          {
+            "name": "OrgSettings-Forms.Read.All"
+          },
+          {
+            "name": "OrgSettings-Todo.Read.All"
+          },
+          {
+            "name": "OrgSettings-AppsAndServices.Read.All"
+          },
+          {
+            "name": "OrgSettings-DynamicsVoice.Read.All"
+          },
+          {
+            "name": "Tasks.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Application.ReadWrite.All"
+          },
+          {
+            "name": "ReportSettings.ReadWrite.All"
+          },
+          {
+            "name": "OrgSettings-Microsoft365Install.ReadWrite.All"
+          },
+          {
+            "name": "OrgSettings-Forms.ReadWrite.All"
+          },
+          {
+            "name": "OrgSettings-Todo.ReadWrite.All"
+          },
+          {
+            "name": "OrgSettings-AppsAndServices.ReadWrite.All"
+          },
+          {
+            "name": "OrgSettings-DynamicsVoice.ReadWrite.All"
+          },
+          {
+            "name": "Tasks.ReadWrite.All"
+          }
+        ]
+      }
     }
+  },
+  "requiredModules": [
+    "ExchangeOnlineManagement",
+    "Microsoft.Graph.Applications",
+    "MSCloudLoginAssistant"
+  ]
 }

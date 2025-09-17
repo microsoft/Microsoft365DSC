@@ -1,34 +1,43 @@
 {
-    "resourceName": "EXOEmailTenantSettings",
-    "description": "",
-    "roles": {
+  "resourceName": "EXOEmailTenantSettings",
+  "description": "",
+  "roles": {
+    "read": [
+      "Global Reader"
+    ],
+    "update": [
+      "Exchange Administrator"
+    ]
+  },
+  "permissions": {
+    "Office 365 Exchange Online": {
+      "application": {
         "read": [
-            "Global Reader"
+          {
+            "name": "Exchange.ManageAsApp"
+          }
         ],
         "update": [
-            "Exchange Administrator"
+          {
+            "name": "Exchange.ManageAsApp"
+          }
         ]
+      }
     },
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [],
-                "update": []
-            },
-            "application": {
-                "read": [],
-                "update": []
-            }
-        },
-        "exchange": {
-            "requiredroles": [
-                "Organization Management",
-                "Security Reader"
-            ],
-            "requiredrolegroups": [
-                "Organization Management",
-                "Security Administrator"
-            ]
-        }
+    "exchange": {
+      "requiredroles": [
+        "Organization Management",
+        "Security Reader"
+      ],
+      "requiredrolegroups": [
+        "Organization Management",
+        "Security Administrator"
+      ]
     }
+  },
+  "requiredModules": [],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ]
 }

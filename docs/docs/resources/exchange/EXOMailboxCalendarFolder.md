@@ -12,7 +12,7 @@
 | **SearchableUrlEnabled** | Write | Boolean | The SearchableUrlEnabled parameter specifies whether the published calendar URL is discoverable on the web. | |
 | **SharedCalendarSyncStartDate** | Write | String | The SharedCalendarSyncStartDate parameter specifies the limit for past events in the shared calendar that are visible to delegates. A copy of the shared calendar within the specified date range is stored in the delegate's mailbox. | |
 | **Credential** | Write | PSCredential | Credentials of the Exchange Admin | |
-| **Ensure** | Write | String | Determines wether or not the instance exist. | `Present` |
+| **Ensure** | Write | String | Determines whether or not the instance exist. | `Present` |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
 | **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. | |
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |

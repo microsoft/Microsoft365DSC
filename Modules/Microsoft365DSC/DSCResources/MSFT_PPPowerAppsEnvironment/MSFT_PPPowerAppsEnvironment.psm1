@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_PPPowerAppsEnvironment'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -116,16 +118,16 @@ function Get-TargetResource
             $LanguageNameparam = $environment.properties.linkedEnvironmentMetadata.baseLanguage
         }
 
-        $environmentSKU = $environment.properties.EnvironmentSKU
-        if ($environmentSKU -eq 'Notspecified')
+        $envSku = $environment.properties.EnvironmentSKU
+        if ($envSku -eq 'Notspecified')
         {
-            $environmentSKU = 'Teams'
+            $envSku = 'Teams'
         }
         return @{
             DisplayName           = $DisplayName
             Location              = $environment.location
             EnvironmentType       = $environment.properties.EnvironmentType
-            EnvironmentSKU        = $environmentSKU
+            EnvironmentSKU        = $envSku
             ProvisionDatabase     = $ProvisionDatabaseparam
             LanguageName          = $LanguageNameparam
             Ensure                = 'Present'
@@ -518,3 +520,4 @@ function Export-TargetResource
 }
 
 Export-ModuleMember -Function *-TargetResource
+

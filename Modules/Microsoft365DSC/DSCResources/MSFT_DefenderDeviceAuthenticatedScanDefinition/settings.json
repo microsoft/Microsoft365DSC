@@ -1,34 +1,29 @@
-﻿{
-    "resourceName": "DefenderDeviceAuthenticatedScanDefinition",
-    "description": "Configures device authenticated scan definitions in Defender.",
-    "roles": {
-        "read": [],
-        "update": []
-    },
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [],
-                "update": []
-            },
-            "application": {
-                "read": [],
-                "update": []
-            }
-        },
-        "WindowsDefenderATP":{
-            "delegated": {
-                "read": [],
-                "update": []
-            },
-            "application": {
-                "read": [
-                    "Machine.Read.All"
-                ],
-                "update": [
-                    "Machine.ReadWrite.All"
-                ]
-            }
-        }
+{
+  "resourceName": "DefenderDeviceAuthenticatedScanDefinition",
+  "description": "Configures device authenticated scan definitions in Defender.",
+  "roles": {
+    "read": [],
+    "update": []
+  },
+  "permissions": {
+    "WindowsDefenderATP": {
+      "delegated": {
+        "read": [
+          "Machine.Read.All"
+        ],
+        "update": [
+          "Machine.ReadWrite.All"
+        ]
+      },
+      "application": {
+        "read": [
+          "Machine.Read.All"
+        ],
+        "update": [
+          "Machine.ReadWrite.All"
+        ]
+      }
     }
+  },
+  "requiredModules": []
 }

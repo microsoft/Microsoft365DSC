@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_IntuneAppProtectionPolicyAndroid'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -391,7 +393,7 @@ function Get-TargetResource
     {
         if (-not $Script:exportedInstance -or $Script:exportedInstance.DisplayName -ne $DisplayName)
         {
-            $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+            $null = New-M365DSCConnection -Workload 'MicrosoftGraph' `
                 -InboundParameters $PSBoundParameters
 
             #Ensure the proper dependencies are installed in the current environment.
@@ -967,8 +969,8 @@ function Set-TargetResource
         [System.String[]]
         $AccessTokens
     )
-    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters
+
+    Write-Verbose -Message "Setting configuration of the Intune App Protection Policy for Android with Id {$Id} and DisplayName {$DisplayName}"
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -1032,7 +1034,7 @@ function Set-TargetResource
     if ($PSBoundParameters.Keys -contains 'Assignments' )
     {
         $PSBoundParameters.Assignments | ForEach-Object {
-            if ($_ -ne $null)
+            if ($null -ne $_)
             {
                 $groupInfo = Get-MgGroup -Filter "DisplayName eq '$($_ -replace "'", "''")'"
                 $idValue = $_
@@ -1049,7 +1051,7 @@ function Set-TargetResource
     if ($PSBoundParameters.Keys -contains 'ExcludedGroups' )
     {
         $PSBoundParameters.ExcludedGroups | ForEach-Object {
-            if ($_ -ne $null)
+            if ($null -ne $_)
             {
                 $assignmentsArray += set-JSONstring -id $_ -type 'ExcludedGroups'
             }
@@ -1063,7 +1065,7 @@ function Set-TargetResource
     {
         $approvedKeyboardHastableArray = @()
         $PSBoundParameters.ApprovedKeyboards | ForEach-Object {
-            if ($_ -ne $null)
+            if ($null -ne $_)
             {
                 $tempArray = @()
                 $tempArray = $_ -split '[|]'
@@ -1082,7 +1084,7 @@ function Set-TargetResource
     {
         $exemptedAppPackagesHastableArray = @()
         $PSBoundParameters.ExemptedAppPackages | ForEach-Object {
-            if ($_ -ne $null)
+            if ($null -ne $_)
             {
                 $tempArray = @()
                 $tempArray = $_ -split '[|]'
@@ -1099,7 +1101,7 @@ function Set-TargetResource
     # set the apps values
     $AppsHash = set-AppsHash -AppGroupType $AppGroupType -apps $apps
     $appshash.Apps | ForEach-Object {
-        if ($_ -ne $null)
+        if ($null -ne $_)
         {
             $appsarray += set-JSONstring -id $_ -type 'Apps'
         }
@@ -1698,6 +1700,7 @@ function Export-TargetResource
         [System.String[]]
         $AccessTokens
     )
+
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
@@ -1974,7 +1977,7 @@ function Get-InputParameters
         Apps                                            = @{Type = 'ComplexParameter' ; ExportFileType = 'NA'; }
         Assignments                                     = @{Type = 'ComplexParameter' ; ExportFileType = 'NA'; }
         CertificateThumbprint                           = @{Type = 'Credential'       ; ExportFileType = 'NA'; }
-        Managedidentity                                 = @{Type = 'ComplexParameter' ; ExportFileType = 'NA'; }
+        ManagedIdentity                                 = @{Type = 'ComplexParameter' ; ExportFileType = 'NA'; }
         ContactSyncBlocked                              = @{Type = 'Parameter'        ; ExportFileType = 'NA'; }
         Credential                                      = @{Type = 'Credential'       ; ExportFileType = 'NA'; }
         CustomBrowserDisplayName                        = @{Type = 'ComplexParameter' ; ExportFileType = 'NA'; }

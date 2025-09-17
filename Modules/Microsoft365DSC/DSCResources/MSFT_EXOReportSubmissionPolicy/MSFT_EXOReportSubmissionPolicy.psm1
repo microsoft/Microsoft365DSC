@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_EXOReportSubmissionPolicy'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -152,15 +154,16 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message 'Getting configuration of ReportSubmissionPolicy'
+
     if ($Global:CurrentModeIsExport)
     {
-        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters `
             -SkipModuleReload $true
     }
     else
     {
-        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters
     }
 
@@ -225,7 +228,7 @@ function Get-TargetResource
                 CertificateThumbprint            = $CertificateThumbprint
                 CertificatePath                  = $CertificatePath
                 CertificatePassword              = $CertificatePassword
-                Managedidentity                  = $ManagedIdentity.IsPresent
+                ManagedIdentity                  = $ManagedIdentity.IsPresent
                 TenantId                         = $TenantId
                 AccessTokens                     = $AccessTokens
             }
@@ -412,23 +415,11 @@ function Set-TargetResource
     #endregion
     Write-Verbose -Message 'Setting configuration of ReportSubmissionPolicy'
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
-        -InboundParameters $PSBoundParameters
-
     $currentReportSubmissionPolicy = Get-TargetResource @PSBoundParameters
 
-    $ReportSubmissionPolicyParams = [System.Collections.Hashtable]($PSBoundParameters)
-    $ReportSubmissionPolicyParams.Remove('Ensure') | Out-Null
+    $ReportSubmissionPolicyParams = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
     $ReportSubmissionPolicyParams.Remove('IsSingleInstance') | Out-Null
-    $ReportSubmissionPolicyParams.Remove('Credential') | Out-Null
-    $ReportSubmissionPolicyParams.Remove('ApplicationId') | Out-Null
-    $ReportSubmissionPolicyParams.Remove('TenantId') | Out-Null
-    $ReportSubmissionPolicyParams.Remove('CertificateThumbprint') | Out-Null
-    $ReportSubmissionPolicyParams.Remove('CertificatePath') | Out-Null
-    $ReportSubmissionPolicyParams.Remove('CertificatePassword') | Out-Null
-    $ReportSubmissionPolicyParams.Remove('ManagedIdentity') | Out-Null
     $ReportSubmissionPolicyParams.Add('Identity', 'DefaultReportSubmissionPolicy') | Out-Null
-    $ReportSubmissionPolicyParams.Remove('AccessTokens') | Out-Null
 
     if ($Ensure -eq 'Present' -and $currentReportSubmissionPolicy.Ensure -eq 'Absent')
     {
@@ -670,6 +661,7 @@ function Export-TargetResource
         [System.String[]]
         $AccessTokens
     )
+
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
         -SkipModuleReload $true
@@ -712,7 +704,7 @@ function Export-TargetResource
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint
             CertificatePassword   = $CertificatePassword
-            Managedidentity       = $ManagedIdentity.IsPresent
+            ManagedIdentity       = $ManagedIdentity.IsPresent
             CertificatePath       = $CertificatePath
             IsSingleInstance      = 'Yes'
             AccessTokens          = $AccessTokens

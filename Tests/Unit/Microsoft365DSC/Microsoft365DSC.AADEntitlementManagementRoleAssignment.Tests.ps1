@@ -46,17 +46,41 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-MgBetaRoleManagementEntitlementManagementRoleAssignment -MockWith {
             }
 
-            Mock -CommandName Get-MgUser -MockWith {
-                return @{
-                    UserPrincipalName = "John.Smith@contoso.com"
-                    Id                = "12345-12345-12345-12345-12345"
-                }
+            Mock -CommandName Invoke-M365DSCGraphBatchRequest -MockWith {
+                return @(
+                    @{
+                        id = 'user'
+                        body = @{
+                            value = @{
+                                userPrincipalName = "John.Smith@contoso.com"
+                                id                = "12345-12345-12345-12345-12345"
+                            }
+                        }
+                    }
+                )
             }
 
             Mock -CommandName Get-MgBetaRoleManagementEntitlementManagementRoleDefinition -MockWith {
+                return @(
+                    @{
+                        DisplayName = "Catalog creator"
+                        Id          = "12345-12345-12345-12345-12345"
+                    }
+                )
+            }
+
+            Mock -CommandName Get-MgBetaRoleManagementEntitlementManagementRoleAssignment -MockWith {
                 return @{
-                    DisplayName = "Catalog creator"
-                    Id          = "12345-12345-12345-12345-12345"
+                    AppScopeId       = "/"
+                    PrincipalId      = '12345-12345-12345-12345-12345'
+                    Principal        = @{
+                        AdditionalProperties = @{
+                            '@odata.type' = '#microsoft.graph.user'
+                            userPrincipalName = "John.Smith@contoso.com"
+                        }
+                    }
+                    RoleDefinitionId = '12345-12345-12345-12345-12345'
+                    DirectoryScopeId = ''
                 }
             }
 
@@ -106,15 +130,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     RoleDefinition = "Catalog creator";
                     Credential     = $Credential
                 }
-
-                Mock -CommandName Get-MgBetaRoleManagementEntitlementManagementRoleAssignment -MockWith {
-                    return @{
-                        AppScopeId       = "/"
-                        PrincipalId      = 'xxxxx-xxxxx-xxxxx-xxxxx-xxxxx'
-                        RoleDefinitionId = 'xxxxx-xxxxx-xxxxx-xxxxx-xxxxx'
-                        DirectoryScopeId = ''
-                    }
-                }
             }
             It 'Should return Values from the Get method' {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
@@ -131,14 +146,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
                     Credential = $Credential
-                }
-                Mock -CommandName Get-MgBetaRoleManagementEntitlementManagementRoleAssignment -MockWith {
-                    return @{
-                        AppScopeId       = "/"
-                        PrincipalId      = 'xxxxx-xxxxx-xxxxx-xxxxx-xxxxx'
-                        RoleDefinitionId = 'xxxxx-xxxxx-xxxxx-xxxxx-xxxxx'
-                        DirectoryScopeId = ''
-                    }
                 }
             }
 

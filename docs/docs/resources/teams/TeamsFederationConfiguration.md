@@ -8,7 +8,7 @@
 | **AllowFederatedUsers** | Write | Boolean | When set to True users will be potentially allowed to communicate with users from other domains. | |
 | **AllowedDomains** | Write | StringArray[] | List of federated domains to allow. | |
 | **BlockedDomains** | Write | StringArray[] | List of federated domains to block. | |
-| **AllowPublicUsers** | Write | Boolean | When set to True users will be potentially allowed to communicate with users who have accounts on public IM and presence providers. | |
+| **AllowPublicUsers** | Write | Boolean | DEPRECATED | |
 | **AllowTeamsConsumer** | Write | Boolean | Allows federation with people using Teams with an account that's not managed by an organization. | |
 | **AllowTeamsConsumerInbound** | Write | Boolean | Allows people using Teams with an account that's not managed by an organization, to discover and start communication with users in your organization. | |
 | **ExternalAccessWithTrialTenants** | Write | String | When set to Blocked, all external access with users from Teams subscriptions that contain only trial licenses will be blocked. This means users from these trial-only tenants will not be able to reach to your users via chats, Teams calls, and meetings (using the users authenticated identity) and your users will not be able to reach users in these trial-only tenants. If this setting is set to Blocked, users from the trial-only tenant will also be removed from existing chats. | `Allowed`, `Blocked` |

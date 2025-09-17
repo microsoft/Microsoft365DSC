@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_TeamsOnlineVoicemailPolicy'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -464,3 +466,4 @@ function Export-TargetResource
 }
 
 Export-ModuleMember -Function *-TargetResource
+

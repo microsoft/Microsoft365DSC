@@ -1,32 +1,40 @@
 {
-    "resourceName": "IntuneDeviceCategory",
-    "description": "This resource configures the Intune device categories.",
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [
-                    {
-                        "name": "DeviceManagementManagedDevices.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "DeviceManagementManagedDevices.ReadWrite.All"
-                    }
-                ]
-            },
-            "application": {
-                "read": [
-                    {
-                        "name": "DeviceManagementManagedDevices.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "DeviceManagementManagedDevices.ReadWrite.All"
-                    }
-                ]
-            }
-        }
+  "resourceName": "IntuneDeviceCategory",
+  "description": "This resource configures the Intune device categories.",
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "DeviceManagementManagedDevices.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "DeviceManagementManagedDevices.ReadWrite.All"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "DeviceManagementManagedDevices.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "DeviceManagementManagedDevices.ReadWrite.All"
+          }
+        ]
+      }
     }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.DeviceManagement"
+  ],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ]
 }

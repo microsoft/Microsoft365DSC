@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_O365OrgSettings'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -198,7 +200,7 @@ function Get-TargetResource
         TenantId              = $TenantId
         ApplicationSecret     = $ApplicationSecret
         CertificateThumbprint = $CertificateThumbprint
-        Managedidentity       = $ManagedIdentity.IsPresent
+        ManagedIdentity       = $ManagedIdentity.IsPresent
         AccessTokens          = $AccessTokens
     }
     try
@@ -972,7 +974,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $ResourceName `
+                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
                                          -ExcludedProperties @('MicrosoftVivaBriefingEmail') # Deprecated parameter
     return $result
 }
@@ -1040,7 +1042,7 @@ function Export-TargetResource
             TenantId              = $TenantId
             ApplicationSecret     = $ApplicationSecret
             CertificateThumbprint = $CertificateThumbprint
-            Managedidentity       = $ManagedIdentity.IsPresent
+            ManagedIdentity       = $ManagedIdentity.IsPresent
             AccessTokens          = $AccessTokens
         }
 

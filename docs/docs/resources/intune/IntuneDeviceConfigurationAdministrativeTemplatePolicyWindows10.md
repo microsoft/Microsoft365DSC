@@ -9,6 +9,7 @@
 | **PolicyConfigurationIngestionType** | Write | String | Type of definitions configured for this policy. Possible values are: unknown, custom, builtIn, mixed, unknownFutureValue. | `unknown`, `custom`, `builtIn`, `mixed`, `unknownFutureValue` |
 | **Id** | Write | String | The unique identifier for an entity. Read-only. | |
 | **DefinitionValues** | Write | MSFT_IntuneGroupPolicyDefinitionValue[] | The list of enabled or disabled group policy definition values for the configuration. | |
+| **RoleScopeTagIds** | Write | StringArray[] | List of Scope Tag IDs for this policy instance. | |
 | **Assignments** | Write | MSFT_DeviceManagementConfigurationPolicyAssignments[] | Represents the assignment to the Intune policy. | |
 | **Ensure** | Write | String | Present ensures the policy exists, absent ensures it is removed. | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials of the Admin | |
@@ -28,6 +29,7 @@
 | **dataType** | Write | String | The type of the target assignment. | `#microsoft.graph.groupAssignmentTarget`, `#microsoft.graph.allLicensedUsersAssignmentTarget`, `#microsoft.graph.allDevicesAssignmentTarget`, `#microsoft.graph.exclusionGroupAssignmentTarget`, `#microsoft.graph.configurationManagerCollectionAssignmentTarget` |
 | **deviceAndAppManagementAssignmentFilterType** | Write | String | The type of filter of the target assignment i.e. Exclude or Include. Possible values are:none, include, exclude. | `none`, `include`, `exclude` |
 | **deviceAndAppManagementAssignmentFilterId** | Write | String | The Id of the filter for the target assignment. | |
+| **deviceAndAppManagementAssignmentFilterDisplayName** | Write | String | The display name of the filter for the target assignment. | |
 | **groupId** | Write | String | The group Id that is the target of the assignment. | |
 | **groupDisplayName** | Write | String | The group Display Name that is the target of the assignment. | |
 | **collectionId** | Write | String | The collection Id that is the target of the assignment.(ConfigMgr) | |

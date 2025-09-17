@@ -1,24 +1,33 @@
-﻿{
-    "resourceName": "SCInsiderRiskPolicy",
-    "description": "Configures Insider Risk Policies in Purview.",
-    "roles": {
+{
+  "resourceName": "SCInsiderRiskPolicy",
+  "description": "Configures Insider Risk Policies in Purview.",
+  "roles": {
+    "read": [
+      "Compliance Administrator"
+    ],
+    "update": [
+      "Compliance Administrator"
+    ]
+  },
+  "permissions": {
+    "Office 365 Exchange Online": {
+      "application": {
         "read": [
-            "Global Reader"
+          {
+            "name": "Exchange.ManageAsApp"
+          }
         ],
         "update": [
-            "Compliance Administrator"
+          {
+            "name": "Exchange.ManageAsApp"
+          }
         ]
-    },
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [],
-                "update": []
-            },
-            "application": {
-                "read": [],
-                "update": []
-            }
-        }
+      }
     }
+  },
+  "requiredModules": [],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ]
 }

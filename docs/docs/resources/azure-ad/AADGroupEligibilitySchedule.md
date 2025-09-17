@@ -92,21 +92,21 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - PrivilegedEligibilitySchedule.Read.AzureADGroup
+    - Directory.Read.All, PrivilegedEligibilitySchedule.Read.AzureADGroup
 
 - **Update**
 
-    - None
+    - Directory.Read.All, PrivilegedEligibilitySchedule.ReadWrite.AzureADGroup, RoleManagementPolicy.ReadWrite.Directory
 
 #### Application permissions
 
 - **Read**
 
-    - PrivilegedEligibilitySchedule.Read.AzureADGroup
+    - Directory.Read.All, PrivilegedEligibilitySchedule.Read.AzureADGroup
 
 - **Update**
 
-    - None
+    - Directory.Read.All, PrivilegedEligibilitySchedule.ReadWrite.AzureADGroup, RoleManagementPolicy.ReadWrite.Directory
 
 ## Examples
 

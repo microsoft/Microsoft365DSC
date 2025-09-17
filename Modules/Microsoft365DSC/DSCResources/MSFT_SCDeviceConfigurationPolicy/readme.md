@@ -2,4 +2,4 @@
 
 ## Description
 
-This resource configures a Device Configuration Policy in Security and Compliance.
+This resource configures a Device Configuration Policy in Purview.

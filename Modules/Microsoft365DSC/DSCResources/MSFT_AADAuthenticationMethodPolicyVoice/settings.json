@@ -1,52 +1,61 @@
 {
-    "resourceName": "AADAuthenticationMethodPolicyVoice",
-    "description": "This resource configures an Azure AD Authentication Method Policy Voice.",
-    "roles": {
+  "resourceName": "AADAuthenticationMethodPolicyVoice",
+  "description": "This resource configures an Azure AD Authentication Method Policy Voice.",
+  "roles": {
+    "read": [
+      "Security Reader"
+    ],
+    "update": [
+      "Authentication Policy Administrator"
+    ]
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
         "read": [
-            "Security Reader"
+          {
+            "name": "Policy.Read.AuthenticationMethod"
+          },
+          {
+            "name": "Group.Read.All"
+          }
         ],
         "update": [
-            "Authentication Policy Administrator"
+          {
+            "name": "Policy.ReadWrite.AuthenticationMethod"
+          },
+          {
+            "name": "Group.Read.All"
+          }
         ]
-    },
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [
-                    {
-                        "name": "Policy.ReadWrite.AuthenticationMethod"
-                    },
-                    {
-                        "name": "Policy.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Policy.ReadWrite.AuthenticationMethod"
-                    },
-                    {
-                        "name": "Policy.Read.All"
-                    }
-                ]
-            },
-            "application": {
-                "read": [
-                    {
-                        "name": "Policy.ReadWrite.AuthenticationMethod"
-                    },
-                    {
-                        "name": "Policy.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Policy.ReadWrite.AuthenticationMethod"
-                    },
-                    {
-                        "name": "Policy.Read.All"
-                    }
-                ]
-            }
-        }
+      },
+      "application": {
+        "read": [
+          {
+            "name": "Policy.Read.AuthenticationMethod"
+          },
+          {
+            "name": "Group.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Policy.ReadWrite.AuthenticationMethod"
+          },
+          {
+            "name": "Group.Read.All"
+          }
+        ]
+      }
     }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.Identity.SignIns",
+    "Microsoft.Graph.Groups"
+  ],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ]
 }

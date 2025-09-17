@@ -4,7 +4,7 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **GroupDisplayName** | Key | String | Group Displayname of the group the policys are assigned to | |
+| **GroupDisplayName** | Key | String | Group Displayname of the group the policies are assigned to | |
 | **GroupId** | Write | String | GroupId, alternatively to Group Displayname | |
 | **PolicyType** | Key | String | Teams PolicyType. The type of the policy to be assigned. Possible values: | `ApplicationAccessPolicy`, `CallingLineIdentity`, `OnlineAudioConferencingRoutingPolicy`, `OnlineVoicemailPolicy`, `OnlineVoiceRoutingPolicy`, `TeamsAudioConferencingPolicy`, `TeamsCallHoldPolicy`, `TeamsCallParkPolicy`, `TeamsChannelsPolicy`, `TeamsComplianceRecordingPolicy`, `TeamsCortanaPolicy`, `TeamsEmergencyCallingPolicy`, `TeamsEnhancedEncryptionPolicy`, `TeamsFeedbackPolicy`, `TeamsFilesPolicy`, `TeamsIPPhonePolicy`, `TeamsMediaLoggingPolicy`, `TeamsMeetingBroadcastPolicy`, `TeamsMeetingPolicy`, `TeamsMessagingPolicy`, `TeamsMobilityPolicy`, `TeamsRoomVideoTeleConferencingPolicy`, `TeamsShiftsPolicy`, `TeamsUpdateManagementPolicy`, `TeamsVdiPolicy`, `TeamsVideoInteropServicePolicy`, `TenantDialPlan`, `ExternalAccessPolicy`, `TeamsAppSetupPolicy`, `TeamsCallingPolicy`, `TeamsEventsPolicy`, `TeamsMeetingBrandingPolicy`, `TeamsMeetingTemplatePermissionPolicy`, `TeamsVerticalPackagePolicy` |
 | **PolicyName** | Write | String | Teams PolicyName. The name of the policy to be assigned. | |

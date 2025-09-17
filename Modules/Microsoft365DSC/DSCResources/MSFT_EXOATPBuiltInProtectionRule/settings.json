@@ -1,20 +1,29 @@
-﻿{
-    "resourceName": "EXOATPBuiltInProtectionRule",
-    "description": "Configures Defender ATP built-in protection rules.",
-    "roles": {
-        "read": [],
-        "update": []
-    },
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [],
-                "update": []
-            },
-            "application": {
-                "read": [],
-                "update": []
-            }
-        }
+{
+  "resourceName": "EXOATPBuiltInProtectionRule",
+  "description": "Configures Defender ATP built-in protection rules.",
+  "roles": {
+    "read": [],
+    "update": []
+  },
+  "permissions": {
+    "Office 365 Exchange Online": {
+      "application": {
+        "read": [
+          {
+            "name": "Exchange.ManageAsApp"
+          }
+        ],
+        "update": [
+          {
+            "name": "Exchange.ManageAsApp"
+          }
+        ]
+      }
     }
+  },
+  "requiredModules": [],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ]
 }

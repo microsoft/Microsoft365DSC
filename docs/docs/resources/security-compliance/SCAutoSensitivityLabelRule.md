@@ -46,7 +46,7 @@
 | **SentTo** | Write | StringArray[] | The SentTo parameter specifies a condition for the auto-sensitivity policy rule that looks for recipients in messages. You can use any value that uniquely identifies the recipient. | |
 | **SentToMemberOf** | Write | StringArray[] | The SentToMemberOf parameter specifies a condition for the auto-labeling policy rule that looks for messages sent to members of distribution groups, dynamic distribution groups, or mail-enabled security groups. You identify the groups by email address. | |
 | **SubjectMatchesPatterns** | Write | String | The SubjectMatchesPatterns parameter specifies a condition for the auto-labeling policy rule that looks for text patterns in the Subject field of messages by using regular expressions. | |
-| **Workload** | Key | String | Workload the rule is associated with. Value can be: Exchange, SharePoint, OneDriveForBusiness | `Exchange`, `SharePoint`, `OneDriveForBusiness` |
+| **Workload** | Key | String | Workload the rule is associated with. Value can be: Exchange, SharePoint, OneDriveForBusiness, Applications, Azure, AWS and PowerBI | `Exchange`, `SharePoint`, `OneDriveForBusiness`, `Applications`, `Azure`, `AWS`, `PowerBI` |
 | **Ensure** | Write | String | Specify if this rule should exist or not. | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials of the Exchange Global Admin | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
@@ -112,34 +112,9 @@
 
 ## Description
 
-This resource configures a Auto Sensitivity Label
-Rule in Security and Compliance Center.
+This resource configures an Auto Sensitivity Label Rule in Purview.
 
 ## Permissions
-
-### Microsoft Graph
-
-To authenticate with the Microsoft Graph API, this resource required the following permissions:
-
-#### Delegated permissions
-
-- **Read**
-
-    - None
-
-- **Update**
-
-    - None
-
-#### Application permissions
-
-- **Read**
-
-    - None
-
-- **Update**
-
-    - None
 
 ## Examples
 

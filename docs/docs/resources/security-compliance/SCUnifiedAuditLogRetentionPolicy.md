@@ -21,7 +21,7 @@
 
 ## Description
 
-The resource configured the Unified Audit Log Retention Policy in the Security and Compliance.
+The resource configures a Unified Audit Log Retention Policy in the Purview.
 
 ## Permissions
 

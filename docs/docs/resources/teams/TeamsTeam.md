@@ -8,7 +8,7 @@
 | **Description** | Write | String | Description of Team. | |
 | **GroupID** | Write | String | Team group ID, only used to target a Team when duplicated display names occurs. | |
 | **MailNickName** | Write | String | MailNickName of O365 Group associated with Team | |
-| **Owner** | Write | StringArray[] | Owners of the Team | |
+| **Owner** | Write | StringArray[] | Owners of the Team. At least one entry is required. | |
 | **Visibility** | Write | String | Visibility of the Team | `Public`, `Private`, `HiddenMembership` |
 | **AllowAddRemoveApps** | Write | Boolean | Allow add or remove apps from the Team. | |
 | **AllowGiphy** | Write | Boolean | Allow giphy in Team. | |

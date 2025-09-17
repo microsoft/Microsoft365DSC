@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_EXOClientAccessRule'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -103,16 +105,18 @@ function Get-TargetResource
         [System.String[]]
         $AccessTokens
     )
+
     Write-Verbose -Message "Getting configuration of ClientAccessRule for $Identity"
+
     if ($Global:CurrentModeIsExport)
     {
-        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters `
             -SkipModuleReload $true
     }
     else
     {
-        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters
     }
 
@@ -127,7 +131,6 @@ function Get-TargetResource
         -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-
 
     $nullReturn = $PSBoundParameters
     $nullReturn.Ensure = 'Absent'
@@ -163,7 +166,7 @@ function Get-TargetResource
                 CertificateThumbprint                = $CertificateThumbprint
                 CertificatePath                      = $CertificatePath
                 CertificatePassword                  = $CertificatePassword
-                Managedidentity                      = $ManagedIdentity.IsPresent
+                ManagedIdentity                      = $ManagedIdentity.IsPresent
                 TenantId                             = $TenantId
                 AccessTokens                         = $AccessTokens
             }
@@ -309,31 +312,14 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    if ($Global:CurrentModeIsExport)
-    {
-        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters `
-            -SkipModuleReload $true
-    }
-    else
-    {
-        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters
-    }
+    $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
+        -InboundParameters $PSBoundParameters
 
     $ClientAccessRules = Get-ClientAccessRule
 
     $ClientAccessRule = $ClientAccessRules | Where-Object -FilterScript { $_.Identity -eq $Identity }
-    $ClientAccessRuleParams = [System.Collections.Hashtable]($PSBoundParameters)
-    $ClientAccessRuleParams.Remove('Ensure') | Out-Null
-    $ClientAccessRuleParams.Remove('Credential') | Out-Null
-    $ClientAccessRuleParams.Remove('ApplicationId') | Out-Null
-    $ClientAccessRuleParams.Remove('TenantId') | Out-Null
-    $ClientAccessRuleParams.Remove('CertificateThumbprint') | Out-Null
-    $ClientAccessRuleParams.Remove('CertificatePath') | Out-Null
-    $ClientAccessRuleParams.Remove('CertificatePassword') | Out-Null
-    $ClientAccessRuleParams.Remove('ManagedIdentity') | Out-Null
-    $ClientAccessRuleParams.Remove('AccessTokens') | Out-Null
+    $ClientAccessRuleParams = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+
     if ($ClientAccessRuleParams.RuleScope)
     {
         $ClientAccessRuleParams += @{
@@ -535,6 +521,7 @@ function Export-TargetResource
         [System.String[]]
         $AccessTokens
     )
+
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
         -SkipModuleReload $true
@@ -582,7 +569,7 @@ function Export-TargetResource
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                     CertificatePassword   = $CertificatePassword
-                    Managedidentity       = $ManagedIdentity.IsPresent
+                    ManagedIdentity       = $ManagedIdentity.IsPresent
                     CertificatePath       = $CertificatePath
                     AccessTokens          = $AccessTokens
                 }

@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_IntuneRoleAssignment'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -84,7 +86,7 @@ function Get-TargetResource
     {
         if (-not $Script:exportedInstance -or $Script:exportedInstance.DisplayName -ne $DisplayName)
         {
-            $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+            $null = New-M365DSCConnection -Workload 'MicrosoftGraph' `
                 -InboundParameters $PSBoundParameters
 
             #Ensure the proper dependencies are installed in the current environment.
@@ -132,7 +134,7 @@ function Get-TargetResource
         $Id = $getValue.Id
         Write-Verbose -Message "An Intune Role Assignment with Id {$Id} and DisplayName {$DisplayName} was found"
 
-        #Get Roledefinition first, loop through all roledefinitions and find the assignment that matches the Id
+        # Get Roledefinition first, loop through all roledefinitions and find the assignment that matches the Id
         $tempRoleDefinitions = Get-MgDeviceManagementRoleDefinition
         foreach ($tempRoleDefinition in $tempRoleDefinitions)
         {
@@ -148,13 +150,25 @@ function Get-TargetResource
         $ResourceScopesDisplayNames = @()
         foreach ($ResourceScope in $getValue.ResourceScopes)
         {
-            $ResourceScopesDisplayNames += (Get-MgGroup -GroupId $ResourceScope).DisplayName
+            $group = Get-MgGroup -GroupId $ResourceScope -ErrorAction SilentlyContinue
+            if ($null -eq $group)
+            {
+                Write-Warning -Message "Could not find group with Id {$ResourceScope} when retrieving resource scope display names"
+                continue
+            }
+            $ResourceScopesDisplayNames += $group.DisplayName
         }
 
         $MembersDisplayNames = @()
         foreach ($tempMember in $getValue.Members)
         {
-            $MembersDisplayNames += (Get-MgGroup -GroupId $tempMember).DisplayName
+            $group = Get-MgGroup -GroupId $tempMember -ErrorAction SilentlyContinue
+            if ($null -eq $group)
+            {
+                Write-Warning -Message "Could not find group with Id {$tempMember} when retrieving member display names"
+                continue
+            }
+            $MembersDisplayNames += $group.DisplayName
         }
 
         $scopeTypeValue = $null
@@ -183,7 +197,7 @@ function Get-TargetResource
             AccessTokens               = $AccessTokens
         }
 
-        return [System.Collections.Hashtable] $results
+        return $results
     }
     catch
     {
@@ -276,15 +290,7 @@ function Set-TargetResource
         $AccessTokens
     )
 
-    try
-    {
-        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters
-    }
-    catch
-    {
-        Write-Verbose -Message $_
-    }
+    Write-Verbose -Message "Setting configuration of the Intune Role Assignment with Id {$Id} and DisplayName {$DisplayName}"
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -299,7 +305,6 @@ function Set-TargetResource
     #endregion
 
     $currentInstance = Get-TargetResource @PSBoundParameters
-    $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
     if ($RoleDefinition -notmatch '^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$' -or $RoleDefinition -eq '00000000-0000-0000-0000-000000000000')
     {
@@ -494,7 +499,7 @@ function Test-TargetResource
     Write-Verbose -Message "Testing configuration of {$Id - $displayName}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
-    $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
+    $ValuesToCheck = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
     if (-not ($RoleDefinition -match '^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$'))
     {
@@ -558,7 +563,7 @@ function Test-TargetResource
         if (($null -ne $CurrentValues[$key]) `
                 -and ($CurrentValues[$key].getType().Name -eq 'DateTime'))
         {
-            $CurrentValues[$key] = $CurrentValues[$key].toString()
+            $CurrentValues[$key] = $CurrentValues[$key].ToString()
         }
     }
 

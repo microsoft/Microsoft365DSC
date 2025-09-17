@@ -5,6 +5,18 @@
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
 | **Identity** | Key | String | Identity for the teams messaging policy you're modifying. To modify the global policy, use this syntax: -Identity global. To modify a per-user policy, use syntax similar to this: -Identity TeamsMessagingPolicy. | |
+| **AllowChatWithGroup** | Write | Boolean | This setting determines if users can chat with groups (Distribution, M365 and Security groups). Possible values: True, False | |
+| **AllowCustomGroupChatAvatars** | Write | Boolean | These settings enables, disables updating or fetching custom group chat avatars for the users included in the messaging policy. Possible values: True, False | |
+| **AllowFullChatPermissionUserToDeleteAnyMessage** | Write | Boolean | This setting determines if users with the 'Full permissions' role can delete any group or meeting chat message within their tenant. Possible values: True, False | |
+| **AllowGiphyDisplay** | Write | Boolean | Determines if Giphy images should be displayed that had been already sent or received in chat. Possible values: True, False | |
+| **AllowGroupChatJoinLinks** | Write | Boolean | This setting determines if users in a group chat can create and share join links for other users within the organization to join that chat. Possible values: True, False | |
+| **AllowPasteInternetImage** | Write | Boolean | Determines if a user is allowed to paste internet-based images in compose. Possible values: True, False | |
+| **ChatPermissionRole** | Write | String | Determines the Supervised Chat role of the user. Set this to Full to allow the user to supervise chats. Supervisors have the ability to initiate chats with and invite any user within the environment. Set this to Limited to allow the user to initiate conversations with Full and Limited permissioned users, but not Restricted. Set this to Restricted to block chat creation with anyone other than Full permissioned users. | `Full`, `Limited`, `Restricted` |
+| **CreateCustomEmojis** | Write | Boolean | This setting enables the creation of custom emojis and reactions within an organization for the specified policy users. | |
+| **DeleteCustomEmojis** | Write | Boolean | These settings enable and disable the editing and deletion of custom emojis and reactions for the users included in the messaging policy. | |
+| **DesignerForBackgroundsAndImages** | Write | String | This setting determines whether a user is allowed to create custom AI-powered backgrounds and images with MS Designer.Possible values are: Enabled, Disabled | `Enabled`, `Disabled` |
+| **InOrganizationChatControl** | Write | String | This setting determines if chat regulation for internal communication in the tenant is allowed. Possible values: BlockingAllowed, BlockingDisallowed | `BlockingDisallowed`, `BlockingAllowed` |
+| **UsersCanDeleteBotMessages** | Write | Boolean | Determines whether a user is allowed to delete messages sent by bots. Possible values are: True, False | |
 | **AllowCommunicationComplianceEndUserReporting** | Write | Boolean | Report inappropriate content. | |
 | **AllowFluidCollaborate** | Write | Boolean | Determines is Fluid Collaboration should be enabled or not. | |
 | **AllowSecurityEndUserReporting** | Write | Boolean | Report a security concern. | |

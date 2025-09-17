@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_AADEntitlementManagementAccessPackageCatalogResource'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -88,9 +90,11 @@ function Get-TargetResource
         $AccessTokens
     )
 
+    Write-Verbose -Message "Getting configuration of AzureAD Entitlement Management Access Package Catalog Resource for DisplayName {$DisplayName}"
+
     try
     {
-        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+        $null = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters
     }
     catch
@@ -118,7 +122,6 @@ function Get-TargetResource
         $CatalogIdValue = $catalogId
         if (-not [System.String]::IsNullOrEmpty($CatalogId))
         {
-            $resource = ([Hashtable]$PSBoundParameters).clone()
             $ObjectGuid = [System.Guid]::empty
             if (-not [System.Guid]::TryParse($CatalogId, [System.Management.Automation.PSReference]$ObjectGuid))
             {
@@ -197,7 +200,7 @@ function Get-TargetResource
             AccessTokens          = $AccessTokens
         }
 
-        return [System.Collections.Hashtable] $results
+        return $results
     }
     catch
     {
@@ -300,15 +303,7 @@ function Set-TargetResource
         $AccessTokens
     )
 
-    try
-    {
-        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters
-    }
-    catch
-    {
-        Write-Verbose -Message $_
-    }
+    Write-Verbose -Message "Setting configuration of AzureAD Entitlement Management Access Package Catalog Resource for DisplayName {$DisplayName}"
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -324,19 +319,11 @@ function Set-TargetResource
 
     $currentInstance = Get-TargetResource @PSBoundParameters
 
-    $PSBoundParameters.Remove('Ensure') | Out-Null
-    $PSBoundParameters.Remove('Credential') | Out-Null
-    $PSBoundParameters.Remove('ApplicationId') | Out-Null
-    $PSBoundParameters.Remove('ApplicationSecret') | Out-Null
-    $PSBoundParameters.Remove('TenantId') | Out-Null
-    $PSBoundParameters.Remove('CertificateThumbprint') | Out-Null
-    $PSBoundParameters.Remove('ManagedIdentity') | Out-Null
     $PSBoundParameters.Remove('addedBy') | Out-Null
     $PSBoundParameters.Remove('addedOn') | Out-Null
     $PSBoundParameters.Remove('isPendingOnboarding') | Out-Null
-    $PSBoundParameters.Remove('AccessTokens') | Out-Null
 
-    $resource = ([Hashtable]$PSBoundParameters).clone()
+    $resource = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
     $ObjectGuid = [System.Guid]::empty
     if ($OriginSystem -eq 'AADGroup' -and `
             -not [System.Guid]::TryParse($OriginId, [System.Management.Automation.PSReference]$ObjectGuid))
@@ -364,15 +351,13 @@ function Set-TargetResource
 
         $resource.Remove('Id') | Out-Null
         $resource.Remove('CatalogId') | Out-Null
-        $resource.Remove('Verbose') | Out-Null
 
         #Preparing embedded Cim Instances
-        $keys = (([Hashtable]$resource).clone()).Keys
+        $keys = (([Hashtable]$resource).Clone()).Keys
         foreach ($key in $keys)
         {
-            $keyName = $key
             $keyValue = $resource.$key
-            if ($null -ne $resource.$key -and $resource.$key.getType().Name -like '*cimInstance*')
+            if ($null -ne $resource.$key -and $resource.$key.GetType().Name -like '*cimInstance*')
             {
                 $keyValue = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $resource.$key
                 $resource.$key = $keyValue
@@ -402,7 +387,7 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Updating resource {$DisplayName} in catalog {$CatalogId}"
 
-        $resource = ([Hashtable]$PSBoundParameters).clone()
+        $resource = ([Hashtable]$PSBoundParameters).Clone()
         $ObjectGuid = [System.Guid]::empty
         if (-not [System.Guid]::TryParse($CatalogId, [System.Management.Automation.PSReference]$ObjectGuid))
         {
@@ -418,12 +403,11 @@ function Set-TargetResource
         $resource.Remove('Verbose') | Out-Null
 
         #Preparing embedded Cim Instances
-        $keys = (([Hashtable]$resource).clone()).Keys
+        $keys = (([Hashtable]$resource).Clone()).Keys
         foreach ($key in $keys)
         {
-            $keyName = $key
             $keyValue = $resource.$key
-            if ($null -ne $resource.$key -and $resource.$key.getType().Name -like '*cimInstance*')
+            if ($null -ne $resource.$key -and $resource.$key.GetType().Name -like '*cimInstance*')
             {
                 $keyValue = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $resource.$key
                 $resource.$key = $keyValue
@@ -453,19 +437,18 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Removing resource {$DisplayName} from catalog {$CatalogId}"
 
-        $resource = ([Hashtable]$PSBoundParameters).clone()
+        $resource = ([Hashtable]$PSBoundParameters).Clone()
 
         $resource.Remove('Id') | Out-Null
         $resource.Remove('CatalogId') | Out-Null
         $resource.Remove('Verbose') | Out-Null
 
         #Preparing embedded Cim Instances
-        $keys = (([Hashtable]$resource).clone()).Keys
+        $keys = (([Hashtable]$resource).Clone()).Keys
         foreach ($key in $keys)
         {
-            $keyName = $key
             $keyValue = $resource.$key
-            if ($null -ne $resource.$key -and $resource.$key.getType().Name -like '*cimInstance*')
+            if ($null -ne $resource.$key -and $resource.$key.GetType().Name -like '*cimInstance*')
             {
                 $keyValue = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $resource.$key
                 $resource.$key = $keyValue
@@ -589,7 +572,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $ResourceName `
+                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
                                          -ExcludedProperties @('AddedBy', 'AddedOn', 'IsPendingOnboarding')
     return $result
 }
@@ -771,8 +754,8 @@ function Export-TargetResource
             $i++
         }
 
-        #Removing coma between items in cim instance array
-        $dscContent = $dscContent.replace("            ,`r`n", '')
+        # Removing comma between items in cim instance array
+        $dscContent = $dscContent.Replace("            ,`r`n", '')
         return $dscContent
     }
     catch
@@ -797,4 +780,3 @@ function Export-TargetResource
 }
 
 Export-ModuleMember -Function *-TargetResource
-

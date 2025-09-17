@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_AADConditionalAccessPolicy'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -233,6 +235,10 @@ function Get-TargetResource
         [System.String[]]
         $ServicePrincipalRiskLevels,
 
+        [Parameter()]
+        [System.String[]]
+        $ProtocolFlows,
+
         #generic
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -268,10 +274,11 @@ function Get-TargetResource
         $AccessTokens
     )
 
+    Write-Verbose -Message "Getting configuration of AzureAD Conditional Access Policy for {$DisplayName}"
+
     if (-not $Script:exportedInstance -or $Script:exportedInstance.DisplayName -ne $DisplayName)
     {
-        Write-Verbose -Message 'Getting configuration of AzureAD Conditional Access Policy'
-        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+        $null = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters
 
         #Ensure the proper dependencies are installed in the current environment.
@@ -669,10 +676,16 @@ function Get-TargetResource
         $InsiderRiskLevelsValue = $Policy.Conditions.InsiderRiskLevels.Split(',')
     }
 
-    $ServicePrincipalRiskLevelsValue = $null
-    if (-not [System.String]::IsNullOrEmpty($Policy.Conditions.ServicePrincipalRiskLevels))
+    $ProtocolFlowsValue = @()
+    if ($null -ne $Policy.Conditions.AuthenticationFlows.AdditionalProperties.protocolFlows)
     {
-        $ServicePrincipalRiskLevelsValue = $Policy.Conditions.ServicePrincipalRiskLevels.Split(',')
+        $ProtocolFlowsValue = $Policy.Conditions.AuthenticationFlows.AdditionalProperties.protocolFlows.Split(',')
+    }
+
+    $DisableResilienceDefaultsIsEnabledValue = $null
+    if (-not [System.String]::IsNullOrEmpty($Policy.SessionControls.disableResilienceDefaults.isEnabled))
+    {
+        $DisableResilienceDefaultsIsEnabledValue = [Boolean]::Parse($Policy.SessionControls.disableResilienceDefaults.isEnabled)
     }
 
     $result = @{
@@ -744,24 +757,26 @@ function Get-TargetResource
         #no translation needed
         PersistentBrowserIsEnabled               = $false -or $Policy.SessionControls.PersistentBrowser.IsEnabled
         #no translation needed
-        DisableResilienceDefaultsIsEnabled       = $false -or $Policy.SessionControls.disableResilienceDefaults
+        DisableResilienceDefaultsIsEnabled       = $DisableResilienceDefaultsIsEnabledValue
         #make false if undefined, true if true
         PersistentBrowserMode                    = [System.String]$Policy.SessionControls.PersistentBrowser.Mode
         #no translation needed
         AuthenticationStrength                   = $AuthenticationStrengthValue
         AuthenticationContexts                   = $AuthenticationContextsValues
         TransferMethods                          = [System.String]$Policy.Conditions.AuthenticationFlows.TransferMethods
+        ProtocolFlows                            = $ProtocolFlowsValue
+        #no translation needed, return empty string array if undefined
+        ServicePrincipalRiskLevels               = [System.String[]](@() + $Policy.Conditions.ServicePrincipalRiskLevels)
         #Standard part
         TermsOfUse                               = $termOfUseName
         InsiderRiskLevels                        = $InsiderRiskLevelsValue
-        ServicePrincipalRiskLevels               = $ServicePrincipalRiskLevelsValue
         Ensure                                   = 'Present'
         Credential                               = $Credential
         ApplicationSecret                        = $ApplicationSecret
         ApplicationId                            = $ApplicationId
         TenantId                                 = $TenantId
         CertificateThumbprint                    = $CertificateThumbprint
-        Managedidentity                          = $ManagedIdentity.IsPresent
+        ManagedIdentity                          = $ManagedIdentity.IsPresent
         AccessTokens                             = $AccessTokens
     }
 
@@ -1003,6 +1018,10 @@ function Set-TargetResource
         [System.String[]]
         $ServicePrincipalRiskLevels,
 
+        [Parameter()]
+        [System.String[]]
+        $ProtocolFlows,
+
         #generic
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -1037,7 +1056,8 @@ function Set-TargetResource
         [System.String[]]
         $AccessTokens
     )
-    Write-Verbose -Message 'Setting configuration of AzureAD Conditional Access Policy'
+
+    Write-Verbose -Message "Setting configuration of AzureAD Conditional Access Policy for {$DisplayName}"
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -1051,18 +1071,8 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message 'Set-Targetresource: Running Get-TargetResource'
     $currentPolicy = Get-TargetResource @PSBoundParameters
-    Write-Verbose -Message 'Set-Targetresource: Cleaning up parameters'
-    $currentParameters = $PSBoundParameters
-    $currentParameters.Remove('ApplicationId') | Out-Null
-    $currentParameters.Remove('TenantId') | Out-Null
-    $currentParameters.Remove('CertificateThumbprint') | Out-Null
-    $currentParameters.Remove('ApplicationSecret') | Out-Null
-    $currentParameters.Remove('Ensure') | Out-Null
-    $currentParameters.Remove('Credential') | Out-Null
-    $currentParameters.Remove('ManagedIdentity') | Out-Null
-    $currentParameters.Remove('AccessTokens') | Out-Null
+    $currentParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
     if ($Ensure -eq 'Present')#create policy attribute objects
     {
@@ -1071,7 +1081,6 @@ function Set-TargetResource
         $NewParameters.Add('displayName', $DisplayName)
         $NewParameters.Add('state', $State)
         #create Conditions object
-        Write-Verbose -Message 'Set-Targetresource: create Conditions object'
         $conditions = @{
             applications = @{}
         }
@@ -1592,6 +1601,10 @@ function Set-TargetResource
                     $conditions.platforms.Add('excludePlatforms', @())
                     $conditions.platforms.excludePlatforms = @() + $ExcludePlatforms
                 }
+                else
+                {
+                    $conditions.platforms.Add('excludePlatforms', @())
+                }
                 #no translation or conversion needed
             }
             else
@@ -1638,6 +1651,7 @@ function Set-TargetResource
                                 -Source $($MyInvocation.MyCommand.Source) `
                                 -TenantId $TenantId `
                                 -Credential $Credential
+                            throw $message # and avoid creating or updating a policy with a missing location
                         }
                         else
                         {
@@ -1664,6 +1678,7 @@ function Set-TargetResource
                                 -Source $($MyInvocation.MyCommand.Source) `
                                 -TenantId $TenantId `
                                 -Credential $Credential
+                            throw $message # and avoid creating or updating a policy with a missing location
                         }
                         else
                         {
@@ -1722,9 +1737,9 @@ function Set-TargetResource
             $conditions.Add('insiderRiskLevels', $($InsiderRiskLevels -join ','))
         }
 
-        if ([String]::IsNullOrEmpty($ServicePrincipalRiskLevels) -eq $false)
+        if ($ServicePrincipalRiskLevels -is [string[]] -and $ServicePrincipalRiskLevels.Count -gt 0)
         {
-            $conditions.Add('servicePrincipalRiskLevels', $($ServicePrincipalRiskLevels -join ','))
+            $conditions.Add('servicePrincipalRiskLevels', $ServicePrincipalRiskLevels)
         }
 
         Write-Verbose -Message 'Set-Targetresource: process risk levels and app types'
@@ -1751,19 +1766,28 @@ function Set-TargetResource
             #no translation or conversion needed
         }
 
-        Write-Verbose -Message "Set-Targetresource: authenticationFlows transferMethods: $TransferMethods"
-        if ($currentParameters.ContainsKey('TransferMethods'))
+        Write-Verbose -Message "Set-TargetResource: authenticationFlows transferMethods: $TransferMethods"
+        if ($currentParameters.ContainsKey('TransferMethods') -or `
+            $currentParameters.ContainsKey('ProtocolFlows'))
         {
             #create and provision TransferMethods condition object if used
-            $authenticationFlows = if ([System.String]::IsNullOrEmpty($TransferMethods))
+            $authenticationFlows = if ([System.String]::IsNullOrEmpty($TransferMethods) -and [System.String]::IsNullOrEmpty($ProtocolFlows))
             {
                 $null
             }
             else
             {
-                @{
-                    transferMethods = $TransferMethods
+                $value = @{}
+
+                if (-not [System.String]::IsNullOrEmpty($TransferMethods))
+                {
+                    $value.Add('transferMethods', $TransferMethods)
                 }
+                if (-not [System.String]::IsNullOrEmpty($ProtocolFlows))
+                {
+                    $value.Add('protocolFlows', $ProtocolFlows -join ',')
+                }
+                $value
             }
             if (-not $conditions.Contains('authenticationFlows'))
             {
@@ -1773,7 +1797,6 @@ function Set-TargetResource
             {
                 $conditions.authenticationFlows = $authenticationFlows
             }
-
         }
         Write-Verbose -Message 'Set-Targetresource: Adding processed conditions'
         #add all conditions to the parameter list
@@ -1888,7 +1911,7 @@ function Set-TargetResource
                 $sessioncontrols.persistentBrowser.isEnabled = $true
                 $sessioncontrols.persistentBrowser.mode = $PersistentBrowserMode
             }
-            if ($null -ne $DisableResilienceDefaultsIsEnabled)
+            if (-not [System.String]::IsNullOrEmpty($DisableResilienceDefaultsIsEnabled))
             {
                 $sessioncontrols.Add('disableResilienceDefaults', $DisableResilienceDefaultsIsEnabled)
             }
@@ -2211,6 +2234,10 @@ function Test-TargetResource
         [System.String[]]
         $ServicePrincipalRiskLevels,
 
+        [Parameter()]
+        [System.String[]]
+        $ProtocolFlows,
+
         #generic
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -2256,7 +2283,7 @@ function Test-TargetResource
     #endregion
 
     $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
-                                         -ResourceName $ResourceName
+                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
     return $result
 }
 
@@ -2343,7 +2370,7 @@ function Export-TargetResource
                     ApplicationSecret     = $ApplicationSecret
                     CertificateThumbprint = $CertificateThumbprint
                     Credential            = $Credential
-                    Managedidentity       = $ManagedIdentity.IsPresent
+                    ManagedIdentity       = $ManagedIdentity.IsPresent
                     AccessTokens          = $AccessTokens
                 }
                 $Script:exportedInstance = $Policy
@@ -2384,4 +2411,3 @@ function Export-TargetResource
 }
 
 Export-ModuleMember -Function *-TargetResource
-

@@ -1,0 +1,37 @@
+{
+  "resourceName": "IntuneWindowsBackupForOrganizationConfiguration",
+  "description": "This resource configures an Intune Windows Backup For Organization Configuration.",
+  "permissions": {
+    "graph": {
+      "application": {
+        "update": [
+          {
+            "name": "DeviceManagementServiceConfig.ReadWrite.All"
+          }
+        ],
+        "read": [
+          {
+            "name": "DeviceManagementServiceConfig.Read.All"
+          }
+        ]
+      },
+      "delegated": {
+        "update": [
+          {
+            "name": "DeviceManagementConfiguration.ReadWrite.All"
+          }
+        ],
+        "read": [
+          {
+            "name": "DeviceManagementConfiguration.Read.All"
+          }
+        ]
+      }
+    }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.DeviceManagement.Enrollment"
+  ],
+  "mode": "Configuration"
+}

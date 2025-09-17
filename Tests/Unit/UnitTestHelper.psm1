@@ -44,7 +44,9 @@ function New-M365DscUnitTestHelper
         $moduleToLoad = Join-Path -Path $moduleRoot -ChildPath $modulePath
     }
 
-    Import-Module -Name $moduleToLoad -Global
+    $Global:SkipModuleValidation = $true
+
+    Import-Module -Name $moduleToLoad -Global -Force
 
     $initScript = @"
             Remove-Module -Name "AzureAD" -Force -ErrorAction SilentlyContinue

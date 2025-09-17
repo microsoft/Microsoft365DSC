@@ -4,7 +4,7 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **Id** | Write | String | The unique idenfier for an entity. Read-only. | |
+| **Id** | Write | String | The unique identifier for an entity. Read-only. | |
 | **Description** | Write | String | Description of the Role Assignment. | |
 | **DisplayName** | Key | String | The display or friendly name of the role Assignment. | |
 | **ResourceScopes** | Write | StringArray[] | List of ids of role scope member security groups. These are IDs from Azure Active Directory. Ignored if ScopeType is not 'ResourceScope' | |

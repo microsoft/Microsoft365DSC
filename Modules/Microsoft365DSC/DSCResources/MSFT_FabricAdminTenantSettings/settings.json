@@ -1,24 +1,25 @@
-﻿{
-    "resourceName": "FabricAdminTenantSettings",
-    "description": "This resource configures the tenant settings for Microsoft Fabric.",
-    "roles": {
-        "read": [
-            "Global Reader"
-        ],
-        "update": [
-            "Fabric Administrator"
-        ]
-    },
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [],
-                "update": []
-            },
-            "application": {
-                "read": [],
-                "update": []
-            }
-        }
+{
+  "resourceName": "FabricAdminTenantSettings",
+  "description": "This resource configures the tenant settings for Microsoft Fabric.",
+  "roles": {
+    "read": [
+      "Global Reader"
+    ],
+    "update": []
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [],
+        "update": []
+      },
+      "application": {
+        "read": [],
+        "update": []
+      }
     }
+  },
+  "requiredModules": [
+    "MSCloudLoginAssistant"
+  ]
 }

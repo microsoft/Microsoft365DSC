@@ -1,32 +1,40 @@
-﻿{
-    "resourceName": "AADRemoteNetwork",
-    "description": "Use this resource to manage the Entra's Network Access Remote Networks, and related Device links.",
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [
-                    {
-                        "name": "NetworkAccess.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "NetworkAccess.ReadWrite.All"
-                    }
-                ]
-            },
-            "application": {
-                "read": [
-                    {
-                        "name": "NetworkAccess.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "NetworkAccess.ReadWrite.All"
-                    }
-                ]
-            }
-        }
+{
+  "resourceName": "AADRemoteNetwork",
+  "description": "Use this resource to manage the Entra's Network Access Remote Networks, and related Device links.",
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "NetworkAccess.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "NetworkAccess.ReadWrite.All"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "NetworkAccess.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "NetworkAccess.ReadWrite.All"
+          }
+        ]
+      }
     }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.NetworkAccess",
+    "MSCloudLoginAssistant"
+  ],
+  "supportedEnvironments": [
+    "Global"
+  ]
 }

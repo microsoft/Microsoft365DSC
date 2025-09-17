@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_SPOTenantCdnEnabled'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -57,26 +59,29 @@ function Get-TargetResource
 
     try
     {
-        Write-Verbose -Message 'Getting configuration of SPO Cdn enabled'
+        Write-Verbose -Message 'Getting configuration of SPO Tenant Cdn Enabled'
 
-        $ConnectionMode = New-M365DSCConnection -Workload 'PNP' `
-            -InboundParameters $PSBoundParameters
+        if (-not $Script:ExportMode)
+        {
+            $null = New-M365DSCConnection -Workload 'PNP' `
+                -InboundParameters $PSBoundParameters
+
+            # Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+        }
 
         $nullResult = @{
             CdnType = $CdnType
         }
-
-        #Ensure the proper dependencies are installed in the current environment.
-        Confirm-M365DSCDependencies
-
-        #region Telemetry
-        $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-        $CommandName = $MyInvocation.MyCommand
-        $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-            -CommandName $CommandName `
-            -Parameters $PSBoundParameters
-        Add-M365DSCTelemetryEvent -Data $data
-        #endregion
 
         $cdnEnabled = Get-PnPTenantCdnEnabled -CdnType $CdnType `
             -ErrorAction Stop
@@ -91,7 +96,7 @@ function Get-TargetResource
             CertificatePassword   = $CertificatePassword
             CertificatePath       = $CertificatePath
             CertificateThumbprint = $CertificateThumbprint
-            Managedidentity       = $ManagedIdentity.IsPresent
+            ManagedIdentity       = $ManagedIdentity.IsPresent
             AccessTokens          = $AccessTokens
         }
         return $result
@@ -354,6 +359,8 @@ function Export-TargetResource
 
         $i = 1
         Write-M365DSCHost -Message "`r`n" -DeferWrite
+
+        $Script:ExportMode = $true
         foreach ($cType in $cdnTypes)
         {
             if ($null -ne $Global:M365DSCExportResourceInstancesCount)
@@ -371,7 +378,7 @@ function Export-TargetResource
                 CertificatePassword   = $CertificatePassword
                 CertificatePath       = $CertificatePath
                 CertificateThumbprint = $CertificateThumbprint
-                Managedidentity       = $ManagedIdentity.IsPresent
+                ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }
 
@@ -421,3 +428,4 @@ function Export-TargetResource
 }
 
 Export-ModuleMember -Function *-TargetResource
+

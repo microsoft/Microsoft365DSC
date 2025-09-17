@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_EXOSafeAttachmentPolicy'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -76,15 +78,16 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration of SafeAttachmentPolicy for $Identity"
+
     if ($Global:CurrentModeIsExport)
     {
-        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters `
             -SkipModuleReload $true
     }
     else
     {
-        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters
     }
 
@@ -130,7 +133,7 @@ function Get-TargetResource
                 CertificateThumbprint = $CertificateThumbprint
                 CertificatePath       = $CertificatePath
                 CertificatePassword   = $CertificatePassword
-                Managedidentity       = $ManagedIdentity.IsPresent
+                ManagedIdentity       = $ManagedIdentity.IsPresent
                 TenantId              = $TenantId
                 AccessTokens          = $AccessTokens
             }
@@ -241,20 +244,12 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+    $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
-    $SafeAttachmentPolicyParams = [System.Collections.Hashtable]($PSBoundParameters)
-    $SafeAttachmentPolicyParams.Remove('Ensure') | Out-Null
-    $SafeAttachmentPolicyParams.Remove('Credential') | Out-Null
-    $SafeAttachmentPolicyParams.Remove('ApplicationId') | Out-Null
+    $SafeAttachmentPolicyParams = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
     $tenantIdValue = $TenantId
     $SafeAttachmentPolicyParams.Remove('TenantId') | Out-Null
-    $SafeAttachmentPolicyParams.Remove('CertificateThumbprint') | Out-Null
-    $SafeAttachmentPolicyParams.Remove('CertificatePath') | Out-Null
-    $SafeAttachmentPolicyParams.Remove('CertificatePassword') | Out-Null
-    $SafeAttachmentPolicyParams.Remove('ManagedIdentity') | Out-Null
-    $SafeAttachmentPolicyParams.Remove('AccessTokens') | Out-Null
 
     $SafeAttachmentPolicies = Get-SafeAttachmentPolicy
 
@@ -503,6 +498,7 @@ function Export-TargetResource
         [System.String[]]
         $AccessTokens
     )
+
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
         -SkipModuleReload $true
@@ -549,7 +545,7 @@ function Export-TargetResource
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                     CertificatePassword   = $CertificatePassword
-                    Managedidentity       = $ManagedIdentity.IsPresent
+                    ManagedIdentity       = $ManagedIdentity.IsPresent
                     CertificatePath       = $CertificatePath
                     AccessTokens          = $AccessTokens
                 }

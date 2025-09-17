@@ -6,7 +6,7 @@
 | --- | --- | --- | --- | --- |
 | **SpaceName** | Key | String | Name of the associated Services Hub space. | |
 | **GroupName** | Key | String | Name of the group. | |
-| **Roles** | Write | StringArray[] | List of roles associated with the group. | |
+| **Roles** | Write | StringArray[] | List of roles associated with the group. Accepted values are: CustomerActivityPagePermissionRole, HealthPermissionRole, InviteUsersPermissionRole, PlansPermissionRole, SharedFilesPermissionRole, SupportCasePermissionRole, TrainingManager, TrainingPermissionRole, WorkspaceAdministratorRole. Role Account manager,IncidentManagerUnified,CSMAdministrator, ContractSupportUser are read-only and inherited from the upstream system and cannot be modified. | |
 | **Ensure** | Write | String | Present ensures the instance exists, absent ensures it is removed. | `Absent`, `Present` |
 | **Credential** | Write | PSCredential | Credentials of the workload's Admin | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |

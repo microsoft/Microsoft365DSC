@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_PPDLPPolicyConnectorConfigurations'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -128,7 +130,7 @@ function Get-TargetResource
             ManagedIdentity               = $ManagedIdentity.IsPresent
             AccessTokens                  = $AccessTokens
         }
-        return [System.Collections.Hashtable] $results
+        return $results
     }
     catch
     {
@@ -417,13 +419,13 @@ function Export-TargetResource
         $uri = "https://" + (Get-MSCloudLoginConnectionProfile -Workload 'PowerPlatformREST').BapEndpoint + `
                "/providers/Microsoft.BusinessAppPlatform/scopes/admin/apiPolicies?api-version=2016-11-01"
 
-        [array]$policies = Invoke-M365DSCPowerPlatformRESTWebRequest -Uri $uri -Method 'GET'
+        [array]$policies = (Invoke-M365DSCPowerPlatformRESTWebRequest -Uri $uri -Method 'GET').value
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters
         $tenantinfo = (Get-MgContext)
 
         $dscContent = ''
-        if ($policies.Length -eq 0)
+        if ($policies.Count -eq 0)
         {
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
@@ -432,13 +434,13 @@ function Export-TargetResource
             Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
         $i = 1
-        foreach ($policy in $policies.value)
+        foreach ($policy in $policies)
         {
             if ($null -ne $Global:M365DSCExportResourceInstancesCount)
             {
                 $Global:M365DSCExportResourceInstancesCount++
             }
-            Write-M365DSCHost -Message "    |---[$i/$($policies.value.Count)] $($policy.properties.DisplayName)" -DeferWrite
+            Write-M365DSCHost -Message "    |---[$i/$($policies.Count)] $($policy.properties.DisplayName)" -DeferWrite
             $params = @{
                 PPTenantId            = $tenantInfo.TenantId
                 PolicyName            = $policy.properties.displayName
@@ -506,3 +508,4 @@ function Export-TargetResource
 }
 
 Export-ModuleMember -Function *-TargetResource
+

@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_EXODataEncryptionPolicy'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -69,17 +71,18 @@ function Get-TargetResource
         [System.String[]]
         $AccessTokens
     )
+
     Write-Verbose -Message "Getting Data encryption policy for $($Identity)"
 
     if ($Global:CurrentModeIsExport)
     {
-        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters `
             -SkipModuleReload $true
     }
     else
     {
-        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters
     }
 
@@ -124,7 +127,7 @@ function Get-TargetResource
                 CertificateThumbprint     = $CertificateThumbprint
                 CertificatePath           = $CertificatePath
                 CertificatePassword       = $CertificatePassword
-                Managedidentity           = $ManagedIdentity.IsPresent
+                ManagedIdentity           = $ManagedIdentity.IsPresent
                 TenantId                  = $TenantId
                 AccessTokens              = $AccessTokens
             }
@@ -216,6 +219,9 @@ function Set-TargetResource
         [System.String[]]
         $AccessTokens
     )
+
+    Write-Verbose -Message "Setting configuration of Data encryption policy for $($Identity)"
+
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
@@ -228,23 +234,12 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Setting configuration of Data encryption policy for $($Identity)"
-
-    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+    $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
     $DataEncryptionPolicies = Get-DataEncryptionPolicy
     $DataEncryptionPolicy = $DataEncryptionPolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }
-    $DataEncryptionPolicyParams = [System.Collections.Hashtable]($PSBoundParameters)
-    $DataEncryptionPolicyParams.Remove('Ensure') | Out-Null
-    $DataEncryptionPolicyParams.Remove('Credential') | Out-Null
-    $DataEncryptionPolicyParams.Remove('ApplicationId') | Out-Null
-    $DataEncryptionPolicyParams.Remove('TenantId') | Out-Null
-    $DataEncryptionPolicyParams.Remove('CertificateThumbprint') | Out-Null
-    $DataEncryptionPolicyParams.Remove('CertificatePath') | Out-Null
-    $DataEncryptionPolicyParams.Remove('CertificatePassword') | Out-Null
-    $DataEncryptionPolicyParams.Remove('ManagedIdentity') | Out-Null
-    $DataEncryptionPolicyParams.Remove('AccessTokens') | Out-Null
+    $DataEncryptionPolicyParams = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
     if (('Present' -eq $Ensure ) -and ($null -eq $DataEncryptionPolicy))
     {
@@ -406,6 +401,7 @@ function Export-TargetResource
         [System.String[]]
         $AccessTokens
     )
+
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
         -SkipModuleReload $true
@@ -453,7 +449,7 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
                 CertificatePassword   = $CertificatePassword
-                Managedidentity       = $ManagedIdentity.IsPresent
+                ManagedIdentity       = $ManagedIdentity.IsPresent
                 CertificatePath       = $CertificatePath
                 AccessTokens          = $AccessTokens
             }

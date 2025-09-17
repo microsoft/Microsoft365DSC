@@ -32,7 +32,7 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - Policy.ReadWrite.AuthenticationMethod
+    - Policy.Read.AuthenticationMethod
 
 - **Update**
 
@@ -42,7 +42,7 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - Policy.ReadWrite.AuthenticationMethod
+    - Policy.Read.AuthenticationMethod
 
 - **Update**
 

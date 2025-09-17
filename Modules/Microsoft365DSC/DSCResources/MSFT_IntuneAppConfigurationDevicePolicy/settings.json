@@ -40,5 +40,13 @@
         ]
       }
     }
-  }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.Devices.CorporateManagement"
+  ],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ]
 }

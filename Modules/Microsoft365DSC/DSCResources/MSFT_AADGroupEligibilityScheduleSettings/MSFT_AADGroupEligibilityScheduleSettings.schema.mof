@@ -65,15 +65,15 @@ class MSFT_AADRoleManagementPolicyAuthenticationContextRule
 [ClassVersion("1.0.0.0"), FriendlyName("AADGroupEligibilityScheduleSettings")]
 class MSFT_AADGroupEligibilityScheduleSettings : OMI_BaseResource
 {
-    [Key, Description("The unique identifier for an entity. Read-only.")] String id;
-    [Key, Description("Group display name.")] String groupDisplayName;
-    [Write, Description("Rule Type.")] String ruleType;
+    [Key, Description("The unique identifier for an entity. Read-only.")] String Id;
+    [Key, Description("Group display name.")] String GroupDisplayName;
+    [Write, Description("Rule Type.")] String RuleType;
     [Key, Description("PIM Group Role."), ValueMap{"member","owner"}, Values{"member","owner"}] string PIMGroupRole;
-    [Write, Description("Expiration Rule."), EmbeddedInstance("MSFT_AADRoleManagementPolicyExpirationRule")] String expirationRule;
-    [Write, Description("Notification Rule."), EmbeddedInstance("MSFT_AADRoleManagementPolicyNotificationRule")] String notificationRule;
-    [Write, Description("Enablement Rule."), EmbeddedInstance("MSFT_AADRoleManagementPolicyEnablementRule")] String enablementRule;
-    [Write, Description("Approval Rule."), EmbeddedInstance("MSFT_AADRoleManagementPolicyApprovalRule")] String approvalRule;
-    [Write, Description("Authentication Context Rule."), EmbeddedInstance("MSFT_AADRoleManagementPolicyAuthenticationContextRule")] String authenticationContextRule;
+    [Write, Description("Expiration Rule."), EmbeddedInstance("MSFT_AADRoleManagementPolicyExpirationRule")] String ExpirationRule;
+    [Write, Description("Notification Rule."), EmbeddedInstance("MSFT_AADRoleManagementPolicyNotificationRule")] String NotificationRule;
+    [Write, Description("Enablement Rule."), EmbeddedInstance("MSFT_AADRoleManagementPolicyEnablementRule")] String EnablementRule;
+    [Write, Description("Approval Rule."), EmbeddedInstance("MSFT_AADRoleManagementPolicyApprovalRule")] String ApprovalRule;
+    [Write, Description("Authentication Context Rule."), EmbeddedInstance("MSFT_AADRoleManagementPolicyAuthenticationContextRule")] String AuthenticationContextRule;
     [Write, Description("Credentials of the Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
     [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;

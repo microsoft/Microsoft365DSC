@@ -1,20 +1,38 @@
-﻿{
-    "resourceName": "DefenderSubscriptionPlan",
-    "description": "Enables or disables Microsoft Defender plans for a subscription in Microsoft Defender for Cloud.",
-    "roles": {
+{
+  "resourceName": "DefenderSubscriptionPlan",
+  "description": "Enables or disables Microsoft Defender plans for a subscription in Microsoft Defender for Cloud.",
+  "roles": {
+    "read": [],
+    "update": []
+  },
+  "permissions": {
+    "Azure Service Management": {
+      "delegated": {
+        "read": [
+          {
+            "name": "user_impersonation"
+          }
+        ],
+        "update": [
+          {
+            "name": "user_impersonation"
+          }
+        ]
+      },
+      "application": {
         "read": [],
         "update": []
+      }
     },
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [],
-                "update": []
-            },
-            "application": {
-                "read": [],
-                "update": []
-            }
-        }
+    "azure": {
+      "requiredRoles": [
+        "Security Reader",
+        "Security Admin"
+      ]
     }
+  },
+  "requiredModules": [
+    "Az.Accounts",
+    "Az.Security"
+  ]
 }

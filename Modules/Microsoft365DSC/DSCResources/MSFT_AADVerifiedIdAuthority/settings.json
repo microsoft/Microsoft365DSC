@@ -1,16 +1,21 @@
 {
-    "resourceName": "AADVerifiedIdAuthority",
-    "description": "This resource configures an Azure AD Verified Identity Authority.",
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [],
-                "update": []
-            },
-            "application": {
-                "read": [],
-                "update": []
-            }
-        }
+  "resourceName": "AADVerifiedIdAuthority",
+  "description": "This resource configures an Azure AD Verified Identity Authority.",
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [],
+        "update": []
+      },
+      "application": {
+        "read": [],
+        "update": []
+      }
     }
+  },
+  "requiredModules": [],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ]
 }

@@ -1,38 +1,73 @@
-﻿{
-    "resourceName": "AADServicePrincipal",
-    "description": "This resource configures an Azure Active Directory ServicePrincipal.",
-    "roles": {
-        "read": [],
+{
+  "resourceName": "AADServicePrincipal",
+  "description": "This resource configures an Azure Active Directory ServicePrincipal.",
+  "roles": {
+    "read": [],
+    "update": [
+      "Application Administrator"
+    ]
+  },
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "Application.Read.All"
+          },
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "User.Read.All"
+          }
+        ],
         "update": [
-            "Application Administrator"
+          {
+            "name": "Application.ReadWrite.All"
+          },
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "User.Read.All"
+          }
         ]
-    },
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [
-                    {
-                        "name": "Application.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Application.ReadWrite.All"
-                    }
-                ]
-            },
-            "application": {
-                "read": [
-                    {
-                        "name": "Application.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Application.ReadWrite.All"
-                    }
-                ]
-            }
-        }
+      },
+      "application": {
+        "read": [
+          {
+            "name": "Application.Read.All"
+          },
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "User.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Application.ReadWrite.All"
+          },
+          {
+            "name": "Group.Read.All"
+          },
+          {
+            "name": "User.Read.All"
+          }
+        ]
+      }
     }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Applications",
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Groups",
+    "Microsoft.Graph.Users",
+    "MSCloudLoginAssistant"
+  ],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ]
 }

@@ -1,70 +1,78 @@
-﻿{
-    "resourceName": "SPOHubSite",
-    "description": "",
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [
-                    {
-                        "name": "Domain.Read.All"
-                    },
-                    {
-                        "name": "Group.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Domain.Read.All"
-                    },
-                    {
-                        "name": "Group.Read.All"
-                    }
-                ]
-            },
-            "application": {
-                "read": [
-                    {
-                        "name": "Domain.Read.All"
-                    },
-                    {
-                        "name": "Group.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Domain.Read.All"
-                    },
-                    {
-                        "name": "Group.Read.All"
-                    }
-                ]
-            }
-        },
-        "sharepoint": {
-            "delegated": {
-                "read": [
-                    {
-                        "name": "Sites.FullControl.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Sites.FullControl.All"
-                    }
-                ]
-            },
-            "application": {
-                "read": [
-                    {
-                        "name": "Sites.FullControl.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "Sites.FullControl.All"
-                    }
-                ]
-            }
-        }
+{
+  "resourceName": "SPOHubSite",
+  "description": "",
+  "permissions": {
+    "graph": {
+      "delegated": {
+        "read": [
+          {
+            "name": "Domain.Read.All"
+          },
+          {
+            "name": "Group.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Domain.Read.All"
+          },
+          {
+            "name": "Group.Read.All"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "Domain.Read.All"
+          },
+          {
+            "name": "Group.Read.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Domain.Read.All"
+          },
+          {
+            "name": "Group.Read.All"
+          }
+        ]
+      }
+    },
+    "sharepoint": {
+      "delegated": {
+        "read": [
+          {
+            "name": "Sites.FullControl.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Sites.FullControl.All"
+          }
+        ]
+      },
+      "application": {
+        "read": [
+          {
+            "name": "Sites.FullControl.All"
+          }
+        ],
+        "update": [
+          {
+            "name": "Sites.FullControl.All"
+          }
+        ]
+      }
     }
+  },
+  "requiredModules": [
+    "Microsoft.Graph.Groups",
+    "PnP.PowerShell"
+  ],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ]
 }

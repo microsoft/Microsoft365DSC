@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_EXORemoteDomain'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -139,17 +141,18 @@ function Get-TargetResource
         [System.String[]]
         $AccessTokens
     )
+
     Write-Verbose -Message "Getting configuration of Remote Domain for $Identity"
 
     if ($Global:CurrentModeIsExport)
     {
-        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters `
             -SkipModuleReload $true
     }
     else
     {
-        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters
     }
 
@@ -208,7 +211,7 @@ function Get-TargetResource
                 CertificateThumbprint                = $CertificateThumbprint
                 CertificatePath                      = $CertificatePath
                 CertificatePassword                  = $CertificatePassword
-                Managedidentity                      = $ManagedIdentity.IsPresent
+                ManagedIdentity                      = $ManagedIdentity.IsPresent
                 TenantId                             = $TenantId
                 AccessTokens                         = $AccessTokens
             }
@@ -385,19 +388,10 @@ function Set-TargetResource
 
     $currentRemoteDomainConfig = Get-TargetResource @PSBoundParameters
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+    $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
-    $RemoteDomainParams = [System.Collections.Hashtable]($PSBoundParameters)
-    $RemoteDomainParams.Remove('Credential') | Out-Null
-    $RemoteDomainParams.Remove('Ensure') | Out-Null
-    $RemoteDomainParams.Remove('ApplicationId') | Out-Null
-    $RemoteDomainParams.Remove('TenantId') | Out-Null
-    $RemoteDomainParams.Remove('CertificateThumbprint') | Out-Null
-    $RemoteDomainParams.Remove('CertificatePath') | Out-Null
-    $RemoteDomainParams.Remove('CertificatePassword') | Out-Null
-    $RemoteDomainParams.Remove('ManagedIdentity') | Out-Null
-    $RemoteDomainParams.Remove('AccessTokens') | Out-Null
+    $RemoteDomainParams = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
     # CASE: Remote Domain doesn't exist but should;
     if ($Ensure -eq 'Present' -and $currentRemoteDomainConfig.Ensure -eq 'Absent')
@@ -650,6 +644,7 @@ function Export-TargetResource
         [System.String[]]
         $AccessTokens
     )
+
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
         -SkipModuleReload $true
@@ -697,7 +692,7 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
                 CertificatePassword   = $CertificatePassword
-                Managedidentity       = $ManagedIdentity.IsPresent
+                ManagedIdentity       = $ManagedIdentity.IsPresent
                 CertificatePath       = $CertificatePath
                 AccessTokens          = $AccessTokens
             }
@@ -730,4 +725,3 @@ function Export-TargetResource
 }
 
 Export-ModuleMember -Function *-TargetResource
-

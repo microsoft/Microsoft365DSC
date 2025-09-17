@@ -11,6 +11,9 @@
 | **InternetExplorerIntegrationReloadInIEModeAllowed** | Write | String | Allow unconfigured sites to be reloaded in Internet Explorer mode (0: Disabled, 1: Enabled) | `0`, `1` |
 | **SSLErrorOverrideAllowed** | Write | String | Allow users to proceed from the HTTPS warning page (0: Disabled, 1: Enabled) | `0`, `1` |
 | **InternetExplorerIntegrationZoneIdentifierMhtFileAllowed** | Write | String | Automatically open downloaded MHT or MHTML files from the web in Internet Explorer mode (0: Disabled, 1: Enabled) | `0`, `1` |
+| **edge_DynamicCodeSettings** | Write | String | Dynamic Code Settings (0: Disabled, 1: Enabled) | `0`, `1` |
+| **DynamicCodeSettings_DynamicCodeSettings** | Write | String | Dynamic Code Settings (Device) - Depends on edge_DynamicCodeSettings (0: Default dynamic code settings, 1: Prevent the browser process from creating dynamic code) | `0`, `1` |
+| **ApplicationBoundEncryptionEnabled** | Write | String | Enable Application Bound Encryption (0: Disabled, 1: Enabled) | `0`, `1` |
 | **BrowserLegacyExtensionPointsBlockingEnabled** | Write | String | Enable browser legacy extension point blocking (0: Disabled, 1: Enabled) | `0`, `1` |
 | **SitePerProcess** | Write | String | Enable site isolation for every site (0: Disabled, 1: Enabled) | `0`, `1` |
 | **EdgeEnhanceImagesEnabled** | Write | String | Enhance images enabled (0: Disabled, 1: Enabled) | `0`, `1` |
@@ -48,6 +51,7 @@
 | **dataType** | Write | String | The type of the target assignment. | `#microsoft.graph.groupAssignmentTarget`, `#microsoft.graph.allLicensedUsersAssignmentTarget`, `#microsoft.graph.allDevicesAssignmentTarget`, `#microsoft.graph.exclusionGroupAssignmentTarget`, `#microsoft.graph.configurationManagerCollectionAssignmentTarget` |
 | **deviceAndAppManagementAssignmentFilterType** | Write | String | The type of filter of the target assignment i.e. Exclude or Include. Possible values are:none, include, exclude. | `none`, `include`, `exclude` |
 | **deviceAndAppManagementAssignmentFilterId** | Write | String | The Id of the filter for the target assignment. | |
+| **deviceAndAppManagementAssignmentFilterDisplayName** | Write | String | The display name of the filter for the target assignment. | |
 | **groupId** | Write | String | The group Id that is the target of the assignment. | |
 | **groupDisplayName** | Write | String | The group Display Name that is the target of the assignment. | |
 | **collectionId** | Write | String | The collection Id that is the target of the assignment.(ConfigMgr) | |

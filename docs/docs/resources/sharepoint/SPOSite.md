@@ -55,7 +55,7 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - Application.Read.All, Domain.Read.All
+    - Domain.Read.All
 
 - **Update**
 
@@ -65,7 +65,7 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - Application.Read.All, Domain.Read.All
+    - Domain.Read.All
 
 - **Update**
 

@@ -1,0 +1,53 @@
+{
+  "resourceName":"IntuneDeviceComplianceNotificationMessageTemplate",
+  "description":"This resource configures an Intune Device Compliance Notification Message Template.",
+  "permissions":{
+    "graph":{
+      "delegated":{
+        "read":[
+          {
+            "name":"DeviceManagementServiceConfig.Read.All"
+          },
+          {
+            "name":"Group.Read.All"
+          }
+        ],
+        "update":[
+          {
+            "name":"DeviceManagementServiceConfig.ReadWrite.All"
+          },
+          {
+            "name":"Group.Read.All"
+          }
+        ]
+      },
+      "application":{
+        "read":[
+          {
+            "name":"DeviceManagementServiceConfig.Read.All"
+          },
+          {
+            "name":"Group.Read.All"
+          }
+        ],
+        "update":[
+          {
+            "name":"DeviceManagementServiceConfig.ReadWrite.All"
+          },
+          {
+            "name":"Group.Read.All"
+          }
+        ]
+      }
+    }
+  },
+  "requiredModules":[
+    "Microsoft.Graph.Authentication",
+    "Microsoft.Graph.Beta.DeviceManagement"
+  ],
+  "mode":"Configuration",
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ]
+}

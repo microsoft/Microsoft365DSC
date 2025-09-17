@@ -8,6 +8,8 @@
 | **DisplayName** | Required | String | Name of the access review series. Supports $select and $orderby. Required on create. | |
 | **DescriptionForAdmins** | Write | String | Description provided by review creators to provide more context of the review to admins. Supports $select. | |
 | **DescriptionForReviewers** | Write | String | Description provided  by review creators to provide more context of the review to reviewers. Reviewers see this description in the email sent to them requesting their review. Email notifications support up to 256 characters. Supports $select. | |
+| **FallbackReviewers** | Write | MSFT_AADAccessReviewDefinitionReviewer[] | The fallback reviewers of the access review. | |
+| **Reviewers** | Write | MSFT_AADAccessReviewDefinitionReviewer[] | The reviewers of the access review. | |
 | **ScopeValue** | Write | MSFT_MicrosoftGraphaccessReviewScope | Defines the entities whose access is reviewed. For supported scopes, see accessReviewScope. Required on create. Supports $select and $filter (contains only). For examples of options for configuring scope, see Configure the scope of your access review definition using the Microsoft Graph API. | |
 | **SettingsValue** | Write | MSFT_MicrosoftGraphaccessReviewScheduleSettings | The settings for an access review series, see type definition below. Supports $select. Required on create. | |
 | **StageSettings** | Write | MSFT_MicrosoftGraphaccessReviewStageSettings[] | Required only for a multi-stage access review to define the stages and their settings. You can break down each review instance into up to three sequential stages, where each stage can have a different set of reviewers, fallback reviewers, and settings. Stages are created sequentially based on the dependsOn property. Optional.  When this property is defined, its settings are used instead of the corresponding settings in the accessReviewScheduleDefinition object and its settings, reviewers, and fallbackReviewers properties. | |
@@ -117,8 +119,17 @@
 | **DurationInDays** | Write | UInt32 | The duration of the stage. Required.  NOTE: The cumulative value of this property across all stages  1. Will override the instanceDurationInDays setting on the accessReviewScheduleDefinition object. 2. Can't exceed the length of one recurrence. That is, if the review recurs weekly, the cumulative durationInDays can't exceed 7. | |
 | **RecommendationInsightSettings** | Write | MSFT_MicrosoftGraphAccessReviewRecommendationInsightSetting[] | Recommendation Insights Settings | |
 | **RecommendationLookBackDuration** | Write | String | Optional field. Indicates the time period of inactivity (with respect to the start date of the review instance) from which that recommendations will be configured. The recommendation is to deny if the user is inactive during the look back duration. For reviews of groups and Microsoft Entra roles, any duration is accepted. For reviews of applications, 30 days is the maximum duration. If not specified, the duration is 30 days. NOTE: The value of this property overrides the corresponding setting on the accessReviewScheduleDefinition object. | |
-| **RecommendationsEnabled** | Write | Boolean | Indicates whether showing recommendations to reviewers is enabled. Required. NOTE: The value of this property overrides the corresponding setting on the accessReviewScheduleDefinition object. | |
+| **RecommendationsEnabled** | Required | Boolean | Indicates whether showing recommendations to reviewers is enabled. Required. NOTE: The value of this property overrides the corresponding setting on the accessReviewScheduleDefinition object. | |
 | **StageId** | Write | String | Unique identifier of the accessReviewStageSettings. The stageId is used in dependsOn property to indicate the stage relationship. Required. | |
+
+### MSFT_AADAccessReviewDefinitionReviewer
+
+#### Parameters
+
+| Parameter | Attribute | DataType | Description | Allowed Values |
+| --- | --- | --- | --- | --- |
+| **DisplayName** | Write | String | Indicates the display name of the current reviewer, either of a group or of a user. | |
+| **Type** | Write | String | Indicates the type of reviewer. Possible values: Manager, Owner, User, Group | `Manager`, `Owner`, `User`, `Group` |
 
 
 ## Description
@@ -139,7 +150,7 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Update**
 
-    - None
+    - AccessReview.ReadWrite.All
 
 #### Application permissions
 
@@ -149,7 +160,7 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Update**
 
-    - None
+    - AccessReview.ReadWrite.All
 
 ## Examples
 
@@ -186,6 +197,21 @@ Configuration Example
             DisplayName             = "Test Access Review Definition";
             Ensure                  = "Present";
             Id                      = "613854e6-c458-4a2c-83fc-e0f4b8b17d60";
+            FallbackReviewers       = @(
+                MSFT_AADAccessReviewDefinitionReviewer{
+                    DisplayName = "Fallback Reviewer 1"
+                    Type = "User"
+                }
+                MSFT_AADAccessReviewDefinitionReviewer{
+                    DisplayName = "Fallback Group 1"
+                    Type = "Group"
+                }
+            );
+            Reviewers               = @(
+                MSFT_AADAccessReviewDefinitionReviewer{
+                    Type = "Manager"
+                }
+            )
             ScopeValue              = MSFT_MicrosoftGraphaccessReviewScope{
                 PrincipalScopes = @(
                     MSFT_MicrosoftGraphAccessReviewScope{
@@ -306,6 +332,21 @@ Configuration Example
             DisplayName             = "Test Access Review Definition";
             Ensure                  = "Present";
             Id                      = "613854e6-c458-4a2c-83fc-e0f4b8b17d60";
+            FallbackReviewers       = @(
+                MSFT_AADAccessReviewDefinitionReviewer{
+                    DisplayName = "Fallback Reviewer 1"
+                    Type = "User"
+                }
+                MSFT_AADAccessReviewDefinitionReviewer{
+                    DisplayName = "Fallback Group 1"
+                    Type = "Group"
+                }
+            );
+            Reviewers               = @(
+                MSFT_AADAccessReviewDefinitionReviewer{
+                    Type = "Manager"
+                }
+            )
             ScopeValue              = MSFT_MicrosoftGraphaccessReviewScope{
                 PrincipalScopes = @(
                     MSFT_MicrosoftGraphAccessReviewScope{

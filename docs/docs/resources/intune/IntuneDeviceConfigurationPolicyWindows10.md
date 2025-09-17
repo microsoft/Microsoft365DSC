@@ -154,7 +154,7 @@
 | **MicrosoftAccountBlocked** | Write | Boolean | Indicates whether or not to Block a Microsoft account. | |
 | **MicrosoftAccountBlockSettingsSync** | Write | Boolean | Indicates whether or not to Block Microsoft account settings sync. | |
 | **MicrosoftAccountSignInAssistantSettings** | Write | String | Controls the Microsoft Account Sign-In Assistant (wlidsvc) NT service. Possible values are: notConfigured, disabled. | `notConfigured`, `disabled` |
-| **NetworkProxyApplySettingsDeviceWide** | Write | Boolean | If set, proxy settings will be applied to all processes and accounts in the device. Otherwise, it will be applied to the user account thats enrolled into MDM. | |
+| **NetworkProxyApplySettingsDeviceWide** | Write | Boolean | If set, proxy settings will be applied to all processes and accounts in the device. Otherwise, it will be applied to the user account that's enrolled into MDM. | |
 | **NetworkProxyAutomaticConfigurationUrl** | Write | String | Address to the proxy auto-config (PAC) script you want to use. | |
 | **NetworkProxyDisableAutoDetect** | Write | Boolean | Disable automatic detection of settings. If enabled, the system will try to find the path to a proxy auto-config (PAC) script. | |
 | **NetworkProxyServer** | Write | MSFT_MicrosoftGraphwindows10NetworkProxyServer | Specifies manual proxy server settings. | |
@@ -172,7 +172,7 @@
 | **PasswordRequireWhenResumeFromIdleState** | Write | Boolean | Indicates whether or not to require a password upon resuming from an idle state. | |
 | **PasswordSignInFailureCountBeforeFactoryReset** | Write | UInt32 | The number of sign in failures before factory reset. Valid values 0 to 999 | |
 | **PersonalizationDesktopImageUrl** | Write | String | A http or https Url to a jpg, jpeg or png image that needs to be downloaded and used as the Desktop Image or a file Url to a local image on the file system that needs to used as the Desktop Image. | |
-| **PersonalizationLockScreenImageUrl** | Write | String | A http or https Url to a jpg, jpeg or png image that neeeds to be downloaded and used as the Lock Screen Image or a file Url to a local image on the file system that needs to be used as the Lock Screen Image. | |
+| **PersonalizationLockScreenImageUrl** | Write | String | A http or https Url to a jpg, jpeg or png image that needs to be downloaded and used as the Lock Screen Image or a file Url to a local image on the file system that needs to be used as the Lock Screen Image. | |
 | **PowerButtonActionOnBattery** | Write | String | This setting specifies the action that Windows takes when a user presses the Power button while on battery. Possible values are: notConfigured, noAction, sleep, hibernate, shutdown. | `notConfigured`, `noAction`, `sleep`, `hibernate`, `shutdown` |
 | **PowerButtonActionPluggedIn** | Write | String | This setting specifies the action that Windows takes when a user presses the Power button while plugged in. Possible values are: notConfigured, noAction, sleep, hibernate, shutdown. | `notConfigured`, `noAction`, `sleep`, `hibernate`, `shutdown` |
 | **PowerHybridSleepOnBattery** | Write | String | This setting allows you to turn off hybrid sleep while on battery. If you set this setting to disable, a hiberfile is not generated when the system transitions to sleep (Stand By). If you set this setting to enable or do not configure this policy setting, users control this setting. Possible values are: notConfigured, enabled, disabled. | `notConfigured`, `enabled`, `disabled` |
@@ -290,6 +290,7 @@
 | **DisplayName** | Key | String | Admin provided name of the device configuration. | |
 | **SupportsScopeTags** | Write | Boolean | Indicates whether or not the underlying Device Configuration supports the assignment of scope tags. Assigning to the ScopeTags property is not allowed when this value is false and entities will not be visible to scoped users. This occurs for Legacy policies created in Silverlight and can be resolved by deleting and recreating the policy in the Azure Portal. This property is read-only. | |
 | **Id** | Write | String | The unique identifier for an entity. Read-only. | |
+| **RoleScopeTagIds** | Write | StringArray[] | List of Scope Tags for this Entity instance. | |
 | **Assignments** | Write | MSFT_DeviceManagementConfigurationPolicyAssignments[] | Represents the assignment to the Intune policy. | |
 | **Ensure** | Write | String | Present ensures the policy exists, absent ensures it is removed. | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials of the Admin | |
@@ -309,6 +310,7 @@
 | **dataType** | Write | String | The type of the target assignment. | `#microsoft.graph.groupAssignmentTarget`, `#microsoft.graph.allLicensedUsersAssignmentTarget`, `#microsoft.graph.allDevicesAssignmentTarget`, `#microsoft.graph.exclusionGroupAssignmentTarget`, `#microsoft.graph.configurationManagerCollectionAssignmentTarget` |
 | **deviceAndAppManagementAssignmentFilterType** | Write | String | The type of filter of the target assignment i.e. Exclude or Include. Possible values are:none, include, exclude. | `none`, `include`, `exclude` |
 | **deviceAndAppManagementAssignmentFilterId** | Write | String | The Id of the filter for the target assignment. | |
+| **deviceAndAppManagementAssignmentFilterDisplayName** | Write | String | The display name of the filter for the target assignment. | |
 | **groupId** | Write | String | The group Id that is the target of the assignment. | |
 | **groupDisplayName** | Write | String | The group Display Name that is the target of the assignment. | |
 | **collectionId** | Write | String | The collection Id that is the target of the assignment.(ConfigMgr) | |

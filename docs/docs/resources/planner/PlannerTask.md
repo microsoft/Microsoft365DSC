@@ -6,7 +6,7 @@
 | --- | --- | --- | --- | --- |
 | **PlanId** | Key | String | Id of the Planner Plan which contains the Task. | |
 | **Title** | Key | String | The Title of the Planner Task. | |
-| **Categories** | Write | StringArray[] | List of categories assigned to the task. | `Pink`, `Red`, `Yellow`, `Green`, `Blue`, `Purple` |
+| **Categories** | Write | StringArray[] | List of categories assigned to the task. | |
 | **AssignedUsers** | Write | StringArray[] | List of users assigned to the tasks (ex: @('john.smith@contoso.com', 'bob.houle@contoso.com')). | |
 | **Attachments** | Write | MSFT_PlannerTaskAttachment[] | List of links to attachments assigned to the task. | |
 | **Checklist** | Write | MSFT_PlannerTaskChecklistItem[] | List checklist items associated with the task. | |
@@ -62,21 +62,21 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - Group.Read.All, User.Read.All
+    - Group.Read.All, Tasks.Read.All, User.Read.All
 
 - **Update**
 
-    - Group.Read.All, Group.ReadWrite.All, User.Read.All
+    - Group.Read.All, Tasks.ReadWrite.All, User.Read.All
 
 #### Application permissions
 
 - **Read**
 
-    - Group.Read.All, User.Read.All
+    - Group.Read.All, Tasks.Read.All, User.Read.All
 
 - **Update**
 
-    - Group.Read.All, Group.ReadWrite.All, User.Read.All
+    - Group.Read.All, Tasks.ReadWrite.All, User.Read.All
 
 ## Examples
 

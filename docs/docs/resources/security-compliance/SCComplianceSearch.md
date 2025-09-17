@@ -28,33 +28,9 @@
 
 ## Description
 
-This resource configures an Compliance Search (eDiscovery) in Security and Compliance.
+This resource configures an Compliance Search (eDiscovery) in Purview.
 
 ## Permissions
-
-### Microsoft Graph
-
-To authenticate with the Microsoft Graph API, this resource required the following permissions:
-
-#### Delegated permissions
-
-- **Read**
-
-    - None
-
-- **Update**
-
-    - None
-
-#### Application permissions
-
-- **Read**
-
-    - None
-
-- **Update**
-
-    - None
 
 ## Examples
 

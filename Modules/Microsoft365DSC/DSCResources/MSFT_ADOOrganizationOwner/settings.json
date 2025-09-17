@@ -1,20 +1,29 @@
-﻿{
-    "resourceName": "ADOOrganizationOwner",
-    "description": "Configures the owner of an Azure DevOPS organization.",
-    "roles": {
+{
+  "resourceName": "ADOOrganizationOwner",
+  "description": "Configures the owner of an Azure DevOPS organization.",
+  "roles": {
+    "read": [],
+    "update": []
+  },
+  "permissions": {
+    "Azure DevOps": {
+      "delegated": {
+        "read": [
+          {
+            "name": "user_impersonation"
+          }
+        ],
+        "update": [
+          {
+            "name": "user_impersonation"
+          }
+        ]
+      },
+      "application": {
         "read": [],
         "update": []
-    },
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [],
-                "update": []
-            },
-            "application": {
-                "read": [],
-                "update": []
-            }
-        }
+      }
     }
+  },
+  "requiredModules": []
 }

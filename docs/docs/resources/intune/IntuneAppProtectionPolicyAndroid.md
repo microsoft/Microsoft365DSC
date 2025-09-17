@@ -6,6 +6,7 @@
 | --- | --- | --- | --- | --- |
 | **DisplayName** | Key | String | Display name of the Android App Protection Policy. | |
 | **Description** | Write | String | Description of the Android App Protection Policy. | |
+| **RoleScopeTagIds** | Write | StringArray[] | List of Scope Tags for this Entity instance. | |
 | **AllowedAndroidDeviceModels** | Write | StringArray[] | List of allowed Android device models. | |
 | **AllowedOutboundClipboardSharingExceptionLength** | Write | UInt32 | Maximum length of outbound clipboard sharing exceptions. | |
 | **BiometricAuthenticationBlocked** | Write | Boolean | Indicates whether biometric authentication is blocked. | |

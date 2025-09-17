@@ -44,8 +44,8 @@
 | **DocumentIsPasswordProtected** | Write | Boolean | The DocumentIsPasswordProtected parameter specifies a condition for the DLP rule that looks for password protected files (because the contents of the file can't be inspected). Password detection only works for Office documents and .zip files. | |
 | **ExceptIfDocumentIsPasswordProtected** | Write | Boolean | The ExceptIfDocumentIsPasswordProtected parameter specifies an exception for the DLP rule that looks for password protected files (because the contents of the file can't be inspected). Password detection only works for Office documents and .zip files.  | |
 | **MessageTypeMatches** | Write | StringArray[] | The MessageTypeMatches parameter specifies a condition for the DLP rule that looks for types of SMIME message patterns. | |
-| **FromScope** | Write | StringArray[] | The FromScope parameter specifies wether messages from inside or outside the organisation are in scope for the DLP rule. | |
-| **ExceptIfFromScope** | Write | StringArray[] | The ExceptIfFromScope parameter specifies wether messages from inside or outside the organisation are in scope for the DLP rule. | |
+| **FromScope** | Write | StringArray[] | The FromScope parameter specifies whether messages from inside or outside the organisation are in scope for the DLP rule. | |
+| **ExceptIfFromScope** | Write | StringArray[] | The ExceptIfFromScope parameter specifies whether messages from inside or outside the organisation are in scope for the DLP rule. | |
 | **SubjectContainsWords** | Write | StringArray[] | The SubjectContainsWords parameter specifies a condition for the DLP rule that looks for words or phrases in the Subject field of messages. You can specify multiple words or phrases separated by commas. | |
 | **SubjectMatchesPatterns** | Write | StringArray[] | The SubjectMatchesPatterns parameter specifies a condition for the DLP rule that looks for text patterns in the Subject field of messages by using regular expressions. | |
 | **SubjectOrBodyContainsWords** | Write | StringArray[] | The SubjectOrBodyContainsWords parameter specifies a condition for the rule that looks for words in the Subject field or body of messages. | |
@@ -128,34 +128,9 @@
 
 ## Description
 
-This resource configures a Data Loss Prevention Compliance
-Rule in Security and Compliance Center.
+This resource configures a Data Loss Prevention Compliance Rule in Purview.
 
 ## Permissions
-
-### Microsoft Graph
-
-To authenticate with the Microsoft Graph API, this resource required the following permissions:
-
-#### Delegated permissions
-
-- **Read**
-
-    - None
-
-- **Update**
-
-    - None
-
-#### Application permissions
-
-- **Read**
-
-    - None
-
-- **Update**
-
-    - None
 
 ## Examples
 

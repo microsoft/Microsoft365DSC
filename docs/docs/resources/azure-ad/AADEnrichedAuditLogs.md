@@ -19,7 +19,7 @@
 
 ## Description
 
-Configures advanced audit logs for Global Secure Access in Entra Id
+DEPRECATED - This resource has been deprecated and is no longer supported.
 
 ## Permissions
 
@@ -31,11 +31,11 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - None
+    - NetworkAccess.Read.All
 
 - **Update**
 
-    - None
+    - NetworkAccess.ReadWrite.All
 
 #### Application permissions
 

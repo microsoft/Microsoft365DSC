@@ -1,29 +1,38 @@
-﻿{
-    "resourceName": "EXODistributionGroup",
-    "roles": {
-        "read": [],
+{
+  "resourceName": "EXODistributionGroup",
+  "roles": {
+    "read": [],
+    "update": [
+      "Exchange Administrator"
+    ]
+  },
+  "description": "",
+  "permissions": {
+    "Office 365 Exchange Online": {
+      "application": {
+        "read": [
+          {
+            "name": "Exchange.ManageAsApp"
+          }
+        ],
         "update": [
-            "Exchange Administrator"
+          {
+            "name": "Exchange.ManageAsApp"
+          }
         ]
+      }
     },
-    "description": "",
-    "permissions": {
-        "graph": {
-            "delegated": {
-                "read": [],
-                "update": []
-            },
-            "application": {
-                "read": [],
-                "update": []
-            }
-        },
-        "exchange": {
-            "requiredroles": [
-                "Organization Management",
-                "Recipient Management"
-            ],
-            "requiredrolegroups": []
-        }
+    "exchange": {
+      "requiredroles": [
+        "Organization Management",
+        "Recipient Management"
+      ],
+      "requiredrolegroups": []
     }
+  },
+  "requiredModules": [],
+  "supportedEnvironments": [
+    "Global",
+    "USGov"
+  ]
 }

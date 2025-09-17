@@ -1,3 +1,5 @@
+Confirm-M365DSCModuleDependency -ModuleName 'MSFT_EXOAntiPhishPolicy'
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -198,13 +200,13 @@ function Get-TargetResource
 
     if ($Global:CurrentModeIsExport)
     {
-        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters `
             -SkipModuleReload $true
     }
     else
     {
-        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
             -InboundParameters $PSBoundParameters
     }
 
@@ -295,7 +297,7 @@ function Get-TargetResource
                 CertificateThumbprint                         = $CertificateThumbprint
                 CertificatePath                               = $CertificatePath
                 CertificatePassword                           = $CertificatePassword
-                Managedidentity                               = $ManagedIdentity.IsPresent
+                ManagedIdentity                               = $ManagedIdentity.IsPresent
                 TenantId                                      = $TenantId
                 AccessTokens                                  = $AccessTokens
             }
@@ -526,33 +528,24 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+    $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
     $currentInstance = Get-TargetResource @PSBoundParameters
 
-    $PSBoundParameters.Remove('ApplicationId') | Out-Null
-    $PSBoundParameters.Remove('TenantId') | Out-Null
-    $PSBoundParameters.Remove('CertificateThumbprint') | Out-Null
-    $PSBoundParameters.Remove('CertificatePassword') | Out-Null
-    $PSBoundParameters.Remove('ManagedIdentity') | Out-Null
-    $PSBoundParameters.Remove('CertificatePath') | Out-Null
-    $PSBoundParameters.Remove('Credential') | Out-Null
-    $PSBoundParameters.Remove('AccessTokens') | Out-Null
-
     if (('Present' -eq $Ensure ) -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating new instance of AntiPhish Policy {$Identity}"
-        $CreateParams = $PSBoundParameters
-        $CreateParams.Remove('Ensure') | Out-Null
+        $createParams = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+        $createParams.Remove('Ensure') | Out-Null
         $createParams.Add('Name', $Identity)
         $createParams.Remove('Identity') | Out-Null
-        New-AntiPhishPolicy @PSBoundParameters
+        New-AntiPhishPolicy @createParams
     }
     elseif (('Present' -eq $Ensure ) -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating existing AntiPhishPolicy {$Identity}"
-        $UpdateParams = $PSBoundParameters
+        $UpdateParams = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
         $UpdateParams.Remove('Ensure') | Out-Null
         Set-AntiphishPolicy @UpdateParams
     }
@@ -774,12 +767,10 @@ function Test-TargetResource
     Write-Verbose -Message "Testing configuration of AntiPhishPolicy for $Identity"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
+    $ValuesToCheck = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
-
-    $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('Credential') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -829,6 +820,7 @@ function Export-TargetResource
         [System.String[]]
         $AccessTokens
     )
+
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
         -SkipModuleReload $true
@@ -875,7 +867,7 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
                 CertificatePassword   = $CertificatePassword
-                Managedidentity       = $ManagedIdentity.IsPresent
+                ManagedIdentity       = $ManagedIdentity.IsPresent
                 CertificatePath       = $CertificatePath
                 AccessTokens          = $AccessTokens
             }
