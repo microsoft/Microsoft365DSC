@@ -15,7 +15,7 @@ class MSFT_DeviceManagementApplicabilityRuleOsEdition
 {
     [Write, Description("Name for object")] String Name;
     [Write, Description("Applicability rule OS edition type")] String OsEditionTypes[];
-    [Write, Description("Applicability Rule type"), ValueMap{"include","exclude"}, Values{"include","exclude"}] String RuleType;
+    [Write, Description("Applicability Rule type"), ValueMap{"include","exclude", ""}, Values{"include","exclude",""}] String RuleType;
 };
 [ClassVersion("1.0.0")]
 class MSFT_DeviceManagementApplicabilityRuleOsVersion
@@ -23,7 +23,7 @@ class MSFT_DeviceManagementApplicabilityRuleOsVersion
     [Write, Description("Name for object")] String Name;
     [Write, Description("Min OS version for Applicability Rule")] String MinOSVersion;
     [Write, Description("Max OS version for Applicability Rule")] String MaxOSVersion;
-    [Write, Description("Applicability Rule type"), ValueMap{"include","exclude"}, Values{"include","exclude"}] String RuleType;
+    [Write, Description("Applicability Rule type"), ValueMap{"include","exclude", ""}, Values{"include","exclude",""}] String RuleType;
 };
 
 [ClassVersion("1.0.0.0"), FriendlyName("IntuneWifiEnterpriseConfigurationPolicyWindows10")]
