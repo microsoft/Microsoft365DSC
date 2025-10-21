@@ -48,53 +48,54 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Get-MgBetaDeviceManagementDeviceConfiguration -MockWith {
-
                 return @{
+                    Id                  = 'FakeIdentitfier'
+                    Description         = 'FakeDescription'
+                    DisplayName         = 'FakeDisplayName'
+                    DeviceManagementApplicabilityRuleOSEdition = @()
+                    DeviceManagementApplicabilityRuleOSVersion = @()
+                    RoleScopeTagIds     = @('42')
                     AdditionalProperties = @{
-                        ConnectAutomatically                            = $True
-                        ConnectToPreferredNetwork                       = $True
-                        ConnectWhenNetworkNameIsHidden                  = $False
-                        ForceFIPSCompliance                             = $True
-                        MeteredConnectionLimit                          = 'unrestricted'
-                        NetworkName                                     = 'FakeWifiName'
-                        PreSharedKey                                    = 'FakeKey'
-                        ProxyAutomaticConfigurationUrl                  = 'FakeAutoConfigURL'
-                        ProxyManualAddress                              = 'FakeManualAddress'
-                        ProxyManualPort                                 = 42
-                        ProxySetting                                    = 'none'
-                        Ssid                                            = 'fakessid'
-                        WifiSecurityType                                = 'wpa2Enterprise'
-                        NetworkSingleSignOn                             = 'disabled'
-                        MaximumAuthenticationTimeoutInSeconds           = 60
-                        UserBasedVirtualLan                             = $True
-                        PromptForAdditionalAuthenticationCredentials    = $True
-                        EnablePairwiseMasterKeyCaching                  = $True
-                        MaximumPairwiseMasterKeyCacheTimeInMinutes      = 42
-                        MaximumNumberOfPairwiseMasterKeysInCache        = 42
-                        EnablePreAuthentication                         = $True
-                        MaximumPreAuthenticationAttempts                = 7
-                        EapType                                         = 'eapTls'
-                        TrustedServerCertificateNames                   = @(
-                            'fakecertificate'
+                        connectAutomatically = $True
+                        connectToPreferredNetwork = $True
+                        connectWhenNetworkNameIsHidden = $False
+                        forceFIPSCompliance = $False
+                        meteredConnectionLimit = 'unrestricted'
+                        networkName = 'FakeNetworkName'
+                        preSharedKey = 'FakePreSharedKey'
+                        proxyAutomaticConfigurationUrl = 'FakeProxyConfigUrl'
+                        proxyManualAddress = 'FakeProxyAddress'
+                        proxyManualPort = 42
+                        proxySetting = 'manual'
+                        ssid = 'fakessid'
+                        wifiSecurityType = 'wpa2Enterprise'
+                        networkSingleSignOn = 'disabled'
+                        maximumAuthenticationTimeoutInSeconds = 42
+                        userBasedVirtualLan = $False
+                        promptForAdditionalAuthenticationCredentials = $False
+                        enablePairwiseMasterKeyCaching = $False
+                        maximumPairwiseMasterKeyCacheTimeInMinutes = 42
+                        maximumNumberOfPairwiseMasterKeysInCache = 42
+                        enablePreAuthentication = $False
+                        maximumPreAuthenticationAttempts = 7
+                        eapType = 'eapTls'
+                        trustedServerCertificateNames = @(
+                            'FakeServerCertificateName'
                         )
-                        AuthenticationMethod                            = 'certificate'
-                        InnerAuthenticationProtocolForEAPTTLS           = 'microsoftChap'
-                        OuterIdentityPrivacyTemporaryValue              = 'fakeString'
-                        RequireCryptographicBinding                     = $True
-                        PerformServerValidation                         = $True
-                        DisableUserPromptForServerValidation            = $True
-                        AuthenticationPeriodInSeconds                   = 42
-                        AuthenticationRetryDelayPeriodInSeconds         = 42
-                        EapolStartPeriodInSeconds                       = 42
-                        MaximumEAPOLStartMessages                       = 42
-                        MaximumAuthenticationFailures                   = 42
-                        CacheCredentials                                = $False
-                        AuthenticationType                              = 'user'
+                        authenticationMethod = 'certificate'
+                        innerAuthenticationProtocolForEAPTTLS = 'microsoftChapVersionTwo'
+                        outerIdentityPrivacyTemporaryValue = 'FakeStringValue'
+                        requireCryptographicBinding  = $False
+                        performServerValidation = $False
+                        disableUserPromptForServerValidation = $True
+                        authenticationPeriodInSeconds = 42
+                        authenticationRetryDelayPeriodInSeconds = 42
+                        eapolStartPeriodInSeconds = 42
+                        maximumEAPOLStartMessages = 42
+                        maximumAuthenticationFailures = 42
+                        cacheCredentials = $False
+                        authenticationType = 'user'
                     }
-                    Description          = 'FakeStringValue'
-                    DisplayName          = 'FakeStringValue'
-                    Id                   = 'FakeStringValue'
-
                 }
             }
 
@@ -185,49 +186,51 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'The IntuneWifiEnterpriseConfigurationPolicyWindows10 Exists and Values are already in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    ConnectAutomatically                            = $True
-                    ConnectToPreferredNetwork                       = $True
-                    ConnectWhenNetworkNameIsHidden                  = $False
-                    ForceFIPSCompliance                             = $True
-                    MeteredConnectionLimit                          = 'unrestricted'
-                    NetworkName                                     = 'FakeWifiName'
-                    PreSharedKey                                    = 'FakeKey'
-                    ProxyAutomaticConfigurationUrl                  = 'FakeAutoConfigURL'
-                    ProxyManualAddress                              = 'FakeManualAddress'
-                    ProxyManualPort                                 = 42
-                    ProxySetting                                    = 'none'
-                    Ssid                                            = 'fakessid'
-                    WifiSecurityType                                = 'wpa2Enterprise'
-                    NetworkSingleSignOn                             = 'disabled'
-                    MaximumAuthenticationTimeoutInSeconds           = 60
-                    UserBasedVirtualLan                             = $True
-                    PromptForAdditionalAuthenticationCredentials    = $True
-                    EnablePairwiseMasterKeyCaching                  = $True
-                    MaximumPairwiseMasterKeyCacheTimeInMinutes      = 42
-                    MaximumNumberOfPairwiseMasterKeysInCache        = 42
-                    EnablePreAuthentication                         = $True
-                    MaximumPreAuthenticationAttempts                = 7
-                    EapType                                         = 'eapTls'
-                    TrustedServerCertificateNames                   = @(
-                        'fakecertificate'
+                    Id                  = 'FakeIdentitfier'
+                    Description         = 'FakeDescription'
+                    DisplayName         = 'FakeDisplayName'
+                    DeviceManagementApplicabilityRuleOSEdition = @()
+                    DeviceManagementApplicabilityRuleOSVersion = @()
+                    RoleScopeTagIds     = @('42')
+                    connectAutomatically = $True
+                    connectToPreferredNetwork = $True
+                    connectWhenNetworkNameIsHidden = $False
+                    forceFIPSCompliance = $False
+                    meteredConnectionLimit = 'unrestricted'
+                    networkName = 'FakeNetworkName'
+                    preSharedKey = 'FakePreSharedKey'
+                    proxyAutomaticConfigurationUrl = 'FakeProxyConfigUrl'
+                    proxyManualAddress = 'FakeProxyAddress'
+                    proxyManualPort = 42
+                    proxySetting = 'manual'
+                    ssid = 'fakessid'
+                    wifiSecurityType = 'wpa2Enterprise'
+                    networkSingleSignOn = 'disabled'
+                    maximumAuthenticationTimeoutInSeconds = 42
+                    userBasedVirtualLan = $False
+                    promptForAdditionalAuthenticationCredentials = $False
+                    enablePairwiseMasterKeyCaching = $False
+                    maximumPairwiseMasterKeyCacheTimeInMinutes = 42
+                    maximumNumberOfPairwiseMasterKeysInCache = 42
+                    enablePreAuthentication = $False
+                    maximumPreAuthenticationAttempts = 7
+                    eapType = 'eapTls'
+                    trustedServerCertificateNames = @(
+                        'FakeServerCertificateName'
                     )
-                    AuthenticationMethod                            = 'certificate'
-                    InnerAuthenticationProtocolForEAPTTLS           = 'microsoftChap'
-                    OuterIdentityPrivacyTemporaryValue              = 'fakeString'
-                    RequireCryptographicBinding                     = $True
-                    PerformServerValidation                         = $True
-                    DisableUserPromptForServerValidation            = $True
-                    AuthenticationPeriodInSeconds                   = 42
-                    AuthenticationRetryDelayPeriodInSeconds         = 42
-                    EapolStartPeriodInSeconds                       = 42
-                    MaximumEAPOLStartMessages                       = 42
-                    MaximumAuthenticationFailures                   = 42
-                    CacheCredentials                                = $False
-                    AuthenticationType                              = 'user'
-
-                    Description          = 'FakeStringValue'
-                    DisplayName          = 'FakeStringValue'
-                    Id                   = 'FakeStringValue'
+                    authenticationMethod = 'certificate'
+                    innerAuthenticationProtocolForEAPTTLS = 'microsoftChapVersionTwo'
+                    outerIdentityPrivacyTemporaryValue = 'FakeStringValue'
+                    requireCryptographicBinding  = $False
+                    performServerValidation = $False
+                    disableUserPromptForServerValidation = $True
+                    authenticationPeriodInSeconds = 42
+                    authenticationRetryDelayPeriodInSeconds = 42
+                    eapolStartPeriodInSeconds = 42
+                    maximumEAPOLStartMessages = 42
+                    maximumAuthenticationFailures = 42
+                    cacheCredentials = $False
+                    authenticationType = 'user'
                 }
             }
 
@@ -239,49 +242,51 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'The IntuneWifiEnterpriseConfigurationPolicyWindows10 exists and values are NOT in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    ConnectAutomatically                            = $True
-                    ConnectToPreferredNetwork                       = $True
-                    ConnectWhenNetworkNameIsHidden                  = $True # Changed property
-                    ForceFIPSCompliance                             = $True
-                    MeteredConnectionLimit                          = 'unrestricted'
-                    NetworkName                                     = 'FakeWifiName'
-                    PreSharedKey                                    = 'FakeKey'
-                    ProxyAutomaticConfigurationUrl                  = 'FakeAutoConfigURL'
-                    ProxyManualAddress                              = 'FakeManualAddress'
-                    ProxyManualPort                                 = 42
-                    ProxySetting                                    = 'none'
-                    Ssid                                            = 'fakessid'
-                    WifiSecurityType                                = 'wpa2Enterprise'
-                    NetworkSingleSignOn                             = 'disabled'
-                    MaximumAuthenticationTimeoutInSeconds           = 60
-                    UserBasedVirtualLan                             = $True
-                    PromptForAdditionalAuthenticationCredentials    = $True
-                    EnablePairwiseMasterKeyCaching                  = $True
-                    MaximumPairwiseMasterKeyCacheTimeInMinutes      = 42
-                    MaximumNumberOfPairwiseMasterKeysInCache        = 42
-                    EnablePreAuthentication                         = $True
-                    MaximumPreAuthenticationAttempts                = 7
-                    EapType                                         = 'eapTls'
-                    TrustedServerCertificateNames                   = @(
-                        'fakecertificate'
+                    Id                  = 'FakeIdentitfier'
+                    Description         = 'FakeDescription'
+                    DisplayName         = 'FakeDisplayName'
+                    DeviceManagementApplicabilityRuleOSEdition = @()
+                    DeviceManagementApplicabilityRuleOSVersion = @()
+                    RoleScopeTagIds     = @('42')
+                    connectAutomatically = $True
+                    connectToPreferredNetwork = $True
+                    connectWhenNetworkNameIsHidden = $False
+                    forceFIPSCompliance = $False
+                    meteredConnectionLimit = 'unrestricted'
+                    networkName = 'FakeNetworkName'
+                    preSharedKey = 'FakePreSharedKey'
+                    proxyAutomaticConfigurationUrl = 'FakeProxyConfigUrl'
+                    proxyManualAddress = 'FakeProxyAddress'
+                    proxyManualPort = 42
+                    proxySetting = 'manual'
+                    ssid = 'fakessid'
+                    wifiSecurityType = 'wpa2Enterprise'
+                    networkSingleSignOn = 'disabled'
+                    maximumAuthenticationTimeoutInSeconds = 24 # Should be 42, simulates a typo
+                    userBasedVirtualLan = $False
+                    promptForAdditionalAuthenticationCredentials = $False
+                    enablePairwiseMasterKeyCaching = $False
+                    maximumPairwiseMasterKeyCacheTimeInMinutes = 42
+                    maximumNumberOfPairwiseMasterKeysInCache = 42
+                    enablePreAuthentication = $False
+                    maximumPreAuthenticationAttempts = 7
+                    eapType = 'eapTls'
+                    trustedServerCertificateNames = @(
+                        'FakeServerCertificateName'
                     )
-                    AuthenticationMethod                            = 'certificate'
-                    InnerAuthenticationProtocolForEAPTTLS           = 'microsoftChap'
-                    OuterIdentityPrivacyTemporaryValue              = 'fakeString'
-                    RequireCryptographicBinding                     = $True
-                    PerformServerValidation                         = $True
-                    DisableUserPromptForServerValidation            = $True
-                    AuthenticationPeriodInSeconds                   = 42
-                    AuthenticationRetryDelayPeriodInSeconds         = 42
-                    EapolStartPeriodInSeconds                       = 42
-                    MaximumEAPOLStartMessages                       = 42
-                    MaximumAuthenticationFailures                   = 42
-                    CacheCredentials                                = $False
-                    AuthenticationType                              = 'user'
-
-                    Description          = 'FakeStringValue'
-                    DisplayName          = 'FakeStringValue'
-                    Id                   = 'FakeStringValue'
+                    authenticationMethod = 'certificate'
+                    innerAuthenticationProtocolForEAPTTLS = 'microsoftChapVersionTwo'
+                    outerIdentityPrivacyTemporaryValue = 'FakeStringValue'
+                    requireCryptographicBinding  = $False
+                    performServerValidation = $False
+                    disableUserPromptForServerValidation = $True
+                    authenticationPeriodInSeconds = 42
+                    authenticationRetryDelayPeriodInSeconds = 42
+                    eapolStartPeriodInSeconds = 42
+                    maximumEAPOLStartMessages = 42
+                    maximumAuthenticationFailures = 42
+                    cacheCredentials = $False
+                    authenticationType = 'user'
                 }
             }
 
