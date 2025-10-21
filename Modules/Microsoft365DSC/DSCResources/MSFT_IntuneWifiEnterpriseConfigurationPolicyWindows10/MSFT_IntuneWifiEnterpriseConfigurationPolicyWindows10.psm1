@@ -46,7 +46,11 @@ function Get-TargetResource
         [Parameter()]
         [System.String]
         [ValidateSet('disabled', 'prelogon', 'postlogon')]
-        $networkSingleSignOn,
+        $NetworkSingleSignOn,
+
+        [Parameter()]
+        [System.Int32]
+        $MaximumAuthenticationTimeoutInSeconds,
 
         [Parameter()]
         [ValidateSet('unrestricted', 'fixed', 'variable')]
@@ -88,103 +92,103 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $userBasedVirtualLan,
+        $UserBasedVirtualLan,
 
         [Parameter()]
         [System.Boolean]
-        $promptForAdditionalAuthenticationCredentials,
+        $PromptForAdditionalAuthenticationCredentials,
 
         [Parameter()]
         [System.Boolean]
-        $enablePairwiseMasterKeyCaching,
+        $EnablePairwiseMasterKeyCaching,
 
         [Parameter()]
         [System.Int32]
         [ValidateRange(5,1440)]
-        $maximumPairwiseMasterKeyCacheTimeInMinutes,
+        $MaximumPairwiseMasterKeyCacheTimeInMinutes,
 
         [Parameter()]
         [System.Int32]
         [ValidateRange(1,255)]
-        $maximumNumberOfPairwiseMasterKeysInCache,
+        $MaximumNumberOfPairwiseMasterKeysInCache,
 
         [Parameter()]
         [System.Boolean]
-        $enablePreAuthentication,
+        $EnablePreAuthentication,
 
         [Parameter()]
         [System.Int32]
         [ValidateRange(1,16)]
-        $maximumPreAuthenticationAttempts,
+        $MaximumPreAuthenticationAttempts,
 
         [Parameter()]
         [ValidateSet('eapTls', 'leap', 'eapSim', 'eapTtls', 'peap', 'eapFast', 'teap')]
         [System.String]
-        $eapType,
+        $EapType,
 
         [Parameter()]
         [System.String[]]
-        $trustedServerCertificateNames,#
+        $TrustedServerCertificateNames,#
 
         [Parameter()]
         [ValidateSet('certificate', 'usernameAndPassword', 'derivedCredential')]
         [System.String]
-        $authenticationMethod,
+        $AuthenticationMethod,
 
         [Parameter()]
         [ValidateSet('unencryptedPassword', 'challengeHandshakeAuthenticationProtocol', 'microsoftChap', 'microsoftChapVersionTwo')]
         [System.String]
-        $innerAuthenticationProtocolForEAPTTLS,
+        $InnerAuthenticationProtocolForEAPTTLS,
 
         [Parameter()]
         [System.String]
-        $outerIdentityPrivacyTemporaryValue,
+        $OuterIdentityPrivacyTemporaryValue,
 
         [Parameter()]
         [System.Boolean]
-        $requireCryptographicBinding,
+        $RequireCryptographicBinding,
 
         [Parameter()]
         [System.Boolean]
-        $performServerValidation,
+        $PerformServerValidation,
 
         [Parameter()]
         [System.Boolean]
-        $disableUserPromptForServerValidation,
+        $DisableUserPromptForServerValidation,
 
         [Parameter()]
         [System.Int32]
         [ValidateRange(1,3600)]
-        $authenticationPeriodInSeconds,
+        $AuthenticationPeriodInSeconds,
 
         [Parameter()]
         [System.Int32]
         [ValidateRange(1,3600)]
-        $authenticationRetryDelayPeriodInSeconds,
+        $AuthenticationRetryDelayPeriodInSeconds,
 
         [Parameter()]
         [System.Int32]
         [ValidateRange(1,3600)]
-        $eapolStartPeriodInSeconds,
+        $EapolStartPeriodInSeconds,
 
         [Parameter()]
         [System.Int32]
         [ValidateRange(1,100)]
-        $maximumEAPOLStartMessages,
+        $MaximumEAPOLStartMessages,
 
         [Parameter()]
         [System.Int32]
         [ValidateRange(1,100)]
-        $maximumAuthenticationFailures,
+        $MaximumAuthenticationFailures,
 
         [Parameter()]
         [System.Boolean]
-        $cacheCredentials,
+        $CacheCredentials,
 
         [Parameter()]
         [ValidateSet('none', 'user', 'machine', 'machineOrUser', 'guest')]
         [System.String]
-        $authenticationType,
+        $AuthenticationType,
 
         [Parameter()]
         [ValidateSet('open', 'wpaPersonal', 'wpaEnterprise', 'wep', 'wpa2Personal', 'wpa2Enterprise')]
@@ -322,30 +326,30 @@ function Get-TargetResource
             RoleScopeTagIds                                 = $getValue.RoleScopeTagIds
             Ssid                                            = $getValue.AdditionalProperties.ssid
             WifiSecurityType                                = $getValue.AdditionalProperties.wifiSecurityType
-            networkSingleSignOn                             = $getValue.AdditionalProperties.networkSingleSignOn
-            maximumAuthenticationTimeoutInSeconds           = $getValue.AdditionalProperties.maximumAuthenticationTimeoutInSeconds
-            userBasedVirtualLan                             = $getValue.AdditionalProperties.userBasedVirtualLan
-            promptForAdditionalAuthenticationCredentials    = $getValue.AdditionalProperties.promptForAdditionalAuthenticationCredentials
-            enablePairwiseMasterKeyCaching                  = $getValue.AdditionalProperties.enablePairwiseMasterKeyCaching
-            maximumPairwiseMasterKeyCacheTimeInMinutes      = $getValue.AdditionalProperties.maximumPairwiseMasterKeyCacheTimeInMinutes
-            maximumNumberOfPairwiseMasterKeysInCache        = $getValue.AdditionalProperties.maximumNumberOfPairwiseMasterKeysInCache
-            enablePreAuthentication                         = $getValue.AdditionalProperties.enablePreAuthentication
-            maximumPreAuthenticationAttempts                = $getValue.AdditionalProperties.maximumPreAuthenticationAttempts
-            eapType                                         = $getValue.AdditionalProperties.eapType
-            trustedServerCertificateNames                   = $getValue.AdditionalProperties.trustedServerCertificateNames
-            authenticationMethod                            = $getValue.AdditionalProperties.authenticationMethod
-            innerAuthenticationProtocolForEAPTTLS           = $getValue.AdditionalProperties.innerAuthenticationProtocolForEAPTTLS
-            outerIdentityPrivacyTemporaryValue              = $getValue.AdditionalProperties.outerIdentityPrivacyTemporaryValue
-            requireCryptographicBinding                     = $getValue.AdditionalProperties.requireCryptographicBinding
-            performServerValidation                         = $getValue.AdditionalProperties.performServerValidation
-            disableUserPromptForServerValidation            = $getValue.AdditionalProperties.disableUserPromptForServerValidation
-            authenticationPeriodInSeconds                   = $getValue.AdditionalProperties.authenticationPeriodInSeconds
-            authenticationRetryDelayPeriodInSeconds         = $getValue.AdditionalProperties.authenticationRetryDelayPeriodInSeconds
-            eapolStartPeriodInSeconds                       = $getValue.AdditionalProperties.eapolStartPeriodInSeconds
-            maximumEAPOLStartMessages                       = $getValue.AdditionalProperties.maximumEAPOLStartMessages
-            maximumAuthenticationFailures                   = $getValue.AdditionalProperties.maximumAuthenticationFailures
-            cacheCredentials                                = $getValue.AdditionalProperties.cacheCredentials
-            authenticationType                              = $getValue.AdditionalProperties.authenticationType
+            NetworkSingleSignOn                             = $getValue.AdditionalProperties.networkSingleSignOn
+            MaximumAuthenticationTimeoutInSeconds           = $getValue.AdditionalProperties.maximumAuthenticationTimeoutInSeconds
+            UserBasedVirtualLan                             = $getValue.AdditionalProperties.userBasedVirtualLan
+            PromptForAdditionalAuthenticationCredentials    = $getValue.AdditionalProperties.promptForAdditionalAuthenticationCredentials
+            EnablePairwiseMasterKeyCaching                  = $getValue.AdditionalProperties.enablePairwiseMasterKeyCaching
+            MaximumPairwiseMasterKeyCacheTimeInMinutes      = $getValue.AdditionalProperties.maximumPairwiseMasterKeyCacheTimeInMinutes
+            MaximumNumberOfPairwiseMasterKeysInCache        = $getValue.AdditionalProperties.maximumNumberOfPairwiseMasterKeysInCache
+            EnablePreAuthentication                         = $getValue.AdditionalProperties.enablePreAuthentication
+            MaximumPreAuthenticationAttempts                = $getValue.AdditionalProperties.maximumPreAuthenticationAttempts
+            EapType                                         = $getValue.AdditionalProperties.eapType
+            TrustedServerCertificateNames                   = $getValue.AdditionalProperties.trustedServerCertificateNames
+            AuthenticationMethod                            = $getValue.AdditionalProperties.authenticationMethod
+            InnerAuthenticationProtocolForEAPTTLS           = $getValue.AdditionalProperties.innerAuthenticationProtocolForEAPTTLS
+            OuterIdentityPrivacyTemporaryValue              = $getValue.AdditionalProperties.outerIdentityPrivacyTemporaryValue
+            RequireCryptographicBinding                     = $getValue.AdditionalProperties.requireCryptographicBinding
+            PerformServerValidation                         = $getValue.AdditionalProperties.performServerValidation
+            DisableUserPromptForServerValidation            = $getValue.AdditionalProperties.disableUserPromptForServerValidation
+            AuthenticationPeriodInSeconds                   = $getValue.AdditionalProperties.authenticationPeriodInSeconds
+            AuthenticationRetryDelayPeriodInSeconds         = $getValue.AdditionalProperties.authenticationRetryDelayPeriodInSeconds
+            EapolStartPeriodInSeconds                       = $getValue.AdditionalProperties.eapolStartPeriodInSeconds
+            MaximumEAPOLStartMessages                       = $getValue.AdditionalProperties.maximumEAPOLStartMessages
+            MaximumAuthenticationFailures                   = $getValue.AdditionalProperties.maximumAuthenticationFailures
+            CacheCredentials                                = $getValue.AdditionalProperties.cacheCredentials
+            AuthenticationType                              = $getValue.AdditionalProperties.authenticationType
             Ensure                                          = 'Present'
             Credential                                      = $Credential
             ApplicationId                                   = $ApplicationId
@@ -388,7 +392,7 @@ function Set-TargetResource
         #region resource generator code
         [Parameter()]
         [System.String]
-        $Id,#
+        $Id,
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -425,7 +429,11 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         [ValidateSet('disabled', 'prelogon', 'postlogon')]
-        $networkSingleSignOn,
+        $NetworkSingleSignOn,
+
+        [Parameter()]
+        [System.Int32]
+        $MaximumAuthenticationTimeoutInSeconds,
 
         [Parameter()]
         [ValidateSet('unrestricted', 'fixed', 'variable')]
@@ -467,108 +475,108 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $userBasedVirtualLan,
+        $UserBasedVirtualLan,
 
         [Parameter()]
         [System.Boolean]
-        $promptForAdditionalAuthenticationCredentials,
+        $PromptForAdditionalAuthenticationCredentials,
 
         [Parameter()]
         [System.Boolean]
-        $enablePairwiseMasterKeyCaching,
+        $EnablePairwiseMasterKeyCaching,
 
         [Parameter()]
         [System.Int32]
         [ValidateRange(5,1440)]
-        $maximumPairwiseMasterKeyCacheTimeInMinutes,
+        $MaximumPairwiseMasterKeyCacheTimeInMinutes,
 
         [Parameter()]
         [System.Int32]
         [ValidateRange(1,255)]
-        $maximumNumberOfPairwiseMasterKeysInCache,
+        $MaximumNumberOfPairwiseMasterKeysInCache,
 
         [Parameter()]
         [System.Boolean]
-        $enablePreAuthentication,
+        $EnablePreAuthentication,
 
         [Parameter()]
         [System.Int32]
         [ValidateRange(1,16)]
-        $maximumPreAuthenticationAttempts,
+        $MaximumPreAuthenticationAttempts,
 
         [Parameter()]
         [ValidateSet('eapTls', 'leap', 'eapSim', 'eapTtls', 'peap', 'eapFast', 'teap')]
         [System.String]
-        $eapType,
+        $EapType,
 
         [Parameter()]
         [System.String[]]
-        $trustedServerCertificateNames,#
+        $TrustedServerCertificateNames,#
 
         [Parameter()]
         [ValidateSet('certificate', 'usernameAndPassword', 'derivedCredential')]
         [System.String]
-        $authenticationMethod,
+        $AuthenticationMethod,
 
         [Parameter()]
         [ValidateSet('unencryptedPassword', 'challengeHandshakeAuthenticationProtocol', 'microsoftChap', 'microsoftChapVersionTwo')]
         [System.String]
-        $innerAuthenticationProtocolForEAPTTLS,
+        $InnerAuthenticationProtocolForEAPTTLS,
 
         [Parameter()]
         [System.String]
-        $outerIdentityPrivacyTemporaryValue,
+        $OuterIdentityPrivacyTemporaryValue,
 
         [Parameter()]
         [System.Boolean]
-        $requireCryptographicBinding,
+        $RequireCryptographicBinding,
 
         [Parameter()]
         [System.Boolean]
-        $performServerValidation,
+        $PerformServerValidation,
 
         [Parameter()]
         [System.Boolean]
-        $disableUserPromptForServerValidation,
+        $DisableUserPromptForServerValidation,
 
         [Parameter()]
         [System.Int32]
         [ValidateRange(1,3600)]
-        $authenticationPeriodInSeconds,
+        $AuthenticationPeriodInSeconds,
 
         [Parameter()]
         [System.Int32]
         [ValidateRange(1,3600)]
-        $authenticationRetryDelayPeriodInSeconds,
+        $AuthenticationRetryDelayPeriodInSeconds,
 
         [Parameter()]
         [System.Int32]
         [ValidateRange(1,3600)]
-        $eapolStartPeriodInSeconds,
+        $EapolStartPeriodInSeconds,
 
         [Parameter()]
         [System.Int32]
         [ValidateRange(1,100)]
-        $maximumEAPOLStartMessages,
+        $MaximumEAPOLStartMessages,
 
         [Parameter()]
         [System.Int32]
         [ValidateRange(1,100)]
-        $maximumAuthenticationFailures,
+        $MaximumAuthenticationFailures,
 
         [Parameter()]
         [System.Boolean]
-        $cacheCredentials,
+        $CacheCredentials,
 
         [Parameter()]
         [ValidateSet('none', 'user', 'machine', 'machineOrUser', 'guest')]
         [System.String]
-        $authenticationType,#
+        $AuthenticationType,
 
         [Parameter()]
         [ValidateSet('open', 'wpaPersonal', 'wpaEnterprise', 'wep', 'wpa2Personal', 'wpa2Enterprise')]
         [System.String]
-        $WifiSecurityType,#
+        $WifiSecurityType,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
@@ -649,6 +657,7 @@ function Set-TargetResource
             if ($key -ne '@odata.type')
             {
                 $keyName = $key.Substring(0, 1).ToUpper() + $key.Substring(1, $key.Length - 1)
+                Write-Verbose ("Removing additional property '{0}' from from creation parameters" -f $keyName)
                 $CreateParameters.Remove($keyName)
             }
         }
@@ -780,7 +789,11 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         [ValidateSet('disabled', 'prelogon', 'postlogon')]
-        $networkSingleSignOn,
+        $NetworkSingleSignOn,
+
+        [Parameter()]
+        [System.Int32]
+        $MaximumAuthenticationTimeoutInSeconds,
 
         [Parameter()]
         [ValidateSet('unrestricted', 'fixed', 'variable')]
@@ -822,108 +835,108 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $userBasedVirtualLan,
+        $UserBasedVirtualLan,
 
         [Parameter()]
         [System.Boolean]
-        $promptForAdditionalAuthenticationCredentials,
+        $PromptForAdditionalAuthenticationCredentials,
 
         [Parameter()]
         [System.Boolean]
-        $enablePairwiseMasterKeyCaching,
+        $EnablePairwiseMasterKeyCaching,
 
         [Parameter()]
         [System.Int32]
         [ValidateRange(5,1440)]
-        $maximumPairwiseMasterKeyCacheTimeInMinutes,
+        $MaximumPairwiseMasterKeyCacheTimeInMinutes,
 
         [Parameter()]
         [System.Int32]
         [ValidateRange(1,255)]
-        $maximumNumberOfPairwiseMasterKeysInCache,
+        $MaximumNumberOfPairwiseMasterKeysInCache,
 
         [Parameter()]
         [System.Boolean]
-        $enablePreAuthentication,
+        $EnablePreAuthentication,
 
         [Parameter()]
         [System.Int32]
         [ValidateRange(1,16)]
-        $maximumPreAuthenticationAttempts,
+        $MaximumPreAuthenticationAttempts,
 
         [Parameter()]
         [ValidateSet('eapTls', 'leap', 'eapSim', 'eapTtls', 'peap', 'eapFast', 'teap')]
         [System.String]
-        $eapType,
+        $EapType,
 
         [Parameter()]
         [System.String[]]
-        $trustedServerCertificateNames,#
+        $TrustedServerCertificateNames,#
 
         [Parameter()]
         [ValidateSet('certificate', 'usernameAndPassword', 'derivedCredential')]
         [System.String]
-        $authenticationMethod,
+        $AuthenticationMethod,
 
         [Parameter()]
         [ValidateSet('unencryptedPassword', 'challengeHandshakeAuthenticationProtocol', 'microsoftChap', 'microsoftChapVersionTwo')]
         [System.String]
-        $innerAuthenticationProtocolForEAPTTLS,
+        $InnerAuthenticationProtocolForEAPTTLS,
 
         [Parameter()]
         [System.String]
-        $outerIdentityPrivacyTemporaryValue,
+        $OuterIdentityPrivacyTemporaryValue,
 
         [Parameter()]
         [System.Boolean]
-        $requireCryptographicBinding,
+        $RequireCryptographicBinding,
 
         [Parameter()]
         [System.Boolean]
-        $performServerValidation,
+        $PerformServerValidation,
 
         [Parameter()]
         [System.Boolean]
-        $disableUserPromptForServerValidation,
+        $DisableUserPromptForServerValidation,
 
         [Parameter()]
         [System.Int32]
         [ValidateRange(1,3600)]
-        $authenticationPeriodInSeconds,
+        $AuthenticationPeriodInSeconds,
 
         [Parameter()]
         [System.Int32]
         [ValidateRange(1,3600)]
-        $authenticationRetryDelayPeriodInSeconds,
+        $AuthenticationRetryDelayPeriodInSeconds,
 
         [Parameter()]
         [System.Int32]
         [ValidateRange(1,3600)]
-        $eapolStartPeriodInSeconds,
+        $EapolStartPeriodInSeconds,
 
         [Parameter()]
         [System.Int32]
         [ValidateRange(1,100)]
-        $maximumEAPOLStartMessages,
+        $MaximumEAPOLStartMessages,
 
         [Parameter()]
         [System.Int32]
         [ValidateRange(1,100)]
-        $maximumAuthenticationFailures,
+        $MaximumAuthenticationFailures,
 
         [Parameter()]
         [System.Boolean]
-        $cacheCredentials,
+        $CacheCredentials,
 
         [Parameter()]
         [ValidateSet('none', 'user', 'machine', 'machineOrUser', 'guest')]
         [System.String]
-        $authenticationType,#
+        $AuthenticationType,
 
         [Parameter()]
         [ValidateSet('open', 'wpaPersonal', 'wpaEnterprise', 'wep', 'wpa2Personal', 'wpa2Enterprise')]
         [System.String]
-        $WifiSecurityType,#
+        $WifiSecurityType,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
@@ -1213,8 +1226,6 @@ function Get-M365DSCAdditionalProperties
         'ConnectAutomatically'
         'ConnectToPreferredNetwork'
         'ConnectWhenNetworkNameIsHidden'
-        'DeviceManagementApplicabilityRuleOsEdition'
-        'DeviceManagementApplicabilityRuleOsVersion'
         'ForceFIPSCompliance'
         'MeteredConnectionLimit'
         'NetworkName'
@@ -1225,6 +1236,30 @@ function Get-M365DSCAdditionalProperties
         'ProxySetting'
         'Ssid'
         'WifiSecurityType'
+        'NetworkSingleSignOn'
+        'MaximumAuthenticationTimeoutInSeconds'
+        'UserBasedVirtualLan'
+        'PromptForAdditionalAuthenticationCredentials'
+        'EnablePairwiseMasterKeyCaching'
+        'MaximumPairwiseMasterKeyCacheTimeInMinutes'
+        'MaximumNumberOfPairwiseMasterKeysInCache'
+        'EnablePreAuthentication'
+        'MaximumPreAuthenticationAttempts'
+        'EapType'
+        'TrustedServerCertificateNames'
+        'AuthenticationMethod'
+        'InnerAuthenticationProtocolForEAPTTLS'
+        'OuterIdentityPrivacyTemporaryValue'
+        'RequireCryptographicBinding'
+        'PerformServerValidation'
+        'DisableUserPromptForServerValidation'
+        'AuthenticationPeriodInSeconds'
+        'AuthenticationRetryDelayPeriodInSeconds'
+        'EapolStartPeriodInSeconds'
+        'MaximumEAPOLStartMessages'
+        'MaximumAuthenticationFailures'
+        'CacheCredentials'
+        'AuthenticationType'
     )
 
     $results = @{'@odata.type' = '#microsoft.graph.windowsWifiEnterpriseEAPConfiguration' }
