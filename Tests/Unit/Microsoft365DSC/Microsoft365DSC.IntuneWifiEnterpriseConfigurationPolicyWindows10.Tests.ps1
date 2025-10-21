@@ -15,7 +15,7 @@ Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
         -Resolve)
 
 $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource 'IntuneWifiConfigurationPolicyWindows10' -GenericStubModule $GenericStubPath
+    -DscResource 'IntuneWifiEnterpriseConfigurationPolicyWindows10' -GenericStubModule $GenericStubPath
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
@@ -211,7 +211,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name 'The IntuneWifiConfigurationPolicyWindows10 exists and values are NOT in the desired state' -Fixture {
+        Context -Name 'The IntuneWifiEnterpriseConfigurationPolicyWindows10 exists and values are NOT in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
                     ConnectAutomatically           = $True
