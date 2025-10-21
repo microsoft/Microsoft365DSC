@@ -201,7 +201,7 @@ function Get-TargetResource
                 {
                     $myApps.Add('odataType', $currentApps.'@odata.type'.ToString())
                 }
-                if ($myApps.values.Where({ $null -ne $_ }).count -gt 0)
+                if ($myApps.values.Where({ $null -ne $_ }).Count -gt 0)
                 {
                     $complexApps += $myApps
                 }
@@ -239,7 +239,7 @@ function Get-TargetResource
             {
                 $complexUwpApp.Add('odataType', $currentkioskProfiles.appConfiguration.uwpApp.'@odata.type'.ToString())
             }
-            if ($complexUwpApp.values.Where({ $null -ne $_ }).count -eq 0)
+            if ($complexUwpApp.values.Where({ $null -ne $_ }).Count -eq 0)
             {
                 $complexUwpApp = $null
             }
@@ -273,7 +273,7 @@ function Get-TargetResource
             {
                 $complexWin32App.Add('odataType', $currentkioskProfiles.appConfiguration.win32App.'@odata.type'.ToString())
             }
-            if ($complexWin32App.values.Where({ $null -ne $_ }).count -eq 0)
+            if ($complexWin32App.values.Where({ $null -ne $_ }).Count -eq 0)
             {
                 $complexWin32App = $null
             }
@@ -282,7 +282,7 @@ function Get-TargetResource
             {
                 $complexAppConfiguration.Add('odataType', $currentkioskProfiles.appConfiguration.'@odata.type'.ToString())
             }
-            if ($complexAppConfiguration.values.Where({ $null -ne $_ }).count -eq 0)
+            if ($complexAppConfiguration.values.Where({ $null -ne $_ }).Count -eq 0)
             {
                 $complexAppConfiguration = $null
             }
@@ -303,13 +303,13 @@ function Get-TargetResource
                 {
                     $myUserAccountsConfiguration.Add('odataType', $currentUserAccountsConfiguration.'@odata.type'.ToString())
                 }
-                if ($myUserAccountsConfiguration.values.Where({ $null -ne $_ }).count -gt 0)
+                if ($myUserAccountsConfiguration.values.Where({ $null -ne $_ }).Count -gt 0)
                 {
                     $complexUserAccountsConfiguration += $myUserAccountsConfiguration
                 }
             }
             $mykioskProfiles.Add('UserAccountsConfiguration', $complexUserAccountsConfiguration)
-            if ($mykioskProfiles.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($mykioskProfiles.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexKioskProfiles += $mykioskProfiles
             }
@@ -330,7 +330,7 @@ function Get-TargetResource
         {
             $complexWindowsKioskForceUpdateSchedule.Add('StartDateTime', ([DateTimeOffset]$getValue.AdditionalProperties.windowsKioskForceUpdateSchedule.startDateTime).ToString('o'))
         }
-        if ($complexWindowsKioskForceUpdateSchedule.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexWindowsKioskForceUpdateSchedule.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexWindowsKioskForceUpdateSchedule = $null
         }
@@ -515,7 +515,7 @@ function Set-TargetResource
         $keys = (([Hashtable]$CreateParameters).Clone()).Keys
         foreach ($key in $keys)
         {
-            if ($null -ne $CreateParameters.$key -and $CreateParameters.$key.getType().Name -like '*cimInstance*')
+            if ($null -ne $CreateParameters.$key -and $CreateParameters.$key.GetType().Name -like '*cimInstance*')
             {
                 $CreateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters.$key
             }
@@ -546,7 +546,7 @@ function Set-TargetResource
         $keys = (([Hashtable]$UpdateParameters).Clone()).Keys
         foreach ($key in $keys)
         {
-            if ($null -ne $UpdateParameters.$key -and $UpdateParameters.$key.getType().Name -like '*cimInstance*')
+            if ($null -ne $UpdateParameters.$key -and $UpdateParameters.$key.GetType().Name -like '*cimInstance*')
             {
                 $UpdateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters.$key
             }

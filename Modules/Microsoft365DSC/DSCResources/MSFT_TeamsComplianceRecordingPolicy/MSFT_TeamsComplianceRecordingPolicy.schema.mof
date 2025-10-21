@@ -1,4 +1,4 @@
-[ClassVersion("1.0.0")]
+[ClassVersion("1.0.0.0")]
 class MSFT_TeamsComplianceRecordingApplication
 {
     [Write, Description("A name that uniquely identifies the application instance of the policy-based recording application.")] String Id;
@@ -10,7 +10,7 @@ class MSFT_TeamsComplianceRecordingApplication
     [Write, Description("Determines the number of invites to send out to the application instance of the policy-based recording application. Can be set to 1 or 2 only.")] String ConcurrentInvitationCount;
 };
 
-[ClassVersion("1.0.0.0"), FriendlyName("TeamsComplianceRecordingPolicy")]
+[ClassVersion("1.0.0.1"), FriendlyName("TeamsComplianceRecordingPolicy")]
 class MSFT_TeamsComplianceRecordingPolicy : OMI_BaseResource
 {
     [Key, Description("Unique identifier of the application instance of a policy-based recording application to be retrieved.")] String Identity;
@@ -18,6 +18,7 @@ class MSFT_TeamsComplianceRecordingPolicy : OMI_BaseResource
     [Write, Description("Enables administrators to provide explanatory text to accompany a Teams recording policy. For example, the Description might include information about the users the policy should be assigned to.")] String Description;
     [Write, Description("Setting this attribute to true disables recording audio notifications for 1:1 calls that are under compliance recording.")] Boolean DisableComplianceRecordingAudioNotificationForCalls;
     [Write, Description("Controls whether this Teams recording policy is active or not.")] Boolean Enabled;
+    [Write, Description("Setting this attribute to true enables compliance recording for calls that have been re-routed from a compliance recording-enabled user. Supported call scenarios include forward, transfer, delegation, call groups, and simultaneous ring.")] Boolean RecordReroutedCalls;
     [Write, Description("This parameter is reserved for future use.")] Boolean WarnUserOnRemoval;
     [Write, Description("Present ensures the instance exists, absent ensures it is removed."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] string Ensure;
     [Write, Description("Credentials of the workload's Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;

@@ -46,6 +46,20 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-CsTeamsUpdateManagementPolicy -MockWith {
             }
 
+            Mock -CommandName Get-CsTeamsUpdateManagementPolicy -MockWith {
+                return @{
+                    AllowManagedUpdates = $False
+                    AllowPreview        = $False
+                    AllowPublicPreview  = 'Enabled'
+                    Description         = 'Test'
+                    Identity            = 'Tag:TestPolicy'
+                    UpdateDayOfWeek     = 1
+                    UpdateTime          = '18:00'
+                    UpdateTimeOfDay     = $DateTimeValue
+                    UseNewTeamsClient   = 'MicrosoftChoice'
+                }
+            }
+
             # Mock Write-M365DSCHost to hide output during the tests
             Mock -CommandName Write-M365DSCHost -MockWith {
             }
@@ -97,26 +111,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowPublicPreview  = 'Enabled'
                     Description         = 'Test'
                     Identity            = 'TestPolicy'
-                    UpdateDayOfWeek     = 1
+                    UpdateDayOfWeek     = 3 # Drift
                     UpdateTime          = '18:00'
                     UpdateTimeOfDay     = '6:00 PM'
                     UseNewTeamsClient   = 'MicrosoftChoice'
                     Ensure              = 'Present'
                     Credential          = $Credential
-                }
-
-                Mock -CommandName Get-CsTeamsUpdateManagementPolicy -MockWith {
-                    return @{
-                        AllowManagedUpdates = $False
-                        AllowPreview        = $False
-                        AllowPublicPreview  = 'Enabled'
-                        Description         = 'Test'
-                        Identity            = 'TestPolicy'
-                        UpdateDayOfWeek     = 3; #Drift
-                        UpdateTime          = '18:00'
-                        UpdateTimeOfDay     = $DateTimeValue
-                        UseNewTeamsClient   = 'MicrosoftChoice'
-                    }
                 }
             }
 
@@ -150,20 +150,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure              = 'Present'
                     Credential          = $Credential
                 }
-
-                Mock -CommandName Get-CsTeamsUpdateManagementPolicy -MockWith {
-                    return @{
-                        AllowManagedUpdates = $False
-                        AllowPreview        = $False
-                        AllowPublicPreview  = 'Enabled'
-                        Description         = 'Test'
-                        Identity            = 'Tag:TestPolicy'
-                        UpdateDayOfWeek     = 1
-                        UpdateTime          = '18:00'
-                        UpdateTimeOfDay     = $DateTimeValue
-                        UseNewTeamsClient   = 'MicrosoftChoice'
-                    }
-                }
             }
 
             It 'Should return Present from the Get method' {
@@ -181,20 +167,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Identity   = 'Tag:TestPolicy'
                     Ensure     = 'Absent'
                     Credential = $Credential
-                }
-
-                Mock -CommandName Get-CsTeamsUpdateManagementPolicy -MockWith {
-                    return @{
-                        AllowManagedUpdates = $False
-                        AllowPreview        = $False
-                        AllowPublicPreview  = 'Enabled'
-                        Description         = 'Test'
-                        Identity            = 'Tag:TestPolicy'
-                        UpdateDayOfWeek     = 1
-                        UpdateTime          = '18:00'
-                        UpdateTimeOfDay     = $DateTimeValue
-                        UseNewTeamsClient   = 'MicrosoftChoice'
-                    }
                 }
             }
 
@@ -218,20 +190,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
                     Credential = $Credential
-                }
-
-                Mock -CommandName Get-CsTeamsUpdateManagementPolicy -MockWith {
-                    return @{
-                        AllowManagedUpdates = $False
-                        AllowPreview        = $False
-                        AllowPublicPreview  = 'Enabled'
-                        Description         = 'Test'
-                        Identity            = 'Tag:TestPolicy'
-                        UpdateDayOfWeek     = 1
-                        UpdateTime          = '18:00'
-                        UpdateTimeOfDay     = $DateTimeValue
-                        UseNewTeamsClient   = 'MicrosoftChoice'
-                    }
                 }
             }
 

@@ -1095,7 +1095,7 @@ function New-PolicyData
     {
         if (!$desiredData.Contains($currItem))
         {
-            $desiredData.add($currItem) | Out-Null
+            $desiredData.Add($currItem) | Out-Null
         }
     }
 
@@ -1103,20 +1103,20 @@ function New-PolicyData
     {
         if (!$desiredData.Contains("$curritem"))
         {
-            $desiredData.add($currItem) | Out-Null
+            $desiredData.Add($currItem) | Out-Null
         }
     }
 
     foreach ($currItem in $removedData)
     {
-        $desiredData.remove($currItem) | Out-Null
+        $desiredData.Remove($currItem) | Out-Null
     }
 
     foreach ($currItem in $additionalData)
     {
         if (!$desiredData.Contains("$curritem"))
         {
-            $desiredData.add($currItem) | Out-Null
+            $desiredData.Add($currItem) | Out-Null
         }
     }
 

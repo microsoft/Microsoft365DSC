@@ -8,7 +8,7 @@ function Get-StringFirstCharacterToUpper
         $Value
     )
 
-    return $Value.Substring(0,1).ToUpper() + $Value.Substring(1,$Value.length-1)
+    return $Value.Substring(0,1).ToUpper() + $Value.Substring(1,$Value.Length-1)
 }
 
 function Get-StringFirstCharacterToLower
@@ -21,7 +21,7 @@ function Get-StringFirstCharacterToLower
         $Value
     )
 
-    return $Value.Substring(0,1).ToLower() + $Value.Substring(1,$Value.length-1)
+    return $Value.Substring(0,1).ToLower() + $Value.Substring(1,$Value.Length-1)
 }
 
 function Remove-M365DSCCimInstanceTrailingCharacterFromExport
@@ -73,7 +73,7 @@ function Rename-M365DSCCimInstanceParameter
         }
         $result = $values
 
-        return , $result
+        return ,[System.Collections.Hashtable[]]$result
     }
     #endregion
 
@@ -90,7 +90,7 @@ function Rename-M365DSCCimInstanceParameter
 
         foreach ($key in $keys)
         {
-            $keyName = $key.Substring(0, 1).Tolower() + $key.Substring(1, $key.length - 1)
+            $keyName = $key.Substring(0, 1).Tolower() + $key.Substring(1, $key.Length - 1)
             if ($key -in $KeyMapping.Keys)
             {
                 $keyName = $KeyMapping.$key
@@ -125,7 +125,7 @@ function Rename-M365DSCCimInstanceParameter
 function Get-M365DSCDRGComplexTypeToHashtable
 {
     [CmdletBinding()]
-    [OutputType([hashtable], [hashtable[]])]
+    [OutputType([System.Collections.Hashtable], [System.Collections.Hashtable[]])]
     param(
         [Parameter()]
         $ComplexObject
@@ -152,7 +152,7 @@ function Get-M365DSCDRGComplexTypeToHashtable
         # PowerShell returns all non-captured stream output, not just the argument of the return statement.
         #An empty array is mangled into $null in the process.
         #However, an array can be preserved on return by prepending it with the array construction operator (,)
-        return , [hashtable[]]$results
+        return ,[System.Collections.Hashtable[]]$results
     }
 
     if ($ComplexObject.GetType().FullName -like '*Dictionary*')
@@ -179,11 +179,10 @@ function Get-M365DSCDRGComplexTypeToHashtable
                 }
             }
         }
-        return [hashtable]$results
+        return $results
     }
 
     $results = @{}
-
     if ($ComplexObject.GetType().Fullname -like '*hashtable')
     {
         $keys = $ComplexObject.Keys
@@ -210,7 +209,14 @@ function Get-M365DSCDRGComplexTypeToHashtable
 
                 if ($null -ne $hash -and $hash.Keys.Count -gt 0)
                 {
-                    $results.Add($keyName, $hash)
+                    if ($ComplexObject.$keyName.GetType().FullName -like '*[[\]]')
+                    {
+                        $results.Add($keyName, @($hash))
+                    }
+                    else
+                    {
+                        $results.Add($keyName, $hash)
+                    }
                 }
             }
             else
@@ -219,7 +225,7 @@ function Get-M365DSCDRGComplexTypeToHashtable
             }
         }
     }
-    return [hashtable]$results
+    return $results
 }
 
 <#
@@ -580,7 +586,7 @@ function Get-M365DSCDRGSimpleObjectTypeToString
             $returnValue = $Space + $key + ' = @('
             $whitespace = ''
             $newline = ''
-            if ($Value.count -gt 1)
+            if ($Value.Count -gt 1)
             {
                 $returnValue += "`r`n"
                 $whitespace = $Space + '    '
@@ -659,7 +665,8 @@ function Compare-M365DSCComplexObject
         return $false
     }
 
-    if ($Source.GetType().FullName -like '*CimInstance[[\]]' -or $Source.GetType().FullName -like '*Hashtable[[\]]')
+    if ($Source.GetType().FullName -like '*CimInstance[[\]]' -or $Source.GetType().FullName -like '*Hashtable[[\]]' -or `
+        ($Source.GetType().FullName -like '*Object[[\]]' -and $Source.Count -gt 0 -and ($Source[0].GetType().FullName -like '*CimInstance*' -or $Source[0].GetType().FullName -like '*Hashtable*')))
     {
         if ($Source.Count -ne $Target.Count)
         {
@@ -874,12 +881,12 @@ function Compare-M365DSCComplexObject
                         # Align line breaks
                         if (-not [System.String]::IsNullOrEmpty($referenceObject))
                         {
-                            $referenceObject = $referenceObject.Replace("`r`n", "`n")
+                            $referenceObject = $referenceObject.ToString().Replace("`r`n", "`n")
                         }
 
                         if (-not [System.String]::IsNullOrEmpty($differenceObject))
                         {
-                            $differenceObject = $differenceObject.Replace("`r`n", "`n")
+                            $differenceObject = $differenceObject.ToString().Replace("`r`n", "`n")
                         }
 
                         $compareResult = $true
@@ -920,10 +927,10 @@ function Compare-M365DSCComplexObjectV2
     [CmdletBinding()]
     [OutputType([System.Boolean])]
     param(
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         $Source,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         $Target,
 
         [Parameter(Mandatory = $true)]
@@ -979,7 +986,8 @@ function Compare-M365DSCComplexObjectV2
         return $false
     }
 
-    if ($Source.GetType().FullName -like '*CimInstance[[\]]' -or $Source.GetType().FullName -like '*Hashtable[[\]]')
+    if ($Source.GetType().FullName -like '*CimInstance[[\]]' -or $Source.GetType().FullName -like '*Hashtable[[\]]' -or `
+        ($Source.GetType().FullName -like '*Object[[\]]' -and $Source.Count -gt 0 -and ($Source[0].GetType().FullName -like '*CimInstance*' -or $Source[0].GetType().FullName -like '*Hashtable*')))
     {
         if ($Source.Count -ne $Target.Count)
         {
@@ -1379,22 +1387,29 @@ function Write-M365DSCDriftsToEventLog
         $LCMState = $null
         try
         {
-            $LCMInfo = Get-DscLocalConfigurationManager -ErrorAction Stop
+            if (([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
+            {
+                $LCMInfo = Get-DscLocalConfigurationManager -ErrorAction Stop
 
-            if ($LCMInfo.LCMStateDetail -eq 'LCM is performing a consistency check.' -or `
-                    $LCMInfo.LCMStateDetail -eq 'LCM exécute une vérification de cohérence.' -or `
-                    $LCMInfo.LCMStateDetail -eq 'LCM führt gerade eine Konsistenzüberprüfung durch.')
-            {
-                $LCMState = 'ConsistencyCheck'
+                if ($LCMInfo.LCMStateDetail -eq 'LCM is performing a consistency check.' -or `
+                        $LCMInfo.LCMStateDetail -eq 'LCM exécute une vérification de cohérence.' -or `
+                        $LCMInfo.LCMStateDetail -eq 'LCM führt gerade eine Konsistenzüberprüfung durch.')
+                {
+                    $LCMState = 'ConsistencyCheck'
+                }
+                elseif ($LCMInfo.LCMStateDetail -eq 'LCM is testing node against the configuration.')
+                {
+                    $LCMState = 'ManualTestDSCConfiguration'
+                }
+                elseif ($LCMInfo.LCMStateDetail -eq 'LCM is applying a new configuration.' -or `
+                        $LCMInfo.LCMStateDetail -eq 'LCM applique une nouvelle configuration.')
+                {
+                    $LCMState = 'Initial'
+                }
             }
-            elseif ($LCMInfo.LCMStateDetail -eq 'LCM is testing node against the configuration.')
+            else
             {
-                $LCMState = 'ManualTestDSCConfiguration'
-            }
-            elseif ($LCMInfo.LCMStateDetail -eq 'LCM is applying a new configuration.' -or `
-                    $LCMInfo.LCMStateDetail -eq 'LCM applique une nouvelle configuration.')
-            {
-                $LCMState = 'Initial'
+                $LCMState = 'Unauthorized'
             }
         }
         catch
@@ -1453,7 +1468,7 @@ function Write-M365DSCDriftsToEventLog
 function Convert-M365DSCDRGComplexTypeToHashtable
 {
     [CmdletBinding()]
-    [OutputType([hashtable], [hashtable[]])]
+    [OutputType([System.Collections.Hashtable], [System.Collections.Hashtable[]])]
     param(
         [Parameter(Mandatory = $true)]
         [AllowNull()]
@@ -1486,7 +1501,7 @@ function Convert-M365DSCDRGComplexTypeToHashtable
         # PowerShell returns all non-captured stream output, not just the argument of the return statement.
         #An empty array is mangled into $null in the process.
         #However, an array can be preserved on return by prepending it with the array construction operator (,)
-        return , [hashtable[]]$results
+        return ,[System.Collections.Hashtable[]]$results
     }
 
     if ($SingleLevel)
@@ -1503,7 +1518,7 @@ function Convert-M365DSCDRGComplexTypeToHashtable
             $propertyValue = $ComplexObject.$($key.Name)
             $returnObject.Add($propertyName, $propertyValue)
         }
-        return [hashtable]$returnObject
+        return $returnObject
     }
 
     $hashComplexObject = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject
@@ -1513,7 +1528,7 @@ function Convert-M365DSCDRGComplexTypeToHashtable
         $results = $hashComplexObject.Clone()
         if ($SingleLevel)
         {
-            return [hashtable]$results
+            return $results
         }
 
         $keys = $hashComplexObject.Keys | Where-Object -FilterScript { $_ -ne 'PSComputerName' }
@@ -1533,7 +1548,7 @@ function Convert-M365DSCDRGComplexTypeToHashtable
         }
     }
 
-    return [hashtable]$results
+    return $results
 }
 
 function ConvertFrom-IntunePolicyAssignment
@@ -1635,7 +1650,7 @@ function ConvertFrom-IntunePolicyAssignment
         $assignmentResult += $hashAssignment
     }
 
-    return ,$assignmentResult
+    return ,[System.Collections.Hashtable[]]$assignmentResult
 }
 
 function ConvertTo-IntunePolicyAssignment
@@ -1745,7 +1760,7 @@ function ConvertTo-IntunePolicyAssignment
         }
     }
 
-    return ,$assignmentResult
+    return ,[System.Collections.Hashtable[]]$assignmentResult
 }
 
 function ConvertFrom-IntuneMobileAppAssignment
@@ -1844,7 +1859,7 @@ function ConvertFrom-IntuneMobileAppAssignment
         $assignmentResult += $hashAssignment
     }
 
-    return ,$assignmentResult
+    return ,[System.Collections.Hashtable[]]$assignmentResult
 }
 
 function ConvertTo-IntuneMobileAppAssignment
@@ -1958,7 +1973,7 @@ function ConvertTo-IntuneMobileAppAssignment
         $assignmentResult += $formattedAssignment
     }
 
-    return ,$assignmentResult
+    return ,[System.Collections.Hashtable[]]$assignmentResult
 }
 
 function Compare-M365DSCIntunePolicyAssignment
@@ -2140,7 +2155,7 @@ function Update-DeviceConfigurationPolicyAssignment
                             Write-Warning -Message $message
                             $target = $null
                         }
-                        if ($group -and $group.count -gt 1)
+                        if ($group -and $group.Count -gt 1)
                         {
                             $message = "Skipping assignment for the group with DisplayName {$($target.groupDisplayName)} as it is not unique in the directory.`r`n"
                             $message += "Please update your DSC resource extract with the correct groupId or a unique group DisplayName."
@@ -2263,7 +2278,7 @@ function Update-DeviceAppManagementPolicyAssignment
                             Write-Warning -Message $message
                             $target = $null
                         }
-                        if ($group -and $group.count -gt 1)
+                        if ($group -and $group.Count -gt 1)
                         {
                             $message = "Skipping assignment for the group with DisplayName {$($target.groupDisplayName)} as it is not unique in the directory.`r`n"
                             $message += "Please update your DSC resource extract with the correct groupId or a unique group DisplayName."
@@ -2647,7 +2662,7 @@ function Get-IntuneSettingCatalogPolicySetting
             $settingInstance.Add('settingInstanceTemplateReference', @{'settingInstanceTemplateId' = $settingInstanceTemplate.settingInstanceTemplateId })
         }
         $settingValueName = $settingType.Replace('#microsoft.graph.deviceManagementConfiguration', '').Replace('Instance', 'Value')
-        $settingValueName = $settingValueName.Substring(0, 1).ToLower() + $settingValueName.Substring(1, $settingValueName.length - 1 )
+        $settingValueName = $settingValueName.Substring(0, 1).ToLower() + $settingValueName.Substring(1, $settingValueName.Length - 1 )
         [string]$settingValueType = $settingInstanceTemplate.AdditionalProperties."$($settingValueName)Template".'@odata.type' | Select-Object -Unique
         if (-not [System.String]::IsNullOrEmpty($settingValueType))
         {
@@ -2829,7 +2844,7 @@ function Get-IntuneSettingCatalogPolicySettingInstanceValue
                     $childSettingType = $childDefinition.AdditionalProperties.'@odata.type'.Replace('Definition', 'Instance').Replace('SettingGroup', 'GroupSetting')
                     $childSettingValueName = $childSettingType.Replace('#microsoft.graph.deviceManagementConfiguration', '').Replace('Instance', 'Value')
                     $childSettingValueType = "#microsoft.graph.deviceManagementConfiguration$($childSettingValueName)"
-                    $childSettingValueName = $childSettingValueName.Substring(0, 1).ToLower() + $childSettingValueName.Substring(1, $childSettingValueName.length - 1 )
+                    $childSettingValueName = $childSettingValueName.Substring(0, 1).ToLower() + $childSettingValueName.Substring(1, $childSettingValueName.Length - 1 )
                     $childSettingInstanceTemplate = if ($null -ne $SettingInstanceTemplate.AdditionalProperties) {
                         $SettingInstanceTemplate.AdditionalProperties.groupSettingCollectionValueTemplate.children | Where-Object { $_.settingDefinitionId -eq $childDefinition.Id } | Select-Object -First 1
                     } else {
@@ -3267,7 +3282,6 @@ function Export-IntuneSettingCatalogPolicySettings
         )]
         [switch]$ContainsDeviceAndUserSettings
     )
-
     if ($PSCmdlet.ParameterSetName -eq 'Start')
     {
         if ($ContainsDeviceAndUserSettings)

@@ -37,5 +37,16 @@
     "Global",
     "USGov"
   ],
-  "mode": "Configuration"
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Beta.Applications",
+      "cmdlets": [
+        "Get-MgBetaOnPremisePublishingProfileConnectorGroup",
+        "New-MgBetaOnPremisePublishingProfileConnectorGroup",
+        "Remove-MgBetaOnPremisePublishingProfileConnectorGroup",
+        "Update-MgBetaOnPremisePublishingProfileConnectorGroup"
+      ]
+    }
+  ]
 }

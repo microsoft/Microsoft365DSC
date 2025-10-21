@@ -1,11 +1,4 @@
-import {
-  Checkbox,
-  IStackItemStyles,
-  IStackStyles,
-  IStackTokens,
-  Stack,
-  StackItem
-} from '@fluentui/react';
+import { Checkbox, IStackItemStyles, IStackStyles, IStackTokens, Stack, StackItem } from '@fluentui/react';
 import * as React from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { Resource } from '../../models/Resource';
@@ -42,13 +35,13 @@ export const WorkloadOptions: React.FunctionComponent<IWorkloadOptionsProps> = (
   };
 
   const onSelectAll = (workload: Workload, isIndeterminate?: boolean, checked?: boolean) => {
-      setResources((selectedResources) => {
-        return selectedResources.map((resource) => {
-          const updatedResource = resource.workload === workload.id ? { ...resource, checked: isIndeterminate || checked } : resource;
-          return updatedResource;
-        });
+    setResources((selectedResources) => {
+      return selectedResources.map((resource) => {
+        const updatedResource =
+          resource.workload === workload.id ? { ...resource, checked: isIndeterminate || checked } : resource;
+        return updatedResource;
       });
-
+    });
   };
 
   return (
@@ -65,9 +58,8 @@ export const WorkloadOptions: React.FunctionComponent<IWorkloadOptionsProps> = (
                     label={resource.name}
                     checked={resource.checked}
                     onChange={(ev, checked) => props.onSelectedResourcesChange(resource, checked)}
-                    value={resource.name}
+                    inputProps={{ value: resource.name, onMouseOver: () => _onCheckboxMouseEnter(resource) }}
                     key={resource.name}
-                    onMouseOver={() => _onCheckboxMouseEnter(resource)}
                   />
                 </StackItem>
               ))}

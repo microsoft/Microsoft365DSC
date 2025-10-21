@@ -193,7 +193,7 @@ function Get-TargetResource
             {
                 $mycustomSubjectAlternativeNames.Add('SanType', $currentcustomSubjectAlternativeNames.sanType.ToString())
             }
-            if ($mycustomSubjectAlternativeNames.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($mycustomSubjectAlternativeNames.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexCustomSubjectAlternativeNames += $mycustomSubjectAlternativeNames
             }
@@ -205,7 +205,7 @@ function Get-TargetResource
             $myextendedKeyUsages = [ordered]@{}
             $myextendedKeyUsages.Add('Name', $currentextendedKeyUsages.name)
             $myextendedKeyUsages.Add('ObjectIdentifier', $currentextendedKeyUsages.objectIdentifier)
-            if ($myextendedKeyUsages.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myextendedKeyUsages.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexExtendedKeyUsages += $myextendedKeyUsages
             }
@@ -448,7 +448,7 @@ function Set-TargetResource
         $keys = (([Hashtable]$CreateParameters).Clone()).Keys
         foreach ($key in $keys)
         {
-            if ($null -ne $CreateParameters.$key -and $CreateParameters.$key.getType().Name -like '*cimInstance*')
+            if ($null -ne $CreateParameters.$key -and $CreateParameters.$key.GetType().Name -like '*cimInstance*')
             {
                 $CreateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters.$key
             }
@@ -479,7 +479,7 @@ function Set-TargetResource
         $keys = (([Hashtable]$UpdateParameters).Clone()).Keys
         foreach ($key in $keys)
         {
-            if ($null -ne $UpdateParameters.$key -and $UpdateParameters.$key.getType().Name -like '*cimInstance*')
+            if ($null -ne $UpdateParameters.$key -and $UpdateParameters.$key.GetType().Name -like '*cimInstance*')
             {
                 $UpdateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters.$key
             }

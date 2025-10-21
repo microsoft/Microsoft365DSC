@@ -38,6 +38,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Get-CsTeamsUpgradeConfiguration -MockWith {
+                return @{
+                    DownloadTeams    = $True
+                    SfBMeetingJoinUx = 'NativeLimitedClient'
+                }
             }
 
             # Mock Write-M365DSCHost to hide output during the tests
@@ -56,13 +60,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     IsSingleInstance = 'Yes'
                     SfBMeetingJoinUx = 'NativeLimitedClient'
                 }
-
-                Mock -CommandName Get-CsTeamsUpgradeConfiguration -MockWith {
-                    return @{
-                        DownloadTeams    = $True
-                        SfBMeetingJoinUx = 'NativeLimitedClient'
-                    }
-                }
             }
 
             It 'Should return absent from the Get method' {
@@ -78,17 +75,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'When Settings are NOT in the Desired State' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    DownloadTeams    = $False
+                    DownloadTeams    = $False # Drift
                     Credential       = $Credential
                     IsSingleInstance = 'Yes'
                     SfBMeetingJoinUx = 'NativeLimitedClient'
-                }
-
-                Mock -CommandName Get-CsTeamsUpgradeConfiguration -MockWith {
-                    return @{
-                        DownloadTeams    = $True
-                        SfBMeetingJoinUx = 'NativeLimitedClient'
-                    }
                 }
             }
 
@@ -112,13 +102,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
                     Credential = $Credential
-                }
-
-                Mock -CommandName Get-CsTeamsUpgradeConfiguration -MockWith {
-                    return @{
-                        DownloadTeams    = $True
-                        SfBMeetingJoinUx = 'NativeLimitedClient'
-                    }
                 }
             }
 

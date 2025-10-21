@@ -1,5 +1,7 @@
 Confirm-M365DSCModuleDependency -ModuleName 'MSFT_AADUser'
 
+$Script:propertiesToRetrieve = @('Id', 'AccountEnabled', 'UserPrincipalName', 'DisplayName', 'GivenName', 'Surname', 'UsageLocation', 'City', 'Country', 'Department', 'FaxNumber', 'MobilePhone', 'OfficeLocation', 'Mail', 'OtherMails', 'BusinessPhones', 'PostalCode', 'PreferredLanguage', 'State', 'StreetAddress', 'JobTitle', 'UserType', 'PasswordPolicies')
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -9,6 +11,10 @@ function Get-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $UserPrincipalName,
+
+        [Parameter()]
+        [System.Boolean]
+        $AccountEnabled,
 
         [Parameter()]
         [System.String]
@@ -167,6 +173,7 @@ function Get-TargetResource
 
             $nullReturn = @{
                 UserPrincipalName     = $null
+                AccountEnabled        = $null
                 DisplayName           = $null
                 FirstName             = $null
                 LastName              = $null
@@ -187,8 +194,7 @@ function Get-TargetResource
             }
 
             Write-Verbose -Message "Getting Office 365 User $UserPrincipalName"
-            $propertiesToRetrieve = @('Id', 'UserPrincipalName', 'DisplayName', 'GivenName', 'Surname', 'UsageLocation', 'City', 'Country', 'Department', 'FaxNumber', 'MobilePhone', 'OfficeLocation', 'Mail', 'OtherMails', 'BusinessPhones', 'PostalCode', 'PreferredLanguage', 'State', 'StreetAddress', 'JobTitle', 'UserType', 'PasswordPolicies')
-            $user = Get-MgUser -UserId $UserPrincipalName -Property $propertiesToRetrieve -ErrorAction SilentlyContinue
+            $user = Get-MgUser -UserId $UserPrincipalName -Property $Script:propertiesToRetrieve -ErrorAction SilentlyContinue
             if ($null -eq $user)
             {
                 Write-Verbose -Message "The specified User doesn't already exist."
@@ -253,6 +259,7 @@ function Get-TargetResource
 
         $results = @{
             UserPrincipalName     = $UserPrincipalName
+            AccountEnabled        = $user.AccountEnabled
             DisplayName           = $user.DisplayName
             FirstName             = $user.GivenName
             LastName              = $user.Surname
@@ -308,6 +315,10 @@ function Set-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $UserPrincipalName,
+
+        [Parameter()]
+        [System.Boolean]
+        $AccountEnabled,
 
         [Parameter()]
         [System.String]
@@ -594,7 +605,10 @@ function Set-TargetResource
             $CreationParams.Add('PasswordProfile', $PasswordProfile)
 
             Write-Verbose -Message "Creating Office 365 User $UserPrincipalName"
-            $CreationParams.Add('AccountEnabled', $true)
+            if (-not $CreationParams.ContainsKey('AccountEnabled') -or -not $CreationParams.AccountEnabled)
+            {
+                $CreationParams.AccountEnabled = $true
+            }
             $CreationParams.Add('MailNickName', $UserPrincipalName.Split('@')[0])
             Write-Verbose -Message "Creating new user with values: $(Convert-M365DscHashtableToString -Hashtable $CreationParams)"
             $user = New-MgUser @CreationParams
@@ -748,6 +762,10 @@ function Test-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $UserPrincipalName,
+
+        [Parameter()]
+        [System.Boolean]
+        $AccountEnabled,
 
         [Parameter()]
         [System.String]
@@ -955,11 +973,10 @@ function Export-TargetResource
     try
     {
         $Script:ExportMode = $true
-        $propertiesToRetrieve = @('Id', 'UserPrincipalName', 'DisplayName', 'GivenName', 'Surname', 'UsageLocation', 'City', 'Country', 'Department', 'FacsimileTelephoneNumber', 'Mobile', 'OfficeLocation', 'Mail', 'OtherMails', 'TelephoneNumber', 'PostalCode', 'PreferredLanguage', 'State', 'StreetAddress', 'JobTitle', 'UserType', 'PasswordPolicies')
         $ExportParameters = @{
             Filter      = $Filter
             All         = [switch]$true
-            Property    = $propertiesToRetrieve
+            Property    = $Script:propertiesToRetrieve
             ErrorAction = 'Stop'
         }
         $queryTypes = @{
@@ -1128,7 +1145,8 @@ function Export-TargetResource
                         -ConnectionMode $ConnectionMode `
                         -ModulePath $PSScriptRoot `
                         -Results $Results `
-                        -Credential $Credential
+                        -Credential $Credential `
+                        -NoEscape @('Password')
 
                     $dscContent.Append($currentDSCBlock) | Out-Null
                     Save-M365DSCPartialExport -Content $currentDSCBlock `

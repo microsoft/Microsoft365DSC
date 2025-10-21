@@ -27,6 +27,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -ModuleName M365DSCUtil -CommandName Confirm-M365DSCDependencies -MockWith {
             }
 
+            Mock -CommandName Get-CsTeamsAppPermissionPolicy -MockWith {
+                return @{
+                    DefaultCatalogApps     = @(
+                        @{
+                            Id = "com.microsoft.teamspace.tab.vsts";
+                        }
+                    )
+                    DefaultCatalogAppsType = "AllowedAppList";
+                    Description            = "This is a test policy";
+                    GlobalCatalogAppsType  = "BlockedAppList";
+                    Identity               = "TestPolicy";
+                    PrivateCatalogAppsType = "BlockedAppList";
+                }
+            }
+
             Mock -CommandName Set-CsTeamsAppPermissionPolicy -MockWith {
             }
 
@@ -108,21 +123,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     PrivateCatalogAppsType = "BlockedAppList";
                     Credential             = $Credential
                 }
-
-                Mock -CommandName Get-CsTeamsAppPermissionPolicy -MockWith {
-                    return @{
-                        DefaultCatalogApps     = @(
-                            @{
-                                Id = "com.microsoft.teamspace.tab.vsts";
-                            }
-                        )
-                        DefaultCatalogAppsType = "AllowedAppList";
-                        Description            = "This is a test policy";
-                        GlobalCatalogAppsType  = "BlockedAppList";
-                        Identity               = "TestPolicy";
-                        PrivateCatalogAppsType = "BlockedAppList";
-                    }
-                }
             }
 
             It 'Should return Values from the Get method' {
@@ -151,21 +151,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     PrivateCatalogAppsType = "BlockedAppList";
                     Credential             = $Credential
                 }
-
-                Mock -CommandName Get-CsTeamsAppPermissionPolicy -MockWith {
-                    return @{
-                        DefaultCatalogApps     = @(
-                            @{
-                                Id = "com.microsoft.teamspace.tab.vsts";
-                            }
-                        )
-                        DefaultCatalogAppsType = "AllowedAppList";
-                        Description            = "This is a test policy";
-                        GlobalCatalogAppsType  = "BlockedAppList";
-                        Identity               = "TestPolicy";
-                        PrivateCatalogAppsType = "BlockedAppList";
-                    }
-                }
             }
 
 
@@ -181,25 +166,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DefaultCatalogAppsType = "AllowedAppList";
                     Description            = "This is a test policy";
                     Ensure                 = "Present";
-                    GlobalCatalogAppsType  = "BlockedAppList";
+                    GlobalCatalogAppsType  = "AllowedAppList"; # Drift
                     Identity               = "TestPolicy";
                     PrivateCatalogAppsType = "BlockedAppList";
                     Credential             = $Credential
-                }
-
-                Mock -CommandName Get-CsTeamsAppPermissionPolicy -MockWith {
-                    return @{
-                        DefaultCatalogApps     = @(
-                            @{
-                                Id = "com.microsoft.teamspace.tab.vsts";
-                            }
-                        )
-                        DefaultCatalogAppsType = "AllowedAppList";
-                        Description            = "This is a test policy";
-                        GlobalCatalogAppsType  = "AllowedAppList"; # Drift
-                        Identity               = "TestPolicy";
-                        PrivateCatalogAppsType = "BlockedAppList";
-                    }
                 }
             }
 
@@ -223,21 +193,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
                     Credential = $Credential
-                }
-
-                Mock -CommandName Get-CsTeamsAppPermissionPolicy -MockWith {
-                    return @{
-                        DefaultCatalogApps     = @(
-                            @{
-                                Id = "com.microsoft.teamspace.tab.vsts";
-                            }
-                        )
-                        DefaultCatalogAppsType = "AllowedAppList";
-                        Description            = "This is a test policy";
-                        GlobalCatalogAppsType  = "AllowedAppList"; # Drift
-                        Identity               = "TestPolicy";
-                        PrivateCatalogAppsType = "BlockedAppList";
-                    }
                 }
             }
 

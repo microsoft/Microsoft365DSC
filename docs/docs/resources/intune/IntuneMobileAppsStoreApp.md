@@ -22,7 +22,7 @@
 | **RoleScopeTagIds** | Write | StringArray[] | List of scope tag ids for this mobile app. | |
 | **TargetPlatform** | Required | String | The target platform of the mobile app. | `android`, `ios` |
 | **Categories** | Write | MSFT_DeviceManagementMobileAppCategory[] | The list of categories for this app. | |
-| **Assignments** | Write | MSFT_DeviceManagementMobileAppAssignment[] | Represents the assignment to the Intune policy. | |
+| **Assignments** | Write | MSFT_DeviceManagementStoreMobileAppAssignment[] | Represents the assignment to the Intune policy. | |
 | **Ensure** | Write | String | Present ensures the policy exists, absent ensures it is removed. | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials of the Admin | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
@@ -45,6 +45,41 @@
 | **groupId** | Write | String | The group Id that is the target of the assignment. | |
 | **groupDisplayName** | Write | String | The group Display Name that is the target of the assignment. | |
 | **intent** | Write | String | Possible values for the install intent chosen by the admin. | `available`, `required`, `uninstall`, `availableWithoutEnrollment` |
+
+### MSFT_DeviceManagementMobileAppAssignmentSettings
+
+#### Parameters
+
+| Parameter | Attribute | DataType | Description | Allowed Values |
+| --- | --- | --- | --- | --- |
+| **odataType** | Required | String | The odata type of the assignment type. | `#microsoft.graph.iosStoreAppAssignmentSettings`, `#microsoft.graph.win32LobAppAssignmentSettings`, `#microsoft.graph.winGetAppAssignmentSettings`, `#microsoft.graph.windowsUniversalAppXAppAssignmentSettings` |
+
+### MSFT_DeviceManagementStoreMobileAppAssignmentSettings
+
+#### Parameters
+
+| Parameter | Attribute | DataType | Description | Allowed Values |
+| --- | --- | --- | --- | --- |
+| **odataType** | Required | String | The odata type of the assignment type. | `#microsoft.graph.iosStoreAppAssignmentSettings`, `#microsoft.graph.win32LobAppAssignmentSettings`, `#microsoft.graph.winGetAppAssignmentSettings`, `#microsoft.graph.windowsUniversalAppXAppAssignmentSettings` |
+| **vpnConfigurationId** | Write | String | Display name or Id of the VPN configuration profile associated with this policy. | |
+| **uninstallOnDeviceRemoval** | Write | Boolean | When TRUE, indicates that the app should be uninstalled when the device is removed from Intune. When FALSE, indicates that the app will not be uninstalled when the device is removed from Intune. By default, property is set to null which internally is treated as TRUE. | |
+| **isRemovable** | Write | Boolean | When TRUE, indicates that the app can be uninstalled by the user. When FALSE, indicates that the app cannot be uninstalled by the user. By default, this property is set to null which internally is treated as TRUE. | |
+| **preventManagedAppBackup** | Write | Boolean | When TRUE, indicates that the app should not be backed up to iCloud. When FALSE, indicates that the app may be backed up to iCloud. By default, this property is set to null which internally is treated as FALSE. | |
+
+### MSFT_DeviceManagementStoreMobileAppAssignment
+
+#### Parameters
+
+| Parameter | Attribute | DataType | Description | Allowed Values |
+| --- | --- | --- | --- | --- |
+| **dataType** | Write | String | The type of the target assignment. | `#microsoft.graph.groupAssignmentTarget`, `#microsoft.graph.allLicensedUsersAssignmentTarget`, `#microsoft.graph.allDevicesAssignmentTarget`, `#microsoft.graph.exclusionGroupAssignmentTarget`, `#microsoft.graph.mobileAppAssignment` |
+| **deviceAndAppManagementAssignmentFilterId** | Write | String | The Id of the filter for the target assignment. | |
+| **deviceAndAppManagementAssignmentFilterDisplayName** | Write | String | The display name of the filter for the target assignment. | |
+| **deviceAndAppManagementAssignmentFilterType** | Write | String | The type of filter of the target assignment i.e. Exclude or Include. Possible values are: none, include, exclude. | `none`, `include`, `exclude` |
+| **groupId** | Write | String | The group Id that is the target of the assignment. | |
+| **groupDisplayName** | Write | String | The group Display Name that is the target of the assignment. | |
+| **intent** | Write | String | Possible values for the install intent chosen by the admin. | `available`, `required`, `uninstall`, `availableWithoutEnrollment` |
+| **assignmentSettings** | Write | MSFT_DeviceManagementStoreMobileAppAssignmentSettings | The settings of the assignment. | |
 
 ### MSFT_MicrosoftGraphIosDeviceType
 
@@ -203,11 +238,17 @@ Configuration Example
             PrivacyInformationUrl = "";
             Publisher             = "Contoso";
             Assignments          = @(
-                MSFT_DeviceManagementMobileAppAssignment {
+                MSFT_DeviceManagementStoreMobileAppAssignment {
                     groupDisplayName = 'All devices'
                     deviceAndAppManagementAssignmentFilterType = 'none'
                     dataType = '#microsoft.graph.allDevicesAssignmentTarget'
                     intent = 'required'
+                    assignmentSettings = MSFT_DeviceManagementStoreMobileAppAssignmentSettings {
+                        odataType = '#microsoft.graph.iosStoreAppAssignmentSettings'
+                        uninstallOnDeviceRemoval = $False
+                        isRemovable = $True
+                        preventManagedAppBackup = $True
+                    }
                 }
             );
             Categories             = @(
@@ -291,11 +332,17 @@ Configuration Example
             PrivacyInformationUrl = "";
             Publisher             = "Contoso";
             Assignments          = @(
-                MSFT_DeviceManagementMobileAppAssignment {
+                MSFT_DeviceManagementStoreMobileAppAssignment {
                     groupDisplayName = 'All devices'
                     deviceAndAppManagementAssignmentFilterType = 'none'
                     dataType = '#microsoft.graph.allDevicesAssignmentTarget'
                     intent = 'required'
+                    assignmentSettings = MSFT_DeviceManagementStoreMobileAppAssignmentSettings {
+                        odataType = '#microsoft.graph.iosStoreAppAssignmentSettings'
+                        uninstallOnDeviceRemoval = $False
+                        isRemovable = $True
+                        preventManagedAppBackup = $True
+                    }
                 }
             );
             Categories             = @(

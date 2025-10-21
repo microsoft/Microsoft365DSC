@@ -33,5 +33,22 @@
     "Microsoft.Graph.Authentication",
     "Microsoft.Graph.Beta.Search"
   ],
-  "mode": "Configuration"
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Applications",
+      "cmdlets": [
+        "Get-MgApplication"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Beta.Search",
+      "cmdlets": [
+        "Get-MgBetaExternalConnection",
+        "New-MgBetaExternalConnection",
+        "Remove-MgBetaExternalConnection",
+        "Update-MgBetaExternalConnection"
+      ]
+    }
+  ]
 }

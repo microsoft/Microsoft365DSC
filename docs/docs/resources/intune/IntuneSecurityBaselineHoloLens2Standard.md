@@ -8,45 +8,45 @@
 | **DisplayName** | Key | String | Policy name | |
 | **RoleScopeTagIds** | Write | StringArray[] | List of Scope Tags for this Entity instance. | |
 | **Id** | Write | String | The unique identifier for an entity. Read-only. | |
-| **AllowMicrosoftAccountConnection** | Write | String | Allow Microsoft Account Connection (0: Not allowed., 1: Allowed.) | `0`, `1` |
-| **VideoPowerDownTimeOutAC_2** | Write | String | Turn off the display (plugged in) (0: Disabled, 1: Enabled) | `0`, `1` |
+| **AllowMicrosoftAccountConnection** | Write | SInt32 | Allow Microsoft Account Connection (0: Not allowed., 1: Allowed.) | `0`, `1` |
+| **VideoPowerDownTimeOutAC_2** | Write | SInt32 | Turn off the display (plugged in) (0: Disabled, 1: Enabled) | `0`, `1` |
 | **EnterVideoACPowerDownTimeOut** | Write | SInt32 | When plugged in, turn display off after (seconds) - Depends on VideoPowerDownTimeOutAC_2 | |
-| **AllowCookies** | Write | String | Allow Cookies (0: Block all cookies from all sites, 1: Block only cookies from third party websites, 2: Allow all cookies from all sites) | `0`, `1`, `2` |
-| **AllowPasswordManager** | Write | String | Allow Password Manager (0: Not allowed., 1: Allowed.) | `0`, `1` |
-| **AllowSmartScreen** | Write | String | Allow Smart Screen (0: Turned off. Do not protect users from potential threats and prevent users from turning it on., 1: Turned on. Protect users from potential threats and prevent users from turning it off.) | `0`, `1` |
-| **AllowUSBConnection** | Write | String | Allow USB Connection (0: Not allowed., 1: Allowed.) | `0`, `1` |
-| **DevicePasswordEnabled** | Write | String | Device Password Enabled (0: Enabled, 1: Disabled) | `0`, `1` |
+| **AllowCookies** | Write | SInt32 | Allow Cookies (0: Block all cookies from all sites, 1: Block only cookies from third party websites, 2: Allow all cookies from all sites) | `0`, `1`, `2` |
+| **AllowPasswordManager** | Write | SInt32 | Allow Password Manager (0: Not allowed., 1: Allowed.) | `0`, `1` |
+| **AllowSmartScreen** | Write | SInt32 | Allow Smart Screen (0: Turned off. Do not protect users from potential threats and prevent users from turning it on., 1: Turned on. Protect users from potential threats and prevent users from turning it off.) | `0`, `1` |
+| **AllowUSBConnection** | Write | SInt32 | Allow USB Connection (0: Not allowed., 1: Allowed.) | `0`, `1` |
+| **DevicePasswordEnabled** | Write | SInt32 | Device Password Enabled (0: Enabled, 1: Disabled) | `0`, `1` |
 | **DevicePasswordExpiration** | Write | SInt32 | Device Password Expiration - Depends on DevicePasswordEnabled | |
 | **MinDevicePasswordLength** | Write | SInt32 | Min Device Password Length - Depends on DevicePasswordEnabled | |
-| **AlphanumericDevicePasswordRequired** | Write | String | Alphanumeric Device Password Required - Depends on DevicePasswordEnabled (0: Password or Alphanumeric PIN required., 1: Password or Numeric PIN required., 2: Password, Numeric PIN, or Alphanumeric PIN required.) | `0`, `1`, `2` |
+| **AlphanumericDevicePasswordRequired** | Write | SInt32 | Alphanumeric Device Password Required - Depends on DevicePasswordEnabled (0: Password or Alphanumeric PIN required., 1: Password or Numeric PIN required., 2: Password, Numeric PIN, or Alphanumeric PIN required.) | `0`, `1`, `2` |
 | **MaxDevicePasswordFailedAttempts** | Write | SInt32 | Max Device Password Failed Attempts - Depends on DevicePasswordEnabled | |
-| **MinDevicePasswordComplexCharacters** | Write | String | Min Device Password Complex Characters - Depends on DevicePasswordEnabled (1: Digits only, 2: Digits and lowercase letters are required, 3: Digits lowercase letters and uppercase letters are required. Not supported in desktop Microsoft accounts and domain accounts, 4: Digits lowercase letters uppercase letters and special characters are required. Not supported in desktop) | `1`, `2`, `3`, `4` |
+| **MinDevicePasswordComplexCharacters** | Write | SInt32 | Min Device Password Complex Characters - Depends on DevicePasswordEnabled (1: Digits only, 2: Digits and lowercase letters are required, 3: Digits lowercase letters and uppercase letters are required. Not supported in desktop Microsoft accounts and domain accounts, 4: Digits lowercase letters uppercase letters and special characters are required. Not supported in desktop) | `1`, `2`, `3`, `4` |
 | **MaxInactivityTimeDeviceLock** | Write | SInt32 | Max Inactivity Time Device Lock - Depends on DevicePasswordEnabled | |
 | **DevicePasswordHistory** | Write | SInt32 | Device Password History - Depends on DevicePasswordEnabled | |
-| **AllowSimpleDevicePassword** | Write | String | Allow Simple Device Password - Depends on DevicePasswordEnabled (0: Not allowed., 1: Allowed.) | `0`, `1` |
-| **AllowManualMDMUnenrollment** | Write | String | Allow Manual MDM Unenrollment (0: Not allowed., 1: Allowed.) | `0`, `1` |
-| **AllowAllTrustedApps** | Write | String | Allow All Trusted Apps (0: Explicit deny., 1: Explicit allow unlock., 65535: Not configured.) | `0`, `1`, `65535` |
-| **AllowAppStoreAutoUpdate** | Write | String | Allow apps from the Microsoft app store to auto update (0: Not allowed., 1: Allowed., 2: Not configured.) | `0`, `1`, `2` |
-| **AllowDeveloperUnlock** | Write | String | Allow Developer Unlock (0: Explicit deny., 1: Explicit allow unlock., 65535: Not configured.) | `0`, `1`, `65535` |
-| **BlockThirdPartyCookies** | Write | String | Block third party cookies (0: Disabled, 1: Enabled) | `0`, `1` |
-| **ExtensionInstallBlocklist** | Write | String | Control which extensions cannot be installed (0: Disabled, 1: Enabled) | `0`, `1` |
+| **AllowSimpleDevicePassword** | Write | SInt32 | Allow Simple Device Password - Depends on DevicePasswordEnabled (0: Not allowed., 1: Allowed.) | `0`, `1` |
+| **AllowManualMDMUnenrollment** | Write | SInt32 | Allow Manual MDM Unenrollment (0: Not allowed., 1: Allowed.) | `0`, `1` |
+| **AllowAllTrustedApps** | Write | SInt32 | Allow All Trusted Apps (0: Explicit deny., 1: Explicit allow unlock., 65535: Not configured.) | `0`, `1`, `65535` |
+| **AllowAppStoreAutoUpdate** | Write | SInt32 | Allow apps from the Microsoft app store to auto update (0: Not allowed., 1: Allowed., 2: Not configured.) | `0`, `1`, `2` |
+| **AllowDeveloperUnlock** | Write | SInt32 | Allow Developer Unlock (0: Explicit deny., 1: Explicit allow unlock., 65535: Not configured.) | `0`, `1`, `65535` |
+| **BlockThirdPartyCookies** | Write | SInt32 | Block third party cookies (0: Disabled, 1: Enabled) | `0`, `1` |
+| **ExtensionInstallBlocklist** | Write | SInt32 | Control which extensions cannot be installed (0: Disabled, 1: Enabled) | `0`, `1` |
 | **ExtensionInstallBlocklistDesc** | Write | StringArray[] | Extension IDs the user should be prevented from installing (or * for all) (Device) - Depends on ExtensionInstallBlocklist | |
-| **PasswordManagerEnabled** | Write | String | Enable saving passwords to the password manager (0: Disabled, 1: Enabled) | `0`, `1` |
-| **SmartScreenEnabled** | Write | String | Configure Microsoft Defender SmartScreen (0: Disabled, 1: Enabled) | `0`, `1` |
+| **PasswordManagerEnabled** | Write | SInt32 | Enable saving passwords to the password manager (0: Disabled, 1: Enabled) | `0`, `1` |
+| **SmartScreenEnabled** | Write | SInt32 | Configure Microsoft Defender SmartScreen (0: Disabled, 1: Enabled) | `0`, `1` |
 | **AADGroupMembershipCacheValidityInDays** | Write | SInt32 | AAD Group Membership Cache Validity In Days | |
-| **AllowVPN** | Write | String | Allow VPN (0: Not allowed., 1: Allowed.) | `0`, `1` |
+| **AllowVPN** | Write | SInt32 | Allow VPN (0: Not allowed., 1: Allowed.) | `0`, `1` |
 | **PageVisibilityList** | Write | String | Page Visibility List | |
-| **AllowStorageCard** | Write | String | Allow Storage Card (0: SD card use is not allowed and USB drives are disabled. This setting does not prevent programmatic access to the storage card., 1: Allow a storage card.) | `0`, `1` |
+| **AllowStorageCard** | Write | SInt32 | Allow Storage Card (0: SD card use is not allowed and USB drives are disabled. This setting does not prevent programmatic access to the storage card., 1: Allow a storage card.) | `0`, `1` |
 | **EnablePinRecovery** | Write | String | Enable Pin Recovery - Depends on TenantId (false: Disabled, true: Enabled) | `false`, `true` |
 | **TPM12** | Write | String | Restrict use of TPM 1.2 - Depends on TenantId (false: Disabled, true: Enabled) | `false`, `true` |
-| **Digits** | Write | String | Digits - Depends on TenantId (0: Allows the use of digits in PIN., 1: Requires the use of at least one digits in PIN., 2: Does not allow the use of digits in PIN.) | `0`, `1`, `2` |
+| **Digits** | Write | SInt32 | Digits - Depends on TenantId (0: Allows the use of digits in PIN., 1: Requires the use of at least one digits in PIN., 2: Does not allow the use of digits in PIN.) | `0`, `1`, `2` |
 | **Expiration** | Write | SInt32 | Expiration - Depends on TenantId | |
 | **History** | Write | SInt32 | PIN History - Depends on TenantId | |
-| **LowercaseLetters** | Write | String | Lowercase Letters - Depends on TenantId (0: Allows the use of lowercase letters in PIN., 1: Requires the use of at least one lowercase letters in PIN., 2: Does not allow the use of lowercase letters in PIN.) | `0`, `1`, `2` |
+| **LowercaseLetters** | Write | SInt32 | Lowercase Letters - Depends on TenantId (0: Allows the use of lowercase letters in PIN., 1: Requires the use of at least one lowercase letters in PIN., 2: Does not allow the use of lowercase letters in PIN.) | `0`, `1`, `2` |
 | **MaximumPINLength** | Write | SInt32 | Maximum PIN Length - Depends on TenantId | |
 | **MinimumPINLength** | Write | SInt32 | Minimum PIN Length - Depends on TenantId | |
-| **SpecialCharacters** | Write | String | Special Characters - Depends on TenantId (0: Allows the use of special characters in PIN., 1: Requires the use of at least one special characters in PIN., 2: Does not allow the use of special characters in PIN.) | `0`, `1`, `2` |
-| **UppercaseLetters** | Write | String | Uppercase Letters - Depends on TenantId (0: Allows the use of uppercase letters in PIN., 1: Requires the use of at least one uppercase letters in PIN., 2: Does not allow the use of uppercase letters in PIN.) | `0`, `1`, `2` |
+| **SpecialCharacters** | Write | SInt32 | Special Characters - Depends on TenantId (0: Allows the use of special characters in PIN., 1: Requires the use of at least one special characters in PIN., 2: Does not allow the use of special characters in PIN.) | `0`, `1`, `2` |
+| **UppercaseLetters** | Write | SInt32 | Uppercase Letters - Depends on TenantId (0: Allows the use of uppercase letters in PIN., 1: Requires the use of at least one uppercase letters in PIN., 2: Does not allow the use of uppercase letters in PIN.) | `0`, `1`, `2` |
 | **RequireSecurityDevice** | Write | String | Require Security Device - Depends on TenantId (false: Disabled, true: Enabled) | `false`, `true` |
 | **UseCertificateForOnPremAuth** | Write | String | Use Certificate For On Prem Auth - Depends on TenantId (false: Disabled, true: Enabled) | `false`, `true` |
 | **UseHelloCertificatesAsSmartCardCertificates** | Write | String | Use Hello Certificates As Smart Card Certificates - Depends on TenantId (false: Disabled, true: Enabled) | `false`, `true` |
@@ -70,7 +70,7 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **dataType** | Write | String | The type of the target assignment. | `#microsoft.graph.groupAssignmentTarget`, `#microsoft.graph.allLicensedUsersAssignmentTarget`, `#microsoft.graph.allDevicesAssignmentTarget`, `#microsoft.graph.exclusionGroupAssignmentTarget`, `#microsoft.graph.configurationManagerCollectionAssignmentTarget` |
+| **dataType** | Write | String | The type of the target assignment. | `#microsoft.graph.cloudPcManagementGroupAssignmentTarget`, `#microsoft.graph.groupAssignmentTarget`, `#microsoft.graph.allLicensedUsersAssignmentTarget`, `#microsoft.graph.allDevicesAssignmentTarget`, `#microsoft.graph.exclusionGroupAssignmentTarget`, `#microsoft.graph.configurationManagerCollectionAssignmentTarget` |
 | **deviceAndAppManagementAssignmentFilterType** | Write | String | The type of filter of the target assignment i.e. Exclude or Include. Possible values are:none, include, exclude. | `none`, `include`, `exclude` |
 | **deviceAndAppManagementAssignmentFilterId** | Write | String | The Id of the filter for the target assignment. | |
 | **deviceAndAppManagementAssignmentFilterDisplayName** | Write | String | The display name of the filter for the target assignment. | |

@@ -45,5 +45,15 @@
     "Global",
     "USGov"
   ],
-  "mode": "Configuration"
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Beta.Identity.DirectoryManagement",
+      "cmdlets": [
+        "Get-MgBetaDirectoryCustomSecurityAttributeDefinition",
+        "New-MgBetaDirectoryCustomSecurityAttributeDefinition",
+        "Update-MgBetaDirectoryCustomSecurityAttributeDefinition"
+      ]
+    }
+  ]
 }

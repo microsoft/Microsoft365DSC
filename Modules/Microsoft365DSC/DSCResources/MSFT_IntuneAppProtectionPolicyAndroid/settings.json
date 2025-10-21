@@ -50,5 +50,36 @@
     "Global",
     "USGov"
   ],
-  "mode": "Configuration"
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Authentication",
+      "cmdlets": [
+        "Invoke-MgGraphRequest"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Beta.DeviceManagement",
+      "cmdlets": [
+        "Get-MgBetaDeviceManagementAssignmentFilter"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Beta.Devices.CorporateManagement",
+      "cmdlets": [
+        "Get-MgBetaDeviceAppManagementAndroidManagedAppProtection",
+        "Get-MgBetaDeviceAppManagementAndroidManagedAppProtectionApp",
+        "Get-MgBetaDeviceAppManagementAndroidManagedAppProtectionAssignment",
+        "New-MgBetaDeviceAppManagementAndroidManagedAppProtection",
+        "Remove-MgBetaDeviceAppManagementAndroidManagedAppProtection",
+        "Update-MgBetaDeviceAppManagementAndroidManagedAppProtection"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Groups",
+      "cmdlets": [
+        "Get-MgGroup"
+      ]
+    }
+  ]
 }

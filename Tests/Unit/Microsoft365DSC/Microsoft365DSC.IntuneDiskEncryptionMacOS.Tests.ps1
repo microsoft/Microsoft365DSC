@@ -24,7 +24,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $secpasswd = ConvertTo-SecureString (New-Guid | Out-String) -AsPlainText -Force
             $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin@mydomain.com', $secpasswd)
 
-            Mock -CommandName Confirm-M365DSCDependencies -MockWith {
+            Mock -ModuleName M365DSCUtil -CommandName Confirm-M365DSCDependencies -MockWith {
             }
 
             Mock -CommandName Get-MSCloudLoginConnectionProfile -MockWith {
@@ -61,7 +61,63 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $Script:exportedInstances =$null
             $Script:ExportMode = $false
 
+            Mock -CommandName Get-MgBetaDeviceManagementIntent -MockWith {
+                return @{
+                    Description     = "FakeStringValue"
+                    DisplayName     = "FakeStringValue"
+                    Id              = "FakeStringValue"
+                    RoleScopeTagIds = @("0")
+                    TemplateId      = "a239407c-698d-4ef8-b314-e3ae409204b8"
+                }
+            }
+
+            Mock -CommandName Get-MgBetaDeviceManagementIntentSetting -MockWith {
+                return @(
+                    @{
+                        definitionId = "deviceConfiguration--macOSEndpointProtectionConfiguration_fileVaultSelectedRecoveryKeyTypes"
+                        Id = "cba611e9-3084-4a42-a6f2-c6ac2c13f331"
+                        valueJson = "[""personalRecoveryKey""]"
+                    },
+                    @{
+                        definitionId = "deviceConfiguration--macOSEndpointProtectionConfiguration_fileVaultNumberOfTimesUserCanIgnore"
+                        Id = "c3106770-f35d-4486-95cb-e23cb5c18651"
+                        valueJson = "-1"
+                    },
+                    @{
+                        definitionId = "deviceConfiguration--macOSEndpointProtectionConfiguration_fileVaultPersonalRecoveryKeyRotationInMonths"
+                        Id = "dee4e9bb-14d8-4523-afd6-4a4906f9f214"
+                        valueJson = "2"
+                    },
+                    @{
+                        definitionId = "deviceConfiguration--macOSEndpointProtectionConfiguration_fileVaultEnabled"
+                        Id = "9456793f-b37e-461b-86df-0ade0dc11ecc"
+                        valueJson = "true"
+                    },
+                    @{
+                        definitionId = "deviceConfiguration--macOSEndpointProtectionConfiguration_fileVaultPersonalRecoveryKeyHelpMessage"
+                        Id = "6b1e229a-ba62-44f9-a04b-ed9321192fe3"
+                        valueJson = """FakeStringValue"""
+                    },
+                    @{
+                        definitionId = "deviceConfiguration--macOSEndpointProtectionConfiguration_fileVaultAllowDeferralUntilSignOut"
+                        Id = "ac30133a-5607-4450-8e16-d8442dbb20aa"
+                        valueJson = "true"
+                    },
+                    @{
+                        definitionId = "deviceConfiguration--macOSEndpointProtectionConfiguration_fileVaultDisablePromptAtSignOut"
+                        Id = "4585e424-abce-4bb5-84bc-bf073eaf7cee"
+                        valueJson = "false"
+                    },
+                    @{
+                        definitionId = "deviceConfiguration--macOSEndpointProtectionConfiguration_fileVaultHidePersonalRecoveryKey"
+                        Id = "5608d7db-5990-45b7-bf40-ecb2125e060b"
+                        valueJson = "false"
+                    }
+                )
+            }
+
             Mock -CommandName Get-MgBetaDeviceManagementIntentAssignment -MockWith {
+                return @()
             }
 
         }
@@ -75,6 +131,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName                         = "FakeStringValue";
                     Enabled                             = $True;
                     Id                                  = "FakeStringValue";
+                    DisablePromptAtSignOut              = $False;
+                    HidePersonalRecoveryKey             = $False;
                     NumberOfTimesUserCanIgnore          = -1;
                     PersonalRecoveryKeyHelpMessage      = "FakeStringValue";
                     PersonalRecoveryKeyRotationInMonths = 2;
@@ -109,6 +167,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName                         = "FakeStringValue";
                     Enabled                             = $True;
                     Id                                  = "FakeStringValue";
+                    DisablePromptAtSignOut              = $False;
+                    HidePersonalRecoveryKey             = $False;
                     NumberOfTimesUserCanIgnore          = -1;
                     PersonalRecoveryKeyHelpMessage      = "FakeStringValue";
                     PersonalRecoveryKeyRotationInMonths = 2;
@@ -116,65 +176,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     SelectedRecoveryKeyTypes            = @("personalRecoveryKey");
                     Ensure                              = "Absent";
                     Credential                          = $Credential;
-                }
-
-                Mock -CommandName Get-MgBetaDeviceManagementIntent -MockWith {
-                    return @{
-                        Description     = "FakeStringValue"
-                        DisplayName     = "FakeStringValue"
-                        Id              = "FakeStringValue"
-                        RoleScopeTagIds = @("0")
-                        TemplateId      = "a239407c-698d-4ef8-b314-e3ae409204b8"
-                    }
-                }
-
-                Mock -CommandName Get-MgBetaDeviceManagementIntentSetting -MockWith {
-                    return @(
-                        @{
-                            definitionId = "deviceConfiguration--macOSEndpointProtectionConfiguration_fileVaultSelectedRecoveryKeyTypes"
-                            Id = "cba611e9-3084-4a42-a6f2-c6ac2c13f331"
-                            valueJson = "[""personalRecoveryKey""]"
-                        },
-                        @{
-                            definitionId = "deviceConfiguration--macOSEndpointProtectionConfiguration_fileVaultNumberOfTimesUserCanIgnore"
-                            Id = "c3106770-f35d-4486-95cb-e23cb5c18651"
-                            valueJson = "-1"
-                        },
-                        @{
-                            definitionId = "deviceConfiguration--macOSEndpointProtectionConfiguration_fileVaultPersonalRecoveryKeyRotationInMonths"
-                            Id = "dee4e9bb-14d8-4523-afd6-4a4906f9f214"
-                            valueJson = "2"
-                        },
-                        @{
-                            definitionId = "deviceConfiguration--macOSEndpointProtectionConfiguration_fileVaultEnabled"
-                            Id = "9456793f-b37e-461b-86df-0ade0dc11ecc"
-                            valueJson = "true"
-                        },
-                        @{
-                            definitionId = "deviceConfiguration--macOSEndpointProtectionConfiguration_fileVaultPersonalRecoveryKeyHelpMessage"
-                            Id = "6b1e229a-ba62-44f9-a04b-ed9321192fe3"
-                            valueJson = """FakeStringValue"""
-                        },
-                        @{
-                            definitionId = "deviceConfiguration--macOSEndpointProtectionConfiguration_fileVaultAllowDeferralUntilSignOut"
-                            Id = "ac30133a-5607-4450-8e16-d8442dbb20aa"
-                            valueJson = "true"
-                        },
-                        @{
-                            definitionId = "deviceConfiguration--macOSEndpointProtectionConfiguration_fileVaultDisablePromptAtSignOut"
-                            Id = "4585e424-abce-4bb5-84bc-bf073eaf7cee"
-                            valueJson = "false"
-                        },
-                        @{
-                            definitionId = "deviceConfiguration--macOSEndpointProtectionConfiguration_fileVaultHidePersonalRecoveryKey"
-                            Id = "5608d7db-5990-45b7-bf40-ecb2125e060b"
-                            valueJson = "false"
-                        }
-                    )
-                }
-
-                Mock -CommandName Get-MgBetaDeviceManagementIntentAssignment -MockWith {
-                    return @()
                 }
             }
 
@@ -200,6 +201,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName                         = "FakeStringValue";
                     Enabled                             = $True;
                     Id                                  = "FakeStringValue";
+                    DisablePromptAtSignOut              = $False;
+                    HidePersonalRecoveryKey             = $False;
                     NumberOfTimesUserCanIgnore          = -1;
                     PersonalRecoveryKeyHelpMessage      = "FakeStringValue";
                     PersonalRecoveryKeyRotationInMonths = 2;
@@ -208,67 +211,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure                              = "Present";
                     Credential                          = $Credential;
                 }
-
-                Mock -CommandName Get-MgBetaDeviceManagementIntent -MockWith {
-                    return @{
-                        Description     = "FakeStringValue"
-                        DisplayName     = "FakeStringValue"
-                        Id              = "FakeStringValue"
-                        RoleScopeTagIds = @("0")
-                        TemplateId      = "a239407c-698d-4ef8-b314-e3ae409204b8"
-                    }
-                }
-
-                Mock -CommandName Get-MgBetaDeviceManagementIntentSetting -MockWith {
-                    return @(
-                        @{
-                            definitionId = "deviceConfiguration--macOSEndpointProtectionConfiguration_fileVaultSelectedRecoveryKeyTypes"
-                            Id = "cba611e9-3084-4a42-a6f2-c6ac2c13f331"
-                            valueJson = "[""personalRecoveryKey""]"
-                        },
-                        @{
-                            definitionId = "deviceConfiguration--macOSEndpointProtectionConfiguration_fileVaultNumberOfTimesUserCanIgnore"
-                            Id = "c3106770-f35d-4486-95cb-e23cb5c18651"
-                            valueJson = "-1"
-                        },
-                        @{
-                            definitionId = "deviceConfiguration--macOSEndpointProtectionConfiguration_fileVaultPersonalRecoveryKeyRotationInMonths"
-                            Id = "dee4e9bb-14d8-4523-afd6-4a4906f9f214"
-                            valueJson = "2"
-                        },
-                        @{
-                            definitionId = "deviceConfiguration--macOSEndpointProtectionConfiguration_fileVaultEnabled"
-                            Id = "9456793f-b37e-461b-86df-0ade0dc11ecc"
-                            valueJson = "true"
-                        },
-                        @{
-                            definitionId = "deviceConfiguration--macOSEndpointProtectionConfiguration_fileVaultPersonalRecoveryKeyHelpMessage"
-                            Id = "6b1e229a-ba62-44f9-a04b-ed9321192fe3"
-                            valueJson = """FakeStringValue"""
-                        },
-                        @{
-                            definitionId = "deviceConfiguration--macOSEndpointProtectionConfiguration_fileVaultAllowDeferralUntilSignOut"
-                            Id = "ac30133a-5607-4450-8e16-d8442dbb20aa"
-                            valueJson = "true"
-                        },
-                        @{
-                            definitionId = "deviceConfiguration--macOSEndpointProtectionConfiguration_fileVaultDisablePromptAtSignOut"
-                            Id = "4585e424-abce-4bb5-84bc-bf073eaf7cee"
-                            valueJson = "false"
-                        },
-                        @{
-                            definitionId = "deviceConfiguration--macOSEndpointProtectionConfiguration_fileVaultHidePersonalRecoveryKey"
-                            Id = "5608d7db-5990-45b7-bf40-ecb2125e060b"
-                            valueJson = "false"
-                        }
-                    )
-                }
-
-                Mock -CommandName Get-MgBetaDeviceManagementIntentAssignment -MockWith {
-                    return @()
-                }
             }
-
 
             It 'Should return true from the Test method' {
                 Test-TargetResource @testParams | Should -Be $true
@@ -284,72 +227,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName                         = "FakeStringValue";
                     Enabled                             = $True;
                     Id                                  = "FakeStringValue";
+                    DisablePromptAtSignOut              = $False;
+                    HidePersonalRecoveryKey             = $False;
                     NumberOfTimesUserCanIgnore          = -1;
                     PersonalRecoveryKeyHelpMessage      = "FakeStringValue";
-                    PersonalRecoveryKeyRotationInMonths = 2;
+                    PersonalRecoveryKeyRotationInMonths = 3; # Drift
                     RoleScopeTagIds                     = @("0");
                     SelectedRecoveryKeyTypes            = @("personalRecoveryKey");
                     Ensure                              = "Present";
                     Credential                          = $Credential;
-                }
-
-                Mock -CommandName Get-MgBetaDeviceManagementIntent -MockWith {
-                    return @{
-                        Description     = "FakeStringValue"
-                        DisplayName     = "FakeStringValue"
-                        Id              = "FakeStringValue"
-                        RoleScopeTagIds = @("0")
-                        TemplateId      = "a239407c-698d-4ef8-b314-e3ae409204b8"
-                    }
-                }
-
-                Mock -CommandName Get-MgBetaDeviceManagementIntentSetting -MockWith {
-                    return @(
-                        @{
-                            definitionId = "deviceConfiguration--macOSEndpointProtectionConfiguration_fileVaultSelectedRecoveryKeyTypes"
-                            Id = "cba611e9-3084-4a42-a6f2-c6ac2c13f331"
-                            valueJson = "[""personalRecoveryKey""]"
-                        },
-                        @{
-                            definitionId = "deviceConfiguration--macOSEndpointProtectionConfiguration_fileVaultNumberOfTimesUserCanIgnore"
-                            Id = "c3106770-f35d-4486-95cb-e23cb5c18651"
-                            valueJson = "-1"
-                        },
-                        @{
-                            definitionId = "deviceConfiguration--macOSEndpointProtectionConfiguration_fileVaultPersonalRecoveryKeyRotationInMonths"
-                            Id = "dee4e9bb-14d8-4523-afd6-4a4906f9f214"
-                            valueJson = "3" # Updated property
-                        },
-                        @{
-                            definitionId = "deviceConfiguration--macOSEndpointProtectionConfiguration_fileVaultEnabled"
-                            Id = "9456793f-b37e-461b-86df-0ade0dc11ecc"
-                            valueJson = "true"
-                        },
-                        @{
-                            definitionId = "deviceConfiguration--macOSEndpointProtectionConfiguration_fileVaultPersonalRecoveryKeyHelpMessage"
-                            Id = "6b1e229a-ba62-44f9-a04b-ed9321192fe3"
-                            valueJson = """FakeStringValue"""
-                        },
-                        @{
-                            definitionId = "deviceConfiguration--macOSEndpointProtectionConfiguration_fileVaultAllowDeferralUntilSignOut"
-                            Id = "ac30133a-5607-4450-8e16-d8442dbb20aa"
-                            valueJson = "true"
-                        },
-                        @{
-                            definitionId = "deviceConfiguration--macOSEndpointProtectionConfiguration_fileVaultDisablePromptAtSignOut"
-                            Id = "4585e424-abce-4bb5-84bc-bf073eaf7cee"
-                            valueJson = "false"
-                        },
-                        @{
-                            definitionId = "deviceConfiguration--macOSEndpointProtectionConfiguration_fileVaultHidePersonalRecoveryKey"
-                            Id = "5608d7db-5990-45b7-bf40-ecb2125e060b"
-                            valueJson = "false"
-                        }
-                    )
-                }
-
-                Mock -CommandName Get-MgBetaDeviceManagementIntentAssignment -MockWith {
-                    return @()
                 }
             }
 
@@ -373,65 +259,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
                     Credential = $Credential
-                }
-
-                Mock -CommandName Get-MgBetaDeviceManagementIntent -MockWith {
-                    return @{
-                        Description     = "FakeStringValue"
-                        DisplayName     = "FakeStringValue"
-                        Id              = "FakeStringValue"
-                        RoleScopeTagIds = @("0")
-                        TemplateId      = "a239407c-698d-4ef8-b314-e3ae409204b8"
-                    }
-                }
-
-                Mock -CommandName Get-MgBetaDeviceManagementIntentSetting -MockWith {
-                    return @(
-                        @{
-                            definitionId = "deviceConfiguration--macOSEndpointProtectionConfiguration_fileVaultSelectedRecoveryKeyTypes"
-                            Id = "cba611e9-3084-4a42-a6f2-c6ac2c13f331"
-                            valueJson = "[""personalRecoveryKey""]"
-                        },
-                        @{
-                            definitionId = "deviceConfiguration--macOSEndpointProtectionConfiguration_fileVaultNumberOfTimesUserCanIgnore"
-                            Id = "c3106770-f35d-4486-95cb-e23cb5c18651"
-                            valueJson = "-1"
-                        },
-                        @{
-                            definitionId = "deviceConfiguration--macOSEndpointProtectionConfiguration_fileVaultPersonalRecoveryKeyRotationInMonths"
-                            Id = "dee4e9bb-14d8-4523-afd6-4a4906f9f214"
-                            valueJson = "2"
-                        },
-                        @{
-                            definitionId = "deviceConfiguration--macOSEndpointProtectionConfiguration_fileVaultEnabled"
-                            Id = "9456793f-b37e-461b-86df-0ade0dc11ecc"
-                            valueJson = "true"
-                        },
-                        @{
-                            definitionId = "deviceConfiguration--macOSEndpointProtectionConfiguration_fileVaultPersonalRecoveryKeyHelpMessage"
-                            Id = "6b1e229a-ba62-44f9-a04b-ed9321192fe3"
-                            valueJson = """FakeStringValue"""
-                        },
-                        @{
-                            definitionId = "deviceConfiguration--macOSEndpointProtectionConfiguration_fileVaultAllowDeferralUntilSignOut"
-                            Id = "ac30133a-5607-4450-8e16-d8442dbb20aa"
-                            valueJson = "true"
-                        },
-                        @{
-                            definitionId = "deviceConfiguration--macOSEndpointProtectionConfiguration_fileVaultDisablePromptAtSignOut"
-                            Id = "4585e424-abce-4bb5-84bc-bf073eaf7cee"
-                            valueJson = "false"
-                        },
-                        @{
-                            definitionId = "deviceConfiguration--macOSEndpointProtectionConfiguration_fileVaultHidePersonalRecoveryKey"
-                            Id = "5608d7db-5990-45b7-bf40-ecb2125e060b"
-                            valueJson = "false"
-                        }
-                    )
-                }
-
-                Mock -CommandName Get-MgBetaDeviceManagementIntentAssignment -MockWith {
-                    return @()
                 }
             }
             It 'Should Reverse Engineer resource from the Export method' {

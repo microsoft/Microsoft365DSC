@@ -991,7 +991,7 @@ function Set-TargetResource
             {
                 Write-Verbose -Message 'Handle Activation: Require approval to activate / Approvers'
                 $isApprovalRequired = $ApprovaltoActivate
-                if ($ActivateApprover.count -gt 0)
+                if ($ActivateApprover.Count -gt 0)
                 {
                     $primaryApprovers = @()
                     foreach ($item in $ActivateApprover)

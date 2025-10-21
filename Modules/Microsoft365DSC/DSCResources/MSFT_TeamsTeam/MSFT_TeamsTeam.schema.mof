@@ -1,4 +1,4 @@
-[ClassVersion("1.0.0.0"), FriendlyName("TeamsTeam")]
+[ClassVersion("1.0.0.1"), FriendlyName("TeamsTeam")]
 class MSFT_TeamsTeam : OMI_BaseResource
 {
     [Key, Description("Display Name of the Team")] string DisplayName;
@@ -16,6 +16,7 @@ class MSFT_TeamsTeam : OMI_BaseResource
     [Write, Description("Allow members to delete messages within Team.")] Boolean AllowUserDeleteMessages;
     [Write, Description("Allow owners to delete messages within Team.")] Boolean AllowOwnerDeleteMessages;
     [Write, Description("Allow members to delete channels within Team.")] Boolean AllowDeleteChannels;
+    [Write, Description("Determines whether private channel creation is allowed for the team.")] Boolean AllowCreatePrivateChannels;
     [Write, Description("Allow members to manage connectors within Team.")] Boolean AllowCreateUpdateRemoveConnectors;
     [Write, Description("Allow members to manage tabs within Team.")] Boolean AllowCreateUpdateRemoveTabs;
     [Write, Description("Allow mentions in Team.")] Boolean AllowTeamMentions;

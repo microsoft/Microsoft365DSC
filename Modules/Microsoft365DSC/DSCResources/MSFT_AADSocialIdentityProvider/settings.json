@@ -45,5 +45,16 @@
     "Global",
     "USGov"
   ],
-  "mode": "Configuration"
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Beta.Identity.SignIns",
+      "cmdlets": [
+        "Get-MgBetaIdentityProvider",
+        "New-MgBetaIdentityProvider",
+        "Remove-MgBetaIdentityProvider",
+        "Update-MgBetaIdentityProvider"
+      ]
+    }
+  ]
 }

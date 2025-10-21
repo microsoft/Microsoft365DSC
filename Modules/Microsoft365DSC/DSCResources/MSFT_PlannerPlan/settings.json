@@ -46,5 +46,21 @@
     "Microsoft.Graph.Groups",
     "Microsoft.Graph.Planner"
   ],
-  "mode": "Data"
+  "mode": "Data",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Groups",
+      "cmdlets": [
+        "Get-MgGroup"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Planner",
+      "cmdlets": [
+        "Get-MgGroupPlannerPlan",
+        "New-MgPlannerPlan",
+        "Update-MgPlannerPlan"
+      ]
+    }
+  ]
 }

@@ -33,5 +33,13 @@
     "Global",
     "USGov"
   ],
-  "mode": "Data"
+  "mode": "Data",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Applications",
+      "cmdlets": [
+        "Get-MgServicePrincipal"
+      ]
+    }
+  ]
 }

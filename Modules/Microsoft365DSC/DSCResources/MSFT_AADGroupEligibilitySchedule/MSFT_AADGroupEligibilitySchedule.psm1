@@ -138,7 +138,7 @@ function Get-TargetResource {
             else
             {
                 $getValue = Get-MgBetaIdentityGovernancePrivilegedAccessGroupEligibilitySchedule `
-                    -PrivilegedAccessGroupEligibilityScheduleId $Id
+                    -PrivilegedAccessGroupEligibilityScheduleId $Id `
                     -ErrorAction SilentlyContinue
             }
 
@@ -153,6 +153,15 @@ function Get-TargetResource {
             $getValue = $Script:exportedInstance
         }
         $Id = $getValue.Id
+
+        if ($getValue.GetType().Name -eq 'MicrosoftGraphPrivilegedAccessGroupEligibilitySchedule')
+        {
+            $newGetValue = @{}
+            $getValue | Get-Member -MemberType Property | ForEach-Object {
+                $newGetValue[$_.Name] = $getValue.$($_.Name)
+            }
+            $getValue = $newGetValue
+        }
 
         Write-Verbose -Message "An Azure AD Group Eligibility Schedule with Id {$Id} and DisplayName {$GroupDisplayName} was found"
 
@@ -250,7 +259,15 @@ function Get-TargetResource {
 
         $PrincipalValue = $null
         $objectInfo = Get-MgBetaDirectoryObjectById -Ids $getvalue.PrincipalId -ErrorAction SilentlyContinue
-        $getValue.PrincipalType = $objectInfo.AdditionalProperties['@odata.type'].Split('.')[2]
+
+        if (-not $getValue.ContainsKey('PrincipalType'))
+        {
+            $getValue.Add('PrincipalType', $objectInfo.AdditionalProperties['@odata.type'].Split('.')[2])
+        }
+        else
+        {
+            $getValue.PrincipalType = $objectInfo.AdditionalProperties['@odata.type'].Split('.')[2]
+        }
 
        	switch ($getValue.PrincipalType)
         {
@@ -484,6 +501,7 @@ function Set-TargetResource {
             }
         }
         #region resource generator code
+        Write-Verbose -Message "Creating the Azure AD Group Eligibility Schedule with parameters:`r`n$(ConvertTo-Json $createParameters -Depth 10)"
         New-MgBetaIdentityGovernancePrivilegedAccessGroupEligibilityScheduleRequest -BodyParameter $createParameters
         #endregion
     }
@@ -536,7 +554,7 @@ function Set-TargetResource {
                         )
                     }
                 }
-                Write-Verbose -Message "Updating the expiration policy for the group {$GroupDisplayName}"
+                Write-Verbose -Message "Updating the expiration policy for the group {$GroupDisplayName} with:`r`n$(ConvertTo-Json $params -Depth 10)"
                 Update-MgBetaPolicyRoleManagementPolicyRule -UnifiedRoleManagementPolicyId $unifiedRoleManagementPolicyId -UnifiedRoleManagementPolicyRuleId $unifiedRoleManagementPolicyRuleId -BodyParameter $params
             }
         }
@@ -845,7 +863,7 @@ function Export-TargetResource {
         foreach ($group in $Script:exportedGroups)
         {
             Write-Verbose "Processing Group $($group.DisplayName), Id $($group.id)"
-            Write-M365DSCHost -Message "    |---[$j/$($groups.Count)] $($group.DisplayName)" -DeferWrite
+            Write-M365DSCHost -Message "    |---[$j/$($Script:exportedGroups.Length)] $($group.DisplayName)" -DeferWrite
             #region resource generator code
             $getValue = ($batchResponses | Where-Object { $_.id -eq $group.Id }).body.value
             Write-Verbose "GetValue set for schedule Id $($getValue.Id)"

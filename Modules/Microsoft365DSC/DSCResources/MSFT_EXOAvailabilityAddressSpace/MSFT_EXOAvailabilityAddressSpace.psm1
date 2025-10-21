@@ -502,7 +502,7 @@ function Export-TargetResource
                 $Global:M365DSCExportResourceInstancesCount++
             }
 
-            Write-M365DSCHost -Message "    |---[$i/$($AvailabilityAddressSpaces.length)] $($AvailabilityAddressSpace.Identity)" -DeferWrite
+            Write-M365DSCHost -Message "    |---[$i/$($AvailabilityAddressSpaces.Length)] $($AvailabilityAddressSpace.Identity)" -DeferWrite
 
             $Params = @{
                 Identity              = $AvailabilityAddressSpace.Identity

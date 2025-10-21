@@ -50,5 +50,29 @@
     "Global",
     "USGov"
   ],
-  "mode": "Configuration"
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Beta.DeviceManagement",
+      "cmdlets": [
+        "Get-MgBetaDeviceManagementAssignmentFilter"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Beta.DeviceManagement.Enrollment",
+      "cmdlets": [
+        "Get-MgBetaDeviceManagementWindowsFeatureUpdateProfile",
+        "Get-MgBetaDeviceManagementWindowsFeatureUpdateProfileAssignment",
+        "New-MgBetaDeviceManagementWindowsFeatureUpdateProfile",
+        "Remove-MgBetaDeviceManagementWindowsFeatureUpdateProfile",
+        "Update-MgBetaDeviceManagementWindowsFeatureUpdateProfile"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Groups",
+      "cmdlets": [
+        "Get-MgGroup"
+      ]
+    }
+  ]
 }

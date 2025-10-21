@@ -46,5 +46,28 @@
     "Global",
     "USGov"
   ],
-  "mode": "Configuration"
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Beta.Identity.Governance",
+      "cmdlets": [
+        "Get-MgBetaEntitlementManagementAccessPackage",
+        "Get-MgBetaEntitlementManagementAccessPackageCatalog",
+        "Get-MgBetaEntitlementManagementAccessPackageCatalogAccessPackageResource",
+        "Get-MgBetaEntitlementManagementAccessPackageCatalogAccessPackageResourceRole",
+        "Get-MgBetaEntitlementManagementAccessPackageIncompatibleAccessPackage",
+        "Get-MgBetaEntitlementManagementAccessPackageIncompatibleGroup",
+        "Get-MgBetaEntitlementManagementAccessPackageIncompatibleWith",
+        "New-MgBetaEntitlementManagementAccessPackage",
+        "New-MgBetaEntitlementManagementAccessPackageIncompatibleAccessPackageByRef",
+        "New-MgBetaEntitlementManagementAccessPackageIncompatibleGroupByRef",
+        "New-MgBetaEntitlementManagementAccessPackageResourceRoleScope",
+        "Remove-MgBetaEntitlementManagementAccessPackage",
+        "Remove-MgBetaEntitlementManagementAccessPackageIncompatibleAccessPackageByRef",
+        "Remove-MgBetaEntitlementManagementAccessPackageIncompatibleGroupByRef",
+        "Remove-MgBetaEntitlementManagementAccessPackageResourceRoleScope",
+        "Update-MgBetaEntitlementManagementAccessPackage"
+      ]
+    }
+  ]
 }

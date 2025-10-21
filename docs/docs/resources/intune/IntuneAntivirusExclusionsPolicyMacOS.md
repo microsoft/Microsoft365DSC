@@ -25,7 +25,7 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **dataType** | Write | String | The type of the target assignment. | `#microsoft.graph.groupAssignmentTarget`, `#microsoft.graph.allLicensedUsersAssignmentTarget`, `#microsoft.graph.allDevicesAssignmentTarget`, `#microsoft.graph.exclusionGroupAssignmentTarget`, `#microsoft.graph.configurationManagerCollectionAssignmentTarget` |
+| **dataType** | Write | String | The type of the target assignment. | `#microsoft.graph.cloudPcManagementGroupAssignmentTarget`, `#microsoft.graph.groupAssignmentTarget`, `#microsoft.graph.allLicensedUsersAssignmentTarget`, `#microsoft.graph.allDevicesAssignmentTarget`, `#microsoft.graph.exclusionGroupAssignmentTarget`, `#microsoft.graph.configurationManagerCollectionAssignmentTarget` |
 | **deviceAndAppManagementAssignmentFilterType** | Write | String | The type of filter of the target assignment i.e. Exclude or Include. Possible values are:none, include, exclude. | `none`, `include`, `exclude` |
 | **deviceAndAppManagementAssignmentFilterId** | Write | String | The Id of the filter for the target assignment. | |
 | **deviceAndAppManagementAssignmentFilterDisplayName** | Write | String | The display name of the filter for the target assignment. | |
@@ -39,11 +39,11 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **exclusions_item_type** | Write | String | Type - Depends on exclusions (0: Path, 1: File extension, 2: Process name) | `0`, `1`, `2` |
-| **exclusions_item_extension** | Write | String | File extension - Depends on exclusions_item_type=1 | |
-| **exclusions_item_name** | Write | String | File name - exclusions_item_type=2 | |
-| **exclusions_item_path** | Write | String | Path - exclusions_item_type=0 | |
-| **exclusions_item_isDirectory** | Write | String | Is directory (false: Disabled, true: Enabled) - Depends on exclusions_item_type=0 | `false`, `true` |
+| **exclusions_item_type** | Write | String | Type - Depends on exclusions (excludedPath: Path, excludedFileExtension: File extension, excludedFileName: Process name) | `excludedPath`, `excludedFileExtension`, `excludedFileName` |
+| **exclusions_item_extension** | Write | String | File extension - Depends on exclusions_item_type=excludedFileExtension | |
+| **exclusions_item_name** | Write | String | File name - exclusions_item_type=excludedFileName | |
+| **exclusions_item_path** | Write | String | Path - exclusions_item_type=excludedPath | |
+| **exclusions_item_isDirectory** | Write | String | Is directory (false: Disabled, true: Enabled) - Depends on exclusions_item_type=excludedPath | `false`, `true` |
 
 
 ## Description
@@ -112,11 +112,11 @@ Configuration Example
             Exclusions  = @(
                 MSFT_MicrosoftGraphIntuneSettingsCatalogExclusions{
                     Exclusions_item_extension = '.dmg'
-                    Exclusions_item_type = '1'
+                    Exclusions_item_type = 'excludedFileExtension'
                 }
                 MSFT_MicrosoftGraphIntuneSettingsCatalogExclusions{
                     Exclusions_item_name = 'process1'
-                    Exclusions_item_type = '2'
+                    Exclusions_item_type = 'excludedFileName'
                 }
             );
             RoleScopeTagIds                    = @("0");
@@ -162,11 +162,11 @@ Configuration Example
             Exclusions  = @(
                 MSFT_MicrosoftGraphIntuneSettingsCatalogExclusions{
                     Exclusions_item_extension = '.xcode' # Updated property
-                    Exclusions_item_type = '1'
+                    Exclusions_item_type = 'excludedFileExtension'
                 }
                 MSFT_MicrosoftGraphIntuneSettingsCatalogExclusions{
                     Exclusions_item_name = 'process1'
-                    Exclusions_item_type = '2'
+                    Exclusions_item_type = 'excludedFileName'
                 }
             );
             RoleScopeTagIds                    = @("0");

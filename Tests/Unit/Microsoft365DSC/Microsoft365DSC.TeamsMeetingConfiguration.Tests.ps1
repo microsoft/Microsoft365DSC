@@ -106,7 +106,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ClientAudioPortRange        = 20
                     ClientMediaPortRangeEnabled = $True
                     ClientVideoPort             = 50020
-                    ClientVideoPortRange        = 21; #Variant
+                    ClientVideoPortRange        = 21; # Drift
                     CustomFooterText            = $null
                     DisableAnonymousJoin        = $False
                     EnableQoS                   = $False

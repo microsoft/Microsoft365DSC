@@ -33,5 +33,19 @@
     "Microsoft.Graph.Authentication",
     "Microsoft.Graph.Beta.DeviceManagement.Enrollment"
   ],
-  "mode": "Configuration"
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Authentication",
+      "cmdlets": [
+        "Invoke-MgGraphRequest"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Beta.DeviceManagement.Enrollment",
+      "cmdlets": [
+        "Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration"
+      ]
+    }
+  ]
 }

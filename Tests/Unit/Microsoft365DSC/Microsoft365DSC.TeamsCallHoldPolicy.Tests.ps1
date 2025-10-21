@@ -33,6 +33,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-PSSession -MockWith {
             }
 
+            Mock -CommandName Get-CsTeamsCallHoldPolicy -MockWith {
+                return @{
+                    AudioFileId = 'FakeStringValue'
+                    Description = 'FakeStringValue'
+                    Identity    = 'FakeStringValue'
+                }
+            }
+
             Mock -CommandName Set-CsTeamsCallHoldPolicy -MockWith {
             }
 
@@ -89,15 +97,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure      = 'Absent'
                     Credential  = $Credential
                 }
-
-                Mock -CommandName Get-CsTeamsCallHoldPolicy -MockWith {
-                    return @{
-                        AudioFileId = 'FakeStringValue'
-                        Description = 'FakeStringValue'
-                        Identity    = 'FakeStringValue'
-
-                    }
-                }
             }
 
             It 'Should return Values from the Get method' {
@@ -123,15 +122,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure      = 'Present'
                     Credential  = $Credential
                 }
-
-                Mock -CommandName Get-CsTeamsCallHoldPolicy -MockWith {
-                    return @{
-                        AudioFileId = 'FakeStringValue'
-                        Description = 'FakeStringValue'
-                        Identity    = 'FakeStringValue'
-
-                    }
-                }
             }
 
 
@@ -143,19 +133,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'The TeamsCallHoldPolicy exists and values are NOT in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    AudioFileId = 'FakeStringValue'
+                    AudioFileId = 'FakeStringValue Drift' # Drift
                     Description = 'FakeStringValue'
                     Identity    = 'FakeStringValue'
                     Ensure      = 'Present'
                     Credential  = $Credential
-                }
-
-                Mock -CommandName Get-CsTeamsCallHoldPolicy -MockWith {
-                    return @{
-                        AudioFileId = 'FakeStringValueDrift #Drift'
-                        Description = 'FakeStringValueDrift #Drift'
-                        Identity    = 'FakeStringValue'
-                    }
                 }
             }
 
@@ -179,15 +161,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
                     Credential = $Credential
-                }
-
-                Mock -CommandName Get-CsTeamsCallHoldPolicy -MockWith {
-                    return @{
-                        AudioFileId = 'FakeStringValue'
-                        Description = 'FakeStringValue'
-                        Identity    = 'FakeStringValue'
-
-                    }
                 }
             }
 

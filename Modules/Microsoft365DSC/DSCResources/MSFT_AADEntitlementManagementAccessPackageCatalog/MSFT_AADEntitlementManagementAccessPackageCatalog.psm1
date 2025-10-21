@@ -245,7 +245,7 @@ function Set-TargetResource
         $CreateParameters.Remove('Id') | Out-Null
         $CreateParameters.Remove('Verbose') | Out-Null
 
-        $CreateParameters.add('@odata.type', '#microsoft.graph.accessPackageCatalog')
+        $CreateParameters.Add('@odata.type', '#microsoft.graph.accessPackageCatalog')
 
         #region resource generator code
         $policy = New-MgBetaEntitlementManagementAccessPackageCatalog -BodyParameter $CreateParameters
@@ -262,7 +262,7 @@ function Set-TargetResource
         $UpdateParameters.Remove('Id') | Out-Null
         $UpdateParameters.Remove('Verbose') | Out-Null
 
-        $UpdateParameters.add('@odata.type', '#microsoft.graph.accessPackageCatalog')
+        $UpdateParameters.Add('@odata.type', '#microsoft.graph.accessPackageCatalog')
 
         #region resource generator code
         Update-MgBetaEntitlementManagementAccessPackageCatalog -BodyParameter $UpdateParameters `

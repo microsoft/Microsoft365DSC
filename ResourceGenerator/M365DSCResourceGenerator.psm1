@@ -24,6 +24,10 @@ function New-M365DSCResource
         [System.String]
         $CmdLetVerb = 'New',
 
+        [Parameter()]
+        [switch]
+        $IsSingleInstance,
+
         # Path to the new Resource
         [Parameter()]
         [System.String]
@@ -603,10 +607,12 @@ $($userDefinitionSettings.MOF -join "`r`n")
         }
         Write-TokenReplacement -Token '<TimeTypeConstructor>' -Value $timeTypeConstructor -FilePath $moduleFilePath
 
-        $newCmdlet = Get-Command -Name "New-$($CmdLetNoun)"
-        $newDefaultParameterSet = $newCmdlet.ParameterSets | Where-Object -FilterScript { $_.Name -eq 'Create' }
-        [Array]$newKeyIdentifier = ($newDefaultParameterSet.Parameters | Where-Object -FilterScript { $_.IsMandatory }).Name
-        $defaultCreateParameters = @"
+        if (-not $IsSingleInstance)
+        {
+            $newCmdlet = Get-Command -Name "New-$($CmdLetNoun)"
+            $newDefaultParameterSet = $newCmdlet.ParameterSets | Where-Object -FilterScript { $_.Name -eq 'Create' }
+            [Array]$newKeyIdentifier = ($newDefaultParameterSet.Parameters | Where-Object -FilterScript { $_.IsMandatory }).Name
+            $defaultCreateParameters = @"
         `$createParameters = ([Hashtable]`$boundParameters).Clone()
         `$createParameters = Rename-M365DSCCimInstanceParameter -Properties `$createParameters
         `$createParameters.Remove('Id') | Out-Null
@@ -620,6 +626,7 @@ $($userDefinitionSettings.MOF -join "`r`n")
             }
         }
 "@
+        }
         $defaultUpdateParameters = @"
         `$updateParameters = ([Hashtable]`$boundParameters).Clone()
         `$updateParameters = Rename-M365DSCCimInstanceParameter -Properties `$updateParameters
@@ -1251,7 +1258,14 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
         Write-TokenReplacement -Token '<CIMInstances>' -Value '' -FilePath $schemaFilePath
 
         #region Readme & Settings
-        $cmdName = "New-$cmdletNoun"
+        if ($IsSingleInstance)
+        {
+            $cmdName = "Set-$cmdletNoun"
+        }
+        else
+        {
+            $cmdName = "New-$cmdletNoun"
+        }
         $cmdletInfo = & $cmdName -?
         $synopsis = $cmdletInfo.Synopsis.Replace('cmdlet', 'resource')
         Write-TokenReplacement -Token '<ResourceFriendlyName>' -Value $ResourceName -FilePath $readmeFilePath

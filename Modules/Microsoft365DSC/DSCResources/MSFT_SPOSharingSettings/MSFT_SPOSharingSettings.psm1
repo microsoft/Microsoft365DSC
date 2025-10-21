@@ -655,11 +655,8 @@ function Test-TargetResource
         $AccessTokens
     )
 
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
     $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
@@ -667,68 +664,57 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message 'Testing configuration for SPO Sharing settings'
-
-    $CurrentValues = Get-TargetResource @PSBoundParameters
-
-    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
-    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
-
-    $ValuesToCheck = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
-
     if ($DefaultLinkPermission -eq 'None')
     {
         Write-Verbose -Message 'Valid values to set are View and Edit. A value of None will be set to Edit as its the default value.'
-        $ValuesToCheck['DefaultLinkPermission'] = 'Edit'
+        $PSBoundParameters.DefaultLinkPermission = 'Edit'
     }
 
     if ($null -eq $SignInAccelerationDomain)
     {
-        $ValuesToCheck.Remove('SignInAccelerationDomain') | Out-Null
-        $ValuesToCheck.Remove('EnableGuestSignInAcceleration') | Out-Null #removing EnableGuestSignInAcceleration since it can only be configured with a configured SignINAccerlation domain
+        $PSBoundParameters.Remove('SignInAccelerationDomain') | Out-Null
+        $PSBoundParameters.Remove('EnableGuestSignInAcceleration') | Out-Null #removing EnableGuestSignInAcceleration since it can only be configured with a configured SignINAccerlation domain
     }
+
     if ($SharingCapability -ne 'ExternalUserAndGuestSharing')
     {
         Write-Warning -Message 'The sharing capabilities for the tenant are not configured to be ExternalUserAndGuestSharing for that the RequireAnonymousLinksExpireInDays property cannot be configured'
-        $ValuesToCheck.Remove('RequireAnonymousLinksExpireInDays') | Out-Null
+        $PSBoundParameters.Remove('RequireAnonymousLinksExpireInDays') | Out-Null
     }
+
     if ($ExternalUserExpireInDays -and $ExternalUserExpirationRequired -eq $false)
     {
         Write-Warning -Message 'ExternalUserExpirationRequired is set to be false. For that the ExternalUserExpireInDays property cannot be configured'
-        $ValuesToCheck.Remove('ExternalUserExpireInDays') | Out-Null
+        $PSBoundParameters.Remove('ExternalUserExpireInDays') | Out-Null
     }
+
     if ($SharingCapability -ne 'ExternalUserAndGuestSharing' -and ($null -ne $FileAnonymousLinkType -or $null -ne $FolderAnonymousLinkType))
     {
         Write-Warning -Message 'If anonymous file or folder links are set, SharingCapability must be set to ExternalUserAndGuestSharing '
-        $ValuesToCheck.Remove('FolderAnonymousLinkType') | Out-Null
-        $ValuesToCheck.Remove('FileAnonymousLinkType') | Out-Null
+        $PSBoundParameters.Remove('FolderAnonymousLinkType') | Out-Null
+        $PSBoundParameters.Remove('FileAnonymousLinkType') | Out-Null
     }
 
     if ($SharingDomainRestrictionMode -eq 'None')
     {
         Write-Warning -Message 'SharingDomainRestrictionMode is set to None. For that SharingAllowedDomainList / SharingBlockedDomainList cannot be configured'
-        $ValuesToCheck.Remove('SharingAllowedDomainList') | Out-Null
-        $ValuesToCheck.Remove('SharingBlockedDomainList') | Out-Null
+        $PSBoundParameters.Remove('SharingAllowedDomainList') | Out-Null
+        $PSBoundParameters.Remove('SharingBlockedDomainList') | Out-Null
     }
     elseif ($SharingDomainRestrictionMode -eq 'AllowList')
     {
         Write-Verbose -Message 'SharingDomainRestrictionMode is set to AllowList. For that SharingBlockedDomainList cannot be configured'
-        $ValuesToCheck.Remove('SharingBlockedDomainList') | Out-Null
+        $PSBoundParameters.Remove('SharingBlockedDomainList') | Out-Null
     }
     elseif ($SharingDomainRestrictionMode -eq 'BlockList')
     {
         Write-Warning -Message 'SharingDomainRestrictionMode is set to BlockList. For that SharingAllowedDomainList cannot be configured'
-        $ValuesToCheck.Remove('SharingAllowedDomainList') | Out-Null
+        $PSBoundParameters.Remove('SharingAllowedDomainList') | Out-Null
     }
 
-    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
-        -Source $($MyInvocation.MyCommand.Source) `
-        -DesiredValues $PSBoundParameters `
-        -ValuesToCheck $ValuesToCheck.Keys
-
-    Write-Verbose -Message "Test-TargetResource returned $TestResult"
-
-    return $TestResult
+    $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
+                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '')
+    return $result
 }
 
 function Export-TargetResource

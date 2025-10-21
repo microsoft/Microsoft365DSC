@@ -134,7 +134,7 @@ function Get-TargetResource
                 $myExcludeTargets.Add('TargetType', $currentExcludeTargets.targetType.ToString())
             }
 
-            if ($myExcludeTargets.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myExcludeTargets.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexExcludeTargets += $myExcludeTargets
             }
@@ -174,7 +174,7 @@ function Get-TargetResource
                 $myincludeTargets.Add('TargetType', $currentincludeTargets.targetType.ToString())
             }
 
-            if ($myincludeTargets.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myincludeTargets.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexincludeTargets += $myincludeTargets
             }
@@ -306,7 +306,7 @@ function Set-TargetResource
         $keys = (([Hashtable]$UpdateParameters).Clone()).Keys
         foreach ($key in $keys)
         {
-            if ($null -ne $UpdateParameters.$key -and $UpdateParameters.$key.getType().Name -like '*cimInstance*')
+            if ($null -ne $UpdateParameters.$key -and $UpdateParameters.$key.GetType().Name -like '*cimInstance*')
             {
                 $UpdateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters.$key
             }

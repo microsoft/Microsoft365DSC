@@ -25,7 +25,7 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **dataType** | Write | String | The type of the target assignment. | `#microsoft.graph.groupAssignmentTarget`, `#microsoft.graph.allLicensedUsersAssignmentTarget`, `#microsoft.graph.allDevicesAssignmentTarget`, `#microsoft.graph.exclusionGroupAssignmentTarget`, `#microsoft.graph.configurationManagerCollectionAssignmentTarget` |
+| **dataType** | Write | String | The type of the target assignment. | `#microsoft.graph.cloudPcManagementGroupAssignmentTarget`, `#microsoft.graph.groupAssignmentTarget`, `#microsoft.graph.allLicensedUsersAssignmentTarget`, `#microsoft.graph.allDevicesAssignmentTarget`, `#microsoft.graph.exclusionGroupAssignmentTarget`, `#microsoft.graph.configurationManagerCollectionAssignmentTarget` |
 | **deviceAndAppManagementAssignmentFilterType** | Write | String | The type of filter of the target assignment i.e. Exclude or Include. Possible values are:none, include, exclude. | `none`, `include`, `exclude` |
 | **deviceAndAppManagementAssignmentFilterId** | Write | String | The Id of the filter for the target assignment. | |
 | **deviceAndAppManagementAssignmentFilterDisplayName** | Write | String | The display name of the filter for the target assignment. | |
@@ -39,7 +39,7 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **exclusions_item_type** | Write | String | Type - (0: Path, 1: Process name) | `0`, `1` |
+| **exclusions_item_type** | Write | String | Type - (excludedPath: Path, excludedFileName: Process name) | `excludedPath`, `excludedFileName` |
 | **exclusions_item_path** | Write | String | Path | |
 | **exclusions_item_name** | Write | String | Process name | |
 | **exclusions_item_isDirectory** | Write | String | Is directory (false: Disabled, true: Enabled) | `false`, `true` |
@@ -112,11 +112,11 @@ Configuration Example
                 MSFT_MicrosoftGraphIntuneSettingsCatalogExclusionsV2{
                     exclusions_item_path = '/path/to/directory'
                     exclusions_item_isDirectory = 'true'
-                    exclusions_item_type = '0'
+                    exclusions_item_type = 'excludedPath'
                 }
                 MSFT_MicrosoftGraphIntuneSettingsCatalogExclusionsV2{
                     Exclusions_item_name = 'process1'
-                    Exclusions_item_type = '1'
+                    Exclusions_item_type = 'excludedFileName'
                 }
             );
             RoleScopeTagIds       = @("0");
@@ -163,11 +163,11 @@ Configuration Example
                 MSFT_MicrosoftGraphIntuneSettingsCatalogExclusionsV2{
                     exclusions_item_path = '/path/to/otherDirectory' # Updated property
                     exclusions_item_isDirectory = 'true'
-                    exclusions_item_type = '0'
+                    exclusions_item_type = 'excludedPath'
                 }
                 MSFT_MicrosoftGraphIntuneSettingsCatalogExclusionsV2{
                     Exclusions_item_name = 'process1'
-                    Exclusions_item_type = '1'
+                    Exclusions_item_type = 'excludedFileName'
                 }
             );
             RoleScopeTagIds       = @("0");

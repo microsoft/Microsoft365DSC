@@ -42,6 +42,39 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-CsTeamsComplianceRecordingPolicy -MockWith {
             }
 
+            Mock -CommandName Get-CsTeamsComplianceRecordingPolicy -MockWith {
+                return @{
+                    WarnUserOnRemoval                                   = $True
+                    Description                                         = 'FakeStringValue'
+                    Enabled                                             = $True
+                    DisableComplianceRecordingAudioNotificationForCalls = $True
+                    ComplianceRecordingApplications                     = @(
+                        @{
+                            Id = '00000000-0000-0000-0000-000000000000'
+                            ComplianceRecordingPairedApplications = @()
+                            ConcurrentInvitationCount             = 1
+                            RequiredDuringCall                    = $True
+                            RequiredBeforeMeetingJoin             = $True
+                            RequiredBeforeCallEstablishment       = $True
+                            RequiredDuringMeeting                 = $True
+                        }
+                    )
+                    Identity                                            = 'FakeStringValue'
+                }
+            }
+
+            Mock -CommandName Get-CsTeamsComplianceRecordingApplication  -MockWith {
+                return @{
+                    Id = '00000000-0000-0000-0000-000000000000'
+                    ComplianceRecordingPairedApplications = @()
+                    ConcurrentInvitationCount             = 1
+                    RequiredDuringCall                    = $True
+                    RequiredBeforeMeetingJoin             = $True
+                    RequiredBeforeCallEstablishment       = $True
+                    RequiredDuringMeeting                 = $True
+                }
+            }
+
             Mock -CommandName New-M365DSCConnection -MockWith {
                 return 'Credentials'
             }
@@ -96,39 +129,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure                                              = 'Absent'
                     Credential                                          = $Credential
                 }
-
-                Mock -CommandName Get-CsTeamsComplianceRecordingPolicy -MockWith {
-                    return @{
-                        WarnUserOnRemoval                                   = $True
-                        Description                                         = 'FakeStringValue'
-                        Enabled                                             = $True
-                        DisableComplianceRecordingAudioNotificationForCalls = $True
-                        ComplianceRecordingApplications                     = @(
-                            @{
-                                Id = '00000000-0000-0000-0000-000000000000'
-                                ComplianceRecordingPairedApplications = @()
-                                ConcurrentInvitationCount             = 1
-                                RequiredDuringCall                    = $True
-                                RequiredBeforeMeetingJoin             = $True
-                                RequiredBeforeCallEstablishment       = $True
-                                RequiredDuringMeeting                 = $True
-                            }
-                        )
-                        Identity                                            = 'FakeStringValue'
-                    }
-                }
-                Mock -CommandName Get-CsTeamsComplianceRecordingApplication  -MockWith {
-                    return @{
-                        Id = '00000000-0000-0000-0000-000000000000'
-                        ComplianceRecordingPairedApplications = @()
-                        ConcurrentInvitationCount             = 1
-                        RequiredDuringCall                    = $True
-                        RequiredBeforeMeetingJoin             = $True
-                        RequiredBeforeCallEstablishment       = $True
-                        RequiredDuringMeeting                 = $True
-                    }
-                }
-
             }
 
             It 'Should return Values from the Get method' {
@@ -160,38 +160,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure                                              = 'Present'
                     Credential                                          = $Credential
                 }
-
-                Mock -CommandName Get-CsTeamsComplianceRecordingPolicy -MockWith {
-                    return @{
-                        WarnUserOnRemoval                                   = $True
-                        Description                                         = 'FakeStringValue'
-                        Enabled                                             = $True
-                        DisableComplianceRecordingAudioNotificationForCalls = $True
-                        ComplianceRecordingApplications                     = @(
-                            @{
-                                Id = '00000000-0000-0000-0000-000000000000'
-                                ComplianceRecordingPairedApplications = @()
-                                ConcurrentInvitationCount             = 1
-                                RequiredDuringCall                    = $True
-                                RequiredBeforeMeetingJoin             = $True
-                                RequiredBeforeCallEstablishment       = $True
-                                RequiredDuringMeeting                 = $True
-                            }
-                        )
-                        Identity                                            = 'FakeStringValue'
-                    }
-                }
-                Mock -CommandName Get-CsTeamsComplianceRecordingApplication  -MockWith {
-                    return @{
-                        Id = '00000000-0000-0000-0000-000000000000'
-                        ComplianceRecordingPairedApplications = @()
-                        ConcurrentInvitationCount             = 1
-                        RequiredDuringCall                    = $True
-                        RequiredBeforeMeetingJoin             = $True
-                        RequiredBeforeCallEstablishment       = $True
-                        RequiredDuringMeeting                 = $True
-                    }
-                }
             }
 
             It 'Should return true from the Test method' {
@@ -202,46 +170,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'The TeamsComplianceRecordingPolicy exists and values are NOT in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    WarnUserOnRemoval                                   = $True
+                    WarnUserOnRemoval                                   = $False # Drift
                     Description                                         = 'FakeStringValue'
                     Enabled                                             = $True
                     DisableComplianceRecordingAudioNotificationForCalls = $True
                     Identity                                            = 'FakeStringValue'
                     Ensure                                              = 'Present'
                     Credential                                          = $Credential
-                }
-
-                Mock -CommandName Get-CsTeamsComplianceRecordingPolicy -MockWith {
-                    return @{
-                        WarnUserOnRemoval                                   = $False
-                        Description                                         = 'FakeStringValue'
-                        Enabled                                             = $True
-                        DisableComplianceRecordingAudioNotificationForCalls = $True
-                        ComplianceRecordingApplications                     = @(
-                            @{
-                                Id = '00000000-0000-0000-0000-000000000000'
-                                ComplianceRecordingPairedApplications = @()
-                                ConcurrentInvitationCount             = 1
-                                RequiredDuringCall                    = $True
-                                RequiredBeforeMeetingJoin             = $True
-                                RequiredBeforeCallEstablishment       = $True
-                                RequiredDuringMeeting                 = $True
-                            }
-                        )
-                        Identity                                            = 'FakeStringValue'
-                    }
-                }
-
-                Mock -CommandName Get-CsTeamsComplianceRecordingApplication  -MockWith {
-                    return @{
-                        Id = '00000000-0000-0000-0000-000000000000'
-                        ComplianceRecordingPairedApplications = @()
-                        ConcurrentInvitationCount             = 1
-                        RequiredDuringCall                    = $True
-                        RequiredBeforeMeetingJoin             = $True
-                        RequiredBeforeCallEstablishment       = $True
-                        RequiredDuringMeeting                 = $True
-                    }
                 }
             }
 
@@ -265,27 +200,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
                     Credential = $Credential
-                }
-
-                Mock -CommandName Get-CsTeamsComplianceRecordingPolicy -MockWith {
-                    return @{
-                        WarnUserOnRemoval                                   = $True
-                        Description                                         = 'FakeStringValue'
-                        Enabled                                             = $True
-                        DisableComplianceRecordingAudioNotificationForCalls = $True
-                        ComplianceRecordingApplications                     = @(
-                            @{
-                                Id = '00000000-0000-0000-0000-000000000000'
-                                ComplianceRecordingPairedApplications = @()
-                                ConcurrentInvitationCount             = 1
-                                RequiredDuringCall                    = $True
-                                RequiredBeforeMeetingJoin             = $True
-                                RequiredBeforeCallEstablishment       = $True
-                                RequiredDuringMeeting                 = $True
-                            }
-                        )
-                        Identity                                            = 'FakeStringValue'
-                    }
                 }
             }
 

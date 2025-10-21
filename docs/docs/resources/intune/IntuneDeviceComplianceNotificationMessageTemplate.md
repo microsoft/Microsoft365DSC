@@ -93,7 +93,7 @@ Configuration Example
             BrandingOptions               = @("includeCompanyName","includeContactInformation","includeCompanyPortalLink");
             LocalizedNotificationMessages = @(
                 MSFT_DeviceManagementNotificationMessageTemplate{
-                    MessageTemplate = "Das ist eine Testnachricht für Deutsch."
+                    MessageTemplate = "Das ist eine Testnachricht fÃ¼r Deutsch."
                     IsDefault = $True
                     Subject = "Test Deutsch2"
                     Locale = "de-de"
@@ -147,7 +147,7 @@ Configuration Example
             BrandingOptions               = @("includeCompanyName","includeContactInformation","includeCompanyPortalLink");
             LocalizedNotificationMessages = @(
                 MSFT_DeviceManagementNotificationMessageTemplate{
-                    MessageTemplate = "Das ist eine Testnachricht für Deutsch."
+                    MessageTemplate = "Das ist eine Testnachricht fÃ¼r Deutsch."
                     IsDefault = $False # Updated property
                     Subject = "Test Deutsch2"
                     Locale = "de-de"

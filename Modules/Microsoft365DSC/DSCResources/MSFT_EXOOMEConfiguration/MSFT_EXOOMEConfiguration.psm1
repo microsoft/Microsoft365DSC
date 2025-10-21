@@ -121,7 +121,7 @@ function Get-TargetResource
     {
         #Get-OMEConfiguration do NOT accept ErrorAction parameter
         $OMEConfigurations = Get-OMEConfiguration 2>&1
-        if ($null -ne ($OMEConfigurations | Where-Object { $_.gettype().Name -like '*ErrorRecord*' }))
+        if ($null -ne ($OMEConfigurations | Where-Object { $_.GetType().Name -like '*ErrorRecord*' }))
         {
             throw $OMEConfigurations
         }
@@ -463,7 +463,7 @@ function Export-TargetResource
     {
         #Using 2>&1 to redirect Error stream to variable because Set-Perimeter do not inlude ErrorAction
         $OMEConfigurations = Get-OMEConfiguration 2>&1
-        if ($null -ne ($OMEConfigurations | Where-Object { $_.gettype().Name -like '*ErrorRecord*' }))
+        if ($null -ne ($OMEConfigurations | Where-Object { $_.GetType().Name -like '*ErrorRecord*' }))
         {
             throw $OMEConfigurations
         }

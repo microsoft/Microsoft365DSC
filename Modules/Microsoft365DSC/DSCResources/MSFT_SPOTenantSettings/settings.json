@@ -76,5 +76,14 @@
     "Global",
     "USGov"
   ],
-  "mode": "Configuration"
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Sites",
+      "cmdlets": [
+        "Get-MgAdminSharepointSetting",
+        "Update-MgAdminSharepointSetting"
+      ]
+    }
+  ]
 }

@@ -40,6 +40,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Set-CsOnlinePstnUsage -MockWith {
             }
 
+            Mock -CommandName Get-CsOnlinePstnUsage -MockWith {
+                return @{
+                    Identity = 'Global'
+                    Usage    = @('Local')
+                }
+            }
+
             # Mock Write-M365DSCHost to hide output during the tests
             Mock -CommandName Write-M365DSCHost -MockWith {
             }
@@ -57,7 +64,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
 
                 Mock -CommandName Get-CsOnlinePstnUsage -MockWith {
-                    return New-Object PSObject -Property @{
+                    return @{
                         Identity = 'Global'
                         Usage    = @()
                     }
@@ -85,13 +92,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure     = 'Present'
                     Credential = $Credential
                 }
-
-                Mock -CommandName Get-CsOnlinePstnUsage -MockWith {
-                    return New-Object PSObject -Property @{
-                        Identity = 'Global'
-                        Usage    = @('Local')
-                    }
-                }
             }
 
             It 'Should return true from the Test method' {
@@ -105,13 +105,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Usage      = 'Local'
                     Ensure     = 'Absent'
                     Credential = $Credential
-                }
-
-                Mock -CommandName Get-CsOnlinePstnUsage -MockWith {
-                    return New-Object PSObject -Property @{
-                        Identity = 'Global'
-                        Usage    = @('Local')
-                    }
                 }
             }
 
@@ -133,13 +126,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     Credential = $Credential
-                }
-
-                Mock -CommandName Get-CsOnlinePstnUsage -MockWith {
-                    return New-Object PSObject -Property @{
-                        Identity = 'Global'
-                        Usage    = @('Local')
-                    }
                 }
             }
 

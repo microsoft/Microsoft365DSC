@@ -1077,7 +1077,7 @@ function Get-TargetResource
                         Write-Verbose -Message "Could not find an Intune Device Configuration Endpoint Protection Policy for Windows10 with DisplayName {$DisplayName}"
                         return $nullResult
                     }
-                    if (([array]$getValue).count -gt 1)
+                    if (([array]$getValue).Count -gt 1)
                     {
                         throw "A policy with a duplicated displayName {'$DisplayName'} was found - Ensure displayName is unique"
                     }
@@ -1116,13 +1116,13 @@ function Get-TargetResource
         {
             $complexRecoveryOptions.Add('RecoveryPasswordUsage', $getValue.AdditionalProperties.bitLockerFixedDrivePolicy.recoveryOptions.recoveryPasswordUsage.ToString())
         }
-        if ($complexRecoveryOptions.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexRecoveryOptions.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexRecoveryOptions = $null
         }
         $complexBitLockerFixedDrivePolicy.Add('RecoveryOptions', $complexRecoveryOptions)
         $complexBitLockerFixedDrivePolicy.Add('RequireEncryptionForWriteAccess', $getValue.AdditionalProperties.bitLockerFixedDrivePolicy.requireEncryptionForWriteAccess)
-        if ($complexBitLockerFixedDrivePolicy.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexBitLockerFixedDrivePolicy.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexBitLockerFixedDrivePolicy = $null
         }
@@ -1134,7 +1134,7 @@ function Get-TargetResource
             $complexBitLockerRemovableDrivePolicy.Add('EncryptionMethod', $getValue.AdditionalProperties.bitLockerRemovableDrivePolicy.encryptionMethod.ToString())
         }
         $complexBitLockerRemovableDrivePolicy.Add('RequireEncryptionForWriteAccess', $getValue.AdditionalProperties.bitLockerRemovableDrivePolicy.requireEncryptionForWriteAccess)
-        if ($complexBitLockerRemovableDrivePolicy.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexBitLockerRemovableDrivePolicy.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexBitLockerRemovableDrivePolicy = $null
         }
@@ -1165,7 +1165,7 @@ function Get-TargetResource
         {
             $complexRecoveryOptions.Add('RecoveryPasswordUsage', $getValue.AdditionalProperties.bitLockerSystemDrivePolicy.recoveryOptions.recoveryPasswordUsage.ToString())
         }
-        if ($complexRecoveryOptions.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexRecoveryOptions.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexRecoveryOptions = $null
         }
@@ -1188,7 +1188,7 @@ function Get-TargetResource
         {
             $complexBitLockerSystemDrivePolicy.Add('StartupAuthenticationTpmUsage', $getValue.AdditionalProperties.bitLockerSystemDrivePolicy.startupAuthenticationTpmUsage.ToString())
         }
-        if ($complexBitLockerSystemDrivePolicy.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexBitLockerSystemDrivePolicy.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexBitLockerSystemDrivePolicy = $null
         }
@@ -1210,7 +1210,7 @@ function Get-TargetResource
         {
             $complexDefenderDetectedMalwareActions.Add('SevereSeverity', $getValue.AdditionalProperties.defenderDetectedMalwareActions.severeSeverity.ToString())
         }
-        if ($complexDefenderDetectedMalwareActions.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexDefenderDetectedMalwareActions.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexDefenderDetectedMalwareActions = $null
         }
@@ -1242,7 +1242,7 @@ function Get-TargetResource
         $complexFirewallProfileDomain.Add('StealthModeRequired', $getValue.AdditionalProperties.firewallProfileDomain.stealthModeRequired)
         $complexFirewallProfileDomain.Add('UnicastResponsesToMulticastBroadcastsBlocked', $getValue.AdditionalProperties.firewallProfileDomain.unicastResponsesToMulticastBroadcastsBlocked)
         $complexFirewallProfileDomain.Add('UnicastResponsesToMulticastBroadcastsRequired', $getValue.AdditionalProperties.firewallProfileDomain.unicastResponsesToMulticastBroadcastsRequired)
-        if ($complexFirewallProfileDomain.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexFirewallProfileDomain.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexFirewallProfileDomain = $null
         }
@@ -1274,7 +1274,7 @@ function Get-TargetResource
         $complexFirewallProfilePrivate.Add('StealthModeRequired', $getValue.AdditionalProperties.firewallProfilePrivate.stealthModeRequired)
         $complexFirewallProfilePrivate.Add('UnicastResponsesToMulticastBroadcastsBlocked', $getValue.AdditionalProperties.firewallProfilePrivate.unicastResponsesToMulticastBroadcastsBlocked)
         $complexFirewallProfilePrivate.Add('UnicastResponsesToMulticastBroadcastsRequired', $getValue.AdditionalProperties.firewallProfilePrivate.unicastResponsesToMulticastBroadcastsRequired)
-        if ($complexFirewallProfilePrivate.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexFirewallProfilePrivate.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexFirewallProfilePrivate = $null
         }
@@ -1306,7 +1306,7 @@ function Get-TargetResource
         $complexFirewallProfilePublic.Add('StealthModeRequired', $getValue.AdditionalProperties.firewallProfilePublic.stealthModeRequired)
         $complexFirewallProfilePublic.Add('UnicastResponsesToMulticastBroadcastsBlocked', $getValue.AdditionalProperties.firewallProfilePublic.unicastResponsesToMulticastBroadcastsBlocked)
         $complexFirewallProfilePublic.Add('UnicastResponsesToMulticastBroadcastsRequired', $getValue.AdditionalProperties.firewallProfilePublic.unicastResponsesToMulticastBroadcastsRequired)
-        if ($complexFirewallProfilePublic.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexFirewallProfilePublic.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexFirewallProfilePublic = $null
         }
@@ -1346,7 +1346,7 @@ function Get-TargetResource
             {
                 $myfirewallRules.Add('TrafficDirection', $currentfirewallRules.trafficDirection.ToString())
             }
-            if ($myfirewallRules.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myfirewallRules.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexFirewallRules += $myfirewallRules
             }
@@ -1360,7 +1360,7 @@ function Get-TargetResource
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
             $myLocalUsersOrGroups.Add('Name', $currentLocalUsersOrGroups.name)
             $myLocalUsersOrGroups.Add('SecurityIdentifier', $currentLocalUsersOrGroups.securityIdentifier)
-            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexLocalUsersOrGroups += $myLocalUsersOrGroups
             }
@@ -1370,7 +1370,7 @@ function Get-TargetResource
         {
             $complexUserRightsAccessCredentialManagerAsTrustedCaller.Add('State', $getValue.AdditionalProperties.userRightsAccessCredentialManagerAsTrustedCaller.state.ToString())
         }
-        if ($complexUserRightsAccessCredentialManagerAsTrustedCaller.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexUserRightsAccessCredentialManagerAsTrustedCaller.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexUserRightsAccessCredentialManagerAsTrustedCaller = $null
         }
@@ -1383,7 +1383,7 @@ function Get-TargetResource
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
             $myLocalUsersOrGroups.Add('Name', $currentLocalUsersOrGroups.name)
             $myLocalUsersOrGroups.Add('SecurityIdentifier', $currentLocalUsersOrGroups.securityIdentifier)
-            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexLocalUsersOrGroups += $myLocalUsersOrGroups
             }
@@ -1393,7 +1393,7 @@ function Get-TargetResource
         {
             $complexUserRightsActAsPartOfTheOperatingSystem.Add('State', $getValue.AdditionalProperties.userRightsActAsPartOfTheOperatingSystem.state.ToString())
         }
-        if ($complexUserRightsActAsPartOfTheOperatingSystem.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexUserRightsActAsPartOfTheOperatingSystem.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexUserRightsActAsPartOfTheOperatingSystem = $null
         }
@@ -1406,7 +1406,7 @@ function Get-TargetResource
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
             $myLocalUsersOrGroups.Add('Name', $currentLocalUsersOrGroups.name)
             $myLocalUsersOrGroups.Add('SecurityIdentifier', $currentLocalUsersOrGroups.securityIdentifier)
-            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexLocalUsersOrGroups += $myLocalUsersOrGroups
             }
@@ -1416,7 +1416,7 @@ function Get-TargetResource
         {
             $complexUserRightsAllowAccessFromNetwork.Add('State', $getValue.AdditionalProperties.userRightsAllowAccessFromNetwork.state.ToString())
         }
-        if ($complexUserRightsAllowAccessFromNetwork.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexUserRightsAllowAccessFromNetwork.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexUserRightsAllowAccessFromNetwork = $null
         }
@@ -1429,7 +1429,7 @@ function Get-TargetResource
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
             $myLocalUsersOrGroups.Add('Name', $currentLocalUsersOrGroups.name)
             $myLocalUsersOrGroups.Add('SecurityIdentifier', $currentLocalUsersOrGroups.securityIdentifier)
-            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexLocalUsersOrGroups += $myLocalUsersOrGroups
             }
@@ -1439,7 +1439,7 @@ function Get-TargetResource
         {
             $complexUserRightsBackupData.Add('State', $getValue.AdditionalProperties.userRightsBackupData.state.ToString())
         }
-        if ($complexUserRightsBackupData.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexUserRightsBackupData.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexUserRightsBackupData = $null
         }
@@ -1452,7 +1452,7 @@ function Get-TargetResource
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
             $myLocalUsersOrGroups.Add('Name', $currentLocalUsersOrGroups.name)
             $myLocalUsersOrGroups.Add('SecurityIdentifier', $currentLocalUsersOrGroups.securityIdentifier)
-            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexLocalUsersOrGroups += $myLocalUsersOrGroups
             }
@@ -1462,7 +1462,7 @@ function Get-TargetResource
         {
             $complexUserRightsBlockAccessFromNetwork.Add('State', $getValue.AdditionalProperties.userRightsBlockAccessFromNetwork.state.ToString())
         }
-        if ($complexUserRightsBlockAccessFromNetwork.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexUserRightsBlockAccessFromNetwork.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexUserRightsBlockAccessFromNetwork = $null
         }
@@ -1475,7 +1475,7 @@ function Get-TargetResource
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
             $myLocalUsersOrGroups.Add('Name', $currentLocalUsersOrGroups.name)
             $myLocalUsersOrGroups.Add('SecurityIdentifier', $currentLocalUsersOrGroups.securityIdentifier)
-            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexLocalUsersOrGroups += $myLocalUsersOrGroups
             }
@@ -1485,7 +1485,7 @@ function Get-TargetResource
         {
             $complexUserRightsChangeSystemTime.Add('State', $getValue.AdditionalProperties.userRightsChangeSystemTime.state.ToString())
         }
-        if ($complexUserRightsChangeSystemTime.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexUserRightsChangeSystemTime.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexUserRightsChangeSystemTime = $null
         }
@@ -1498,7 +1498,7 @@ function Get-TargetResource
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
             $myLocalUsersOrGroups.Add('Name', $currentLocalUsersOrGroups.name)
             $myLocalUsersOrGroups.Add('SecurityIdentifier', $currentLocalUsersOrGroups.securityIdentifier)
-            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexLocalUsersOrGroups += $myLocalUsersOrGroups
             }
@@ -1508,7 +1508,7 @@ function Get-TargetResource
         {
             $complexUserRightsCreateGlobalObjects.Add('State', $getValue.AdditionalProperties.userRightsCreateGlobalObjects.state.ToString())
         }
-        if ($complexUserRightsCreateGlobalObjects.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexUserRightsCreateGlobalObjects.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexUserRightsCreateGlobalObjects = $null
         }
@@ -1521,7 +1521,7 @@ function Get-TargetResource
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
             $myLocalUsersOrGroups.Add('Name', $currentLocalUsersOrGroups.name)
             $myLocalUsersOrGroups.Add('SecurityIdentifier', $currentLocalUsersOrGroups.securityIdentifier)
-            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexLocalUsersOrGroups += $myLocalUsersOrGroups
             }
@@ -1531,7 +1531,7 @@ function Get-TargetResource
         {
             $complexUserRightsCreatePageFile.Add('State', $getValue.AdditionalProperties.userRightsCreatePageFile.state.ToString())
         }
-        if ($complexUserRightsCreatePageFile.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexUserRightsCreatePageFile.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexUserRightsCreatePageFile = $null
         }
@@ -1544,7 +1544,7 @@ function Get-TargetResource
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
             $myLocalUsersOrGroups.Add('Name', $currentLocalUsersOrGroups.name)
             $myLocalUsersOrGroups.Add('SecurityIdentifier', $currentLocalUsersOrGroups.securityIdentifier)
-            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexLocalUsersOrGroups += $myLocalUsersOrGroups
             }
@@ -1554,7 +1554,7 @@ function Get-TargetResource
         {
             $complexUserRightsCreatePermanentSharedObjects.Add('State', $getValue.AdditionalProperties.userRightsCreatePermanentSharedObjects.state.ToString())
         }
-        if ($complexUserRightsCreatePermanentSharedObjects.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexUserRightsCreatePermanentSharedObjects.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexUserRightsCreatePermanentSharedObjects = $null
         }
@@ -1567,7 +1567,7 @@ function Get-TargetResource
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
             $myLocalUsersOrGroups.Add('Name', $currentLocalUsersOrGroups.name)
             $myLocalUsersOrGroups.Add('SecurityIdentifier', $currentLocalUsersOrGroups.securityIdentifier)
-            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexLocalUsersOrGroups += $myLocalUsersOrGroups
             }
@@ -1577,7 +1577,7 @@ function Get-TargetResource
         {
             $complexUserRightsCreateSymbolicLinks.Add('State', $getValue.AdditionalProperties.userRightsCreateSymbolicLinks.state.ToString())
         }
-        if ($complexUserRightsCreateSymbolicLinks.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexUserRightsCreateSymbolicLinks.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexUserRightsCreateSymbolicLinks = $null
         }
@@ -1590,7 +1590,7 @@ function Get-TargetResource
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
             $myLocalUsersOrGroups.Add('Name', $currentLocalUsersOrGroups.name)
             $myLocalUsersOrGroups.Add('SecurityIdentifier', $currentLocalUsersOrGroups.securityIdentifier)
-            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexLocalUsersOrGroups += $myLocalUsersOrGroups
             }
@@ -1600,7 +1600,7 @@ function Get-TargetResource
         {
             $complexUserRightsCreateToken.Add('State', $getValue.AdditionalProperties.userRightsCreateToken.state.ToString())
         }
-        if ($complexUserRightsCreateToken.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexUserRightsCreateToken.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexUserRightsCreateToken = $null
         }
@@ -1613,7 +1613,7 @@ function Get-TargetResource
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
             $myLocalUsersOrGroups.Add('Name', $currentLocalUsersOrGroups.name)
             $myLocalUsersOrGroups.Add('SecurityIdentifier', $currentLocalUsersOrGroups.securityIdentifier)
-            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexLocalUsersOrGroups += $myLocalUsersOrGroups
             }
@@ -1623,7 +1623,7 @@ function Get-TargetResource
         {
             $complexUserRightsDebugPrograms.Add('State', $getValue.AdditionalProperties.userRightsDebugPrograms.state.ToString())
         }
-        if ($complexUserRightsDebugPrograms.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexUserRightsDebugPrograms.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexUserRightsDebugPrograms = $null
         }
@@ -1636,7 +1636,7 @@ function Get-TargetResource
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
             $myLocalUsersOrGroups.Add('Name', $currentLocalUsersOrGroups.name)
             $myLocalUsersOrGroups.Add('SecurityIdentifier', $currentLocalUsersOrGroups.securityIdentifier)
-            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexLocalUsersOrGroups += $myLocalUsersOrGroups
             }
@@ -1646,7 +1646,7 @@ function Get-TargetResource
         {
             $complexUserRightsDelegation.Add('State', $getValue.AdditionalProperties.userRightsDelegation.state.ToString())
         }
-        if ($complexUserRightsDelegation.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexUserRightsDelegation.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexUserRightsDelegation = $null
         }
@@ -1659,7 +1659,7 @@ function Get-TargetResource
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
             $myLocalUsersOrGroups.Add('Name', $currentLocalUsersOrGroups.name)
             $myLocalUsersOrGroups.Add('SecurityIdentifier', $currentLocalUsersOrGroups.securityIdentifier)
-            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexLocalUsersOrGroups += $myLocalUsersOrGroups
             }
@@ -1669,7 +1669,7 @@ function Get-TargetResource
         {
             $complexUserRightsDenyLocalLogOn.Add('State', $getValue.AdditionalProperties.userRightsDenyLocalLogOn.state.ToString())
         }
-        if ($complexUserRightsDenyLocalLogOn.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexUserRightsDenyLocalLogOn.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexUserRightsDenyLocalLogOn = $null
         }
@@ -1682,7 +1682,7 @@ function Get-TargetResource
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
             $myLocalUsersOrGroups.Add('Name', $currentLocalUsersOrGroups.name)
             $myLocalUsersOrGroups.Add('SecurityIdentifier', $currentLocalUsersOrGroups.securityIdentifier)
-            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexLocalUsersOrGroups += $myLocalUsersOrGroups
             }
@@ -1692,7 +1692,7 @@ function Get-TargetResource
         {
             $complexUserRightsGenerateSecurityAudits.Add('State', $getValue.AdditionalProperties.userRightsGenerateSecurityAudits.state.ToString())
         }
-        if ($complexUserRightsGenerateSecurityAudits.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexUserRightsGenerateSecurityAudits.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexUserRightsGenerateSecurityAudits = $null
         }
@@ -1705,7 +1705,7 @@ function Get-TargetResource
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
             $myLocalUsersOrGroups.Add('Name', $currentLocalUsersOrGroups.name)
             $myLocalUsersOrGroups.Add('SecurityIdentifier', $currentLocalUsersOrGroups.securityIdentifier)
-            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexLocalUsersOrGroups += $myLocalUsersOrGroups
             }
@@ -1715,7 +1715,7 @@ function Get-TargetResource
         {
             $complexUserRightsImpersonateClient.Add('State', $getValue.AdditionalProperties.userRightsImpersonateClient.state.ToString())
         }
-        if ($complexUserRightsImpersonateClient.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexUserRightsImpersonateClient.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexUserRightsImpersonateClient = $null
         }
@@ -1728,7 +1728,7 @@ function Get-TargetResource
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
             $myLocalUsersOrGroups.Add('Name', $currentLocalUsersOrGroups.name)
             $myLocalUsersOrGroups.Add('SecurityIdentifier', $currentLocalUsersOrGroups.securityIdentifier)
-            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexLocalUsersOrGroups += $myLocalUsersOrGroups
             }
@@ -1738,7 +1738,7 @@ function Get-TargetResource
         {
             $complexUserRightsIncreaseSchedulingPriority.Add('State', $getValue.AdditionalProperties.userRightsIncreaseSchedulingPriority.state.ToString())
         }
-        if ($complexUserRightsIncreaseSchedulingPriority.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexUserRightsIncreaseSchedulingPriority.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexUserRightsIncreaseSchedulingPriority = $null
         }
@@ -1751,7 +1751,7 @@ function Get-TargetResource
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
             $myLocalUsersOrGroups.Add('Name', $currentLocalUsersOrGroups.name)
             $myLocalUsersOrGroups.Add('SecurityIdentifier', $currentLocalUsersOrGroups.securityIdentifier)
-            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexLocalUsersOrGroups += $myLocalUsersOrGroups
             }
@@ -1761,7 +1761,7 @@ function Get-TargetResource
         {
             $complexUserRightsLoadUnloadDrivers.Add('State', $getValue.AdditionalProperties.userRightsLoadUnloadDrivers.state.ToString())
         }
-        if ($complexUserRightsLoadUnloadDrivers.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexUserRightsLoadUnloadDrivers.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexUserRightsLoadUnloadDrivers = $null
         }
@@ -1774,7 +1774,7 @@ function Get-TargetResource
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
             $myLocalUsersOrGroups.Add('Name', $currentLocalUsersOrGroups.name)
             $myLocalUsersOrGroups.Add('SecurityIdentifier', $currentLocalUsersOrGroups.securityIdentifier)
-            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexLocalUsersOrGroups += $myLocalUsersOrGroups
             }
@@ -1784,7 +1784,7 @@ function Get-TargetResource
         {
             $complexUserRightsLocalLogOn.Add('State', $getValue.AdditionalProperties.userRightsLocalLogOn.state.ToString())
         }
-        if ($complexUserRightsLocalLogOn.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexUserRightsLocalLogOn.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexUserRightsLocalLogOn = $null
         }
@@ -1797,7 +1797,7 @@ function Get-TargetResource
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
             $myLocalUsersOrGroups.Add('Name', $currentLocalUsersOrGroups.name)
             $myLocalUsersOrGroups.Add('SecurityIdentifier', $currentLocalUsersOrGroups.securityIdentifier)
-            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexLocalUsersOrGroups += $myLocalUsersOrGroups
             }
@@ -1807,7 +1807,7 @@ function Get-TargetResource
         {
             $complexUserRightsLockMemory.Add('State', $getValue.AdditionalProperties.userRightsLockMemory.state.ToString())
         }
-        if ($complexUserRightsLockMemory.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexUserRightsLockMemory.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexUserRightsLockMemory = $null
         }
@@ -1820,7 +1820,7 @@ function Get-TargetResource
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
             $myLocalUsersOrGroups.Add('Name', $currentLocalUsersOrGroups.name)
             $myLocalUsersOrGroups.Add('SecurityIdentifier', $currentLocalUsersOrGroups.securityIdentifier)
-            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexLocalUsersOrGroups += $myLocalUsersOrGroups
             }
@@ -1830,7 +1830,7 @@ function Get-TargetResource
         {
             $complexUserRightsManageAuditingAndSecurityLogs.Add('State', $getValue.AdditionalProperties.userRightsManageAuditingAndSecurityLogs.state.ToString())
         }
-        if ($complexUserRightsManageAuditingAndSecurityLogs.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexUserRightsManageAuditingAndSecurityLogs.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexUserRightsManageAuditingAndSecurityLogs = $null
         }
@@ -1843,7 +1843,7 @@ function Get-TargetResource
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
             $myLocalUsersOrGroups.Add('Name', $currentLocalUsersOrGroups.name)
             $myLocalUsersOrGroups.Add('SecurityIdentifier', $currentLocalUsersOrGroups.securityIdentifier)
-            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexLocalUsersOrGroups += $myLocalUsersOrGroups
             }
@@ -1853,7 +1853,7 @@ function Get-TargetResource
         {
             $complexUserRightsManageVolumes.Add('State', $getValue.AdditionalProperties.userRightsManageVolumes.state.ToString())
         }
-        if ($complexUserRightsManageVolumes.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexUserRightsManageVolumes.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexUserRightsManageVolumes = $null
         }
@@ -1866,7 +1866,7 @@ function Get-TargetResource
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
             $myLocalUsersOrGroups.Add('Name', $currentLocalUsersOrGroups.name)
             $myLocalUsersOrGroups.Add('SecurityIdentifier', $currentLocalUsersOrGroups.securityIdentifier)
-            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexLocalUsersOrGroups += $myLocalUsersOrGroups
             }
@@ -1876,7 +1876,7 @@ function Get-TargetResource
         {
             $complexUserRightsModifyFirmwareEnvironment.Add('State', $getValue.AdditionalProperties.userRightsModifyFirmwareEnvironment.state.ToString())
         }
-        if ($complexUserRightsModifyFirmwareEnvironment.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexUserRightsModifyFirmwareEnvironment.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexUserRightsModifyFirmwareEnvironment = $null
         }
@@ -1889,7 +1889,7 @@ function Get-TargetResource
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
             $myLocalUsersOrGroups.Add('Name', $currentLocalUsersOrGroups.name)
             $myLocalUsersOrGroups.Add('SecurityIdentifier', $currentLocalUsersOrGroups.securityIdentifier)
-            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexLocalUsersOrGroups += $myLocalUsersOrGroups
             }
@@ -1899,7 +1899,7 @@ function Get-TargetResource
         {
             $complexUserRightsModifyObjectLabels.Add('State', $getValue.AdditionalProperties.userRightsModifyObjectLabels.state.ToString())
         }
-        if ($complexUserRightsModifyObjectLabels.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexUserRightsModifyObjectLabels.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexUserRightsModifyObjectLabels = $null
         }
@@ -1912,7 +1912,7 @@ function Get-TargetResource
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
             $myLocalUsersOrGroups.Add('Name', $currentLocalUsersOrGroups.name)
             $myLocalUsersOrGroups.Add('SecurityIdentifier', $currentLocalUsersOrGroups.securityIdentifier)
-            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexLocalUsersOrGroups += $myLocalUsersOrGroups
             }
@@ -1922,7 +1922,7 @@ function Get-TargetResource
         {
             $complexUserRightsProfileSingleProcess.Add('State', $getValue.AdditionalProperties.userRightsProfileSingleProcess.state.ToString())
         }
-        if ($complexUserRightsProfileSingleProcess.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexUserRightsProfileSingleProcess.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexUserRightsProfileSingleProcess = $null
         }
@@ -1935,7 +1935,7 @@ function Get-TargetResource
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
             $myLocalUsersOrGroups.Add('Name', $currentLocalUsersOrGroups.name)
             $myLocalUsersOrGroups.Add('SecurityIdentifier', $currentLocalUsersOrGroups.securityIdentifier)
-            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexLocalUsersOrGroups += $myLocalUsersOrGroups
             }
@@ -1945,7 +1945,7 @@ function Get-TargetResource
         {
             $complexUserRightsRemoteDesktopServicesLogOn.Add('State', $getValue.AdditionalProperties.userRightsRemoteDesktopServicesLogOn.state.ToString())
         }
-        if ($complexUserRightsRemoteDesktopServicesLogOn.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexUserRightsRemoteDesktopServicesLogOn.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexUserRightsRemoteDesktopServicesLogOn = $null
         }
@@ -1958,7 +1958,7 @@ function Get-TargetResource
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
             $myLocalUsersOrGroups.Add('Name', $currentLocalUsersOrGroups.name)
             $myLocalUsersOrGroups.Add('SecurityIdentifier', $currentLocalUsersOrGroups.securityIdentifier)
-            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexLocalUsersOrGroups += $myLocalUsersOrGroups
             }
@@ -1968,7 +1968,7 @@ function Get-TargetResource
         {
             $complexUserRightsRemoteShutdown.Add('State', $getValue.AdditionalProperties.userRightsRemoteShutdown.state.ToString())
         }
-        if ($complexUserRightsRemoteShutdown.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexUserRightsRemoteShutdown.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexUserRightsRemoteShutdown = $null
         }
@@ -1981,7 +1981,7 @@ function Get-TargetResource
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
             $myLocalUsersOrGroups.Add('Name', $currentLocalUsersOrGroups.name)
             $myLocalUsersOrGroups.Add('SecurityIdentifier', $currentLocalUsersOrGroups.securityIdentifier)
-            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexLocalUsersOrGroups += $myLocalUsersOrGroups
             }
@@ -1991,7 +1991,7 @@ function Get-TargetResource
         {
             $complexUserRightsRestoreData.Add('State', $getValue.AdditionalProperties.userRightsRestoreData.state.ToString())
         }
-        if ($complexUserRightsRestoreData.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexUserRightsRestoreData.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexUserRightsRestoreData = $null
         }
@@ -2004,7 +2004,7 @@ function Get-TargetResource
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
             $myLocalUsersOrGroups.Add('Name', $currentLocalUsersOrGroups.name)
             $myLocalUsersOrGroups.Add('SecurityIdentifier', $currentLocalUsersOrGroups.securityIdentifier)
-            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexLocalUsersOrGroups += $myLocalUsersOrGroups
             }
@@ -2014,7 +2014,7 @@ function Get-TargetResource
         {
             $complexUserRightsTakeOwnership.Add('State', $getValue.AdditionalProperties.userRightsTakeOwnership.state.ToString())
         }
-        if ($complexUserRightsTakeOwnership.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexUserRightsTakeOwnership.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexUserRightsTakeOwnership = $null
         }
@@ -2650,7 +2650,7 @@ function Get-TargetResource
 
         $returnAssignments = @()
         $graphAssignments = Get-MgBetaDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId $Id
-        if ($graphAssignments.count -gt 0)
+        if ($graphAssignments.Count -gt 0)
         {
             $returnAssignments += ConvertFrom-IntunePolicyAssignment `
                 -IncludeDeviceFilter:$true `
@@ -3725,12 +3725,12 @@ function Set-TargetResource
         $keys = (([Hashtable]$CreateParameters).Clone()).Keys
         foreach ($key in $keys)
         {
-            if ($null -ne $CreateParameters.$key -and $CreateParameters.$key.getType().Name -like '*cimInstance*')
+            if ($null -ne $CreateParameters.$key -and $CreateParameters.$key.GetType().Name -like '*cimInstance*')
             {
                 $CreateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters.$key
             }
         }
-        if ($CreateParameters.FirewallRules.count -gt 0)
+        if ($CreateParameters.FirewallRules.Count -gt 0)
         {
             $intuneFirewallRules = @()
             foreach ($firewallRule in $CreateParameters.FirewallRules)
@@ -3769,12 +3769,12 @@ function Set-TargetResource
         $keys = (([Hashtable]$UpdateParameters).Clone()).Keys
         foreach ($key in $keys)
         {
-            if ($null -ne $UpdateParameters.$key -and $UpdateParameters.$key.getType().Name -like '*cimInstance*')
+            if ($null -ne $UpdateParameters.$key -and $UpdateParameters.$key.GetType().Name -like '*cimInstance*')
             {
                 $UpdateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters.$key
             }
         }
-        if ($UpdateParameters.FirewallRules.count -gt 0)
+        if ($UpdateParameters.FirewallRules.Count -gt 0)
         {
             $intuneFirewallRules = @()
             foreach ($firewallRule in $UpdateParameters.FirewallRules)

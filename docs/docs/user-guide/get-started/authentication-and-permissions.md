@@ -219,11 +219,11 @@ All SharePoint Online resources are using the <a href="https://github.com/pnp/po
 
 Use the "<a href="https://pnp.github.io/powershell/cmdlets/Register-PnPManagementShellAccess.html" target="_blank">Register-PnPManagementShellAccess</a>" cmdlet to register this application in Azure Active Directory and grant the correct permissions.
 
-### Using your own Azure AD app
+### Using your own Entra app registration
 
-<a href="https://docs.microsoft.com/en-us/azure/active-directory/develop/quickstart-register-app" target="_blank">Create a new app registration</a> in Azure AD yourself and grant the correct permissions to this app. The documentation on this website for each of the SharePoint Online resources list the permissions needed for the resource.
+<a href="https://docs.microsoft.com/en-us/azure/active-directory/develop/quickstart-register-app" target="_blank">Create a new app registration</a> in Microsoft Entra yourself and grant the correct permissions to this app. The documentation on this website for each of the SharePoint Online resources list the permissions needed for the resource.
 
-> Note: Make sure your app has the "Allow Public Client Flows" setting set to "Yes". This is required for SharePoint. More information can be found <a href="https://pnp.github.io/powershell/articles/authentication.html#silent-authentication-with-credentials-for-running-in-pipelines" target="_blank">here</a>
+> Note: Make sure your app has the "Allow Public Client Flows" setting set to "Yes". This is required for SharePoint (and Device Code Flow). More information can be found <a href="https://pnp.github.io/powershell/articles/authentication.html#silent-authentication-with-credentials-for-running-in-pipelines" target="_blank">here</a>
 
 As an alternative, you can use the "<a href="https://pnp.github.io/powershell/cmdlets/Register-PnPAzureADApp.html" target="_blank">Register-PnPAzureADApp</a>" cmdlet to have PnP PowerShell create the app registration for you and grant the correct permissions.
 

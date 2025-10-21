@@ -77,5 +77,20 @@
     "Global",
     "USGov"
   ],
-  "mode": "Data"
+  "mode": "Data",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Groups",
+      "cmdlets": [
+        "New-MgGroup",
+        "New-MgGroupOwnerByRef"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Users",
+      "cmdlets": [
+        "Get-MgUser"
+      ]
+    }
+  ]
 }

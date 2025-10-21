@@ -27,7 +27,7 @@ Configuration Example
             TenantId                = $TenantId
             CertificateThumbprint   = $CertificateThumbprint
             Description             = "CertificateBasedAuthentication rollout policy";
-            DisplayName             = "CertificateBasedAuthentication rollout policy";
+            DisplayName             = "certificateBasedAuthentication rollout policy";
             Ensure                  = "Present";
             IsAppliedToOrganization = $False;
             IsEnabled               = $False;

@@ -37,6 +37,20 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return 'Credentials'
             }
 
+            Mock -CommandName Get-CsOnlineDialInConferencingTenantSettings -MockWith {
+                return @{
+                    AllowPSTNOnlyMeetingsByDefault   = $False
+                    AutomaticallyMigrateUserMeetings = $True
+                    AutomaticallyReplaceAcpProvider  = $False
+                    AutomaticallySendEmailsToUsers   = $True
+                    EnableDialOutJoinConfirmation    = $False
+                    EnableEntryExitNotifications     = $True
+                    EntryExitAnnouncementsType       = 'ToneOnly'
+                    MaskPstnNumbersType              = 'MaskedForExternalUsers'
+                    PinLength                        = 8
+                }
+            }
+
             Mock -CommandName Set-CsOnlineDialInConferencingTenantSettings -MockWith {
             }
 
@@ -63,20 +77,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     MaskPstnNumbersType              = 'MaskedForExternalUsers'
                     PinLength                        = 8
                 }
-
-                Mock -CommandName Get-CsOnlineDialInConferencingTenantSettings -MockWith {
-                    return @{
-                        AllowPSTNOnlyMeetingsByDefault   = $False
-                        AutomaticallyMigrateUserMeetings = $True
-                        AutomaticallyReplaceAcpProvider  = $False
-                        AutomaticallySendEmailsToUsers   = $True
-                        EnableDialOutJoinConfirmation    = $False
-                        EnableEntryExitNotifications     = $True
-                        EntryExitAnnouncementsType       = 'ToneOnly'
-                        MaskPstnNumbersType              = 'MaskedForExternalUsers'
-                        PinLength                        = 8
-                    }
-                }
             }
 
             It 'Should return absent from the Get method' {
@@ -92,7 +92,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     AllowPSTNOnlyMeetingsByDefault   = $False
-                    AutomaticallyMigrateUserMeetings = $True
+                    AutomaticallyMigrateUserMeetings = $False # Drift
                     AutomaticallyReplaceAcpProvider  = $False
                     AutomaticallySendEmailsToUsers   = $True
                     Credential                       = $Credential
@@ -102,20 +102,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     IsSingleInstance                 = 'Yes'
                     MaskPstnNumbersType              = 'MaskedForExternalUsers'
                     PinLength                        = 8
-                }
-
-                Mock -CommandName Get-CsOnlineDialInConferencingTenantSettings -MockWith {
-                    return @{
-                        AllowPSTNOnlyMeetingsByDefault   = $False
-                        AutomaticallyMigrateUserMeetings = $False; #Drift
-                        AutomaticallyReplaceAcpProvider  = $False
-                        AutomaticallySendEmailsToUsers   = $True
-                        EnableDialOutJoinConfirmation    = $False
-                        EnableEntryExitNotifications     = $True
-                        EntryExitAnnouncementsType       = 'ToneOnly'
-                        MaskPstnNumbersType              = 'MaskedForExternalUsers'
-                        PinLength                        = 8
-                    }
                 }
             }
 
@@ -135,20 +121,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
                     Credential = $Credential
-                }
-
-                Mock -CommandName Get-CsOnlineDialInConferencingTenantSettings -MockWith {
-                    return @{
-                        AllowPSTNOnlyMeetingsByDefault   = $False
-                        AutomaticallyMigrateUserMeetings = $True
-                        AutomaticallyReplaceAcpProvider  = $False
-                        AutomaticallySendEmailsToUsers   = $True
-                        EnableDialOutJoinConfirmation    = $False
-                        EnableEntryExitNotifications     = $True
-                        EntryExitAnnouncementsType       = 'ToneOnly'
-                        MaskPstnNumbersType              = 'MaskedForExternalUsers'
-                        PinLength                        = 8
-                    }
                 }
             }
 

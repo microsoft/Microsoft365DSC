@@ -40,5 +40,14 @@
   "supportedEnvironments": [
     "Global"
   ],
-  "mode": "Configuration"
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Beta.Identity.Governance",
+      "cmdlets": [
+        "Get-MgBetaIdentityGovernanceLifecycleWorkflowSetting",
+        "Update-MgBetaIdentityGovernanceLifecycleWorkflowSetting"
+      ]
+    }
+  ]
 }

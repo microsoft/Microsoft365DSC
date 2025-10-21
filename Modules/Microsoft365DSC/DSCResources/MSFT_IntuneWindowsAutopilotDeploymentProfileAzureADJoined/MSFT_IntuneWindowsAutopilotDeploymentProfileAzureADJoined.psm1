@@ -169,7 +169,7 @@ function Get-TargetResource
         $complexEnrollmentStatusScreenSettings.Add('CustomErrorMessage', $getValue.EnrollmentStatusScreenSettings.customErrorMessage)
         $complexEnrollmentStatusScreenSettings.Add('HideInstallationProgress', $getValue.EnrollmentStatusScreenSettings.hideInstallationProgress)
         $complexEnrollmentStatusScreenSettings.Add('InstallProgressTimeoutInMinutes', $getValue.EnrollmentStatusScreenSettings.installProgressTimeoutInMinutes)
-        if ($complexEnrollmentStatusScreenSettings.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexEnrollmentStatusScreenSettings.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexEnrollmentStatusScreenSettings = $null
         }
@@ -187,7 +187,7 @@ function Get-TargetResource
         {
             $complexOutOfBoxExperienceSettings.Add('UserType', $getValue.OutOfBoxExperienceSettings.userType.ToString())
         }
-        if ($complexOutOfBoxExperienceSettings.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexOutOfBoxExperienceSettings.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexOutOfBoxExperienceSettings = $null
         }
@@ -229,7 +229,7 @@ function Get-TargetResource
         $rawAssignments = @()
         $rawAssignments = Get-MgBetaDeviceManagementWindowsAutopilotDeploymentProfileAssignment -WindowsAutopilotDeploymentProfileId $Id -All
         $assignmentResult = @()
-        if ($null -ne $rawAssignments -and $rawAssignments.count -gt 0)
+        if ($null -ne $rawAssignments -and $rawAssignments.Count -gt 0)
         {
             $assignmentResult += ConvertFrom-IntunePolicyAssignment -Assignments $rawAssignments -IncludeDeviceFilter $false
         }
@@ -369,7 +369,7 @@ function Set-TargetResource
         $keys = (([Hashtable]$CreateParameters).Clone()).Keys
         foreach ($key in $keys)
         {
-            if ($null -ne $CreateParameters.$key -and $CreateParameters.$key.getType().Name -like '*cimInstance*')
+            if ($null -ne $CreateParameters.$key -and $CreateParameters.$key.GetType().Name -like '*cimInstance*')
             {
                 $CreateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters.$key
             }
@@ -381,7 +381,7 @@ function Set-TargetResource
 
         #region new Intune assignment management
         $intuneAssignments = @()
-        if ($null -ne $Assignments -and $Assignments.count -gt 0)
+        if ($null -ne $Assignments -and $Assignments.Count -gt 0)
         {
             $intuneAssignments += ConvertTo-IntunePolicyAssignment -Assignments $Assignments
         }
@@ -406,7 +406,7 @@ function Set-TargetResource
         $keys = (([Hashtable]$UpdateParameters).Clone()).Keys
         foreach ($key in $keys)
         {
-            if ($null -ne $UpdateParameters.$key -and $UpdateParameters.$key.getType().Name -like '*cimInstance*')
+            if ($null -ne $UpdateParameters.$key -and $UpdateParameters.$key.GetType().Name -like '*cimInstance*')
             {
                 $UpdateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters.$key
             }
@@ -423,7 +423,7 @@ function Set-TargetResource
         $currentAssignments += Get-MgBetaDeviceManagementWindowsAutopilotDeploymentProfileAssignment -WindowsAutopilotDeploymentProfileId $currentInstance.id
 
         $intuneAssignments = @()
-        if ($null -ne $Assignments -and $Assignments.count -gt 0)
+        if ($null -ne $Assignments -and $Assignments.Count -gt 0)
         {
             $intuneAssignments += ConvertTo-IntunePolicyAssignment -Assignments $Assignments
         }
@@ -440,7 +440,7 @@ function Set-TargetResource
                 $currentAssignments = $currentAssignments | Where-Object { -not($_.Target.AdditionalProperties.groupId -eq $assignment.Target.groupId -and $_.Target.AdditionalProperties.'@odata.type' -eq $assignment.Target.'@odata.type') }
             }
         }
-        if ($currentAssignments.count -gt 0)
+        if ($currentAssignments.Count -gt 0)
         {
             foreach ($assignment in $currentAssignments)
             {

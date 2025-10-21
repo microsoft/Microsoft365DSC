@@ -90,7 +90,7 @@ function Get-TargetResource
             #checking if the site actually exists
             try
             {
-                $site = Get-PnPTenantSite $Url
+                $null = Get-PnPTenantSite $Url -ErrorAction Stop
             }
             catch
             {

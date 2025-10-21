@@ -4,10 +4,10 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
+| **Principal** | Key | String | Displayname if the Principal is group, otherwise UserPrincipalName for user. | |
 | **AccessId** | Key | String | The identifier of the membership or ownership eligibility to the group that is governed by PIM. Required. The possible values are: owner, member. Supports $filter (eq). | `owner`, `member`, `unknownFutureValue` |
-| **GroupId** | Write | String | The identifier of the group representing the scope of the membership or ownership eligibility through PIM for groups. Required. Supports $filter (eq). | |
 | **GroupDisplayName** | Key | String | Displayname of the group representing the scope of the membership or ownership eligibility through PIM for groups. | |
-| **Principal** | Key | String | "Displayname if the Principal is group, otherwise UserPrincipalName for user. | |
+| **GroupId** | Write | String | The identifier of the group representing the scope of the membership or ownership eligibility through PIM for groups. Required. Supports $filter (eq). | |
 | **MemberType** | Write | String | Indicates whether the assignment is derived from a group assignment. It can further imply whether the caller can manage the schedule. Required. The possible values are: direct, group, unknownFutureValue. Supports $filter (eq). | `direct`, `group`, `unknownFutureValue` |
 | **PrincipalType** | Write | String | Principal type user or group | `user`, `group` |
 | **ScheduleInfo** | Write | MSFT_MicrosoftGraphrequestSchedule | Represents the period of the access assignment or eligibility. The scheduleInfo can represent a single occurrence or multiple recurring instances. Required. | |
@@ -129,15 +129,18 @@ Configuration Example
         AADGroupEligibilitySchedule 'Example'
         {
             AccessId              = "member";
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
             Ensure                = "Present";
-            GroupDisplayName      = "MyPIMGroup";
             MemberType            = "direct";
-            PrincipalDisplayname  = "MyPrincipalGroup";
+            GroupDisplayName      = "sg-Retail";
+            Principal             = "sg-Retail";
             PrincipalType         = "group";
             ScheduleInfo          = MSFT_MicrosoftGraphrequestSchedule{
-                StartDateTime = '2024-12-23T08:59:28.1200000+00:00'
+                StartDateTime = '2032-12-23T08:59:28.1200000+00:00'
                 Expiration = MSFT_MicrosoftGraphExpirationPattern{
-                    EndDateTime = '12/23/2025 8:59:00 AM +00:00'
+                    EndDateTime = '12/23/2032 8:59:00 AM +00:00'
                     Type = 'afterDateTime'
                 }
             };
@@ -166,10 +169,13 @@ Configuration Example
         AADGroupEligibilitySchedule 'Example'
         {
             AccessId              = "member";
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
             Ensure                = "Present";
-            GroupDisplayName      = "MyPIMGroup";
             MemberType            = "direct";
-            PrincipalDisplayname  = "MyPrincipalGroup";
+            GroupDisplayName      = "sg-Retail";
+            Principal             = "sg-Retail";
             PrincipalType         = "group";
             ScheduleInfo          = MSFT_MicrosoftGraphrequestSchedule{
                 Expiration = MSFT_MicrosoftGraphExpirationPattern{

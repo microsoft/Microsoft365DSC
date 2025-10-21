@@ -59,5 +59,34 @@
   "supportedEnvironments": [
     "Global"
   ],
-  "mode": "Configuration"
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Applications",
+      "cmdlets": [
+        "Get-MgServicePrincipal"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Beta.Identity.Governance",
+      "cmdlets": [
+        "Get-MgBetaRoleManagementDirectoryRoleAssignmentSchedule",
+        "Get-MgBetaRoleManagementDirectoryRoleAssignmentScheduleRequest",
+        "Get-MgBetaRoleManagementDirectoryRoleDefinition",
+        "New-MgBetaRoleManagementDirectoryRoleAssignmentScheduleRequest"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Groups",
+      "cmdlets": [
+        "Get-MgGroup"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Users",
+      "cmdlets": [
+        "Get-MgUser"
+      ]
+    }
+  ]
 }

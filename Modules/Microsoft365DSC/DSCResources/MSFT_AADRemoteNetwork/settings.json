@@ -37,5 +37,24 @@
   "supportedEnvironments": [
     "Global"
   ],
-  "mode": "Configuration"
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Authentication",
+      "cmdlets": [
+        "Invoke-MgGraphRequest"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Beta.NetworkAccess",
+      "cmdlets": [
+        "Get-MgBetaNetworkAccessConnectivityRemoteNetwork",
+        "Get-MgBetaNetworkAccessForwardingProfile",
+        "New-MgBetaNetworkAccessConnectivityRemoteNetwork",
+        "New-MgBetaNetworkAccessConnectivityRemoteNetworkDeviceLink",
+        "Remove-MgBetaNetworkAccessConnectivityRemoteNetwork",
+        "Remove-MgBetaNetworkAccessConnectivityRemoteNetworkDeviceLink"
+      ]
+    }
+  ]
 }

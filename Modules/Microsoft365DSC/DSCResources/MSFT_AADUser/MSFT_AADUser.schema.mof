@@ -1,7 +1,8 @@
-[ClassVersion("1.0.0.0"), FriendlyName("AADUser")]
+[ClassVersion("1.0.0.1"), FriendlyName("AADUser")]
 class MSFT_AADUser : OMI_BaseResource
 {
     [Key, Description("The login name of the user")] String UserPrincipalName;
+    [Write, Description("Specifies whether the user account is enabled or not. Required when a user is created.")] Boolean AccountEnabled;
     [Write, Description("The display name for the user")] String DisplayName;
     [Write, Description("The first name of the user")] String FirstName;
     [Write, Description("The last name of the user")] String LastName;

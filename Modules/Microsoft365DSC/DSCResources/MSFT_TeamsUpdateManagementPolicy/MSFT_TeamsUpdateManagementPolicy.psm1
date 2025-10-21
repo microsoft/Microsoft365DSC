@@ -15,6 +15,11 @@ function Get-TargetResource
         $Description,
 
         [Parameter()]
+        [ValidateSet('91382d07-8b89-444c-bbcb-cfe43133af33', 'edf2633e-9827-44de-b34c-8b8b9717e84c')]
+        [System.String]
+        $DisabledInProductMessages,
+
+        [Parameter()]
         [System.Boolean]
         $AllowManagedUpdates,
 
@@ -26,6 +31,10 @@ function Get-TargetResource
         [System.String]
         [ValidateSet('Disabled', 'Enabled', 'Forced', 'FollowOfficePreview')]
         $AllowPublicPreview,
+
+        [Parameter()]
+        [System.Boolean]
+        $BlockLegacyAuthorization,
 
         [Parameter()]
         [System.UInt32]
@@ -118,10 +127,12 @@ function Get-TargetResource
         Write-Verbose -Message "Found Teams Update Management Policy with Identity {$Identity}"
         $results = @{
             Identity              = $policy.Identity
+            DisabledInProductMessages = $policy.DisabledInProductMessages
             Description           = $policy.Description
             AllowManagedUpdates   = $policy.AllowManagedUpdates
             AllowPreview          = $policy.AllowPreview
             AllowPublicPreview    = $policy.AllowPublicPreview
+            BlockLegacyAuthorization = $policy.BlockLegacyAuthorization
             UpdateDayOfWeek       = $policy.UpdateDayOfWeek
             UpdateTime            = $policy.UpdateTime
             UseNewTeamsClient     = $policy.UseNewTeamsClient
@@ -166,6 +177,11 @@ function Set-TargetResource
         $Description,
 
         [Parameter()]
+        [ValidateSet('91382d07-8b89-444c-bbcb-cfe43133af33', 'edf2633e-9827-44de-b34c-8b8b9717e84c')]
+        [System.String]
+        $DisabledInProductMessages,
+
+        [Parameter()]
         [System.Boolean]
         $AllowManagedUpdates,
 
@@ -177,6 +193,10 @@ function Set-TargetResource
         [System.String]
         [ValidateSet('Disabled', 'Enabled', 'Forced', 'FollowOfficePreview')]
         $AllowPublicPreview,
+
+        [Parameter()]
+        [System.Boolean]
+        $BlockLegacyAuthorization,
 
         [Parameter()]
         [System.UInt32]
@@ -239,27 +259,23 @@ function Set-TargetResource
         -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-    Write-Verbose -Message "Updating Teams Update Management Policy {$Identity}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
-    $PSBoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+    $boundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
     if ($CurrentValues.Ensure -eq 'Absent' -and $Ensure -eq 'Present')
     {
         Write-Verbose "Creating new Teams Update Management Policy {$Identity}"
-
-        New-CsTeamsUpdateManagementPolicy @PSBoundParameters | Out-Null
+        New-CsTeamsUpdateManagementPolicy @boundParameters | Out-Null
     }
     elseif ($CurrentValues.Ensure -eq 'Present' -and $Ensure -eq 'Present')
     {
         Write-Verbose "Updating existing Teams Update Management Policy {$Identity}"
-
-        Set-CsTeamsUpdateManagementPolicy @PSBoundParameters | Out-Null
+        Set-CsTeamsUpdateManagementPolicy @boundParameters | Out-Null
     }
     elseif ($CurrentValues.Ensure -eq 'Present' -and $Ensure -eq 'Absent')
     {
         Write-Verbose "Removing existing Teams Update Management Policy {$Identity}"
-
         Remove-CsTeamsUpdateManagementPolicy -Identity $Identity | Out-Null
     }
 }
@@ -279,6 +295,11 @@ function Test-TargetResource
         $Description,
 
         [Parameter()]
+        [ValidateSet('91382d07-8b89-444c-bbcb-cfe43133af33', 'edf2633e-9827-44de-b34c-8b8b9717e84c')]
+        [System.String]
+        $DisabledInProductMessages,
+
+        [Parameter()]
         [System.Boolean]
         $AllowManagedUpdates,
 
@@ -290,6 +311,10 @@ function Test-TargetResource
         [System.String]
         [ValidateSet('Disabled', 'Enabled', 'Forced', 'FollowOfficePreview')]
         $AllowPublicPreview,
+
+        [Parameter()]
+        [System.Boolean]
+        $BlockLegacyAuthorization,
 
         [Parameter()]
         [System.UInt32]

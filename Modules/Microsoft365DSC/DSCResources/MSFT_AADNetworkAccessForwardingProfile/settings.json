@@ -36,5 +36,16 @@
   "supportedEnvironments": [
     "Global"
   ],
-  "mode": "Configuration"
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Beta.NetworkAccess",
+      "cmdlets": [
+        "Get-MgBetaNetworkAccessForwardingProfile",
+        "Get-MgBetaNetworkAccessForwardingProfilePolicy",
+        "Update-MgBetaNetworkAccessForwardingProfile",
+        "Update-MgBetaNetworkAccessForwardingProfilePolicy"
+      ]
+    }
+  ]
 }

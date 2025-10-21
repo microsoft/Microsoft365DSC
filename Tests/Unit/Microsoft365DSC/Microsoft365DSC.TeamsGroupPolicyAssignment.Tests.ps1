@@ -44,7 +44,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            Mock -CommandName get-csTeamsCallingPolicy -MockWith {
+            Mock -CommandName Get-CsTeamsCallingPolicy -MockWith {
                 return @(
                     @{
                         Identity = "Tag:AllowCalling"
@@ -52,13 +52,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 )
             }
 
-            Mock -CommandName Get-csGroupPolicyAssignment -MockWith {
+            Mock -CommandName Get-CsGroupPolicyAssignment -MockWith {
+                return @{
+                    GroupId               = '00000000-0000-0000-0000-000000000000'
+                    GroupDisplayname      = 'TestGroup'
+                    PolicyType            = "TeamsCallingPolicy"
+                    PolicyName            = "AllowCalling"
+                    Priority              = "1"
+                    Ensure                = 'Present'
+                }
             }
 
-            Mock -CommandName New-csGroupPolicyAssignment -MockWith {
+            Mock -CommandName New-CsGroupPolicyAssignment -MockWith {
             }
 
-            Mock -CommandName Remove-csGroupPolicyAssignment -MockWith {
+            Mock -CommandName Remove-CsGroupPolicyAssignment -MockWith {
             }
 
             # Mock Write-M365DSCHost to hide output during the tests
@@ -81,7 +89,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential            = $Credential
                 }
 
-                Mock -CommandName  Get-CsGroupPolicyAssignment -MockWith {
+                Mock -CommandName Get-CsGroupPolicyAssignment -MockWith {
                     return $null
                 }
             }
@@ -100,27 +108,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name 'Policy assignemnt exists but is not in the Desired State' -Fixture {
+        Context -Name 'Policy assignment exists but is not in the Desired State' -Fixture {
             BeforeAll {
                 $testParams = @{
                     GroupId               = '00000000-0000-0000-0000-000000000000'
                     GroupDisplayname      = 'TestGroup'
                     PolicyType            = "TeamsCallingPolicy"
-                    PolicyName            = "AllowCalling"
+                    PolicyName            = "DisallowCalling" # Drift
                     Priority              = "1"
                     Ensure                = 'Present'
                     Credential            = $Credential
-                }
-
-                Mock -CommandName Get-CsGroupPolicyAssignment -MockWith {
-                    return @{
-                        GroupId               = '00000000-0000-0000-0000-000000000000'
-                        GroupDisplayname      = 'TestGroup'
-                        PolicyType            = "TeamsCallingPolicy"
-                        PolicyName            = "DisallowCalling"
-                        Priority              = "1"
-                        Ensure                = 'Present'
-                    }
                 }
             }
 
@@ -150,17 +147,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure                = 'Present'
                     Credential            = $Credential
                 }
-
-                Mock -CommandName Get-CsGroupPolicyAssignment -MockWith {
-                    return @{
-                        GroupId               = '00000000-0000-0000-0000-000000000000'
-                        GroupDisplayname      = 'TestGroup'
-                        PolicyType            = "TeamsCallingPolicy"
-                        PolicyName            = "AllowCalling"
-                        Priority              = "1"
-                        Ensure                = 'Present'
-                    }
-                }
             }
 
             It 'Should return Present from the Get method' {
@@ -182,17 +168,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Priority              = "1"
                     Ensure                = 'Absent'
                     Credential            = $Credential
-                }
-
-                Mock -CommandName Get-CsGroupPolicyAssignment -MockWith {
-                    return @{
-                        GroupId               = '00000000-0000-0000-0000-000000000000'
-                        GroupDisplayname      = 'TestGroup'
-                        PolicyType            = "TeamsCallingPolicy"
-                        PolicyName            = "AllowCalling"
-                        Priority              = "1"
-                        Ensure                = 'Present'
-                    }
                 }
             }
 
@@ -216,17 +191,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
                     Credential = $Credential
-                }
-
-                Mock -CommandName Get-CsGroupPolicyAssignment -MockWith {
-                    return @{
-                        GroupId               = '00000000-0000-0000-0000-000000000000'
-                        GroupDisplayname      = 'TestGroup'
-                        PolicyType            = "TeamsCallingPolicy"
-                        PolicyName            = "AllowCalling"
-                        Priority              = "1"
-                        Ensure                = 'Present'
-                    }
                 }
             }
 

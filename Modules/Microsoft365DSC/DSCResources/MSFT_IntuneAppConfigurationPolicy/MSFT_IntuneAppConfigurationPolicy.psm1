@@ -129,7 +129,7 @@ function Get-TargetResource
                     Write-Verbose -Message "No App Configuration Policy with DisplayName {$DisplayName} was found"
                     return $nullResult
                 }
-                if (([array]$configPolicy).count -gt 1)
+                if (([array]$configPolicy).Count -gt 1)
                 {
                     throw "A policy with a duplicated displayName {'$DisplayName'} was found - Ensure displayName is unique"
                 }
@@ -198,7 +198,7 @@ function Get-TargetResource
 
         $returnAssignments = @()
         $graphAssignments = Get-MgBetaDeviceAppManagementTargetedManagedAppConfigurationAssignment -TargetedManagedAppConfigurationId $configPolicy.Id
-        if ($graphAssignments.count -gt 0)
+        if ($graphAssignments.Count -gt 0)
         {
             $returnAssignments += ConvertFrom-IntunePolicyAssignment `
                 -IncludeDeviceFilter:$true `

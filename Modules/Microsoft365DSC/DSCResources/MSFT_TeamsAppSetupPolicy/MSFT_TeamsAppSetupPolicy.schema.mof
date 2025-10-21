@@ -1,4 +1,4 @@
-[ClassVersion("1.0.0.0"), FriendlyName("TeamsAppSetupPolicy")]
+[ClassVersion("1.0.0.1"), FriendlyName("TeamsAppSetupPolicy")]
 class MSFT_TeamsAppSetupPolicy : OMI_BaseResource
 {
     [Key, Description("Unique identifier to be assigned to the new Teams app setup policy. Use the 'Global' Identity if you wish to assign this policy to the entire tenant.")] String Identity;
@@ -6,6 +6,7 @@ class MSFT_TeamsAppSetupPolicy : OMI_BaseResource
     [Write, Description("Choose which apps and messaging extensions you want to be installed in your users' personal Teams environment and in meetings they create. Users can install other available apps from the Teams app store.")] String AppPresetList[];
     [Write, Description("Choose which apps and meeting extensions you want to be installed in your users' personal Teams environment and in meetings they create. Users can install other available apps from the Teams app store.")] String AppPresetMeetingList[];
     [Write, Description("Pinning an app displays the app in the app bar in Teams client. Admins can pin apps and they can allow users to pin apps. Pinning is used to highlight apps that are needed the most by users and promote ease of access.")] String PinnedAppBarApps[];
+    [Write, Description("Determines the list of apps that are pre pinned for a participant in Calls.")] String PinnedCallingBarApps[];
     [Write, Description("Apps are pinned in messaging extensions and into the ellipsis menu.")] String PinnedMessageBarApps[];
     [Write, Description("If you turn this on, the user's existing app pins will be added to the list of pinned apps set in this policy. Users can rearrange, add, and remove pins as they choose. If you turn this off, the user's existing app pins will be removed and replaced with the apps defined in this policy.")] Boolean AllowUserPinning;
     [Write, Description("This is also known as side loading. This setting determines if a user can upload a custom app package in the Teams app. Turning it on lets you create or develop a custom app to be used personally or across your organization without having to submit it to the Teams app store. Uploading a custom app also lets you test an app before you distribute it more widely by only assigning it to a single user or group of users.")] Boolean AllowSideLoading;

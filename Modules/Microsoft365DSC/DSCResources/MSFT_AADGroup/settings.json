@@ -45,16 +45,10 @@
         ],
         "update": [
           {
-            "name": "Group.Read.All"
-          },
-          {
             "name": "Group.ReadWrite.All"
           },
           {
             "name": "Organization.Read.All"
-          },
-          {
-            "name": "RoleManagement.Read.Directory"
           },
           {
             "name": "RoleManagement.ReadWrite.Directory"
@@ -84,5 +78,65 @@
     "Global",
     "USGov"
   ],
-  "mode": "Data"
+  "mode": "Data",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Applications",
+      "cmdlets": [
+        "Get-MgApplication",
+        "Get-MgServicePrincipal"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Beta.Groups",
+      "cmdlets": [
+        "New-MgBetaGroupMemberByRef",
+        "Remove-MgBetaGroupMemberDirectoryObjectByRef"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Beta.Identity.DirectoryManagement",
+      "cmdlets": [
+        "Get-MgBetaDirectoryDeletedItemAsGroup",
+        "Get-MgBetaSubscribedSku",
+        "Restore-MgBetaDirectoryDeletedItem"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Beta.Identity.Governance",
+      "cmdlets": [
+        "Get-MgBetaRoleManagementDirectoryRoleAssignment",
+        "Get-MgBetaRoleManagementDirectoryRoleDefinition",
+        "New-MgBetaRoleManagementDirectoryRoleAssignment",
+        "Remove-MgBetaRoleManagementDirectoryRoleAssignment"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Groups",
+      "cmdlets": [
+        "Get-MgGroup",
+        "New-MgGroup",
+        "New-MgGroupMember",
+        "New-MgGroupMemberByRef",
+        "New-MgGroupOwnerByRef",
+        "Remove-MgGroup",
+        "Remove-MgGroupMemberDirectoryObjectByRef",
+        "Remove-MgGroupOwnerDirectoryObjectByRef",
+        "Set-MgGroupLicense",
+        "Update-MgGroup"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Identity.DirectoryManagement",
+      "cmdlets": [
+        "Get-MgDevice"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Users",
+      "cmdlets": [
+        "Get-MgUser"
+      ]
+    }
+  ]
 }

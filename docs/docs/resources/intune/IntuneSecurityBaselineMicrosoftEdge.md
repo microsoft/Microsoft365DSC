@@ -8,30 +8,30 @@
 | **DisplayName** | Key | String | Policy name | |
 | **RoleScopeTagIds** | Write | StringArray[] | List of Scope Tags for this Entity instance. | |
 | **Id** | Write | String | The unique identifier for an entity. Read-only. | |
-| **InternetExplorerIntegrationReloadInIEModeAllowed** | Write | String | Allow unconfigured sites to be reloaded in Internet Explorer mode (0: Disabled, 1: Enabled) | `0`, `1` |
-| **SSLErrorOverrideAllowed** | Write | String | Allow users to proceed from the HTTPS warning page (0: Disabled, 1: Enabled) | `0`, `1` |
-| **InternetExplorerIntegrationZoneIdentifierMhtFileAllowed** | Write | String | Automatically open downloaded MHT or MHTML files from the web in Internet Explorer mode (0: Disabled, 1: Enabled) | `0`, `1` |
-| **edge_DynamicCodeSettings** | Write | String | Dynamic Code Settings (0: Disabled, 1: Enabled) | `0`, `1` |
-| **DynamicCodeSettings_DynamicCodeSettings** | Write | String | Dynamic Code Settings (Device) - Depends on edge_DynamicCodeSettings (0: Default dynamic code settings, 1: Prevent the browser process from creating dynamic code) | `0`, `1` |
-| **ApplicationBoundEncryptionEnabled** | Write | String | Enable Application Bound Encryption (0: Disabled, 1: Enabled) | `0`, `1` |
-| **BrowserLegacyExtensionPointsBlockingEnabled** | Write | String | Enable browser legacy extension point blocking (0: Disabled, 1: Enabled) | `0`, `1` |
-| **SitePerProcess** | Write | String | Enable site isolation for every site (0: Disabled, 1: Enabled) | `0`, `1` |
-| **EdgeEnhanceImagesEnabled** | Write | String | Enhance images enabled (0: Disabled, 1: Enabled) | `0`, `1` |
-| **ExtensionInstallBlocklist** | Write | String | Control which extensions cannot be installed (0: Disabled, 1: Enabled) | `0`, `1` |
+| **InternetExplorerIntegrationReloadInIEModeAllowed** | Write | SInt32 | Allow unconfigured sites to be reloaded in Internet Explorer mode (0: Disabled, 1: Enabled) | `0`, `1` |
+| **SSLErrorOverrideAllowed** | Write | SInt32 | Allow users to proceed from the HTTPS warning page (0: Disabled, 1: Enabled) | `0`, `1` |
+| **InternetExplorerIntegrationZoneIdentifierMhtFileAllowed** | Write | SInt32 | Automatically open downloaded MHT or MHTML files from the web in Internet Explorer mode (0: Disabled, 1: Enabled) | `0`, `1` |
+| **edge_DynamicCodeSettings** | Write | SInt32 | Dynamic Code Settings (0: Disabled, 1: Enabled) | `0`, `1` |
+| **DynamicCodeSettings_DynamicCodeSettings** | Write | SInt32 | Dynamic Code Settings (Device) - Depends on edge_DynamicCodeSettings (0: Default dynamic code settings, 1: Prevent the browser process from creating dynamic code) | `0`, `1` |
+| **ApplicationBoundEncryptionEnabled** | Write | SInt32 | Enable Application Bound Encryption (0: Disabled, 1: Enabled) | `0`, `1` |
+| **BrowserLegacyExtensionPointsBlockingEnabled** | Write | SInt32 | Enable browser legacy extension point blocking (0: Disabled, 1: Enabled) | `0`, `1` |
+| **SitePerProcess** | Write | SInt32 | Enable site isolation for every site (0: Disabled, 1: Enabled) | `0`, `1` |
+| **EdgeEnhanceImagesEnabled** | Write | SInt32 | Enhance images enabled (0: Disabled, 1: Enabled) | `0`, `1` |
+| **ExtensionInstallBlocklist** | Write | SInt32 | Control which extensions cannot be installed (0: Disabled, 1: Enabled) | `0`, `1` |
 | **ExtensionInstallBlocklistDesc** | Write | StringArray[] | Extension IDs the user should be prevented from installing (or * for all) (Device) - Depends on ExtensionInstallBlocklist | |
-| **WebSQLAccess** | Write | String | Force WebSQL to be enabled (0: Disabled, 1: Enabled) | `0`, `1` |
-| **BasicAuthOverHttpEnabled** | Write | String | Allow Basic authentication for HTTP (0: Disabled, 1: Enabled) | `0`, `1` |
-| **MicrosoftEdge_HTTPAuthentication_AuthSchemes** | Write | String | Supported authentication schemes (0: Disabled, 1: Enabled) | `0`, `1` |
+| **WebSQLAccess** | Write | SInt32 | Force WebSQL to be enabled (0: Disabled, 1: Enabled) | `0`, `1` |
+| **BasicAuthOverHttpEnabled** | Write | SInt32 | Allow Basic authentication for HTTP (0: Disabled, 1: Enabled) | `0`, `1` |
+| **MicrosoftEdge_HTTPAuthentication_AuthSchemes** | Write | SInt32 | Supported authentication schemes (0: Disabled, 1: Enabled) | `0`, `1` |
 | **AuthSchemes_AuthSchemes** | Write | String | Supported authentication schemes (Device) - Depends on MicrosoftEdge_HTTPAuthentication_AuthSchemes | |
-| **NativeMessagingUserLevelHosts** | Write | String | Allow user-level native messaging hosts (installed without admin permissions) (0: Disabled, 1: Enabled) | `0`, `1` |
-| **InsecurePrivateNetworkRequestsAllowed** | Write | String | Specifies whether to allow insecure websites to make requests to more-private network endpoints (0: Disabled, 1: Enabled) | `0`, `1` |
-| **InternetExplorerModeToolbarButtonEnabled** | Write | String | Show the Reload in Internet Explorer mode button in the toolbar (0: Disabled, 1: Enabled) | `0`, `1` |
-| **SmartScreenEnabled** | Write | String | Configure Microsoft Defender SmartScreen (0: Disabled, 1: Enabled) | `0`, `1` |
-| **SmartScreenPuaEnabled** | Write | String | Configure Microsoft Defender SmartScreen to block potentially unwanted apps (0: Disabled, 1: Enabled) | `0`, `1` |
-| **PreventSmartScreenPromptOverride** | Write | String | Prevent bypassing Microsoft Defender SmartScreen prompts for sites (0: Disabled, 1: Enabled) | `0`, `1` |
-| **PreventSmartScreenPromptOverrideForFiles** | Write | String | Prevent bypassing of Microsoft Defender SmartScreen warnings about downloads (0: Disabled, 1: Enabled) | `0`, `1` |
-| **SharedArrayBufferUnrestrictedAccessAllowed** | Write | String | Specifies whether SharedArrayBuffers can be used in a non cross-origin-isolated context (0: Disabled, 1: Enabled) | `0`, `1` |
-| **TyposquattingCheckerEnabled** | Write | String | Configure Edge TyposquattingChecker (0: Disabled, 1: Enabled) | `0`, `1` |
+| **NativeMessagingUserLevelHosts** | Write | SInt32 | Allow user-level native messaging hosts (installed without admin permissions) (0: Disabled, 1: Enabled) | `0`, `1` |
+| **InsecurePrivateNetworkRequestsAllowed** | Write | SInt32 | Specifies whether to allow insecure websites to make requests to more-private network endpoints (0: Disabled, 1: Enabled) | `0`, `1` |
+| **InternetExplorerModeToolbarButtonEnabled** | Write | SInt32 | Show the Reload in Internet Explorer mode button in the toolbar (0: Disabled, 1: Enabled) | `0`, `1` |
+| **SmartScreenEnabled** | Write | SInt32 | Configure Microsoft Defender SmartScreen (0: Disabled, 1: Enabled) | `0`, `1` |
+| **SmartScreenPuaEnabled** | Write | SInt32 | Configure Microsoft Defender SmartScreen to block potentially unwanted apps (0: Disabled, 1: Enabled) | `0`, `1` |
+| **PreventSmartScreenPromptOverride** | Write | SInt32 | Prevent bypassing Microsoft Defender SmartScreen prompts for sites (0: Disabled, 1: Enabled) | `0`, `1` |
+| **PreventSmartScreenPromptOverrideForFiles** | Write | SInt32 | Prevent bypassing of Microsoft Defender SmartScreen warnings about downloads (0: Disabled, 1: Enabled) | `0`, `1` |
+| **SharedArrayBufferUnrestrictedAccessAllowed** | Write | SInt32 | Specifies whether SharedArrayBuffers can be used in a non cross-origin-isolated context (0: Disabled, 1: Enabled) | `0`, `1` |
+| **TyposquattingCheckerEnabled** | Write | SInt32 | Configure Edge TyposquattingChecker (0: Disabled, 1: Enabled) | `0`, `1` |
 | **Assignments** | Write | MSFT_DeviceManagementConfigurationPolicyAssignments[] | Represents the assignment to the Intune policy. | |
 | **Ensure** | Write | String | Present ensures the policy exists, absent ensures it is removed. | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials of the Admin | |
@@ -48,7 +48,7 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **dataType** | Write | String | The type of the target assignment. | `#microsoft.graph.groupAssignmentTarget`, `#microsoft.graph.allLicensedUsersAssignmentTarget`, `#microsoft.graph.allDevicesAssignmentTarget`, `#microsoft.graph.exclusionGroupAssignmentTarget`, `#microsoft.graph.configurationManagerCollectionAssignmentTarget` |
+| **dataType** | Write | String | The type of the target assignment. | `#microsoft.graph.cloudPcManagementGroupAssignmentTarget`, `#microsoft.graph.groupAssignmentTarget`, `#microsoft.graph.allLicensedUsersAssignmentTarget`, `#microsoft.graph.allDevicesAssignmentTarget`, `#microsoft.graph.exclusionGroupAssignmentTarget`, `#microsoft.graph.configurationManagerCollectionAssignmentTarget` |
 | **deviceAndAppManagementAssignmentFilterType** | Write | String | The type of filter of the target assignment i.e. Exclude or Include. Possible values are:none, include, exclude. | `none`, `include`, `exclude` |
 | **deviceAndAppManagementAssignmentFilterId** | Write | String | The Id of the filter for the target assignment. | |
 | **deviceAndAppManagementAssignmentFilterDisplayName** | Write | String | The display name of the filter for the target assignment. | |

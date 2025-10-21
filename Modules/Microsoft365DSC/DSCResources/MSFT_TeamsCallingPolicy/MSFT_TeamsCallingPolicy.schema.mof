@@ -1,4 +1,4 @@
-[ClassVersion("1.0.0.0"), FriendlyName("TeamsCallingPolicy")]
+[ClassVersion("1.0.0.1"), FriendlyName("TeamsCallingPolicy")]
 class MSFT_TeamsCallingPolicy : OMI_BaseResource
 {
     [Key, Description("Identity of the Teams Calling Policy.")] String Identity;
@@ -8,6 +8,7 @@ class MSFT_TeamsCallingPolicy : OMI_BaseResource
     [Write, Description("Setting this parameter lets you control how Copilot is used during calls and if transcription is needed to be turned on and saved after the call. Possible values: Enabled, EnabledWithTranscript, Disabled"), ValueMap{"Enabled","EnabledWithTranscript","Disabled"}, Values{"Enabled","EnabledWithTranscript","Disabled"}] String Copilot;
     [Write, Description("This setting allows an admin to enable or disable spend limits on PSTN calls for their user base.")] Boolean EnableSpendLimits;
     [Write, Description("Determines if MediaBypass is enabled for PSTN calls on specified Web platforms.")] Boolean EnableWebPstnMediaBypass;
+    [Write, Description("This setting controls whether users must provide or obtain explicit consent before recording a 1:1 PSTN or Teams call. When enabled, both parties will receive a notification, and consent must be given before recording starts. Possible values: Enabled: Requires users to give and obtain explicit consent before starting a call recording. Disabled: Users are not required to obtain explicit consent before recording starts."), ValueMap{"Disabled","Enabled"}, Values{"Disabled","Enabled"}] String ExplicitRecordingConsent;
     [Write, Description("Setting this parameter lets you control how inbound federated calls should be routed. Possible values are: RegularIncoming, Unanswered, Voicemail."), ValueMap{"RegularIncoming","Unanswered","Voicemail"}, Values{"RegularIncoming","Unanswered","Voicemail"}] String InboundFederatedCallRoutingTreatment;
     [Write, Description("Setting this parameter lets you control how inbound PSTN calls should be routed. Possible values are: RegularIncoming, Unanswered, Voicemail, UserOverride."), ValueMap{"RegularIncoming","Unanswered","Voicemail","UserOverride"}, Values{"RegularIncoming","Unanswered","Voicemail","UserOverride"}] String InboundPstnCallRoutingTreatment;
     [Write, Description("Setting this parameter allows you to set the PopoutForIncomingPstnCalls setting's URL path of the website to launch upon receiving incoming PSTN calls. This parameter accepts an HTTPS URL with less than 1024 characters. The URL can contain a {phone} placeholder that is replaced with the caller's PSTN number in E.164 format when launched.")] String PopoutAppPathForIncomingPstnCalls;
@@ -42,4 +43,3 @@ class MSFT_TeamsCallingPolicy : OMI_BaseResource
     [Write, Description("Managed ID being used for authentication.")] Boolean ManagedIdentity;
     [Write, Description("Access token used for authentication.")] String AccessTokens[];
 };
-

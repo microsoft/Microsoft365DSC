@@ -192,19 +192,13 @@ function Set-TargetResource
                 $CreateParameters.Remove($key) | Out-Null
                 $CreateParameters.Add($key, $keyValue)
             }
-            if ($null -ne $CreateParameters.$key -and $CreateParameters.$key.GetType().Name -like '*cimInstance*')
-            {
-                $keyValue = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters.$key
-                $CreateParameters.Remove($key) | Out-Null
-                $CreateParameters.Add($keyName, $keyValue)
-            }
         }
-        Write-Verbose -Message "Creating {$Identity} with Parameters:`r`n$(Convert-M365DscHashtableToString -Hashtable $CreateParameters)"
+        Write-Verbose -Message "Creating a Teams Audio Conferencing Policy with Identity {$Identity}"
         New-CsTeamsAudioConferencingPolicy @CreateParameters | Out-Null
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Updating {$Identity}"
+        Write-Verbose -Message "Updating the Teams Audio Conferencing Policy with Identity {$Identity}"
 
         $UpdateParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
@@ -217,19 +211,13 @@ function Set-TargetResource
                 $UpdateParameters.Remove($key) | Out-Null
                 $UpdateParameters.Add($key, $keyValue)
             }
-            if ($null -ne $UpdateParameters.$key -and $UpdateParameters.$key.GetType().Name -like '*cimInstance*')
-            {
-                $keyValue = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters.$key
-                $UpdateParameters.Remove($key) | Out-Null
-                $UpdateParameters.Add($keyName, $keyValue)
-            }
         }
 
         Set-CsTeamsAudioConferencingPolicy @UpdateParameters | Out-Null
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing {$Identity}"
+        Write-Verbose -Message "Removing the Teams Audio Conferencing Policy with Identity {$Identity}"
         Remove-CsTeamsAudioConferencingPolicy -Identity $currentInstance.Identity
     }
 }

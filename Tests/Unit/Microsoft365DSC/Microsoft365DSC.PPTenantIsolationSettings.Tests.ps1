@@ -31,6 +31,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
+            Mock -ModuleName M365DSCUtil -CommandName Confirm-M365DSCDependencies -MockWith {
+            }
+
             Mock -CommandName New-M365DSCConnection -MockWith {
                 return 'Credentials'
             }
@@ -137,7 +140,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     )
                     Credential       = $Credscredential
                 }
-                
+
                 Mock -CommandName Invoke-WebRequest -MockWith {
                     if ($Uri -match 'https://login.windows.net/([A-Za-z0-9.]*)/.well-known/openid-configuration')
                     {
@@ -259,7 +262,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     )
                     Credential       = $Credscredential
                 }
-                
+
                 Mock -CommandName Invoke-WebRequest -MockWith {
                     if ($Uri -match 'https://login.windows.net/([A-Za-z0-9.]*)/.well-known/openid-configuration')
                     {

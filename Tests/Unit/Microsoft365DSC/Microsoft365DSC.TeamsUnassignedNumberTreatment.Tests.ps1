@@ -42,6 +42,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-CsTeamsUnassignedNumberTreatment -MockWith {
             }
 
+            Mock -CommandName Get-CsTeamsUnassignedNumberTreatment -MockWith {
+                return @{
+                    Target            = 'ae274f0a-9c9c-496a-8dd3-8a57640d93aa'
+                    Description       = 'FakeStringValue'
+                    TreatmentPriority = 3
+                    Identity          = 'TR2'
+                    TargetType        = 'User'
+                    Pattern           = '^\+15552224444$'
+                }
+            }
+
             Mock -CommandName New-M365DSCConnection -MockWith {
                 return 'Credentials'
             }
@@ -96,17 +107,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure            = 'Absent'
                     Credential        = $Credential
                 }
-
-                Mock -CommandName Get-CsTeamsUnassignedNumberTreatment -MockWith {
-                    return @{
-                        Target            = 'ae274f0a-9c9c-496a-8dd3-8a57640d93aa'
-                        Description       = 'FakeStringValue'
-                        TreatmentPriority = 3
-                        Identity          = 'TR2'
-                        TargetType        = 'User'
-                        Pattern           = '^\+15552224444$'
-                    }
-                }
             }
 
             It 'Should return Values from the Get method' {
@@ -134,17 +134,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure            = 'Present'
                     Credential        = $Credential
                 }
-
-                Mock -CommandName Get-CsTeamsUnassignedNumberTreatment -MockWith {
-                    return @{
-                        Description       = 'FakeStringValue'
-                        Identity          = 'TR2'
-                        Pattern           = '^\+15552224444$'
-                        Target            = 'ae274f0a-9c9c-496a-8dd3-8a57640d93aa'
-                        TargetType        = 'User'
-                        TreatmentPriority = 3
-                    }
-                }
             }
 
             It 'Should return true from the Test method' {
@@ -156,23 +145,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     Identity          = 'TR2'
-                    Pattern           = '^\+15552224444$'
+                    Pattern           = '^\+15552221111$' # Drift
                     Target            = 'ae274f0a-9c9c-496a-8dd3-8a57640d93aa'
                     TargetType        = 'User'
                     TreatmentPriority = 3
                     Ensure            = 'Present'
                     Credential        = $Credential
-                }
-
-                Mock -CommandName Get-CsTeamsUnassignedNumberTreatment -MockWith {
-                    return @{
-                        Description       = 'FakeStringValueDrift #Drift'
-                        TreatmentPriority = 2
-                        Identity          = 'TR2'
-                        Pattern           = '^\+15552224444$'
-                        Target            = 'ae274f0a-9c9c-496a-8dd3-8a57640d93aa'
-                        TargetType        = 'User'
-                    }
                 }
             }
 
@@ -196,18 +174,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
                     Credential = $Credential
-                }
-
-                Mock -CommandName Get-CsTeamsUnassignedNumberTreatment -MockWith {
-                    return @{
-                        Target            = 'FakeStringValue'
-                        Description       = 'FakeStringValue'
-                        TreatmentPriority = 3
-                        Identity          = 'FakeStringValue'
-                        TargetType        = 'FakeStringValue'
-                        Pattern           = 'FakeStringValue'
-
-                    }
                 }
             }
 

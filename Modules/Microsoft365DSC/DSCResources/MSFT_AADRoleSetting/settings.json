@@ -43,6 +43,9 @@
           },
           {
             "name": "User.Read.All"
+          },
+          {
+            "name": "RoleManagementPolicy.Read.Directory"
           }
         ],
         "update": [
@@ -54,6 +57,9 @@
           },
           {
             "name": "User.Read.All"
+          },
+          {
+            "name": "RoleManagementPolicy.ReadWrite.Directory"
           }
         ]
       }
@@ -70,5 +76,35 @@
     "Global",
     "USGov"
   ],
-  "mode": "Data"
+  "mode": "Data",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Beta.Identity.Governance",
+      "cmdlets": [
+        "Get-MgBetaRoleManagementDirectoryRoleDefinition"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Beta.Identity.SignIns",
+      "cmdlets": [
+        "Get-MgBetaIdentityConditionalAccessAuthenticationContextClassReference",
+        "Get-MgBetaPolicyRoleManagementPolicy",
+        "Get-MgBetaPolicyRoleManagementPolicyAssignment",
+        "Get-MgBetaPolicyRoleManagementPolicyRule",
+        "Update-MgBetaPolicyRoleManagementPolicyRule"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Groups",
+      "cmdlets": [
+        "Get-MgGroup"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Users",
+      "cmdlets": [
+        "Get-MgUser"
+      ]
+    }
+  ]
 }

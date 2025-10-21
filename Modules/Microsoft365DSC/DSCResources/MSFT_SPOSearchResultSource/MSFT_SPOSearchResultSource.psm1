@@ -374,7 +374,7 @@ function Set-TargetResource
     $node = $SearchConfigXML.CreateElement('d4p1:ProviderId', `
             'http://schemas.datacontract.org/2004/07/Microsoft.Office.Server.Search.Administration.Query')
     $node.InnerText = $mapping.ProviderID
-    $catch = $newSource.AppendChild($node)
+    $newSource.AppendChild($node) | Out-Null
 
     Write-Verbose -Message 'Setting QueryTransform'
     $queryTransformNode = $SearchConfigXML.CreateElement('d4p1:QueryTransform', `

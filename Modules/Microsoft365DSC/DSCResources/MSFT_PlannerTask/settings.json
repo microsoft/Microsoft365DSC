@@ -60,5 +60,37 @@
     "Microsoft.Graph.Users",
     "MSCloudLoginAssistant"
   ],
-  "mode": "Data"
+  "mode": "Data",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Authentication",
+      "cmdlets": [
+        "Invoke-MgGraphRequest"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Groups",
+      "cmdlets": [
+        "Get-MgGroup"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Planner",
+      "cmdlets": [
+        "Get-MgGroupPlannerPlan",
+        "Get-MgGroupPlannerPlanTask",
+        "Get-MgPlannerPlanDetail",
+        "Get-MgPlannerTask",
+        "Get-MgPlannerTaskDetail",
+        "New-MgPlannerTask",
+        "Remove-MgPlannerTask"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Users",
+      "cmdlets": [
+        "Get-MgUser"
+      ]
+    }
+  ]
 }

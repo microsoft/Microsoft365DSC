@@ -484,9 +484,6 @@ function Test-TargetResource
         $AccessTokens
     )
 
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
     $CommandName = $MyInvocation.MyCommand
@@ -496,11 +493,6 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of {$Id - $displayName}"
-
-    $CurrentValues = Get-TargetResource @PSBoundParameters
-    $ValuesToCheck = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
-
     if (-not ($RoleDefinition -match '^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$'))
     {
         [string]$roleDefinition = $null
@@ -509,7 +501,7 @@ function Test-TargetResource
         if ($null -ne $roleDefinitionId)
         {
             $roleDefinition = $roleDefinitionId.Id
-            $PSBoundParameters.Set_Item('RoleDefinition', $roleDefinition)
+            $PSBoundParameters.RoleDefinition = $roleDefinition
         }
         else
         {
@@ -533,7 +525,7 @@ function Test-TargetResource
             Write-Verbose -Message "No member of type group with DisplayName {$membersDisplayName} was found"
         }
     }
-    $PSBoundParameters.Set_Item('Members', $Members)
+    $PSBoundParameters.Members = $Members
 
     foreach ($resourceScopesDisplayName in $ResourceScopesDisplayNames)
     {
@@ -551,33 +543,12 @@ function Test-TargetResource
             Write-Verbose -Message "No resource scope of type group with DisplayName {$ResourceScopesDisplayName} was found"
         }
     }
-    $PSBoundParameters.Set_Item('ResourceScopes', $ResourceScopes)
-    $testResult = $true
+    $PSBoundParameters.ResourceScopes = $ResourceScopes
 
-    $ValuesToCheck.Remove('Id') | Out-Null
-    $ValuesToCheck.Remove('ResourceScopesDisplayNames') | Out-Null
-    $ValuesToCheck.Remove('membersDisplayNames') | Out-Null
-
-    foreach ($key in $ValuesToCheck.Keys)
-    {
-        if (($null -ne $CurrentValues[$key]) `
-                -and ($CurrentValues[$key].getType().Name -eq 'DateTime'))
-        {
-            $CurrentValues[$key] = $CurrentValues[$key].ToString()
-        }
-    }
-
-    if ($testResult)
-    {
-        $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
-            -Source $($MyInvocation.MyCommand.Source) `
-            -DesiredValues $PSBoundParameters `
-            -ValuesToCheck $ValuesToCheck.Keys
-    }
-
-    Write-Verbose -Message "Test-TargetResource returned $testResult"
-
-    return $testResult
+    $result = Test-M365DSCTargetResource -DesiredValues $PSBoundParameters `
+                                         -ResourceName $($MyInvocation.MyCommand.Source).Replace('MSFT_', '') `
+                                         -ExcludedProperties @('ResourceScopesDisplayNames', 'MembersDisplayNames')
+    return $result
 }
 
 function Export-TargetResource

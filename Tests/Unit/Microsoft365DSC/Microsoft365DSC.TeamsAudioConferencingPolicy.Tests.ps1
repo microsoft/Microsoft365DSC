@@ -33,6 +33,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-PSSession -MockWith {
             }
 
+            Mock -CommandName Get-CsTeamsAudioConferencingPolicy -MockWith {
+                return @{
+                    AllowTollFreeDialin       = $True
+                    MeetingInvitePhoneNumbers = 'FakeStringValue'
+                    Identity                  = 'FakeStringValue'
+
+                }
+            }
+
             Mock -CommandName Set-CsTeamsAudioConferencingPolicy -MockWith {
             }
 
@@ -89,15 +98,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure                    = 'Absent'
                     Credential                = $Credential
                 }
-
-                Mock -CommandName Get-CsTeamsAudioConferencingPolicy -MockWith {
-                    return @{
-                        AllowTollFreeDialin       = $True
-                        MeetingInvitePhoneNumbers = 'FakeStringValue'
-                        Identity                  = 'FakeStringValue'
-
-                    }
-                }
             }
 
             It 'Should return Values from the Get method' {
@@ -123,17 +123,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure                    = 'Present'
                     Credential                = $Credential
                 }
-
-                Mock -CommandName Get-CsTeamsAudioConferencingPolicy -MockWith {
-                    return @{
-                        AllowTollFreeDialin       = $True
-                        MeetingInvitePhoneNumbers = 'FakeStringValue'
-                        Identity                  = 'FakeStringValue'
-
-                    }
-                }
             }
-
 
             It 'Should return true from the Test method' {
                 Test-TargetResource @testParams | Should -Be $true
@@ -143,19 +133,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'The TeamsAudioConferencingPolicy exists and values are NOT in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    AllowTollFreeDialin       = $True
+                    AllowTollFreeDialin       = $False # Drift
                     MeetingInvitePhoneNumbers = 'FakeStringValue'
                     Identity                  = 'FakeStringValue'
                     Ensure                    = 'Present'
                     Credential                = $Credential
-                }
-
-                Mock -CommandName Get-CsTeamsAudioConferencingPolicy -MockWith {
-                    return @{
-                        AllowTollFreeDialin       = $False
-                        MeetingInvitePhoneNumbers = 'FakeStringValueDrift #Drift'
-                        Identity                  = 'FakeStringValue'
-                    }
                 }
             }
 
@@ -179,15 +161,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
                     Credential = $Credential
-                }
-
-                Mock -CommandName Get-CsTeamsAudioConferencingPolicy -MockWith {
-                    return @{
-                        AllowTollFreeDialin       = $True
-                        MeetingInvitePhoneNumbers = 'FakeStringValue'
-                        Identity                  = 'FakeStringValue'
-
-                    }
                 }
             }
 

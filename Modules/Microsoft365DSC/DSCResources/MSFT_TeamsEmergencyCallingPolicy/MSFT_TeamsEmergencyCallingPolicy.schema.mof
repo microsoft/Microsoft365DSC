@@ -1,9 +1,19 @@
-[ClassVersion("1.0.0.0"), FriendlyName("TeamsEmergencyCallingPolicy")]
+[ClassVersion("1.0.0.0")]
+class MSFT_TeamsEmergencyCallingExtendedNotification
+{
+    [Key, Description("The emergency dial string.")] String EmergencyDialString;
+    [Write, Description("The email recipients of the notifications.")] String NotificationGroup[];
+    [Write, Description("The additional number to call when contacting an emergency number.")] String NotificationDialOutNumber;
+    [Write, Description("The notification mode for the additional number. Possible values: ConferenceMuted - Join the emergency call muted. ConferenceUnMuted - Join the emergency call unmuted. NotificationOnly - Only receive a notification for an emergency call."), ValueMap{"ConferenceMuted", "ConferenceUnMuted", "NotificationOnly"}, Values{"ConferenceMuted", "ConferenceUnMuted", "NotificationOnly"}] String NotificationMode;
+};
+
+[ClassVersion("1.0.0.1"), FriendlyName("TeamsEmergencyCallingPolicy")]
 class MSFT_TeamsEmergencyCallingPolicy : OMI_BaseResource
 {
     [Key, Description("Identity of the Teams Emergency Calling Policy.")] String Identity;
     [Write, Description("Description of the Teams Emergency Calling Policy.")] String Description;
     [Write, Description("Allows the tenant administrator to configure a text string, which is shown at the top of the Calls app.")] String EnhancedEmergencyServiceDisclaimer;
+    [Write, Description("A list of one or more instances of TeamsEmergencyCallingExtendedNotification. Each TeamsEmergencyCallingExtendedNotification should use a unique EmergencyDialString. If an extended notification is found for an emergency phone number based on the EmergencyDialString parameter the extended notification will be controlling the notification. If no extended notification is found the notification settings on the policy instance itself will be used."), EmbeddedInstance("MSFT_TeamsEmergencyCallingExtendedNotification")] String ExtendedNotifications[];
     [Write, Description("Enables ExternalLocationLookupMode. This mode allows users to set Emergency addresses for remote locations."), ValueMap{"Disabled","Enabled"}, Values{"Disabled","Enabled"}] String ExternalLocationLookupMode;
     [Write, Description("This parameter represents PSTN number which can be dialed out if NotificationMode is set to either of the two Conference values.")] String NotificationDialOutNumber;
     [Write, Description("NotificationGroup is a email list of users and groups to be notified of an emergency call.")] String NotificationGroup;

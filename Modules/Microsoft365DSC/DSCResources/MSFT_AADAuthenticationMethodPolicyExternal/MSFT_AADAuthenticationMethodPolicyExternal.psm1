@@ -146,7 +146,7 @@ function Get-TargetResource
                 $myExcludeTargets.Add('TargetType', $currentExcludeTargets.targetType.ToString())
             }
 
-            if ($myExcludeTargets.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myExcludeTargets.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexExcludeTargets += $myExcludeTargets
             }
@@ -185,7 +185,7 @@ function Get-TargetResource
                 $myincludeTargets.Add('TargetType', $currentincludeTargets.targetType.ToString())
             }
 
-            if ($myincludeTargets.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myincludeTargets.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexincludeTargets += $myincludeTargets
             }

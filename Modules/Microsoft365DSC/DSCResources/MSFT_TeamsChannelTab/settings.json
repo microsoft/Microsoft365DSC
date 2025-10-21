@@ -67,5 +67,24 @@
     "Global",
     "USGov"
   ],
-  "mode": "Data"
+  "mode": "Data",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Beta.Teams",
+      "cmdlets": [
+        "Get-MgBetaTeam",
+        "Get-MgBetaTeamChannel",
+        "Get-MgBetaTeamChannelTab",
+        "New-MgBetaTeamChannelTab",
+        "Remove-MgBetaTeamChannelTab",
+        "Update-MgBetaTeamChannelTab"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Groups",
+      "cmdlets": [
+        "Get-MgGroup"
+      ]
+    }
+  ]
 }

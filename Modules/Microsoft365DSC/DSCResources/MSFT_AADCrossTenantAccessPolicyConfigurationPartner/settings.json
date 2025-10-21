@@ -45,5 +45,28 @@
     "Global",
     "USGov"
   ],
-  "mode": "Configuration"
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Beta.Identity.SignIns",
+      "cmdlets": [
+        "Get-MgBetaPolicyCrossTenantAccessPolicyPartner",
+        "New-MgBetaPolicyCrossTenantAccessPolicyPartner",
+        "Remove-MgBetaPolicyCrossTenantAccessPolicyPartner",
+        "Update-MgBetaPolicyCrossTenantAccessPolicyPartner"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Groups",
+      "cmdlets": [
+        "Get-MgGroup"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Users",
+      "cmdlets": [
+        "Get-MgUser"
+      ]
+    }
+  ]
 }

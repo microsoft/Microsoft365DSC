@@ -435,7 +435,7 @@ function Set-TargetResource
         $policy = New-MgBetaDeviceManagementDeviceEnrollmentConfiguration -BodyParameter $CreateParameters
 
         $intuneAssignments = @()
-        if ($null -ne $Assignments -and $Assignments.count -gt 0)
+        if ($null -ne $Assignments -and $Assignments.Count -gt 0)
         {
             $intuneAssignments += ConvertTo-IntunePolicyAssignment -Assignments $Assignments
         }
@@ -473,7 +473,7 @@ function Set-TargetResource
         if ($currentInstance.Id -notlike '*_DefaultWindows10EnrollmentCompletionPageConfiguration')
         {
             $intuneAssignments = @()
-            if ($null -ne $Assignments -and $Assignments.count -gt 0)
+            if ($null -ne $Assignments -and $Assignments.Count -gt 0)
             {
                 $intuneAssignments += ConvertTo-IntunePolicyAssignment -Assignments $Assignments
             }

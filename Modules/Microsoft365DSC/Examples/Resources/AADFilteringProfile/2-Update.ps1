@@ -42,7 +42,7 @@ Configuration Example
                     State = 'enabled'
                 }
             );
-            Priority              = 130; #Drift
+            Priority              = 140; #Drift
             State                 = "enabled";
             TenantId              = $TenantId;
         }

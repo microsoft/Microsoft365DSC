@@ -42,6 +42,20 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-CsTenantNetworkSite -MockWith {
             }
 
+            Mock -CommandName Get-CsTenantNetworkSite -MockWith {
+                return @{
+                    LocationPolicy             = 'FakeStringValue'
+                    EmergencyCallRoutingPolicy = 'FakeStringValue'
+                    Description                = 'FakeStringValue'
+                    SiteAddress                = 'FakeStringValue'
+                    NetworkRegionID            = 'FakeStringValue'
+                    EnableLocationBasedRouting = $True
+                    Identity                   = 'FakeStringValue'
+                    NetworkRoamingPolicy       = 'FakeStringValue'
+                    EmergencyCallingPolicy     = 'FakeStringValue'
+                }
+            }
+
             Mock -CommandName New-M365DSCConnection -MockWith {
                 return 'Credentials'
             }
@@ -90,20 +104,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure                     = 'Absent'
                     Credential                 = $Credential
                 }
-
-                Mock -CommandName Get-CsTenantNetworkSite -MockWith {
-                    return @{
-                        LocationPolicy             = 'FakeStringValue'
-                        EmergencyCallRoutingPolicy = 'FakeStringValue'
-                        Description                = 'FakeStringValue'
-                        SiteAddress                = 'FakeStringValue'
-                        NetworkRegionID            = 'FakeStringValue'
-                        EnableLocationBasedRouting = $True
-                        Identity                   = 'FakeStringValue'
-                        NetworkRoamingPolicy       = 'FakeStringValue'
-                        EmergencyCallingPolicy     = 'FakeStringValue'
-                    }
-                }
             }
 
             It 'Should return Values from the Get method' {
@@ -128,20 +128,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure                     = 'Present'
                     Credential                 = $Credential
                 }
-
-                Mock -CommandName Get-CsTenantNetworkSite -MockWith {
-                    return @{
-                        LocationPolicy             = 'FakeStringValue'
-                        EmergencyCallRoutingPolicy = 'FakeStringValue'
-                        Description                = 'FakeStringValue'
-                        SiteAddress                = 'FakeStringValue'
-                        NetworkRegionID            = 'FakeStringValue'
-                        EnableLocationBasedRouting = $True
-                        Identity                   = 'FakeStringValue'
-                        NetworkRoamingPolicy       = 'FakeStringValue'
-                        EmergencyCallingPolicy     = 'FakeStringValue'
-                    }
-                }
             }
 
             It 'Should return true from the Test method' {
@@ -153,23 +139,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     Identity                   = 'FakeStringValue'
-                    EnableLocationBasedRouting = $False
+                    EnableLocationBasedRouting = $False # Drift
                     Ensure                     = 'Present'
                     Credential                 = $Credential
-                }
-
-                Mock -CommandName Get-CsTenantNetworkSite -MockWith {
-                    return @{
-                        LocationPolicy             = 'FakeStringValueDrift #Drift'
-                        EmergencyCallRoutingPolicy = 'FakeStringValueDrift #Drift'
-                        Description                = 'FakeStringValueDrift #Drift'
-                        SiteAddress                = 'FakeStringValueDrift #Drift'
-                        NetworkRegionID            = 'FakeStringValueDrift #Drift'
-                        EnableLocationBasedRouting = $True
-                        Identity                   = 'FakeStringValue'
-                        NetworkRoamingPolicy       = 'FakeStringValueDrift #Drift'
-                        EmergencyCallingPolicy     = 'FakeStringValueDrift #Drift'
-                    }
                 }
             }
 
@@ -193,21 +165,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
                     Credential = $Credential
-                }
-
-                Mock -CommandName Get-CsTenantNetworkSite -MockWith {
-                    return @{
-                        LocationPolicy             = 'FakeStringValue'
-                        EmergencyCallRoutingPolicy = 'FakeStringValue'
-                        Description                = 'FakeStringValue'
-                        SiteAddress                = 'FakeStringValue'
-                        NetworkRegionID            = 'FakeStringValue'
-                        EnableLocationBasedRouting = $True
-                        Identity                   = 'FakeStringValue'
-                        NetworkRoamingPolicy       = 'FakeStringValue'
-                        EmergencyCallingPolicy     = 'FakeStringValue'
-
-                    }
                 }
             }
 

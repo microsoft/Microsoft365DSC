@@ -164,7 +164,7 @@ function Get-TargetResource
                 $mypermissionActions.Add('Action', $currentpermissionActions.action.ToString())
             }
             $mypermissionActions.Add('Permission', $currentpermissionActions.permission)
-            if ($mypermissionActions.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($mypermissionActions.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexPermissionActions += $mypermissionActions
             }
@@ -180,7 +180,7 @@ function Get-TargetResource
                 $mysettings.Add('AppConfigKeyType', $currentsettings.appConfigKeyType.ToString())
             }
             $mysettings.Add('AppConfigKeyValue', $currentsettings.appConfigKeyValue)
-            if ($mysettings.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($mysettings.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexSettings += $mysettings
             }
@@ -426,7 +426,7 @@ function Set-TargetResource
         $keys = (([Hashtable]$CreateParameters).Clone()).Keys
         foreach ($key in $keys)
         {
-            if ($null -ne $CreateParameters.$key -and $CreateParameters.$key.getType().Name -like '*cimInstance*')
+            if ($null -ne $CreateParameters.$key -and $CreateParameters.$key.GetType().Name -like '*cimInstance*')
             {
                 $CreateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters.$key
             }
@@ -465,7 +465,7 @@ function Set-TargetResource
         $keys = (([Hashtable]$UpdateParameters).Clone()).Keys
         foreach ($key in $keys)
         {
-            if ($null -ne $UpdateParameters.$key -and $UpdateParameters.$key.getType().Name -like '*cimInstance*')
+            if ($null -ne $UpdateParameters.$key -and $UpdateParameters.$key.GetType().Name -like '*cimInstance*')
             {
                 $UpdateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters.$key
             }

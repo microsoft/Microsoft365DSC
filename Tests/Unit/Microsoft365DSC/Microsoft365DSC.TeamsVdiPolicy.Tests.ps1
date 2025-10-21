@@ -42,6 +42,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-CsTeamsVdiPolicy -MockWith {
             }
 
+            Mock -CommandName Get-CsTeamsVdiPolicy -MockWith {
+                return @{
+                    DisableCallsAndMeetings             = $False
+                    DisableAudioVideoInCallsAndMeetings = $False
+                    Identity                            = 'FakeStringValue'
+                }
+            }
+
             Mock -CommandName New-M365DSCConnection -MockWith {
                 return 'Credentials'
             }
@@ -91,14 +99,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Identity                            = 'FakeStringValue'
                     Credential                          = $Credential
                 }
-
-                Mock -CommandName Get-CsTeamsVdiPolicy -MockWith {
-                    return @{
-                        DisableCallsAndMeetings             = $True
-                        DisableAudioVideoInCallsAndMeetings = $True
-                        Identity                            = 'FakeStringValue'
-                    }
-                }
             }
 
             It 'Should return Values from the Get method' {
@@ -124,14 +124,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Identity                            = 'FakeStringValue'
                     Credential                          = $Credential
                 }
-
-                Mock -CommandName Get-CsTeamsVdiPolicy -MockWith {
-                    return @{
-                        DisableCallsAndMeetings             = $False
-                        DisableAudioVideoInCallsAndMeetings = $False
-                        Identity                            = 'FakeStringValue'
-                    }
-                }
             }
 
             It 'Should return true from the Test method' {
@@ -142,19 +134,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'The TeamsVdiPolicy exists and values are NOT in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    DisableAudioVideoInCallsAndMeetings = $False
+                    DisableAudioVideoInCallsAndMeetings = $True # Drift
                     DisableCallsAndMeetings             = $False
                     Identity                            = 'FakeStringValue'
                     Ensure                              = 'Present'
                     Credential                          = $Credential
-                }
-
-                Mock -CommandName Get-CsTeamsVdiPolicy -MockWith {
-                    return @{
-                        DisableCallsAndMeetings             = $True
-                        DisableAudioVideoInCallsAndMeetings = $True
-                        Identity                            = 'FakeStringValue'
-                    }
                 }
             }
 
@@ -178,15 +162,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
                     Credential = $Credential
-                }
-
-                Mock -CommandName Get-CsTeamsVdiPolicy -MockWith {
-                    return @{
-                        DisableCallsAndMeetings             = $True
-                        DisableAudioVideoInCallsAndMeetings = $True
-                        Identity                            = 'FakeStringValue'
-
-                    }
                 }
             }
 

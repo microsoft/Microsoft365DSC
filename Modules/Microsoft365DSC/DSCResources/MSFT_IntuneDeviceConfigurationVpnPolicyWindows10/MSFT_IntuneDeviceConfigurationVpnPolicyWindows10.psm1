@@ -243,7 +243,7 @@ function Get-TargetResource
                 $myassociatedApps.Add('AppType', $currentassociatedApps.appType.ToString())
             }
             $myassociatedApps.Add('Identifier', $currentassociatedApps.identifier)
-            if ($myassociatedApps.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myassociatedApps.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexAssociatedApps += $myassociatedApps
             }
@@ -274,7 +274,7 @@ function Get-TargetResource
         {
             $complexCryptographySuite.Add('PfsGroup', $getValue.AdditionalProperties.cryptographySuite.pfsGroup.ToString())
         }
-        if ($complexCryptographySuite.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexCryptographySuite.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexCryptographySuite = $null
         }
@@ -288,7 +288,7 @@ function Get-TargetResource
             $mydnsRules.Add('Persistent', $currentdnsRules.persistent)
             $mydnsRules.Add('ProxyServerUri', $currentdnsRules.proxyServerUri)
             $mydnsRules.Add('Servers', $currentdnsRules.servers)
-            if ($mydnsRules.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($mydnsRules.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexDnsRules += $mydnsRules
             }
@@ -304,7 +304,7 @@ function Get-TargetResource
         {
             $complexProxyServer.Add('odataType', $getValue.AdditionalProperties.proxyServer.'@odata.type'.ToString())
         }
-        if ($complexProxyServer.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexProxyServer.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexProxyServer = $null
         }
@@ -315,7 +315,7 @@ function Get-TargetResource
             $myroutes = [ordered]@{}
             $myroutes.Add('DestinationPrefix', $currentroutes.destinationPrefix)
             $myroutes.Add('PrefixSize', $currentroutes.prefixSize)
-            if ($myroutes.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myroutes.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexRoutes += $myroutes
             }
@@ -324,7 +324,7 @@ function Get-TargetResource
         $complexSingleSignOnEku = [ordered]@{}
         $complexSingleSignOnEku.Add('Name', $getValue.AdditionalProperties.singleSignOnEku.name)
         $complexSingleSignOnEku.Add('ObjectIdentifier', $getValue.AdditionalProperties.singleSignOnEku.objectIdentifier)
-        if ($complexSingleSignOnEku.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexSingleSignOnEku.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexSingleSignOnEku = $null
         }
@@ -350,7 +350,7 @@ function Get-TargetResource
                 {
                     $myLocalAddressRanges.Add('odataType', $currentLocalAddressRanges.'@odata.type'.ToString())
                 }
-                if ($myLocalAddressRanges.values.Where({ $null -ne $_ }).count -gt 0)
+                if ($myLocalAddressRanges.values.Where({ $null -ne $_ }).Count -gt 0)
                 {
                     $complexLocalAddressRanges += $myLocalAddressRanges
                 }
@@ -362,7 +362,7 @@ function Get-TargetResource
                 $myLocalPortRanges = [ordered]@{}
                 $myLocalPortRanges.Add('LowerNumber', $currentLocalPortRanges.lowerNumber)
                 $myLocalPortRanges.Add('UpperNumber', $currentLocalPortRanges.upperNumber)
-                if ($myLocalPortRanges.values.Where({ $null -ne $_ }).count -gt 0)
+                if ($myLocalPortRanges.values.Where({ $null -ne $_ }).Count -gt 0)
                 {
                     $complexLocalPortRanges += $myLocalPortRanges
                 }
@@ -381,7 +381,7 @@ function Get-TargetResource
                 {
                     $myRemoteAddressRanges.Add('odataType', $currentRemoteAddressRanges.'@odata.type'.ToString())
                 }
-                if ($myRemoteAddressRanges.values.Where({ $null -ne $_ }).count -gt 0)
+                if ($myRemoteAddressRanges.values.Where({ $null -ne $_ }).Count -gt 0)
                 {
                     $complexRemoteAddressRanges += $myRemoteAddressRanges
                 }
@@ -393,7 +393,7 @@ function Get-TargetResource
                 $myRemotePortRanges = [ordered]@{}
                 $myRemotePortRanges.Add('LowerNumber', $currentRemotePortRanges.lowerNumber)
                 $myRemotePortRanges.Add('UpperNumber', $currentRemotePortRanges.upperNumber)
-                if ($myRemotePortRanges.values.Where({ $null -ne $_ }).count -gt 0)
+                if ($myRemotePortRanges.values.Where({ $null -ne $_ }).Count -gt 0)
                 {
                     $complexRemotePortRanges += $myRemotePortRanges
                 }
@@ -407,7 +407,7 @@ function Get-TargetResource
             {
                 $mytrafficRules.Add('VpnTrafficDirection', $currenttrafficRules.vpnTrafficDirection.ToString())
             }
-            if ($mytrafficRules.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($mytrafficRules.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexTrafficRules += $mytrafficRules
             }
@@ -420,7 +420,7 @@ function Get-TargetResource
             $myservers.Add('Address', $currentservers.address)
             $myservers.Add('Description', $currentservers.description)
             $myservers.Add('IsDefaultServer', $currentservers.isDefaultServer)
-            if ($myservers.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myservers.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexServers += $myservers
             }
@@ -718,7 +718,7 @@ function Set-TargetResource
         $keys = (([Hashtable]$CreateParameters).Clone()).Keys
         foreach ($key in $keys)
         {
-            if ($null -ne $CreateParameters.$key -and $CreateParameters.$key.getType().Name -like '*cimInstance*')
+            if ($null -ne $CreateParameters.$key -and $CreateParameters.$key.GetType().Name -like '*cimInstance*')
             {
                 $CreateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters.$key
             }
@@ -749,7 +749,7 @@ function Set-TargetResource
         $keys = (([Hashtable]$UpdateParameters).Clone()).Keys
         foreach ($key in $keys)
         {
-            if ($null -ne $UpdateParameters.$key -and $UpdateParameters.$key.getType().Name -like '*cimInstance*')
+            if ($null -ne $UpdateParameters.$key -and $UpdateParameters.$key.GetType().Name -like '*cimInstance*')
             {
                 $UpdateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters.$key
             }

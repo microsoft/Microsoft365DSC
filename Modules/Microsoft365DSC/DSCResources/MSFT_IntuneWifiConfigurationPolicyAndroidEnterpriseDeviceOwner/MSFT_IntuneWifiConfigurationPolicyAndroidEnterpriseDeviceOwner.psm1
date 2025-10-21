@@ -402,7 +402,7 @@ function Set-TargetResource
         {
             if ($key -ne '@odata.type')
             {
-                $keyName = $key.Substring(0, 1).ToUpper() + $key.Substring(1, $key.length - 1)
+                $keyName = $key.Substring(0, 1).ToUpper() + $key.Substring(1, $key.Length - 1)
                 $UpdateParameters.Remove($keyName)
             }
         }

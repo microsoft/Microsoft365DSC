@@ -42,6 +42,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-CsTeamsTranslationRule -MockWith {
             }
 
+            Mock -CommandName Get-CsTeamsTranslationRule -MockWith {
+                return @{
+                    Translation = 'FakeStringValue'
+                    Description = 'FakeStringValue'
+                    Pattern     = 'FakeStringValue'
+                    Identity    = 'FakeStringValue'
+                }
+            }
+
             Mock -CommandName New-M365DSCConnection -MockWith {
                 return 'Credentials'
             }
@@ -94,15 +103,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure      = 'Absent'
                     Credential  = $Credential
                 }
-
-                Mock -CommandName Get-CsTeamsTranslationRule -MockWith {
-                    return @{
-                        Translation = 'FakeStringValue'
-                        Description = 'FakeStringValue'
-                        Pattern     = 'FakeStringValue'
-                        Identity    = 'FakeStringValue'
-                    }
-                }
             }
 
             It 'Should return Values from the Get method' {
@@ -129,15 +129,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure      = 'Present'
                     Credential  = $Credential
                 }
-
-                Mock -CommandName Get-CsTeamsTranslationRule -MockWith {
-                    return @{
-                        Translation = 'FakeStringValue'
-                        Description = 'FakeStringValue'
-                        Pattern     = 'FakeStringValue'
-                        Identity    = 'FakeStringValue'
-                    }
-                }
             }
 
             It 'Should return true from the Test method' {
@@ -148,21 +139,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'The TeamsTranslationRule exists and values are NOT in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Translation = 'FakeStringValue'
+                    Translation = 'FakeStringValue Updated' # Drift
                     Description = 'FakeStringValue'
                     Pattern     = 'FakeStringValue'
                     Identity    = 'FakeStringValue'
                     Ensure      = 'Present'
                     Credential  = $Credential
-                }
-
-                Mock -CommandName Get-CsTeamsTranslationRule -MockWith {
-                    return @{
-                        Translation = 'FakeStringValueDrift #Drift'
-                        Description = 'FakeStringValueDrift #Drift'
-                        Pattern     = 'FakeStringValueDrift #Drift'
-                        Identity    = 'FakeStringValue'
-                    }
                 }
             }
 
@@ -186,15 +168,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
                     Credential = $Credential
-                }
-
-                Mock -CommandName Get-CsTeamsTranslationRule -MockWith {
-                    return @{
-                        Translation = 'FakeStringValue'
-                        Description = 'FakeStringValue'
-                        Pattern     = 'FakeStringValue'
-                        Identity    = 'FakeStringValue'
-                    }
                 }
             }
 

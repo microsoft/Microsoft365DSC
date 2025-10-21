@@ -27,7 +27,7 @@ Configuration Example
             ApplicationId           = $ApplicationId
             TenantId                = $TenantId
             CertificateThumbprint   = $CertificateThumbprint
-            DisplayName             = "CertificateBasedAuthentication rollout policy";
+            DisplayName             = "certificateBasedAuthentication rollout policy";
             Ensure                  = "Absent";
         }
     }

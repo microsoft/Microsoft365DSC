@@ -23,7 +23,7 @@ Configuration Example
     {
         AADCustomAuthenticationExtension "AADCustomAuthenticationExtension1"
         {
-            AuthenticationConfigurationResourceId  = "api://microsoft365dsc.com/11105949-846e-42a1-a873-f12db8345013"
+            AuthenticationConfigurationResourceId  = "api://microsoft365dsc.com/a5352e69-55c0-4160-b4b5-03d034d842fd"
             AuthenticationConfigurationType        = "#microsoft.graph.azureAdTokenAuthentication"
             ClaimsForTokenConfiguration            = @(
                 MSFT_AADCustomAuthenticationExtensionClaimForTokenConfiguration{
@@ -43,7 +43,6 @@ Configuration Example
                 TargetUrl = 'https://Microsoft365DSC.com'
             }
             Ensure                                 = "Present";
-            Id                                     = "11105949-846e-42a1-a873-f12db8345013"
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint

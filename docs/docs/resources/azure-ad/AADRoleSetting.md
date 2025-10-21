@@ -82,11 +82,11 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - Group.Read.All, RoleManagement.Read.Directory, User.Read.All
+    - Group.Read.All, RoleManagement.Read.Directory, User.Read.All, RoleManagementPolicy.Read.Directory
 
 - **Update**
 
-    - Group.Read.All, RoleManagement.ReadWrite.Directory, User.Read.All
+    - Group.Read.All, RoleManagement.ReadWrite.Directory, User.Read.All, RoleManagementPolicy.ReadWrite.Directory
 
 ## Examples
 

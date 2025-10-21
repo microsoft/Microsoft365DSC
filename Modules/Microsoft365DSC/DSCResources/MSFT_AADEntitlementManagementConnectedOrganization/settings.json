@@ -54,5 +54,40 @@
     "Global",
     "USGov"
   ],
-  "mode": "Configuration"
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Authentication",
+      "cmdlets": [
+        "Invoke-MgGraphRequest"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Beta.DirectoryObjects",
+      "cmdlets": [
+        "Get-MgBetaDirectoryObject"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Beta.Identity.Governance",
+      "cmdlets": [
+        "Get-MgBetaEntitlementManagementConnectedOrganization",
+        "Get-MgBetaEntitlementManagementConnectedOrganizationExternalSponsor",
+        "Get-MgBetaEntitlementManagementConnectedOrganizationInternalSponsor",
+        "New-MgBetaEntitlementManagementConnectedOrganization",
+        "New-MgBetaEntitlementManagementConnectedOrganizationExternalSponsorByRef",
+        "New-MgBetaEntitlementManagementConnectedOrganizationInternalSponsorByRef",
+        "Remove-MgBetaEntitlementManagementConnectedOrganization",
+        "Remove-MgBetaEntitlementManagementConnectedOrganizationExternalSponsorDirectoryObjectByRef",
+        "Remove-MgBetaEntitlementManagementConnectedOrganizationInternalSponsorDirectoryObjectByRef",
+        "Update-MgBetaEntitlementManagementConnectedOrganization"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Users",
+      "cmdlets": [
+        "Get-MgUser"
+      ]
+    }
+  ]
 }

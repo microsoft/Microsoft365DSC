@@ -10,7 +10,7 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
     [Write, Description("The collection Id that is the target of the assignment.(ConfigMgr)")] String collectionId;
 };
 
-[ClassVersion("1.0.0.1"), FriendlyName("IntuneAntivirusPolicyWindows10SettingCatalog")]
+[ClassVersion("1.0.0.2"), FriendlyName("IntuneAntivirusPolicyWindows10SettingCatalog")]
 class MSFT_IntuneAntivirusPolicyWindows10SettingCatalog : OMI_BaseResource
 {
     [Key, Description("Display name of the endpoint protection policy for Windows 10.")] String DisplayName;
@@ -59,8 +59,8 @@ class MSFT_IntuneAntivirusPolicyWindows10SettingCatalog : OMI_BaseResource
     [Write, Description("Time period (in days) that quarantine items will be stored on the system.")] sInt32 DaysToRetainCleanedMalware;
     [Write, Description("This policy setting allows you to configure catch-up scans for scheduled full scans.  (1: disabled, 0: enabled)"), ValueMap{"0","1"}, Values{"0","1"}] String DisableCatchupFullScan;
     [Write, Description("This policy setting allows you to configure catch-up scans for scheduled quick scans.  (1: disabled, 0: enabled)"), ValueMap{"0","1"}, Values{"0","1"}] String DisableCatchupQuickScan;
-    [Write, Description("Disable Core Service ECS Integration.  (0: disabled, 1: enabled)"), ValueMap{"0","1"}, Values{"0","1"}] String DisableCoreServiceECSIntegration;
-    [Write, Description("Disable Core Service Telemetry.  (1: disabled, 0: enabled)"), ValueMap{"0","1"}, Values{"0","1"}] String DisableCoreServiceTelemetry;
+    [Write, Description("Disable Core Service ECS Integration.  (0: disabled, 1: enabled)"), ValueMap{"0","1"}, Values{"0","1"}] String DisableCoreServiceECSIntegration[];
+    [Write, Description("Disable Core Service Telemetry.  (1: disabled, 0: enabled)"), ValueMap{"0","1"}, Values{"0","1"}] String DisableCoreServiceTelemetry[];
     [Write, Description("Disables or enables DNS over TCP Parsing for Network Protection. (0: enable feature. 1: disable feature)"), ValueMap{"0","1"}, Values{"0","1"}] String DisableDnsOverTcpParsing;
     [Write, Description("Disables or enables HTTP Parsing for Network Protection. (0: enable feature. 1: disable feature)"), ValueMap{"0","1"}, Values{"0","1"}] String DisableHttpParsing;
     [Write, Description("Disable Ssh Parsing (1: SSH parsing is disabled, 0: SSH parsing is enabled)"), ValueMap{"1", "0"}, Values{"1", "0"}] String DisableSshParsing;

@@ -45,5 +45,14 @@
     "Global",
     "USGov"
   ],
-  "mode": "Configuration"
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Beta.Identity.SignIns",
+      "cmdlets": [
+        "Get-MgBetaPolicyCrossTenantAccessPolicy",
+        "Update-MgBetaPolicyCrossTenantAccessPolicy"
+      ]
+    }
+  ]
 }

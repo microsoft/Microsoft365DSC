@@ -33,6 +33,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-PSSession -MockWith {
             }
 
+            Mock -CommandName Get-CsTeamsMobilityPolicy -MockWith {
+                return @{
+                    MobileDialerPreference = 'Teams'
+                    Description            = 'FakeStringValue'
+                    IPVideoMobileMode      = 'AllNetworks'
+                    IPAudioMobileMode      = 'AllNetworks'
+                    Identity               = 'FakeStringValue'
+                }
+            }
+
             Mock -CommandName Set-CsTeamsMobilityPolicy -MockWith {
             }
 
@@ -96,16 +106,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure                 = 'Absent'
                     Credential             = $Credential
                 }
-
-                Mock -CommandName Get-CsTeamsMobilityPolicy -MockWith {
-                    return @{
-                        MobileDialerPreference = 'Teams'
-                        Description            = 'FakeStringValue'
-                        IPVideoMobileMode      = 'AllNetworks'
-                        IPAudioMobileMode      = 'AllNetworks'
-                        Identity               = 'FakeStringValue'
-                    }
-                }
             }
 
             It 'Should return Values from the Get method' {
@@ -133,16 +133,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure                 = 'Present'
                     Credential             = $Credential
                 }
-
-                Mock -CommandName Get-CsTeamsMobilityPolicy -MockWith {
-                    return @{
-                        MobileDialerPreference = 'Teams'
-                        Description            = 'FakeStringValue'
-                        IPVideoMobileMode      = 'AllNetworks'
-                        IPAudioMobileMode      = 'AllNetworks'
-                        Identity               = 'FakeStringValue'
-                    }
-                }
             }
 
             It 'Should return true from the Test method' {
@@ -154,22 +144,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     MobileDialerPreference = 'Teams'
-                    Description            = 'FakeStringValue'
+                    Description            = 'Updated Description' # Drift
                     IPVideoMobileMode      = 'AllNetworks'
                     IPAudioMobileMode      = 'AllNetworks'
                     Identity               = 'FakeStringValue'
                     Ensure                 = 'Present'
                     Credential             = $Credential
-                }
-
-                Mock -CommandName Get-CsTeamsMobilityPolicy -MockWith {
-                    return @{
-                        MobileDialerPreference = 'Native'
-                        Description            = 'FakeStringValueDrift #Drift'
-                        IPVideoMobileMode      = 'AllNetworks'
-                        IPAudioMobileMode      = 'AllNetworks'
-                        Identity               = 'FakeStringValue'
-                    }
                 }
             }
 
@@ -193,17 +173,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
                     Credential = $Credential
-                }
-
-                Mock -CommandName Get-CsTeamsMobilityPolicy -MockWith {
-                    return @{
-                        MobileDialerPreference = 'Teams'
-                        Description            = 'FakeStringValue'
-                        IPVideoMobileMode      = 'AllNetworks'
-                        IPAudioMobileMode      = 'AllNetworks'
-                        Identity               = 'FakeStringValue'
-
-                    }
                 }
             }
 

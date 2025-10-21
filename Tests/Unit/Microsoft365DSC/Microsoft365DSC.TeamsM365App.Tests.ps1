@@ -33,6 +33,24 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Save-M365DSCPartialExport -MockWith {
             }
 
+            Mock -CommandName Get-MgGroup -MockWith {
+                return @{
+                    DisplayName = "Finance Team"
+                    Id = "12345-12345-12345-12345-12345"
+                }
+            }
+
+            Mock -CommandName Get-M365TeamsApp -MockWith {
+                return @{
+                    IsBlocked = $false
+                    AvailableTo = @{
+                        AssignmentType = "UsersAndGroups"
+                        Groups = @("12345-12345-12345-12345-12345")
+                    }
+                    Id = "95de633a-083e-42f5-b444-a4295d8e9314"
+                }
+            }
+
             Mock -CommandName New-M365DSCConnection -MockWith {
                 return 'Credentials'
             }
@@ -58,24 +76,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Users                = @();
                     Credential = $Credential
                 }
-
-                Mock -CommandName Get-MgGroup -MockWith {
-                    return @{
-                        DisplayName = "Finance Team"
-                        Id = "12345-12345-12345-12345-12345"
-                    }
-                }
-
-                Mock -CommandName Get-M365TeamsApp -MockWith {
-                    return @{
-                        IsBlocked = $false
-                        AvailableTo = @{
-                            AssignmentType = "UsersAndGroups"
-                            Groups = @("12345-12345-12345-12345-12345")
-                        }
-                        Id = "95de633a-083e-42f5-b444-a4295d8e9314"
-                    }
-                }
             }
 
             It 'Should return true from the Test method' {
@@ -91,7 +91,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Groups               = @();
                     Id                   = "95de633a-083e-42f5-b444-a4295d8e9314";
                     IsBlocked            = $False;
-                    Users                = @("john.smith@contoso.com");
+                    Users                = @("john.smith@contoso.com"); # Drift
                     Credential           = $Credential
                 }
 
@@ -99,23 +99,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return @{
                         UserPrincipalName = "john.smith@contoso.com"
                         Id = "12345-12345-12345-12345-12345"
-                    }
-                }
-                Mock -CommandName Get-MgGroup -MockWith {
-                    return @{
-                        DisplayName = "Finance Team"
-                        Id = "12345-12345-12345-12345-12345"
-                    }
-                }
-
-                Mock -CommandName Get-M365TeamsApp -MockWith {
-                    return @{
-                        IsBlocked = $false
-                        AvailableTo = @{
-                            AssignmentType = "UsersAndGroups"
-                            Groups = @("12345-12345-12345-12345-12345")
-                        }
-                        Id = "95de633a-083e-42f5-b444-a4295d8e9314"
                     }
                 }
             }
@@ -147,22 +130,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             Groups = @("12345-12345-12345-12345-12345")
                         }
                         Id = "95de633a-083e-42f5-b444-a4295d8e9314"
-                    }
-                }
-                Mock -CommandName Get-M365TeamsApp -MockWith {
-                    return @{
-                        IsBlocked = $false
-                        AvailableTo = @{
-                            AssignmentType = "UsersAndGroups"
-                            Groups = @("12345-12345-12345-12345-12345")
-                        }
-                        Id = "95de633a-083e-42f5-b444-a4295d8e9314"
-                    }
-                }
-                Mock -CommandName Get-MgGroup -MockWith {
-                    return @{
-                        DisplayName = "Finance Team"
-                        Id = "12345-12345-12345-12345-12345"
                     }
                 }
             }

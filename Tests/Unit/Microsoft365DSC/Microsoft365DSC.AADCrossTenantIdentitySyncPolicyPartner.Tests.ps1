@@ -28,21 +28,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $secpasswd = ConvertTo-SecureString (New-Guid | Out-String) -AsPlainText -Force
             $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin@mydomain.com', $secpasswd)
 
-            Mock -CommandName Confirm-M365DSCDependencies -MockWith {
+            Mock -ModuleName M365DSCUtil -CommandName Confirm-M365DSCDependencies -MockWith {
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
                 return "Credentials"
             }
 
-            Mock -CommandName Set-MgBetaPolicyCrossTenantAccessPolicyPartnerIdentitySynchronization -MockWith {             
+            Mock -CommandName Set-MgBetaPolicyCrossTenantAccessPolicyPartnerIdentitySynchronization -MockWith {
             }
 
-            Mock -CommandName Remove-MgBetaPolicyCrossTenantAccessPolicyPartnerIdentitySynchronization -MockWith {             
+            Mock -CommandName Remove-MgBetaPolicyCrossTenantAccessPolicyPartnerIdentitySynchronization -MockWith {
             }
-            
 
-            Mock -CommandName Invoke-MgGraphRequest -MockWith {             
+
+            Mock -CommandName Invoke-MgGraphRequest -MockWith {
             }
 
             # Mock Write-M365DSCHost to hide output during the tests

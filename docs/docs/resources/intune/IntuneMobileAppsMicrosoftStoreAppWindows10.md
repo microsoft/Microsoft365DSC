@@ -69,7 +69,7 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **odataType** | Write | String | The odata type of the assignment type. | `#microsoft.graph.win32LobAppAssignmentSettings`, `#microsoft.graph.winGetAppAssignmentSettings`, `#microsoft.graph.windowsUniversalAppXAppAssignmentSettings` |
+| **odataType** | Required | String | The odata type of the assignment type. | `#microsoft.graph.iosStoreAppAssignmentSettings`, `#microsoft.graph.win32LobAppAssignmentSettings`, `#microsoft.graph.winGetAppAssignmentSettings`, `#microsoft.graph.windowsUniversalAppXAppAssignmentSettings` |
 
 ### MSFT_DeviceManagementWingetMobileAppAssignmentSettings
 
@@ -77,7 +77,7 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **odataType** | Write | String | The odata type of the assignment type. | `#microsoft.graph.win32LobAppAssignmentSettings`, `#microsoft.graph.winGetAppAssignmentSettings`, `#microsoft.graph.windowsUniversalAppXAppAssignmentSettings` |
+| **odataType** | Required | String | The odata type of the assignment type. | `#microsoft.graph.iosStoreAppAssignmentSettings`, `#microsoft.graph.win32LobAppAssignmentSettings`, `#microsoft.graph.winGetAppAssignmentSettings`, `#microsoft.graph.windowsUniversalAppXAppAssignmentSettings` |
 | **installTimeSettings** | Write | MSFT_DeviceManagementWinGetMobileAppAssignmentSettingsInstallTimeSettings | The install time settings to apply for this app assignment. | |
 | **notifications** | Write | String | The notification status for this app assignment. Possible values are: showAll, showReboot, hideAll. | `showAll`, `showReboot`, `hideAll` |
 | **restartSettings** | Write | MSFT_DeviceManagementWinGetMobileAppAssignmentSettingsRestartSettings | The reboot settings to apply for this app assignment. | |

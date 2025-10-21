@@ -76,7 +76,7 @@ Configuration Example
         {
             ApplicationId                                       = $ApplicationId;
             CertificateThumbprint                               = $CertificateThumbprint;
-            CrossTenantAccessPolicyConfigurationPartnerTenantId = "d8295cae-8bd0-4a7f-9288-933d2dc4573c";
+            CrossTenantAccessPolicyConfigurationPartnerTenantId = "e7a80bcf-696e-40ca-8775-a7f85fbb3ebc";
             DisplayName                                         = "IdentitySync";
             Ensure                                              = "Present";
             IsSyncAllowed                                       = $True;
@@ -114,7 +114,7 @@ Configuration Example
         {
             ApplicationId                                       = $ApplicationId;
             CertificateThumbprint                               = $CertificateThumbprint;
-            CrossTenantAccessPolicyConfigurationPartnerTenantId = "d8295cae-8bd0-4a7f-9288-933d2dc4573c";
+            CrossTenantAccessPolicyConfigurationPartnerTenantId = "e7a80bcf-696e-40ca-8775-a7f85fbb3ebc";
             DisplayName                                         = "IdentitySync";
             Ensure                                              = "Present";
             IsSyncAllowed                                       = $False;
@@ -152,7 +152,7 @@ Configuration Example
         {
             ApplicationId                                       = $ApplicationId;
             CertificateThumbprint                               = $CertificateThumbprint;
-            CrossTenantAccessPolicyConfigurationPartnerTenantId = "d8295cae-8bd0-4a7f-9288-933d2dc4573c";
+            CrossTenantAccessPolicyConfigurationPartnerTenantId = "e7a80bcf-696e-40ca-8775-a7f85fbb3ebc";
             DisplayName                                         = "IdentitySync";
             Ensure                                              = "Absent";
             IsSyncAllowed                                       = $True;

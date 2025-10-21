@@ -42,21 +42,24 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-OrganizationConfig -MockWith {
                 return @{
-                    DefaultPublicFolderProhibitPostQuota       = '13 KB (13,312 bytes)'
-                    VisibleMeetingUpdateProperties             = 'Location,AllProperties:15'
-                    DefaultPublicFolderIssueWarningQuota       = '13 KB (13,312 bytes)'
-                    ConnectorsEnabledForYammer                 = $True
-                    DefaultPublicFolderMaxItemSize             = '13 KB (13,312 bytes)'
-                    MailTipsLargeAudienceThreshold             = 25
-                    PublicFoldersEnabled                       = 'Local'
-                    WebPushNotificationsDisabled               = $False
-                    MailTipsGroupMetricsEnabled                = $True
-                    DefaultPublicFolderMovedItemRetention      = '06.00:00:00'
-                    DefaultPublicFolderDeletedItemRetention    = '30.00:00:00'
-                    ByteEncoderTypeFor7BitCharsets             = 0
-                    SendFromAliasEnabled                       = $false
-                    ActivityBasedAuthenticationTimeoutInterval = '06:00:00'
-                    DefaultGroupAccessType                     = 'Private'
+                    DefaultPublicFolderProhibitPostQuota              = '13 KB (13,312 bytes)'
+                    VisibleMeetingUpdateProperties                    = 'Location,AllProperties:15'
+                    DefaultPublicFolderIssueWarningQuota              = '13 KB (13,312 bytes)'
+                    ConnectorsEnabledForYammer                        = $True
+                    DefaultPublicFolderMaxItemSize                    = '13 KB (13,312 bytes)'
+                    MailTipsLargeAudienceThreshold                    = 25
+                    PublicFoldersEnabled                              = 'Local'
+                    WebPushNotificationsDisabled                      = $False
+                    MailTipsGroupMetricsEnabled                       = $True
+                    DefaultPublicFolderMovedItemRetention             = '06.00:00:00'
+                    DefaultPublicFolderDeletedItemRetention           = '30.00:00:00'
+                    ByteEncoderTypeFor7BitCharsets                    = 0
+                    SendFromAliasEnabled                              = $false
+                    ActivityBasedAuthenticationTimeoutInterval        = '06:00:00'
+                    DefaultGroupAccessType                            = 'Private'
+                    DelayedDelicensingEnabledState                    = 'Enabled: False; WhenLastModifiedUtc: 1/1/0001 12:00:00 AM'
+                    EndUserMailNotificationForDelayedDelicensingState = 'Enabled: False; WhenLastModifiedUtc: 1/1/0001 12:00:00 AM'
+                    TenantAdminNotificationForDelayedDelicensingState = 'Enabled: False; WhenLastModifiedUtc: 1/1/0001 12:00:00 AM'
                 }
             }
 

@@ -190,7 +190,7 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $currentOrgSiteAsset = Get-TargetResource @PSBoundParameters
+    $null = Get-TargetResource @PSBoundParameters
     $currentParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
     #No add only a set

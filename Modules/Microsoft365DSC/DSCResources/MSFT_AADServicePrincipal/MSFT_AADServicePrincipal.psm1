@@ -801,7 +801,7 @@ function Set-TargetResource
             else
             {
                 Write-Verbose -Message "Removing owner {$($userInfo.Id)}"
-                Remove-MgServicePrincipalOwnerByRef -ServicePrincipalId $currentAADServicePrincipal.ObjectId `
+                Remove-MgServicePrincipalOwnerDirectoryObjectByRef -ServicePrincipalId $currentAADServicePrincipal.ObjectId `
                     -DirectoryObjectId $userInfo.Id | Out-Null
             }
         }

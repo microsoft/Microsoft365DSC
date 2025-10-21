@@ -134,5 +134,22 @@
     "Microsoft.Graph.Applications",
     "MSCloudLoginAssistant"
   ],
-  "mode": "Configuration"
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Applications",
+      "cmdlets": [
+        "Get-MgServicePrincipal",
+        "New-MgServicePrincipal",
+        "Update-MgServicePrincipal"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Authentication",
+      "cmdlets": [
+        "Connect-MgGraph",
+        "Invoke-MgGraphRequest"
+      ]
+    }
+  ]
 }

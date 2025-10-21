@@ -55,8 +55,8 @@ function Set-M365DSCLCMConfiguration
 {
     [CmdletBinding()]
     param (
-        [Parameter()]
-        [object]
+        [Parameter(Mandatory = $true)]
+        [System.Object]
         $LCMConfig
     )
 

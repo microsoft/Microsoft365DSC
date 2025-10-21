@@ -101,7 +101,8 @@ function Get-TargetResource
         Write-Verbose -Message "An Azure AD Identity B2 X User Flow with Id {$Id} was found"
 
         #region Get ApiConnectorConfiguration
-        $connectorConfiguration = Get-MgBetaIdentityB2XUserFlowApiConnectorConfiguration -B2XIdentityUserFlowId $Id -ExpandProperty 'postFederationSignup,postAttributeCollection'
+        $connectorConfiguration = Get-MgBetaIdentityB2XUserFlowApiConnectorConfiguration -B2XIdentityUserFlowId $Id `
+                                                                                         -ExpandProperty 'postFederationSignup,postAttributeCollection'
 
         $complexApiConnectorConfiguration = @{
             postFederationSignupConnectorName    = Get-ConnectorName($connectorConfiguration.PostFederationSignup.DisplayName)
@@ -272,6 +273,7 @@ function Set-TargetResource
             apiConnectorConfiguration = $newApiConnectorConfiguration
         }
 
+        Write-Verbose -Message "Creating instance with:`r`n$(ConvertTo-Json $params -Depth 5)"
         $newObj = New-MgBetaIdentityB2XUserFlow -BodyParameter $params
 
         #region Add IdentityProvider objects to the newly created object
@@ -282,7 +284,6 @@ function Set-TargetResource
             }
 
             Write-Verbose -Message "Adding the Identity Provider with Id {$provider} to the newly created Azure AD Identity B2X User Flow with Id {$($newObj.Id)}"
-
             New-MgBetaIdentityB2XUserFlowIdentityProviderByRef -B2XIdentityUserFlowId $newObj.Id -BodyParameter $params
         }
         #endregion
@@ -313,7 +314,6 @@ function Set-TargetResource
             }
 
             Write-Verbose -Message "Adding the User Attribute Assignment with Id {$($userAttributeAssignment.Id)} to the newly created Azure AD Identity B2X User Flow with Id {$($newObj.Id)}"
-
             New-MgBetaIdentityB2XUserFlowUserAttributeAssignment -B2XIdentityUserFlowId $newObj.Id -BodyParameter $params
         }
         #endregion
@@ -366,7 +366,7 @@ function Set-TargetResource
         {
             Write-Verbose -Message "Removing the Identity Provider with Id {$provider} from the Azure AD Identity B2X User Flow with Id {$($currentInstance.Id)}"
 
-            Remove-MgBetaIdentityB2XUserFlowIdentityProviderByRef -B2XIdentityUserFlowId $currentInstance.Id -IdentityProviderBaseId $provider
+            Remove-MgBetaIdentityB2XUserFlowIdentityProviderBaseByRef -B2XIdentityUserFlowId $currentInstance.Id -IdentityProviderBaseId $provider
         }
         #endregion
 
@@ -574,6 +574,10 @@ function Export-TargetResource
         }
         foreach ($config in $getValue)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
             $displayedKey = $config.Id
             Write-M365DSCHost -Message "    |---[$i/$($getValue.Count)] $displayedKey" -DeferWrite
             $params = @{

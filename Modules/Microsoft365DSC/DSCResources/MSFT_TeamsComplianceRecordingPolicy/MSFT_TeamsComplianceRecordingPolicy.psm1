@@ -28,6 +28,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $RecordReroutedCalls,
+
+        [Parameter()]
+        [System.Boolean]
         $WarnUserOnRemoval,
 
         [Parameter()]
@@ -118,7 +122,7 @@ function Get-TargetResource
                 $MyComplianceRecordingApplications.Add('RequiredDuringCall', $CurrentComplianceRecordingApplications.RequiredDuringCall)
                 $MyComplianceRecordingApplications.Add('ConcurrentInvitationCount', $CurrentComplianceRecordingApplications.ConcurrentInvitationCount)
 
-                if ($MyComplianceRecordingApplications.values.Where({ $null -ne $_ }).count -gt 0)
+                if ($MyComplianceRecordingApplications.values.Where({ $null -ne $_ }).Count -gt 0)
                 {
                     $ComplexComplianceRecordingApplications += $MyComplianceRecordingApplications
                 }
@@ -132,6 +136,7 @@ function Get-TargetResource
             Description                                         = $instance.Description
             DisableComplianceRecordingAudioNotificationForCalls = $instance.DisableComplianceRecordingAudioNotificationForCalls
             Enabled                                             = $instance.Enabled
+            RecordReroutedCalls                                 = $instance.RecordReroutedCalls
             WarnUserOnRemoval                                   = $instance.WarnUserOnRemoval
             Ensure                                              = 'Present'
             Credential                                          = $Credential
@@ -179,6 +184,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $Enabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $RecordReroutedCalls,
 
         [Parameter()]
         [System.Boolean]
@@ -237,7 +246,7 @@ function Set-TargetResource
         {
             if ($null -ne $CreateParameters.$key -and $CreateParameters.$key.GetType().Name -like '*cimInstance*')
             {
-                $keyName = $key.substring(0, 1).ToLower() + $key.substring(1, $key.length - 1)
+                $keyName = $key.Substring(0, 1).ToLower() + $key.Substring(1, $key.Length - 1)
                 $keyValue = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters.$key
                 $CreateParameters.Remove($key) | Out-Null
                 $CreateParameters.Add($keyName, $keyValue)
@@ -266,7 +275,7 @@ function Set-TargetResource
             $CreateParameters['ComplianceRecordingApplications'] = $appObjects
         }
 
-        Write-Verbose -Message "Creating {$Identity} with Parameters:`r`n$(Convert-M365DscHashtableToString -Hashtable $CreateParameters)"
+        Write-Verbose -Message "Creating a Teams Compliance Recording Policy with Identity {$Identity}"
         New-CsTeamsComplianceRecordingPolicy @CreateParameters | Out-Null
 
         if ($ComplianceRecordingApplications.Count -gt 0)
@@ -317,8 +326,7 @@ function Set-TargetResource
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Updating {$Identity}"
-
+        Write-Verbose -Message "Updating the Teams Compliance Recording Policy with Identity {$Identity}"
         $UpdateParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
         $keys = $UpdateParameters.Keys
@@ -404,7 +412,7 @@ function Set-TargetResource
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing {$Identity}"
+        Write-Verbose -Message "Removing the Teams Compliance Recording Policy with Identity {$Identity}"
         Remove-CsTeamsComplianceRecordingPolicy -Identity $currentInstance.Identity
     }
 }
@@ -434,6 +442,10 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $Enabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $RecordReroutedCalls,
 
         [Parameter()]
         [System.Boolean]

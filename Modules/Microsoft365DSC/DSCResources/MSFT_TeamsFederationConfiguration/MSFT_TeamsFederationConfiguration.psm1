@@ -32,6 +32,11 @@ function Get-TargetResource
         $AllowTeamsConsumerInbound,
 
         [Parameter()]
+        [ValidateSet('Disabled', 'Enabled')]
+        [System.String]
+        $DomainBlockingForMDOAdminsInTeams,
+
+        [Parameter()]
         [System.String]
         [ValidateSet('Allowed', 'Blocked')]
         $ExternalAccessWithTrialTenants,
@@ -79,7 +84,7 @@ function Get-TargetResource
     {
         if (-not $Script:exportMode)
         {
-            $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
+            $null = New-M365DSCConnection -Workload 'MicrosoftTeams' `
                 -InboundParameters $PSBoundParameters
 
             #Ensure the proper dependencies are installed in the current environment.
@@ -98,6 +103,7 @@ function Get-TargetResource
                 Identity = 'Global'
             }
         }
+
         $config = Get-CsTenantFederationConfiguration -ErrorAction Stop
 
         $AllowedDomainsArray = $config.AllowedDomains.AllowedDomain.Domain
@@ -129,6 +135,7 @@ function Get-TargetResource
             AllowFederatedUsers                         = $config.AllowFederatedUsers
             AllowTeamsConsumer                          = $config.AllowTeamsConsumer
             AllowTeamsConsumerInbound                   = $config.AllowTeamsConsumerInbound
+            DomainBlockingForMDOAdminsInTeams           = $config.DomainBlockingForMDOAdminsInTeams
             ExternalAccessWithTrialTenants              = $config.ExternalAccessWithTrialTenants
             TreatDiscoveredPartnersAsUnverified         = $config.TreatDiscoveredPartnersAsUnverified
             SharedSipAddressSpace                       = $config.SharedSipAddressSpace
@@ -182,6 +189,11 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowTeamsConsumerInbound,
+
+        [Parameter()]
+        [ValidateSet('Disabled', 'Enabled')]
+        [System.String]
+        $DomainBlockingForMDOAdminsInTeams,
 
         [Parameter()]
         [System.String]
@@ -287,6 +299,11 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowTeamsConsumerInbound,
+
+        [Parameter()]
+        [ValidateSet('Disabled', 'Enabled')]
+        [System.String]
+        $DomainBlockingForMDOAdminsInTeams,
 
         [Parameter()]
         [System.String]

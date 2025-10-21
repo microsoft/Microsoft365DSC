@@ -15,6 +15,11 @@ function Get-TargetResource
         $Description,
 
         [Parameter()]
+        [ValidateSet('Disabled', 'Enabled')]
+        [System.String]
+        $AIInterpreter,
+
+        [Parameter()]
         [System.Boolean]
         $AllowAnnotations,
 
@@ -32,7 +37,15 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $AllowAvatarsInGallery,
+
+        [Parameter()]
+        [System.Boolean]
         $AllowBreakoutRooms,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCarbonSummary,
 
         [Parameter()]
         [System.String]
@@ -57,6 +70,11 @@ function Get-TargetResource
         $AllowedStreamingMediaInput,
 
         [Parameter()]
+        [ValidateSet('Everyone', 'UsersAllowedToByPassTheLobby')]
+        [System.String]
+        $AllowedUsersForMeetingDetails,
+
+        [Parameter()]
         [ValidateSet('Enabled', 'Disabled', 'ForceEnabled')]
         [System.String]
         $AllowEngagementReport = 'Disabled',
@@ -68,6 +86,10 @@ function Get-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowExternalParticipantGiveRequestControl,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowImmersiveView,
 
         [Parameter()]
         [System.Boolean]
@@ -138,6 +160,11 @@ function Get-TargetResource
         $AllowSharedNotes,
 
         [Parameter()]
+        [ValidateSet('Disabled', 'Enabled')]
+        [System.String]
+        $AllowTasksFromTranscript,
+
+        [Parameter()]
         [System.Boolean]
         $AllowTranscription,
 
@@ -145,6 +172,14 @@ function Get-TargetResource
         [System.String]
         [ValidateSet('Enabled', 'FederatedOnly', 'Disabled')]
         $AllowUserToJoinExternalMeeting,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowWatermarkCustomizationForCameraVideo,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowWatermarkCustomizationForScreenSharing,
 
         [Parameter()]
         [System.Boolean]
@@ -159,9 +194,19 @@ function Get-TargetResource
         $AllowWhiteboard,
 
         [Parameter()]
+        [ValidateSet('None', 'OneTimePasscode')]
+        [System.String]
+        $AnonymousUserAuthenticationMethod,
+
+        [Parameter()]
         [ValidateSet('Disabled', 'Enabled', 'DisabledUserOverride')]
         [System.String]
         $AttendeeIdentityMasking,
+
+        [Parameter()]
+        [ValidateSet('AllAttendees', 'PstnOnly')]
+        [System.String]
+        $AudibleRecordingNotification,
 
         [Parameter()]
         [System.String]
@@ -263,6 +308,11 @@ function Get-TargetResource
         $LiveStreamingMode,
 
         [Parameter()]
+        [ValidateSet('Disabled', 'Enabled')]
+        [System.String]
+        $LobbyChat,
+
+        [Parameter()]
         [System.UInt32]
         $MediaBitRateKb,
 
@@ -281,9 +331,19 @@ function Get-TargetResource
         $NewMeetingRecordingExpirationDays,
 
         [Parameter()]
+        [ValidateSet('Disabled', 'Enabled', 'MicrosoftDefault')]
+        [System.String]
+        $NoiseSuppressionForDialInParticipants,
+
+        [Parameter()]
         [ValidateSet('Disabled', 'Enabled')]
         [System.String]
         $ParticipantNameChange,
+
+        [Parameter()]
+        [ValidateSet('Everyone', 'EveryoneInOrganization', 'EveryoneInOrganizationAndGuests', 'None')]
+        [System.String]
+        $ParticipantSlideControl,
 
         [Parameter()]
         [System.String]
@@ -294,6 +354,11 @@ function Get-TargetResource
         [ValidateSet('Disabled', 'Enabled')]
         [System.String]
         $QnAEngagementMode,
+
+        [Parameter()]
+        [ValidateSet('Disabled', 'Enabled')]
+        [System.String]
+        $RealTimeText,
 
         [Parameter()]
         [ValidateSet('Off', 'Distinguish', 'Attribute')]
@@ -311,6 +376,11 @@ function Get-TargetResource
         $ScreenSharingMode,
 
         [Parameter()]
+        [ValidateSet('OnAllowOrganizerOverride', 'OffAllowOrganizerOverride', 'Off')]
+        [System.String]
+        $SmsNotifications,
+
+        [Parameter()]
         [System.String]
         [ValidateSet('Disabled', 'DisabledUserOverride', 'EnabledUserOverride', 'Enabled')]
         $SpeakerAttributionMode,
@@ -326,6 +396,11 @@ function Get-TargetResource
         $TeamsCameraFarEndPTZMode,
 
         [Parameter()]
+        [ValidateSet('OrganizerAndCoOrganizersOnly', 'OrganizersAndPresentersOnly')]
+        [System.String]
+        $UsersCanAdmitFromLobby,
+
+        [Parameter()]
         [System.String]
         [ValidateSet('NoFilters', 'BlurOnly', 'BlurAndDefaultBackgrounds', 'AllFilters')]
         $VideoFiltersMode,
@@ -334,6 +409,36 @@ function Get-TargetResource
         [ValidateSet('Disabled', 'Enabled')]
         [System.String]
         $VoiceIsolation,
+
+        [Parameter()]
+        [ValidateSet('Disabled', 'Enabled')]
+        [System.String]
+        $VoiceSimulationInInterpreter,
+
+        [Parameter()]
+        [ValidateSet('JoinWithAudioOnly', 'WatermarkWithDisplayName')]
+        [System.String]
+        $WatermarkForAnonymousUsers,
+
+        [Parameter()]
+        [ValidateRange(1, 100)]
+        [System.Int64]
+        $WatermarkForCameraVideoOpacity,
+
+        [Parameter()]
+        [ValidateSet('Single', 'Tiled')]
+        [System.String]
+        $WatermarkForCameraVideoPattern,
+
+        [Parameter()]
+        [ValidateRange(1, 100)]
+        [System.Int64]
+        $WatermarkForScreenSharingOpacity,
+
+        [Parameter()]
+        [ValidateSet('Single', 'Tiled')]
+        [System.String]
+        $WatermarkForScreenSharingPattern,
 
         [Parameter()]
         [ValidateSet('Everyone', 'EveryoneInCompany')]
@@ -411,19 +516,24 @@ function Get-TargetResource
         return @{
             Identity                                   = $Identity
             Description                                = $policy.Description
+            AIInterpreter                              = $policy.AIInterpreter
             AllowAnnotations                           = $policy.AllowAnnotations
             AllowAnonymousUsersToDialOut               = $policy.AllowAnonymousUsersToDialOut
             AllowAnonymousUsersToJoinMeeting           = $policy.AllowAnonymousUsersToJoinMeeting
             AllowAnonymousUsersToStartMeeting          = $policy.AllowAnonymousUsersToStartMeeting
+            AllowAvatarsInGallery                      = $policy.AllowAvatarsInGallery
             AllowBreakoutRooms                         = $policy.AllowBreakoutRooms
+            AllowCarbonSummary                         = $policy.AllowCarbonSummary
             AllowCartCaptionsScheduling                = $policy.AllowCartCaptionsScheduling
             AllowChannelMeetingScheduling              = $policy.AllowChannelMeetingScheduling
             AllowCloudRecording                        = $policy.AllowCloudRecording
             AllowDocumentCollaboration                 = $policy.AllowDocumentCollaboration
             AllowedStreamingMediaInput                 = $policy.AllowedStreamingMediaInput
+            AllowedUsersForMeetingDetails              = $policy.AllowedUsersForMeetingDetails
             AllowEngagementReport                      = $policy.AllowEngagementReport
             AllowExternalNonTrustedMeetingChat         = $policy.AllowExternalNonTrustedMeetingChat
             AllowExternalParticipantGiveRequestControl = $policy.AllowExternalParticipantGiveRequestControl
+            AllowImmersiveView                         = $policy.AllowImmersiveView
             AllowIPAudio                               = $policy.AllowIPAudio
             AllowIPVideo                               = $policy.AllowIPVideo
             AllowMeetingCoach                          = $policy.AllowMeetingCoach
@@ -441,12 +551,17 @@ function Get-TargetResource
             AllowPSTNUsersToBypassLobby                = $policy.AllowPSTNUsersToBypassLobby
             AllowRecordingStorageOutsideRegion         = $policy.AllowRecordingStorageOutsideRegion
             AllowSharedNotes                           = $policy.AllowSharedNotes
+            AllowTasksFromTranscript                   = $policy.AllowTasksFromTranscript
             AllowTranscription                         = $policy.AllowTranscription
             AllowUserToJoinExternalMeeting             = $policy.AllowUserToJoinExternalMeeting
+            AllowWatermarkCustomizationForCameraVideo  = $policy.AllowWatermarkCustomizationForCameraVideo
+            AllowWatermarkCustomizationForScreenSharing = $policy.AllowWatermarkCustomizationForScreenSharing
             AllowWatermarkForCameraVideo               = $policy.AllowWatermarkForCameraVideo
             AllowWatermarkForScreenSharing             = $policy.AllowWatermarkForScreenSharing
             AllowWhiteboard                            = $policy.AllowWhiteboard
+            AnonymousUserAuthenticationMethod          = $policy.AnonymousUserAuthenticationMethod
             AttendeeIdentityMasking                    = $policy.AttendeeIdentityMasking
+            AudibleRecordingNotification               = $policy.AudibleRecordingNotification
             AutoAdmittedUsers                          = $policy.AutoAdmittedUsers
             AutomaticallyStartCopilot                  = $policy.AutomaticallyStartCopilot
             AutoRecording                              = $policy.AutoRecording
@@ -468,21 +583,33 @@ function Get-TargetResource
             LiveCaptionsEnabledType                    = $policy.LiveCaptionsEnabledType
             LiveInterpretationEnabledType              = $policy.LiveInterpretationEnabledType
             LiveStreamingMode                          = $policy.LiveStreamingMode
+            LobbyChat                                  = $policy.LobbyChat
             MediaBitRateKb                             = $policy.MediaBitRateKb
             MeetingChatEnabledType                     = $policy.MeetingChatEnabledType
             MeetingInviteLanguages                     = $policy.MeetingInviteLanguages
             NewMeetingRecordingExpirationDays          = $policy.NewMeetingRecordingExpirationDays
+            NoiseSuppressionForDialInParticipants      = $policy.NoiseSuppressionForDialInParticipants
             ParticipantNameChange                      = $policy.ParticipantNameChange
+            ParticipantSlideControl                    = $policy.ParticipantSlideControl
             PreferredMeetingProviderForIslandsMode     = $policy.PreferredMeetingProviderForIslandsMode
             QnAEngagementMode                          = $policy.QnAEngagementMode
+            RealTimeText                               = $policy.RealTimeText
             RoomAttributeUserOverride                  = $policy.RoomAttributeUserOverride
             RoomPeopleNameUserOverride                 = $policy.RoomPeopleNameUserOverride
             ScreenSharingMode                          = $policy.ScreenSharingMode
+            SmsNotifications                           = $policy.SmsNotifications
             SpeakerAttributionMode                     = $policy.SpeakerAttributionMode
             StreamingAttendeeMode                      = $policy.StreamingAttendeeMode
+            TeamsCameraFarEndPTZMode                   = $policy.TeamsCameraFarEndPTZMode
+            UsersCanAdmitFromLobby                     = $policy.UsersCanAdmitFromLobby
             VideoFiltersMode                           = $policy.VideoFiltersMode
             VoiceIsolation                             = $policy.VoiceIsolation
-            TeamsCameraFarEndPTZMode                   = $policy.TeamsCameraFarEndPTZMode
+            VoiceSimulationInInterpreter               = $policy.VoiceSimulationInInterpreter
+            WatermarkForAnonymousUsers                 = $policy.WatermarkForAnonymousUsers
+            WatermarkForCameraVideoOpacity             = $policy.WatermarkForCameraVideoOpacity
+            WatermarkForCameraVideoPattern             = $policy.WatermarkForCameraVideoPattern
+            WatermarkForScreenSharingOpacity           = $policy.WatermarkForScreenSharingOpacity
+            WatermarkForScreenSharingPattern           = $policy.WatermarkForScreenSharingPattern
             WhoCanRegister                             = $policy.WhoCanRegister
             Ensure                                     = 'Present'
             Credential                                 = $Credential
@@ -519,6 +646,11 @@ function Set-TargetResource
         $Description,
 
         [Parameter()]
+        [ValidateSet('Disabled', 'Enabled')]
+        [System.String]
+        $AIInterpreter,
+
+        [Parameter()]
         [System.Boolean]
         $AllowAnnotations,
 
@@ -536,7 +668,15 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $AllowAvatarsInGallery,
+
+        [Parameter()]
+        [System.Boolean]
         $AllowBreakoutRooms,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCarbonSummary,
 
         [Parameter()]
         [System.String]
@@ -561,6 +701,11 @@ function Set-TargetResource
         $AllowedStreamingMediaInput,
 
         [Parameter()]
+        [ValidateSet('Everyone', 'UsersAllowedToByPassTheLobby')]
+        [System.String]
+        $AllowedUsersForMeetingDetails,
+
+        [Parameter()]
         [ValidateSet('Enabled', 'Disabled', 'ForceEnabled')]
         [System.String]
         $AllowEngagementReport = 'Disabled',
@@ -572,6 +717,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowExternalParticipantGiveRequestControl,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowImmersiveView,
 
         [Parameter()]
         [System.Boolean]
@@ -642,6 +791,11 @@ function Set-TargetResource
         $AllowSharedNotes,
 
         [Parameter()]
+        [ValidateSet('Disabled', 'Enabled')]
+        [System.String]
+        $AllowTasksFromTranscript,
+
+        [Parameter()]
         [System.Boolean]
         $AllowTranscription,
 
@@ -649,6 +803,14 @@ function Set-TargetResource
         [System.String]
         [ValidateSet('Enabled', 'FederatedOnly', 'Disabled')]
         $AllowUserToJoinExternalMeeting,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowWatermarkCustomizationForCameraVideo,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowWatermarkCustomizationForScreenSharing,
 
         [Parameter()]
         [System.Boolean]
@@ -663,9 +825,19 @@ function Set-TargetResource
         $AllowWhiteboard,
 
         [Parameter()]
+        [ValidateSet('None', 'OneTimePasscode')]
+        [System.String]
+        $AnonymousUserAuthenticationMethod,
+
+        [Parameter()]
         [ValidateSet('Disabled', 'Enabled', 'DisabledUserOverride')]
         [System.String]
         $AttendeeIdentityMasking,
+
+        [Parameter()]
+        [ValidateSet('AllAttendees', 'PstnOnly')]
+        [System.String]
+        $AudibleRecordingNotification,
 
         [Parameter()]
         [System.String]
@@ -767,6 +939,11 @@ function Set-TargetResource
         $LiveStreamingMode,
 
         [Parameter()]
+        [ValidateSet('Disabled', 'Enabled')]
+        [System.String]
+        $LobbyChat,
+
+        [Parameter()]
         [System.UInt32]
         $MediaBitRateKb,
 
@@ -785,9 +962,19 @@ function Set-TargetResource
         $NewMeetingRecordingExpirationDays,
 
         [Parameter()]
+        [ValidateSet('Disabled', 'Enabled', 'MicrosoftDefault')]
+        [System.String]
+        $NoiseSuppressionForDialInParticipants,
+
+        [Parameter()]
         [ValidateSet('Disabled', 'Enabled')]
         [System.String]
         $ParticipantNameChange,
+
+        [Parameter()]
+        [ValidateSet('Everyone', 'EveryoneInOrganization', 'EveryoneInOrganizationAndGuests', 'None')]
+        [System.String]
+        $ParticipantSlideControl,
 
         [Parameter()]
         [System.String]
@@ -798,6 +985,11 @@ function Set-TargetResource
         [ValidateSet('Disabled', 'Enabled')]
         [System.String]
         $QnAEngagementMode,
+
+        [Parameter()]
+        [ValidateSet('Disabled', 'Enabled')]
+        [System.String]
+        $RealTimeText,
 
         [Parameter()]
         [ValidateSet('Off', 'Distinguish', 'Attribute')]
@@ -815,6 +1007,11 @@ function Set-TargetResource
         $ScreenSharingMode,
 
         [Parameter()]
+        [ValidateSet('OnAllowOrganizerOverride', 'OffAllowOrganizerOverride', 'Off')]
+        [System.String]
+        $SmsNotifications,
+
+        [Parameter()]
         [System.String]
         [ValidateSet('Disabled', 'DisabledUserOverride', 'EnabledUserOverride', 'Enabled')]
         $SpeakerAttributionMode,
@@ -830,6 +1027,11 @@ function Set-TargetResource
         $TeamsCameraFarEndPTZMode,
 
         [Parameter()]
+        [ValidateSet('OrganizerAndCoOrganizersOnly', 'OrganizersAndPresentersOnly')]
+        [System.String]
+        $UsersCanAdmitFromLobby,
+
+        [Parameter()]
         [System.String]
         [ValidateSet('NoFilters', 'BlurOnly', 'BlurAndDefaultBackgrounds', 'AllFilters')]
         $VideoFiltersMode,
@@ -838,6 +1040,36 @@ function Set-TargetResource
         [ValidateSet('Disabled', 'Enabled')]
         [System.String]
         $VoiceIsolation,
+
+        [Parameter()]
+        [ValidateSet('Disabled', 'Enabled')]
+        [System.String]
+        $VoiceSimulationInInterpreter,
+
+        [Parameter()]
+        [ValidateSet('JoinWithAudioOnly', 'WatermarkWithDisplayName')]
+        [System.String]
+        $WatermarkForAnonymousUsers,
+
+        [Parameter()]
+        [ValidateRange(1, 100)]
+        [System.Int64]
+        $WatermarkForCameraVideoOpacity,
+
+        [Parameter()]
+        [ValidateSet('Single', 'Tiled')]
+        [System.String]
+        $WatermarkForCameraVideoPattern,
+
+        [Parameter()]
+        [ValidateRange(1, 100)]
+        [System.Int64]
+        $WatermarkForScreenSharingOpacity,
+
+        [Parameter()]
+        [ValidateSet('Single', 'Tiled')]
+        [System.String]
+        $WatermarkForScreenSharingPattern,
 
         [Parameter()]
         [ValidateSet('Everyone', 'EveryoneInCompany')]
@@ -891,6 +1123,9 @@ function Set-TargetResource
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $SetParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
+    # The AllowUserToJoinExternalMeeting is not available in Set-CsTeamsMeetingPolicy
+    $SetParameters.Remove('AllowUserToJoinExternalMeeting') | Out-Null
+
     if ($AllowCloudRecording -eq $false -and $SetParameters.Keys -contains 'AllowRecordingStorageOutsideRegion')
     {
         $SetParameters.Remove('AllowRecordingStorageOutsideRegion') | Out-Null
@@ -898,7 +1133,7 @@ function Set-TargetResource
 
     if ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Absent')
     {
-        Write-Verbose -Message "Creating a new Teams Meeting Policy {$Identity}"
+        Write-Verbose -Message "Creating a Teams Meeting Policy with Identity {$Identity}"
 
         # The AllowAnonymousUsersToDialOut is temporarly disabled. Therefore
         # we can't create or update a policy with it and it needs to be removed;
@@ -916,7 +1151,7 @@ function Set-TargetResource
     {
         # If we get here, it's because the Test-TargetResource detected a drift, therefore we always call
         # into the Set-CsTeamsMeetingPolicy cmdlet.
-        Write-Verbose -Message "Updating settings for Teams Meeting Policy {$Identity}"
+        Write-Verbose -Message "Updating the Teams Meeting Policy with Identity {$Identity}"
 
         # The AllowAnonymousUsersToDialOut is temporarly disabled. Therefore
         # we can't create or update a policy with it and it needs to be removed;
@@ -952,6 +1187,11 @@ function Test-TargetResource
         $Description,
 
         [Parameter()]
+        [ValidateSet('Disabled', 'Enabled')]
+        [System.String]
+        $AIInterpreter,
+
+        [Parameter()]
         [System.Boolean]
         $AllowAnnotations,
 
@@ -969,7 +1209,15 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $AllowAvatarsInGallery,
+
+        [Parameter()]
+        [System.Boolean]
         $AllowBreakoutRooms,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCarbonSummary,
 
         [Parameter()]
         [System.String]
@@ -994,6 +1242,11 @@ function Test-TargetResource
         $AllowedStreamingMediaInput,
 
         [Parameter()]
+        [ValidateSet('Everyone', 'UsersAllowedToByPassTheLobby')]
+        [System.String]
+        $AllowedUsersForMeetingDetails,
+
+        [Parameter()]
         [ValidateSet('Enabled', 'Disabled', 'ForceEnabled')]
         [System.String]
         $AllowEngagementReport = 'Disabled',
@@ -1005,6 +1258,10 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowExternalParticipantGiveRequestControl,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowImmersiveView,
 
         [Parameter()]
         [System.Boolean]
@@ -1075,6 +1332,11 @@ function Test-TargetResource
         $AllowSharedNotes,
 
         [Parameter()]
+        [ValidateSet('Disabled', 'Enabled')]
+        [System.String]
+        $AllowTasksFromTranscript,
+
+        [Parameter()]
         [System.Boolean]
         $AllowTranscription,
 
@@ -1082,6 +1344,14 @@ function Test-TargetResource
         [System.String]
         [ValidateSet('Enabled', 'FederatedOnly', 'Disabled')]
         $AllowUserToJoinExternalMeeting,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowWatermarkCustomizationForCameraVideo,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowWatermarkCustomizationForScreenSharing,
 
         [Parameter()]
         [System.Boolean]
@@ -1096,9 +1366,19 @@ function Test-TargetResource
         $AllowWhiteboard,
 
         [Parameter()]
+        [ValidateSet('None', 'OneTimePasscode')]
+        [System.String]
+        $AnonymousUserAuthenticationMethod,
+
+        [Parameter()]
         [ValidateSet('Disabled', 'Enabled', 'DisabledUserOverride')]
         [System.String]
         $AttendeeIdentityMasking,
+
+        [Parameter()]
+        [ValidateSet('AllAttendees', 'PstnOnly')]
+        [System.String]
+        $AudibleRecordingNotification,
 
         [Parameter()]
         [System.String]
@@ -1200,6 +1480,11 @@ function Test-TargetResource
         $LiveStreamingMode,
 
         [Parameter()]
+        [ValidateSet('Disabled', 'Enabled')]
+        [System.String]
+        $LobbyChat,
+
+        [Parameter()]
         [System.UInt32]
         $MediaBitRateKb,
 
@@ -1218,9 +1503,19 @@ function Test-TargetResource
         $NewMeetingRecordingExpirationDays,
 
         [Parameter()]
+        [ValidateSet('Disabled', 'Enabled', 'MicrosoftDefault')]
+        [System.String]
+        $NoiseSuppressionForDialInParticipants,
+
+        [Parameter()]
         [ValidateSet('Disabled', 'Enabled')]
         [System.String]
         $ParticipantNameChange,
+
+        [Parameter()]
+        [ValidateSet('Everyone', 'EveryoneInOrganization', 'EveryoneInOrganizationAndGuests', 'None')]
+        [System.String]
+        $ParticipantSlideControl,
 
         [Parameter()]
         [System.String]
@@ -1231,6 +1526,11 @@ function Test-TargetResource
         [ValidateSet('Disabled', 'Enabled')]
         [System.String]
         $QnAEngagementMode,
+
+        [Parameter()]
+        [ValidateSet('Disabled', 'Enabled')]
+        [System.String]
+        $RealTimeText,
 
         [Parameter()]
         [ValidateSet('Off', 'Distinguish', 'Attribute')]
@@ -1248,6 +1548,11 @@ function Test-TargetResource
         $ScreenSharingMode,
 
         [Parameter()]
+        [ValidateSet('OnAllowOrganizerOverride', 'OffAllowOrganizerOverride', 'Off')]
+        [System.String]
+        $SmsNotifications,
+
+        [Parameter()]
         [System.String]
         [ValidateSet('Disabled', 'DisabledUserOverride', 'EnabledUserOverride', 'Enabled')]
         $SpeakerAttributionMode,
@@ -1263,6 +1568,11 @@ function Test-TargetResource
         $TeamsCameraFarEndPTZMode,
 
         [Parameter()]
+        [ValidateSet('OrganizerAndCoOrganizersOnly', 'OrganizersAndPresentersOnly')]
+        [System.String]
+        $UsersCanAdmitFromLobby,
+
+        [Parameter()]
         [System.String]
         [ValidateSet('NoFilters', 'BlurOnly', 'BlurAndDefaultBackgrounds', 'AllFilters')]
         $VideoFiltersMode,
@@ -1271,6 +1581,36 @@ function Test-TargetResource
         [ValidateSet('Disabled', 'Enabled')]
         [System.String]
         $VoiceIsolation,
+
+        [Parameter()]
+        [ValidateSet('Disabled', 'Enabled')]
+        [System.String]
+        $VoiceSimulationInInterpreter,
+
+        [Parameter()]
+        [ValidateSet('JoinWithAudioOnly', 'WatermarkWithDisplayName')]
+        [System.String]
+        $WatermarkForAnonymousUsers,
+
+        [Parameter()]
+        [ValidateRange(1, 100)]
+        [System.Int64]
+        $WatermarkForCameraVideoOpacity,
+
+        [Parameter()]
+        [ValidateSet('Single', 'Tiled')]
+        [System.String]
+        $WatermarkForCameraVideoPattern,
+
+        [Parameter()]
+        [ValidateRange(1, 100)]
+        [System.Int64]
+        $WatermarkForScreenSharingOpacity,
+
+        [Parameter()]
+        [ValidateSet('Single', 'Tiled')]
+        [System.String]
+        $WatermarkForScreenSharingPattern,
 
         [Parameter()]
         [ValidateSet('Everyone', 'EveryoneInCompany')]

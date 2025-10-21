@@ -42,6 +42,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-CsTenantNetworkSubnet -MockWith {
             }
 
+            Mock -CommandName Get-CsTenantNetworkSubnet -MockWith {
+                return @{
+                    NetworkSiteID = 'FakeStringValue'
+                    Description   = 'FakeStringValue'
+                    MaskBits      = 24
+                    Identity      = 'FakeStringValue'
+                }
+            }
+
             Mock -CommandName New-M365DSCConnection -MockWith {
                 return 'Credentials'
             }
@@ -57,10 +66,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'The TeamsTenantNetworkSubnet should exist but it DOES NOT' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Description   = 'Nik Test'
-                    Identity      = '192.168.0.0'
+                    Description   = 'FakeStringValue'
+                    Identity      = 'FakeStringValue'
                     MaskBits      = 24
-                    NetworkSiteID = 'Nik'
+                    NetworkSiteID = 'FakeStringValue'
                     Ensure        = 'Present'
                     Credential    = $Credential
                 }
@@ -87,21 +96,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'The TeamsTenantNetworkSubnet exists but it SHOULD NOT' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Description   = 'Nik Test'
-                    Identity      = '192.168.0.0'
+                    Description   = 'FakeStringValue'
+                    Identity      = 'FakeStringValue'
                     MaskBits      = 24
-                    NetworkSiteID = 'Nik'
+                    NetworkSiteID = 'FakeStringValue'
                     Ensure        = 'Absent'
                     Credential    = $Credential
-                }
-
-                Mock -CommandName Get-CsTenantNetworkSubnet -MockWith {
-                    return @{
-                        NetworkSiteID = 'FakeStringValue'
-                        Description   = 'FakeStringValue'
-                        MaskBits      = 3
-                        Identity      = 'FakeStringValue'
-                    }
                 }
             }
 
@@ -122,21 +122,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'The TeamsTenantNetworkSubnet Exists and Values are already in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Description          = "Nik Test";
-                    Identity             = "192.168.0.0";
-                    MaskBits             = 24;
-                    NetworkSiteID        = "Nik";
+                    Description   = 'FakeStringValue'
+                    Identity      = 'FakeStringValue'
+                    MaskBits      = 24
+                    NetworkSiteID = 'FakeStringValue'
                     Ensure = "Present"
                     Credential = $Credential;
-                }
-
-                Mock -CommandName Get-CsTenantNetworkSubnet -MockWith {
-                    return @{
-                        NetworkSiteID = 'Nik'
-                        Description   = 'Nik Test'
-                        MaskBits      = 24
-                        Identity      = '192.168.0.0'
-                    }
                 }
             }
 
@@ -148,20 +139,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'The TeamsTenantNetworkSubnet exists and values are NOT in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Description = 'Nik Test'
-                    Identity = '192.168.0.0'
-                    MaskBits = 24
-                    NetworkSiteID = 'Nik'; Ensure = 'Present'
+                    Description   = 'FakeStringValue'
+                    Identity      = 'FakeStringValue'
+                    MaskBits      = 3 # Drift
+                    NetworkSiteID = 'FakeStringValue'
+                    Ensure = 'Present'
                     Credential = $Credential
-                }
-
-                Mock -CommandName Get-CsTenantNetworkSubnet -MockWith {
-                    return @{
-                        NetworkSiteID = 'FakeStringValueDrift #Drift'
-                        Description   = 'FakeStringValueDrift #Drift'
-                        MaskBits      = 2
-                        Identity      = 'FakeStringValue'
-                    }
                 }
             }
 
@@ -185,15 +168,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
                     Credential = $Credential
-                }
-
-                Mock -CommandName Get-CsTenantNetworkSubnet -MockWith {
-                    return @{
-                        NetworkSiteID = 'FakeStringValue'
-                        Description   = 'FakeStringValue'
-                        MaskBits      = 3
-                        Identity      = 'FakeStringValue'
-                    }
                 }
             }
 

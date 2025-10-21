@@ -40,5 +40,17 @@
   "supportedEnvironments": [
     "Global"
   ],
-  "mode": "Configuration"
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Beta.NetworkAccess",
+      "cmdlets": [
+        "Get-MgBetaNetworkAccessFilteringPolicy",
+        "Get-MgBetaNetworkAccessFilteringPolicyRule",
+        "New-MgBetaNetworkAccessFilteringPolicyRule",
+        "Remove-MgBetaNetworkAccessFilteringPolicyRule",
+        "Update-MgBetaNetworkAccessFilteringPolicyRule"
+      ]
+    }
+  ]
 }

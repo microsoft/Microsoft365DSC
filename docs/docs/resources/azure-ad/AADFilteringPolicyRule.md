@@ -95,7 +95,7 @@ Configuration Example
             );
             Ensure                = "Present";
             Name                  = "MyFQDN";
-            Policy                = "AMyPolicy";
+            Policy                = "MyPolicy";
             RuleType              = "fqdn";
             TenantId              = $TenantId;
         }
@@ -153,7 +153,7 @@ Configuration Example
             );
             Ensure                = "Present";
             Name                  = "MyFQDN";
-            Policy                = "AMyPolicy";
+            Policy                = "MyPolicy";
             RuleType              = "fqdn";
             TenantId              = $TenantId;
         }
@@ -196,7 +196,7 @@ Configuration Example
             );
             Ensure                = "Absent";
             Name                  = "MyFQDN";
-            Policy                = "AMyPolicy";
+            Policy                = "MyPolicy";
             RuleType              = "fqdn";
             TenantId              = $TenantId;
         }

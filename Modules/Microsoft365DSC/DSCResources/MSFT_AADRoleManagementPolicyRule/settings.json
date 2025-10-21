@@ -50,5 +50,21 @@
     "Global",
     "USGov"
   ],
-  "mode": "Data"
+  "mode": "Data",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Beta.Identity.Governance",
+      "cmdlets": [
+        "Get-MgBetaRoleManagementDirectoryRoleDefinition"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Beta.Identity.SignIns",
+      "cmdlets": [
+        "Get-MgBetaPolicyRoleManagementPolicyAssignment",
+        "Get-MgBetaPolicyRoleManagementPolicyRule",
+        "Update-MgBetaPolicyRoleManagementPolicyRule"
+      ]
+    }
+  ]
 }

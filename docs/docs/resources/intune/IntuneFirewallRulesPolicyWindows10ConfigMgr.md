@@ -25,7 +25,7 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **dataType** | Write | String | The type of the target assignment. | `#microsoft.graph.groupAssignmentTarget`, `#microsoft.graph.allLicensedUsersAssignmentTarget`, `#microsoft.graph.allDevicesAssignmentTarget`, `#microsoft.graph.exclusionGroupAssignmentTarget`, `#microsoft.graph.configurationManagerCollectionAssignmentTarget` |
+| **dataType** | Write | String | The type of the target assignment. | `#microsoft.graph.cloudPcManagementGroupAssignmentTarget`, `#microsoft.graph.groupAssignmentTarget`, `#microsoft.graph.allLicensedUsersAssignmentTarget`, `#microsoft.graph.allDevicesAssignmentTarget`, `#microsoft.graph.exclusionGroupAssignmentTarget`, `#microsoft.graph.configurationManagerCollectionAssignmentTarget` |
 | **deviceAndAppManagementAssignmentFilterType** | Write | String | The type of filter of the target assignment i.e. Exclude or Include. Possible values are:none, include, exclude. | `none`, `include`, `exclude` |
 | **deviceAndAppManagementAssignmentFilterId** | Write | String | The Id of the filter for the target assignment. | |
 | **deviceAndAppManagementAssignmentFilterDisplayName** | Write | String | The display name of the filter for the target assignment. | |
@@ -41,7 +41,7 @@
 | --- | --- | --- | --- | --- |
 | **Enabled** | Write | String | Enabled - Depends on FirewallRuleName (0: Disabled, 1: Enabled) | `0`, `1` |
 | **Name** | Write | String | Name - Depends on FirewallRuleName | |
-| **InterfaceTypes** | Write | StringArray[] | Interface Types - Depends on FirewallRuleName (remoteaccess: RemoteAccess, wireless: Wireless, lan: Lan, mobilebroadband: MobileBroadband, mbb: MBB, all: All) | `remoteaccess`, `wireless`, `lan`, `mobilebroadband`, `mbb`, `all` |
+| **InterfaceTypes** | Write | StringArray[] | Interface Types - Depends on FirewallRuleName (RemoteAccess, Wireless, Lan, MobileBroadband, MBB, All) | `RemoteAccess`, `Wireless`, `Lan`, `MobileBroadband`, `MBB`, `All` |
 | **FilePath** | Write | String | File Path - Depends on FirewallRuleName | |
 | **RemotePortRanges** | Write | StringArray[] | Remote Port Ranges - Depends on FirewallRuleName | |
 | **EdgeTraversal** | Write | String | Edge Traversal - Depends on FirewallRuleName (0: Disabled, 1: Enabled) | `0`, `1` |
@@ -51,7 +51,7 @@
 | **Description** | Write | String | Description - Depends on FirewallRuleName | |
 | **PackageFamilyName** | Write | String | Package Family Name - Depends on FirewallRuleName | |
 | **LocalAddressRanges** | Write | StringArray[] | Local Address Ranges - Depends on FirewallRuleName | |
-| **Direction** | Write | String | Direction - Depends on FirewallRuleName (in: The rule applies to inbound traffic., out: The rule applies to outbound traffic.) | `in`, `out` |
+| **Direction** | Write | String | Direction - Depends on FirewallRuleName (IN: The rule applies to inbound traffic., OUT: The rule applies to outbound traffic.) | `IN`, `OUT` |
 | **ServiceName** | Write | String | Service Name - Depends on FirewallRuleName | |
 | **RemoteAddressRanges** | Write | StringArray[] | Remote Address Ranges - Depends on FirewallRuleName | |
 | **Type** | Write | String | Action - Depends on FirewallRuleName (0: Block, 1: Allow) | `0`, `1` |

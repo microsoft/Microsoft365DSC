@@ -21,12 +21,12 @@ Configuration Example
     Import-DscResource -ModuleName Microsoft365DSC
     node localhost
     {
-        AADDomain "AADDomain-Contoso"
+        AADDomain "AADDomain-Mail"
         {
             ApplicationId                    = $ApplicationId;
             CertificateThumbprint            = $CertificateThumbprint;
             Ensure                           = "Absent";
-            Id                               = "contoso.com";
+            Id                               = "M365x73318397.mail.onmicrosoft.com";
             TenantId                         = $TenantId;
         }
     }

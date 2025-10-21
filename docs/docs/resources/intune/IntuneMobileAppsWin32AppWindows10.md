@@ -91,7 +91,7 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **odataType** | Write | String | The odata type of the assignment type. | `#microsoft.graph.win32LobAppAssignmentSettings`, `#microsoft.graph.winGetAppAssignmentSettings`, `#microsoft.graph.windowsUniversalAppXAppAssignmentSettings` |
+| **odataType** | Required | String | The odata type of the assignment type. | `#microsoft.graph.iosStoreAppAssignmentSettings`, `#microsoft.graph.win32LobAppAssignmentSettings`, `#microsoft.graph.winGetAppAssignmentSettings`, `#microsoft.graph.windowsUniversalAppXAppAssignmentSettings` |
 
 ### MSFT_DeviceManagementWin32MobileAppAssignmentSettings
 
@@ -99,7 +99,7 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **odataType** | Write | String | The odata type of the assignment type. | `#microsoft.graph.win32LobAppAssignmentSettings`, `#microsoft.graph.winGetAppAssignmentSettings`, `#microsoft.graph.windowsUniversalAppXAppAssignmentSettings` |
+| **odataType** | Required | String | The odata type of the assignment type. | `#microsoft.graph.iosStoreAppAssignmentSettings`, `#microsoft.graph.win32LobAppAssignmentSettings`, `#microsoft.graph.winGetAppAssignmentSettings`, `#microsoft.graph.windowsUniversalAppXAppAssignmentSettings` |
 | **autoUpdateSettings** | Write | MSFT_DeviceManagementWin32MobileAppAssignmentSettingsAutoUpdateSettings | The auto-update settings to apply for this app assignment. | |
 | **deliveryOptimizationPriority** | Write | String | The delivery optimization priority for this app assignment. This setting is not supported in National Cloud environments. Possible values are: notConfigured, foreground. | `foreground`, `notConfigured` |
 | **installTimeSettings** | Write | MSFT_DeviceManagementWin32MobileAppAssignmentSettingsInstallTimeSettings | The install time settings to apply for this app assignment. | |
