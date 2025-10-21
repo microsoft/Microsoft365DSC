@@ -133,7 +133,7 @@ function Get-TargetResource
             $myEnterpriseCloudResources = [ordered]@{}
             $myEnterpriseCloudResources.Add('IpAddressOrFQDN', $currentEnterpriseCloudResources.ipAddressOrFQDN)
             $myEnterpriseCloudResources.Add('Proxy', $currentEnterpriseCloudResources.proxy)
-            if ($myEnterpriseCloudResources.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myEnterpriseCloudResources.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexEnterpriseCloudResources += $myEnterpriseCloudResources
             }
@@ -151,7 +151,7 @@ function Get-TargetResource
             {
                 $myEnterpriseIPRanges.Add('odataType', $currentEnterpriseIPRanges.'@odata.type'.ToString())
             }
-            if ($myEnterpriseIPRanges.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myEnterpriseIPRanges.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexEnterpriseIPRanges += $myEnterpriseIPRanges
             }
@@ -162,7 +162,7 @@ function Get-TargetResource
         $complexWindowsNetworkIsolationPolicy.Add('EnterpriseProxyServers', $getValue.AdditionalProperties.windowsNetworkIsolationPolicy.enterpriseProxyServers)
         $complexWindowsNetworkIsolationPolicy.Add('EnterpriseProxyServersAreAuthoritative', $getValue.AdditionalProperties.windowsNetworkIsolationPolicy.enterpriseProxyServersAreAuthoritative)
         $complexWindowsNetworkIsolationPolicy.Add('NeutralDomainResources', $getValue.AdditionalProperties.windowsNetworkIsolationPolicy.neutralDomainResources)
-        if ($complexWindowsNetworkIsolationPolicy.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexWindowsNetworkIsolationPolicy.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexWindowsNetworkIsolationPolicy = $null
         }
@@ -287,21 +287,21 @@ function Set-TargetResource
     #endregion
 
     $currentInstance = Get-TargetResource @PSBoundParameters
-    $PSBoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+    $boundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating an Intune Device Configuration Network Boundary Policy for Windows10 with DisplayName {$DisplayName}"
-        $PSBoundParameters.Remove('Assignments') | Out-Null
+        $boundParameters.Remove('Assignments') | Out-Null
 
-        $CreateParameters = ([Hashtable]$PSBoundParameters).Clone()
+        $CreateParameters = ([Hashtable]$boundParameters).Clone()
         $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
         $CreateParameters.Remove('Id') | Out-Null
 
         $keys = (([Hashtable]$CreateParameters).Clone()).Keys
         foreach ($key in $keys)
         {
-            if ($null -ne $CreateParameters.$key -and $CreateParameters.$key.getType().Name -like '*cimInstance*')
+            if ($null -ne $CreateParameters.$key -and $CreateParameters.$key.GetType().Name -like '*cimInstance*')
             {
                 $CreateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters.$key
             }
@@ -322,9 +322,9 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating the Intune Device Configuration Network Boundary Policy for Windows10 with Id {$($currentInstance.Id)}"
-        $PSBoundParameters.Remove('Assignments') | Out-Null
+        $boundParameters.Remove('Assignments') | Out-Null
 
-        $UpdateParameters = ([Hashtable]$PSBoundParameters).Clone()
+        $UpdateParameters = ([Hashtable]$boundParameters).Clone()
         $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
 
         $UpdateParameters.Remove('Id') | Out-Null
@@ -332,7 +332,7 @@ function Set-TargetResource
         $keys = (([Hashtable]$UpdateParameters).Clone()).Keys
         foreach ($key in $keys)
         {
-            if ($null -ne $UpdateParameters.$key -and $UpdateParameters.$key.getType().Name -like '*cimInstance*')
+            if ($null -ne $UpdateParameters.$key -and $UpdateParameters.$key.GetType().Name -like '*cimInstance*')
             {
                 $UpdateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters.$key
             }

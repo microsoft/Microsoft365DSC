@@ -68,6 +68,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $AllowCreatePrivateChannels,
+
+        [Parameter()]
+        [System.Boolean]
         $AllowCreateUpdateRemoveConnectors,
 
         [Parameter()]
@@ -215,6 +219,7 @@ function Get-TargetResource
             AllowUserEditMessages             = $team.AllowUserEditMessages
             AllowUserDeleteMessages           = $team.AllowUserDeleteMessages
             AllowOwnerDeleteMessages          = $team.AllowOwnerDeleteMessages
+            AllowCreatePrivateChannels        = $team.AllowCreatePrivateChannels
             AllowCreateUpdateRemoveConnectors = $team.AllowCreateUpdateRemoveConnectors
             AllowCreateUpdateRemoveTabs       = $team.AllowCreateUpdateRemoveTabs
             AllowTeamMentions                 = $team.AllowTeamMentions
@@ -317,6 +322,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowOwnerDeleteMessages,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCreatePrivateChannels,
 
         [Parameter()]
         [System.Boolean]
@@ -561,6 +570,10 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $AllowCreatePrivateChannels,
+
+        [Parameter()]
+        [System.Boolean]
         $AllowCreateUpdateRemoveConnectors,
 
         [Parameter()]
@@ -687,15 +700,6 @@ function Export-TargetResource
 
     try
     {
-        if ($ConnectionMode.StartsWith('ServicePrincipal'))
-        {
-            $organization = Get-M365DSCTenantDomain -ApplicationId $ApplicationId -TenantId $TenantId -CertificateThumbprint $CertificateThumbprint
-        }
-        else
-        {
-            $organization = $Credential.UserName.Split('@')[1]
-        }
-
         $teams = Get-Team | Sort-Object -Property GroupId
         $i = 1
         $dscContent = ''

@@ -43,5 +43,17 @@
     "Global",
     "USGov"
   ],
-  "mode": "Configuration"
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Beta.Identity.SignIns",
+      "cmdlets": [
+        "Get-MgBetaPolicyAuthenticationStrengthPolicy",
+        "New-MgBetaPolicyAuthenticationStrengthPolicy",
+        "Remove-MgBetaPolicyAuthenticationStrengthPolicy",
+        "Update-MgBetaPolicyAuthenticationStrengthPolicy",
+        "Update-MgBetaPolicyAuthenticationStrengthPolicyAllowedCombination"
+      ]
+    }
+  ]
 }

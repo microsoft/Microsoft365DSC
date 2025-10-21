@@ -182,7 +182,7 @@ function Get-TargetResource
                         Write-Verbose -Message "Could not find an Intune Device Configuration Delivery Optimization Policy for Windows10 with DisplayName {$DisplayName}"
                         return $nullResult
                     }
-                    if (([array]$getValue).count -gt 1)
+                    if (([array]$getValue).Count -gt 1)
                     {
                         throw "A policy with a duplicated displayName {'$DisplayName'} was found - Ensure displayName is unique"
                     }
@@ -207,7 +207,7 @@ function Get-TargetResource
         $complexBandwidthBackgroundPercentageHours.Add('BandwidthEndBusinessHours', $getValue.AdditionalProperties.bandwidthMode.bandwidthBackgroundPercentageHours.bandwidthEndBusinessHours)
         $complexBandwidthBackgroundPercentageHours.Add('BandwidthPercentageDuringBusinessHours', $getValue.AdditionalProperties.bandwidthMode.bandwidthBackgroundPercentageHours.bandwidthPercentageDuringBusinessHours)
         $complexBandwidthBackgroundPercentageHours.Add('BandwidthPercentageOutsideBusinessHours', $getValue.AdditionalProperties.bandwidthMode.bandwidthBackgroundPercentageHours.bandwidthPercentageOutsideBusinessHours)
-        if ($complexBandwidthBackgroundPercentageHours.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexBandwidthBackgroundPercentageHours.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexBandwidthBackgroundPercentageHours = $null
         }
@@ -217,7 +217,7 @@ function Get-TargetResource
         $complexBandwidthForegroundPercentageHours.Add('BandwidthEndBusinessHours', $getValue.AdditionalProperties.bandwidthMode.bandwidthForegroundPercentageHours.bandwidthEndBusinessHours)
         $complexBandwidthForegroundPercentageHours.Add('BandwidthPercentageDuringBusinessHours', $getValue.AdditionalProperties.bandwidthMode.bandwidthForegroundPercentageHours.bandwidthPercentageDuringBusinessHours)
         $complexBandwidthForegroundPercentageHours.Add('BandwidthPercentageOutsideBusinessHours', $getValue.AdditionalProperties.bandwidthMode.bandwidthForegroundPercentageHours.bandwidthPercentageOutsideBusinessHours)
-        if ($complexBandwidthForegroundPercentageHours.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexBandwidthForegroundPercentageHours.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexBandwidthForegroundPercentageHours = $null
         }
@@ -228,7 +228,7 @@ function Get-TargetResource
         {
             $complexBandwidthMode.Add('odataType', $getValue.AdditionalProperties.bandwidthMode.'@odata.type'.ToString())
         }
-        if ($complexBandwidthMode.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexBandwidthMode.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexBandwidthMode = $null
         }
@@ -243,7 +243,7 @@ function Get-TargetResource
         {
             $complexGroupIdSource.Add('odataType', $getValue.AdditionalProperties.groupIdSource.'@odata.type'.ToString())
         }
-        if ($complexGroupIdSource.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexGroupIdSource.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexGroupIdSource = $null
         }
@@ -255,7 +255,7 @@ function Get-TargetResource
         {
             $complexMaximumCacheSize.Add('odataType', $getValue.AdditionalProperties.maximumCacheSize.'@odata.type'.ToString())
         }
-        if ($complexMaximumCacheSize.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexMaximumCacheSize.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexMaximumCacheSize = $null
         }
@@ -318,7 +318,7 @@ function Get-TargetResource
         }
         $returnAssignments = @()
         $graphAssignments = Get-MgBetaDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId $Id
-        if ($graphAssignments.count -gt 0)
+        if ($graphAssignments.Count -gt 0)
         {
             $returnAssignments += ConvertFrom-IntunePolicyAssignment `
                 -IncludeDeviceFilter:$true `
@@ -499,7 +499,7 @@ function Set-TargetResource
         $keys = (([Hashtable]$CreateParameters).Clone()).Keys
         foreach ($key in $keys)
         {
-            if ($null -ne $CreateParameters.$key -and $CreateParameters.$key.getType().Name -like '*cimInstance*')
+            if ($null -ne $CreateParameters.$key -and $CreateParameters.$key.GetType().Name -like '*cimInstance*')
             {
                 $CreateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters.$key
             }
@@ -530,7 +530,7 @@ function Set-TargetResource
         $keys = (([Hashtable]$UpdateParameters).Clone()).Keys
         foreach ($key in $keys)
         {
-            if ($null -ne $UpdateParameters.$key -and $UpdateParameters.$key.getType().Name -like '*cimInstance*')
+            if ($null -ne $UpdateParameters.$key -and $UpdateParameters.$key.GetType().Name -like '*cimInstance*')
             {
                 $UpdateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters.$key
             }

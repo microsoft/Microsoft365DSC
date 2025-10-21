@@ -53,5 +53,46 @@
     "Global",
     "USGov"
   ],
-  "mode": "Data"
+  "mode": "Data",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Applications",
+      "cmdlets": [
+        "Get-MgApplication",
+        "Get-MgServicePrincipal",
+        "New-MgApplication",
+        "New-MgApplicationOwnerByRef",
+        "Remove-MgApplication",
+        "Remove-MgApplicationOwnerDirectoryObjectByRef",
+        "Update-MgApplication"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Authentication",
+      "cmdlets": [
+        "Invoke-MgGraphRequest"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Beta.Applications",
+      "cmdlets": [
+        "Get-MgBetaApplication",
+        "Invoke-MgBetaInstantiateApplicationTemplate",
+        "Update-MgBetaApplication"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Beta.Identity.DirectoryManagement",
+      "cmdlets": [
+        "Get-MgBetaDirectoryDeletedItemAsApplication",
+        "Restore-MgBetaDirectoryDeletedItem"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Users",
+      "cmdlets": [
+        "Get-MgUser"
+      ]
+    }
+  ]
 }

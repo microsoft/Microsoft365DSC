@@ -107,7 +107,6 @@ Configuration Example
             GroupTypes      = @("Unified")
             MailNickname    = "M365DSC"
             Members         = @("admin@$TenantId", "AdeleV@$TenantId")
-            GroupAsMembers  = @("Group1", "Group2")
             Visibility      = "Private"
             Owners          = @("admin@$TenantId", "AdeleV@$TenantId")
             Ensure          = "Present"
@@ -152,7 +151,6 @@ Configuration Example
             GroupTypes       = @("Unified")
             MailNickname     = "M365DSC"
             Members          = @("AdeleV@$TenantId")
-            GroupAsMembers   = @("Group1")
             Visibility       = "Private"
             Owners           = @("admin@$TenantId", "AdeleV@$TenantId")
             AssignedLicenses = @(

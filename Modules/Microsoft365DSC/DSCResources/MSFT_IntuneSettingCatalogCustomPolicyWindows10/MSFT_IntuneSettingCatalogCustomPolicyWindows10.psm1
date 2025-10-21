@@ -152,7 +152,7 @@ function Get-TargetResource
             $complexValue = get-SettingValue -SettingValue $rawValue -SettingValueType $currentSettings.settingInstance.AdditionalProperties.'@odata.type'
             $complexSettingInstance.Add($valueName, $complexValue)
             $mySettings.Add('SettingInstance', $complexSettingInstance)
-            if ($mySettings.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($mySettings.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexSettings += $mySettings
             }

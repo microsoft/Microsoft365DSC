@@ -374,7 +374,6 @@ function Set-TargetResource
     # UPDATE
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Updating custom authentication extension {$DisplayName}"
         $params.Add('CustomAuthenticationExtensionId', $currentInstance.Id)
         $params.Remove('Id') | Out-Null
 
@@ -390,8 +389,8 @@ function Set-TargetResource
             $params['AdditionalProperties']['claimsForTokenConfiguration'] += $c
         }
 
-        Write-Verbose -Message "{$params['@odata.type']}"
-        Update-MgBetaIdentityCustomAuthenticationExtension -CustomAuthenticationExtensionId $Id -BodyParameter $params
+        Write-Verbose -Message "Updating custom authentication extension {$DisplayName} with:`r`n$(ConvertTo-Json $params -Depth 10)"
+        Update-MgBetaIdentityCustomAuthenticationExtension -CustomAuthenticationExtensionId $currentInstance.Id -BodyParameter $params
     }
     # REMOVE
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')

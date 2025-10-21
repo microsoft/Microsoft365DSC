@@ -80,13 +80,13 @@ Configuration Example
     Import-DscResource -ModuleName Microsoft365DSC
     node localhost
     {
-        AADDomain "AADDomain-Contoso"
+        AADDomain "AADDomain-Mail"
         {
             ApplicationId                    = $ApplicationId;
             AuthenticationType               = "Managed";
             CertificateThumbprint            = $CertificateThumbprint;
             Ensure                           = "Present";
-            Id                               = "contoso.com";
+            Id                               = "M365x73318397.mail.onmicrosoft.com";
             IsAdminManaged                   = $True;
             IsDefault                        = $True;
             IsRoot                           = $True;
@@ -123,13 +123,13 @@ Configuration Example
     Import-DscResource -ModuleName Microsoft365DSC
     node localhost
     {
-        AADDomain "AADDomain-Contoso"
+        AADDomain "AADDomain-Mail"
         {
             ApplicationId                    = $ApplicationId;
             AuthenticationType               = "Managed";
             CertificateThumbprint            = $CertificateThumbprint;
             Ensure                           = "Present";
-            Id                               = "contoso.com";
+            Id                               = "M365x73318397.mail.onmicrosoft.com";
             IsAdminManaged                   = $True;
             IsDefault                        = $True;
             IsRoot                           = $True;
@@ -166,12 +166,12 @@ Configuration Example
     Import-DscResource -ModuleName Microsoft365DSC
     node localhost
     {
-        AADDomain "AADDomain-Contoso"
+        AADDomain "AADDomain-Mail"
         {
             ApplicationId                    = $ApplicationId;
             CertificateThumbprint            = $CertificateThumbprint;
             Ensure                           = "Absent";
-            Id                               = "contoso.com";
+            Id                               = "M365x73318397.mail.onmicrosoft.com";
             TenantId                         = $TenantId;
         }
     }

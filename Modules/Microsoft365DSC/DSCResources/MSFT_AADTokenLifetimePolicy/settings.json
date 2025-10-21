@@ -43,5 +43,16 @@
     "Global",
     "USGov"
   ],
-  "mode": "Configuration"
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Beta.Identity.SignIns",
+      "cmdlets": [
+        "Get-MgBetaPolicyTokenLifetimePolicy",
+        "New-MgBetaPolicyTokenLifetimePolicy",
+        "Remove-MgBetaPolicyTokenLifetimePolicy",
+        "Update-MgBetaPolicyTokenLifetimePolicy"
+      ]
+    }
+  ]
 }

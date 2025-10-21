@@ -265,7 +265,7 @@ function Set-TargetResource
     {
         $CreateParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
         $CreateParameters.Remove('Verbose') | Out-Null
-        Write-Verbose -Message "Creating {$Identity} with Parameters:`r`n$(Convert-M365DscHashtableToString -Hashtable $CreateParameters)"
+        Write-Verbose -Message "Creating a Teams App Permission Policy with Identity {$Identity}"
 
         $CreateParameters.GlobalCatalogApps = $GlobalCatalogAppsValue
         $CreateParameters.PrivateCatalogApps = $PrivateCatalogAppsValue
@@ -277,7 +277,7 @@ function Set-TargetResource
     {
         $UpdateParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
         $UpdateParameters.Remove('Verbose') | Out-Null
-        Write-Verbose -Message "Updating {$Identity}"
+        Write-Verbose -Message "Updating the Teams App Permission Policy with Identity {$Identity}"
 
         $UpdateParameters.GlobalCatalogApps = $GlobalCatalogAppsValue
         $UpdateParameters.PrivateCatalogApps = $PrivateCatalogAppsValue
@@ -287,7 +287,7 @@ function Set-TargetResource
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing {$Identity}"
+        Write-Verbose -Message "Removing the Teams App Permission Policy with Identity {$Identity}"
         Remove-CsTeamsAppPermissionPolicy -Identity $currentInstance.Identity
     }
 }

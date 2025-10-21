@@ -1,4 +1,4 @@
-[ClassVersion("1.0.0.0"), FriendlyName("TeamsMeetingConfiguration")]
+[ClassVersion("1.0.0.1"), FriendlyName("TeamsMeetingConfiguration")]
 class MSFT_TeamsMeetingConfiguration : OMI_BaseResource
 {
     [Key, Description("The only valid input is Global - the tenant wide configuration"), ValueMap{"Global"}, Values{"Global"}] string Identity;
@@ -7,7 +7,10 @@ class MSFT_TeamsMeetingConfiguration : OMI_BaseResource
     [Write, Description("URL to a website where users can obtain assistance on joining the meeting.This would be included in the meeting invite. Please ensure this URL is publicly accessible for invites that go beyond your federation boundaries.")] String HelpURL;
     [Write, Description("Text to be used on custom meeting invitations.")] String CustomFooterText;
     [Write, Description("Determines whether anonymous users are blocked from joining meetings in the tenant. Set this to TRUE to block anonymous users from joining. Set this to FALSE to allow anonymous users to join meetings.")] Boolean DisableAnonymousJoin;
+    [Write, Description("Determines if anonymous users can interact with apps in meetings. Set to TRUE to disable App interaction. ")] Boolean DisableAppInteractionForAnonymousUsers;
     [Write, Description("Determines whether Quality of Service Marking for real-time media (audio, video, screen/app sharing) is enabled in the tenant. Set this to TRUE to enable and FALSE to disable.")] Boolean EnableQoS;
+    [Write, Description("Determines if anonymous participants receive surveys to provide feedback about their meeting experience. Set to Disabled to disable anonymous meeting participants to receive surveys. Set to Enabled to allow anonymous meeting participants to receive surveys. Possible values: Enabled, Disabled"), ValueMap{"Disabled","Enabled"}, Values{"Disabled","Enabled"}] String FeedbackSurveyForAnonymousUsers;
+    [Write, Description("When set to True, users within the Tenant will have their presenter role capabilities limited. When set to False, the presenter role capabilities will not be impacted and will remain as is.")] Boolean LimitPresenterRolePermissions;
     [Write, Description("Determines the starting port number for client audio. Minimum allowed value: 1024 Maximum allowed value: 65535 Default value: 50000.")] UInt32 ClientAudioPort;
     [Write, Description("Determines the total number of ports available for client audio. Default value is 20.")] UInt32 ClientAudioPortRange;
     [Write, Description("Determines the starting port number for client video. Minimum allowed value: 1024 Maximum allowed value: 65535 Default value: 50020.")] UInt32 ClientVideoPort;

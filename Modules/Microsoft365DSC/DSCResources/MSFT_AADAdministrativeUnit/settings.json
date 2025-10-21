@@ -85,5 +85,44 @@
     "Global",
     "USGov"
   ],
-  "mode": "Configuration"
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Applications",
+      "cmdlets": [
+        "Get-MgServicePrincipal"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Groups",
+      "cmdlets": [
+        "Get-MgGroup"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Identity.DirectoryManagement",
+      "cmdlets": [
+        "Get-MgDevice",
+        "Get-MgDirectoryAdministrativeUnit",
+        "Get-MgDirectoryAdministrativeUnitMember",
+        "Get-MgDirectoryAdministrativeUnitScopedRoleMember",
+        "Get-MgDirectoryRole",
+        "Get-MgDirectoryRoleTemplate",
+        "New-MgDirectoryAdministrativeUnit",
+        "New-MgDirectoryAdministrativeUnitMemberByRef",
+        "New-MgDirectoryAdministrativeUnitScopedRoleMember",
+        "New-MgDirectoryRole",
+        "Remove-MgDirectoryAdministrativeUnit",
+        "Remove-MgDirectoryAdministrativeUnitMemberDirectoryObjectByRef",
+        "Remove-MgDirectoryAdministrativeUnitScopedRoleMember",
+        "Update-MgDirectoryAdministrativeUnit"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Users",
+      "cmdlets": [
+        "Get-MgUser"
+      ]
+    }
+  ]
 }

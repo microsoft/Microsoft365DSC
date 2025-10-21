@@ -37,6 +37,20 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return 'Credentials'
             }
 
+            Mock -CommandName Get-CsTeamsCallingPolicy -MockWith {
+                return @{
+                    Identity                   = 'Test Calling Policy'
+                    AllowPrivateCalling        = $false
+                    AllowVoicemail             = 'UserOverride'
+                    AllowCallGroups            = $true
+                    AllowDelegation            = $true
+                    AllowCallForwardingToUser  = $false
+                    AllowCallForwardingToPhone = $true
+                    PreventTollBypass          = $true
+                    BusyOnBusyEnabledType      = 'Enabled'
+                }
+            }
+
             Mock -CommandName New-CsTeamsCallingPolicy -MockWith {
             }
 
@@ -100,23 +114,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowCallForwardingToUser  = $false
                     AllowCallForwardingToPhone = $true
                     PreventTollBypass          = $true
-                    BusyOnBusyEnabledType      = 'Enabled'
+                    BusyOnBusyEnabledType      = 'Disabled' # Drift
                     Ensure                     = 'Present'
                     Credential                 = $Credential
-                }
-
-                Mock -CommandName Get-CsTeamsCallingPolicy -MockWith {
-                    return @{
-                        Identity                   = 'Test Calling Policy'
-                        AllowPrivateCalling        = $false
-                        AllowVoicemail             = 'UserOverride'
-                        AllowCallGroups            = $true
-                        AllowDelegation            = $true
-                        AllowCallForwardingToUser  = $false
-                        AllowCallForwardingToPhone = $true
-                        PreventTollBypass          = $true
-                        BusyOnBusyEnabledType      = 'Disabled'
-                    }
                 }
             }
 

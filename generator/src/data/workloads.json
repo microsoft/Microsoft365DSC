@@ -4,7 +4,39 @@
     "title": "Azure AD",
     "iconName": "AADLogo",
     "extractionModes": {
-      "full": ["AADGroup", "AADServicePrincipal", "AADUser"]
+      "full": []
+    }
+  },
+  {
+    "id": "ADO",
+    "title": "Azure DevOps",
+    "iconName": "AzureLogo",
+    "extractionModes": {
+      "full": []
+    }
+  },
+  {
+    "id": "Azure",
+    "title": "Azure",
+    "iconName": "AzureLogo",
+    "extractionModes": {
+      "full": []
+    }
+  },
+  {
+    "id": "Commerce",
+    "title": "Commerce",
+    "iconName": "CommerceLogo",
+    "extractionModes": {
+      "full": []
+    }
+  },
+  {
+    "id": "Defender",
+    "title": "Microsoft Defender",
+    "iconName": "ATPLogo",
+    "extractionModes": {
+      "full": []
     }
   },
   {
@@ -12,33 +44,47 @@
     "title": "Exchange",
     "iconName": "ExchangeLogo",
     "extractionModes": {
-      "full": ["EXOMailboxSettings", "EXOManagementRole"]
+      "full": []
+    }
+  },
+  {
+    "id": "Fabric",
+    "title": "Microsoft Fabric",
+    "iconName": "FabricLogo",
+    "extractionModes": {
+      "full": []
     }
   },
   {
     "id": "Intune",
     "title": "Intune",
-    "iconName": "Devices2"
+    "iconName": "Devices2",
+    "extractionModes": {
+      "full": []
+    }
   },
   {
     "id": "O365",
     "title": "Office 365",
     "iconName": "OfficeLogo",
     "extractionModes": {
-      "full": ["O365Group"]
+      "full": []
     }
   },
   {
     "id": "OD",
     "title": "OneDrive",
-    "iconName": "OneDriveLogo"
+    "iconName": "OneDriveLogo",
+    "extractionModes": {
+      "full": []
+    }
   },
   {
     "id": "Planner",
     "title": "Planner",
     "iconName": "PlannerLogo",
     "extractionModes": {
-      "full": ["PlannerPlan", "PlannerBucket", "PlannerTask"]
+      "full": []
     }
   },
   {
@@ -46,21 +92,39 @@
     "title": "Power Platform",
     "iconName": "PowerAppsLogo",
     "extractionModes": {
-      "full": ["PPPowerAppsEnvironment"]
+      "full": []
     }
   },
   {
     "id": "SC",
     "title": "Security & Compliance",
-    "iconName": "Encryption"
+    "iconName": "Encryption",
+    "extractionModes": {
+      "full": []
+    }
+  },
+  {
+    "id": "Sentinel",
+    "title": "Microsoft Sentinel",
+    "iconName": "SentinelLogo",
+    "extractionModes": {
+      "full": []
+    }
+  },
+  {
+    "id": "SH",
+    "title": "Spaces Hub",
+    "iconName": "SpacesHubLogo",
+    "extractionModes": {
+      "full": []
+    }
   },
   {
     "id": "SPO",
     "title": "SharePoint",
     "iconName": "SharepointLogo",
     "extractionModes": {
-      "default": ["SPOApp", "SPOSiteDesign"],
-      "full": ["SPOSiteAuditSettings", "SPOSiteGroup", "SPOSite", "SPOUserProfileProperty", "SPOPropertyBag"]
+      "full": []
     }
   },
   {
@@ -68,7 +132,7 @@
     "title": "Teams",
     "iconName": "TeamsLogo",
     "extractionModes": {
-      "full": ["TeamsTeam", "TeamsUser", "TeamsChannelTab"]
+      "full": []
     }
   }
 ]

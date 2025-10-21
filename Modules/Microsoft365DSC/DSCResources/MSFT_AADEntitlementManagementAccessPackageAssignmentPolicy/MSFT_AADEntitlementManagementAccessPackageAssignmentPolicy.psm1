@@ -145,25 +145,25 @@ function Get-TargetResource
             $formattedAccessReviewSettings = $null
         }
 
-        if ($null -ne $formattedAccessReviewSettings.Reviewers -and $formattedAccessReviewSettings.Reviewers.count -gt 0 )
+        if ($null -ne $formattedAccessReviewSettings.Reviewers -and $formattedAccessReviewSettings.Reviewers.Count -gt 0 )
         {
             foreach ($setting in $formattedAccessReviewSettings.Reviewers)
             {
-                $setting.add('odataType', $setting.AdditionalProperties.'@odata.type')
+                $setting.Add('odataType', $setting.AdditionalProperties.'@odata.type')
                 if (-not [String]::isNullOrEmpty($setting.AdditionalProperties.id))
                 {
                     $user = Get-MgUser -UserId $setting.AdditionalProperties.id -ErrorAction SilentlyContinue
 
                     if ($null -ne $user)
                     {
-                        $setting.add('Id', $user.UserPrincipalName)
+                        $setting.Add('Id', $user.UserPrincipalName)
                     }
                 }
                 if (-not [String]::isNullOrEmpty($setting.AdditionalProperties.managerLevel))
                 {
-                    $setting.add('ManagerLevel', $setting.AdditionalProperties.managerLevel)
+                    $setting.Add('ManagerLevel', $setting.AdditionalProperties.managerLevel)
                 }
-                $setting.remove('AdditionalProperties') | Out-Null
+                $setting.Remove('AdditionalProperties') | Out-Null
             }
         }
         #endregion
@@ -172,54 +172,54 @@ function Get-TargetResource
         $formattedRequestApprovalSettings = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $getValue.RequestApprovalSettings
         if ($null -ne $formattedRequestApprovalSettings)
         {
-            $formattedRequestApprovalSettings.remove('additionalProperties') | Out-Null
+            $formattedRequestApprovalSettings.Remove('additionalProperties') | Out-Null
         }
-        if ($null -ne $formattedRequestApprovalSettings.approvalStages -and $formattedRequestApprovalSettings.approvalStages.count -gt 0 )
+        if ($null -ne $formattedRequestApprovalSettings.approvalStages -and $formattedRequestApprovalSettings.approvalStages.Count -gt 0 )
         {
             foreach ($approvalStage in $formattedRequestApprovalSettings.approvalStages)
             {
-                if ($null -ne $approvalStage.PrimaryApprovers -and $approvalStage.PrimaryApprovers.count -gt 0)
+                if ($null -ne $approvalStage.PrimaryApprovers -and $approvalStage.PrimaryApprovers.Count -gt 0)
                 {
                     foreach ($setting in $approvalStage.PrimaryApprovers)
                     {
-                        $setting.add('odataType', $setting.AdditionalProperties.'@odata.type')
+                        $setting.Add('odataType', $setting.AdditionalProperties.'@odata.type')
                         if (-not [String]::isNullOrEmpty($setting.AdditionalProperties.id))
                         {
                             $user = Get-MgUser -UserId $setting.AdditionalProperties.id -ErrorAction SilentlyContinue
                             if ($null -ne $user)
                             {
-                                $setting.add('Id', $user.UserPrincipalName)
+                                $setting.Add('Id', $user.UserPrincipalName)
                             }
                         }
                         if (-not [String]::isNullOrEmpty($setting.AdditionalProperties.managerLevel))
                         {
-                            $setting.add('ManagerLevel', $setting.AdditionalProperties.managerLevel)
+                            $setting.Add('ManagerLevel', $setting.AdditionalProperties.managerLevel)
                         }
-                        $setting.remove('additionalProperties') | Out-Null
+                        $setting.Remove('additionalProperties') | Out-Null
                     }
                 }
 
-                if ($null -ne $approvalStage.EscalationApprovers -and $approvalStage.EscalationApprovers.count -gt 0)
+                if ($null -ne $approvalStage.EscalationApprovers -and $approvalStage.EscalationApprovers.Count -gt 0)
                 {
                     foreach ($setting in $approvalStage.EscalationApprovers)
                     {
-                        $setting.add('odataType', $setting.AdditionalProperties.'@odata.type')
+                        $setting.Add('odataType', $setting.AdditionalProperties.'@odata.type')
                         if (-not [String]::isNullOrEmpty($setting.AdditionalProperties.id))
                         {
                             $user = Get-MgUser -UserId $setting.AdditionalProperties.id -ErrorAction SilentlyContinue
                             if ($null -ne $user)
                             {
-                                $setting.add('Id', $user.UserPrincipalName)
+                                $setting.Add('Id', $user.UserPrincipalName)
                             }
                         }
                         if (-not [String]::isNullOrEmpty($setting.AdditionalProperties.managerLevel))
                         {
-                            $setting.add('ManagerLevel', $setting.AdditionalProperties.managerLevel)
+                            $setting.Add('ManagerLevel', $setting.AdditionalProperties.managerLevel)
                         }
-                        $setting.remove('additionalProperties') | Out-Null
+                        $setting.Remove('additionalProperties') | Out-Null
                     }
                 }
-                $approvalStage.remove('additionalProperties') | Out-Null
+                $approvalStage.Remove('additionalProperties') | Out-Null
             }
         }
         #endregion
@@ -228,15 +228,15 @@ function Get-TargetResource
         $formattedRequestorSettings = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $getValue.RequestorSettings
         if ($null -ne $formattedRequestorSettings)
         {
-            $formattedRequestorSettings.remove('additionalProperties') | Out-Null
+            $formattedRequestorSettings.Remove('additionalProperties') | Out-Null
         }
-        if ($null -ne $formattedRequestorSettings.allowedRequestors -and $formattedRequestorSettings.allowedRequestors.count -gt 0 )
+        if ($null -ne $formattedRequestorSettings.allowedRequestors -and $formattedRequestorSettings.allowedRequestors.Count -gt 0 )
         {
             foreach ($setting in $formattedRequestorSettings.allowedRequestors)
             {
                 if (-not $setting.ContainsKey('odataType'))
                 {
-                    $setting.add('odataType', $setting.AdditionalProperties.'@odata.type')
+                    $setting.Add('odataType', $setting.AdditionalProperties.'@odata.type')
                 }
                 if (-not [String]::isNullOrEmpty($setting.AdditionalProperties.id))
                 {
@@ -249,12 +249,12 @@ function Get-TargetResource
                         $user = Get-MgUser -UserId $setting.AdditionalProperties.id -ErrorAction SilentlyContinue
                         if ($null -ne $user)
                         {
-                            $setting.add('Id', $user.UserPrincipalName)
+                            $setting.Add('Id', $user.UserPrincipalName)
                         }
                         else
                         {
                             # If user not found, keep the original ID (could be UPN already)
-                            $setting.add('Id', $setting.AdditionalProperties.id)
+                            $setting.Add('Id', $setting.AdditionalProperties.id)
                         }
                     }
                     elseif ($odataType -eq '#microsoft.graph.groupMembers')
@@ -263,25 +263,25 @@ function Get-TargetResource
                         $group = Get-MgGroup -GroupId $setting.AdditionalProperties.id -ErrorAction SilentlyContinue
                         if ($null -ne $group)
                         {
-                            $setting.add('Id', $group.DisplayName)
+                            $setting.Add('Id', $group.DisplayName)
                         }
                         else
                         {
                             # If group not found, keep the GUID
-                            $setting.add('Id', $setting.AdditionalProperties.id)
+                            $setting.Add('Id', $setting.AdditionalProperties.id)
                         }
                     }
                     else
                     {
                         # For other types (requestorManager, etc.), keep the original ID
-                        $setting.add('Id', $setting.AdditionalProperties.id)
+                        $setting.Add('Id', $setting.AdditionalProperties.id)
                     }
                 }
                 if (-not [String]::isNullOrEmpty($setting.AdditionalProperties.managerLevel))
                 {
-                    $setting.add('ManagerLevel', $setting.AdditionalProperties.managerLevel)
+                    $setting.Add('ManagerLevel', $setting.AdditionalProperties.managerLevel)
                 }
-                $setting.remove('additionalProperties') | Out-Null
+                $setting.Remove('additionalProperties') | Out-Null
             }
         }
         #endregion
@@ -292,31 +292,31 @@ function Get-TargetResource
         {
             if (-not $question.ContainsKey('odataType'))
             {
-                $question.add('odataType', $question.AdditionalProperties.'@odata.type')
+                $question.Add('odataType', $question.AdditionalProperties.'@odata.type')
             }
             if ($null -ne $question.Text)
             {
-                $question.add('QuestionText', $question.Text)
-                $question.remove('Text') | Out-Null
-                $question.QuestionText.remove('additionalProperties') | Out-Null
+                $question.Add('QuestionText', $question.Text)
+                $question.Remove('Text') | Out-Null
+                $question.QuestionText.Remove('additionalProperties') | Out-Null
                 foreach ($localizedText in $question.QuestionText.localizedTexts)
                 {
-                    $localizedText.remove('additionalProperties') | Out-Null
+                    $localizedText.Remove('additionalProperties') | Out-Null
                 }
             }
             if ($null -ne $question.AdditionalProperties.isSingleLineQuestion)
             {
-                $question.add('IsSingleLineQuestion', $question.AdditionalProperties.isSingleLineQuestion)
+                $question.Add('IsSingleLineQuestion', $question.AdditionalProperties.isSingleLineQuestion)
             }
             if ($null -ne $question.AdditionalProperties.choices)
             {
-                $question.add('Choices', [Array]$question.AdditionalProperties.choices)
+                $question.Add('Choices', [Array]$question.AdditionalProperties.choices)
             }
             if ($null -ne $question.AdditionalProperties.allowsMultipleSelection)
             {
-                $question.add('AllowsMultipleSelection', $question.AdditionalProperties.allowsMultipleSelection)
+                $question.Add('AllowsMultipleSelection', $question.AdditionalProperties.allowsMultipleSelection)
             }
-            $question.remove('additionalProperties') | Out-Null
+            $question.Remove('additionalProperties') | Out-Null
         }
         #endregion
 
@@ -590,7 +590,7 @@ function Set-TargetResource
                 # For other types (requestorManager, etc.), leave ID as-is
             }
         }
-        If ($null -ne $CreateParameters.CustomExtensionHandlers -and $CreateParameters.CustomExtensionHandlers.count -gt 0 )
+        If ($null -ne $CreateParameters.CustomExtensionHandlers -and $CreateParameters.CustomExtensionHandlers.Count -gt 0 )
         {
             $formattedCustomExtensionHandlers = @()
             foreach ($customExtensionHandler in $CreateParameters.CustomExtensionHandlers)
@@ -739,7 +739,7 @@ function Set-TargetResource
                 # For other types (requestorManager, etc.), leave ID as-is
             }
         }
-        If ($null -ne $UpdateParameters.CustomExtensionHandlers -and $UpdateParameters.CustomExtensionHandlers.count -gt 0 )
+        If ($null -ne $UpdateParameters.CustomExtensionHandlers -and $UpdateParameters.CustomExtensionHandlers.Count -gt 0 )
         {
             $formattedCustomExtensionHandlers = @()
             foreach ($customExtensionHandler in $UpdateParameters.CustomExtensionHandlers)

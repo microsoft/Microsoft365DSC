@@ -34,5 +34,22 @@
     "Microsoft.Graph.Beta.Identity.DirectoryManagement",
     "Microsoft.Graph.Groups"
   ],
-  "mode": "Configuration"
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Beta.Identity.DirectoryManagement",
+      "cmdlets": [
+        "Get-MgBetaOrganizationSettingItemInsight",
+        "Get-MgBetaOrganizationSettingPersonInsight",
+        "Update-MgBetaOrganizationSettingItemInsight",
+        "Update-MgBetaOrganizationSettingPersonInsight"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Groups",
+      "cmdlets": [
+        "Get-MgGroup"
+      ]
+    }
+  ]
 }

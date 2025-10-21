@@ -37,6 +37,11 @@ function Get-TargetResource
         $EnableWebPstnMediaBypass,
 
         [Parameter()]
+        [ValidateSet('Disabled', 'Enabled')]
+        [System.String]
+        $ExplicitRecordingConsent,
+
+        [Parameter()]
         [ValidateSet('RegularIncoming', 'Unanswered', 'Voicemail')]
         [System.String]
         $InboundFederatedCallRoutingTreatment,
@@ -238,6 +243,7 @@ function Get-TargetResource
             Description                          = $policy.Description
             EnableSpendLimits                    = $policy.EnableSpendLimits
             EnableWebPstnMediaBypass             = $policy.EnableWebPstnMediaBypass
+            ExplicitRecordingConsent             = $policy.ExplicitRecordingConsent
             InboundFederatedCallRoutingTreatment = $policy.InboundFederatedCallRoutingTreatment
             InboundPstnCallRoutingTreatment      = $policy.InboundPstnCallRoutingTreatment
             PopoutAppPathForIncomingPstnCalls    = $policy.PopoutAppPathForIncomingPstnCalls
@@ -310,6 +316,11 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $EnableWebPstnMediaBypass,
+
+        [Parameter()]
+        [ValidateSet('Disabled', 'Enabled')]
+        [System.String]
+        $ExplicitRecordingConsent,
 
         [Parameter()]
         [ValidateSet('RegularIncoming', 'Unanswered', 'Voicemail')]
@@ -530,6 +541,11 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $EnableWebPstnMediaBypass,
+
+        [Parameter()]
+        [ValidateSet('Disabled', 'Enabled')]
+        [System.String]
+        $ExplicitRecordingConsent,
 
         [Parameter()]
         [ValidateSet('RegularIncoming', 'Unanswered', 'Voicemail')]

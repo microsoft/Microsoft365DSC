@@ -164,7 +164,7 @@ function Get-TargetResource
                 -ErrorAction SilentlyContinue | Where-Object `
                 -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.iosCompliancePolicy' -and `
                     $_.displayName -eq $($DisplayName) }
-            if (([array]$devicePolicy).count -gt 1)
+            if (([array]$devicePolicy).Count -gt 1)
             {
                 throw "A policy with a duplicated displayName {'$DisplayName'} was found - Ensure displayName is unique"
             }
@@ -215,7 +215,7 @@ function Get-TargetResource
 
         $returnAssignments = @()
         $graphAssignments = Get-MgBetaDeviceManagementDeviceCompliancePolicyAssignment -DeviceCompliancePolicyId $devicePolicy.Id
-        if ($graphAssignments.count -gt 0)
+        if ($graphAssignments.Count -gt 0)
         {
             $returnAssignments += ConvertFrom-IntunePolicyAssignment `
                 -IncludeDeviceFilter:$true `
@@ -413,7 +413,7 @@ function Set-TargetResource
         $AdditionalProperties = Get-M365DSCIntuneDeviceCompliancePolicyiosAdditionalProperties -Properties $boundParameters
         if ($RestrictedApps -and $RestrictedApps.Count -gt 0)
         {
-            $AdditionalProperties.add('restrictedApps', (Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $RestrictedApps))
+            $AdditionalProperties.Add('restrictedApps', (Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $RestrictedApps))
         }
 
         $policy = New-MgBetaDeviceManagementDeviceCompliancePolicy -DisplayName $DisplayName `
@@ -447,7 +447,7 @@ function Set-TargetResource
         $AdditionalProperties = Get-M365DSCIntuneDeviceCompliancePolicyiosAdditionalProperties -Properties $boundParameters
         if ($RestrictedApps -and $RestrictedApps.Count -gt 0)
         {
-            $AdditionalProperties.add('restrictedApps', (Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $RestrictedApps))
+            $AdditionalProperties.Add('restrictedApps', (Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $RestrictedApps))
         }
 
         Update-MgBetaDeviceManagementDeviceCompliancePolicy -AdditionalProperties $AdditionalProperties `

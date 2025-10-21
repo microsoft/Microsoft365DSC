@@ -204,7 +204,7 @@ Configuration Example
             AccessPackageId         = "Integration Package";
             AccessReviewSettings    = MSFT_MicrosoftGraphassignmentreviewsettings{
                 IsEnabled = $True
-                StartDateTime = '12/17/2022 23:59:59'
+                StartDateTime = '12/17/2032 23:59:59'
                 IsAccessRecommendationEnabled = $True
                 AccessReviewTimeoutBehavior = 'keepAccess'
                 IsApprovalJustificationRequired = $True
@@ -262,7 +262,7 @@ Configuration Example
             AccessPackageId         = "Integration Package";
             AccessReviewSettings    = MSFT_MicrosoftGraphassignmentreviewsettings{
                 IsEnabled = $True
-                StartDateTime = '12/17/2022 23:59:59'
+                StartDateTime = '12/17/2032 23:59:59'
                 IsAccessRecommendationEnabled = $True
                 AccessReviewTimeoutBehavior = 'keepAccess'
                 IsApprovalJustificationRequired = $True

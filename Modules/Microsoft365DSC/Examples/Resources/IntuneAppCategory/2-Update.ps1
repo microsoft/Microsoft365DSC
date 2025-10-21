@@ -27,6 +27,9 @@ Configuration Example
             Id                   = "a1fc9fe2-728d-4867-9a72-a61e18f8c606";
             DisplayName          = "Custom Data Management updated";
             Ensure               = "Present";
+            ApplicationId         = $ApplicationId;
+            TenantId              = $TenantId;
+            CertificateThumbprint = $CertificateThumbprint;
         }
     }
 }

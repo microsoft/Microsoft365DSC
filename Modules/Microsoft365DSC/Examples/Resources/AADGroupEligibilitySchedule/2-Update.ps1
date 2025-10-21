@@ -21,9 +21,9 @@ Configuration Example
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint
             Ensure                = "Present";
-            GroupDisplayName      = "MyPIMGroup";
             MemberType            = "direct";
-            Principal             = "FakePrincipalGroup";
+            GroupDisplayName      = "sg-Retail";
+            Principal             = "sg-Retail";
             PrincipalType         = "group";
             ScheduleInfo          = MSFT_MicrosoftGraphrequestSchedule{
                 Expiration = MSFT_MicrosoftGraphExpirationPattern{

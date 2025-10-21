@@ -571,14 +571,14 @@ function Set-TargetResource
         $keys = (([Hashtable]$CreateParameters).Clone()).Keys
         foreach ($key in $keys)
         {
-            if ($null -ne $CreateParameters.$key -and $CreateParameters.$key.getType().Name -like '*cimInstance*')
+            if ($null -ne $CreateParameters.$key -and $CreateParameters.$key.GetType().Name -like '*cimInstance*')
             {
                 $CreateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters.$key
             }
         }
         #region resource generator code
 
-        if ($null -ne $RootCertificatesForServerValidationIds -and $RootCertificatesForServerValidationIds.count -gt 0 )
+        if ($null -ne $RootCertificatesForServerValidationIds -and $RootCertificatesForServerValidationIds.Count -gt 0 )
         {
             $rootCertificatesForServerValidation = @()
             for ($i = 0; $i -lt $RootCertificatesForServerValidationIds.Length; $i++)
@@ -692,7 +692,7 @@ function Set-TargetResource
             -Repository 'deviceManagement/deviceConfigurations'
         #endregion
 
-        if ($null -ne $RootCertificatesForServerValidationIds -and $RootCertificatesForServerValidationIds.count -gt 0 )
+        if ($null -ne $RootCertificatesForServerValidationIds -and $RootCertificatesForServerValidationIds.Count -gt 0 )
         {
             [Array]$rootCertificatesForServerValidationChecked = @()
             for ($i = 0; $i -lt $RootCertificatesForServerValidationIds.Count; $i++)
@@ -709,14 +709,14 @@ function Set-TargetResource
             [Array]$certsToAdd = ($compareResult | Where-Object { $_.SideIndicator -eq '=>' }).InputObject
             [Array]$certsToRemove = ($compareResult | Where-Object { $_.SideIndicator -eq '<=' }).InputObject
 
-            if ($certsToAdd.count -gt 0)
+            if ($certsToAdd.Count -gt 0)
             {
                 Update-DeviceConfigurationPolicyCertificateId -DeviceConfigurationPolicyId $currentInstance.Id `
                     -CertificateIds $certsToAdd `
                     -CertificateName rootCertificatesForServerValidation
             }
 
-            if ($certsToRemove.count -gt 0)
+            if ($certsToRemove.Count -gt 0)
             {
                 Remove-DeviceConfigurationPolicyCertificateId -DeviceConfigurationPolicyId $currentInstance.Id `
                     -CertificateIds $certsToRemove `

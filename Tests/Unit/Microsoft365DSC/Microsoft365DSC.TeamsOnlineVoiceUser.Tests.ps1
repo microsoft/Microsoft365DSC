@@ -40,6 +40,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Set-CsPhoneNumberAssignment -MockWith {
             }
 
+            Mock -CommandName Get-CsPhoneNumberAssignment -MockWith {
+                return @{
+                    LocationId = 'c7c5a17f-00d7-47c0-9ddb-3383229d606b'
+                }
+            }
+
+            Mock -CommandName Get-CsOnlineUser -MockWith {
+                return @{
+                    LineUri           = 'tel:+14255043920'
+                    UserPrincipalName = 'John.Smith@Contoso.com'
+                }
+            }
+
             # Mock Write-M365DSCHost to hide output during the tests
             Mock -CommandName Write-M365DSCHost -MockWith {
             }
@@ -52,7 +65,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     Identity        = 'John.Smith@Contoso.com'
-                    TelephoneNumber = '+14255043920'
+                    TelephoneNumber = '14255043920'
                     LocationId      = 'c7c5a17f-00d7-47c0-9ddb-3383229d606b'
                     Ensure          = 'Present'
                     Credential      = $Credential
@@ -86,19 +99,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure          = 'Present'
                     Credential      = $Credential
                 }
-
-                Mock -CommandName Get-CsOnlineUser -MockWith {
-                    return @{
-                        LineUri           = 'tel:+14255043920'
-                        UserPrincipalName = 'John.Smith@Contoso.com'
-                    }
-                }
-
-                Mock -CommandName Get-CsPhoneNumberAssignment -MockWith {
-                    return @{
-                        LocationId = 'c7c5a17f-00d7-47c0-9ddb-3383229d606b'
-                    }
-                }
             }
 
             It 'Should return true from the Test method' {
@@ -110,23 +110,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     Identity        = 'John.Smith@Contoso.com'
-                    TelephoneNumber = '+14255043920'
+                    TelephoneNumber = '15555555555' # Drift
                     LocationId      = 'c7c5a17f-00d7-47c0-9ddb-3383229d606b'
                     Ensure          = 'Present'
                     Credential      = $Credential
-                }
-
-                Mock -CommandName Get-CsOnlineUser -MockWith {
-                    return @{
-                        LineUri           = 'tel:+15555555555'
-                        UserPrincipalName = 'John.Smith@Contoso.com'
-                    }
-                }
-
-                Mock -CommandName Get-CsPhoneNumberAssignment -MockWith {
-                    return @{
-                        LocationId = 'c7c5a17f-00d7-47c0-9ddb-3383229d606b'
-                    }
                 }
             }
 
@@ -148,19 +135,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     Credential = $Credential
-                }
-
-                Mock -CommandName Get-CsOnlineUser -MockWith {
-                    return @{
-                        LineUri           = 'tel:+15555555555'
-                        UserPrincipalName = 'John.Smith@Contoso.com'
-                    }
-                }
-
-                Mock -CommandName Get-CsPhoneNumberAssignment -MockWith {
-                    return @{
-                        LocationId = 'c7c5a17f-00d7-47c0-9ddb-3383229d606b'
-                    }
                 }
             }
 

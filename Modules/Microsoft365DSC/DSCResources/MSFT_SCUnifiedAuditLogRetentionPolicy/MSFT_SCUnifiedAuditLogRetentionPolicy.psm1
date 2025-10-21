@@ -220,46 +220,21 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         $CreateParameters = ([Hashtable]$BoundParameters).Clone()
-
-        $CreateParameters.Remove('Verbose') | Out-Null
-
-        $keys = $CreateParameters.Keys
-        foreach ($key in $keys)
-        {
-            if ($null -ne $CreateParameters.$key -and $CreateParameters.$key.GetType().Name -like '*cimInstance*')
-            {
-                $keyValue = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters.$key
-                $CreateParameters.Remove($key) | Out-Null
-                $CreateParameters.Add($keyName, $keyValue)
-            }
-        }
-        Write-Verbose -Message "Creating {$Name} with Parameters:`r`n$(Convert-M365DscHashtableToString -Hashtable $CreateParameters)"
+        Write-Verbose -Message "Creating a Unified Audit Log Retention Policy with Name {$Name}"
         New-UnifiedAuditLogRetentionPolicy @CreateParameters | Out-Null
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Updating {$Name}"
+        Write-Verbose -Message "Updating the Unified Audit Log Retention Policy with Name {$Name}"
 
         $UpdateParameters = ([Hashtable]$BoundParameters).Clone()
         $UpdateParameters.Remove('Name') | Out-Null
         $UpdateParameters.Add('Identity', $currentInstance.Identity) | Out-Null
-
-        $keys = $UpdateParameters.Keys
-        foreach ($key in $keys)
-        {
-            if ($null -ne $UpdateParameters.$key -and $UpdateParameters.$key.GetType().Name -like '*cimInstance*')
-            {
-                $keyValue = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters.$key
-                $UpdateParameters.Remove($key) | Out-Null
-                $UpdateParameters.Add($keyName, $keyValue)
-            }
-        }
-
         Set-UnifiedAuditLogRetentionPolicy @UpdateParameters | Out-Null
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing {$Name}"
+        Write-Verbose -Message "Removing the Unified Audit Log Retention Policy with Name {$Name}"
         Remove-UnifiedAuditLogRetentionPolicy -Identity $currentInstance.Identity
     }
 }

@@ -147,7 +147,7 @@ function Get-TargetResource
         {
             $complexRolloutSettings.Add('OfferStartDateTimeInUTC', ([DateTimeOffset]$getValue.RolloutSettings.offerStartDateTimeInUTC).ToString('o'))
         }
-        if ($complexRolloutSettings.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexRolloutSettings.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexRolloutSettings = $null
         }

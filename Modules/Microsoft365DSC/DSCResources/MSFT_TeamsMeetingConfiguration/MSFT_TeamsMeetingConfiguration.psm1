@@ -33,7 +33,20 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $DisableAppInteractionForAnonymousUsers,
+
+        [Parameter()]
+        [System.Boolean]
         $EnableQoS,
+
+        [Parameter()]
+        [ValidateSet('Disabled', 'Enabled')]
+        [System.String]
+        $FeedbackSurveyForAnonymousUsers,
+
+        [Parameter()]
+        [System.Boolean]
+        $LimitPresenterRolePermissions,
 
         [Parameter()]
         [System.UInt32]
@@ -117,26 +130,29 @@ function Get-TargetResource
         $config = Get-CsTeamsMeetingConfiguration -ErrorAction Stop
 
         return @{
-            Identity                    = $Identity
-            LogoURL                     = $config.LogoURL
-            LegalURL                    = $config.LegalURL
-            HelpURL                     = $config.HelpURL
-            CustomFooterText            = $config.CustomFooterText
-            DisableAnonymousJoin        = $config.DisableAnonymousJoin
-            EnableQoS                   = $config.EnableQoS
-            ClientAudioPort             = $config.ClientAudioPort
-            ClientAudioPortRange        = $config.ClientAudioPortRange
-            ClientVideoPort             = $config.ClientVideoPort
-            ClientVideoPortRange        = $config.ClientVideoPortRange
-            ClientAppSharingPort        = $config.ClientAppSharingPort
-            ClientAppSharingPortRange   = $config.ClientAppSharingPortRange
-            ClientMediaPortRangeEnabled = $config.ClientMediaPortRangeEnabled
-            Credential                  = $Credential
-            ApplicationId               = $ApplicationId
-            TenantId                    = $TenantId
-            CertificateThumbprint       = $CertificateThumbprint
-            ManagedIdentity             = $ManagedIdentity.IsPresent
-            AccessTokens                = $AccessTokens
+            Identity                               = $Identity
+            LogoURL                                = $config.LogoURL
+            LegalURL                               = $config.LegalURL
+            HelpURL                                = $config.HelpURL
+            CustomFooterText                       = $config.CustomFooterText
+            DisableAnonymousJoin                   = $config.DisableAnonymousJoin
+            EnableQoS                              = $config.EnableQoS
+            ClientAudioPort                        = $config.ClientAudioPort
+            ClientAudioPortRange                   = $config.ClientAudioPortRange
+            ClientVideoPort                        = $config.ClientVideoPort
+            ClientVideoPortRange                   = $config.ClientVideoPortRange
+            ClientAppSharingPort                   = $config.ClientAppSharingPort
+            ClientAppSharingPortRange              = $config.ClientAppSharingPortRange
+            ClientMediaPortRangeEnabled            = $config.ClientMediaPortRangeEnabled
+            DisableAppInteractionForAnonymousUsers = $config.DisableAppInteractionForAnonymousUsers
+            FeedbackSurveyForAnonymousUsers        = $config.FeedbackSurveyForAnonymousUsers
+            LimitPresenterRolePermissions          = $config.LimitPresenterRolePermissions
+            Credential                             = $Credential
+            ApplicationId                          = $ApplicationId
+            TenantId                               = $TenantId
+            CertificateThumbprint                  = $CertificateThumbprint
+            ManagedIdentity                        = $ManagedIdentity.IsPresent
+            AccessTokens                           = $AccessTokens
         }
     }
     catch
@@ -183,7 +199,20 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $DisableAppInteractionForAnonymousUsers,
+
+        [Parameter()]
+        [System.Boolean]
         $EnableQoS,
+
+        [Parameter()]
+        [ValidateSet('Disabled', 'Enabled')]
+        [System.String]
+        $FeedbackSurveyForAnonymousUsers,
+
+        [Parameter()]
+        [System.Boolean]
+        $LimitPresenterRolePermissions,
 
         [Parameter()]
         [System.UInt32]
@@ -295,7 +324,20 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $DisableAppInteractionForAnonymousUsers,
+
+        [Parameter()]
+        [System.Boolean]
         $EnableQoS,
+
+        [Parameter()]
+        [ValidateSet('Disabled', 'Enabled')]
+        [System.String]
+        $FeedbackSurveyForAnonymousUsers,
+
+        [Parameter()]
+        [System.Boolean]
+        $LimitPresenterRolePermissions,
 
         [Parameter()]
         [System.UInt32]

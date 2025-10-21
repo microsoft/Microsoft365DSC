@@ -1,0 +1,11 @@
+{
+  "requiredModules": {
+    "Microsoft.Graph.Applications": [
+        "Get-MgServicePrincipal"
+    ],
+    "Microsoft.Graph.Beta.Identity.Governance": [
+      "Get-MgBetaRoleManagementDirectoryRoleAssignment",
+      "Get-MgBetaRoleManagementDirectoryRoleDefinition"
+    ]
+  }
+}

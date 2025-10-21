@@ -677,7 +677,7 @@ function Get-TargetResource
 
         $complexAzureAdSharedDeviceDataClearApps = @()
         $currentValueArray = $getValue.AdditionalProperties.azureAdSharedDeviceDataClearApps
-        if ($null -ne $currentValueArray -and $currentValueArray.count -gt 0)
+        if ($null -ne $currentValueArray -and $currentValueArray.Count -gt 0)
         {
             foreach ($currentValue in $currentValueArray)
             {
@@ -699,7 +699,7 @@ function Get-TargetResource
             $complexDetailedHelpText.Add('DefaultMessage', $currentValue.defaultMessage)
             $complexLocalizedMessages = @()
             $currentValueArray = $currentValue.localizedMessages
-            if ($null -ne $currentValueArray -and $currentValueArray.count -gt 0)
+            if ($null -ne $currentValueArray -and $currentValueArray.Count -gt 0)
             {
                 foreach ($currentChildValue in $currentValueArray)
                 {
@@ -724,7 +724,7 @@ function Get-TargetResource
             $complexDeviceOwnerLockScreenMessage.Add('DefaultMessage', $currentValue.defaultMessage)
             $complexLocalizedMessages = @()
             $currentValueArray = $currentValue.localizedMessages
-            if ($null -ne $currentValueArray -and $currentValueArray.count -gt 0)
+            if ($null -ne $currentValueArray -and $currentValueArray.Count -gt 0)
             {
                 foreach ($currentChildValue in $currentValueArray)
                 {
@@ -759,7 +759,7 @@ function Get-TargetResource
 
         $complexKioskModeApps = @()
         $currentValueArray = $getValue.AdditionalProperties.kioskModeApps
-        if ($null -ne $currentValueArray -and $currentValueArray.count -gt 0)
+        if ($null -ne $currentValueArray -and $currentValueArray.Count -gt 0)
         {
             foreach ($currentValue in $currentValueArray)
             {
@@ -775,7 +775,7 @@ function Get-TargetResource
 
         $complexPersonalProfilePersonalApplications = @()
         $currentValueArray = $getValue.AdditionalProperties.personalProfilePersonalApplications
-        if ($null -ne $currentValueArray -and $currentValueArray.count -gt 0)
+        if ($null -ne $currentValueArray -and $currentValueArray.Count -gt 0)
         {
             foreach ($currentValue in $currentValueArray)
             {
@@ -796,7 +796,7 @@ function Get-TargetResource
             $complexShortHelpText.Add('DefaultMessage', $currentValue.defaultMessage)
             $complexLocalizedMessages = @()
             $currentValueArray = $currentValue.localizedMessages
-            if ($null -ne $currentValueArray -and $currentValueArray.count -gt 0)
+            if ($null -ne $currentValueArray -and $currentValueArray.Count -gt 0)
             {
                 foreach ($currentChildValue in $currentValueArray)
                 {
@@ -816,7 +816,7 @@ function Get-TargetResource
 
         $complexSystemUpdateFreezePeriods = @()
         $currentValueArray = $getValue.AdditionalProperties.systemUpdateFreezePeriods
-        if ($null -ne $currentValueArray -and $currentValueArray.count -gt 0)
+        if ($null -ne $currentValueArray -and $currentValueArray.Count -gt 0)
         {
             foreach ($currentValue in $currentValueArray)
             {
@@ -1676,7 +1676,7 @@ function Set-TargetResource
 
             if ($key -ne '@odata.type')
             {
-                $keyName = $key.Substring(0, 1).ToLower() + $key.Substring(1, $key.length - 1)
+                $keyName = $key.Substring(0, 1).ToLower() + $key.Substring(1, $key.Length - 1)
                 $keyValue = $CreateParameters.$key
                 $CreateParameters.Remove($key) | Out-Null
                 $CreateParameters.Add($keyName, $keyValue) | Out-Null
@@ -1729,7 +1729,7 @@ function Set-TargetResource
 
             if ($key -ne '@odata.type')
             {
-                $keyName = $key.Substring(0, 1).ToLower() + $key.Substring(1, $key.length - 1)
+                $keyName = $key.Substring(0, 1).ToLower() + $key.Substring(1, $key.Length - 1)
                 $keyValue = $UpdateParameters.$key
                 $UpdateParameters.Remove($key)
                 $UpdateParameters.Add($keyName, $keyValue)

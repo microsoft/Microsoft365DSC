@@ -38,13 +38,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Get-CsTeamsMeetingBroadcastPolicy -MockWith {
-                return @(@{
+                return @(
+                    @{
                         AllowBroadcastScheduling        = $True
                         AllowBroadcastTranscription     = $False
                         BroadcastAttendeeVisibilityMode = 'EveryoneInCompany'
                         BroadcastRecordingMode          = 'AlwaysEnabled'
                         Identity                        = 'MyDemoPolicy'
-                    })
+                    }
+                )
             }
 
             Mock -CommandName Set-CsTeamsMeetingBroadcastPolicy -MockWith {

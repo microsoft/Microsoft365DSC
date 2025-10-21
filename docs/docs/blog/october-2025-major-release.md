@@ -104,3 +104,7 @@ The IntuneAccountProtection resource has been removed from this release. To fix 
 ## EXOMobileDeviceMailboxPolicy Converted 2 Properties to Type Integer ([#6513](https://github.com/microsoft/Microsoft365DSC/pull/6513))
 
 The MinPasswordComplexCharacters and PasswordHistory parameters of the EXOMobileDeviceMailboxPolicy resource have been converted from being of String type to Inteher type. To fix your existing configuration files, simply make sure that instances of EXOMobiledeviceMailboxPolicy that define these parameters are defining them as numbers instead of string (e.g. don't specify quotes).
+
+## O365AdminAuditLogConfig - Removed the Ensure Parameter ([#6541](https://github.com/microsoft/Microsoft365DSC/pull/6541))
+
+Since O365AdminAuditLogConfig is a tenant-wide resource where there can only ever be one instance, we are removing the Ensure parameter from it. To fix existing configuration files, search for an instance of this resource and make sure the Ensure parameter is removed.

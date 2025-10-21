@@ -42,6 +42,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-CsTeamsWorkloadPolicy -MockWith {
             }
 
+            Mock -CommandName Get-CsTeamsWorkloadPolicy -MockWith {
+                return @{
+                    AllowMessagingPinned = $True
+                    Description          = 'FakeStringValue'
+                    AllowCalling         = $True
+                    AllowCallingPinned   = $True
+                    AllowMessaging       = $True
+                    Identity             = 'FakeStringValue'
+                    AllowMeeting         = $True
+                    AllowMeetingPinned   = $True
+                }
+            }
+
             Mock -CommandName New-M365DSCConnection -MockWith {
                 return 'Credentials'
             }
@@ -99,19 +112,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure               = 'Absent'
                     Credential           = $Credential
                 }
-
-                Mock -CommandName Get-CsTeamsWorkloadPolicy -MockWith {
-                    return @{
-                        AllowMessagingPinned = $True
-                        Description          = 'FakeStringValue'
-                        AllowCalling         = $True
-                        AllowCallingPinned   = $True
-                        AllowMessaging       = $True
-                        Identity             = 'FakeStringValue'
-                        AllowMeeting         = $True
-                        AllowMeetingPinned   = $True
-                    }
-                }
             }
 
             It 'Should return Values from the Get method' {
@@ -141,19 +141,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure               = 'Present'
                     Credential           = $Credential
                 }
-
-                Mock -CommandName Get-CsTeamsWorkloadPolicy -MockWith {
-                    return @{
-                        AllowMessagingPinned = $True
-                        Description          = 'FakeStringValue'
-                        AllowCalling         = $True
-                        AllowCallingPinned   = $True
-                        AllowMessaging       = $True
-                        Identity             = 'FakeStringValue'
-                        AllowMeeting         = $True
-                        AllowMeetingPinned   = $True
-                    }
-                }
             }
 
             It 'Should return true from the Test method' {
@@ -164,7 +151,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'The TeamsWorkloadPolicy exists and values are NOT in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    AllowCalling         = $True
+                    AllowCalling         = $False # Drift
                     AllowCallingPinned   = $True
                     AllowMeeting         = $True
                     AllowMeetingPinned   = $True
@@ -173,19 +160,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Identity             = 'FakeStringValue'
                     Ensure               = 'Present'
                     Credential           = $Credential
-                }
-
-                Mock -CommandName Get-CsTeamsWorkloadPolicy -MockWith {
-                    return @{
-                        AllowMessagingPinned = $False
-                        Description          = 'FakeStringValueDrift #Drift'
-                        AllowCalling         = $False
-                        AllowCallingPinned   = $False
-                        AllowMessaging       = $False
-                        Identity             = 'FakeStringValue'
-                        AllowMeeting         = $False
-                        AllowMeetingPinned   = $False
-                    }
                 }
             }
 
@@ -209,19 +183,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
                     Credential = $Credential
-                }
-
-                Mock -CommandName Get-CsTeamsWorkloadPolicy -MockWith {
-                    return @{
-                        AllowMessagingPinned = $True
-                        Description          = 'FakeStringValue'
-                        AllowCalling         = $True
-                        AllowCallingPinned   = $True
-                        AllowMessaging       = $True
-                        Identity             = 'FakeStringValue'
-                        AllowMeeting         = $True
-                        AllowMeetingPinned   = $True
-                    }
                 }
             }
 

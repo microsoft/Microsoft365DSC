@@ -55,5 +55,28 @@
     "Global",
     "USGov"
   ],
-  "mode": "Configuration"
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Beta.Identity.Governance",
+      "cmdlets": [
+        "Get-MgBetaRoleManagementEntitlementManagementRoleAssignment",
+        "Get-MgBetaRoleManagementEntitlementManagementRoleDefinition",
+        "New-MgBetaRoleManagementEntitlementManagementRoleAssignment",
+        "Remove-MgBetaRoleManagementEntitlementManagementRoleAssignment"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Groups",
+      "cmdlets": [
+        "Get-MgGroup"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Users",
+      "cmdlets": [
+        "Get-MgUser"
+      ]
+    }
+  ]
 }

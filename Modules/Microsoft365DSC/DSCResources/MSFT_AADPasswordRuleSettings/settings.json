@@ -41,5 +41,16 @@
     "Global",
     "USGov"
   ],
-  "mode": "Configuration"
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Beta.Identity.DirectoryManagement",
+      "cmdlets": [
+        "Get-MgBetaDirectorySetting",
+        "Get-MgBetaDirectorySettingTemplate",
+        "New-MgBetaDirectorySetting",
+        "Update-MgBetaDirectorySetting"
+      ]
+    }
+  ]
 }

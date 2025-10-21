@@ -24,7 +24,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $secpasswd = ConvertTo-SecureString (New-Guid | Out-String) -AsPlainText -Force
             $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin@mydomain.com', $secpasswd)
 
-            Mock -CommandName Confirm-M365DSCDependencies -MockWith {
+            Mock -ModuleName M365DSCUtil -CommandName Confirm-M365DSCDependencies -MockWith {
             }
 
             Mock -CommandName Get-MSCloudLoginConnectionProfile -MockWith {
@@ -71,6 +71,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Id          = 'FakeStringValue'
                 }
             }
+
+            Mock -CommandName Get-MgGroup -ParameterFilter { $Filter -like '*OtherMember*' } -MockWith {
+                return @{
+                    Displayname = 'OtherMember'
+                    Id          = 'OtherMember'
+                }
+            }
             # Mock Write-M365DSCHost to hide output during the tests
             Mock -CommandName Write-M365DSCHost -MockWith {
             }
@@ -113,7 +120,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure                     = 'Absent'
                     RoleDefinition             = '7fbbd347-98de-431d-942b-cf5bea92998d'
                     MembersDisplayNames        = @('FakeStringValue')
-                    resourceScopesDisplayNames = @('FakeStringValue')
+                    ResourceScopesDisplayNames = @('FakeStringValue')
                     ScopeType                  = 'resourceScope'
                     Credential                 = $Credential
                 }
@@ -141,7 +148,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure                     = 'Present'
                     RoleDefinition             = '7fbbd347-98de-431d-942b-cf5bea92998d'
                     MembersDisplayNames        = @('FakeStringValue')
-                    resourceScopesDisplayNames = @('FakeStringValue')
+                    ResourceScopesDisplayNames = @('FakeStringValue')
                     ScopeType                  = 'resourceScope'
                     Credential                 = $Credential
                 }
@@ -162,7 +169,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure                     = 'Present'
                     RoleDefinition             = '7fbbd347-98de-431d-942b-cf5bea92998d'
                     MembersDisplayNames        = @('OtherMember') # Updated property
-                    resourceScopesDisplayNames = @('FakeStringValue')
+                    ResourceScopesDisplayNames = @('FakeStringValue')
                     ScopeType                  = 'resourceScope'
                     Credential                 = $Credential
                 }

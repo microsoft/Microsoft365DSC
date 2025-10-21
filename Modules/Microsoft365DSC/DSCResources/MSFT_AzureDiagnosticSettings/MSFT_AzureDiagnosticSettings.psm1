@@ -270,7 +270,7 @@ function Set-TargetResource
         {
             Write-Verbose -Message "Updating diagnostic setting {$Name}"
         }
-        $response = Invoke-AzRest -Uri "https://management.azure.com/providers/microsoft.aadiam/diagnosticsettings/$($Name)?api-version=2017-04-01-preview" `
+        $null = Invoke-AzRest -Uri "https://management.azure.com/providers/microsoft.aadiam/diagnosticsettings/$($Name)?api-version=2017-04-01-preview" `
             -Method PUT `
             -Payload $payload
     }
@@ -278,7 +278,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing diagnostic setting {$Name}"
-        $response = Invoke-AzRest -Uri "https://management.azure.com/providers/microsoft.aadiam/diagnosticsettings/$($Name)?api-version=2017-04-01-preview" `
+        $null = Invoke-AzRest -Uri "https://management.azure.com/providers/microsoft.aadiam/diagnosticsettings/$($Name)?api-version=2017-04-01-preview" `
             -Method DELETE
     }
 }

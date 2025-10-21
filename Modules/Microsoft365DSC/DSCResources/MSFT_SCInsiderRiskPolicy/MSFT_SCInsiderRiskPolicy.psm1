@@ -1856,9 +1856,6 @@ function Set-TargetResource
     #endregion
 
     $currentInstance = Get-TargetResource @PSBoundParameters
-
-    $setParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
-
     $indicatorsProperties = @('AnomalyDetections', 'CopyToPersonalCloud', 'CopyToUSB', 'CumulativeExfiltrationDetector', `
             'EmailExternal', 'EmployeeAccessedEmployeePatientData', 'EmployeeAccessedFamilyData', `
             'EmployeeAccessedHighVolumePatientData', 'EmployeeAccessedNeighbourData', `

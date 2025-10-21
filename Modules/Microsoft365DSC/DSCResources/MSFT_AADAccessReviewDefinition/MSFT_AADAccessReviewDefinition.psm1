@@ -38,7 +38,7 @@ function Get-TargetResource
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $StageSettings,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Id,
 
@@ -102,8 +102,11 @@ function Get-TargetResource
 
             $getValue = $null
             #region resource generator code
-            $getValue = Get-MgBetaIdentityGovernanceAccessReviewDefinition -AccessReviewScheduleDefinitionId $Id -ErrorAction SilentlyContinue
-
+            if (-not [System.String]::IsNullOrEmpty($Id))
+            {
+                $getValue = Get-MgBetaIdentityGovernanceAccessReviewDefinition -AccessReviewScheduleDefinitionId $Id `
+                    -ErrorAction SilentlyContinue
+            }
             if ($null -eq $getValue)
             {
                 Write-Verbose -Message "Could not find an Azure AD Access Review Definition with Id {$Id}"
@@ -343,7 +346,7 @@ function Get-TargetResource
                         url    = $query.Replace('/v1.0', '').Replace('transitiveMembers/microsoft.graph.user', '')
                     }
                 }
-
+                Write-Verbose -Message "Invoking BATCH request to resolve Fallback Reviewers from Get-TargetResource: $(ConvertTo-Json $batchRequests -Depth 10)"
                 $batchResponses = Invoke-M365DSCGraphBatchRequest -Requests $batchRequests
             }
 
@@ -385,6 +388,7 @@ function Get-TargetResource
         }
         if ($batchRequests.Count -gt 0)
         {
+            Write-Verbose -Message "Invoking BATCH request to resolve Reviewers from Get-TargetResource: $(ConvertTo-Json $batchRequests -Depth 10)"
             $batchResponses = Invoke-M365DSCGraphBatchRequest -Requests $batchRequests
         }
 
@@ -487,7 +491,7 @@ function Set-TargetResource
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $StageSettings,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Id,
 
@@ -564,6 +568,7 @@ function Set-TargetResource
         }
         if ($batchRequests.Count -gt 0)
         {
+            Write-Verbose -Message "Invoking BATCH request to resolve FallbackReviewers: $(ConvertTo-Json $batchRequests -Depth 10)"
             $batchResponses = Invoke-M365DSCGraphBatchRequest -Requests $batchRequests
         }
         $newFallbackReviewers = @()
@@ -618,15 +623,19 @@ function Set-TargetResource
                     $reviewerType = 'groups'
                 }
             }
-            $filter = "displayName eq '$($currentReviewer.DisplayName -replace "'", "''")'"
-            $batchRequests += @{
-                id = $currentReviewer.DisplayName
-                method = 'GET'
-                url = "/$($reviewerType)?`$filter=$filter"
+            if (-not [System.String]::IsNullOrEmpty($currentReviewer.DisplayName))
+            {
+                $filter = "displayName eq '$($currentReviewer.DisplayName -replace "'", "''")'"
+                $batchRequests += @{
+                    id = $currentReviewer.DisplayName
+                    method = 'GET'
+                    url = "/$($reviewerType)?`$filter=$filter"
+                }
             }
         }
         if ($batchRequests.Count -gt 0)
         {
+            Write-Verbose -Message "Invoking BATCH request to resolve Reviewers: $(ConvertTo-Json $batchRequests -Depth 10)"
             $batchResponses = Invoke-M365DSCGraphBatchRequest -Requests $batchRequests
         }
         $newReviewers = @()
@@ -733,6 +742,7 @@ function Set-TargetResource
             }
         }
         $createParameters.Add('@odata.type', '#microsoft.graph.AccessReviewScheduleDefinition')
+        Write-Verbose -Message "Creating an Azure AD Access Review Definition with: $(ConvertTo-Json $createParameters -Depth 10)"
         $policy = New-MgBetaIdentityGovernanceAccessReviewDefinition -BodyParameter $createParameters
         return
     }
@@ -791,6 +801,7 @@ function Set-TargetResource
         }
         #region resource generator code
         $createParameters.Add('@odata.type', '#microsoft.graph.AccessReviewScheduleDefinition')
+        Write-Verbose -Message "Creating an Azure AD Access Review Definition with: $(ConvertTo-Json $createParameters -Depth 10)"
         $policy = New-MgBetaIdentityGovernanceAccessReviewDefinition -BodyParameter $createParameters
         #endregion
     }
@@ -821,6 +832,7 @@ function Set-TargetResource
 
         #region resource generator code
         $UpdateParameters.Add('@odata.type', '#microsoft.graph.AccessReviewScheduleDefinition')
+        Write-Verbose -Message "Updating Azure AD Access Review Definition {$($currentInstance.Id)} with: $(ConvertTo-Json $UpdateParameters -Depth 10)"
         Set-MgBetaIdentityGovernanceAccessReviewDefinition `
             -AccessReviewScheduleDefinitionId $currentInstance.Id `
             -BodyParameter $UpdateParameters
@@ -873,7 +885,7 @@ function Test-TargetResource
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $StageSettings,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Id,
 

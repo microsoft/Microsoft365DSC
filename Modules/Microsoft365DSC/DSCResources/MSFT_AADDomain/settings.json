@@ -41,5 +41,16 @@
     "Global",
     "USGov"
   ],
-  "mode": "Configuration"
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Beta.Identity.DirectoryManagement",
+      "cmdlets": [
+        "Get-MgBetaDomain",
+        "Invoke-MgBetaForceDomainDelete",
+        "New-MgBetaDomain",
+        "Update-MgBetaDomain"
+      ]
+    }
+  ]
 }

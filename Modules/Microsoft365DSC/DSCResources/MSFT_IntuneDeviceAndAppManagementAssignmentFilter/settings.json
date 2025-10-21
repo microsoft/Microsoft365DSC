@@ -37,5 +37,16 @@
     "Global",
     "USGov"
   ],
-  "mode": "Configuration"
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Beta.DeviceManagement",
+      "cmdlets": [
+        "Get-MgBetaDeviceManagementAssignmentFilter",
+        "New-MgBetaDeviceManagementAssignmentFilter",
+        "Remove-MgBetaDeviceManagementAssignmentFilter",
+        "Update-MgBetaDeviceManagementAssignmentFilter"
+      ]
+    }
+  ]
 }

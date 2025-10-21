@@ -86,7 +86,7 @@ function Get-TargetResource
     {
         #Get-OMEConfiguration do NOT accept ErrorAction parameter
         $PerimeterConfiguration = Get-PerimeterConfig 2>&1
-        if ($null -ne ($PerimeterConfiguration | Where-Object { $_.gettype().Name -like '*ErrorRecord*' }))
+        if ($null -ne ($PerimeterConfiguration | Where-Object { $_.GetType().Name -like '*ErrorRecord*' }))
         {
             throw $PerimeterConfiguration
         }
@@ -327,7 +327,7 @@ function Export-TargetResource
         }
 
         $PerimeterConfiguration = Get-PerimeterConfig 2>&1
-        if ($null -ne ($PerimeterConfiguration | Where-Object { $_.gettype().Name -like '*ErrorRecord*' }))
+        if ($null -ne ($PerimeterConfiguration | Where-Object { $_.GetType().Name -like '*ErrorRecord*' }))
         {
             throw $PerimeterConfiguration
         }

@@ -244,7 +244,7 @@ function Get-TargetResource
             $myservers.Add('address', $currentservers.address)
             $myservers.Add('description', $currentservers.description)
             $myservers.Add('isDefaultServer', $currentservers.isDefaultServer)
-            if ($myservers.values.Where({$null -ne $_}).count -gt 0)
+            if ($myservers.values.Where({$null -ne $_}).Count -gt 0)
             {
                 $complexServers += $myservers
             }
@@ -257,7 +257,7 @@ function Get-TargetResource
             $myservers.Add('automaticConfigurationScriptUrl', $currentservers.automaticConfigurationScriptUrl)
             $myservers.Add('address', $currentservers.address)
             $myservers.Add('port', $currentservers.port)
-            if ($myservers.values.Where({$null -ne $_}).count -gt 0)
+            if ($myservers.values.Where({$null -ne $_}).Count -gt 0)
             {
                 $complexProxyServers += $myservers
             }
@@ -269,7 +269,7 @@ function Get-TargetResource
             $myCustomdata = [ordered]@{}
             $myCustomdata.Add('key', $value.key)
             $myCustomdata.Add('value', $value.value)
-            if ($myCustomdata.values.Where({$null -ne $_}).count -gt 0)
+            if ($myCustomdata.values.Where({$null -ne $_}).Count -gt 0)
             {
                 $complexCustomData += $myCustomdata
             }
@@ -281,7 +281,7 @@ function Get-TargetResource
             $myCVdata = [ordered]@{}
             $myCVdata.Add('name', $value.name)
             $myCVdata.Add('value', $value.value)
-            if ($myCVdata.values.Where({$null -ne $_}).count -gt 0)
+            if ($myCVdata.values.Where({$null -ne $_}).Count -gt 0)
             {
                 $complexCustomKeyValueData += $myCVdata
             }
@@ -295,7 +295,7 @@ function Get-TargetResource
             $myTMAdata.Add('publisher', $value.publisher)
             $myTMAdata.Add('appStoreUrl', $value.appStoreUrl)
             $myTMAdata.Add('appId', $value.appId)
-            if ($myTMAdata.values.Where({$null -ne $_}).count -gt 0)
+            if ($myTMAdata.values.Where({$null -ne $_}).Count -gt 0)
             {
                 $complexTargetedMobileApps += $myTMAdata
             }
@@ -613,7 +613,7 @@ function Set-TargetResource
         {
             if ($key -ne '@odata.type')
             {
-                $keyName = $key.Substring(0, 1).ToUpper() + $key.Substring(1, $key.length - 1)
+                $keyName = $key.Substring(0, 1).ToUpper() + $key.Substring(1, $key.Length - 1)
                 $CreateParameters.Remove($keyName)
             }
         }

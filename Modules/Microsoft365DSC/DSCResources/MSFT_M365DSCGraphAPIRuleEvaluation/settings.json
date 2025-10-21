@@ -17,5 +17,13 @@
       }
     }
   },
-  "requiredModules": []
+  "requiredModules": [],
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Authentication",
+      "cmdlets": [
+        "Invoke-MgGraphRequest"
+      ]
+    }
+  ]
 }

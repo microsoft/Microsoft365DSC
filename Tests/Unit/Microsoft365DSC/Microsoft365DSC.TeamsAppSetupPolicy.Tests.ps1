@@ -26,6 +26,30 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -ModuleName M365DSCUtil -CommandName Confirm-M365DSCDependencies -MockWith {
             }
 
+            Mock -CommandName Get-CsTeamsAppSetupPolicy -MockWith {
+                return @{
+                    AllowSideLoading     = $True;
+                    AllowUserPinning     = $True;
+                    AppPresetList        = @(
+                        @{
+                            Id = "com.microsoft.teamspace.tab.vsts"
+                        }
+                    );
+                    Description          = "My Description";
+                    Identity             = "Test";
+                    PinnedAppBarApps     = @(
+                        @{
+                            Id = "14d6962d-6eeb-4f48-8890-de55454bb136"
+                            Order = 1
+                        },
+                        @{
+                            Id = "86fcd49b-61a2-4701-b771-54728cd291fb"
+                            Order = 2
+                        }
+                    )
+                }
+            }
+
             Mock -CommandName Set-CsTeamsAppSetupPolicy -MockWith {
             }
 
@@ -113,30 +137,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Identity             = "Test";
                     PinnedAppBarApps     = @("14d6962d-6eeb-4f48-8890-de55454bb136","86fcd49b-61a2-4701-b771-54728cd291fb");
                 }
-
-                Mock -CommandName Get-CsTeamsAppSetupPolicy -MockWith {
-                    return @{
-                        AllowSideLoading     = $True;
-                        AllowUserPinning     = $True;
-                        AppPresetList        = @(
-                            @{
-                                Id = "com.microsoft.teamspace.tab.vsts"
-                            }
-                        );
-                        Description          = "My Description";
-                        Identity             = "Test";
-                        PinnedAppBarApps     = @(
-                            @{
-                                Id = "14d6962d-6eeb-4f48-8890-de55454bb136"
-                                Order = 1
-                            },
-                            @{
-                                Id = "86fcd49b-61a2-4701-b771-54728cd291fb"
-                                Order = 2
-                            }
-                        )
-                    }
-                }
             }
 
             It 'Should return Values from the Get method' {
@@ -202,36 +202,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     AllowSideLoading     = $True;
                     AllowUserPinning     = $True;
-                    AppPresetList        = "com.microsoft.teamspace.tab.vsts";
+                    AppPresetList        = "com.microsoft.fake.app"; # Drift
                     Credential           = $Credential;
                     Description          = "My Description";
                     Ensure               = "Present";
                     Identity             = "Test";
                     PinnedAppBarApps     = @("14d6962d-6eeb-4f48-8890-de55454bb136","86fcd49b-61a2-4701-b771-54728cd291fb");
-                }
-
-                Mock -CommandName Get-CsTeamsAppSetupPolicy -MockWith {
-                    return @{
-                        AllowSideLoading     = $True;
-                        AllowUserPinning     = $True;
-                        AppPresetList        = @(
-                            @{
-                                Id = "com.microsoft.fake.app" #drift
-                            }
-                        );
-                        Description          = "My Description";
-                        Identity             = "Test";
-                        PinnedAppBarApps     = @(
-                            @{
-                                Id = "14d6962d-6eeb-4f48-8890-de55454bb136"
-                                Order = 1
-                            },
-                            @{
-                                Id = "86fcd49b-61a2-4701-b771-54728cd291fb"
-                                Order = 2
-                            }
-                        )
-                    }
                 }
             }
 
@@ -255,30 +231,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
                     Credential = $Credential
-                }
-
-                Mock -CommandName Get-CsTeamsAppSetupPolicy -MockWith {
-                    return @{
-                        AllowSideLoading     = $True;
-                        AllowUserPinning     = $True;
-                        AppPresetList        = @(
-                            @{
-                                Id = "com.microsoft.teamspace.tab.vsts"
-                            }
-                        );
-                        Description          = "My Description";
-                        Identity             = "Test";
-                        PinnedAppBarApps     = @(
-                            @{
-                                Id = "14d6962d-6eeb-4f48-8890-de55454bb136"
-                                Order = 1
-                            },
-                            @{
-                                Id = "86fcd49b-61a2-4701-b771-54728cd291fb"
-                                Order = 2
-                            }
-                        )
-                    }
                 }
             }
 

@@ -33,6 +33,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-PSSession -MockWith {
             }
 
+            Mock -CommandName Get-CsTeamsFilesPolicy -MockWith {
+                return @{
+                    NativeFileEntryPoints = 'Enabled'
+                    SPChannelFilesTab     = 'Enabled'
+                    Identity              = 'FakeStringValue'
+                }
+            }
+
             Mock -CommandName Set-CsTeamsFilesPolicy -MockWith {
             }
 
@@ -92,14 +100,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure                = 'Absent'
                     Credential            = $Credential
                 }
-
-                Mock -CommandName Get-CsTeamsFilesPolicy -MockWith {
-                    return @{
-                        NativeFileEntryPoints = 'Enabled'
-                        SPChannelFilesTab     = 'Enabled'
-                        Identity              = 'FakeStringValue'
-                    }
-                }
             }
 
             It 'Should return Values from the Get method' {
@@ -125,14 +125,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure                = 'Present'
                     Credential            = $Credential
                 }
-
-                Mock -CommandName Get-CsTeamsFilesPolicy -MockWith {
-                    return @{
-                        NativeFileEntryPoints = 'Enabled'
-                        SPChannelFilesTab     = 'Enabled'
-                        Identity              = 'FakeStringValue'
-                    }
-                }
             }
 
             It 'Should return true from the Test method' {
@@ -143,19 +135,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'The TeamsFilesPolicy exists and values are NOT in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    NativeFileEntryPoints = 'Enabled'
+                    NativeFileEntryPoints = 'Disabled' # Drift
                     SPChannelFilesTab     = 'Enabled'
                     Identity              = 'FakeStringValue'
                     Ensure                = 'Present'
                     Credential            = $Credential
-                }
-
-                Mock -CommandName Get-CsTeamsFilesPolicy -MockWith {
-                    return @{
-                        NativeFileEntryPoints = 'Disabled'
-                        SPChannelFilesTab     = 'Disabled'
-                        Identity              = 'FakeStringValue'
-                    }
                 }
             }
 
@@ -179,15 +163,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
                     Credential = $Credential
-                }
-
-                Mock -CommandName Get-CsTeamsFilesPolicy -MockWith {
-                    return @{
-                        NativeFileEntryPoints = 'Enabled'
-                        SPChannelFilesTab     = 'Enabled'
-                        Identity              = 'FakeStringValue'
-
-                    }
                 }
             }
 

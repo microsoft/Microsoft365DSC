@@ -90,7 +90,8 @@ function Get-TargetResource
             $nullResult = $PSBoundParameters
             $nullResult.Ensure = 'Absent'
 
-            $instance = Get-MgBetaIdentityGovernanceLifecycleWorkflow -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'"
+            $instance = Get-MgBetaIdentityGovernanceLifecycleWorkflow -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'" `
+                                                                      -ErrorAction Stop
         }
         else
         {
@@ -292,25 +293,82 @@ function Set-TargetResource
     # CREATE
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        New-MgBetaIdentityGovernanceLifecycleWorkflow @SetParameters
+        try
+        {
+            New-MgBetaIdentityGovernanceLifecycleWorkflow @SetParameters -ErrorAction Stop
+        }
+        catch
+        {
+            if ($_.ErrorDetails.Message -like "*Insufficient license *")
+            {
+                Write-Warning -Message " Insufficient license. You need the Entra ID Governance license."
+            }
+            else
+            {
+                New-M365DSCLogEntry -Message 'Error during Create:' `
+                    -Exception $_ `
+                    -Source $($MyInvocation.MyCommand.Source) `
+                    -TenantId $TenantId `
+                    -Credential $Credential
+                throw $_
+            }
+        }
     }
     # UPDATE
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        $instance = Get-MgBetaIdentityGovernanceLifecycleWorkflow -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'"
-        $instance = Get-MgBetaIdentityGovernanceLifecycleWorkflow -WorkflowId $instance.Id
+        try
+        {
+            $instance = Get-MgBetaIdentityGovernanceLifecycleWorkflow -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'"
+            $instance = Get-MgBetaIdentityGovernanceLifecycleWorkflow -WorkflowId $instance.Id
 
-        New-MgBetaIdentityGovernanceLifecycleWorkflowNewVersion -WorkflowId $instance.Id -BodyParameter $newParams -ErrorAction Stop
+            New-MgBetaIdentityGovernanceLifecycleWorkflowNewVersion -WorkflowId $instance.Id -BodyParameter $newParams -ErrorAction Stop
 
-        # the below implementation of Update cmdlet can't be used for updating parameters other than basic parameters like display name,
-        # description, isEnabled, isSchedulingEnabled. Hence using the new version cmdlet for exhaustive update scenarios.
-        # Update-MgBetaIdentityGovernanceLifecycleWorkflow @setParameters
+            # the below implementation of Update cmdlet can't be used for updating parameters other than basic parameters like display name,
+            # description, isEnabled, isSchedulingEnabled. Hence using the new version cmdlet for exhaustive update scenarios.
+            # Update-MgBetaIdentityGovernanceLifecycleWorkflow @setParameters
+        }
+        catch
+        {
+            if ($_.ErrorDetails.Message -like "*Insufficient license *")
+            {
+                Write-Warning -Message " Insufficient license. You need the Entra ID Governance license."
+            }
+            else
+            {
+                New-M365DSCLogEntry -Message 'Error during Update:' `
+                    -Exception $_ `
+                    -Source $($MyInvocation.MyCommand.Source) `
+                    -TenantId $TenantId `
+                    -Credential $Credential
+                throw $_
+            }
+        }
     }
     # REMOVE
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        $instance = Get-MgBetaIdentityGovernanceLifecycleWorkflow -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'"
-        Remove-MgBetaIdentityGovernanceLifecycleWorkflow -WorkflowId $instance.Id
+        try
+        {
+            $instance = Get-MgBetaIdentityGovernanceLifecycleWorkflow -Filter "DisplayName eq '$($DisplayName -replace "'", "''")'"
+            Remove-MgBetaIdentityGovernanceLifecycleWorkflow -WorkflowId $instance.Id  -ErrorAction Stop
+        }
+        catch
+        {
+            if ($_.ErrorDetails.Message -like "*Insufficient license *")
+            {
+                Write-Warning -Message " Insufficient license. You need the Entra ID Governance license."
+            }
+            else
+            {
+                New-M365DSCLogEntry -Message 'Error during Remove:' `
+                    -Exception $_ `
+                    -Source $($MyInvocation.MyCommand.Source) `
+                    -TenantId $TenantId `
+                    -Credential $Credential
+                throw $_
+            }
+        }
     }
 }
 

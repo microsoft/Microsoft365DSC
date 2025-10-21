@@ -410,7 +410,7 @@ function Export-TargetResource
                 $Global:M365DSCExportResourceInstancesCount++
             }
 
-            Write-M365DSCHost -Message "    |---[$i/$($IntraOrganizationConnectors.length)] $($IntraOrganizationConnector.Identity)" -DeferWrite
+            Write-M365DSCHost -Message "    |---[$i/$($IntraOrganizationConnectors.Length)] $($IntraOrganizationConnector.Identity)" -DeferWrite
 
             $Params = @{
                 Identity              = $IntraOrganizationConnector.Identity

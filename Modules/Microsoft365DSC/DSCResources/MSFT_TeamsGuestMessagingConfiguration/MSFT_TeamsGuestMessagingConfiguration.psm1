@@ -49,6 +49,10 @@ function Get-TargetResource
         $AllowImmersiveReader,
 
         [Parameter()]
+        [System.Boolean]
+        $UsersCanDeleteBotMessages,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -99,22 +103,23 @@ function Get-TargetResource
         $config = Get-CsTeamsGuestMessagingConfiguration -ErrorAction Stop
 
         return @{
-            Identity               = $Identity
-            AllowUserEditMessage   = $config.AllowUserEditMessage
-            AllowUserDeleteMessage = $config.AllowUserDeleteMessage
-            AllowUserChat          = $config.AllowUserChat
-            AllowUserDeleteChat    = $config.AllowUserDeleteChat
-            AllowGiphy             = $config.AllowGiphy
-            GiphyRatingType        = $config.GiphyRatingType
-            AllowMemes             = $config.AllowMemes
-            AllowStickers          = $config.AllowStickers
-            AllowImmersiveReader   = $config.AllowImmersiveReader
-            Credential             = $Credential
-            ApplicationId          = $ApplicationId
-            TenantId               = $TenantId
-            CertificateThumbprint  = $CertificateThumbprint
-            ManagedIdentity        = $ManagedIdentity.IsPresent
-            AccessTokens           = $AccessTokens
+            Identity                  = $Identity
+            AllowUserEditMessage      = $config.AllowUserEditMessage
+            AllowUserDeleteMessage    = $config.AllowUserDeleteMessage
+            AllowUserChat             = $config.AllowUserChat
+            AllowUserDeleteChat       = $config.AllowUserDeleteChat
+            AllowGiphy                = $config.AllowGiphy
+            GiphyRatingType           = $config.GiphyRatingType
+            AllowMemes                = $config.AllowMemes
+            AllowStickers             = $config.AllowStickers
+            AllowImmersiveReader      = $config.AllowImmersiveReader
+            UsersCanDeleteBotMessages = $config.UsersCanDeleteBotMessages
+            Credential                = $Credential
+            ApplicationId             = $ApplicationId
+            TenantId                  = $TenantId
+            CertificateThumbprint     = $CertificateThumbprint
+            ManagedIdentity           = $ManagedIdentity.IsPresent
+            AccessTokens              = $AccessTokens
         }
     }
     catch
@@ -175,6 +180,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowImmersiveReader,
+
+        [Parameter()]
+        [System.Boolean]
+        $UsersCanDeleteBotMessages,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -283,6 +292,10 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowImmersiveReader,
+
+        [Parameter()]
+        [System.Boolean]
+        $UsersCanDeleteBotMessages,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]

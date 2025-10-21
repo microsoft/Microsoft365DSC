@@ -1282,7 +1282,7 @@ function Update-M365DSCAzureAdApplication
         Write-Host @params
     }
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+    $null = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
     $requireWait = $false

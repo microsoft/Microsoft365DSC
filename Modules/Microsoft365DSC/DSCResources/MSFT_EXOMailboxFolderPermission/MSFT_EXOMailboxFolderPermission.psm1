@@ -388,7 +388,7 @@ function Export-TargetResource
         $j = 1
         foreach ($mailboxFolder in $mailboxFolders)
         {
-            Write-M365DSCHost -Message "        |---[$j/$($mailboxFolders.count)] $($mailboxFolder.Identity)" -DeferWrite
+            Write-M365DSCHost -Message "        |---[$j/$($mailboxFolders.Count)] $($mailboxFolder.Identity)" -DeferWrite
             Write-M365DSCHost -Message "`r`n" -DeferWrite
 
             $Params = @{

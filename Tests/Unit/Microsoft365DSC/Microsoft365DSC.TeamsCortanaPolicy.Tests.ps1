@@ -42,6 +42,18 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-CsTeamsCortanaPolicy -MockWith {
             }
 
+            Mock -CommandName Get-CsTeamsCortanaPolicy -MockWith {
+                return @{
+                    AllowCortanaVoiceInvocation      = $True
+                    Description                      = 'FakeStringValue'
+                    AllowCortanaInContextSuggestions = $True
+                    AllowCortanaAmbientListening     = $True
+                    Identity                         = 'FakeStringValue'
+                    CortanaVoiceInvocationMode       = 'WakeWordPushToTalkUserOverride'
+
+                }
+            }
+
             Mock -CommandName New-M365DSCConnection -MockWith {
                 return 'Credentials'
             }
@@ -92,18 +104,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure                     = 'Absent'
                     Credential                 = $Credential
                 }
-
-                Mock -CommandName Get-CsTeamsCortanaPolicy -MockWith {
-                    return @{
-                        AllowCortanaVoiceInvocation      = $True
-                        Description                      = 'FakeStringValue'
-                        AllowCortanaInContextSuggestions = $True
-                        AllowCortanaAmbientListening     = $True
-                        Identity                         = 'FakeStringValue'
-                        CortanaVoiceInvocationMode       = 'WakeWordPushToTalkUserOverride'
-
-                    }
-                }
             }
 
             It 'Should return Values from the Get method' {
@@ -129,18 +129,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure                     = 'Present'
                     Credential                 = $Credential
                 }
-
-                Mock -CommandName Get-CsTeamsCortanaPolicy -MockWith {
-                    return @{
-                        AllowCortanaVoiceInvocation      = $True
-                        Description                      = 'FakeStringValue'
-                        AllowCortanaInContextSuggestions = $True
-                        AllowCortanaAmbientListening     = $True
-                        Identity                         = 'FakeStringValue'
-                        CortanaVoiceInvocationMode       = 'WakeWordPushToTalkUserOverride'
-
-                    }
-                }
             }
 
             It 'Should return true from the Test method' {
@@ -153,20 +141,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     Description                = 'FakeStringValue'
                     Identity                   = 'FakeStringValue'
-                    CortanaVoiceInvocationMode = 'WakeWordPushToTalkUserOverride'
+                    CortanaVoiceInvocationMode = 'Disabled' # Drift
                     Ensure                     = 'Present'
                     Credential                 = $Credential
-                }
-
-                Mock -CommandName Get-CsTeamsCortanaPolicy -MockWith {
-                    return @{
-                        AllowCortanaVoiceInvocation      = $False
-                        Description                      = 'FakeStringValueDrift #Drift'
-                        AllowCortanaInContextSuggestions = $False
-                        AllowCortanaAmbientListening     = $False
-                        Identity                         = 'FakeStringValue'
-                        CortanaVoiceInvocationMode       = 'PushToTalkUserOverride'
-                    }
                 }
             }
 
@@ -190,18 +167,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
                     Credential = $Credential
-                }
-
-                Mock -CommandName Get-CsTeamsCortanaPolicy -MockWith {
-                    return @{
-                        AllowCortanaVoiceInvocation      = $True
-                        Description                      = 'FakeStringValue'
-                        AllowCortanaInContextSuggestions = $True
-                        AllowCortanaAmbientListening     = $True
-                        Identity                         = 'FakeStringValue'
-                        CortanaVoiceInvocationMode       = 'WakeWordPushToTalkUserOverride'
-
-                    }
                 }
             }
 

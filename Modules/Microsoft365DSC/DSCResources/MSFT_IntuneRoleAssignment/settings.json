@@ -52,5 +52,29 @@
     "Global",
     "USGov"
   ],
-  "mode": "Configuration"
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Beta.DeviceManagement.Administration",
+      "cmdlets": [
+        "Get-MgBetaDeviceManagementRoleAssignment",
+        "New-MgBetaDeviceManagementRoleAssignment",
+        "Remove-MgBetaDeviceManagementRoleAssignment",
+        "Update-MgBetaDeviceManagementRoleAssignment"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.DeviceManagement.Administration",
+      "cmdlets": [
+        "Get-MgDeviceManagementRoleDefinition",
+        "Get-MgDeviceManagementRoleDefinitionRoleAssignment"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Groups",
+      "cmdlets": [
+        "Get-MgGroup"
+      ]
+    }
+  ]
 }

@@ -45,7 +45,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-MgBetaIdentityB2XUserFlow -MockWith {
             }
 
-            Mock -CommandName Remove-MgBetaIdentityB2XUserFlowIdentityProviderByRef -MockWith {
+            Mock -CommandName Remove-MgBetaIdentityB2XUserFlowIdentityProviderBaseByRef -MockWith {
             }
 
             Mock -CommandName New-MgBetaIdentityB2XUserFlowIdentityProviderByRef -MockWith {

@@ -41,6 +41,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $AllowRoleBasedChatPermissions,
+
+        [Parameter()]
+        [System.Boolean]
         $AllowScopedPeopleSearchandAccess,
 
         [Parameter()]
@@ -132,6 +136,7 @@ function Get-TargetResource
             AllowGuestUser                   = $config.AllowGuestUser
             AllowOrganizationTab             = $config.AllowOrganizationTab
             AllowResourceAccountSendMessage  = $config.AllowResourceAccountSendMessage
+            AllowRoleBasedChatPermissions    = $config.AllowRoleBasedChatPermissions
             AllowScopedPeopleSearchandAccess = $config.AllowScopedPeopleSearchandAccess
             AllowShareFile                   = $config.AllowShareFile
             AllowSkypeBusinessInterop        = $config.AllowSkypeBusinessInterop
@@ -200,6 +205,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowResourceAccountSendMessage,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowRoleBasedChatPermissions,
 
         [Parameter()]
         [System.Boolean]
@@ -327,6 +336,10 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowResourceAccountSendMessage,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowRoleBasedChatPermissions,
 
         [Parameter()]
         [System.Boolean]

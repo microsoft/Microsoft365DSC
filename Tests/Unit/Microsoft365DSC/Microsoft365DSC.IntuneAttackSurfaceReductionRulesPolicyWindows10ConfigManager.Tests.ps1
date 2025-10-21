@@ -25,7 +25,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $secpasswd = ConvertTo-SecureString ((New-Guid).ToString()) -AsPlainText -Force
             $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin@mydomain.com', $secpasswd)
 
-            Mock -CommandName Confirm-M365DSCDependencies -MockWith {
+            Mock -ModuleName M365DSCUtil -CommandName Confirm-M365DSCDependencies -MockWith {
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
@@ -42,7 +42,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicy -MockWith {
-            }
+                    return @{
+                        Id    = '619bd4a4-3b3b-4441-bd6f-3f4c0c444870'
+                        Description = 'My Test Description'
+                        Name        = 'My Test'
+                        TemplateReference = @{
+                            TemplateId = '5dd36540-eb22-4e7e-b19c-2a07772ba627_1'
+                        }
+                    }
+                }
 
             Mock -CommandName Remove-MgBetaDeviceManagementConfigurationPolicy -MockWith {
             }
@@ -194,14 +202,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Identity    = '619bd4a4-3b3b-4441-bd6f-3f4c0c444870'
                     useadvancedprotectionagainstransomware = "audit"
                 }
-
-                Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicy -MockWith {
-                    return @{
-                        Id    = '619bd4a4-3b3b-4441-bd6f-3f4c0c444870'
-                        Description = 'My Test Description'
-                        Name        = 'My Test'
-                    }
-                }
             }
 
             It 'Should return Present from the Get method' {
@@ -234,14 +234,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         } -ClientOnly)
                     )
                 }
-
-                Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicy -MockWith {
-                    return @{
-                        Id    = '619bd4a4-3b3b-4441-bd6f-3f4c0c444870'
-                        Description = 'My Test Description'
-                        Name        = 'My Test'
-                    }
-                }
             }
 
             It 'Should return true from the Test method' {
@@ -265,14 +257,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure      = 'Absent'
                     Identity    = '619bd4a4-3b3b-4441-bd6f-3f4c0c444870'
                 }
-
-                Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicy -MockWith {
-                    return @{
-                        Id    = '619bd4a4-3b3b-4441-bd6f-3f4c0c444870'
-                        Description = 'My Test Description'
-                        Name        = 'My Test'
-                    }
-                }
             }
 
             It 'Should return Present from the Get method' {
@@ -295,17 +279,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
                     Credential = $Credential
-                }
-
-                Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicy -MockWith {
-                    return @{
-                        Id    = '619bd4a4-3b3b-4441-bd6f-3f4c0c444870'
-                        Description = 'My Test Description'
-                        Name        = 'My Test'
-                        TemplateReference = @{
-                            TemplateId = '5dd36540-eb22-4e7e-b19c-2a07772ba627_1'
-                        }
-                    }
                 }
             }
 

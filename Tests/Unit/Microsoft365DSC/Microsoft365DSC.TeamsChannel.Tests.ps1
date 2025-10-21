@@ -37,7 +37,38 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return 'Credentials'
             }
 
+            Mock -CommandName Remove-TeamChannel -MockWith {
+                return $null
+            }
+
             Mock -CommandName Set-TeamChannel -MockWith {
+            }
+
+            Mock -CommandName New-TeamChannel -MockWith {
+                return @{
+                    GroupID = $null
+                }
+            }
+
+            Mock -CommandName Get-TeamChannel -MockWith {
+                return @{
+                    GroupID     = '12345-12345-12345-12345-12345'
+                    DisplayName = 'Test Channel'
+                }
+            }
+
+            Mock -CommandName Get-Team -MockWith {
+                return @{
+                    DisplayName = 'TestTeam'
+                    GroupID     = '12345-12345-12345-12345-12345'
+                }
+            }
+
+            Mock -CommandName Get-TeamByName -MockWith {
+                return @{
+                    DisplayName = 'TestTeam'
+                    GroupID     = '12345-12345-12345-12345-12345'
+                }
             }
 
             # Mock Write-M365DSCHost to hide output during the tests
@@ -57,33 +88,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential  = $Credential
                 }
 
-                Mock -CommandName New-M365DSCConnection -MockWith {
-                    return 'Credentials'
-                }
-
-                Mock -CommandName Get-TeamByName -MockWith {
-                    return @{
-                        DisplayName = 'TestTeam'
-                        GroupID     = '12345-12345-12345-12345-12345'
-                    }
-                }
-
                 Mock -CommandName Get-TeamChannel -MockWith {
                     return @{
-                        DisplayName = 'TestTeam'
+                        DisplayName = 'Other Channel'
                         GroupID     = '12345-12345-12345-12345-12345'
-                    }
-                }
-
-                Mock -CommandName Get-Team -MockWith {
-                    return @{
-                        DisplayName = 'TestTeam'
-                        GroupID     = '12345-12345-12345-12345-12345'
-                    }
-                }
-
-                Mock -CommandName New-TeamChannel -MockWith {
-                    return @{GroupID = $null
                     }
                 }
             }
@@ -105,31 +113,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure      = 'Present'
                     Credential  = $Credential
                 }
-
-                Mock -CommandName New-M365DSCConnection -MockWith {
-                    return 'Credentials'
-                }
-
-                Mock -CommandName Get-TeamByName -MockWith {
-                    return @{
-                        DisplayName = 'TestTeam'
-                        GroupID     = '12345-12345-12345-12345-12345'
-                    }
-                }
-
-                Mock -CommandName Get-TeamChannel -MockWith {
-                    return @{
-                        GroupID     = '12345-12345-12345-12345-12345'
-                        DisplayName = 'Test Channel'
-                    }
-                }
-
-                Mock -CommandName Get-Team -MockWith {
-                    return @{
-                        DisplayName = 'TestTeam'
-                        GroupID     = '12345-12345-12345-12345-12345'
-                    }
-                }
             }
 
             It 'Should return present from the Get method' {
@@ -149,31 +132,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure         = 'Present'
                     NewDisplayName = 'Test Channel Updated'
                     Credential     = $Credential
-                }
-
-                Mock -CommandName New-M365DSCConnection -MockWith {
-                    return 'Credentials'
-                }
-
-                Mock -CommandName Get-TeamByName -MockWith {
-                    return @{
-                        DisplayName = 'TestTeam'
-                        GroupID     = '12345-12345-12345-12345-12345'
-                    }
-                }
-
-                Mock -CommandName Get-TeamChannel -MockWith {
-                    return @{
-                        GroupID     = '12345-12345-12345-12345-12345'
-                        DisplayName = 'Test Channel'
-                    }
-                }
-
-                Mock -CommandName Get-Team -MockWith {
-                    return @{
-                        DisplayName = 'TestTeam'
-                        GroupID     = '12345-12345-12345-12345-12345'
-                    }
                 }
             }
 
@@ -198,35 +156,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure      = 'Absent'
                     Credential  = $Credential
                 }
-
-                Mock -CommandName New-M365DSCConnection -MockWith {
-                    return 'Credentials'
-                }
-
-                Mock -CommandName Get-TeamByName -MockWith {
-                    return @{
-                        DisplayName = 'TestTeam'
-                        GroupID     = '12345-12345-12345-12345-12345'
-                    }
-                }
-
-                Mock -CommandName Remove-TeamChannel -MockWith {
-                    return $null
-                }
-
-                Mock -CommandName Get-Team -MockWith {
-                    return @{
-                        DisplayName = 'TestTeam'
-                        GroupID     = '12345-12345-12345-12345-12345'
-                    }
-                }
-
-                Mock -CommandName Get-TeamChannel -MockWith {
-                    return @{
-                        TeamName    = 'TestTeam'
-                        DisplayName = 'Test Channel'
-                    }
-                }
             }
 
             It 'Should return present from the Get method' {
@@ -236,7 +165,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It 'Remove channel in the Set method' {
                 Set-TargetResource @testParams
             }
-
         }
 
         Context -Name 'ReverseDSC Tests' -Fixture {
@@ -245,30 +173,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
                     Credential = $Credential
-                }
-
-                Mock -CommandName New-M365DSCConnection -MockWith {
-                    return 'Credentials'
-                }
-
-                Mock -CommandName Get-TeamByName -MockWith {
-                    return @{
-                        DisplayName = 'TestTeam'
-                        GroupID     = '12345-12345-12345-12345-12345'
-                    }
-                }
-
-                Mock -CommandName Get-Team -MockWith {
-                    return @{
-                        DisplayName = 'TestTeam'
-                        GroupID     = '12345-12345-12345-12345-12345'
-                    }
-                }
-
-                Mock -CommandName Get-TeamChannel -MockWith {
-                    return @{
-                        DisplayName = 'Test Channel'
-                    }
                 }
             }
 

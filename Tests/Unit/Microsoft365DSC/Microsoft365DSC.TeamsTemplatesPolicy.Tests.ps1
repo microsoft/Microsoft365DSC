@@ -56,6 +56,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
+            Mock -CommandName Get-CsTeamsTemplatePermissionPolicy -MockWith {
+                return @{
+                    Description     = "Test Policy Creation";
+                    HiddenTemplates = @(
+                        @{
+                            Id = "12345-12345-12345-12345-12345"
+                            Name = 'Manage a Project'
+                        }
+                    );
+                    Identity        = "DSC Test";
+                }
+            }
+
             # Mock Write-M365DSCHost to hide output during the tests
             Mock -CommandName Write-M365DSCHost -MockWith {
             }
@@ -99,20 +112,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     Description          = "Test Policy Creation";
                     Ensure               = "Present";
-                    HiddenTemplates      = @("Manage a Project","Manage an Event","Adopt Office 365","Organize Help Desk");
+                    HiddenTemplates      = @("Manage a Project", "Manage an Event"); # Drift
                     Identity             = "DSC Test";
                     Credential           = $Credential
-                }
-
-                Mock -CommandName Get-CsTeamsTemplatePermissionPolicy -MockWith {
-                    return @{
-                        Description          = "Test Policy Creation";
-                        HiddenTemplates      = @(@{
-                            Id = "12345-12345-12345-12345-12345"
-                            Name = 'Manage a Project'
-                        }); # Drift
-                        Identity             = "DSC Test";
-                    }
                 }
             }
 
@@ -139,17 +141,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Identity             = "DSC Test";
                     Credential           = $Credential
                 }
-
-                Mock -CommandName Get-CsTeamsTemplatePermissionPolicy -MockWith {
-                    return @{
-                        Description          = "Test Policy Creation";
-                        HiddenTemplates      = @(@{
-                            Id = "12345-12345-12345-12345-12345"
-                            Name = 'Manage a Project'
-                        });
-                        Identity             = "DSC Test";
-                    }
-                }
             }
 
             It 'Should return Present from the Get method' {
@@ -169,17 +160,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     HiddenTemplates      = @("Manage a Project");
                     Identity             = "DSC Test";
                     Credential           = $Credential
-                }
-
-                Mock -CommandName Get-CsTeamsTemplatePermissionPolicy -MockWith {
-                    return @{
-                        Description          = "Test Policy Creation";
-                        HiddenTemplates      = @(@{
-                            Id = "12345-12345-12345-12345-12345"
-                            Name = 'Manage a Project'
-                        });
-                        Identity             = "DSC Test";
-                    }
                 }
             }
 
@@ -203,16 +183,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
                     Credential = $Credential
-                }
-                Mock -CommandName Get-CsTeamsTemplatePermissionPolicy -MockWith {
-                    return @{
-                        Description          = "Test Policy Creation";
-                        HiddenTemplates      = @(@{
-                            Id = "12345-12345-12345-12345-12345"
-                            Name = 'Manage a Project'
-                        });
-                        Identity             = "DSC Test";
-                    }
                 }
             }
 

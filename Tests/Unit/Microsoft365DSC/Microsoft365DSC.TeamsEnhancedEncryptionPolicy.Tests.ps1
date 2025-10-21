@@ -46,6 +46,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return 'Credentials'
             }
 
+            Mock -CommandName Get-CsTeamsEnhancedEncryptionPolicy -MockWith {
+                return @{
+                    CallingEndtoEndEncryptionEnabledType = 'FakeStringValue'
+                    Description                          = 'FakeStringValue'
+                    MeetingEndToEndEncryption            = 'FakeStringValue'
+                    Identity                             = 'FakeStringValue'
+                }
+            }
+
             # Mock Write-M365DSCHost to hide output during the tests
             Mock -CommandName Write-M365DSCHost -MockWith {
             }
@@ -94,15 +103,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure                               = 'Absent'
                     Credential                           = $Credential
                 }
-
-                Mock -CommandName Get-CsTeamsEnhancedEncryptionPolicy -MockWith {
-                    return @{
-                        CallingEndtoEndEncryptionEnabledType = 'FakeStringValue'
-                        Description                          = 'FakeStringValue'
-                        MeetingEndToEndEncryption            = 'FakeStringValue'
-                        Identity                             = 'FakeStringValue'
-                    }
-                }
             }
 
             It 'Should return Values from the Get method' {
@@ -129,16 +129,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure                               = 'Present'
                     Credential                           = $Credential
                 }
-
-                Mock -CommandName Get-CsTeamsEnhancedEncryptionPolicy -MockWith {
-                    return @{
-                        CallingEndtoEndEncryptionEnabledType = 'FakeStringValue'
-                        Description                          = 'FakeStringValue'
-                        MeetingEndToEndEncryption            = 'FakeStringValue'
-                        Identity                             = 'FakeStringValue'
-
-                    }
-                }
             }
 
             It 'Should return true from the Test method' {
@@ -149,21 +139,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'The TeamsEnhancedEncryptionPolicy exists and values are NOT in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    CallingEndtoEndEncryptionEnabledType = 'FakeStringValue'
+                    CallingEndtoEndEncryptionEnabledType = 'Disabled' # Drift
                     Description                          = 'FakeStringValue'
                     MeetingEndToEndEncryption            = 'FakeStringValue'
                     Identity                             = 'FakeStringValue'
                     Ensure                               = 'Present'
                     Credential                           = $Credential
-                }
-
-                Mock -CommandName Get-CsTeamsEnhancedEncryptionPolicy -MockWith {
-                    return @{
-                        CallingEndtoEndEncryptionEnabledType = 'FakeStringValueDrift #Drift'
-                        Description                          = 'FakeStringValueDrift #Drift'
-                        MeetingEndToEndEncryption            = 'FakeStringValueDrift #Drift'
-                        Identity                             = 'FakeStringValue'
-                    }
                 }
             }
 
@@ -187,16 +168,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
                     Credential = $Credential
-                }
-
-                Mock -CommandName Get-CsTeamsEnhancedEncryptionPolicy -MockWith {
-                    return @{
-                        CallingEndtoEndEncryptionEnabledType = 'FakeStringValue'
-                        Description                          = 'FakeStringValue'
-                        MeetingEndToEndEncryption            = 'FakeStringValue'
-                        Identity                             = 'FakeStringValue'
-
-                    }
                 }
             }
 

@@ -200,7 +200,6 @@ function Set-TargetResource
     #endregion
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
-
     $SetParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
     if ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Absent')
@@ -210,10 +209,6 @@ function Set-TargetResource
     }
     elseif ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Present')
     {
-        <#
-            If we get here, it's because the Test-TargetResource detected a drift, therefore we always call
-            into the Set-CsOnlineVoiceRoutingPolicy cmdlet.
-        #>
         Write-Verbose -Message "Updating settings for Voice Routing Policy {$Identity}"
         Set-CsOnlineVoiceRoutingPolicy @SetParameters
     }

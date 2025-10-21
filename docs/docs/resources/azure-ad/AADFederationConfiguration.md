@@ -5,6 +5,7 @@
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
 | **DisplayName** | Key | String | The display name of the SAML/WS-Fed based identity provider. Inherited from identityProviderBase. | |
+| **Id** | Write | String | Unique fientifier | |
 | **IssuerUri** | Write | String | Issuer URI of the federation server. Inherited from samlOrWsFedProvider. | |
 | **MetadataExchangeUri** | Write | String | URI of the metadata exchange endpoint used for authentication from rich client applications. Inherited from samlOrWsFedProvider. | |
 | **PassiveSignInUri** | Write | String | URI that web-based clients are directed to when signing in to Microsoft Entra services. Inherited from samlOrWsFedProvider. | |
@@ -81,11 +82,9 @@ Configuration Example
         {
             IssuerUri                       = 'https://contoso.com/issuerUri'
             DisplayName                     = 'contoso display name'
-            MetadataExchangeUri             ='https://contoso.com/metadataExchangeUri'
             PassiveSignInUri                = 'https://contoso.com/signin'
             PreferredAuthenticationProtocol = 'wsFed'
             Domains                         = @('contoso.com')
-            SigningCertificate              = 'MIIDADCCAeigAwIBAgIQEX41y8r6'
             Ensure                          = 'Present'
             ApplicationId                   = $ApplicationId
             TenantId                        = $TenantId
@@ -123,11 +122,9 @@ Configuration Example
         {
             IssuerUri                       = 'https://contoso.com/issuerUri'
             DisplayName                     = 'contoso display name'
-            MetadataExchangeUri             ='https://contoso.com/metadataExchangeUri'
             PassiveSignInUri                = 'https://contoso.com/drift' # drift
             PreferredAuthenticationProtocol = 'wsFed'
             Domains                         = @('contoso.com')
-            SigningCertificate              = 'MIIDADCCAeigAwIBAgIQEX41y8r6'
             Ensure                          = 'Present'
             ApplicationId                   = $ApplicationId
             TenantId                        = $TenantId
@@ -165,11 +162,9 @@ Configuration Example
         {
             IssuerUri                       = 'https://contoso.com/issuerUri'
             DisplayName                     = 'contoso display name'
-            MetadataExchangeUri             ='https://contoso.com/metadataExchangeUri'
             PassiveSignInUri                = 'https://contoso.com/signin'
             PreferredAuthenticationProtocol = 'wsFed'
             Domains                         = @('contoso.com')
-            SigningCertificate              = 'MIIDADCCAeigAwIBAgIQEX41y8r6'
             Ensure                          = 'Absent'
             ApplicationId                   = $ApplicationId
             TenantId                        = $TenantId

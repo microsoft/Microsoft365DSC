@@ -28,6 +28,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String[]]
+        $PinnedCallingBarApps,
+
+        [Parameter()]
+        [System.String[]]
         $PinnedMessageBarApps,
 
         [Parameter()]
@@ -104,38 +108,45 @@ function Get-TargetResource
             return $nullResult
         }
 
-        $AppPresetListValue = $instance.AppPresetList.Id
+        $appPresetListValue = $instance.AppPresetList.Id
         if ($instance.AppPresetList.Count -eq 0)
         {
-            $AppPresetListValue = @()
+            $appPresetListValue = @()
         }
 
-        $AppPresetMeetingListValue = $instance.AppPresetMeetingList.Id
+        $appPresetMeetingListValue = $instance.AppPresetMeetingList.Id
         if ($instance.AppPresetMeetingList.Count -eq 0)
         {
-            $AppPresetMeetingListValue = @()
+            $appPresetMeetingListValue = @()
         }
 
-        $PinnedAppBarAppsValue = $instance.PinnedAppBarApps.Id
+        $pinnedAppBarAppsValue = $instance.PinnedAppBarApps.Id
         if ($instance.PinnedAppBarApps.Count -eq 0)
         {
-            $PinnedAppBarAppsValue = @()
+            $pinnedAppBarAppsValue = @()
         }
 
-        $PinnedMessageBarAppsValue = $instance.PinnedMessageBarApps.Id
+        $pinnedCallingBarAppsValue = $instance.PinnedCallingBarApps.Id
+        if ($instance.PinnedCallingBarApps.Count -eq 0)
+        {
+            $pinnedCallingBarAppsValue = @()
+        }
+
+        $pinnedMessageBarAppsValue = $instance.PinnedMessageBarApps.Id
         if ($instance.PinnedMessageBarApps.Count -eq 0)
         {
-            $PinnedMessageBarAppsValue = @()
+            $pinnedMessageBarAppsValue = @()
         }
 
         Write-Verbose -Message "Found an instance with Identity {$Identity}"
         $results = @{
             Identity              = $instance.Identity.Replace('Tag:', '')
             Description           = $instance.Description
-            AppPresetList         = [Array]$AppPresetListValue
-            AppPresetMeetingList  = [Array]$AppPresetMeetingListValue
-            PinnedAppBarApps      = [Array]$PinnedAppBarAppsValue
-            PinnedMessageBarApps  = [Array]$PinnedMessageBarAppsValue
+            AppPresetList         = [Array]$appPresetListValue
+            AppPresetMeetingList  = [Array]$appPresetMeetingListValue
+            PinnedAppBarApps      = [Array]$pinnedAppBarAppsValue
+            PinnedCallingBarApps  = [Array]$pinnedCallingBarAppsValue
+            PinnedMessageBarApps  = [Array]$pinnedMessageBarAppsValue
             AllowUserPinning      = $instance.AllowUserPinning
             AllowSideLoading      = $instance.AllowSideLoading
             Ensure                = 'Present'
@@ -184,6 +195,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String[]]
         $PinnedAppBarApps,
+
+        [Parameter()]
+        [System.String[]]
+        $PinnedCallingBarApps,
 
         [Parameter()]
         [System.String[]]
@@ -248,7 +263,7 @@ function Set-TargetResource
     {
         foreach ($appInstance in $AppPresetList)
         {
-            $appPresetValues += [Microsoft.Teams.Policy.Administration.Cmdlets.Core.AppPreset]::New($appInstance)
+            $appPresetValues += [Microsoft.Teams.Policy.Administration.Cmdlets.Core.AppPreset]::new($appInstance)
         }
     }
 
@@ -257,7 +272,7 @@ function Set-TargetResource
     {
         foreach ($appInstance in $AppPresetMeetingList)
         {
-            $appPresetMeetingValues += [Microsoft.Teams.Policy.Administration.Cmdlets.Core.AppPresetMeeting]::New($appInstance)
+            $appPresetMeetingValues += [Microsoft.Teams.Policy.Administration.Cmdlets.Core.AppPresetMeeting]::new($appInstance)
         }
     }
 
@@ -267,7 +282,18 @@ function Set-TargetResource
         $i = 1
         foreach ($appInstance in $PinnedAppBarApps)
         {
-            $pinnedAppBarAppsValue += [Microsoft.Teams.Policy.Administration.Cmdlets.Core.PinnedApp]::New($appInstance, $i)
+            $pinnedAppBarAppsValue += [Microsoft.Teams.Policy.Administration.Cmdlets.Core.PinnedApp]::new($appInstance, $i)
+            $i++
+        }
+    }
+
+    $pinnedCallingBarAppsValue = @()
+    if ($null -ne $PinnedCallingBarApps -and ([Array]$PinnedCallingBarApps).Count -gt 0)
+    {
+        $i = 1
+        foreach ($appInstance in $PinnedCallingBarApps)
+        {
+            $pinnedCallingBarAppsValue += [Microsoft.Teams.Policy.Administration.Cmdlets.Core.PinnedCallingBarApp]::new($appInstance, $i)
             $i++
         }
     }
@@ -278,7 +304,7 @@ function Set-TargetResource
         $i = 1
         foreach ($appInstance in $PinnedMessageBarApps)
         {
-            $pinnedMessageBarAppsValue += [Microsoft.Teams.Policy.Administration.Cmdlets.Core.PinnedMessageBarApp]::New($appInstance, $i)
+            $pinnedMessageBarAppsValue += [Microsoft.Teams.Policy.Administration.Cmdlets.Core.PinnedMessageBarApp]::new($appInstance, $i)
             $i++
         }
     }
@@ -287,11 +313,12 @@ function Set-TargetResource
     {
         $CreateParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
         $CreateParameters.Remove('Verbose') | Out-Null
-        Write-Verbose -Message "Creating {$Identity} with Parameters:`r`n$(Convert-M365DscHashtableToString -Hashtable $CreateParameters)"
+        Write-Verbose -Message "Creating the Teams App Setup Policy {$Identity} with Parameters:`r`n$(Convert-M365DscHashtableToString -Hashtable $CreateParameters)"
 
         $CreateParameters.AppPresetList = $appPresetValues
         $CreateParameters.AppPresetMeetingList = $appPresetMeetingValues
         $CreateParameters.PinnedAppBarApps = $pinnedAppBarAppsValue
+        $CreateParameters.PinnedCallingBarApps = $pinnedCallingBarAppsValue
         $CreateParameters.PinnedMessageBarApps = $pinnedMessageBarAppsValue
 
         New-CsTeamsAppSetupPolicy @CreateParameters | Out-Null
@@ -300,18 +327,19 @@ function Set-TargetResource
     {
         $UpdateParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
         $UpdateParameters.Remove('Verbose') | Out-Null
-        Write-Verbose -Message "Updating {$Identity}"
+        Write-Verbose -Message "Updating the Teams App Setup Policy with Identity {$Identity}"
 
         $UpdateParameters.AppPresetList = $appPresetValues
         $UpdateParameters.AppPresetMeetingList = $appPresetMeetingValues
         $UpdateParameters.PinnedAppBarApps = $pinnedAppBarAppsValue
+        $UpdateParameters.PinnedCallingBarApps = $pinnedCallingBarAppsValue
         $UpdateParameters.PinnedMessageBarApps = $pinnedMessageBarAppsValue
 
         Set-CsTeamsAppSetupPolicy @UpdateParameters | Out-Null
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing {$Identity}"
+        Write-Verbose -Message "Removing the Teams App Setup Policy with Identity {$Identity}"
         Remove-CsTeamsAppSetupPolicy -Identity $currentInstance.Identity
     }
 }
@@ -341,6 +369,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String[]]
         $PinnedAppBarApps,
+
+        [Parameter()]
+        [System.String[]]
+        $PinnedCallingBarApps,
 
         [Parameter()]
         [System.String[]]

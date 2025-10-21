@@ -159,7 +159,7 @@ function Get-TargetResource
 
         $getIncompatibleAccessPackages = @()
         [Array]$query = Get-MgBetaEntitlementManagementAccessPackageIncompatibleAccessPackage -AccessPackageId $getValue.id
-        if ($query.count -gt 0)
+        if ($query.Count -gt 0)
         {
             $getIncompatibleAccessPackages += $query.id
         }
@@ -167,14 +167,14 @@ function Get-TargetResource
 
         $getAccessPackagesIncompatibleWith = @()
         [Array]$query = Get-MgBetaEntitlementManagementAccessPackageIncompatibleWith -AccessPackageId $getValue.id
-        if ($query.count -gt 0)
+        if ($query.Count -gt 0)
         {
             $getAccessPackagesIncompatibleWith += $query.id
         }
 
         $getIncompatibleGroups = @()
         [Array]$query = Get-MgBetaEntitlementManagementAccessPackageIncompatibleGroup -AccessPackageId $getValue.id
-        if ($query.count -gt 0)
+        if ($query.Count -gt 0)
         {
             $getIncompatibleGroups += $query.id
         }

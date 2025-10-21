@@ -78,6 +78,7 @@ function Get-TargetResource
             $nullResult = $PSBoundParameters
             $nullResult.Ensure = 'Absent'
 
+            $instance = $null
             if (-not [System.String]::IsNullOrEmpty($Id))
             {
                 Write-Verbose -Message "Retrieving policy by id {$Id}"
@@ -206,20 +207,20 @@ function Set-TargetResource
     # CREATE
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        Write-Verbose -Message "Creating new filtering policy {$Name}"
+        Write-Verbose -Message "Creating new filtering policy {$Name} with:`r`n$(ConvertTo-Json $instanceParams -Depth 10)"
         New-MgBetaNetworkAccessFilteringPolicy -BodyParameter $instanceParams
     }
     # UPDATE
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Updating filtering policy {$Name}"
+        Write-Verbose -Message "Updating filtering policy {$Name} with:`r`n$(ConvertTo-Json $instanceParams -Depth 10)"
         Update-MgBetaNetworkAccessFilteringPolicy -FilteringPolicyId $currentInstance.Id `
             -BodyParameter $instanceParams
     }
     # REMOVE
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing filtering policy {$Name}"
+        Write-Verbose -Message "Removing filtering policy with Id {$currentInstance.Id}"
         Remove-MgBetaNetworkAccessFilteringPolicy -FilteringPolicyId $currentInstance.Id
     }
 }

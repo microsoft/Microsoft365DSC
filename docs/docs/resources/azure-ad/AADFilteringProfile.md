@@ -108,7 +108,7 @@ Configuration Example
                     State = 'enabled'
                 }
             );
-            Priority              = 120;
+            Priority              = 130;
             State                 = "enabled";
             TenantId              = $TenantId;
         }
@@ -161,7 +161,7 @@ Configuration Example
                     State = 'enabled'
                 }
             );
-            Priority              = 130; #Drift
+            Priority              = 140; #Drift
             State                 = "enabled";
             TenantId              = $TenantId;
         }
@@ -214,7 +214,7 @@ Configuration Example
                     State = 'enabled'
                 }
             );
-            Priority              = 120;
+            Priority              = 140;
             State                 = "enabled";
             TenantId              = $TenantId;
         }

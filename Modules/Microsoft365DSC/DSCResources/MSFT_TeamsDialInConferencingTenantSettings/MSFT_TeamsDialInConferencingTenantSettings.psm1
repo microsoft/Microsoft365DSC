@@ -36,6 +36,10 @@ function Get-TargetResource
         $EnableEntryExitNotifications,
 
         [Parameter()]
+        [System.Boolean]
+        $EnableNameRecording,
+
+        [Parameter()]
         [System.String]
         $EntryExitAnnouncementsType,
 
@@ -45,8 +49,16 @@ function Get-TargetResource
         $MaskPstnNumbersType,
 
         [Parameter()]
+        [System.Boolean]
+        $MigrateServiceNumbersOnCrossForestMove,
+
+        [Parameter()]
         [System.UInt32]
         $PinLength,
+
+        [Parameter()]
+        [System.Boolean]
+        $UseUniqueConferenceIds,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -99,22 +111,25 @@ function Get-TargetResource
         $instance = Get-CsOnlineDialInConferencingTenantSettings -ErrorAction SilentlyContinue
 
         return @{
-            IsSingleInstance                 = 'Yes'
-            AllowPSTNOnlyMeetingsByDefault   = $instance.AllowPSTNOnlyMeetingsByDefault
-            AutomaticallyMigrateUserMeetings = $instance.AutomaticallyMigrateUserMeetings
-            AutomaticallyReplaceAcpProvider  = $instance.AutomaticallyReplaceAcpProvider
-            AutomaticallySendEmailsToUsers   = $instance.AutomaticallySendEmailsToUsers
-            EnableDialOutJoinConfirmation    = $instance.EnableDialOutJoinConfirmation
-            EnableEntryExitNotifications     = $instance.EnableEntryExitNotifications
-            EntryExitAnnouncementsType       = $instance.EntryExitAnnouncementsType
-            MaskPstnNumbersType              = $instance.MaskPstnNumbersType
-            PinLength                        = $instance.PinLength
-            Credential                       = $Credential
-            ApplicationId                    = $ApplicationId
-            TenantId                         = $TenantId
-            CertificateThumbprint            = $CertificateThumbprint
-            ManagedIdentity                  = $ManagedIdentity.IsPresent
-            AccessTokens                     = $AccessTokens
+            IsSingleInstance                       = 'Yes'
+            AllowPSTNOnlyMeetingsByDefault         = $instance.AllowPSTNOnlyMeetingsByDefault
+            AutomaticallyMigrateUserMeetings       = $instance.AutomaticallyMigrateUserMeetings
+            AutomaticallyReplaceAcpProvider        = $instance.AutomaticallyReplaceAcpProvider
+            AutomaticallySendEmailsToUsers         = $instance.AutomaticallySendEmailsToUsers
+            EnableDialOutJoinConfirmation          = $instance.EnableDialOutJoinConfirmation
+            EnableEntryExitNotifications           = $instance.EnableEntryExitNotifications
+            EnableNameRecording                    = $instance.EnableNameRecording
+            EntryExitAnnouncementsType             = $instance.EntryExitAnnouncementsType
+            MaskPstnNumbersType                    = $instance.MaskPstnNumbersType
+            MigrateServiceNumbersOnCrossForestMove = $instance.MigrateServiceNumbersOnCrossForestMove
+            PinLength                              = $instance.PinLength
+            UseUniqueConferenceIds                 = $instance.UseUniqueConferenceIds
+            Credential                             = $Credential
+            ApplicationId                          = $ApplicationId
+            TenantId                               = $TenantId
+            CertificateThumbprint                  = $CertificateThumbprint
+            ManagedIdentity                        = $ManagedIdentity.IsPresent
+            AccessTokens                           = $AccessTokens
         }
     }
     catch
@@ -164,6 +179,10 @@ function Set-TargetResource
         $EnableEntryExitNotifications,
 
         [Parameter()]
+        [System.Boolean]
+        $EnableNameRecording,
+
+        [Parameter()]
         [System.String]
         $EntryExitAnnouncementsType,
 
@@ -173,8 +192,16 @@ function Set-TargetResource
         $MaskPstnNumbersType,
 
         [Parameter()]
+        [System.Boolean]
+        $MigrateServiceNumbersOnCrossForestMove,
+
+        [Parameter()]
         [System.UInt32]
         $PinLength,
+
+        [Parameter()]
+        [System.Boolean]
+        $UseUniqueConferenceIds,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -271,6 +298,10 @@ function Test-TargetResource
         $EnableEntryExitNotifications,
 
         [Parameter()]
+        [System.Boolean]
+        $EnableNameRecording,
+
+        [Parameter()]
         [System.String]
         $EntryExitAnnouncementsType,
 
@@ -280,8 +311,16 @@ function Test-TargetResource
         $MaskPstnNumbersType,
 
         [Parameter()]
+        [System.Boolean]
+        $MigrateServiceNumbersOnCrossForestMove,
+
+        [Parameter()]
         [System.UInt32]
         $PinLength,
+
+        [Parameter()]
+        [System.Boolean]
+        $UseUniqueConferenceIds,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]

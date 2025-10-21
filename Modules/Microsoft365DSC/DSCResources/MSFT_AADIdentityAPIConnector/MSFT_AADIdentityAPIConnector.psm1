@@ -258,8 +258,7 @@ function Set-TargetResource
 
     $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
-    # If the certificates array is not empty, then we need to create a new instance of New-MgBetaAADIdentityAPIConnector
-
+    # If the certificates array is not empty, then we need to create a new instance
     $needToUpdateCertificates = $false
     if ($null -ne $Certificates -and $Certificates.Count -gt 0)
     {

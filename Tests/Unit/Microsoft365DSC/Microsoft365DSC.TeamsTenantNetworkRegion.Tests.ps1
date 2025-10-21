@@ -33,6 +33,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-PSSession -MockWith {
             }
 
+            Mock -CommandName Get-CsTenantNetworkRegion -MockWith {
+                return @{
+                    BypassID    = 'FakeStringValue'
+                    Description = 'FakeStringValue'
+                    CentralSite = 'FakeStringValue'
+                    Identity    = 'FakeStringValue'
+                }
+            }
+
             Mock -CommandName Set-CsTenantNetworkRegion -MockWith {
             }
 
@@ -90,15 +99,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure      = 'Absent'
                     Credential  = $Credential
                 }
-
-                Mock -CommandName Get-CsTenantNetworkRegion -MockWith {
-                    return @{
-                        BypassID    = 'FakeStringValue'
-                        Description = 'FakeStringValue'
-                        CentralSite = 'FakeStringValue'
-                        Identity    = 'FakeStringValue'
-                    }
-                }
             }
 
             It 'Should return Values from the Get method' {
@@ -123,15 +123,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure      = 'Present'
                     Credential  = $Credential
                 }
-
-                Mock -CommandName Get-CsTenantNetworkRegion -MockWith {
-                    return @{
-                        BypassID    = 'FakeStringValue'
-                        Description = 'FakeStringValue'
-                        CentralSite = 'FakeStringValue'
-                        Identity    = 'FakeStringValue'
-                    }
-                }
             }
 
             It 'Should return true from the Test method' {
@@ -142,19 +133,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'The TeamsTenantNetworkRegion exists and values are NOT in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    CentralSite = 'FakeStringValue'
+                    CentralSite = 'FakeStringValue Changed' # Drift
                     Identity    = 'FakeStringValue'
                     Ensure      = 'Present'
                     Credential  = $Credential
-                }
-
-                Mock -CommandName Get-CsTenantNetworkRegion -MockWith {
-                    return @{
-                        BypassID    = 'FakeStringValueDrift #Drift'
-                        Description = 'FakeStringValueDrift #Drift'
-                        CentralSite = 'FakeStringValueDrift #Drift'
-                        Identity    = 'FakeStringValue'
-                    }
                 }
             }
 
@@ -178,16 +160,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
                     Credential = $Credential
-                }
-
-                Mock -CommandName Get-CsTenantNetworkRegion -MockWith {
-                    return @{
-                        BypassID    = 'FakeStringValue'
-                        Description = 'FakeStringValue'
-                        CentralSite = 'FakeStringValue'
-                        Identity    = 'FakeStringValue'
-
-                    }
                 }
             }
 

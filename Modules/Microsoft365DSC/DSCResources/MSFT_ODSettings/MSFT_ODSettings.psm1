@@ -347,7 +347,7 @@ function Set-TargetResource
     # set the TenantRestrictionEnabled and DomainGuids values to avoid invalid configurations
     if ($TenantRestrictionEnabled -eq $true)
     {
-        if (!($CurrentParameters.ContainsKey('DomainGuids') -and ($CurrentParameters.DomainGuids.count -gt 0) -and ($CurrentParameters.DomainGuids[0] -ne '') ))
+        if (!($CurrentParameters.ContainsKey('DomainGuids') -and ($CurrentParameters.DomainGuids.Count -gt 0) -and ($CurrentParameters.DomainGuids[0] -ne '') ))
         {
             Write-Verbose -Message 'Invalid configuration specified: TenantRestrictionEnabled is True but No DomainGuids Specified, this option will not be enabled'
             $TenantRestrictionEnabled = $false
@@ -360,7 +360,7 @@ function Set-TargetResource
     {
         if ($CurrentParameters.ContainsKey('TenantRestrictionEnabled'))
         {
-            if ($CurrentParameters.ContainsKey('DomainGuids') -and ($CurrentParameters.DomainGuids.count -gt 0) -and ($CurrentParameters.DomainGuids[0] -ne '') )
+            if ($CurrentParameters.ContainsKey('DomainGuids') -and ($CurrentParameters.DomainGuids.Count -gt 0) -and ($CurrentParameters.DomainGuids[0] -ne '') )
             {
                 Write-Verbose -Message 'DomainGuids have been Specified but TenantRestrictionEnabled is set to False, DomainGuids value will be ignored'
                 $TenantRestrictionEnabled = $false
@@ -376,7 +376,7 @@ function Set-TargetResource
         }
         else
         {
-            if ($CurrentParameters.ContainsKey('DomainGuids') -and ($CurrentParameters.DomainGuids.count -gt 0) -and ($CurrentParameters.DomainGuids[0] -ne '') )
+            if ($CurrentParameters.ContainsKey('DomainGuids') -and ($CurrentParameters.DomainGuids.Count -gt 0) -and ($CurrentParameters.DomainGuids[0] -ne '') )
             {
                 Write-Verbose -Message 'TenantRestrictionEnabled value not specified but a valid DomainGuids value is present - TenantRestrictionEnabled will be set to true'
                 $TenantRestrictionEnabled = $true

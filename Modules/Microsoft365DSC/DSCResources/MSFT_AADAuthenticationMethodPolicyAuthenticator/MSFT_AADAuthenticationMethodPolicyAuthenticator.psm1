@@ -149,7 +149,7 @@ function Get-TargetResource
             $complexExcludeTarget.Add('TargetType', $getValue.additionalProperties.featureSettings.companionAppAllowedState.excludeTarget.targetType.ToString())
         }
 
-        if ($complexExcludeTarget.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexExcludeTarget.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexExcludeTarget = $null
         }
@@ -191,7 +191,7 @@ function Get-TargetResource
             $complexIncludeTarget.Add('TargetType', $getValue.additionalProperties.featureSettings.companionAppAllowedState.includeTarget.targetType.ToString())
         }
 
-        if ($complexIncludeTarget.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexIncludeTarget.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexIncludeTarget = $null
         }
@@ -203,7 +203,7 @@ function Get-TargetResource
             $complexCompanionAppAllowedState.Add('State', $getValue.additionalProperties.featureSettings.companionAppAllowedState.state.ToString())
         }
 
-        if ($complexCompanionAppAllowedState.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexCompanionAppAllowedState.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexCompanionAppAllowedState = $null
         }
@@ -246,7 +246,7 @@ function Get-TargetResource
         {
             $complexExcludeTarget.Add('TargetType', $getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.excludeTarget.targetType.ToString())
         }
-        if ($complexExcludeTarget.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexExcludeTarget.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexExcludeTarget = $null
         }
@@ -288,7 +288,7 @@ function Get-TargetResource
             $complexIncludeTarget.Add('TargetType', $getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.includeTarget.targetType.ToString())
         }
 
-        if ($complexIncludeTarget.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexIncludeTarget.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexIncludeTarget = $null
         }
@@ -300,7 +300,7 @@ function Get-TargetResource
             $complexDisplayAppInformationRequiredState.Add('State', $getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.state.ToString())
         }
 
-        if ($complexDisplayAppInformationRequiredState.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexDisplayAppInformationRequiredState.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexDisplayAppInformationRequiredState = $null
         }
@@ -344,7 +344,7 @@ function Get-TargetResource
             $complexExcludeTarget.Add('TargetType', $getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.excludeTarget.targetType.ToString())
         }
 
-        if ($complexExcludeTarget.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexExcludeTarget.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexExcludeTarget = $null
         }
@@ -387,7 +387,7 @@ function Get-TargetResource
             $complexIncludeTarget.Add('TargetType', $getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.includeTarget.targetType.ToString())
         }
 
-        if ($complexIncludeTarget.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexIncludeTarget.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexIncludeTarget = $null
         }
@@ -400,7 +400,7 @@ function Get-TargetResource
             $complexDisplayLocationInformationRequiredState.Add('State', $getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.state.ToString())
         }
 
-        if ($complexDisplayLocationInformationRequiredState.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexDisplayLocationInformationRequiredState.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexDisplayLocationInformationRequiredState = $null
         }
@@ -430,7 +430,7 @@ function Get-TargetResource
                 $myExcludeTargets.Add('TargetType', $currentExcludeTargets.targetType.ToString())
             }
 
-            if ($myExcludeTargets.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myExcludeTargets.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexExcludeTargets += $myExcludeTargets
             }
@@ -459,7 +459,7 @@ function Get-TargetResource
                 $myIncludeTargets.Add('TargetType', $currentIncludeTargets.targetType.ToString())
             }
 
-            if ($myIncludeTargets.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myIncludeTargets.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexIncludeTargets += $myIncludeTargets
             }
@@ -587,7 +587,6 @@ function Set-TargetResource
     #endregion
 
     $currentInstance = Get-TargetResource @PSBoundParameters
-
     $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
     if ($Ensure -eq 'Present')

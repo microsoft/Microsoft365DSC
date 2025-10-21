@@ -811,7 +811,7 @@ function Set-TargetResource
 
         <#if ($AdditionalProperties)
         {
-            $CreateParameters.add('AdditionalProperties', $AdditionalProperties)
+            $CreateParameters.Add('AdditionalProperties', $AdditionalProperties)
         }#>
         $CreateParameters.Add('@odata.type', '#microsoft.graph.macOSGeneralDeviceConfiguration')
 
@@ -835,17 +835,6 @@ function Set-TargetResource
         $UpdateParameters = ([Hashtable]$PSBoundParameters).Clone()
         $UpdateParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $UpdateParameters
         $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
-
-        <#$AdditionalProperties = Get-M365DSCAdditionalProperties -Properties ($UpdateParameters)
-        foreach ($key in $AdditionalProperties.keys)
-        {
-            if ($key -ne '@odata.type')
-            {
-                $keyName = $key.substring(0, 1).ToUpper() + $key.substring(1, $key.length - 1)
-                $UpdateParameters.remove($keyName)
-            }
-        }#>
-
         $UpdateParameters.Remove('Id') | Out-Null
 
         foreach ($key in ($UpdateParameters.Clone()).Keys)
@@ -856,13 +845,7 @@ function Set-TargetResource
             }
         }
 
-        <#if ($AdditionalProperties)
-        {
-            $UpdateParameters.add('AdditionalProperties', $AdditionalProperties)
-        }#>
         $UpdateParameters.Add('@odata.type', '#microsoft.graph.macOSGeneralDeviceConfiguration')
-        #$UpdateParameters.remove('emailInDomainSuffixes')
-        #$UpdateParameters.remove('updateDelayPolicy')
 
         #region resource generator code
         Update-MgBetaDeviceManagementDeviceConfiguration `

@@ -130,7 +130,7 @@ function Get-TargetResource
         Write-Verbose -Message "Entitlement Management Connected Organization with id {$($getValue.id)} and displayName {$($getValue.DisplayName)} was found."
         [Array]$getExternalSponsors = Get-MgBetaEntitlementManagementConnectedOrganizationExternalSponsor -ConnectedOrganizationId $getValue.id
 
-        if ($null -ne $getExternalSponsors -and $getExternalSponsors.count -gt 0)
+        if ($null -ne $getExternalSponsors -and $getExternalSponsors.Count -gt 0)
         {
             $sponsors = @()
             foreach ($sponsor in $getExternalSponsors)
@@ -142,7 +142,7 @@ function Get-TargetResource
 
         [Array]$getInternalSponsors = Get-MgBetaEntitlementManagementConnectedOrganizationInternalSponsor -ConnectedOrganizationId $getValue.id
 
-        if ($null -ne $getInternalSponsors -and $getInternalSponsors.count -gt 0)
+        if ($null -ne $getInternalSponsors -and $getInternalSponsors.Count -gt 0)
         {
             $sponsors = @()
             foreach ($sponsor in $getInternalSponsors)
@@ -431,7 +431,7 @@ function Set-TargetResource
         $keys = (([Hashtable]$CreateParameters).Clone()).Keys
         foreach ($key in $keys)
         {
-            if ($null -ne $CreateParameters.$key -and $CreateParameters.$key.getType().Name -like '*cimInstance*')
+            if ($null -ne $CreateParameters.$key -and $CreateParameters.$key.GetType().Name -like '*cimInstance*')
             {
                 $CreateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters.$key
             }
@@ -446,7 +446,7 @@ function Set-TargetResource
         {
             $directoryObject = Get-MgBetaDirectoryObject -DirectoryObjectId $sponsor
             $directoryObjectType = $directoryObject.AdditionalProperties.'@odata.type'
-            $directoryObjectType = ($directoryObject.AdditionalProperties.'@odata.type').split('.') | Select-Object -Last 1
+            $directoryObjectType = ($directoryObject.AdditionalProperties.'@odata.type').Split('.') | Select-Object -Last 1
             $directoryObjectRef = @{
                 '@odata.id' = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/$($directoryObjectType)s/$($sponsor)"
             }
@@ -459,7 +459,7 @@ function Set-TargetResource
         foreach ($sponsor in $InternalSponsors)
         {
             $directoryObject = Get-MgBetaDirectoryObject -DirectoryObjectId $sponsor
-            $directoryObjectType = ($directoryObject.AdditionalProperties.'@odata.type').split('.') | Select-Object -Last 1
+            $directoryObjectType = ($directoryObject.AdditionalProperties.'@odata.type').Split('.') | Select-Object -Last 1
             $directoryObjectRef = @{
                 '@odata.id' = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/$($directoryObjectType)s/$($sponsor)"
             }
@@ -485,7 +485,7 @@ function Set-TargetResource
         $keys = (([Hashtable]$UpdateParameters).Clone()).Keys
         foreach ($key in $keys)
         {
-            if ($null -ne $UpdateParameters.$key -and $UpdateParameters.$key.getType().Name -like '*cimInstance*')
+            if ($null -ne $UpdateParameters.$key -and $UpdateParameters.$key.GetType().Name -like '*cimInstance*')
             {
                 $UpdateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters.$key
             }
@@ -515,7 +515,7 @@ function Set-TargetResource
         {
             $directoryObject = Get-MgBetaDirectoryObject -DirectoryObjectId $sponsor
             $directoryObjectType = $directoryObject.AdditionalProperties.'@odata.type'
-            $directoryObjectType = ($directoryObject.AdditionalProperties.'@odata.type').split('.') | Select-Object -Last 1
+            $directoryObjectType = ($directoryObject.AdditionalProperties.'@odata.type').Split('.') | Select-Object -Last 1
             $directoryObjectRef = @{
                 '@odata.id' = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/$($directoryObjectType)s/$($sponsor)"
             }
@@ -553,7 +553,7 @@ function Set-TargetResource
         {
             $directoryObject = Get-MgBetaDirectoryObject -DirectoryObjectId $sponsor
             $directoryObjectType = $directoryObject.AdditionalProperties.'@odata.type'
-            $directoryObjectType = ($directoryObject.AdditionalProperties.'@odata.type').split('.') | Select-Object -Last 1
+            $directoryObjectType = ($directoryObject.AdditionalProperties.'@odata.type').Split('.') | Select-Object -Last 1
             $directoryObjectRef = @{
                 '@odata.id' = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/$($directoryObjectType)s/$($sponsor)"
             }

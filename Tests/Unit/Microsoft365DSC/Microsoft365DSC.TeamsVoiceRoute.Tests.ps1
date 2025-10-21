@@ -41,8 +41,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-CsOnlineVoiceRoute -MockWith {
             }
 
+            Mock -CommandName Get-CsOnlineVoiceRoute -MockWith {
+                return @{
+                    Identity              = 'Test Route'
+                    Description           = 'My Test Route'
+                    NumberPattern         = '^\+1(425|206)(\d{7})'
+                    OnlinePstnGatewayList = @('Sbc1.litware.com', 'Sbc2.litware.com')
+                    OnlinePstnUsages      = @('Local', 'Long Distance')
+                    Priority              = 1
+                }
+            }
+
             Mock -CommandName Get-CsOnlinePstnUsage -MockWith {
-                return New-Object PSObject -Property @{
+                return @{
                     Identity = 'Global'
                     Usage    = @('Local', 'Long Distance')
                 }
@@ -50,11 +61,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-CsOnlinePstnGateway -MockWith {
                 return @(
-                    New-Object PSObject -Property @{
+                    @{
                         Identity = 'Sbc1.litware.com'
                         Enabled  = $true
                     }
-                    New-Object PSObject -Property @{
+                    @{
                         Identity = 'Sbc2.litware.com'
                         Enabled  = $true
                     }
@@ -112,21 +123,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Description           = 'My Test Route'
                     NumberPattern         = '^\+1(425|206)(\d{7})'
                     OnlinePstnGatewayList = @('Sbc1.litware.com', 'Sbc2.litware.com')
-                    OnlinePstnUsages      = @('Local', 'Long Distance')
-                    Priority              = 1
+                    OnlinePstnUsages      = @('Local') # Drift
+                    Priority              = 10 # Drift
                     Ensure                = 'Present'
                     Credential            = $Credential
-                }
-
-                Mock -CommandName Get-CsOnlineVoiceRoute -MockWith {
-                    return @{
-                        Identity              = 'Test Route'
-                        Description           = 'My Test Route'
-                        NumberPattern         = '^\+1(425|206)(\d{7})'
-                        OnlinePstnGatewayList = @('Sbc1.litware.com', 'Sbc2.litware.com')
-                        OnlinePstnUsages      = @('Local') #Drift
-                        Priority              = 10 #Drift
-                    }
                 }
             }
 
@@ -152,17 +152,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure                = 'Present'
                     Credential            = $Credential
                 }
-
-                Mock -CommandName Get-CsOnlineVoiceRoute -MockWith {
-                    return @{
-                        Identity              = 'Test Route'
-                        Description           = 'My Test Route'
-                        NumberPattern         = '^\+1(425|206)(\d{7})'
-                        OnlinePstnGatewayList = @('Sbc1.litware.com', 'Sbc2.litware.com')
-                        OnlinePstnUsages      = @('Local', 'Long Distance')
-                        Priority              = 1
-                    }
-                }
             }
 
             It 'Should return true from the Test method' {
@@ -176,17 +165,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Identity   = 'Test Route'
                     Ensure     = 'Absent'
                     Credential = $Credential
-                }
-
-                Mock -CommandName Get-CsOnlineVoiceRoute -MockWith {
-                    return @{
-                        Identity              = 'Test Route'
-                        Description           = 'My Test Route'
-                        NumberPattern         = '^\+1(425|206)(\d{7})'
-                        OnlinePstnGatewayList = @('Sbc1.litware.com', 'Sbc2.litware.com')
-                        OnlinePstnUsages      = @('Local', 'Long Distance')
-                        Priority              = 1
-                    }
                 }
             }
 
@@ -210,17 +188,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
                     Credential = $Credential
-                }
-
-                Mock -CommandName Get-CsOnlineVoiceRoute -MockWith {
-                    return @{
-                        Identity              = 'Test Route'
-                        Description           = 'My Test Route'
-                        NumberPattern         = '^\+1(425|206)(\d{7})'
-                        OnlinePstnGatewayList = @('Sbc1.litware.com', 'Sbc2.litware.com')
-                        OnlinePstnUsages      = @('Local', 'Long Distance')
-                        Priority              = 1
-                    }
                 }
             }
 

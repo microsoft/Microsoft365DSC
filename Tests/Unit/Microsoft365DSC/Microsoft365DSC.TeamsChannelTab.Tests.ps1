@@ -49,6 +49,38 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-MgBetaTeamChannelTab -MockWith {
             }
 
+            Mock -CommandName Get-MgBetaTeamChannelTab -MockWith {
+                return @{
+                    id             = '12345-12345-12345-12345-12345'
+                    displayName    = 'TestTab'
+                    sortOrderIndex = '10100'
+                    webUrl         = 'https://contoso.com'
+                    configuration  = @{
+                        entityId   = $null
+                        contentUrl = 'https://contoso.com'
+                        websiteUrl = 'https://contoso.com'
+                        removeUrl  = $null
+                    }
+                    teamsApp       = @{
+                        id = 'com.microsoft.teamspace.tab.web'
+                    }
+                }
+            }
+
+            Mock -CommandName Get-MgGroup -MockWith {
+                return @{
+                    Id     = '12345-12345-12345-12345-12345'
+                    DisplayName = 'Contoso Team'
+                }
+            }
+
+            Mock -CommandName Get-MgBetaTeamChannel -MockWith {
+                return @{
+                    Id          = '67890-67890-67890-67890-67890'
+                    DisplayName = 'General'
+                }
+            }
+
             # Mock Write-M365DSCHost to hide output during the tests
             Mock -CommandName Write-M365DSCHost -MockWith {
             }
@@ -71,20 +103,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     TeamsApp              = 'com.microsoft.teamspace.tab.web'
                     TenantId              = 'contoso.onmicrosoft.com'
                     WebSiteUrl            = 'https://contoso.com'
-                }
-
-                Mock -CommandName Get-MgGroup -MockWith {
-                    return @{
-                        Id     = '12345-12345-12345-12345-12345'
-                        DisplayName = 'Contoso Team'
-                    }
-                }
-
-                Mock -CommandName Get-MgBetaTeamChannel -MockWith {
-                    return @{
-                        Id          = '67890-67890-67890-67890-67890'
-                        DisplayName = 'General'
-                    }
                 }
 
                 Mock -CommandName Get-MgBetaTeamChannelTab -MockWith {
@@ -115,43 +133,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ContentUrl            = 'https://contoso.com'
                     DisplayName           = 'TestTab'
                     Ensure                = 'Present'
-                    SortOrderIndex        = '10100'
+                    SortOrderIndex        = '11100' # Drift
                     TeamName              = 'Contoso Team'
                     TeamsApp              = 'com.microsoft.teamspace.tab.web'
                     TenantId              = 'contoso.onmicrosoft.com'
                     WebSiteUrl            = 'https://contoso.com'
-                }
-
-                Mock -CommandName Get-MgGroup -MockWith {
-                    return @{
-                        Id     = '12345-12345-12345-12345-12345'
-                        DisplayName = 'Contoso Team'
-                    }
-                }
-
-                Mock -CommandName Get-MgBetaTeamChannel -MockWith {
-                    return @{
-                        Id          = '67890-67890-67890-67890-67890'
-                        DisplayName = 'General'
-                    }
-                }
-
-                Mock -CommandName Get-MgBetaTeamChannelTab -MockWith {
-                    return @{
-                        id             = '12345-12345-12345-12345-12345'
-                        displayName    = 'TestTab'
-                        sortOrderIndex = '11100' #Drift
-                        webUrl         = 'https://contoso.com'
-                        configuration  = @{
-                            entityId   = $null
-                            contentUrl = 'https://contoso.com'
-                            websiteUrl = 'https://contoso.com'
-                            removeUrl  = $null
-                        }
-                        teamsApp       = @{
-                            id = 'com.microsoft.teamspace.tab.web'
-                        }
-                    }
                 }
             }
 
@@ -184,38 +170,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     TenantId              = 'contoso.onmicrosoft.com'
                     WebSiteUrl            = 'https://contoso.com'
                 }
-
-                Mock -CommandName Get-MgGroup -MockWith {
-                    return @{
-                        Id     = '12345-12345-12345-12345-12345'
-                        DisplayName = 'Contoso Team'
-                    }
-                }
-
-                Mock -CommandName Get-MgBetaTeamChannel -MockWith {
-                    return @{
-                        Id          = '67890-67890-67890-67890-67890'
-                        DisplayName = 'General'
-                    }
-                }
-
-                Mock -CommandName Get-MgBetaTeamChannelTab -MockWith {
-                    return @{
-                        id             = '12345-12345-12345-12345-12345'
-                        displayName    = 'TestTab'
-                        sortOrderIndex = '10100'
-                        webUrl         = 'https://contoso.com'
-                        configuration  = @{
-                            entityId   = $null
-                            contentUrl = 'https://contoso.com'
-                            websiteUrl = 'https://contoso.com'
-                            removeUrl  = $null
-                        }
-                        teamsApp       = @{
-                            id = 'com.microsoft.teamspace.tab.web'
-                        }
-                    }
-                }
             }
 
             It 'Should return Present from the Get method' {
@@ -241,38 +195,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     TeamsApp              = 'com.microsoft.teamspace.tab.web'
                     TenantId              = 'contoso.onmicrosoft.com'
                     WebSiteUrl            = 'https://contoso.com'
-                }
-
-                Mock -CommandName Get-MgGroup -MockWith {
-                    return @{
-                        DisplayName = 'Contoso Team'
-                        Id          = '12345-12345-12345-12345-12345'
-                    }
-                }
-
-                Mock -CommandName Get-MgBetaTeamChannel -MockWith {
-                    return @{
-                        Id          = '67890-67890-67890-67890-67890'
-                        DisplayName = 'General'
-                    }
-                }
-
-                Mock -CommandName Get-MgBetaTeamChannelTab -MockWith {
-                    return @{
-                        id             = '12345-12345-12345-12345-12345'
-                        displayName    = 'TestTab'
-                        sortOrderIndex = '11100' #Drift
-                        webUrl         = 'https://contoso.com'
-                        configuration  = @{
-                            entityId   = $null
-                            contentUrl = 'https://contoso.com'
-                            websiteUrl = 'https://contoso.com'
-                            removeUrl  = $null
-                        }
-                        teamsApp       = @{
-                            id = 'com.microsoft.teamspace.tab.web'
-                        }
-                    }
                 }
             }
 
@@ -302,38 +224,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return @{
                         Id          = '12345-12345-12345-12345-12345'
                         DisplayName = 'Contoso Team'
-                    }
-                }
-
-                Mock -CommandName Get-MgGroup -MockWith {
-                    return @{
-                        Id          = '12345-12345-12345-12345-12345'
-                        DisplayName = 'Contoso Team'
-                    }
-                }
-
-                Mock -CommandName Get-MgBetaTeamChannel -MockWith {
-                    return @{
-                        Id          = '67890-67890-67890-67890-67890'
-                        DisplayName = 'General'
-                    }
-                }
-
-                Mock -CommandName Get-MgBetaTeamChannelTab -MockWith {
-                    return @{
-                        id             = '12345-12345-12345-12345-12345'
-                        displayName    = 'TestTab'
-                        sortOrderIndex = '11100' #Drift
-                        webUrl         = 'https://contoso.com'
-                        configuration  = @{
-                            entityId   = $null
-                            contentUrl = 'https://contoso.com'
-                            websiteUrl = 'https://contoso.com'
-                            removeUrl  = $null
-                        }
-                        teamsApp       = @{
-                            id = 'com.microsoft.teamspace.tab.web'
-                        }
                     }
                 }
             }

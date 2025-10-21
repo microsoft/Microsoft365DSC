@@ -11,6 +11,8 @@ function Start-M365DSCConfigurationExtract
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingConvertToSecureStringWithPlainText', '', Justification = 'Conversion for credential creation')]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSReviewUnusedParameter', 'GenerateInfo', Justification = 'Using statement not detected')]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSReviewUnusedParameter', 'Filters', Justification = 'Using statement not detected')]
     param(
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -655,6 +657,7 @@ function Start-M365DSCConfigurationExtract
         })
         $resourceDictionary = Get-M365DSCAllResourcesDictionary
         $exportScriptBlock = {
+            $Global:MaximumFunctionCount = 32768
             $Global:PartialExportFileName = $using:partialExportName
             $Global:M365DSCSkipDependenciesValidation = $true
             $resource = $_
@@ -923,11 +926,11 @@ function Start-M365DSCConfigurationExtract
 
         if (-not [System.String]::IsNullOrEmpty($FileName))
         {
-            $outputDSCFile = $OutputDSCPath + $FileName
+            $outputDSCFile = $FileName
         }
         else
         {
-            $outputDSCFile = $OutputDSCPath + 'M365TenantConfig.ps1'
+            $outputDSCFile = 'M365TenantConfig.ps1'
         }
 
         # Clean empty lines with semi-colons, normally generated from CIMInstances convertions to String.
@@ -990,7 +993,7 @@ function Start-M365DSCConfigurationExtract
                 Write-Verbose -Message "Could not retrieve current Windows Principal. This may be due to the fact that the current OS is not Windows."
             }
         }
-        $outputConfigurationData = $OutputDSCPath + 'ConfigurationData.psd1'
+        $outputConfigurationData = '.\ConfigurationData.psd1'
         New-ConfigurationDataDocument -Path $outputConfigurationData
         if ($shouldOpenOutputDirectory)
         {

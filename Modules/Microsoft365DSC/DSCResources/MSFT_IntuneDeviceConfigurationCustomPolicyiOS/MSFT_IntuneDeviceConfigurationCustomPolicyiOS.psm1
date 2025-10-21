@@ -272,7 +272,7 @@ function Set-TargetResource
 
         foreach ($key in ($CreateParameters.Clone()).Keys)
         {
-            if ($CreateParameters[$key].getType().Fullname -like '*CimInstance*')
+            if ($CreateParameters[$key].GetType().Fullname -like '*CimInstance*')
             {
                 $CreateParameters[$key] = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters[$key]
             }
@@ -301,7 +301,7 @@ function Set-TargetResource
 
         foreach ($key in ($UpdateParameters.Clone()).Keys)
         {
-            if ($UpdateParameters[$key].getType().Fullname -like '*CimInstance*')
+            if ($UpdateParameters[$key].GetType().Fullname -like '*CimInstance*')
             {
                 $UpdateParameters[$key] = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters[$key]
             }
@@ -562,61 +562,6 @@ function Export-TargetResource
 
         return ''
     }
-}
-
-function Get-M365DSCAdditionalProperties
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param
-    (
-        [Parameter(Mandatory = 'true')]
-        [System.Collections.Hashtable]
-        $Properties
-    )
-
-    $additionalProperties = @(
-        'certFileName'
-        'trustedRootCertificate'
-    )
-
-    $results = @{'@odata.type' = '#microsoft.graph.iosCustomConfiguration' }
-    $cloneProperties = $Properties.Clone()
-    foreach ($property in $cloneProperties.Keys)
-    {
-        if ($property -in ($additionalProperties) )
-        {
-            $propertyName = $property[0].ToString().ToLower() + $property.Substring(1, $property.Length - 1)
-            if ($properties.$property -and $properties.$property.getType().FullName -like '*CIMInstance*')
-            {
-                if ($properties.$property.getType().FullName -like '*[[\]]')
-                {
-                    $array = @()
-                    foreach ($item in $properties.$property)
-                    {
-                        $array += Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $item
-                    }
-                    $propertyValue = $array
-                }
-                else
-                {
-                    $propertyValue = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $properties.$property
-                }
-
-            }
-            else
-            {
-                $propertyValue = $properties.$property
-            }
-
-            $results.Add($propertyName, $propertyValue)
-        }
-    }
-    if ($results.Count -eq 1)
-    {
-        return $null
-    }
-    return $results
 }
 
 Export-ModuleMember -Function *-TargetResource

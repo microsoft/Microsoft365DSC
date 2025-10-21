@@ -249,13 +249,15 @@ function Set-TargetResource
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        Write-Verbose -Message "Creating Azure AD Agreement with DisplayName {$DisplayName}"
-
         # Prepare the file content
-        $fileContent = @{
-            data     = [System.Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($FileData))
-            name     = $FileName
+        $fileContent = @()
+        $fileContent += @{
+            fileData = @{
+                data     = [System.Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($FileData))
+            }
+            fileName     = $FileName
             language = $Language
+            isDefault = $true
         }
 
         $CreateParameters = @{
@@ -264,24 +266,26 @@ function Set-TargetResource
             isPerDeviceAcceptanceRequired      = $IsPerDeviceAcceptanceRequired
             userReacceptRequiredFrequency      = $UserReacceptRequiredFrequency
             acceptanceStatement                = $AcceptanceStatement
-            file                               = $fileContent
+            files                              = $fileContent
         }
 
         $CreateParameters = Remove-NullEntriesFromHashtable -Hash $CreateParameters
+        Write-Verbose -Message "Creating Azure AD Agreement with DisplayName {$DisplayName} with:`r`n$(ConvertTo-Json $CreateParameters -Depth 5)"
 
-        New-MgBetaAgreement -BodyParameter $CreateParameters
+        Invoke-MgGraphRequest -Uri "/beta/agreements" -Method POST -Body ($CreateParameters | ConvertTo-Json -Depth 5) | Out-Null
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Updating Azure AD Agreement with DisplayName {$DisplayName}"
-
         # Prepare the file content if provided
         $fileContent = $null
         if (-not [System.String]::IsNullOrEmpty($FileData))
         {
-            $fileContent = @{
-                data     = [System.Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($FileData))
-                name     = $FileName
+            $fileContent = @()
+            $fileContent += @{
+                fileData     = @{
+                    data = [System.Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($FileData))
+                }
+                fileName     = $FileName
                 language = $Language
             }
         }
@@ -296,15 +300,18 @@ function Set-TargetResource
 
         if ($null -ne $fileContent)
         {
-            $UpdateParameters.file = $fileContent
+            $UpdateParameters.files = $fileContent
         }
 
         $UpdateParameters = Remove-NullEntriesFromHashtable -Hash $UpdateParameters
-        Update-MgBetaAgreement -AgreementId $currentInstance.Id -BodyParameter $UpdateParameters
+        Write-Verbose -Message "Updating Azure AD Agreement with ID {$($currentInstance.Id)} with:`r`n$(ConvertTo-Json $UpdateParameters -Depth 5)"
+        Invoke-MgGraphRequest -Method PATCH `
+                              -Uri "/beta/agreements/$($currentInstance.Id)" `
+                              -Body ($UpdateParameters | ConvertTo-Json -Depth 5) | Out-Null
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing Azure AD Agreement with DisplayName {$DisplayName}"
+        Write-Verbose -Message "Removing Azure AD Agreement with DisplayName {$DisplayName} with ID {$($currentInstance.Id)}"
         Remove-MgBetaAgreement -AgreementId $currentInstance.Id
     }
 }

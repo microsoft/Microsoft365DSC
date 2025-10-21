@@ -145,7 +145,7 @@ function Get-TargetResource
             {
                 $myExcludeTargets.Add('TargetType', $currentExcludeTargets.targetType.ToString())
             }
-            if ($myExcludeTargets.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myExcludeTargets.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexExcludeTargets += $myExcludeTargets
             }
@@ -161,7 +161,7 @@ function Get-TargetResource
             {
                 $myIncludeTargets.Add('TargetType', $currentIncludeTargets.targetType.ToString())
             }
-            if ($myIncludeTargets.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myIncludeTargets.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexIncludeTargets += $myIncludeTargets
             }
@@ -172,12 +172,12 @@ function Get-TargetResource
         {
             $complexAuthenticationMethodsRegistrationCampaign.Add('State', $getValue.registrationEnforcement.authenticationMethodsRegistrationCampaign.state.ToString())
         }
-        if ($complexAuthenticationMethodsRegistrationCampaign.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexAuthenticationMethodsRegistrationCampaign.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexAuthenticationMethodsRegistrationCampaign = $null
         }
         $complexRegistrationEnforcement.Add('AuthenticationMethodsRegistrationCampaign', $complexAuthenticationMethodsRegistrationCampaign)
-        if ($complexRegistrationEnforcement.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexRegistrationEnforcement.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexRegistrationEnforcement = $null
         }
@@ -199,7 +199,7 @@ function Get-TargetResource
         {
             $complexReportSuspiciousActivitySettings.Add('VoiceReportingCode', $getValue.ReportSuspiciousActivitySettings.VoiceReportingCode)
         }
-        if ($complexReportSuspiciousActivitySettings.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexReportSuspiciousActivitySettings.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexReportSuspiciousActivitySettings = $null
         }
@@ -214,7 +214,7 @@ function Get-TargetResource
             {
                 $myExcludeTargets.Add('TargetType', $currentExcludeTargets.targetType.ToString())
             }
-            if ($myExcludeTargets.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myExcludeTargets.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexExcludeTargets += $myExcludeTargets
             }
@@ -229,7 +229,7 @@ function Get-TargetResource
             {
                 $myIncludeTargets.Add('TargetType', $currentIncludeTargets.targetType.ToString())
             }
-            if ($myIncludeTargets.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myIncludeTargets.values.Where({ $null -ne $_ }).Count -gt 0)
             {
                 $complexIncludeTargets += $myIncludeTargets
             }
@@ -239,7 +239,7 @@ function Get-TargetResource
         {
             $complexSystemCredentialPreferences.Add('State', $getValue.SystemCredentialPreferences.state.ToString())
         }
-        if ($complexSystemCredentialPreferences.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexSystemCredentialPreferences.values.Where({ $null -ne $_ }).Count -eq 0)
         {
             $complexSystemCredentialPreferences = $null
         }
@@ -387,7 +387,7 @@ function Set-TargetResource
         $keys = (([Hashtable]$UpdateParameters).Clone()).Keys
         foreach ($key in $keys)
         {
-            if ($null -ne $UpdateParameters.$key -and $UpdateParameters.$key.getType().Name -like '*cimInstance*')
+            if ($null -ne $UpdateParameters.$key -and $UpdateParameters.$key.GetType().Name -like '*cimInstance*')
             {
                 $UpdateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters.$key
             }

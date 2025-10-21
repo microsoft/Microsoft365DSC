@@ -42,7 +42,7 @@ Configuration Example
                     State = 'enabled'
                 }
             );
-            Priority              = 120;
+            Priority              = 130;
             State                 = "enabled";
             TenantId              = $TenantId;
         }

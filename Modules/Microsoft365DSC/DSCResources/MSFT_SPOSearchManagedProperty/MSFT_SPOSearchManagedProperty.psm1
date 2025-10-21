@@ -648,8 +648,6 @@ function Set-TargetResource
     if ($null -ne $Aliases)
     {
         $aliasesArray = $Aliases.Split(';')
-        $aliasDictNode = $SearchConfigXml.ChildNodes[0].SearchSchemaConfigurationSettings.Aliases.dictionary
-
         if ([System.String]::IsNullOrEmpty($currentPID))
         {
             # Get the managed property back. This is the only way to ensure we have the right PID

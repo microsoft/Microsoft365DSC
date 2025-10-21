@@ -203,7 +203,7 @@ function Set-TargetResource
 
     # Delete the old configuration
     Write-Verbose -Message 'Removing the current Azure AD Organization Certificate Based Auth Configuration.'
-    Invoke-MgGraphRequest -Uri ((Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/organization/$OrganizationId/certificateBasedAuthConfiguration/$CertificateBasedAuthConfigurationId") -Method DELETE
+    Invoke-MgGraphRequest -Uri "/beta/organization/$OrganizationId/certificateBasedAuthConfiguration/$CertificateBasedAuthConfigurationId" -Method DELETE
 
     if ($Ensure -eq 'Present')
     {
@@ -227,8 +227,7 @@ function Set-TargetResource
             certificateAuthorities = $createCertAuthorities
         }
 
-        $uri = ((Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + `
-                    "beta/organization/$OrganizationId/certificateBasedAuthConfiguration/")
+        $uri = "/beta/organization/$OrganizationId/certificateBasedAuthConfiguration/"
 
         Write-Verbose -Message "Creating with Parameters:`r`n$(ConvertTo-Json $params -Depth 10)"
         Invoke-MgGraphRequest -Uri $uri `

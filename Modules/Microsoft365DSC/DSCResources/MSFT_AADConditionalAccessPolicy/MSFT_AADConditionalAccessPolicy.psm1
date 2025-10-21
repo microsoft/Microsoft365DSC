@@ -634,7 +634,7 @@ function Get-TargetResource
         [Array]$ExcludeGuestOrExternalUserTypes = ($Policy.Conditions.Users.ExcludeGuestsOrExternalUsers.GuestOrExternalUserTypes).Split(',')
     }
 
-    $termsOfUseName = $null
+    $termOfUseName = $null
     if ($Policy.GrantControls.TermsOfUse)
     {
         $termofUse = Get-MgBetaAgreement | Where-Object -FilterScript { $_.Id -eq $Policy.GrantControls.TermsOfUse }
@@ -1950,7 +1950,7 @@ function Set-TargetResource
         Write-Verbose -Message 'Create Parameters:'
         Write-Verbose -Message (Convert-M365DscHashtableToString $NewParameters)
 
-        if ($newparameters.Conditions.applications.count -gt 0 -and ($newparameters.Conditions.Users.count -gt 0 -or $newparameters.Conditions.ClientApplications.count -gt 0) -and ($newparameters.GrantControls.count -gt 0 -or $newparameters.SessionControls.count -gt 0))
+        if ($newparameters.Conditions.applications.Count -gt 0 -and ($newparameters.Conditions.Users.Count -gt 0 -or $newparameters.Conditions.ClientApplications.Count -gt 0) -and ($newparameters.GrantControls.Count -gt 0 -or $newparameters.SessionControls.Count -gt 0))
         {
             try
             {

@@ -32,6 +32,18 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
+        $PostAmbleAudioFile,
+
+        [Parameter()]
+        [System.String]
+        $PreambleAudioFile,
+
+        [Parameter()]
+        [System.Boolean]
+        $PreamblePostambleMandatory,
+
+        [Parameter()]
+        [System.String]
         $PrimarySystemPromptLanguage,
 
         [Parameter()]
@@ -119,6 +131,9 @@ function Get-TargetResource
             EnableTranscriptionProfanityMasking = $policy.EnableTranscriptionProfanityMasking
             EnableTranscriptionTranslation      = $policy.EnableTranscriptionTranslation
             MaximumRecordingLength              = $policy.MaximumRecordingLength
+            PostambleAudioFile                  = $policy.PostambleAudioFile
+            PreambleAudioFile                   = $policy.PreambleAudioFile
+            PreamblePostambleMandatory          = $policy.PreamblePostambleMandatory
             PrimarySystemPromptLanguage         = $policy.PrimarySystemPromptLanguage
             SecondarySystemPromptLanguage       = $policy.SecondarySystemPromptLanguage
             ShareData                           = $policy.ShareData
@@ -171,6 +186,18 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $MaximumRecordingLength,
+
+        [Parameter()]
+        [System.String]
+        $PostAmbleAudioFile,
+
+        [Parameter()]
+        [System.String]
+        $PreambleAudioFile,
+
+        [Parameter()]
+        [System.Boolean]
+        $PreamblePostambleMandatory,
 
         [Parameter()]
         [System.String]
@@ -229,7 +256,6 @@ function Set-TargetResource
     #endregion
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
-
     $SetParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
     # Convert the MaximumRecordingLength back to a timespan object.
@@ -239,18 +265,16 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating a new Teams Online Voicemail Policy {$Identity}"
-
         New-CsOnlineVoicemailPolicy @SetParameters
     }
     elseif ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Updating settings for Teams Online Voicemail Policy {$Identity}"
-
+        Write-Verbose -Message "Updating the Teams Online Voicemail Policy with Identity {$Identity}"
         Set-CsOnlineVoicemailPolicy @SetParameters
     }
     elseif ($Ensure -eq 'Absent' -and $CurrentValues.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing existing Teams Online Voicemail Policy {$Identity}"
+        Write-Verbose -Message "Removing the Teams Online Voicemail Policy with Identity {$Identity}"
         Remove-CsOnlineVoicemailPolicy -Identity $Identity
     }
 }
@@ -284,6 +308,18 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $MaximumRecordingLength,
+
+        [Parameter()]
+        [System.String]
+        $PostAmbleAudioFile,
+
+        [Parameter()]
+        [System.String]
+        $PreambleAudioFile,
+
+        [Parameter()]
+        [System.Boolean]
+        $PreamblePostambleMandatory,
 
         [Parameter()]
         [System.String]

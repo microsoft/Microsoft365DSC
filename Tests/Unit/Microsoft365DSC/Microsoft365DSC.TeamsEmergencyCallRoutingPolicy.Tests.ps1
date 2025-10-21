@@ -27,12 +27,27 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             $Global:PartialExportFileName = 'c:\TestPath'
 
+            Mock -ModuleName M365DSCUtil -CommandName Confirm-M365DSCDependencies -MockWith {
+            }
 
             Mock -CommandName Save-M365DSCPartialExport -MockWith {
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
                 return 'Credentials'
+            }
+
+            Mock -CommandName Get-CsTeamsEmergencyCallRoutingPolicy -MockWith {
+                return @{
+                    AllowEnhancedEmergencyServices = $False
+                    Description                    = 'Desc'
+                    EmergencyNumbers               = @{
+                        EmergencyDialString = '123456'
+                        EmergencyDialMask   = '123'
+                        OnlinePSTNUsage     = ''
+                    }
+                    Identity                       = 'UnitTest'
+                }
             }
 
             Mock -CommandName New-CsTeamsEmergencyCallRoutingPolicy -MockWith {
@@ -71,7 +86,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Identity                       = 'UnitTest'
                 }
 
-                Mock -CommandName Get-CsTeamsMeetingPolicy -MockWith {
+                Mock -CommandName Get-CsTeamsEmergencyCallRoutingPolicy -MockWith {
                     return $null
                 }
             }
@@ -104,19 +119,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential                     = $Credential
                     Identity                       = 'UnitTest'
                 }
-
-                Mock -CommandName Get-CsTeamsEmergencyCallRoutingPolicy -MockWith {
-                    return @{
-                        AllowEnhancedEmergencyServices = $False
-                        Description                    = 'Desc'
-                        EmergencyNumbers               = @{
-                            EmergencyDialString = '123456'
-                            EmergencyDialMask   = '123'
-                            OnlinePSTNUsage     = ''
-                        }
-                        Identity                       = 'UnitTest'
-                    }
-                }
             }
 
             It 'Should return Present from the Get method' {
@@ -138,7 +140,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     AllowEnhancedEmergencyServices = $False
-                    Description                    = 'Drifted'; #drift
+                    Description                    = 'Desc';
                     EmergencyNumbers               = (New-CimInstance -ClassName MSFT_TeamsEmergencyNumber -Property @{
                             EmergencyDialString = '123456'
                             EmergencyDialMask   = '123'
@@ -147,19 +149,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure                         = 'Present'
                     Credential                     = $Credential
                     Identity                       = 'UnitTest'
-                }
-
-                Mock -CommandName Get-CsTeamsEmergencyCallRoutingPolicy -MockWith {
-                    return @{
-                        AllowEnhancedEmergencyServices = $False
-                        Description                    = 'Drifted'; #drift
-                        EmergencyNumbers               = @{
-                            EmergencyDialString = '123456'
-                            EmergencyDialMask   = '123'
-                            OnlinePSTNUsage     = ''
-                        }
-                        Identity                       = 'UnitTest'
-                    }
                 }
             }
 
@@ -176,7 +165,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     AllowEnhancedEmergencyServices = $False
-                    Description                    = 'Drifted'; #drift
+                    Description                    = 'Desc';
                     EmergencyNumbers               = (New-CimInstance -ClassName MSFT_TeamsEmergencyNumber -Property @{
                             EmergencyDialString = '123456'
                             EmergencyDialMask   = '123'
@@ -185,19 +174,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure                         = 'Absent'
                     Credential                     = $Credential
                     Identity                       = 'UnitTest'
-                }
-
-                Mock -CommandName Get-CsTeamsEmergencyCallRoutingPolicy -MockWith {
-                    return @{
-                        AllowEnhancedEmergencyServices = $False
-                        Description                    = 'Drifted'; #drift
-                        EmergencyNumbers               = @{
-                            EmergencyDialString = '123456'
-                            EmergencyDialMask   = '123'
-                            OnlinePSTNUsage     = ''
-                        }
-                        Identity                       = 'UnitTest'
-                    }
                 }
             }
 
@@ -234,19 +210,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
                     Credential = $Credential
-                }
-
-                Mock -CommandName Get-CsTeamsEmergencyCallRoutingPolicy -MockWith {
-                    return @{
-                        AllowEnhancedEmergencyServices = $False
-                        Description                    = 'Drifted'; #drift
-                        EmergencyNumbers               = @{
-                            EmergencyDialString = '123456'
-                            EmergencyDialMask   = '123'
-                            OnlinePSTNUsage     = ''
-                        }
-                        Identity                       = 'UnitTest'
-                    }
                 }
             }
 

@@ -33,6 +33,33 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-PSSession -MockWith {
             }
 
+            Mock -CommandName Get-CsCallQueue -MockWith {
+                return @{
+                    Id                                         = "12345-12345-12345-12345-12345"
+                    AgentAlertTime                             = 114;
+                    AllowOptOut                                = $True;
+                    AuthorizedUsers                            = @("9abce74d-d108-475f-a2cb-bbb82f484982");
+                    ChannelId                                  = "19:Y6MG7XdME2Cf9IRmU8PUXNfA1OtqmjyBgCmCGBN2tzY1@thread.tacv2";
+                    ConferenceMode                             = $True;
+                    DistributionLists                          = @("36c88f29-faba-4f4a-89a7-e5af29e7095e");
+                    EnableOverflowSharedVoicemailTranscription = $False;
+                    EnableTimeoutSharedVoicemailTranscription  = $False;
+                    LanguageId                                 = "fr-CA";
+                    Name                                       = "TestQueue";
+                    OverflowAction                             = "Forward";
+                    OverflowActionTarget                       = @{Id="9abce74d-d108-475f-a2cb-bbb82f484982"}
+                    OverflowThreshold                          = 50;
+                    PresenceBasedRouting                       = $True;
+                    RoutingMethod                              = "RoundRobin";
+                    TimeoutAction                              = "Forward";
+                    TimeoutActionTarget                        = @{Id = "9abce74d-d108-475f-a2cb-bbb82f484982"}
+                    TimeoutThreshold                           = 1200;
+                    UseDefaultMusicOnHold                      = $False;
+                    Ensure                                     = 'Present'
+                    Credential                                 = $Credential
+                }
+            }
+
             Mock -CommandName Set-CsCallQueue -MockWith {
             }
 
@@ -124,33 +151,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure                                     = 'Absent'
                     Credential                                 = $Credential
                 }
-
-                Mock -CommandName Get-CsCallQueue -MockWith {
-                    return @{
-                        Id                                         = "12345-12345-12345-12345-12345"
-                        AgentAlertTime                             = 114;
-                        AllowOptOut                                = $True;
-                        AuthorizedUsers                            = @("9abce74d-d108-475f-a2cb-bbb82f484982");
-                        ChannelId                                  = "19:Y6MG7XdME2Cf9IRmU8PUXNfA1OtqmjyBgCmCGBN2tzY1@thread.tacv2";
-                        ConferenceMode                             = $True;
-                        DistributionLists                          = @("36c88f29-faba-4f4a-89a7-e5af29e7095e");
-                        EnableOverflowSharedVoicemailTranscription = $False;
-                        EnableTimeoutSharedVoicemailTranscription  = $False;
-                        LanguageId                                 = "fr-CA";
-                        Name                                       = "TestQueue";
-                        OverflowAction                             = "Forward";
-                        OverflowActionTarget                       = @{Id="9abce74d-d108-475f-a2cb-bbb82f484982"}
-                        OverflowThreshold                          = 50;
-                        PresenceBasedRouting                       = $True;
-                        RoutingMethod                              = "RoundRobin";
-                        TimeoutAction                              = "Forward";
-                        TimeoutActionTarget                        = @{Id = "9abce74d-d108-475f-a2cb-bbb82f484982"}
-                        TimeoutThreshold                           = 1200;
-                        UseDefaultMusicOnHold                      = $False;
-                        Ensure                                     = 'Present'
-                        Credential                                 = $Credential
-                    }
-                }
             }
 
             It 'Should return Values from the Get method' {
@@ -192,33 +192,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure                                     = 'Present'
                     Credential                                 = $Credential
                 }
-
-                Mock -CommandName Get-CsCallQueue -MockWith {
-                    return @{
-                        Id                                         = "12345-12345-12345-12345-12345"
-                        AgentAlertTime                             = 114;
-                        AllowOptOut                                = $True;
-                        AuthorizedUsers                            = @("9abce74d-d108-475f-a2cb-bbb82f484982");
-                        ChannelId                                  = "19:Y6MG7XdME2Cf9IRmU8PUXNfA1OtqmjyBgCmCGBN2tzY1@thread.tacv2";
-                        ConferenceMode                             = $True;
-                        DistributionLists                          = @("36c88f29-faba-4f4a-89a7-e5af29e7095e");
-                        EnableOverflowSharedVoicemailTranscription = $False;
-                        EnableTimeoutSharedVoicemailTranscription  = $False;
-                        LanguageId                                 = "fr-CA";
-                        Name                                       = "TestQueue";
-                        OverflowAction                             = "Forward";
-                        OverflowActionTarget                       = @{Id="9abce74d-d108-475f-a2cb-bbb82f484982"}
-                        OverflowThreshold                          = 50;
-                        PresenceBasedRouting                       = $True;
-                        RoutingMethod                              = "RoundRobin";
-                        TimeoutAction                              = "Forward";
-                        TimeoutActionTarget                        = @{Id = "9abce74d-d108-475f-a2cb-bbb82f484982"}
-                        TimeoutThreshold                           = 1200;
-                        UseDefaultMusicOnHold                      = $False;
-                        Ensure                                     = 'Present'
-                        Credential                                 = $Credential
-                    }
-                }
             }
 
             It 'Should return Values from the Get method' {
@@ -233,7 +206,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'The TeamsCallQueue is NOT in the Desired State' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    AgentAlertTime                             = 114;
+                    AgentAlertTime                             = 120; # Drift
                     AllowOptOut                                = $True;
                     AuthorizedUsers                            = @("9abce74d-d108-475f-a2cb-bbb82f484982");
                     ChannelId                                  = "19:Y6MG7XdME2Cf9IRmU8PUXNfA1OtqmjyBgCmCGBN2tzY1@thread.tacv2";
@@ -254,33 +227,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     UseDefaultMusicOnHold                      = $False;
                     Ensure                                     = 'Present'
                     Credential                                 = $Credential
-                }
-
-                Mock -CommandName Get-CsCallQueue -MockWith {
-                    return @{
-                        Id                                         = "12345-12345-12345-12345-12345"
-                        AgentAlertTime                             = 120; #Drift
-                        AllowOptOut                                = $True;
-                        AuthorizedUsers                            = @("9abce74d-d108-475f-a2cb-bbb82f484982");
-                        ChannelId                                  = "19:Y6MG7XdME2Cf9IRmU8PUXNfA1OtqmjyBgCmCGBN2tzY1@thread.tacv2";
-                        ConferenceMode                             = $True;
-                        DistributionLists                          = @("36c88f29-faba-4f4a-89a7-e5af29e7095e");
-                        EnableOverflowSharedVoicemailTranscription = $False;
-                        EnableTimeoutSharedVoicemailTranscription  = $False;
-                        LanguageId                                 = "fr-CA";
-                        Name                                       = "TestQueue";
-                        OverflowAction                             = "Forward";
-                        OverflowActionTarget                       = @{Id="9abce74d-d108-475f-a2cb-bbb82f484982"}
-                        OverflowThreshold                          = 50;
-                        PresenceBasedRouting                       = $True;
-                        RoutingMethod                              = "RoundRobin";
-                        TimeoutAction                              = "Forward";
-                        TimeoutActionTarget                        = @{Id = "9abce74d-d108-475f-a2cb-bbb82f484982"}
-                        TimeoutThreshold                           = 1200;
-                        UseDefaultMusicOnHold                      = $False;
-                        Ensure                                     = 'Present'
-                        Credential                                 = $Credential
-                    }
                 }
             }
 
@@ -304,33 +250,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
                     Credential = $Credential
-                }
-
-                Mock -CommandName Get-CsCallQueue -MockWith {
-                    return @{
-                        Id                                         = "12345-12345-12345-12345-12345"
-                        AgentAlertTime                             = 120; #Drift
-                        AllowOptOut                                = $True;
-                        AuthorizedUsers                            = @("9abce74d-d108-475f-a2cb-bbb82f484982");
-                        ChannelId                                  = "19:Y6MG7XdME2Cf9IRmU8PUXNfA1OtqmjyBgCmCGBN2tzY1@thread.tacv2";
-                        ConferenceMode                             = $True;
-                        DistributionLists                          = @("36c88f29-faba-4f4a-89a7-e5af29e7095e");
-                        EnableOverflowSharedVoicemailTranscription = $False;
-                        EnableTimeoutSharedVoicemailTranscription  = $False;
-                        LanguageId                                 = "fr-CA";
-                        Name                                       = "TestQueue";
-                        OverflowAction                             = "Forward";
-                        OverflowActionTarget                       = @{Id="9abce74d-d108-475f-a2cb-bbb82f484982"}
-                        OverflowThreshold                          = 50;
-                        PresenceBasedRouting                       = $True;
-                        RoutingMethod                              = "RoundRobin";
-                        TimeoutAction                              = "Forward";
-                        TimeoutActionTarget                        = @{Id = "9abce74d-d108-475f-a2cb-bbb82f484982"}
-                        TimeoutThreshold                           = 1200;
-                        UseDefaultMusicOnHold                      = $False;
-                        Ensure                                     = 'Present'
-                        Credential                                 = $Credential
-                    }
                 }
             }
 

@@ -270,7 +270,7 @@ function Export-TargetResource
 
         $i = 1
         $dscContent = ''
-        if ($accounts.count -eq 0)
+        if ($accounts.Count -eq 0)
         {
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
             return ''

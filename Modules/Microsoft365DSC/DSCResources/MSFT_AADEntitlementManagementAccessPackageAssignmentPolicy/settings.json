@@ -42,5 +42,29 @@
     "Microsoft.Graph.Beta.Identity.Governance",
     "Microsoft.Graph.Users"
   ],
-  "mode": "Configuration"
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Beta.Identity.Governance",
+      "cmdlets": [
+        "Get-MgBetaEntitlementManagementAccessPackage",
+        "Get-MgBetaEntitlementManagementAccessPackageAssignmentPolicy",
+        "New-MgBetaEntitlementManagementAccessPackageAssignmentPolicy",
+        "Remove-MgBetaEntitlementManagementAccessPackageAssignmentPolicy",
+        "Set-MgBetaEntitlementManagementAccessPackageAssignmentPolicy"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Groups",
+      "cmdlets": [
+        "Get-MgGroup"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Users",
+      "cmdlets": [
+        "Get-MgUser"
+      ]
+    }
+  ]
 }

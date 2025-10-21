@@ -38,5 +38,26 @@
     "Global",
     "USGov"
   ],
-  "mode": "Configuration"
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Beta.Identity.SignIns",
+      "cmdlets": [
+        "Get-MgBetaIdentityApiConnector",
+        "Get-MgBetaIdentityB2XUserFlow",
+        "Get-MgBetaIdentityB2XUserFlowApiConnectorConfiguration",
+        "Get-MgBetaIdentityB2XUserFlowIdentityProvider",
+        "Get-MgBetaIdentityB2XUserFlowUserAttributeAssignment",
+        "New-MgBetaIdentityB2XUserFlow",
+        "New-MgBetaIdentityB2XUserFlowIdentityProviderByRef",
+        "New-MgBetaIdentityB2XUserFlowUserAttributeAssignment",
+        "Remove-MgBetaIdentityB2XUserFlow",
+        "Remove-MgBetaIdentityB2XUserFlowIdentityProviderBaseByRef",
+        "Remove-MgBetaIdentityB2XUserFlowUserAttributeAssignment",
+        "Set-MgBetaIdentityB2XUserFlowPostAttributeCollectionByRef",
+        "Set-MgBetaIdentityB2XUserFlowPostFederationSignupByRef",
+        "Update-MgBetaIdentityB2XUserFlowUserAttributeAssignment"
+      ]
+    }
+  ]
 }

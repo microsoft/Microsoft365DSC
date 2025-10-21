@@ -41,5 +41,14 @@
     "Global",
     "USGov"
   ],
-  "mode": "Configuration"
+  "mode": "Configuration",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Beta.Identity.SignIns",
+      "cmdlets": [
+        "Get-MgBetaPolicyB2CAuthenticationMethodPolicy",
+        "Update-MgBetaPolicyB2CAuthenticationMethodPolicy"
+      ]
+    }
+  ]
 }

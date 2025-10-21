@@ -33,6 +33,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-PSSession -MockWith {
             }
 
+            Mock -CommandName Get-CsTeamsIPPhonePolicy -MockWith {
+                return @{
+                    AllowHotDesking                = $True
+                    AllowBetterTogether            = 'Enabled'
+                    SearchOnCommonAreaPhoneMode    = 'Enabled'
+                    Description                    = 'FakeStringValue'
+                    HotDeskingIdleTimeoutInMinutes = 3
+                    SignInMode                     = 'UserSignIn'
+                    Identity                       = 'FakeStringValue'
+                    AllowHomeScreen                = 'Enabled'
+                }
+            }
+
             Mock -CommandName Set-CsTeamsIPPhonePolicy -MockWith {
             }
 
@@ -102,19 +115,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure                         = 'Absent'
                     Credential                     = $Credential
                 }
-
-                Mock -CommandName Get-CsTeamsIPPhonePolicy -MockWith {
-                    return @{
-                        AllowHotDesking                = $True
-                        AllowBetterTogether            = 'Enabled'
-                        SearchOnCommonAreaPhoneMode    = 'Enabled'
-                        Description                    = 'FakeStringValue'
-                        HotDeskingIdleTimeoutInMinutes = 3
-                        SignInMode                     = 'UserSignIn'
-                        Identity                       = 'FakeStringValue'
-                        AllowHomeScreen                = 'Enabled'
-                    }
-                }
             }
 
             It 'Should return Values from the Get method' {
@@ -145,19 +145,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure                         = 'Present'
                     Credential                     = $Credential
                 }
-
-                Mock -CommandName Get-CsTeamsIPPhonePolicy -MockWith {
-                    return @{
-                        AllowHotDesking                = $True
-                        AllowBetterTogether            = 'Enabled'
-                        SearchOnCommonAreaPhoneMode    = 'Enabled'
-                        Description                    = 'FakeStringValue'
-                        HotDeskingIdleTimeoutInMinutes = 3
-                        SignInMode                     = 'UserSignIn'
-                        Identity                       = 'FakeStringValue'
-                        AllowHomeScreen                = 'Enabled'
-                    }
-                }
             }
 
             It 'Should return true from the Test method' {
@@ -168,7 +155,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'The TeamsIPPhonePolicy exists and values are NOT in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    AllowHotDesking                = $True
+                    AllowHotDesking                = $False # Drift
                     AllowBetterTogether            = 'Enabled'
                     SearchOnCommonAreaPhoneMode    = 'Enabled'
                     Description                    = 'FakeStringValue'
@@ -178,19 +165,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowHomeScreen                = 'Enabled'
                     Ensure                         = 'Present'
                     Credential                     = $Credential
-                }
-
-                Mock -CommandName Get-CsTeamsIPPhonePolicy -MockWith {
-                    return @{
-                        AllowHotDesking                = $False
-                        AllowBetterTogether            = 'Disabled'
-                        SearchOnCommonAreaPhoneMode    = 'Disabled'
-                        Description                    = 'FakeStringValueDrift #Drift'
-                        HotDeskingIdleTimeoutInMinutes = 2
-                        SignInMode                     = 'CommonAreaPhoneSignIn'
-                        Identity                       = 'FakeStringValue'
-                        AllowHomeScreen                = 'Disabled'
-                    }
                 }
             }
 
@@ -214,20 +188,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
                     Credential = $Credential
-                }
-
-                Mock -CommandName Get-CsTeamsIPPhonePolicy -MockWith {
-                    return @{
-                        AllowHotDesking                = $True
-                        AllowBetterTogether            = 'Enabled'
-                        SearchOnCommonAreaPhoneMode    = 'Enabled'
-                        Description                    = 'FakeStringValue'
-                        HotDeskingIdleTimeoutInMinutes = 3
-                        SignInMode                     = 'UserSignIn'
-                        Identity                       = 'FakeStringValue'
-                        AllowHomeScreen                = 'Enabled'
-
-                    }
                 }
             }
 

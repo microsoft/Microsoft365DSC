@@ -27,6 +27,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             $Global:PartialExportFileName = 'c:\TestPath'
 
+            Mock -ModuleName M365DSCUtil -CommandName Confirm-M365DSCDependencies -MockWith {
+            }
+
             Mock -CommandName Save-M365DSCPartialExport -MockWith {
             }
 
@@ -41,6 +44,31 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName New-CsTenantDialPlan -MockWith {
+            }
+
+            Mock -CommandName Get-CsTenantDialPlan -MockWith {
+                return @{
+                    Identity           = 'Test'
+                    Description        = 'TestDescription'
+                    NormalizationRules = @(
+                        @{
+                            Pattern             = '^00(\d+)$'
+                            Description         = 'None'
+                            Name                = 'TestNotExisting'
+                            Translation         = '+$1'
+                            Priority            = 0
+                            IsInternalExtension = $False
+                        },
+                        @{
+                            Pattern             = '^00(\d+)$'
+                            Description         = 'None'
+                            Name                = 'TestNotExisting2'
+                            Translation         = '+$1'
+                            Priority            = 0
+                            IsInternalExtension = $False
+                        }
+                    )
+                }
             }
 
             # Mock Write-M365DSCHost to hide output during the tests
@@ -85,38 +113,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Identity           = 'Test'
                     Description        = 'TestDescription'
                     Ensure             = 'Present'
-                    NormalizationRules = @(New-CimInstance -ClassName MSFT_TeamsVoiceNormalizationRule -Property @{
+                    NormalizationRules = [CimInstance[]]@(New-CimInstance -ClassName MSFT_TeamsVoiceNormalizationRule -Property @{
                             Pattern             = '^00(\d+)$'
                             Description         = 'None'
                             Identity            = 'TestNotExisting'
                             Translation         = '+$1'
                             Priority            = 0
                             IsInternalExtension = $False
-                        } -ClientOnly;
-                        New-CimInstance -ClassName MSFT_TeamsVoiceNormalizationRule -Property @{
-                            Pattern             = '^00(\d+)$'
-                            Description         = 'None'
-                            Identity            = 'TestNotExisting2'
-                            Translation         = '+$1'
-                            Priority            = 0
-                            IsInternalExtension = $False
-                        } -ClientOnly)
+                        } -ClientOnly;) # Drift
                     Credential         = $Credential
-                }
-
-                Mock -CommandName Get-CsTenantDialPlan -MockWith {
-                    return @{
-                        Identity           = 'Test'
-                        Description        = 'TestDescription'
-                        NormalizationRules = @{
-                            Pattern             = '^00(\d+)$'
-                            Description         = 'None'
-                            Name                = 'TestNotExisting'
-                            Translation         = '+$1'
-                            Priority            = 0
-                            IsInternalExtension = $False
-                        }
-                    }
                 }
             }
 
@@ -131,7 +136,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Updates in the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Set-CsTenantDialPlan -Exactly 1
+                Should -Invoke -CommandName Set-CsTenantDialPlan -Exactly 2
             }
         }
 
@@ -159,30 +164,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         } -ClientOnly)
                     Credential         = $Credential
                 }
-
-                Mock -CommandName Get-CsTenantDialPlan -MockWith {
-                    return @{
-                        Identity           = 'Test'
-                        Description        = 'TestDescription'
-                        NormalizationRules = @(@{
-                                Pattern             = '^00(\d+)$'
-                                Description         = 'None'
-                                Name                = 'TestNotExisting'
-                                Translation         = '+$1'
-                                Priority            = 0
-                                IsInternalExtension = $False
-                            },
-                            @{
-                                Pattern             = '^00(\d+)$'
-                                Description         = 'None'
-                                Name                = 'TestNotExisting2'
-                                Translation         = '+$1'
-                                Priority            = 0
-                                IsInternalExtension = $False
-                            }
-                        )
-                    }
-                }
             }
 
             It 'Should return true from the Test method' {
@@ -202,30 +183,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Description = 'TestDescription'
                     Ensure      = 'Absent'
                     Credential  = $Credential
-                }
-
-                Mock -CommandName Get-CsTenantDialPlan -MockWith {
-                    return @{
-                        Identity           = 'Test'
-                        Description        = 'TestDescription'
-                        NormalizationRules = @(@{
-                                Pattern             = '^00(\d+)$'
-                                Description         = 'None'
-                                Name                = 'TestNotExisting'
-                                Translation         = '+$1'
-                                Priority            = 0
-                                IsInternalExtension = $False
-                            },
-                            @{
-                                Pattern             = '^00(\d+)$'
-                                Description         = 'None'
-                                Name                = 'TestNotExisting2'
-                                Translation         = '+$1'
-                                Priority            = 0
-                                IsInternalExtension = $False
-                            }
-                        )
-                    }
                 }
             }
 
@@ -251,30 +208,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
                     Credential = $Credential
-                }
-
-                Mock -CommandName Get-CsTenantDialPlan -MockWith {
-                    return @{
-                        Identity           = 'Test'
-                        Description        = 'TestDescription'
-                        NormalizationRules = @(@{
-                                Pattern             = '^00(\d+)$'
-                                Description         = 'None'
-                                Name                = 'TestNotExisting'
-                                Translation         = '+$1'
-                                Priority            = 0
-                                IsInternalExtension = $False
-                            },
-                            @{
-                                Pattern             = '^00(\d+)$'
-                                Description         = 'None'
-                                Name                = 'TestNotExisting2'
-                                Translation         = '+$1'
-                                Priority            = 0
-                                IsInternalExtension = $False
-                            }
-                        )
-                    }
                 }
             }
 

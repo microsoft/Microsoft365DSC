@@ -34,6 +34,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return "Credentials"
             }
 
+            Mock -CommandName Get-CsOnlineApplicationInstance -MockWith {
+                return @{
+                    DisplayName         = 'john.smith@contoso.com'
+                    UserPrincipalName   = 'john.smith@contoso.com'
+                    ApplicationId       = 'ce933385-9390-45d1-9512-c8d228074e07'
+                }
+            }
+
             Mock -CommandName New-CsOnlineApplicationInstance -MockWith {
             }
 
@@ -83,14 +91,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure              = 'Absent'
                     Credential          = $Credential;
                 }
-
-                Mock -CommandName Get-CsOnlineApplicationInstance -MockWith {
-                    return @{
-                        DisplayName         = 'john.smith@contoso.com'
-                        UserPrincipalName   = 'john.smith@contoso.com'
-                        ApplicationId       = 'ce933385-9390-45d1-9512-c8d228074e07'
-                    }
-                }
             }
             It 'Should return Values from the Get method' {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
@@ -112,14 +112,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ResourceAccountType = 'AutoAttendant'
                     Ensure              = 'Present'
                     Credential          = $Credential;
-                }
-
-                Mock -CommandName Get-CsOnlineApplicationInstance -MockWith {
-                    return @{
-                        DisplayName         = 'john.smith@contoso.com'
-                        UserPrincipalName   = 'john.smith@contoso.com'
-                        ApplicationId       = 'ce933385-9390-45d1-9512-c8d228074e07'
-                    }
                 }
             }
 
@@ -167,14 +159,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
                     Credential  = $Credential;
-                }
-
-                Mock -CommandName Get-CsOnlineApplicationInstance -MockWith {
-                    return @{
-                        DisplayName         = 'john.smith@contoso.com'
-                        UserPrincipalName   = 'john.smith@contoso.com'
-                        ApplicationId       = '11cd3e2e-fccb-42ad-ad00-878b93575e07' # Drift
-                    }
                 }
             }
             It 'Should Reverse Engineer resource from the Export method' {

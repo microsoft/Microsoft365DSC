@@ -868,7 +868,7 @@ function Get-DevicePlatformRestrictionSetting
     if ($null -ne $Properties.platformType)
     {
         $keyName = ($Properties.platformType).Substring(0, 1).ToUpper() + ($Properties.platformType).Substring(1, $Properties.platformType.length - 1) + 'Restriction'
-        $keyValue = $Properties.platformRestriction.Clone()
+        $keyValue = $Properties.platformRestriction
         $hash = @{}
         foreach ($key in $keyValue.Keys)
         {
@@ -878,7 +878,7 @@ function Get-DevicePlatformRestrictionSetting
                 {
                     '*[[\]]'
                     {
-                        if ($keyValue.$key.count -gt 0)
+                        if ($keyValue.$key.Count -gt 0)
                         {
                             $hash.Add($key, $keyValue.$key)
                         }
@@ -901,13 +901,13 @@ function Get-DevicePlatformRestrictionSetting
     }
     else
     {
-        $platformRestrictions = $Properties.Clone()
+        $platformRestrictions = $Properties
         $platformRestrictions.Remove('@odata.type')
         $platformRestrictions.Remove('@odata.context')
         foreach ($key in $platformRestrictions.Keys)
         {
             $keyName = $key.Substring(0, 1).ToUpper() + $key.Substring(1, $key.Length - 1)
-            $keyValue = $platformRestrictions.$key.Clone()
+            $keyValue = $platformRestrictions.$key
             $hash = @{}
             foreach ($key in $keyValue.Keys)
             {
@@ -917,7 +917,7 @@ function Get-DevicePlatformRestrictionSetting
                     {
                         '*[[\]]'
                         {
-                            if ($keyValue.$key.count -gt 0)
+                            if ($keyValue.$key.Count -gt 0)
                             {
                                 $hash.Add($key, $keyValue.$key)
                             }

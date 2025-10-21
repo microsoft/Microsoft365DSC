@@ -32,9 +32,6 @@
             "name": "RoleManagement.ReadWrite.Directory"
           },
           {
-            "name": "User.Read.All"
-          },
-          {
             "name": "User.ReadWrite.All"
           },
           {
@@ -62,9 +59,6 @@
             "name": "RoleManagement.ReadWrite.Directory"
           },
           {
-            "name": "User.Read.All"
-          },
-          {
             "name": "User.ReadWrite.All"
           },
           {
@@ -89,5 +83,45 @@
     "Global",
     "USGov"
   ],
-  "mode": "Data"
+  "mode": "Data",
+  "commands": [
+    {
+      "module": "Microsoft.Graph.Beta.Identity.DirectoryManagement",
+      "cmdlets": [
+        "Get-MgBetaSubscribedSku"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Beta.Identity.Governance",
+      "cmdlets": [
+        "Get-MgBetaRoleManagementDirectoryRoleAssignment",
+        "Get-MgBetaRoleManagementDirectoryRoleDefinition",
+        "New-MgBetaRoleManagementDirectoryRoleAssignment",
+        "Remove-MgBetaRoleManagementDirectoryRoleAssignment"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Groups",
+      "cmdlets": [
+        "Get-MgGroup",
+        "New-MgGroupMember",
+        "Remove-MgGroupMemberDirectoryObjectByRef"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Users",
+      "cmdlets": [
+        "Get-MgUser",
+        "New-MgUser",
+        "Remove-MgUser",
+        "Update-MgUser"
+      ]
+    },
+    {
+      "module": "Microsoft.Graph.Users.Actions",
+      "cmdlets": [
+        "Set-MgUserLicense"
+      ]
+    }
+  ]
 }

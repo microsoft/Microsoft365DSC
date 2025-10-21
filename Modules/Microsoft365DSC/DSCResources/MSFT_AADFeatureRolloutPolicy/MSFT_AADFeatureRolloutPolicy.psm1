@@ -92,8 +92,10 @@ function Get-TargetResource
 
             $getValue = $null
             #region resource generator code
-            $getValue = Get-MgBetaPolicyFeatureRolloutPolicy -FeatureRolloutPolicyId $Id -ErrorAction SilentlyContinue
-
+            if (-not [System.String]::IsNullOrEmpty($Id))
+            {
+                $getValue = Get-MgBetaPolicyFeatureRolloutPolicy -FeatureRolloutPolicyId $Id -ErrorAction SilentlyContinue
+            }
             if ($null -eq $getValue)
             {
                 Write-Verbose -Message "Could not find an Azure AD Policy Feature Rollout Policy with Id {$Id}"

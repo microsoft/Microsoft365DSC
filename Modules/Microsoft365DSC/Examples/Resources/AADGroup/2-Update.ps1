@@ -30,7 +30,6 @@ Configuration Example
             GroupTypes       = @("Unified")
             MailNickname     = "M365DSC"
             Members          = @("AdeleV@$TenantId")
-            GroupAsMembers   = @("Group1")
             Visibility       = "Private"
             Owners           = @("admin@$TenantId", "AdeleV@$TenantId")
             AssignedLicenses = @(

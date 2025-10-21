@@ -415,12 +415,12 @@ function Get-Base64EncodedImage
     {
         $icon = Get-Item -Path $IconPath
 
-        if($icon.Extension.endsWith("jpg") -or $icon.Extension.endsWith("jpeg"))
+        if($icon.Extension.EndsWith("jpg") -or $icon.Extension.EndsWith("jpeg"))
         {
             $mimeType = "image/jpeg"
         }
 
-        if($icon.Extension.endsWith("png"))
+        if($icon.Extension.EndsWith("png"))
         {
             $mimeType = "image/png"
         }
@@ -1484,12 +1484,12 @@ function Get-M365DSCResourceKey
     {
         return @('OrgWideAccount')
     }
-    elseif ($mandatoryParameters.count -gt 0)
+    elseif ($mandatoryParameters.Count -gt 0)
     {
         # return all mandatory parameters
         return @($mandatoryParameters.Name)
     }
-    elseif ($mandatoryParameters.count -eq 0)
+    elseif ($mandatoryParameters.Count -eq 0)
     {
         Write-Verbose -Message "No mandatory parameters found for $($Resource.ResourceName)"
     }

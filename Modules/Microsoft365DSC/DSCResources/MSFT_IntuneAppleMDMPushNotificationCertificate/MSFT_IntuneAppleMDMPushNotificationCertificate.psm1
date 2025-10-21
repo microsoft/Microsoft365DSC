@@ -122,7 +122,7 @@ function Get-TargetResource
         $consentInstance = Get-MgBetaDeviceManagementDataSharingConsent -DataSharingConsentId 'appleMDMPushCertificate'
         $results.Add('DataSharingConsetGranted', $consentInstance.Granted)
 
-        return [System.Collections.Hashtable]$results
+        return $results
     }
     catch
     {

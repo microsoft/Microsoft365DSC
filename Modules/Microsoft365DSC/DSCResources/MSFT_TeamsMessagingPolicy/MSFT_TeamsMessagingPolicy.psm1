@@ -20,6 +20,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $AllowExtendedWorkInfoInSearch,
+
+        [Parameter()]
+        [System.Boolean]
         $AllowFullChatPermissionUserToDeleteAnyMessage,
 
         [Parameter()]
@@ -33,6 +37,11 @@ function Get-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowPasteInternetImage,
+
+        [Parameter()]
+        [ValidateSet('Enabled', 'Disabled')]
+        [System.String]
+        $AutoShareFilesInExternalChats,
 
         [Parameter()]
         [ValidateSet('Full', 'Limited', 'Restricted')]
@@ -156,6 +165,11 @@ function Get-TargetResource
         [System.String]
         [ValidateSet('UserPreference', 'Everyone', 'None')]
         $ReadReceiptsEnabledType,
+
+        [Parameter()]
+        [ValidateSet('Enabled', 'Disabled')]
+        [System.String]
+        $UseB2BInvitesToAddExternalUsers,
 
         [Parameter()]
         [System.String]
@@ -243,10 +257,12 @@ function Get-TargetResource
                 Identity                                      = $currentPolicy
                 AllowChatWithGroup                            = $policy.AllowChatWithGroup
                 AllowCustomGroupChatAvatars                   = $policy.AllowCustomGroupChatAvatars
+                AllowExtendedWorkInfoInSearch                 = $policy.AllowExtendedWorkInfoInSearch
                 AllowFullChatPermissionUserToDeleteAnyMessage = $policy.AllowFullChatPermissionUserToDeleteAnyMessage
                 AllowGiphyDisplay                             = $policy.AllowGiphyDisplay
                 AllowGroupChatJoinLinks                       = $policy.AllowGroupChatJoinLinks
                 AllowPasteInternetImage                       = $policy.AllowPasteInternetImage
+                AutoShareFilesInExternalChats                 = $policy.AutoShareFilesInExternalChats
                 ChatPermissionRole                            = $policy.ChatPermissionRole
                 CreateCustomEmojis                            = $policy.CreateCustomEmojis
                 DeleteCustomEmojis                            = $policy.DeleteCustomEmojis
@@ -276,6 +292,7 @@ function Get-TargetResource
                 AllowVideoMessages                            = $policy.AllowVideoMessages
                 ChannelsInChatListEnabledType                 = $policy.ChannelsInChatListEnabledType
                 AudioMessageEnabledType                       = $policy.AudioMessageEnabledType
+                UseB2BInvitesToAddExternalUsers               = $policy.UseB2BInvitesToAddExternalUsers
                 Description                                   = $policy.Description
                 Tenant                                        = $policy.Tenant
                 Ensure                                        = 'Present'
@@ -319,6 +336,10 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $AllowExtendedWorkInfoInSearch,
+
+        [Parameter()]
+        [System.Boolean]
         $AllowFullChatPermissionUserToDeleteAnyMessage,
 
         [Parameter()]
@@ -332,6 +353,11 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowPasteInternetImage,
+
+        [Parameter()]
+        [ValidateSet('Enabled', 'Disabled')]
+        [System.String]
+        $AutoShareFilesInExternalChats,
 
         [Parameter()]
         [ValidateSet('Full', 'Limited', 'Restricted')]
@@ -455,6 +481,11 @@ function Set-TargetResource
         [System.String]
         [ValidateSet('UserPreference', 'Everyone', 'None')]
         $ReadReceiptsEnabledType,
+
+        [Parameter()]
+        [ValidateSet('Enabled', 'Disabled')]
+        [System.String]
+        $UseB2BInvitesToAddExternalUsers,
 
         [Parameter()]
         [System.String]
@@ -545,6 +576,10 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $AllowExtendedWorkInfoInSearch,
+
+        [Parameter()]
+        [System.Boolean]
         $AllowFullChatPermissionUserToDeleteAnyMessage,
 
         [Parameter()]
@@ -558,6 +593,11 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowPasteInternetImage,
+
+        [Parameter()]
+        [ValidateSet('Enabled', 'Disabled')]
+        [System.String]
+        $AutoShareFilesInExternalChats,
 
         [Parameter()]
         [ValidateSet('Full', 'Limited', 'Restricted')]
@@ -681,6 +721,11 @@ function Test-TargetResource
         [System.String]
         [ValidateSet('UserPreference', 'Everyone', 'None')]
         $ReadReceiptsEnabledType,
+
+        [Parameter()]
+        [ValidateSet('Enabled', 'Disabled')]
+        [System.String]
+        $UseB2BInvitesToAddExternalUsers,
 
         [Parameter()]
         [System.String]
