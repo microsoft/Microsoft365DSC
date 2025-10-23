@@ -1213,6 +1213,7 @@ function Test-M365DSCTargetResource
         [switch]
         $PassThru
     )
+	
 	#Force correct drift detection for Intune Custom Policy
 	if ($ResourceName -match 'IntuneSettingCatalogCustomPolicyWindows10')
 	{
