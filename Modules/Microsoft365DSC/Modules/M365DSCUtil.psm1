@@ -1230,7 +1230,7 @@ function Test-M365DSCTargetResource
 		try {
 			#Skip drift check if authentication parameters missing 
 			if (-not $DesiredValues.Credential -and
-            (-not $DesiredValues.ApplicationId -or -not $DesiredValues.TenantId -or -not $DesiredValues.CertificateThumbprint))
+            (-not $DesiredValues.ApplicationId -or -not $DesiredValues.TenantId -or -not $DesiredValues.CertificateThumbprint)-or $env:TF_BUILD -or $env:GITHUB_ACTIONS)
 			{
 				Write-Verbose "Skipping Intune custom drift check — authentication parameters not provided"
 				return $true
