@@ -1213,7 +1213,43 @@ function Test-M365DSCTargetResource
         [switch]
         $PassThru
     )
+	#Force correct drift detection for Intune Custom Policy
+	if ($ResourceName -match 'IntuneSettingCatalogCustomPolicyWindows10')
+	{
+		Write-Verbose "Custom drift detection for IntuneSettingCatalogCustomPolicyWindows10"
 
+		# Prevent recursive loop during drift checks
+		if ($Global:__InCustomIntuneCheck)
+		{
+			Write-Verbose "Detected recursive call - skipping custom drift check"
+			return $true
+		}
+		$Global:__InCustomIntuneCheck = $true
+
+		try {
+			$CurrentValues = & MSFT_IntuneSettingCatalogCustomPolicyWindows10\Get-TargetResource @DesiredValues
+
+			$diff = Compare-Object `
+				-ReferenceObject ($CurrentValues.GetEnumerator() | Sort-Object Name) `
+				-DifferenceObject ($DesiredValues.GetEnumerator() | Sort-Object Name)
+
+			if ($null -ne $diff -and $diff.Count -gt 0)
+			{
+				Write-Verbose "Drift detected for IntuneSettingCatalogCustomPolicyWindows10"
+				return $false
+			}
+			Write-Verbose "No drift detected for IntuneSettingCatalogCustomPolicyWindows10"
+			return $true
+		}
+		catch {
+			Write-Verbose "Failed during custom drift check: $($_.Exception.Message)"
+			return $false
+		}
+		finally {
+			Remove-Variable -Name __InCustomIntuneCheck -Scope Global -ErrorAction SilentlyContinue
+		}
+	}
+	
     $Global:AllDrifts = @{
         DriftInfo     = @()
         CurrentValues = @{}
