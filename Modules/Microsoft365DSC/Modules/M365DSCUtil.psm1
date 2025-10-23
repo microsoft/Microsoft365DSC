@@ -1228,13 +1228,20 @@ function Test-M365DSCTargetResource
 		$Global:__InCustomIntuneCheck = $true
 
 		try {
+			#Skip drift check if authentication parameters missing 
+			if (-not $DesiredValues.Credential -and
+            (-not $DesiredValues.ApplicationId -or -not $DesiredValues.TenantId -or -not $DesiredValues.CertificateThumbprint))
+			{
+				Write-Verbose "Skipping Intune custom drift check — authentication parameters not provided"
+				return $true
+			}
 			$CurrentValues = & MSFT_IntuneSettingCatalogCustomPolicyWindows10\Get-TargetResource @DesiredValues
 
 			$diff = Compare-Object `
 				-ReferenceObject ($CurrentValues.GetEnumerator() | Sort-Object Name) `
 				-DifferenceObject ($DesiredValues.GetEnumerator() | Sort-Object Name)
 
-			if ($null -ne $diff -and $diff.Count -gt 0)
+			if ($diff -and $diff.Count -gt 0)
 			{
 				Write-Verbose "Drift detected for IntuneSettingCatalogCustomPolicyWindows10"
 				return $false
