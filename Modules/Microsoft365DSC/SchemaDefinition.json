@@ -6608,6 +6608,27 @@
     "Description": "Custom authentication extensions define interactions with external systems during a user authentication session."
   },
   {
+<<<<<<< Updated upstream
+=======
+    "ClassName": "MSFT_CustomSecurityAttributeAllowedValue",
+    "Parameters": [
+      {
+        "CIMType": "String",
+        "Description": "The id of the allowed value. Must be unique in the set of allowed values.",
+        "Name": "ValueId",
+        "Option": "Key"
+      },
+      {
+        "CIMType": "Boolean",
+        "Description": "If the allowed value is active.",
+        "Name": "IsActive",
+        "Option": "Required"
+      }
+    ],
+    "Description": "Configures custom security attribute definitions in Entra Id."
+  },
+  {
+>>>>>>> Stashed changes
     "ClassName": "MSFT_AADCustomSecurityAttributeDefinition",
     "Parameters": [
       {
@@ -6623,6 +6644,15 @@
         "Option": "Key"
       },
       {
+<<<<<<< Updated upstream
+=======
+        "CIMType": "MSFT_CustomSecurityAttributeAllowedValue[]",
+        "Description": "The allowed values of the attribute definition.",
+        "Name": "AllowedValues",
+        "Option": "Write"
+      },
+      {
+>>>>>>> Stashed changes
         "CIMType": "String",
         "Description": "Unique identifier of the Attribute Definition.",
         "Name": "Id",
@@ -11395,7 +11425,11 @@
         "Option": "Write",
         "ValueMap": [
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
           "#microsoft.graph.countryNamedLocation",
+=======
+          "#microsoft.graph.CountryNamedLocation",
+>>>>>>> Stashed changes
 =======
           "#microsoft.graph.CountryNamedLocation",
 >>>>>>> Stashed changes
@@ -11404,7 +11438,11 @@
         ],
         "Values": [
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
           "#microsoft.graph.countryNamedLocation",
+=======
+          "#microsoft.graph.CountryNamedLocation",
+>>>>>>> Stashed changes
 =======
           "#microsoft.graph.CountryNamedLocation",
 >>>>>>> Stashed changes
@@ -14981,6 +15019,15 @@
         "Option": "Key"
       },
       {
+<<<<<<< Updated upstream
+=======
+        "CIMType": "Boolean",
+        "Description": "Specifies whether the user account is enabled or not. Required when a user is created.",
+        "Name": "AccountEnabled",
+        "Option": "Write"
+      },
+      {
+>>>>>>> Stashed changes
         "CIMType": "String",
         "Description": "The display name for the user",
         "Name": "DisplayName",
@@ -27938,13 +27985,19 @@
       {
         "CIMType": "Boolean",
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
         "Description": "The DelayedDelicensingEnabled parameter enables or disables a 30 day grace period for Exchange Online license removals from mailboxes.",
         "Name": "DelayedDelicensingEnabled",
         "Option": "Write"
       },
       {
         "CIMType": "Boolean",
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         "Description": "The DirectReportsGroupAutoCreationEnabled parameter specifies whether to enable or disable the automatic creation of direct report Office 365 groups.",
         "Name": "DirectReportsGroupAutoCreationEnabled",
@@ -27995,13 +28048,19 @@
       {
         "CIMType": "Boolean",
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
         "Description": "The EndUserMailNotificationForDelayedDelicensingEnabled parameter enables or disables periodic email warnings to affected users that have pending Exchange Online license removal requests on their mailboxes.",
         "Name": "EndUserMailNotificationForDelayedDelicensingEnabled",
         "Option": "Write"
       },
       {
         "CIMType": "Boolean",
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         "Description": "The EwsAllowEntourage parameter specifies whether to enable or disable Entourage 2008 to access Exchange Web Services (EWS) for the entire organization.",
         "Name": "EwsAllowEntourage",
@@ -28309,13 +28368,19 @@
       },
       {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
         "CIMType": "Boolean",
         "Description": "The TenantAdminNotificationForDelayedDelicensingEnabled parameter enables or disables weekly admin Service Health advisory notifications that are sent to admins.",
         "Name": "TenantAdminNotificationForDelayedDelicensingEnabled",
         "Option": "Write"
       },
       {
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         "CIMType": "String",
         "Description": "The VisibleMeetingUpdateProperties parameter specifies whether meeting message updates will be auto-processed on behalf of attendees. Auto-processed updates are applied to the attendee's calendar item, and then the meeting message is moved to the deleted items. The attendee never sees the update in their inbox, but their calendar is updated.",
@@ -38936,7 +39001,11 @@
       },
       {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         "CIMType": "String",
+=======
+        "CIMType": "String[]",
+>>>>>>> Stashed changes
 =======
         "CIMType": "String[]",
 >>>>>>> Stashed changes
@@ -38954,7 +39023,11 @@
       },
       {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         "CIMType": "String",
+=======
+        "CIMType": "String[]",
+>>>>>>> Stashed changes
 =======
         "CIMType": "String[]",
 >>>>>>> Stashed changes
@@ -42898,6 +42971,569 @@
     "Description": "This resource configures an Intune Endpoint Protection Attack Surface Reduction Rules policy for a Windows 10 Device for Configuration Manager.\r\nThis policy setting enables setting the state (Block/Audit/Off/Warn) for each attack surface reduction (ASR) rule. Each ASR rule listed can be set to one of the following states (Block/Audit/Off/Warn). The ASR rule ID and state should be added under the Options for this setting. Each entry must be listed as a name value pair. The name defines a valid ASR rule ID, while the value contains the status ID indicating the status of the rule.\r\n\r\nFor more information about ASR rule ID and status ID, see Enable Attack Surface Reduction: https://docs.microsoft.com/en-us/windows/threat-protection/windows-defender-exploit-guard/enable-attack-surface-reduction."
   },
   {
+<<<<<<< Updated upstream
+=======
+    "ClassName": "MSFT_IntuneAzureNetworkConnectionWindows365",
+    "Parameters": [
+      {
+        "CIMType": "String",
+        "Description": "The fully qualified domain name (FQDN) of the Active Directory domain you want to join. Optional.",
+        "Name": "AdDomainName",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "The password associated with adDomainUsername. Cannot be exported and must be manually added before deploying the network connection.",
+        "Name": "AdDomainPassword",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "The username of an Active Directory account (user or service account) that has permissions to create computer objects in Active Directory. Required format: admincontoso.com. Optional.",
+        "Name": "AdDomainUsername",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "Specifies the method by which a provisioned Cloud PC is joined to Microsoft Entra. The azureADJoin option indicates the absence of an on-premises Active Directory (AD) in the current tenant that results in the Cloud PC device only joining to Microsoft Entra. The hybridAzureADJoin option indicates the presence of an on-premises AD in the current tenant and that the Cloud PC joins both the on-premises AD and Microsoft Entra. The selected option also determines the types of users who can be assigned and can sign into a Cloud PC. The azureADJoin option allows both cloud-only and hybrid users to be assigned and sign in, whereas hybridAzureADJoin is restricted to hybrid users only. The default value is hybridAzureADJoin. The possible values are: hybridAzureADJoin, azureADJoin.",
+        "Name": "ConnectionType",
+        "Option": "Write",
+        "ValueMap": [
+          "hybridAzureADJoin",
+          "azureADJoin"
+        ],
+        "Values": [
+          "hybridAzureADJoin",
+          "azureADJoin"
+        ]
+      },
+      {
+        "CIMType": "String",
+        "Description": "The display name for the Azure network connection.",
+        "Name": "DisplayName",
+        "Option": "Key"
+      },
+      {
+        "CIMType": "String",
+        "Description": "The organizational unit (OU) in which the computer account is created. If left null, the OU configured as the default (a well-known computer object container) in your Active Directory domain (OU) is used. Optional. Only applicable for the connection type 'hybridAzureADJoin'.",
+        "Name": "OrganizationalUnit",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "The ID of the target resource group. Required format: /subscriptions/{subscription-id}/resourceGroups/{resourceGroupName}.",
+        "Name": "ResourceGroupId",
+        "Option": "Required"
+      },
+      {
+        "CIMType": "String[]",
+        "Description": "List of Scope Tags for this Entity instance.",
+        "Name": "RoleScopeTagIds",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "The ID of the target subnet. Required format: /subscriptions/{subscription-id}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/virtualNetworks/{virtualNetworkId}/subnets/{subnetName}.",
+        "Name": "SubnetId",
+        "Option": "Required"
+      },
+      {
+        "CIMType": "String",
+        "Description": "The name of the target Azure subscription.",
+        "Name": "SubscriptionName",
+        "Option": "Required"
+      },
+      {
+        "CIMType": "String",
+        "Description": "The ID of the target virtual network. Required format: /subscriptions/{subscription-id}/{resourceGroups/resourceGroupName}/providers/Microsoft.Network/virtualNetworks/{virtualNetworkName}.",
+        "Name": "VirtualNetworkId",
+        "Option": "Required"
+      },
+      {
+        "CIMType": "String",
+        "Description": "The unique identifier for an entity. Read-only.",
+        "Name": "Id",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "string",
+        "Description": "Present ensures the policy exists, absent ensures it is removed.",
+        "Name": "Ensure",
+        "Option": "Write",
+        "ValueMap": [
+          "Present",
+          "Absent"
+        ],
+        "Values": [
+          "Present",
+          "Absent"
+        ]
+      },
+      {
+        "CIMType": "MSFT_Credential",
+        "Description": "Credentials of the Admin",
+        "Name": "Credential",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "Id of the Azure Active Directory application to authenticate with.",
+        "Name": "ApplicationId",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "Id of the Azure Active Directory tenant used for authentication.",
+        "Name": "TenantId",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "MSFT_Credential",
+        "Description": "Secret of the Azure Active Directory tenant used for authentication.",
+        "Name": "ApplicationSecret",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.",
+        "Name": "CertificateThumbprint",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "Boolean",
+        "Description": "Managed ID being used for authentication.",
+        "Name": "ManagedIdentity",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String[]",
+        "Description": "Access token used for authentication.",
+        "Name": "AccessTokens",
+        "Option": "Write"
+      }
+    ],
+    "Description": "Intune Azure Network Connection for Windows365\r\n\r\n**NOTE:** To resolve the subscription and resource group name, the identity requires the `Microsoft.Resources/subscriptions/read` Azure permission.\r\nYou can either assign it with a built-in role with more permissions, or use a custom Azure RBAC role with this specific permission.\r\nThe role scope can be configured at management group or at an individual subscription level, but it must be the subscription where the Azure Network Connection was deployed to.\r\n\r\nMake sure that the value of `SubscriptionName` is the same as the one in the subnet and resource group specification."
+  },
+  {
+    "ClassName": "MSFT_MicrosoftGraphCloudPcProvisioningPolicyAutopatch",
+    "Parameters": [
+      {
+        "CIMType": "String",
+        "Description": "The unique identifier (ID) of a Windows Autopatch group. An Autopatch group is a logical container or unit that groups several Microsoft Entra groups and software update policies. Devices with the same Autopatch group ID share unified software update management. The default value is null that indicates that no Autopatch group is associated with the provisioning policy.",
+        "Name": "AutopatchGroupId",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "The unique display name of a Windows Autopatch group.",
+        "Name": "AutopatchGroupDisplayName",
+        "Option": "Write"
+      }
+    ],
+    "Description": "Intune Cloud Provisioning Policy for Windows365\r\n\r\n**Please note:** To deploy an Intune Cloud Provisioning Policy for Windows 365 and you opted to use Autopatch, then you must use `Credentials` as the authentication method.\r\nThe Microsoft Graph API does not allow Service Principal authentication for Autopatch configuration."
+  },
+  {
+    "ClassName": "MSFT_MicrosoftGraphCloudPcAutopilotConfiguration",
+    "Parameters": [
+      {
+        "CIMType": "UInt32",
+        "Description": "Indicates the number of minutes allowed for the Autopilot application to apply the device preparation profile (DPP) configurations to the device. If the Autopilot application doesn't finish within the specified time (applicationTimeoutInMinutes), the application error is added to the statusDetail property of the cloudPC object. The supported value is an integer between 10 and 360. Required.",
+        "Name": "ApplicationTimeoutInMinutes",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "The unique identifier (ID) of the Autopilot device preparation profile (DPP) that links a Windows Autopilot device preparation policy to ensure that devices are ready for users after provisioning. Required.",
+        "Name": "DevicePreparationProfileId",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "Boolean",
+        "Description": "Indicates whether the access to the device is allowed when the application of Autopilot device preparation profile (DPP) configurations fails or times out. If true, the status of the device is failed and the device is unable to access otherwise, the status of the device is provisionedWithWarnings and the device is allowed to access. The default value is false. Required.",
+        "Name": "OnFailureDeviceAccessDenied",
+        "Option": "Write"
+      }
+    ],
+    "Description": "Intune Cloud Provisioning Policy for Windows365\r\n\r\n**Please note:** To deploy an Intune Cloud Provisioning Policy for Windows 365 and you opted to use Autopatch, then you must use `Credentials` as the authentication method.\r\nThe Microsoft Graph API does not allow Service Principal authentication for Autopatch configuration."
+  },
+  {
+    "ClassName": "MSFT_MicrosoftGraphCloudPcDomainJoinConfiguration",
+    "Parameters": [
+      {
+        "CIMType": "String",
+        "Description": "Specifies the method by which the provisioned Cloud PC joins Microsoft Entra ID. If you choose the hybridAzureADJoin type, only provide a value for the onPremisesConnectionId property and leave the regionName property empty. If you choose the azureADJoin type, provide a value for either the onPremisesConnectionId or the regionName property. Possible values are: azureADJoin, hybridAzureADJoin.",
+        "Name": "DomainJoinType",
+        "Option": "Write",
+        "ValueMap": [
+          "azureADJoin",
+          "hybridAzureADJoin"
+        ],
+        "Values": [
+          "azureADJoin",
+          "hybridAzureADJoin"
+        ]
+      },
+      {
+        "CIMType": "String",
+        "Description": "The Azure network connection ID that matches the virtual network IT admins want the provisioning policy to use when they create Cloud PCs. You can use this property in both domain join types: Azure AD joined or Hybrid Microsoft Entra joined. If you enter an onPremisesConnectionId, leave the regionName property empty.",
+        "Name": "OnPremisesConnectionId",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "The logical geographic group this region belongs to. Multiple regions can belong to one region group. A customer can select a regionGroup when they provision a Cloud PC, and the Cloud PC is put in one of the regions in the group based on resource status. For example, the Europe region group contains the Northern Europe and Western Europe regions.",
+        "Name": "RegionGroup",
+        "Option": "Write",
+        "ValueMap": [
+          "default",
+          "australia",
+          "canada",
+          "usCentral",
+          "usEast",
+          "usWest",
+          "france",
+          "germany",
+          "europeUnion",
+          "unitedKingdom",
+          "japan",
+          "asia",
+          "india",
+          "southAmerica",
+          "euap",
+          "usGovernment",
+          "usGovernmentDOD",
+          "norway",
+          "switzerland",
+          "southKorea",
+          "middleEast",
+          "mexico",
+          "australasia",
+          "europe"
+        ],
+        "Values": [
+          "default",
+          "australia",
+          "canada",
+          "usCentral",
+          "usEast",
+          "usWest",
+          "france",
+          "germany",
+          "europeUnion",
+          "unitedKingdom",
+          "japan",
+          "asia",
+          "india",
+          "southAmerica",
+          "euap",
+          "usGovernment",
+          "usGovernmentDOD",
+          "norway",
+          "switzerland",
+          "southKorea",
+          "middleEast",
+          "mexico",
+          "australasia",
+          "europe"
+        ]
+      },
+      {
+        "CIMType": "String",
+        "Description": "The supported Azure region where the IT admin wants the provisioning policy to create Cloud PCs. The underlying virtual network is created and managed by the Windows 365 service. This can only be entered if the IT admin chooses Microsoft Entra joined as the domain join type. If you enter a regionName, leave the onPremisesConnectionId property empty. For an automatic selection, choose 'Automatic'.",
+        "Name": "RegionName",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "Specifies the method by which the provisioned Cloud PC joins Microsoft Entra ID. If you choose the hybridAzureADJoin type, only provide a value for the onPremisesConnectionId property and leave regionName as empty. If you choose the azureADJoin type, provide a value for either onPremisesConnectionId or regionName. The possible values are: azureADJoin, hybridAzureADJoin. The type property is deprecated and will stop returning data on January 31, 2024. Going forward, use the domainJoinType property.",
+        "Name": "Type",
+        "Option": "Write",
+        "ValueMap": [
+          "azureADJoin",
+          "hybridAzureADJoin"
+        ],
+        "Values": [
+          "azureADJoin",
+          "hybridAzureADJoin"
+        ]
+      }
+    ],
+    "Description": "Intune Cloud Provisioning Policy for Windows365\r\n\r\n**Please note:** To deploy an Intune Cloud Provisioning Policy for Windows 365 and you opted to use Autopatch, then you must use `Credentials` as the authentication method.\r\nThe Microsoft Graph API does not allow Service Principal authentication for Autopatch configuration."
+  },
+  {
+    "ClassName": "MSFT_MicrosoftGraphMicrosoftManagedDesktop",
+    "Parameters": [
+      {
+        "CIMType": "String",
+        "Description": "Indicates the provisioning policy associated with Microsoft Managed Desktop settings. Possible values are: notManaged, premiumManaged, standardManaged, starterManaged. The default value is notManaged.",
+        "Name": "ManagedType",
+        "Option": "Write",
+        "ValueMap": [
+          "notManaged",
+          "premiumManaged",
+          "standardManaged",
+          "starterManaged"
+        ],
+        "Values": [
+          "notManaged",
+          "premiumManaged",
+          "standardManaged",
+          "starterManaged"
+        ]
+      },
+      {
+        "CIMType": "String",
+        "Description": "The name of the Microsoft Managed Desktop profile that the Windows 365 Cloud PC is associated with.",
+        "Name": "Profile",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "Indicates whether the provisioning policy enables Microsoft Managed Desktop and, if enabled, specifies the type of plan managing the device. Possible values are: notManaged, premiumManaged, standardManaged, starterManaged. The type property is deprecated and will stop returning data on January 31, 2024. Going forward, use the managedType property.",
+        "Name": "Type",
+        "Option": "Write",
+        "ValueMap": [
+          "notManaged",
+          "premiumManaged",
+          "standardManaged",
+          "starterManaged"
+        ],
+        "Values": [
+          "notManaged",
+          "premiumManaged",
+          "standardManaged",
+          "starterManaged"
+        ]
+      }
+    ],
+    "Description": "Intune Cloud Provisioning Policy for Windows365\r\n\r\n**Please note:** To deploy an Intune Cloud Provisioning Policy for Windows 365 and you opted to use Autopatch, then you must use `Credentials` as the authentication method.\r\nThe Microsoft Graph API does not allow Service Principal authentication for Autopatch configuration."
+  },
+  {
+    "ClassName": "MSFT_MicrosoftGraphCloudPcWindowsSetting",
+    "Parameters": [
+      {
+        "CIMType": "String",
+        "Description": "The Windows language or region tag to use for language pack configuration and localization of the Cloud PC. The default value is en-US, which corresponds to English (United States).",
+        "Name": "Locale",
+        "Option": "Write"
+      }
+    ],
+    "Description": "Intune Cloud Provisioning Policy for Windows365\r\n\r\n**Please note:** To deploy an Intune Cloud Provisioning Policy for Windows 365 and you opted to use Autopatch, then you must use `Credentials` as the authentication method.\r\nThe Microsoft Graph API does not allow Service Principal authentication for Autopatch configuration."
+  },
+  {
+    "ClassName": "MSFT_MicrosoftGraphCloudPcWindowsSettings",
+    "Parameters": [
+      {
+        "CIMType": "String",
+        "Description": "The Windows language/region tag to use for language pack configuration and localization of the Cloud PC. The default value is en-US, which corresponds to English (United States).",
+        "Name": "Language",
+        "Option": "Write"
+      }
+    ],
+    "Description": "Intune Cloud Provisioning Policy for Windows365\r\n\r\n**Please note:** To deploy an Intune Cloud Provisioning Policy for Windows 365 and you opted to use Autopatch, then you must use `Credentials` as the authentication method.\r\nThe Microsoft Graph API does not allow Service Principal authentication for Autopatch configuration."
+  },
+  {
+    "ClassName": "MSFT_IntuneCloudProvisioningPolicyWindows365",
+    "Parameters": [
+      {
+        "CIMType": "MSFT_MicrosoftGraphcloudPcProvisioningPolicyAutopatch",
+        "Description": "Indicates the Windows Autopatch settings for Cloud PCs using this provisioning policy. The settings take effect when the tenant enrolls in Autopatch and the managedType of the microsoftManagedDesktop property is set as starterManaged.",
+        "Name": "Autopatch",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "MSFT_MicrosoftGraphcloudPcAutopilotConfiguration",
+        "Description": "The specific settings for Windows Autopilot that enable Windows 365 customers to experience it on Cloud PC. Supports $select.",
+        "Name": "AutopilotConfiguration",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "The template used to name Cloud PCs provisioned using this policy. The template can contain custom text and replacement tokens, including %USERNAME:x% and %RAND:x%, which represent the user's name and a randomly generated number, respectively. For example, CPC-%USERNAME:4%-%RAND:5% means that the name of the Cloud PC starts with CPC-, followed by a four-character username, a - character, and then five random characters. The total length of the text generated by the template can't exceed 15 characters.",
+        "Name": "CloudPcNamingTemplate",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "The provisioning policy description.",
+        "Name": "Description",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "The display name for the provisioning policy.",
+        "Name": "DisplayName",
+        "Option": "Key"
+      },
+      {
+        "CIMType": "MSFT_MicrosoftGraphcloudPcDomainJoinConfiguration[]",
+        "Description": "Specifies a list ordered by priority on how Cloud PCs join Microsoft Entra ID (Azure AD). Supports $select.",
+        "Name": "DomainJoinConfigurations",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "Boolean",
+        "Description": "True if single sign-on can access the provisioned Cloud PC. False indicates that the provisioned Cloud PC doesn't support this feature. The default value is false. Windows 365 users can use single sign-on to authenticate to Microsoft Entra ID with passwordless options (for example, FIDO keys) to access their Cloud PC. Optional.",
+        "Name": "EnableSingleSignOn",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "The display name of the operating system image that is used for provisioning. For example, Windows 11 Preview + Microsoft 365 Apps 23H2 23H2.",
+        "Name": "ImageDisplayName",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "The unique identifier that represents an operating system image that is used for provisioning new Cloud PCs. The format for a gallery type image is: {publisherNameofferNameskuName}. Supported values for each of the parameters are:publisher: Microsoftwindowsdesktop offer: windows-ent-cpc sku: 21h1-ent-cpc-m365, 21h1-ent-cpc-os, 20h2-ent-cpc-m365, 20h2-ent-cpc-os, 20h1-ent-cpc-m365, 20h1-ent-cpc-os, 19h2-ent-cpc-m365, and 19h2-ent-cpc-os",
+        "Name": "ImageId",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "The type of operating system image (custom or gallery) that is used for provisioning on Cloud PCs. Possible values are: gallery, custom. The default value is gallery.",
+        "Name": "ImageType",
+        "Option": "Write",
+        "ValueMap": [
+          "gallery",
+          "custom"
+        ],
+        "Values": [
+          "gallery",
+          "custom"
+        ]
+      },
+      {
+        "CIMType": "Boolean",
+        "Description": "When true, the local admin is enabled for Cloud PCs false indicates that the local admin isn't enabled for Cloud PCs. The default value is false.",
+        "Name": "LocalAdminEnabled",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "Specifies the type of licenses to be used when provisioning Cloud PCs using this policy. The possible values are dedicated, shared, sharedByUser, sharedByEntraGroup. The shared member is deprecated and will stop returning on April 30, 2027 going forward, use the sharedByUser member. For example, a dedicated service plan can be assigned to only one user and provision only one Cloud PC. The shared and sharedByUser plans require customers to purchase a shared service plan. Each shared license purchased can enable up to three Cloud PCs, with only one user signed in at a time. The sharedByEntraGroup plan also requires the purchase of a shared service plan. Each shared license under this plan can enable one Cloud PC, which is shared for the group according to the assignments of this policy. By default, the license type is dedicated if the provisioningType isn't specified when you create the cloudPcProvisioningPolicy. You can't change this property after the cloudPcProvisioningPolicy is created.",
+        "Name": "ProvisioningType",
+        "Option": "Write",
+        "ValueMap": [
+          "dedicated",
+          "shared",
+          "sharedByUser",
+          "sharedByEntraGroup",
+          "reserve"
+        ],
+        "Values": [
+          "dedicated",
+          "shared",
+          "sharedByUser",
+          "sharedByEntraGroup",
+          "reserve"
+        ]
+      },
+      {
+        "CIMType": "String[]",
+        "Description": "The Role Scope Tag Ids",
+        "Name": "RoleScopeTagIds",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "Specifies the type of cloud object the end user can access. Possible values are: cloudPc, cloudApp. cloudPc indicates that the end user can access the entire desktop. cloudApp indicates that the end user can only access apps published under this provisioning policy. The type can't be changed once the provisioning policy is created. If not specified during creation, the default value is cloudPc. When cloudApp is selected, the provisioningType must be sharedByEntraGroup. Cannot be changed after creation.",
+        "Name": "UserExperienceType",
+        "Option": "Write",
+        "ValueMap": [
+          "cloudPc",
+          "cloudApp"
+        ],
+        "Values": [
+          "cloudPc",
+          "cloudApp"
+        ]
+      },
+      {
+        "CIMType": "MSFT_MicrosoftGraphcloudPcWindowsSetting",
+        "Description": "Indicates a specific Windows setting to configure during the creation of Cloud PCs for this provisioning policy. Supports $select.",
+        "Name": "WindowsSetting",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "MSFT_MicrosoftGraphcloudPcWindowsSettings",
+        "Description": "Specific Windows settings to configure during the creation of Cloud PCs for this provisioning policy. Supports $select. The windowsSettings property is deprecated and will stop returning data on January 31, 2024. Going forward, use the windowsSetting property.",
+        "Name": "WindowsSettings",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "The unique identifier for an entity. Read-only.",
+        "Name": "Id",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "MSFT_DeviceManagementConfigurationPolicyAssignments[]",
+        "Description": "Represents the assignment to the Intune policy.",
+        "Name": "Assignments",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "string",
+        "Description": "Present ensures the policy exists, absent ensures it is removed.",
+        "Name": "Ensure",
+        "Option": "Write",
+        "ValueMap": [
+          "Present",
+          "Absent"
+        ],
+        "Values": [
+          "Present",
+          "Absent"
+        ]
+      },
+      {
+        "CIMType": "MSFT_Credential",
+        "Description": "Credentials of the Admin",
+        "Name": "Credential",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "Id of the Azure Active Directory application to authenticate with.",
+        "Name": "ApplicationId",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "Id of the Azure Active Directory tenant used for authentication.",
+        "Name": "TenantId",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "MSFT_Credential",
+        "Description": "Secret of the Azure Active Directory tenant used for authentication.",
+        "Name": "ApplicationSecret",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.",
+        "Name": "CertificateThumbprint",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "Boolean",
+        "Description": "Managed ID being used for authentication.",
+        "Name": "ManagedIdentity",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String[]",
+        "Description": "Access token used for authentication.",
+        "Name": "AccessTokens",
+        "Option": "Write"
+      }
+    ],
+    "Description": "Intune Cloud Provisioning Policy for Windows365\r\n\r\n**Please note:** To deploy an Intune Cloud Provisioning Policy for Windows 365 and you opted to use Autopatch, then you must use `Credentials` as the authentication method.\r\nThe Microsoft Graph API does not allow Service Principal authentication for Autopatch configuration."
+  },
+  {
+>>>>>>> Stashed changes
     "ClassName": "MSFT_MicrosoftGraphIntuneSettingsCatalogExclusionsV2",
     "Parameters": [
       {
@@ -105171,7 +105807,11 @@
       {
         "CIMType": "Boolean",
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         "Description": "Allow people in your organization to start trial subscriptions for apps and services that support trials. Admins manage licenses for these trials in the same way as other licenses in your organization. Only admins can upgrade these trials to paid subscriptions, so they won’t affect your billing.",
+=======
+        "Description": "Allow people in your organization to start trial subscriptions for apps and services that support trials. Admins manage licenses for these trials in the same way as other licenses in your organization. Only admins can upgrade these trials to paid subscriptions, so they won't affect your billing.",
+>>>>>>> Stashed changes
 =======
         "Description": "Allow people in your organization to start trial subscriptions for apps and services that support trials. Admins manage licenses for these trials in the same way as other licenses in your organization. Only admins can upgrade these trials to paid subscriptions, so they won't affect your billing.",
 >>>>>>> Stashed changes
@@ -110462,6 +111102,95 @@
     "Description": "This resource configures a Data Loss Prevention Compliance Rule in Purview."
   },
   {
+<<<<<<< Updated upstream
+=======
+    "ClassName": "MSFT_SCDLPSensitiveInformationType",
+    "Parameters": [
+      {
+        "CIMType": "String",
+        "Description": "The Name parameter specifies a name for the sensitive information type rule. The value must be less than 256 characters.",
+        "Name": "Name",
+        "Option": "Key"
+      },
+      {
+        "CIMType": "String",
+        "Description": "Unique identifier of the Sensitive Information Type.",
+        "Name": "Identity",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "The Description parameter specifies a description for the sensitive information type rule.",
+        "Name": "Description",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "TBD",
+        "Name": "FileData",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "The Locale parameter specifies the language that's associated with the sensitive information type rule.",
+        "Name": "Locale",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "string",
+        "Description": "Present ensures the instance exists, absent ensures it is removed.",
+        "Name": "Ensure",
+        "Option": "Write",
+        "ValueMap": [
+          "Absent",
+          "Present"
+        ],
+        "Values": [
+          "Absent",
+          "Present"
+        ]
+      },
+      {
+        "CIMType": "MSFT_Credential",
+        "Description": "Credentials of the workload's Admin",
+        "Name": "Credential",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "Id of the Azure Active Directory application to authenticate with.",
+        "Name": "ApplicationId",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "Id of the Azure Active Directory tenant used for authentication.",
+        "Name": "TenantId",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.",
+        "Name": "CertificateThumbprint",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "Boolean",
+        "Description": "Managed ID being used for authentication.",
+        "Name": "ManagedIdentity",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String[]",
+        "Description": "Access token used for authentication.",
+        "Name": "AccessTokens",
+        "Option": "Write"
+      }
+    ],
+    "Description": "Manages sensitive information types in Purview."
+  },
+  {
+>>>>>>> Stashed changes
     "ClassName": "MSFT_SCFilePlanPropertyAuthority",
     "Parameters": [
       {
@@ -115087,10 +115816,25 @@
         "Option": "Write"
       },
       {
+<<<<<<< Updated upstream
         "CIMType": "MSFT_SentinelAlertRuleIncidentConfigurationGroupingConfigurationAlertDetail[]",
         "Description": "A list of alert details to group by (when matchingMethod is Selected)",
         "Name": "groupByAlertDetails",
         "Option": "Write"
+=======
+        "CIMType": "String[]",
+        "Description": "A list of alert details to group by (when matchingMethod is Selected)",
+        "Name": "groupByAlertDetails",
+        "Option": "Write",
+        "ValueMap": [
+          "DisplayName",
+          "Severity"
+        ],
+        "Values": [
+          "DisplayName",
+          "Severity"
+        ]
+>>>>>>> Stashed changes
       },
       {
         "CIMType": "String[]",
@@ -115126,6 +115870,7 @@
     "Description": "Configures alert rules in Azure Sentinel."
   },
   {
+<<<<<<< Updated upstream
     "ClassName": "MSFT_SentinelAlertRuleIncidentConfigurationGroupingConfigurationAlertDetail",
     "Parameters": [
       {
@@ -115144,6 +115889,8 @@
     "Description": "Configures alert rules in Azure Sentinel."
   },
   {
+=======
+>>>>>>> Stashed changes
     "ClassName": "MSFT_SentinelAlertRule",
     "Parameters": [
       {
@@ -118514,7 +119261,11 @@
       },
       {
         "CIMType": "string",
+<<<<<<< Updated upstream
         "Description": "Determines what level of sharing is available for OneDrive sites. It corresponds to the SharingCapabilities for OneDrive sites.",
+=======
+        "Description": "DEPRECATED - Determines what level of sharing is available for OneDrive sites. It corresponds to the SharingCapabilities for OneDrive sites.",
+>>>>>>> Stashed changes
         "Name": "OneDriveSharingCapability",
         "Option": "Write",
         "ValueMap": [
@@ -118972,6 +119723,119 @@
     "Description": "This resource allows users to configure and monitor the profile\r\nproperties of a user."
   },
   {
+<<<<<<< Updated upstream
+=======
+    "ClassName": "MSFT_TeamsAIPolicy",
+    "Parameters": [
+      {
+        "CIMType": "String",
+        "Description": "Unique identity of the AI Policy.",
+        "Name": "Identity",
+        "Option": "Key"
+      },
+      {
+        "CIMType": "String",
+        "Description": "Provides explanatory text about the Teams AI policy.",
+        "Name": "Description",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "EnrollFace controls user access to user face enrollment in the Teams app settings.",
+        "Name": "EnrollFace",
+        "Option": "Write",
+        "ValueMap": [
+          "Enabled",
+          "Disabled"
+        ],
+        "Values": [
+          "Enabled",
+          "Disabled"
+        ]
+      },
+      {
+        "CIMType": "String",
+        "Description": "EnrollVoice controls user access to user voice enrollment in the Teams app settings.",
+        "Name": "EnrollVoice",
+        "Option": "Write",
+        "ValueMap": [
+          "Enabled",
+          "Disabled"
+        ],
+        "Values": [
+          "Enabled",
+          "Disabled"
+        ]
+      },
+      {
+        "CIMType": "String",
+        "Description": "Setting to Enabled turns on speaker attribution in BYOD scenarios while Disabled will turn off the function.",
+        "Name": "SpeakerAttributionForBYOD",
+        "Option": "Write",
+        "ValueMap": [
+          "Enabled",
+          "Disabled"
+        ],
+        "Values": [
+          "Enabled",
+          "Disabled"
+        ]
+      },
+      {
+        "CIMType": "string",
+        "Description": "Present ensures the instance exists, absent ensures it is removed.",
+        "Name": "Ensure",
+        "Option": "Write",
+        "ValueMap": [
+          "Present",
+          "Absent"
+        ],
+        "Values": [
+          "Present",
+          "Absent"
+        ]
+      },
+      {
+        "CIMType": "MSFT_Credential",
+        "Description": "Credentials of the workload's Admin",
+        "Name": "Credential",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "Id of the Azure Active Directory application to authenticate with.",
+        "Name": "ApplicationId",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "Id of the Azure Active Directory tenant used for authentication.",
+        "Name": "TenantId",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.",
+        "Name": "CertificateThumbprint",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "Boolean",
+        "Description": "Managed ID being used for authentication.",
+        "Name": "ManagedIdentity",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String[]",
+        "Description": "Access token used for authentication.",
+        "Name": "AccessTokens",
+        "Option": "Write"
+      }
+    ],
+    "Description": "This resource implements Teams AI Policies."
+  },
+  {
+>>>>>>> Stashed changes
     "ClassName": "MSFT_TeamsApplicationInstance",
     "Parameters": [
       {
@@ -119192,6 +120056,15 @@
       },
       {
         "CIMType": "String[]",
+<<<<<<< Updated upstream
+=======
+        "Description": "Determines the list of apps that are pre pinned for a participant in Calls.",
+        "Name": "PinnedCallingBarApps",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String[]",
+>>>>>>> Stashed changes
         "Description": "Apps are pinned in messaging extensions and into the ellipsis menu.",
         "Name": "PinnedMessageBarApps",
         "Option": "Write"
@@ -119474,6 +120347,23 @@
       },
       {
         "CIMType": "String",
+<<<<<<< Updated upstream
+=======
+        "Description": "This setting controls whether users must provide or obtain explicit consent before recording a 1:1 PSTN or Teams call. When enabled, both parties will receive a notification, and consent must be given before recording starts. Possible values: Enabled: Requires users to give and obtain explicit consent before starting a call recording. Disabled: Users are not required to obtain explicit consent before recording starts.",
+        "Name": "ExplicitRecordingConsent",
+        "Option": "Write",
+        "ValueMap": [
+          "Disabled",
+          "Enabled"
+        ],
+        "Values": [
+          "Disabled",
+          "Enabled"
+        ]
+      },
+      {
+        "CIMType": "String",
+>>>>>>> Stashed changes
         "Description": "Setting this parameter lets you control how inbound federated calls should be routed. Possible values are: RegularIncoming, Unanswered, Voicemail.",
         "Name": "InboundFederatedCallRoutingTreatment",
         "Option": "Write",
@@ -120597,67 +121487,117 @@
         ]
       },
       {
+<<<<<<< Updated upstream
         "CIMType": "boolean",
+=======
+        "CIMType": "Boolean",
+>>>>>>> Stashed changes
         "Description": "Designates whether users are able to leverage Box as a third party storage solution in Microsoft Teams. If $true, users will be able to add Box in the client and interact with the files stored there.",
         "Name": "AllowBox",
         "Option": "Write"
       },
       {
+<<<<<<< Updated upstream
         "CIMType": "boolean",
+=======
+        "CIMType": "Boolean",
+>>>>>>> Stashed changes
         "Description": "Designates whether users are able to leverage DropBox as a third party storage solution in Microsoft Teams. If $true, users will be able to add DropBox in the client and interact with the files stored there.",
         "Name": "AllowDropBox",
         "Option": "Write"
       },
       {
+<<<<<<< Updated upstream
         "CIMType": "boolean",
+=======
+        "CIMType": "Boolean",
+>>>>>>> Stashed changes
         "Description": "When set to $true, mail hooks are enabled, and users can post messages to a channel by sending an email to the email address of Teams channel.",
         "Name": "AllowEmailIntoChannel",
         "Option": "Write"
       },
       {
+<<<<<<< Updated upstream
         "CIMType": "boolean",
+=======
+        "CIMType": "Boolean",
+>>>>>>> Stashed changes
         "Description": "Designates whether users are able to leverage GoogleDrive as a third party storage solution in Microsoft Teams. If $true, users will be able to add Google Drive in the client and interact with the files stored there.",
         "Name": "AllowGoogleDrive",
         "Option": "Write"
       },
       {
+<<<<<<< Updated upstream
         "CIMType": "boolean",
+=======
+        "CIMType": "Boolean",
+>>>>>>> Stashed changes
         "Description": "Designates whether or not guest users in your organization will have access to the Teams client. If $true, guests in your tenant will be able to access the Teams client. Note that this setting has a core dependency on Guest Access being enabled in your Office 365 tenant.",
         "Name": "AllowGuestUser",
         "Option": "Write"
       },
       {
+<<<<<<< Updated upstream
         "CIMType": "boolean",
+=======
+        "CIMType": "Boolean",
+>>>>>>> Stashed changes
         "Description": "When set to $true, users will be able to see the organizational chart icon other users' contact cards, and when clicked, this icon will display the detailed organizational chart.",
         "Name": "AllowOrganizationTab",
         "Option": "Write"
       },
       {
+<<<<<<< Updated upstream
         "CIMType": "boolean",
+=======
+        "CIMType": "Boolean",
+>>>>>>> Stashed changes
         "Description": "Surface Hub uses a device account to provide email and collaboration services (IM, video, voice). This device account is used as the originating identity (the from party) when sending email, IM, and placing calls. As this account is not coming from an individual, identifiable user, it is deemed anonymous because it originated from the Surface Hub's device account. If set to $true, these device accounts will be able to send chat messages in Skype for Business Online (does not apply to Microsoft Teams).",
         "Name": "AllowResourceAccountSendMessage",
         "Option": "Write"
       },
       {
+<<<<<<< Updated upstream
         "CIMType": "boolean",
+=======
+        "CIMType": "Boolean",
+        "Description": "When set to True, Supervised Chat is enabled for the tenant.",
+        "Name": "AllowRoleBasedChatPermissions",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "Boolean",
+>>>>>>> Stashed changes
         "Description": "If set to $true, the Exchange address book policy (ABP) will be used to provide customized view of the global address book for each user. This is only a virtual separation and not a legal separation.",
         "Name": "AllowScopedPeopleSearchandAccess",
         "Option": "Write"
       },
       {
+<<<<<<< Updated upstream
         "CIMType": "boolean",
+=======
+        "CIMType": "Boolean",
+>>>>>>> Stashed changes
         "Description": "Designates whether users are able to leverage ShareFile as a third party storage solution in Microsoft Teams. If $true, users will be able to add ShareFile in the client and interact with the files stored there.",
         "Name": "AllowShareFile",
         "Option": "Write"
       },
       {
+<<<<<<< Updated upstream
         "CIMType": "boolean",
+=======
+        "CIMType": "Boolean",
+>>>>>>> Stashed changes
         "Description": "When set to $true, Teams conversations automatically show up in Skype for Business for users that aren't enabled for Teams.",
         "Name": "AllowSkypeBusinessInterop",
         "Option": "Write"
       },
       {
+<<<<<<< Updated upstream
         "CIMType": "boolean",
+=======
+        "CIMType": "Boolean",
+>>>>>>> Stashed changes
         "Description": "Designates whether users are able to leverage Egnyte as a third party storage solution in Microsoft Teams. If $true, users will be able to add Egnyte in the client and interact with the files stored there.",
         "Name": "AllowEgnyte",
         "Option": "Write"
@@ -120822,6 +121762,15 @@
       },
       {
         "CIMType": "Boolean",
+<<<<<<< Updated upstream
+=======
+        "Description": "Setting this attribute to true enables compliance recording for calls that have been re-routed from a compliance recording-enabled user. Supported call scenarios include forward, transfer, delegation, call groups, and simultaneous ring.",
+        "Name": "RecordReroutedCalls",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "Boolean",
+>>>>>>> Stashed changes
         "Description": "This parameter is reserved for future use.",
         "Name": "WarnUserOnRemoval",
         "Option": "Write"
@@ -121015,6 +121964,15 @@
         "Option": "Write"
       },
       {
+<<<<<<< Updated upstream
+=======
+        "CIMType": "Boolean",
+        "Description": "Specifies whether the name of a user is recorded on entry to the conference. This recording is used during entry and exit notifications. Set to $true to enable name recording, set to $false to bypass name recording. The default is $true.",
+        "Name": "EnableNameRecording",
+        "Option": "Write"
+      },
+      {
+>>>>>>> Stashed changes
         "CIMType": "String",
         "Description": "Supported entry and exit announcement type.",
         "Name": "EntryExitAnnouncementsType",
@@ -121037,12 +121995,30 @@
         ]
       },
       {
+<<<<<<< Updated upstream
+=======
+        "CIMType": "Boolean",
+        "Description": "Specifies whether service numbers assigned to the tenant should be migrated to the new forest of the tenant when the tenant is migrated cross region. If false, service numbers will be released back to stock once the migration completes. This settings does not apply to ported-in numbers that are always migrated. PARAMVALUE: $true | $false",
+        "Name": "MigrateServiceNumbersOnCrossForestMove",
+        "Option": "Write"
+      },
+      {
+>>>>>>> Stashed changes
         "CIMType": "UInt32",
         "Description": "Specifies the number of digits in the automatically generated PINs. Organizers can enter their PIN to start a meeting they scheduled if they join via phone and are the first person to join. The minimum value is 4, the maximum is 12, and the default is 5.",
         "Name": "PinLength",
         "Option": "Write"
       },
       {
+<<<<<<< Updated upstream
+=======
+        "CIMType": "Boolean",
+        "Description": "Specifies if Private Meetings are enabled for the users in this tenant. PARAMVALUE: $true | $false",
+        "Name": "UseUniqueConferenceIds",
+        "Option": "Write"
+      },
+      {
+>>>>>>> Stashed changes
         "CIMType": "MSFT_Credential",
         "Description": "Credentials of the Teams Global Admin.",
         "Name": "Credential",
@@ -121082,6 +122058,49 @@
     "Description": "This resource configures a Teams User's Calling Settings.\r\n\r\nMore information: https://learn.microsoft.com/en-us/microsoftteams/user-call-settings"
   },
   {
+<<<<<<< Updated upstream
+=======
+    "ClassName": "MSFT_TeamsEmergencyCallingExtendedNotification",
+    "Parameters": [
+      {
+        "CIMType": "String",
+        "Description": "The emergency dial string.",
+        "Name": "EmergencyDialString",
+        "Option": "Key"
+      },
+      {
+        "CIMType": "String[]",
+        "Description": "The email recipients of the notifications.",
+        "Name": "NotificationGroup",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "The additional number to call when contacting an emergency number.",
+        "Name": "NotificationDialOutNumber",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "The notification mode for the additional number. Possible values: ConferenceMuted - Join the emergency call muted. ConferenceUnMuted - Join the emergency call unmuted. NotificationOnly - Only receive a notification for an emergency call.",
+        "Name": "NotificationMode",
+        "Option": "Write",
+        "ValueMap": [
+          "ConferenceMuted",
+          "ConferenceUnMuted",
+          "NotificationOnly"
+        ],
+        "Values": [
+          "ConferenceMuted",
+          "ConferenceUnMuted",
+          "NotificationOnly"
+        ]
+      }
+    ],
+    "Description": "This resource configures the Teams Emergency Calling Policies.\r\n\r\nMore information: https://docs.microsoft.com/en-us/microsoftteams/manage-emergency-calling-policies"
+  },
+  {
+>>>>>>> Stashed changes
     "ClassName": "MSFT_TeamsEmergencyCallingPolicy",
     "Parameters": [
       {
@@ -121103,6 +122122,15 @@
         "Option": "Write"
       },
       {
+<<<<<<< Updated upstream
+=======
+        "CIMType": "MSFT_TeamsEmergencyCallingExtendedNotification[]",
+        "Description": "A list of one or more instances of TeamsEmergencyCallingExtendedNotification. Each TeamsEmergencyCallingExtendedNotification should use a unique EmergencyDialString. If an extended notification is found for an emergency phone number based on the EmergencyDialString parameter the extended notification will be controlling the notification. If no extended notification is found the notification settings on the policy instance itself will be used.",
+        "Name": "ExtendedNotifications",
+        "Option": "Write"
+      },
+      {
+>>>>>>> Stashed changes
         "CIMType": "String",
         "Description": "Enables ExternalLocationLookupMode. This mode allows users to set Emergency addresses for remote locations.",
         "Name": "ExternalLocationLookupMode",
@@ -121728,6 +122756,23 @@
       },
       {
         "CIMType": "String",
+<<<<<<< Updated upstream
+=======
+        "Description": "When set to 'Enabled', security operations team will be able to add domains to the blocklist on security portal. When set to 'Disabled', security operations team will not have permissions to update the domains blocklist.",
+        "Name": "DomainBlockingForMDOAdminsInTeams",
+        "Option": "Write",
+        "ValueMap": [
+          "Disabled",
+          "Enabled"
+        ],
+        "Values": [
+          "Disabled",
+          "Enabled"
+        ]
+      },
+      {
+        "CIMType": "String",
+>>>>>>> Stashed changes
         "Description": "When set to Blocked, all external access with users from Teams subscriptions that contain only trial licenses will be blocked. This means users from these trial-only tenants will not be able to reach to your users via chats, Teams calls, and meetings (using the users authenticated identity) and your users will not be able to reach users in these trial-only tenants. If this setting is set to Blocked, users from the trial-only tenant will also be removed from existing chats.",
         "Name": "ExternalAccessWithTrialTenants",
         "Option": "Write",
@@ -121916,6 +122961,23 @@
       },
       {
         "CIMType": "String",
+<<<<<<< Updated upstream
+=======
+        "Description": "Indicates if file sharing in chats with external users is enabled. It is by default enabled, to disable admins can run following command.",
+        "Name": "FileSharingInChatswithExternalUsers",
+        "Option": "Write",
+        "ValueMap": [
+          "Enabled",
+          "Disabled"
+        ],
+        "Values": [
+          "Enabled",
+          "Disabled"
+        ]
+      },
+      {
+        "CIMType": "String",
+>>>>>>> Stashed changes
         "Description": "Specifies whether users see the options to upload files from OneDrive for Business, other cloud storage services configured for the user account, and SharePoint Online",
         "Name": "NativeFileEntryPoints",
         "Option": "Write",
@@ -121943,6 +123005,15 @@
         ]
       },
       {
+<<<<<<< Updated upstream
+=======
+        "CIMType": "String",
+        "Description": "This can be used by the 3p apps to configure their app, so when the files will be dragged and dropped in compose, it will get uploaded in that 3P app.",
+        "Name": "DefaultFileUploadAppId",
+        "Option": "Write"
+      },
+      {
+>>>>>>> Stashed changes
         "CIMType": "string",
         "Description": "Present ensures the instance exists, absent ensures it is removed.",
         "Name": "Ensure",
@@ -122395,6 +123466,15 @@
         "Option": "Write"
       },
       {
+<<<<<<< Updated upstream
+=======
+        "CIMType": "Boolean",
+        "Description": "Determines whether a user is allowed to delete messages sent by bots. Set this to TRUE to allow. Set this to FALSE to prohibit.",
+        "Name": "UsersCanDeleteBotMessages",
+        "Option": "Write"
+      },
+      {
+>>>>>>> Stashed changes
         "CIMType": "MSFT_Credential",
         "Description": "Credentials of the Teams Admin",
         "Name": "Credential",
@@ -122902,11 +123982,43 @@
       },
       {
         "CIMType": "Boolean",
+<<<<<<< Updated upstream
+=======
+        "Description": "Determines if anonymous users can interact with apps in meetings. Set to TRUE to disable App interaction. ",
+        "Name": "DisableAppInteractionForAnonymousUsers",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "Boolean",
+>>>>>>> Stashed changes
         "Description": "Determines whether Quality of Service Marking for real-time media (audio, video, screen/app sharing) is enabled in the tenant. Set this to TRUE to enable and FALSE to disable.",
         "Name": "EnableQoS",
         "Option": "Write"
       },
       {
+<<<<<<< Updated upstream
+=======
+        "CIMType": "String",
+        "Description": "Determines if anonymous participants receive surveys to provide feedback about their meeting experience. Set to Disabled to disable anonymous meeting participants to receive surveys. Set to Enabled to allow anonymous meeting participants to receive surveys. Possible values: Enabled, Disabled",
+        "Name": "FeedbackSurveyForAnonymousUsers",
+        "Option": "Write",
+        "ValueMap": [
+          "Disabled",
+          "Enabled"
+        ],
+        "Values": [
+          "Disabled",
+          "Enabled"
+        ]
+      },
+      {
+        "CIMType": "Boolean",
+        "Description": "When set to True, users within the Tenant will have their presenter role capabilities limited. When set to False, the presenter role capabilities will not be impacted and will remain as is.",
+        "Name": "LimitPresenterRolePermissions",
+        "Option": "Write"
+      },
+      {
+>>>>>>> Stashed changes
         "CIMType": "UInt32",
         "Description": "Determines the starting port number for client audio. Minimum allowed value: 1024 Maximum allowed value: 65535 Default value: 50000.",
         "Name": "ClientAudioPort",
@@ -123003,6 +124115,23 @@
         "Option": "Write"
       },
       {
+<<<<<<< Updated upstream
+=======
+        "CIMType": "String",
+        "Description": "Enables the user to use the AI Interpreter related features. Possible values: Disabled, Enabled",
+        "Name": "AIInterpreter",
+        "Option": "Write",
+        "ValueMap": [
+          "Disabled",
+          "Enabled"
+        ],
+        "Values": [
+          "Disabled",
+          "Enabled"
+        ]
+      },
+      {
+>>>>>>> Stashed changes
         "CIMType": "Boolean",
         "Description": "Determines whether a user can use the Annotation feature",
         "Name": "AllowAnnotations",
@@ -123028,11 +124157,29 @@
       },
       {
         "CIMType": "Boolean",
+<<<<<<< Updated upstream
+=======
+        "Description": "If admins disable avatars in 2D meetings, then users cannot represent themselves as avatars in the Gallery view. This does not disable avatars in Immersive view.",
+        "Name": "AllowAvatarsInGallery",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "Boolean",
+>>>>>>> Stashed changes
         "Description": "Determines whether or not meetings created by users with this policy are able to utilize the Breakout Rooms feature.",
         "Name": "AllowBreakoutRooms",
         "Option": "Write"
       },
       {
+<<<<<<< Updated upstream
+=======
+        "CIMType": "Boolean",
+        "Description": "This setting will enable Tenant Admins to enable/disable the sharing of location data necessary to provide the end of meeting carbon summary screen for either the entire tenant or for a particular user. If set to True the meeting organizer will share their location to the client of the participant to enable the calculation of distance and the resulting carbon.",
+        "Name": "AllowCarbonSummary",
+        "Option": "Write"
+      },
+      {
+>>>>>>> Stashed changes
         "CIMType": "String",
         "Description": "Determines whether a user can add a URL for captions from a Communications Access Real-Time Translation (CART) captioner for providing real-time captions in meetings.",
         "Name": "AllowCartCaptionsScheduling",
@@ -123082,6 +124229,23 @@
       },
       {
         "CIMType": "String",
+<<<<<<< Updated upstream
+=======
+        "Description": "Controls which users should have ability to see the meeting info details on join screen. 'None' option should disable the feature completely. Possible Values: UsersAllowedToByPassTheLobby: Users who are able to bypass lobby can see the meeting info details. Everyone: All meeting participants can see the meeting info details.",
+        "Name": "AllowedUsersForMeetingDetails",
+        "Option": "Write",
+        "ValueMap": [
+          "Everyone",
+          "UsersAllowedToByPassTheLobby"
+        ],
+        "Values": [
+          "Everyone",
+          "UsersAllowedToByPassTheLobby"
+        ]
+      },
+      {
+        "CIMType": "String",
+>>>>>>> Stashed changes
         "Description": "Determines whether or not a meeting Organizer can track join and leave times for all users within their meetings as well as download a roster.",
         "Name": "AllowEngagementReport",
         "Option": "Write",
@@ -123104,6 +124268,15 @@
       },
       {
         "CIMType": "Boolean",
+<<<<<<< Updated upstream
+=======
+        "Description": "If admins have disabled avatars, this does not disable using avatars in Immersive view on Teams desktop or web. Additionally, it does not prevent users from joining the Teams meeting on VR headsets.",
+        "Name": "AllowImmersiveView",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "Boolean",
+>>>>>>> Stashed changes
         "Description": "Determines whether audio is enabled in a user's meetings or calls.",
         "Name": "AllowIPAudio",
         "Option": "Write"
@@ -123205,6 +124378,23 @@
         "Option": "Write"
       },
       {
+<<<<<<< Updated upstream
+=======
+        "CIMType": "String",
+        "Description": "This policy setting allows for the extraction of AI-Assisted Action Items/Tasks from the Meeting Transcript.",
+        "Name": "AllowTasksFromTranscript",
+        "Option": "Write",
+        "ValueMap": [
+          "Disabled",
+          "Enabled"
+        ],
+        "Values": [
+          "Disabled",
+          "Enabled"
+        ]
+      },
+      {
+>>>>>>> Stashed changes
         "CIMType": "Boolean",
         "Description": "Determines whether real-time and/or post-meeting captions and transcriptions are allowed in a user's meetings.",
         "Name": "AllowTranscription",
@@ -123228,6 +124418,21 @@
       },
       {
         "CIMType": "Boolean",
+<<<<<<< Updated upstream
+=======
+        "Description": "This setting allows scheduling meetings with customized watermarking for video enabled.",
+        "Name": "AllowWatermarkCustomizationForCameraVideo",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "Boolean",
+        "Description": "This setting allows scheduling meetings with customized watermarking for screen sharing enabled.",
+        "Name": "AllowWatermarkCustomizationForScreenSharing",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "Boolean",
+>>>>>>> Stashed changes
         "Description": "This setting allows scheduling meetings with watermarking for video enabled.",
         "Name": "AllowWatermarkForCameraVideo",
         "Option": "Write"
@@ -123246,6 +124451,23 @@
       },
       {
         "CIMType": "String",
+<<<<<<< Updated upstream
+=======
+        "Description": "Determines how anonymous users will be authenticated when joining a meeting. Possible values are: OneTimePasscode, if you would like anonymous users to be sent a one time passcode to their email when joining a meeting. None, if you would like to disable authentication for anonymous users joining a meeting",
+        "Name": "AnonymousUserAuthenticationMethod",
+        "Option": "Write",
+        "ValueMap": [
+          "None",
+          "OneTimePasscode"
+        ],
+        "Values": [
+          "None",
+          "OneTimePasscode"
+        ]
+      },
+      {
+        "CIMType": "String",
+>>>>>>> Stashed changes
         "Description": "This setting will allow admins to enable or disable Masked Attendee mode in Meetings. Masked Attendee meetings will hide attendees' identifying information (e.g., name, contact information, profile photo).",
         "Name": "AttendeeIdentityMasking",
         "Option": "Write",
@@ -123262,6 +124484,23 @@
       },
       {
         "CIMType": "String",
+<<<<<<< Updated upstream
+=======
+        "Description": "The setting controls whether recording notification is played to all attendees or just PSTN users.",
+        "Name": "AudibleRecordingNotification",
+        "Option": "Write",
+        "ValueMap": [
+          "AllAttendees",
+          "PstnOnly"
+        ],
+        "Values": [
+          "AllAttendees",
+          "PstnOnly"
+        ]
+      },
+      {
+        "CIMType": "String",
+>>>>>>> Stashed changes
         "Description": "Determines what types of participants will automatically be added to meetings organized by this user. Set this to EveryoneInCompany if you would like meetings to place every external user in the lobby but allow all users in the company to join the meeting immediately. Set this to Everyone if you'd like to admit anonymous users by default. Set this to EveryoneInSameAndFederatedCompany if you would like meetings to allow federated users to join like your company's users, but place all other external users in a lobby. Set this to InvitedUsers if you would like meetings to allow only the invited users.",
         "Name": "AutoAdmittedUsers",
         "Option": "Write",
@@ -123525,6 +124764,23 @@
         ]
       },
       {
+<<<<<<< Updated upstream
+=======
+        "CIMType": "String",
+        "Description": "Determines whether chat messages are allowed in the lobby. Possible values are: Enabled, Disabled",
+        "Name": "LobbyChat",
+        "Option": "Write",
+        "ValueMap": [
+          "Disabled",
+          "Enabled"
+        ],
+        "Values": [
+          "Disabled",
+          "Enabled"
+        ]
+      },
+      {
+>>>>>>> Stashed changes
         "CIMType": "UInt32",
         "Description": "Determines the media bit rate for audio/video/app sharing transmissions in meetings.",
         "Name": "MediaBitRateKb",
@@ -123560,6 +124816,25 @@
       },
       {
         "CIMType": "String",
+<<<<<<< Updated upstream
+=======
+        "Description": "Control Noises Supression Feature for PST legs joining a meeting. Possible Values: MicrosoftDefault, Enabled, Disabled",
+        "Name": "NoiseSuppressionForDialInParticipants",
+        "Option": "Write",
+        "ValueMap": [
+          "Disabled",
+          "Enabled",
+          "MicrosoftDefault"
+        ],
+        "Values": [
+          "Disabled",
+          "Enabled",
+          "MicrosoftDefault"
+        ]
+      },
+      {
+        "CIMType": "String",
+>>>>>>> Stashed changes
         "Description": "This setting will enable Tenant Admins to turn on/off participant renaming feature.",
         "Name": "ParticipantNameChange",
         "Option": "Write",
@@ -123574,6 +124849,27 @@
       },
       {
         "CIMType": "String",
+<<<<<<< Updated upstream
+=======
+        "Description": "Determines whether participants can give control of presentation slides during meetings scheduled by this user. Set the type of users you want to be able to give control and be given control of presentation slides in meetings. Users excluded from the selected group will be prohibited from giving control, or being given control, in a meeting. Possible Values: Everyone: Anyone in the meeting can give or take control. EveryoneInOrganization: Only internal AAD users and Multi-Tenant Organization (MTO) users can give or take control. EveryoneInOrganizationAndGuests: Only those who are Guests to the tenant, MTO users, and internal AAD users can give or take control. None: No one in the meeting can give or take control",
+        "Name": "ParticipantSlideControl",
+        "Option": "Write",
+        "ValueMap": [
+          "Everyone",
+          "EveryoneInOrganization",
+          "EveryoneInOrganizationAndGuests",
+          "None"
+        ],
+        "Values": [
+          "Everyone",
+          "EveryoneInOrganization",
+          "EveryoneInOrganizationAndGuests",
+          "None"
+        ]
+      },
+      {
+        "CIMType": "String",
+>>>>>>> Stashed changes
         "Description": "Determines which Outlook Add-in the user will get as preferred Meeting provider(TeamsAndSfb or Teams).",
         "Name": "PreferredMeetingProviderForIslandsMode",
         "Option": "Write",
@@ -123602,6 +124898,23 @@
       },
       {
         "CIMType": "String",
+<<<<<<< Updated upstream
+=======
+        "Description": "Allows users to use real time text during a meeting, allowing them to communicate by typing their messages in real time. Possible Values: Enabled: User is allowed to turn on real time text. Disabled: User is not allowed to turn on real time text.",
+        "Name": "RealTimeText",
+        "Option": "Write",
+        "ValueMap": [
+          "Disabled",
+          "Enabled"
+        ],
+        "Values": [
+          "Disabled",
+          "Enabled"
+        ]
+      },
+      {
+        "CIMType": "String",
+>>>>>>> Stashed changes
         "Description": "Determines whether or not biometric data will be used to distinguish and or attribute in the transcript.",
         "Name": "RoomAttributeUserOverride",
         "Option": "Write",
@@ -123648,6 +124961,25 @@
       },
       {
         "CIMType": "String",
+<<<<<<< Updated upstream
+=======
+        "Description": "Participants can sign up for text message meeting reminders.",
+        "Name": "SmsNotifications",
+        "Option": "Write",
+        "ValueMap": [
+          "OnAllowOrganizerOverride",
+          "OffAllowOrganizerOverride",
+          "Off"
+        ],
+        "Values": [
+          "OnAllowOrganizerOverride",
+          "OffAllowOrganizerOverride",
+          "Off"
+        ]
+      },
+      {
+        "CIMType": "String",
+>>>>>>> Stashed changes
         "Description": "Determines if users are identified in transcriptions and if they can change the value of the Automatically identify me in meeting captions and transcripts setting.",
         "Name": "SpeakerAttributionMode",
         "Option": "Write",
@@ -123696,6 +125028,7 @@
       },
       {
         "CIMType": "String",
+<<<<<<< Updated upstream
         "Description": "Determines the background effects that a user can configure in the Teams client. ",
         "Name": "VideoFiltersMode",
         "Option": "Write",
@@ -123710,6 +125043,18 @@
           "BlurOnly",
           "BlurAndDefaultBackgrounds",
           "AllFilters"
+=======
+        "Description": "This policy controls who can admit from the lobby.",
+        "Name": "UsersCanAdmitFromLobby",
+        "Option": "Write",
+        "ValueMap": [
+          "OrganizerAndCoOrganizersOnly",
+          "OrganizersAndPresentersOnly"
+        ],
+        "Values": [
+          "OrganizerAndCoOrganizersOnly",
+          "OrganizersAndPresentersOnly"
+>>>>>>> Stashed changes
         ]
       },
       {
@@ -123728,6 +125073,95 @@
       },
       {
         "CIMType": "String",
+<<<<<<< Updated upstream
+=======
+        "Description": "Enables the user to use the voice simulation feature while being AI interpreted. Possible Values: Disabled, Enabled",
+        "Name": "VoiceSimulationInInterpreter",
+        "Option": "Write",
+        "ValueMap": [
+          "Disabled",
+          "Enabled"
+        ],
+        "Values": [
+          "Disabled",
+          "Enabled"
+        ]
+      },
+      {
+        "CIMType": "String",
+        "Description": "Determines the meeting experience and watermark content of an anonymous user.",
+        "Name": "WatermarkForAnonymousUsers",
+        "Option": "Write",
+        "ValueMap": [
+          "JoinWithAudioOnly",
+          "WatermarkWithDisplayName"
+        ],
+        "Values": [
+          "JoinWithAudioOnly",
+          "WatermarkWithDisplayName"
+        ]
+      },
+      {
+        "CIMType": "SInt64",
+        "Description": "Allows the transparency of watermark to be customizable. Must be between 1 and 100 inclusive.",
+        "Name": "WatermarkForCameraVideoOpacity",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "Allows the pattern design of watermark to be customizable.",
+        "Name": "WatermarkForCameraVideoPattern",
+        "Option": "Write",
+        "ValueMap": [
+          "Single",
+          "Tiled"
+        ],
+        "Values": [
+          "Single",
+          "Tiled"
+        ]
+      },
+      {
+        "CIMType": "SInt64",
+        "Description": "Allows the transparency of watermark to be customizable. Must be between 1 and 100 inclusive.",
+        "Name": "WatermarkForScreenSharingOpacity",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "Allows the pattern design of watermark to be customizable.",
+        "Name": "WatermarkForScreenSharingPattern",
+        "Option": "Write",
+        "ValueMap": [
+          "Single",
+          "Tiled"
+        ],
+        "Values": [
+          "Single",
+          "Tiled"
+        ]
+      },
+      {
+        "CIMType": "String",
+        "Description": "Determines the background effects that a user can configure in the Teams client. ",
+        "Name": "VideoFiltersMode",
+        "Option": "Write",
+        "ValueMap": [
+          "NoFilters",
+          "BlurOnly",
+          "BlurAndDefaultBackgrounds",
+          "AllFilters"
+        ],
+        "Values": [
+          "NoFilters",
+          "BlurOnly",
+          "BlurAndDefaultBackgrounds",
+          "AllFilters"
+        ]
+      },
+      {
+        "CIMType": "String",
+>>>>>>> Stashed changes
         "Description": "Specifies who can attend and register for webinars.",
         "Name": "WhoCanRegister",
         "Option": "Write",
@@ -123795,7 +125229,10 @@
   },
   {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
     "ClassName": "MSFT_TeamsMessagingConfiguration",
     "Parameters": [
       {
@@ -123940,6 +125377,9 @@
     "Description": "The TeamsMessagingConfiguration determines the messaging settings for users in your tenant."
   },
   {
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     "ClassName": "MSFT_TeamsMessagingPolicy",
     "Parameters": [
@@ -123963,6 +125403,15 @@
       },
       {
         "CIMType": "Boolean",
+<<<<<<< Updated upstream
+=======
+        "Description": "This setting enables/disables showing company name and department name in search results for MTO users. Possible values: True, False",
+        "Name": "AllowExtendedWorkInfoInSearch",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "Boolean",
+>>>>>>> Stashed changes
         "Description": "This setting determines if users with the 'Full permissions' role can delete any group or meeting chat message within their tenant. Possible values: True, False",
         "Name": "AllowFullChatPermissionUserToDeleteAnyMessage",
         "Option": "Write"
@@ -123987,6 +125436,23 @@
       },
       {
         "CIMType": "String",
+<<<<<<< Updated upstream
+=======
+        "Description": "Determines whether files are automatically shared in external chats. Possible values: Enabled: Files are automatically shared in external chats. Disabled: Files are not automatically shared in external chats.",
+        "Name": "AutoShareFilesInExternalChats",
+        "Option": "Write",
+        "ValueMap": [
+          "Enabled",
+          "Disabled"
+        ],
+        "Values": [
+          "Enabled",
+          "Disabled"
+        ]
+      },
+      {
+        "CIMType": "String",
+>>>>>>> Stashed changes
         "Description": "Determines the Supervised Chat role of the user. Set this to Full to allow the user to supervise chats. Supervisors have the ability to initiate chats with and invite any user within the environment. Set this to Limited to allow the user to initiate conversations with Full and Limited permissioned users, but not Restricted. Set this to Restricted to block chat creation with anyone other than Full permissioned users.",
         "Name": "ChatPermissionRole",
         "Option": "Write",
@@ -124230,6 +125696,23 @@
         ]
       },
       {
+<<<<<<< Updated upstream
+=======
+        "CIMType": "String",
+        "Description": "Indicates whether B2B invites should be used to add external users when necessary. Possible values: Enabled: External users will be added using B2B invites. Disabled: External users will not be added using B2B invites.",
+        "Name": "UseB2BInvitesToAddExternalUsers",
+        "Option": "Write",
+        "ValueMap": [
+          "Enabled",
+          "Disabled"
+        ],
+        "Values": [
+          "Enabled",
+          "Disabled"
+        ]
+      },
+      {
+>>>>>>> Stashed changes
         "CIMType": "string",
         "Description": "Globally unique identifier (GUID) of the tenant account whose external user communication policy are being created.",
         "Name": "Tenant",
@@ -124521,6 +126004,27 @@
       },
       {
         "CIMType": "String",
+<<<<<<< Updated upstream
+=======
+        "Description": "The audio file to play to the caller after the user's voicemail greeting has played and before the caller is allowed to leave a voicemail message.",
+        "Name": "PostambleAudioFile",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "The audio file to play to the caller before the user's voicemail greeting is played.",
+        "Name": "PreambleAudioFile",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "Boolean",
+        "Description": "Is playing the Pre- or Post-amble mandatory before the caller can leave a message. Possible values are $true or $false.",
+        "Name": "PreamblePostambleMandatory",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+>>>>>>> Stashed changes
         "Description": "The primary (or first) language that voicemail system prompts will be presented in. Must also set SecondarySystemPromptLanguage. When set, this overrides the user language choice.",
         "Name": "PrimarySystemPromptLanguage",
         "Option": "Write"
@@ -125153,6 +126657,15 @@
       },
       {
         "CIMType": "Boolean",
+<<<<<<< Updated upstream
+=======
+        "Description": "Determines whether private channel creation is allowed for the team.",
+        "Name": "AllowCreatePrivateChannels",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "Boolean",
+>>>>>>> Stashed changes
         "Description": "Allow members to manage connectors within Team.",
         "Name": "AllowCreateUpdateRemoveConnectors",
         "Option": "Write"
@@ -126014,6 +127527,29 @@
         ]
       },
       {
+<<<<<<< Updated upstream
+=======
+        "CIMType": "Boolean",
+        "Description": "This setting will force Teams clients to enforce session revocation for core Messaging and Calling/Meeting scenarios. If turned ON, session revocation will be enforced for calls, chats and meetings for opted-in users. If turned OFF, session revocation will not be enforced for calls, chats and meetings for opted-in users.",
+        "Name": "BlockLegacyAuthorization",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "List of IDs of the categories of the in-product messages that will be disabled. You can choose one of the categories from this table: 91382d07-8b89-444c-bbcb-cfe43133af33\t= What's New. edf2633e-9827-44de-b34c-8b8b9717e84c = Conferences",
+        "Name": "DisabledInProductMessages",
+        "Option": "Write",
+        "ValueMap": [
+          "91382d07-8b89-444c-bbcb-cfe43133af33",
+          "edf2633e-9827-44de-b34c-8b8b9717e84c"
+        ],
+        "Values": [
+          "91382d07-8b89-444c-bbcb-cfe43133af33",
+          "edf2633e-9827-44de-b34c-8b8b9717e84c"
+        ]
+      },
+      {
+>>>>>>> Stashed changes
         "CIMType": "UInt32",
         "Description": "Determines the day of week to perform the updates. Value should be between 0 and 6.",
         "Name": "UpdateDayOfWeek",
@@ -126763,6 +128299,15 @@
       },
       {
         "CIMType": "String",
+<<<<<<< Updated upstream
+=======
+        "Description": "BridgeSourcePhoneNumber is an E.164 formatted Operator Connect Conferencing phone number assigned to your Audio Conferencing Bridge. Using BridgeSourcePhoneNumber in an online voice route is mutually exclusive with using OnlinePstnGatewayList in the same online voice route. When using BridgeSourcePhoneNumber in an online voice route, the OnlinePstnUsages used in the online voice route should only be used in a corresponding OnlineAudioConferencingRoutingPolicy. The same OnlinePstnUsages should not be used in online voice routes that are not using BridgeSourcePhoneNumber.",
+        "Name": "BridgeSourcePhoneNumber",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+>>>>>>> Stashed changes
         "Description": "A description of what this online voice route is for.",
         "Name": "Description",
         "Option": "Write"
