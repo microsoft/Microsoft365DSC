@@ -536,6 +536,77 @@
                     TenantId              = $TenantId;
                     CertificateThumbprint = $CertificateThumbprint;
                 }
+                IntuneAzureNetworkConnectionWindows365 'IntuneAzureNetworkConnectionWindows365-IntuneWindows365AzureNetworkConnection_Hybrid'
+                {
+                    AdDomainName          = "contoso.com";
+                    AdDomainUsername      = "username@contoso.com";
+                    AdDomainPassword      = "securePassword";
+                    ConnectionType        = "hybridAzureADJoin";
+                    DisplayName           = "IntuneWindows365AzureNetworkConnection_Hybrid";
+                    Ensure                = "Present";
+                    OrganizationalUnit    = "OU=Test,DC=contoso,DC=com";
+                    ResourceGroupId       = "/subscriptions/subscription-name/resourceGroups/resource-group-name";
+                    RoleScopeTagIds       = @("0");
+                    SubnetId              = "/subscriptions/subscription-name/resourceGroups/resource-group-name/providers/Microsoft.Network/virtualNetworks/virtual-network-name/subnets/default";
+                    SubscriptionName      = "subscription-name";
+                    VirtualNetworkId      = "/subscriptions/subscription-name/resourceGroups/resource-group-name/providers/Microsoft.Network/virtualNetworks/virtual-network-name";
+                    ApplicationId         = $ApplicationId;
+                    CertificateThumbprint = $CertificateThumbprint;
+                    TenantId              = $TenantId;
+                }
+                IntuneAzureNetworkConnectionWindows365 'IntuneAzureNetworkConnectionWindows365-IntuneWindows365AzureNetworkConnection_Entra'
+                {
+                    ConnectionType        = "azureADJoin";
+                    DisplayName           = "IntuneWindows365AzureNetworkConnection_Entra_1";
+                    Ensure                = "Present";
+                    ResourceGroupId       = "/subscriptions/subscription-name/resourceGroups/resource-group-name";
+                    RoleScopeTagIds       = @("0");
+                    SubnetId              = "/subscriptions/subscription-name/resourceGroups/resource-group-name/providers/Microsoft.Network/virtualNetworks/virtual-network-name/subnets/default";
+                    SubscriptionName      = "subscription-name";
+                    VirtualNetworkId      = "/subscriptions/subscription-name/resourceGroups/resource-group-name/providers/Microsoft.Network/virtualNetworks/virtual-network-name";
+                    ApplicationId         = $ApplicationId;
+                    CertificateThumbprint = $CertificateThumbprint;
+                    TenantId              = $TenantId;
+                }
+                IntuneCloudProvisioningPolicyWindows365 'IntuneCloudProvisioningPolicyWindows365_1'
+                {
+                    ApplicationId            = $ApplicationId;
+                    Assignments              = @(
+                        MSFT_DeviceManagementConfigurationPolicyAssignments{
+                            dataType = "#microsoft.graph.cloudPcManagementGroupAssignmentTarget"
+                            groupId = "42a638ec-2bf2-47a8-8f5f-176ce2124b7b"
+                        }
+                    );
+                    Autopatch                = MSFT_MicrosoftGraphCloudPcProvisioningPolicyAutopatch{
+                        AutopatchGroupId = "db2d8ac9-0697-4f04-a5cd-b3d230f31dc6"
+                    };
+                    CloudPcNamingTemplate    = "CPC-%USERNAME:5%-%RAND:5%";
+                    Description              = "";
+                    DisplayName              = "IntuneCloudProvisioningPolicyWindows365_1";
+                    DomainJoinConfigurations = @(
+                        MSFT_MicrosoftGraphCloudPcDomainJoinConfiguration{
+                            Type = "azureADJoin"
+                            RegionName = "automatic"
+                            DomainJoinType = "azureADJoin"
+                            RegionGroup = "usCentral"
+                        }
+                    );
+                    EnableSingleSignOn       = $True;
+                    Ensure                   = "Present";
+                    ImageDisplayName         = "Windows 11 Enterprise 25H2";
+                    ImageId                  = "microsoftwindowsdesktop_windows-ent-cpc_win11-25h2-ent-cpc";
+                    ImageType                = "gallery";
+                    ProvisioningType         = "dedicated";
+                    RoleScopeTagIds          = @("0");
+                    WindowsSetting           = MSFT_MicrosoftGraphCloudPcWindowsSetting{
+                        Locale = "en-US"
+                    };
+                    WindowsSettings          = MSFT_MicrosoftGraphCloudPcWindowsSettings{
+                        Language = "en-US"
+                    };
+                    CertificateThumbprint    = $CertificateThumbprint;
+                    TenantId                 = $TenantId;
+                }
                 IntuneDefenderGlobalExclusionsPolicyLinux 'myIntuneDefenderGlobalExclusionsPolicyLinux'
                 {
                     Assignments = @();
