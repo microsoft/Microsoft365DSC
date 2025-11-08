@@ -536,6 +536,77 @@
                     TenantId              = $TenantId;
                     CertificateThumbprint = $CertificateThumbprint;
                 }
+                IntuneAzureNetworkConnectionWindows365 'IntuneAzureNetworkConnectionWindows365-IntuneWindows365AzureNetworkConnection_Hybrid'
+                {
+                    AdDomainName          = "contoso.com";
+                    AdDomainUsername      = "username@contoso.com";
+                    AdDomainPassword      = "securePassword";
+                    ConnectionType        = "hybridAzureADJoin";
+                    DisplayName           = "IntuneWindows365AzureNetworkConnection_Hybrid";
+                    Ensure                = "Present";
+                    OrganizationalUnit    = "OU=Test,DC=contoso,DC=com";
+                    ResourceGroupId       = "/subscriptions/subscription-name/resourceGroups/resource-group-name";
+                    RoleScopeTagIds       = @("0");
+                    SubnetId              = "/subscriptions/subscription-name/resourceGroups/resource-group-name/providers/Microsoft.Network/virtualNetworks/virtual-network-name/subnets/default";
+                    SubscriptionName      = "subscription-name";
+                    VirtualNetworkId      = "/subscriptions/subscription-name/resourceGroups/resource-group-name/providers/Microsoft.Network/virtualNetworks/virtual-network-name";
+                    ApplicationId         = $ApplicationId;
+                    CertificateThumbprint = $CertificateThumbprint;
+                    TenantId              = $TenantId;
+                }
+                IntuneAzureNetworkConnectionWindows365 'IntuneAzureNetworkConnectionWindows365-IntuneWindows365AzureNetworkConnection_Entra'
+                {
+                    ConnectionType        = "azureADJoin";
+                    DisplayName           = "IntuneWindows365AzureNetworkConnection_Entra_1";
+                    Ensure                = "Present";
+                    ResourceGroupId       = "/subscriptions/subscription-name/resourceGroups/resource-group-name";
+                    RoleScopeTagIds       = @("0");
+                    SubnetId              = "/subscriptions/subscription-name/resourceGroups/resource-group-name/providers/Microsoft.Network/virtualNetworks/virtual-network-name/subnets/default";
+                    SubscriptionName      = "subscription-name";
+                    VirtualNetworkId      = "/subscriptions/subscription-name/resourceGroups/resource-group-name/providers/Microsoft.Network/virtualNetworks/virtual-network-name";
+                    ApplicationId         = $ApplicationId;
+                    CertificateThumbprint = $CertificateThumbprint;
+                    TenantId              = $TenantId;
+                }
+                IntuneCloudProvisioningPolicyWindows365 'IntuneCloudProvisioningPolicyWindows365_1'
+                {
+                    ApplicationId            = $ApplicationId;
+                    Assignments              = @(
+                        MSFT_DeviceManagementConfigurationPolicyAssignments{
+                            dataType = "#microsoft.graph.cloudPcManagementGroupAssignmentTarget"
+                            groupId = "42a638ec-2bf2-47a8-8f5f-176ce2124b7b"
+                        }
+                    );
+                    Autopatch                = MSFT_MicrosoftGraphCloudPcProvisioningPolicyAutopatch{
+                        AutopatchGroupId = "db2d8ac9-0697-4f04-a5cd-b3d230f31dc6"
+                    };
+                    CloudPcNamingTemplate    = "CPC-%USERNAME:5%-%RAND:5%";
+                    Description              = "";
+                    DisplayName              = "IntuneCloudProvisioningPolicyWindows365_1";
+                    DomainJoinConfigurations = @(
+                        MSFT_MicrosoftGraphCloudPcDomainJoinConfiguration{
+                            Type = "azureADJoin"
+                            RegionName = "automatic"
+                            DomainJoinType = "azureADJoin"
+                            RegionGroup = "usCentral"
+                        }
+                    );
+                    EnableSingleSignOn       = $True;
+                    Ensure                   = "Present";
+                    ImageDisplayName         = "Windows 11 Enterprise 25H2";
+                    ImageId                  = "microsoftwindowsdesktop_windows-ent-cpc_win11-25h2-ent-cpc";
+                    ImageType                = "gallery";
+                    ProvisioningType         = "dedicated";
+                    RoleScopeTagIds          = @("0");
+                    WindowsSetting           = MSFT_MicrosoftGraphCloudPcWindowsSetting{
+                        Locale = "en-US"
+                    };
+                    WindowsSettings          = MSFT_MicrosoftGraphCloudPcWindowsSettings{
+                        Language = "en-US"
+                    };
+                    CertificateThumbprint    = $CertificateThumbprint;
+                    TenantId                 = $TenantId;
+                }
                 IntuneDefenderGlobalExclusionsPolicyLinux 'myIntuneDefenderGlobalExclusionsPolicyLinux'
                 {
                     Assignments = @();
@@ -2401,6 +2472,40 @@
                     TenantId              = $TenantId;
                     CertificateThumbprint = $CertificateThumbprint;
                 }
+                IntuneDeviceControlPolicySetting 'IntuneDeviceControlPolicySetting-IntuneDeviceControlPolicySetting_1'
+                {
+                    Description           = "";
+                    DisplayName           = "IntuneDeviceControlPolicySetting_1";
+                    Ensure                = "Present";
+                    MatchType             = "All";
+                    PrinterPolicySettings = @(
+                        MSFT_ReusablePrinterDeviceControlPolicySetting{
+                            FriendlyNameId = "Printer\FriendlyNameId"
+                            Name = "PrinterReusableSetting"
+                            VID_PID = "0000_1111"
+                            PrinterConnectionId = 0
+                            PrimaryId = 0
+                        }
+                    );
+                    StoragePolicySettings = @(
+                        MSFT_ReusableStorageDeviceControlPolicySetting{
+                            VID_PID = "1111_2222"
+                            SerialNumberId = "bbbb"
+                            HardwareId = "HardwareId"
+                            PrimaryId = "RemovableMediaDevices"
+                            DeviceId = "aaa"
+                            Name = "RemovableStorageSetting"
+                            VID = "0000"
+                            BusId = "USB"
+                            FriendlyNameId = "FriendlyNameId"
+                            PID = "1111"
+                            InstancePathId = "USBSTOR\DISK&VEN_GENERIC&PROD_FLASH_DISK&REV_8.07\8735B611&0"
+                        }
+                    );
+                    ApplicationId         = $ApplicationId;
+                    TenantId              = $TenantId;
+                    CertificateThumbprint = $CertificateThumbprint;
+                }
                 IntuneDeviceControlPolicyWindows10 'ConfigureDeviceControlPolicy'
                 {
                     AllowStorageCard      = "1";
@@ -2750,6 +2855,16 @@
                     ConfigurationType = "onboard"
                     SampleSharing = 1
                 }
+                IntuneEpmCertificatePolicySetting 'IntuneEpmCertificatePolicySetting-IntuneEpmCertificatePolicySetting_1'
+                {
+                    Description           = "";
+                    DisplayName           = "IntuneEpmCertificatePolicySetting_1";
+                    Ensure                = "Present";
+                    CertificateFile       = "<Base64EncodedCertificateContent>";
+                    ApplicationId         = $ApplicationId;
+                    TenantId              = $TenantId;
+                    CertificateThumbprint = $CertificateThumbprint;
+                }
                 IntuneEpmElevationRulesPolicyWindows10 'Example'
                 {
                     Assignments           = @(
@@ -2980,6 +3095,26 @@
           </AppConfig>
         </MitigationPolicy>"
                     Ensure                            = 'Present'
+                    ApplicationId         = $ApplicationId;
+                    TenantId              = $TenantId;
+                    CertificateThumbprint = $CertificateThumbprint;
+                }
+                IntuneFirewallPolicySetting 'IntuneFirewallPolicySetting-IntuneFirewallPolicySetting_1'
+                {
+                    Description           = "";
+                    DisplayName           = "IntuneFirewallPolicySetting_1";
+                    Ensure                = "Present";
+                    PolicySettings        = @(
+                        MSFT_ReusableFirewallPolicySetting{
+                            Keyword = "ReusableSetting1"
+                            AutoResolve = $False
+                            Addresses = @(
+                                "192.168.10.0/24"
+                                "0.0.0.0/32"
+                                "::1/64"
+                            )
+                        }
+                    );
                     ApplicationId         = $ApplicationId;
                     TenantId              = $TenantId;
                     CertificateThumbprint = $CertificateThumbprint;
