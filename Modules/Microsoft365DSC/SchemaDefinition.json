@@ -1804,6 +1804,15 @@
       },
       {
         "CIMType": "String",
+<<<<<<< Updated upstream
+=======
+        "Description": "The Token Lifetime Policy assigned to the application with its DisplayName.",
+        "Name": "TokenLifetimePolicy",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+>>>>>>> Stashed changes
         "Description": "Specify if the Azure AD App should exist or not.",
         "Name": "Ensure",
         "Option": "Write",
@@ -4878,6 +4887,15 @@
       },
       {
         "CIMType": "Boolean",
+<<<<<<< Updated upstream
+=======
+        "Description": "Indicates whether user consent for risky apps is allowed.",
+        "Name": "AllowUserConsentForRiskyApps",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "Boolean",
+>>>>>>> Stashed changes
         "Description": "Boolean To disable the use of MSOL PowerShell, set this property to true. This will also disable user-based access to the legacy service endpoint used by MSOL PowerShell. This does not affect Azure AD Connect or Microsoft Graph.",
         "Name": "BlockMsolPowershell",
         "Option": "Write"
@@ -6610,7 +6628,10 @@
   {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
     "ClassName": "MSFT_CustomSecurityAttributeAllowedValue",
@@ -6632,6 +6653,9 @@
   },
   {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -6652,7 +6676,10 @@
       {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
         "CIMType": "MSFT_CustomSecurityAttributeAllowedValue[]",
@@ -6662,6 +6689,9 @@
       },
       {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -8441,6 +8471,15 @@
         "Option": "Write"
       },
       {
+<<<<<<< Updated upstream
+=======
+        "CIMType": "MSFT_Credential",
+        "Description": "Secret of the Azure Active Directory tenant used for authentication.",
+        "Name": "ApplicationSecret",
+        "Option": "Write"
+      },
+      {
+>>>>>>> Stashed changes
         "CIMType": "String",
         "Description": "Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.",
         "Name": "CertificateThumbprint",
@@ -8537,6 +8576,15 @@
     "ClassName": "MSFT_AADFeatureRolloutPolicy",
     "Parameters": [
       {
+<<<<<<< Updated upstream
+=======
+        "CIMType": "String[]",
+        "Description": "Indicates the DisplayName of the groups the policy is assigned to.",
+        "Name": "AppliesTo",
+        "Option": "Write"
+      },
+      {
+>>>>>>> Stashed changes
         "CIMType": "String",
         "Description": "A description for this feature rollout policy.",
         "Name": "Description",
@@ -9151,6 +9199,15 @@
         "Option": "Write"
       },
       {
+<<<<<<< Updated upstream
+=======
+        "CIMType": "Boolean",
+        "Description": "Specifies if the current group is part of a selected Group Lifecycle Policy configuration. Only applicable for Microsoft 365 Groups.",
+        "Name": "GroupLifecyclePolicySelectedEnabled",
+        "Option": "Write"
+      },
+      {
+>>>>>>> Stashed changes
         "CIMType": "String[]",
         "Description": "Specifies that the group is a dynamic group. To create a dynamic group, specify a value of DynamicMembership.",
         "Name": "GroupTypes",
@@ -11439,7 +11496,11 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
           "#microsoft.graph.countryNamedLocation",
+=======
+          "#microsoft.graph.CountryNamedLocation",
+>>>>>>> Stashed changes
 =======
           "#microsoft.graph.CountryNamedLocation",
 >>>>>>> Stashed changes
@@ -11456,7 +11517,11 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
           "#microsoft.graph.countryNamedLocation",
+=======
+          "#microsoft.graph.CountryNamedLocation",
+>>>>>>> Stashed changes
 =======
           "#microsoft.graph.CountryNamedLocation",
 >>>>>>> Stashed changes
@@ -12751,6 +12816,15 @@
         "Option": "Write"
       },
       {
+<<<<<<< Updated upstream
+=======
+        "CIMType": "MSFT_Credential",
+        "Description": "Secret of the Azure Active Directory tenant used for authentication.",
+        "Name": "ApplicationSecret",
+        "Option": "Write"
+      },
+      {
+>>>>>>> Stashed changes
         "CIMType": "String",
         "Description": "Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.",
         "Name": "CertificateThumbprint",
@@ -12815,7 +12889,11 @@
         ]
       }
     ],
+<<<<<<< Updated upstream
     "Description": "This resource configures an Azure Active Directory Privilege Identity Management assignment."
+=======
+    "Description": "This resource configures an Azure Active Directory Privilege Identity Management assignment.\r\n\r\n**Please note:** The difference between start and end times of assignments must be at least 5 minutes. Lower assignment times will result in an error.\r\nAlso, if you attempt to remove or update an assignment less than 5 minutes after the last modification, it will fail as well."
+>>>>>>> Stashed changes
   },
   {
     "ClassName": "MSFT_AADRoleAssignmentScheduleRequestScheduleRecurrencePattern",
@@ -12929,7 +13007,11 @@
         ]
       }
     ],
+<<<<<<< Updated upstream
     "Description": "This resource configures an Azure Active Directory Privilege Identity Management assignment."
+=======
+    "Description": "This resource configures an Azure Active Directory Privilege Identity Management assignment.\r\n\r\n**Please note:** The difference between start and end times of assignments must be at least 5 minutes. Lower assignment times will result in an error.\r\nAlso, if you attempt to remove or update an assignment less than 5 minutes after the last modification, it will fail as well."
+>>>>>>> Stashed changes
   },
   {
     "ClassName": "MSFT_AADRoleAssignmentScheduleRequestScheduleRecurrence",
@@ -12947,7 +13029,11 @@
         "Option": "Write"
       }
     ],
+<<<<<<< Updated upstream
     "Description": "This resource configures an Azure Active Directory Privilege Identity Management assignment."
+=======
+    "Description": "This resource configures an Azure Active Directory Privilege Identity Management assignment.\r\n\r\n**Please note:** The difference between start and end times of assignments must be at least 5 minutes. Lower assignment times will result in an error.\r\nAlso, if you attempt to remove or update an assignment less than 5 minutes after the last modification, it will fail as well."
+>>>>>>> Stashed changes
   },
   {
     "ClassName": "MSFT_AADRoleAssignmentScheduleRequestScheduleExpiration",
@@ -12983,7 +13069,11 @@
         ]
       }
     ],
+<<<<<<< Updated upstream
     "Description": "This resource configures an Azure Active Directory Privilege Identity Management assignment."
+=======
+    "Description": "This resource configures an Azure Active Directory Privilege Identity Management assignment.\r\n\r\n**Please note:** The difference between start and end times of assignments must be at least 5 minutes. Lower assignment times will result in an error.\r\nAlso, if you attempt to remove or update an assignment less than 5 minutes after the last modification, it will fail as well."
+>>>>>>> Stashed changes
   },
   {
     "ClassName": "MSFT_AADRoleAssignmentScheduleRequestSchedule",
@@ -13007,7 +13097,11 @@
         "Option": "Write"
       }
     ],
+<<<<<<< Updated upstream
     "Description": "This resource configures an Azure Active Directory Privilege Identity Management assignment."
+=======
+    "Description": "This resource configures an Azure Active Directory Privilege Identity Management assignment.\r\n\r\n**Please note:** The difference between start and end times of assignments must be at least 5 minutes. Lower assignment times will result in an error.\r\nAlso, if you attempt to remove or update an assignment less than 5 minutes after the last modification, it will fail as well."
+>>>>>>> Stashed changes
   },
   {
     "ClassName": "MSFT_AADRoleAssignmentScheduleRequestTicketInfo",
@@ -13025,20 +13119,32 @@
         "Option": "Write"
       }
     ],
+<<<<<<< Updated upstream
     "Description": "This resource configures an Azure Active Directory Privilege Identity Management assignment."
+=======
+    "Description": "This resource configures an Azure Active Directory Privilege Identity Management assignment.\r\n\r\n**Please note:** The difference between start and end times of assignments must be at least 5 minutes. Lower assignment times will result in an error.\r\nAlso, if you attempt to remove or update an assignment less than 5 minutes after the last modification, it will fail as well."
+>>>>>>> Stashed changes
   },
   {
     "ClassName": "MSFT_AADRoleAssignmentScheduleRequest",
     "Parameters": [
       {
         "CIMType": "String",
+<<<<<<< Updated upstream
         "Description": "User Principal Name of the eligibility request.",
+=======
+        "Description": "User Principal Name of the assignment request.",
+>>>>>>> Stashed changes
         "Name": "Principal",
         "Option": "Key"
       },
       {
         "CIMType": "String",
+<<<<<<< Updated upstream
         "Description": "Role associated with the eligibility request.",
+=======
+        "Description": "Role associated with the assignment request.",
+>>>>>>> Stashed changes
         "Name": "RoleDefinition",
         "Option": "Key"
       },
@@ -13060,25 +13166,41 @@
       },
       {
         "CIMType": "String",
+<<<<<<< Updated upstream
         "Description": "Identifier of the directory object representing the scope of the role eligibility. The scope of an role eligibility determines the set of resources for which the principal has been granted access. Directory scopes are shared scopes stored in the directory that are understood by multiple applications. Use / for tenant-wide scope. Use appScopeId to limit the scope to an application only. Either directoryScopeId or appScopeId is required.",
+=======
+        "Description": "Identifier of the directory object representing the scope of the role assignment. The scope of an role assignment determines the set of resources for which the principal has been granted access. Directory scopes are shared scopes stored in the directory that are understood by multiple applications. Use / for tenant-wide scope. Use appScopeId to limit the scope to an application only. Either directoryScopeId or appScopeId is required.",
+>>>>>>> Stashed changes
         "Name": "DirectoryScopeId",
         "Option": "Key"
       },
       {
         "CIMType": "String",
+<<<<<<< Updated upstream
         "Description": "Identifier for the Role Eligibility Schedule Request.",
+=======
+        "Description": "Identifier for the Role Assignment Schedule Request.",
+>>>>>>> Stashed changes
         "Name": "Id",
         "Option": "Write"
       },
       {
         "CIMType": "String",
+<<<<<<< Updated upstream
         "Description": "Identifier of the app-specific scope when the role eligibility is scoped to an app. The scope of a role eligibility determines the set of resources for which the principal is eligible to access. App scopes are scopes that are defined and understood by this application only. Use / for tenant-wide app scopes. Use directoryScopeId to limit the scope to particular directory objects, for example, administrative units. Either directoryScopeId or appScopeId is required.",
+=======
+        "Description": "Identifier of the app-specific scope when the role assignment is scoped to an app. The scope of a role assignment determines the set of resources for which the principal is eligible to access. App scopes are scopes that are defined and understood by this application only. Use / for tenant-wide app scopes. Use directoryScopeId to limit the scope to particular directory objects, for example, administrative units. Either directoryScopeId or appScopeId is required.",
+>>>>>>> Stashed changes
         "Name": "AppScopeId",
         "Option": "Write"
       },
       {
         "CIMType": "String",
+<<<<<<< Updated upstream
         "Description": "Represents the type of operation on the role eligibility request.The possible values are: adminAssign, adminUpdate, adminRemove, selfActivate, selfDeactivate, adminExtend, adminRenew, selfExtend, selfRenew, unknownFutureValue.",
+=======
+        "Description": "This parameter is deprecated and will be removed in a future release. Represents the type of operation on the role assignment request.The possible values are: adminAssign, adminUpdate, adminRemove, selfActivate, selfDeactivate, adminExtend, adminRenew, selfExtend, selfRenew, unknownFutureValue.",
+>>>>>>> Stashed changes
         "Name": "Action",
         "Option": "Write",
         "ValueMap": [
@@ -13108,7 +13230,11 @@
       },
       {
         "CIMType": "Boolean",
+<<<<<<< Updated upstream
         "Description": "Determines whether the call is a validation or an actual call. Only set this property if you want to check whether an activation is subject to additional rules like MFA before actually submitting the request.",
+=======
+        "Description": "This parameter is deprecated and will be removed in a future release. Determines whether the call is a validation or an actual call. Only set this property if you want to check whether an activation is subject to additional rules like MFA before actually submitting the request.",
+>>>>>>> Stashed changes
         "Name": "IsValidationOnly",
         "Option": "Write"
       },
@@ -13120,13 +13246,21 @@
       },
       {
         "CIMType": "MSFT_AADRoleAssignmentScheduleRequestSchedule",
+<<<<<<< Updated upstream
         "Description": "The period of the role eligibility. Optional when action is adminRemove. The period of eligibility is dependent on the settings of the Azure AD role.",
+=======
+        "Description": "The period of the role assignment. Optional when action is adminRemove. The period of assignment is dependent on the settings of the Azure AD role.",
+>>>>>>> Stashed changes
         "Name": "ScheduleInfo",
         "Option": "Write"
       },
       {
         "CIMType": "MSFT_AADRoleAssignmentScheduleRequestTicketInfo",
+<<<<<<< Updated upstream
         "Description": "Ticket details linked to the role eligibility request including details of the ticket number and ticket system.",
+=======
+        "Description": "This parameter is deprecated and will be removed in a future release. Ticket details linked to the role assignment request including details of the ticket number and ticket system.",
+>>>>>>> Stashed changes
         "Name": "TicketInfo",
         "Option": "Write"
       },
@@ -13187,7 +13321,11 @@
         "Option": "Write"
       }
     ],
+<<<<<<< Updated upstream
     "Description": "This resource configures an Azure Active Directory Privilege Identity Management assignment."
+=======
+    "Description": "This resource configures an Azure Active Directory Privilege Identity Management assignment.\r\n\r\n**Please note:** The difference between start and end times of assignments must be at least 5 minutes. Lower assignment times will result in an error.\r\nAlso, if you attempt to remove or update an assignment less than 5 minutes after the last modification, it will fail as well."
+>>>>>>> Stashed changes
   },
   {
     "ClassName": "MSFT_AADRoleDefinition",
@@ -13343,7 +13481,11 @@
         ]
       }
     ],
+<<<<<<< Updated upstream
     "Description": "Represents a request for a role eligibility for a principal through PIM. The role eligibility can be permanently eligible without an expiry date or temporarily eligible with an expiry date. Inherits from request."
+=======
+    "Description": "Represents a request for a role eligibility for a principal through PIM. The role eligibility can be permanently eligible without an expiry date or temporarily eligible with an expiry date.\r\n\r\n**Please note:** The difference between start and end times of assignments must be at least 5 minutes. Lower assignment times will result in an error.\r\nAlso, if you attempt to remove or update an assignment less than 5 minutes after the last modification, it will fail as well."
+>>>>>>> Stashed changes
   },
   {
     "ClassName": "MSFT_AADRoleEligibilityScheduleRequestScheduleRecurrencePattern",
@@ -13457,7 +13599,11 @@
         ]
       }
     ],
+<<<<<<< Updated upstream
     "Description": "Represents a request for a role eligibility for a principal through PIM. The role eligibility can be permanently eligible without an expiry date or temporarily eligible with an expiry date. Inherits from request."
+=======
+    "Description": "Represents a request for a role eligibility for a principal through PIM. The role eligibility can be permanently eligible without an expiry date or temporarily eligible with an expiry date.\r\n\r\n**Please note:** The difference between start and end times of assignments must be at least 5 minutes. Lower assignment times will result in an error.\r\nAlso, if you attempt to remove or update an assignment less than 5 minutes after the last modification, it will fail as well."
+>>>>>>> Stashed changes
   },
   {
     "ClassName": "MSFT_AADRoleEligibilityScheduleRequestScheduleRecurrence",
@@ -13475,7 +13621,11 @@
         "Option": "Write"
       }
     ],
+<<<<<<< Updated upstream
     "Description": "Represents a request for a role eligibility for a principal through PIM. The role eligibility can be permanently eligible without an expiry date or temporarily eligible with an expiry date. Inherits from request."
+=======
+    "Description": "Represents a request for a role eligibility for a principal through PIM. The role eligibility can be permanently eligible without an expiry date or temporarily eligible with an expiry date.\r\n\r\n**Please note:** The difference between start and end times of assignments must be at least 5 minutes. Lower assignment times will result in an error.\r\nAlso, if you attempt to remove or update an assignment less than 5 minutes after the last modification, it will fail as well."
+>>>>>>> Stashed changes
   },
   {
     "ClassName": "MSFT_AADRoleEligibilityScheduleRequestScheduleExpiration",
@@ -13511,7 +13661,11 @@
         ]
       }
     ],
+<<<<<<< Updated upstream
     "Description": "Represents a request for a role eligibility for a principal through PIM. The role eligibility can be permanently eligible without an expiry date or temporarily eligible with an expiry date. Inherits from request."
+=======
+    "Description": "Represents a request for a role eligibility for a principal through PIM. The role eligibility can be permanently eligible without an expiry date or temporarily eligible with an expiry date.\r\n\r\n**Please note:** The difference between start and end times of assignments must be at least 5 minutes. Lower assignment times will result in an error.\r\nAlso, if you attempt to remove or update an assignment less than 5 minutes after the last modification, it will fail as well."
+>>>>>>> Stashed changes
   },
   {
     "ClassName": "MSFT_AADRoleEligibilityScheduleRequestSchedule",
@@ -13535,7 +13689,11 @@
         "Option": "Write"
       }
     ],
+<<<<<<< Updated upstream
     "Description": "Represents a request for a role eligibility for a principal through PIM. The role eligibility can be permanently eligible without an expiry date or temporarily eligible with an expiry date. Inherits from request."
+=======
+    "Description": "Represents a request for a role eligibility for a principal through PIM. The role eligibility can be permanently eligible without an expiry date or temporarily eligible with an expiry date.\r\n\r\n**Please note:** The difference between start and end times of assignments must be at least 5 minutes. Lower assignment times will result in an error.\r\nAlso, if you attempt to remove or update an assignment less than 5 minutes after the last modification, it will fail as well."
+>>>>>>> Stashed changes
   },
   {
     "ClassName": "MSFT_AADRoleEligibilityScheduleRequest",
@@ -13586,7 +13744,11 @@
       },
       {
         "CIMType": "String",
+<<<<<<< Updated upstream
         "Description": "Represents the type of operation on the role eligibility request.The possible values are: adminAssign, adminUpdate, adminRemove, selfActivate, selfDeactivate, adminExtend, adminRenew, selfExtend, selfRenew, unknownFutureValue.",
+=======
+        "Description": "This parameter is deprecated and will be removed in a future release. Represents the type of operation on the role eligibility request.The possible values are: adminAssign, adminUpdate, adminRemove, selfActivate, selfDeactivate, adminExtend, adminRenew, selfExtend, selfRenew, unknownFutureValue.",
+>>>>>>> Stashed changes
         "Name": "Action",
         "Option": "Write",
         "ValueMap": [
@@ -13616,7 +13778,11 @@
       },
       {
         "CIMType": "Boolean",
+<<<<<<< Updated upstream
         "Description": "Determines whether the call is a validation or an actual call. Only set this property if you want to check whether an activation is subject to additional rules like MFA before actually submitting the request.",
+=======
+        "Description": "This parameter is deprecated and will be removed in a future release. Determines whether the call is a validation or an actual call. Only set this property if you want to check whether an activation is subject to additional rules like MFA before actually submitting the request.",
+>>>>>>> Stashed changes
         "Name": "IsValidationOnly",
         "Option": "Write"
       },
@@ -13689,7 +13855,11 @@
         "Option": "Write"
       }
     ],
+<<<<<<< Updated upstream
     "Description": "Represents a request for a role eligibility for a principal through PIM. The role eligibility can be permanently eligible without an expiry date or temporarily eligible with an expiry date. Inherits from request."
+=======
+    "Description": "Represents a request for a role eligibility for a principal through PIM. The role eligibility can be permanently eligible without an expiry date or temporarily eligible with an expiry date.\r\n\r\n**Please note:** The difference between start and end times of assignments must be at least 5 minutes. Lower assignment times will result in an error.\r\nAlso, if you attempt to remove or update an assignment less than 5 minutes after the last modification, it will fail as well."
+>>>>>>> Stashed changes
   },
   {
     "ClassName": "MSFT_AADRoleManagementPolicyRule",
@@ -13697,55 +13867,91 @@
       {
         "CIMType": "String",
         "Description": "The unique identifier for an entity. Read-only.",
+<<<<<<< Updated upstream
         "Name": "id",
+=======
+        "Name": "Id",
+>>>>>>> Stashed changes
         "Option": "Key"
       },
       {
         "CIMType": "String",
         "Description": "Role display name.",
+<<<<<<< Updated upstream
         "Name": "roleDisplayName",
+=======
+        "Name": "RoleDisplayName",
+>>>>>>> Stashed changes
         "Option": "Key"
       },
       {
         "CIMType": "String",
         "Description": "Rule Type.",
+<<<<<<< Updated upstream
         "Name": "ruleType",
+=======
+        "Name": "RuleType",
+>>>>>>> Stashed changes
         "Option": "Write"
       },
       {
         "CIMType": "String",
         "Description": "Policy Id.",
+<<<<<<< Updated upstream
         "Name": "policyId",
+=======
+        "Name": "PolicyId",
+>>>>>>> Stashed changes
         "Option": "Write"
       },
       {
         "CIMType": "MSFT_AADRoleManagementPolicyExpirationRule",
         "Description": "Expiration Rule.",
+<<<<<<< Updated upstream
         "Name": "expirationRule",
+=======
+        "Name": "ExpirationRule",
+>>>>>>> Stashed changes
         "Option": "Write"
       },
       {
         "CIMType": "MSFT_AADRoleManagementPolicyNotificationRule",
         "Description": "Notification Rule.",
+<<<<<<< Updated upstream
         "Name": "notificationRule",
+=======
+        "Name": "NotificationRule",
+>>>>>>> Stashed changes
         "Option": "Write"
       },
       {
         "CIMType": "MSFT_AADRoleManagementPolicyEnablementRule",
         "Description": "Enablement Rule.",
+<<<<<<< Updated upstream
         "Name": "enablementRule",
+=======
+        "Name": "EnablementRule",
+>>>>>>> Stashed changes
         "Option": "Write"
       },
       {
         "CIMType": "MSFT_AADRoleManagementPolicyApprovalRule",
         "Description": "Approval Rule.",
+<<<<<<< Updated upstream
         "Name": "approvalRule",
+=======
+        "Name": "ApprovalRule",
+>>>>>>> Stashed changes
         "Option": "Write"
       },
       {
         "CIMType": "MSFT_AADRoleManagementPolicyAuthenticationContextRule",
         "Description": "Authentication Context Rule.",
+<<<<<<< Updated upstream
         "Name": "authenticationContextRule",
+=======
+        "Name": "AuthenticationContextRule",
+>>>>>>> Stashed changes
         "Option": "Write"
       },
       {
@@ -15041,7 +15247,10 @@
       {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
         "CIMType": "Boolean",
@@ -15051,6 +15260,9 @@
       },
       {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -19029,6 +19241,21 @@
         "Option": "Write"
       },
       {
+<<<<<<< Updated upstream
+=======
+        "CIMType": "MSFT_Credential",
+        "Description": "Username can be made up to anything but password will be used for CertificatePassword",
+        "Name": "CertificatePassword",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "Path to certificate used in service principal usually a PFX file.",
+        "Name": "CertificatePath",
+        "Option": "Write"
+      },
+      {
+>>>>>>> Stashed changes
         "CIMType": "Boolean",
         "Description": "Managed ID being used for authentication.",
         "Name": "ManagedIdentity",
@@ -28013,7 +28240,10 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -28026,6 +28256,9 @@
         "CIMType": "Boolean",
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -28082,7 +28315,10 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -28095,6 +28331,9 @@
         "CIMType": "Boolean",
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -28408,7 +28647,10 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -28421,6 +28663,9 @@
       {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -32733,7 +32978,11 @@
       },
       {
         "CIMType": "MSFT_Credential",
+<<<<<<< Updated upstream
         "Description": "Credentials of the workload's Admin",
+=======
+        "Description": "Credentials of the Exchange Global Admin",
+>>>>>>> Stashed changes
         "Name": "Credential",
         "Option": "Write"
       },
@@ -32760,6 +33009,33 @@
         "Description": "Secret of the Azure Active Directory tenant used for authentication.",
         "Name": "ApplicationSecret",
         "Option": "Write"
+<<<<<<< Updated upstream
+=======
+      },
+      {
+        "CIMType": "MSFT_Credential",
+        "Description": "Username can be made up to anything but password will be used for CertificatePassword",
+        "Name": "CertificatePassword",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "Path to certificate used in service principal usually a PFX file.",
+        "Name": "CertificatePath",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "Boolean",
+        "Description": "Managed ID being used for authentication.",
+        "Name": "ManagedIdentity",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String[]",
+        "Description": "Access token used for authentication.",
+        "Name": "AccessTokens",
+        "Option": "Write"
+>>>>>>> Stashed changes
       }
     ],
     "Description": "Use this resource to manage the Exchange Online Tenant Allow/Block List items."
@@ -36345,6 +36621,319 @@
     "Description": "Intune Account Protection Policy for Windows10"
   },
   {
+<<<<<<< Updated upstream
+=======
+    "ClassName": "MSFT_IntuneAlertRuleNotificationChannelReceiver",
+    "Parameters": [
+      {
+        "CIMType": "String",
+        "Description": "The email address of the receiver.",
+        "Name": "ContactInformation",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "The locale of the email.",
+        "Name": "Locale",
+        "Option": "Write",
+        "ValueMap": [
+          "en-us",
+          "cs-cz",
+          "de-de",
+          "es-es",
+          "fr-fr",
+          "hu-hu",
+          "it-it",
+          "ja-jp",
+          "ko-kr",
+          "nl-nl",
+          "pl-pl",
+          "pt-br",
+          "pt-pt",
+          "ru-ru",
+          "sv-se",
+          "tr-tr",
+          "zh-cn",
+          "zh-tw"
+        ],
+        "Values": [
+          "en-us",
+          "cs-cz",
+          "de-de",
+          "es-es",
+          "fr-fr",
+          "hu-hu",
+          "it-it",
+          "ja-jp",
+          "ko-kr",
+          "nl-nl",
+          "pl-pl",
+          "pt-br",
+          "pt-pt",
+          "ru-ru",
+          "sv-se",
+          "tr-tr",
+          "zh-cn",
+          "zh-tw"
+        ]
+      }
+    ],
+    "Description": "Intune Alert Rule Windows365"
+  },
+  {
+    "ClassName": "MSFT_IntuneAlertRuleNotificationChannel",
+    "Parameters": [
+      {
+        "CIMType": "String",
+        "Description": "The notification channel type.",
+        "Name": "NotificationChannelType",
+        "Option": "Write",
+        "ValueMap": [
+          "portal",
+          "email"
+        ],
+        "Values": [
+          "portal",
+          "email"
+        ]
+      },
+      {
+        "CIMType": "MSFT_IntuneAlertRuleNotificationChannelReceiver[]",
+        "Description": "The receivers of the notification. Only applicable if the NotificationChannelType is 'email'.",
+        "Name": "NotificationReceivers",
+        "Option": "Write"
+      }
+    ],
+    "Description": "Intune Alert Rule Windows365"
+  },
+  {
+    "ClassName": "MSFT_IntuneAlertRuleCondition",
+    "Parameters": [
+      {
+        "CIMType": "String",
+        "Description": "The built-in aggregation method for the rule condition. The possible values are: count, percentage, affectedCloudPcCount, affectedCloudPcPercentage, durationInMinutes.",
+        "Name": "Aggregation",
+        "Option": "Write",
+        "ValueMap": [
+          "count",
+          "percentage",
+          "affectedCloudPcCount",
+          "affectedCloudPcPercentage",
+          "durationInMinutes"
+        ],
+        "Values": [
+          "count",
+          "percentage",
+          "affectedCloudPcCount",
+          "affectedCloudPcPercentage",
+          "durationInMinutes"
+        ]
+      },
+      {
+        "CIMType": "String",
+        "Description": "The property that the rule condition monitors. Possible values are: provisionFailures, imageUploadFailures, azureNetworkConnectionCheckFailures, cloudPcInGracePeriod, frontlineInsufficientLicenses, cloudPcConnectionErrors, cloudPcHostHealthCheckFailures, cloudPcZoneOutage, unknownFutureValue, frontlineBufferUsageDuration, frontlineBufferUsageThreshold, cloudPcUserSettingsPersistenceUsageThreshold, cloudPcDeprovisionedThreshold, cloudPcReserveDeprovisionFailedThreshold.",
+        "Name": "ConditionCategory",
+        "Option": "Write",
+        "ValueMap": [
+          "provisionFailures",
+          "imageUploadFailures",
+          "azureNetworkConnectionCheckFailures",
+          "cloudPcInGracePeriod",
+          "frontlineInsufficientLicenses",
+          "cloudPcConnectionErrors",
+          "cloudPcHostHealthCheckFailures",
+          "cloudPcZoneOutage",
+          "unknownFutureValue",
+          "frontlineBufferUsageDuration",
+          "frontlineBufferUsageThreshold",
+          "cloudPcUserSettingsPersistenceUsageThreshold",
+          "cloudPcDeprovisionedThreshold",
+          "cloudPcReserveDeprovisionFailedThreshold"
+        ],
+        "Values": [
+          "provisionFailures",
+          "imageUploadFailures",
+          "azureNetworkConnectionCheckFailures",
+          "cloudPcInGracePeriod",
+          "frontlineInsufficientLicenses",
+          "cloudPcConnectionErrors",
+          "cloudPcHostHealthCheckFailures",
+          "cloudPcZoneOutage",
+          "unknownFutureValue",
+          "frontlineBufferUsageDuration",
+          "frontlineBufferUsageThreshold",
+          "cloudPcUserSettingsPersistenceUsageThreshold",
+          "cloudPcDeprovisionedThreshold",
+          "cloudPcReserveDeprovisionFailedThreshold"
+        ]
+      },
+      {
+        "CIMType": "String",
+        "Description": "The built-in operator for the rule condition. The possible values are: greaterOrEqual, equal, greater, less, lessOrEqual, notEqual.",
+        "Name": "Operator",
+        "Option": "Write",
+        "ValueMap": [
+          "greaterOrEqual",
+          "greater",
+          "equal",
+          "less",
+          "lessOrEqual"
+        ],
+        "Values": [
+          "greaterOrEqual",
+          "greater",
+          "equal",
+          "less",
+          "lessOrEqual"
+        ]
+      },
+      {
+        "CIMType": "String",
+        "Description": "The relationship type. Possible values are: and, or.",
+        "Name": "RelationshipType",
+        "Option": "Write",
+        "ValueMap": [
+          "and",
+          "or"
+        ],
+        "Values": [
+          "and",
+          "or"
+        ]
+      },
+      {
+        "CIMType": "String",
+        "Description": "The threshold value of the alert condition. The threshold value can be a number in string form or string like 'WestUS'.",
+        "Name": "ThresholdValue",
+        "Option": "Write"
+      }
+    ],
+    "Description": "Intune Alert Rule Windows365"
+  },
+  {
+    "ClassName": "MSFT_IntuneAlertRuleWindows365",
+    "Parameters": [
+      {
+        "CIMType": "String",
+        "Description": "The rule template of the alert event. The possible values are: cloudPcProvisionScenario, cloudPcImageUploadScenario, cloudPcOnPremiseNetworkConnectionCheckScenario, cloudPcInGracePeriodScenario, cloudPcFrontlineInsufficientLicensesScenario, cloudPcInaccessibleScenario, cloudPcFrontlineConcurrencyScenario, cloudPcUserSettingsPersistenceScenario, cloudPcDeprovisionFailedScenario.",
+        "Name": "AlertRuleTemplate",
+        "Option": "Key",
+        "ValueMap": [
+          "cloudPcProvisionScenario",
+          "cloudPcImageUploadScenario",
+          "cloudPcOnPremiseNetworkConnectionCheckScenario",
+          "cloudPcInGracePeriodScenario",
+          "cloudPcFrontlineInsufficientLicensesScenario",
+          "cloudPcInaccessibleScenario",
+          "cloudPcFrontlineConcurrencyScenario",
+          "cloudPcUserSettingsPersistenceScenario",
+          "cloudPcDeprovisionFailedScenario"
+        ],
+        "Values": [
+          "cloudPcProvisionScenario",
+          "cloudPcImageUploadScenario",
+          "cloudPcOnPremiseNetworkConnectionCheckScenario",
+          "cloudPcInGracePeriodScenario",
+          "cloudPcFrontlineInsufficientLicensesScenario",
+          "cloudPcInaccessibleScenario",
+          "cloudPcFrontlineConcurrencyScenario",
+          "cloudPcUserSettingsPersistenceScenario",
+          "cloudPcDeprovisionFailedScenario"
+        ]
+      },
+      {
+        "CIMType": "MSFT_IntuneAlertRuleCondition[]",
+        "Description": "The conditions that determine when to send alerts. For example, you can configure a condition to send an alert when provisioning fails for six or more Cloud PCs.",
+        "Name": "Conditions",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "Boolean",
+        "Description": "The status of the rule that indicates whether the rule is enabled or disabled. If true, the rule is enabled otherwise, the rule is disabled.",
+        "Name": "Enabled",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "MSFT_IntuneAlertRuleNotificationChannel[]",
+        "Description": "The notification channels of the rule selected by the user.",
+        "Name": "NotificationChannels",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "The severity of the rule. The possible values are: informational, warning, critical.",
+        "Name": "Severity",
+        "Option": "Write",
+        "ValueMap": [
+          "Critical",
+          "Warning",
+          "Informational"
+        ],
+        "Values": [
+          "Critical",
+          "Warning",
+          "Informational"
+        ]
+      },
+      {
+        "CIMType": "string",
+        "Description": "Present ensures the rule exists. Alert rules for Windows365 cannot be removed.",
+        "Name": "Ensure",
+        "Option": "Write",
+        "ValueMap": [
+          "Present"
+        ],
+        "Values": [
+          "Present"
+        ]
+      },
+      {
+        "CIMType": "MSFT_Credential",
+        "Description": "Credentials of the Admin",
+        "Name": "Credential",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "Id of the Azure Active Directory application to authenticate with.",
+        "Name": "ApplicationId",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "Id of the Azure Active Directory tenant used for authentication.",
+        "Name": "TenantId",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "MSFT_Credential",
+        "Description": "Secret of the Azure Active Directory tenant used for authentication.",
+        "Name": "ApplicationSecret",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.",
+        "Name": "CertificateThumbprint",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "Boolean",
+        "Description": "Managed ID being used for authentication.",
+        "Name": "ManagedIdentity",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String[]",
+        "Description": "Access token used for authentication.",
+        "Name": "AccessTokens",
+        "Option": "Write"
+      }
+    ],
+    "Description": "Intune Alert Rule Windows365"
+  },
+  {
+>>>>>>> Stashed changes
     "ClassName": "MSFT_androidPermissionAction",
     "Parameters": [
       {
@@ -39047,7 +39636,11 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         "CIMType": "String",
+=======
+        "CIMType": "String[]",
+>>>>>>> Stashed changes
 =======
         "CIMType": "String[]",
 >>>>>>> Stashed changes
@@ -39073,7 +39666,11 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         "CIMType": "String",
+=======
+        "CIMType": "String[]",
+>>>>>>> Stashed changes
 =======
         "CIMType": "String[]",
 >>>>>>> Stashed changes
@@ -43025,7 +43622,10 @@
   {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
     "ClassName": "MSFT_IntuneAzureNetworkConnectionWindows365",
@@ -43589,6 +44189,9 @@
   },
   {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -53646,6 +54249,167 @@
     "Description": "Intune Device Configuration Pkcs Certificate Policy for Windows10"
   },
   {
+<<<<<<< Updated upstream
+=======
+    "ClassName": "MSFT_IntuneDeviceConfigurationPlatformScriptLinux",
+    "Parameters": [
+      {
+        "CIMType": "String",
+        "Description": "Policy description",
+        "Name": "Description",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "Policy name",
+        "Name": "DisplayName",
+        "Option": "Key"
+      },
+      {
+        "CIMType": "String[]",
+        "Description": "List of Scope Tags for this Entity instance.",
+        "Name": "RoleScopeTagIds",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "The unique identifier for an entity. Read-only.",
+        "Name": "Id",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "Execution context (root: Root, user: User)",
+        "Name": "CustomConfigExecutionContext",
+        "Option": "Write",
+        "ValueMap": [
+          "root",
+          "user"
+        ],
+        "Values": [
+          "root",
+          "user"
+        ]
+      },
+      {
+        "CIMType": "SInt32",
+        "Description": "Execution frequency (15: Every 15 minutes, 30: Every 30 minutes, 60: Every 1 hour, 120: Every 2 hours, 180: Every 3 hours, 360: Every 6 hours, 720: Every 12 hours, 1440: Every 1 day, 10080: Every 1 week)",
+        "Name": "CustomConfigExecutionFrequency",
+        "Option": "Write",
+        "ValueMap": [
+          15,
+          30,
+          60,
+          120,
+          180,
+          360,
+          720,
+          1440,
+          10080
+        ],
+        "Values": [
+          15,
+          30,
+          60,
+          120,
+          180,
+          360,
+          720,
+          1440,
+          10080
+        ]
+      },
+      {
+        "CIMType": "SInt32",
+        "Description": "Execution retries (0: No retries, 1: 1 time, 2: 2 times, 3: 3 times)",
+        "Name": "CustomConfigExecutionRetries",
+        "Option": "Write",
+        "ValueMap": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "Values": [
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "CIMType": "String",
+        "Description": "Execution Script",
+        "Name": "CustomConfig_Script",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "MSFT_DeviceManagementConfigurationPolicyAssignments[]",
+        "Description": "Represents the assignment to the Intune policy.",
+        "Name": "Assignments",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "string",
+        "Description": "Present ensures the policy exists, absent ensures it is removed.",
+        "Name": "Ensure",
+        "Option": "Write",
+        "ValueMap": [
+          "Present",
+          "Absent"
+        ],
+        "Values": [
+          "Present",
+          "Absent"
+        ]
+      },
+      {
+        "CIMType": "MSFT_Credential",
+        "Description": "Credentials of the Admin",
+        "Name": "Credential",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "Id of the Azure Active Directory application to authenticate with.",
+        "Name": "ApplicationId",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "Id of the Azure Active Directory tenant used for authentication.",
+        "Name": "TenantId",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "MSFT_Credential",
+        "Description": "Secret of the Azure Active Directory tenant used for authentication.",
+        "Name": "ApplicationSecret",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.",
+        "Name": "CertificateThumbprint",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "Boolean",
+        "Description": "Managed ID being used for authentication.",
+        "Name": "ManagedIdentity",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String[]",
+        "Description": "Access token used for authentication.",
+        "Name": "AccessTokens",
+        "Option": "Write"
+      }
+    ],
+    "Description": "Intune Device Configuration Platform Script for Linux"
+  },
+  {
+>>>>>>> Stashed changes
     "ClassName": "MSFT_IntuneDeviceConfigurationPlatformScriptMacOS",
     "Parameters": [
       {
@@ -63593,7 +64357,10 @@
   },
   {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
     "ClassName": "MSFT_ReusableStorageDeviceControlPolicySetting",
     "Parameters": [
       {
@@ -63844,6 +64611,9 @@
     "Description": "Intune Device Control Policy Setting"
   },
   {
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     "ClassName": "MSFT_MicrosoftGraphIntuneSettingsCatalogPolicyRule",
     "Parameters": [
@@ -64984,7 +65754,11 @@
         "Option": "Write"
       }
     ],
+<<<<<<< Updated upstream
     "Description": "Intune Device Enrollment Status Page Configuration for Windows10"
+=======
+    "Description": "Intune Device Enrollment Status Page Configuration for Windows10\r\n\r\n**Please note:** If multiple resources are defined and they are not sorted by their priority increasing (meaning that the first resource e.g. has priority 2 and the next one has 1),\r\nit is possible that the priority cannot be set correctly because not enough policies exist in the tenant.\r\n\r\nTo prevent this issue from happening, either define the resources with their priority increasing or use the `DependsOn` property to define a relation to the one that needs to be processed first."
+>>>>>>> Stashed changes
   },
   {
     "ClassName": "MSFT_airPrintDestination",
@@ -66365,6 +67139,201 @@
     "Description": "Intune Device Remediation\r\n\r\n**Important:** Global scripts only allow the update of the following properties:\r\n\r\n* Assignments\r\n* RoleScopeTagIds\r\n* RunAs32Bit\r\n* RunAsAccount"
   },
   {
+<<<<<<< Updated upstream
+=======
+    "ClassName": "MSFT_IntuneDiskEncryptionFileVaultPolicyMacOS",
+    "Parameters": [
+      {
+        "CIMType": "String",
+        "Description": "Policy description",
+        "Name": "Description",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "Policy name",
+        "Name": "DisplayName",
+        "Option": "Key"
+      },
+      {
+        "CIMType": "String[]",
+        "Description": "List of Scope Tags for this Entity instance.",
+        "Name": "RoleScopeTagIds",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "The unique identifier for an entity. Read-only.",
+        "Name": "Id",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "Defer (true: Enabled)",
+        "Name": "Defer",
+        "Option": "Write",
+        "ValueMap": [
+          "true"
+        ],
+        "Values": [
+          "true"
+        ]
+      },
+      {
+        "CIMType": "String",
+        "Description": "Defer Dont Ask At User Logout (false: Disabled, true: Enabled)",
+        "Name": "DeferDontAskAtUserLogout",
+        "Option": "Write",
+        "ValueMap": [
+          "false",
+          "true"
+        ],
+        "Values": [
+          "false",
+          "true"
+        ]
+      },
+      {
+        "CIMType": "SInt32",
+        "Description": "Defer Force At User Login Max Bypass Attempts",
+        "Name": "DeferForceAtUserLoginMaxBypassAttempts",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "Enable (0: On, 1: Off)",
+        "Name": "Enable",
+        "Option": "Write",
+        "ValueMap": [
+          "On",
+          "Off"
+        ],
+        "Values": [
+          "On",
+          "Off"
+        ]
+      },
+      {
+        "CIMType": "SInt32",
+        "Description": "Recovery Key Rotation In Months (0: 0, 1: 1, 2: 2, 3: 3, 4: 4, 5: 5, 6: 6, 7: 7, 8: 8, 9: 9, 10: 10, 11: 11, 12: 12)",
+        "Name": "RecoveryKeyRotationInMonths",
+        "Option": "Write",
+        "ValueMap": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12
+        ],
+        "Values": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12
+        ]
+      },
+      {
+        "CIMType": "String",
+        "Description": "Use Recovery Key (true: Enabled)",
+        "Name": "UseRecoveryKey",
+        "Option": "Write",
+        "ValueMap": [
+          "true"
+        ],
+        "Values": [
+          "true"
+        ]
+      },
+      {
+        "CIMType": "String",
+        "Description": "Location where the key should be escrowed to.",
+        "Name": "Location",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "MSFT_DeviceManagementConfigurationPolicyAssignments[]",
+        "Description": "Represents the assignment to the Intune policy.",
+        "Name": "Assignments",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "string",
+        "Description": "Present ensures the policy exists, absent ensures it is removed.",
+        "Name": "Ensure",
+        "Option": "Write",
+        "ValueMap": [
+          "Present",
+          "Absent"
+        ],
+        "Values": [
+          "Present",
+          "Absent"
+        ]
+      },
+      {
+        "CIMType": "MSFT_Credential",
+        "Description": "Credentials of the Admin",
+        "Name": "Credential",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "Id of the Azure Active Directory application to authenticate with.",
+        "Name": "ApplicationId",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "Id of the Azure Active Directory tenant used for authentication.",
+        "Name": "TenantId",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "MSFT_Credential",
+        "Description": "Secret of the Azure Active Directory tenant used for authentication.",
+        "Name": "ApplicationSecret",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.",
+        "Name": "CertificateThumbprint",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "Boolean",
+        "Description": "Managed ID being used for authentication.",
+        "Name": "ManagedIdentity",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String[]",
+        "Description": "Access token used for authentication.",
+        "Name": "AccessTokens",
+        "Option": "Write"
+      }
+    ],
+    "Description": "Intune Disk Encryption File Vault Policy for macOS"
+  },
+  {
+>>>>>>> Stashed changes
     "ClassName": "MSFT_IntuneDiskEncryptionMacOS",
     "Parameters": [
       {
@@ -67864,7 +68833,10 @@
   },
   {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
     "ClassName": "MSFT_IntuneEpmCertificatePolicySetting",
     "Parameters": [
       {
@@ -67951,6 +68923,9 @@
     "Description": "Intune Endpoint Privilege Management Certificate Policy Setting"
   },
   {
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     "ClassName": "MSFT_MicrosoftGraphIntuneSettingsCatalogElevationRuleName",
     "Parameters": [
@@ -68535,7 +69510,10 @@
   },
   {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
     "ClassName": "MSFT_ReusableFirewallPolicySetting",
     "Parameters": [
       {
@@ -68646,6 +69624,9 @@
     "Description": "Intune Firewall Policy Setting"
   },
   {
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     "ClassName": "MSFT_IntuneFirewallPolicyWindows10",
     "Parameters": [
@@ -70533,6 +71514,107 @@
     "Description": "Intune Firewall Rules Policy for Windows10 ConfigMgr"
   },
   {
+<<<<<<< Updated upstream
+=======
+    "ClassName": "MSFT_IntuneManagedInstallerPolicyWindows10",
+    "Parameters": [
+      {
+        "CIMType": "String",
+        "Description": "Description of the Managed Installer Policy.",
+        "Name": "Description",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "Name of the Managed Installer Policy",
+        "Name": "DisplayName",
+        "Option": "Key"
+      },
+      {
+        "CIMType": "Boolean",
+        "Description": "Indicates if Intune is considered a Managed Installer.",
+        "Name": "IsIntuneManagedInstaller",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String[]",
+        "Description": "List of Scope Tag IDs for the device health script",
+        "Name": "RoleScopeTagIds",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "The unique identifier for an entity. Read-only.",
+        "Name": "Id",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "MSFT_DeviceManagementConfigurationPolicyAssignments[]",
+        "Description": "Represents the assignment to the Intune policy.",
+        "Name": "Assignments",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "string",
+        "Description": "Present ensures the policy exists, absent ensures it is removed.",
+        "Name": "Ensure",
+        "Option": "Write",
+        "ValueMap": [
+          "Present",
+          "Absent"
+        ],
+        "Values": [
+          "Present",
+          "Absent"
+        ]
+      },
+      {
+        "CIMType": "MSFT_Credential",
+        "Description": "Credentials of the Admin",
+        "Name": "Credential",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "Id of the Azure Active Directory application to authenticate with.",
+        "Name": "ApplicationId",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "Id of the Azure Active Directory tenant used for authentication.",
+        "Name": "TenantId",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "MSFT_Credential",
+        "Description": "Secret of the Azure Active Directory tenant used for authentication.",
+        "Name": "ApplicationSecret",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.",
+        "Name": "CertificateThumbprint",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "Boolean",
+        "Description": "Managed ID being used for authentication.",
+        "Name": "ManagedIdentity",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String[]",
+        "Description": "Access token used for authentication.",
+        "Name": "AccessTokens",
+        "Option": "Write"
+      }
+    ],
+    "Description": "Intune Managed Installer Policy for Windows 10"
+  },
+  {
+>>>>>>> Stashed changes
     "ClassName": "MSFT_DeviceManagementMobileAppAssignment",
     "Parameters": [
       {
@@ -106059,6 +107141,81 @@
     "Description": "This resource configures a Purview Admin Audit Log."
   },
   {
+<<<<<<< Updated upstream
+=======
+    "ClassName": "MSFT_O365CopilotSettingsPeopleEnhancedPersonalization",
+    "Parameters": [
+      {
+        "CIMType": "String",
+        "Description": "Only valid value is 'Yes'.",
+        "Name": "IsSingleInstance",
+        "Option": "Key",
+        "ValueMap": [
+          "Yes"
+        ],
+        "Values": [
+          "Yes"
+        ]
+      },
+      {
+        "CIMType": "Boolean",
+        "Description": "If true, enables the enhanced personalization control and therefore related features as defined in control enhanced personalization privacy Required.",
+        "Name": "isEnabledInOrganization",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "string",
+        "Description": "The ID of a Microsoft Entra group to which the value is used to disable the control for populated users. Optional.",
+        "Name": "disabledForGroup",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "MSFT_Credential",
+        "Description": "Credentials of the workload's Admin",
+        "Name": "Credential",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "Id of the Azure Active Directory application to authenticate with.",
+        "Name": "ApplicationId",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "Id of the Azure Active Directory tenant used for authentication.",
+        "Name": "TenantId",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "MSFT_Credential",
+        "Description": "Secret of the Azure Active Directory tenant used for authentication.",
+        "Name": "ApplicationSecret",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.",
+        "Name": "CertificateThumbprint",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "Boolean",
+        "Description": "Managed ID being used for authentication.",
+        "Name": "ManagedIdentity",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String[]",
+        "Description": "Access token used for authentication.",
+        "Name": "AccessTokens",
+        "Option": "Write"
+      }
+    ],
+    "Description": "Represents a setting that controls whether Microsoft 365 Copilot can use features that enhance its personalization capabilities."
+  },
+  {
+>>>>>>> Stashed changes
     "ClassName": "MSFT_O365ExternalConnection",
     "Parameters": [
       {
@@ -106322,7 +107479,11 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         "Description": "Allow people in your organization to start trial subscriptions for apps and services that support trials. Admins manage licenses for these trials in the same way as other licenses in your organization. Only admins can upgrade these trials to paid subscriptions, so they won’t affect your billing.",
+=======
+        "Description": "Allow people in your organization to start trial subscriptions for apps and services that support trials. Admins manage licenses for these trials in the same way as other licenses in your organization. Only admins can upgrade these trials to paid subscriptions, so they won't affect your billing.",
+>>>>>>> Stashed changes
 =======
         "Description": "Allow people in your organization to start trial subscriptions for apps and services that support trials. Admins manage licenses for these trials in the same way as other licenses in your organization. Only admins can upgrade these trials to paid subscriptions, so they won't affect your billing.",
 >>>>>>> Stashed changes
@@ -106774,6 +107935,21 @@
         ]
       },
       {
+<<<<<<< Updated upstream
+=======
+        "CIMType": "Boolean",
+        "Description": "Allows configuration on Add shortcut to OneDrive feature in SharePoint document libraries. If set to $true, then this feature will be disabled on all sites in the tenant. If set to $false, it will be enabled on all sites in the tenant.",
+        "Name": "DisableAddToOneDrive",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "Boolean",
+        "Description": "Allows configuring whether display name of people who view the file are visible in the property pane of the site in OneDrive for business sites.",
+        "Name": "DisplayNamesOfFileViewers",
+        "Option": "Write"
+      },
+      {
+>>>>>>> Stashed changes
         "CIMType": "String",
         "Description": "Present ensures the user exists, absent ensures it is removed",
         "Name": "Ensure",
@@ -111621,7 +112797,10 @@
   {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
     "ClassName": "MSFT_SCDLPSensitiveInformationType",
@@ -111711,6 +112890,9 @@
   },
   {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -116341,11 +117523,14 @@
       {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         "CIMType": "MSFT_SentinelAlertRuleIncidentConfigurationGroupingConfigurationAlertDetail[]",
         "Description": "A list of alert details to group by (when matchingMethod is Selected)",
         "Name": "groupByAlertDetails",
         "Option": "Write"
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
         "CIMType": "String[]",
@@ -116361,6 +117546,9 @@
           "Severity"
         ]
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -116401,6 +117589,7 @@
   {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     "ClassName": "MSFT_SentinelAlertRuleIncidentConfigurationGroupingConfigurationAlertDetail",
     "Parameters": [
       {
@@ -116419,6 +117608,8 @@
     "Description": "Configures alert rules in Azure Sentinel."
   },
   {
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -119795,7 +120986,11 @@
         "CIMType": "string",
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         "Description": "Determines what level of sharing is available for OneDrive sites. It corresponds to the SharingCapabilities for OneDrive sites.",
+=======
+        "Description": "DEPRECATED - Determines what level of sharing is available for OneDrive sites. It corresponds to the SharingCapabilities for OneDrive sites.",
+>>>>>>> Stashed changes
 =======
         "Description": "DEPRECATED - Determines what level of sharing is available for OneDrive sites. It corresponds to the SharingCapabilities for OneDrive sites.",
 >>>>>>> Stashed changes
@@ -119988,6 +121183,121 @@
         "Option": "Write"
       },
       {
+<<<<<<< Updated upstream
+=======
+        "CIMType": "Boolean",
+        "Description": "Gets or sets a value to specify if user checks handle mobile friendly url.",
+        "Name": "MobileFriendlyUrlEnabledInTenant",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "Boolean",
+        "Description": "Gets or sets a value to specify the advanced setting of the conditional access policy.",
+        "Name": "AllowDownloadingNonWebViewableFiles",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "Boolean",
+        "Description": "Prevents users from editing Office files in the browser and copying and pasting Office file contents out of the browser window.",
+        "Name": "AllowEditing",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "Boolean",
+        "Description": "Set whether to hide the sync button on OneDrive for Business sites.",
+        "Name": "HideSyncButtonOnODB",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "Boolean",
+        "Description": "Configure if ACS-based app-only authentication should be disabled or not.",
+        "Name": "DisableCustomAppAuthentication",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String[]",
+        "Description": "Guids of out of the box modern list templates to hide when creating a new list.",
+        "Name": "DisabledModernListTemplateIds",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "Boolean",
+        "Description": "Allows configuring whether personal lists created within the OneDrive for Business site of the user is enabled or disabled in the tenant. If set to $false, personal lists will be allowed to be created in the tenant. If set to $true, it will be disabled in the tenant.",
+        "Name": "DisablePersonalListCreation",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "Boolean",
+        "Description": "Allows configuring whether display name of people who view the file are visible in the property pane of the site in SharePoint site collection.",
+        "Name": "DisplayNamesOfFileViewersInSpo",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "Boolean",
+        "Description": "Allows configuration on whether Fluid components are enabled or disabled in the tenant. If set to $true, then this feature will be enabled on all sites in the tenant. If set to $false, it will be disabled on all sites in the tenant.",
+        "Name": "IsFluidEnabled",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "Boolean",
+        "Description": "Allows configuring whether loop components are enabled or disabled in the tenant. If set to $true, loop components will be allowed to be created in the tenant. If set to $false, it will be disabled in the tenant.",
+        "Name": "IsLoopEnabled",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "Boolean",
+        "Description": "Indicates whether the newsfeed is allowed on the modern site pages in SharePoint.",
+        "Name": "IsSharePointNewsfeedEnabled",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "Boolean",
+        "Description": "Indicates whether users are allowed to create sites.",
+        "Name": "IsSiteCreationEnabled",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "Boolean",
+        "Description": "Indicates whether the UI commands for creating sites are shown.",
+        "Name": "IsSiteCreationUiEnabled",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "Boolean",
+        "Description": "Indicates whether creating new modern pages is allowed on SharePoint sites.",
+        "Name": "IsSitePagesCreationEnabled",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "Specifies the URL of the redirected site for those site collections which have the locked state 'NoAccess'. The valid values are: '' (default) - Blank by default, this will also remove or clear any value that has been set. Full URL - Example: https://contoso.sharepoint.com/Pages/Locked.aspx",
+        "Name": "NoAccessRedirectUrl",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "Boolean",
+        "Description": "Ensures that an external user can only accept an external sharing invitation with an account matching the invited email address. Note, this only applies to new external users accepting new sharing invitations. Also, the resource owner must share with an organizational or Microsoft account or the external user will be unable to access the resource. ",
+        "Name": "RequireAcceptingAccountMatchInvitedAccount",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "Permits the use of special characters in file and folder names in SharePoint Online and OneDrive for Business document libraries. The only two characters that can be managed at this time are the # and % characters.",
+        "Name": "SpecialCharactersStateInFileFolderNames",
+        "Option": "Write",
+        "ValueMap": [
+          "NoPreference",
+          "Allowed",
+          "Disallowed"
+        ],
+        "Values": [
+          "NoPreference",
+          "Allowed",
+          "Disallowed"
+        ]
+      },
+      {
+>>>>>>> Stashed changes
         "CIMType": "String",
         "Description": "Only accepted value is 'Present'.",
         "Name": "Ensure",
@@ -120261,7 +121571,10 @@
   {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
     "ClassName": "MSFT_TeamsAIPolicy",
@@ -120375,6 +121688,9 @@
   },
   {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -120600,7 +121916,10 @@
         "CIMType": "String[]",
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
         "Description": "Determines the list of apps that are pre pinned for a participant in Calls.",
@@ -120610,6 +121929,9 @@
       {
         "CIMType": "String[]",
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -120897,7 +122219,10 @@
         "CIMType": "String",
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
         "Description": "This setting controls whether users must provide or obtain explicit consent before recording a 1:1 PSTN or Teams call. When enabled, both parties will receive a notification, and consent must be given before recording starts. Possible values: Enabled: Requires users to give and obtain explicit consent before starting a call recording. Disabled: Users are not required to obtain explicit consent before recording starts.",
@@ -120915,6 +122240,9 @@
       {
         "CIMType": "String",
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -122043,7 +123371,11 @@
       {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         "CIMType": "boolean",
+=======
+        "CIMType": "Boolean",
+>>>>>>> Stashed changes
 =======
         "CIMType": "Boolean",
 >>>>>>> Stashed changes
@@ -122057,7 +123389,11 @@
       {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         "CIMType": "boolean",
+=======
+        "CIMType": "Boolean",
+>>>>>>> Stashed changes
 =======
         "CIMType": "Boolean",
 >>>>>>> Stashed changes
@@ -122071,7 +123407,11 @@
       {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         "CIMType": "boolean",
+=======
+        "CIMType": "Boolean",
+>>>>>>> Stashed changes
 =======
         "CIMType": "Boolean",
 >>>>>>> Stashed changes
@@ -122085,7 +123425,11 @@
       {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         "CIMType": "boolean",
+=======
+        "CIMType": "Boolean",
+>>>>>>> Stashed changes
 =======
         "CIMType": "Boolean",
 >>>>>>> Stashed changes
@@ -122099,7 +123443,11 @@
       {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         "CIMType": "boolean",
+=======
+        "CIMType": "Boolean",
+>>>>>>> Stashed changes
 =======
         "CIMType": "Boolean",
 >>>>>>> Stashed changes
@@ -122113,7 +123461,11 @@
       {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         "CIMType": "boolean",
+=======
+        "CIMType": "Boolean",
+>>>>>>> Stashed changes
 =======
         "CIMType": "Boolean",
 >>>>>>> Stashed changes
@@ -122127,7 +123479,11 @@
       {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         "CIMType": "boolean",
+=======
+        "CIMType": "Boolean",
+>>>>>>> Stashed changes
 =======
         "CIMType": "Boolean",
 >>>>>>> Stashed changes
@@ -122141,8 +123497,11 @@
       {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         "CIMType": "boolean",
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
         "CIMType": "Boolean",
@@ -122153,6 +123512,9 @@
       {
         "CIMType": "Boolean",
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -122163,7 +123525,11 @@
       {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         "CIMType": "boolean",
+=======
+        "CIMType": "Boolean",
+>>>>>>> Stashed changes
 =======
         "CIMType": "Boolean",
 >>>>>>> Stashed changes
@@ -122177,7 +123543,11 @@
       {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         "CIMType": "boolean",
+=======
+        "CIMType": "Boolean",
+>>>>>>> Stashed changes
 =======
         "CIMType": "Boolean",
 >>>>>>> Stashed changes
@@ -122191,7 +123561,11 @@
       {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         "CIMType": "boolean",
+=======
+        "CIMType": "Boolean",
+>>>>>>> Stashed changes
 =======
         "CIMType": "Boolean",
 >>>>>>> Stashed changes
@@ -122364,7 +123738,10 @@
         "CIMType": "Boolean",
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
         "Description": "Setting this attribute to true enables compliance recording for calls that have been re-routed from a compliance recording-enabled user. Supported call scenarios include forward, transfer, delegation, call groups, and simultaneous ring.",
@@ -122374,6 +123751,9 @@
       {
         "CIMType": "Boolean",
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -122572,7 +123952,10 @@
       {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
         "CIMType": "Boolean",
@@ -122582,6 +123965,9 @@
       },
       {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -122609,7 +123995,10 @@
       {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
         "CIMType": "Boolean",
@@ -122619,6 +124008,9 @@
       },
       {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -122630,7 +124022,10 @@
       {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
         "CIMType": "Boolean",
@@ -122640,6 +124035,9 @@
       },
       {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -122684,7 +124082,10 @@
   {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
     "ClassName": "MSFT_TeamsEmergencyCallingExtendedNotification",
@@ -122728,6 +124129,9 @@
   },
   {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -122754,7 +124158,10 @@
       {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
         "CIMType": "MSFT_TeamsEmergencyCallingExtendedNotification[]",
@@ -122764,6 +124171,9 @@
       },
       {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -123394,7 +124804,10 @@
         "CIMType": "String",
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
         "Description": "When set to 'Enabled', security operations team will be able to add domains to the blocklist on security portal. When set to 'Disabled', security operations team will not have permissions to update the domains blocklist.",
@@ -123412,6 +124825,9 @@
       {
         "CIMType": "String",
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -123605,7 +125021,10 @@
         "CIMType": "String",
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
         "Description": "Indicates if file sharing in chats with external users is enabled. It is by default enabled, to disable admins can run following command.",
@@ -123623,6 +125042,9 @@
       {
         "CIMType": "String",
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -123655,7 +125077,10 @@
       {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
         "CIMType": "String",
@@ -123665,6 +125090,9 @@
       },
       {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -124122,7 +125550,10 @@
       {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
         "CIMType": "Boolean",
@@ -124132,6 +125563,9 @@
       },
       {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -124644,7 +126078,10 @@
         "CIMType": "Boolean",
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
         "Description": "Determines if anonymous users can interact with apps in meetings. Set to TRUE to disable App interaction. ",
@@ -124654,6 +126091,9 @@
       {
         "CIMType": "Boolean",
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -124664,7 +126104,10 @@
       {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
         "CIMType": "String",
@@ -124688,6 +126131,9 @@
       },
       {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -124789,7 +126235,10 @@
       {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
         "CIMType": "String",
@@ -124807,6 +126256,9 @@
       },
       {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -124837,7 +126289,10 @@
         "CIMType": "Boolean",
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
         "Description": "If admins disable avatars in 2D meetings, then users cannot represent themselves as avatars in the Gallery view. This does not disable avatars in Immersive view.",
@@ -124847,6 +126302,9 @@
       {
         "CIMType": "Boolean",
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -124857,7 +126315,10 @@
       {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
         "CIMType": "Boolean",
@@ -124867,6 +126328,9 @@
       },
       {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -124921,7 +126385,10 @@
         "CIMType": "String",
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
         "Description": "Controls which users should have ability to see the meeting info details on join screen. 'None' option should disable the feature completely. Possible Values: UsersAllowedToByPassTheLobby: Users who are able to bypass lobby can see the meeting info details. Everyone: All meeting participants can see the meeting info details.",
@@ -124939,6 +126406,9 @@
       {
         "CIMType": "String",
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -124966,7 +126436,10 @@
         "CIMType": "Boolean",
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
         "Description": "If admins have disabled avatars, this does not disable using avatars in Immersive view on Teams desktop or web. Additionally, it does not prevent users from joining the Teams meeting on VR headsets.",
@@ -124976,6 +126449,9 @@
       {
         "CIMType": "Boolean",
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -125082,7 +126558,10 @@
       {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
         "CIMType": "String",
@@ -125100,6 +126579,9 @@
       },
       {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -125128,7 +126610,10 @@
         "CIMType": "Boolean",
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
         "Description": "This setting allows scheduling meetings with customized watermarking for video enabled.",
@@ -125144,6 +126629,9 @@
       {
         "CIMType": "Boolean",
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -125167,7 +126655,10 @@
         "CIMType": "String",
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
         "Description": "Determines how anonymous users will be authenticated when joining a meeting. Possible values are: OneTimePasscode, if you would like anonymous users to be sent a one time passcode to their email when joining a meeting. None, if you would like to disable authentication for anonymous users joining a meeting",
@@ -125185,6 +126676,9 @@
       {
         "CIMType": "String",
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -125206,7 +126700,10 @@
         "CIMType": "String",
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
         "Description": "The setting controls whether recording notification is played to all attendees or just PSTN users.",
@@ -125224,6 +126721,9 @@
       {
         "CIMType": "String",
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -125492,7 +126992,10 @@
       {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
         "CIMType": "String",
@@ -125510,6 +127013,9 @@
       },
       {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -125550,7 +127056,10 @@
         "CIMType": "String",
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
         "Description": "Control Noises Supression Feature for PST legs joining a meeting. Possible Values: MicrosoftDefault, Enabled, Disabled",
@@ -125570,6 +127079,9 @@
       {
         "CIMType": "String",
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -125589,7 +127101,10 @@
         "CIMType": "String",
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
         "Description": "Determines whether participants can give control of presentation slides during meetings scheduled by this user. Set the type of users you want to be able to give control and be given control of presentation slides in meetings. Users excluded from the selected group will be prohibited from giving control, or being given control, in a meeting. Possible Values: Everyone: Anyone in the meeting can give or take control. EveryoneInOrganization: Only internal AAD users and Multi-Tenant Organization (MTO) users can give or take control. EveryoneInOrganizationAndGuests: Only those who are Guests to the tenant, MTO users, and internal AAD users can give or take control. None: No one in the meeting can give or take control",
@@ -125611,6 +127126,9 @@
       {
         "CIMType": "String",
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -125644,7 +127162,10 @@
         "CIMType": "String",
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
         "Description": "Allows users to use real time text during a meeting, allowing them to communicate by typing their messages in real time. Possible Values: Enabled: User is allowed to turn on real time text. Disabled: User is not allowed to turn on real time text.",
@@ -125662,6 +127183,9 @@
       {
         "CIMType": "String",
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -125713,7 +127237,10 @@
         "CIMType": "String",
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
         "Description": "Participants can sign up for text message meeting reminders.",
@@ -125733,6 +127260,9 @@
       {
         "CIMType": "String",
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -125786,6 +127316,7 @@
         "CIMType": "String",
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         "Description": "Determines the background effects that a user can configure in the Teams client. ",
         "Name": "VideoFiltersMode",
         "Option": "Write",
@@ -125803,6 +127334,8 @@
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
         "Description": "This policy controls who can admit from the lobby.",
         "Name": "UsersCanAdmitFromLobby",
         "Option": "Write",
@@ -125814,6 +127347,9 @@
           "OrganizerAndCoOrganizersOnly",
           "OrganizersAndPresentersOnly"
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -125837,7 +127373,10 @@
         "CIMType": "String",
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
         "Description": "Enables the user to use the voice simulation feature while being AI interpreted. Possible Values: Disabled, Enabled",
@@ -125867,7 +127406,11 @@
         ]
       },
       {
+<<<<<<< Updated upstream
         "CIMType": "SInt64",
+=======
+        "CIMType": "SInt32",
+>>>>>>> Stashed changes
         "Description": "Allows the transparency of watermark to be customizable. Must be between 1 and 100 inclusive.",
         "Name": "WatermarkForCameraVideoOpacity",
         "Option": "Write"
@@ -125887,7 +127430,11 @@
         ]
       },
       {
+<<<<<<< Updated upstream
         "CIMType": "SInt64",
+=======
+        "CIMType": "SInt32",
+>>>>>>> Stashed changes
         "Description": "Allows the transparency of watermark to be customizable. Must be between 1 and 100 inclusive.",
         "Name": "WatermarkForScreenSharingOpacity",
         "Option": "Write"
@@ -125927,6 +127474,9 @@
       {
         "CIMType": "String",
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -125999,7 +127549,10 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -126150,6 +127703,9 @@
   {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -126179,7 +127735,10 @@
         "CIMType": "Boolean",
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
         "Description": "This setting enables/disables showing company name and department name in search results for MTO users. Possible values: True, False",
@@ -126189,6 +127748,9 @@
       {
         "CIMType": "Boolean",
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -126218,7 +127780,10 @@
         "CIMType": "String",
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
         "Description": "Determines whether files are automatically shared in external chats. Possible values: Enabled: Files are automatically shared in external chats. Disabled: Files are not automatically shared in external chats.",
@@ -126236,6 +127801,9 @@
       {
         "CIMType": "String",
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -126484,7 +128052,10 @@
       {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
         "CIMType": "String",
@@ -126502,6 +128073,9 @@
       },
       {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -126798,7 +128372,10 @@
         "CIMType": "String",
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
         "Description": "The audio file to play to the caller after the user's voicemail greeting has played and before the caller is allowed to leave a voicemail message.",
@@ -126820,6 +128397,9 @@
       {
         "CIMType": "String",
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -127125,11 +128705,36 @@
       },
       {
         "CIMType": "MSFT_Credential",
+<<<<<<< Updated upstream
         "Description": "Credentials of the Teams Admin",
+=======
+        "Description": "Credentials of the Teams Global Admin.",
+>>>>>>> Stashed changes
         "Name": "Credential",
         "Option": "Write"
       },
       {
+<<<<<<< Updated upstream
+=======
+        "CIMType": "String",
+        "Description": "Id of the Azure Active Directory application to authenticate with.",
+        "Name": "ApplicationId",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "Name of the Azure Active Directory tenant used for authentication. Format contoso.onmicrosoft.com",
+        "Name": "TenantId",
+        "Option": "Write"
+      },
+      {
+        "CIMType": "String",
+        "Description": "Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.",
+        "Name": "CertificateThumbprint",
+        "Option": "Write"
+      },
+      {
+>>>>>>> Stashed changes
         "CIMType": "Boolean",
         "Description": "Managed ID being used for authentication.",
         "Name": "ManagedIdentity",
@@ -127142,7 +128747,11 @@
         "Option": "Write"
       }
     ],
+<<<<<<< Updated upstream
     "Description": "This resource configures Org-Wide App Settings for Teams.\r\n\r\n**This resource currently only supports Credential authentication. Please refer to [Teams PowerShell Application Authentication](https://learn.microsoft.com/en-us/microsoftteams/teams-powershell-application-authentication) for further information.**"
+=======
+    "Description": "This resource configures Org-Wide App Settings for Teams."
+>>>>>>> Stashed changes
   },
   {
     "ClassName": "MSFT_TeamsPstnUsage",
@@ -127457,7 +129066,10 @@
         "CIMType": "Boolean",
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
         "Description": "Determines whether private channel creation is allowed for the team.",
@@ -127467,6 +129079,9 @@
       {
         "CIMType": "Boolean",
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -128333,7 +129948,10 @@
       {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
         "CIMType": "Boolean",
@@ -128342,7 +129960,11 @@
         "Option": "Write"
       },
       {
+<<<<<<< Updated upstream
         "CIMType": "String",
+=======
+        "CIMType": "String[]",
+>>>>>>> Stashed changes
         "Description": "List of IDs of the categories of the in-product messages that will be disabled. You can choose one of the categories from this table: 91382d07-8b89-444c-bbcb-cfe43133af33\t= What's New. edf2633e-9827-44de-b34c-8b8b9717e84c = Conferences",
         "Name": "DisabledInProductMessages",
         "Option": "Write",
@@ -128357,6 +129979,9 @@
       },
       {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -129111,7 +130736,10 @@
         "CIMType": "String",
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
         "Description": "BridgeSourcePhoneNumber is an E.164 formatted Operator Connect Conferencing phone number assigned to your Audio Conferencing Bridge. Using BridgeSourcePhoneNumber in an online voice route is mutually exclusive with using OnlinePstnGatewayList in the same online voice route. When using BridgeSourcePhoneNumber in an online voice route, the OnlinePstnUsages used in the online voice route should only be used in a corresponding OnlineAudioConferencingRoutingPolicy. The same OnlinePstnUsages should not be used in online voice routes that are not using BridgeSourcePhoneNumber.",
@@ -129121,6 +130749,9 @@
       {
         "CIMType": "String",
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
