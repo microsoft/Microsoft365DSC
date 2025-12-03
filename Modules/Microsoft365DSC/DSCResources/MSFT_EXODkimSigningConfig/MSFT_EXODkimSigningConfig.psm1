@@ -73,55 +73,43 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of DkimSigningConfig for $Identity"
 
-    if ($Global:CurrentModeIsExport)
-    {
-        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters `
-            -SkipModuleReload $true
-    }
-    else
-    {
-        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters
-    }
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    Write-Verbose -Message 'Global ExchangeOnlineSession status:'
-    Write-Verbose -Message "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.Name -eq 'ExchangeOnline' } | Out-String)"
-
-    $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = 'Absent'
     try
     {
-        $DkimSigningConfigs = Get-DkimSigningConfig
-    }
-    catch
-    {
-        $Message = 'Error calling {Get-DkimSigningConfig}'
-        New-M365DSCLogEntry -Message $Message `
-            -Exception $_ `
-            -Source $MyInvocation.MyCommand.ModuleName
-        return $nullReturn
-    }
-    $DkimSigningConfig = $DkimSigningConfigs | Where-Object -FilterScript { $_.Identity -eq $Identity }
-    if (-not $DkimSigningConfig)
-    {
-        Write-Verbose -Message "DkimSigningConfig $($Identity) does not exist."
-        return $nullReturn
-    }
-    else
-    {
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Identity -ne $Identity)
+        {
+            $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
+                -InboundParameters $PSBoundParameters
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullReturn = $PSBoundParameters
+            $nullReturn.Ensure = 'Absent'
+
+            $DkimSigningConfig = Get-DkimSigningConfig -Identity $Identity
+
+            if ($null -eq $DkimSigningConfig)
+            {
+                Write-Verbose -Message "DkimSigningConfig $($Identity) does not exist."
+                return $nullReturn
+            }
+        }
+        else
+        {
+            $DkimSigningConfig = $Script:exportedInstance
+        }
+
+        Write-Verbose -Message "Found DkimSigningConfig $($Identity)"
+
         $result = @{
             Ensure                 = 'Present'
             Identity               = $Identity
@@ -140,9 +128,17 @@ function Get-TargetResource
             AccessTokens           = $AccessTokens
         }
 
-        Write-Verbose -Message "Found DkimSigningConfig $($Identity)"
-        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
         return $result
+    }
+    catch
+    {
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return $nullReturn
     }
 }
 
@@ -401,7 +397,7 @@ function Export-TargetResource
         [array]$DkimSigningConfigs = Get-DkimSigningConfig
 
         $i = 1
-        if ($DkimSigningConfigs.Length -eq 0)
+        if ($DkimSigningConfigs.Count -eq 0)
         {
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
@@ -417,7 +413,7 @@ function Export-TargetResource
                 $Global:M365DSCExportResourceInstancesCount++
             }
 
-            Write-M365DSCHost -Message "    |---[$i/$($DkimSigningConfigs.Length)] $($DkimSigningConfig.Identity)" -DeferWrite
+            Write-M365DSCHost -Message "    |---[$i/$($DkimSigningConfigs.Count)] $($DkimSigningConfig.Identity)" -DeferWrite
             $Params = @{
                 Identity              = $DkimSigningConfig.Identity
                 Credential            = $Credential
@@ -429,6 +425,7 @@ function Export-TargetResource
                 CertificatePath       = $CertificatePath
                 AccessTokens          = $AccessTokens
             }
+            $Script:exportedInstance = $DkimSigningConfig
             $Results = Get-TargetResource @Params
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `

@@ -54,49 +54,41 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting Policy Tip configuration for $Name"
 
-    if ($Global:CurrentModeIsExport)
-    {
-        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters `
-            -SkipModuleReload $true
-    }
-    else
-    {
-        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters
-    }
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $command = Get-Command Get-PolicyTipConfig -ErrorAction SilentlyContinue
-    if ($null -eq $command)
-    {
-        New-M365DSCLogEntry -Message 'Get-PolicyTipConfig is not available in the tenant' `
-            -Exception $_ `
-            -Source $MyInvocation.MyCommand.ModuleName
-        throw 'EXOPolicyTipConfig is not supported in the current tenant.'
-    }
-    $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = 'Absent'
-
     try
     {
-        $PolicyTipConfig = Get-PolicyTipConfig -Identity $Name -ErrorAction SilentlyContinue
-        if ($null -eq $PolicyTipConfig)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Name -ne $Name)
         {
-            Write-Verbose -Message "Policy Tip Config $($Name) does not exist."
-            return $nullReturn
+            $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
+                -InboundParameters $PSBoundParameters
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullReturn = $PSBoundParameters
+            $nullReturn.Ensure = 'Absent'
+
+            $PolicyTipConfig = Get-PolicyTipConfig -Identity $Name -ErrorAction SilentlyContinue
+            if ($null -eq $PolicyTipConfig)
+            {
+                Write-Verbose -Message "Policy Tip Config $($Name) does not exist."
+                return $nullReturn
+            }
         }
+        else
+        {
+            $PolicyTipConfig = $Script:exportedInstance
+        }
+
+        Write-Verbose -Message "Found Policy Tip Config with Name {$Name}"
 
         $result = @{
             Name                  = $PolicyTipConfig.Name
@@ -112,7 +104,6 @@ function Get-TargetResource
             AccessTokens          = $AccessTokens
         }
 
-        Write-Verbose -Message "Found Policy Tip Config $($Name)"
         return $result
     }
     catch
@@ -389,6 +380,7 @@ function Export-TargetResource
                     CertificatePath       = $CertificatePath
                     AccessTokens          = $AccessTokens
                 }
+                $Script:exportedInstance = $PolicyTipConfig
                 $Results = Get-TargetResource @Params
                 $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                     -ConnectionMode $ConnectionMode `

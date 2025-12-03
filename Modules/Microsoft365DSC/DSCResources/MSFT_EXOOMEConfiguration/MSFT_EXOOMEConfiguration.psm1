@@ -90,78 +90,73 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting OME Configuration for $($Identity)"
 
-    if ($Global:CurrentModeIsExport)
-    {
-        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters `
-            -SkipModuleReload $true
-    }
-    else
-    {
-        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters
-    }
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = 'Absent'
-
     try
     {
-        #Get-OMEConfiguration do NOT accept ErrorAction parameter
-        $OMEConfigurations = Get-OMEConfiguration 2>&1
-        if ($null -ne ($OMEConfigurations | Where-Object { $_.GetType().Name -like '*ErrorRecord*' }))
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Identity -ne $Identity)
         {
-            throw $OMEConfigurations
-        }
+            $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
+                -InboundParameters $PSBoundParameters
 
-        $OMEConfiguration = $OMEConfigurations | Where-Object -FilterScript { $_.Identity -eq $Identity }
-        if ($null -eq $OMEConfiguration)
-        {
-            Write-Verbose -Message "OMEConfiguration $($Identity) does not exist."
-            return $nullReturn
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullReturn = $PSBoundParameters
+            $nullReturn.Ensure = 'Absent'
+
+            #Get-OMEConfiguration do NOT accept ErrorAction parameter
+            $OMEConfiguration = Get-OMEConfiguration -Identity $Identity 2>&1
+            if ($null -ne ($OMEConfiguration | Where-Object { $_.GetType().Name -like '*ErrorRecord*' }))
+            {
+                throw $OMEConfiguration
+            }
+
+            if ($null -eq $OMEConfiguration)
+            {
+                Write-Verbose -Message "OMEConfiguration $($Identity) does not exist."
+                return $nullReturn
+            }
         }
         else
         {
-            $result = @{
-                Identity                 = $Identity
-                BackgroundColor          = $OMEConfiguration.BackgroundColor
-                DisclaimerText           = $OMEConfiguration.DisclaimerText
-                EmailText                = $OMEConfiguration.EmailText
-                ExternalMailExpiryInDays = $OMEConfiguration.ExternalMailExpiryInterval.Days
-                #                Image                        = $OMEConfiguration.Image
-                IntroductionText         = $OMEConfiguration.IntroductionText
-                OTPEnabled               = $OMEConfiguration.OTPEnabled
-                PortalText               = $OMEConfiguration.PortalText
-                PrivacyStatementUrl      = $OMEConfiguration.PrivacyStatementUrl
-                ReadButtonText           = $OMEConfiguration.ReadButtonText
-                SocialIdSignIn           = $OMEConfiguration.SocialIdSignIn
-                Credential               = $Credential
-                Ensure                   = 'Present'
-                ApplicationId            = $ApplicationId
-                CertificateThumbprint    = $CertificateThumbprint
-                CertificatePath          = $CertificatePath
-                CertificatePassword      = $CertificatePassword
-                ManagedIdentity          = $ManagedIdentity.IsPresent
-                TenantId                 = $TenantId
-                AccessTokens             = $AccessTokens
-            }
-
-            Write-Verbose -Message "Found OME Configuration $($Identity)"
-            Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
-            return $result
+            $OMEConfiguration = $Script:exportedInstance
         }
+
+        Write-Verbose -Message "Found OME Configuration $($Identity)"
+
+        $result = @{
+            Identity                 = $Identity
+            BackgroundColor          = $OMEConfiguration.BackgroundColor
+            DisclaimerText           = $OMEConfiguration.DisclaimerText
+            EmailText                = $OMEConfiguration.EmailText
+            ExternalMailExpiryInDays = $OMEConfiguration.ExternalMailExpiryInterval.Days
+            #                Image                        = $OMEConfiguration.Image
+            IntroductionText         = $OMEConfiguration.IntroductionText
+            OTPEnabled               = $OMEConfiguration.OTPEnabled
+            PortalText               = $OMEConfiguration.PortalText
+            PrivacyStatementUrl      = $OMEConfiguration.PrivacyStatementUrl
+            ReadButtonText           = $OMEConfiguration.ReadButtonText
+            SocialIdSignIn           = $OMEConfiguration.SocialIdSignIn
+            Credential               = $Credential
+            Ensure                   = 'Present'
+            ApplicationId            = $ApplicationId
+            CertificateThumbprint    = $CertificateThumbprint
+            CertificatePath          = $CertificatePath
+            CertificatePassword      = $CertificatePassword
+            ManagedIdentity          = $ManagedIdentity.IsPresent
+            TenantId                 = $TenantId
+            AccessTokens             = $AccessTokens
+        }
+
+        return $result
     }
     catch
     {
@@ -471,7 +466,7 @@ function Export-TargetResource
         [Array]$OMEConfigurations = $OMEConfigurations
         $dscContent = ''
 
-        if ($OMEConfigurations.Length -eq 0)
+        if ($OMEConfigurations.Count -eq 0)
         {
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
@@ -500,7 +495,7 @@ function Export-TargetResource
                 CertificatePath       = $CertificatePath
                 AccessTokens          = $AccessTokens
             }
-
+            $Script:exportedInstance = $OMEConfiguration
             $Results = Get-TargetResource @Params
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `

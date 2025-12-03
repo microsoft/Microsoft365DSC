@@ -835,7 +835,8 @@ $($userDefinitionSettings.MOF -join "`r`n")
             -TemplateReferenceId `$templateReferenceId ``
             -Platforms `$platforms ``
             -Technologies `$technologies ``
-            -Settings `$settings`r`n
+            -Settings `$settings`r`n ``
+            -RoleScopeTagIds `$RoleScopeTagIds`r`n
 "@
         }
         Write-TokenReplacement -Token '<#DefaultUpdateParameters#>' -Value $defaultUpdateParameters -FilePath $moduleFilePath
@@ -3872,7 +3873,7 @@ function Get-SettingsCatalogSettingDefinitionValueOption {
     foreach ($option in $SettingDefinition.AdditionalProperties.options) {
         $options += @{
             Name        = $option.name
-            Id          = $option.itemId.Split("_")[-1]
+            Id          = $option.optionValue.value
             Type        = $option.optionValue.'@odata.type'.Replace($SettingDefinitionOdataTypeBase, "").Replace("SettingValue", "")
             DisplayName = $option.displayName
         }

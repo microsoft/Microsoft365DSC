@@ -6,6 +6,16 @@ nav:
       - 'What is Microsoft365DSC?': 'home/what-is-M365DSC.md'
   - Blog:
       - 'Blog Posts': 'blog/index.md'
+      - Major Updates:
+          - 'October 2025': 'blog/october-2025-major-release.md'
+          - 'April 2025': 'blog/april-2025-major-release.md'
+          - 'October 2024': 'blog/october-2024-major-release.md'
+          - 'April 2024': 'blog/april-2024-major-release.md'
+          - 'October 2023': 'blog/october-2023-major-release.md'
+          - 'April 2023': 'blog/april-2023-major-release.md'
+          - 'October 2022': 'blog/october-2022-major-release.md'
+      - Concepts:
+          - 'DSC Error Flow': 'blog/2024/dsc-error-flow/dsc-error-flow.md'
   - User Guide:
       - 'Get Started':
           - 'Introduction': 'user-guide/get-started/introduction.md'
@@ -35,16 +45,18 @@ nav:
           - 'Compare-M365DSCConfigurations': 'user-guide/cmdlets/Compare-M365DSCConfigurations.md'
           - 'Get-M365DSCAllResources': 'user-guide/cmdlets/Get-M365DSCAllResources.md'
           - 'Get-M365DSCCompiledPermissionList': 'user-guide/cmdlets/Get-M365DSCCompiledPermissionList.md'
-          - 'Get-M365DSCLoggingOption': 'user-guide/cmdlets/Get-M365DSCLoggingOption.md'
-          - 'Get-M365DSCNotificationEndPointRegistration': 'user-guide/cmdlets/Get-M365DSCNotificationEndpointRegistration.md'
-          - 'Get-M365DSCTelemetryOption': 'user-guide/cmdlets/Get-M365DSCTelemetryOption.md'
+          - 'Get-M365DSCConfigurationConflict': 'user-guide/cmdlets/Get-M365DSCConfigurationConflict.md'
           - 'Get-M365DSCConnectedWorkloadList': 'user-guide/cmdlets/Get-M365DSCConnectedWorkloadList.md'
+          - 'Get-M365DSCLoggingOption': 'user-guide/cmdlets/Get-M365DSCLoggingOption.md'
+          - 'Get-M365DSCNotificationEndpointRegistration': 'user-guide/cmdlets/Get-M365DSCNotificationEndpointRegistration.md'
+          - 'Get-M365DSCTelemetryOption': 'user-guide/cmdlets/Get-M365DSCTelemetryOption.md'
+          - 'Get-M365DSCResourcesByExportMode': 'user-guide/cmdlets/Get-M365DSCResourcesByExportMode.md'
           - 'Install-M365DSCDevBranch': 'user-guide/cmdlets/Install-M365DSCDevBranch.md'
           - 'Join-M365DSCConfiguration': 'user-guide/cmdlets/Join-M365DSCConfiguration.md'
           - 'New-M365DSCDeltaReport': 'user-guide/cmdlets/New-M365DSCDeltaReport.md'
-          - 'New-M365DSCNotificationEndPointRegistration': 'user-guide/cmdlets/New-M365DSCNotificationEndpointRegistration.md'
+          - 'New-M365DSCNotificationEndpointRegistration': 'user-guide/cmdlets/New-M365DSCNotificationEndpointRegistration.md'
           - 'New-M365DSCReportFromConfiguration': 'user-guide/cmdlets/New-M365DSCReportFromConfiguration.md'
-          - 'Remove-M365DSCNotificationEndPointRegistration': 'user-guide/cmdlets/Remove-M365DSCNotificationEndpointRegistration.md'
+          - 'Remove-M365DSCNotificationEndpointRegistration': 'user-guide/cmdlets/Remove-M365DSCNotificationEndpointRegistration.md'
           - 'Set-M365DSCAgentCertificateConfiguration': 'user-guide/cmdlets/Set-M365DSCAgentCertificateConfiguration.md'
           - 'Set-M365DSCLoggingOption': 'user-guide/cmdlets/Set-M365DSCLoggingOption.md'
           - 'Set-M365DSCTelemetryOption': 'user-guide/cmdlets/Set-M365DSCTelemetryOption.md'
@@ -62,6 +74,7 @@ nav:
       - 'Develop a New Resource': 'contributing/develop-new-resource.md'
   - Concepts:
       - 'Breaking Changes Policy': 'concepts/breaking-changes.md'
+      - 'Consent Flow': 'concepts/consent-flow.md'
       - 'Key Parameters in DSC': 'concepts/key-parameters.md'
       - 'Personas': 'concepts/personas.md'
   - Resources:
@@ -69,6 +82,7 @@ nav:
       - 'Azure': 'resources/azure'
       - 'Azure AD': 'resources/azure-ad'
       - 'Azure DevOps': 'resources/azure-devops'
+      - 'Commerce': 'resources/commerce'
       - 'Defender': 'resources/defender'
       - 'Exchange': 'resources/exchange'
       - 'Fabric': 'resources/fabric'
@@ -83,16 +97,17 @@ nav:
       - 'Services Hub': 'resources/services-hub'
       - 'SharePoint': 'resources/sharepoint'
       - 'Teams': 'resources/teams'
+      - 'Viva': 'resources/viva'
   - About:
       - 'Why Microsoft365DSC': 'about/why.md'
-      - 'Changelog': https://github.com/microsoft/Microsoft365DSC/blob/master/CHANGELOG.md" target="_blank
+      - 'Changelog': https://github.com/microsoft/Microsoft365DSC/blob/Master/CHANGELOG.md" target="_blank
       - 'License': 'about/license.md'
       - 'Community Resources': 'about/community-resources.md'
 plugins:
   - search
   - include_dir_to_nav
 theme:
-  name: 'material'
+  name: material
   custom_dir: docs/overrides
   logo: Images/SmallLogo.png
   favicon: Images/favicon.ico
@@ -101,25 +116,32 @@ theme:
   palette:
     - scheme: default
       primary: blue
+      accent: indigo
       toggle:
         icon: material/toggle-switch-off-outline
         name: Switch to dark mode
     - scheme: slate
       primary: blue
+      accent: indigo
       toggle:
         icon: material/toggle-switch
         name: Switch to light mode
   features:
     - navigation.tabs
+    - navigation.top
+    - navigation.tracking
     - navigation.instant
+    - toc.follow
+    - search.highlight
     - search.share
+    - content.code.copy
 markdown_extensions:
   - admonition
   - codehilite:
       guess_lang: false
   - toc:
       permalink: true
-      toc_depth: 0
+      toc_depth: 3
   - pymdownx.details
   - pymdownx.superfences
   - pymdownx.snippets
@@ -127,6 +149,10 @@ markdown_extensions:
   - attr_list
   - md_in_html
 extra:
+  analytics:
+    provider: google
+    property: UA-246073771-1
+  generator: false
   social:
     - icon: fontawesome/brands/twitter
       link: 'https://twitter.com/Microsoft365DSC'
@@ -134,10 +160,6 @@ extra:
       link: 'https://www.youtube.com/channel/UCveScabVT6pxzqYgGRu17iw'
     - icon: fontawesome/solid/link
       link: 'https://www.powershellgallery.com/packages/Microsoft365DSC/'
-  generator: false
-  analytics:
-    provider: google
-    property: UA-246073771-1
 extra_css:
   - stylesheets/extra.css
 repo_url: https://github.com/microsoft/Microsoft365DSC

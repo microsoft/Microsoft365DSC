@@ -143,7 +143,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     VivaInsightsDigestEmail                      = $true
                     VivaInsightsOutlookAddInAndInlineSuggestions = $true
                     VivaInsightsScheduleSendSuggestions          = $true
-                    Ensure                                       = 'Present'
                     Credential                                   = $Credential
                 }
 

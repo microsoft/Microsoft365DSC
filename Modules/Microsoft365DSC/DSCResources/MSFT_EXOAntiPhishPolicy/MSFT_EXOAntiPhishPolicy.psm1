@@ -198,112 +198,110 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of AntiPhishPolicy for $Identity"
 
-    if ($Global:CurrentModeIsExport)
-    {
-        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters `
-            -SkipModuleReload $true
-    }
-    else
-    {
-        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters
-    }
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = 'Absent'
     try
     {
-        $AntiPhishPolicy = Get-AntiPhishPolicy -Identity $Identity -ErrorAction SilentlyContinue
-        if ($null -eq $AntiPhishPolicy)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Identity -ne $Identity)
         {
-            Write-Verbose -Message "AntiPhishPolicy $($Identity) does not exist."
-            return $nullReturn
+
+            $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
+                -InboundParameters $PSBoundParameters
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullReturn = $PSBoundParameters
+            $nullReturn.Ensure = 'Absent'
+
+            $AntiPhishPolicy = Get-AntiPhishPolicy -Identity $Identity -ErrorAction SilentlyContinue
+            if ($null -eq $AntiPhishPolicy)
+            {
+                Write-Verbose -Message "AntiPhishPolicy $($Identity) does not exist."
+                return $nullReturn
+            }
         }
         else
         {
-            $PhishThresholdLevelValue = $AntiPhishPolicy.PhishThresholdLevel
-            if ([System.String]::IsNullOrEmpty($PhishThresholdLevelValue))
-            {
-                $PhishThresholdLevelValue = 1
-            }
-
-            $TargetedUserProtectionActionValue = $AntiPhishPolicy.TargetedUserProtectionAction
-            if ([System.String]::IsNullOrEmpty($TargetedUserProtectionActionValue))
-            {
-                $TargetedUserProtectionActionValue = 'NoAction'
-            }
-
-            $TargetedDomainProtectionActionValue = $AntiPhishPolicy.TargetedDomainProtectionAction
-            if ([System.String]::IsNullOrEmpty($TargetedDomainProtectionActionValue))
-            {
-                $TargetedDomainProtectionActionValue = 'NoAction'
-            }
-
-            $result = @{
-                Identity                                      = $Identity
-                AdminDisplayName                              = $AntiPhishPolicy.AdminDisplayName
-                AuthenticationFailAction                      = $AntiPhishPolicy.AuthenticationFailAction
-                Enabled                                       = $AntiPhishPolicy.Enabled
-                EnableFirstContactSafetyTips                  = $AntiPhishPolicy.EnableFirstContactSafetyTips
-                EnableMailboxIntelligence                     = $AntiPhishPolicy.EnableMailboxIntelligence
-                EnableMailboxIntelligenceProtection           = $AntiPhishPolicy.EnableMailboxIntelligenceProtection
-                EnableOrganizationDomainsProtection           = $AntiPhishPolicy.EnableOrganizationDomainsProtection
-                EnableSimilarDomainsSafetyTips                = $AntiPhishPolicy.EnableSimilarDomainsSafetyTips
-                EnableSimilarUsersSafetyTips                  = $AntiPhishPolicy.EnableSimilarUsersSafetyTips
-                EnableSpoofIntelligence                       = $AntiPhishPolicy.EnableSpoofIntelligence
-                EnableTargetedDomainsProtection               = $AntiPhishPolicy.EnableTargetedDomainsProtection
-                EnableTargetedUserProtection                  = $AntiPhishPolicy.EnableTargetedUserProtection
-                EnableUnauthenticatedSender                   = $AntiPhishPolicy.EnableUnauthenticatedSender
-                EnableUnusualCharactersSafetyTips             = $AntiPhishPolicy.EnableUnusualCharactersSafetyTips
-                EnableViaTag                                  = $AntiPhishPolicy.EnableViaTag
-                ExcludedDomains                               = $AntiPhishPolicy.ExcludedDomains
-                ExcludedSenders                               = $AntiPhishPolicy.ExcludedSenders
-                HonorDmarcPolicy                              = $AntiPhishPolicy.HonorDmarcPolicy
-                ImpersonationProtectionState                  = $AntiPhishPolicy.ImpersonationProtectionState
-                MailboxIntelligenceProtectionAction           = $AntiPhishPolicy.MailboxIntelligenceProtectionAction
-                MailboxIntelligenceProtectionActionRecipients = $AntiPhishPolicy.MailboxIntelligenceProtectionActionRecipients
-                MailboxIntelligenceQuarantineTag              = $AntiPhishPolicy.MailboxIntelligenceQuarantineTag
-                SpoofQuarantineTag                            = $AntiPhishPolicy.SpoofQuarantineTag
-                MakeDefault                                   = $AntiPhishPolicy.IsDefault
-                PhishThresholdLevel                           = $PhishThresholdLevelValue
-                TargetedDomainActionRecipients                = $AntiPhishPolicy.TargetedDomainActionRecipients
-                TargetedDomainProtectionAction                = $TargetedDomainProtectionActionValue
-                TargetedDomainsToProtect                      = $AntiPhishPolicy.TargetedDomainsToProtect
-                TargetedDomainQuarantineTag                   = $AntiPhishPolicy.TargetedDomainQuarantineTag
-                TargetedUserActionRecipients                  = $AntiPhishPolicy.TargetedUserActionRecipients
-                TargetedUserProtectionAction                  = $TargetedUserProtectionActionValue
-                TargetedUsersToProtect                        = $AntiPhishPolicy.TargetedUsersToProtect
-                TargetedUserQuarantineTag                     = $AntiPhishPolicy.TargetedUserQuarantineTag
-                DmarcQuarantineAction                         = $AntiPhishPolicy.DmarcQuarantineAction
-                DmarcRejectAction                             = $AntiPhishPolicy.DmarcRejectAction
-                Credential                                    = $Credential
-                Ensure                                        = 'Present'
-                ApplicationId                                 = $ApplicationId
-                CertificateThumbprint                         = $CertificateThumbprint
-                CertificatePath                               = $CertificatePath
-                CertificatePassword                           = $CertificatePassword
-                ManagedIdentity                               = $ManagedIdentity.IsPresent
-                TenantId                                      = $TenantId
-                AccessTokens                                  = $AccessTokens
-            }
-
-            Write-Verbose -Message "Found AntiPhishPolicy $($Identity)"
-            Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
-            return $result
+            $AntiPhishPolicy = $Script:exportedInstance
         }
+
+        $PhishThresholdLevelValue = $AntiPhishPolicy.PhishThresholdLevel
+        if ([System.String]::IsNullOrEmpty($PhishThresholdLevelValue))
+        {
+            $PhishThresholdLevelValue = 1
+        }
+
+        $TargetedUserProtectionActionValue = $AntiPhishPolicy.TargetedUserProtectionAction
+        if ([System.String]::IsNullOrEmpty($TargetedUserProtectionActionValue))
+        {
+            $TargetedUserProtectionActionValue = 'NoAction'
+        }
+
+        $TargetedDomainProtectionActionValue = $AntiPhishPolicy.TargetedDomainProtectionAction
+        if ([System.String]::IsNullOrEmpty($TargetedDomainProtectionActionValue))
+        {
+            $TargetedDomainProtectionActionValue = 'NoAction'
+        }
+
+        Write-Verbose -Message "Found AntiPhishPolicy $($Identity)"
+
+        $result = @{
+            Identity                                      = $Identity
+            AdminDisplayName                              = $AntiPhishPolicy.AdminDisplayName
+            AuthenticationFailAction                      = $AntiPhishPolicy.AuthenticationFailAction
+            Enabled                                       = $AntiPhishPolicy.Enabled
+            EnableFirstContactSafetyTips                  = $AntiPhishPolicy.EnableFirstContactSafetyTips
+            EnableMailboxIntelligence                     = $AntiPhishPolicy.EnableMailboxIntelligence
+            EnableMailboxIntelligenceProtection           = $AntiPhishPolicy.EnableMailboxIntelligenceProtection
+            EnableOrganizationDomainsProtection           = $AntiPhishPolicy.EnableOrganizationDomainsProtection
+            EnableSimilarDomainsSafetyTips                = $AntiPhishPolicy.EnableSimilarDomainsSafetyTips
+            EnableSimilarUsersSafetyTips                  = $AntiPhishPolicy.EnableSimilarUsersSafetyTips
+            EnableSpoofIntelligence                       = $AntiPhishPolicy.EnableSpoofIntelligence
+            EnableTargetedDomainsProtection               = $AntiPhishPolicy.EnableTargetedDomainsProtection
+            EnableTargetedUserProtection                  = $AntiPhishPolicy.EnableTargetedUserProtection
+            EnableUnauthenticatedSender                   = $AntiPhishPolicy.EnableUnauthenticatedSender
+            EnableUnusualCharactersSafetyTips             = $AntiPhishPolicy.EnableUnusualCharactersSafetyTips
+            EnableViaTag                                  = $AntiPhishPolicy.EnableViaTag
+            ExcludedDomains                               = $AntiPhishPolicy.ExcludedDomains
+            ExcludedSenders                               = $AntiPhishPolicy.ExcludedSenders
+            HonorDmarcPolicy                              = $AntiPhishPolicy.HonorDmarcPolicy
+            ImpersonationProtectionState                  = $AntiPhishPolicy.ImpersonationProtectionState
+            MailboxIntelligenceProtectionAction           = $AntiPhishPolicy.MailboxIntelligenceProtectionAction
+            MailboxIntelligenceProtectionActionRecipients = $AntiPhishPolicy.MailboxIntelligenceProtectionActionRecipients
+            MailboxIntelligenceQuarantineTag              = $AntiPhishPolicy.MailboxIntelligenceQuarantineTag
+            SpoofQuarantineTag                            = $AntiPhishPolicy.SpoofQuarantineTag
+            MakeDefault                                   = $AntiPhishPolicy.IsDefault
+            PhishThresholdLevel                           = $PhishThresholdLevelValue
+            TargetedDomainActionRecipients                = $AntiPhishPolicy.TargetedDomainActionRecipients
+            TargetedDomainProtectionAction                = $TargetedDomainProtectionActionValue
+            TargetedDomainsToProtect                      = $AntiPhishPolicy.TargetedDomainsToProtect
+            TargetedDomainQuarantineTag                   = $AntiPhishPolicy.TargetedDomainQuarantineTag
+            TargetedUserActionRecipients                  = $AntiPhishPolicy.TargetedUserActionRecipients
+            TargetedUserProtectionAction                  = $TargetedUserProtectionActionValue
+            TargetedUsersToProtect                        = $AntiPhishPolicy.TargetedUsersToProtect
+            TargetedUserQuarantineTag                     = $AntiPhishPolicy.TargetedUserQuarantineTag
+            DmarcQuarantineAction                         = $AntiPhishPolicy.DmarcQuarantineAction
+            DmarcRejectAction                             = $AntiPhishPolicy.DmarcRejectAction
+            Credential                                    = $Credential
+            Ensure                                        = 'Present'
+            ApplicationId                                 = $ApplicationId
+            CertificateThumbprint                         = $CertificateThumbprint
+            CertificatePath                               = $CertificatePath
+            CertificatePassword                           = $CertificatePassword
+            ManagedIdentity                               = $ManagedIdentity.IsPresent
+            TenantId                                      = $TenantId
+            AccessTokens                                  = $AccessTokens
+        }
+
+        return $result
     }
     catch
     {
@@ -853,6 +851,7 @@ function Export-TargetResource
                 CertificatePath       = $CertificatePath
                 AccessTokens          = $AccessTokens
             }
+            $Script:exportedInstance = $Policy
             $Results = Get-TargetResource @Params
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `

@@ -71,7 +71,6 @@
       "module": "Microsoft.Graph.Beta.Identity.Governance",
       "cmdlets": [
         "Get-MgBetaRoleManagementDirectoryRoleAssignmentSchedule",
-        "Get-MgBetaRoleManagementDirectoryRoleAssignmentScheduleRequest",
         "Get-MgBetaRoleManagementDirectoryRoleDefinition",
         "New-MgBetaRoleManagementDirectoryRoleAssignmentScheduleRequest"
       ]

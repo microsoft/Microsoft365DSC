@@ -29,11 +29,6 @@ function Get-TargetResource
         [Parameter()]
         [ValidateSet('off', 'block', 'audit', 'warn')]
         [System.String]
-        $AttackSurfaceReductionRules,
-
-        [Parameter()]
-        [ValidateSet('off', 'block', 'audit', 'warn')]
-        [System.String]
         $BlockAbuseOfExploitedVulnerableSignedDrivers,
 
         [Parameter()]
@@ -301,11 +296,6 @@ function Set-TargetResource
         [Parameter()]
         [ValidateSet('off', 'block', 'audit', 'warn')]
         [System.String]
-        $AttackSurfaceReductionRules,
-
-        [Parameter()]
-        [ValidateSet('off', 'block', 'audit', 'warn')]
-        [System.String]
         $BlockAbuseOfExploitedVulnerableSignedDrivers,
 
         [Parameter()]
@@ -544,11 +534,6 @@ function Test-TargetResource
         [Parameter()]
         [System.String[]]
         $AttackSurfaceReductionOnlyExclusions,
-
-        [Parameter()]
-        [ValidateSet('off', 'block', 'audit', 'warn')]
-        [System.String]
-        $AttackSurfaceReductionRules,
 
         [Parameter()]
         [ValidateSet('off', 'block', 'audit', 'warn')]

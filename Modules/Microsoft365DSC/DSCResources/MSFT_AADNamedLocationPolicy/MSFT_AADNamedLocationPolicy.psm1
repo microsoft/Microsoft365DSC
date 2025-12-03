@@ -95,19 +95,13 @@ function Get-TargetResource
             Add-M365DSCTelemetryEvent -Data $data
             #endregion
 
-
             $nullReturn = $PSBoundParameters
             $nullReturn.Ensure = 'Absent'
-            try
+
+            $NamedLocation = $null
+            if (-not [System.String]::IsNullOrEmpty($Id))
             {
-                if ($Id)
-                {
-                    $NamedLocation = Get-MgBetaIdentityConditionalAccessNamedLocation -NamedLocationId $Id -ErrorAction Stop
-                }
-            }
-            catch
-            {
-                Write-Verbose -Message "Could not retrieve AAD Named Location by ID {$Id}"
+                $NamedLocation = Get-MgBetaIdentityConditionalAccessNamedLocation -NamedLocationId $Id -ErrorAction SilentlyContinue
             }
 
             if ($null -eq $NamedLocation)
@@ -148,8 +142,8 @@ function Get-TargetResource
             DisplayName                       = $NamedLocation.DisplayName
             IpRanges                          = $NamedLocation.AdditionalProperties.ipRanges.cidrAddress
             IsTrusted                         = $NamedLocation.AdditionalProperties.isTrusted
-            CountriesAndRegions               = [String[]]$NamedLocation.AdditionalProperties.CountriesAndRegions
-            CountryLookupMethod               = $NamedLocation.AdditionalProperties.CountryLookupMethod
+            CountriesAndRegions               = [String[]]$NamedLocation.AdditionalProperties.countriesAndRegions
+            CountryLookupMethod               = $NamedLocation.AdditionalProperties.countryLookupMethod
             IncludeUnknownCountriesAndRegions = $NamedLocation.AdditionalProperties.includeUnknownCountriesAndRegions
             Ensure                            = 'Present'
             ApplicationSecret                 = $ApplicationSecret

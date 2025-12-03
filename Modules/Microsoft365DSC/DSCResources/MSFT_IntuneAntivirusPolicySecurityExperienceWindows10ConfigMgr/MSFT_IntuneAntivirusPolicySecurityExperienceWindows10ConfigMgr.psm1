@@ -537,7 +537,8 @@ function Set-TargetResource
             -CreationSource 'WindowsSecurity' `
             -Platforms $platforms `
             -Technologies $technologies `
-            -Settings $settings
+            -Settings $settings `
+            -RoleScopeTagIds $RoleScopeTagIds
 
         #region resource generator code
 

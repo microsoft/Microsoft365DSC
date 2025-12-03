@@ -196,17 +196,8 @@ function Get-TargetResource
     {
         if (-not $Script:exportedInstance -or $Script:exportedInstance.Name -ne $Name)
         {
-            if ($Global:CurrentModeIsExport)
-            {
-                $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-                    -InboundParameters $PSBoundParameters `
-                    -SkipModuleReload $true
-            }
-            else
-            {
-                $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-                    -InboundParameters $PSBoundParameters
-            }
+            $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
+                -InboundParameters $PSBoundParameters
 
             #Ensure the proper dependencies are installed in the current environment.
             Confirm-M365DSCDependencies

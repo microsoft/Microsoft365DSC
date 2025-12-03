@@ -22,7 +22,7 @@ To get the best experience running Microsoft365DSC cmdlets, it is recommended th
 
 In order to connect to Microsoft 365, you need to make sure you have valid credentials (user **or** application credentials) with the correct permissions to the Microsoft 365 service. Microsoft365DSC offers several methods of authentication, depending on the used resources. Unfortunately, we are depending on the supported authentication methods used by the various PowerShell modules that are used.
 
-Make sure you review the [Authentication and Permissions](../authentication-and-permissions) article for more information on the available authentication methods and how to configure all required permissions.
+Make sure you review the [Authentication and Permissions](authentication-and-permissions.md) article for more information on the available authentication methods and how to configure all required permissions.
 
 ## Experience and skills
 

@@ -19,6 +19,7 @@ Modules/Microsoft365DSC/DSCResources/MSFT_EXOAvailabilityAddressSpace/Add-Availa
 *.log
 DscResource.Tests/*
 CodeCov.xml
+site
 
 # generated docs
 docs/site

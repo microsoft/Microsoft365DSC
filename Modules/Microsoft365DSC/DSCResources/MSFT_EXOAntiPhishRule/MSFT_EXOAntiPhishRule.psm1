@@ -90,96 +90,71 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of AntiPhishRule for $Identity"
 
-    if ($Global:CurrentModeIsExport)
-    {
-        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters `
-            -SkipModuleReload $true
-    }
-    else
-    {
-        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters
-    }
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = 'Absent'
     try
     {
-        Write-Verbose -Message 'Global ExchangeOnlineSession status:'
-        Write-Verbose -Message "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.Name -eq 'ExchangeOnline' } | Out-String)"
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Identity -ne $Identity)
+        {
+            $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
+                -InboundParameters $PSBoundParameters
 
-        try
-        {
-            $AntiPhishRules = Get-AntiPhishRule -ErrorAction SilentlyContinue
-        }
-        catch
-        {
-            New-M365DSCLogEntry -Message "Couldn't get AntiPhishRules" `
-                -Exception $_ `
-                -Source $MyInvocation.MyCommand.ModuleName
-        }
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
 
-        if ($null -ne $AntiPhishRules)
-        {
-            $AntiPhishRule = $AntiPhishRules | Where-Object -FilterScript { $_.Identity -eq $Identity }
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullReturn = $PSBoundParameters
+            $nullReturn.Ensure = 'Absent'
+
+            $AntiPhishRule = Get-AntiPhishRule -Identity $Identity -ErrorAction SilentlyContinue
             if ($null -eq $AntiPhishRule)
             {
                 Write-Verbose -Message "AntiPhishRule $Identity does not exist."
                 return $nullReturn
             }
-            else
-            {
-                $result = @{
-                    Identity                  = $Identity
-                    AntiPhishPolicy           = $AntiPhishRule.AntiPhishPolicy
-                    Comments                  = $AntiPhishRule.Comments
-                    Enabled                   = $AntiPhishRule.RuleEnabled
-                    ExceptIfRecipientDomainIs = $AntiPhishRule.ExceptIfRecipientDomainIs
-                    ExceptIfSentTo            = $AntiPhishRule.ExceptIfSentTo
-                    ExceptIfSentToMemberOf    = $AntiPhishRule.ExceptIfSentToMemberOf
-                    Priority                  = $AntiPhishRule.Priority
-                    RecipientDomainIs         = $AntiPhishRule.RecipientDomainIs
-                    SentTo                    = $AntiPhishRule.SentTo
-                    SentToMemberOf            = $AntiPhishRule.SentToMemberOf
-                    Ensure                    = 'Present'
-                    Credential                = $Credential
-                    ApplicationId             = $ApplicationId
-                    CertificateThumbprint     = $CertificateThumbprint
-                    CertificatePath           = $CertificatePath
-                    CertificatePassword       = $CertificatePassword
-                    ManagedIdentity           = $ManagedIdentity.IsPresent
-                    TenantId                  = $TenantId
-                    AccessTokens              = $AccessTokens
-                }
-                if ('Enabled' -eq $AntiPhishRule.State)
-                {
-                    # Accounts for Get-AntiPhishRule returning 'State' instead of 'Enabled' used by New/Set
-                    $result.Enabled = $true
-                }
-
-                Write-Verbose -Message "Found AntiPhishRule $Identity"
-                Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
-                return $result
-            }
         }
         else
         {
-            Write-Verbose -Message "AntiPhishRule $Identity does not exist."
-            return $nullReturn
+            $AntiPhishRule = $Script:exportedInstance
         }
+
+        Write-Verbose -Message "Found AntiPhishRule $Identity"
+        $result = @{
+            Identity                  = $Identity
+            AntiPhishPolicy           = $AntiPhishRule.AntiPhishPolicy
+            Comments                  = $AntiPhishRule.Comments
+            Enabled                   = $AntiPhishRule.RuleEnabled
+            ExceptIfRecipientDomainIs = $AntiPhishRule.ExceptIfRecipientDomainIs
+            ExceptIfSentTo            = $AntiPhishRule.ExceptIfSentTo
+            ExceptIfSentToMemberOf    = $AntiPhishRule.ExceptIfSentToMemberOf
+            Priority                  = $AntiPhishRule.Priority
+            RecipientDomainIs         = $AntiPhishRule.RecipientDomainIs
+            SentTo                    = $AntiPhishRule.SentTo
+            SentToMemberOf            = $AntiPhishRule.SentToMemberOf
+            Ensure                    = 'Present'
+            Credential                = $Credential
+            ApplicationId             = $ApplicationId
+            CertificateThumbprint     = $CertificateThumbprint
+            CertificatePath           = $CertificatePath
+            CertificatePassword       = $CertificatePassword
+            ManagedIdentity           = $ManagedIdentity.IsPresent
+            TenantId                  = $TenantId
+            AccessTokens              = $AccessTokens
+        }
+
+        if ('Enabled' -eq $AntiPhishRule.State)
+        {
+            # Accounts for Get-AntiPhishRule returning 'State' instead of 'Enabled' used by New/Set
+            $result.Enabled = $true
+        }
+
+        return $result
     }
     catch
     {
@@ -547,6 +522,7 @@ function Export-TargetResource
                 CertificatePath       = $CertificatePath
                 AccessTokens          = $AccessTokens
             }
+            $Script:exportedInstance = $Rule
             $Results = Get-TargetResource @Params
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `

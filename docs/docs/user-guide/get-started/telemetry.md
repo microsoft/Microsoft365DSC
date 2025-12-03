@@ -2,7 +2,7 @@ By default, Microsoft365DSC is sending telemetry back to Microsoft to help the t
 
 ## Telemetry Configuration
 
-Users can decide to stop sending telemetry back to Microsoft at any given point by opting out. To do so, simply run the [Set-M365DSCTelemetryOption](../../cmdlets/Set-M365DSCTelemetryOption) PowerShell command:
+Users can decide to stop sending telemetry back to Microsoft at any given point by opting out. To do so, simply run the [Set-M365DSCTelemetryOption](../cmdlets/Set-M365DSCTelemetryOption.md) PowerShell command:
 
 ```PowerShell
 Set-M365DSCTelemetryOption -Enabled $false

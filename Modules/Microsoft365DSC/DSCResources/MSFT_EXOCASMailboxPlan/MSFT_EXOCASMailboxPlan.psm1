@@ -70,58 +70,58 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of CASMailboxPlan for $Identity"
 
-    if ($Global:CurrentModeIsExport)
-    {
-        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters `
-            -SkipModuleReload $true
-    }
-    else
-    {
-        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters
-    }
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullResult = @{
-        Identity = $Identity
-        Ensure   = 'Absent'
-    }
-
     try
     {
-        $CASMailboxPlan = Get-CASMailboxPlan -Identity $Identity -ErrorAction SilentlyContinue
-        if ($null -eq $MailboxPlan)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Identity -ne $Identity)
         {
-            Write-Verbose -Message "MailboxPlan $($Identity) does not exist."
+            $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
+                -InboundParameters $PSBoundParameters
 
-            # Try and retrieve by Display Name
-            if (-not [System.String]::IsNullOrEmpty($DisplayName))
-            {
-                $CASMailboxPlan = Get-CASMailboxPlan -Filter "DisplayName -eq '$DisplayName'"
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullResult = @{
+                Identity = $Identity
+                Ensure   = 'Absent'
             }
 
+            $CASMailboxPlan = Get-CASMailboxPlan -Identity $Identity -ErrorAction SilentlyContinue
             if ($null -eq $MailboxPlan)
             {
-                $CASMailboxPlan = Get-CASMailboxPlan -Filter "Name -like '$($Identity.Split('-')[0])-*'"
-                if ($null -eq $CASMailboxPlan)
+                Write-Verbose -Message "MailboxPlan $($Identity) does not exist."
+
+                # Try and retrieve by Display Name
+                if (-not [System.String]::IsNullOrEmpty($DisplayName))
                 {
-                    Write-Verbose -Message "CASMailboxPlan $($Identity) does not exist."
-                    return $nullResult
+                    $CASMailboxPlan = Get-CASMailboxPlan -Filter "DisplayName -eq '$DisplayName'"
+                }
+
+                if ($null -eq $MailboxPlan)
+                {
+                    $CASMailboxPlan = Get-CASMailboxPlan -Filter "Name -like '$($Identity.Split('-')[0])-*'"
+                    if ($null -eq $CASMailboxPlan)
+                    {
+                        Write-Verbose -Message "CASMailboxPlan $($Identity) does not exist."
+                        return $nullResult
+                    }
                 }
             }
         }
+        else
+        {
+            $CASMailboxPlan = $Script:exportedInstance
+        }
+
+        Write-Verbose -Message "Found CASMailboxPlan $($Identity)"
 
         $result = @{
             Ensure                = 'Present'
@@ -141,8 +141,6 @@ function Get-TargetResource
             AccessTokens          = $AccessTokens
         }
 
-        Write-Verbose -Message "Found CASMailboxPlan $($Identity)"
-        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
         return $result
     }
     catch
@@ -429,7 +427,7 @@ function Export-TargetResource
                 CertificatePath       = $CertificatePath
                 AccessTokens          = $AccessTokens
             }
-
+            $Script:exportedInstance = $CASMailboxPlan
             $Results = Get-TargetResource @Params
             if ($Results -is [System.Collections.Hashtable] -and $Results.Count -gt 1)
             {

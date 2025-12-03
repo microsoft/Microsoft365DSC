@@ -95,6 +95,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                         'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}_name'
                                         'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}_filename'
                                         'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}_filepath'
+                                        'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}_ruletype'
                                     )
                                 }
                             }
@@ -136,6 +137,31 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                         @{
                                             dependentOn = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}'
                                             parentSettingId = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}'
+                                        }
+                                    )
+                                }
+                            }
+                            @{
+                                Id = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}_ruletype'
+                                Name = 'ElevationType'
+                                OffsetUri = '/PrivilegeManagement/ElevationRules/{0}/RuleType'
+                                AdditionalProperties = @{
+                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
+                                    rootDefinitionId = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}'
+                                    options = @(
+                                        @{
+                                            itemId = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}_automatic'
+                                            name = 'Automatic'
+                                            optionValue = @{
+                                                '@odata.type' = "#microsoft.graph.deviceManagementConfigurationStringSettingValue"
+                                                value = 'Automatic'
+                                            }
+                                            dependentOn = @(
+                                                @{
+                                                    dependentOn = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}'
+                                                    parentSettingId = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}'
+                                                }
+                                            )
                                         }
                                     )
                                 }
@@ -175,6 +201,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                                     value = 'Rule Name'
                                                 }
                                             }
+                                            @{
+                                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                                                settingDefinitionId = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}_ruletype'
+                                                choiceSettingValue = @{
+                                                    children = @()
+                                                    value = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}_automatic'
+                                                }
+                                            }
                                         )
                                     }
                                 )
@@ -200,6 +234,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                         'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}_name'
                                         'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}_filename'
                                         'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}_filepath'
+                                        'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}_ruletype'
                                     )
                                 }
                             }
@@ -241,6 +276,31 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                         @{
                                             dependentOn = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}'
                                             parentSettingId = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}'
+                                        }
+                                    )
+                                }
+                            }
+                            @{
+                                Id = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}_ruletype'
+                                Name = 'ElevationType'
+                                OffsetUri = '/PrivilegeManagement/ElevationRules/{0}/RuleType'
+                                AdditionalProperties = @{
+                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSimpleSettingDefinition'
+                                    rootDefinitionId = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}'
+                                    options = @(
+                                        @{
+                                            itemId = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}_automatic'
+                                            name = 'Automatic'
+                                            optionValue = @{
+                                                '@odata.type' = "#microsoft.graph.deviceManagementConfigurationStringSettingValue"
+                                                value = 'Automatic'
+                                            }
+                                            dependentOn = @(
+                                                @{
+                                                    dependentOn = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}'
+                                                    parentSettingId = 'device_vendor_msft_policy_privilegemanagement_elevationrules_{elevationrulename}'
+                                                }
+                                            )
                                         }
                                     )
                                 }
@@ -291,6 +351,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             FileName = "file.exe"
                             Name = "Rule Name"
                             FilePath = "C:\Temp"
+                            ElevationType = 'automatic'
                         } -ClientOnly
                     )
                     RoleScopeTagIds = @("FakeStringValue")
@@ -332,6 +393,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             FileName = "file.exe"
                             Name = "Rule Name"
                             FilePath = "C:\Temp"
+                            ElevationType = 'automatic'
                         } -ClientOnly
                     )
                     RoleScopeTagIds = @("FakeStringValue")
@@ -372,6 +434,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             FileName = "file.exe"
                             Name = "Rule Name"
                             FilePath = "C:\Temp"
+                            ElevationType = 'automatic'
                         } -ClientOnly
                     )
                     RoleScopeTagIds = @("FakeStringValue")
@@ -403,6 +466,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             FileName = "file_2.exe" # Drift
                             Name = "Rule Name"
                             FilePath = "C:\Temp"
+                            ElevationType = 'automatic'
                         } -ClientOnly
                     )
                     RoleScopeTagIds = @("FakeStringValue")

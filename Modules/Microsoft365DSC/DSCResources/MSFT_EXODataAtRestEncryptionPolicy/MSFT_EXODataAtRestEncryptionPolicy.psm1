@@ -58,34 +58,38 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration for DataAtRestEncryptionPolicy with Identity $Identity"
 
-    $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-        -InboundParameters $PSBoundParameters
-
-    Confirm-M365DSCDependencies
-
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-
-    $nullResult = $PSBoundParameters
-    $nullResult.Ensure = 'Absent'
     try
     {
-        if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Identity -ne $Identity)
         {
-            $instance = $Script:exportedInstances | Where-Object -FilterScript { $_.Identity.Name -eq $Identity }
+            $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
+                -InboundParameters $PSBoundParameters
+
+            Confirm-M365DSCDependencies
+
+            $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+
+            $nullResult = $PSBoundParameters
+            $nullResult.Ensure = 'Absent'
+
+            $instance = Get-M365DataAtRestEncryptionPolicy -Identity $Identity -ErrorAction SilentlyContinue
+            if ($null -eq $instance)
+            {
+                Write-Verbose -Message "No EXO DataAtRestEncryptionPolicy with Identity $Identity was found"
+                return $nullResult
+            }
         }
         else
         {
-            $instance = Get-M365DataAtRestEncryptionPolicy -Identity $Identity -ErrorAction SilentlyContinue
+            $instance = $Script:exportedInstance
         }
-        if ($null -eq $instance)
-        {
-            return $nullResult
-        }
+
+        Write-Verbose -Message "An EXO DataAtRestEncryptionPolicy with Identity $Identity was found"
 
         $results = @{
             Identity              = $Identity
@@ -354,9 +358,8 @@ function Export-TargetResource
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }
-
-            $Results = Get-TargetResource @Params
-
+            $Script:exportedInstance = $config
+            $Results = Get-TargetResource @params
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `

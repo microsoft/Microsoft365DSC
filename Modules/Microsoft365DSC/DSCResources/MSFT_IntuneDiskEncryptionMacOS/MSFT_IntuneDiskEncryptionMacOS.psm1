@@ -317,6 +317,8 @@ function Set-TargetResource
         $AccessTokens
     )
 
+    Write-Warning -Message "This resource is deprecated. Please use 'IntuneDiskEncryptionFileVaultPolicyMacOS'."
+
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
@@ -519,6 +521,8 @@ function Test-TargetResource
         [System.String[]]
         $AccessTokens
     )
+
+    Write-Warning -Message "This resource is deprecated. Please use 'IntuneDiskEncryptionFileVaultPolicyMacOS'."
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')

@@ -163,6 +163,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $DisplayNamesOfFileViewersInSpo,
+
+        [Parameter()]
+        [System.Boolean]
         $IsLoopEnabled,
 
         [Parameter()]
@@ -533,6 +537,10 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $DisplayNamesOfFileViewersInSpo,
+
+        [Parameter()]
+        [System.Boolean]
         $IsLoopEnabled,
 
         [Parameter()]
@@ -857,6 +865,10 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $DisablePersonalListCreation,
+
+        [Parameter()]
+        [System.Boolean]
+        $DisplayNamesOfFileViewersInSpo,
 
         [Parameter()]
         [System.Boolean]

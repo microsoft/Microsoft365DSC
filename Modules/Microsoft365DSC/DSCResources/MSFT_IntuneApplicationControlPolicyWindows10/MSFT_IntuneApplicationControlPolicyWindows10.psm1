@@ -236,6 +236,8 @@ function Set-TargetResource
         $AccessTokens
     )
 
+    Write-Warning -Message "This resource is deprecated. Please use 'IntuneDeviceConfigurationEndpointProtectionPolicyWindows10'."
+
     Write-Verbose -Message "Setting configuration of the Intune Application Control Policy for Windows10 with DisplayName {$DisplayName}"
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -391,6 +393,8 @@ function Test-TargetResource
         [System.String[]]
         $AccessTokens
     )
+
+    Write-Warning -Message "This resource is deprecated. Please use 'IntuneDeviceConfigurationEndpointProtectionPolicyWindows10'."
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')

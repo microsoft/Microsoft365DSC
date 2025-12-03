@@ -597,7 +597,8 @@ function Test-TargetResource
         {
             $testResult = Compare-M365DSCComplexObject `
                 -Source ($source) `
-                -Target ($target)
+                -Target ($target) `
+                -PropertyName $key
 
             if (-not $testResult)
             {

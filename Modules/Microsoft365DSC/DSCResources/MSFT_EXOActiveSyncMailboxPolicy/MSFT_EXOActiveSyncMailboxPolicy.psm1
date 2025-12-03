@@ -261,34 +261,40 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration for ActiveSync Mailbox Policy with Identity $Identity"
 
-    $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-        -InboundParameters $PSBoundParameters
-
-    Confirm-M365DSCDependencies
-
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-
-    $nullResult = $PSBoundParameters
-    $nullResult.Ensure = 'Absent'
     try
     {
-        if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Identity -ne $Identity)
         {
-            $instance = $Script:exportedInstances | Where-Object -FilterScript { $_.Identity -eq $Identity }
+
+            $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
+                -InboundParameters $PSBoundParameters
+
+            Confirm-M365DSCDependencies
+
+            $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+
+            $nullResult = $PSBoundParameters
+            $nullResult.Ensure = 'Absent'
+
+            $instance = Get-ActiveSyncMailboxPolicy -Identity $Identity -ErrorAction SilentlyContinue
+
+            if ($null -eq $instance)
+            {
+                Write-Verbose -Message "An EXO ActiveSync Mailbox Policy with Identity $Identity was not found."
+                return $nullResult
+            }
         }
         else
         {
-            $instance = Get-ActiveSyncMailboxPolicy -Identity $Identity -ErrorAction SilentlyContinue
+            $instance = $Script:exportedInstance
         }
-        if ($null -eq $instance)
-        {
-            return $nullResult
-        }
+
+        Write-Verbose -Message "An EXO ActiveSync Mailbox Policy with Identity $Identity was found."
 
         $results = @{
             Ensure                                   = 'Present'
@@ -986,12 +992,11 @@ function Export-TargetResource
 
     try
     {
-        $Script:ExportMode = $true
-        [array] $Script:exportedInstances = Get-ActiveSyncMailboxPolicy -ErrorAction Stop
+        [array]$policies = Get-ActiveSyncMailboxPolicy -ErrorAction Stop
 
         $i = 1
         $dscContent = ''
-        if ($Script:exportedInstances.Length -eq 0)
+        if ($policies.Length -eq 0)
         {
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
@@ -999,10 +1004,10 @@ function Export-TargetResource
         {
             Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
-        foreach ($config in $Script:exportedInstances)
+        foreach ($config in $policies)
         {
             $displayedKey = $config.Name
-            Write-M365DSCHost -Message "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -DeferWrite
+            Write-M365DSCHost -Message "    |---[$i/$($policies.Count)] $displayedKey" -DeferWrite
             $params = @{
                 Identity              = $config.Name
                 Credential            = $Credential
@@ -1013,6 +1018,7 @@ function Export-TargetResource
                 AccessTokens          = $AccessTokens
             }
 
+            $Script:exportedInstance = $config
             $Results = Get-TargetResource @Params
 
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `

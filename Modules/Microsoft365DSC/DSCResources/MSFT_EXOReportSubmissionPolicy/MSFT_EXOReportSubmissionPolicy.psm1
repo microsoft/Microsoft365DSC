@@ -155,42 +155,42 @@ function Get-TargetResource
 
     Write-Verbose -Message 'Getting configuration of ReportSubmissionPolicy'
 
-    if ($Global:CurrentModeIsExport)
-    {
-        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters `
-            -SkipModuleReload $true
-    }
-    else
-    {
-        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters
-    }
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = 'Absent'
-    $nullReturn.IsSingleInstance = 'Yes'
-
     try
     {
-        $ReportSubmissionPolicy = Get-ReportSubmissionPolicy -ErrorAction Stop
-        if ($null -eq $ReportSubmissionPolicy)
+        if (-not $Script:exportedInstance)
         {
-            Write-Verbose -Message 'ReportSubmissionPolicy does not exist.'
-            return $nullReturn
+            $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
+                -InboundParameters $PSBoundParameters
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullReturn = $PSBoundParameters
+            $nullReturn.Ensure = 'Absent'
+            $nullReturn.IsSingleInstance = 'Yes'
+
+            $ReportSubmissionPolicy = Get-ReportSubmissionPolicy -ErrorAction SilentlyContinue
+            if ($null -eq $ReportSubmissionPolicy)
+            {
+                Write-Verbose -Message 'ReportSubmissionPolicy does not exist.'
+                return $nullReturn
+            }
         }
+        else
+        {
+            $ReportSubmissionPolicy = $Script:exportedInstance
+        }
+
+        Write-Verbose -Message "Found ReportSubmissionPolicy"
 
         $result = @{
             IsSingleInstance                 = 'Yes'
@@ -231,8 +231,6 @@ function Get-TargetResource
             AccessTokens                     = $AccessTokens
         }
 
-        Write-Verbose -Message 'Found ReportSubmissionPolicy'
-        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
         return $result
     }
     catch
@@ -690,7 +688,7 @@ function Export-TargetResource
             IsSingleInstance      = 'Yes'
             AccessTokens          = $AccessTokens
         }
-
+        $Script:exportedInstance = $ReportSubmissionPolicy
         $Results = Get-TargetResource @Params
         $keysToRemove = @()
         foreach ($key in $Results.Keys)

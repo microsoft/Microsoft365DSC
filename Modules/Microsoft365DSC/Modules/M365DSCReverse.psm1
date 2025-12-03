@@ -820,6 +820,14 @@ function Start-M365DSCConfigurationExtract
             $DSCContent.Append($synchronizedHashtable.ResourcesResult.$resource) | Out-Null
         }
 
+        foreach ($pair in (Get-M365DSCStringReplacementMap).GetEnumerator())
+        {
+            Add-ConfigurationDataEntry -Node 'NonNodeData' `
+                -Key $pair.Value `
+                -Value $pair.Key `
+                -Description "Placeholder for sensitive data - $($pair.Value)"
+        }
+
         # Close the Node and Configuration declarations
         $DSCContent.Append("    }`r`n") | Out-Null
         $DSCContent.Append("}`r`n") | Out-Null
@@ -972,7 +980,7 @@ function Start-M365DSCConfigurationExtract
             Write-Verbose -Message $_
         }
 
-        if (!$AzureAutomation -and !$ManagedIdentity.IsPresent)
+        if (-not $AzureAutomation -and -not $ManagedIdentity.IsPresent)
         {
             try
             {

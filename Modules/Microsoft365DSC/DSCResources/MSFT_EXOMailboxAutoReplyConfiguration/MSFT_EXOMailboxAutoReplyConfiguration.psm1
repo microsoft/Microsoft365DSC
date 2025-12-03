@@ -108,34 +108,35 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of Mailbox AutoReply Configuration for $Identity"
 
-    if ($Global:CurrentModeIsExport)
-    {
-        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters `
-            -SkipModuleReload $true
-    }
-    else
-    {
-        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters
-    }
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = 'Absent'
     try
     {
+        if ($Global:CurrentModeIsExport)
+        {
+            $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
+                -InboundParameters $PSBoundParameters `
+                -SkipModuleReload $true
+        }
+        else
+        {
+            $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
+                -InboundParameters $PSBoundParameters
+        }
+
+        #Ensure the proper dependencies are installed in the current environment.
+        Confirm-M365DSCDependencies
+
+        #region Telemetry
+        $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+        $CommandName = $MyInvocation.MyCommand
+        $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+            -CommandName $CommandName `
+            -Parameters $PSBoundParameters
+        Add-M365DSCTelemetryEvent -Data $data
+        #endregion
+
+        $nullReturn = $PSBoundParameters
+        $nullReturn.Ensure = 'Absent'
+
         $config = Get-MailboxAutoReplyConfiguration -Identity $Identity -ErrorAction SilentlyContinue
         if ($null -eq $config)
         {
@@ -143,11 +144,14 @@ function Get-TargetResource
             return $nullReturn
         }
 
+        Write-Verbose -Message "Found Mailbox $($Identity)"
+
         $userPrincipalName = $Identity
         if ($userPrincipalName -notlike '*@*')
         {
             $userPrincipalName = (Get-User -Identity $Identity).UserPrincipalName
         }
+
         $result = @{
             Identity                         = $userPrincipalName
             Owner                            = $userPrincipalName
@@ -175,8 +179,6 @@ function Get-TargetResource
             AccessTokens                     = $AccessTokens
         }
 
-        Write-Verbose -Message "Found Mailbox $($Identity)"
-        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
         return $result
     }
     catch

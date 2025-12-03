@@ -86,54 +86,55 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of MailboxPlan for $Identity"
 
-    if ($Global:CurrentModeIsExport)
-    {
-        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters `
-            -SkipModuleReload $true
-    }
-    else
-    {
-        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters
-    }
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullResult = @{
-        Identity = $Identity
-    }
-
     try
     {
-        $MailboxPlan = Get-MailboxPlan -Identity $Identity -ErrorAction SilentlyContinue
-        if ($null -eq $MailboxPlan)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Identity -ne $Identity)
         {
-            if (-not [System.String]::IsNullOrEmpty($DisplayName))
-            {
-                Write-Verbose -Message "Couldn't find MailboxPlan by Identity {$Identity}. Trying by DisplayName."
-                $MailboxPlan = Get-MailboxPlan -Identity $DisplayName
-            }
-            else
-            {
-                $MailboxPlan = Get-MailboxPlan -Filter "Name -like '$($Identity.Split('-')[0])*'"
+            $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
+                -InboundParameters $PSBoundParameters
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullResult = @{
+                Identity = $Identity
+                Ensure   = 'Absent'
             }
 
+            $MailboxPlan = Get-MailboxPlan -Identity $Identity -ErrorAction SilentlyContinue
             if ($null -eq $MailboxPlan)
             {
-                return $nullResult
+                if (-not [System.String]::IsNullOrEmpty($DisplayName))
+                {
+                    Write-Verbose -Message "Couldn't find MailboxPlan by Identity {$Identity}. Trying by DisplayName."
+                    $MailboxPlan = Get-MailboxPlan -Identity $DisplayName
+                }
+                else
+                {
+                    $MailboxPlan = Get-MailboxPlan -Filter "Name -like '$($Identity.Split('-')[0])*'"
+                }
+
+                if ($null -eq $MailboxPlan)
+                {
+                    return $nullResult
+                }
             }
         }
+        else
+        {
+            $MailboxPlan = $Script:exportedInstance
+        }
+
+        Write-Verbose -Message "Found MailboxPlan $($Identity)"
 
         $result = @{
             Ensure                   = 'Present'
@@ -157,8 +158,6 @@ function Get-TargetResource
             AccessTokens             = $AccessTokens
         }
 
-        Write-Verbose -Message "Found MailboxPlan $($Identity)"
-        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
         return $result
     }
     catch
@@ -476,7 +475,7 @@ function Export-TargetResource
                 CertificatePath       = $CertificatePath
                 AccessTokens          = $AccessTokens
             }
-
+            $Script:exportedInstance = $MailboxPlan
             $Results = Get-TargetResource @Params
             if ($Results -is [System.Collections.Hashtable] -and $Results.Count -gt 1)
             {

@@ -117,40 +117,41 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of OutBoundConnector for $($Identity)"
 
-    if ($Global:CurrentModeIsExport)
-    {
-        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters `
-            -SkipModuleReload $true
-    }
-    else
-    {
-        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters
-    }
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = 'Absent'
     try
     {
-        $OutBoundConnector = Get-OutBoundConnector -Identity $Identity -IncludeTestModeConnectors:$true -ErrorAction SilentlyContinue
-        if ($null -eq $OutBoundConnector)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Identity -ne $Identity)
         {
-            Write-Verbose -Message "OutBoundConnector $($Identity) does not exist."
-            return $nullReturn
+            $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
+                -InboundParameters $PSBoundParameters
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullReturn = $PSBoundParameters
+            $nullReturn.Ensure = 'Absent'
+
+            $OutBoundConnector = Get-OutBoundConnector -Identity $Identity -IncludeTestModeConnectors:$true -ErrorAction SilentlyContinue
+            if ($null -eq $OutBoundConnector)
+            {
+                Write-Verbose -Message "OutBoundConnector $($Identity) does not exist."
+                return $nullReturn
+            }
         }
+        else
+        {
+            $OutBoundConnector = $Script:exportedInstance
+        }
+
+        Write-Verbose -Message "OutBoundConnector with Identity $($OutBoundConnector.Identity) found"
 
         $ConnectorSourceValue = $OutBoundConnector.ConnectorSource
         if ($ConnectorSourceValue -eq 'AdminUI' -or `
@@ -188,8 +189,6 @@ function Get-TargetResource
             AccessTokens                  = $AccessTokens
         }
 
-        Write-Verbose -Message "Found OutBoundConnector $($Identity)"
-        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
         return $result
     }
     catch
@@ -583,6 +582,7 @@ function Export-TargetResource
                 CertificatePath       = $CertificatePath
                 AccessTokens          = $AccessTokens
             }
+            $Script:exportedInstance = $OutboundConnector
             $Results = Get-TargetResource @Params
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `

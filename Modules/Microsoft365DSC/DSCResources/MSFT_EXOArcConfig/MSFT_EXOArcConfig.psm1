@@ -50,34 +50,40 @@ function Get-TargetResource
 
     Write-Verbose -Message 'Getting EXO Arc Settings'
 
-    if ($Global:CurrentModeIsExport)
-    {
-        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters `
-            -SkipModuleReload $true
-    }
-    else
-    {
-        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters
-    }
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullResult = $PSBoundParameters
     try
     {
-        $ArcConfigSettings = Get-ArcConfig -ErrorAction Stop
+        if (-not $Script:exportedInstance)
+        {
+            $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
+                -InboundParameters $PSBoundParameters
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullResult = $PSBoundParameters
+
+            $ArcConfigSettings = Get-ArcConfig -ErrorAction SilentlyContinue
+            if ($null -eq $ArcConfigSettings)
+            {
+                Write-Verbose -Message 'No Arc config settings found'
+                return $nullResult
+            }
+        }
+        else
+        {
+            $ArcConfigSettings = $Script:exportedInstance
+        }
+
+        Write-Verbose -Message 'Found Arc config settings'
 
         $result = @{
             IsSingleInstance      = 'Yes'
@@ -92,8 +98,6 @@ function Get-TargetResource
             AccessTokens          = $AccessTokens
         }
 
-        Write-Verbose -Message 'Found Arc config settings'
-        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
         return $result
     }
     catch
@@ -329,6 +333,7 @@ function Export-TargetResource
             AccessTokens          = $AccessTokens
         }
 
+        $Script:exportedInstance = $ArcConfigSettings
         $Results = Get-TargetResource @Params
         $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
             -ConnectionMode $ConnectionMode `

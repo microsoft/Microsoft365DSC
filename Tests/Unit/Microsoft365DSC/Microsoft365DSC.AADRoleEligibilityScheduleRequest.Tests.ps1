@@ -90,10 +90,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'The instance should exist but it DOES NOT' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Action               = "AdminAssign";
                     DirectoryScopeId     = "/";
                     Ensure               = "Present";
-                    IsValidationOnly     = $False;
                     Principal            = "John.Smith@contoso.com";
                     PrincipalType        = "User"
                     RoleDefinition       = "Teams Communications Administrator";
@@ -126,10 +124,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'The instance exists but it SHOULD NOT' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Action               = "AdminAssign";
                     DirectoryScopeId     = "/";
                     Ensure               = "Absent";
-                    IsValidationOnly     = $False;
                     PrincipalType        = "User"
                     Principal            = "John.Smith@contoso.com";
                     RoleDefinition       = "Teams Communications Administrator";
@@ -159,10 +155,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'The instance Exists and Values are already in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Action               = "AdminAssign";
                     DirectoryScopeId     = "/";
                     Ensure               = "Present";
-                    IsValidationOnly     = $False;
                     PrincipalType        = "User"
                     Principal            = "John.Smith@contoso.com";
                     RoleDefinition       = "Teams Communications Administrator";
@@ -186,10 +180,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'The instance Exists and specified Values are NOT in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Action               = "AdminAssign";
                     DirectoryScopeId     = "/";
                     Ensure               = "Present";
-                    IsValidationOnly     = $False;
                     PrincipalType        = "User"
                     Principal            = "John.Smith@contoso.com";
                     RoleDefinition       = "Teams Communications Administrator";
@@ -223,25 +215,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
                     Credential = $Credential
-                }
-
-                Mock -CommandName Get-MgBetaRoleManagementDirectoryRoleEligibilityScheduleRequest -MockWith {
-                    return @{
-                        Action               = "AdminAssign";
-                        Id                   = '12345-12345-12345-12345-12345'
-                        DirectoryScopeId     = "/";
-                        IsValidationOnly     = $False;
-                        PrincipalId          = "123456";
-                        RoleDefinitionId     = "12345";
-                        ScheduleInfo         = @{
-                            startDateTime = [System.DateTime]::Parse('2023-09-01T02:40:44Z')
-                            expiration    = @{
-                                endDateTime = [System.DateTime]::Parse('2025-10-31T02:40:09Z')
-                                type        = 'afterDateTime'
-                            }
-                        };
-                        TargetScheduleId = "12345-12345-12345-12345-12345"
-                    }
                 }
             }
 

@@ -178,7 +178,7 @@ function Invoke-QualityChecksHarness
     [CmdletBinding()]
     param ()
 
-    $sw = [System.Diagnostics.StopWatch]::startnew()
+    $sw = [System.Diagnostics.StopWatch]::StartNew()
 
     Write-Host -Object 'Running all Quality Check Tests'
 

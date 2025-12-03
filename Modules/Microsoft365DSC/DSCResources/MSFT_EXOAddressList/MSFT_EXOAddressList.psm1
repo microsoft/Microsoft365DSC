@@ -185,6 +185,8 @@ function Get-TargetResource
             $IncludedRecipients = $AddressList.IncludedRecipients
         }
 
+        Write-Verbose -Message "Found AddressList $($Name)"
+
         $result = @{
             Name                         = $Name
             ConditionalCompany           = $AddressList.ConditionalCompany
@@ -219,8 +221,6 @@ function Get-TargetResource
             AccessTokens                 = $AccessTokens
         }
 
-        Write-Verbose -Message "Found AddressList $($Name)"
-        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
         return $result
     }
     catch

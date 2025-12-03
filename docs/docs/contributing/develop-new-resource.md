@@ -1,6 +1,6 @@
 <iframe width="560" height="315" src="https://www.youtube.com/embed/Bax6eVshfwY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
-Before getting ready to contribute a resource to the project, make sure you've read and followed the steps described in [Setting up your Environment to Contribute to the Project](../getting-started).
+Before getting ready to contribute a resource to the project, make sure you've read and followed the steps described in [Setting up your Environment to Contribute to the Project](getting-started.md).
 
 ## Select the Resource to Add
 

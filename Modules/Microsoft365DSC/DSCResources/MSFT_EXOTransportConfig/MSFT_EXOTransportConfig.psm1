@@ -150,40 +150,34 @@ function Get-TargetResource
 
     Write-Verbose -Message 'Getting EXOTransportConfig'
 
-    if ($Global:CurrentModeIsExport)
-    {
-        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters `
-            -SkipModuleReload $true
-    }
-    else
-    {
-        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters
-    }
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullReturn = @{
-        IsSingleInstance = 'Yes'
-    }
-
     try
     {
-        $TransportConfigSettings = Get-TransportConfig -ErrorAction Stop
-        if ($null -eq $TransportConfigSettings)
+        if (-not $Script:exportedInstance)
         {
-            throw 'There was an error retrieving values from the Get function in EXOTransportConfig.'
+            $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
+                -InboundParameters $PSBoundParameters
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullReturn = @{
+                IsSingleInstance = 'Yes'
+            }
+
+            $TransportConfigSettings = Get-TransportConfig -ErrorAction Stop
+        }
+        else
+        {
+            $TransportConfigSettings = $Script:exportedInstance
         }
 
         $results = @{
@@ -633,6 +627,9 @@ function Export-TargetResource
 
     try
     {
+        $transportConfiguration = Get-TransportConfig -ErrorAction Stop
+
+        $dscContent = ''
         if ($null -ne $Global:M365DSCExportResourceInstancesCount)
         {
             $Global:M365DSCExportResourceInstancesCount++
@@ -649,7 +646,7 @@ function Export-TargetResource
             CertificatePath       = $CertificatePath
             AccessTokens          = $AccessTokens
         }
-
+        $Script:exportedInstance = $transportConfiguration
         $Results = Get-TargetResource @Params
         if ($Results -is [System.Collections.Hashtable] -and $Results.Count -gt 1)
         {

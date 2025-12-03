@@ -63,42 +63,42 @@ function Get-TargetResource
 
     Write-Verbose -Message 'Getting configuration of ReportSubmissionRule'
 
-    if ($Global:CurrentModeIsExport)
-    {
-        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters `
-            -SkipModuleReload $true
-    }
-    else
-    {
-        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters
-    }
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = 'Absent'
-    $nullReturn.IsSingleInstance = 'Yes'
-
     try
     {
-        $ReportSubmissionRule = Get-ReportSubmissionRule -ErrorAction SilentlyContinue
-        if ($null -eq $ReportSubmissionRule)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Identity -ne $Identity)
         {
-            Write-Verbose -Message 'ReportSubmissionRule does not exist.'
-            return $nullReturn
+            $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
+                -InboundParameters $PSBoundParameters
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullReturn = $PSBoundParameters
+            $nullReturn.Ensure = 'Absent'
+            $nullReturn.IsSingleInstance = 'Yes'
+
+            $ReportSubmissionRule = Get-ReportSubmissionRule -ErrorAction SilentlyContinue
+            if ($null -eq $ReportSubmissionRule)
+            {
+                Write-Verbose -Message 'ReportSubmissionRule does not exist.'
+                return $nullReturn
+            }
         }
+        else
+        {
+            $ReportSubmissionRule = $Script:exportedInstance
+        }
+
+        Write-Verbose -Message "Found ReportSubmissionRule with Identity {$Identity}"
 
         $result = @{
             IsSingleInstance      = 'Yes'
@@ -116,8 +116,6 @@ function Get-TargetResource
             AccessTokens          = $AccessTokens
         }
 
-        Write-Verbose -Message 'Found ReportSubmissionRule'
-        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
         return $result
     }
     catch
@@ -397,7 +395,7 @@ function Export-TargetResource
             IsSingleInstance      = 'Yes'
             AccessTokens          = $AccessTokens
         }
-
+        $Script:exportedInstance = $ReportSubmissionRule
         $Results = Get-TargetResource @Params
         $keysToRemove = @()
         foreach ($key in $Results.Keys)

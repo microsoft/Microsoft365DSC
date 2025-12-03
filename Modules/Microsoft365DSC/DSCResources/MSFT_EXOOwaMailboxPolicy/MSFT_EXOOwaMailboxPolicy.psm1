@@ -400,40 +400,41 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting OWA Mailbox Policy configuration for $Name"
 
-    if ($Global:CurrentModeIsExport)
-    {
-        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters `
-            -SkipModuleReload $true
-    }
-    else
-    {
-        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters
-    }
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = 'Absent'
     try
     {
-        $OwaMailboxPolicy = Get-OwaMailboxPolicy -Identity $Name -ErrorAction SilentlyContinue
-        if ($null -eq $OwaMailboxPolicy)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Name -ne $Name)
         {
-            Write-Verbose -Message "OWA Mailbox Policy $($Name) does not exist."
-            return $nullReturn
+            $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
+                -InboundParameters $PSBoundParameters
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullReturn = $PSBoundParameters
+            $nullReturn.Ensure = 'Absent'
+
+            $OwaMailboxPolicy = Get-OwaMailboxPolicy -Identity $Name -ErrorAction SilentlyContinue
+            if ($null -eq $OwaMailboxPolicy)
+            {
+                Write-Verbose -Message "OWA Mailbox Policy $($Name) does not exist."
+                return $nullReturn
+            }
         }
+        else
+        {
+            $OwaMailboxPolicy = $Script:exportedInstance
+        }
+
+        Write-Verbose -Message "OWA Mailbox Policy with Name $($OwaMailboxPolicy.Name) found"
 
         $result = @{
             Name                                                 = $OwaMailboxPolicy.Name
@@ -534,7 +535,6 @@ function Get-TargetResource
             AccessTokens                                         = $AccessTokens
         }
 
-        Write-Verbose -Message "Found OWA Mailbox Policy $($Name)"
         return $result
     }
     catch
@@ -1471,7 +1471,6 @@ function Export-TargetResource
     try
     {
         [array]$AllOwaMailboxPolicies = Get-OwaMailboxPolicy -ErrorAction Stop
-
         $dscContent = ''
 
         if ($AllOwaMailboxPolicies.Length -eq 0)
@@ -1503,6 +1502,7 @@ function Export-TargetResource
                 CertificatePath       = $CertificatePath
                 AccessTokens          = $AccessTokens
             }
+            $Script:exportedInstance = $OwaMailboxPolicy
             $Results = Get-TargetResource @Params
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `

@@ -443,9 +443,12 @@ function Set-TargetResource
         $Uri = (Get-MSCloudLoginConnectionProfile -Workload MicrosoftGraph).ResourceUrl + "beta/deviceManagement/deviceEnrollmentConfigurations/$($policy.Id)/assign"
         Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $body -ErrorAction Stop
 
-        Update-DeviceEnrollmentConfigurationPriority `
-            -DeviceEnrollmentConfigurationId $policy.id `
-            -Priority $Priority
+        if ($PSBoundParameters.ContainsKey('Priority') -and $policy.Priority -ne $Priority)
+        {
+            Update-DeviceEnrollmentConfigurationPriority `
+                -DeviceEnrollmentConfigurationId $policy.id `
+                -Priority $Priority
+        }
         #endregion
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')

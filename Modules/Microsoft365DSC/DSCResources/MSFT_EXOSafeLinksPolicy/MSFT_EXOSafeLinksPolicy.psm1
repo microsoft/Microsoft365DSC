@@ -106,83 +106,73 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of SafeLinksPolicy for $Identity"
 
-    if ($Global:CurrentModeIsExport)
-    {
-        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters `
-            -SkipModuleReload $true
-    }
-    else
-    {
-        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters
-    }
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = 'Absent'
     try
     {
-        try
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Identity -ne $Identity)
         {
-            $SafeLinksPolicy = Get-SafeLinksPolicy -Identity $Identity -ErrorAction Stop
-        }
-        catch
-        {
-            $Message = 'Error calling {Get-SafeLinksPolicy}'
-            New-M365DSCLogEntry -Message $Message `
-                -Exception $_ `
-                -Source $MyInvocation.MyCommand.ModuleName
-        }
-        if (-not $SafeLinksPolicy)
-        {
-            Write-Verbose -Message "SafeLinksPolicy $($Identity) does not exist."
-            return $nullReturn
+            $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
+                -InboundParameters $PSBoundParameters
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullReturn = $PSBoundParameters
+            $nullReturn.Ensure = 'Absent'
+
+            $SafeLinksPolicy = Get-SafeLinksPolicy -Identity $Identity -ErrorAction SilentlyContinue
+            if ($null -eq $SafeLinksPolicy)
+            {
+                Write-Verbose -Message "SafeLinksPolicy $($Identity) does not exist."
+                return $nullReturn
+            }
         }
         else
         {
-            $result = @{
-                Identity                   = $SafeLinksPolicy.Identity
-                AdminDisplayName           = $SafeLinksPolicy.AdminDisplayName
-                AllowClickThrough          = $SafeLinksPolicy.AllowClickThrough
-                CustomNotificationText     = $SafeLinksPolicy.CustomNotificationText
-                DeliverMessageAfterScan    = $SafeLinksPolicy.DeliverMessageAfterScan
-                DoNotRewriteUrls           = $SafeLinksPolicy.DoNotRewriteUrls
-                EnableForInternalSenders   = $SafeLinksPolicy.EnableForInternalSenders
-                EnableOrganizationBranding = $SafeLinksPolicy.EnableOrganizationBranding
-                EnableSafeLinksForTeams    = $SafeLinksPolicy.EnableSafeLinksForTeams
-                EnableSafeLinksForEmail    = $SafeLinksPolicy.EnableSafeLinksForEmail
-                EnableSafeLinksForOffice   = $SafeLinksPolicy.EnableSafeLinksForOffice
-                DisableUrlRewrite          = $SafeLinksPolicy.DisableUrlRewrite
-                ScanUrls                   = $SafeLinksPolicy.ScanUrls
-                TrackClicks                = $SafeLinksPolicy.TrackClicks
-                # The Get-SafeLinksPolicy no longer returns this property
-                # UseTranslatedNotificationText = $SafeLinksPolicy.UseTranslatedNotificationText
-                Ensure                     = 'Present'
-                Credential                 = $Credential
-                ApplicationId              = $ApplicationId
-                CertificateThumbprint      = $CertificateThumbprint
-                CertificatePath            = $CertificatePath
-                CertificatePassword        = $CertificatePassword
-                ManagedIdentity            = $ManagedIdentity.IsPresent
-                TenantId                   = $TenantId
-                AccessTokens               = $AccessTokens
-            }
-
-            Write-Verbose -Message "Found SafeLinksPolicy $($Identity)"
-            Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
-            return $result
+            $SafeLinksPolicy = $Script:exportedInstance
         }
+
+        Write-Verbose -Message "Found existing instance of SafeLinksPolicy $($Identity)"
+
+        $result = @{
+            Identity                   = $SafeLinksPolicy.Identity
+            AdminDisplayName           = $SafeLinksPolicy.AdminDisplayName
+            AllowClickThrough          = $SafeLinksPolicy.AllowClickThrough
+            CustomNotificationText     = $SafeLinksPolicy.CustomNotificationText
+            DeliverMessageAfterScan    = $SafeLinksPolicy.DeliverMessageAfterScan
+            DoNotRewriteUrls           = $SafeLinksPolicy.DoNotRewriteUrls
+            EnableForInternalSenders   = $SafeLinksPolicy.EnableForInternalSenders
+            EnableOrganizationBranding = $SafeLinksPolicy.EnableOrganizationBranding
+            EnableSafeLinksForTeams    = $SafeLinksPolicy.EnableSafeLinksForTeams
+            EnableSafeLinksForEmail    = $SafeLinksPolicy.EnableSafeLinksForEmail
+            EnableSafeLinksForOffice   = $SafeLinksPolicy.EnableSafeLinksForOffice
+            DisableUrlRewrite          = $SafeLinksPolicy.DisableUrlRewrite
+            ScanUrls                   = $SafeLinksPolicy.ScanUrls
+            TrackClicks                = $SafeLinksPolicy.TrackClicks
+            # The Get-SafeLinksPolicy no longer returns this property
+            # UseTranslatedNotificationText = $SafeLinksPolicy.UseTranslatedNotificationText
+            Ensure                     = 'Present'
+            Credential                 = $Credential
+            ApplicationId              = $ApplicationId
+            CertificateThumbprint      = $CertificateThumbprint
+            CertificatePath            = $CertificatePath
+            CertificatePassword        = $CertificatePassword
+            ManagedIdentity            = $ManagedIdentity.IsPresent
+            TenantId                   = $TenantId
+            AccessTokens               = $AccessTokens
+        }
+
+        Write-Verbose -Message "Found SafeLinksPolicy $($Identity)"
+        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
+        return $result
     }
     catch
     {
@@ -315,12 +305,10 @@ function Set-TargetResource
     $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
-    $SafeLinksPolicies = Get-SafeLinksPolicy
-
-    $SafeLinksPolicy = $SafeLinksPolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }
+    $SafeLinksPolicy = Get-SafeLinksPolicy -Identity $Identity -ErrorAction SilentlyContinue
     $SafeLinksPolicyParams = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
-    if (('Present' -eq $Ensure ) -and ($null -eq $SafeLinksPolicy))
+    if ('Present' -eq $Ensure -and $null -eq $SafeLinksPolicy)
     {
         $SafeLinksPolicyParams += @{
             Name = $SafeLinksPolicyParams.Identity
@@ -330,13 +318,13 @@ function Set-TargetResource
 
         New-SafeLinksPolicy @SafeLinksPolicyParams
     }
-    elseif (('Present' -eq $Ensure ) -and ($null -ne $SafeLinksPolicy))
+    elseif ('Present' -eq $Ensure -and $null -ne $SafeLinksPolicy)
     {
         Write-Verbose -Message "Setting SafeLinksPolicy $($Identity) with values: $(Convert-M365DscHashtableToString -Hashtable $SafeLinksPolicyParams)"
 
         Set-SafeLinksPolicy @SafeLinksPolicyParams -Confirm:$false
     }
-    elseif (('Absent' -eq $Ensure ) -and ($null -ne $SafeLinksPolicy))
+    elseif ('Absent' -eq $Ensure -and $null -ne $SafeLinksPolicy)
     {
         Write-Verbose -Message "Removing SafeLinksPolicy $($Identity) "
         Remove-SafeLinksPolicy -Identity $Identity -Confirm:$false
@@ -553,6 +541,7 @@ function Export-TargetResource
                     CertificatePath       = $CertificatePath
                     AccessTokens          = $AccessTokens
                 }
+                $Script:exportedInstance = $SafeLinksPolicy
                 $Results = Get-TargetResource @Params
                 $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                     -ConnectionMode $ConnectionMode `

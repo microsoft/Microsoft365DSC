@@ -64,63 +64,61 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of Accepted Domain for $Identity"
 
-    if ($Global:CurrentModeIsExport)
-    {
-        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters `
-            -SkipModuleReload $true
-    }
-    else
-    {
-        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters
-    }
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = 'Absent'
     try
     {
-        Write-Verbose -Message 'Getting all Accepted Domain'
-        $AcceptedDomain = Get-AcceptedDomain -Identity $Identity -ErrorAction SilentlyContinue
-
-        if ($null -eq $AcceptedDomain)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Identity -ne $Identity)
         {
-            Write-Verbose -Message "AcceptedDomain configuration for {$($Identity)} does not exist."
-            return $nullReturn
+            $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
+                -InboundParameters $PSBoundParameters
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullReturn = $PSBoundParameters
+            $nullReturn.Ensure = 'Absent'
+
+            Write-Verbose -Message 'Getting all Accepted Domain'
+            $AcceptedDomain = Get-AcceptedDomain -Identity $Identity -ErrorAction SilentlyContinue
+
+            if ($null -eq $AcceptedDomain)
+            {
+                Write-Verbose -Message "AcceptedDomain configuration for {$($Identity)} does not exist."
+                return $nullReturn
+            }
         }
         else
         {
-            $result = @{
-                DomainType            = $AcceptedDomain.DomainType
-                Ensure                = 'Present'
-                Identity              = $AcceptedDomain.Identity
-                MatchSubDomains       = $AcceptedDomain.MatchSubDomains
-                OutboundOnly          = $AcceptedDomain.OutboundOnly
-                Credential            = $Credential
-                ApplicationId         = $ApplicationId
-                TenantId              = $TenantId
-                CertificateThumbprint = $CertificateThumbprint
-                CertificatePath       = $CertificatePath
-                CertificatePassword   = $CertificatePassword
-                ManagedIdentity       = $ManagedIdentity.IsPresent
-                AccessTokens          = $AccessTokens
-            }
-
-            Write-Verbose -Message "Found AcceptedDomain configuration for $($Identity)"
-            return $result
+            $AcceptedDomain = $Script:exportedInstance
         }
+
+        Write-Verbose -Message "Found AcceptedDomain configuration for $($Identity)"
+
+        $result = @{
+            DomainType            = $AcceptedDomain.DomainType
+            Ensure                = 'Present'
+            Identity              = $AcceptedDomain.Identity
+            MatchSubDomains       = $AcceptedDomain.MatchSubDomains
+            OutboundOnly          = $AcceptedDomain.OutboundOnly
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
+            ManagedIdentity       = $ManagedIdentity.IsPresent
+            AccessTokens          = $AccessTokens
+        }
+
+        return $result
     }
     catch
     {
@@ -398,6 +396,7 @@ function Export-TargetResource
                 ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }
+            $Script:exportedInstance = $domain
             $Results = Get-TargetResource @Params
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `

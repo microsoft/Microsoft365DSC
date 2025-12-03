@@ -25,7 +25,7 @@ For more information and more advanced topics, please make sure you review the f
 - <a href="https://docs.microsoft.com/en-us/powershell/dsc/configurations/configdata?view=dsc-1.1" target="_blank">Using configuration data in DSC</a>
 - <a href="https://devblogs.microsoft.com/powershell/want-to-secure-credentials-in-windows-powershell-desired-state-configuration" target="_blank">Want to secure credentials in Windows PowerShell Desired State Configuration?</a>
 - <a href="https://docs.microsoft.com/en-us/powershell/dsc/pull-server/securemof?view=dsc-1.1" target="_blank">Securing the MOF File</a>
-- [Securing your Compiled Configuration](../securing-configurations) (Next chapter in this guide)
+- [Securing your Compiled Configuration](securing-configurations.md) (Next chapter in this guide)
 
 ## Compiling and Validating the Configuration
 

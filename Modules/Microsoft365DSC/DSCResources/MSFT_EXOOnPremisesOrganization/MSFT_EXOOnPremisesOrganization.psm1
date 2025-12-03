@@ -78,41 +78,41 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting On-premises Organization configuration for $Identity"
 
-    if ($Global:CurrentModeIsExport)
-    {
-        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters `
-            -SkipModuleReload $true
-    }
-    else
-    {
-        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters
-    }
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = 'Absent'
-
     try
     {
-        $OnPremisesOrganization = Get-OnPremisesOrganization -Identity $Identity -ErrorAction SilentlyContinue
-        if ($null -eq $OnPremisesOrganization)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Identity -ne $Identity)
         {
-            Write-Verbose -Message "On-premises Organization $($Identity) does not exist."
-            return $nullReturn
+            $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
+                -InboundParameters $PSBoundParameters
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullReturn = $PSBoundParameters
+            $nullReturn.Ensure = 'Absent'
+
+            $OnPremisesOrganization = Get-OnPremisesOrganization -Identity $Identity -ErrorAction SilentlyContinue
+            if ($null -eq $OnPremisesOrganization)
+            {
+                Write-Verbose -Message "On-premises Organization $($Identity) does not exist."
+                return $nullReturn
+            }
         }
+        else
+        {
+            $OnPremisesOrganization = $Script:exportedInstance
+        }
+
+        Write-Verbose -Message "On-premises Organization with Identity $($OnPremisesOrganization.Identity) found"
 
         $result = @{
             Identity                 = $OnPremisesOrganization.Identity
@@ -134,7 +134,6 @@ function Get-TargetResource
             AccessTokens             = $AccessTokens
         }
 
-        Write-Verbose -Message "Found On-premises Organization $($Identity)"
         return $result
     }
     catch
@@ -473,6 +472,7 @@ function Export-TargetResource
                 CertificatePath       = $CertificatePath
                 AccessTokens          = $AccessTokens
             }
+            $Script:exportedInstance = $OnPremisesOrganization
             $Results = Get-TargetResource @Params
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `

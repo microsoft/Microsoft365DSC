@@ -67,41 +67,41 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting Email Address Policy configuration for $Name"
 
-    if ($Global:CurrentModeIsExport)
-    {
-        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters `
-            -SkipModuleReload $true
-    }
-    else
-    {
-        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters
-    }
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = 'Absent'
-
     try
     {
-        $EmailAddressPolicy = Get-EmailAddressPolicy -Identity $Name -ErrorAction SilentlyContinue
-        if ($null -eq $EmailAddressPolicy)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Name -ne $Name)
         {
-            Write-Verbose -Message "Email Address Policy $($Name) does not exist."
-            return $nullReturn
+            $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
+                -InboundParameters $PSBoundParameters
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullReturn = $PSBoundParameters
+            $nullReturn.Ensure = 'Absent'
+
+            $EmailAddressPolicy = Get-EmailAddressPolicy -Identity $Name -ErrorAction SilentlyContinue
+            if ($null -eq $EmailAddressPolicy)
+            {
+                Write-Verbose -Message "Email Address Policy $($Name) does not exist."
+                return $nullReturn
+            }
         }
+        else
+        {
+            $EmailAddressPolicy = $Script:exportedInstance
+        }
+
+        Write-Verbose -Message "Found Email Address Policy $($Name)"
 
         $result = @{
             Name                              = $EmailAddressPolicy.Name
@@ -120,7 +120,6 @@ function Get-TargetResource
             AccessTokens                      = $AccessTokens
         }
 
-        Write-Verbose -Message "Found Email Address Policy $($Name)"
         return $result
     }
     catch
@@ -420,7 +419,7 @@ function Export-TargetResource
         [array]$AllEmailAddressPolicies = Get-EmailAddressPolicy -ErrorAction Stop
 
         $dscContent = ''
-        if ($AllEmailAddressPolicies.Length -eq 0)
+        if ($AllEmailAddressPolicies.Count -eq 0)
         {
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
@@ -449,6 +448,7 @@ function Export-TargetResource
                 CertificatePath       = $CertificatePath
                 AccessTokens          = $AccessTokens
             }
+            $Script:exportedInstance = $EmailAddressPolicy
             $Results = Get-TargetResource @Params
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `

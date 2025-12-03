@@ -622,7 +622,7 @@ function New-DscMofResourceWikiPage
                     $null = $permissionsContent.AppendLine()
                     $null = $permissionsContent.AppendLine('### Exchange')
                     $null = $permissionsContent.AppendLine()
-                    $null = $permissionsContent.AppendLine('To authenticate with Microsoft Exchange, this resource required the following permissions:')
+                    $null = $permissionsContent.AppendLine('To authenticate with Microsoft Exchange, this resource requires the following permissions:')
                     $null = $permissionsContent.AppendLine()
                     $null = $permissionsContent.AppendLine('#### Roles')
                     $null = $permissionsContent.AppendLine()
@@ -648,7 +648,7 @@ function New-DscMofResourceWikiPage
                         $null = $permissionsContent.AppendLine()
                         $null = $permissionsContent.AppendLine('### Microsoft Graph')
                         $null = $permissionsContent.AppendLine()
-                        $null = $permissionsContent.AppendLine('To authenticate with the Microsoft Graph API, this resource required the following permissions:')
+                        $null = $permissionsContent.AppendLine('To authenticate with the Microsoft Graph API, this resource requires the following permissions:')
                         $null = $permissionsContent.AppendLine()
                         $null = $permissionsContent.AppendLine('#### Delegated permissions')
                         $null = $permissionsContent.AppendLine()
@@ -716,7 +716,7 @@ function New-DscMofResourceWikiPage
                         $null = $permissionsContent.AppendLine()
                         $null = $permissionsContent.AppendLine('### Microsoft SharePoint')
                         $null = $permissionsContent.AppendLine()
-                        $null = $permissionsContent.AppendLine('To authenticate with the SharePoint API, this resource required the following permissions:')
+                        $null = $permissionsContent.AppendLine('To authenticate with the SharePoint API, this resource requires the following permissions:')
                         $null = $permissionsContent.AppendLine()
                         $null = $permissionsContent.AppendLine('#### Delegated permissions')
                         $null = $permissionsContent.AppendLine()
@@ -784,7 +784,7 @@ function New-DscMofResourceWikiPage
                         $null = $permissionsContent.AppendLine()
                         $null = $permissionsContent.AppendLine('### ProjectWorkManagement')
                         $null = $permissionsContent.AppendLine()
-                        $null = $permissionsContent.AppendLine('To authenticate with the Microsoft ProjectWorkManagement API, this resource required the following permissions:')
+                        $null = $permissionsContent.AppendLine('To authenticate with the Microsoft ProjectWorkManagement API, this resource requires the following permissions:')
                         $null = $permissionsContent.AppendLine()
                         $null = $permissionsContent.AppendLine('#### Delegated permissions')
                         $null = $permissionsContent.AppendLine()
@@ -856,7 +856,7 @@ function New-DscMofResourceWikiPage
             $null = $output.AppendLine($permissionsContent)
 
             # Adding examples
-            $examplesPath = Join-Path -Path $SourcePath -ChildPath ('Examples\Resources\{0}' -f $resourceSchema.FriendlyName)
+            $examplesPath = Join-Path -Path $SourcePath -ChildPath ('..\..\Examples\Resources\{0}' -f $resourceSchema.FriendlyName)
 
             $examplesOutput = Get-ResourceExampleAsMarkdown -Path $examplesPath
 
@@ -961,6 +961,9 @@ function Update-M365DSCResourceDocumentationPage
             'Azure*'
             { $targetFolder = 'azure'
             }
+            'Commerce*'
+            { $targetFolder = 'commerce'
+            }
             'Defender*'
             { $targetFolder = 'Defender'
             }
@@ -1002,6 +1005,13 @@ function Update-M365DSCResourceDocumentationPage
             }
             'Teams*'
             { $targetFolder = 'teams'
+            }
+            'Viva*'
+            { $targetFolder = 'viva'
+            }
+            default
+            {
+                throw "Unknown resource prefix for file '$($file.Name)'. Cannot determine target folder."
             }
         }
         $destinationFolder = Join-Path -Path $resourceDocsRoot -ChildPath $targetFolder

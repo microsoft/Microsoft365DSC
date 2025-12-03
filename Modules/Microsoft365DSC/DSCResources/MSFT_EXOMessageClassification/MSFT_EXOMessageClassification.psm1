@@ -112,7 +112,7 @@ function Get-TargetResource
                 if (-not [System.String]::IsNullOrEmpty($DisplayName))
                 {
                     Write-Verbose -Message "Couldn't retrieve Message Classification policy by Id {$($Identity)}. Trying by DisplayName."
-                    $MessageClassification = Get-MessageClassification -Identity $DisplayName
+                    $MessageClassification = Get-MessageClassification -Identity $DisplayName -ErrorAction SilentlyContinue
                 }
                 if ($null -eq $MessageClassification)
                 {

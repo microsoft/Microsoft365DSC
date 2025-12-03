@@ -495,40 +495,39 @@ function Get-TargetResource
 
     Write-Verbose -Message 'Getting EXOOrganizationConfig'
 
-    if ($Global:CurrentModeIsExport)
-    {
-        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters `
-            -SkipModuleReload $true
-    }
-    else
-    {
-        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters
-    }
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullReturn = @{
-        IsSingleInstance = 'Yes'
-    }
-
     try
     {
-        $ConfigSettings = Get-OrganizationConfig -ErrorAction Stop
-        if ($null -eq $ConfigSettings)
+        if (-not $Script:exportedInstance)
         {
-            throw 'There was an error retrieving values from the Get function in EXOOrganizationConfig.'
+            $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
+                -InboundParameters $PSBoundParameters
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullReturn = @{
+                IsSingleInstance = 'Yes'
+                Ensure = 'Absent'
+            }
+
+            $ConfigSettings = Get-OrganizationConfig -ErrorAction SilentlyContinue
+            if ($null -eq $ConfigSettings)
+            {
+                throw 'There was an error retrieving values from the Get function in EXOOrganizationConfig.'
+            }
+        }
+        else
+        {
+            $ConfigSettings = $Script:exportedInstance
         }
 
         # DelayedDelicensingEnabledState
@@ -1815,6 +1814,7 @@ function Export-TargetResource
 
     try
     {
+        $organizationConfig = Get-OrganizationConfig -ErrorAction Stop
         if ($null -ne $Global:M365DSCExportResourceInstancesCount)
         {
             $Global:M365DSCExportResourceInstancesCount++

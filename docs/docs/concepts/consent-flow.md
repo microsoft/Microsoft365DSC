@@ -11,7 +11,7 @@ When using PnP PowerShell for the first time you have to consent the PnP Managem
 Register-PnPManagementShellAccess
 ```
 
-For more information, check out the [SharePoint PnP PowerShell Permissions](../../user-guide/get-started/authentication-and-permissions/#sharepoint-pnp-powershell-permissions) section on the **Authentication and Permissions** page.
+For more information, check out the [SharePoint PnP PowerShell Permissions](../user-guide/get-started/authentication-and-permissions.md#sharepoint-pnp-powershell-permissions) section on the **Authentication and Permissions** page.
 
 ## Microsoft Graph
 
@@ -36,4 +36,4 @@ Read                           {Organization.Read.All}
 Update                         {Organization.ReadWrite.All}
 ```
 
-For more information, check out the [Microsoft Graph Permissions](../../user-guide/get-started/authentication-and-permissions/#microsoft-graph-permissions) section on the **Authentication and Permissions** page.
+For more information, check out the [Microsoft Graph Permissions](../user-guide/get-started/authentication-and-permissions.md/#microsoft-graph-permissions) section on the **Authentication and Permissions** page.

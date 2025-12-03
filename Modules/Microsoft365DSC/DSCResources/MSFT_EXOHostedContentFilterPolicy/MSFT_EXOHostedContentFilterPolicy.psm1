@@ -263,39 +263,38 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of HostedContentFilterPolicy for $Identity"
 
-    if ($Global:CurrentModeIsExport)
-    {
-        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters `
-            -SkipModuleReload $true
-    }
-    else
-    {
-        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters
-    }
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = 'Absent'
     try
     {
-        $HostedContentFilterPolicy = Get-HostedContentFilterPolicy -Identity $Identity -ErrorAction SilentlyContinue
-        if ($null -eq $HostedContentFilterPolicy)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Identity -ne $Identity)
         {
-            Write-Verbose -Message "HostedContentFilterPolicy $($Identity) does not exist."
-            return $nullReturn
+            $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
+                -InboundParameters $PSBoundParameters
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullReturn = $PSBoundParameters
+            $nullReturn.Ensure = 'Absent'
+
+            $HostedContentFilterPolicy = Get-HostedContentFilterPolicy -Identity $Identity -ErrorAction SilentlyContinue
+            if ($null -eq $HostedContentFilterPolicy)
+            {
+                Write-Verbose -Message "HostedContentFilterPolicy $($Identity) does not exist."
+                return $nullReturn
+            }
+        }
+        else
+        {
+            $HostedContentFilterPolicy = $Script:exportedInstance
         }
 
         [System.String[]]$AllowedSendersValues = $HostedContentFilterPolicy.AllowedSenders.Sender | Select-Object Address -ExpandProperty Address
@@ -321,6 +320,9 @@ function Get-TargetResource
         {
             $BlockedSenderDomains = @()
         }
+
+        Write-Verbose -Message "Found HostedContentFilterPolicy $($Identity)"
+
         $result = @{
             Ensure                               = 'Present'
             Identity                             = $Identity
@@ -386,8 +388,6 @@ function Get-TargetResource
             $result.MakeDefault = $true
         }
 
-        Write-Verbose -Message "Found HostedContentFilterPolicy $($Identity)"
-        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
         return $result
     }
     catch
@@ -681,8 +681,7 @@ function Set-TargetResource
         -InboundParameters $PSBoundParameters
 
     Write-Verbose (Get-HostedContentFilterPolicy | Out-String)
-    $HostedContentFilterPolicy = Get-HostedContentFilterPolicy -Identity $Identity
-
+    $HostedContentFilterPolicy = Get-HostedContentFilterPolicy -Identity $Identity -ErrorAction SilentlyContinue
     $HostedContentFilterPolicyParams = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
     if ($IntraOrgFilterState -eq 'Default')
@@ -1071,7 +1070,7 @@ function Export-TargetResource
         [array]$HostedContentFilterPolicies = Get-HostedContentFilterPolicy -ErrorAction Stop
         $dscContent = ''
 
-        if ($HostedContentFilterPolicies.Length -eq 0)
+        if ($HostedContentFilterPolicies.Count -eq 0)
         {
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
@@ -1098,6 +1097,7 @@ function Export-TargetResource
                 CertificatePath       = $CertificatePath
                 AccessTokens          = $AccessTokens
             }
+            $Script:exportedInstance = $HostedContentFilterPolicy
             Write-M365DSCHost -Message "    |---[$i/$($HostedContentFilterPolicies.Length)] $($HostedContentFilterPolicy.Identity)" -DeferWrite
             $Results = Get-TargetResource @Params
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `

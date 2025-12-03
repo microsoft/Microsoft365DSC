@@ -63,47 +63,73 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $ApplicationSecret
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Getting configuration for Tenant Allow/Block List Items with Action {$Action} and Value {$Value}"
 
-    $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-        -InboundParameters $PSBoundParameters
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullResult = $PSBoundParameters
-    $nullResult.Ensure = 'Absent'
-    $nullResult.ListType = $ListType
     try
     {
-        $getParams = @{ ListType = $ListType; Entry = $Value; }
-        if ($Action -eq 'Allow')
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Action -ne $Action -or $Script:exportedInstance.Value -ne $Value -or $Script:exportedInstance.ListType -ne $ListType)
         {
-            $getParams.Allow = $true
+            $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
+                -InboundParameters $PSBoundParameters
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullResult = $PSBoundParameters
+            $nullResult.Ensure = 'Absent'
+            $nullResult.ListType = $ListType
+
+            $getParams = @{ ListType = $ListType; Entry = $Value; }
+            if ($Action -eq 'Allow')
+            {
+                $getParams.Allow = $true
+            }
+            elseif ($Action -eq 'Block')
+            {
+                $getParams.Block = $true
+            }
+            $instance = Get-TenantAllowBlockListItems @getParams -ErrorAction SilentlyContinue
+            if ($null -eq $instance)
+            {
+                Write-Verbose -Message "No EXO Tenant Allow/Block List Item found for Action {$Action} and Value {$Value}"
+                return $nullResult
+            }
         }
-        elseif ($Action -eq 'Block')
+        else
         {
-            $getParams.Block = $true
-        }
-        $instance = Get-TenantAllowBlockListItems @getParams -ErrorAction SilentlyContinue
-        if ($null -eq $instance)
-        {
-            return $nullResult
+            $instance = $Script:exportedInstance
         }
 
-        Write-Verbose -Message "Found an instance with Action {$Action}, Value {$Value}, and ListType {$ListType}"
+        Write-Verbose -Message "Found an EXO Tenant Allow/Block List Item with Action {$Action}, Value {$Value}, and ListType {$ListType}"
+
         $results = @{
             Action                = $Action
             Value                 = $instance.Value
@@ -119,6 +145,10 @@ function Get-TargetResource
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint
             ApplicationSecret     = $ApplicationSecret
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
+            ManagedIdentity       = $ManagedIdentity.IsPresent
+            AccessTokens          = $AccessTokens
         }
         return $results
     }
@@ -196,10 +226,31 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $ApplicationSecret
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Setting configuration for Tenant Allow/Block List Items with Action {$Action} and Value {$Value}"
+
+    if ($PSBoundParameters.ContainsKey('ApplicationSecret'))
+    {
+        Write-Warning -Message "The 'ApplicationSecret' parameter is deprecated and will be removed in future versions."
+    }
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -345,8 +396,29 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $ApplicationSecret
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
+
+    if ($PSBoundParameters.ContainsKey('ApplicationSecret'))
+    {
+        Write-Warning -Message "The 'ApplicationSecret' parameter is deprecated and will be removed in future versions."
+    }
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
@@ -390,8 +462,20 @@ function Export-TargetResource
         $CertificateThumbprint,
 
         [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword,
+
+        [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
@@ -413,23 +497,18 @@ function Export-TargetResource
     {
         $ListTypes = ('FileHash', 'Sender', 'Url')
 
-        [array]$getValues = @()
-
         foreach ($ListType in $ListTypes)
         {
-            $listValues = Get-TenantAllowBlockListItems -ListType $ListType -ErrorAction Stop
-            $listValues | ForEach-Object {
-                $getValues += @{
-                    Action   = $_.Action
-                    Value    = $_.Value
-                    ListType = $ListType
-                }
+            [array]$listValues = Get-TenantAllowBlockListItems -ListType $ListType -ErrorAction Stop
+            foreach ($value in $listValues)
+            {
+                $value | Add-Member -MemberType NoteProperty -Name ListType -Value $ListType
             }
         }
 
         $i = 1
         $dscContent = ''
-        if ($getValues.Length -eq 0)
+        if ($listValues.Count -eq 0)
         {
             Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
         }
@@ -437,7 +516,7 @@ function Export-TargetResource
         {
             Write-M365DSCHost -Message "`r`n" -DeferWrite
         }
-        foreach ($config in $getValues)
+        foreach ($config in $listValues)
         {
             if ($null -ne $Global:M365DSCExportResourceInstancesCount)
             {
@@ -449,7 +528,7 @@ function Export-TargetResource
             {
                 $displayedKey = $config.displayName
             }
-            Write-M365DSCHost -Message "    |---[$i/$($getValues.Count)] $displayedKey" -DeferWrite
+            Write-M365DSCHost -Message "    |---[$i/$($listValues.Count)] $displayedKey" -DeferWrite
             $params = @{
                 Action                = $config.Action
                 ListType              = $config.ListType
@@ -460,11 +539,13 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
                 ApplicationSecret     = $ApplicationSecret
-
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
+                ManagedIdentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
             }
-
+            $Script:exportedInstance = $config
             $Results = Get-TargetResource @Params
-
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `

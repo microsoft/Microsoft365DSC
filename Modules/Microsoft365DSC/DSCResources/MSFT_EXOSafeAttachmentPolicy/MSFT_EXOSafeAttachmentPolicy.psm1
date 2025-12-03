@@ -75,42 +75,41 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of SafeAttachmentPolicy for $Identity"
 
-    if ($Global:CurrentModeIsExport)
-    {
-        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters `
-            -SkipModuleReload $true
-    }
-    else
-    {
-        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters
-    }
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = 'Absent'
-
     try
     {
-        $SafeAttachmentPolicies = Get-SafeAttachmentPolicy -ErrorAction Stop
-        $SafeAttachmentPolicy = $SafeAttachmentPolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }
-        if (-not $SafeAttachmentPolicy)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Identity -ne $Identity)
         {
-            Write-Verbose -Message "SafeAttachmentPolicy $($Identity) does not exist."
-            return $nullReturn
+            $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
+                -InboundParameters $PSBoundParameters
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullReturn = $PSBoundParameters
+            $nullReturn.Ensure = 'Absent'
+
+            $SafeAttachmentPolicy = Get-SafeAttachmentPolicy -Identity $Identity -ErrorAction SilentlyContinue
+            if ($null -eq $SafeAttachmentPolicy)
+            {
+                Write-Verbose -Message "SafeAttachmentPolicy $($Identity) does not exist."
+                return $nullReturn
+            }
         }
+        else
+        {
+            $SafeAttachmentPolicy = $Script:exportedInstance
+        }
+
+        Write-Verbose -Message "Found existing instance of SafeAttachmentPolicy $($Identity)"
 
         $result = @{
             Ensure                = 'Present'
@@ -131,8 +130,6 @@ function Get-TargetResource
             AccessTokens          = $AccessTokens
         }
 
-        Write-Verbose -Message "Found SafeAttachmentPolicy $($Identity)"
-        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
         return $result
     }
     catch
@@ -239,9 +236,7 @@ function Set-TargetResource
     $tenantIdValue = $TenantId
     $SafeAttachmentPolicyParams.Remove('TenantId') | Out-Null
 
-    $SafeAttachmentPolicies = Get-SafeAttachmentPolicy
-
-    $SafeAttachmentPolicy = $SafeAttachmentPolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }
+    $SafeAttachmentPolicy = Get-SafeAttachmentPolicy -Identity $Identity -ErrorAction SilentlyContinue
     if ('Present' -eq $Ensure )
     {
         $StopProcessingPolicy = $false
@@ -512,6 +507,7 @@ function Export-TargetResource
                     CertificatePath       = $CertificatePath
                     AccessTokens          = $AccessTokens
                 }
+                $Script:exportedInstance = $SafeAttachmentPolicy
                 $Results = Get-TargetResource @Params
                 $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                     -ConnectionMode $ConnectionMode `

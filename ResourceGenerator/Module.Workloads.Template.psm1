@@ -213,7 +213,7 @@ function Export-TargetResource
             }
 
             $displayedKey = $config.<PrimaryKey>
-            if (-not [String]::IsNullOrEmpty($config.displayName))
+            if (-not [System.String]::IsNullOrEmpty($config.displayName))
             {
                 $displayedKey = $config.displayName
             }

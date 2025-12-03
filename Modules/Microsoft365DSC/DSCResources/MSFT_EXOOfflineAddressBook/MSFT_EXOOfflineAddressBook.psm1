@@ -67,70 +67,60 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting Offline Address Book configuration for $Name"
 
-    if ($Global:CurrentModeIsExport)
-    {
-        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters `
-            -SkipModuleReload $true
-    }
-    else
-    {
-        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters
-    }
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = 'Absent'
-
     try
     {
-        if ($null -eq (Get-Command 'Get-OfflineAddressBook' -ErrorAction SilentlyContinue))
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Name -ne $Name)
         {
-            return $nullReturn
-        }
+            $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
+                -InboundParameters $PSBoundParameters
 
-        $AllOfflineAddressBooks = Get-OfflineAddressBook
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
 
-        $OfflineAddressBook = $AllOfflineAddressBooks | Where-Object -FilterScript { $_.Name -eq $Name }
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
 
-        if ($null -eq $OfflineAddressBook)
-        {
-            Write-Verbose -Message "Offline Address Book $($Name) does not exist."
-            return $nullReturn
+            $nullReturn = $PSBoundParameters
+            $nullReturn.Ensure = 'Absent'
+
+            $OfflineAddressBook = Get-OfflineAddressBook -Identity $Name -ErrorAction SilentlyContinue
+            if ($null -eq $OfflineAddressBook)
+            {
+                Write-Verbose -Message "Offline Address Book $($Name) does not exist."
+                return $nullReturn
+            }
         }
         else
         {
-            $result = @{
-                Name                  = $OfflineAddressBook.Name
-                AddressLists          = $OfflineAddressBook.AddressLists
-                ConfiguredAttributes  = $OfflineAddressBook.ConfiguredAttributes
-                DiffRetentionPeriod   = $OfflineAddressBook.DiffRetentionPeriod
-                IsDefault             = $OfflineAddressBook.IsDefault
-                Ensure                = 'Present'
-                Credential            = $Credential
-                ApplicationId         = $ApplicationId
-                CertificateThumbprint = $CertificateThumbprint
-                CertificatePath       = $CertificatePath
-                CertificatePassword   = $CertificatePassword
-                ManagedIdentity       = $ManagedIdentity.IsPresent
-                TenantId              = $TenantId
-                AccessTokens          = $AccessTokens
-            }
-
-            Write-Verbose -Message "Found Offline Address Book $($Name)"
-            return $result
+            $OfflineAddressBook = $Script:exportedInstance
         }
+
+        Write-Verbose -Message "Offline Address Book with Name $($OfflineAddressBook.Name) found"
+
+        $result = @{
+            Name                  = $OfflineAddressBook.Name
+            AddressLists          = $OfflineAddressBook.AddressLists
+            ConfiguredAttributes  = $OfflineAddressBook.ConfiguredAttributes
+            DiffRetentionPeriod   = $OfflineAddressBook.DiffRetentionPeriod
+            IsDefault             = $OfflineAddressBook.IsDefault
+            Ensure                = 'Present'
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            CertificateThumbprint = $CertificateThumbprint
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
+            ManagedIdentity       = $ManagedIdentity.IsPresent
+            TenantId              = $TenantId
+            AccessTokens          = $AccessTokens
+        }
+
+        return $result
     }
     catch
     {
@@ -401,16 +391,9 @@ function Export-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    if ($null -eq (Get-Command 'Get-OfflineAddressBook' -ErrorAction SilentlyContinue))
-    {
-        Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
-        return $nullReturn
-    }
-
     try
     {
         [array]$AllOfflineAddressBooks = Get-OfflineAddressBook -ErrorAction Stop
-
         $dscContent = ''
 
         if ($AllOfflineAddressBooks.Length -eq 0)
@@ -442,6 +425,7 @@ function Export-TargetResource
                 CertificatePath       = $CertificatePath
                 AccessTokens          = $AccessTokens
             }
+            $Script:exportedInstance = $OfflineAddressBook
             $Results = Get-TargetResource @Params
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `

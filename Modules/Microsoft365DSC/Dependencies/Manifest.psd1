@@ -22,7 +22,7 @@
         },
         @{
             ModuleName      = 'DSCParser'
-            RequiredVersion = '2.0.0.20'
+            RequiredVersion = '2.0.0.21'
         },
         @{
             ModuleName      = 'ExchangeOnlineManagement'
@@ -130,12 +130,16 @@
         },
         @{
             ModuleName      = "MSCloudLoginAssistant"
-            RequiredVersion = "1.1.54"
+            RequiredVersion = "1.1.55"
         },
         @{
             ModuleName      = 'PnP.PowerShell'
             RequiredVersion = '1.12.0'
             InstallLocation = 'WindowsPowerShell'
+            # TODO: Review again once ModuleFast can work with additional properties
+            # https://github.com/microsoft/Microsoft365DSC/pull/6726
+            # https://github.com/ykuijs/M365DSC_CICD/issues/53
+            #DependsOn       = @('Microsoft.Graph.Authentication')
         },
         @{
             ModuleName      = 'PSDesiredStateConfiguration'

@@ -264,7 +264,7 @@ function Get-TargetResource
             }
 
             $assignmentResult += @{
-                RunRemediationScript = $assignment.RunRemediationScript
+                RunRemediationScript = $assignment.runRemediationScript
                 RunSchedule          = @{
                     DataType = $assignment.RunSchedule.AdditionalProperties.'@odata.type'
                     Date     = $assignment.RunSchedule.AdditionalProperties.date
@@ -461,7 +461,7 @@ function Set-TargetResource
                 }
             }
             $assignmentsHash += @{
-                runRemediationScript = $assignment.RunRemediationScript
+                runRemediationScript = $true
                 runSchedule          = $runSchedule
                 target               = $assignmentTarget.target
             }
@@ -540,7 +540,7 @@ function Set-TargetResource
                 }
             }
             $assignmentsHash += @{
-                runRemediationScript = $assignment.RunRemediationScript
+                runRemediationScript = $true
                 runSchedule          = $runSchedule
                 target               = $assignmentTarget.target
             }

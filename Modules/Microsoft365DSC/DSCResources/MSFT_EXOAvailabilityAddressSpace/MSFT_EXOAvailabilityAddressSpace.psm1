@@ -76,43 +76,41 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of AvailabilityAddressSpace with Identity $Identity"
 
-    if ($Global:CurrentModeIsExport)
-    {
-        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters `
-            -SkipModuleReload $true
-    }
-    else
-    {
-        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters
-    }
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = 'Absent'
-
     try
     {
-        if (-not [System.String]::IsNullOrEmpty($ForestName))
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Identity -ne $Identity)
         {
-            $AvailabilityAddressSpace = Get-AvailabilityAddressSpace -Identity $ForestName -ErrorAction SilentlyContinue
+            $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
+                -InboundParameters $PSBoundParameters
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullReturn = $PSBoundParameters
+            $nullReturn.Ensure = 'Absent'
+
+            if (-not [System.String]::IsNullOrEmpty($ForestName))
+            {
+                $AvailabilityAddressSpace = Get-AvailabilityAddressSpace -Identity $ForestName -ErrorAction SilentlyContinue
+            }
+            if ($null -eq $AvailabilityAddressSpace)
+            {
+                Write-Verbose -Message "AvailabilityAddressSpace $($ForestName) does not exist."
+                return $nullReturn
+            }
         }
-        if ($null -eq $AvailabilityAddressSpace)
+        else
         {
-            Write-Verbose -Message "AvailabilityAddressSpace $($ForestName) does not exist."
-            return $nullReturn
+            $AvailabilityAddressSpace = $Script:exportedInstance
         }
 
         if ($null -eq $AvailabilityAddressSpace.TargetAutodiscoverEpr -or $AvailabilityAddressSpace.TargetAutodiscoverEpr -eq '' )
@@ -123,6 +121,8 @@ function Get-TargetResource
         {
             $TargetAutodiscoverEpr = $AvailabilityAddressSpace.TargetAutodiscoverEpr.ToString()
         }
+
+        Write-Verbose -Message "Found AvailabilityAddressSpace $($Identity)"
 
         $result = @{
             Identity              = $Identity
@@ -143,8 +143,6 @@ function Get-TargetResource
             AccessTokens          = $AccessTokens
         }
 
-        Write-Verbose -Message "Found AvailabilityAddressSpace $($Identity)"
-        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
         return $result
     }
     catch
@@ -504,6 +502,7 @@ function Export-TargetResource
                 CertificatePath       = $CertificatePath
                 AccessTokens          = $AccessTokens
             }
+            $Script:exportedInstance = $AvailabilityAddressSpace
             $Results = Get-TargetResource @Params
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `

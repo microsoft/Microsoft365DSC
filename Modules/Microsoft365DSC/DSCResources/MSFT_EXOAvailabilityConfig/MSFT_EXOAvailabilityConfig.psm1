@@ -50,46 +50,47 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of Availability Config for account $OrgWideAccount"
 
-    if ($Global:CurrentModeIsExport)
-    {
-        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters `
-            -SkipModuleReload $true
-    }
-    else
-    {
-        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters
-    }
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = 'Absent'
-
     try
     {
-        $AvailabilityConfigs = Get-AvailabilityConfig -ErrorAction SilentlyContinue
-        if ($null -ne $AvailabilityConfigs -and $null -ne $AvailabilityConfigs.OrgWideAccount)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.OrgWideAccount -ne $OrgWideAccount)
         {
-            $user = Get-User -Identity $OrgWideAccount -ErrorAction SilentlyContinue
-            $AvailabilityConfig = ($AvailabilityConfigs | Where-Object -FilterScript { $_.OrgWideAccount -match $user.Id })
+            $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
+                -InboundParameters $PSBoundParameters
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullReturn = $PSBoundParameters
+            $nullReturn.Ensure = 'Absent'
+
+            $AvailabilityConfigs = Get-AvailabilityConfig -ErrorAction SilentlyContinue
+            if ($null -ne $AvailabilityConfigs -and $null -ne $AvailabilityConfigs.OrgWideAccount)
+            {
+                $user = Get-User -Identity $OrgWideAccount -ErrorAction SilentlyContinue
+                $AvailabilityConfig = ($AvailabilityConfigs | Where-Object -FilterScript { $_.OrgWideAccount -match $user.Id })
+            }
+            if ($null -eq $AvailabilityConfig)
+            {
+                Write-Verbose -Message "Availability config for [$($OrgWideAccount)] does not exist."
+                return $nullReturn
+            }
         }
-        if ($null -eq $AvailabilityConfig)
+        else
         {
-            Write-Verbose -Message "Availability config for [$($OrgWideAccount)] does not exist."
-            return $nullReturn
+            $AvailabilityConfig = $Script:exportedInstance
         }
+
+        Write-Verbose -Message "Found Availability Config for $($OrgWideAccount)"
+
         $result = @{
             OrgWideAccount        = $OrgWideAccount
             Ensure                = 'Present'
@@ -103,7 +104,6 @@ function Get-TargetResource
             AccessTokens          = $AccessTokens
         }
 
-        Write-Verbose -Message "Found Availability Config for $($OrgWideAccount)"
         return $result
     }
     catch
@@ -359,6 +359,7 @@ function Export-TargetResource
             CertificatePath       = $CertificatePath
             AccessTokens          = $AccessTokens
         }
+        $Script:exportedInstance = $AvailabilityConfig
         $Results = Get-TargetResource @Params
         $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
             -ConnectionMode $ConnectionMode `

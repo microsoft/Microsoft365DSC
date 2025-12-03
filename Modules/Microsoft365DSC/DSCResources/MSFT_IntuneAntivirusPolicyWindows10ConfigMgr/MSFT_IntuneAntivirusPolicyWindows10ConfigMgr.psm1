@@ -826,7 +826,8 @@ function Set-TargetResource
             -CreationSource 'SccmAV' `
             -Platforms $platforms `
             -Technologies $technologies `
-            -Settings $settings
+            -Settings $settings `
+            -RoleScopeTagIds $RoleScopeTagIds
 
         #region resource generator code
 

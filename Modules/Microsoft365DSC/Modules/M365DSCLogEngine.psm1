@@ -445,7 +445,7 @@ Represents the type of events that need to be reported to the endpoint.
 .Functionality
 Public
 #>
-function New-M365DSCNotificationEndPointRegistration
+function New-M365DSCNotificationEndpointRegistration
 {
     [CmdletBinding()]
     param
@@ -495,7 +495,7 @@ Represents the type of events that need to be reported to the endpoint.
 .Functionality
 Public
 #>
-function Remove-M365DSCNotificationEndPointRegistration
+function Remove-M365DSCNotificationEndpointRegistration
 {
     [CmdletBinding()]
     param
@@ -547,7 +547,7 @@ Represents the type of events that need to be reported to the endpoint.
 .Functionality
 Public
 #>
-function Get-M365DSCNotificationEndPointRegistration
+function Get-M365DSCNotificationEndpointRegistration
 {
     [CmdletBinding()]
     param
@@ -619,7 +619,7 @@ function Send-M365DSCNotificationEndPointMessage
     )
 
     # Get all notification endpoints that are registered for the given EventType
-    [Array]$endpointsToContact = Get-M365DSCNotificationEndPointRegistration -EventType $EventType
+    [Array]$endpointsToContact = Get-M365DSCNotificationEndpointRegistration -EventType $EventType
 
     $messageBody = @{
         Details   = $EventDetails
@@ -741,8 +741,8 @@ Export-ModuleMember -Function @(
     'Export-M365DSCDiagnosticData',
     'Get-M365DSCLoggingOption',
     'New-M365DSCLogEntry',
-    'Get-M365DSCNotificationEndPointRegistration',
-    'New-M365DSCNotificationEndPointRegistration',
-    'Remove-M365DSCNotificationEndPointRegistration',
+    'Get-M365DSCNotificationEndpointRegistration',
+    'New-M365DSCNotificationEndpointRegistration',
+    'Remove-M365DSCNotificationEndpointRegistration',
     'Set-M365DSCLoggingOption'
 )

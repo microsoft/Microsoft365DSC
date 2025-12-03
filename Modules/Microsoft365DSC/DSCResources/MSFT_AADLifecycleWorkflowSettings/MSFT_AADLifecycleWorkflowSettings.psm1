@@ -133,11 +133,6 @@ function Set-TargetResource
         $UseCompanyBranding,
 
         [Parameter()]
-        [ValidateSet('Present', 'Absent')]
-        [System.String]
-        $Ensure = 'Present',
-
-        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -215,11 +210,6 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $UseCompanyBranding,
-
-        [Parameter()]
-        [ValidateSet('Present', 'Absent')]
-        [System.String]
-        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]

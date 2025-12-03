@@ -62,6 +62,28 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         }
         # Test contexts
 
+        Context -Name "User doesn't exist" -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    Ensure                       = "Present";
+                    FocusedInboxOn               = $True;
+                    Identity                     = "admin@contoso.com";
+                }
+
+                Mock -CommandName Get-FocusedInbox -MockWith {
+                    return $null
+                }
+            }
+
+            It 'Should return false from the Test method' {
+                Test-TargetResource @testParams | Should -Be $false
+            }
+
+            It 'Should return Absent from the Get method' {
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Absent'
+            }
+        }
+
         Context -Name 'Settings are not in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
@@ -102,30 +124,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
         }
-
-        Context -Name "User doesn't exist" -Fixture {
-            BeforeAll {
-                $testParams = @{
-                    Ensure                       = "Present";
-                    FocusedInboxOn               = $True;
-                    Identity                     = "admin@contoso.com";
-                }
-
-                Mock -CommandName Get-FocusedInbox -MockWith {
-                    return $null
-                }
-            }
-
-            It 'Should return false from the Test method' {
-                Test-TargetResource @testParams | Should -Be $false
-            }
-
-            It 'Should return Absent from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should -Be 'Absent'
-            }
-        }
-
-
 
         Context -Name 'ReverseDSC Tests' -Fixture {
             BeforeAll {

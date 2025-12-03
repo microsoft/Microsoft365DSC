@@ -85,7 +85,10 @@ function Get-TargetResource
 
         foreach ($key in $currentProperties.Keys)
         {
-            $convertedProperty = Get-SPOUserProfilePropertyInstance -Key $key -Value $currentProperties[$key]
+            $convertedProperty = [ordered]@{
+                Key   = $Key
+                Value = $Value
+            }
             $propertiesValue += $convertedProperty
         }
 

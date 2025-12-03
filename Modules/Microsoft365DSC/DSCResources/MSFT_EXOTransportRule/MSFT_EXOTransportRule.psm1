@@ -736,8 +736,7 @@ function Get-TargetResource
             Add-M365DSCTelemetryEvent -Data $data
             #endregion
 
-            $TransportRule = Get-TransportRule -Identity $Name -ErrorAction 'SilentlyContinue'
-
+            $TransportRule = Get-TransportRule -Identity $Name -ErrorAction SilentlyContinue
             if ($null -eq $TransportRule)
             {
                 Write-Verbose -Message "Transport Rule $($Name) does not exist."
@@ -747,15 +746,6 @@ function Get-TargetResource
         else
         {
             $TransportRule = $Script:exportedInstance
-        }
-
-        if ($TransportRule.State -eq 'Enabled')
-        {
-            $enabled = $true
-        }
-        else
-        {
-            $enabled = $false
         }
 
         $result = @{
@@ -797,7 +787,7 @@ function Get-TargetResource
             CopyTo                                       = $TransportRule.CopyTo
             DeleteMessage                                = $TransportRule.DeleteMessage
             DlpPolicy                                    = $TransportRule.DlpPolicy
-            Enabled                                      = $enabled
+            Enabled                                      = $TransportRule.State -eq 'Enabled'
             ExceptIfADComparisonAttribute                = $TransportRule.ExceptIfADComparisonAttribute
             ExceptIfADComparisonOperator                 = $TransportRule.ExceptIfADComparisonOperator
             ExceptIfAnyOfCcHeader                        = $TransportRule.ExceptIfAnyOfCcHeader

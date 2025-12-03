@@ -1038,8 +1038,8 @@ function Export-TargetResource
             -All `
             -ErrorAction Stop | Where-Object `
             -FilterScript {
-            $_.TemplateReference.TemplateId -eq $policyTemplateID
-        }
+                $_.TemplateReference.TemplateId -eq $policyTemplateID
+            }
         #endregion
 
         $i = 1

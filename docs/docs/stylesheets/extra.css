@@ -1,9 +1,112 @@
-/* Sets the width of the center column a bit wider than default, so tables render better. */
+/* Set the width of the center column a bit wider than default, so tables render better. */
 .md-grid {
-    max-width: initial;
-    margin: 0 15%;
+    max-width: 100%;
+    margin-left: clamp(2%, 10vw, 15%);
+    margin-right: clamp(2%, 10vw, 15%);
 }
-/* Hides the secondary sidebar, which is not used in this documentation site. */
+
+/* Hide the secondary sidebar, which is not used in this documentation site. */
 .md-sidebar--secondary:not([hidden]) {
     display: none;
+}
+
+/* Increase the sidebar width for longer menu titles. */
+:root {
+    --md-sidebar-width: clamp(14rem, 15vw, 16rem);
+}
+
+.md-sidebar {
+    width: var(--md-sidebar-width);
+}
+
+/* Sidebar separator: visible on wide screens when the sidebar is docked */
+@media screen and (min-width: 76.25em) {
+    .md-sidebar__scrollwrap {
+        /* visual separator */
+        border-right: 1px solid rgba(0,0,0,0.08);
+        /* subtle depth if you prefer */
+        box-shadow: 1px 0 0 rgba(0,0,0,0.02) inset;
+    }
+
+    /* theme-aware color for dark/slate schemes */
+    .md-theme--slate .md-sidebar__scrollwrap,
+    .md-theme--dark .md-sidebar__scrollwrap {
+        border-right-color: rgba(255,255,255,0.06);
+        box-shadow: 1px 0 0 rgba(255,255,255,0.02) inset;
+    }
+}
+
+/* Hide separator when sidebar overlays content (mobile/tablet) */
+@media screen and (max-width: 76.25em) {
+    .md-sidebar__scrollwrap {
+        border-right: none;
+        box-shadow: none;
+    }
+}
+
+.md-nav--primary {
+    width: calc(var(--md-sidebar-width) - 1rem);
+}
+
+@media screen and (max-width: 76.25em) {
+    [dir=ltr] .md-sidebar--primary {
+        width: var(--md-sidebar-width);
+        left: calc(-1 * var(--md-sidebar-width));
+        transition: transform .25s ease;
+    }
+
+    [data-md-toggle=drawer]:checked~.md-container .md-sidebar--primary {
+        transform: translateX(var(--md-sidebar-width));
+    }
+}
+
+.md-sidebar__scrollwrap {
+    margin: 0;
+    padding-bottom: 1rem;
+}
+
+/* Adjust side margins for medium screens */
+@media screen and (max-width: 1200px) {
+    .md-grid {
+        margin-left: 5%;
+        margin-right: 5%;
+    }
+}
+
+/* Normal screens */
+@media screen and (min-width: 1200px) {
+    .md-grid {
+        margin-left: 10%;
+        margin-right: 10%;
+    }
+}
+
+@media screen and (min-width: 1500px) {
+    .md-grid {
+        margin-left: 15%;
+        margin-right: 15%;
+    }
+}
+
+/* Wide/ultra-wide screens */
+@media screen and (min-width: 2200px) {
+    .md-grid {
+        margin-left: 20%;
+        margin-right: 20%;
+    }
+}
+
+@media screen and (min-width: 2800px) {
+    .md-grid {
+        margin-left: 25%;
+        margin-right: 25%;
+    }
+}
+
+/* High contrast & reduced motion considerations */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition: none !important;
+        animation: none !important;
+    }
 }

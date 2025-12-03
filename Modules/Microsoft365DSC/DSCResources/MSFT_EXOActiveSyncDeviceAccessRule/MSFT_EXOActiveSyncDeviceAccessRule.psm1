@@ -64,46 +64,48 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting Active Sync Device Access Rule configuration for $Identity"
 
-    if ($Global:CurrentModeIsExport)
-    {
-        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters `
-            -SkipModuleReload $true
-    }
-    else
-    {
-        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters
-    }
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = 'Absent'
     try
     {
-        $ActiveSyncDeviceAccessRule = Get-ActiveSyncDeviceAccessRule -Identity "$QueryString ($Characteristic)" -ErrorAction SilentlyContinue
-        if ($null -eq $ActiveSyncDeviceAccessRule)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Identity -ne $Identity)
         {
-            Write-Verbose -Message 'Trying to retrieve instance by Identity'
-            $ActiveSyncDeviceAccessRule = Get-ActiveSyncDeviceAccessRule -Identity $Identity -ErrorAction 'SilentlyContinue'
+            $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
+                -InboundParameters $PSBoundParameters
 
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullReturn = $PSBoundParameters
+            $nullReturn.Ensure = 'Absent'
+
+            $ActiveSyncDeviceAccessRule = Get-ActiveSyncDeviceAccessRule -Identity "$QueryString ($Characteristic)" -ErrorAction SilentlyContinue
             if ($null -eq $ActiveSyncDeviceAccessRule)
             {
-                Write-Verbose -Message "Active Sync Device Access Rule $($Identity) does not exist."
-                return $nullReturn
+                Write-Verbose -Message 'Trying to retrieve instance by Identity'
+                $ActiveSyncDeviceAccessRule = Get-ActiveSyncDeviceAccessRule -Identity $Identity -ErrorAction 'SilentlyContinue'
+
+                if ($null -eq $ActiveSyncDeviceAccessRule)
+                {
+                    Write-Verbose -Message "Active Sync Device Access Rule $($Identity) does not exist."
+                    return $nullReturn
+                }
             }
         }
+        else
+        {
+            $ActiveSyncDeviceAccessRule = $Script:exportedInstance
+        }
+
+        Write-Verbose -Message "Found Active Sync Device Access Rule $($Identity)"
+
         $result = @{
             Identity              = $ActiveSyncDeviceAccessRule.Identity
             AccessLevel           = $ActiveSyncDeviceAccessRule.AccessLevel
@@ -120,7 +122,6 @@ function Get-TargetResource
             AccessTokens          = $AccessTokens
         }
 
-        Write-Verbose -Message "Found Active Sync Device Access Rule $($Identity)"
         return $result
     }
     catch
@@ -416,6 +417,7 @@ function Export-TargetResource
                 CertificatePath       = $CertificatePath
                 AccessTokens          = $AccessTokens
             }
+            $Script:exportedInstance = $ActiveSyncDeviceAccessRule
             $Results = Get-TargetResource @Params
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `

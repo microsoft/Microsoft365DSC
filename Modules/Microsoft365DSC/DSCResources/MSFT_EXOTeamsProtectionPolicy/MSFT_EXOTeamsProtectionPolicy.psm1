@@ -64,60 +64,63 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of EXO Teams Protection Policy"
 
-    $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-        -InboundParameters $PSBoundParameters
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullReturn = @{
-        IsSingleInstance                 = 'Yes'
-        AdminDisplayName                 = $null
-        HighConfidencePhishQuarantineTag = $null
-        MalwareQuarantineTag             = $null
-        ZapEnabled                       = $null
-    }
-
     try
     {
-        $ProtectionPolicy = Get-TeamsProtectionPolicy
-
-        if ($null -eq $ProtectionPolicy)
+        if (-not $Script:exportedInstance)
         {
-            Write-Verbose -Message "Teams Protection Policy does not exist."
-            return $nullReturn
+            $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
+                -InboundParameters $PSBoundParameters
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullReturn = @{
+                IsSingleInstance                 = 'Yes'
+                AdminDisplayName                 = $null
+                HighConfidencePhishQuarantineTag = $null
+                MalwareQuarantineTag             = $null
+                ZapEnabled                       = $null
+            }
+
+            $ProtectionPolicy = Get-TeamsProtectionPolicy -ErrorAction SilentlyContinue
+            if ($null -eq $ProtectionPolicy)
+            {
+                Write-Verbose -Message "Teams Protection Policy does not exist."
+                return $nullReturn
+            }
         }
         else
         {
-            $result = @{
-                IsSingleInstance                 = 'Yes'
-                AdminDisplayName                 = $ProtectionPolicy.AdminDisplayName
-                HighConfidencePhishQuarantineTag = $ProtectionPolicy.HighConfidencePhishQuarantineTag
-                MalwareQuarantineTag             = $ProtectionPolicy.MalwareQuarantineTag
-                ZapEnabled                       = $ProtectionPolicy.ZapEnabled
-                Credential                       = $Credential
-                ApplicationId                    = $ApplicationId
-                CertificateThumbprint            = $CertificateThumbprint
-                CertificatePath                  = $CertificatePath
-                CertificatePassword              = $CertificatePassword
-                ManagedIdentity                  = $ManagedIdentity.IsPresent
-                TenantId                         = $TenantId
-                AccessTokens                     = $AccessTokens
-            }
-
-            Write-Verbose -Message "Found ProtectionPolicy"
-            Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
-            return $result
+            $ProtectionPolicy = $Script:exportedInstance
         }
+
+        Write-Verbose -Message "An EXO Teams Protection Policy was found."
+        $result = @{
+            IsSingleInstance                 = 'Yes'
+            AdminDisplayName                 = $ProtectionPolicy.AdminDisplayName
+            HighConfidencePhishQuarantineTag = $ProtectionPolicy.HighConfidencePhishQuarantineTag
+            MalwareQuarantineTag             = $ProtectionPolicy.MalwareQuarantineTag
+            ZapEnabled                       = $ProtectionPolicy.ZapEnabled
+            Credential                       = $Credential
+            ApplicationId                    = $ApplicationId
+            CertificateThumbprint            = $CertificateThumbprint
+            CertificatePath                  = $CertificatePath
+            CertificatePassword              = $CertificatePassword
+            ManagedIdentity                  = $ManagedIdentity.IsPresent
+            TenantId                         = $TenantId
+            AccessTokens                     = $AccessTokens
+        }
+
+        return $result
     }
     catch
     {
@@ -362,7 +365,7 @@ function Export-TargetResource
 
         $dscContent = ''
 
-        [array]$teamsProtectionPolicy = Get-TeamsProtectionPolicy
+        [array]$teamsProtectionPolicy = Get-TeamsProtectionPolicy -ErrorAction Stop
         if ($null -ne $teamsProtectionPolicy)
         {
             $Params = @{
@@ -376,9 +379,8 @@ function Export-TargetResource
                 CertificatePath       = $CertificatePath
                 AccessTokens          = $AccessTokens
             }
-
+            $Script:exportedInstance = $teamsProtectionPolicy
             $Results = Get-TargetResource @Params
-
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
@@ -391,7 +393,6 @@ function Export-TargetResource
         }
 
         Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
-
         return $dscContent
     }
     catch

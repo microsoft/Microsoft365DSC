@@ -960,10 +960,6 @@ function Export-TargetResource
                 -Credential $Credential `
                 -NoEscape @('FeatureSettings', 'ExcludeTargets', 'IncludeTargets')
 
-            $currentDSCBlock = Remove-M365DSCCimInstanceTrailingCharacterFromExport -DSCBlock $currentDSCBlock
-
-            # FIX #3645
-            $currentDSCBlock = $currentDSCBlock.Replace("}                    State = 'default'`r`n", "}`r`n                    State = 'default'`r`n")
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName

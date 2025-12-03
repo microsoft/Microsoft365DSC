@@ -134,41 +134,41 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting Organization Relationship configuration for $Name"
 
-    if ($Global:CurrentModeIsExport)
-    {
-        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters `
-            -SkipModuleReload $true
-    }
-    else
-    {
-        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters
-    }
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = 'Absent'
-
     try
     {
-        $OrganizationRelationship = Get-OrganizationRelationship -Identity $Name -ErrorAction SilentlyContinue
-        if ($null -eq $OrganizationRelationship)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Name -ne $Name)
         {
-            Write-Verbose -Message "Organization Relationship configuration for $($Name) does not exist."
-            return $nullReturn
+            $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
+                -InboundParameters $PSBoundParameters
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullReturn = $PSBoundParameters
+            $nullReturn.Ensure = 'Absent'
+
+            $OrganizationRelationship = Get-OrganizationRelationship -Identity $Name -ErrorAction SilentlyContinue
+            if ($null -eq $OrganizationRelationship)
+            {
+                Write-Verbose -Message "Organization Relationship configuration for $($Name) does not exist."
+                return $nullReturn
+            }
         }
+        else
+        {
+            $OrganizationRelationship = $Script:exportedInstance
+        }
+
+        Write-Verbose -Message "Organization Relationship with Name $($OrganizationRelationship.Name) found"
 
         $result = @{
             ArchiveAccessEnabled       = $OrganizationRelationship.ArchiveAccessEnabled
@@ -235,7 +235,6 @@ function Get-TargetResource
             $result.Add('TargetOwaURL', '')
         }
 
-        Write-Verbose -Message "Found Organization Relationship configuration for $($Name)"
         return $result
     }
     catch
@@ -425,7 +424,7 @@ function Set-TargetResource
         Confirm                    = $false
     }
     # Removes empty properties from Splat to prevent function throwing errors if parameter is null or empty
-    Remove-M365DSCEmptyValue -Splat $NewOrganizationRelationshipParams
+    Remove-NullEntriesFromHashtable -Hash $NewOrganizationRelationshipParams
 
     $SetOrganizationRelationshipParams = @{
         ArchiveAccessEnabled       = $ArchiveAccessEnabled
@@ -452,7 +451,7 @@ function Set-TargetResource
         Confirm                    = $false
     }
     # Removes empty properties from Splat to prevent function throwing errors if parameter is null or empty
-    Remove-M365DSCEmptyValue -Splat $SetOrganizationRelationshipParams
+    Remove-NullEntriesFromHashtable -Hash $SetOrganizationRelationshipParams
 
     # CASE: Organization Relationship doesn't exist but should;
     if ($Ensure -eq 'Present' -and $currentOrgRelationshipConfig.Ensure -eq 'Absent')
@@ -680,7 +679,6 @@ function Export-TargetResource
     try
     {
         [array]$AllOrgRelationships = Get-OrganizationRelationship -ErrorAction Stop
-
         $dscContent = ''
 
         if ($AllOrganizationRelationships.Length -eq 0)
@@ -712,6 +710,7 @@ function Export-TargetResource
                 CertificatePath       = $CertificatePath
                 AccessTokens          = $AccessTokens
             }
+            $Script:exportedInstance = $relationship
             $Results = Get-TargetResource @Params
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `

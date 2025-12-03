@@ -6,12 +6,20 @@ $Global:SessionSecurityCompliance = $null
 $Script:M365DSCWorkloads = @('AAD', 'ADO', 'AZURE', 'COMMERCE', 'DEFENDER', 'EXO', 'FABRIC', 'INTUNE', 'O365', 'OD', 'PLANNER', 'PP', 'SC', 'SENTINEL', 'SH', 'SPO', 'TEAMS')
 $Script:M365DSCDependenciesValidated = $false
 $Script:IsPowerShellCore = $PSVersionTable.PSEdition -eq 'Core'
+$Script:M365DSCStringReplacementMap = @{}
 if ($null -eq $Script:M365DSCDependencies)
 {
     $Script:M365DSCDependencies = [System.Collections.Generic.Dictionary[System.String, System.Object]]::new([System.StringComparer]::OrdinalIgnoreCase)
     $dependencies = (Import-PowerShellDataFile "$PSScriptRoot/../Dependencies/Manifest.psd1").Dependencies
     foreach ($dependency in $dependencies)
     {
+        # TODO: Review again once ModuleFast can work with additional properties
+        # https://github.com/microsoft/Microsoft365DSC/pull/6726
+        # https://github.com/ykuijs/M365DSC_CICD/issues/53
+        if ($dependency.ModuleName -eq 'PnP.PowerShell')
+        {
+            $dependency.DependsOn = @('Microsoft.Graph.Authentication')
+        }
         $Script:M365DSCDependencies.Add($dependency.ModuleName, $dependency)
     }
 
@@ -1224,6 +1232,12 @@ function Test-M365DSCTargetResource
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
+    if ($null -eq (Get-Module -Name 'M365DSCCompare'))
+    {
+        $compareModulePath = Join-Path -Path $PSScriptRoot -ChildPath "M365DSCCompare.psm1"
+        Import-Module -Name $compareModulePath -Force
+    }
+
     # Retrieve the primary keys of the given resource and remove them from the list of values to check.
     $currentPath = $PSScriptRoot
     if ($null -eq $Script:M365DSCSchema)
@@ -1252,162 +1266,14 @@ function Test-M365DSCTargetResource
     Write-Verbose -Message "Testing configuration of the $ResourceName with $finalString" -Verbose:$Verbose
 
     $CurrentValues = & MSFT_$ResourceName\Get-TargetResource @DesiredValues
-    $ValuesToCheck = ([Hashtable]$DesiredValues).Clone()
 
-    # Apply custom post-processing to CurrentValues and ValuesToCheck if specified
-    if ($null -ne $PostProcessing)
-    {
-        Write-Verbose -Message "Applying custom post-processing to CurrentValues and ValuesToCheck for resource $ResourceName" -Verbose:$Verbose
-        try
-        {
-            $result = $PostProcessing.Invoke($DesiredValues, $CurrentValues, $ValuesToCheck, $PostProcessingArgs)
-            if ($null -ne $result -and $result.Item1 -is [Hashtable] -and $result.Item2 -is [Hashtable] -and $result.Item3 -is [Hashtable])
-            {
-                $DesiredValues = $result.Item1
-                $CurrentValues = $result.Item2
-                $ValuesToCheck = $result.Item3
-            }
-            else
-            {
-                Write-Warning -Message "PostProcessing function did not return a valid tuple for resource $ResourceName. Using original values."
-            }
-        }
-        catch
-        {
-            Write-Warning -Message "Error occurred during post-processing for resource $ResourceName`: $_"
-        }
-    }
-
-    $ValuesToCheck.Remove('Id') | Out-Null
-    $ValuesToCheck.Remove('Identity') | Out-Null
-
-    # Remove the key parameters from the comparison
-    foreach ($keyToRemove in $resourceKeys)
-    {
-        $ValuesToCheck.Remove($keyToRemove.Name) | Out-Null
-    }
-
-    # Remove PSCredential object from the list of properties to be evaluated
-    $credentialProperties = $resourceDefinition.Parameters | Where-Object -FilterScript { $_.CIMType -eq 'MSFT_Credential' }
-    foreach ($property in $credentialProperties)
-    {
-        $ValuesToCheck.Remove($property.Name) | Out-Null
-    }
-
-    # Remove the ExcludedProperties from the list of properties to be evaluated
-    foreach ($property in $ExcludedProperties)
-    {
-        $ValuesToCheck.Remove($property) | Out-Null
-    }
-
-    # Add the IncludedProperties to the list of properties to be evaluated
-    foreach ($property in $IncludedProperties)
-    {
-        if ($DesiredValues.ContainsKey($property) -and -not $ValuesToCheck.ContainsKey($property))
-        {
-            $ValuesToCheck.Add($property, $DesiredValues.$property)
-        }
-    }
-
-    $testTargetResource = $true
-    if ($DesiredValues.Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Absent')
-    {
-        Write-Verbose -Message "The resource $ResourceName with $finalString was not found in the tenant." -Verbose:$Verbose
-        $Global:AllDrifts.DriftInfo += @{
-            PropertyName = 'Ensure'
-            CurrentValue = 'Absent'
-            DesiredValue = 'Present'
-        }
-        $testTargetResource = $false
-    }
-    elseif ($DesiredValues.Ensure -eq 'Absent' -and $CurrentValues.Ensure -eq 'Present')
-    {
-        Write-Verbose -Message "The resource $ResourceName with $finalString should not exist in the tenant." -Verbose:$Verbose
-        $Global:AllDrifts.DriftInfo += @{
-            PropertyName = 'Ensure'
-            CurrentValue = 'Present'
-            DesiredValue = 'Absent'
-        }
-        $testTargetResource = $false
-    }
-
-    $testResult = $true
-    if ($testTargetResource)
-    {
-        # Compare Cim instances
-        $desiredKeys = ([Hashtable]$DesiredValues).Clone().Keys
-        foreach ($key in $desiredKeys)
-        {
-            $source = $DesiredValues.$key
-            $target = $CurrentValues.$key
-            if ($null -ne $source -and $source.GetType().Name -like '*CimInstance*')
-            {
-                Write-Verbose -Message "Comparing complex object property $key of resource $ResourceName"
-                $CIMProperty = $resourceDefinition.Parameters | Where-Object -FilterScript { $_.Name -eq $key }
-                $CIMName = $CIMProperty.CIMType.Replace('[]', '')
-                $CIMDefinition = $Script:M365DSCSchema | Where-Object -FilterScript { $_.ClassName -eq $CIMName }
-                $CIMPrimaryKeys = $CIMDefinition.Parameters | Where-Object -FilterScript { $_.Option -eq 'Required' }
-
-                $targetObjects = @{}
-                if ($source.GetType().Name -eq 'CimInstance[]')
-                {
-                    $targetObjects = @()
-                }
-
-                foreach ($targetObject in $target)
-                {
-                    foreach ($primaryKey in $CIMPrimaryKeys.Name)
-                    {
-                        if ($primaryKey -notin $IncludedProperties)
-                        {
-                            $targetObject.Remove($primaryKey) | Out-Null
-                        }
-                    }
-
-                    if ($targetObjects -is [array])
-                    {
-                        $targetObjects += $targetObject
-                    }
-                    else
-                    {
-                        $targetObjects = $targetObject
-                    }
-                }
-
-                $testResult = Compare-M365DSCComplexObjectV2 `
-                    -Source ($source) `
-                    -Target ($targetObjects) `
-                    -PropertyName $key
-
-                if (-not $testResult)
-                {
-                    Write-Verbose "TestResult returned False for $source"
-                    $testTargetResource = $false
-                }
-
-                $DesiredValues.Remove($key) | Out-Null
-                $ValuesToCheck.Remove($key) | Out-Null
-            }
-        }
-    }
-
-    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)" -Verbose:$Verbose
-    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)" -Verbose:$Verbose
-
-    if ($testResult)
-    {
-        $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
-            -Source $ResourceName `
-            -DesiredValues $DesiredValues `
-            -ValuesToCheck $ValuesToCheck.Keys `
-            -NoEventMessage `
-            -NoDriftReset
-    }
-
-    if (-not $testResult)
-    {
-        $testTargetResource = $false
-    }
+    $testTargetResource = Compare-M365DSCResourceState -ResourceName $ResourceName `
+        -DesiredValues $DesiredValues `
+        -CurrentValues $CurrentValues `
+        -ExcludedProperties $ExcludedProperties `
+        -IncludedProperties $IncludedProperties `
+        -PostProcessing $PostProcessing `
+        -PostProcessingArgs $PostProcessingArgs
 
     if (-not $testTargetResource)
     {
@@ -1556,11 +1422,20 @@ Specifies the path of the PFX file which is used for authentication.
 .Parameter Filters
 Specifies resource level filters to apply in order to reduce the number of instances exported.
 
+.PARAMETER AccessTokens
+    Specifies the access token to use for authentication.
+
 .Parameter ManagedIdentity
 Specifies use of managed identity for authentication.
 
 .Parameter Validate
 Specifies that the configuration needs to be validated for conflicts or issues after its extraction is completed.
+
+.PARAMETER Parallel
+    Specifies that the export is executed in parallel.
+
+.PARAMETER TokenReplacement
+    Specifies the hashtable to use for token replacement. Key is the value to replace, and the value is the variable to use for replacement without the '$' sign.
 
 .Example
 Export-M365DSCConfiguration -Components @("AADApplication", "AADConditionalAccessPolicy", "AADGroupsSettings") -Credential $Credential
@@ -1572,7 +1447,7 @@ Export-M365DSCConfiguration -Mode 'Default' -ApplicationId '2560bb7c-bc85-415f-a
 Export-M365DSCConfiguration -Components @("AADApplication", "AADConditionalAccessPolicy", "AADGroupsSettings") -Credential $Credential -Path 'C:\DSC' -FileName 'MyConfig.ps1'
 
 .Example
-Export-M365DSCConfiguration -Credential $Credential -Filters @{AADApplication = "DisplayName eq 'MyApp'"}
+Export-M365DSCConfiguration -Credential $Credential -Filters @{AADApplication = "DisplayName eq 'MyApp'"} -TokenReplacement @{ 'alternate-email.onmicrosoft.com' = 'AlternateEmail' }
 
 .Example
 Export-M365DSCConfiguration -Workloads @("SPO") -ExcludeComponents @("SPOPropertyBag") -Credential $Credential
@@ -1683,7 +1558,11 @@ function Export-M365DSCConfiguration
 
         [Parameter(ParameterSetName = 'Export')]
         [Switch]
-        $Parallel
+        $Parallel,
+
+        [Parameter(ParameterSetName = 'Export')]
+        [System.Collections.Hashtable]
+        $TokenReplacement
     )
 
     $currentStartDateTime = [System.DateTime]::Now
@@ -1813,6 +1692,9 @@ function Export-M365DSCConfiguration
 
     Add-M365DSCTelemetryEvent -Type 'ExportInitiated' -Data $data
     Initialize-M365DSCAllResourcesDictionary
+    if ($PSBoundParameters.ContainsKey('TokenReplacement')) {
+        Set-M365DSCStringReplacementMap -Map $TokenReplacement
+    }
 
     if ($null -ne $Workloads)
     {
@@ -1977,8 +1859,17 @@ function Confirm-M365DSCLoadedModule
     }
 
     $manifestModule = $Script:M365DSCDependencies[$ModuleName]
-    $loadedModule = Get-Module -Name $ModuleName
 
+    if ($null -ne $manifestModule.DependsOn -and $manifestModule.DependsOn.Count -gt 0)
+    {
+        foreach ($dependency in $manifestModule.DependsOn)
+        {
+            Write-Verbose -Message "Validating dependency '$dependency' for module '$ModuleName'."
+            Confirm-M365DSCLoadedModule -ModuleName $dependency
+        }
+    }
+
+    $loadedModule = Get-Module -Name $ModuleName
     if ($null -eq $loadedModule)
     {
         Write-Verbose -Message "Module '$ModuleName' is not loaded. Importing it now."
@@ -3027,81 +2918,6 @@ function Get-M365TenantName
 
 <#
 .Description
-This function splits the provided array in the specified number of arrays
-
-.Functionality
-Internal
-#>
-function Split-ArrayByParts
-{
-    [OutputType([System.Object[]])]
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [System.Object[]]
-        $Array,
-
-        [Parameter(Mandatory = $true)]
-        [System.Uint32]
-        $Parts
-    )
-
-    if ($Parts)
-    {
-        $PartSize = [Math]::Ceiling($Array.Count / $Parts)
-    }
-    $outArray = New-Object -TypeName 'System.Collections.Generic.List[PSObject]'
-
-    for ($i = 0; $i -lt $Parts; $i++)
-    {
-        $start = ($i * $PartSize)
-
-        if ($start -lt $Array.Count)
-        {
-            $end = (($i + 1) * $PartSize) - 1
-            if ($end -ge $Array.Count)
-            {
-                $end = $Array.Count - 1
-            }
-            $outArray.Add(@($Array[$start..$end]))
-        }
-    }
-
-    return , $outArray
-}
-
-<#
-.Description
-This function creates a PSCustomObject of the provided input values
-
-.Functionality
-Internal
-#>
-function Get-SPOUserProfilePropertyInstance
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Key,
-
-        [Parameter()]
-        [System.String]
-        $Value
-    )
-
-    $result = [PSCustomObject]@{
-        Key   = $Key
-        Value = $Value
-    }
-
-    return $result
-}
-
-<#
-.Description
 This function downloads and installs the Dev branch of Microsoft365DSC on the local machine
 
 .Parameter Scope
@@ -3891,69 +3707,6 @@ function Uninstall-M365DSCOutdatedDependencies
 
 <#
 .Description
-This function removes all empty values from a dictionary object
-
-.Functionality
-Internal
-#>
-function Remove-M365DSCEmptyValue
-{
-    [Alias('Remove-M365DSCEmptyValues')]
-    [CmdletBinding()]
-    param
-    (
-        [Alias('Splat', 'IDictionary')][Parameter(Mandatory)][System.Collections.IDictionary] $Hashtable,
-        [string[]] $ExcludeParameter,
-        [switch] $Recursive,
-        [int] $Rerun
-    )
-
-    foreach ($Key in [string[]] $Hashtable.Keys)
-    {
-        if ($Key -notin $ExcludeParameter)
-        {
-            if ($Recursive)
-            {
-                if ($Hashtable[$Key] -is [System.Collections.IDictionary])
-                {
-                    if ($Hashtable[$Key].Count -eq 0)
-                    {
-                        $Hashtable.Remove($Key)
-                    }
-                    else
-                    {
-                        Remove-M365DSCEmptyValue -Hashtable $Hashtable[$Key] -Recursive:$Recursive
-                    }
-                }
-                else
-                {
-                    if ($null -eq $Hashtable[$Key] -or ($Hashtable[$Key] -is [string] -and $Hashtable[$Key] -eq '') -or ($Hashtable[$Key] -is [System.Collections.IList] -and $Hashtable[$Key].Count -eq 0))
-                    {
-                        $Hashtable.Remove($Key)
-                    }
-                }
-            }
-            else
-            {
-                if ($null -eq $Hashtable[$Key] -or ($Hashtable[$Key] -is [string] -and $Hashtable[$Key] -eq '') -or ($Hashtable[$Key] -is [System.Collections.IList] -and $Hashtable[$Key].Count -eq 0))
-                {
-                    $Hashtable.Remove($Key)
-                }
-            }
-        }
-    }
-    if ($Rerun)
-    {
-        for ($i = 0; $i -lt $Rerun; $i++)
-        {
-            Remove-M365DSCEmptyValue -Hashtable $Hashtable -Recursive:$Recursive
-        }
-    }
-}
-
-
-<#
-.Description
 This function updates the exported results with the specified authentication method
 
 .Functionality
@@ -4155,6 +3908,56 @@ function Update-M365DSCExportAuthenticationResults
 }
 
 <#
+.DESCRIPTION
+    This function sets the string replacement map used during export.
+
+.FUNCTIONALITY
+    Internal
+#>
+function Set-M365DSCStringReplacementMap
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $Map,
+
+        [Parameter()]
+        [switch]
+        $Clear
+    )
+
+    if ($Clear)
+    {
+        $Script:M365DSCStringReplacementMap = @{}
+    }
+
+    if ($PSBoundParameters.ContainsKey('Map'))
+    {
+        foreach ($key in $Map.Keys)
+        {
+            $Script:M365DSCStringReplacementMap[$key] = $Map[$key]
+        }
+    }
+}
+
+<#
+.DESCRIPTION
+    This function returns the string replacement map used during export.
+
+.FUNCTIONALITY
+    Internal
+#>
+function Get-M365DSCStringReplacementMap
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param()
+
+    return $Script:M365DSCStringReplacementMap.Clone()
+}
+
+<#
 .Description
 This function generates DSC string from an exported result hashtable
 
@@ -4337,6 +4140,35 @@ function Get-M365DSCExportContentForResource
         $partialContent = $partialContent -ireplace [regex]::Escape($OrganizationName), "`$OrganizationName"
         $partialContent = $partialContent -ireplace [regex]::Escape('@' + $OrganizationName), "@`$OrganizationName"
     }
+
+    # Apply additional string to variable replacements from mapping
+    if ($null -ne $Script:M365DSCStringReplacementMap -and $Script:M365DSCStringReplacementMap.Count -gt 0)
+    {
+        foreach ($entry in $Script:M365DSCStringReplacementMap.GetEnumerator())
+        {
+            $target = $entry.Key
+            $varName = $entry.Value
+            if ([System.String]::IsNullOrEmpty($target) -or [System.String]::IsNullOrEmpty($varName))
+            {
+                Write-Verbose -Message "Skipping invalid string replacement map entry: Key = '$target', VariableName = '$varName'"
+                continue
+            }
+            # Skip if already handled as OrganizationName
+            if ($OrganizationName -and ($target -ieq $OrganizationName))
+            {
+                Write-Verbose -Message "Skipping replacement for target [$target] because it matches the OrganizationName: '$OrganizationName'"
+                continue
+            }
+
+            if ($partialContent.ToLower().IndexOf($target.ToLower()) -gt 0)
+            {
+                $partialContent = $partialContent -ireplace [regex]::Escape($target + ':'), "`$(`$ConfigurationData.NonNodeData.$varName):"
+                $partialContent = $partialContent -ireplace [regex]::Escape($target), "`$(`$ConfigurationData.NonNodeData.$varName)"
+                $partialContent = $partialContent -ireplace [regex]::Escape('@' + $target), "@`$(`$ConfigurationData.NonNodeData.$varName)"
+            }
+        }
+    }
+
     [void]$content.Append($partialContent)
     [void]$content.Append("        }`r`n")
 
@@ -5022,7 +4854,7 @@ function New-M365DSCMissingResourcesExample
         $m365Resources = Get-DscResource -Module Microsoft365DSC | Select-Object -ExpandProperty Name
     }
 
-    $examplesPath = Join-Path $location -ChildPath '..\Examples\Resources'
+    $examplesPath = Join-Path $location -ChildPath '..\..\..\Examples\Resources'
     $examples = Get-ChildItem -Path $examplesPath | Where-Object { $_.PsIsContainer } | Select-Object -ExpandProperty Name
 
     [array]$differences = Compare-Object -ReferenceObject $m365Resources -DifferenceObject $examples
@@ -5033,7 +4865,7 @@ function New-M365DSCMissingResourcesExample
     foreach ($difference in $differences)
     {
         Write-Host "[$count/$total] Processing $($difference.InputObject)"
-        $path = Join-Path -Path '.\Modules\Microsoft365DSC\Examples\Resources' -ChildPath $difference.InputObject
+        $path = Join-Path -Path '.\Examples\Resources' -ChildPath $difference.InputObject
         switch ($difference.SideIndicator)
         {
             '<='
@@ -5514,7 +5346,11 @@ function Join-M365DSCConfiguration
     The parameters to pass to the function.
 
 .EXAMPLE
-    Invoke-PowerShellCoreResource -Path 'C:\Program Files\...\DSCResources\MSFT_Resource\MSFT_Resource.psm1' -FunctionName Test -Parameters @{ Name = 'Value' }
+    Invoke-PowerShellCoreResource -Path 'C:\Program Files\...\DSCResources\MSFT_Resource\MSFT_Resource.psm1' -FunctionName Test-TargetResource -Parameters @{ Name = 'Value' }
+
+.EXAMPLE
+    # From inside of a DSC resource
+    Invoke-PowerShellCoreResource -Path $PSCommandPath -FunctionName $MyInvocation.MyCommand.Name -Parameters $PSBoundParameters
 
 .FUNCTIONALITY
     Internal
@@ -5534,7 +5370,7 @@ function Invoke-PowerShellCoreResource
         [System.String]$Path,
 
         [Parameter(Mandatory = $true)]
-        [ValidateSet('Get', 'Set', 'Test', 'Export')]
+        [ValidateSet('Get-TargetResource', 'Set-TargetResource', 'Test-TargetResource', 'Export-TargetResource')]
         [System.String]$FunctionName,
 
         [Parameter(Mandatory = $true)]
@@ -5548,7 +5384,7 @@ function Invoke-PowerShellCoreResource
 
     $output = Invoke-Command -Session $PSCoreSession -ScriptBlock {
         Import-Module -Name $using:Path
-        & $using:FunctionName-TargetResource @using:Parameters
+        & $using:FunctionName @using:Parameters
     }
 
     return $output
@@ -5879,13 +5715,13 @@ Export-ModuleMember -Function @(
     'Get-M365DSCExportContentForResource',
     'Get-M365DSCOrganization',
     'Get-M365DSCResourcesByExportMode',
+    'Get-M365DSCStringReplacementMap',
     'Get-M365DSCTelemetryConnectionParameter',
     'Get-M365DSCTenantDomain',
     'Get-M365DSCTenantNameFromParameterSet',
     'Get-M365DSCWorkloadForResource',
     'Get-M365TenantName',
     'Get-SPOAdministrationUrl',
-    'Get-SPOUserProfilePropertyInstance',
     'Get-TeamByName',
     'Initialize-M365DSCAllResourcesDictionary',
     'Install-M365DSCDevBranch',
@@ -5895,11 +5731,10 @@ Export-ModuleMember -Function @(
     'New-M365DSCCmdletDocumentation',
     'New-M365DSCConnection',
     'New-M365DSCMissingResourcesExample',
-    'Remove-M365DSCEmptyValue',
     'Remove-M365DSCAuthenticationParameter',
     'Remove-NullEntriesFromHashtable',
-    'Split-ArrayByParts',
     'Set-M365DSCAllResourcesDictionary',
+    'Set-M365DSCStringReplacementMap',
     'Split-M365DSCConfiguration',
     'Sync-M365DSCParameter',
     'Test-M365DSCDependenciesForNewVersions',

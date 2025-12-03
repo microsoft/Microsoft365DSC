@@ -66,36 +66,41 @@ function Get-TargetResource
 
     Write-Verbose -Message 'Getting EXO Email Tenant Settings'
 
-    if ($Global:CurrentModeIsExport)
-    {
-        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters `
-            -SkipModuleReload $true
-    }
-    else
-    {
-        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters
-    }
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = 'Absent'
-
     try
     {
-        $EmailTenantSettings = Get-EmailTenantSettings -ErrorAction Stop
+        if (-not $Script:exportedInstance)
+        {
+            $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
+                -InboundParameters $PSBoundParameters
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullReturn = $PSBoundParameters
+            $nullReturn.Ensure = 'Absent'
+
+            $EmailTenantSettings = Get-EmailTenantSettings -ErrorAction SilentlyContinue
+            if ($null -eq $EmailTenantSettings)
+            {
+                Write-Verbose -Message "Failed to find Email Tenant Settings"
+                return $nullReturn
+            }
+        }
+        else
+        {
+            $EmailTenantSettings = $Script:exportedInstance
+        }
+
+        Write-Verbose -Message 'Found Email Tenant Settings config '
 
         $result = @{
             IsSingleInstance                = 'Yes'
@@ -114,8 +119,6 @@ function Get-TargetResource
             AccessTokens                    = $AccessTokens
         }
 
-        Write-Verbose -Message 'Found Email Tenant Settings config '
-        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
         return $result
     }
     catch
@@ -382,7 +385,7 @@ function Export-TargetResource
             CertificatePath       = $CertificatePath
             AccessTokens          = $AccessTokens
         }
-
+        $Script:exportedInstance = $EmailTenantSettings
         $Results = Get-TargetResource @Params
         $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
             -ConnectionMode $ConnectionMode `

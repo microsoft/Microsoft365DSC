@@ -31,17 +31,28 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return 'Credentials'
             }
 
+            Mock -CommandName Get-Recipient -MockWith {
+                return @(
+                    @{
+                        Name = "12345678-1234-1234-1234-123456789012";
+                        PrimarySmtpAddress = "TestUser@contoso.com"
+                    }
+                )
+            }
+
             Mock -CommandName Get-UnifiedGroup -MockWith {
                 return @{
                     Id                                     = "12345-12345-12345-12345-12345";
                     DisplayName                            = "Test Group";
                     AccessType                             = "Public";
+                    AcceptMessagesOnlyFromSendersOrMembersWithDisplayNames = @("TestUser@contoso.com");
+                    GrantSendOnBehalfToWithDisplayNames    = @("TestUser@contoso.com");
                     AlwaysSubscribeMembersToCalendarEvents = $False;
                     AuditLogAgeLimit                       = "90.00:00:00";
                     AutoSubscribeNewMembers                = $False;
                     CalendarMemberReadOnly                 = $False;
                     ConnectorsEnabled                      = $True;
-                    EmailAddresses                         = @("SMTP:TestGroup@$contoso.com","SPO:SPO_eff656f4-6163-44b5-8410-139ac8658c5d@SPO_e7a80bcf-696e-40ca-8775-a7f85fbb3ebc");
+                    EmailAddresses                         = @("SMTP:TestGroup@contoso.com","SPO:SPO_eff656f4-6163-44b5-8410-139ac8658c5d@SPO_e7a80bcf-696e-40ca-8775-a7f85fbb3ebc");
                     HiddenFromAddressListsEnabled          = $True;
                     HiddenFromExchangeClientsEnabled       = $True;
                     InformationBarrierMode                 = "Open";
@@ -53,6 +64,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     PrimarySmtpAddress                     = "TestGroup@contoso.com";
                     RequireSenderAuthenticationEnabled     = $True;
                     SubscriptionEnabled                    = $False;
+                    WelcomeMessageEnabled                  = $True;
                 }
             }
 
@@ -71,6 +83,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     DisplayName                            = "Test Group";
                     AccessType                             = "Public";
+                    AcceptMessagesOnlyFromSendersOrMembers = @("TestUser@contoso.com");
                     AlwaysSubscribeMembersToCalendarEvents = $False;
                     AuditLogAgeLimit                       = "90.00:00:00";
                     AutoSubscribeNewMembers                = $False;
@@ -79,6 +92,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential                             = $Credential;
                     HiddenFromAddressListsEnabled          = $True;
                     HiddenFromExchangeClientsEnabled       = $True;
+                    GrantSendOnBehalfTo                    = @("12345678-1234-1234-1234-123456789012");
                     InformationBarrierMode                 = "Open";
                     Language                               = "en-US";
                     MaxReceiveSize                         = "36 MB (37,748,736 bytes)";
@@ -88,6 +102,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     PrimarySmtpAddress                     = "TestGroup@contoso.com";
                     RequireSenderAuthenticationEnabled     = $True;
                     SubscriptionEnabled                    = $False;
+                    WelcomeMessageEnabled                  = $True;
                 }
 
                 Mock -CommandName Get-UnifiedGroup -MockWith {
@@ -114,13 +129,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     DisplayName                            = "Test Group";
                     AccessType                             = "Public";
+                    AcceptMessagesOnlyFromSendersOrMembers = @("TestUser@contoso.com");
                     AlwaysSubscribeMembersToCalendarEvents = $False;
                     AuditLogAgeLimit                       = "90.00:00:00";
                     AutoSubscribeNewMembers                = $False;
                     CalendarMemberReadOnly                 = $False;
                     ConnectorsEnabled                      = $True;
-                    Credential                             = $Credential;HiddenFromAddressListsEnabled          = $True;
+                    Credential                             = $Credential;
+                    HiddenFromAddressListsEnabled          = $True;
                     HiddenFromExchangeClientsEnabled       = $True;
+                    GrantSendOnBehalfTo                    = @("12345678-1234-1234-1234-123456789012");
                     InformationBarrierMode                 = "Open";
                     Language                               = "en-US";
                     MaxReceiveSize                         = "36 MB (37,748,736 bytes)";
@@ -130,6 +148,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     PrimarySmtpAddress                     = "TestGroup@contoso.com";
                     RequireSenderAuthenticationEnabled     = $True;
                     SubscriptionEnabled                    = $False;
+                    WelcomeMessageEnabled                  = $True;
                 }
             }
 
@@ -146,6 +165,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     DisplayName                            = "Test Group";
                     AccessType                             = "Public";
+                    AcceptMessagesOnlyFromSendersOrMembers = @("TestUser@contoso.com");
                     AlwaysSubscribeMembersToCalendarEvents = $False;
                     AuditLogAgeLimit                       = "90.00:00:00";
                     AutoSubscribeNewMembers                = $False;
@@ -153,6 +173,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ConnectorsEnabled                      = $True;
                     Credential                             = $Credential;HiddenFromAddressListsEnabled          = $True;
                     HiddenFromExchangeClientsEnabled       = $True;
+                    GrantSendOnBehalfTo                    = @("12345678-1234-1234-1234-123456789012");
                     InformationBarrierMode                 = "Open";
                     Language                               = "en-US";
                     MaxReceiveSize                         = "36 MB (37,748,736 bytes)";
@@ -162,6 +183,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     PrimarySmtpAddress                     = "TestGroup@contoso.com";
                     RequireSenderAuthenticationEnabled     = $True;
                     SubscriptionEnabled                    = $False;
+                    WelcomeMessageEnabled                  = $True;
                 }
             }
 

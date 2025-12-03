@@ -123,11 +123,6 @@ function Get-TargetResource
         $InstallationOptionsAppsForMac,
 
         [Parameter()]
-        [ValidateSet('Present', 'Absent')]
-        [System.String]
-        $Ensure = 'Present',
-
-        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -486,11 +481,6 @@ function Set-TargetResource
         $InstallationOptionsAppsForMac,
 
         [Parameter()]
-        [ValidateSet('Present', 'Absent')]
-        [System.String]
-        $Ensure = 'Present',
-
-        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -520,11 +510,6 @@ function Set-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration of Office 365 Org Settings"
-
-    if ($PSBoundParameters.ContainsKey('Ensure') -and $Ensure -eq 'Absent')
-    {
-        throw 'This resource is not able to remove the Org settings and therefore only accepts Ensure=Present.'
-    }
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -907,11 +892,6 @@ function Test-TargetResource
         [System.String[]]
         [ValidateSet('isSkypeForBusinessEnabled', 'isMicrosoft365AppsEnabled')]
         $InstallationOptionsAppsForMac,
-
-        [Parameter()]
-        [ValidateSet('Present', 'Absent')]
-        [System.String]
-        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]

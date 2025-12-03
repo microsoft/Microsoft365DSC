@@ -1,10 +1,13 @@
 <#
 .SYNOPSIS
     Get the evaluation rules for guarding a given configuration.
+
 .DESCRIPTION
     This function will return all the evaluation rules for a given configuration either as a new configuration file or as a list of rules that can be used in a configuration to guard the resources.
+
 .PARAMETER ConfigurationPath
     The path to the configuration file.
+
 .PARAMETER OutputPath
     The path to the output file. If not provided, the function will return the evaluation rules as a string.
 #>

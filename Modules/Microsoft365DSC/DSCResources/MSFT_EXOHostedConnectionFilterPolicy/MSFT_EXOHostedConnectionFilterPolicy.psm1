@@ -70,40 +70,41 @@ function Get-TargetResource
 
     Write-Verbose -Message "Setting configuration of HostedConnectionFilterPolicy for $Identity"
 
-    if ($Global:CurrentModeIsExport)
-    {
-        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters `
-            -SkipModuleReload $true
-    }
-    else
-    {
-        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters
-    }
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = 'Absent'
     try
     {
-        $HostedConnectionFilterPolicy = Get-HostedConnectionFilterPolicy -Identity $Identity -ErrorAction SilentlyContinue
-        if (-not $HostedConnectionFilterPolicy)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Identity -ne $Identity)
         {
-            Write-Verbose -Message "HostedConnectionFilterPolicy [$($Identity)] does not exist."
-            return $nullReturn
+            $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
+                -InboundParameters $PSBoundParameters
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullReturn = $PSBoundParameters
+            $nullReturn.Ensure = 'Absent'
+
+            $HostedConnectionFilterPolicy = Get-HostedConnectionFilterPolicy -Identity $Identity -ErrorAction SilentlyContinue
+            if (-not $HostedConnectionFilterPolicy)
+            {
+                Write-Verbose -Message "HostedConnectionFilterPolicy [$($Identity)] does not exist."
+                return $nullReturn
+            }
         }
+        else
+        {
+            $HostedConnectionFilterPolicy = $Script:exportedInstance
+        }
+
+        Write-Verbose -Message "Found HostedConnectionFilterPolicy $($Identity)"
 
         $result = @{
             Ensure                = 'Present'
@@ -123,13 +124,11 @@ function Get-TargetResource
             AccessTokens          = $AccessTokens
         }
 
-        if ($AntiPhishRule.IsDefault)
+        if ($HostedConnectionFilterPolicy.IsDefault)
         {
             $result.MakeDefault = $true
         }
 
-        Write-Verbose -Message "Found HostedConnectionFilterPolicy $($Identity)"
-        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
         return $result
     }
     catch
@@ -343,7 +342,6 @@ function Test-TargetResource
         $AccessTokens
     )
 
-
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
     $CommandName = $MyInvocation.MyCommand
@@ -445,6 +443,7 @@ function Export-TargetResource
                 CertificatePath       = $CertificatePath
                 AccessTokens          = $AccessTokens
             }
+            $Script:exportedInstance = $HostedConnectionFilterPolicy
             Write-M365DSCHost -Message "    |---[$i/$($HostedConnectionFilterPolicies.Length)] $($HostedConnectionFilterPolicy.Identity)" -DeferWrite
             $Results = Get-TargetResource @Params
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `

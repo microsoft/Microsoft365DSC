@@ -66,69 +66,71 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting Application Access Policy configuration for $Identity"
-    if ($Global:CurrentModeIsExport)
-    {
-        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters `
-            -SkipModuleReload $true
-    }
-    else
-    {
-        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters
-    }
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = 'Absent'
 
     try
     {
-        $ApplicationAccessPolicy = $null
-        [Array]$ApplicationAccessPolicy = Get-ApplicationAccessPolicy -Identity $Identity -ErrorAction SilentlyContinue
-
-        $ScopeIdentityValue = $null
-        if ($null -eq $ApplicationAccessPolicy)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Identity -ne $Identity)
         {
-            $scopeIdentityGroup = $null
-            $scopeIdentityGroup = Get-Group -Identity $PolicyScopeGroupId -ErrorAction SilentlyContinue
+            $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
+                -InboundParameters $PSBoundParameters
 
-            if ($null -ne $scopeIdentityGroup)
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullReturn = $PSBoundParameters
+            $nullReturn.Ensure = 'Absent'
+
+            $ApplicationAccessPolicy = $null
+            [Array]$ApplicationAccessPolicy = Get-ApplicationAccessPolicy -Identity $Identity -ErrorAction SilentlyContinue
+
+            $ScopeIdentityValue = $null
+            if ($null -eq $ApplicationAccessPolicy)
             {
-                $ScopeIdentityValue = $scopeIdentityGroup.WindowsEmailAddress
-                $ApplicationAccessPolicy = Get-ApplicationAccessPolicy | Where-Object -FilterScript { $AppID -eq $_.AppId -and $_.ScopeIdentity -eq $scopeIdentityGroup }
+                $scopeIdentityGroup = $null
+                $scopeIdentityGroup = Get-Group -Identity $PolicyScopeGroupId -ErrorAction SilentlyContinue
+
+                if ($null -ne $scopeIdentityGroup)
+                {
+                    $ScopeIdentityValue = $scopeIdentityGroup.WindowsEmailAddress
+                    $ApplicationAccessPolicy = Get-ApplicationAccessPolicy | Where-Object -FilterScript { $AppID -eq $_.AppId -and $_.ScopeIdentity -eq $scopeIdentityGroup }
+                }
+                else
+                {
+                    Write-Verbose -Message "Could not find Group with Identity {$PolicyScopeGroupId}"
+                }
+
+                if ($null -ne $ApplicationAccessPolicy)
+                {
+                    Write-Verbose -Message "Found Application Access Policy by Scope {$PolicyScopeGroupId}"
+                }
             }
             else
             {
-                Write-Verbose -Message "Could not find Group with Identity {$PolicyScopeGroupId}"
+                $ScopeIdentityValue = $ApplicationAccessPolicy.ScopeIdentity
             }
 
-            if ($null -ne $ApplicationAccessPolicy)
+            if ($null -eq $ApplicationAccessPolicy)
             {
-                Write-Verbose -Message "Found Application Access Policy by Scope {$PolicyScopeGroupId}"
+                Write-Verbose -Message "Application Access Policy $($Identity) does not exist."
+                return $nullReturn
             }
         }
         else
         {
+            $ApplicationAccessPolicy = $Script:exportedInstance
             $ScopeIdentityValue = $ApplicationAccessPolicy.ScopeIdentity
         }
 
-        if ($null -eq $ApplicationAccessPolicy)
-        {
-            Write-Verbose -Message "Application Access Policy $($Identity) does not exist."
-            return $nullReturn
-        }
+        Write-Verbose -Message "Found Application Access Policy {$($Identity)}"
 
         $ApplicationAccessPolicy = $ApplicationAccessPolicy[0]
         $result = @{
@@ -148,7 +150,6 @@ function Get-TargetResource
             AccessTokens          = $AccessTokens
         }
 
-        Write-Verbose -Message "Found Application Access Policy {$($Identity)}"
         return $result
     }
     catch
@@ -473,6 +474,7 @@ function Export-TargetResource
                 CertificatePath       = $CertificatePath
                 AccessTokens          = $AccessTokens
             }
+            $Script:exportedInstance = $ApplicationAccessPolicy
             $Results = Get-TargetResource @Params
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `

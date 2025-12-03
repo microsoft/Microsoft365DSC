@@ -41,27 +41,36 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration for DnssecForVerifiedDomain with DomainName $DomainName"
 
-    $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-        -InboundParameters $PSBoundParameters
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullResult = $PSBoundParameters
-    $nullResult.DnssecFeatureStatus = 'Unknown'
-
     try
     {
-        $instance = Get-DnssecStatusForVerifiedDomain -DomainName $DomainName -ErrorAction Stop
+        if ($Global:CurrentModeIsExport)
+        {
+            $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
+                -InboundParameters $PSBoundParameters `
+                -SkipModuleReload $true
+        }
+        else
+        {
+            $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
+                -InboundParameters $PSBoundParameters
+        }
+
+        #Ensure the proper dependencies are installed in the current environment.
+        Confirm-M365DSCDependencies
+
+        #region Telemetry
+        $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+        $CommandName = $MyInvocation.MyCommand
+        $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+            -CommandName $CommandName `
+            -Parameters $PSBoundParameters
+        Add-M365DSCTelemetryEvent -Data $data
+        #endregion
+
+        $nullResult = $PSBoundParameters
+        $nullResult.DnssecFeatureStatus = 'Unknown'
+
+        $instance = Get-DnssecStatusForVerifiedDomain -DomainName $DomainName -ErrorAction SilentlyContinue
         if ('Unknown' -eq $instance.DnssecFeatureStatus.ToString())
         {
             return $nullResult

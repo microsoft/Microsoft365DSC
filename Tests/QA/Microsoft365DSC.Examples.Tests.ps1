@@ -1,5 +1,5 @@
 ﻿BeforeDiscovery {
-    $examplesPath = Join-Path -Path $PSScriptRoot -ChildPath '..\..\Modules\Microsoft365DSC\Examples'
+    $examplesPath = Join-Path -Path $PSScriptRoot -ChildPath '..\..\Examples'
 
     # If there are no Examples folder, exit.
     if (-not (Test-Path -Path $examplesPath))
@@ -201,7 +201,7 @@ Describe -Name 'Successfully compile examples' {
 
 Describe -Name 'Check examples for all resources' {
     BeforeAll {
-        $examplesPath = Join-Path -Path $PSScriptRoot -ChildPath '..\..\Modules\Microsoft365DSC\Examples'
+        $examplesPath = Join-Path -Path $PSScriptRoot -ChildPath '..\..\Examples'
 
         # If there are no Examples folder, exit.
         if (-not (Test-Path -Path $examplesPath))

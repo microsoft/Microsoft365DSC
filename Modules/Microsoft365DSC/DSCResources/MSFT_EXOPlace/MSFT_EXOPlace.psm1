@@ -139,53 +139,52 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration for Place for $($Identity)"
 
-    if ($Global:CurrentModeIsExport)
-    {
-        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters `
-            -SkipModuleReload $true
-    }
-    else
-    {
-        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters
-    }
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = 'Absent'
-
     try
     {
-        $place = Get-Place -Identity $Identity -ErrorAction SilentlyContinue
-
-        if ($null -eq $place)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Identity -ne $Identity)
         {
-            if (-not [System.String]::IsNullOrEmpty($DisplayName))
-            {
-                Write-Verbose -Message "Couldn't retrieve place by Id {$($Identity)}. Trying by DisplayName"
-                $place = Get-Place -ResultSize 'Unlimited' | Where-Object -FilterScript { $_.DisplayName -eq $DisplayName }
-            }
+            $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
+                -InboundParameters $PSBoundParameters
 
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullReturn = $PSBoundParameters
+            $nullReturn.Ensure = 'Absent'
+
+            $place = Get-Place -Identity $Identity -ErrorAction SilentlyContinue
             if ($null -eq $place)
             {
-                return $nullReturn
+                if (-not [System.String]::IsNullOrEmpty($DisplayName))
+                {
+                    Write-Verbose -Message "Couldn't retrieve place by Id {$($Identity)}. Trying by DisplayName"
+                    $place = Get-Place -ResultSize 'Unlimited' | Where-Object -FilterScript { $_.DisplayName -eq $DisplayName }
+                }
+
+                if ($null -eq $place)
+                {
+                    return $nullReturn
+                }
             }
         }
+        else
+        {
+            $place = $Script:exportedInstance
+        }
+
+        Write-Verbose -Message "Found Place with Identity {$Identity}"
 
         $TagsValue = [Array] $place.Tags
-        if ($place.Tags -eq $null)
+        if ($null -eq $place.Tags)
         {
             $TagsValue = @()
         }
@@ -224,6 +223,7 @@ function Get-TargetResource
             TenantId               = $TenantId
             AccessTokens           = $AccessTokens
         }
+
         return $result
     }
     catch
@@ -640,7 +640,7 @@ function Export-TargetResource
                 CertificatePath       = $CertificatePath
                 AccessTokens          = $AccessTokens
             }
-
+            $Script:exportedInstance = $place
             $Results = Get-TargetResource @Params
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `

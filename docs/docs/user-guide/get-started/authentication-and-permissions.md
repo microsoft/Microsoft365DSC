@@ -134,7 +134,7 @@ Most components of the Microsoft365DSC solution are using the Microsoft Graph Po
     For example: If your account only has permissions on three SharePoint sites, only these sites can be retrieved. Even when the AzureAD app has Sites.FullControl.All permissions granted.
 
     <figure markdown>
-      ![Using the Graph API with Delegated Permissions and the default App Registration](/Images/PermissionsGraphDelegatedApp.png)
+      ![Using the Graph API with Delegated Permissions and the default App Registration](../../Images/PermissionsGraphDelegatedApp.png)
       <figcaption>Using the Graph API with Delegated Permissions and the default App Registration</figcaption>
     </figure>
 
@@ -149,7 +149,7 @@ Most components of the Microsoft365DSC solution are using the Microsoft Graph Po
     **NOTE:** This is the easiest option to use.
 
     <figure markdown>
-      ![Using the Graph API with a custom application](/Images/PermissionsM365DSCApp.png)
+      ![Using the Graph API with a custom application](../../Images/PermissionsM365DSCApp.png)
       <figcaption>Using the Graph API with a custom application</figcaption>
     </figure>
 
@@ -241,17 +241,15 @@ SharePoint Online uses the legacy ACS model to authenticate using an Application
 3. In the App domain box, type in www.<yourtenant>.com.
 4. Leave the **Redirect URL** box empty.
 5. In the **Permission request XML** box, put in the following XML:
-
 ```powershell
   <AppPermissionRequests AllowAppOnlyPolicy="true">
     <AppPermissionRequest Scope="http://sharepoint/content/tenant" Right="FullControl" />
   </AppPermissionRequests>
 ```
-
-6. Click on the **Create** button.
-<a href="/Images/Step1-SPOACS.png"><img src="/Images/Step1-SPOACS.png" alt="Register a new app for SharePoint Online." /></a>
-7. On the next screen, click on the **Trust It** button to complete the registration process.
-<a href="/Images/Step2-SPOACS.png"><img src="/Images/Step2-SPOACS.png" alt="Register a new app for SharePoint Online." /></a>
+6. Click on the **Create** button. </br>
+![Register a new app for SharePoint Online.](../../Images/Step1-SPOACS.png)
+7. On the next screen, click on the **Trust It** button to complete the registration process. </br>
+![Register a new app for SharePoint Online.](../../Images/Step2-SPOACS.png)
 
 You should now be able to connect to SharePoint Online using an Application Secret.
 
@@ -284,9 +282,9 @@ If you want to leverage Service Principal Authentication (using an App Registrat
 <li><p><strong>Create a new Service Principal and associate it with your app registration:</strong></p>
 <p>Start by connecting to the Security and Compliance PowerShell module and run the following line to create the Service Principal. The cmdlets refer below won't be available if you don't connect first (use the Connect-IPPSsession cmdlet). The AppID and ObjectID represent the application id and its object id. You can retrieve these by navigating to your app instance on the Azure Portal or by leveraging the Get-MgApplication cmdlet from the Graph PowerShell SDK. In my case, my custom App Registration in Azure AD is named "MySCApp" and I am giving the name SC-SPN to the new Service Principal I am creating.</p>
 
-<a href="/Images/AppIdRetrieval.png"><img src="/Images/AppIdRetrieval.png" alt="Retrieving an app registration id from the Azure portal." /></a>
+![Retrieving an app registration id from the Azure portal.](../../Images/AppIdRetrieval.png)
 
-<a href="/Images/CreatingNewSPForSC.png"><img src="/Images/CreatingNewSPForSC.png" alt="PowerShell Script to create a Service Principal" /></a>
+![PowerShell Script to create a Service Principal](../../Images/CreatingNewSPForSC.png)
 
 ```powershell
 $App = Get-MgApplication -Filter "DisplayName eq 'MySCApp'"
@@ -298,7 +296,7 @@ New-ServicePrincipal -AppId $App.AppId -ServiceId $App.Id -DisplayName "SC-SPN"
 <li><p><strong>Grant the eDiscovery Manager role to your new Service Principal:</strong></p>
 <p>Run the following PowerShell command to grant the eDiscovery Manager role to your new Service Principal. The ID passed is the Object ID of the Service Principal you created at the previous step. If you don't have it handy, you can use the Get-ServicePrincipal cmdlet to retrieve it.</p>
 
-<a href="/Images/AddSPNeDiscoveryRole.png"><img src="/Images/AddSPNeDiscoveryRole.png" alt="Grant the eDiscovery Manager role to your Service Principal" /></a>
+![Grant the eDiscovery Manager role to your Service Principal](../../Images/AddSPNeDiscoveryRole.png)
 
 ``` PowerShell
 $SPN = Get-ServicePrincipal -Identity "SC-SPN"
@@ -312,7 +310,7 @@ Add-RoleGroupMember -Identity eDiscoveryManager -Member $SPN.ObjectId
 
 <p>The Service Principal requires one last permission in order to be able to retrieve values from the Security and Compliance center cmdlets. Run the following PowerShell command to add it as a case admin:</p>
 
-<a href="/Images/Add-eDiscoveryCaseAdmin.png"><img src="/Images/Add-eDiscoveryCaseAdmin.png" alt="Grant the eDiscovery Case Admin role to your Service Principal" /></a>
+![Grant the eDiscovery Case Admin role to your Service Principal](../../Images/Add-eDiscoveryCaseAdmin.png)
 
 ``` PowerShell
 $SPN = Get-ServicePrincipal -Identity "SC-SPN"
@@ -323,8 +321,7 @@ Add-eDiscoveryCaseAdmin -User $SPN.Name
 </li>
 <li><p><strong>Grant your app registration the Compliance Administrator role:</strong></p>
 <p>The last required step is to add your app registration to the Compliance Administrator role.</p>
-
-<a href="/Images/AddComplianceAdmin.png"><img src="/Images/AddComplianceAdmin.png" alt="Add your app registration to the compliance administrator role." /></a>
+![Add your app registration to the compliance administrator role.](../../Images/AddComplianceAdmin.png)
 </li>
 
 </ol>
@@ -332,7 +329,7 @@ Add-eDiscoveryCaseAdmin -User $SPN.Name
 
 <p><strong>Important</strong>: For GCC High, you will also need to grant the Exchange.ManageAsApp permission from the Microsoft Exchange Online Protection API in addition to the Office 365 Exchange Online API permissions.</p>
 
-<a href="/Images/GetComplianceCase.png"><img src="/Images/GetComplianceCase.png" alt="Connecting using your app registration and retrieving cases." /></a>
+![Connecting using your app registration and retrieving cases.](../../Images/GetComplianceCase.png)
 
 ``` PowerShell
 Connect-M365Tenant -ApplicationId '8154ba3e-3e73-450e-8690-53cfc0eb0d66' -TenantId 'xxxx.onmicrosoft.com' -CertificateThumbprint 'xxx-xxx-xxx-xxx-xxx' -Workload 'SecurityComplianceCenter'
@@ -365,13 +362,13 @@ All SharePoint and OneDrive resources work with the SharePoint Admin role assign
 
 When executing the Export-M365DSCConfiguration cmdlet user name and password should be filled in the following fields:
 
-![User name and Password](/Images/userpwdpng.png 'Username and Password')
+![User name and Password](../../Images/userpwdpng.png 'Username and Password')
 
 ### Azure AD app permissions
 
 The best option when using Microsoft365DSC with SharePoint and OneDrive is to use an Azure AD app principal. When using AAD App permission Microsoft365DSC supports 2 different scenarios, certificate path option or installing certificate and using the thumbprint. The permissions required for Azure AD applications are SharePoint Site.FullControl.All scope.
 
-![API Permissions](/Images/APIPermissions.png 'SharePoint Permissions')
+![API Permissions](../../Images/APIPermissions.png 'SharePoint Permissions')
 
 ### Configure AzureAD app for Microsoft365DSC
 
@@ -393,9 +390,9 @@ DSC by default the LCM runs under the system account so easiest option to instal
 After AzureAD app is created and certificate is installed you need some additional properties before you can use with Microsoft365DSC. Login to
 Azure Active Directory and browse to the App registrations page you should see the TestApp2 app created from the script above. We need to copy the following properties:
 
-![Application Id](/Images/AppId.png 'Application ID')
+![Application Id](../../Images/AppId.png 'Application ID')
 
-![Certificate Thumbprint](/Images/CertificateThump.png 'Certificate Thumbprint')
+![Certificate Thumbprint](../../Images/CertificateThump.png 'Certificate Thumbprint')
 
 ### Using Certificate Thumbprint option
 
@@ -408,7 +405,7 @@ when using certificate thumbprint.
 
 From the Export-M365DSCConfiguration GUI the following fields should be used:
 
-![ExportThumprint](/Images/ExportCertThumb.png 'Export using thumbprint')
+![ExportThumprint](../../Images/ExportCertThumb.png 'Export using thumbprint')
 
 ### Using Certificate Path option
 
@@ -422,7 +419,7 @@ would be the best solution. The following parameters are required when using cer
 
 From the Export-M365DSCConfiguration GUI the following fields should be used:
 
-![Export using Certificate Path](/Images/CertPath.png){ align=center width=500 }
+![Export using Certificate Path](../../Images/CertPath.png){ align=center width=500 }
 
 ## Teams Permissions
 

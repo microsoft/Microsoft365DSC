@@ -5013,7 +5013,27 @@ function Get-UnifiedGroup
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
+        $IncludeAcceptMessagesOnlyFromSendersOrMembersWithDisplayNames,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
         $IncludeAllProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IncludeBypassModerationFromSendersOrMembersWithDisplayNames,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IncludeGrantSendOnBehalfToWithDisplayNames,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IncludeModeratedByWithDisplayNames,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IncludeRejectMessagesFromSendersOrMembersWithDisplayNames,
 
         [Parameter()]
         [System.String]
@@ -87018,4 +87038,3 @@ function Update-MgBetaDeviceManagementReusableSetting
 }
 
 #endregion
-

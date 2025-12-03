@@ -209,7 +209,9 @@ function Set-TargetResource
                 $currentRuleHashtable.Remove('ActionValue')
                 $testResult = Compare-M365DSCComplexObject `
                     -Source ($currentRuleHashtable) `
-                    -Target ($desiredRuleHashtable)
+                    -Target ($desiredRuleHashtable) `
+                    -PropertyName 'PolicyRules' `
+                    -NoDriftReport
                 if ($testResult)
                 {
                     Write-Verbose "Updating: $($currentRule.Name), $($currentRule.Id)"

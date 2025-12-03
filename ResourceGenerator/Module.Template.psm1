@@ -334,11 +334,11 @@ function Export-TargetResource
         foreach ($config in $getValue)
         {
             $displayedKey = $config.<PrimaryKey>
-            if (-not [String]::IsNullOrEmpty($config.displayName))
+            if (-not [System.String]::IsNullOrEmpty($config.displayName))
             {
                 $displayedKey = $config.displayName
             }
-            elseif (-not [string]::IsNullOrEmpty($config.name))
+            elseif (-not [System.String]::IsNullOrEmpty($config.name))
             {
                 $displayedKey = $config.name
             }

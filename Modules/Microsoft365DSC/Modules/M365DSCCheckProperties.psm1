@@ -7,7 +7,6 @@
 .Functionality
     Internal
 #>
-
 function Get-PropertyReport
 {
     param

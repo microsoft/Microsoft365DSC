@@ -1288,10 +1288,11 @@ function Export-TargetResource
             $Script:requireGroupMemberFetching = $true
         }
 
+        # Exclude Distribution Groups and mail enabled security groups from Exchange
         [array] $Script:exportedGroups = Get-MgBetaGroup @ExportParameters
         $Script:exportedGroups = $Script:exportedGroups | Where-Object -FilterScript {
-            -not ($_.MailEnabled -and ($null -eq $_.GroupTypes -or $_.GroupTypes.Length -eq 0)) -and `
-                -not ($_.MailEnabled -and $_.SecurityEnabled)
+            -not ($_.MailEnabled -and ($null -eq $_.GroupTypes -or $_.GroupTypes.Count -eq 0)) -and `
+                -not ($_.MailEnabled -and $_.SecurityEnabled -and ($null -eq $_.GroupTypes -or $_.GroupTypes.Count -eq 0))
         } | Sort-Object -Property DisplayName
 
         $i = 1

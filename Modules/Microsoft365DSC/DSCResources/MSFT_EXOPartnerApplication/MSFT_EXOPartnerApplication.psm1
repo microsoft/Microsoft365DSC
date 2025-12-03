@@ -71,41 +71,41 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting Partner Application configuration for $Name"
 
-    if ($Global:CurrentModeIsExport)
-    {
-        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters `
-            -SkipModuleReload $true
-    }
-    else
-    {
-        $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters
-    }
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = 'Absent'
-
     try
     {
-        $PartnerApplication = Get-PartnerApplication -Identity $Name -ErrorAction SilentlyContinue
-        if ($null -eq $PartnerApplication)
+        if (-not $Script:exportedInstance -or $Script:exportedInstance.Name -ne $Name)
         {
-            Write-Verbose -Message "Partner Application $($Name) does not exist."
-            return $nullReturn
+            $null = New-M365DSCConnection -Workload 'ExchangeOnline' `
+                -InboundParameters $PSBoundParameters
+
+            #Ensure the proper dependencies are installed in the current environment.
+            Confirm-M365DSCDependencies
+
+            #region Telemetry
+            $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
+            $CommandName = $MyInvocation.MyCommand
+            $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+                -CommandName $CommandName `
+                -Parameters $PSBoundParameters
+            Add-M365DSCTelemetryEvent -Data $data
+            #endregion
+
+            $nullReturn = $PSBoundParameters
+            $nullReturn.Ensure = 'Absent'
+
+            $PartnerApplication = Get-PartnerApplication -Identity $Name -ErrorAction SilentlyContinue
+            if ($null -eq $PartnerApplication)
+            {
+                Write-Verbose -Message "Partner Application $($Name) does not exist."
+                return $nullReturn
+            }
         }
+        else
+        {
+            $PartnerApplication = $Script:exportedInstance
+        }
+
+        Write-Verbose -Message "Partner Application with Name $($PartnerApplication.Name) found"
 
         $result = @{
             Name                                = $PartnerApplication.Name
@@ -125,7 +125,6 @@ function Get-TargetResource
             AccessTokens                        = $AccessTokens
         }
 
-        Write-Verbose -Message "Found Partner Application $($Name)"
         return $result
     }
     catch
@@ -420,7 +419,6 @@ function Export-TargetResource
     try
     {
         [array]$AllPartnerApplications = Get-PartnerApplication -ErrorAction Stop
-
         $dscContent = ''
         if ($AllPartnerApplications.Length -eq 0)
         {
@@ -451,6 +449,7 @@ function Export-TargetResource
                 CertificatePath       = $CertificatePath
                 AccessTokens          = $AccessTokens
             }
+            $Script:exportedInstance = $PartnerApplication
             $Results = Get-TargetResource @Params
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `

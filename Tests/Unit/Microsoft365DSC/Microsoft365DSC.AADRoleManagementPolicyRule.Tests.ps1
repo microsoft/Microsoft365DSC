@@ -50,6 +50,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-MgBetaPolicyRoleManagementPolicyAssignment -MockWith {
                 return @{
                     PolicyId = "FakeStringValue"
+                    RoleDefinitionId = "FakeStringValue"
                 }
             }
 
@@ -77,7 +78,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             isRequestorJustificationRequired = $True
                         }
                     }
-                    id = "FakeStringValue"
+                    Id = "FakeStringValue"
                 }
             }
 
@@ -88,18 +89,18 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             # Mock Write-M365DSCHost to hide output during the tests
             Mock -CommandName Write-M365DSCHost -MockWith {
             }
-            $Script:exportedInstances =$null
+            $Script:exportedInstance = $null
             $Script:ExportMode = $false
         }
 
         Context -Name "The AADRoleManagementPolicyRule Exists and Values are already in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    id = "FakeStringValue"
-                    roleDisplayName = "FakeStringValue"
-                    policyId = "FakeStringValue"
-                    ruleType = "#microsoft.graph.unifiedRoleManagementPolicyApprovalRule"
-                    approvalRule = (New-CimInstance -ClassName MSFT_AADRoleManagementPolicyApprovalRule -Property @{
+                    Id = "FakeStringValue"
+                    RoleDisplayName = "FakeStringValue"
+                    PolicyId = "FakeStringValue"
+                    RuleType = "#microsoft.graph.unifiedRoleManagementPolicyApprovalRule"
+                    ApprovalRule = (New-CimInstance -ClassName MSFT_AADRoleManagementPolicyApprovalRule -Property @{
                         setting = (New-CimInstance -ClassName MSFT_AADRoleManagementPolicyApprovalSettings -Property @{
                             approvalMode = "FakeStringValue"
                             isApprovalRequired = $true
@@ -132,11 +133,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The AADRoleManagementPolicyRule exists and values are NOT in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    id = "FakeStringValue"
-                    roleDisplayName = "FakeStringValue"
-                    policyId = "FakeStringValue"
-                    ruleType = "#microsoft.graph.unifiedRoleManagementPolicyApprovalRule"
-                    approvalRule = (New-CimInstance -ClassName MSFT_AADRoleManagementPolicyApprovalRule -Property @{
+                    Id = "FakeStringValue"
+                    RoleDisplayName = "FakeStringValue"
+                    PolicyId = "FakeStringValue"
+                    RuleType = "#microsoft.graph.unifiedRoleManagementPolicyApprovalRule"
+                    ApprovalRule = (New-CimInstance -ClassName MSFT_AADRoleManagementPolicyApprovalRule -Property @{
                         setting = (New-CimInstance -ClassName MSFT_AADRoleManagementPolicyApprovalSettings -Property @{
                             approvalMode = "FakeStringValue"
                             isApprovalRequired = $false # Drift

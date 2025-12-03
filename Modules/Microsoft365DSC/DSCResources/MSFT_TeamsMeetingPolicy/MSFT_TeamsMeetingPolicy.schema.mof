@@ -1,4 +1,4 @@
-﻿[ClassVersion("1.0.0.1"), FriendlyName("TeamsMeetingPolicy")]
+﻿[ClassVersion("1.0.0.2"), FriendlyName("TeamsMeetingPolicy")]
 class MSFT_TeamsMeetingPolicy : OMI_BaseResource
 {
     [Key, Description("Identity of the Teams Meeting Policy.")] String Identity;
@@ -92,9 +92,9 @@ class MSFT_TeamsMeetingPolicy : OMI_BaseResource
     [Write, Description("Determines whether you provide support for your users to enable voice isolation in Teams meeting calls."), ValueMap{"Disabled", "Enabled"}, Values{"Disabled", "Enabled"}] String VoiceIsolation;
     [Write, Description("Enables the user to use the voice simulation feature while being AI interpreted. Possible Values: Disabled, Enabled"), ValueMap{"Disabled","Enabled"}, Values{"Disabled","Enabled"}] String VoiceSimulationInInterpreter;
     [Write, Description("Determines the meeting experience and watermark content of an anonymous user."), ValueMap{"JoinWithAudioOnly","WatermarkWithDisplayName"}, Values{"JoinWithAudioOnly","WatermarkWithDisplayName"}] String WatermarkForAnonymousUsers;
-    [Write, Description("Allows the transparency of watermark to be customizable. Must be between 1 and 100 inclusive.")] SInt64 WatermarkForCameraVideoOpacity;
+    [Write, Description("Allows the transparency of watermark to be customizable. Must be between 1 and 100 inclusive.")] SInt32 WatermarkForCameraVideoOpacity;
     [Write, Description("Allows the pattern design of watermark to be customizable."), ValueMap{"Single","Tiled"}, Values{"Single","Tiled"}] String WatermarkForCameraVideoPattern;
-    [Write, Description("Allows the transparency of watermark to be customizable. Must be between 1 and 100 inclusive.")] SInt64 WatermarkForScreenSharingOpacity;
+    [Write, Description("Allows the transparency of watermark to be customizable. Must be between 1 and 100 inclusive.")] SInt32 WatermarkForScreenSharingOpacity;
     [Write, Description("Allows the pattern design of watermark to be customizable."), ValueMap{"Single","Tiled"}, Values{"Single","Tiled"}] String WatermarkForScreenSharingPattern;
     [Write, Description("Determines the background effects that a user can configure in the Teams client. "), ValueMap{"NoFilters", "BlurOnly", "BlurAndDefaultBackgrounds", "AllFilters"}, Values{"NoFilters", "BlurOnly", "BlurAndDefaultBackgrounds", "AllFilters"}] String VideoFiltersMode;
     [Write, Description("Specifies who can attend and register for webinars."), ValueMap{"Everyone", "EveryoneInCompany"}, Values{"Everyone", "EveryoneInCompany"}] String WhoCanRegister;
