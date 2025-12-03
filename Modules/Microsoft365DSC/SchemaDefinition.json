@@ -8435,6 +8435,12 @@
                                "Option":  "Write"
                            },
                            {
+                               "CIMType":  "MSFT_Credential",
+                               "Description":  "Secret of the Azure Active Directory tenant used for authentication.",
+                               "Name":  "ApplicationSecret",
+                               "Option":  "Write"
+                           },
+                           {
                                "CIMType":  "String",
                                "Description":  "Thumbprint of the Azure Active Directory application\u0027s authentication certificate to use for authentication.",
                                "Name":  "CertificateThumbprint",
@@ -12733,6 +12739,12 @@
                                "Option":  "Write"
                            },
                            {
+                               "CIMType":  "MSFT_Credential",
+                               "Description":  "Secret of the Azure Active Directory tenant used for authentication.",
+                               "Name":  "ApplicationSecret",
+                               "Option":  "Write"
+                           },
+                           {
                                "CIMType":  "String",
                                "Description":  "Thumbprint of the Azure Active Directory application\u0027s authentication certificate to use for authentication.",
                                "Name":  "CertificateThumbprint",
@@ -13014,13 +13026,13 @@
         "Parameters":  [
                            {
                                "CIMType":  "String",
-                               "Description":  "User Principal Name of the eligibility request.",
+                               "Description":  "User Principal Name of the assignment request.",
                                "Name":  "Principal",
                                "Option":  "Key"
                            },
                            {
                                "CIMType":  "String",
-                               "Description":  "Role associated with the eligibility request.",
+                               "Description":  "Role associated with the assignment request.",
                                "Name":  "RoleDefinition",
                                "Option":  "Key"
                            },
@@ -13042,25 +13054,25 @@
                            },
                            {
                                "CIMType":  "String",
-                               "Description":  "Identifier of the directory object representing the scope of the role eligibility. The scope of an role eligibility determines the set of resources for which the principal has been granted access. Directory scopes are shared scopes stored in the directory that are understood by multiple applications. Use / for tenant-wide scope. Use appScopeId to limit the scope to an application only. Either directoryScopeId or appScopeId is required.",
+                               "Description":  "Identifier of the directory object representing the scope of the role assignment. The scope of an role assignment determines the set of resources for which the principal has been granted access. Directory scopes are shared scopes stored in the directory that are understood by multiple applications. Use / for tenant-wide scope. Use appScopeId to limit the scope to an application only. Either directoryScopeId or appScopeId is required.",
                                "Name":  "DirectoryScopeId",
                                "Option":  "Key"
                            },
                            {
                                "CIMType":  "String",
-                               "Description":  "Identifier for the Role Eligibility Schedule Request.",
+                               "Description":  "Identifier for the Role Assignment Schedule Request.",
                                "Name":  "Id",
                                "Option":  "Write"
                            },
                            {
                                "CIMType":  "String",
-                               "Description":  "Identifier of the app-specific scope when the role eligibility is scoped to an app. The scope of a role eligibility determines the set of resources for which the principal is eligible to access. App scopes are scopes that are defined and understood by this application only. Use / for tenant-wide app scopes. Use directoryScopeId to limit the scope to particular directory objects, for example, administrative units. Either directoryScopeId or appScopeId is required.",
+                               "Description":  "Identifier of the app-specific scope when the role assignment is scoped to an app. The scope of a role assignment determines the set of resources for which the principal is eligible to access. App scopes are scopes that are defined and understood by this application only. Use / for tenant-wide app scopes. Use directoryScopeId to limit the scope to particular directory objects, for example, administrative units. Either directoryScopeId or appScopeId is required.",
                                "Name":  "AppScopeId",
                                "Option":  "Write"
                            },
                            {
                                "CIMType":  "String",
-                               "Description":  "Represents the type of operation on the role eligibility request.The possible values are: adminAssign, adminUpdate, adminRemove, selfActivate, selfDeactivate, adminExtend, adminRenew, selfExtend, selfRenew, unknownFutureValue.",
+                               "Description":  "This parameter is deprecated and will be removed in a future release. Represents the type of operation on the role assignment request.The possible values are: adminAssign, adminUpdate, adminRemove, selfActivate, selfDeactivate, adminExtend, adminRenew, selfExtend, selfRenew, unknownFutureValue.",
                                "Name":  "Action",
                                "Option":  "Write",
                                "ValueMap":  [
@@ -13090,7 +13102,7 @@
                            },
                            {
                                "CIMType":  "Boolean",
-                               "Description":  "Determines whether the call is a validation or an actual call. Only set this property if you want to check whether an activation is subject to additional rules like MFA before actually submitting the request.",
+                               "Description":  "This parameter is deprecated and will be removed in a future release. Determines whether the call is a validation or an actual call. Only set this property if you want to check whether an activation is subject to additional rules like MFA before actually submitting the request.",
                                "Name":  "IsValidationOnly",
                                "Option":  "Write"
                            },
@@ -13102,13 +13114,13 @@
                            },
                            {
                                "CIMType":  "MSFT_AADRoleAssignmentScheduleRequestSchedule",
-                               "Description":  "The period of the role eligibility. Optional when action is adminRemove. The period of eligibility is dependent on the settings of the Azure AD role.",
+                               "Description":  "The period of the role assignment. Optional when action is adminRemove. The period of assignment is dependent on the settings of the Azure AD role.",
                                "Name":  "ScheduleInfo",
                                "Option":  "Write"
                            },
                            {
                                "CIMType":  "MSFT_AADRoleAssignmentScheduleRequestTicketInfo",
-                               "Description":  "Ticket details linked to the role eligibility request including details of the ticket number and ticket system.",
+                               "Description":  "This parameter is deprecated and will be removed in a future release. Ticket details linked to the role assignment request including details of the ticket number and ticket system.",
                                "Name":  "TicketInfo",
                                "Option":  "Write"
                            },
@@ -13568,7 +13580,7 @@
                            },
                            {
                                "CIMType":  "String",
-                               "Description":  "Represents the type of operation on the role eligibility request.The possible values are: adminAssign, adminUpdate, adminRemove, selfActivate, selfDeactivate, adminExtend, adminRenew, selfExtend, selfRenew, unknownFutureValue.",
+                               "Description":  "This parameter is deprecated and will be removed in a future release. Represents the type of operation on the role eligibility request.The possible values are: adminAssign, adminUpdate, adminRemove, selfActivate, selfDeactivate, adminExtend, adminRenew, selfExtend, selfRenew, unknownFutureValue.",
                                "Name":  "Action",
                                "Option":  "Write",
                                "ValueMap":  [
@@ -13598,7 +13610,7 @@
                            },
                            {
                                "CIMType":  "Boolean",
-                               "Description":  "Determines whether the call is a validation or an actual call. Only set this property if you want to check whether an activation is subject to additional rules like MFA before actually submitting the request.",
+                               "Description":  "This parameter is deprecated and will be removed in a future release. Determines whether the call is a validation or an actual call. Only set this property if you want to check whether an activation is subject to additional rules like MFA before actually submitting the request.",
                                "Name":  "IsValidationOnly",
                                "Option":  "Write"
                            },
@@ -13679,55 +13691,55 @@
                            {
                                "CIMType":  "String",
                                "Description":  "The unique identifier for an entity. Read-only.",
-                               "Name":  "id",
+                               "Name":  "Id",
                                "Option":  "Key"
                            },
                            {
                                "CIMType":  "String",
                                "Description":  "Role display name.",
-                               "Name":  "roleDisplayName",
+                               "Name":  "RoleDisplayName",
                                "Option":  "Key"
                            },
                            {
                                "CIMType":  "String",
                                "Description":  "Rule Type.",
-                               "Name":  "ruleType",
+                               "Name":  "RuleType",
                                "Option":  "Write"
                            },
                            {
                                "CIMType":  "String",
                                "Description":  "Policy Id.",
-                               "Name":  "policyId",
+                               "Name":  "PolicyId",
                                "Option":  "Write"
                            },
                            {
                                "CIMType":  "MSFT_AADRoleManagementPolicyExpirationRule",
                                "Description":  "Expiration Rule.",
-                               "Name":  "expirationRule",
+                               "Name":  "ExpirationRule",
                                "Option":  "Write"
                            },
                            {
                                "CIMType":  "MSFT_AADRoleManagementPolicyNotificationRule",
                                "Description":  "Notification Rule.",
-                               "Name":  "notificationRule",
+                               "Name":  "NotificationRule",
                                "Option":  "Write"
                            },
                            {
                                "CIMType":  "MSFT_AADRoleManagementPolicyEnablementRule",
                                "Description":  "Enablement Rule.",
-                               "Name":  "enablementRule",
+                               "Name":  "EnablementRule",
                                "Option":  "Write"
                            },
                            {
                                "CIMType":  "MSFT_AADRoleManagementPolicyApprovalRule",
                                "Description":  "Approval Rule.",
-                               "Name":  "approvalRule",
+                               "Name":  "ApprovalRule",
                                "Option":  "Write"
                            },
                            {
                                "CIMType":  "MSFT_AADRoleManagementPolicyAuthenticationContextRule",
                                "Description":  "Authentication Context Rule.",
-                               "Name":  "authenticationContextRule",
+                               "Name":  "AuthenticationContextRule",
                                "Option":  "Write"
                            },
                            {
@@ -19001,6 +19013,18 @@
                                "CIMType":  "String",
                                "Description":  "Thumbprint of the Azure Active Directory application\u0027s authentication certificate to use for authentication.",
                                "Name":  "CertificateThumbprint",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Description":  "Username can be made up to anything but password will be used for CertificatePassword",
+                               "Name":  "CertificatePassword",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Description":  "Path to certificate used in service principal usually a PFX file.",
+                               "Name":  "CertificatePath",
                                "Option":  "Write"
                            },
                            {
@@ -32663,7 +32687,7 @@
                            },
                            {
                                "CIMType":  "MSFT_Credential",
-                               "Description":  "Credentials of the workload\u0027s Admin",
+                               "Description":  "Credentials of the Exchange Global Admin",
                                "Name":  "Credential",
                                "Option":  "Write"
                            },
@@ -32689,6 +32713,30 @@
                                "CIMType":  "MSFT_Credential",
                                "Description":  "Secret of the Azure Active Directory tenant used for authentication.",
                                "Name":  "ApplicationSecret",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Description":  "Username can be made up to anything but password will be used for CertificatePassword",
+                               "Name":  "CertificatePassword",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Description":  "Path to certificate used in service principal usually a PFX file.",
+                               "Name":  "CertificatePath",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Description":  "Managed ID being used for authentication.",
+                               "Name":  "ManagedIdentity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Description":  "Access token used for authentication.",
+                               "Name":  "AccessTokens",
                                "Option":  "Write"
                            }
                        ],
@@ -106705,6 +106753,78 @@
         "Description":  ""
     },
     {
+        "ClassName":  "MSFT_O365CopilotSettingsPeopleEnhancedPersonalization",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Description":  "Only valid value is \u0027Yes\u0027.",
+                               "Name":  "IsSingleInstance",
+                               "Option":  "Key",
+                               "ValueMap":  [
+                                                "Yes"
+                                            ],
+                               "Values":  [
+                                              "Yes"
+                                          ]
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Description":  "If true, enables the enhanced personalization control and therefore related features as defined in control enhanced personalization privacy Required.",
+                               "Name":  "isEnabledInOrganization",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "string",
+                               "Description":  "The ID of a Microsoft Entra group to which the value is used to disable the control for populated users. Optional.",
+                               "Name":  "disabledForGroup",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Description":  "Credentials of the workload\u0027s Admin",
+                               "Name":  "Credential",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Description":  "Id of the Azure Active Directory application to authenticate with.",
+                               "Name":  "ApplicationId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Description":  "Id of the Azure Active Directory tenant used for authentication.",
+                               "Name":  "TenantId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Description":  "Secret of the Azure Active Directory tenant used for authentication.",
+                               "Name":  "ApplicationSecret",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Description":  "Thumbprint of the Azure Active Directory application\u0027s authentication certificate to use for authentication.",
+                               "Name":  "CertificateThumbprint",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Description":  "Managed ID being used for authentication.",
+                               "Name":  "ManagedIdentity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Description":  "Access token used for authentication.",
+                               "Name":  "AccessTokens",
+                               "Option":  "Write"
+                           }
+                       ],
+        "Description":  ""
+    },
+    {
         "ClassName":  "MSFT_O365ExternalConnection",
         "Parameters":  [
                            {
@@ -127395,8 +127515,26 @@
                            },
                            {
                                "CIMType":  "MSFT_Credential",
-                               "Description":  "Credentials of the Teams Admin",
+                               "Description":  "Credentials of the Teams Global Admin.",
                                "Name":  "Credential",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Description":  "Id of the Azure Active Directory application to authenticate with.",
+                               "Name":  "ApplicationId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Description":  "Name of the Azure Active Directory tenant used for authentication. Format contoso.onmicrosoft.com",
+                               "Name":  "TenantId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Description":  "Thumbprint of the Azure Active Directory application\u0027s authentication certificate to use for authentication.",
+                               "Name":  "CertificateThumbprint",
                                "Option":  "Write"
                            },
                            {
