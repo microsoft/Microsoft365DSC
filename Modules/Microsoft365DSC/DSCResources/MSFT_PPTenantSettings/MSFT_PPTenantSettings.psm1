@@ -124,7 +124,7 @@ function Get-TargetResource
         $EnableDefaultEnvironmentRouting,
 
         [Parameter()]
-        [System.String]
+        [System.Boolean]
         $EnableDesktopFlowDataPolicyManagement,
 
         [Parameter()]
@@ -483,7 +483,7 @@ function Set-TargetResource
         $EnableDefaultEnvironmentRouting,
 
         [Parameter()]
-        [System.String]
+        [System.Boolean]
         $EnableDesktopFlowDataPolicyManagement,
 
         [Parameter()]
@@ -1064,17 +1064,10 @@ function Get-M365DSCPowerPlatformTenantSettings
 
     if ($null -ne $EnableDesktopFlowDataPolicyManagement)
     {
-        try
-        {
-            $policy = @{
-                enableDesktopFlowDataPolicyManagement = [Boolean]::Parse($Parameters.EnableDesktopFlowDataPolicyManagement)
-            }
-            $governance.Add('policy', $policy)
+        $policy = @{
+            enableDesktopFlowDataPolicyManagement = $Parameters.EnableDesktopFlowDataPolicyManagement
         }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        $governance.Add('policy', $policy)
     }
     $result.powerplatform.Add('governance', $governance)
 

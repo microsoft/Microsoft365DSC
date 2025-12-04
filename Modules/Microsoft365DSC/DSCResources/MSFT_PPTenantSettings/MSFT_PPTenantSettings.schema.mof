@@ -15,7 +15,7 @@ class MSFT_PPTenantSettings : OMI_BaseResource
     [Write, Description("Restrict all developer environments to be created by tenant admins, Power Platform admins, or Dynamics 365 service admins. Default is false.")] Boolean DisableDeveloperEnvironmentCreationByNonAdminUsers;
     [Write, Description("TBD")] Boolean EnvironmentRoutingAllMakers;
     [Write, Description("Enables the Default Environment routing feature that creates personal, developer environments for new makers. Default value is false.")] Boolean EnableDefaultEnvironmentRouting;
-    [Write, Description("When this setting is true, admins can view and manage desktop flow action groups in DLP policies in the Power Platform admin center. Default value is false.")] String EnableDesktopFlowDataPolicyManagement;
+    [Write, Description("When this setting is true, admins can view and manage desktop flow action groups in DLP policies in the Power Platform admin center. Default value is false.")] Boolean EnableDesktopFlowDataPolicyManagement;
     [Write, Description("Allow users to collect telemetry data about their app in Azure Application Insights. Setting this to False blocks the transmission of this data.")] Boolean EnableCanvasAppInsights;
     [Write, Description("Allow people to create a canvas app based on a Figma file. Default value is false.")] Boolean DisableCreateFromFigma;
 

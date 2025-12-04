@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# Unreleased
+ * PPTenantSettings
+  * Changed type of `EnableDesktopFlowDataPolicyManagement` property from String to Boolean to avoid errors or warnings
+    FIXES [#6740](https://github.com/microsoft/Microsoft365DSC/issues/6740)
+
 # 1.25.1203.1
 
 * AADGroup
