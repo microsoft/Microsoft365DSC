@@ -39,15 +39,74 @@ if ($null -eq $Script:M365DSCDependencies)
         })
     }
 
-    Write-Verbose -Message "Processing config.json for global required modules"
+    Write-Verbose -Message "Loading current configuration from config.json"
     $Script:M365DSCValidatedDependencies = [System.Collections.Generic.List[System.String]]::new($Script:M365DSCDependencies.Count)
-    $globalRequiredModules = (Get-Content -Path "$PSScriptRoot/../config.json" | ConvertFrom-Json).requiredModules
+    $configAsPsCustomObject = Get-Content -Path "$PSScriptRoot/../config.json" | ConvertFrom-Json
+    $configAsHashtable = @{}
+    foreach ($property in $configAsPsCustomObject.PSObject.Properties)
+    {
+        $configAsHashtable.Add($property.Name, $property.Value)
+    }
+    $Script:CurrentConfiguration = $configAsHashtable
+    $globalRequiredModules = $Script:CurrentConfiguration.requiredModules
     foreach ($entry in $commandToModuleMap.GetEnumerator())
     {
         $sortedFunctions = @($globalRequiredModules.$($entry.Key)) + @($entry.Value) | Sort-Object -Unique
         $Script:M365DSCDependencies[$entry.Key].Commands = $sortedFunctions
     }
     $Script:M365DSCRequiredModules = @($globalRequiredModules.psobject.Properties.Name)
+
+    # Custom settings
+    $skipModuleDependencyValidation = [System.Environment]::GetEnvironmentVariable('M365DSC_SKIP_MODULE_DEPENDENCY_VALIDATION', 'Machine')
+    if (-not [string]::IsNullOrEmpty($skipModuleDependencyValidation))
+    {
+        $Script:CurrentConfiguration.skipModuleDependencyValidation = [System.Convert]::ToBoolean($skipModuleDependencyValidation)
+    }
+}
+
+function Get-M365DSCModuleConfiguration
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param()
+
+    return $Script:CurrentConfiguration.Clone()
+}
+
+function Set-M365DSCModuleConfiguration
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [String]
+        $Key,
+
+        [Parameter(Mandatory = $true)]
+        [Object]
+        $Value,
+
+        [Parameter()]
+        [switch]
+        $Persist,
+
+        [Parameter()]
+        [switch]
+        $Clear
+    )
+
+    if ($Key -eq 'skipModuleDependencyValidation')
+    {
+        if ($Persist)
+        {
+            [System.Environment]::SetEnvironmentVariable('M365DSC_SKIP_MODULE_DEPENDENCY_VALIDATION', $Value.ToString(), 'Machine')
+        }
+        elseif ($Clear)
+        {
+            [System.Environment]::('M365DSC_SKIP_MODULE_DEPENDENCY_VALIDATION', [NullString]::Value, 'Machine')
+        }
+    }
+    $Script:CurrentConfiguration."$Key" = $Value
 }
 
 <#
@@ -1933,9 +1992,9 @@ function Confirm-M365DSCModuleDependency
 
     $Global:MaximumFunctionCount = 32767
 
-    if ($Global:IsTestEnvironment)
+    if ($Global:IsTestEnvironment -or (Get-M365DSCModuleConfiguration).skipModuleDependencyValidation)
     {
-        Write-Verbose -Message "Skipping module dependency validation in test environment for module '$ModuleName'."
+        Write-Verbose -Message "Skipping module dependency validation in test environment or because it was requested to be skipped for module '$ModuleName'."
         return
     }
 
@@ -3307,7 +3366,10 @@ function Assert-M365DSCBlueprint
 
         try
         {
+            $previousValue = (Get-M365DSCModuleConfiguration).skipModuleDependencyValidation
+            Set-M365DSCModuleConfiguration -Key 'skipModuleDependencyValidation' -Value $true -Persist
             $parsedBluePrint = ConvertTo-DSCObject -Content $fileContent
+            Set-M365DSCModuleConfiguration -Key 'skipModuleDependencyValidation' -Value $previousValue -Persist
         }
         catch
         {
@@ -5091,7 +5153,10 @@ function Get-M365DSCConfigurationConflict
 
     $results = @()
     Write-Verbose -Message "Converting configuration's content into a PowerShell Object using DSCParser"
+    $previousValue = (Get-M365DSCModuleConfiguration).skipModuleDependencyValidation
+    Set-M365DSCModuleConfiguration -Key 'skipModuleDependencyValidation' -Value $true -Persist
     $parsedContent = ConvertTo-DSCObject -Content $ConfigurationContent
+    Set-M365DSCModuleConfiguration -Key 'skipModuleDependencyValidation' -Value $previousValue -Persist
 
     $resourcesPrimaryIdentities = @()
     if ($Script:IsPowerShellCore)
@@ -5312,8 +5377,11 @@ function Join-M365DSCConfiguration
     $ConfigurationFilePath = Join-Path -Path $ConfigurationPath -ChildPath $ConfigurationFile
     $ConfigurationPath = Join-Path -Path $ConfigurationPath -ChildPath "*"
 
+    $previousValue = (Get-M365DSCModuleConfiguration).skipModuleDependencyValidation
+    Set-M365DSCModuleConfiguration -Key 'skipModuleDependencyValidation' -Value $true -Persist
     $baseConfiguration = ConvertTo-DSCObject -Path $ConfigurationFilePath
     $additionalConfigurations = Get-Item -Path $ConfigurationPath -Filter *.ps1 -Exclude $ConfigurationFile | ForEach-Object { ConvertTo-DSCObject -Path $_.FullName }
+    Set-M365DSCModuleConfiguration -Key 'skipModuleDependencyValidation' -Value $previousValue -Persist
 
     $combinedArray = @($baseConfiguration) + @($additionalConfigurations)
     $combinedConfiguration = ConvertFrom-DSCObject -DSCResources $combinedArray
@@ -5710,6 +5778,7 @@ Export-ModuleMember -Function @(
     'Get-M365DSCAPIEndpoint',
     'Get-M365DSCAuthenticationMode',
     'Get-M365DSCComponentsWithMostSecureAuthenticationType',
+    'Get-M365DSCModuleConfiguration',
     'Get-M365DSCConfigurationConflict',
     'Get-M365DSCConnectedWorkloadList',
     'Get-M365DSCExportContentForResource',
@@ -5734,6 +5803,7 @@ Export-ModuleMember -Function @(
     'Remove-M365DSCAuthenticationParameter',
     'Remove-NullEntriesFromHashtable',
     'Set-M365DSCAllResourcesDictionary',
+    'Set-M365DSCModuleConfiguration',
     'Set-M365DSCStringReplacementMap',
     'Split-M365DSCConfiguration',
     'Sync-M365DSCParameter',

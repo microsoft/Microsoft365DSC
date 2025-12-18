@@ -2369,6 +2369,8 @@ function Initialize-M365DSCReporting
         Write-Verbose 'Error trying to remove Module Version'
     }
 
+    $previousValue = (Get-M365DSCModuleConfiguration).skipModuleDependencyValidation
+    Set-M365DSCModuleConfiguration -Key 'skipModuleDependencyValidation' -Value $true -Persist
     if ($IncludeComments)
     {
         $parsedContent = ConvertTo-DSCObject -Content $fileContent -IncludeComments:$True
@@ -2377,6 +2379,7 @@ function Initialize-M365DSCReporting
     {
         $parsedContent = ConvertTo-DSCObject -Content $fileContent
     }
+    Set-M365DSCModuleConfiguration -Key 'skipModuleDependencyValidation' -Value $previousValue -Persist
 
     if ($null -eq $parsedContent)
     {

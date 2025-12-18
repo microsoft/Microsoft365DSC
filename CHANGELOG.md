@@ -1,6 +1,12 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* MISC
+  * Allow module validation to be skipped when using `ConvertTo-DscObject` internally.
+
 # 1.25.1203.2
+
 * DEPENDENCIES
   * Updated MSCloudLoginAssistant to version 1.1.56.
 

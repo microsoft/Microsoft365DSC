@@ -31,7 +31,10 @@ function Get-M365DSCEvaluationRulesForConfiguration
         $ConnectionMode
     )
 
+    $previousValue = (Get-M365DSCModuleConfiguration).skipModuleDependencyValidation
+    Set-M365DSCModuleConfiguration -Key 'skipModuleDependencyValidation' -Value $true -Persist
     $configurationAsObject = ConvertTo-DSCObject -Path $ConfigurationPath
+    Set-M365DSCModuleConfiguration -Key 'skipModuleDependencyValidation' -Value $previousValue -Persist
 
     $groupCondition = {
         $_.ResourceName
