@@ -57,7 +57,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
 
                 Mock -CommandName Get-PnPTenantSite -MockWith {
-                    throw
+                    return $null
                 }
             }
 
@@ -69,7 +69,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Test-TargetResource @testParams | Should -Be $false
             }
 
-            It 'Should throw error in the Set method' {
+            It 'Should call  the Set method' {
+                Mock -CommandName Get-PnPTenantSite -MockWith {
+                    throw
+                }
                 { Set-TargetResource @testParams } | Should -Throw "The specified Site Collection {$($testParams.Url)} for SPOHubSite doesn't already exist."
             }
         }

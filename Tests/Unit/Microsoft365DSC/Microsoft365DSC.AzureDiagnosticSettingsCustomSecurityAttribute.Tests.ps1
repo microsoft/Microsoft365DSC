@@ -95,7 +95,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
 
                 Mock -CommandName Invoke-AzRest -MockWith {
-                    return $null
+                    return @{
+                        Content = '{}'
+                    }
                 }
             }
             It 'Should return Values from the Get method' {

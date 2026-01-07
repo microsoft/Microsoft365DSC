@@ -73,6 +73,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Invoke-AzRest -MockWith {
                     return @{
                         statuscode = 200
+                        Content = '{}'
                     }
                 }
             }

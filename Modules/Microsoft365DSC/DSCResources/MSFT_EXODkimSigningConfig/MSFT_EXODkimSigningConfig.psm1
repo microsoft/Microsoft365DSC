@@ -138,7 +138,7 @@ function Get-TargetResource
             -TenantId $TenantId `
             -Credential $Credential
 
-        return $nullReturn
+        throw
     }
 }
 
@@ -392,59 +392,72 @@ function Export-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-DkimSigningConfig)
+    try
     {
-        [array]$DkimSigningConfigs = Get-DkimSigningConfig
-
-        $i = 1
-        if ($DkimSigningConfigs.Count -eq 0)
+        if (Confirm-ImportedCmdletIsAvailable -CmdletName Get-DkimSigningConfig)
         {
-            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
+            [array]$DkimSigningConfigs = Get-DkimSigningConfig
+
+            $i = 1
+            if ($DkimSigningConfigs.Count -eq 0)
+            {
+                Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
+            }
+            else
+            {
+                Write-M365DSCHost -Message "`r`n" -DeferWrite
+            }
+            $dscContent = ''
+            foreach ($DkimSigningConfig in $DkimSigningConfigs)
+            {
+                if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+                {
+                    $Global:M365DSCExportResourceInstancesCount++
+                }
+
+                Write-M365DSCHost -Message "    |---[$i/$($DkimSigningConfigs.Count)] $($DkimSigningConfig.Identity)" -DeferWrite
+                $Params = @{
+                    Identity              = $DkimSigningConfig.Identity
+                    Credential            = $Credential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
+                    CertificatePassword   = $CertificatePassword
+                    ManagedIdentity       = $ManagedIdentity.IsPresent
+                    CertificatePath       = $CertificatePath
+                    AccessTokens          = $AccessTokens
+                }
+                $Script:exportedInstance = $DkimSigningConfig
+                $Results = Get-TargetResource @Params
+                $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                    -ConnectionMode $ConnectionMode `
+                    -ModulePath $PSScriptRoot `
+                    -Results $Results `
+                    -Credential $Credential
+                $dscContent += $currentDSCBlock
+                Save-M365DSCPartialExport -Content $currentDSCBlock `
+                    -FileName $Global:PartialExportFileName
+                Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
+                $i++
+            }
         }
         else
         {
-            Write-M365DSCHost -Message "`r`n" -DeferWrite
+            Write-M365DSCHost -Message "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered to allow for DKIM Signing Config"
+            return ''
         }
-        $dscContent = ''
-        foreach ($DkimSigningConfig in $DkimSigningConfigs)
-        {
-            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
-            {
-                $Global:M365DSCExportResourceInstancesCount++
-            }
-
-            Write-M365DSCHost -Message "    |---[$i/$($DkimSigningConfigs.Count)] $($DkimSigningConfig.Identity)" -DeferWrite
-            $Params = @{
-                Identity              = $DkimSigningConfig.Identity
-                Credential            = $Credential
-                ApplicationId         = $ApplicationId
-                TenantId              = $TenantId
-                CertificateThumbprint = $CertificateThumbprint
-                CertificatePassword   = $CertificatePassword
-                ManagedIdentity       = $ManagedIdentity.IsPresent
-                CertificatePath       = $CertificatePath
-                AccessTokens          = $AccessTokens
-            }
-            $Script:exportedInstance = $DkimSigningConfig
-            $Results = Get-TargetResource @Params
-            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                -ConnectionMode $ConnectionMode `
-                -ModulePath $PSScriptRoot `
-                -Results $Results `
-                -Credential $Credential
-            $dscContent += $currentDSCBlock
-            Save-M365DSCPartialExport -Content $currentDSCBlock `
-                -FileName $Global:PartialExportFileName
-            Write-M365DSCHost -Message $Global:M365DSCEmojiGreenCheckMark -CommitWrite
-            $i++
-        }
+        return $dscContent
     }
-    else
+    catch
     {
-        Write-M365DSCHost -Message "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered to allow for DKIM Signing Config"
-        return ''
+        New-M365DSCLogEntry -Message 'Error during Export:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        throw
     }
-    return $dscContent
 }
 
 Export-ModuleMember -Function *-TargetResource

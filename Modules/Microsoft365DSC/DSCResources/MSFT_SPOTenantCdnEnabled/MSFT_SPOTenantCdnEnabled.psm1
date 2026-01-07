@@ -110,13 +110,7 @@ function Get-TargetResource
             -TenantId $TenantId `
             -Credential $Credential
 
-        # This method is not implemented in some sovereign clouds (e.g. GCCHigh)
-        if ($_.Exception -like '*The method or operation is not implemented*')
-        {
-            throw $_
-        }
-
-        return $nullResult
+        throw
     }
 }
 
@@ -386,18 +380,18 @@ function Export-TargetResource
         if ($_.Exception -like '*The method or operation is not implemented*')
         {
             Write-M365DSCHost -Message "    $($Global:M365DSCEmojiYellowCircle) The current tenant does not support this feature." -CommitWrite
+            return ''
         }
         else
         {
-            Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
-
             New-M365DSCLogEntry -Message 'Error during Export:' `
                 -Exception $_ `
                 -Source $($MyInvocation.MyCommand.Source) `
                 -TenantId $TenantId `
                 -Credential $Credential
+
+            throw
         }
-        return ''
     }
 }
 

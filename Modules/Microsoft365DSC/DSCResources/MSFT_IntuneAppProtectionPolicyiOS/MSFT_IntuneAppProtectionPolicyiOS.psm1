@@ -554,14 +554,7 @@ function Get-TargetResource
             -TenantId $TenantId `
             -Credential $Credential
 
-        if ($_.Exception.Message -eq "Multiple policies with display name {$DisplayName} were found. Please ensure only one instance exists.")
-        {
-            throw $_
-        }
-        else
-        {
-            return $nullResult
-        }
+        throw
     }
 }
 
@@ -1576,16 +1569,14 @@ function Export-TargetResource
         }
         else
         {
-            Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
-
             New-M365DSCLogEntry -Message 'Error during Export:' `
                 -Exception $_ `
                 -Source $($MyInvocation.MyCommand.Source) `
                 -TenantId $TenantId `
                 -Credential $Credential
-        }
 
-        return ''
+            throw
+        }
     }
 }
 

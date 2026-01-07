@@ -314,14 +314,13 @@ function Get-TargetResource
     }
     catch
     {
-        Write-Verbose "Error: $_"
         New-M365DSCLogEntry -Message 'Error retrieving data:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `
             -Credential $Credential
 
-        return $nullResult
+        throw
     }
 }
 
@@ -887,22 +886,21 @@ function Export-TargetResource
     catch
     {
         if ($_.ErrorDetails.Message -like '*The tenant needs an AAD Premium*' -or `
-                $_.ErrorDetails.MEssage -like '*[AadPremiumLicenseRequired]*')
+                $_.ErrorDetails.Message -like '*[AadPremiumLicenseRequired]*')
         {
             Write-M365DSCHost -Message "`r`n    $($Global:M365DSCEmojiYellowCircle) Tenant does not meet license requirement to extract this component."
+            return ''
         }
         else
         {
-            Write-Verbose -Message "Exception: $($_.Exception.Message)"
-            Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
             New-M365DSCLogEntry -Message 'Error during Export:' `
                 -Exception $_ `
                 -Source $($MyInvocation.MyCommand.Source) `
                 -TenantId $TenantId `
                 -Credential $Credential
-        }
 
-        return ''
+            throw
+        }
     }
 }
 

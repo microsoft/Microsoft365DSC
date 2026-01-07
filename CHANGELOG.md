@@ -1,9 +1,22 @@
 # Change log for Microsoft365DSC
 
-# Unreleased
- * PPTenantSettings
+# UNRELEASED
+
+* AADNetworkAccessForwardingPolicy
+  * Fixed an issue where empty `PolicyRules` would throw an exception during Get.
+* EXOPlace
+  * Fixes an issue with the export where it was trying to export RoomList.
+* PPTenantSettings
   * Changed type of `EnableDesktopFlowDataPolicyManagement` property from String to Boolean to avoid errors or warnings
     FIXES [#6740](https://github.com/microsoft/Microsoft365DSC/issues/6740)
+* MISC
+  * Removed verbose output from `Get-TargetResource`.
+  * Updated the error behavior to always throw inside `Get-TargetResource`.
+
+# 1.25.1203.2
+
+* DEPENDENCIES
+  * Updated MSCloudLoginAssistant to version 1.1.56.
 
 # 1.25.1203.1
 

@@ -4,10 +4,8 @@ function Get-TargetResource
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
-    param (
-
-        #region resource params
-
+    param
+    (
         [Parameter()]
         [System.String]
         $Id,
@@ -33,8 +31,6 @@ function Get-TargetResource
         [Parameter()]
         [System.Int32]
         $RenewalThresholdPercentage,
-
-        #endregion resource params
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -145,21 +141,21 @@ function Get-TargetResource
     }
     catch
     {
-        Write-Verbose -Message $_
         New-M365DSCLogEntry -Message 'Error retrieving data:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `
             -Credential $Credential
 
-        return $nullResult
+        throw
     }
 }
 
 function Set-TargetResource
 {
     [CmdletBinding()]
-    param (
+    param
+    (
 
         #region resource params
 
@@ -263,7 +259,8 @@ function Test-TargetResource
 {
     [CmdletBinding()]
     [OutputType([System.Boolean])]
-    param (
+    param
+    (
 
         #region resource params
 
@@ -347,7 +344,8 @@ function Export-TargetResource
 {
     [CmdletBinding()]
     [OutputType([System.String])]
-    param (
+    param
+    (
 
         #region resource params
 
@@ -484,15 +482,13 @@ function Export-TargetResource
     }
     catch
     {
-        Write-M365DSCHost -Message $Global:M365DSCEmojiRedX -CommitWrite
-
         New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `
             -Credential $Credential
 
-        return ''
+        throw
     }
 }
 

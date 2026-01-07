@@ -197,8 +197,11 @@ function Start-M365DSCConfigurationExtract
             $ComponentsToSkip += $ExcludeComponents
         }
 
-        $resourcesInBothIncludeAndExclude = Compare-Object -ReferenceObject $Components `
-            -DifferenceObject $ComponentsToSkip -ExcludeDifferent -IncludeEqual
+        if ($null -ne $Components)
+        {
+            $resourcesInBothIncludeAndExclude = Compare-Object -ReferenceObject $Components `
+                -DifferenceObject $ComponentsToSkip -ExcludeDifferent -IncludeEqual
+        }
         if ($resourcesInBothIncludeAndExclude.Count -gt 0)
         {
             foreach ($resource in $resourcesInBothIncludeAndExclude)
@@ -760,7 +763,7 @@ function Start-M365DSCConfigurationExtract
                     }
                     elseif ($null -ne $resourceFilter)
                     {
-                        Write-M365DSCHost -Message "    `r`n$($Global:M365DSCEmojiYellowCircle) You specified a filter for resource {$resourceName} but it doesn't support filters. Filter will be ignored and all instances of the resource will be captured."
+                        Write-M365DSCHost -Message "    `r`n$($Global:M365DSCEmojiYellowCircle) You specified a filter for resource {$resourceName} but it doesn't support filters. Filter will be ignored and all instances of the resource will be captured." -ForegroundColor DarkYellow -CommitWrite
                     }
                 }
 
@@ -776,7 +779,7 @@ function Start-M365DSCConfigurationExtract
                 }
                 catch
                 {
-                    Write-M365DSCHost -Message "    `r`n$($Global:M365DSCEmojiRedX) An error occurred while exporting resource {$resourceName}: $($_.Exception.Message)" -CommitWrite
+                    Write-M365DSCHost -Message "$($Global:M365DSCEmojiRedX)`r`n    An error occurred while exporting resource {$resourceName}: $($_.Exception.Message)" -ForegroundColor Red -CommitWrite
                     if ($ErrorActionPreference -eq 'Stop')
                     {
                         throw $_
