@@ -114,12 +114,11 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    Write-Verbose -Message "Getting configuration of AzureAD Group with DisplayName {$DisplayName}"
-
     try
     {
         if (-not $Script:exportedInstance -or $Script:exportedInstance.DisplayName -ne $DisplayName)
         {
+            Write-Verbose -Message 'Getting configuration of AzureAD Group'
             $null = New-M365DSCConnection -Workload 'MicrosoftGraph' `
                 -InboundParameters $PSBoundParameters
 
@@ -137,12 +136,12 @@ function Get-TargetResource
 
             $nullReturn = $PSBoundParameters
             $nullReturn.Ensure = 'Absent'
-            $nullReturn.Owners = @()
-            $nullReturn.Members = @()
-            $nullReturn.GroupAsMembers = @()
-            $nullReturn.MemberOf = @()
-            $nullReturn.AssignedToRole = @()
-            $nullReturn.AssignedLicenses = @()
+            $nullReturn.Owners = [System.String[]]@()
+            $nullReturn.Members = [System.String[]]@()
+            $nullReturn.GroupAsMembers = [System.String[]]@()
+            $nullReturn.MemberOf = [System.String[]]@()
+            $nullReturn.AssignedToRole = [System.String[]]@()
+            $nullReturn.AssignedLicenses = [CimInstance[]]@()
 
             if ($PSBoundParameters.ContainsKey('Id'))
             {
@@ -223,7 +222,6 @@ function Get-TargetResource
             }
         }
 
-        $MembersValues = $null
         $result = @{}
         if ($Group.MembershipRuleProcessingState -ne 'On')
         {
@@ -283,8 +281,8 @@ function Get-TargetResource
                     }
                 }
             }
-            $result.Add('Members', $MembersValues)
-            $result.Add('GroupAsMembers', $GroupAsMembersValues)
+            $result.Add('Members', [System.String[]]$MembersValues)
+            $result.Add('GroupAsMembers', [System.String[]]$GroupAsMembersValues)
         }
 
         # MemberOf
@@ -341,7 +339,7 @@ function Get-TargetResource
         $assignedLicensesRequest = ($batchResponse | Where-Object -FilterScript { $_.id -eq 'Licenses' }).body
         if ($assignedLicensesRequest.value.Length -gt 0)
         {
-            [Array]$assignedLicensesValues = Get-M365DSCAzureADGroupLicenses -AssignedLicenses $assignedLicensesRequest.value
+            [CimInstance[]]$assignedLicensesValues = Get-M365DSCAzureADGroupLicenses -AssignedLicenses $assignedLicensesRequest.value
         }
 
         # GroupLifecyclePolicies
@@ -352,19 +350,18 @@ function Get-TargetResource
         $policySettings = @{
             DisplayName                         = $Group.DisplayName
             Id                                  = $Group.Id
-            Owners                              = $OwnersValues
-            MemberOf                            = $MemberOfValues
+            Owners                              = [System.String[]]$OwnersValues
+            MemberOf                            = [System.String[]]$MemberOfValues
             Description                         = $Group.Description
-            GroupTypes                          = [System.String[]]$Group.GroupTypes
+            GroupTypes                          = [System.String[]]($Group.GroupTypes)
             MembershipRule                      = $Group.MembershipRule
             MembershipRuleProcessingState       = $Group.MembershipRuleProcessingState
             SecurityEnabled                     = $Group.SecurityEnabled
             MailEnabled                         = $Group.MailEnabled
             IsAssignableToRole                  = $false -or $Group.IsAssignableToRole
-            AssignedToRole                      = $AssignedToRoleValues
+            AssignedToRole                      = [System.String[]]$AssignedToRoleValues
             MailNickname                        = $Group.MailNickname
             Visibility                          = $Group.Visibility
-            AssignedLicenses                    = $assignedLicensesValues
             Ensure                              = 'Present'
             ApplicationId                       = $ApplicationId
             TenantId                            = $TenantId
@@ -372,10 +369,14 @@ function Get-TargetResource
             ApplicationSecret                   = $ApplicationSecret
             Credential                          = $Credential
             ManagedIdentity                     = $ManagedIdentity.IsPresent
-            AccessTokens                        = $AccessTokens
+            AccessTokens                        = [System.String[]]$AccessTokens
         }
 
         $result += $policySettings
+        If ( $assignedLicensesValues )
+        {
+            $result.Add("AssignedLicenses", [CimInstance[]]$assignedLicensesValues)
+        }
         if ($result.MailEnabled)
         {
             $result.Add("GroupLifecyclePolicySelectedEnabled", $isGroupLifecyclePoliciesEnabled)
@@ -391,7 +392,7 @@ function Get-TargetResource
             -TenantId $TenantId `
             -Credential $Credential
 
-        throw
+        throw $_
     }
 }
 
@@ -1407,10 +1408,10 @@ function Get-M365DSCAzureADGroupLicenses
             $disabledPlansValues += $foundItem.ServicePlanName
         }
         $currentLicense = @{
-            DisabledPlans = $disabledPlansValues
+            DisabledPlans = [String[]]$disabledPlansValues
             SkuId         = $skuPartNumber.SkuPartNumber -replace [char]0xFEFF
         }
-        $returnValue += $currentLicense
+        $returnValue += New-CimInstance -ClassName MSFT_AADGroupLicense -Namespace root/Microsoft/Windows/DesiredStateConfiguration -Property $currentLicense -ClientOnly
     }
 
     return $returnValue
