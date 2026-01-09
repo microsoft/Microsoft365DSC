@@ -1,7 +1,9 @@
 # Change log for Microsoft365DSC
 
 # UNRELEASED
-
+* AADGroup
+  * Fixed an issue where Get-DscConfiguration would fail.
+    FIXES [#6796](https://github.com/microsoft/Microsoft365DSC/issues/6796)
 * AADAuthenticationMethodPolicy
   * Fixed an issue where empty arrays were not exported.
     FIXES [#6759](https://github.com/microsoft/Microsoft365DSC/issues/6759)
@@ -95,7 +97,7 @@
     FIXES [#6584](https://github.com/microsoft/Microsoft365DSC/issues/6584)
   * Removed verbose output from `Get-TargetResource`.
   * Updated the error behavior to always throw inside `Get-TargetResource`.
-    
+
 # 1.25.1203.2
 
 * DEPENDENCIES
